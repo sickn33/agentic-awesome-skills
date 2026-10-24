@@ -58,10 +58,12 @@ Based on the evidence gathered, determine the issue type:
 
 Once you've identified the table, issue type, and approximate timeline, continue with Step 2 (Map the blast radius) from the main SKILL.md workflow.
 
-> **TSA note.** This intake path intentionally does **not** invoke the Troubleshooting Agent (TSA), because `run_troubleshooting_agent` requires a Monte Carlo incident UUID and this path starts without one. If Step 3 above identifies a matching alert, treat the user as having provided that alert's incident ID and re-enter the main `SKILL.md` flow at Step 1 — Step 1.5 there will auto-invoke TSA. If no matching alert is found, run the manual investigation only.
+> **TSA note.** This intake path intentionally does **not** invoke the Troubleshooting Agent (TSA), because `run_troubleshooting_agent` requires a Monte Carlo incident UUID and this path starts without one. If Step 3 above identifies a matching alert, treat the user as having provided that alert's incident ID and re-enter the main `SKILL.md` flow at Step 1 — Step 1.5 there checks authorization before any new paid TSA run. If no matching alert is found, run the manual investigation only.
 
 ## Tips
 
 - **Users often know the symptom but not the cause.** "The dashboard shows yesterday's numbers" = freshness issue. "Revenue is way too high" = volume or field anomaly.
 - **Check downstream first if the user reports a dashboard issue.** The bad data might originate several tables upstream.
 - **Multiple alerts on the same table at the same time** usually have a single root cause.
+
+<!-- Modified locally: evidence, SQL safety or paid-run corrections. -->

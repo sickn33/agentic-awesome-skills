@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- Modified locally: independent palette reset and bounded integer seeds. Unfinished algorithm scaffold. -->
 <!--
     THIS IS A TEMPLATE THAT SHOULD BE USED EVERY TIME AND MODIFIED.
     WHAT TO KEEP:
@@ -451,7 +452,7 @@
             colorPalette: ['#d97757', '#6a9bcc', '#788c5d']
         };
 
-        let defaultParams = {...params}; // Store defaults for reset
+        let defaultParams = {...params, colorPalette: [...params.colorPalette]}; // Store defaults for reset
 
         // ═══════════════════════════════════════════════════════════════════════
         // P5.JS GENERATIVE ART ALGORITHM - REPLACE WITH YOUR VISION
@@ -537,8 +538,8 @@
 
         function updateSeed() {
             let input = document.getElementById('seed-input');
-            let newSeed = parseInt(input.value);
-            if (newSeed && newSeed > 0) {
+            let newSeed = Number(input.value);
+            if (Number.isInteger(newSeed) && newSeed > 0 && newSeed <= 4294967295) {
                 params.seed = newSeed;
                 initializeSystem();
             } else {
@@ -554,7 +555,7 @@
         }
 
         function nextSeed() {
-            params.seed = params.seed + 1;
+            params.seed = params.seed >= 4294967295 ? 1 : params.seed + 1;
             updateSeedDisplay();
             initializeSystem();
         }
@@ -566,7 +567,7 @@
         }
 
         function resetParameters() {
-            params = {...defaultParams};
+            params = {...defaultParams, colorPalette: [...defaultParams.colorPalette]};
             
             // Update UI elements
             document.getElementById('particleCount').value = params.particleCount;

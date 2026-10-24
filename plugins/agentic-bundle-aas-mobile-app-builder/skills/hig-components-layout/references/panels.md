@@ -1,6 +1,7 @@
 ---
 title: "Panels | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/panels
+---
 
 # Panels
 
@@ -22,7 +23,7 @@ When your app runs in other platforms, consider using a modal view to present su
 
 **Write a brief title that describes the panel’s purpose.** Because a panel often floats above other open windows in your app, it needs a title bar so people can position it where they want. Create a short title using a noun — or a noun phrase with [title-style capitalization](https://support.apple.com/guide/applestyleguide/c-apsgb744e4a3/web#apdca93e113f1d64) — that can help people recognize the panel onscreen. For example, macOS provides familiar panels titled “Fonts” and “Colors,” and many apps use the title “Inspector.”
 
-**Show and hide panels appropriately.** When your app becomes active, bring all of its open panels to the front, regardless of which window was active when the panel opened. When your app is inactive, hide all of its panels.
+**Show and hide panels appropriately.** For document utility panels, coordinate visibility and window level with the active document and AppKit’s panel behavior. Hide utility panels when the app deactivates where appropriate; do not indiscriminately front every panel or make unrelated/sensitive document content visible.
 
 **Avoid including panels in the Window menu’s documents list.** It’s fine to include commands for showing or hiding panels in the [Window menu](https://developer.apple.com/design/human-interface-guidelines/the-menu-bar#Window-menu), but panels aren’t documents or standard app windows, and they don’t belong in the Window menu’s list.
 

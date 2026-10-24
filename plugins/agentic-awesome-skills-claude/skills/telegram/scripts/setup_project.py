@@ -55,7 +55,7 @@ def setup_nodejs(project_path: str, with_webhook: bool = False, with_ai: bool = 
     if with_webhook:
         print("\n  Webhook mode enabled - configure WEBHOOK_URL in .env")
     if with_ai:
-        print("\n  AI integration enabled - configure ANTHROPIC_API_KEY in .env")
+        print("\n  AI integration is not bundled; implement and test a provider adapter separately.")
 
 
 def setup_python(project_path: str, with_webhook: bool = False, with_ai: bool = False):
@@ -79,7 +79,7 @@ def setup_python(project_path: str, with_webhook: bool = False, with_ai: bool = 
     if with_webhook:
         print("  5. python webhook_server.py  (webhook mode)")
     if with_ai:
-        print("\n  AI integration enabled - configure ANTHROPIC_API_KEY in .env")
+        print("\n  AI integration is not bundled; implement and test a provider adapter separately.")
 
 
 def main():
@@ -92,7 +92,7 @@ def main():
     parser.add_argument("--with-webhook", action="store_true",
                         help="Include webhook server setup")
     parser.add_argument("--with-ai", action="store_true",
-                        help="Include AI integration boilerplate")
+                        help="Print guidance for adding an AI adapter (not bundled)")
     parser.add_argument("--force", action="store_true",
                         help="Overwrite existing directory")
     args = parser.parse_args()

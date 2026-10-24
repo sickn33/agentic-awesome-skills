@@ -222,13 +222,11 @@ class HomeViewModelTest {
     private val getItemsUseCase = mockk<GetItemsUseCase>()
     private lateinit var viewModel: HomeViewModel
 
-    @BeforeEach
-    fun setup() { viewModel = HomeViewModel(getItemsUseCase) }
-
     @Test
     fun `loadItems emits Success when use case succeeds`() = runTest {
         val items = listOf(Item("1", "Test"))
         coEvery { getItemsUseCase() } returns Result.success(items)
+        viewModel = HomeViewModel(getItemsUseCase)
 
         viewModel.uiState.test {
             skipItems(1) // Loading

@@ -24,6 +24,8 @@ def llm_workflow(prompt):
 ```python
 @DBOS.workflow()
 def llm_workflow(prompt):
+    # call_llm_streaming must be a DBOS-supported replay-safe streaming step/child.
+    # A raw nondeterministic API generator here violates workflow determinism.
     for chunk in call_llm_streaming(prompt):
         DBOS.write_stream("response", chunk)
     DBOS.close_stream("response")

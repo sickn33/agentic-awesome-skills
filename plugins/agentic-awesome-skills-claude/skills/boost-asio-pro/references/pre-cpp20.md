@@ -8,7 +8,7 @@ If you can't use C++20 `co_await`, the **same Asio library** (modern Boost or st
 
 **Unchanged from the coroutine style** (these are library, not language, features): `io_context`, `make_strand`, `bind_executor`, `steady_timer`, `ssl::stream`, `signal_set`, `async_read`/`async_write`/`async_read_until`, buffers, `resolver`. Use them exactly as shown in [coroutines.md](coroutines.md).
 
-**Not available pre-C++20:** `co_await`/`awaitable<T>`, `co_spawn`, `use_awaitable`, the `||`/`&&` `awaitable_operators`, `as_tuple`, and `co_composed`. The table below gives the equivalent.
+**C++20-specific usage in these examples:** `co_await`/`awaitable<T>`, `co_spawn`, `use_awaitable`, the `||`/`&&` `awaitable_operators`, `as_tuple`, and `co_composed`. The table below gives the equivalent.
 
 ### C++20 → pre-C++20 mapping
 
@@ -25,7 +25,7 @@ If you can't use C++20 `co_await`, the **same Asio library** (modern Boost or st
 
 ### Callback style: full-duplex + write queue
 
-The full-duplex write-queue rule is identical — a strand alone doesn't stop interleaved writes — just expressed with chained handlers. Capture `self = shared_from_this()` in **every** handler to keep the connection alive.
+The full-duplex write-queue rule is identical — a strand alone doesn't stop interleaved writes — just expressed with chained handlers. Capture a previously declared `self` (`auto self = shared_from_this();`) in **every** handler to keep the connection alive.
 
 ```cpp
 class connection : public std::enable_shared_from_this<connection> {
@@ -34,6 +34,7 @@ class connection : public std::enable_shared_from_this<connection> {
     std::deque<std::string> outbox_;
     bool writing_ = false;
     char buf_[1024];
+    // Bound outbox_ bytes/messages and terminate the connection on write errors.
 public:
     explicit connection(tcp::socket s)
         : socket_(std::move(s)), strand_(asio::make_strand(socket_.get_executor())) {}

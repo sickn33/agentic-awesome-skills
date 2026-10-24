@@ -7,22 +7,22 @@ Importado por todos os outros scripts.
 from __future__ import annotations
 
 import re
+import os
+import math
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
 # -- Paths --------------------------------------------------------------------
 ROOT_DIR = Path(__file__).resolve().parent.parent
 SCRIPTS_DIR = ROOT_DIR / "scripts"
-DATA_DIR = ROOT_DIR / "data"
+DATA_DIR = Path(os.environ.get("SKILL_SENTINEL_STATE_DIR", Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local" / "state")) / "skill-sentinel"))
 REPORTS_DIR = DATA_DIR / "reports"
 DB_PATH = DATA_DIR / "sentinel.db"
 
 # Raiz do ecossistema de skills
-SKILLS_ROOT = ROOT_DIR.parent
+SKILLS_ROOT = Path(os.environ.get("SKILL_SENTINEL_ROOT", ROOT_DIR.parent))
 
-# Garante que diretorios existem
-DATA_DIR.mkdir(parents=True, exist_ok=True)
-REPORTS_DIR.mkdir(parents=True, exist_ok=True)
+# Imports do not create directories; state is initialized only for an explicit operation.
 
 # -- Skill Discovery ----------------------------------------------------------
 # Locais onde skills podem estar (relativo a SKILLS_ROOT)
@@ -62,8 +62,10 @@ SCORE_LABELS: List[Tuple[int, int, str]] = [
 
 def get_score_label(score: float) -> str:
     """Retorna label textual para um score numerico."""
+    if not isinstance(score, (int, float)) or not math.isfinite(score) or not 0 <= score <= 100:
+        return "Desconhecido"
     for low, high, label in SCORE_LABELS:
-        if low <= score <= high:
+        if low <= score < high + 1:
             return label
     return "Desconhecido"
 
@@ -93,7 +95,7 @@ SECRET_PATTERNS: List[re.Pattern] = [
 
 # Padroes que sao excepcoes conhecidas (nao sao secrets reais)
 SECRET_EXCEPTIONS: List[str] = [
-    "546c25a59c58ad7",  # Imgur public anonymous upload key
+    # No substring exceptions: an unrelated public ID must not hide another secret.
 ]
 
 SQL_INJECTION_PATTERNS: List[re.Pattern] = [

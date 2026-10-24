@@ -1,5 +1,7 @@
 # 2slides Presentation Generation - Detailed Guide
 
+Review update 2026-10-23: API/pricing examples below are a historical snapshot; verify the current [API](https://2slides.com/api.md) and [pricing](https://2slides.com/pricing) before billable calls. Subscription credits and purchased-package credits have different expiry rules. No live generation was tested.
+
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
 ## Overview
@@ -26,7 +28,7 @@ read -r -s SLIDES_2SLIDES_API_KEY
 export SLIDES_2SLIDES_API_KEY
 ```
 
-4. **Install Script Dependencies:** From this skill directory, install the pinned local requirements before using the Python scripts:
+4. **Install Script Dependencies:** From this skill directory, review and resolve the minimum-version local requirements in an isolated environment (these are not a lockfile) before using the Python scripts:
 
 ```bash
 python -m pip install -r requirements.txt
@@ -208,7 +210,7 @@ python scripts/generate_slides.py \
 
 **Step 3: Handle Results**
 
-This mode always runs synchronously and returns:
+Sync mode returns completed results; async mode returns a job to poll:
 ```json
 {
   "slideUrl": "https://2slides.com/workspace?jobId=...",
@@ -685,7 +687,7 @@ And more: Arabic, Portuguese, Indonesian, Russian, Hindi, Vietnamese, Turkish, P
 
 ## Script Parameter Reference (2slides API)
 
-All scripts accept parameters that match [2slides API](https://2slides.com/api.md). Allowed values are defined in `scripts/api_constants.py` and enforced where applicable.
+The scripts implement a subset of parameters from [2slides API](https://2slides.com/api.md). Allowed values are defined in `scripts/api_constants.py` and enforced where applicable.
 
 | Script | Key parameters | Allowed values (see script `--help` or api_constants.py) |
 |--------|----------------|----------------------------------------------------------|

@@ -2,9 +2,6 @@
 <html lang="ru"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>QA Review — пример отчёта</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Russo+One&display=swap">
 <style>
 :root{
   --page:#FFFFFF; --band:#D5DEE7; --chip:#F4F4F4;
@@ -393,8 +390,9 @@ h1,h2,h3,h4{margin:0;text-wrap:balance}
 
 <script>
 function bugFilter(sev, btn){
-  document.querySelectorAll('.tblbtn').forEach(function(b){ b.classList.remove('active'); });
+  document.querySelectorAll('.tblbtn').forEach(function(b){ b.classList.remove('active'); b.setAttribute('aria-pressed','false'); });
   btn.classList.add('active');
+  btn.setAttribute('aria-pressed','true');
   document.querySelectorAll('#bugtbody tr').forEach(function(row){
     row.classList.toggle('hide', sev !== 'all' && row.dataset.sev !== sev);
   });

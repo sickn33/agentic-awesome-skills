@@ -1,0 +1,103 @@
+{
+  "schema_version": "2.1",
+  "session_config": {
+    "working_language": "en",
+    "canonical_identifiers": "en",
+    "fallback_language": "en"
+  },
+  "review_id": "live-coding-review-001",
+  "goal": "Add one visible save-state label to the existing note editor header so editors know whether they can leave safely.",
+  "stage": "prototype",
+  "combined_verdict": "continue",
+  "actor_boundary": {
+    "target_population": [
+      "Workspace editors drafting internal notes"
+    ],
+    "operator": "Workspace editor",
+    "beneficiary": "Workspace editor",
+    "machine_actor": "Repository-aware coding agent",
+    "affected_people": [
+      "Workspace editors",
+      "Support team"
+    ],
+    "excluded_groups": [
+      "External collaborators",
+      "Public note viewers"
+    ]
+  },
+  "product_organization": {
+    "organization": "Example Notes Co.",
+    "project_owner": "Editor experience team",
+    "issuer": "Example Notes Co."
+  },
+  "stakeholder_effects": [
+    {
+      "stakeholder": "Workspace editors",
+      "effect": "They get clearer save-state feedback before leaving the editor."
+    },
+    {
+      "stakeholder": "Support team",
+      "effect": "They may receive fewer avoidable questions about whether notes were saved."
+    }
+  ],
+  "human_judgment_boundary": {
+    "human_owned_decisions": [],
+    "machine_supported_inputs": [
+      "Support ticket pattern",
+      "Session replay observation"
+    ],
+    "not_mechanized": [],
+    "approval_gates": []
+  },
+  "unresolved_assumptions": [
+    "The confusion comes from unclear save-state feedback rather than a real save failure.",
+    "A header label is noticeable enough without changing the editor workflow."
+  ],
+  "scope": [
+    "Add one visible save-state label to the existing note editor header.",
+    "Use the current save state already available to the editor UI.",
+    "Add or preserve a measurement hook that can compare exit hesitation and save-state support-tag volume."
+  ],
+  "non_goals": [
+    "Do not change save persistence.",
+    "Do not change permissions.",
+    "Do not add notifications, external delivery, or background jobs.",
+    "Do not redesign the editor header beyond the save-state label."
+  ],
+  "acceptance_criteria": [
+    "The label is visible in the editor header while a note is being edited.",
+    "The label wording does not imply guarantees beyond existing save behavior.",
+    "Existing save behavior, permissions, and external actions remain unchanged.",
+    "The change can be reversed by removing the label and measurement hook."
+  ],
+  "measurement_hooks": [
+    "Compare editor close hesitation before and after the label.",
+    "Track support conversations tagged editor-save-state for the next review.",
+    "Classify post-build feedback as behavior, quote, support pattern, counter-signal, or scope-change trigger."
+  ],
+  "evidence_snapshot_ids": [
+    "lc-support-save-state-001",
+    "lc-replay-exit-hesitation-001"
+  ],
+  "rollback_plan": "Remove the save-state label and any label-specific measurement hook; keep the existing editor save behavior unchanged.",
+  "human_approval_gates": [],
+  "high_risk_actions": [],
+  "stop_conditions": [
+    "The implementation requires persistence, permission, notification, or external delivery changes.",
+    "A new stakeholder group is affected by the label.",
+    "The label implies a stronger save guarantee than the product can support."
+  ],
+  "execution_boundary": {
+    "may_do": [
+      "Add one visible save-state label to the existing note editor header.",
+      "Use the current save state already available to the editor UI.",
+      "Add or preserve a measurement hook that can compare exit hesitation and save-state support-tag volume."
+    ],
+    "must_not_do": [
+      "expand scope or execute external irreversible actions"
+    ],
+    "must_ask": [
+      "new stakeholder, data, risk, or scope appears"
+    ]
+  }
+}

@@ -64,7 +64,7 @@ contract SecureBank {
 **Alternative: ReentrancyGuard**
 
 ```solidity
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 contract SecureBank is ReentrancyGuard {
     mapping(address => uint256) public balances;
@@ -113,21 +113,7 @@ contract SecureToken {
 }
 ```
 
-**For Solidity < 0.8.0, use SafeMath:**
-
-```solidity
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-
-contract SecureToken {
-    using SafeMath for uint256;
-    mapping(address => uint256) public balances;
-
-    function transfer(address to, uint256 amount) public {
-        balances[msg.sender] = balances[msg.sender].sub(amount);
-        balances[to] = balances[to].add(amount);
-    }
-}
-```
+Legacy contracts below Solidity 0.8 need a separately pinned compiler-compatible arithmetic library and explicit migration review. OpenZeppelin 5.x requires modern Solidity and does not provide the legacy SafeMath path; do not mix the versions shown in older examples.
 
 ### 3. Access Control
 
@@ -151,6 +137,7 @@ contract VulnerableContract {
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract SecureContract is Ownable {
+    constructor(address initialOwner) Ownable(initialOwner) {}
     function withdraw(uint256 amount) public onlyOwner {
         payable(owner()).transfer(amount);
     }
@@ -191,11 +178,12 @@ contract VulnerableDEX {
 
 ```solidity
 contract SecureDEX {
-    mapping(bytes32 => bool) public usedCommitments;
+    mapping(address => mapping(bytes32 => uint256)) public committedAt;
 
     // Step 1: Commit to trade
     function commitTrade(bytes32 commitment) public {
-        usedCommitments[commitment] = true;
+        require(committedAt[msg.sender][commitment] == 0, "Already committed");
+        committedAt[msg.sender][commitment] = block.number;
     }
 
     // Step 2: Reveal trade (next block)
@@ -204,10 +192,12 @@ contract SecureDEX {
         uint256 minOutput,
         bytes32 secret
     ) public {
-        bytes32 commitment = keccak256(abi.encodePacked(
-            msg.sender, amount, minOutput, secret
+        bytes32 commitment = keccak256(abi.encode(
+            address(this), block.chainid, msg.sender, amount, minOutput, secret
         ));
-        require(usedCommitments[commitment], "Invalid commitment");
+        uint256 committedBlock = committedAt[msg.sender][commitment];
+        require(committedBlock != 0 && block.number > committedBlock, "Missing or same-block commitment");
+        delete committedAt[msg.sender][commitment]; // consume before any interaction
         // Perform swap
     }
 }
@@ -252,7 +242,8 @@ contract SecurePayment {
         require(amount > 0, "Nothing to withdraw");
 
         pendingWithdrawals[msg.sender] = 0;
-        payable(msg.sender).transfer(amount);
+        (bool success, ) = msg.sender.call{value: amount}("");
+        require(success, "Transfer failed");
     }
 }
 
@@ -271,6 +262,8 @@ contract RiskyPayment {
 
 ```solidity
 contract SecureContract {
+    mapping(address => uint256) public balances;
+
     function transfer(address to, uint256 amount) public {
         // Validate inputs
         require(to != address(0), "Invalid recipient");
@@ -288,9 +281,12 @@ contract SecureContract {
 ### Emergency Stop (Circuit Breaker)
 
 ```solidity
-import "@openzeppelin/contracts/security/Pausable.sol";
+import "@openzeppelin/contracts/utils/Pausable.sol";
+
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract EmergencyStop is Pausable, Ownable {
+    constructor(address initialOwner) Ownable(initialOwner) {}
     function criticalFunction() public whenNotPaused {
         // Function logic
     }
@@ -406,52 +402,16 @@ contract SecurityChecklist {
 
 ## Testing for Security
 
-```javascript
-// Hardhat test example
-const { expect } = require("chai");
-const { ethers } = require("hardhat");
+The earlier Hardhat test referenced an absent attacker contract and deposit method, mixed ethers v5/v6 APIs, used an out-of-scope signer and asserted an OpenZeppelin v4 revert string against modern contracts. It was not an executable regression test. Build a local test fixture for the selected exact contract/compiler/OpenZeppelin/Hardhat/ethers versions, then verify:
 
-describe("Security Tests", function () {
-  it("Should prevent reentrancy attack", async function () {
-    const [attacker] = await ethers.getSigners();
+- deposits and successful withdrawals preserve the accounting invariant;
+- adversarial callback/reentry cannot withdraw more than the recorded entitlement;
+- unauthorized callers fail with the installed version’s actual custom error;
+- insufficient balances and boundary arithmetic revert for the intended reason;
+- commit reveal rejects same-block reveal, another caller and replay, and consumes before interactions;
+- pause/resume roles and upgrade/storage-layout invariants match the threat model.
 
-    const VictimBank = await ethers.getContractFactory("SecureBank");
-    const bank = await VictimBank.deploy();
-
-    const Attacker = await ethers.getContractFactory("ReentrancyAttacker");
-    const attackerContract = await Attacker.deploy(bank.address);
-
-    // Deposit funds
-    await bank.deposit({ value: ethers.utils.parseEther("10") });
-
-    // Attempt reentrancy attack
-    await expect(
-      attackerContract.attack({ value: ethers.utils.parseEther("1") }),
-    ).to.be.revertedWith("ReentrancyGuard: reentrant call");
-  });
-
-  it("Should prevent integer overflow", async function () {
-    const Token = await ethers.getContractFactory("SecureToken");
-    const token = await Token.deploy();
-
-    // Attempt overflow
-    await expect(token.transfer(attacker.address, ethers.constants.MaxUint256))
-      .to.be.reverted;
-  });
-
-  it("Should enforce access control", async function () {
-    const [owner, attacker] = await ethers.getSigners();
-
-    const Contract = await ethers.getContractFactory("SecureContract");
-    const contract = await Contract.deploy();
-
-    // Attempt unauthorized withdrawal
-    await expect(contract.connect(attacker).withdraw(100)).to.be.revertedWith(
-      "Ownable: caller is not the owner",
-    );
-  });
-});
-```
+Use deterministic fixtures, fuzzing and invariant testing. No deployed funds or mainnet calls are required to test these patterns.
 
 ## Audit Preparation
 
@@ -522,3 +482,9 @@ contract WellDocumentedContract {
 5. **Missing Events**: Emit events for state changes
 6. **Excessive Gas in Loops**: Can hit block gas limit
 7. **No Upgrade Path**: Consider proxy patterns if upgrades needed
+
+## Version and scope limits
+
+Independent teaching fragments, not deployable audited contracts. Modern examples assume a pinned compatible Solidity 0.8.x compiler and OpenZeppelin 5.x; add project-approved SPDX metadata without inventing a source license. Duplicate contract names belong in separate files. Balance examples omit funding/token-standard behavior; custom admins need a controlled initialization/grant/revoke design. Commit/reveal here demonstrates ownership, delay and one-time consumption only; actual trading needs escrow, expiry, settlement, slippage/deadline and griefing analysis and remains exposed to MEV. Logs cannot be read by contracts as a storage substitute; storage packing and integer gas costs depend on access patterns/compiler. Listed references/assets/scripts are absent from this package. No security, gas-saving or audit result is established by the snippets.
+
+Primary version references: [OpenZeppelin utils](https://docs.openzeppelin.com/contracts/5.x/api/utils), [access control](https://docs.openzeppelin.com/contracts/5.x/access-control).

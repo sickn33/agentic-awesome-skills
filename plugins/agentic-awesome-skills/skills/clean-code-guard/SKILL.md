@@ -25,7 +25,7 @@ Use this skill when reviewing generated or changed code before it ships. Activat
 This is a portable instruction skill. It requires no MCP server, network access,
 API key, shell command, local executable, or bundled script. It can be used in
 any runtime that supports `SKILL.md` plus directly linked [references/](references/)
-files; `agents/openai.yaml` is lightweight display metadata.
+files. This bundle contains no runtime helper or host metadata file.
 
 This skill does not replace project linters, formatters, type checkers, or test
 runners. Use the project's own tools for mechanical verification; use this skill
@@ -52,7 +52,7 @@ The reference files are:
 - [references/comments-and-formatting.md](references/comments-and-formatting.md) — when to comment, when to delete, matching neighbor style.
 - [references/solid.md](references/solid.md) — SRP, OCP, LSP, ISP, DIP with the modern phrasings and detection smells.
 - [references/dry-kiss-yagni.md](references/dry-kiss-yagni.md) — knowledge vs code duplication, Sandi Metz's re-inline rule, McCabe complexity, Fowler's YAGNI cost categories.
-- [references/ai-failure-modes.md](references/ai-failure-modes.md) — the 14 systematic ways LLMs produce bad code. **Read this one first if you are an AI agent reading this skill.** It is the highest-leverage file in the skill.
+- [references/ai-failure-modes.md](references/ai-failure-modes.md) — the 15 systematic ways LLMs produce bad code. **Read this one first if you are an AI agent reading this skill.** It is the highest-leverage file in the skill.
 - [references/review-checklist.md](references/review-checklist.md) — structured walk-through for review mode.
 - [references/sources.md](references/sources.md) — central bibliography for source URLs. Read it only when you need to verify or cite an external source.
 
@@ -74,17 +74,17 @@ This skill is working when code-writing tasks avoid the listed failure modes,
 code-review tasks produce prioritized findings with concrete evidence, and
 refactors preserve behavior unless the user explicitly asks for a behavior
 change. It should stay silent for conceptual, CI, git workflow, prose, data
-analysis, and test-running tasks covered by the frontmatter exclusions.
+analysis, and test-running tasks covered by the scope exclusions below.
 
 ## Why this skill exists
 
 LLM-generated code has measurable, systematic failure modes that generic "follow clean code" instructions do not catch. Examples backed by published research:
 
-- **Code duplication grew 8x** in tracked codebases between 2021 and 2024 (GitClear 2025 report).
-- **Package hallucination rate averages 19.6%** across 16 models (Spracklen et al., USENIX Security '25).
+- GitClear reports increased copy/paste and cloning in its observational code-change dataset; this does not establish that AI caused each change.
+- Spracklen et al. measured package hallucinations across 16 models; the paper reports at least 5.2% for commercial and 21.7% for open-source models in its tested setting.
 - LLMs often wrap risky operations in broad catch-all handlers that swallow errors (Karpathy).
 - AI agents **"declare success despite failing tests"** by returning hardcoded fixture values (Fowler, Patterns for Reducing Friction).
-- Function size grew from 142 to 267 LoC, cyclomatic complexity from 4.2 to 8.1 in AI-assisted commits (GitClear).
+- Do not infer a particular function-size or complexity increase without checking the underlying metric and study population.
 
 The classic principles (Clean Code, SOLID, DRY/KISS/YAGNI) are still the foundation — but this skill adds the *AI-specific* layer most rule packs miss.
 
@@ -174,11 +174,20 @@ Refer them to the source name in the relevant [references/](references/) file an
 - If a rule conflicts with an explicit project convention, follow the project
   convention and document the exception only when it would otherwise surprise a
   future maintainer.
-- If the skill feels too broad, use the frontmatter exclusions first; do not add
+- If the skill feels too broad, use the scope exclusions below first; do not add
   runtime-specific rules to this general guard skill.
 
 ## What this skill does not do
 
 - Run linters or static analysis. Those are tool-level concerns; this skill is about *what to write* and *what to look for*.
 - Enforce language-specific formatter or linter preferences. Defer to the project's style tooling.
-- Replace tests. Clean code passes tests; tests do not pass without clean code, but clean code without tests is also a defect.
+- Replace tests. Passing tests does not prove maintainability, and maintainable-looking code can still be incorrect.
+
+## Limitations
+
+These numeric cutoffs and style imperatives are review heuristics, not universal
+correctness criteria or research-established safety limits. Respect project
+contracts and documented API conventions. An uncalled exported entry point may
+be used externally; verify consumers before deleting it. Preserve license and
+provenance comments. Do not execute an untrusted package merely to inspect its
+API; prefer static source and versioned documentation.

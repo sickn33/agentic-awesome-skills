@@ -21,6 +21,12 @@ documentation, changelog and configuration walkthroughs.
 rclone [flags]
 ```
 
+This is a bundled upstream help snapshot, not an inventory of every installed
+build. Confirm flags and defaults with `rclone help` and the relevant backend
+help before use. Password/key/token flags describe supported inputs; prefer
+interactive configuration or a protected secret source over real secrets in
+shell history or process arguments. Obscuring is reversible, not encryption.
+
 ## Options
 
 ```
@@ -793,7 +799,7 @@ rclone [flags]
       --rc-client-ca string                                 Client certificate authority to verify clients with
       --rc-enable-metrics                                   Enable the Prometheus metrics path at the remote control server
       --rc-files string                                     Path to local files to serve on the HTTP server
-      --rc-htpasswd string                                  A htpasswd file - if not provided no authentication is done
+      --rc-htpasswd string                                  Authentication password file (other RC authentication options also apply)
       --rc-job-expire-duration Duration                     Expire finished async jobs older than this value (default 1m0s)
       --rc-job-expire-interval Duration                     Interval to check for expired async jobs (default 10s)
       --rc-key string                                       TLS PEM Private key

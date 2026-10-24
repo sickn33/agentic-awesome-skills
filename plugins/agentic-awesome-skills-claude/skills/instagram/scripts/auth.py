@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import getpass
 import hmac
 import html
 import json
@@ -285,7 +286,7 @@ async def auto_refresh_if_needed(account_id: Optional[int] = None) -> Optional[s
             print(f"Token renovado. Nova expiração: {new_expires[:10]}")
             return new_token
         except Exception as e:
-            print(f"AVISO: Falha ao renovar token: {e}")
+            print(f"AVISO: Falha ao renovar token ({type(e).__name__}); reautorização pode ser necessária")
             return token
 
     return token
@@ -305,7 +306,7 @@ async def setup() -> None:
 
     # App credentials
     app_id = os.environ.get("INSTAGRAM_APP_ID") or input("App ID: ").strip()
-    app_secret = os.environ.get("INSTAGRAM_APP_SECRET") or input("App Secret: ").strip()
+    app_secret = os.environ.get("INSTAGRAM_APP_SECRET") or getpass.getpass("App Secret: ").strip()
 
     if not app_id or not app_secret:
         print("ERRO: App ID e App Secret são obrigatórios.")
@@ -375,7 +376,7 @@ async def setup() -> None:
     print(f"  Token expira: {expires_at[:10]}")
     print(f"  Account ID (interno): {account_id}")
     print()
-    print("Pronto! Use 'python scripts/status.py' para verificar.")
+    print("Pronto! Use 'python scripts/auth.py --status' para verificar.")
 
 
 async def show_status() -> None:
@@ -411,7 +412,7 @@ async def do_refresh() -> None:
     """Força renovação do token."""
     token = await auto_refresh_if_needed()
     if token:
-        print("Token renovado com sucesso.")
+        print("Token local disponível; verifique a validade/expiração. Renovação não é garantida.")
         await show_status()
     else:
         print("Nenhuma conta configurada para renovar.")
@@ -423,7 +424,7 @@ def main():
     group.add_argument("--setup", action="store_true", help="Configuração inicial completa")
     group.add_argument("--refresh", action="store_true", help="Renovar token")
     group.add_argument("--status", action="store_true", help="Ver status do token")
-    group.add_argument("--revoke", action="store_true", help="Revogar token (desativar conta)")
+    group.add_argument("--revoke", action="store_true", help="Desativar conta localmente (não revoga token na Meta)")
     args = parser.parse_args()
 
     if args.setup:
@@ -435,7 +436,8 @@ def main():
     elif args.revoke:
         account = db.get_active_account()
         if account:
-            db._connect().execute("UPDATE accounts SET is_active = 0 WHERE id = ?", [account["id"]])
+            with db._connect() as conn:
+                conn.execute("UPDATE accounts SET is_active = 0 WHERE id = ?", [account["id"]])
             print(f"Conta @{account['username']} desativada.")
         else:
             print("Nenhuma conta ativa para revogar.")

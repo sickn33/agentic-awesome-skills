@@ -28,7 +28,7 @@ fig, axes = plt.subplots(2, 2, figsize=(12, 10))
 **Key Attributes:**
 - `fig.axes` - List of all axes in the figure
 - `fig.dpi` - Resolution in dots per inch
-- `fig.figsize` - Figure dimensions in inches (width, height)
+- `fig.get_size_inches()` / `fig.set_size_inches(width, height)` - Figure dimensions in inches (width, height)
 
 ### Axes
 
@@ -56,7 +56,7 @@ ax = fig.add_subplot(111)  # Alternative method
 
 **Statistical plots:**
 - `ax.hist(data, bins=10, density=False)` - Histogram
-- `ax.boxplot(data, labels=None)` - Box plot
+- `ax.boxplot(data, tick_labels=None)` - Box plot
 - `ax.violinplot(data)` - Violin plot
 
 **2D plots:**
@@ -258,7 +258,7 @@ plt.rcParams['savefig.bbox'] = 'tight'
 plt.rcParams['axes.labelsize'] = 14
 plt.rcParams['axes.titlesize'] = 16
 plt.rcParams['axes.grid'] = True
-plt.rcParams['axes.grid.alpha'] = 0.3
+plt.rcParams['grid.alpha'] = 0.3
 
 # Line settings
 plt.rcParams['lines.linewidth'] = 2

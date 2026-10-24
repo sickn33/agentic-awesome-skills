@@ -107,7 +107,7 @@ struct BrutalistView: View {
     }
 }
 ```
-- Avoid all native `ButtonStyle` components. Use `Text` with `.underline()` mapped to system blue.
+- Style semantic `Button` and `Link` controls to look raw; underlined `Text` alone does not provide button or navigation behavior.
 - Use `.border(Color.black, width: 1)` instead of backgrounds or shadows.
 - Force monospace fonts like Courier New or Menlo.
 
@@ -164,7 +164,7 @@ class BrutalistScreen extends StatelessWidget {
   }
 }
 ```
-- Avoid `ElevatedButton`, `Card`, or `AppBar`.
+- Prefer semantic buttons with custom raw styling; a GestureDetector alone requires explicit focus, keyboard and accessibility support.
 - Build UI out of raw `Container`s with `Border.all(color: Colors.black)` and `Text` widgets.
 - Use `TextDecoration.underline` to indicate interactivity.
 
@@ -259,7 +259,7 @@ fun BrutalistScreen() {
 ```
 - Use `BasicText` instead of `Text` to bypass Material theme defaults.
 - Build structural lines using `Box` with `.background(Color.Black)`.
-- **Do not** use `Button` or `Card` or any Material composables. Raw layouts only.
+- Use semantic controls with raw styling. Retain button roles, keyboard activation, focus and feedback.
 
 ## Do's and Don'ts
 - **DO**: Use harsh, high-contrast borders (1px solid black) around everything.

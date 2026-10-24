@@ -1,6 +1,9 @@
 # Schema do Banco de Dados - Sentinel
 
-Banco: `data/sentinel.db` (SQLite, WAL mode)
+> Catalog review: exemplos e scores consultivos, nao prova de seguranca, cobertura total, conformidade ou autoridade de merge. Nomes e palavras-chave exigem confirmacao semantica; a ausencia de um sinal pode ser falso negativo. Estado privado fica fora da skill instalada.
+
+
+Banco: `$SKILL_SENTINEL_STATE_DIR/sentinel.db` ou diretorio XDG privado (SQLite, WAL mode)
 
 ## Tabelas
 

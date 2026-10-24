@@ -46,6 +46,8 @@ async function main() {
     config.listenQueues = [gpuQueue];
   } else if (workerType === "cpu") {
     config.listenQueues = [cpuQueue];
+  } else {
+    throw new Error("WORKER_TYPE must be cpu or gpu");
   }
 
   DBOS.setConfig(config);

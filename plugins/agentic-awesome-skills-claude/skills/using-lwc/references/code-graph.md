@@ -1,3 +1,4 @@
+<!-- Modified for AAS individual review: scope, consent, recovery and factual guidance corrected; upstream attribution retained. -->
 # LWC CodeGraph Index
 
 ## Use when

@@ -1,8 +1,12 @@
 ---
 title: "Machine learning | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/machine-learning
+---
 
 # Machine learning
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
 
 Machine learning enables apps and games to learn from data and usage patterns, letting you improve existing experiences and create engaging new ones.
 
@@ -350,7 +354,7 @@ An important part of the design process is to identify the scenarios where limit
 
   * As people interact with the feature, provide feedback on their actions to guide them towards a result without overwhelming them. For example, while people are interacting with Animoji, the feature responds to current conditions and suggests how people can improve their results by adjusting the lighting or moving closer to the camera.
 
-  * Suggest alternative ways to accomplish the goal instead of showing no results. To do this successfully, you need to understand the goal well enough to suggest alternatives that make sense. For example, if people ask Siri to set a timer on a Mac, Siri suggests setting a reminder instead, because timers aren’t available in macOS. This suggestion makes sense because people’s goal is to receive an alert at a certain time.
+  * Suggest alternative ways to accomplish the goal instead of showing no results. To do this successfully, you need to understand the goal well enough to suggest alternatives that make sense. Choose fallbacks based on actual current platform capabilities. The older example that macOS has no timers is obsolete: [Clock on Mac supports timers](https://support.apple.com/guide/clock-mac/apdw3d5aebf9/mac). Do not replace an available timer with a reminder merely because this snapshot once described that limitation.
 
 
 

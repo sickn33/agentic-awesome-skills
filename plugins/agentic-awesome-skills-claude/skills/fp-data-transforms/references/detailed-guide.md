@@ -215,7 +215,7 @@ const found = pipe(
 ); // Option<User>
 
 // Partition into two groups
-const [inactive, active] = pipe(
+const { left: inactive, right: active } = pipe(
   users,
   A.partition(user => user.isActive)
 );
@@ -320,6 +320,8 @@ const sanitizeForLogging = omit<User, 'passwordHash' | 'internalNotes'>([
 ```
 
 **Honest assessment**: For one-off omits, destructuring (the imperative approach) is perfectly fine and very readable. The functional `omit` utility pays off when you have many such transformations or need to compose them.
+
+Spreads preserve explicitly supplied `undefined` values, so the spread examples are not equivalent to the fallback examples for that input. Validate settings and omit undefined overrides before merging; examples assume validated non-undefined fields.
 
 ### Merge: Combine Objects
 
@@ -489,12 +491,15 @@ const updateTheme = (state: State, newTheme: string): State => ({
   },
 });
 
+// Illustrative helper for trusted, existing plain-object paths only.
+// Reject __proto__, constructor and prototype path segments; do not use on arrays.
 // With a lens-like helper
 const updatePath = <T, V>(
   obj: T,
   path: string[],
   value: V
 ): T => {
+  if (path.some(k => ["__proto__", "constructor", "prototype"].includes(k))) throw new Error("Unsafe path");
   if (path.length === 0) return value as unknown as T;
 
   const [head, ...rest] = path;
@@ -515,6 +520,8 @@ const newState = updatePath(state, ['user', 'profile', 'settings', 'theme'], 'da
 ## 3. Data Normalization
 
 API responses rarely match the shape your app needs. Normalization transforms nested, denormalized data into flat, indexed structures.
+
+The normalization below is a simplified product index: it does not preserve order-line quantity or historical unit price. For an order system, store separate line-item records linked to each order. Validate incoming data at the boundary, deduplicate order IDs, and use own-property checks or `Map` for arbitrary external keys.
 
 ### API Response to App State
 
@@ -769,7 +776,7 @@ interface Order {
 }
 
 function groupByCustomer(orders: Order[]): Record<string, Order[]> {
-  const result: Record<string, Order[]> = {};
+  const result: Record<string, Order[]> = Object.create(null);
 
   for (const order of orders) {
     if (!result[order.customerId]) {
@@ -794,10 +801,10 @@ const groupBy = <T, K extends string | number>(
       const key = getKey(item);
       return {
         ...groups,
-        [key]: [...(groups[key] || []), item],
+        [key]: [...(Object.hasOwn(groups, key) ? groups[key] : []), item],
       };
     },
-    {} as Record<K, T[]>
+    Object.create(null) as Record<K, T[]>
   );
 
 // Usage
@@ -816,7 +823,7 @@ import { pipe } from 'fp-ts/function';
 
 // NEA.groupBy guarantees non-empty arrays in result
 const ordersByCustomer = pipe(
-  orders as NEA.NonEmptyArray<Order>, // Must be non-empty
+  orders, // groupBy accepts an ordinary array; each produced group is non-empty
   NEA.groupBy(order => order.customerId)
 ); // Record<string, NonEmptyArray<Order>>
 ```
@@ -829,7 +836,7 @@ const ordersByCustomer = pipe(
 
 ```typescript
 function countByStatus(orders: Order[]): Record<string, number> {
-  const counts: Record<string, number> = {};
+  const counts: Record<string, number> = Object.create(null);
 
   for (const order of orders) {
     counts[order.status] = (counts[order.status] || 0) + 1;
@@ -851,10 +858,10 @@ const countBy = <T, K extends string>(
       const key = getKey(item);
       return {
         ...counts,
-        [key]: (counts[key] || 0) + 1,
+        [key]: (Object.hasOwn(counts, key) ? counts[key] : 0) + 1,
       };
     },
-    {} as Record<K, number>
+    Object.create(null) as Record<K, number>
   );
 
 // Usage
@@ -876,7 +883,7 @@ interface Sale {
 }
 
 function sumByCategory(sales: Sale[]): Record<string, number> {
-  const totals: Record<string, number> = {};
+  const totals: Record<string, number> = Object.create(null);
 
   for (const sale of sales) {
     totals[sale.category] = (totals[sale.category] || 0) + sale.amount;
@@ -899,10 +906,10 @@ const sumBy = <T, K extends string>(
       const key = getKey(item);
       return {
         ...totals,
-        [key]: (totals[key] || 0) + getValue(item),
+        [key]: (Object.hasOwn(totals, key) ? totals[key] : 0) + getValue(item),
       };
     },
-    {} as Record<K, number>
+    Object.create(null) as Record<K, number>
   );
 
 // Usage
@@ -1041,10 +1048,10 @@ import * as O from 'fp-ts/Option';
 import { pipe } from 'fp-ts/function';
 
 // Safe property access that returns Option
-const prop = <T, K extends keyof T>(key: K) =>
-  (obj: T | null | undefined): O.Option<T[K]> =>
-    obj != null && key in obj
-      ? O.some(obj[key] as T[K])
+const prop = <T extends object, K extends keyof T>(key: K) =>
+  (obj: T | null | undefined): O.Option<NonNullable<T[K]>> =>
+    obj != null && Object.prototype.hasOwnProperty.call(obj, key)
+      ? O.fromNullable(obj[key])
       : O.none;
 
 // Chain accesses with flatMap
@@ -1070,7 +1077,7 @@ import * as A from 'fp-ts/Array';
 import * as O from 'fp-ts/Option';
 import { pipe } from 'fp-ts/function';
 
-// Imperative: throws if array is empty
+// Direct access: returns undefined if the array is empty
 const first = items[0]; // Could be undefined!
 
 // Safe: returns Option

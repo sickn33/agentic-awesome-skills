@@ -15,7 +15,7 @@ kind: Template
 metadata:
   name: nodejs-service
   title: Node.js Microservice
-  description: Create a production-ready Node.js service with CI/CD, monitoring, and Kubernetes manifests.
+  description: Scaffold a Node.js service for environment-specific review with CI/CD, monitoring, and Kubernetes manifests.
   tags:
     - recommended
     - nodejs
@@ -171,7 +171,7 @@ metadata:
     backstage.io/kubernetes-id: orders-service
     backstage.io/kubernetes-namespace: team-commerce
     argocd/app-name: orders-service
-    pagerduty.com/integration-key: ${PAGERDUTY_KEY}
+    pagerduty.com/service-id: YOUR_SERVICE_ID  # never place routing secrets in catalog metadata
     grafana/dashboard-selector: "app=orders-service"
   tags:
     - nodejs
@@ -219,6 +219,8 @@ spec:
 ```
 
 ### TechDocs Configuration
+
+Build only trusted documentation in an isolated runner: MkDocs configuration can load Python plugins/tags. Separate read/publish roles and bucket permissions; never build untrusted PR docs with publishing credentials.
 
 ```yaml
 # mkdocs.yml (in the service repo root)
@@ -334,6 +336,8 @@ proxy:
 [Score](https://score.dev) provides a platform-agnostic workload specification so developers describe what they need, and the platform decides how to provision it.
 
 ### score.yaml
+
+Illustrative workload sketch: validate fields against the pinned Score schema and provisioner. Resource outputs are supplied by provisioners; the `properties` blocks below are not a portable output schema. Do not apply this as validated Score.
 
 ```yaml
 # score.yaml
@@ -454,6 +458,7 @@ variable "services" {
     name     = string
     port     = number
     replicas = number
+    database = optional(bool, false)
   }))
   description = "List of services to deploy"
 }
@@ -532,6 +537,8 @@ spec:
 
 ### Backstage Self-Service Action (Custom Plugin)
 
+Incomplete adapter sketch: authenticate the platform API, authorize the caller for the requested team/environment, validate all service fields server-side, use timeout/idempotency and poll asynchronous provisioning status. HTTP 2xx alone does not mean an environment is ready. This bundle does not implement the API, operator, modules, skeleton or ArgoCD action.
+
 ```typescript
 // plugins/platform-actions/src/actions/provision-environment.ts
 import { createTemplateAction } from '@backstage/plugin-scaffolder-node';
@@ -588,7 +595,7 @@ export const provisionEnvironmentAction = (config: Config) => {
       }
 
       const result = await response.json();
-      ctx.logger.info(`Environment ready: ${result.namespace}`);
+      ctx.logger.info(`Request accepted for namespace: ${result.namespace}`);
       ctx.output('namespace', result.namespace);
       ctx.output('dashboardUrl', result.dashboardUrl);
     },
@@ -600,6 +607,8 @@ export const provisionEnvironmentAction = (config: Config) => {
 
 
 ## 9. Platform Metrics
+
+The Prometheus rules below are illustrative proxy metrics, not DORA measurements: sync duration/failure is not commit-to-production lead time/change failure, and generic incident resolution is not necessarily failed-deployment recovery. Instrument production deployment IDs, commit timestamps and linked incidents before labeling results DORA. Missing telemetry and zero denominators are unknown, not zero. Names/labels require exporter verification.
 
 ### DORA Metrics Collection (Prometheus)
 
@@ -808,7 +817,7 @@ spec:
   parameters:
     allowedRegistries:
       - "myorg.azurecr.io/"
-      - "gcr.io/myorg-"
+      - "gcr.io/myorg/"
       - "public.ecr.aws/myorg/"
 ```
 
@@ -872,6 +881,8 @@ spec:
 ```
 
 ### Platform-Level Network Policies
+
+Requires a CNI that enforces NetworkPolicy. This is restricted ingress plus broad public HTTPS egress, not a complete default-deny policy; public 443 still permits exfiltration and cloud-service endpoints. Replace it with reviewed destinations/proxies as needed. Namespace labels must be platform-controlled; test DNS and same-namespace traffic with your actual CNI. Gatekeeper rules above inspect regular containers only: add init/ephemeral-container coverage and digest policy before claiming all images are controlled.
 
 ```yaml
 # network-policy-platform-defaults.yaml

@@ -18,7 +18,7 @@ tools: [claude, cursor, gemini]
 
 ## Overview
 
-CareJobs.Now is a free US healthcare job board. It reads the career sites of 270 hospitals, health systems, clinic groups and care companies every day, keeps 170,000+ open jobs current, and shows the hourly pay each employer posts. This skill answers US healthcare job and pay questions from that data and always gives the person a link where they can apply.
+CareJobs.Now is a US healthcare job board that aggregates employer postings and advertised pay. Coverage and opening counts change; read the dataset timestamp and current coverage rather than treating a historical employer/job count as current. This skill answers US healthcare job and pay questions from that data and always gives the person a link where they can apply.
 
 ## When to Use This Skill
 
@@ -44,7 +44,7 @@ Its tools:
 - `GET https://carejobs.now/pay.json`: `pay_by_work_type[]` with `label`, `median`, `typical_low`, `typical_high` (USD per hour) and `open_total`.
 - `GET https://carejobs.now/roles.json`: `totals` and `open_by_work_type[]`.
 
-Both are CORS-enabled, refreshed daily and licensed CC BY 4.0. Cite "CareJobs.Now" with a link.
+The provider documents both as CORS-enabled, nightly datasets licensed CC BY 4.0. Cite "CareJobs.Now" with a link and the returned `temporal_coverage`/`updated` value. `typical_low` is the 25th percentile of posting-range midpoints and `typical_high` the 90th-percentile advertised ceiling; they are not a conventional symmetric interval. These aggregate endpoints do not provide individual job listings or a state filter. See [dataset definitions](https://carejobs.now/data).
 
 ### Step 3: Answer
 
@@ -60,7 +60,7 @@ Both are CORS-enabled, refreshed daily and licensed CC BY 4.0. Cite "CareJobs.No
 
 ### Example 2: Pay question
 
-"What do respiratory therapists get paid in Ohio?" calls `get_healthcare_pay` for the kind of job, then reports the median and typical range for the state's posted pay.
+"What do respiratory therapists get paid in Ohio?" first inspects the installed tool schema for state filtering. Report Ohio results only if the returned data actually has that scope; otherwise state that the aggregate is national and search Ohio postings separately.
 
 ## Best Practices
 

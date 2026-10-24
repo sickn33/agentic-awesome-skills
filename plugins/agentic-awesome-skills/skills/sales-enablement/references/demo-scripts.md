@@ -92,13 +92,13 @@ Scene-by-scene templates for different call types, with timing, talk tracks, and
 **What to do:**
 - Summarize the 2-3 key pain points
 - Propose a specific next step with a date
-- Send a calendar invite before you hang up
+- Draft a calendar invite; send only with user authorization and agreed recipients
 
 ---
 
 ## First Demo Script
 
-**Duration:** 30-45 minutes
+**Duration:** 38 minutes as written; shorten scenes to fit a 30-minute booking
 **Goal:** Show how your product solves their specific pain. Advance to evaluation/pilot.
 
 ### Scene 1: Opening & Recap (5 min)
@@ -173,13 +173,13 @@ Show something they can't do today and can't get from competitors.
 - Propose a specific next step (not "let me know")
 - Identify additional stakeholders to involve
 - Set a follow-up date before ending the call
-- Send recap email within 2 hours
+- Draft a recap promptly; send only when authorized
 
 ---
 
 ## Technical Deep-Dive Script
 
-**Duration:** 45-60 minutes
+**Duration:** 53 minutes as written
 **Goal:** Satisfy technical evaluation criteria. Address architecture, security, and integration concerns.
 
 ### Scene 1: Opening (3 min)
@@ -208,7 +208,7 @@ Show something they can't do today and can't get from competitors.
 ### Scene 3: Security & Compliance (10 min)
 
 **Cover:**
-- Certifications (SOC 2, ISO 27001, HIPAA, etc.)
+- Verified security evidence: SOC 2 attestation/report scope, applicable ISO certification scope, and documented regulatory support; do not call SOC 2 or HIPAA a certification
 - Data encryption (at rest, in transit)
 - Access controls and authentication (SSO, RBAC)
 - Audit logging
@@ -263,7 +263,7 @@ Show something they can't do today and can't get from competitors.
 
 ## Executive Overview Script
 
-**Duration:** 20-30 minutes
+**Duration:** 22–27 minutes as written; add time or shorten the talk to reserve the promised 10-minute Q&A
 **Goal:** Get executive buy-in on the business case. Advance to budget approval or decision.
 
 ### Scene 1: Opening (2 min)

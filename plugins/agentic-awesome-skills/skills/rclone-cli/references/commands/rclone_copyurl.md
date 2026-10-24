@@ -48,7 +48,7 @@ If you can't get `rclone copyurl` to work then here are some things you can try:
 - `--disable-http2` rclone will use HTTP2 if available - try disabling it
 - `--bind 0.0.0.0` rclone will use IPv6 if available - try disabling it
 - `--bind ::0` to disable IPv4
-- `--user agent curl` - some sites have whitelists for curl's user-agent - try that
+- `--user-agent curl` - some sites have whitelists for curl's user-agent - try that
 - Make sure the site works with `curl` directly
 
 ```

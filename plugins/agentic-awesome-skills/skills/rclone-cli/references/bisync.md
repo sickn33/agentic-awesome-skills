@@ -27,8 +27,7 @@ section) before using, or data loss can result. Questions can be asked in the
   unnecessary files and directories from the sync.
 - Consider setting up the [--check-access](#check-access) feature
   for safety.
-- On Linux or Mac, consider setting up a [crontab entry](#cron). bisync can
-  safely run in concurrent cron jobs thanks to lock files it maintains.
+- On Linux or Mac, consider setting up a [crontab entry](#cron). lock files help prevent identical-pair overlap, but only when runs share the same workdir/lock namespace. Do not run overlapping sync trees or rely on host-local locks across machines.
 
 For example, your first command might look like this:
 
@@ -308,7 +307,7 @@ throughout your sync'd fileset. Recommended methods for **A)** include:
 
 - `rclone touch Path1/RCLONE_TEST` (create a new file)
 - `rclone copyto Path1/RCLONE_TEST Path2/RCLONE_TEST` (copy an existing file)
-- `rclone copy Path1/RCLONE_TEST Path2/RCLONE_TEST  --include "RCLONE_TEST"`
+- `rclone copy Path1 Path2 --include "RCLONE_TEST"`
 (copy multiple files at once, recursively)
 - create the files manually (outside of rclone)
 - run `bisync` once *without* `--check-access` to set matching files on both filesystems
@@ -658,7 +657,7 @@ separators.) To address this particular issue, an additional `{MacFriendlyTime}`
 (or just `{mac}`) option is supported, which results in `2006-01-02 0304PM`.
 
 Note that `--conflict-suffix` is entirely separate from rclone's main
-[`--sufix`](/docs/#suffix-string) flag. This is intentional, as users may wish
+[`--suffix`](/docs/#suffix-string) flag. This is intentional, as users may wish
 to use both flags simultaneously, if also using
 [`--backup-dir`](#backup-dir1-and-backup-dir2).
 
@@ -991,7 +990,7 @@ When bisync is running, a lock file is created in the bisync working directory,
 typically at `~/.cache/rclone/bisync/PATH1..PATH2.lck` on Linux.
 If bisync should crash or hang, the lock file will remain in place and block
 any further runs of bisync *for the same paths*.
-Delete the lock file as part of debugging the situation.
+Remove a lock file only after verifying its owner process is no longer running and no other host/run is modifying either tree; preserve listings/logs while diagnosing.
 The lock file effectively blocks follow-on (e.g., scheduled by *cron*) runs
 when the prior invocation is taking a long time.
 The lock file contains *PID* of the blocking process, which may help in debug.
@@ -1044,7 +1043,7 @@ expire on its own, if using `--max-lock`.)
 
 ### Supported backends
 
-Bisync is integration-tested against all rclone backends to verify compatibility.
+The upstream snapshot describes integration tests; no such runtime/backend tests were performed for this skill review. Consult current upstream results for your version and provider.
 Most backends (including all backends not listed below) are deemed fully
 supported with no known issues. Occasionally, however, these tests reveal issues
 with particular backends, usually related to a provider-specific limitation
@@ -1271,7 +1270,7 @@ below.
     - Disregard step 4.
 4. Exclude select directories:
     - Add more lines like in step 1.
-      For example: `-/Desktop/tempfiles/`, or `- /testdir/`.
+      For example: `- /Desktop/tempfiles/`, or `- /testdir/`.
       Again, a `**` on the end is not necessary.
     - Do *not* add a `- **` in the file. Without this line, everything
       will be included that has not been explicitly excluded.
@@ -1329,8 +1328,7 @@ to be synched with a network drive (Path2).
 
 Note also that Windows implements several "library" links such as
 `C:\Users\MyLogin\My Documents\My Music` pointing to `C:\Users\MyLogin\Music`.
-rclone sees these as links, so you must add `--links` to the
-bisync command line if you which to follow these links. I find that I get
+`--links` translates symlinks to/from .rclonelink objects; it does not follow targets. `--copy-links` follows supported symlinks and can include data outside the intended tree, so review scope and junction support before using it. I find that I get
 permission errors in trying to follow the links, so I don't include the
 rclone `--links` flag, but then you get lots of `Can't follow symlink…`
 noise from rclone about not following the links. This noise can be
@@ -1611,8 +1609,9 @@ type = dropbox
 
 [Dropcrypt]
 type = crypt
-remote = /path/to/DBoxroot/crypt          # on the Linux server
-remote = C:\Users\MyLogin\Dropbox\crypt   # on the Windows notebook
+# Linux example. On Windows use the Windows path instead, not a second remote key.
+remote = /path/to/DBoxroot/crypt
+# Windows alternative: C:\Users\MyLogin\Dropbox\crypt
 filename_encryption = standard
 directory_name_encryption = true
 password = ...
@@ -1634,7 +1633,7 @@ directory name, e.g.
 Tests will make a temporary folder on remote and purge it afterwards.
 If during test run there are intermittent errors and rclone retries,
 these errors will be captured and flagged as invalid MISCOMPAREs.
-Rerunning the test will let it pass. Consider such failures as noise.
+A rerun may pass, but preserve the original failure and investigate whether it reflects a real race or provider error; do not relabel unexplained failures as noise.
 
 ### Test command syntax
 
@@ -1772,7 +1771,7 @@ Your normal workflow might be as follows:
 7. Check the difference *carefully*!
 8. Commit the change (`git commit`) *only* if you are sure.
    If unsure, save your code changes then wipe the log diffs from git:
-   `git reset [--hard]`.
+   restore only the explicitly reviewed golden-result paths after preserving needed changes; do not use a repository-wide hard reset.
 
 ### Structure of test scenarios
 

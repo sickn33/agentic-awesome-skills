@@ -1,0 +1,127 @@
+{
+  "schema_version": "2.1",
+  "session_config": {
+    "working_language": "en",
+    "canonical_identifiers": "en",
+    "fallback_language": "en"
+  },
+  "review_id": "example-standard-001",
+  "product_direction": "Add scheduled CSV export to the reports page for team admins.",
+  "mode": "standard_gate",
+  "stage": "prototype",
+  "actor_boundary": {
+    "target_population": [
+      "Team admins who repeatedly export reports"
+    ],
+    "operator": "Team admin",
+    "beneficiary": "Reporting team",
+    "machine_actor": "Not applicable",
+    "affected_people": [
+      "Downstream report consumers"
+    ],
+    "excluded_groups": [
+      "Teams without recurring report export workflows"
+    ]
+  },
+  "product_organization": {
+    "organization": "Example Product Co.",
+    "project_owner": "Reporting team",
+    "issuer": "Example Product Co."
+  },
+  "stakeholder_effects": [
+    {
+      "stakeholder": "Downstream report consumers",
+      "effect": "Scheduled exports could change how recurring reporting work is coordinated."
+    }
+  ],
+  "human_judgment_boundary": {
+    "human_owned_decisions": [
+      "Whether recurring export is strategically worth building"
+    ],
+    "machine_supported_inputs": [
+      "Support tickets",
+      "Product logs"
+    ],
+    "not_mechanized": [
+      "Roadmap priority trade-off"
+    ],
+    "approval_gates": [
+      {
+        "gate_id": "product-owner-scheduling-build-approval",
+        "accountable_owner": "Product owner",
+        "condition": "Before any scheduling infrastructure build starts."
+      }
+    ]
+  },
+  "unresolved_assumptions": [
+    "Whether the request reflects a recurring workflow or one-off audits."
+  ],
+  "combined_verdict": "verify",
+  "weakest_flow": "evidence",
+  "strongest_signal": "Fourteen support tickets in one quarter ask for recurring report export.",
+  "riskiest_claim": "Admins will schedule exports instead of downloading manually.",
+  "main_uncertainty": "Whether the request reflects a recurring workflow or one-off audits.",
+  "confidence_level": "low",
+  "evidence_tier": "t1",
+  "main_trade_off": "Verify the recurring need before building scheduling infrastructure.",
+  "human_owned_decision": "none",
+  "human_decision_record_id": null,
+  "evidence_receipt_ids": [
+    "support-ticket-pattern-002"
+  ],
+  "reviews": {
+    "user": {
+      "verdict": "continue",
+      "evidence_tier": "t2",
+      "strongest_signal": "Admins already download the same report every week.",
+      "weakest_assumption": "The weekly download is done by the same person each time.",
+      "missing_evidence": "Who consumes the exported file downstream.",
+      "disconfirming_evidence": "Downloads are irregular one-off audit pulls.",
+      "stop_condition": "No admin can name a recurring consumer of the export."
+    },
+    "evidence": {
+      "verdict": "verify",
+      "evidence_tier": "t1",
+      "strongest_signal": "Ticket volume is consistent across three months.",
+      "weakest_assumption": "Ticket requests represent the broader admin base.",
+      "missing_evidence": "Product logs showing repeat manual export behavior.",
+      "disconfirming_evidence": "Logs show most exporters export only once.",
+      "stop_condition": "Export behavior cannot be measured per account."
+    },
+    "business": {
+      "verdict": "continue",
+      "evidence_tier": "t2",
+      "strongest_signal": "Scheduled exports deepen weekly workflow dependency.",
+      "weakest_assumption": "Maintenance cost of scheduling stays bounded.",
+      "missing_evidence": "Infrastructure cost of recurring export jobs.",
+      "disconfirming_evidence": "Exports are replaced by a BI integration request.",
+      "stop_condition": "Scheduling requires a new permission or billing model."
+    }
+  },
+  "next_smallest_action": "Query product logs for repeat manual exports per account over 90 days.",
+  "execution_boundary": {
+    "may_do": [
+      "Analyze existing export logs and interview two weekly exporters."
+    ],
+    "must_not_do": [
+      "Build scheduling infrastructure or change report permissions."
+    ],
+    "must_ask": [
+      "The proof step requires production schema changes or new permissions."
+    ]
+  },
+  "human_approval_gates": [
+    {
+      "gate_id": "product-owner-scheduling-build-approval",
+      "accountable_owner": "Product owner",
+      "condition": "Before any scheduling infrastructure build starts."
+    }
+  ],
+  "high_risk_actions": [],
+  "stop_conditions": [
+    "Fewer than ten accounts export the same report more than twice.",
+    "The proof step requires production schema changes."
+  ],
+  "context_pack_required": false,
+  "proof_step": "Measure repeat manual export behavior in product logs over the last 90 days."
+}

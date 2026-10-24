@@ -28,12 +28,12 @@ When a user asks you to build a frontend interface (web or app):
    - "Bauhaus" or "Clean" -> `swiss-design`
    - "Cyber" or "Matrix" -> `cyberpunk-ui`
    If they don't specify a style, choose one that best fits the project context.
-2. **Read the Style Reference**: Check the **Style Index** below to find the correct path for the chosen style. Use the `view_file` tool to read its specific `SKILL.md`.
-3. **Pick a Palette**: If the user explicitly defined a theme or colors, **use their requested colors**. If they did NOT specify colors, you MUST choose from one of the **10 Universal Palettes** below.
+2. **Read the Style Reference**: Check the **Style Index** below to find the correct path for the chosen style. Use an available file-reading tool to read its specific `SKILL.md`.
+3. **Pick a Palette**: If the user explicitly defined a theme or colors, **use their requested colors**. If they did NOT specify colors, use a suitable palette below as an optional starting point, then verify contrast for every actual foreground/background pair.
 4. **Execute**: Write the code following the specific principles of the chosen style. Do not blend styles unless requested.
 
 ## Universal Color Palettes
-If the user provides their own colors, use them. Otherwise, you MUST use one of these 10 award-winning, highly sophisticated palettes to avoid generic neon/purplish gradients. When picking a palette, stick to these exact hex codes and establish CSS variables for them.
+If the user provides their own colors, use them. Otherwise, these ten illustrative palettes are optional starting points. No award provenance is claimed. Adapt their colors for the selected style, brand and measured contrast, and define reusable color tokens.
 
 1. **Yacht Club** (Nautical / Classic Elegance)
    - Backgrounds: `#F9F6F0`
@@ -174,3 +174,26 @@ To use a style, you MUST read its file at `<style-folder>/SKILL.md` relative to 
 - This skill does not replace environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, or safety boundaries are missing.
 
+
+## Implementation boundaries
+
+The style references are visual studies and partial snippets, not complete compiled applications. Imports, package versions, licensed fonts and image assets must be supplied by the project. `Color(hex:)` is a custom extension; use an explicitly implemented parser or RGB initializers. Framework APIs and shadow support vary by version and platform; legacy React Native shadow props do not describe all New Architecture capabilities.
+
+Define the referenced CSS tokens in the project (for example `--bg-primary`, `--primary-text`, `--text-primary`, `--secondary-base`, `--bg-surface` and `--cta-highlight`); palette names alone do not declare these variables. A palette or native material does not establish contrast compliance.
+
+Keep semantic buttons, labels, focus, keyboard activation and useful navigation even when the decoration looks raw or text-only. Empty callbacks, container-only buttons and gesture-only examples demonstrate appearance; connect real actions and cancellation-safe interaction state before use. Do not announce decorative duplicate text, glows, scanlines or icons as repeated content. Respect text scaling, safe areas and reduced-transparency settings. Avoid fixed layouts that clip essential content at narrow widths.
+
+Animation is optional. Prefer stable essential text and controls, pause decorative loops when hidden, dispose controllers and stop loops on unmount, and provide a static reduced-motion version. Web animation examples should include a targeted fallback such as:
+
+```css
+@media (prefers-reduced-motion: reduce) {
+  .aurora-blob, .cyber-y2k-btn, .max-sticker, .tile-live-content {
+    animation: none;
+    transition: none;
+  }
+}
+```
+
+Use the corresponding native reduced-motion setting and keep a readable fallback for gradient/masked text. Styling choices do not replace accessibility testing on the target device.
+
+Implementation references: [Flutter component theme migration](https://docs.flutter.dev/release/breaking-changes/component-theme-normalization), [Flutter child color filters](https://api.flutter.dev/flutter/widgets/ColorFiltered-class.html), [Android RenderEffect](https://developer.android.com/reference/android/graphics/RenderEffect), and [SwiftUI inner shadow style](https://developer.apple.com/documentation/swiftui/shadowstyle/inner(color:radius:x:y:)).

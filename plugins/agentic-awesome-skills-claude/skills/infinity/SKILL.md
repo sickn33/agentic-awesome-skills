@@ -145,7 +145,11 @@ If any `UNTRUSTED` or `SEMI-TRUSTED` input reaches logic, storage, or rendering 
 
 ---
 
-## What This Skill Prevents
+## Enforcement limits
+
+Validation is not authorization or injection prevention by itself. Use parameterized SQL, context-specific output encoding, safe path resolution and per-resource authorization at their actual sinks. Preserve raw webhook bytes until signature verification; normalizing or sanitizing first can invalidate authentication. Do not lowercase passwords, opaque tokens or case-sensitive identifiers. Schema validation must include size/resource limits.
+
+## Risks This Skill Helps Reduce
 
 - SQL injection via unvalidated query params
 - Crashes from unexpected API response shapes

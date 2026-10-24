@@ -17,8 +17,7 @@ dotnet add package Azure.ResourceManager.ApplicationInsights
 dotnet add package Azure.Identity
 ```
 
-**Current Version**: v1.0.0 (GA)  
-**API Version**: 2022-06-15
+Pin a supported tested SDK version and verify each operation against its API reference; package and ARM API versions differ. These independent fragments are not a single compiled program.
 
 ## Environment Variables
 
@@ -53,6 +52,8 @@ Subscription
             └── MyWorkbook                     # Private workbooks
 ```
 
+Select the intended tenant/subscription and verify the credential/roles. Create/update/delete operations and scheduled tests require target-specific authorization, cost review and rollback/retention planning. Avoid logging telemetry content or keys. Workspace-based retention is governed by the linked workspace/table configuration; component fields alone do not establish effective retention or application SDK sampling. Private Link requires the complete scope, DNS and access policy setup.
+
 ## Core Workflows
 
 ### 1. Create Application Insights Component (Workspace-based)
@@ -61,10 +62,16 @@ Subscription
 using Azure.ResourceManager.ApplicationInsights;
 using Azure.ResourceManager.ApplicationInsights.Models;
 
-ResourceGroupResource resourceGroup = await client
-    .GetDefaultSubscriptionAsync()
-    .Result
-    .GetResourceGroupAsync("my-resource-group");
+using Azure;
+using Azure.Core;
+using Azure.ResourceManager.Resources;
+
+string subscriptionId = Environment.GetEnvironmentVariable("AZURE_SUBSCRIPTION_ID")
+    ?? throw new InvalidOperationException("Missing subscription");
+SubscriptionResource subscription = client.GetSubscriptionResource(
+    new ResourceIdentifier($"/subscriptions/{subscriptionId}"));
+ResourceGroupResource resourceGroup = (await subscription
+    .GetResourceGroupAsync("my-resource-group")).Value;
 
 ApplicationInsightsComponentCollection components = resourceGroup.GetApplicationInsightsComponents();
 
@@ -96,8 +103,8 @@ ArmOperation<ApplicationInsightsComponentResource> operation = await components
 ApplicationInsightsComponentResource component = operation.Value;
 
 Console.WriteLine($"Component created: {component.Data.Name}");
-Console.WriteLine($"Instrumentation Key: {component.Data.InstrumentationKey}");
-Console.WriteLine($"Connection String: {component.Data.ConnectionString}");
+// Keep ingestion identifiers in approved configuration; do not log them.
+// Pass the connection string to approved configuration without logging.
 ```
 
 ### 2. Get Connection String and Keys
@@ -111,134 +118,18 @@ string connectionString = component.Data.ConnectionString;
 string instrumentationKey = component.Data.InstrumentationKey;
 string appId = component.Data.AppId;
 
-Console.WriteLine($"Connection String: {connectionString}");
-Console.WriteLine($"Instrumentation Key: {instrumentationKey}");
+// Do not print connectionString.
+// Do not print instrumentationKey.
 Console.WriteLine($"App ID: {appId}");
 ```
 
-### 3. Create API Key
+### 3. Telemetry Query Authentication
 
-```csharp
-ApplicationInsightsComponentResource component = await resourceGroup
-    .GetApplicationInsightsComponentAsync("my-appinsights");
+Prefer supported Microsoft Entra authentication and least-privilege query roles. Do not create or log legacy telemetry-query API keys; verify the current query API/authentication lifecycle before migrating existing clients. Management-plane credentials are separate from ingestion and query access.
 
-ApplicationInsightsComponentApiKeyCollection apiKeys = component.GetApplicationInsightsComponentApiKeys();
+### 4. Availability Monitoring
 
-// API key for reading telemetry
-ApplicationInsightsApiKeyContent keyContent = new ApplicationInsightsApiKeyContent
-{
-    Name = "ReadTelemetryKey",
-    LinkedReadProperties =
-    {
-        $"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/components/{component.Data.Name}/api",
-        $"/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/components/{component.Data.Name}/agentconfig"
-    }
-};
-
-ApplicationInsightsComponentApiKeyResource apiKey = await apiKeys
-    .CreateOrUpdateAsync(WaitUntil.Completed, keyContent);
-
-Console.WriteLine($"API Key Name: {apiKey.Data.Name}");
-Console.WriteLine($"API Key: {apiKey.Data.ApiKey}"); // Only shown once!
-```
-
-### 4. Create Web Test (Availability Test)
-
-```csharp
-WebTestCollection webTests = resourceGroup.GetWebTests();
-
-// URL Ping Test
-WebTestData urlPingTest = new WebTestData(AzureLocation.EastUS)
-{
-    Kind = WebTestKind.Ping,
-    SyntheticMonitorId = "webtest-ping-myapp",
-    WebTestName = "Homepage Availability",
-    Description = "Checks if homepage is available",
-    IsEnabled = true,
-    Frequency = 300, // 5 minutes
-    Timeout = 120,   // 2 minutes
-    WebTestKind = WebTestKind.Ping,
-    IsRetryEnabled = true,
-    Locations =
-    {
-        new WebTestGeolocation { WebTestLocationId = "us-ca-sjc-azr" },  // West US
-        new WebTestGeolocation { WebTestLocationId = "us-tx-sn1-azr" },  // South Central US
-        new WebTestGeolocation { WebTestLocationId = "us-il-ch1-azr" },  // North Central US
-        new WebTestGeolocation { WebTestLocationId = "emea-gb-db3-azr" }, // UK South
-        new WebTestGeolocation { WebTestLocationId = "apac-sg-sin-azr" }  // Southeast Asia
-    },
-    Configuration = new WebTestConfiguration
-    {
-        WebTest = """
-            <WebTest Name="Homepage" Enabled="True" Timeout="120" 
-                     xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
-                <Items>
-                    <Request Method="GET" Version="1.1" Url="https://myapp.example.com" 
-                             ThinkTime="0" Timeout="120" ParseDependentRequests="False" 
-                             FollowRedirects="True" RecordResult="True" Cache="False" 
-                             ResponseTimeGoal="0" Encoding="utf-8" ExpectedHttpStatusCode="200" />
-                </Items>
-            </WebTest>
-        """
-    },
-    Tags =
-    {
-        { $"hidden-link:/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/components/my-appinsights", "Resource" }
-    }
-};
-
-ArmOperation<WebTestResource> operation = await webTests
-    .CreateOrUpdateAsync(WaitUntil.Completed, "webtest-homepage", urlPingTest);
-
-WebTestResource webTest = operation.Value;
-Console.WriteLine($"Web test created: {webTest.Data.Name}");
-```
-
-### 5. Create Multi-Step Web Test
-
-```csharp
-WebTestData multiStepTest = new WebTestData(AzureLocation.EastUS)
-{
-    Kind = WebTestKind.MultiStep,
-    SyntheticMonitorId = "webtest-multistep-login",
-    WebTestName = "Login Flow Test",
-    Description = "Tests login functionality",
-    IsEnabled = true,
-    Frequency = 900, // 15 minutes
-    Timeout = 300,   // 5 minutes
-    WebTestKind = WebTestKind.MultiStep,
-    IsRetryEnabled = true,
-    Locations =
-    {
-        new WebTestGeolocation { WebTestLocationId = "us-ca-sjc-azr" }
-    },
-    Configuration = new WebTestConfiguration
-    {
-        WebTest = """
-            <WebTest Name="LoginFlow" Enabled="True" Timeout="300"
-                     xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
-                <Items>
-                    <Request Method="GET" Version="1.1" Url="https://myapp.example.com/login" 
-                             ThinkTime="0" Timeout="60" />
-                    <Request Method="POST" Version="1.1" Url="https://myapp.example.com/api/auth" 
-                             ThinkTime="0" Timeout="60">
-                        <Headers>
-                            <Header Name="Content-Type" Value="application/json" />
-                        </Headers>
-                        <Body>{"username":"testuser","password":"{{TestPassword}}"}</Body>
-                    </Request>
-                </Items>
-            </WebTest>
-        """
-    },
-    Tags =
-    {
-        { $"hidden-link:/subscriptions/{subscriptionId}/resourceGroups/{resourceGroupName}/providers/microsoft.insights/components/my-appinsights", "Resource" }
-    }
-};
-
-await webTests.CreateOrUpdateAsync(WaitUntil.Completed, "webtest-login-flow", multiStepTest);
-```
+Use supported Standard availability tests for new deployments. The former URL Ping XML example was deprecated, and multi-step `.webtest` tests retired in2024. Inspect current region/location identifiers, pricing, request/response validation, retry policy and TLS settings before enabling a scheduled test. For a multi-request journey, choose an explicitly supported synthetic runner with test-only credentials; this skill does not supply one. Never assume `{{TestPassword}}` interpolation is provided by the ARM SDK.
 
 ### 6. Create Workbook
 
@@ -441,7 +332,7 @@ try
 }
 catch (RequestFailedException ex) when (ex.Status == 409)
 {
-    Console.WriteLine("Component already exists");
+    Console.WriteLine("Conflict: inspect structured error/code and current resource state; do not assume existence is the cause.");
 }
 catch (RequestFailedException ex) when (ex.Status == 400)
 {

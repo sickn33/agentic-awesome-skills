@@ -9,6 +9,10 @@ date_added: "2026-02-27"
 
 # Writing Skills (Excellence)
 
+Compatibility: these templates are conventions, not a universal loader schema. Use the target host's documented skill directory and current schema; custom `metadata.triggers` is optional and does not itself guarantee discovery. Bundled upstream guidance is a historical snapshot. Rendering requires Node.js and a locally installed Graphviz `dot`; inspect trusted DOT only, and open generated SVG cautiously. `--combine` shares node IDs across graphs and is a visual convenience, not a semantics-preserving merge. Outputs are exclusive: remove or choose another output directory deliberately before rerunning.
+
+Scope: examples are authoring/test fixtures, not live instructions. Follow the user, host, and repository instruction hierarchy. Run pressure tests only with authorized isolated fixtures; never delete user work or weaken safety/approval boundaries to enforce a skill. Preserve existing work and adapt the validation plan when a baseline already passes. Sample compliance does not prove universal reliability.
+
 Dispatcher for skill creation excellence. Use the decision tree below to find the right template and standards.
 
 ## ⚡ Quick Decision Tree
@@ -81,9 +85,9 @@ metadata:
 
 | Mistake | Fix |
 |---------|-----|
-| Description summarizes workflow | Use "Use when..." triggers only |
-| No `metadata.triggers` | Add 3+ keywords |
-| Generic name ("helper") | Use gerund (`creating-skills`) |
+| Description summarizes workflow | Describe the capability and specific use conditions concisely |
+| No `metadata.triggers` | Optional host-specific metadata; include useful terms in description |
+| Generic name ("helper") | Use a descriptive lowercase hyphenated ID |
 | Long monolithic SKILL.md | Split into `references/` |
 
 See [gotchas.md](gotchas.md) for more.
@@ -94,8 +98,8 @@ Before deploying any skill:
 
 - [ ] `name` field matches directory name exactly
 - [ ] `SKILL.md` filename is ALL CAPS
-- [ ] Description starts with "Use when..."
-- [ ] `metadata.triggers` has 3+ keywords
+- [ ] Description explains what the skill does and when to use it
+- [ ] Frontmatter matches the target host and repository schema
 - [ ] Total lines < 500 (use `references/` for more)
 - [ ] No `@` force-loading in cross-references
 - [ ] Tested with real scenarios
@@ -103,7 +107,7 @@ Before deploying any skill:
 ## 🔗 Related Skills
 
 - **opencode-expert**: For OpenCode environment configuration
-- Use `/write-skill` command for guided skill creation
+- If your host defines `/write-skill`, it may provide guided creation; that command is not bundled here
 
 ## Examples
 

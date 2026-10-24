@@ -37,6 +37,8 @@ run on the same host as the docker daemon or on every Swarm node.
 
 ## Getting started
 
+These historical deployment examples grant broad host/FUSE privileges and use floating image tags. For an authorized deployment, pin reviewed plugin/image digests, inspect requested privileges instead of blindly granting all permissions, protect config/cache directories, and restrict mounted data. A VFS cache is not a cluster-coherent filesystem; simultaneous writers from different nodes can conflict. Coordinate service interruption before changing plugins or restarting Docker.
+
 In the first example we will use the [SFTP](/sftp/)
 rclone volume with Docker engine on a standalone Ubuntu machine.
 
@@ -69,6 +71,8 @@ Create your [SFTP volume](/sftp/#standard-options):
 ```console
 docker volume create firstvolume -d rclone -o type=sftp -o sftp-host=_hostname_ -o sftp-user=_username_ -o sftp-pass=_password_ -o allow-other=true
 ```
+
+The sample sftp-pass value must be rclone-obscured, not plaintext, and remains reversible; Docker volume options are inspectable. Prefer a reviewed existing remote configuration with restrictive file permissions.
 
 Note that since all options are static, you don't even have to run
 `rclone config` or create the `rclone.conf` file (but the `config` directory
@@ -311,7 +315,7 @@ volumes:
 Notice a few important details:
 
 - YAML prefers `_` in option names instead of `-`.
-- YAML treats single and double quotes interchangeably.
+- YAML single and double quotes differ: double quotes interpret escape sequences, single quotes do not.
   Simple strings and integers can be left unquoted.
 - Boolean values must be quoted like `'true'` or `"false"` because
   these two words are reserved by YAML.
@@ -478,9 +482,7 @@ services:
 
 ## Running Plugin under Systemd
 
-In most cases you should prefer managed mode. Moreover, MacOS and Windows
-do not support native Docker plugins. Please use managed mode on these
-systems. Proceed further only if you are on Linux.
+Docker Engine managed plugins are Linux-specific; do not assume native macOS/Windows or Docker Desktop support. Use a documented supported Linux Engine environment. The following systemd integration also requires Linux.
 
 First, [install rclone](/install/).
 You can just run it (type `rclone serve docker` and hit enter) for the test.
@@ -498,8 +500,8 @@ and [docker-volume-rclone.socket](https://raw.githubusercontent.com/rclone/rclon
 Put them to the `/etc/systemd/system/` directory:
 
 ```console
-cp docker-volume-plugin.service /etc/systemd/system/
-cp docker-volume-plugin.socket  /etc/systemd/system/
+cp docker-volume-rclone.service /etc/systemd/system/
+cp docker-volume-rclone.socket  /etc/systemd/system/
 ```
 
 Please note that all commands in this section must be run as *root* but

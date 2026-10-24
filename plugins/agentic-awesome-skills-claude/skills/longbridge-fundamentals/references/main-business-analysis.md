@@ -1,5 +1,7 @@
 # 主营业务分析
 
+Scope: only apply this workflow when the user asks for business analysis. Existing adequate data need not be refetched. Primary issuer filings are a valid fallback if CLI coverage fails; never invent missing numbers or upgrade software automatically. Segment concentration describes revenue composition, not antitrust market concentration: thresholds here are illustrative, and samples of 3–5 peers are sample rankings rather than whole-industry ranks. HHI uses mutually exclusive, exhaustive nonnegative shares summing to 100; CAGR requires positive endpoints; zero aggregate growth makes contribution ratios undefined. Examples are illustrative, not verified issuer figures.
+
 用户提供公司名称或股票代码，通过 longbridge CLI 实时获取主营业务数据，分析公司的收入结构、增长能力与行业地位，产出专业分析。
 
 > **首要行动（加载后的第一步）：** 无论用户问什么，加载本文档后必须**先完成数据采集**（阶段一），不得跳过。如果已调用过数据工具获取了相关数据，仍须按照本文档的流程**重新审视已有数据是否充分**，不足则补充采集。**禁止**在未完成数据采集的情况下直接输出分析结论。
@@ -19,7 +21,7 @@
 5. **结论必须有据** — 不得出现无数据支撑的判断（"+18.5%、占比 42.3%"而非"明显增长、主要来源"）
 6. **行业排名口径明示** — 行业排名优先来自 `longbridge company` 返回的行业归属字段；通过网页搜索补充时必须**明确标注数据来源（机构名 + 报告期）**，且说明所用行业划分（GICS / 申万 / 中信 / 自定义细分等）
 7. **网页搜索数据可信度声明** — 通过网页搜索获取的市占率、行业排名、规模数据，必须标注"来自网络公开资料"并说明可能存在口径差异
-8. **失败必须透明** — CLI 调用失败、数据缺失、口径变更必须告知用户，不可静默跳过。若 `business-segments` 提示 `unrecognized subcommand`，先执行 `longbridge update` 升级后重试
+8. **失败必须透明** — CLI 调用失败、数据缺失、口径变更必须告知用户，不可静默跳过。若 `business-segments` 提示 `unrecognized subcommand`，先核对已安装版本与帮助；升级属于单独操作，需用户授权，不得自动升级
 9. **维度跳过须显式声明** — 某维度因数据缺失而无法分析，必须在报告中明确写出"维度 X 未执行，原因：[具体原因]"
 10. **标的代码必须标注** — 提到的**每一家**公司都必须附带股票代码（如"特斯拉(TSLA.US)"、"比亚迪(002594.SZ)"）。列举多家公司时每家都要标注代码。没有代码的公司须通过 `longbridge static` 查询后标注；若查不到则标注"(未上市)"或"(代码待查)"
 
@@ -72,7 +74,7 @@
 
 > **通用提示：** 所有命令均支持 `--format json` 输出。首次使用或不确定参数时，先运行 `longbridge <command> --help` 查看可用选项。
 >
-> **版本要求：** `business-segments` 命令需要 CLI ≥ v0.23.0。若提示 `unrecognized subcommand`，先运行 `longbridge update` 升级后重试。
+> **版本要求：** `business-segments` 命令需要 CLI ≥ v0.23.0。若提示 `unrecognized subcommand`，先核对已安装版本与帮助；未经用户授权不得升级。
 
 | 数据 | CLI 命令 | 用途 |
 |------|---------|------|
@@ -184,13 +186,13 @@ def main():
     result = []
     for s in segments:
         growth = s["curr"] - s["prev"]
-        contribution = growth / total_growth * 100 if total_growth != 0 else 0
-        seg_yoy = (s["curr"] - s["prev"]) / s["prev"] * 100 if s["prev"] != 0 else None
+        contribution = growth / total_growth * 100 if total_growth != 0 else None
+        seg_yoy = (s["curr"] - s["prev"]) / s["prev"] * 100 if s["prev"] > 0 else None
         result.append({
             "segment": s["name"],
             "yoy_pct": round(seg_yoy, 2) if seg_yoy is not None else "新业务",
             "growth_value": growth,
-            "contribution_pct": round(contribution, 1)
+            "contribution_pct": round(contribution, 1) if contribution is not None else None
         })
     return result
 ```
@@ -627,7 +629,7 @@ def main():
 
 **业务构成：**
 - ❌ "公司业务以智能手机为主，其他业务包括 IoT、互联网服务等，业务较为多元。"
-- ✅ "主营以智能手机为核心（FY2024 占比 47.2%），叠加 IoT 与生活消费产品（29.2%）、互联网服务（9.0%）、电动汽车等创新业务（9.2%）。CR1=47.2%、CR3=85.4%、HHI=3,287，高集中区间。对比 FY2021，智能手机占比从 60.5% 下降 13.3 pp，结构从单核走向多元。"
+- ✅ "主营以智能手机为核心（FY2024 占比 47.2%），叠加 IoT 与生活消费产品（29.2%）、互联网服务（9.0%）、电动汽车等创新业务（9.2%）。CR1=47.2%、CR3=85.4%、HHI=3,275.28，高集中区间。对比 FY2021，智能手机占比从 60.5% 下降 13.3 pp，结构从单核走向多元。"
 
 **增长描述：**
 - ❌ "公司主营收入快速增长，主业表现良好。"
@@ -639,7 +641,7 @@ def main():
 
 **集中度判断：**
 - ❌ "公司业务集中度较高，存在单一业务依赖风险。"
-- ✅ "CR1=47.2%、HHI=3,287，高度集中。智能手机行业若 -20% 波动，单此一项拖累整体约 9.4 pp。近年 CR1 三年下降 13.3 pp，依赖度在降低但短期仍主导。"
+- ✅ "CR1=47.2%、HHI=3,275.28，高度集中。智能手机行业若 -20% 波动，单此一项拖累整体约 9.4 pp。近年 CR1 三年下降 13.3 pp，依赖度在降低但短期仍主导。"
 
 **风险提示：**
 - ❌ "行业竞争激烈，市场存在不确定性。"

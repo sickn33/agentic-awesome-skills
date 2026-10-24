@@ -15,7 +15,7 @@ Substitution points (search for "← SUBSTITUTE"):
   - MCD_RESOURCE_UUID  : Monte Carlo warehouse resource UUID
 
 Prerequisites:
-  pip install pycarlo>=0.12.251 python-dateutil>=2.8.0
+  python -m pip install pycarlo==0.15.491 python-dateutil>=2.8.0
 """
 
 from __future__ import annotations
@@ -24,7 +24,6 @@ import argparse
 import json
 import logging
 import os
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 
 from dateutil.parser import isoparse
@@ -32,7 +31,7 @@ from dateutil.parser import isoparse
 from pycarlo.core import Client, Session
 from pycarlo.features.ingestion import IngestionService
 from pycarlo.features.ingestion.models import QueryLogEntry
-from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, read_json_file, write_json_file
+from _safe_paths import validate_push, checked_send, safe_existing_directory, safe_input_json_path, safe_output_json_path, read_json_file, write_json_file
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
@@ -43,7 +42,7 @@ LOG_TYPE = "bigquery"
 # 1 MB compressed payload limit.
 _BATCH_SIZE = 100
 
-# Truncate very long SQL to prevent 413 errors.
+# Reject oversized SQL without changing its semantics.
 _MAX_QUERY_TEXT_LEN = 10_000
 
 _ENDPOINT = "https://integrations.getmontecarlo.com"
@@ -52,13 +51,11 @@ _ENDPOINT = "https://integrations.getmontecarlo.com"
 def _build_query_log_entries(queries: list[dict]) -> list[QueryLogEntry]:
     """Convert manifest query dicts into QueryLogEntry objects."""
     entries = []
-    truncated = 0
     for q in queries:
         query_text = q.get("query_text") or ""
 
         if len(query_text) > _MAX_QUERY_TEXT_LEN:
-            query_text = query_text[:_MAX_QUERY_TEXT_LEN] + "... [TRUNCATED]"
-            truncated += 1
+            raise ValueError("Query exceeds template size limit; split approved scope without truncating SQL")
 
         extra = {}
         if q.get("total_bytes_billed") is not None:
@@ -79,8 +76,6 @@ def _build_query_log_entries(queries: list[dict]) -> list[QueryLogEntry]:
         )
         entries.append(entry)
 
-    if truncated:
-        log.info("Truncated %d query text(s) exceeding %d chars", truncated, _MAX_QUERY_TEXT_LEN)
     return entries
 
 
@@ -97,6 +92,7 @@ def push(
     log.info("Using endpoint: %s", endpoint)
 
     manifest = read_json_file(input_file)
+    validate_push(manifest, resource_uuid, batch_size)
 
     queries = manifest.get("queries", [])
     log_type = manifest.get("log_type", LOG_TYPE)
@@ -125,7 +121,7 @@ def push(
             mcd_id=key_id, mcd_token=key_token, scope="Ingestion", endpoint=endpoint,
         ))
         service = IngestionService(mc_client=client)
-        result = service.send_query_logs(
+        result = checked_send(service, "send_query_logs",
             resource_uuid=resource_uuid,
             log_type=log_type,
             events=batch,
@@ -137,21 +133,12 @@ def push(
         )
         return invocation_id
 
-    max_workers = min(4, total_batches)
+    max_workers = 1
     invocation_ids: list[str | None] = [None] * total_batches
 
-    with ThreadPoolExecutor(max_workers=max_workers) as pool:
-        futures = {
-            pool.submit(_push_batch, batch, i + 1): i
-            for i, batch in enumerate(batches)
-        }
-        for future in as_completed(futures):
-            idx = futures[future]
-            try:
-                invocation_ids[idx] = future.result()
-            except Exception as exc:
-                log.error("ERROR pushing batch %d: %s", idx + 1, exc)
-                raise
+    # Sequential delivery stops immediately after an ambiguous/failed batch.
+    for idx, batch in enumerate(batches):
+        invocation_ids[idx] = _push_batch(batch, idx + 1)
 
     log.info("All %d batch(es) pushed.", total_batches)
 
@@ -176,7 +163,7 @@ def main() -> None:
     )
     parser.add_argument("--resource-uuid", default=os.getenv("MCD_RESOURCE_UUID"))
     parser.add_argument("--key-id", default=os.getenv("MCD_INGEST_ID"))
-    parser.add_argument("--key-token", default=os.getenv("MCD_INGEST_TOKEN"))
+    parser.add_argument("--key-token", choices=[], default=os.getenv("MCD_INGEST_TOKEN"))
     parser.add_argument("--input-file", default="query_logs_output.json")
     parser.add_argument("--output-file", default="query_logs_push_result.json")
     parser.add_argument(

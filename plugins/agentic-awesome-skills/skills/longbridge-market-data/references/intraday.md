@@ -40,7 +40,7 @@ Options:
 
 ```bash
 # Run with JSON output for AI agents
-longbridge intraday --format json
+longbridge intraday 700.HK --format json
 
 # See all options
 longbridge intraday --help

@@ -1,5 +1,8 @@
 # Campaigns toolset
 
+**Operation boundary.** Removing a suppression or changing consent mode is not evidence of fresh opt-in. Require a verified recipient opt-in record; preserve history and exclude suppressed contacts from outreach.
+
+
 Campaigns, Audience contacts, leads, segments, consent, suppression, and outbound limits. Connect only this group with `https://app.famulor.io/mcp?toolsets=campaigns`.
 
 This 2026-08-23 snapshot covers all 34 tools assigned to `campaigns` in the canonical 282-tool registry. The live MCP `tools/list` response is authoritative for arguments, current availability, annotations, and plan or role gating. Never invent fields from this catalog.
@@ -32,7 +35,7 @@ This 2026-08-23 snapshot covers all 34 tools assigned to `campaigns` in the cano
 | `list_suppression_entries` | Read | `suppression:read or campaigns:read` | Immediate | List active marketing suppressions across voice, SMS, email, and supported messaging channels. Each result states the contact identity, scope, originating channel, and consent mode captured at opt-out. |
 | `merge_audience_contacts` | Write/action | `leads:write or calls:write` | Immediate | Explicitly merge one Audience contact into another. The target contact keeps its id; phone, email, channel identities, calls, and conversations move over. The source contact is removed. Never merges automatically — the caller must choose both contacts. |
 | `remove_lead_from_campaign` | Delete/destructive | `leads:write or calls:write` | Immediate | Remove a lead from campaign execution without deleting the Audience contact, calls, or campaign history. |
-| `remove_suppression_entry` | Delete/destructive | `suppression:write or campaigns:write` | Immediate | Restore consent for one active suppression by entry ID, E.164 phone number, or email address. This revokes the active suppression and appends an opt-in audit event; it does not erase consent history. |
+| `remove_suppression_entry` | Delete/destructive | `suppression:write or campaigns:write` | Immediate | Remove one active suppression by entry ID, E.164 phone number, or email address only after separately verifying valid renewed opt-in for the intended channel and purpose. Administrative removal does not itself obtain the recipient’s consent. This revokes the active suppression and appends an opt-in audit event; it does not erase consent history. |
 | `request_outbound_limit_increase` | Write/action | `settings:write or assistants:write` | Immediate | Submit a workspace-wide increase request for integrated outbound calls. Only workspace owners and admins can request a change. |
 | `set_consent_mode` | Delete/destructive | `settings:write or assistants:write` | Immediate | Set workspace marketing opt-out enforcement to universal or per_channel. Per-channel mode requires the Consent & Compliance plan feature; suppression enforcement itself is always active. |
 | `start_campaign` | Write/action | `campaigns:write or calls:write` | Immediate | Start or resume immediately and clear any schedule. Channel resources, outreach windows, suppression, concurrency, and credits are enforced before dispatch. |

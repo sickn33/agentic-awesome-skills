@@ -17,8 +17,7 @@ dotnet add package Azure.ResourceManager.ApiCenter
 dotnet add package Azure.Identity
 ```
 
-**Current Version**: v1.0.0 (GA)  
-**API Version**: 2024-03-01
+Examples target the historical 1.0 API family. Pin a reviewed package and verify exact generated types/API version against the official reference; this is not a latest-version claim.
 
 ## Environment Variables
 
@@ -53,6 +52,8 @@ Subscription
         └── MetadataSchema                  # Custom metadata definitions
 ```
 
+These are separate snippets requiring Azure/Azure.Core/Resources imports and a pinned SDK compilation. Confirm exact subscription/resource IDs, permissions and cost before provisioning. API Center records document deployments; creating a deployment record does not deploy a working API. Inspect specs for embedded credentials/internal data before uploading.
+
 ## Core Workflows
 
 ### 1. Create API Center Service
@@ -61,10 +62,11 @@ Subscription
 using Azure.ResourceManager.ApiCenter;
 using Azure.ResourceManager.ApiCenter.Models;
 
-ResourceGroupResource resourceGroup = await client
-    .GetDefaultSubscriptionAsync()
-    .Result
-    .GetResourceGroupAsync("my-resource-group");
+// Resolve the explicitly selected subscription, avoiding sync-over-async/default-account ambiguity.
+var subscription = client.GetSubscriptionResource(new ResourceIdentifier(
+    $"/subscriptions/{Environment.GetEnvironmentVariable("AZURE_SUBSCRIPTION_ID")}"));
+ResourceGroupResource resourceGroup = (await subscription
+    .GetResourceGroupAsync("my-resource-group")).Value;
 
 ApiCenterServiceCollection services = resourceGroup.GetApiCenterServices();
 
@@ -316,27 +318,27 @@ ApiCenterWorkspaceResource workspace = await client
     .GetApiCenterWorkspaceResource(workspaceResourceId)
     .GetAsync();
 
-await foreach (ApiCenterApiResource api in workspace.GetApiCenterApis())
+await foreach (ApiCenterApiResource api in workspace.GetApiCenterApis().GetAllAsync())
 {
     Console.WriteLine($"API: {api.Data.Title}");
     Console.WriteLine($"  Kind: {api.Data.Kind}");
     Console.WriteLine($"  Stage: {api.Data.LifecycleStage}");
     
     // List versions
-    await foreach (ApiCenterApiVersionResource version in api.GetApiCenterApiVersions())
+    await foreach (ApiCenterApiVersionResource version in api.GetApiCenterApiVersions().GetAllAsync())
     {
         Console.WriteLine($"  Version: {version.Data.Title}");
     }
 }
 
 // List environments
-await foreach (ApiCenterEnvironmentResource env in workspace.GetApiCenterEnvironments())
+await foreach (ApiCenterEnvironmentResource env in workspace.GetApiCenterEnvironments().GetAllAsync())
 {
     Console.WriteLine($"Environment: {env.Data.Title} ({env.Data.Kind})");
 }
 
 // List deployments
-await foreach (ApiCenterDeploymentResource deployment in workspace.GetApiCenterDeployments())
+await foreach (ApiCenterDeploymentResource deployment in workspace.GetApiCenterDeployments().GetAllAsync())
 {
     Console.WriteLine($"Deployment: {deployment.Data.Title}");
     Console.WriteLine($"  State: {deployment.Data.State}");

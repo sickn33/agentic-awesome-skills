@@ -30,19 +30,18 @@ function Counter() {
 **Correct (React Compiler compatible):**
 
 ```tsx
-import { useSharedValue } from 'react-native-reanimated'
+import { useState } from 'react'
+import { Button } from 'react-native'
 
 function Counter() {
-  const count = useSharedValue(0)
-
-  const increment = () => {
-    count.set(count.get() + 1)
-  }
-
-  return <Button onPress={increment} title={`Count: ${count.get()}`} />
+  // This value is React-rendered text, so React state is the appropriate primitive.
+  const [count, setCount] = useState(0)
+  return <Button onPress={() => setCount((n) => n + 1)} title={`Count: ${count}`} />
 }
 ```
 
 See the
 [Reanimated docs](https://docs.swmansion.com/react-native-reanimated/docs/core/useSharedValue/#react-compiler-support)
 for more.
+
+For animation worklets, use shared-value `.get()`/`.set()` inside callbacks such as `useAnimatedStyle`. Neither API belongs in JSX/render; shared-value updates do not cause React to rerender text.

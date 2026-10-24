@@ -76,3 +76,5 @@ WEAVIATE_API_KEY=
    - `WEAVIATE_API_KEY`
 3. Ask them to uncomment and fill only the provider keys their Weaviate collections require.
 4. Keep `.env` local only and gitignored.
+
+The listed names are cookbook conventions, not universal SDK defaults. Forward only selected provider headers to an approved, validated Weaviate endpoint over verified TLS; never accept a caller-controlled endpoint or expose headers to the browser. A self-hosted deployment may use another authorized authentication mode rather than Cloud API-key settings.

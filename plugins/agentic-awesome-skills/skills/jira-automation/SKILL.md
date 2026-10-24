@@ -18,12 +18,16 @@ Automate Jira operations through Composio's Jira toolkit via Rube MCP.
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. Verify actual MCP authentication and Jira site/account scopes; endpoint configuration alone does not establish access.
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `jira`
 3. If connection is not ACTIVE, follow the returned auth link to complete Jira OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+## Target and notification scope
+
+Resolve exact site/project/issue and authorized payload before edits, role changes or comments. Comments/mentions may notify people and require user messaging authorization; reading an issue does not grant it. Preserve fields not requested and reconcile ambiguous writes before retrying.
 
 ## Core Workflows
 

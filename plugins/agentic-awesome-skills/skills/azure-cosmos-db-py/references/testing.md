@@ -1,5 +1,9 @@
 # Testing Cosmos DB Services
 
+
+Review corrections (2026-10-23): these snippets are incomplete application starters. Initialize the synchronous client during startup outside the event loop, serialize initialization and close client/credential on shutdown. A cached failed initialization needs an explicit bounded recovery path. `azure.cosmos.aio` is also available; the SDK is not synchronous-only. Enforce tenant authorization independently of partition routing; the bundled client assumes `/workspaceId`. Never accept caller SQL fragments. Distinguish unavailable storage (503) from not-found (404) and empty data; the older graceful-default examples below illustrate a policy to avoid for authoritative reads. Use ETag conditional writes to prevent lost updates, enforce uniqueness atomically, and implement cross-partition moves with conflict-aware compensation; read-then-upsert/delete is not atomic. No live Cosmos behavior is verified by these templates.
+
+
 ## Table of Contents
 
 1. [Test-Driven Development Workflow](#test-driven-development-workflow)
@@ -480,7 +484,8 @@ class ProjectFactory:
 
 
 # Usage in tests
-def test_with_factory(mock_cosmos_async):
+@pytest.mark.asyncio
+async def test_with_factory(mock_cosmos_async):
     factory = ProjectFactory(name="Custom Name", tags=["important"])
     mock_cosmos_async.read_item.return_value = factory.to_doc()
 
@@ -492,4 +497,4 @@ def test_with_factory(mock_cosmos_async):
 
 ## Complete Fixture File
 
-See [assets/conftest_template.py](../assets/conftest_template.py) for a production-ready conftest.py.
+See [assets/conftest_template.py](../assets/conftest_template.py) for a application-specific starter conftest.py.

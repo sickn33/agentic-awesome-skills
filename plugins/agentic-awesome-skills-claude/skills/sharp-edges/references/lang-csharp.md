@@ -1,5 +1,8 @@
 # C# Sharp Edges
 
+> Catalog correction (CC-BY-SA-4.0 adaptation; original attribution/license in UPSTREAM-NOTICE.md): snippets are isolated teaching fragments, not production implementations or an assertion of exploitability. Confirm the installed language/library version, trust boundary, reachable input and impact. Use inert local fixtures only; do not execute the intentionally unsafe snippets, untrusted audited code or destructive payloads. No network attack or configuration change is authorized by this guide.
+
+
 ## Nullable Reference Types
 
 ```csharp
@@ -40,7 +43,7 @@ var connections = new Connection[10];
 // All 10 are default(Connection) - invalid state
 ```
 
-**Fix**: Use constructors, or make structs readonly with init validation.
+**Fix**: Validate at use boundaries or design a valid default state; readonly and constructor validation cannot prevent default(T) or zero-initialized arrays. Use a reference type when construction must enforce an invariant.
 
 ## IDisposable Leaks
 
@@ -77,8 +80,9 @@ async void FireAndForget() {
 }
 
 // DANGEROUS: Deadlock with .Result
-async Task DoWork() {
+async Task<int> DoWork() {
     await Task.Delay(100);
+    return 1;
 }
 
 void Caller() {
@@ -122,8 +126,8 @@ var first = filtered.First();    // Executes query AGAIN
 ## String Comparison
 
 ```csharp
-// DANGEROUS: Culture-sensitive comparison by default
-"stra\u00dfe".Equals("strasse");  // Depends on culture!
+// Equals and == on strings are ordinal by default; Compare/ToLower may use culture.
+"stra\u00dfe".Equals("strasse");  // False with default ordinal equality
 
 // DANGEROUS: Turkish-I problem
 "INFO".ToLower() == "info"  // FALSE in Turkish culture!
@@ -153,7 +157,7 @@ IComparable<Point> comparable = point;  // Boxed!
 
 // DANGEROUS: LINQ with value types
 var ints = new[] { 1, 2, 3 };
-ints.Where(x => x > 1);  // Closure may box
+ints.Where(x => x > 1);  // Noncapturing lambda does not inherently box each int; measure actual allocations.
 ```
 
 ## Equality Implementation
@@ -279,7 +283,7 @@ formatter.Deserialize(untrustedStream);  // RCE vulnerability
 | `.Result` or `.Wait()` on Task | Deadlock |
 | Missing `await` before async call | Fire and forget |
 | `.Where()` without materialization | Multiple enumeration |
-| `string.Equals` without StringComparison | Culture bugs |
+| `string.Compare/ToLower` without explicit comparison policy | Culture-dependent semantics |
 | `lock (this)` or `lock (typeof(...))` | Deadlock risk |
 | `BinaryFormatter` | Deserialization RCE |
 | Event subscription without unsubscription | Memory leak |

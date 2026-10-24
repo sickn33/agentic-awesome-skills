@@ -182,7 +182,7 @@ class FloatingUIScreen extends StatelessWidget {
   }
 }
 ```
-- Avoid the native `BottomNavigationBar`. Instead, use a `Stack` and `Align(alignment: Alignment.bottomCenter)` with a `Container` to build the floating pill menu.
+- Prefer a semantic navigation component where possible. A custom floating menu needs actual labeled buttons, selection state, safe-area insets and reserved scroll-content space so it does not cover content.
 - Use `blurRadius: 30` in `BoxShadow` for the diffuse look.
 
 ### React Native
@@ -291,7 +291,7 @@ fun FloatingUIScreen() {
 - Crucially, lower the `alpha` of the `spotColor` in `Modifier.shadow` to achieve the soft, diffuse shadow look, otherwise Compose defaults to a harsh, dark shadow.
 
 ## Do's and Don'ts
-- **DO**: Animate floating elements! A slow, continuous 2px up/down translateY animation makes them feel truly buoyant.
+- **DO**: Keep essential navigation stationary. Optional decorative motion must respect reduced-motion preferences.
 - **DON'T**: Pin elements to the screen edges (except perhaps background images).
 
 ## Limitations

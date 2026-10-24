@@ -372,9 +372,10 @@ Use `chartXSelection(value:)` or `chartYSelection(value:)` for one selected valu
 ```swift
 @State private var selectedDate: Date?
 
-Chart(steps) { day in
-    LineMark(x: .value("Day", day.date), y: .value("Steps", day.count))
-
+Chart {
+    ForEach(steps) { day in
+        LineMark(x: .value("Day", day.date), y: .value("Steps", day.count))
+    }
     if let selectedDate {
         RuleMark(x: .value("Selected Day", selectedDate))
             .foregroundStyle(.secondary)
@@ -500,7 +501,7 @@ Chart(sales) { item in
 }
 ```
 
-**Avoid** applying `.foregroundStyle(.red)` per mark for categorical data — this suppresses the automatic legend and breaks accessibility.
+Per-mark colors do not create a categorical scale/legend automatically. They can be accessible with explicit labels, contrast and redundant encodings; use a scale when an automatic category legend is wanted.
 
 ### Custom Color Scales
 

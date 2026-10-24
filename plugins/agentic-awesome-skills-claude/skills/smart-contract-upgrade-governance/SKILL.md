@@ -14,7 +14,7 @@ source_repo: Ranjeet2063/agentic-awesome-skills
 
 # Smart Contract Upgrade Governance
 
-**What it is:** Enforces deterministic timelocks, cryptographic bytecode hash verification, and multi-sig consensus for non-custodial smart contract upgrades.
+**What it is:** Records evidence about timelocks, bytecode identity and governance approval; the register itself enforces none of these controls.
 
 ## Overview
 
@@ -36,10 +36,10 @@ Provides a standardized, auditable framework and data model for **Smart Contract
 
 | # | Field Name | Type | SQL Type | JSON Schema Type | Notion Property Type | Example Value |
 |---|------------|------|----------|------------------|----------------------|---------------|
-| 1 | Upgrade Proposal ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text | `UPG-001` |
+| 1 | Upgrade Proposal ID | `id` | `VARCHAR(64) PRIMARY KEY` | `string` | Text | `UPG-001` |
 | 2 | Target Contract Address | `text` | `VARCHAR(56)` | `string` | Text | `CAUD...` |
 | 3 | New WASM Bytecode Hash | `text` | `VARCHAR(64)` | `string` | Text | `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
-| 4 | Timelock Delay Hours | `number` | `INTEGER` | `number` | Number | `48` |
+| 4 | Timelock Delay Hours | `number` | `INTEGER` | `integer` | Number | `48` |
 | 5 | Governance Quorum Required | `select` | `VARCHAR(32)` | `string` | Select | `3-of-5 Multisig` |
 | 6 | State Migration Function | `text` | `VARCHAR(64)` | `string` | Text | `migrate_storage_v2` |
 | 7 | Emergency Cancel Permitted | `select` | `VARCHAR(16)` | `string` | Select | `Yes` |
@@ -92,6 +92,8 @@ How do I configure and track Smart Contract Upgrade Governance for our productio
 > Generate the unified field schema, SQL DDL migration, and JSON validation schema to register into your system catalog.
 >
 > Workflow: Define criteria -> Run automated verification -> Record baseline -> Monitor invariants.
+
+Bind approval to network, contract, current/new executable hash, proposal ID and exact migration parameters; store full validated hashes, not the illustrative hash above. Record scheduled/executable times as UTC timestamps or ledger-bound values consistent with the actual contract, not a date-only proof of elapsed timelock. Verify replay protection, signer weights/thresholds, cancellation authority and storage-migration compatibility in code/tests before any upgrade. A checkbox saying audit attached does not establish an audit or authorize signing.
 
 ## Best Practices
 

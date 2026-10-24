@@ -59,7 +59,7 @@ WHAT ARE YOU TESTING?
         ├── Full user flows (login, checkout, etc.)
         │   ├── Detox (React Native, fast, reliable)
         │   ├── Maestro (Cross-platform, YAML-based)
-        │   └── Appium (Legacy, slow, last resort)
+        │   └── Appium when its driver/device coverage fits the project
         │
         └── Performance, memory, battery
             ├── Flashlight (RN performance)
@@ -76,7 +76,7 @@ WHAT ARE YOU TESTING?
 | **flutter_test** | Flutter | ⚡⚡⚡ | ⚡⚡⚡ | Widget tests |
 | **Detox** | RN | ⚡⚡ | ⚡⚡⚡ | E2E, critical flows |
 | **Maestro** | Both | ⚡⚡ | ⚡⚡ | E2E, cross-platform |
-| **Appium** | Both | ⚡ | ⚡ | Legacy, last resort |
+| **Appium** | Both | ⚡ | ⚡ | Driver/device coverage dependent |
 
 ---
 
@@ -190,7 +190,7 @@ WHAT ARE YOU TESTING?
 | Area | iOS Behavior | Android Behavior | Test Both? |
 |------|--------------|------------------|------------|
 | **Back navigation** | Edge swipe | System back button | ✅ YES |
-| **Permissions** | Ask once, settings | Ask each time, rationale | ✅ YES |
+| **Permissions** | OS/version-specific prompts and settings | Permission/version-specific prompts, denial and settings | ✅ YES |
 | **Keyboard** | Different appearance | Different behavior | ✅ YES |
 | **Date picker** | Wheel/modal | Material dialog | ⚠️ If custom UI |
 | **Push format** | APNs payload | FCM payload | ✅ YES |
@@ -284,7 +284,7 @@ WHERE TO TEST:
 
 ```
 AUTOMATED:
-├── React Native: jest-axe
+├── React Native: native accessibility tooling (jest-axe targets DOM and does not validate a native view tree)
 ├── Flutter: Accessibility checker in tests
 └── Lint rules for missing labels
 
@@ -354,3 +354,14 @@ Before writing tests, answer:
 5. **What happens offline?** → Test that scenario
 
 > **Remember:** Good mobile testing is about testing the RIGHT things, not EVERYTHING. A flaky E2E test is worse than no test. A failing unit test that catches a bug is worth 100 passing trivial tests.
+
+## Evidence interpretation
+
+The pyramid percentages and startup/transition thresholds above are illustrative
+planning examples, not validated universal requirements. Choose by user risk and
+measured baseline. Component snapshots are not rendered visual/accessibility tests.
+A testID is not an accessibility label, and inherited text may already provide a
+correct native accessible name. Test real semantics and focus order with native
+tools/screen readers. A flaky critical E2E test should be repaired or replaced,
+not silently removed. Device farms/cert installation/telemetry can incur costs or
+expose data and require explicit scope. No native device test was run in this review.

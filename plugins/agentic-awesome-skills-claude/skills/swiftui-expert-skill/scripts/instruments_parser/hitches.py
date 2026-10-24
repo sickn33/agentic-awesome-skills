@@ -40,11 +40,12 @@ def analyze(
     events: list[dict] = []
     narrative_counts: Counter[str] = Counter()
     system_count = 0
+    unknown_count = 0
 
     for row in stream:
         start_ns = _first_int(row, stream, START_KEYS)
         duration_ns = _first_int(row, stream, DURATION_KEYS)
-        if start_ns is None or duration_ns is None:
+        if start_ns is None or duration_ns is None or duration_ns < 0:
             continue
         if not xml_utils.event_overlaps_window(start_ns, start_ns + duration_ns, window):
             continue
@@ -62,8 +63,10 @@ def analyze(
 
         is_system_el = row.get("is-system")
         is_system = _bool_text(stream.resolve(is_system_el)) if is_system_el is not None else None
-        if is_system:
+        if is_system is True:
             system_count += 1
+        elif is_system is None:
+            unknown_count += 1
 
         events.append({
             "start_ns": start_ns,
@@ -111,7 +114,8 @@ def analyze(
             "worst_hitch_ms": worst["hitch_duration_ms"] if worst else 0,
             "per_process": per_process,
             "system_hitches": system_count,
-            "app_hitches": len(events) - system_count,
+            "app_hitches": len(events) - system_count - unknown_count,
+            "unknown_origin_hitches": unknown_count,
             "narrative_breakdown": dict(narrative_counts.most_common()),
         },
         "top_offenders": top_offenders,
@@ -142,4 +146,7 @@ def _bool_text(elem) -> bool | None:
     txt = xml_utils.str_text(elem)
     if txt is None:
         return None
-    return txt.strip() in ("1", "true", "True", "YES", "Yes")
+    normalized = txt.strip().lower()
+    if normalized in ("1", "true", "yes"): return True
+    if normalized in ("0", "false", "no"): return False
+    return None

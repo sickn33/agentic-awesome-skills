@@ -177,6 +177,7 @@ dc                   # Continue
 #include <dlfcn.h>
 #include <sys/ptrace.h>
 
+// Incomplete ABI sketch; do not compile/run without extracting variadic arguments and checking dlsym.
 long int ptrace(enum __ptrace_request req, ...) {
     long int (*orig)(enum __ptrace_request, pid_t, void*, void*);
     orig = dlsym(RTLD_NEXT, "ptrace");
@@ -196,7 +197,7 @@ Patch out anti-debug calls directly using pwntools — replaces function with `r
 from pwn import *
 
 elf = ELF('./challenge', checksec=False)
-elf.asm(elf.symbols.ptrace, 'ret')   # Replace ptrace() with immediate return
+elf.asm(elf.symbols.ptrace, 'xor eax, eax; ret')   # Replace ptrace() with immediate return
 elf.save('patched')                   # Save patched binary
 ```
 
@@ -265,18 +266,18 @@ jmp     rax              ; Execute decrypted
 enc = bytes.fromhex("...")  # ciphertext
 known = b"0xL4ugh{say_yes_to_me"
 for klen in range(2, 33):
-    key = bytearray(klen)
+    key = [None] * klen
     ok = True
     for i, b in enumerate(known):
         if i >= len(enc):
             break
         ki = i % klen
         v = enc[i] ^ b
-        if key[ki] != 0 and key[ki] != v:
+        if key[ki] is not None and key[ki] != v:
             ok = False
             break
         key[ki] = v
-    if not ok:
+    if not ok or any(v is None for v in key):
         continue
     pt = bytes(enc[i] ^ key[i % klen] for i in range(len(enc)))
     if all(32 <= c < 127 for c in pt):
@@ -297,20 +298,20 @@ for klen in range(2, 33):
 enc = bytes.fromhex("...")
 known = b"0xL4ugh{say_yes_to_me"
 for klen in range(2, 33):
-    key = bytearray(klen)
+    key = [None] * klen
     ok = True
     for i, b in enumerate(known):
         if i >= len(enc):
             break
         ki = i % klen
-        v = (enc[i] ^ i) ^ b  # strip index XOR
-        if key[ki] != 0 and key[ki] != v:
+        v = (enc[i] ^ (i & 0xff)) ^ b  # strip index XOR
+        if key[ki] is not None and key[ki] != v:
             ok = False
             break
         key[ki] = v
-    if not ok:
+    if not ok or any(v is None for v in key):
         continue
-    pt = bytes((enc[i] ^ i) ^ key[i % klen] for i in range(len(enc)))
+    pt = bytes((enc[i] ^ (i & 0xff)) ^ key[i % klen] for i in range(len(enc)))
     if all(32 <= c < 127 for c in pt):
         print(klen, key, pt)
 ```
@@ -383,10 +384,11 @@ def gen_keystream():
     mul = 0x2545f4914f6cdd1d
     for _ in range(256):
         state ^= (state >> 12)
-        state ^= (state << 25)
+        state ^= (state << 25) & 0xffffffffffffffff
         state ^= (state >> 27)
-        state = (state * mul) & 0xffffffffffffffff
-        ks.append((state >> 56) & 0xff)
+        state &= 0xffffffffffffffff
+        output = (state * mul) & 0xffffffffffffffff
+        ks.append((output >> 56) & 0xff)
     return ks
 ```
 
@@ -421,7 +423,7 @@ if s.check() == sat:
     print(''.join(chr(m[c].as_long()) for c in flag))
 ```
 
-**Key insight:** SECCOMP (Secure Computing Mode) filters encode flag validation as BPF bytecode operating on syscall arguments. Dump the filter with `seccomp-tools`, translate the comparisons and memory operations into z3 constraints, and solve for the flag without ever running the binary.
+**Key insight:** SECCOMP (Secure Computing Mode) filters encode flag validation as BPF bytecode operating on syscall arguments. Dump the filter with `seccomp-tools`, translate the comparisons and memory operations into z3 constraints, and solve for the flag without running the checker after extraction; `seccomp-tools dump ./binary` itself executes the binary and requires isolation.
 
 ---
 
@@ -567,7 +569,8 @@ echo "4d65746143..." | xxd -r -p
 
 ```c
 // LD_PRELOAD interposer to log sigaction calls
-int sigaction(int signum, const struct sigaction *act, ...) {
+// Sketch: real_sigaction must be resolved and null/error checked before use.
+int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact) {
     if (act && (act->sa_flags & SA_SIGINFO))
         log("SET %d SA_SIGINFO=1\n", signum);
     return real_sigaction(signum, act, oldact);
@@ -633,18 +636,18 @@ flag = b''.join(v.to_bytes(4, 'little') for v in values)
 
 **Exploitation:**
 ```python
-import time
+import time, string
 from pwn import *
 
 flag = ""
 for pos in range(flag_length):
     best_char, best_time = '', 0
     for c in string.printable:
-        io = remote(host, port)
-        start = time.time()
-        io.sendline((flag + c).ljust(total_len, 'X'))
-        io.recvall()
-        elapsed = time.time() - start
+        io = remote("127.0.0.1", port, timeout=2)  # authorized local synthetic fixture only
+        start = time.perf_counter()
+        io.sendline((flag + c).ljust(total_len, 'X').encode())
+        io.recvall(timeout=2)
+        elapsed = time.perf_counter() - start
         if elapsed > best_time:
             best_time = elapsed
             best_char = c
@@ -718,8 +721,8 @@ Instead of reversing complex transformation logic, patch a byte to `0xCC` (INT3)
 
 ```bash
 # Patch byte at transform output point to 0xCC
-printf '\xcc' | dd of=binary bs=1 seek=$((0x400ebb)) conv=notrunc
-ulimit -c unlimited
+printf '\xcc' | dd of=binary-analysis-copy bs=1 seek="$VERIFIED_FILE_OFFSET" conv=notrunc
+ulimit -c 65536  # private isolated fixture only; cores may contain secrets
 # Brute-force each position:
 for c in $(seq 32 126); do
     echo -ne "$(printf '\\x%02x' $c)$known_suffix" | ./binary 2>/dev/null
@@ -799,3 +802,7 @@ if s.check() == sat:
 **Key insight:** Format string `%hhn` writes the count of printed characters (mod 256) to a pointed-to byte. A sequence of `%Nc%hhn` instructions implements arbitrary byte-to-memory writes, effectively creating a bytecode VM. Decompile by: (1) extract the write address and value from each `%N...%hhn` pair, (2) map memory addresses to symbolic variables, (3) build an equation system from the write sequences, (4) solve with Z3.
 
 **References:** SECCON 2017
+
+## Semantics and runtime boundaries
+
+Apply the root gate to all hooks, debuggers, fuzzers and emulators. A virtual address is not a file offset; validate instruction boundaries and expected original bytes before patching a copy. Replacing functions, dumping cores and timing probes can modify behavior or disclose data. Case-specific incomplete hooks/solver sketches with undefined symbols must be completed and validated before execution; none establishes a universal bypass. XOR, bytewise transforms and one-byte oracles may have multiple preimages; retain alternatives and replay a complete valid candidate. No live C2, remote service exploitation or authorization bypass is implied.

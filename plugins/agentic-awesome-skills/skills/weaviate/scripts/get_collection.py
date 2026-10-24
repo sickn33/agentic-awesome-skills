@@ -71,6 +71,7 @@ def main(
                 "name": name,
                 "description": config.description,
                 "vectorizer_config": vectorizer_config,
+                "named_vector_config": getattr(config, "vector_config", None),
                 "properties": properties,
                 "replication_factor": getattr(config.replication_config, "factor", None)
                 if hasattr(config, "replication_config")
@@ -88,6 +89,8 @@ def main(
                 print(f"## Collection: {name}\n")
                 print(f"**Description:** {config.description or 'N/A'}")
 
+                if result["named_vector_config"]:
+                    print("**Named vector configuration:** " + json.dumps(result["named_vector_config"], default=str))
                 if vectorizer_config:
                     print(
                         f"**Vectorizer:** {vectorizer_config.get('vectorizer', 'N/A')}"
@@ -111,10 +114,10 @@ def main(
                         print(f"| {prop['name']} | {prop['data_type']} | {desc} |")
 
     except weaviate.exceptions.WeaviateConnectionError as e:
-        print(f"Error: Connection failed - {e}", file=sys.stderr)
+        print("Error: connection failed; inspect sanitized diagnostics separately", file=sys.stderr)
         raise typer.Exit(1)
     except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
+        print("Error: operation failed; inspect sanitized diagnostics separately", file=sys.stderr)
         raise typer.Exit(1)
 
 

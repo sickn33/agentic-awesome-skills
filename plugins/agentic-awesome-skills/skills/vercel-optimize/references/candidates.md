@@ -6,7 +6,7 @@
 
 The deterministic threshold expressions that turn observability signals into investigation candidates. Pure JS, no LLM. Thresholds live in `lib/gates/*.mjs`.
 
-Total gates: 15. Budget cap: `MAX_CODE_CANDIDATES = 6`. Gate version: `1.8.0`.
+Total gates: 15. Budget cap: `MAX_CODE_CANDIDATES = 6`. Gate version: `1.8.1`.
 
 ## Gates
 
@@ -39,7 +39,7 @@ Routes where > 40% of invocations are cold-start, at meaningful traffic (>=1,000
 - **Scope**: route
 - **Source citation**: `https://web.dev/articles/vitals`
 
-Routes where Core Web Vitals fall into Google's "Poor" band on real-user traffic. LCP > 2500ms, INP > 200ms, or CLS > 0.1 each hurt SEO and conversion. Surfaces one candidate per (route, metric) pair to keep recommendations focused.
+Routes where Core Web Vitals fall into the upper bounds of Google's "Good" band on real-user traffic. LCP > 2500ms, INP > 200ms, or CLS > 0.1 each hurt SEO and conversion. Surfaces one candidate per (route, metric) pair to keep recommendations focused.
 
 ---
 

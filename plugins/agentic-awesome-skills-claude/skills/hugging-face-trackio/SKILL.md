@@ -32,7 +32,7 @@ Use `import trackio` in your training scripts to log metrics:
 - Log metrics with `trackio.log()` or use TRL's `report_to="trackio"`
 - Finalize with `trackio.finish()`
 
-**Key concept**: For remote/cloud training, pass `space_id` — metrics sync to a Space dashboard so they persist after the instance terminates.
+**Key concept**: Use local persistent storage by default. An authorized space_id can deploy or update a remote Space and transfer experiment data; verify destination visibility and storage persistence first.
 
 → See [references/logging_metrics.md](references/logging_metrics.md) for setup, TRL integration, and configuration options.
 
@@ -67,7 +67,7 @@ Use the `trackio` command to query logged metrics and alerts:
 ```python
 import trackio
 
-trackio.init(project="my-project", space_id="username/trackio")
+trackio.init(project="my-project")  # local by default
 trackio.log({"loss": 0.1, "accuracy": 0.9})
 trackio.log({"loss": 0.09, "accuracy": 0.91})
 trackio.finish()
@@ -88,7 +88,7 @@ When running experiments autonomously as an LLM agent, the recommended workflow 
 2. **Launch training** — run the script in the background
 3. **Poll for alerts** — use `trackio list alerts --project <name> --json --since <timestamp>` to check for new alerts
 4. **Read metrics** — use `trackio get metric ...` to inspect specific values
-5. **Iterate** — based on alerts and metrics, stop the run, adjust hyperparameters, and launch a new run
+5. **Iterate within an authorized run/time/cost budget** — preserve checkpoints, inspect alerts, and decide whether a controlled change and new run are justified
 
 ```python
 import trackio
@@ -108,7 +108,7 @@ for step in range(num_steps):
     if step > 0 and abs(loss) < 1e-8:
         trackio.alert(
             title="Vanishing loss",
-            text="Loss near zero — possible gradient collapse",
+            text="Loss near zero — inspect objective, data leakage and gradient metrics before diagnosing",
             level=trackio.AlertLevel.WARN,
         )
 
@@ -126,3 +126,7 @@ trackio list alerts --project my-project --json --since "2025-01-01T00:00:00"
 - Use this skill only when the task clearly matches its upstream product or API scope.
 - Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
 - Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+### Privacy and execution boundaries
+
+Check installed-version APIs and CLI --help before use. Training helpers and model/data variables in examples are application-supplied. Metrics/configs can contain sensitive data: do not log tokens, private samples or identifiers. Space creation/sync and webhook messages are external writes; require destination authorization, inspect inherited TRACKIO_* settings, and verify visibility on existing Spaces. Private flags do not make an already-public Space private. Missing alerts do not establish healthy training. Thresholds are task-specific; neither high nor near-zero loss alone diagnoses gradients. No training, installation or service interaction is included.

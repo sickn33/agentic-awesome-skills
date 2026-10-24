@@ -1,0 +1,170 @@
+{
+  "schema_version": "2.1",
+  "session_config": {
+    "working_language": "en",
+    "canonical_identifiers": "en",
+    "fallback_language": "en"
+  },
+  "review_id": "example-council-001",
+  "product_direction": "Let a workflow assistant complete recurring customer operations without manual approval.",
+  "mode": "ux3_council",
+  "stage": "prototype",
+  "actor_boundary": {
+    "target_population": [
+      "Operations teams handling recurring customer workflows"
+    ],
+    "operator": "Operations team member",
+    "beneficiary": "Operations team and customers receiving correct service",
+    "machine_actor": "Workflow assistant",
+    "affected_people": [
+      "Customers affected by completed operations"
+    ],
+    "excluded_groups": [
+      "One-off workflows",
+      "Workflows without reversible approval paths"
+    ]
+  },
+  "product_organization": {
+    "organization": "Example Product Co.",
+    "project_owner": "Workflow automation team",
+    "issuer": "Example Product Co."
+  },
+  "stakeholder_effects": [
+    {
+      "stakeholder": "Customers affected by completed operations",
+      "effect": "Autonomous execution could create customer-facing errors or recovery burden."
+    }
+  ],
+  "human_judgment_boundary": {
+    "human_owned_decisions": [
+      "Acceptable customer-facing recovery risk"
+    ],
+    "machine_supported_inputs": [
+      "Support notes",
+      "Observed workflow traces",
+      "Approval behavior"
+    ],
+    "not_mechanized": [
+      "Risk tolerance for autonomous customer-facing action"
+    ],
+    "approval_gates": [
+      {
+        "gate_id": "accountable-owner-customer-action-approval",
+        "accountable_owner": "Named accountable owner",
+        "condition": "Before any customer-facing execution."
+      }
+    ]
+  },
+  "unresolved_assumptions": [
+    "Whether people want full autonomy or faster preparation with approval."
+  ],
+  "combined_verdict": "verify",
+  "weakest_flow": "evidence",
+  "strongest_signal": "Operators report repeated time loss in recurring customer operations.",
+  "riskiest_claim": "The assistant can act safely without approval.",
+  "main_uncertainty": "Whether people want full autonomy or faster preparation with approval.",
+  "confidence_level": "low",
+  "evidence_tier": "t1",
+  "main_trade_off": "Delay autonomy to protect trust, recovery, and accountability.",
+  "human_owned_decision": "risk",
+  "human_decision_record_id": "decision-example-001",
+  "evidence_receipt_ids": [
+    "support-notes-001"
+  ],
+  "reviews": {
+    "user": {
+      "verdict": "verify",
+      "strongest_signal": "Operators can name recurring work that consumes time.",
+      "weakest_assumption": "They want autonomous execution rather than assisted preparation.",
+      "missing_evidence": "Observed workflows and approval preferences.",
+      "disconfirming_evidence": "Operators reject autonomous action for customer-facing work.",
+      "stop_condition": "No recurring workflow has a clear operator cost.",
+      "evidence_tier": "t1"
+    },
+    "evidence": {
+      "verdict": "verify",
+      "strongest_signal": "Support notes describe recurring work.",
+      "weakest_assumption": "Reported pain predicts willingness to delegate.",
+      "missing_evidence": "Observed error rate, recovery cost, and approval behavior.",
+      "disconfirming_evidence": "Draft assistance does not reduce cycle time.",
+      "stop_condition": "Customer-facing errors cannot be traced or reversed.",
+      "evidence_tier": "t1"
+    },
+    "business": {
+      "verdict": "verify",
+      "strongest_signal": "Cycle-time reduction could deepen workflow dependency.",
+      "weakest_assumption": "Support and trust costs remain bounded.",
+      "missing_evidence": "Retention impact and operating cost.",
+      "disconfirming_evidence": "Review and recovery cost exceed time saved.",
+      "stop_condition": "The product must absorb unbounded exception handling.",
+      "evidence_tier": "t1"
+    }
+  },
+  "next_smallest_action": "Test draft-only assistance with human approval on five recurring workflows.",
+  "execution_boundary": {
+    "may_do": [
+      "Prepare workflow drafts and collect approval decisions."
+    ],
+    "must_not_do": [
+      "Execute customer-facing actions or remove human approval."
+    ],
+    "must_ask": [
+      "Any test would execute customer-facing work or remove human approval."
+    ]
+  },
+  "human_approval_gates": [
+    {
+      "gate_id": "accountable-owner-customer-action-approval",
+      "accountable_owner": "Named accountable owner",
+      "condition": "Before any customer-facing execution."
+    }
+  ],
+  "high_risk_actions": [
+    {
+      "action": "Execute customer-facing workflow actions.",
+      "approval_gate": {
+        "gate_id": "accountable-owner-customer-action-approval",
+        "accountable_owner": "Named accountable owner",
+        "condition": "Before any customer-facing execution."
+      },
+      "rollback_plan": "Stop the test and restore manual approval."
+    }
+  ],
+  "council_record": {
+    "independent_review_ids": [
+      "review-user-001",
+      "review-evidence-001",
+      "review-business-001"
+    ],
+    "challenges": [
+      {
+        "reviewer": "user_flow",
+        "objection_to": "business_flow",
+        "counter_evidence": "Reported time savings do not prove willingness to delegate customer-facing action.",
+        "position_change": "unchanged"
+      },
+      {
+        "reviewer": "evidence_flow",
+        "objection_to": "user_flow",
+        "counter_evidence": "Support requests may ask for speed, not autonomy.",
+        "position_change": "weakened"
+      },
+      {
+        "reviewer": "business_flow",
+        "objection_to": "evidence_flow",
+        "counter_evidence": "A draft-only test can measure cycle time and correction cost without autonomy.",
+        "position_change": "strengthened"
+      }
+    ],
+    "unresolved_conflicts": [
+      "The acceptable threshold for customer-facing recovery risk remains human-owned."
+    ]
+  },
+  "stop_conditions": [
+    "Operators reject draft-only assistance.",
+    "Recovery paths remain unclear.",
+    "Customer-facing mistakes cannot be reversed."
+  ],
+  "context_pack_required": false,
+  "proof_step": "Observe five workflows and compare draft-only cycle time, corrections, and approval decisions."
+}

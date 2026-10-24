@@ -146,3 +146,7 @@ views:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Scope and data limitations
+
+Use a copy or preview before replacing an existing Base. Global filters select data for a view; they are not access controls, and a view limit is not a retention or privacy boundary. YAML parsing alone does not validate the Obsidian expression language or plugin availability. Match view types/functions to the installed version and verify representative missing, zero, malformed and timezone-sensitive dates in Obsidian. The reading-time and byte-based word estimates are rough display heuristics, not measured counts. Escape untrusted strings before rendering HTML and avoid remote images/URLs for private notes without approval. A Base configures presentation and formulas; it does not enforce required fields or database constraints.

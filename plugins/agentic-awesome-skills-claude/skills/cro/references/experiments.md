@@ -67,7 +67,7 @@ Comprehensive list of A/B tests and experiments organized by page type.
 |------|------------|
 | Annual vs. monthly display | Highlight savings or simplify |
 | Price points | $99 vs. $100 vs. $97 psychology |
-| "Most Popular" badge | Highlight target plan |
+| "Most Popular" badge | Use only with current measured popularity evidence; otherwise label an editorial recommendation honestly |
 | Number of tiers | 3 vs. 4 vs. 2 visible options |
 | Price anchoring | Order plans to anchor expectations |
 | Custom enterprise tier | Show vs. "Contact Sales" |
@@ -232,10 +232,10 @@ Comprehensive list of A/B tests and experiments organized by page type.
 | Test | Hypothesis |
 |------|------------|
 | Chat widget | Impact on conversions |
-| Cookie consent UX | Minimize friction |
+| Cookie consent UX | Preserve informed choice, equal access to refusal and required consent behavior |
 | Page load speed | Performance vs. features |
 | Mobile experience | Responsive optimization |
-| Accessibility | Impact on conversion |
+| Accessibility | Preserve baseline access in every variant; do not withhold accessibility as a control |
 | Personalization | Dynamic content by segment |
 
 ### Navigation Tests

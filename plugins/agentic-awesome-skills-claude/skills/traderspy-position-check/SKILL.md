@@ -53,6 +53,10 @@ Map the symbol to Binance naming for the data tools: `BTC` → `BTCUSDT`, `kPEPE
 Three positions ≈ 3 + 1 (+3) calls. If the quota is tight, do derivatives for all coins first,
 then technicals for the position with the smallest liquidation distance.
 
+## Product and approximation limits
+
+Verify the actual instrument, venue, mark-price source and timestamp; symbol-name resemblance does not prove equivalent contracts. The leveraged linear P&L formula excludes fees/funding and does not apply unchanged to inverse contracts. Without an exchange-provided liquidation price, report liquidation distance as unknown: `100/leverage` is an entry-relative rough intuition, not current distance after price moves, added margin or account-wide losses. Funding settlement intervals/rates vary by contract and can change; use actual schedule/units and do not automatically multiply every rate by three. ATR is historical volatility, not a stop-safety guarantee; distance bands are arbitrary reporting labels, not safety ratings.
+
 ## The math (show it, briefly)
 
 - P&L % on margin = (mark − entry) / entry × leverage, sign-flipped for shorts; P&L % on price =

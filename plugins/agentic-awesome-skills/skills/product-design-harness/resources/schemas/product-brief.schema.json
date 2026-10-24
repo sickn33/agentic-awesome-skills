@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cis2042.github.io/ux3-product-design-harness/schemas/product-brief.schema.json",
+  "title": "Product Design Harness Product Brief",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "session_config",
+    "product_direction",
+    "accountable_owner",
+    "stage",
+    "actor_boundary",
+    "business_boundary",
+    "human_judgment_boundary",
+    "unresolved_assumptions",
+    "execution_boundary",
+    "problem_hypothesis",
+    "current_evidence",
+    "business_goal",
+    "constraints",
+    "proposed_next_step",
+    "known_risks"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "2.1"
+    },
+    "session_config": {
+      "$ref": "session-config.schema.json"
+    },
+    "product_direction": {
+      "type": "string",
+      "minLength": 1
+    },
+    "accountable_owner": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "idea",
+        "prototype",
+        "launch",
+        "scale"
+      ]
+    },
+    "actor_boundary": {
+      "$ref": "actor-boundary.schema.json"
+    },
+    "business_boundary": {
+      "type": "object",
+      "required": [
+        "product_organization",
+        "project_owner",
+        "issuer",
+        "customers",
+        "buyers",
+        "operators",
+        "partners",
+        "funders",
+        "platforms",
+        "regulators",
+        "externality_bearers",
+        "decision_authority",
+        "value_exchange"
+      ],
+      "properties": {
+        "product_organization": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project_owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "customers": {
+          "$ref": "#/$defs/string_list"
+        },
+        "buyers": {
+          "$ref": "#/$defs/string_list"
+        },
+        "operators": {
+          "$ref": "#/$defs/string_list"
+        },
+        "partners": {
+          "$ref": "#/$defs/string_list"
+        },
+        "funders": {
+          "$ref": "#/$defs/string_list"
+        },
+        "platforms": {
+          "$ref": "#/$defs/string_list"
+        },
+        "regulators": {
+          "$ref": "#/$defs/string_list"
+        },
+        "externality_bearers": {
+          "$ref": "#/$defs/string_list"
+        },
+        "decision_authority": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value_exchange": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "human_judgment_boundary": {
+      "type": "object",
+      "required": [
+        "human_owned_decisions",
+        "machine_supported_inputs",
+        "not_mechanized",
+        "approval_gates"
+      ],
+      "properties": {
+        "human_owned_decisions": {
+          "$ref": "#/$defs/string_list"
+        },
+        "machine_supported_inputs": {
+          "$ref": "#/$defs/string_list"
+        },
+        "not_mechanized": {
+          "$ref": "#/$defs/string_list"
+        },
+        "approval_gates": {
+          "$ref": "#/$defs/named_human_gates"
+        }
+      },
+      "additionalProperties": false
+    },
+    "unresolved_assumptions": {
+      "$ref": "#/$defs/non_empty_string_list"
+    },
+    "execution_boundary": {
+      "$ref": "#/$defs/execution_boundary"
+    },
+    "problem_hypothesis": {
+      "type": "string",
+      "minLength": 1
+    },
+    "current_evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "evidence.schema.json"
+      }
+    },
+    "business_goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "constraints": {
+      "$ref": "#/$defs/string_list"
+    },
+    "proposed_next_step": {
+      "type": "string",
+      "minLength": 1
+    },
+    "known_risks": {
+      "$ref": "#/$defs/string_list"
+    }
+  },
+  "$defs": {
+    "string_list": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "non_empty_string_list": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "execution_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "may_do",
+        "must_not_do",
+        "must_ask"
+      ],
+      "properties": {
+        "may_do": {
+          "$ref": "#/$defs/non_empty_string_list"
+        },
+        "must_not_do": {
+          "$ref": "#/$defs/non_empty_string_list"
+        },
+        "must_ask": {
+          "$ref": "#/$defs/non_empty_string_list"
+        }
+      }
+    },
+    "named_human_gates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/named_human_gate"
+      }
+    },
+    "named_human_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "gate_id",
+        "accountable_owner",
+        "condition"
+      ],
+      "properties": {
+        "gate_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accountable_owner": {
+          "type": "string",
+          "minLength": 1
+        },
+        "condition": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

@@ -56,7 +56,7 @@ If the context file doesn't exist, run the `developer-audience-context` skill fi
 | **Bi-weekly** | Original content heavy | Can lose momentum |
 | **Monthly** | Product updates, digests | Easy to forget you exist |
 
-**Developer preference**: Weekly is the sweet spot. Developers are busy and inbox-protective.
+Test cadence against the actual audience and publishing capacity; weekly is a starting hypothesis.
 
 ---
 
@@ -141,7 +141,7 @@ Code rendering is tricky in email. Options:
 
 | Approach | Pros | Cons |
 |----------|------|------|
-| **Inline code** (`backticks`) | Works everywhere | No highlighting |
+| **Inline code** | Use rendered HTML code tags or plain text; Markdown backticks need an ESP renderer | Limited highlighting |
 | **Plain text block** | Reliable | Ugly |
 | **Image of code** | Beautiful | Can't copy, accessibility issues |
 | **"View in browser" link** | Full formatting | Friction |
@@ -281,9 +281,9 @@ Avoid in subject lines and body:
 
 ## Metrics & Benchmarks
 
-### Key Metrics
+### Illustrative planning ranges (not validated benchmarks)
 
-| Metric | Developer Newsletter Benchmark |
+| Metric | Historical illustrative range; validate your baseline |
 |--------|-------------------------------|
 | **Open rate** | 30-50% (higher than B2C) |
 | **Click rate** | 5-15% |
@@ -295,7 +295,7 @@ Avoid in subject lines and body:
 
 | Metric | What It Tells You |
 |--------|------------------|
-| **Open rate by subject** | Subject line effectiveness |
+| **Open rate by subject** | Tracking signal affected by privacy proxies; not proof of human reading |
 | **Click rate by link** | Content resonance |
 | **Reply rate** | Engagement depth |
 | **Unsubscribe after send** | Content fit |
@@ -374,3 +374,5 @@ P.S. [Optional: extra CTA, fun fact, or teaser]
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+The70-20-10 mix, subject length, word lists and numeric ranges are heuristics; no single word determines spam placement or inbox success. Verify current sender requirements and ESP features, test rendering/plain-text fallbacks and use evidence for numeric benefit claims. Writing a draft does not authorize sends, list uploads, tracking, paid monitoring or DNS changes. Use consented audiences, honor unsubscribe/suppressions, disclose referrals and avoid copying private community content. If the context file/companion skill is missing, use supplied audience facts and disclose the gap rather than inventing context.

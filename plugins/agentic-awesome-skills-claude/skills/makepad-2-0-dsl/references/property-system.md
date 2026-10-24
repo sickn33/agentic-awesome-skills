@@ -37,7 +37,7 @@ margin: 10                                           // uniform 10px
 margin: Inset{top: 5 bottom: 5 left: 10 right: 10}  // per-side
 ```
 
-**CRITICAL**: Default `height` is `Fill`. Containers inside a `Fit` parent MUST set `height: Fit` or they will be invisible (0 height due to circular dependency).
+**Sizing:** Resolve each axis against its ancestor constraints. A content-sized parent with an unconstrained Fill child can be circular; use Fit or a fixed bound as appropriate. Scroll viewports should remain bounded.
 
 ## Layout Properties
 
@@ -498,7 +498,7 @@ Pal.iq(t a b c d)                  // cosine color palette
 Pal.iq0(t) .. Pal.iq7(t)          // pre-built cosine palettes
 ```
 
-**CRITICAL**: Always wrap final color in `Pal.premul()` when returning from `pixel: fn()`, UNLESS returning `sdf.result` (which is already premultiplied).
+**Alpha contract:** Return the premultiplied color expected by the renderer. Apply `Pal.premul()` once to straight-alpha colors; do not premultiply already-premultiplied sampled/SDF results a second time.
 
 ### Shadow Rendering
 
@@ -534,7 +534,7 @@ dFdx dFdy                    // fragment-only partial derivatives
 
 ```
 width: Fill              // Size
-height: Fit              // Size (ALWAYS set Fit on containers!)
+height: Fit              // Content-sized axis; use Fill/fixed for bounded viewports
 flow: Down               // Flow direction
 spacing: 10              // gap between children
 padding: 15              // Inset or bare number
@@ -709,9 +709,9 @@ Usage: `cursor: MouseCursor.Hand`
 
 ## Draw Batching
 
-Set `new_batch: true` on any View that has `show_bg: true` AND contains text children. Without it, text from child Labels may render BEHIND the parent's background due to GPU draw call batching.
+If a custom shader/background exhibits incorrect draw ordering, inspect the pinned revision's batching and inherited view defaults. `new_batch: true` can establish a boundary; adding it indiscriminately may harm batching. Without it, text from child Labels may render BEHIND the parent's background due to GPU draw call batching.
 
-**CRITICAL for hover effects**: If a View has `show_bg: true` with a hover animator (background goes from transparent to opaque), you MUST set `new_batch: true` or text disappears on hover.
+**CRITICAL for hover effects**: If a View has `show_bg: true` with a hover animator (background goes from transparent to opaque), test whether a batch boundary is required; do not assume every view loses text without this property.
 
 ```
 View{

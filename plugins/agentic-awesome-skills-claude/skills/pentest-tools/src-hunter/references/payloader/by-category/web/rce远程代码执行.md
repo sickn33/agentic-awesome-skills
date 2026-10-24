@@ -285,7 +285,7 @@ _利用PHP Filter链构造RCE_
 **2. 构造Filter链**
 > 构造Filter链
 ```
-php://filter/convert.base64-decode/resource=data://,plain;base64,PD9waHAgc3lzdGVtKCRfR0VUW2NtZF0pOyA/Pg==
+[无效链：data URL 格式错误且重复解码；不能作为可运行载荷]
 使用多个过滤器串联
 ```
 **语法解析：**
@@ -492,7 +492,7 @@ class Exploit {
 }
 echo serialize(new Exploit());
 ?>
-生成: O:6:"Exploit":1:{s:3:"cmd";s:17:"system('whoami');";}
+生成: O:7:"Exploit":1:{s:3:"cmd";s:17:"system('whoami');";}
 ```
 **语法解析：**
 - `system()` — 系统命令执行 _function_
@@ -655,13 +655,13 @@ phar://exploit.phar/test.txt
 使用public/private/protected属性
 注意序列化格式差异:
 public: s:3:"cmd"
-private: s:8:"\0Class\0cmd"
-protected: s:7:"\0*\0cmd"
+private: s:10:"\0Class\0cmd"
+protected: s:6:"\0*\0cmd"
 ```
 **语法解析：**
 - `public: s:3:"cmd"` — 公有属性直接序列化属性名 _value_
-- `private: s:8:"\0Class\0cmd"` — 私有属性前后加\\0和类名，长度包含null字节 _value_
-- `protected: s:7:"\0*\0cmd"` — 受保护属性前后加\\0和*号 _value_
+- `private: s:10:"\0Class\0cmd"` — 私有属性前后加\\0和类名，长度包含null字节 _value_
+- `protected: s:6:"\0*\0cmd"` — 受保护属性前后加\\0和*号 _value_
 
 
 **概述：** PHP反序列化利用unserialize()函数处理用户可控数据时触发魔术方法(__destruct/__wakeup/__toString等)，通过POP链调用system()/exec()等危险函数实现RCE。
@@ -677,7 +677,7 @@ protected: s:7:"\0*\0cmd"
 
 **防御措施：** 防御措施：
 1. 避免反序列化用户输入
-2. 使用json_encode替代
+2. 使用 json_decode 解析并按固定 schema 校验 JSON；不要反序列化不可信对象
 3. 白名单类限制
 4. 禁用Phar
 
@@ -1285,7 +1285,7 @@ _platform: linux_
 php_value include_path "/var/www/html/uploads"
 
 # 禁用安全限制
-php_flag safe_mode off
+# safe_mode 是已移除的历史功能，不能作为现代 PHP 配置
 php_flag display_errors on
 ```
 **语法解析：**
@@ -1327,3 +1327,13 @@ _platform: linux_
 4. 重命名上传文件
 
 ---
+
+
+## 复核后的适用边界
+
+- PHP 版本必须明确：字符串 `assert`、`preg_replace /e`、`create_function` 是历史行为；`eval` 是语言结构，不能通过变量函数名调用。现代 PHP 的数组键须加引号。示例不是跨版本可运行保证，也不保证绕过检测。
+- PHP 8 的普通 Phar 文件操作不再自动反序列化元数据。对象注入需要实际反序列化入口、已加载的类和可达 gadget；`__construct` 并非由 `unserialize` 自动调用。手写序列化长度按字节计，实际实验应由无副作用的夹具生成，而不是运行带 `system` / `eval` 的析构器。
+- Java `Runtime.exec(String)` 不会自动解释 shell 管道。把命令字符串传给 ysoserial 不会自动生成“内存马”；链是否成立取决于 JDK、依赖、过滤器与实际反序列化路径。XMLSerializer 本身也不是任意类型反序列化的充分证据。
+- 网络回调只可使用批准的固定合成标记，不在 DNS 标签、回调或日志中发送命令输出。延迟须与对照基线比较并限制次数；一次延迟、HTTP 200 或报错不是执行证明。`nc -e` 等参数因实现而异。
+- 上传后改名或移除文件执行位不能阻止 PHP 解释器处理文件；需要移出 web 根目录、关闭上传目录脚本处理并验证映射。`.htaccess` 受 AllowOverride、模块与 SAPI 限制，`AddType` 本身不保证执行；自重写规则也不产生执行能力。
+- 图片附加 PHP、图片解析器内存漏洞及 ImageMagick 历史漏洞是不同的攻击链，不能互相作为证据。生成候选文件应保留原文件；shell 双引号会展开 PHP 中的 `$`，这些混合片段不能直接复制运行。本次仅静态复核，未运行命令、载荷、构造器或网络探测。

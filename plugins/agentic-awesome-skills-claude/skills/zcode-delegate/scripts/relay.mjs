@@ -928,8 +928,8 @@ function dispatchToZcode(opts, run, target, writeResult, beforeTree, beforeFinge
     // parent is down, sweep the group (no-op where taskkill already felled the tree)
     if (watchdogFired) killChild(child, "SIGKILL");
     stdoutBuf += stdoutDecoder.end();
-    // Preserve the raw stream before parsing, so nothing is lost when the
-    // document is malformed and the reviewer has to read it themselves.
+    // Preserve the bounded stdout head before parsing; bytes beyond the cap are lost
+    // and the parse warning makes that coverage limit explicit.
     if (stdoutBuf) writeFileSync(run.outputPath, stdoutBuf, "utf8");
     const parsed = parseZcodeOutput(stdoutBuf);
     const finalMessage = typeof parsed?.response === "string" ? parsed.response.trim() : stdoutBuf.trim();

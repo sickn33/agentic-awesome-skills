@@ -62,7 +62,7 @@ Never use raw `Input` or `Textarea` inside an `InputGroup`.
 import { InputGroup, InputGroupInput } from "@/components/ui/input-group"
 
 <InputGroup>
-  <InputGroupInput placeholder="Search..." />
+  <InputGroupInput placeholder="Search..." aria-label="Search query" />
 </InputGroup>
 ```
 
@@ -89,9 +89,9 @@ Never place a `Button` directly inside or adjacent to an `Input` with custom pos
 import { InputGroup, InputGroupInput, InputGroupAddon } from "@/components/ui/input-group"
 
 <InputGroup>
-  <InputGroupInput placeholder="Search..." />
+  <InputGroupInput placeholder="Search..." aria-label="Search query" />
   <InputGroupAddon>
-    <Button size="icon">
+    <Button size="icon" type="button" aria-label="Search">
       <SearchIcon data-icon="inline-start" />
     </Button>
   </InputGroupAddon>
@@ -100,7 +100,7 @@ import { InputGroup, InputGroupInput, InputGroupAddon } from "@/components/ui/in
 
 ---
 
-## Option sets (2–7 choices) use ToggleGroup
+## Toggle option sets can use ToggleGroup
 
 Don't manually loop `Button` components with active state.
 
@@ -127,7 +127,7 @@ const [selected, setSelected] = useState("daily")
 ```tsx
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 
-<ToggleGroup spacing={2}>
+<ToggleGroup spacing={2}> {/* Base example; Radix requires type="single". */}
   <ToggleGroupItem value="daily">Daily</ToggleGroupItem>
   <ToggleGroupItem value="weekly">Weekly</ToggleGroupItem>
   <ToggleGroupItem value="monthly">Monthly</ToggleGroupItem>
@@ -139,7 +139,7 @@ Combine with `Field` for labelled toggle groups:
 ```tsx
 <Field orientation="horizontal">
   <FieldTitle id="theme-label">Theme</FieldTitle>
-  <ToggleGroup aria-labelledby="theme-label" spacing={2}>
+  <ToggleGroup aria-labelledby="theme-label" spacing={2}> {/* Base; Radix requires type="single". */}
     <ToggleGroupItem value="light">Light</ToggleGroupItem>
     <ToggleGroupItem value="dark">Dark</ToggleGroupItem>
     <ToggleGroupItem value="system">System</ToggleGroupItem>
@@ -178,8 +178,8 @@ Both attributes are needed — `data-invalid`/`data-disabled` styles the field (
 // Invalid.
 <Field data-invalid>
   <FieldLabel htmlFor="email">Email</FieldLabel>
-  <Input id="email" aria-invalid />
-  <FieldDescription>Invalid email address.</FieldDescription>
+  <Input id="email" aria-invalid aria-describedby="email-error" />
+  <FieldDescription id="email-error">Invalid email address.</FieldDescription>
 </Field>
 
 // Disabled.

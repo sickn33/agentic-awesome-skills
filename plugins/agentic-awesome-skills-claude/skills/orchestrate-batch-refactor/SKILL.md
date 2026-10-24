@@ -11,7 +11,7 @@ date_added: "2026-03-25"
 ## Overview
 
 Use this skill to run high-throughput refactors safely.
-Analyze scope in parallel, synthesize a single plan, then execute independent work packets with sub-agents.
+When delegation is explicitly authorized by current user or repository instructions, analyze scope in parallel, synthesize a single plan, then execute independent work packets. Otherwise apply the same packet planning sequentially; no agent type or model is implicitly available.
 
 ## When to Use
 - When a refactor spans many files or subsystems and needs clear work partitioning.

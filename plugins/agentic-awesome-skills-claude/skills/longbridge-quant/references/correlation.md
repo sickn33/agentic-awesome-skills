@@ -12,8 +12,8 @@ Computes pairwise return correlations and cointegration statistics for a basket 
 5. **Spearman correlation** (rank-based, robust to outliers): compute alongside Pearson for comparison.
 6. **Rolling 60-day correlation** for the highest-correlated pair: show trend over time.
 7. **Cointegration screen** (for pairs only):
-   - OLS spread residuals → ADF test → report p-value and verdict
-   - Half-life = −ln(2) / OLS slope of Δspread ~ spread\_{t-1}
+   - Use an Engle-Granger cointegration test with its appropriate residual critical values (for example statsmodels.coint), not ordinary adfuller p-values on estimated residuals; report null and assumptions
+   - Estimate Δspread = a + b·spread[t−1] + error; half-life = −ln(2)/ln(1+b) for 0 < 1+b < 1. The −ln(2)/b form is only an approximation near b=0. Otherwise report no finite monotonic mean-reversion half-life.
 8. Output correlation matrix heatmap description (text-based) and a summary of key relationships.
 
 Run `longbridge kline --help` to confirm current flag names.

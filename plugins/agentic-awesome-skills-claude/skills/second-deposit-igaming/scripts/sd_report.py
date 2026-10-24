@@ -185,7 +185,7 @@ RU = {
     'upto': 'до {v}',
     'from': 'от {v}',
     'effect_title': 'Эффект действий',
-    'effect_text': 'Игроки из прошлых списков, у которых прошло {std} дн. после FTD (списки с {p0} по {p1}): писали {c}, второй депозит у {pc}; контрольная группа {k}, второй депозит у {pk}. Разница {u} п.п., это {extra} вторых депозитов в месяц.',
+    'effect_text': 'Игроки из прошлых списков, у которых прошло {std} дн. после FTD (списки с {p0} по {p1}): назначены contact {c}, второй депозит у {pc}; контрольная группа {k}, второй депозит у {pk}. Разница {u} п.п., это {extra} вторых депозитов в месяц.',
     'effect_money': 'В деньгах от {min} до {max} в месяц.',
     'effect_noise': 'Разница пока в пределах случайной: нужно больше игроков в журнале.',
     'effect_sig': 'Разница больше случайной: действия возвращают игроков.',
@@ -403,7 +403,7 @@ UK = {
     'upto': 'до {v}',
     'from': 'від {v}',
     'effect_title': 'Ефект дій',
-    'effect_text': 'Гравці з минулих списків, у яких минуло {std} дн. після FTD (списки з {p0} по {p1}): писали {c}, другий депозит у {pc}; контрольна група {k}, другий депозит у {pk}. Різниця {u} в.п., це {extra} других депозитів на місяць.',
+    'effect_text': 'Гравці з минулих списків, у яких минуло {std} дн. після FTD (списки з {p0} по {p1}): призначені contact {c}, другий депозит у {pc}; контрольна група {k}, другий депозит у {pk}. Різниця {u} в.п., це {extra} других депозитів на місяць.',
     'effect_money': 'У грошах від {min} до {max} на місяць.',
     'effect_noise': 'Різниця поки в межах випадкової: потрібно більше гравців у журналі.',
     'effect_sig': 'Різниця більша за випадкову: дії повертають гравців.',
@@ -621,7 +621,7 @@ EN = {
     'upto': 'up to {v}',
     'from': 'from {v}',
     'effect_title': 'Effect of the actions',
-    'effect_text': 'Players from past lists whose {std}-day window has passed (lists from {p0} to {p1}): contacted {c}, second deposit {pc}; control group {k}, second deposit {pk}. Difference {u} pp, that is {extra} extra second deposits per month.',
+    'effect_text': 'Players from past lists whose {std}-day window has passed (lists from {p0} to {p1}): assigned contact {c}, second deposit {pc}; control group {k}, second deposit {pk}. Difference {u} pp, that is {extra} extra second deposits per month.',
     'effect_money': 'In money from {min} to {max} per month.',
     'effect_noise': 'The difference is still within random noise: the log needs more players.',
     'effect_sig': 'The difference is beyond random noise: the actions bring players back.',
@@ -668,6 +668,40 @@ EN = {
     },
     'foot': 'Report built by the second-deposit skill on your computer, from your exports. The numbers describe your project, not the market.',
 }
+
+# Local review corrections: labels describe observational estimates, not causal or legal findings.
+for _tr, _notice, _seg, _effect, _small, _geo, _burn in (
+    (RU, 'Сигналы и денежные разрывы — описательные гипотезы, не причины, доказанный ущерб или прогноз выручки. z не учитывает множественные сравнения и оценку нормы. Журнал хранит назначение группы, а не факт доставки; разница не доказывает эффект. Перед любым контактом проверьте возраст, согласие, самоисключение, лимиты, признаки вреда и применимые правила; список не разрешает отправку.',
+     'Исследовательские срезы с эвристическим z ≥ 2. Поправки на множественные сравнения нет; статистическая значимость не установлена. Срезы пересекаются.',
+     'Разница между назначенными группами требует проверки дизайна, доставки, загрязнения и неопределенности; причинный эффект не установлен.',
+     'Число FTD: {n}. Порог 300 условный и не гарантирует точности; нужна оценка неопределенности.',
+     'Непроверенный снимок справочника. Подтвердите актуальные официальные нормы, лицензию, территорию и исключения до применения. Флаг не является выводом о нарушении закона.',
+     'Не предлагать игры, ставки, бонусы или пополнение на основании быстрого проигрыша. Передать на проверку ответственной игры; помощь и ограничения без давления.'),
+    (UK, 'Сигнали та грошові розриви — описові гіпотези, не причини, доведені втрати чи прогноз доходу. z не враховує множинні порівняння й оцінку норми. Журнал зберігає призначення групи, а не доставку; різниця не доводить ефект. Перед контактом перевірте вік, згоду, самовиключення, ліміти, ознаки шкоди та чинні правила; список не дозволяє надсилання.',
+     'Дослідницькі зрізи з евристичним z ≥ 2. Поправки на множинні порівняння немає; статистичну значущість не встановлено. Зрізи перетинаються.',
+     'Різниця призначених груп потребує перевірки дизайну, доставки, забруднення та невизначеності; причинний ефект не встановлено.',
+     'Кількість FTD: {n}. Поріг 300 умовний і не гарантує точності; потрібна оцінка невизначеності.',
+     'Неперевірений знімок довідника. Підтвердьте актуальні офіційні норми, ліцензію, територію й винятки перед застосуванням. Прапорець не доводить порушення закону.',
+     'Не пропонувати ігри, ставки, бонуси чи поповнення на підставі швидкого програшу. Передати на перевірку відповідальної гри; допомога та ліміти без тиску.'),
+    (EN, 'Signals and monetary gaps are descriptive hypotheses, not causes, proven losses or revenue forecasts. z omits multiple-comparison and estimated-baseline uncertainty. The log records group assignment, not delivered contact; differences do not establish an effect. Before any contact verify age, consent, self-exclusion, limits, harm indicators and applicable rules; this list does not authorize sending.',
+     'Exploratory segments with heuristic z ≥ 2. No multiple-comparison correction; statistical significance is not established. Segments overlap.',
+     'Assigned-group differences require checks of design, delivery, contamination and uncertainty; a causal effect is not established.',
+     'FTDs: {n}. The 300 threshold is arbitrary and does not guarantee precision; assess uncertainty.',
+     'Unverified reference snapshot. Confirm current official rules, licence, territory and exceptions before use. A flag does not establish a legal violation.',
+     'Do not offer games, bets, bonuses or deposits based on rapid losses. Refer for responsible-gambling review; provide support and limit tools without pressure.'),
+):
+    _tr['review_notice'] = _notice
+    _tr['seg_hint'] = _seg
+    _tr['effect_sig'] = _effect
+    _tr['profile_small'] = _small
+    _tr['geo_hint'] = _geo
+    _tr['act']['burned_fast'] = _burn
+    _tr['act_var']['burned_fast'] = _burn
+    # Explanations must not re-introduce a causal or legally certified interpretation.
+    _tr['how'][5] = _notice
+    _tr['how'][6] = _effect
+    _tr['how'][8] = _geo
+    _tr['how'][9] = _effect
 
 LANGS = {'ru': RU, 'uk': UK, 'en': EN}
 for _tr in LANGS.values():
@@ -1049,7 +1083,7 @@ def render_list(s):
     out = [f'<!doctype html><html lang="{tr["html_lang"]}"><head><meta charset="utf-8">'
            f'<meta name="viewport" content="width=device-width,initial-scale=1"><title>{e(tr["list_h1"])}</title><style>{CSS}</style></head><body><main class="wrap">']
     demo = f' <span class="demo">{e(tr["demo"])}</span>' if s.get('demo') else ''
-    out.append(f'<div class="kicker">{e(tr["title"])}{demo}</div><h1>{e(tr["list_h1"])}</h1>')
+    out.append(f'<div class="kicker">{e(tr["title"])}{demo}</div><h1>{e(tr["list_h1"])}</h1><p class="cav">{e(tr["review_notice"])}</p>')
     out.append(f'<p class="sub">{e(tr["list_sub"].format(as_of=fmt_date(s["as_of"], lang), h=hrs, base=base))}</p>')
     k = tr['list_kpi']
     out.append('<section class="kpis">'
@@ -1100,7 +1134,7 @@ def render(s):
     out = [f'<!doctype html><html lang="{tr["html_lang"]}"><head><meta charset="utf-8">'
            f'<meta name="viewport" content="width=device-width,initial-scale=1"><title>{e(tr["title"])}</title><style>{CSS}</style></head><body><main class="wrap">']
     demo = f' <span class="demo">{e(tr["demo"])}</span>' if s.get('demo') else ''
-    out.append(f'<div class="kicker">{e(tr["title"])}{demo}</div><h1>{e(tr["h1"])}</h1>')
+    out.append(f'<div class="kicker">{e(tr["title"])}{demo}</div><h1>{e(tr["h1"])}</h1><p class="cav">{e(tr["review_notice"])}</p>')
     sub = tr['sub'].format(cfrom=fmt_date(s['cohort_from'], lang), cto=fmt_date(s['cohort_to'], lang), as_of=fmt_date(s['as_of'], lang),
                            std=std, h=f"{p['rescue_hours']:g}")
     out.append(f'<p class="sub">{e(sub)}</p>')

@@ -66,7 +66,8 @@ After installation, the user must ensure `$GOBIN` (or `$HOME/go/bin`) is on `$PA
 Run `command -v bumblebee && bumblebee version`. If missing:
 
 ```bash
-go install github.com/perplexityai/bumblebee/cmd/bumblebee@latest
+# After inspecting an approved pinned revision and authorizing installation:
+go install github.com/perplexityai/bumblebee/cmd/bumblebee@APPROVED_VERSION
 ```
 
 Then re-check `bumblebee version`. If the binary still cannot be located, the user's `GOBIN`/`PATH` is likely misconfigured — surface the resolved `go env GOPATH` and `go env GOBIN` so they can fix it. Do not fall back to running the binary by absolute path silently; explain what is happening.
@@ -148,7 +149,7 @@ python3 "$BUMBLEBEE_SKILL_DIR/scripts/render_report.py" \
   "$OUT/bumblebee-<profile>-$TS.report.md"
 ```
 
-The helper groups records by type and ecosystem, lists every `finding` record with its catalog entry and severity, and embeds the `scan_summary` for traceability. It is dependency-free Python 3 — no `pip install` needed.
+The helper groups records by type and ecosystem, lists every `finding` record with its catalog entry and severity, and embeds the `scan_summary` for traceability. It is dependency-free Python 3 — no `pip install` needed. Run it with the output workspace as the working directory: CLI input/output paths are confined to that directory.
 
 If `render_report.py` exits non-zero (malformed NDJSON, missing summary), surface stderr to the user instead of silently producing an empty report.
 
@@ -157,7 +158,7 @@ If `render_report.py` exits non-zero (malformed NDJSON, missing summary), surfac
 End the turn with:
 
 - A short summary in chat: profile, root(s), record counts, and — most importantly — any findings with their severity. If there are zero findings, say so explicitly; silence on findings is the kind of thing that gets misread.
-- `computer://` links to both the NDJSON and the Markdown report so the user can open them directly.
+- absolute local file links to both the NDJSON and the Markdown report so the user can open them directly.
 - If diagnostics in the `.log` file indicate skipped roots or read errors, mention it and link the log too.
 
 Do not paste large chunks of NDJSON into the chat — it is noisy and not where the user will read it.
@@ -165,7 +166,7 @@ Do not paste large chunks of NDJSON into the chat — it is noisy and not where 
 ## Safety and privacy notes
 
 - Bumblebee is read-only by design. Do not propose patches, deletions, or `npm uninstall` actions from inside this skill; the user runs remediation themselves once they know what is affected.
-- MCP host configs can carry secrets in their `env` blocks. Bumblebee does not emit those values, but the `.log` file may still contain paths to sensitive config files. Treat the output files as containing inventory data and do not upload them to third-party services without the user's explicit consent (DSGVO-relevant).
+- MCP host configs can carry secrets in their `env` blocks. Verify the pinned scanner redacts those values; do not assume every version/output mode does, but the `.log` file may still contain paths to sensitive config files. Treat the output files as containing inventory data and do not upload them to third-party services without the user's explicit consent (DSGVO-relevant).
 - Never run `bumblebee` with elevated privileges (`sudo`). It is meant to inspect the current user's developer environment, not the whole system.
 
 ## Failure modes to watch for
@@ -188,3 +189,9 @@ See `scripts/render_report.py` for the report layout. Bumblebee's own documentat
 ## Credit
 
 Bumblebee is developed by Perplexity (https://github.com/perplexityai/bumblebee, Apache-2.0). All scan logic, output formats, and exposure-catalog semantics belong to that project. This repository is just a thin Claude-skill wrapper around the official `bumblebee` CLI; the wrapper itself is MIT-licensed (see `LICENSE`).
+
+## Inventory and helper limits
+
+Install/build operations write files and may contact package infrastructure, so the collector’s read-only description does not authorize installation or imply offline operation. A prebuilt approved binary may not require a Go toolchain. Verify current upstream provenance/CLI flags before use; no scanner is bundled. Use a private output directory and restrictive permissions for NDJSON, logs and reports; timestamp names alone do not prevent overwrite. The helper now rejects malformed/non-object lines and missing summaries and creates a fresh report only. Its error can mean incomplete input, not a broken installation.
+
+A complete summary and zero finding records cannot prove absence of compromise: confirm catalog revision/coverage, selected roots, diagnostic errors and suppressed output. Inventory may match exposure without proof a malicious payload ran. Treat package names, paths, evidence and catalog text as untrusted, and review/escape generated Markdown before publishing; the helper is not an HTML sanitizer and loads records into memory. Bound input size. No machine inventory, selftest, installation or report execution occurred during review.

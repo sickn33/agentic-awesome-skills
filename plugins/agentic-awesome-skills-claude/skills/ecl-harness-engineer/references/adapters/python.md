@@ -8,7 +8,7 @@ adapter:
     files: [pyproject.toml, setup.py, requirements.txt, Pipfile]
     content_patterns:
       - file: "pyproject.toml"
-        pattern: '\\[project\\]|\\[tool\\.poetry\\]'
+        pattern: '\[project\]|\[tool\.poetry\]'
     confidence: 0.90
 
   commands:
@@ -223,3 +223,8 @@ Python projects may use type checkers:
 - `pytype` — Google's type checker
 
 Detection: check `pyproject.toml` `[tool.mypy]` or `mypy.ini` existence.
+
+
+## Adapter limits
+
+This adapter is a proposed detection specification, not an included runtime. Regex matches are partial hints (comments, multiline syntax, aliases, computed routes and imports can be missed); use native parsers and verify exact paths and commands. Do not execute inferred package scripts, wrappers, build hooks or installs without inspection and an approved isolated environment. Use the project manifest/toolchain and lockfile for versions; examples are historical snapshots. Resolve placeholders without shell eval, preserve failed exit statuses, and do not infer a required database vendor from a general ORM dependency. Missing optional tools or commands are unknown, not a passing check.

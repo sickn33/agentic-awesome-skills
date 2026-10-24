@@ -8,11 +8,13 @@ Send the key as `Authorization: Bearer $QRX_API_KEY` (preferred) or `X-API-Key: 
 
 ## Create a code
 
+Generate and retain one `QRX_REQUEST_ID` before the first submission (for example `QRX_REQUEST_ID="$(uuidgen)"`). Reuse it and the exact body on uncertain retries; never create a fresh key just because the response was lost. Check HTTP status and retain the returned ID before polling; the example omits application-specific persistence.
+
 ```bash
 curl -sS -X POST "https://qrx.codes/v1/codes?wait=45" \
   -H "Authorization: Bearer $QRX_API_KEY" \
   -H "Content-Type: application/json" \
-  -H "Idempotency-Key: $(uuidgen 2>/dev/null || date +%s)" \
+  -H "Idempotency-Key: $QRX_REQUEST_ID" \
   -d '{"prompt":"a lighthouse on a cliff at sunset, watercolour, navy and coral","destination":"https://example.com/menu"}'
 ```
 
@@ -26,7 +28,7 @@ curl -sS -X POST "https://qrx.codes/v1/codes?wait=45" \
 curl -sS "https://qrx.codes/v1/codes/<id>?wait=45" -H "Authorization: Bearer $QRX_API_KEY"
 ```
 
-Repeat until `status` is `succeeded` or `failed`. A finished code has `imageUrl` (PNG), `shortUrl` (the short link, `https://qrx.to/<id>` on qrx.codes), `destination` and `pageUrl`. A code's `id` and `shortUrl` never change. A link code's `id` is currently 6 lowercase letters and digits, such as `k7m2qz`; a Wi-Fi code's `id` is a UUID and its `shortUrl` is null. Treat ids as opaque strings.
+Poll within a bounded monitoring window; honor Retry-After and rate limits. If it remains processing, retain its ID and report pending rather than submit again. A terminal `status` is `succeeded` or `failed`. A finished code has `imageUrl` (PNG), `shortUrl` (the short link, `https://qrx.to/<id>` on qrx.codes), `destination` and `pageUrl`. A code's `id` and `shortUrl` never change. A link code's `id` is currently 6 lowercase letters and digits, such as `k7m2qz`; a Wi-Fi code's `id` is a UUID and its `shortUrl` is null. Treat ids as opaque strings.
 
 ## Other endpoints
 

@@ -1,8 +1,12 @@
 ---
 title: "HealthKit | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/healthkit
+---
 
 # HealthKit
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
 
 HealthKit is the central repository for health and fitness data in iOS, iPadOS, and watchOS.
 
@@ -26,13 +30,13 @@ You must request permission to access people’s data, and you must take all nec
 
 **Provide a coherent privacy policy.** During the app submission process, you must provide a URL to a clearly stated privacy policy, so that people can view the policy when they click the link in the App Store page for your app. For developer guidance, see [App Information > App Store Connect Help](https://help.apple.com/app-store-connect/#/dev219b53a88).
 
-**Request access to health data only when you need it.** It makes sense to request access to weight information when people log their weight, for example, but not immediately after your app launches. When your request is clearly related to the current context, you help people understand your app’s intentions. Also, people can change the permissions they grant, so your app needs to make a request every time it needs access. For developer guidance, see [`requestAuthorization(toShare:read:completion:)`](https://developer.apple.com/documentation/HealthKit/HKHealthStore/requestAuthorization\(toShare:read:completion:\)).
+**Request only relevant HealthKit types at the point of need.** Check availability and request read/write authorization contextually, including new types when needed; do not repeatedly prompt for every read. Handle revocation and missing data gracefully. A successful authorization call does not prove read access: HealthKit intentionally prevents apps from distinguishing denied reads from absent data. See [Authorizing access to health data](https://developer.apple.com/documentation/HealthKit/authorizing-access-to-health-data).
 
 **Clarify your app’s intent by adding descriptive messages to the standard permission screen.** People expect to see the system-provided permission screen when asked to approve access to health data. Write a few succinct sentences that explain why you need the information and how people can benefit from sharing it with your app. Avoid adding custom screens that replicate the standard permission screen’s behavior or content.
 
 ![A screenshot of a Health Access screen on iPhone, which asks for permission for an app to write and read mindful minute data.](https://docs-assets.developer.apple.com/published/68014b16fae04d2ed8dfeecee91a4c39/health-access-requests%402x.png)
 
-**Manage health data sharing solely through the system’s privacy settings.** People expect to globally manage access to their health information in Settings > Privacy. Don’t confuse people by building additional screens in your app that affect the flow of health data.
+**Use system settings for HealthKit permissions and explicit controls for app-managed sharing.** Do not imitate or bypass the system authorization sheet. Care-team, server, or third-party sharing requires its own clear purpose, consent where required, retention controls, and revocation handling; HealthKit permission alone does not authorize every downstream use.
 
 ## [Activity rings](https://developer.apple.com/design/human-interface-guidelines/healthkit#Activity-rings)
 

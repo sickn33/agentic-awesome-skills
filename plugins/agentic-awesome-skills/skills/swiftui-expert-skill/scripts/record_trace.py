@@ -86,8 +86,12 @@ def main(argv: list[str] | None = None) -> int:
               file=sys.stderr)
         return 2
 
+    if any("=" not in value or not re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", value.split("=", 1)[0]) or "\0" in value for value in args.env):
+        parser.error("--env must use KEY=VALUE with a valid environment key")
+    if args.stop_file and (args.stop_file.exists() or args.stop_file.is_symlink()):
+        parser.error("stop-file must be a fresh private path")
     output = args.output or Path.cwd() / _default_trace_name(args.template)
-    if output.exists():
+    if output.exists() or output.is_symlink():
         print(f"error: output already exists: {output}", file=sys.stderr)
         return 2
 
@@ -105,9 +109,11 @@ def main(argv: list[str] | None = None) -> int:
     if args.time_limit:
         stop_hints.append(f"after {args.time_limit}")
     print(f"[record] stop via: {', '.join(stop_hints)}", flush=True)
-    print(f"[record] cmd: {' '.join(_shell_quote(c) for c in cmd)}", flush=True)
+    # --env values may contain credentials; do not echo the full command.
+    print("[record] command prepared (launch environment values withheld)", flush=True)
 
     # Start xctrace in its own process group so we can signal cleanly.
+    os.umask(0o077)
     proc = subprocess.Popen(cmd, start_new_session=True)
 
     try:
@@ -121,10 +127,13 @@ def main(argv: list[str] | None = None) -> int:
     except subprocess.TimeoutExpired:
         print("[record] xctrace did not exit within 60s after stop; killing.",
               file=sys.stderr)
-        proc.kill()
+        try:
+            os.killpg(proc.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
         rc = proc.wait()
 
-    if output.exists():
+    if output.exists() or output.is_symlink():
         print(f"[record] done. trace written: {output}", flush=True)
     else:
         print("[record] done but output file not found — did xctrace error?",
@@ -195,7 +204,7 @@ def _forward_sigint(proc: subprocess.Popen) -> None:
 
 def _print_devices() -> None:
     out = subprocess.run(
-        ["xctrace", "list", "devices"], capture_output=True, text=True, check=True
+        ["xctrace", "list", "devices"], capture_output=True, text=True, check=True, timeout=30
     ).stdout
     devices: list[dict] = []
     section = None
@@ -224,7 +233,7 @@ def _print_devices() -> None:
 
 def _print_templates() -> None:
     out = subprocess.run(
-        ["xctrace", "list", "templates"], capture_output=True, text=True, check=True
+        ["xctrace", "list", "templates"], capture_output=True, text=True, check=True, timeout=30
     ).stdout
     groups: dict[str, list[str]] = {}
     section = "unknown"

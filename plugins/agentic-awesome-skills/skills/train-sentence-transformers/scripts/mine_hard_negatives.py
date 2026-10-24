@@ -66,11 +66,16 @@ See the `mine_hard_negatives` API reference for full semantics and all flags.
 
 from __future__ import annotations
 
+import os
+os.environ["HF_HUB_OFFLINE"] = "1"
+os.environ["HF_DATASETS_OFFLINE"] = "1"
+from training_safety import prepare_run, safe_model, load_dataset
+
 import argparse
 import logging
 import sys
+from pathlib import Path
 
-from datasets import load_dataset
 
 from sentence_transformers import CrossEncoder, SentenceTransformer
 from sentence_transformers.util import mine_hard_negatives
@@ -133,6 +138,13 @@ def build_parser() -> argparse.ArgumentParser:
 def main() -> int:
     args = build_parser().parse_args()
 
+    if args.push_to_hub:
+        raise SystemExit("Publication is a separate explicitly authorized action.")
+    if not args.output_path or not 1 <= args.num_negatives <= 20 or not 1 <= args.batch_size <= 128 or not 0 <= args.range_min < args.range_max <= 1000:
+        raise SystemExit("Require a local output and bounded positive mining options.")
+    if Path(args.output_path).is_absolute() or ".." in Path(args.output_path).parts:
+        raise SystemExit("Output must stay inside the new private run directory.")
+    prepare_run()
     dataset = (
         load_dataset(args.dataset, args.subset, split=args.split)
         if args.subset
@@ -140,8 +152,8 @@ def main() -> int:
     )
     print(f"Loaded {len(dataset):,} rows from {args.dataset} (split={args.split})")
 
-    model = SentenceTransformer(args.model)
-    cross_encoder = CrossEncoder(args.cross_encoder) if args.cross_encoder else None
+    model = safe_model(SentenceTransformer, args.model)
+    cross_encoder = safe_model(CrossEncoder, args.cross_encoder) if args.cross_encoder else None
 
     corpus = None
     if args.corpus_dataset:
@@ -185,9 +197,7 @@ def main() -> int:
         mined.save_to_disk(args.output_path)
         print(f"Saved to {args.output_path}")
 
-    if args.push_to_hub:
-        mined.push_to_hub(args.push_to_hub, private=args.private)
-        print(f"Pushed to https://huggingface.co/datasets/{args.push_to_hub}")
+
 
     if not args.output_path and not args.push_to_hub:
         print("No --output-path or --push-to-hub provided; nothing persisted.")

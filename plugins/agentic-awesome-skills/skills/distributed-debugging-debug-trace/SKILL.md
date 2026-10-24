@@ -42,6 +42,10 @@ $ARGUMENTS
 - Avoid enabling verbose tracing in production without safeguards.
 - Redact secrets and PII from logs and traces.
 
+## Deployment and evidence boundary
+
+The playbook contains incomplete illustrative classes, undefined helper methods/imports and version-specific OpenTelemetry/Sentry configuration, not a ready-to-run debug stack. Inspect pinned APIs and existing instrumentation before adapting it; avoid duplicate server spans and extract/propagate trace context through supported instrumentation. Debuggers can execute code and heap/core snapshots can expose every in-memory secret. Keep inspectors and dashboards loopback-only behind approved authenticated tunnels, cap snapshot duration/disk/overhead, redact before export and remove temporary access after use. Production pause/profile/telemetry changes require scoped authorization and rollback. Do not replace process-global console methods per request or return sensitive diagnostics in response headers. A successful config parse does not establish end-to-end trace coverage or application correctness.
+
 ## Resources
 
 - `resources/implementation-playbook.md` for detailed tooling and configuration patterns.

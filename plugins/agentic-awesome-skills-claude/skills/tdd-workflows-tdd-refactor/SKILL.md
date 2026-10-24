@@ -21,11 +21,11 @@ date_added: "2026-02-27"
 - Clarify goals, constraints, and required inputs.
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
-- If detailed examples are required, open `resources/implementation-playbook.md`.
+- The referenced implementation playbook and tdd-orchestrator agent are not bundled. Use available repository tooling; do not claim a named agent/model ran unless it actually did.
 
 Refactor code with confidence using comprehensive test safety net:
 
-[Extended thinking: This tool uses the tdd-orchestrator agent (opus model) for sophisticated refactoring while maintaining all tests green. It applies design patterns, improves code quality, and optimizes performance with the safety of comprehensive test coverage.]
+Delegate only when current instructions authorize it, using the selected available model. A green suite does not prove unchanged behavior if its coverage is incomplete.
 
 ## Usage
 
@@ -129,7 +129,7 @@ Before committing:
 ## Recovery Protocol
 
 If tests fail:
-- Immediately revert last change
+- Inspect the failure and undo only your last isolated change if needed; preserve unrelated user edits
 - Identify breaking refactoring
 - Apply smaller incremental changes
 - Use version control for safe experimentation
@@ -159,7 +159,9 @@ class OrderProcessor {
 }
 ```
 
-**After:**
+**After (illustrative orchestration change, not a behavior-preserving extraction):**
+
+This sketch introduces async payment, inventory and notification dependencies; do not label it a pure refactor. Specify idempotency, reservation/charge ordering and compensation under failure before adopting it.
 ```typescript
 class OrderProcessor {
   async processOrder(order: Order): Promise<ProcessResult> {

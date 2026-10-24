@@ -7,7 +7,7 @@
 Always use **JSON-LD** (`<script type="application/ld+json">`).
 Google's documentation explicitly recommends JSON-LD over Microdata and RDFa.
 
-**AI Search Note:** Content with proper schema has ~2.5× higher chance of appearing in AI-generated answers (confirmed by Google and Microsoft, March 2025).
+**Evidence boundary:** No supported multiplier for AI citations is established here. Schema.org vocabulary validity differs from Google rich-result eligibility; verify the current feature documentation. Retired Google displays do not deprecate the vocabulary itself.
 
 ---
 
@@ -28,7 +28,7 @@ Google's documentation explicitly recommends JSON-LD over Microdata and RDFa.
 | Review | Individual reviews | reviewRating, author, itemReviewed, reviewBody |
 | AggregateRating | Rating summaries | ratingValue, reviewCount, bestRating, worstRating |
 | BreadcrumbList | Navigation | itemListElement with position, name, item |
-| WebSite | Site-level | name, url, potentialAction (SearchAction for sitelinks search) |
+| WebSite | Site-level | name, url, potentialAction (do not promise the retired Google sitelinks search box) |
 | WebPage | Page-level | name, description, datePublished, dateModified |
 | Person | Author/team | name, jobTitle, url, sameAs, image, worksFor |
 | ContactPage | Contact pages | name, url |
@@ -51,9 +51,9 @@ Google's documentation explicitly recommends JSON-LD over Microdata and RDFa.
 
 > Google severely limited FAQ rich results in August 2023. Only authoritative sources (government, health organizations) receive FAQ rich results.
 >
-> **GEO nuance**: FAQPage schema still benefits AI/LLM citation visibility (ChatGPT, Perplexity, Google AI Overviews), even without Google rich results.
-> - **Existing FAQPage on commercial site**: Flag at Info priority, not Critical. Removal removes GEO citation upside.
-> - **Adding new FAQPage**: Not recommended for Google benefit; acceptable if AI search visibility is a priority.
+> **GEO nuance**: FAQPage may describe real FAQ content, but this bundle establishes no AI-citation benefit.
+> - **Existing FAQPage on commercial site**: Flag at Info priority, not Critical. No proven citation loss can be inferred from removal.
+> - **Adding new FAQPage**: Not recommended for Google benefit; use only when semantically accurate; do not promise visibility.
 
 ---
 
@@ -63,14 +63,14 @@ Google's documentation explicitly recommends JSON-LD over Microdata and RDFa.
 |------|--------|-------|-------|
 | HowTo | Rich results fully removed | September 2023 | Google stopped showing how-to rich results |
 | SpecialAnnouncement | Deprecated | July 31, 2025 | COVID-era schema, no longer processed |
-| CourseInfo | Retired from rich results | June 2025 | Merged into Course |
+| CourseInfo | Retired from rich results | June 2025 | Google feature phased out; not a vocabulary rename |
 | EstimatedSalary | Retired from rich results | June 2025 | No longer displayed |
 | LearningVideo | Retired from rich results | June 2025 | Use VideoObject instead |
 | ClaimReview | Retired from rich results | June 2025 | Fact-check markup no longer generates rich results |
 | VehicleListing | Retired from rich results | June 2025 | Vehicle listing structured data discontinued |
 | Book Actions | Deprecated then REVERSED | June 2025 | **Still functional as of Feb 2026**: historical note only |
 | Practice Problem | Retired from rich results | Late 2025 | Educational practice problems no longer displayed |
-| Dataset | Retired from rich results | Late 2025 | Dataset Search feature discontinued |
+| Dataset | Retired from rich results | Late 2025 | Google Search rich-result support phased out; do not infer that the separate Dataset Search service is discontinued |
 
 ---
 

@@ -34,3 +34,9 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Example
+
+For a shared cart counter, use a private writable signal and a public read-only
+signal. For remote cart writes, keep authorization on the server and test two
+overlapping updates before adding optimistic rollback.

@@ -109,18 +109,9 @@ podDisruptionBudget:
 # Node selection
 nodeSelector: {}
 tolerations: []
-affinity:
-  podAntiAffinity:
-    preferredDuringSchedulingIgnoredDuringExecution:
-    - weight: 100
-      podAffinityTerm:
-        labelSelector:
-          matchExpressions:
-          - key: app.kubernetes.io/name
-            operator: In
-            values:
-            - '{{ include "my-app.name" . }}'
-        topologyKey: kubernetes.io/hostname
+# Put release-specific selectors in templates, not strings inside values:
+# Helm does not evaluate include expressions in values unless tpl is invoked.
+affinity: {}
 
 # Environment variables
 env: []
@@ -153,7 +144,7 @@ postgresql:
   auth:
     database: myapp
     username: myapp
-    password: changeme
+    existingSecret: ""  # required before enabling: reviewed Secret with chart-version-specific keys
   primary:
     persistence:
       enabled: true
@@ -163,7 +154,8 @@ postgresql:
 redis:
   enabled: false
   auth:
-    enabled: false
+    enabled: true
+    existingSecret: ""  # required before enabling; never a default plaintext password
   master:
     persistence:
       enabled: false

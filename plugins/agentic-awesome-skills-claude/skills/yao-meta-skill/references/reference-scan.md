@@ -1,5 +1,13 @@
 # Reference Scan Strategy
 
+> Catalog scope: this is upstream design guidance. Referenced scripts, commands,
+> reports, fixtures and security policies are not bundled here. They describe
+> proposed/manual output contracts or a separately reviewed upstream toolchain,
+> not verified capabilities of this installation. Do not execute missing or
+> unreviewed code, or claim unrun gates passed. Current user scope and host policy
+> take precedence; metadata alone grants no runtime permission.
+
+
 Use a short benchmark scan before deep authoring. The goal is to borrow durable patterns from strong reference objects without importing their prose, weight, or brand language into the new skill.
 
 ## Source Priority
@@ -8,7 +16,7 @@ Reference scan has two layers, and they must not be treated equally:
 
 1. **External Benchmark Scan**
    - primary source of patterns
-   - use high-star public GitHub repos, official docs, strong public examples, and world-class products
+   - use authoritative, relevant public sources with inspectable evidence; stars and branding do not establish quality
    - this layer defines the upper bound for quality
 2. **User Reference Intake**
    - a taste-and-standard layer
@@ -19,7 +27,7 @@ Reference scan has two layers, and they must not be treated equally:
    - use local files only for naming, privacy, compatibility, migration, and library-fit constraints
    - this layer should not define the main design pattern
 
-External sources should lead. User references should sharpen direction. Local files should calibrate.
+User requirements and applicable local contracts define the task. Relevant external sources can inform design, but never override those requirements.
 
 ## Default Visibility
 

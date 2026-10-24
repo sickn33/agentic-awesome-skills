@@ -24,11 +24,7 @@ Provision and manage Azure infrastructure with Terraform using the AzureRM provi
 ## Prerequisites
 
 ```bash
-# Install Terraform
-wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
-echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-sudo apt update && sudo apt install terraform
-
+# Prerequisite: reviewed, organization-approved Terraform package installed.
 # Verify installation
 terraform version
 
@@ -40,15 +36,18 @@ az account set --subscription "my-subscription-id"
 
 # Create storage account for remote state
 az group create --name tfstate-rg --location eastus
+TFSTATE_ACCOUNT="tfstate$(openssl rand -hex 4)"
 az storage account create \
-  --name tfstate$(openssl rand -hex 4) \
+  --name "$TFSTATE_ACCOUNT" \
   --resource-group tfstate-rg \
   --sku Standard_LRS \
   --encryption-services blob
 az storage container create \
   --name tfstate \
-  --account-name tfstateXXXXXXXX
+  --account-name "$TFSTATE_ACCOUNT" --auth-mode login
 ```
+
+These historical AzureRM3.x/AzureAD2.x fragments must be evaluated against a pinned compatible provider/lockfile; do not silently upgrade to latest. Confirm subscription/tenant and use short-lived least-privilege credentials. Provisioning/state changes require an approved target, cost review and recoverable plan. Restrict/encrypt/version the backend and grant intended Blob data roles; `sensitive` only redacts display, not secrets in state/plans. Save artifacts privately and never commit credentials/state.
 
 ## Provider Configuration
 
@@ -75,7 +74,8 @@ terraform {
 
   backend "azurerm" {
     resource_group_name  = "tfstate-rg"
-    storage_account_name = "tfstate12345abc"
+    storage_account_name = "REPLACE_WITH_CREATED_ACCOUNT"
+    use_azuread_auth     = true
     container_name       = "tfstate"
     key                  = "prod.terraform.tfstate"
   }
@@ -132,6 +132,17 @@ variable "sql_admin_password" {
   description = "SQL Server admin password"
   type        = string
   sensitive   = true
+}
+
+variable "allowed_ip_ranges" {
+  description = "Approved Key Vault administrator IP ranges"
+  type = list(string)
+  default = []
+}
+
+variable "kubernetes_version" {
+  description = "Explicit AKS version verified supported for the target region"
+  type = string
 }
 
 variable "aks_admin_group_id" {
@@ -193,7 +204,8 @@ resource "azurerm_subnet" "aks" {
   name                 = "aks-subnet"
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.main.name
-  address_prefixes     = ["10.0.1.0/22"]
+  address_prefixes     = ["10.0.0.0/22"]
+  service_endpoints    = ["Microsoft.KeyVault"]
 }
 
 resource "azurerm_subnet" "app" {
@@ -201,6 +213,7 @@ resource "azurerm_subnet" "app" {
   resource_group_name  = azurerm_resource_group.main.name
   virtual_network_name = azurerm_virtual_network.main.name
   address_prefixes     = ["10.0.8.0/24"]
+  service_endpoints    = ["Microsoft.KeyVault"]
 }
 
 resource "azurerm_subnet" "data" {
@@ -257,7 +270,7 @@ resource "azurerm_kubernetes_cluster" "main" {
   location            = azurerm_resource_group.main.location
   resource_group_name = azurerm_resource_group.main.name
   dns_prefix          = "${var.project_name}-${var.environment}"
-  kubernetes_version  = "1.28"
+  kubernetes_version  = var.kubernetes_version  # verified supported in region
 
   default_node_pool {
     name                = "system"
@@ -365,11 +378,11 @@ resource "azurerm_key_vault_access_policy" "terraform" {
   object_id    = data.azurerm_client_config.current.object_id
 
   secret_permissions = [
-    "Get", "List", "Set", "Delete", "Purge", "Recover"
+    "Get", "List", "Set", "Delete", "Recover"
   ]
 
   key_permissions = [
-    "Get", "List", "Create", "Delete", "Purge", "Recover",
+    "Get", "List", "Create", "Delete", "Recover",
     "WrapKey", "UnwrapKey"
   ]
 }

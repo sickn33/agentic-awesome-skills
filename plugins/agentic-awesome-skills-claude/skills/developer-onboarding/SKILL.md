@@ -18,12 +18,14 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 
 ## When to Use
 
-Use this skill when you need get developers to "Hello World" fast with optimized quickstarts, tutorials, and sample apps. Trigger phrases: developer onboarding, time to first value, quickstart guide, hello world tutorial, developer activation, onboarding checklist, sample apps, getting started experience, reduce...
+Use this skill when you need get developers to "Hello World" fast with optimized quickstarts, tutorials, and sample apps. Trigger phrases: developer onboarding, time to first value, quickstart guide, hello world tutorial, developer activation, onboarding checklist, sample apps, getting started experience, reduce onboarding friction.
 
 
 Get developers from signup to working code as fast as possible, then guide them to deeper engagement.
 
-## Examples from Real Developer Tools
+## Illustrative Product Patterns
+
+The following are historical examples of design patterns, not verified current product features or endorsements. Confirm the actual product, plan and docs before adapting them.
 
 ### Excellent Onboarding: Stripe
 

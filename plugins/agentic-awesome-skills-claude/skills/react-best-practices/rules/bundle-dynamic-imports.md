@@ -33,3 +33,5 @@ function CodePanel({ code }: { code: string }) {
   return <MonacoEditor value={code} />
 }
 ```
+
+For Next App Router, place this dynamic(..., { ssr: false }) declaration inside a separate Client Component module beginning with the directive 'use client'. A Server Component may import that wrapper; ssr:false is not supported directly in a Server Component.

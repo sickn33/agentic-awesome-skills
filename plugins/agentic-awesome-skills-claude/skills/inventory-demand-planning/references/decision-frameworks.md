@@ -22,7 +22,7 @@ methods by archetype.
 
 #### Step 1 — Classify the Demand Pattern
 
-Compute the following statistics on the most recent 52 weeks of de-promoted demand data
+Compute the following statistics on sufficient recent history (more than one annual cycle when testing lag-52 seasonality) of de-promoted demand data
 (remove promotional lift periods before computing):
 
 | Statistic | Formula | Purpose |
@@ -73,7 +73,7 @@ Do not switch methods based on a single bad week. Models need time to prove or d
 ### 1.3 Parameter Optimization Protocol
 
 For exponential smoothing methods, optimize parameters using grid search on time-series
-cross-validation (rolling origin, 1-step ahead forecast, 26+ origins).
+cross-validation (rolling origin, forecasts at the actual protection/replenishment horizons, with sufficient rolling origins).
 
 **Grid search ranges:**
 
@@ -88,9 +88,7 @@ cross-validation (rolling origin, 1-step ahead forecast, 26+ origins).
 produce WMAPE within 1 percentage point, prefer the set with lower α (more smoothing)
 for stability.
 
-**Overfitting guard:** If the optimized model produces WMAPE on the holdout that is
->5 percentage points better than on the fitting data, the model is likely overfit.
-Increase smoothing (lower α) until the gap narrows to <3 points.
+**Overfitting guard:** Repeatedly tuning on a holdout makes it validation data, not an untouched test. Compare rolling-origin forecast performance with seasonal-naive/simple baselines and evaluate the selected process once on a separate final period. A holdout that happens to be easier than training does not itself prove overfitting; investigate leakage, regime/difficulty differences and selection bias.
 
 ---
 
@@ -182,23 +180,7 @@ When an item has < 8 weeks of own demand history:
 
 ### 2.6 Safety Stock Cost-Optimization
 
-The naive approach is to set a service level target and compute SS. The sophisticated
-approach is to optimize the tradeoff between holding cost and stockout cost:
-
-```
-Optimal SL = 1 − (H / (H + S × D/Q))
-```
-
-Where:
-- H = holding cost per unit per period
-- S = stockout cost per unit (lost margin + customer goodwill + substitution cost)
-- D = demand per period
-- Q = order quantity
-
-For most retailers, stockout cost on A-items is 3–5× the unit margin (including lost
-customer visits and substitution effects), which pushes optimal SL to 96–98%.
-For C-items, stockout cost is approximately equal to the unit margin, yielding optimal
-SL of 88–92%.
+Select service policy from a documented cost/service model, not the former unvalidated “optimal SL” equation. For a single-period newsvendor only, the demand quantile is Cu/(Cu+Co), where Cu and Co are comparable marginal underage and overage costs for that decision. Multi-period replenishment, stockout penalties, lost sales/backorders, lead time and order quantity require their own cost model/simulation. Do not transfer this fractile directly to cycle service or fill rate.
 
 ---
 
@@ -258,7 +240,8 @@ display + circular = 2.7×; it's typically 2.0–2.5×).
 #### Step 4 — Model the Post-Promotion Dip
 
 ```
-Post-Promo Demand = Baseline × (1 − Dip Factor × Decay)
+Post-Promo Demand_t = max(0, Baseline_t − IncrementalPromoUnits × ForwardBuyFraction × AllocationWeight_t)
+# weights across post-promo periods sum to1; units and time aggregation must match
 ```
 
 Default dip factors by product type:
@@ -294,7 +277,7 @@ the same period.
 
 **Important:** Cannibalization is bidirectional across the category. When building the
 category-level promotional plan, sum the cannibalization effects across all substitutes
-to compute the true category-level lift (which is always less than the item-level lift).
+to compute the true category-level lift (which may be lower, equal or higher depending on substitution, halo and differing denominators).
 
 ### 3.3 Forward-Buy and Pantry Loading
 
@@ -465,9 +448,9 @@ Score each vendor quarterly on a 0–100 scale across these dimensions:
 |---|---|---|---|---|
 | **On-time delivery** | 30% | % of POs delivered within the agreed window (±1 day) | > 95% | Score = (Actual % / 95%) × 100, cap at 100 |
 | **Fill rate** | 25% | % of ordered units actually shipped | > 97% | Score = (Actual % / 97%) × 100, cap at 100 |
-| **Lead time consistency** | 20% | CV of actual lead time vs. stated lead time | CV < 0.15 | Score = max(0, 100 − (CV − 0.15) × 500) |
+| **Lead time consistency** | 20% | CV of actual lead time vs. stated lead time | CV < 0.15 | Score = min(100, max(0, 100 − (CV − 0.15) × 500)) |
 | **Quality** | 15% | % of received units passing QC inspection | > 99% | Score = (Actual % / 99%) × 100, cap at 100 |
-| **Responsiveness** | 10% | Average response time to inquiries/issues (hours) | < 24 hours | Score = max(0, 100 − (Avg Hours − 24) × 2) |
+| **Responsiveness** | 10% | Average response time to inquiries/issues (hours) | < 24 hours | Score = min(100, max(0, 100 − (Avg Hours − 24) × 2)) |
 
 **Composite score thresholds:**
 
@@ -555,7 +538,8 @@ in-season reorder (if the vendor supports it).
 #### Initial Buy Calculation
 
 ```
-Initial Buy = Season Forecast × Initial Commitment % − Carry-Over Inventory
+Initial Buy = max(0, Season Forecast × Initial Commitment % − usable Carry-Over − firm eligible receipts)
+# round/optimize against approved case packs, MOQ, shelf life and budget
 ```
 
 | Category Risk Profile | Initial Commitment % | Reserve for Reorder | Rationale |
@@ -570,7 +554,8 @@ Initial Buy = Season Forecast × Initial Commitment % − Carry-Over Inventory
 Monitor sell-through rate weekly starting from week 2 of the season:
 
 ```
-Sell-Through Rate = Units Sold / (Units Sold + Units On-Hand + Units On-Order)
+Sell-Through Rate = Units Sold / Units Available for Sale in the defined cohort/period
+# reconcile starting inventory+receipts−returns/transfers; exclude unreceived on-order stock
 ```
 
 | Weeks into Season | Sell-Through vs. Plan | Action |
@@ -623,8 +608,8 @@ When the selling season is ending and inventory remains:
 
 ```
 Liquidation Net Recovery = (Liquidation Price × Remaining Units) − Logistics Cost
-Hold-to-Next-Season Net = (Expected Sell Price × Sell-Through Estimate) 
-                          − Holding Cost − Obsolescence Risk
+Hold-to-Next-Season Net = RemainingUnits × SellThroughFraction × ExpectedNetPrice
+                          + residual recovery − holding/handling/obsolescence/disposal costs
 ```
 
 **Liquidation is preferred when:**
@@ -802,10 +787,7 @@ GMROI = Gross Margin $ / Average Inventory at Cost
 ```
 
 A GMROI of 2.0 means you earn $2 in gross margin for every $1 invested in inventory.
-Minimum acceptable GMROI varies by category but should generally exceed the company's
-cost of capital divided by the gross margin percentage. For a retailer with 8% cost of
-capital and 35% gross margin, minimum GMROI = 0.08 / 0.35 = 0.23. In practice, most
-retailers target GMROI > 1.5 for healthy categories.
+GMROI is gross margin divided by average inventory at cost over an explicit period. It excludes operating expenses, taxes and other invested capital; dividing cost of capital by gross margin percentage does not derive a valid minimum GMROI. Finance must set a comparable target from the full economics, category and period.
 
 ### 9.3 Dead Stock and Obsolescence Identification
 
@@ -859,3 +841,27 @@ shrinkage, damage, and out-of-date risk (for perishables).
 - A-items: allocate with every DC-to-store shipment (typically 2–5× per week)
 - B-items: allocate 1–2× per week
 - C-items: allocate weekly or bi-weekly
+
+## Statistical and implementation qualifications
+
+All threshold tables are local planning examples. Archetypes overlap: define an
+explicit precedence/tie-break rule and handle zero mean/all-zero history before
+CV/ADI. A 52-point series cannot estimate lag-52 autocorrelation; acquire enough
+cycles or mark seasonal strength unestimated. Seasonal decomposition must be fit
+inside training folds and recombined (trend + seasonal + remainder), not forecast
+residuals alone. Multiplicative models require appropriate positive data; X-13
+requires a supported periodicity, not arbitrary weekly input. No minimum SKU count
+guarantees ML superiority or retraining cadence.
+
+Bootstrap independent periods only if stationarity/independence is defensible;
+otherwise use block/residual/conditional simulations preserving dependence, events
+and lead-time interactions. Safety stock = quantile minus expected protection
+demand is a chosen model buffer, not certified fill rate. Clamp negative buffers
+only as an explicit policy. Quantile uncertainty matters with sparse samples.
+
+Do not reserve a reorder budget unless replenishment can arrive before demand
+ends. Available case packs, cost/budget, capacity, expiry and contractual obligations
+constrain all decisions. Allocation quantities must sum to available supply and
+respect per-store needs/caps; if minimum displays cannot fit, expose infeasibility
+instead of promising every store its minimum. Unknown/zero forecast WOS is
+undefined or policy-specific, not a successful “healthy” ratio.

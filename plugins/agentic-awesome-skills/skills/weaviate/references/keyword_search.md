@@ -36,3 +36,6 @@ Search with property boosting:
 ```bash
 uv run scripts/keyword_search.py --query "authentication" --collection "Docs" --properties "title^2,body"
 ```
+
+BM25 ranks token relevance; it is not exact matching. Use a property equality
+filter with appropriate field tokenization for exact strings, or fetch by UUID.

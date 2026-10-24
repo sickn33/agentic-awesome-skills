@@ -36,6 +36,8 @@ Use this skill when:
 - Network access to monitored targets
 - Basic understanding of metrics concepts
 
+Pin supported chart/image versions and validate config/rules with the matching tools before rollout. Docker examples omit alertmanager/node-exporter/apps and provisioning mounts: add only approved services/configuration rather than assuming these targets exist. ServiceMonitor requires operator selectors and a named Service metrics port. Restrict metrics/admin endpoints and secrets; notifications need explicit authorization. Use route templates, not raw req.path/user IDs, as labels to bound cardinality. Keep query label/units consistent with actual instrumentation, define no-traffic/zero-denominator behavior and distinguish up==0 from application health; missing up series need separate absence alerts. Recording rules improve query cost, not source metric cardinality/storage by themselves.
+
 ## Prometheus Setup
 
 ### Docker Deployment
@@ -48,7 +50,7 @@ services:
   prometheus:
     image: prom/prometheus:v2.48.0
     ports:
-      - "9090:9090"
+      - "127.0.0.1:9090:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
       - ./rules:/etc/prometheus/rules
@@ -61,11 +63,11 @@ services:
   grafana:
     image: grafana/grafana:10.2.0
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
     volumes:
       - grafana-data:/var/lib/grafana
     environment:
-      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:?set a unique secret}
 
 volumes:
   prometheus-data:
@@ -119,7 +121,7 @@ helm repo add prometheus-community https://prometheus-community.github.io/helm-c
 helm install prometheus prometheus-community/kube-prometheus-stack \
   --namespace monitoring \
   --create-namespace \
-  --set grafana.adminPassword=admin
+  --values reviewed-monitoring-values.yaml  # reference a pre-created password Secret in reviewed chart values
 ```
 
 ### ServiceMonitor
@@ -148,14 +150,14 @@ spec:
 ### Basic Queries
 
 ```promql
-# Current CPU usage
-node_cpu_seconds_total{mode="idle"}
+# CPU busy percentage by instance
+100 * (1 - avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])))
 
 # Rate of HTTP requests per second
 rate(http_requests_total[5m])
 
 # Average response time
-avg(http_request_duration_seconds_sum / http_request_duration_seconds_count)
+sum(rate(http_request_duration_seconds_sum[5m])) / sum(rate(http_request_duration_seconds_count[5m]))
 
 # Memory usage percentage
 (1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100
@@ -165,10 +167,10 @@ avg(http_request_duration_seconds_sum / http_request_duration_seconds_count)
 
 ```promql
 # Sum requests by status code
-sum by (status_code) (rate(http_requests_total[5m]))
+sum by (status) (rate(http_requests_total[5m]))
 
 # Average CPU by instance
-avg by (instance) (rate(node_cpu_seconds_total{mode!="idle"}[5m]))
+1 - avg by (instance) (rate(node_cpu_seconds_total{mode="idle"}[5m]))
 
 # Top 5 endpoints by request count
 topk(5, sum by (endpoint) (rate(http_requests_total[5m])))
@@ -181,7 +183,7 @@ histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))
 
 ```promql
 # Compare to 1 hour ago
-http_requests_total - http_requests_total offset 1h
+increase(http_requests_total[1h])  # request increase with counter-reset handling
 
 # Predict disk space in 4 hours
 predict_linear(node_filesystem_avail_bytes[1h], 4 * 3600)
@@ -286,8 +288,8 @@ receivers:
         "type": "graph",
         "targets": [
           {
-            "expr": "sum(rate(http_requests_total[5m])) by (status_code)",
-            "legendFormat": "{{ status_code }}"
+            "expr": "sum(rate(http_requests_total[5m])) by (status)",
+            "legendFormat": "{{ status }}"
           }
         ],
         "gridPos": {"x": 0, "y": 0, "w": 12, "h": 8}

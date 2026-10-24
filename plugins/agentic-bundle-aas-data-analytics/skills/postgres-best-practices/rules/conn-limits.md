@@ -23,16 +23,16 @@ show max_connections;  -- 500 (way too high for 4GB RAM)
 **Correct (calculate based on resources):**
 
 ```sql
--- Formula: max_connections = (RAM in MB / 5MB per connection) - reserved
--- For 4GB RAM: (4096 / 5) - 10 = ~800 theoretical max
--- But practically, 100-200 is better for query performance
+-- No universal RAM-per-connection formula: benchmark peak query memory.
+-- Include shared buffers, maintenance, parallel workers and OS headroom.
+-- These numbers are illustrative, not capacity recommendations.
 
--- Recommended settings for 4GB RAM
+-- Example settings only; max_connections changes require a server restart.
 alter system set max_connections = 100;
 
 -- Also set work_mem appropriately
--- work_mem * max_connections should not exceed 25% of RAM
-alter system set work_mem = '8MB';  -- 8MB * 100 = 800MB max
+-- work_mem applies per sort/hash operation and parallel worker, not per connection.
+alter system set work_mem = '8MB';  -- Total memory can greatly exceed 8MB * connection count.
 ```
 
 Monitor connection usage:

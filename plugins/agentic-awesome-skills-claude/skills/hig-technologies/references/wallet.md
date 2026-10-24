@@ -1,8 +1,14 @@
 ---
 title: "Wallet | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/wallet
+---
 
 # Wallet
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
+**Implementation boundary.** A pass does not itself authorize collecting identity or payment data. Check current regional availability, entitlements, signing and verification requirements; protect pass-signing private keys and identity payloads. Example legal-purpose strings apply only where their stated legal requirement is actually established.
+
 
 Wallet helps people securely store their credit and debit cards, driver’s license or state ID, transit cards, event tickets, keys, and more on iPhone and Apple Watch.
 

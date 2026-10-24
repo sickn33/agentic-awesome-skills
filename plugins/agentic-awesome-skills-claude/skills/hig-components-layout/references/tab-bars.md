@@ -1,6 +1,7 @@
 ---
 title: "Tab bars | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/tab-bars
+---
 
 # Tab bars
 
@@ -8,7 +9,7 @@ A tab bar lets people navigate between top-level sections of your app.
 
 ![A stylized representation of a tab bar containing four placeholder icons with names. The image is tinted red to subtly reflect the red in the original six-color Apple logo.](https://docs-assets.developer.apple.com/published/8737d6baf5cdb223521eb4dbe3cb45e5/components-tab-bar-intro%402x.png)
 
-Tab bars help people understand the different types of information or functionality that an app provides. They also let people quickly switch between sections of the view while preserving the current navigation state within each section.
+Tab bars help people understand the different types of information or functionality that an app provides. They also let people quickly switch between sections of the view while allowing each section to maintain its own navigation state. Store that state explicitly where needed and test restoration; a tab container alone does not guarantee persistence.
 
 ## [Best practices](https://developer.apple.com/design/human-interface-guidelines/tab-bars#Best-practices)
 
@@ -20,7 +21,7 @@ Tab bars help people understand the different types of information or functional
 
 **Avoid overflow tabs.** Depending on device size and orientation, the number of visible tabs can be smaller than the total number of tabs. If horizontal space limits the number of visible tabs, the trailing tab becomes a More tab in iOS and iPadOS, revealing the remaining items in a separate list. The More tab makes it harder for people to reach and notice content on tabs that are hidden, so limit scenarios in your app where this can happen.
 
-**Don’t disable or hide tab bar buttons, even when their content is unavailable.** Having tab bar buttons available in some cases but not others makes your app’s interface appear unstable and unpredictable. If a section is empty, explain why its content is unavailable.
+**Don’t disable or hide tab bar buttons, merely because their content is temporarily empty or unavailable. Authorization and entitlement can require different destinations; never expose restricted data to preserve a visual tab.** Having tab bar buttons available in some cases but not others makes your app’s interface appear unstable and unpredictable. If a section is empty, explain why its content is unavailable.
 
 **Include tab labels to help with navigation.** A tab label appears beneath or beside a tab bar icon, and can aid navigation by clearly describing the type of content or functionality the tab contains. Use single words whenever possible.
 

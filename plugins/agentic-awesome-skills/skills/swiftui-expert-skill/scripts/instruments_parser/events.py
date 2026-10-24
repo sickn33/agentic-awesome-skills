@@ -172,7 +172,7 @@ def _read_interval_schema(trace_path: Path, run: int = 1) -> list[dict[str, Any]
             continue
         start_ns = xml_utils.int_text(stream.resolve(start_el))
         dur_ns = xml_utils.int_text(stream.resolve(dur_el))
-        if start_ns is None or dur_ns is None:
+        if start_ns is None or dur_ns is None or dur_ns < 0:
             continue
         end_ns = start_ns + dur_ns
 
@@ -233,7 +233,8 @@ def _read_event_schema(
             if process_el is not None else None
         )
 
-        key = (process, sub, cat, name, signpost_id)
+        process_id = xml_utils.extract_process(process_el, stream).get("pid") if process_el is not None else None
+        key = (process_id, process, sub, cat, name, signpost_id)
         etype = (event_type or "").lower()
 
         if etype in ("begin", "interval begin", "start"):
@@ -242,7 +243,7 @@ def _read_event_schema(
                             "process": process, "signpost_id": signpost_id}
         elif etype in ("end", "interval end", "stop"):
             start = pending.pop(key, None)
-            if start is not None:
+            if start is not None and time_ns >= start["start_ns"]:
                 dur_ns = time_ns - start["start_ns"]
                 intervals.append({
                     **start,

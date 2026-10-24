@@ -2,7 +2,7 @@
 Redshift — Lineage Collection (collect-only)
 ==============================================
 Collects table-level lineage from Redshift by fetching recent successful query
-history from sys_query_history + sys_querytext and parsing CREATE TABLE AS SELECT
+history from sys_query_history + sys_query_text and parsing CREATE TABLE AS SELECT
 (CTAS) and INSERT INTO SELECT patterns to derive source->destination relationships.
 
 Writes a JSON manifest file that can be consumed by push_lineage.py.
@@ -142,11 +142,13 @@ def _dictfetch(cursor: Any, sql: str, params: tuple | None = None) -> list[dict[
         if not chunk:
             break
         rows.extend(dict(zip(cols, row)) for row in chunk)
+        if len(rows) > 100000:
+            raise ValueError("Collection exceeds 100000 rows; narrow scope instead of returning partial success")
     return rows
 
 
 def fetch_query_texts(cursor: Any, lookback_hours: int) -> list[str]:
-    """Assemble full query texts from sys_query_history + sys_querytext."""
+    """Assemble full query texts from sys_query_history + sys_query_text."""
     lookback_hours = _bounded_int(lookback_hours, "lookback_hours", minimum=1, maximum=24 * 31)
     rows = _dictfetch(
         cursor,
@@ -154,11 +156,11 @@ def fetch_query_texts(cursor: Any, lookback_hours: int) -> list[str]:
         SELECT
             sq.query_id,
             LISTAGG(
-                CASE WHEN LEN(st.text) <= 200 THEN st.text ELSE LEFT(st.text, 200) END,
+                st.text,
                 ''
             ) WITHIN GROUP (ORDER BY st.sequence) AS full_text
         FROM sys_query_history sq
-        JOIN sys_querytext st ON sq.query_id = st.query_id
+        JOIN sys_query_text st ON sq.query_id = st.query_id
         WHERE sq.start_time >= DATEADD(hour, -%s, GETDATE())
           AND sq.status = 'success'
         GROUP BY sq.query_id
@@ -231,7 +233,7 @@ def collect(
     collected_at = datetime.now(timezone.utc).isoformat()
 
     conn = psycopg2.connect(
-        host=host, port=port, dbname=db, user=user, password=password, connect_timeout=30,
+        host=host, port=port, dbname=db, user=user, password=password, connect_timeout=30, sslmode="verify-full", options="-c statement_timeout=60000",
     )
     try:
         with conn.cursor() as cursor:
@@ -248,6 +250,7 @@ def collect(
 
     manifest = {
         "resource_type": RESOURCE_TYPE,
+        "lineage_candidates": True,
         "collected_at": collected_at,
         "lookback_hours": lookback_hours,
         "queries_scanned": len(query_texts),
@@ -264,7 +267,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Collect Redshift lineage to a manifest file")
     parser.add_argument("--db", default=os.getenv("REDSHIFT_DB"))             # ← SUBSTITUTE
     parser.add_argument("--user", default=os.getenv("REDSHIFT_USER"))         # ← SUBSTITUTE
-    parser.add_argument("--password", default=os.getenv("REDSHIFT_PASSWORD")) # ← SUBSTITUTE
+    parser.add_argument("--password", choices=[], default=os.getenv("REDSHIFT_PASSWORD")) # ← SUBSTITUTE
     parser.add_argument("--port", type=int, default=int(os.getenv("REDSHIFT_PORT", "5439")))
     parser.add_argument("--lookback-hours", type=int, default=LOOKBACK_HOURS)
     parser.add_argument("--manifest", default="manifest_lineage.json")

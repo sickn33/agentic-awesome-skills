@@ -23,7 +23,7 @@ result = df1.join(df2, on="id", how="left")
 **Outer Join (union):**
 ```python
 # Keep all rows from both DataFrames
-result = df1.join(df2, on="id", how="outer")
+result = df1.join(df2, on="id", how="full")
 ```
 
 **Cross Join (Cartesian product):**
@@ -131,7 +131,7 @@ For time-series data, join to nearest timestamp:
 ```python
 # Join to nearest earlier timestamp
 quotes = pl.DataFrame({
-    "timestamp": [1, 2, 3, 4, 5],
+    "timestamp": [1.0, 2.0, 3.0, 4.0, 5.0],
     "stock": ["A", "A", "A", "A", "A"],
     "quote": [100, 101, 102, 103, 104]
 })
@@ -142,8 +142,8 @@ trades = pl.DataFrame({
     "trade": [50, 75, 100]
 })
 
-result = trades.join_asof(
-    quotes,
+result = trades.sort("timestamp").join_asof(
+    quotes.sort("timestamp"),
     on="timestamp",
     by="stock",
     strategy="backward"  # or "forward", "nearest"
@@ -186,7 +186,7 @@ result = pl.concat([df1, df2], how="horizontal")
 # Result: 3 rows, columns a and b
 ```
 
-**Note:** Horizontal concat requires same number of rows.
+**Note:** Horizontal concat aligns by position, not key, and pads shorter inputs with nulls. Assert equal heights when that is required.
 
 ### Concatenation Options
 
@@ -232,7 +232,7 @@ df = pl.DataFrame({
 pivoted = df.pivot(
     values="sales",
     index="date",
-    columns="product"
+    on="product"
 )
 # Result:
 # date     | A   | B
@@ -255,7 +255,7 @@ df = pl.DataFrame({
 pivoted = df.pivot(
     values="sales",
     index="date",
-    columns="product",
+    on="product",
     aggregate_function="sum"  # or "mean", "max", "min", etc.
 )
 ```
@@ -273,7 +273,7 @@ df = pl.DataFrame({
 pivoted = df.pivot(
     values="sales",
     index=["region", "date"],
-    columns="product"
+    on="product"
 )
 ```
 
@@ -405,7 +405,7 @@ wide = pl.DataFrame({
 long = wide.unpivot(index="id", on=["A", "B"])
 
 # Back to wide (maybe with transformations)
-wide_again = long.pivot(values="value", index="id", columns="variable")
+wide_again = long.pivot(values="value", index="id", on="variable")
 ```
 
 ### Pattern 2: Nested to Flat
@@ -442,7 +442,7 @@ result = (
     sales
     .group_by("date", "product")
     .agg(pl.col("sales").sum())
-    .pivot(values="sales", index="date", columns="product")
+    .pivot(values="sales", index="date", on="product")
 )
 ```
 
@@ -470,7 +470,7 @@ result = (
         metric=pl.col("variable").str.extract(r"Q[0-9]_(.*)", 1)
     )
     .drop("variable")
-    .pivot(values="value", index=["id", "quarter"], columns="metric")
+    .pivot(values="value", index=["id", "quarter"], on="metric")
 )
 ```
 
@@ -479,7 +479,7 @@ result = (
 ### Join Performance
 
 ```python
-# 1. Join on indexed/sorted columns when possible
+# 1. Sorting may add overhead; benchmark rather than assume an index exists
 df1_sorted = df1.sort("id")
 df2_sorted = df2.sort("id")
 result = df1_sorted.join(df2_sorted, on="id")
@@ -545,5 +545,5 @@ orders.join(customers, on="customer_id").join(products, on="product_id")
 
 ```python
 # Pivot for reporting
-sales.pivot(values="amount", index="month", columns="product")
+sales.pivot(values="amount", index="month", on="product")
 ```

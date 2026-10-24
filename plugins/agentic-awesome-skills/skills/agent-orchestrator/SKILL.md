@@ -50,10 +50,14 @@ e orquestra multiplos skills para tarefas complexas.
 
 ---
 
-## Workflow Obrigatorio (Toda Solicitacao)
+## Workflow Para Descoberta Solicitada
 
 Execute estes passos apenas quando a tarefa pede esta ferramenta. Scores sao heuristicas locais, nao prova de seguranca, compatibilidade ou autorizacao. Um plano nao executa skills; delegacao, mensagens e publicacao exigem autorizacao do usuario.
 Os scripts localizam arquivos a partir da propria instalacao, mas os comandos abaixo pressupõem que o diretorio pai de `agent-orchestrator` seja o diretorio atual. De outro local, use o caminho absoluto do script.
+
+## Dependencia
+
+Use Python 3.10+ e instale `scripts/requirements.txt` em um ambiente virtual revisado; o parser requer PyYAML. Os comandos abaixo apenas inventariam metadados e produzem planos; nao executam skills.
 
 ## Passo 1: Auto-Discovery (Varredura)
 
@@ -116,7 +120,7 @@ ambiguo deve parar. O limite de profundidade do scanner torna o inventario parci
 O scanner procura SKILL.md em:
 1. `.claude/skills/*/` (skills registradas no Claude Code)
 2. `*/` (skills standalone no top-level)
-3. `*/*\` (skills em subpastas, ate profundidade 3)
+3. Subpastas ate a profundidade 3 (cobertura parcial)
 
 ## Metadata Por Skill
 
@@ -217,7 +221,7 @@ Uma skill principal lidera; outras fornecem dados de apoio.
 user_query -> whatsapp-cloud-api (primary) + web-scraper (support) -> result
 ```
 
-## Detalhes Em `References/Orchestration-Patterns.Md`
+## Detalhes em [orchestration-patterns.md](references/orchestration-patterns.md)
 
 ---
 
@@ -234,14 +238,14 @@ $AGENT_ORCHESTRATOR_DATA_DIR/projects.json
 ## Operacoes
 
 **Criar projeto:**
-Adicionar entrada ao projects.json:
+Adicionar entrada ao array `projects` em projects.json:
 ```json
-{
+{"projects": [{
   "name": "nome-do-projeto",
   "created_at": "2026-02-25T12:00:00",
   "skills": ["web-scraper", "whatsapp-cloud-api"],
   "description": "Descricao do projeto"
-}
+}]}
 ```
 
 **Adicionar skill a projeto:** Atualizar o array `skills` do projeto.

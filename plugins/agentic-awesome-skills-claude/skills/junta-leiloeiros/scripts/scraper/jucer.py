@@ -66,7 +66,7 @@ class JucerScraper(AbstractJuntaScraper):
             if not nome or len(nome) < 3:
                 continue
 
-            record = {"nome": nome, "municipio": "Porto Velho"}
+            record = {"nome": nome, "municipio": None}
 
             # Coletar dd's subsequentes
             sibling = dt.next_sibling
@@ -114,7 +114,7 @@ class JucerScraper(AbstractJuntaScraper):
             if not nome:
                 continue
 
-            record = {"nome": nome, "municipio": "Porto Velho"}
+            record = {"nome": nome, "municipio": None}
             for line in remaining:
                 self._extract_dd_field(line, record)
             records.append(record)
@@ -185,7 +185,7 @@ class JucerScraper(AbstractJuntaScraper):
             if not block:
                 continue
 
-            record = {"municipio": "Porto Velho"}
+            record = {"municipio": None}
             nome_found = False
 
             for tag, text in block:

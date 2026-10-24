@@ -45,7 +45,7 @@ Unless the user explicitly specifies a different stack, adhere to these structur
 * **DEPENDENCY VERIFICATION [MANDATORY]:** Before importing ANY 3rd party library (e.g. `framer-motion`, `lucide-react`, `zustand`), you MUST check `package.json`. If the package is missing, you MUST output the installation command (e.g. `npm install package-name`) before providing the code. **Never** assume a library exists.
 * **Framework & Interactivity:** React or Next.js. Default to Server Components (`RSC`).
     * **RSC SAFETY:** Global state works ONLY in Client Components. In Next.js, wrap providers in a `"use client"` component.
-    * **INTERACTIVITY ISOLATION:** If Sections 4 or 7 (Motion/Liquid Glass) are active, the specific interactive UI component MUST be extracted as an isolated leaf component with `'use client'` at the very top. Server Components must exclusively render static layouts.
+    * **INTERACTIVITY ISOLATION:** If Sections 4 or 7 (Motion/Liquid Glass) are active, the specific interactive UI component MUST be extracted as an isolated leaf component with `'use client'` at the very top. Server Components may fetch data and render dynamic server output; isolate browser state/effects and event handlers in Client Components.
 * **State Management:** Use local `useState`/`useReducer` for isolated UI. Use global state strictly for deep prop-drilling avoidance.
 * **Styling Policy:** Use Tailwind CSS (v3/v4) for 90% of styling.
     * **TAILWIND VERSION LOCK:** Check `package.json` first. Do not use v4 syntax in v3 projects.
@@ -54,9 +54,9 @@ Unless the user explicitly specifies a different stack, adhere to these structur
 * **Responsiveness & Spacing:**
   * Standardize breakpoints (`sm`, `md`, `lg`, `xl`).
   * Contain page layouts using `max-w-[1400px] mx-auto` or `max-w-7xl`.
-  * **Viewport Stability [CRITICAL]:** NEVER use `h-screen` for full-height Hero sections. ALWAYS use `min-h-[100dvh]` to prevent catastrophic layout jumping on mobile browsers (iOS Safari).
+  * **Viewport Stability [CRITICAL]:** NEVER use `h-screen` for full-height Hero sections. Choose `min-h-[100svh]` for a stable smallest viewport or `100dvh` when tracking browser chrome is intended; test address-bar/keyboard changes because dvh can resize while scrolling.
   * **Grid over Flex-Math:** NEVER use complex flexbox percentage math (`w-[calc(33%-1rem)]`). ALWAYS use CSS Grid (`grid grid-cols-1 md:grid-cols-3 gap-6`) for reliable structures.
-* **Icons:** You MUST use exactly `@phosphor-icons/react` or `@radix-ui/react-icons` as the import paths (check installed version). Standardize `strokeWidth` globally (e.g., exclusively use `1.5` or `2.0`).
+* **Icons:** You MUST use exactly `@phosphor-icons/react` or `@radix-ui/react-icons` as the import paths (check installed version). Use each installed icon library’s supported weight/stroke API; Radix icons and Phosphor do not share a universal strokeWidth contract.
 
 
 ## 3. DESIGN ENGINEERING DIRECTIVES (Bias Correction)
@@ -74,7 +74,7 @@ LLMs have statistical biases toward specific UI cliché patterns. Proactively co
 * **COLOR CONSISTENCY:** Stick to one palette for the entire output. Do not fluctuate between warm and cool grays within the same project.
 
 **Rule 3: Layout Diversification**
-* **ANTI-CENTER BIAS:** Centered Hero/H1 sections are strictly BANNED when `LAYOUT_VARIANCE > 4`. Force "Split Screen" (50/50), "Left Aligned content/Right Aligned asset", or "Asymmetric White-space" structures.
+* **ANTI-CENTER BIAS:** Centered Hero/H1 sections are strictly BANNED when `DESIGN_VARIANCE > 4`. Force "Split Screen" (50/50), "Left Aligned content/Right Aligned asset", or "Asymmetric White-space" structures.
 
 **Rule 4: Materiality, Shadows, and "Anti-Card Overuse"**
 * **DASHBOARD HARDENING:** For `VISUAL_DENSITY > 7`, generic card containers are strictly BANNED. Use logic-grouping via `border-t`, `divide-y`, or purely negative space. Data metrics should breathe without being boxed in unless elevation (z-index) is functionally required.
@@ -85,7 +85,7 @@ LLMs have statistical biases toward specific UI cliché patterns. Proactively co
   * **Loading:** Skeletal loaders matching layout sizes (avoid generic circular spinners).
   * **Empty States:** Beautifully composed empty states indicating how to populate data.
   * **Error States:** Clear, inline error reporting (e.g., forms).
-  * **Tactile Feedback:** On `:active`, use `-translate-y-[1px]` or `scale-[0.98]` to simulate a physical push indicating success/action.
+  * **Tactile Feedback:** On `:active`, use `-translate-y-[1px]` or `scale-[0.98]` to simulate a physical push indicating a press only; show success after the operation actually succeeds.
 
 **Rule 6: Data & Form Patterns**
 * **Forms:** Label MUST sit above input. Helper text is optional but should exist in markup. Error text below input. Use a standard `gap-2` for input blocks.
@@ -94,7 +94,7 @@ LLMs have statistical biases toward specific UI cliché patterns. Proactively co
 To actively combat generic AI designs, systematically implement these high-end coding concepts as your baseline:
 * **"Liquid Glass" Refraction:** When glassmorphism is needed, go beyond `backdrop-blur`. Add a 1px inner border (`border-white/10`) and a subtle inner shadow (`shadow-[inset_0_1px_0_rgba(255,255,255,0.1)]`) to simulate physical edge refraction.
 * **Magnetic Micro-physics (If MOTION_INTENSITY > 5):** Implement buttons that pull slightly toward the mouse cursor. **CRITICAL:** NEVER use React `useState` for magnetic hover or continuous animations. Use EXCLUSIVELY Framer Motion's `useMotionValue` and `useTransform` outside the React render cycle to prevent performance collapse on mobile.
-* **Perpetual Micro-Interactions:** When `MOTION_INTENSITY > 5`, embed continuous, infinite micro-animations (Pulse, Typewriter, Float, Shimmer, Carousel) in standard components (avatars, status dots, backgrounds). Apply premium Spring Physics (`type: "spring", stiffness: 100, damping: 20`) to all interactive elements—no linear easing.
+* **Perpetual Micro-Interactions:** When `MOTION_INTENSITY > 5`, use optional, restrained motion only when it communicates state; do not add continuous animations to normal controls by default. Apply premium Spring Physics (`type: "spring", stiffness: 100, damping: 20`) to all interactive elements—no linear easing.
 * **Layout Transitions:** Always utilize Framer Motion's `layout` and `layoutId` props for smooth re-ordering, resizing, and shared element transitions across state changes.
 * **Staggered Orchestration:** Do not mount lists or grids instantly. Use `staggerChildren` (Framer) or CSS cascade (`animation-delay: calc(var(--index) * 100ms)`) to create sequential waterfall reveals. **CRITICAL:** For `staggerChildren`, the Parent (`variants`) and Children MUST reside in the identical Client Component tree. If data is fetched asynchronously, pass the data as props into a centralized Parent Motion wrapper.
 
@@ -113,7 +113,7 @@ To actively combat generic AI designs, systematically implement these high-end c
 
 ### MOTION_INTENSITY (Level 1-10)
 * **1-3 (Static):** No automatic animations. CSS `:hover` and `:active` states only.
-* **4-7 (Fluid CSS):** Use `transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1)`. Use `animation-delay` cascades for load-ins. Focus strictly on `transform` and `opacity`. Use `will-change: transform` sparingly.
+* **4-7 (Fluid CSS):** List explicit transition properties such as `transform, opacity` with a suitable duration/easing. Use `animation-delay` cascades for load-ins. Focus strictly on `transform` and `opacity`. Use `will-change: transform` sparingly.
 * **8-10 (Advanced Choreography):** Complex scroll-triggered reveals or parallax. Use Framer Motion hooks. NEVER use `window.addEventListener('scroll')`.
 
 ### VISUAL_DENSITY (Level 1-10)
@@ -143,7 +143,7 @@ To guarantee a premium, non-generic output, you MUST strictly avoid these common
 ### Content & Data (The "Jane Doe" Effect)
 * **NO Generic Names:** "John Doe", "Sarah Chan", or "Jack Su" are banned. Use highly creative, realistic-sounding names.
 * **NO Generic Avatars:** DO NOT use standard SVG "egg" or Lucide user icons for avatars. Use creative, believable photo placeholders or specific styling.
-* **NO Fake Numbers:** Avoid predictable outputs like `99.99%`, `50%`, or basic phone numbers (`1234567`). Use organic, messy data (`47.2%`, `+1 (312) 847-1928`).
+* **NO Fake Numbers:** Avoid predictable outputs like `99.99%`, `50%`, or basic phone numbers (`1234567`). Use clearly labeled synthetic data or verified user-provided values; never invent realistic phone numbers or performance claims.
 * **NO Startup Slop Names:** "Acme", "Nexus", "SmartFlow". Invent premium, contextual brand names.
 * **NO Filler Words:** Avoid AI copywriting clichés like "Elevate", "Seamless", "Unleash", or "Next-Gen". Use concrete verbs.
 
@@ -217,7 +217,7 @@ Do not default to generic UI. Pull from this library of advanced concepts to ens
 * **Lens Blur Depth:** Dynamic focus blurring background UI layers to highlight a foreground action.
 
 ## 9. THE "MOTION-ENGINE" BENTO PARADIGM
-When generating modern SaaS dashboards or feature sections, you MUST utilize the following "Bento 2.0" architecture and motion philosophy. This goes beyond static cards and enforces a "Vercel-core meets Dribbble-clean" aesthetic heavily reliant on perpetual physics.
+When the product and user explicitly call for this visual direction, consider the following optional "Bento 2.0" architecture and motion philosophy. This goes beyond static cards and enforces a "Vercel-core meets Dribbble-clean" aesthetic heavily reliant on perpetual physics.
 
 ### A. Core Design Philosophy
 * **Aesthetic:** High-end, minimal, and functional.
@@ -228,15 +228,15 @@ When generating modern SaaS dashboards or feature sections, you MUST utilize the
 * **Pixel-Perfection:** Use generous `p-8` or `p-10` padding inside cards.
 
 ### B. The Animation Engine Specs (Perpetual Motion)
-All cards must contain **"Perpetual Micro-Interactions."** Use the following Framer Motion principles:
+Cards do not require motion. For an explicitly requested animation demo, consider: Use the following Framer Motion principles:
 * **Spring Physics:** No linear easing. Use `type: "spring", stiffness: 100, damping: 20` for a premium, weighty feel.
 * **Layout Transitions:** Heavily utilize the `layout` and `layoutId` props to ensure smooth re-ordering, resizing, and shared element state transitions.
-* **Infinite Loops:** Every card must have an "Active State" that loops infinitely (Pulse, Typewriter, Float, or Carousel) to ensure the dashboard feels "alive".
+* **Infinite Loops:** Infinite loops are optional decorative demos only; stop under reduced-motion, provide pause where required and never simulate real operational status.
 * **Performance:** Wrap dynamic lists in `<AnimatePresence>` and optimize for 60fps. **PERFORMANCE CRITICAL:** Any perpetual motion or infinite loop MUST be memoized (React.memo) and completely isolated in its own microscopic Client Component. Never trigger re-renders in the parent layout.
 
 ### C. The 5-Card Archetypes (Micro-Animation Specs)
 Implement these specific micro-animations when constructing Bento grids (e.g., Row 1: 3 cols | Row 2: 2 cols split 70/30):
-1. **The Intelligent List:** A vertical stack of items with an infinite auto-sorting loop. Items swap positions using `layoutId`, simulating an AI prioritizing tasks in real-time.
+1. **The Intelligent List:** A vertical stack of items with an infinite auto-sorting loop. Items swap positions using `layoutId`, clearly labeled as a demo, not representing actual AI decisions or reordering a user’s live tasks.
 2. **The Command Input:** A search/AI bar with a multi-step Typewriter Effect. It cycles through complex prompts, including a blinking cursor and a "processing" state with a shimmering loading gradient.
 3. **The Live Status:** A scheduling interface with "breathing" status indicators. Include a pop-up notification badge that emerges with an "Overshoot" spring effect, stays for 3 seconds, and vanishes.
 4. **The Wide Data Stream:** A horizontal "Infinite Carousel" of data cards or metrics. Ensure the loop is seamless (using `x: ["0%", "-100%"]`) with a speed that feels effortless.
@@ -246,8 +246,12 @@ Implement these specific micro-animations when constructing Bento grids (e.g., R
 Evaluate your code against this matrix before outputting. This is the **last** filter you apply to your logic.
 - [ ] Is global state used appropriately to avoid deep prop-drilling rather than arbitrarily?
 - [ ] Is mobile layout collapse (`w-full`, `px-4`, `max-w-7xl mx-auto`) guaranteed for high-variance designs?
-- [ ] Do full-height sections safely use `min-h-[100dvh]` instead of the bugged `h-screen`?
+- [ ] Do full-height sections safely use `min-h-[100dvh]` with a viewport strategy verified for the intended keyboard/browser behavior?
 - [ ] Do `useEffect` animations contain strict cleanup functions?
 - [ ] Are empty, loading, and error states provided?
 - [ ] Are cards omitted in favor of spacing where possible?
 - [ ] Did you strictly isolate CPU-heavy perpetual animations in their own Client Components?
+
+## Accessibility, truth and performance
+
+These taste defaults yield to the user’s brand, existing architecture and accessibility needs. Respect prefers-reduced-motion, provide pause/stop for nonessential ongoing animation, keep keyboard focus stable and avoid scroll hijacking as a required navigation path. Hover/magnetic/drag interactions need equivalent keyboard/touch controls; dialogs need semantics, focus management and escape/close behavior. Maintain sufficient contrast, visible focus, target sizes, associated labels/error descriptions and live-region announcements without announcing decorative loops. Treat finance/status/AI activity as real only with evidence; label mock data and use licensed/local imagery rather than depending on remote placeholder uptime/privacy. React.memo alone does not stop animation work, guarantee isolation or deliver 60fps: measure CPU/GPU, reduced motion, offscreen behavior and cleanup on target devices. Server rendering, Tailwind syntax and motion APIs require pinned-version checks; no styling recipe guarantees responsive or production readiness.

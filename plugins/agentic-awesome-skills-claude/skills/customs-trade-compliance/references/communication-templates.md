@@ -2,7 +2,13 @@
 
 > Tier 2 reference. Load when drafting communications with customs brokers, regulatory authorities, internal stakeholders, or trade partners.
 
-These templates provide the structural framework for common trade compliance communications. Adapt language to the specific situation, jurisdiction, and relationship. Variables are indicated with `{curly_braces}`. Remove all instructional notes before sending.
+These templates provide the structural framework for common trade compliance communications. Adapt language to the specific situation, jurisdiction, and relationship. Variables are indicated with `{curly_braces}`. Remove all instructional notes from the draft. Sending or filing requires task-specific authority and qualified owner approval.
+
+Verify every legal citation, ruling, address, rate, required data element, deadline
+and statement of fact. Templates are not completed certifications or filings.
+Do not sign, assert an absence of investigations, admit culpability, tender funds,
+claim a preference or release a hold based only on placeholders. Attach supporting
+evidence and keep the actual submission/approval record.
 
 ---
 
@@ -45,11 +51,11 @@ Select the template closest to your communication need. Fill in all variables. A
 | 2 | {product_description_2} | {HTS_2} | {rate_2} | {origin_2} | {qty_2} | {value_2} |
 
 **Classification Notes:**
-{GRI_rationale_or_ruling_reference. Example: "HTS 8471.30.0100 per GRI 1 — portable ADP machine meeting all four Note 5(A) criteria. Consistent with CBP Ruling HQ H298456 (2019)."}
+{verified_GRI_analysis_and_current_legal_notes; cite only a verified applicable ruling, identifying factual differences}
 
 **Valuation Notes:**
 - Transaction value per Method 1. {Note any additions: assists, royalties, or other adjustments.}
-- Related party: {Yes/No}. {If Yes: "Circumstances of sale test satisfied per attached transfer pricing analysis."}
+- Related party: {Yes/No}. {If Yes: "Customs acceptability analysis attached for broker review; tax transfer-pricing documentation alone does not establish acceptance."}
 - Reconciliation flag: {Yes/No}. {If Yes: "Final price subject to year-end transfer pricing adjustment."}
 
 **Preferential Treatment Claim:**
@@ -61,7 +67,7 @@ Select the template closest to your communication need. Fill in all variables. A
 **PGA Requirements:**
 - FDA: {Prior notice filed — confirmation # {PN_number} / Not applicable}
 - EPA/TSCA: {TSCA positive certification attached / Exemption: {basis} / N/A}
-- FCC: {Declaration of Conformity — FCC ID {FCC_ID} / N/A}
+- FCC: {verified applicable equipment authorisation / Supplier Declaration of Conformity; FCC ID only where applicable / N/A}
 - CPSC: {General Certificate of Conformity attached / N/A}
 - {Other PGA: USDA, TTB, DOE, etc.}
 
@@ -231,7 +237,7 @@ Dear Sir or Madam:
 
 **5. Tender of Duties and Interest**
 
-Pursuant to 19 CFR § 162.74(c), {company_name} hereby tenders the total underpaid duties in the amount of **${total_underpayment}** plus estimated interest of **${interest_amount}**, for a total tender of **${total_tender}**.
+Under the applicable tender provision and timing verified by counsel, {company_name} hereby tenders the total underpaid duties in the amount of **${total_underpayment}** plus estimated interest of **${interest_amount}**, for a total tender of **${total_tender}**.
 
 {Check enclosed payable to "U.S. Customs and Border Protection" / ACH payment details}
 
@@ -304,7 +310,7 @@ Pursuant to CBP's Mitigation Guidelines, {company_name} submits the following mi
 
 | Factor | Evidence |
 |---|---|
-| Contributory CBP error | {CBP accepted {X} prior entries with the same classification without comment / N/A} |
+| Contributory CBP error | {Documented specific CBP error, if any; mere prior entry acceptance is not proof of approval / N/A} |
 | Cooperation | {Company has cooperated fully, producing all requested records within {X} days} |
 | Corrective action | {Specific actions taken: new SOPs, training, classification audit, broker change} |
 | Prior good record | {No penalties or adverse findings in {X} years of import activity, {Y} entries} |
@@ -316,7 +322,7 @@ Pursuant to CBP's Mitigation Guidelines, {company_name} submits the following mi
 Based on the foregoing, {company_name} respectfully requests that CBP:
 
 {Option A — if acknowledging negligence:}
-"Reduce the penalty to the statutory minimum for negligence under 19 USC § 1592(c)(4), specifically {interest on unpaid duties / 1× lost revenue}, consistent with the mitigating factors presented."
+"Apply the supported statutory treatment or discretionary mitigation identified by counsel: {verified_legal_basis_and_requested_amount}. Do not present prior-disclosure treatment as a general negligence minimum."
 
 {Option B — if contesting entirely:}
 "Cancel the proposed penalty in its entirety. The entry information, as submitted, was {correct / supported by a reasonable interpretation of the tariff schedule / consistent with prior CBP treatment of this merchandise}."
@@ -337,7 +343,7 @@ cc: {Legal counsel}
 
 ## Template 5: USMCA Certification of Origin
 
-**Use when:** Certifying that goods qualify for preferential treatment under USMCA. The certification must include all nine data elements per Article 5.2. No prescribed form is required.
+**Use when:** Certifying that goods qualify for preferential treatment under USMCA. Verify the actual minimum data requirements in USMCA Annex 5-A and applicable importing-party instructions; this outline is not a completed compliant certification.
 
 ---
 
@@ -368,6 +374,8 @@ cc: {Legal counsel}
    Company: {company_name}
    Address: {address}
 
+Include all required exporter/producer/importer contact details (address, telephone and email), or a legally permitted exception, plus description/HS and applicable invoice information. Do not assume the numbered outline supplies all nine minimum elements.
+
 **5. Description of Goods:**
 
 | # | Description | HS Tariff Classification (6-digit) | Origin Criterion | Country of Origin |
@@ -378,7 +386,7 @@ cc: {Legal counsel}
 - A: Wholly obtained or produced entirely in the territory of one or more USMCA Parties
 - B: Produced entirely in the territory using non-originating materials that satisfy the applicable product-specific rule of origin (Annex 4-B)
 - C: Produced entirely in the territory exclusively from originating materials
-- D: Goods classified under HS chapters/headings listed in Article 4.3
+- D: Apply only if the actual requirements of Article 4.2(d) are met; verify with the applicable official instructions.
 
 **6. Blanket Period** {if applicable}:
    From: {start_date} To: {end_date} {maximum 12 months}
@@ -617,15 +625,15 @@ cc: {Legal counsel}
 
 **[ ] FALSE POSITIVE** — The screened entity is NOT the listed entity. Basis: {specific reasons — e.g., "Different country (screened entity is in Germany; listed entity is in Iran), different industry sector (screened entity is a pharmaceutical distributor; listed entity is an individual designated for terrorism support), no address correlation."}
 
-**Disposition:** Transaction may proceed.
+**Disposition:** Identity hit cleared by the authorised owner on the documented evidence; transaction release still requires all remaining ownership, destination, item, end-use and licensing checks.
 
-**[ ] TRUE POSITIVE** — The screened entity IS the listed entity or cannot be distinguished.
+**[ ] TRUE POSITIVE** — Reliable identifiers establish that the screened entity is the listed entity. An unresolved identity belongs in INCONCLUSIVE below.
 
-**Disposition:** Transaction BLOCKED. Escalated to {compliance officer / legal counsel} on {date}. {If OFAC: "OFAC blocking report to be filed within 10 business days." / If Entity List: "BIS licence application under consideration." / If DPL: "Absolute prohibition — no licence available. Transaction permanently blocked."}
+**Disposition:** Operational hold pending authorised compliance/legal decision on the applicable list entry/order, nexus, ownership, prohibition, licence or exception, and any blocking/rejection/reporting duties. Decision basis: {verified_basis}; deadline: {actual_deadline}; owner: {owner}.
 
 **[ ] INCONCLUSIVE** — Cannot determine with confidence. Escalated to {compliance officer} for additional investigation on {date}.
 
 **Approved by:** _______________________ Date: ___________
 {Compliance Officer / Manager}
 
-**Record Retention:** This memorandum and all supporting documentation will be retained for {5 years from the date of adjudication / indefinitely for true positives}.
+**Record Retention:** This memorandum and all supporting documentation will be retained for {applicable regime-specific retention and legal hold; assess current OFAC ten-year requirements where relevant}.

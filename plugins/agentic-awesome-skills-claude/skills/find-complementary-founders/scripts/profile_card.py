@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import importlib.util
+import stat
 import argparse
 import hashlib
 import json
@@ -93,59 +95,14 @@ def canonical_profile_bytes(profile: dict) -> bytes:
 
 
 def validate_profile(profile: dict) -> None:
-    if profile.get("schema_version") != "1.0":
-        raise CardError("Profile schema_version must be 1.0")
-    if profile.get("profile_type") != "founder-collaboration":
-        raise CardError("Profile is not a founder-collaboration profile")
-
-    alias = safe_text(profile.get("alias"), "profile.alias", maximum=50)
-    if not re.fullmatch(r"[a-zA-Z0-9][a-zA-Z0-9_-]{1,49}", alias):
-        raise CardError("profile.alias is not a valid pseudonym")
-
-    consent = profile.get("consent")
-    if not isinstance(consent, dict):
-        raise CardError("Profile lacks consent metadata")
-    if consent.get("state") != "public_profile_approved":
-        raise CardError("Profile lacks public-profile approval")
-
-    expires = profile.get("expires_on")
+    path = Path(__file__).with_name("validate_profile.py")
+    spec = importlib.util.spec_from_file_location("findmate_renderer_validator", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
     try:
-        expires_on = date.fromisoformat(expires)
-    except (TypeError, ValueError) as exc:
-        raise CardError("Profile has invalid expires_on") from exc
-    if expires_on < datetime.now(timezone.utc).date():
-        raise CardError(f"Profile expired on {expires_on.isoformat()}")
-
-    validate_vectors(
-        profile.get("stage_contributions"),
-        "stage_contributions",
-        STAGE_LABELS,
-    )
-    validate_vectors(
-        profile.get("functional_contributions"),
-        "functional_contributions",
-        FUNCTION_LABELS,
-    )
-
-    seeking = profile.get("seeking")
-    if not isinstance(seeking, dict):
-        raise CardError("Profile seeking section is invalid")
-    sought_stages = validate_dimension_list(
-        seeking.get("stages"),
-        "seeking.stages",
-        STAGE_LABELS,
-        maximum=3,
-    )
-    sought_functions = validate_dimension_list(
-        seeking.get("functions"),
-        "seeking.functions",
-        FUNCTION_LABELS,
-        maximum=8,
-    )
-    if not sought_stages and not sought_functions:
-        raise CardError(
-            "seeking must name at least one stage or functional capability"
-        )
+        module.validate_profile(profile)
+    except (module.ValidationError, TypeError, ValueError) as exc:
+        raise CardError("Profile failed complete local validation: " + str(exc)) from exc
 
 
 def validate_vectors(
@@ -266,10 +223,14 @@ def write_card(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     if path.is_symlink():
         raise CardError(f"Refusing to write through symlink: {path}")
-    flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | getattr(os, "O_NOFOLLOW", 0)
+    flags = os.O_WRONLY | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0)
     fd = os.open(path, flags, 0o644)
     with os.fdopen(fd, "w", encoding="utf-8") as handle:
-        os.fchmod(handle.fileno(), 0o644)
+        file_stat = os.fstat(handle.fileno())
+        if not stat.S_ISREG(file_stat.st_mode) or file_stat.st_nlink != 1:
+            raise CardError("Refusing nonregular or multiply linked output")
+        os.ftruncate(handle.fileno(), 0)
+        os.fchmod(handle.fileno(), 0o600)
         handle.write(content)
 
 

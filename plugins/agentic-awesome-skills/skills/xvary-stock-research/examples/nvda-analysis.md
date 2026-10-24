@@ -1,6 +1,6 @@
 # Example: `/analyze NVDA`
 
-> Illustrative skill output format. Metrics below were generated from public EDGAR + market snapshots and should be treated as research context, not investment advice.
+> Historical upstream illustration only. No accession links, quote timestamp, score weights or raw snapshots are bundled to reproduce these figures. Treat all numbers, scores and conclusions below as unverified examples, not current research or investment advice. The screenshots likewise contain historical promotional claims and portfolio sizing that this skill must not reproduce as recommendations.
 
 ## Verdict
 

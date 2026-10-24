@@ -153,12 +153,12 @@ single drop loses only that dir, and a re-run **skips already-complete dirs**:
 
 Its shape, and why each piece matters:
 
-- **List once, copy per-dir** — each `scp -r <alias>:<remote>/$d ./` is an independent session; one
-  failure ≠ whole-transfer loss (the `scp` single-stream trap, §5).
-- **Size-threshold skip** — a dir already ≥ threshold counts as complete and is skipped; a partial dir
-  is removed and re-pulled. Re-running the whole script is therefore idempotent and resumable.
-- **Per-dir `ConnectTimeout` + the §3 keepalive flags** on every `scp` so a hung session self-kills
-  instead of blocking the loop.
+- **List once, copy per-dir** — each `rsync --partial --protect-args` is an independent session.
+- **Reconcile every directory** — rsync compares source and destination on each run; a size threshold
+  cannot prove a directory complete. Load-verify every expected artifact before teardown.
+- **Per-dir `ConnectTimeout` + the §3 keepalive flags** bound unresponsive SSH peers.
+  The script requires Bash 4+ and rsync with `--protect-args` on both ends; directory names must not
+  contain newlines. Transfers assume a trusted remote host, and are not a hostile filesystem sandbox.
 
 ## 7. Move secrets via stdin — never inline a key, never on a durable FS
 
@@ -267,4 +267,7 @@ race). → Fix: make every transfer self-sufficient — create the dest in the s
 **T6 — `Host key verification failed` after an instance is recreated.**
 Symptom: same `connect.<region>.<provider>.com` host, new host key, so SSH refuses. → Root cause: the
 recreated container presents a different host key on the reused hostname/port. → Fix:
-`ssh-keygen -R '[connect.<region>.<provider>.com]:<PORT>'`, then reconnect (re-accepts the new key).
+Verify the replacement fingerprint through the authenticated provider console first. Only after it
+matches, remove that specific stale entry with
+`ssh-keygen -R '[connect.<region>.<provider>.com]:<PORT>'` and reconnect. An unexpected change may be an
+interception attempt; do not disable host-key checks.

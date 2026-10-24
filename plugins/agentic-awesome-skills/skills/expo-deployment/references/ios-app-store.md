@@ -83,7 +83,7 @@ Note: Requires app-specific password for accounts with 2FA.
 
 ```bash
 # Build and submit to App Store Connect
-eas build -p ios --profile production --submit
+eas build -p ios --profile production --auto-submit
 
 # Submit latest build
 eas submit -p ios --latest
@@ -92,7 +92,7 @@ eas submit -p ios --latest
 eas submit -p ios --id BUILD_ID
 
 # Quick TestFlight submission
-npx testflight
+eas build -p ios --profile production --auto-submit
 ```
 
 ## App Store Connect Configuration
@@ -226,7 +226,7 @@ Release immediately when approved:
 {
   "apple": {
     "release": {
-      "automaticRelease": true
+      "automaticRelease": false
     }
   }
 }
@@ -281,7 +281,7 @@ Rollout: Day 1 (1%) → Day 2 (2%) → Day 3 (5%) → Day 4 (10%) → Day 5 (20%
 eas credentials -p ios
 
 # Sync with Apple Developer Portal
-eas credentials -p ios --sync
+eas credentials -p ios
 ```
 
 ## App Store Metadata
@@ -310,7 +310,7 @@ Increment build number. With `autoIncrement: true`, this is automatic.
 
 ### "Missing compliance information"
 
-Add export compliance to `app.json`:
+Only after checking the actual encryption use and Apple’s export-compliance questions, declare the truthful value. Do not set false merely to suppress a prompt:
 
 ```json
 {
@@ -327,7 +327,7 @@ Add export compliance to `app.json`:
 ### "Invalid provisioning profile"
 
 ```bash
-eas credentials -p ios --sync
+eas credentials -p ios
 ```
 
 ### Build stuck in "Processing"
@@ -357,8 +357,8 @@ jobs:
     type: submit
     needs: [build]
     params:
-      platform: ios
       profile: production
+      build_id: ${{ needs.build.outputs.build_id }}
 ```
 
 ## Tips

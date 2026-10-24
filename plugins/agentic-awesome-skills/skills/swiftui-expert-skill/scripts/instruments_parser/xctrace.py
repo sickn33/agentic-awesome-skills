@@ -37,7 +37,7 @@ class TraceInfo:
 
 def version() -> str:
     out = subprocess.run(
-        ["xctrace", "version"], capture_output=True, text=True, check=True
+        ["xctrace", "version"], capture_output=True, text=True, check=True, timeout=30
     )
     return out.stdout.strip()
 
@@ -109,7 +109,7 @@ def export_schema(trace_path: Path, schema: str, run: int = 1) -> bytes:
 
 def _run_export(trace_path: Path, extra_args: list[str]) -> bytes:
     cmd = ["xctrace", "export", "--input", str(trace_path), *extra_args]
-    proc = subprocess.run(cmd, capture_output=True, check=False)
+    proc = subprocess.run(cmd, capture_output=True, check=False, timeout=120)
     if proc.returncode != 0:
         raise RuntimeError(
             f"xctrace export failed ({proc.returncode}): "

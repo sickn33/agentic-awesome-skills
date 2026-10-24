@@ -51,7 +51,7 @@ many times as required. This is useful for rc commands which take the
 Will place this in the "opt" value
 
 ```json
-{"key":"value", "key2","")
+{"key":"value", "key2":""}
 ```
 
 The `-a`/`--arg` option can be used to set strings in the "arg" value. It

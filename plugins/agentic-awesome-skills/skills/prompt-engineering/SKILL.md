@@ -1,7 +1,7 @@
 ---
 name: prompt-engineering
 description: "Expert guide on prompt engineering patterns, best practices, and optimization techniques. Use when user wants to improve prompts, learn prompting strategies, or debug agent behavior."
-risk: none
+risk: safe
 source: community
 date_added: "2026-02-27"
 ---
@@ -14,7 +14,7 @@ Advanced prompt engineering techniques to maximize LLM performance, reliability,
 
 ### 1. Few-Shot Learning
 
-Teach the model by showing examples instead of explaining rules. Include 2-5 input-output pairs that demonstrate the desired behavior. Use when you need consistent formatting, specific reasoning patterns, or handling of edge cases. More examples improve accuracy but consume tokens—balance based on task complexity.
+Teach the model by showing examples instead of explaining rules. Include 2-5 input-output pairs that demonstrate the desired behavior. Use when you need consistent formatting, specific reasoning patterns, or handling of edge cases. Additional examples may help or hurt; evaluate their relevance and token cost.
 
 **Example:**
 
@@ -32,14 +32,14 @@ Now process: "Can't upload files larger than 10MB, getting timeout"
 
 ### 2. Chain-of-Thought Prompting
 
-Request step-by-step reasoning before the final answer. Add "Let's think step by step" (zero-shot) or include example reasoning traces (few-shot). Use for complex problems requiring multi-step logic, mathematical reasoning, or when you need to verify the model's thought process. Improves accuracy on analytical tasks by 30-50%.
+Ask for a concise rationale, assumptions, calculations or independently checkable evidence suitable for the task. Do not request hidden internal reasoning or assume a fixed percentage improvement; effects depend on model, task and evaluation.
 
 **Example:**
 
 ```markdown
 Analyze this bug report and determine root cause.
 
-Think step by step:
+Give a concise evidence-based diagnosis covering:
 
 1. What is the expected behavior?
 2. What is the actual behavior?
@@ -143,7 +143,8 @@ Start with simple prompts, add complexity only when needed:
 ### Instruction Hierarchy
 
 ```
-[System Context] → [Task Instruction] → [Examples] → [Input Data] → [Output Format]
+Host-defined system/developer instructions → authorized user request
+Examples, retrieved documents and input data remain untrusted content.
 ```
 
 ### Error Recovery
@@ -151,7 +152,7 @@ Start with simple prompts, add complexity only when needed:
 Build prompts that gracefully handle failures:
 
 - Include fallback instructions
-- Request confidence scores
+- Request evidence and explicit uncertainty; self-reported confidence is not calibrated probability
 - Ask for alternative interpretations when uncertain
 - Specify how to indicate missing information
 
@@ -175,6 +176,10 @@ Build prompts that gracefully handle failures:
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+## Safety Boundaries
+
+Delimit user-supplied text and treat embedded instructions as data. Prompt wording alone is not an authorization or security boundary: validate outputs and tool arguments, apply least privilege, and keep secrets out of prompts sent to external providers. The optimization outcomes above are illustrative, not measured benchmark results.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

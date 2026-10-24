@@ -78,12 +78,9 @@ The description also feeds name/description matching, so seed it with representa
 Set the name and description when you create the workflow, not later:
 
 ```
-n8n_update_partial_workflow({
-  id: "<new workflow id>",
-  operations: [
-    { type: "updateSettings", /* name + description carried on the workflow object */ }
-  ]
-})
+# Pseudocode: discover the connected MCP create/update schema first.
+# Set the workflow name and description using the supported operation;
+# updateSettings is not assumed to rename a workflow.
 ```
 
 In practice you'll set `name` and `description` on the workflow when you create it, then add the trigger and body nodes via `addNode` / `addConnection`. The point is: don't let a new sub-workflow ship without the prefix and a real description.
@@ -100,7 +97,7 @@ Roughly:
 
 Counter-signals:
 
-- **100 sub-workflows** → likely lots of near-duplicates to merge.
+- **Many sub-workflows** → inspect overlap before proposing consolidation; count alone is not evidence of duplication.
 - **0 sub-workflows** → no extraction; logic is being duplicated inline.
 - **50 entries named `Helper`, `Util1`, `Helper2`** → discoverability is broken. Rename to the prefix convention.
 

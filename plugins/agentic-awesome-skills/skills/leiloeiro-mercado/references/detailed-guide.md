@@ -52,7 +52,7 @@ investimento, liquidez, retorno e timing de mercado.
   - Frequência de arrematação no 1º: 20-30%
   - Deságio médio nas arrematações do 1º: 0-15% (compram pela avaliação)
 
-2º Leilão (sem mínimo / veda vil preço):
+2º leilão judicial: verificar mínimo judicial no edital; sem fixação, o CPC art.891 considera vil preço inferior a 50% da avaliação.
   - Frequência de arrematação no 2º: 50-70%
   - Deságio médio nas arrematações do 2º: 30-50%
   - Deságio máximo observado: até 65-70% (imóveis problemáticos)
@@ -65,7 +65,7 @@ investimento, liquidez, retorno e timing de mercado.
   - Deságio médio: 20-35%
   - CEF: deságio médio histórico ~28%
 
-2º Leilão (mínimo = saldo devedor):
+2º leilão extrajudicial: verificar regra legal atual, contrato, dívida/encargos e edital; não presumir que basta o saldo devedor.
   - Frequência de arrematação: 60-80%
   - Deságio médio: 35-55%
   - Oportunidade: saldo devedor pode ser muito menor que valor de mercado
@@ -188,7 +188,7 @@ Deságio sobre VMP:                  ____%
 
 CUSTOS DE AQUISIÇÃO:
 Comissão Leiloeiro (5%):            R$ _____________
-ITBI (3% sobre VMP):                R$ _____________
+ITBI (alíquota/base local verificadas):                R$ _____________
 Registro + Escritura:               R$ _____________
 Advogado (se necessário):           R$ _____________
 Débitos (IPTU + Cond.):             R$ _____________
@@ -200,7 +200,7 @@ CUSTO TOTAL INVESTIDO:              R$ _____________
 CENÁRIO DE SAÍDA:
 Valor de Venda Esperado:            R$ _____________
 Comissão corretagem (5-6%):         R$ _____________
-IRPF Ganho de Capital (15%):        R$ _____________
+IR sobre ganho (regime/alíquota/isenções verificados):        R$ _____________
 
 RESULTADO:
 Lucro Bruto:                        R$ _____________
@@ -227,7 +227,7 @@ Retorno Anualizado (a.a.):          ____%
 ```
 ALTA DE JUROS (SELIC alta):
   → Crédito mais caro → mais inadimplência → mais leilões
-  → Menor concorrência por imóveis → MELHOR MOMENTO PARA COMPRAR
+  → Menor concorrência por imóveis → possível mudança de oferta/concorrência, a verificar com dados locais
   → Selic acima de 12%: mercado de leilões aquece (oferta sobe)
 
 BAIXA DE JUROS (SELIC baixa):
@@ -322,13 +322,13 @@ Identificar o perfil correto do comprador final aumenta a velocidade de venda:
    - Score de Risco do Edital (SKILL de Risco)
    - ROI líquido vs. CDI
    - Capital disponível e prazo
-   - Lance máximo definido → ENTRAR NO LEILÃO
+   - Lance máximo estimado → submeter à decisão e autorização do usuário; nenhuma oferta automática
 ```
 
 ---
 
 
-## Indicadores Chave (Atualizar Periodicamente)
+## Indicadores Históricos Ilustrativos De 2025 — Não São Taxas Atuais
 
 ```
 SELIC Meta (fev/2025):           13,25% a.a.
@@ -346,23 +346,23 @@ FIIs - dividend yield médio:     ~10-12% a.a. (IFIX)
 - Taxa de financiamento habitacional: ~11-13% a.a. (TR+10 a TR+12)
 - Demanda por imóveis desacelera → mais tempo para vender
 - Bancos querem limpar estoques → deságios maiores em venda direta
-- **MOMENTO FAVORÁVEL para comprar em leilão (mais oferta, menos concorrência)**
+- Hipótese de cenário; não estabelece momento favorável nem retorno para um imóvel concreto
 
 
 ## Análise De Financiamento Pós-Arrematação
 
-**Custo do financiamento em cenário atual:**
+**Cenário hipotético a recalcular com CET e sistema de amortização:**
 ```
 Valor financiado: R$ 300.000
 Prazo: 360 meses
 Taxa: 11,5% a.a. (média CEF 2025)
-Parcela inicial: ~R$ 3.450
-Total pago em 30 anos: ~R$ 700.000
+Parcela inicial: calcular pelo contrato (SAC/Price, CET, indexação e seguros)
+Total pago: somar o fluxo efetivo; não inferir de uma parcela inicial
 
 Para valer a pena financiar imóvel de leilão:
 → O deságio precisa ser MAIOR que o custo financeiro adicional
 → Regra prática: só financia se deságio for > 30% E taxa < 12% a.a.
-→ Pagamento à vista SEMPRE é mais vantajoso se tiver capital
+→ Compare CET, liquidez, riscos e custo de oportunidade; à vista não é universalmente superior.
 ```
 
 
@@ -411,7 +411,7 @@ Skill baseada em conhecimento (knowledge-only). Não requer instalação de depe
 
 ## Verificar Se A Skill Está Registrada:
 
-python C:\Users\renat\skills\agent-orchestrator\scripts\scan_registry.py
+# Caminho histórico do autor; scanner/orchestrator não são fornecidos aqui.
 ```
 
 ---
@@ -447,8 +447,8 @@ Políticas adicionais:
 - **Responsável:** Ecossistema Leiloeiro IA
 - **Escopo:** Análise de mercado imobiliário e estratégias de investimento em leilão
 - **Limitações:** Projeções e estimativas. Não constitui recomendação de investimento.
-- **Auditoria:** Validada por skill-sentinel
-- **Dados sensíveis:** Não armazena dados financeiros do usuário
+- **Auditoria:** nenhuma validação de skill-sentinel ou eficácia foi comprovada por estes arquivos
+- **Dados sensíveis:** o helper pode persistir metadados; limitar campos, permissões e retenção antes de uso
 
 ---
 

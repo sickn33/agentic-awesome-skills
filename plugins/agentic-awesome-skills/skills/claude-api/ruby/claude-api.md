@@ -1,5 +1,7 @@
 # Claude API — Ruby
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 > **Note:** The Ruby SDK supports the Claude API. A tool runner is available in beta via `client.beta.messages.tool_runner()`. Agent SDK is not yet available for Ruby.
 
 ## Installation
@@ -26,7 +28,7 @@ client = Anthropic::Client.new(api_key: "your-api-key")
 
 ```ruby
 message = client.messages.create(
-  model: :"claude-opus-5",
+  model: :"claude-opus-5-5",
   max_tokens: 1024,
   messages: [
     { role: "user", content: "What is the capital of France?" }
@@ -41,7 +43,7 @@ puts message.content.first.text
 
 ```ruby
 stream = client.messages.stream(
-  model: :"claude-opus-5",
+  model: :"claude-opus-5-5",
   max_tokens: 1024,
   messages: [{ role: "user", content: "Write a haiku" }]
 )
@@ -73,7 +75,7 @@ class GetWeather < Anthropic::BaseTool
 end
 
 client.beta.messages.tool_runner(
-  model: :"claude-opus-5",
+  model: :"claude-opus-5-5",
   max_tokens: 1024,
   tools: [GetWeather.new],
   messages: [{ role: "user", content: "What's the weather in San Francisco?" }]

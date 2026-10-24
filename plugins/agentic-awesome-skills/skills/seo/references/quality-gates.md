@@ -1,5 +1,7 @@
 # Content Quality Gates
 
+All counts, percentages, title/description lengths and link targets below are optional editorial prompts, not Google ranking requirements or validated penalties. Evaluate intent and useful original information; do not pad content or manufacture local presence to meet a quota. Google has no preferred word count. Short accurate pages can be sufficient. Truncation varies by device/query, not a fixed character limit. Alt text must fit purpose; there is no universal 125-character requirement.
+
 ## Minimum Word Counts by Page Type
 
 | Page Type | Min Words | Unique Content % | Notes |
@@ -37,7 +39,7 @@
   - Local signals (Google Business Profile, local reviews)
 
 ### Why This Matters
-Google's doorway page algorithm penalizes programmatic location pages with thin/duplicate content. Signs of doorway pages:
+Doorway abuse can violate Google spam policies; page count or duplication alone does not establish a penalty. Signs of doorway pages:
 - Only city/state name changed between pages
 - No unique local information
 - No local business signals
@@ -47,7 +49,7 @@ Google's doorway page algorithm penalizes programmatic location pages with thin/
 
 ## Safe vs. Risky Programmatic Pages
 
-### Safe at Scale ✅
+### Potentially Useful at Scale (quality still required)
 | Page Type | Why It's Safe |
 |-----------|---------------|
 | Integration pages | Real setup documentation, unique technical content |

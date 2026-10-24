@@ -1,5 +1,5 @@
 {
-  "description": "Exemplos de templates prontos para submissao ao WhatsApp para aprovacao.",
+  "description": "Illustrative template collection, not an API request. Submit only supported fields from one approved draft; verify category, language, schema and consent.",
   "templates": [
     {
       "name": "welcome_customer_v1",
@@ -16,7 +16,12 @@
           "type": "BODY",
           "text": "Olá {{1}}, seja bem-vindo(a) à {{2}}! 🎉\n\nEstamos felizes em ter você conosco. Confira nossas ofertas especiais para novos clientes.",
           "example": {
-            "body_text": [["Maria", "Loja Example"]]
+            "body_text": [
+              [
+                "Maria",
+                "Loja Example"
+              ]
+            ]
           }
         },
         {
@@ -54,7 +59,15 @@
           "type": "BODY",
           "text": "Olá {{1}}, seu pedido #{{2}} foi confirmado!\n\nValor total: R$ {{3}}\nForma de pagamento: {{4}}\nPrevisão de entrega: {{5}}",
           "example": {
-            "body_text": [["João", "12345", "199,90", "Cartão de crédito", "3 dias úteis"]]
+            "body_text": [
+              [
+                "João",
+                "12345",
+                "199,90",
+                "Cartão de crédito",
+                "3 dias úteis"
+              ]
+            ]
           }
         },
         {
@@ -68,7 +81,9 @@
               "type": "URL",
               "text": "Rastrear Pedido",
               "url": "https://example.com/tracking/{{1}}",
-              "example": ["12345"]
+              "example": [
+                "12345"
+              ]
             }
           ]
         }
@@ -89,7 +104,15 @@
           "type": "BODY",
           "text": "Olá {{1}}, seu pedido #{{2}} foi enviado!\n\nTransportadora: {{3}}\nCódigo de rastreio: {{4}}\nPrevisão de entrega: {{5}}",
           "example": {
-            "body_text": [["Maria", "67890", "Correios", "BR123456789BR", "5 dias úteis"]]
+            "body_text": [
+              [
+                "Maria",
+                "67890",
+                "Correios",
+                "BR123456789BR",
+                "5 dias úteis"
+              ]
+            ]
           }
         },
         {
@@ -99,7 +122,9 @@
               "type": "URL",
               "text": "Rastrear Envio",
               "url": "https://example.com/track/{{1}}",
-              "example": ["BR123456789BR"]
+              "example": [
+                "BR123456789BR"
+              ]
             }
           ]
         }
@@ -115,7 +140,14 @@
           "type": "BODY",
           "text": "Olá {{1}}, lembrando que você tem um agendamento:\n\n📅 Data: {{2}}\n⏰ Horário: {{3}}\n📍 Local: {{4}}\n\nPrecisa reagendar?",
           "example": {
-            "body_text": [["Carlos", "15/03/2026", "14:00", "Av. Paulista, 1000 - São Paulo"]]
+            "body_text": [
+              [
+                "Carlos",
+                "15/03/2026",
+                "14:00",
+                "Av. Paulista, 1000 - São Paulo"
+              ]
+            ]
           }
         },
         {
@@ -138,16 +170,20 @@
       ]
     },
     {
-      "name": "nps_survey_v1",
+      "name": "csat_survey_v1",
       "category": "MARKETING",
       "language": "pt_BR",
-      "description": "Pesquisa de satisfacao NPS",
+      "description": "Pesquisa agrupada de satisfacao, nao NPS; nao permite calcular uma media exata de 1 a 5.",
       "components": [
         {
           "type": "BODY",
           "text": "Olá {{1}}! Gostaríamos de saber sua opinião sobre o atendimento recente.\n\nDe 1 a 5, qual sua nota para nosso atendimento?\n\n⭐ 1-2: Precisa melhorar\n⭐ 3: Regular\n⭐ 4-5: Muito bom",
           "example": {
-            "body_text": [["Ana"]]
+            "body_text": [
+              [
+                "Ana"
+              ]
+            ]
           }
         },
         {

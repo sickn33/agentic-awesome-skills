@@ -55,3 +55,5 @@ const sorted = [...items].sort((a, b) => a.value - b.value)
 - `.toReversed()` - immutable reverse
 - `.toSpliced()` - immutable splice
 - `.with()` - immutable element replacement
+
+Use feature detection or the spread-and-sort fallback for older targets; verify the actual browser support matrix rather than relying on these historical minimum-version examples.

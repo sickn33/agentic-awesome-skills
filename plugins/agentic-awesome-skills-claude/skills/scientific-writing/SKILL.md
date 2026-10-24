@@ -1,6 +1,6 @@
 ---
 name: scientific-writing
-description: "This is the core skill for the deep research and writing tool—combining AI-driven deep research with well-formatted written outputs. Every document produced is backed by comprehensive literature search and verified citations through the research-lookup skill."
+description: "Draft and revise scientific manuscripts with evidence-based structure, citation verification, reporting guidelines and venue-specific formatting."
 license: MIT license
 metadata:
     skill-author: K-Dense Inc.
@@ -10,6 +10,10 @@ date_added: "2026-03-06"
 ---
 
 # Scientific Writing
+
+## Research integrity and tool limits
+
+Only the detailed guide is bundled; research-lookup, venue-templates, schematic/image scripts, LaTeX assets and the other named references are external or absent. Use available authorized source tools and report unavailable literature honestly. Never invent studies, DOI metadata, analyses, ethics approval, consent, registrations, authorship, funding or results. Preserve supplied numbers and uncertainty; verify cited passages support claims and check corrections/retractions. Separate completed methods/results from proposed work, disclose AI help per venue policy, and keep unpublished/private participant data protected. Submission or contact with a journal requires explicit authorization. Reporting checklists aid completeness, not proof of study validity.
 
 ## Detailed Guide
 

@@ -1,5 +1,9 @@
 # Error Handling Patterns
 
+
+Review corrections (2026-10-23): these snippets are incomplete application starters. Initialize the synchronous client during startup outside the event loop, serialize initialization and close client/credential on shutdown. A cached failed initialization needs an explicit bounded recovery path. `azure.cosmos.aio` is also available; the SDK is not synchronous-only. Enforce tenant authorization independently of partition routing; the bundled client assumes `/workspaceId`. Never accept caller SQL fragments. Distinguish unavailable storage (503) from not-found (404) and empty data; the older graceful-default examples below illustrate a policy to avoid for authoritative reads. Use ETag conditional writes to prevent lost updates, enforce uniqueness atomically, and implement cross-partition moves with conflict-aware compensation; read-then-upsert/delete is not atomic. No live Cosmos behavior is verified by these templates.
+
+
 ## Table of Contents
 
 1. [Cosmos Exception Types](#cosmos-exception-types)
@@ -332,27 +336,22 @@ The Cosmos SDK has built-in retry for transient errors (429, 503):
 ```python
 from azure.cosmos import CosmosClient
 
-client = CosmosClient(
-    url=endpoint,
-    credential=credential,
-    connection_retry_policy={
-        "retry_total": 3,
-        "retry_backoff_factor": 0.8,
-    }
-)
+# Use retry_total / retry_backoff_factor only when supported by the pinned SDK.
+# Cosmos-specific 429 retry settings and non-idempotent writes need separate review.
+client = CosmosClient(url=endpoint, credential=credential, retry_total=3)
 ```
 
 ### Custom Retry for Application Logic
 
 ```python
 import asyncio
-from typing import TypeVar, Callable
+from typing import TypeVar, Callable, Awaitable
 
 T = TypeVar("T")
 
 
 async def with_retry(
-    operation: Callable[[], T],
+    operation: Callable[[], Awaitable[T]],
     max_retries: int = 3,
     base_delay: float = 0.5,
 ) -> T:
@@ -363,7 +362,7 @@ async def with_retry(
         try:
             return await operation()
         except CosmosHttpResponseError as e:
-            if e.status_code == 429:  # Rate limited
+            if e.status_code == 429 and attempt < max_retries:  # Bound retries; SDK may already retry
                 last_error = e
                 delay = base_delay * (2 ** attempt)
                 logger.warning(f"Rate limited, retrying in {delay}s (attempt {attempt + 1})")

@@ -100,6 +100,8 @@ How to present work effectively
 ```
 
 ### Showing Impact
+
+The figures below illustrate presentation only; use measured outcomes with dates, baselines and attribution, never invent metrics or testimonials. Obtain permission before publishing client work or private data.
 | Instead of | Write |
 |------------|-------|
 | "Built a website" | "Increased conversions 40%" |
@@ -174,7 +176,9 @@ Adding memorable interactive elements
 | Medium | Scroll animations, transitions | Medium |
 | High | 3D, games, custom cursors | High |
 
-### High-Impact, Low-Risk
+### Optional Enhancements
+
+Preserve a native cursor, keyboard access, visible focus and reduced-motion preferences. Content must remain available without animation, hover or WebGL. Validate contrast and assistive-technology navigation.
 - Custom cursor on desktop
 - Smooth page transitions
 - Project card hover effects
@@ -278,7 +282,7 @@ Recommended fix:
 ## Mobile-First Portfolio
 
 ### Mobile Reality
-- 60%+ traffic is mobile
+- Measure the portfolio's actual device mix; do not assume a universal percentage
 - Recruiters browse on phones
 - First impression = mobile impression
 
@@ -476,7 +480,7 @@ Workflow:
 3. Design hero and project sections
 4. Add subtle scroll animations
 5. Implement and optimize
-6. Launch and share
+6. Prepare deployment and share only within the user's authorized scope
 ```
 
 ### Creative Portfolio
@@ -491,7 +495,7 @@ Workflow:
 3. Build interactive elements
 4. Showcase work creatively
 5. Ensure mobile works
-6. Launch
+6. Publish only when authorized
 ```
 
 

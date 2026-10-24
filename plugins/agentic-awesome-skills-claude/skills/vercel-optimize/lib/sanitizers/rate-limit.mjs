@@ -1,16 +1,16 @@
 // Prepend a caveat (don't drop — customer may be on a higher tier) when a
-// rec prescribes concurrency above a known provider rate limit.
+// rec prescribes concurrency above a known provider account quota.
 
 const PROVIDER_LIMITS = {
-  notion: { rps: 3, label: 'Notion', doc: 'https://developers.notion.com/reference/request-limits' },
-  openai: { rps: 30, label: 'OpenAI', doc: 'https://platform.openai.com/docs/guides/rate-limits' },
-  stripe: { rps: 100, label: 'Stripe', doc: 'https://docs.stripe.com/rate-limits' },
-  anthropic: { rps: 10, label: 'Anthropic', doc: 'https://docs.anthropic.com/en/api/rate-limits' },
+  notion: { label: 'Notion', doc: 'https://developers.notion.com/reference/request-limits' },
+  openai: { label: 'OpenAI', doc: 'https://platform.openai.com/docs/guides/rate-limits' },
+  stripe: { label: 'Stripe', doc: 'https://docs.stripe.com/rate-limits' },
+  anthropic: { label: 'Anthropic', doc: 'https://docs.anthropic.com/en/api/rate-limits' },
 };
 
 export const metadata = {
   id: 'rate-limit',
-  description: 'Prepend caveat when a rec prescribes concurrency above a known provider rate limit.',
+  description: 'Prepend caveat when a rec prescribes concurrency above a known provider account quota.',
 };
 
 const PROVIDER_RE = new RegExp(`\\b(${Object.keys(PROVIDER_LIMITS).join('|')})\\b`, 'gi');
@@ -29,10 +29,10 @@ export function apply(rec, _ctx = {}) {
   for (const key of providers) {
     const limit = PROVIDER_LIMITS[key];
     if (!limit) continue;
-    if (concurrency > limit.rps) {
-      const tag = `rate-limit:${limit.label}:${concurrency}/${limit.rps}`;
+    if (concurrency > 0) {
+      const tag = `rate-limit:${limit.label}:${concurrency}:quota-check`;
       tags.push(tag);
-      prepend += `⚠ ${limit.label} rate-limits to ~${limit.rps} requests/second on first-tier plans; the prescribed concurrency of ${concurrency} may saturate the limit. Verify your tier before applying.\n\n`;
+      prepend += `⚠ ${limit.label}: concurrency ${concurrency} does not establish requests per second. Check the account/model-specific quotas and response headers, then bound concurrency, throughput and retries before applying.\n\n`;
     }
   }
   if (tags.length === 0) return {};

@@ -37,13 +37,16 @@ Implement service-to-service communication management with mTLS, traffic shaping
 - For Istio: `istioctl` CLI installed.
 - For Linkerd: `linkerd` CLI installed.
 
+Select versions using their actual Kubernetes compatibility matrices; 1.26+ and the memory estimate below are not sufficient compatibility/capacity guarantees. CRDs and sample addons must exist for the pinned release. The old authn tls-check and SMI TrafficSplit examples are version-specific and may be unavailable; check CLI help/installed extensions. Strict mTLS requires enrolled workloads and staged verification, and retries require idempotent operations to avoid duplicate effects. Do not resolve 503s by weakening mTLS or raising circuit-breaker limits without identifying the cause and approving the change. Sample dashboards are not hardened production deployments.
+
 ## Istio Installation
 
 ### Install with istioctl
 
 ```bash
 # Download istioctl
-curl -L https://istio.io/downloadIstio -o /tmp/downloadIstio.sh && sh /tmp/downloadIstio.sh && rm /tmp/downloadIstio.sh
+curl -fL https://istio.io/downloadIstio -o /tmp/downloadIstio.sh
+# Inspect the full installer, pin the intended release and verify integrity before executing separately.
 cd istio-*
 export PATH=$PWD/bin:$PATH
 
@@ -332,7 +335,8 @@ spec:
 
 ```bash
 # Install Linkerd CLI
-curl --proto '=https' --tlsv1.2 -sSfL https://run.linkerd.io/install -o /tmp/install-linkerd.sh && sh /tmp/install-linkerd.sh && rm /tmp/install-linkerd.sh
+curl --proto '=https' --tlsv1.2 -sSfL https://run.linkerd.io/install -o /tmp/install-linkerd.sh
+# Inspect and pin the installer before executing separately.
 export PATH=$HOME/.linkerd2/bin:$PATH
 
 # Validate cluster prerequisites

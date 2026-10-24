@@ -6,46 +6,9 @@ source: community
 date_added: "2026-02-27"
 ---
 
-# Green Phase: Simple function
-def product_list(request):
-    products = Product.objects.all()
-    return JsonResponse({'products': list(products.values())})
+# TDD Green Phase
 
-# Refactor: Class-based view
-class ProductListView(View):
-    def get(self, request):
-        products = Product.objects.all()
-        return JsonResponse({'products': list(products.values())})
-
-# Refactor: Generic view
-class ProductListView(ListView):
-    model = Product
-    context_object_name = 'products'
-```
-
-### Express Patterns
-
-**Inline → Middleware → Service Layer:**
-```javascript
-// Green Phase: Inline logic
-app.post('/api/users', (req, res) => {
-  const user = { id: Date.now(), ...req.body };
-  users.push(user);
-  res.json(user);
-});
-
-// Refactor: Extract middleware
-app.post('/api/users', validateUser, (req, res) => {
-  const user = userService.create(req.body);
-  res.json(user);
-});
-
-// Refactor: Full layering
-app.post('/api/users',
-  validateUser,
-  asyncHandler(userController.create)
-);
-```
+Implement the smallest correct behavior for an agreed failing test while preserving existing requirements, security boundaries and interfaces. Read the bundled playbook as illustrative material, not an executable tool.
 
 ## Use this skill when
 

@@ -33,6 +33,8 @@ def main():
         sys.exit(0)
 
     target = Path.cwd() / ".ustht"
+    if target.is_symlink():
+        raise UsthtSafetyError(f"Refusing symlinked runtime directory: {target}")
     if target.exists():
         if target.is_symlink():
             raise UsthtSafetyError(f"Refusing symlinked runtime directory: {target}")
@@ -49,7 +51,7 @@ def main():
         print(f"Error: template directory does not exist: {template}")
         sys.exit(1)
 
-    target.mkdir()
+    target.mkdir(mode=0o700)
     copy_template(template, target)
     for name in ["raw", "ignored", "export"]:
         (target / name).mkdir(exist_ok=True)

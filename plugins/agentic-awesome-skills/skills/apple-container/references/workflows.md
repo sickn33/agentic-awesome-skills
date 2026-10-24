@@ -1,5 +1,7 @@
 # `container` — Task-Oriented Workflows
 
+> Reference scope: this imported guide mixes release-era and later branch documentation; its `1.0.0+` annotations are not verified introduction versions. Match the installed `container --version` and subcommand `--help` to the same upstream release tag before using flags or defaults. Current branch documentation can describe unreleased behavior. No container runtime was executed for this static review.
+
 Copy-pasteable recipes for Apple's `container` CLI (`apple/container`) — Linux containers as
 lightweight VMs on Apple-silicon macOS. This is **Apple's `container`, not Docker**: flags,
 defaults, and the daemon model differ. See `commands.md` for the full flag reference. Use
@@ -37,7 +39,7 @@ fully-qualified image refs (`docker.io/library/alpine`) in scripts. `container` 
 
 ### First run: install + start + first container
 
-There is **no CLI installer command** — download and double-click the signed `.pkg`, then start
+The upstream documented interactive install path is to download and open the signed `.pkg`, then start
 the services and run a container.
 
 ```bash
@@ -55,7 +57,7 @@ container list --all
 container run --rm -it docker.io/library/alpine:latest sh
 ```
 
-Note: double-clicking the `.pkg` is the only install path; `container system start` prompts for the recommended kernel (or use `container system kernel set --recommended`).
+Note: the GUI package flow is documented upstream; macOS package automation needs separate verified installer arguments and task authorization; `container system start` prompts for the recommended kernel (or use `container system kernel set --recommended`).
 
 ---
 
@@ -82,7 +84,7 @@ Note: foreground by default; stdin stays closed unless `-i`. `--rm` deletes the 
 
 ```bash
 # host 8080 -> container 80
-container run -d --rm -p 8080:80 docker.io/library/nginx:latest
+container run -d --rm -p 127.0.0.1:8080:80 docker.io/library/nginx:latest
 
 # bind to a specific host IP
 container run -d --rm -p 127.0.0.1:8080:8000 docker.io/library/node:latest npx http-server -a :: -p 8000
@@ -91,7 +93,7 @@ container run -d --rm -p 127.0.0.1:8080:8000 docker.io/library/node:latest npx h
 container run -d --rm -p '[::1]:8080:8000' docker.io/library/node:latest npx http-server -a :: -p 8000
 
 # UDP
-container run -d --rm -p 5353:5353/udp docker.io/library/alpine:latest
+container run -d --rm -p 127.0.0.1:5353:5353/udp docker.io/library/alpine:latest
 ```
 
 Note: if a container attaches to multiple networks, published ports forward to the IP of the first network's interface.
@@ -108,7 +110,8 @@ container run --rm -e NODE_ENV=production -e PORT=8080 docker.io/library/node:la
 container run --rm -e HOME docker.io/library/alpine:latest sh -c 'echo $HOME'
 
 # From a file (KEY=value per line; # comments and blanks ignored); repeatable.
-container run --rm --env-file ./app.env docker.io/library/alpine:latest env
+container run --rm --env-file ./app.env docker.io/library/alpine:latest sh -c 'test -n "$APP_MODE"'
+# Use only non-secret fixtures here; never print an environment containing credentials.
 ```
 
 Note: `-e` and `--env-file` may be combined and each repeated; later values win.
@@ -189,13 +192,13 @@ Note: `--arch` is repeatable/comma-separated; `--platform` (`os/arch[/variant]`)
 
 ### Tag & push to Docker Hub / private registry
 
-Registry commands live under the **Image** group (`container registry`, alias `r`). Credentials are stored in the macOS keychain.
+Registry commands use the top-level `container registry` group (alias `r`). Credentials are stored in the macOS keychain.
 
 ```bash
 # Log in (prompts for username + password, or use -u / --password-stdin).
 container registry login docker.io
 container registry login -u alice ghcr.io
-echo "$TOKEN" | container registry login -u alice --password-stdin ghcr.io
+printf '%s\n' "$TOKEN" | container registry login --scheme https -u alice --password-stdin ghcr.io
 
 # HTTP for a local registry.
 container registry login --scheme http localhost:5000
@@ -477,11 +480,10 @@ Note: you can also upgrade/downgrade by re-downloading and double-clicking the s
 ### Troubleshooting
 
 ```bash
-# "XPC connection error" / commands hang -> services aren't running. Start them.
-container system start
-
-# Confirm services are up.
+# Diagnose connection failures before changing state.
 container system status
+# If stopped and startup is within the authorized task:
+# container system start
 
 # View service logs (default last 5m; --last <n>[m|h|d], -f to follow).
 container system logs
@@ -495,4 +497,8 @@ container --debug run --rm docker.io/library/alpine:latest true
 container system version
 ```
 
-Note: an XPC/connection error means the background API server isn't started — run `container system start`. Feature gates to keep in mind: container-to-container access and the `container network` group require **macOS 26** (both unavailable on **macOS 15**). The CLI refuses to run under Rosetta — Apple silicon only.
+Note: an XPC/connection error may indicate stopped services, component mismatch, permissions or launch failures; inspect status and logs before retrying. Feature gates to keep in mind: container-to-container access and the `container network` group require **macOS 26** (both unavailable on **macOS 15**). The CLI refuses to run under Rosetta — Apple silicon only.
+
+## Operational boundaries
+
+See the root skill operational boundaries before executing recipes: verify trusted images and kernels, avoid secret environment output and build args, use HTTPS and explicit loopback bindings, restrict host mounts and agent forwarding, and inventory exact resources before cleanup. Machines share substantially more host access than ordinary containers.

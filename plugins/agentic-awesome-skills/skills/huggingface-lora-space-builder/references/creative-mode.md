@@ -1,3 +1,5 @@
+_Modified in the local catalog review: corrected authority, credential, reproducibility and runtime guidance; examples remain environment-dependent._
+
 # Creative mode: custom HTML/JS UIs in Gradio
 
 When a LoRA's natural input shape doesn't fit any standard Gradio component or Hub custom component, you can drop down to plain HTML/CSS/JS inside a Gradio app. This file is about *how* — the Gradio primitives that make it work, and the discipline that keeps it from turning into a tangled mess.
@@ -99,7 +101,9 @@ This is the part that trips people up. Pick whichever fits your case and stick w
 **Approach A — Hidden Gradio input + DOM event dispatch.** Define a hidden `gr.Textbox` (or `gr.JSON`, `gr.Number`, etc.). From JS, set its inner `<input>`/`<textarea>` value and dispatch synthetic `input` and `change` events so Gradio's reactivity fires.
 
 ```python
-state_json = gr.Textbox(value="{}", elem_id="state-json", visible=False)
+state_json = gr.Textbox(value="{}", elem_id="state-json", elem_classes=["state-carrier"])
+# Keep the component rendered; hide it with narrowly scoped CSS only after
+# checking the pinned SDK DOM. visible=False may remove the input entirely.
 ```
 
 ```javascript
@@ -120,9 +124,9 @@ function setGradioValue(elemId, value) {
 setGradioValue("state-json", JSON.stringify(myState));
 ```
 
-The native setter dance (`Object.getOwnPropertyDescriptor(...).set.call(el, value)`) is necessary because React intercepts plain `el.value = ...` assignments and they won't trigger a re-render. The DOM event dispatch is what makes Gradio see the change.
+The native setter and dispatched events are a fragile bridge to the pinned Gradio frontend; Gradio is not universally React and this is not a cross-version guarantee. The DOM event dispatch is what makes Gradio see the change.
 
-This approach works in any Gradio version, with any component type. Downsides: lots of glue, fragile to DOM structure changes, easy to write race conditions.
+This is a version-dependent DOM workaround, not a stable Gradio API; test it with the exact SDK. Downsides: lots of glue, fragile to DOM structure changes, easy to write race conditions.
 
 **Approach B — `gr.HTML` subclass with `html_template`/`js_on_load`.** Newer Gradio supports subclassing `gr.HTML` and providing custom props plus a `js_on_load` script. The script gets a `props` object with custom values and a `trigger()` function for emitting events back to Python. State binding is value-based (Gradio reads the `value` prop just like any other component).
 
@@ -215,7 +219,9 @@ These bite repeatedly. Read before writing.
 
 - **Init race with Gradio mount.** The `js_on_load` (B) or a top-level `<script>` injected via `head` may run before Gradio has rendered the DOM nodes you're trying to hook into. Guard with a short `setTimeout` or wait for the element to exist:
   ```javascript
+  let attempts = 0;
   function init() {
+    if (++attempts > 100) { console.error("Widget mount timed out"); return; }
     const el = document.getElementById("my-widget");
     if (!el) { setTimeout(init, 50); return; }
     // ... do work
@@ -260,3 +266,7 @@ These two Spaces use the patterns above for very different LoRAs. They're useful
 - **Bounding-box drag/resize via canvas** (Approach A, hidden inputs + custom Run button): https://huggingface.co/spaces/linoyts/FLUX.2-klein-Move
 
 A short look at each is worth it before designing a new widget — they show what "production polish" feels like in this register (snap-to-nearest animations, status overlays, cursor changes on hover, mobile-touch handling). But your widget will look different, because your LoRA wants different inputs.
+
+## Security and lifecycle contract
+
+Treat custom browser state as untrusted: validate JSON schema, finite bounded coordinates, maximum item counts/string sizes and media dimensions on the server before inference. Never place raw labels, URLs or model-card content into innerHTML, script strings or CSS without context-appropriate escaping. Prefer reviewed locally hosted JS; any CDN requires explicit version/integrity review and disclosure of third-party requests. Do not send private media through arbitrary external URLs. Scope IDs/state to each widget instance, dispose timers/listeners on unmount, handle remounts, provide keyboard/focus support, and use event completion rather than a fixed 50ms delay as synchronization proof. BrowserState and deep links must not persist/expose private prompts or media by default. The subclass/trigger API below must be checked against the exact SDK docs; it is a sketch, not a tested universal implementation.

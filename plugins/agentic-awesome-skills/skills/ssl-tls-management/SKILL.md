@@ -64,10 +64,9 @@ certbot certonly --manual \
 
 # Using DNS plugin for automation (Cloudflare example)
 pip install certbot-dns-cloudflare
-cat > /etc/letsencrypt/cloudflare.ini << 'EOF'
-dns_cloudflare_api_token = YOUR_CLOUDFLARE_API_TOKEN
-EOF
-chmod 600 /etc/letsencrypt/cloudflare.ini
+install -m 600 /dev/null /etc/letsencrypt/cloudflare.ini
+# Populate dns_cloudflare_api_token using the approved secret-manager workflow;
+# do not paste tokens into shell history or commit the file.
 
 certbot certonly --dns-cloudflare \
   --dns-cloudflare-credentials /etc/letsencrypt/cloudflare.ini \
@@ -81,7 +80,8 @@ certbot certonly --dns-cloudflare \
 # Test renewal
 certbot renew --dry-run
 
-# Systemd timer (preferred over cron)
+# Inspect existing package-managed certbot timers first; configure exactly one renewal schedule.
+# Custom systemd timer example (confirm executable path for your installation)
 cat > /etc/systemd/system/certbot-renewal.service << 'EOF'
 [Unit]
 Description=Certbot certificate renewal
@@ -268,6 +268,7 @@ spec:
 
 ```bash
 # Generate a private key
+umask 077
 openssl genrsa -out server.key 4096
 
 # Generate an ECDSA key (preferred for performance)
@@ -298,7 +299,7 @@ EOF
 # Generate self-signed certificate (development/testing)
 openssl req -x509 -nodes -days 365 -newkey rsa:4096 \
   -keyout selfsigned.key -out selfsigned.crt \
-  -subj "/CN=localhost"
+  -subj "/CN=localhost" -addext "subjectAltName=DNS:localhost"
 
 # View certificate details
 openssl x509 -in cert.pem -noout -text
@@ -328,6 +329,8 @@ openssl s_client -connect example.com:443 -tls1_3
 openssl s_client -connect example.com:443 -cipher 'ECDHE-RSA-AES256-GCM-SHA384'
 ```
 
+The remote openssl display examples inspect a peer certificate; they do not by themselves verify hostname/trust/complete chain. Test with explicit verification options and a trusted CA store. Start HSTS with a short approved max-age, verify all required hosts support HTTPS, then consider longer duration/subdomain/preload separately; those settings can create persistent outages. The selfSigned ClusterIssuer creates self-signed leaves; a managed internal CA requires a CA certificate/key and CA issuer plus trust distribution.
+
 ## Strong TLS Configuration
 
 ### Nginx
@@ -352,15 +355,14 @@ server {
     ssl_session_cache shared:SSL:10m;
     ssl_session_tickets off;
 
-    # OCSP stapling
-    ssl_stapling on;
-    ssl_stapling_verify on;
-    ssl_trusted_certificate /etc/letsencrypt/live/example.com/chain.pem;
+    # Enable stapling only for issuers that still provide a working OCSP responder.
+    # Let's Encrypt no longer supplies OCSP responses.
+    ssl_stapling off;
     resolver 8.8.8.8 8.8.4.4 valid=300s;
     resolver_timeout 5s;
 
     # Security headers
-    add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
+    add_header Strict-Transport-Security "max-age=300" always;
     add_header X-Content-Type-Options nosniff always;
     add_header X-Frame-Options DENY always;
 
@@ -388,10 +390,10 @@ server {
     SSLCipherSuite ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384
     SSLHonorCipherOrder off
 
-    SSLUseStapling on
-    SSLStaplingCache shmcb:/tmp/stapling_cache(128000)
+    # Let's Encrypt issuer: OCSP stapling disabled.
+    SSLUseStapling off
 
-    Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+    Header always set Strict-Transport-Security "max-age=300"
 </VirtualHost>
 ```
 

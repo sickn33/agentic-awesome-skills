@@ -29,195 +29,36 @@ This file contains detailed patterns, checklists, and code samples referenced by
 
 ## Quick Start
 
-### Great Expectations Setup
+### Great Expectations version boundary
 
-```bash
-# Install
-pip install great_expectations
-
-# Initialize project
-great_expectations init
-
-# Create datasource
-great_expectations datasource new
-```
+The original examples mixed legacy 0.18 checkpoints with GX 1.x expectation
+classes. Do not install an unspecified latest version and execute legacy init,
+add_expectation_suite or run_checkpoint APIs. For GX Core 1.x, use the current
+[official workflow](https://docs.greatexpectations.io/docs/core/introduction/try_gx/).
+The following isolated synthetic example illustrates one check without credentials:
 
 ```python
-# great_expectations/checkpoints/daily_validation.yml
 import great_expectations as gx
-
-# Create context
-context = gx.get_context()
-
-# Create expectation suite
-suite = context.add_expectation_suite("orders_suite")
-
-# Add expectations
-suite.add_expectation(
-    gx.expectations.ExpectColumnValuesToNotBeNull(column="order_id")
-)
-suite.add_expectation(
-    gx.expectations.ExpectColumnValuesToBeUnique(column="order_id")
-)
-
-# Validate
-results = context.run_checkpoint(checkpoint_name="daily_orders")
+import pandas as pd
+context = gx.get_context(mode="ephemeral")
+source = context.data_sources.add_pandas("synthetic_orders")
+asset = source.add_dataframe_asset(name="orders")
+definition = asset.add_batch_definition_whole_dataframe("whole")
+batch = definition.get_batch(batch_parameters={"dataframe": pd.DataFrame({"amount": [10, -1]})})
+result = batch.validate(gx.expectations.ExpectColumnValuesToBeBetween(column="amount", min_value=0))
+if result.success is not False:
+    raise AssertionError("Expected the negative synthetic amount to fail")
 ```
+
+Pin compatible GX/Pandas/Python versions. For persistent suites, connect a Batch
+Definition to an Expectation Suite through a Validation Definition, then a
+Checkpoint. Inspect that version's result objects; do not assume legacy dict
+wrappers or list indexing matches modern run_results. Evaluate actual UTC
+freshness bounds in application code rather than passing unevaluated strings
+such as `now - timedelta(days=1)` as parameters. Non-null foreign keys are not
+referential-integrity checks: add a relationship check.
 
 ## Patterns
-
-### Pattern 1: Great Expectations Suite
-
-```python
-# expectations/orders_suite.py
-import great_expectations as gx
-from great_expectations.core import ExpectationSuite
-from great_expectations.core.expectation_configuration import ExpectationConfiguration
-
-def build_orders_suite() -> ExpectationSuite:
-    """Build comprehensive orders expectation suite"""
-
-    suite = ExpectationSuite(expectation_suite_name="orders_suite")
-
-    # Schema expectations
-    suite.add_expectation(ExpectationConfiguration(
-        expectation_type="expect_table_columns_to_match_set",
-        kwargs={
-            "column_set": ["order_id", "customer_id", "amount", "status", "created_at"],
-            "exact_match": False  # Allow additional columns
-        }
-    ))
-
-    # Primary key
-    suite.add_expectation(ExpectationConfiguration(
-        expectation_type="expect_column_values_to_not_be_null",
-        kwargs={"column": "order_id"}
-    ))
-    suite.add_expectation(ExpectationConfiguration(
-        expectation_type="expect_column_values_to_be_unique",
-        kwargs={"column": "order_id"}
-    ))
-
-    # Foreign key
-    suite.add_expectation(ExpectationConfiguration(
-        expectation_type="expect_column_values_to_not_be_null",
-        kwargs={"column": "customer_id"}
-    ))
-
-    # Categorical values
-    suite.add_expectation(ExpectationConfiguration(
-        expectation_type="expect_column_values_to_be_in_set",
-        kwargs={
-            "column": "status",
-            "value_set": ["pending", "processing", "shipped", "delivered", "cancelled"]
-        }
-    ))
-
-    # Numeric ranges
-    suite.add_expectation(ExpectationConfiguration(
-        expectation_type="expect_column_values_to_be_between",
-        kwargs={
-            "column": "amount",
-            "min_value": 0,
-            "max_value": 100000,
-            "strict_min": True  # amount > 0
-        }
-    ))
-
-    # Date validity
-    suite.add_expectation(ExpectationConfiguration(
-        expectation_type="expect_column_values_to_be_dateutil_parseable",
-        kwargs={"column": "created_at"}
-    ))
-
-    # Freshness - data should be recent
-    suite.add_expectation(ExpectationConfiguration(
-        expectation_type="expect_column_max_to_be_between",
-        kwargs={
-            "column": "created_at",
-            "min_value": {"$PARAMETER": "now - timedelta(days=1)"},
-            "max_value": {"$PARAMETER": "now"}
-        }
-    ))
-
-    # Row count sanity
-    suite.add_expectation(ExpectationConfiguration(
-        expectation_type="expect_table_row_count_to_be_between",
-        kwargs={
-            "min_value": 1000,  # Expect at least 1000 rows
-            "max_value": 10000000
-        }
-    ))
-
-    # Statistical expectations
-    suite.add_expectation(ExpectationConfiguration(
-        expectation_type="expect_column_mean_to_be_between",
-        kwargs={
-            "column": "amount",
-            "min_value": 50,
-            "max_value": 500
-        }
-    ))
-
-    return suite
-```
-
-### Pattern 2: Great Expectations Checkpoint
-
-```yaml
-# great_expectations/checkpoints/orders_checkpoint.yml
-name: orders_checkpoint
-config_version: 1.0
-class_name: Checkpoint
-run_name_template: "%Y%m%d-%H%M%S-orders-validation"
-
-validations:
-  - batch_request:
-      datasource_name: warehouse
-      data_connector_name: default_inferred_data_connector_name
-      data_asset_name: orders
-      data_connector_query:
-        index: -1  # Latest batch
-    expectation_suite_name: orders_suite
-
-action_list:
-  - name: store_validation_result
-    action:
-      class_name: StoreValidationResultAction
-
-  - name: store_evaluation_parameters
-    action:
-      class_name: StoreEvaluationParametersAction
-
-  - name: update_data_docs
-    action:
-      class_name: UpdateDataDocsAction
-
-  # Slack notification on failure
-  - name: send_slack_notification
-    action:
-      class_name: SlackNotificationAction
-      slack_webhook: ${SLACK_WEBHOOK}
-      notify_on: failure
-      renderer:
-        module_name: great_expectations.render.renderer.slack_renderer
-        class_name: SlackRenderer
-```
-
-```python
-# Run checkpoint
-import great_expectations as gx
-
-context = gx.get_context()
-result = context.run_checkpoint(checkpoint_name="orders_checkpoint")
-
-if not result.success:
-    failed_expectations = [
-        r for r in result.run_results.values()
-        if not r.success
-    ]
-    raise ValueError(f"Data quality check failed: {failed_expectations}")
-```
 
 ### Pattern 3: dbt Data Tests
 
@@ -283,7 +124,7 @@ models:
           - not_null
           # Custom regex test
           - dbt_utils.expression_is_true:
-              expression: "email ~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$'"
+              expression: "~ '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$'"
 ```
 
 ### Pattern 4: Custom dbt Tests
@@ -351,12 +192,12 @@ select * from orphaned_orders
 -- Test passes if this returns 0 rows
 ```
 
-### Pattern 5: Data Contracts
+### Pattern 5: Illustrative Data Contract (not a portable tool schema)
 
 ```yaml
 # contracts/orders_contract.yaml
-apiVersion: datacontract.com/v1.0.0
-kind: DataContract
+apiVersion: example.internal/v1 # Illustrative organization-specific schema, not a validated standard
+kind: ExampleDataContract
 metadata:
   name: orders
   version: 1.0.0
@@ -378,7 +219,7 @@ servers:
 terms:
   usage: Internal analytics only
   limitations: PII must not be exposed in downstream marts
-  billing: Charged per query TB scanned
+  billing: Verify actual warehouse compute/storage billing; this example establishes no pricing
 
 schema:
   type: object
@@ -435,119 +276,18 @@ sla:
 
 ### Pattern 6: Automated Quality Pipeline
 
-```python
-# quality_pipeline.py
-from dataclasses import dataclass
-from typing import List, Dict, Any
-import great_expectations as gx
-from datetime import datetime
-
-@dataclass
-class QualityResult:
-    table: str
-    passed: bool
-    total_expectations: int
-    failed_expectations: int
-    details: List[Dict[str, Any]]
-    timestamp: datetime
-
-class DataQualityPipeline:
-    """Orchestrate data quality checks across tables"""
-
-    def __init__(self, context: gx.DataContext):
-        self.context = context
-        self.results: List[QualityResult] = []
-
-    def validate_table(self, table: str, suite: str) -> QualityResult:
-        """Validate a single table against expectation suite"""
-
-        checkpoint_config = {
-            "name": f"{table}_validation",
-            "config_version": 1.0,
-            "class_name": "Checkpoint",
-            "validations": [{
-                "batch_request": {
-                    "datasource_name": "warehouse",
-                    "data_asset_name": table,
-                },
-                "expectation_suite_name": suite,
-            }],
-        }
-
-        result = self.context.run_checkpoint(**checkpoint_config)
-
-        # Parse results
-        validation_result = list(result.run_results.values())[0]
-        results = validation_result.results
-
-        failed = [r for r in results if not r.success]
-
-        return QualityResult(
-            table=table,
-            passed=result.success,
-            total_expectations=len(results),
-            failed_expectations=len(failed),
-            details=[{
-                "expectation": r.expectation_config.expectation_type,
-                "success": r.success,
-                "observed_value": r.result.get("observed_value"),
-            } for r in results],
-            timestamp=datetime.now()
-        )
-
-    def run_all(self, tables: Dict[str, str]) -> Dict[str, QualityResult]:
-        """Run validation for all tables"""
-        results = {}
-
-        for table, suite in tables.items():
-            print(f"Validating {table}...")
-            results[table] = self.validate_table(table, suite)
-
-        return results
-
-    def generate_report(self, results: Dict[str, QualityResult]) -> str:
-        """Generate quality report"""
-        report = ["# Data Quality Report", f"Generated: {datetime.now()}", ""]
-
-        total_passed = sum(1 for r in results.values() if r.passed)
-        total_tables = len(results)
-
-        report.append(f"## Summary: {total_passed}/{total_tables} tables passed")
-        report.append("")
-
-        for table, result in results.items():
-            status = "✅" if result.passed else "❌"
-            report.append(f"### {status} {table}")
-            report.append(f"- Expectations: {result.total_expectations}")
-            report.append(f"- Failed: {result.failed_expectations}")
-
-            if not result.passed:
-                report.append("- Failed checks:")
-                for detail in result.details:
-                    if not detail["success"]:
-                        report.append(f"  - {detail['expectation']}: {detail['observed_value']}")
-            report.append("")
-
-        return "\n".join(report)
-
-# Usage
-context = gx.get_context()
-pipeline = DataQualityPipeline(context)
-
-tables_to_validate = {
-    "orders": "orders_suite",
-    "customers": "customers_suite",
-    "products": "products_suite",
-}
-
-results = pipeline.run_all(tables_to_validate)
-report = pipeline.generate_report(results)
-
-# Fail pipeline if any table failed
-if not all(r.passed for r in results.values()):
-    print(report)
-    raise ValueError("Data quality checks failed!")
-```
+1. Resolve each approved table to its configured batch/validation definition.
+2. Run checks with read-only credentials, bounded scan cost and timeouts. Record
+   dataset revision, batch interval, rules version, execution error and result.
+3. Fail closed for missing/skipped required validations; an empty result set is
+   not a successful pipeline. Separate warning from blocking failures by policy.
+4. Emit check names, aggregate counts and status only. Unexpected rows, observed
+   values, Data Docs and exception text may contain personal data; restrict their
+   storage and notification destinations.
+5. Quarantine or stop according to the approved remediation policy. Do not silently
+   let invalid financial/clinical output through to keep a pipeline running.
+6. Retry only transient execution failures; deterministic rule failures require
+   an owner decision and a documented exception, not an automatic threshold change.
 
 ## Best Practices
 
@@ -571,3 +311,7 @@ if not all(r.passed for r in results.values()):
 - [dbt Testing Documentation](https://docs.getdbt.com/docs/build/tests)
 - [Data Contract Specification](https://datacontract.com/)
 - [Soda Core](https://docs.soda.io/soda-core/overview.html)
+
+## Version and semantics limits
+
+The contract sketch needs an explicitly selected contract specification and its schema validator; nested required/unique/pii annotations do not enforce SQL or JSON Schema constraints. SodaCL and dbt_utils examples need compatible installed packages and adapter syntax; pin them and compile locally before warehouse execution. Column-level expression tests already receive the column name, so the email expression should be a table-level expression or omit the duplicate column identifier. Sequential numeric checks are inappropriate for gapful identity/sequence keys. Accuracy against reality requires an authoritative reference; uniqueness/completeness alone do not prove it. Thresholds and freshness windows above are illustrative, not universal baselines.

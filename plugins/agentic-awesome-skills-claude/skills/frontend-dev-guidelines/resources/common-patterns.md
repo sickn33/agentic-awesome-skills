@@ -120,7 +120,7 @@ From BEST_PRACTICES.md - All dialogs should have:
 - Action buttons at bottom
 
 ```typescript
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, IconButton } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, IconButton, Box } from '@mui/material';
 import { Close, Info } from '@mui/icons-material';
 
 interface MyDialogProps {
@@ -138,7 +138,7 @@ export const MyDialog: React.FC<MyDialogProps> = ({ open, onClose, onConfirm }) 
                         <Info color='primary' />
                         Dialog Title
                     </Box>
-                    <IconButton onClick={onClose} size='small'>
+                    <IconButton aria-label='Close dialog' onClick={onClose} size='small'>
                         <Close />
                     </IconButton>
                 </Box>
@@ -329,3 +329,6 @@ export const useAppState = create<AppState>((set) => ({
 - [data-fetching.md](data-fetching.md) - TanStack Query patterns
 - [component-patterns.md](component-patterns.md) - Component structure
 - [loading-and-error-states.md](loading-and-error-states.md) - Error handling
+## Adaptation limits
+
+These snippets assume application-specific imports, aliases, schema and providers. Match MUI/TanStack major versions. TanStack Query v5 useSuspenseQuery does not support enabled or per-query onError; conditional queries use useQuery or conditional child mounting. Cache keys must include user/tenant scope; clear sensitive caches on logout. Do not return list-cache objects unconditionally from queryFn: that can perpetually refresh stale data and summary rows may omit detail fields. Use initialData with the source cache timestamp and a real network queryFn. API prefixes depend on the actual proxy/backend, not this snapshot.

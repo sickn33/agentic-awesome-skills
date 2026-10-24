@@ -15,7 +15,7 @@ license: "MIT"
 
 # ChatExport Need Miner: Offline Market Signal & Pain-Point Extractor
 
-Transform offline Telegram Desktop chat exports (`result.json`) into quantified, quote-grounded rankings of unmet market needs with zero memory crashes and absolute source fidelity.
+Transform offline Telegram Desktop chat exports (`result.json`) into quantified, quote-grounded rankings of unmet market needs using bounded candidate scanning followed by message-level source verification.
 
 ## Untrusted evidence boundary
 
@@ -36,18 +36,18 @@ Do NOT use this skill when:
 
 ## Core Mental Models & Non-Negotiable Rules
 
-1. **The 4MB Stream & Overlap Invariant (Memory Ceiling <= 8MB)**:
+1. **Chunked Candidate Scan (no fixed total-process memory guarantee)**:
    - Telegram Desktop `result.json` files routinely exceed 500MB to 5GB.
    - NEVER load an entire export into memory with `json.load()` or `fs.readFileSync()`.
-   - Read the file in fixed 4MB chunks with a 4KB overlap tail.
-   - **Boundary Counting Law**: A substring hit is recorded if and only if its terminus falls past the overlap boundary. This guarantees zero missed boundary-spanning phrases and strictly zero duplicate counts.
+   - The example reads four million decoded characters at a time with a4096-character overlap. Unicode storage, copies, regex and result aggregation consume additional memory; measure actual peak RSS.
+   - **Boundary Counting Law**: A substring hit is recorded if and only if its terminus falls past the overlap boundary. This avoids overlap duplicates only for bounded matches fitting the overlap. Raw JSON escapes, normalization and overly long matches can still hide signals; it is not a complete message parser.
 
 2. **Cross-Chat Multiplicity Law ($U \ge 3$ Priority)**:
    - One user posting 50 complaints in a single chat is an anecdote; 5 distinct users posting the same complaint across 3 independent chats is a market signal.
    - Cluster rank score is calculated as:
      $$\text{Score} = U \times \sqrt{H}$$
      where $U$ is the number of distinct chat exports containing the signal, and $H$ is the total verified keyword hits.
-   - A pattern appearing in $U \ge 3$ chats always outranks a pattern confined to $U = 1$, regardless of raw hit volume.
+   - The numeric score alone does not guarantee breadth priority. If breadth-first ranking is desired, sort by `(U >= 3, Score)` descending and label that policy explicitly.
 
 3. **Verbatim Quote Anchor & Anti-Hallucination Law**:
    - Every identified need theme MUST be backed by 2 to 5 verbatim quotes with exact ISO timestamp (`date`) and chat identifier.
@@ -66,16 +66,18 @@ Do NOT use this skill when:
 
 | Anti-Pattern | Manifestation in Code/Workflow | Mandatory Production Counter-Rule |
 | :--- | :--- | :--- |
-| **The OOM Slurp** | `data = json.load(open('result.json'))` on 800MB file. | Use incremental regex streaming or chunked buffered file reading with `<= 8MB` RAM footprint. |
+| **The OOM Slurp** | `data = json.load(open('result.json'))` on 800MB file. | Use incremental regex streaming or chunked buffered file reading with measured bounded working set. |
 | **Chunk Boundary Blindness** | Chunking without overlap, truncating `"looking for a tool"` across 4096-byte splits. | Maintain a 4KB sliding overlap tail across chunk transitions. |
 | **Double-Count Overlap Trap** | Counting hits found in both chunk $N$ and the overlap window of chunk $N+1$. | Only increment match counter if `match.end() > overlap_size`. |
 | **The Echo-Chamber Distortion** | Elevating a bug mentioned 80 times by 1 single user in 1 chat to the #1 product opportunity. | Apply Cross-Chat Multiplicity Law ($U \times \sqrt{H}$) and count unique authors when available. |
 | **Hallucinated Quotations** | "User expressed desire for better sync" written in quotes as `"I really need better sync"`. | Exact substring slice from source buffer; if unquoted, label as synthetic analysis. |
 | **Service Message Pollution** | Mining system notifications (`"pinned a message"`, `"joined group"`, bot spam) as human needs. | Filter out messages where `type == "service"` or text begins with known bot commands (`/start`). |
 | **Premature Uniqueness Claim** | Stating "No tool currently exists for this problem" without validation. | Run explicit coverage audit; if unverified, output strictly: `I cannot confirm this`. |
-| **Lossy Encoding Crash** | Crashing on multi-byte emoji surrogate pairs or non-UTF-8 characters in chat history. | Decode with `errors='replace'` or raw byte-level UTF-8 traversal. |
+| **Lossy Encoding Crash** | Crashing on multi-byte emoji surrogate pairs or non-UTF-8 characters in chat history. | Use strict decoding and report invalid encodings; replacement characters cannot support an exact quotation. |
 | **Monolithic Theme Lumping** | Grouping all complaints under `"Users want better UI"` or `"Performance issues"`. | Disaggregate into specific actionable workflows (e.g. `"No zero-downtime database migration path"`). |
 | **API Creep** | Prompting the user for Telegram Bot tokens or phone numbers for MTProto login. | Reject live requests; reiterate that input contract requires offline `result.json` exports only. |
+
+All quotes, communities, dates and competitor claims below are synthetic worked examples, not observed research. Raw scanner snippets are normalized candidate context, never verbatim message evidence. Use an incremental JSON parser to recover each candidate message, join Telegram text entities, filter service/bot entries and record its actual message/date/chat ID before counting verified needs. Do not claim these examples implement those verification steps.
 
 ## Concrete Archetypes / Presets
 
@@ -99,7 +101,7 @@ EN_LEXICON = re.compile(
 
 def stream_chat_chunks(filepath: str) -> Generator[Tuple[str, int], None, None]:
     overlap_tail = ""
-    with open(filepath, "r", encoding="utf-8", errors="replace") as f:
+    with open(filepath, "r", encoding="utf-8", errors="strict") as f:
         while True:
             chunk = f.read(CHUNK_SIZE)
             if not chunk:
@@ -128,7 +130,7 @@ def mine_need_signals(filepath: str, regex: re.Pattern, max_samples: int = 5) ->
 {
   "theme_id": "NEED-001",
   "theme_name": "Zero-Downtime SQLite Replication for Edge Daemons",
-  "aggregate_score": 14.14,
+  "aggregate_score": 28.28,
   "distinct_chats": 4,
   "total_hits": 50,
   "chats_observed": ["devops_talk_ru", "sqlite_users", "homelab_ops", "backend_craft"],
@@ -148,7 +150,7 @@ def mine_need_signals(filepath: str, regex: re.Pattern, max_samples: int = 5) ->
     {"tool": "LiteFS", "gap": "Requires Consul / Fly.io infrastructure; complex on bare-metal edge."},
     {"tool": "rqlite", "gap": "Raft layer alters SQLite interface semantics."}
   ],
-  "verdict": "Real commercial gap for turnkey lightweight edge replication."
+  "verdict": "Illustrative hypothesis only; competitor gaps and willingness to pay are unverified."
 }
 ```
 
@@ -190,7 +192,7 @@ Before emitting any market research summary or opportunity report, verify:
 > - **Evidence 1**: *"бесит когда flyway падает на миграции в CI и приходится вручную чистить schema_version таблицу на стейдже"* (2026-07-19T09:12:44, `devops_community`).
 > - **Evidence 2**: *"is there a tool to safely dry-run flyway down migrations before merging to master?"* (2026-08-04T16:21:09, `k8s_ru`).
 > - **Coverage Check**: Flyway Pro provides undo migrations; however, community tier users lack automated sandbox validation without custom Docker scripts.
-> - **Verdict**: Confirmed gap for a lightweight CLI pre-flight validator for open-source Flyway migrations.
+> - **Verdict**: Hypothesis for follow-up; this fictional example does not establish a commercial gap.
 
 ## Limitations
 

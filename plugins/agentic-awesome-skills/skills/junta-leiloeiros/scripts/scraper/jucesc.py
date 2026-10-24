@@ -54,7 +54,7 @@ class JucescScraper(AbstractJuntaScraper):
                     matricula=gcol(cells, ["matr", "registro", "nº", "numero", "antiguidade"]),
                     cpf_cnpj=gcol(cells, ["cpf", "cnpj"]),
                     situacao=gcol(cells, ["situ", "status"]),
-                    municipio=gcol(cells, ["munic", "cidade"]) or "Florianópolis",
+                    municipio=gcol(cells, ["munic", "cidade"]),
                     telefone=gcol(cells, ["tel", "fone"]),
                     email=gcol(cells, ["email"]),
                     endereco=gcol(cells, ["ender", "logr", "rua"]),

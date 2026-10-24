@@ -30,7 +30,7 @@ Use this skill when the user asks for codebase onboarding using Ontoly evidence.
 
 ## Required Workflow
 
-Follow [the shared Ontoly workflow. Also read [graph evidence rules, [MCP usage, [best practices, and [fallback rules when the task requires detail.
+Follow [the shared Ontoly workflow](reference/workflow.md), [graph evidence rules](reference/graph.md), [MCP usage](reference/mcp.md), [best practices](reference/best-practices.md), and [fallback rules](reference/fallbacks.md). Frontmatter version requirements supersede older 1.0.0 labels in companion notes; verify installed capabilities before use.
 
 ## Ontoly Capabilities
 
@@ -52,9 +52,9 @@ Do not implement compiler, query, MCP, SDK, or business logic in the skill. Do n
 
 ## Resources
 
-- [Examples
-- [Prompt template
-- [Capability notes
+- [Examples](examples.md)
+- [Prompt template](templates/repository-onboarding.md)
+- [Capability notes](reference/capabilities.md)
 
 ## Learn more
 

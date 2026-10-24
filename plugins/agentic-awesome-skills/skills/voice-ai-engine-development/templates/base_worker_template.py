@@ -39,6 +39,8 @@ class BaseWorker:
     
     def start(self):
         """Start the worker's processing loop"""
+        if self._task and not self._task.done():
+            return
         self.active = True
         self._task = asyncio.create_task(self._run_loop())
         logger.info(f"✅ [{self.__class__.__name__}] Started")
@@ -58,7 +60,10 @@ class BaseWorker:
                 item = await self.input_queue.get()
                 
                 # Process the item
-                await self.process(item)
+                try:
+                    await self.process(item)
+                finally:
+                    self.input_queue.task_done()
                 
             except asyncio.CancelledError:
                 # Task was cancelled (normal during shutdown)
@@ -139,14 +144,14 @@ class ExampleWorker(BaseWorker):
         result = item.upper()
         
         # Send to output queue
-        self.output_queue.put_nowait(result)
+        await self.output_queue.put(result)
         
         # Update counter
         self.processed_count += 1
         
         logger.info(
             f"✅ [{self.__class__.__name__}] "
-            f"Processed '{item}' -> '{result}' "
+            f"Processed one item "
             f"(total: {self.processed_count})"
         )
 
@@ -174,7 +179,7 @@ async def example_usage():
         input_queue.put_nowait(item)
     
     # Wait for processing
-    await asyncio.sleep(0.5)
+    await input_queue.join()
     
     # Get results
     results = []

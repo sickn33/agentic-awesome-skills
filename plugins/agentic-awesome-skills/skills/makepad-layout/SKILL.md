@@ -47,9 +47,11 @@ Refer to the local files for detailed documentation:
 
 1. Read the relevant reference file(s) listed above
 2. If file read fails or file is empty:
-   - Inform user: "本地文档不完整，建议运行 `/sync-crate-skills makepad --force` 更新文档"
+   - Report missing references; do not invent or run an unbundled force-sync command.
    - Still answer based on SKILL.md patterns + built-in knowledge
 3. If reference file exists, incorporate its content into the answer
+
+Patterns and enum/property names below describe a historical dev revision; verify the actual pinned crate source. Render at representative viewport/text scale and inspect clipping, overflow, keyboard focus and content sizing; a Fill/Fit layout sketch is not proof of responsiveness or accessibility.
 
 ## Key Patterns
 

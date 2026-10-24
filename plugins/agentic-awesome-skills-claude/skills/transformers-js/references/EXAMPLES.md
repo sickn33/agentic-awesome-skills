@@ -116,7 +116,7 @@ All examples use the same task and model for consistency:
       {
         progress_callback: (info) => {
           if (info.status === 'progress_total') {
-            document.getElementById('status').textContent = `Total: ${info.progress.toFixed(1)}%`;
+            document.getElementById('status').textContent = `Total: ${(Number.isFinite(info.progress) ? info.progress : 0).toFixed(1)}%`;
             return;
           }
 
@@ -127,12 +127,15 @@ All examples use the same task and model for consistency:
             if (!fileProgressBars[info.file]) {
               const fileDiv = document.createElement('div');
               fileDiv.className = 'file-progress';
-              fileDiv.innerHTML = `
-                <div class="file-name">${info.file}</div>
-                <div class="progress-bar">
-                  <div class="progress-fill"></div>
-                </div>
-              `;
+              const label = document.createElement('div');
+        label.className = 'file-name';
+        label.textContent = String(info.file ?? '');
+        const bar = document.createElement('div');
+        bar.className = 'progress-bar';
+        const fill = document.createElement('div');
+        fill.className = 'progress-fill';
+        bar.appendChild(fill);
+        fileDiv.append(label, bar);
               progressContainer.appendChild(fileDiv);
               fileProgressBars[info.file] = fileDiv.querySelector('.progress-fill');
             }
@@ -226,7 +229,8 @@ async function embedDocuments(documents) {
 
   await fs.writeFile(
     'embeddings.json',
-    JSON.stringify(embeddings, null, 2)
+    JSON.stringify(embeddings, null, 2),
+    { flag: 'wx' } // Do not overwrite an existing output
   );
 
   console.log('Saved to embeddings.json');
@@ -262,7 +266,7 @@ async function main() {
     {
       progress_callback: (info) => {
         if (info.status === 'progress_total') {
-          process.stdout.write(`\r\x1b[KTotal: ${info.progress.toFixed(1)}%`);
+          process.stdout.write(`\r\x1b[KTotal: ${(Number.isFinite(info.progress) ? info.progress : 0).toFixed(1)}%`);
           return;
         }
 
@@ -317,9 +321,10 @@ export function EmbeddingGenerator() {
   const [loading, setLoading] = useState(false);
 
   const generate = async () => {
-    if (!text) return;
+    if (!text || loading) return;
 
     setLoading(true);
+    try {
 
     // Load model on first generate
     if (!extractorRef.current) {
@@ -334,7 +339,11 @@ export function EmbeddingGenerator() {
       normalize: true
     });
     setEmbedding(Array.from(output.data));
-    setLoading(false);
+    } catch (error) {
+      console.error('Embedding failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Cleanup on unmount
@@ -389,9 +398,10 @@ export function EmbeddingGeneratorWithProgress() {
   const [loading, setLoading] = useState(false);
 
   const generate = async () => {
-    if (!text) return;
+    if (!text || loading) return;
 
     setLoading(true);
+    try {
 
     // Load model on first generate
     if (!extractorRef.current) {
@@ -403,7 +413,7 @@ export function EmbeddingGeneratorWithProgress() {
         {
           progress_callback: (info) => {
             if (info.status === 'progress_total') {
-              setStatus(`Total: ${info.progress.toFixed(1)}%`);
+              setStatus(`Total: ${(Number.isFinite(info.progress) ? info.progress : 0).toFixed(1)}%`);
               return;
             }
 
@@ -431,7 +441,11 @@ export function EmbeddingGeneratorWithProgress() {
     });
     setEmbedding(Array.from(output.data));
     setStatus('Complete!');
-    setLoading(false);
+    } catch (error) {
+      console.error('Embedding failed');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Cleanup on unmount
@@ -501,11 +515,11 @@ import express from 'express';
 import { pipeline } from '@huggingface/transformers';
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '32kb' }));
 
 // Initialize model once at startup
 let extractor;
-(async () => {
+await (async () => {
   console.log('Loading model...');
   extractor = await pipeline(
     'feature-extraction',
@@ -518,7 +532,7 @@ app.post('/embed', async (req, res) => {
   try {
     const { text } = req.body;
 
-    if (!text) {
+    if (typeof text !== 'string' || !text.trim() || text.length > 10000) {
       return res.status(400).json({ error: 'Text is required' });
     }
 
@@ -538,7 +552,7 @@ app.post('/embed', async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
+app.listen(3000, '127.0.0.1', () => {
   console.log('Server running on http://localhost:3000');
 });
 ```
@@ -551,7 +565,7 @@ import express from 'express';
 import { pipeline } from '@huggingface/transformers';
 
 const app = express();
-app.use(express.json());
+app.use(express.json({ limit: '32kb' }));
 
 let extractor;
 let server;
@@ -569,7 +583,7 @@ app.post('/embed', async (req, res) => {
   try {
     const { text } = req.body;
 
-    if (!text) {
+    if (typeof text !== 'string' || !text.trim() || text.length > 10000) {
       return res.status(400).json({ error: 'Text is required' });
     }
 
@@ -591,9 +605,13 @@ async function shutdown(signal) {
   console.log(`\n${signal} received. Shutting down...`);
 
   if (server) {
-    server.close(() => {
-      console.log('HTTP server closed');
-    });
+    await new Promise((resolve, reject) => {
+      const deadline = setTimeout(() => reject(new Error('Shutdown drain timeout')), 30000);
+      server.close((error) => {
+        clearTimeout(deadline);
+        if (error) reject(error); else resolve();
+      });
+    }); // Wait for in-flight requests before disposing their shared model
   }
 
   if (extractor) {
@@ -605,11 +623,17 @@ async function shutdown(signal) {
   process.exit(0);
 }
 
-process.on('SIGTERM', () => shutdown('SIGTERM'));
-process.on('SIGINT', () => shutdown('SIGINT'));
+let stopping = false;
+const stop = (signal) => {
+  if (stopping) return;
+  stopping = true;
+  shutdown(signal).catch(() => process.exit(1));
+};
+process.on('SIGTERM', () => stop('SIGTERM'));
+process.on('SIGINT', () => stop('SIGINT'));
 
 initialize().then(() => {
-  server = app.listen(3000, () => {
+  server = app.listen(3000, '127.0.0.1', () => {
     console.log('Server running on http://localhost:3000');
   });
 });

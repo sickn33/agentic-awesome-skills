@@ -33,6 +33,8 @@ Build in thin vertical slices — implement one piece, test it, verify it, then 
 
 **When NOT to use:** Single-file, single-function changes where the scope is already minimal.
 
+Apply the project's actual available commands and commit policy; npm test/build/tsc/lint below are examples. A feature flag must guard backend permissions and effects as well as UI. Database rollback may require forward repair, data recovery and compatibility staging rather than a reversible down migration. Keep removal/replacement slices compatible so separated commits do not leave a broken intermediate state. Report skipped/unavailable checks; passing tests support bounded claims, not proof of correctness.
+
 ## The Increment Cycle
 
 ```

@@ -18,13 +18,17 @@ Automate Canva design operations through Composio's Canva toolkit via Rube MCP.
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. Follow the host’s authentication and trust setup; endpoint configuration alone does not establish a working Canva authorization.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `canva`
 3. If connection is not ACTIVE, follow the returned auth link to complete Canva OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+## Operation boundaries
+
+Use an already connected account when available. Client installation/OAuth requires the applicable user authorization; never expose credentials. Confirm the exact design/folder before changing it, and upload only assets authorized for this service. Do not make a private asset public merely to supply a URL. Keep expiring export links private. Bound job polling with a timeout; on uncertain write results, inspect job/item state before retrying to avoid duplicates. Tool slugs/parameter examples are illustrative: the discovered live schema controls.
 
 ## Core Workflows
 

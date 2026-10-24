@@ -38,9 +38,9 @@ Step 1: Read the exact error — don't assume context
 
 Step 2: Check if the file exists
   → If exists: fix the import path (casing issue, wrong alias, etc.)
-  → If missing: create the minimum viable file (even if empty with correct export)
+  → If missing: recover or implement the intended component contract; do not create an empty export merely to hide the import error
 
-Step 3: Verify the fix compiles mentally
+Step 3: Run the available targeted build/typecheck; label inspection-only if unavailable
   → Check all other files that import the same module
   → Confirm tsconfig.json paths alias is correct
 
@@ -59,7 +59,7 @@ Step 4: Report what was changed and why — one sentence each
 
 ---
 
-## Quota Log
+## Illustrative Quota Log (not measured)
 
 | Event | Impact |
 |-------|--------|

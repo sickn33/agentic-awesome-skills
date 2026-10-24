@@ -50,16 +50,16 @@ jobs:
             const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
             const response = await client.messages.create({
-              model: "claude-3-sonnet-20240229",
+              model: process.env.REVIEW_MODEL // configure an available approved model,
               max_tokens: 4096,
               messages: [{
                 role: "user",
                 content: `Review this PR diff and provide feedback:
 
-                Changed files: ${{ steps.changed.outputs.files }}
+                Changed files: ${process.env.CHANGED_FILES}
 
                 Diff:
-                ${{ steps.diff.outputs.diff }}
+                ${process.env.PR_DIFF}
 
                 Provide:
                 1. Summary of changes
@@ -80,6 +80,8 @@ jobs:
             });
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PR_DIFF: ${{ steps.diff.outputs.diff }}
+          CHANGED_FILES: ${{ steps.changed.outputs.files }}
 ```
 
 ### 1.2 Review Comment Patterns
@@ -94,7 +96,7 @@ Brief description of what this PR does.
 ## ✅ What looks good
 
 - Well-structured code
-- Good test coverage
+- Test evidence: name actual executed checks or state unavailable
 - Clear naming conventions
 
 ## ⚠️ Potential Issues
@@ -122,7 +124,7 @@ Brief description of what this PR does.
 
 ## 🔒 Security Notes
 
-- No sensitive data exposure detected
+- Sensitive-data review: specify inspected scope and limitations
 - API key handling looks correct
 
 ````
@@ -359,7 +361,7 @@ jobs:
 
 ```yaml
 # .github/workflows/deploy.yml
-name: Deploy with AI Validation
+name: Deploy with AI Validation (scaffold)
 
 on:
   push:
@@ -417,6 +419,7 @@ jobs:
           CHANGES: ${{ steps.changes.outputs.changes }}
 
   deploy:
+    if: false # add deterministic required checks, protected environment and approved deployment implementation
     needs: validate
     runs-on: ubuntu-latest
     environment: production
@@ -442,6 +445,7 @@ on:
 
 jobs:
   rollback:
+    if: false # select verified successful deployment SHA and approved data-compatible rollback first
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -487,15 +491,14 @@ jobs:
 
 ```yaml
 # .github/workflows/auto-rebase.yml
-name: Auto Rebase
+name: Auto Rebase (disabled scaffold)
 
 on:
-  issue_comment:
-    types: [created]
+  workflow_dispatch:
 
 jobs:
   rebase:
-    if: github.event.issue.pull_request && contains(github.event.comment.body, '/rebase')
+    if: false # implement verified maintainer authorization, explicit PR/head and branch policy first
     runs-on: ubuntu-latest
 
     steps:
@@ -503,6 +506,7 @@ jobs:
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
+          persist-credentials: false
 
       - name: Setup Git
         run: |
@@ -541,7 +545,8 @@ jobs:
 // AI-assisted cherry-pick that handles conflicts
 async function smartCherryPick(commitHash: string, targetBranch: string) {
   // Get commit info
-  const commitInfo = await exec(`git show ${commitHash} --stat`);
+  // Pseudocode: use execFile/spawn argument arrays after validating refs, never shell interpolation.
+  const commitInfo = await execFile("git", ["show", "--stat", verifiedCommitSha, "--"]);
 
   // Check for potential conflicts
   const targetDiff = await exec(
@@ -570,7 +575,7 @@ async function smartCherryPick(commitHash: string, targetBranch: string) {
     });
 
     if (result.failed) {
-      // AI-assisted conflict resolution
+      // Candidate conflict resolution only; inspect and test the combined diff before continuing
       const conflicts = await getConflicts();
       for (const conflict of conflicts) {
         const resolution = await ai.resolveConflict(conflict);
@@ -617,12 +622,14 @@ jobs:
           echo "$stale" >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
-      - name: Create cleanup PR
+      - name: Create cleanup issue
         if: steps.stale.outputs.branches != ''
+        env:
+          STALE_BRANCHES: ${{ steps.stale.outputs.branches }}
         uses: actions/github-script@v7
         with:
           script: |
-            const branches = `${{ steps.stale.outputs.branches }}`.split('\n').filter(Boolean);
+            const branches = process.env.STALE_BRANCHES.split('\n').filter(Boolean);
 
             const body = `## 🧹 Stale Branch Cleanup
 
@@ -670,10 +677,12 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Extract question
+        env:
+          COMMENT_BODY: ${{ github.event.comment.body }}
         id: question
         run: |
           # Extract text after @ai-helper
-          question=$(echo "${{ github.event.comment.body }}" | sed 's/.*@ai-helper//')
+          question=$(printf '%s' "$COMMENT_BODY" | sed 's/.*@ai-helper//')
           echo "question=$question" >> $GITHUB_OUTPUT
 
       - name: Get context

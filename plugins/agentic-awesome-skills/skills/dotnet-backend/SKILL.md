@@ -104,7 +104,7 @@ app.MapPost("/api/users", async (CreateUserRequest request, AppDbContext db) =>
     db.Users.Add(user);
     await db.SaveChangesAsync();
 
-    return Results.Created($"/api/users/{user.Id}", new UserResponse(user));
+    return Results.Created($"/api/users/{user.Id}", new UserResponse(user.Id, user.Email, user.Name));
 })
 .WithName("CreateUser")
 .WithOpenApi();
@@ -154,7 +154,8 @@ public class UsersController : ControllerBase
         _db.Users.Add(user);
         await _db.SaveChangesAsync();
 
-        return CreatedAtAction(nameof(GetUser), new { id = user.Id }, new UserDto(user));
+        return Created($"/api/users/{user.Id}", new UserDto(user.Id, user.Email, user.Name));
+        // Implement the corresponding authorized GET route in the application.
     }
 }
 ```
@@ -235,8 +236,8 @@ public class EmailSenderService : BackgroundService
 
     private async Task SendEmailAsync(PendingEmail email)
     {
-        // Send email logic
-        _logger.LogInformation("Sending email to {Email}", email.To);
+        // Replace with an awaited real provider call; never mark mail sent after a log-only stub.
+        throw new NotImplementedException("Configure the authorized email provider before enabling this worker");
     }
 }
 ```
@@ -262,3 +263,5 @@ public class EmailSenderService : BackgroundService
 - Assumes modern .NET (ASP.NET Core 8+); older .NET Framework projects may require different patterns.
 - Does not cover client-side/frontend implementations.
 - Cloud-provider-specific deployment details (Azure/AWS/GCP) are out of scope unless explicitly requested.
+
+Examples are fragments: supply models/DTOs/packages and configure JWT issuer, audience, signature and lifetime validation before exposing protected routes. Registration needs password policy, unique normalized email handling, rate limits and an established Identity flow; adding authentication services alone does not protect an endpoint. Multi-worker mail delivery needs atomic claiming, durable outcomes and provider idempotency to prevent duplicate sends.

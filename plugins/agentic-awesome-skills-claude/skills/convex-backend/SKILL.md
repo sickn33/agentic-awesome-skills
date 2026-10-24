@@ -84,6 +84,10 @@ export default defineSchema({
 });
 ```
 
+## Security completeness
+
+The snippets below omit the application membership/ownership model and are not deployable authorization examples. Implement a shared server-side access check before `listByChannel`, `send`, paid `generateResponse`, upload URL generation and file URL reads. Validate identity using a stable provider subject/token identifier, not an unchecked/non-unique email. Bound body/prompt/limit values, reject missing channels and cross-tenant IDs, check external HTTP status/content shape and avoid duplicate paid requests. An `isPrivate` field alone enforces nothing. Use an approved dev deployment; `convex dev` may synchronize to cloud. Verify current quotas/pricing rather than assuming the stated free allowance.
+
 ## Queries (Real-Time Reads)
 
 ```typescript
@@ -242,7 +246,9 @@ function App() {
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../convex/_generated/api";
 
-export function Chat({ channelId }: { channelId: string }) {
+import type { Id } from "../convex/_generated/dataModel";
+
+export function Chat({ channelId }: { channelId: Id<"channels"> }) {
   // Real-time query — auto-updates when data changes
   const messages = useQuery(api.messages.listByChannel, { channelId });
   const sendMessage = useMutation(api.messages.send);

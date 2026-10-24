@@ -1,14 +1,14 @@
 ---
 name: react-best-practices
-description: "Comprehensive performance optimization guide for React and Next.js applications, maintained by Vercel. Use when writing new React components or Next.js pages, implementing data fetching (client or server-side), or reviewing code for performance issues."
+description: "Comprehensive performance optimization guide for React and Next.js applications, adapted from Vercel’s published guidance. Use when writing new React components or Next.js pages, implementing data fetching (client or server-side), or reviewing code for performance issues."
 risk: safe
 source: community
 date_added: "2026-02-27"
 ---
 
-# Vercel React Best Practices
+# React Best Practices (catalog adaptation)
 
-Comprehensive performance optimization guide for React and Next.js applications, maintained by Vercel. Contains 45 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.
+Comprehensive performance optimization guide for React and Next.js applications, adapted from Vercel’s published guidance. Contains 45 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.
 
 ## When to Use
 Reference these guidelines when:
@@ -78,7 +78,7 @@ Reference these guidelines when:
 - `rendering-content-visibility` - Use content-visibility for long lists
 - `rendering-hoist-jsx` - Extract static JSX outside components
 - `rendering-svg-precision` - Reduce SVG coordinate precision
-- `rendering-hydration-no-flicker` - Use inline script for client-only data
+- `rendering-hydration-no-flicker` - Keep server and first client theme consistent
 - `rendering-activity` - Use Activity component for show/hide
 - `rendering-conditional-render` - Use ternary, not && for conditionals
 
@@ -122,10 +122,10 @@ Each rule file contains:
 
 For the complete guide with all rules expanded: `AGENTS.md`
 
-### When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Examples are sketches, not complete applications. Identify installed React/Next/SWR versions, public package exports and Server/Client module boundaries before editing. Profile a concrete bottleneck and preserve authorization, privacy, accessibility and behavior; impact levels and historical timing numbers are priorities, not guaranteed measurements. Validate one change with the application’s checks before broad refactoring. No deployments or analytics transmission are authorized by this guide.

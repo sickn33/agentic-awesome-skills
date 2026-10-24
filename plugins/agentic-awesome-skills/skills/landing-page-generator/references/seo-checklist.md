@@ -18,7 +18,7 @@ This checklist ensures landing pages are optimized for search engine visibility 
 
 - [ ] **Organization schema**: Company name, logo, social profiles
 - [ ] **Product schema**: Name, description, price, availability (for product pages)
-- [ ] **FAQ schema**: For pages with FAQ sections (rich snippet opportunity)
+- [ ] **FAQ schema**: Match visible content and current eligibility; rich results are not guaranteed
 - [ ] **Breadcrumb schema**: Navigation path for deep pages
 - [ ] **Review schema**: Aggregate rating if testimonials present (use carefully per guidelines)
 - [ ] **Validate**: Test all structured data with Google Rich Results Test
@@ -31,7 +31,7 @@ This checklist ensures landing pages are optimized for search engine visibility 
 - [ ] Use CDN for static assets
 - [ ] Minimize render-blocking CSS and JavaScript
 
-### First Input Delay (FID) / Interaction to Next Paint (INP) - Target: < 200ms
+### Interaction to Next Paint (INP) - Target: < 200ms
 - [ ] Defer non-critical JavaScript
 - [ ] Break up long tasks (>50ms)
 - [ ] Minimize third-party script impact
@@ -48,7 +48,7 @@ This checklist ensures landing pages are optimized for search engine visibility 
 - [ ] **H1 tag**: Contains primary keyword, one per page only
 - [ ] **H2 tags**: Include secondary keywords naturally
 - [ ] **First paragraph**: Primary keyword appears in first 100 words
-- [ ] **Body copy**: Natural keyword density (1-2%), no stuffing
+- [ ] **Body copy**: Natural relevant language; no fixed keyword-density target
 - [ ] **Image alt text**: Descriptive, includes keyword where relevant
 - [ ] **URL slug**: Short, keyword-rich, hyphen-separated
 - [ ] **CTA text**: Consider keyword inclusion where natural
@@ -60,7 +60,7 @@ This checklist ensures landing pages are optimized for search engine visibility 
 - [ ] Use descriptive anchor text (not "click here")
 - [ ] Ensure landing page is linked from main navigation or sitemap
 - [ ] Link to pricing page if applicable
-- [ ] Limit links to avoid diluting page authority (15-20 max)
+- [ ] Use relevant useful links; no arbitrary maximum link count
 
 ## Image Optimization
 
@@ -78,11 +78,11 @@ This checklist ensures landing pages are optimized for search engine visibility 
 - [ ] Consistent protocol (https) and trailing slash usage
 - [ ] Canonical points to preferred URL version (www vs non-www)
 - [ ] UTM parameters excluded from canonical URL
-- [ ] Pagination handled with rel="next"/"prev" or single-page canonical
+- [ ] Paginated pages have their own appropriate canonical URLs; do not canonicalize distinct pages to page1 by default
 
 ## Mobile Responsiveness
 
-- [ ] **Mobile-friendly test**: Pass Google Mobile-Friendly Test
+- [ ] **Mobile usability**: Inspect current browser/device layouts and accessibility; do not depend on retired testing tools
 - [ ] **Touch targets**: Minimum 44x44px, 8px spacing between targets
 - [ ] **Font size**: Minimum 16px base font, no pinch-to-zoom needed
 - [ ] **Content parity**: All critical content accessible on mobile

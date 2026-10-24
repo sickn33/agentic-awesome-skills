@@ -65,7 +65,7 @@ gh api repos/<owner>/<repo>/contents/<dbt_root>/dbt_project.yml?ref=<head_sha> -
 ```
 Common `<dbt_root>` locations: `analytics`, `.` (repo root), `dbt`, `transform`. Try each until found.
 
-Save `dbt_project.yml` to `/tmp/validation_notebook_working/<PR#>/dbt_project.yml`.
+Use a private unique working directory for this repository and exact base/head SHAs; never reuse a shared predictable PR-number directory. Keep repository paths under that directory and reject traversal/symlinks.
 
 ### If Local mode (Local Directory):
 
@@ -76,7 +76,7 @@ Save `dbt_project.yml` to `/tmp/validation_notebook_working/<PR#>/dbt_project.ym
 git rev-parse --abbrev-ref HEAD
 ```
 
-3. Detect base branch - try `main`, `master`, `develop` in order, or use upstream tracking branch.
+3. Resolve the actual PR target or user-selected comparison base and freeze its SHA; do not guess the first existing branch.
 
 4. Get the list of changed SQL files compared to base branch:
 ```bash
@@ -90,11 +90,11 @@ git diff --name-only <base_branch>...HEAD -- '*.sql'
 git diff <base_branch>...HEAD -- <file_path>
 ```
 
-7. Read model files directly from the filesystem.
+7. Read files from the same frozen head SHA as the diff; report uncommitted changes separately.
 
 8. **Find dbt_project.yml**:
 ```bash
-find . -name "dbt_project.yml" -type f | head -1
+# Resolve the nearest owning dbt_project.yml for each model; stop on ambiguity.
 ```
 
 9. For notebook metadata in local mode, use:
@@ -123,7 +123,7 @@ For EACH changed dbt model `.sql` file, parse and extract:
 
 ### 2a. Model Metadata
 
-**Output table name** -- Derive from file name:
+**Output table name** -- Confirm from compiled manifest metadata; filename below is only a fallback hint:
 - `<any_path>/models/<subdir>/<model_name>.sql` -> table is `<MODEL_NAME>` (uppercase, taken from the filename)
 
 **Output schema** -- Use the schema resolution script:
@@ -145,7 +145,7 @@ For EACH changed dbt model `.sql` file, parse and extract:
 
 4. **Output**: The script prints the resolved schema (e.g., `PROD`, `PROD_STAGE`, `PROD_LINEAGE`)
 
-**Note**: Do NOT manually parse dbt_project.yml or model configs for schema -- always use the script. It handles model config overrides, dbt_project.yml routing rules, PROD_ prefix for custom schemas, and defaults to `PROD`.
+**Resolution gate:** The bundled regex helper is a heuristic for one PROD-prefix convention. It does not evaluate Jinja/macros, aliases, custom model paths, YAML model config or all snapshot routing. Require trusted base/head manifest relation metadata (database/schema/alias/quoting) or explicit confirmed relations before generating runnable SQL. Do not execute untrusted dbt code merely to obtain a manifest. Run the helper from the private staging directory because it confines CLI paths to the current working directory; treat output as a hint only.
 
 **Config block** -- Look for `{{ config(...) }}` and extract:
 - `materialized` -- 'table', 'view', 'incremental', 'ephemeral'
@@ -238,7 +238,7 @@ LIMIT 100
 ```
 
 #### Pattern 5: Uniqueness Check
-**Trigger:** Always for new models (verify unique_key constraint from the start).
+**Trigger:** Only when an expected key is confirmed; dbt unique_key is not itself a database constraint. For composite keys, use the GROUP BY/HAVING query below and a grouped subquery count instead of non-portable COUNT(DISTINCT col1,col2); check NULL components separately.
 
 ```sql
 SELECT
@@ -422,7 +422,8 @@ SELECT
     COALESCE(d.cnt, 0) AS cnt_dev,
     COALESCE(d.cnt, 0) - COALESCE(b.cnt, 0) AS diff
 FROM prod b
-FULL OUTER JOIN dev d ON b.<field> = d.<field>
+FULL OUTER JOIN dev d ON (b.<field> = d.<field> OR (b.<field> IS NULL AND d.<field> IS NULL))
+-- Repeat a null-safe predicate for EVERY grouping field, joined with AND.
 ORDER BY ABS(diff) DESC
 LIMIT 100
 ```
@@ -548,7 +549,7 @@ Cells are ordered consistently for both model types, following this sequence:
 ```bash
 python3 ${CLAUDE_PLUGIN_ROOT}/skills/monte-carlo-validation-notebook/scripts/generate_notebook_url.py /tmp/validation_notebook_working/<id>/notebook.yaml --mc-base-url <MC_BASE_URL>
 ```
-3. The script validates both YAML syntax and notebook schema (required fields on metadata and cells). If validation fails, read the error messages carefully, fix the YAML to match the spec in Phase 4, and re-run.
+3. The script performs partial local structural checks, not a complete current server-schema validation. It validates YAML syntax and selected notebook fields (required fields on metadata and cells). If validation fails, read the error messages carefully, fix the YAML to match the spec in Phase 4, and re-run.
 
 
 ## Phase 6: Output
@@ -564,8 +565,8 @@ Present:
 
 > ⚠️ If models were capped: "Only the first 10 of <total_count> changed models were included. Re-run with `--models` to select specific models."
 
-## Notebook Opened
-The notebook has been opened directly in your browser.
+## Notebook Prepared
+The URL is saved locally. Review its destination and encoded content before opting into browser import with --open. Base64 is reversible and the page can read the fragment.
 Select your Snowflake connector in the notebook interface to begin running queries.
 *Make sure MC Bridge is running. Let me know if you want tips on how to install this locally*
 ```
@@ -578,13 +579,13 @@ Select your Snowflake connector in the notebook interface to begin running queri
 3. **Include LIMIT 100** on queries that could return many rows
 4. **Use double curly braces** -- `{{prod_db}}` NOT `${prod_db}`
 5. **Use correct table format** -- `{{prod_db}}.<SCHEMA>.<TABLE>` and `{{dev_db}}.<SCHEMA>.<TABLE>`
-6. **Always use the schema resolution script** -- do NOT manually parse dbt_project.yml
+6. **Confirm compiled relation metadata** -- the bundled schema resolver is only a hint.
 7. **Schema is NOT a parameter** -- only `prod_db` and `dev_db` are parameters
 8. **Skip ephemeral models** -- they have no physical table
 9. **Truncate notebook name** -- keep under 50 chars
 10. **Generate unique cell IDs** -- use pattern like `cell-p3-model-1`
 11. **YAML multiline content** -- use `|` block scalar for SQL with comments
-12. **ASCII-only YAML** -- the script sanitizes and validates before encoding
+12. **Preserve Unicode** -- changing SQL string literals/identifiers to ASCII changes meaning; the encoder preserves UTF-8.
 
 
 ## Query Pattern Reference

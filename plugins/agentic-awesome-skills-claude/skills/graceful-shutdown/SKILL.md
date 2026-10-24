@@ -39,7 +39,7 @@ function onShutdownSignal(signal: string): void {
   if (isShuttingDown) return; // prevent double-shutdown
   isShuttingDown = true;
   console.log(`Received ${signal}, starting graceful shutdown...`);
-  shutdown();
+  void shutdown().catch(() => { process.exitCode = 1; });
 }
 
 process.on("SIGTERM", () => onShutdownSignal("SIGTERM"));
@@ -277,38 +277,45 @@ uvicorn app:app --timeout-graceful-shutdown 25
 
 If readiness must turn 503 before SIGTERM, coordinate a separately secured and tested pre-stop drain signal plus a propagation delay. FastAPI's lifespan shutdown hook is too late for that transition because Uvicorn invokes it after request draining.
 
-### Example 3: Background worker with checkpoint
+### Example 3: Process-level worker with a bounded drain
+
+`JobQueue` is an application-owned adapter. Its poll must honor the timeout, and each job must be idempotent because a crash after work but before ack causes redelivery. This is a process, not a Node worker thread (process signals are not delivered to worker threads).
 
 ```typescript
-import { parentPort } from "node:worker_threads";
-
-let isShuttingDown = false;
-let currentJob: { id: string; checkpoint: () => Promise<void> } | null = null;
-
-process.on("SIGTERM", async () => {
-  isShuttingDown = true;
-  console.log("Worker shutting down — finishing current job");
-
-  if (currentJob) {
-    await currentJob.checkpoint();
-    console.log(`Job ${currentJob.id} checkpointed`);
-  }
-
-  process.exit(0);
-});
+let stopping = false;
+function stop(): void { stopping = true; }
+process.once("SIGTERM", stop);
+process.once("SIGINT", stop);
 
 async function processJobs(queue: JobQueue): Promise<void> {
-  while (!isShuttingDown) {
-    const job = await queue.poll({ timeout: 5000 });
-    if (!job) continue;
-
-    currentJob = job;
-    await job.execute();
-    await queue.ack(job.id);
-    currentJob = null;
+  let deadline: ReturnType<typeof setTimeout> | undefined;
+  const startDeadline = () => {
+    if (deadline) return;
+    stopping = true;
+    deadline = setTimeout(() => process.exit(1), 25_000);
+  };
+  process.once("SIGTERM", startDeadline);
+  process.once("SIGINT", startDeadline);
+  try {
+    while (!stopping) {
+      const job = await queue.poll({ timeout: 5000 });
+      if (!job) continue;
+      if (stopping) break; // do not start newly polled work; leave it unacked
+      await job.execute();
+      await queue.ack(job.id); // only after successful work
+    }
+    await queue.close(); // application adapter stops polling and closes handles
+    process.exitCode = 0;
+  } finally {
+    if (deadline) clearTimeout(deadline);
+    process.off("SIGTERM", startDeadline);
+    process.off("SIGINT", startDeadline);
   }
 }
+// Caller must await/catch processJobs; on failure close resources and set exitCode=1.
 ```
+
+For checkpointing, design cooperative cancellation inside job.execute and await a confirmed checkpoint before releasing the job. Do not concurrently checkpoint mutable job state from a signal handler while execute/ack still run.
 
 ## Best Practices
 
@@ -375,7 +382,7 @@ spec:
 
 - This skill does not replace environment-specific validation, testing, or expert review.
 - WebSocket and SSE connections require application-level close frames before severing — `server.close()` alone won't gracefully end them.
-- In clustered/multi-process setups (e.g., Node.js `cluster` module), each worker must handle signals independently.
+- In clustered/multi-process setups, coordinate master and child shutdown explicitly; do not assume signals are forwarded. Worker threads need an explicit message/abort protocol.
 - Some cloud platforms (Heroku, Railway) send SIGTERM with very short grace periods (10-30s) — adjust drain timeouts accordingly.
 
 ## Related Skills

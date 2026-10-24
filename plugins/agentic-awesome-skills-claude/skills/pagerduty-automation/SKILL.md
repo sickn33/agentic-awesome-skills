@@ -18,13 +18,17 @@ Automate PagerDuty incident management and operations through Composio's PagerDu
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. The endpoint still requires an authenticated MCP session and an authorized PagerDuty connection with appropriate scopes.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `pagerduty`
 3. If connection is not ACTIVE, follow the returned auth link to complete PagerDuty authentication
 4. Confirm connection status shows ACTIVE before running any workflows
+
+## Incident and notification boundaries
+
+Resolve the exact account/service/incident IDs and current state before writes. Creating incidents, notes, reassignment or schedule/escalation changes can notify or page real people; acknowledgment, snooze, resolve and disabled services can suppress response. Obtain explicit authorization for those effects, preview schedules in the intended IANA timezone and read back changes. A transport timeout is an unknown outcome: reconcile before retrying creation. Incident acknowledgments may retrigger, and status fields can be read-only or constrained by endpoint/schema; do not rely on the simplified forward-only/status lists below. Use discovered current enums and acting-user requirements. Keep incident details and integration keys out of shared logs.
 
 ## Core Workflows
 

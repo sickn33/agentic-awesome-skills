@@ -11,6 +11,7 @@ Usage:
 """
 
 import argparse
+import re
 import json
 import sys
 from typing import Dict, List, Any, Optional
@@ -48,18 +49,23 @@ def tsx_value(value: object) -> str:
     return "{" + tsx_string(value) + "}"
 
 
-def tsx_href(value: object) -> str:
-    """Encode a link while refusing executable URL schemes and controls."""
+def safe_href(value: object) -> str:
     raw = str(value).strip()
-    if not raw or any(ord(character) < 32 or ord(character) == 127 for character in raw):
-        raw = "#"
+    if not raw or any(ord(c) < 32 or ord(c) == 127 for c in raw):
+        return "#"
     try:
         scheme = urlsplit(raw).scheme.lower()
     except ValueError:
-        scheme = "invalid"
-    if scheme and scheme not in {"http", "https", "mailto", "tel"}:
-        raw = "#"
-    return tsx_value(raw)
+        return "#"
+    return raw if not scheme or scheme in {"http", "https", "mailto", "tel"} else "#"
+
+
+def html_href(value: object) -> str:
+    return escape(safe_href(value))
+
+
+def tsx_href(value: object) -> str:
+    return tsx_value(safe_href(value))
 
 
 # ---------------------------------------------------------------------------
@@ -229,7 +235,7 @@ def tsx_pricing(pricing: Dict[str, Any], style: Dict[str, str]) -> str:
     for p in plans:
         featured = p.get("featured", False)
         border_cls = f"border-2 border-{accent}-500 ring-4 ring-{accent}-500/20" if featured else f"border {style['border']}"
-        badge = f'\n            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-{accent}-600 px-4 py-1 text-xs font-semibold text-white">Most Popular</div>' if featured else ""
+        badge = f'\n            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-{accent}-600 px-4 py-1 text-xs font-semibold text-white">Featured plan</div>' if featured else ""
         features_jsx = "\n              ".join(
             f'<li className="flex items-center gap-2 py-2"><span className="text-{accent}-500 font-bold">&#10003;</span> {tsx_value(feat)}</li>'
             for feat in p.get("features", [])
@@ -372,6 +378,12 @@ def generate_css(config: Dict[str, Any]) -> str:
     text_color = theme.get("text_color", "#1f2937")
     font = theme.get("font", "Inter, system-ui, -apple-system, sans-serif")
 
+    for color in (primary, secondary, bg, text_color):
+        if not re.fullmatch(r"#[0-9a-fA-F]{3}(?:[0-9a-fA-F]{3})?", str(color)):
+            raise ValueError("Theme colors must be 3- or 6-digit hex colors")
+    if not re.fullmatch(r"[A-Za-z0-9 ,_'\"-]{1,200}", str(font)):
+        raise ValueError("Unsupported font-family syntax")
+
     return f"""
     * {{ margin: 0; padding: 0; box-sizing: border-box; }}
     body {{ font-family: {font}; color: {text_color}; background: {bg}; line-height: 1.6; }}
@@ -397,7 +409,7 @@ def generate_css(config: Dict[str, Any]) -> str:
     .feature-card h3 {{ font-size: 1.25rem; margin-bottom: 12px; }}
     .feature-card p {{ color: #6b7280; }}
     .testimonials {{ padding: 80px 0; }}
-    .testimonials-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 24px; }}
+    .testimonials-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(min(350px, 100%), 1fr)); gap: 24px; }}
     .testimonial-card {{ padding: 32px; border: 1px solid #e5e7eb; border-radius: 12px; }}
     .testimonial-text {{ font-size: 1.1rem; font-style: italic; margin-bottom: 20px; }}
     .testimonial-author {{ display: flex; align-items: center; gap: 12px; }}
@@ -407,7 +419,7 @@ def generate_css(config: Dict[str, Any]) -> str:
     .pricing-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; max-width: 900px; margin: 0 auto; }}
     .pricing-card {{ background: white; padding: 32px; border-radius: 12px; border: 2px solid #e5e7eb; text-align: center; }}
     .pricing-card.featured {{ border-color: {primary}; position: relative; }}
-    .pricing-card.featured::before {{ content: "Most Popular"; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: {primary}; color: white; padding: 4px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }}
+    .pricing-card.featured::before {{ content: "Featured plan"; position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: {primary}; color: white; padding: 4px 16px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }}
     .pricing-name {{ font-size: 1.25rem; font-weight: 600; margin-bottom: 8px; }}
     .pricing-price {{ font-size: 3rem; font-weight: 800; margin: 16px 0; }}
     .pricing-price span {{ font-size: 1rem; font-weight: 400; color: #6b7280; }}
@@ -434,14 +446,14 @@ def render_nav(config: Dict[str, Any]) -> str:
     nav_links = config.get("nav_links", [])
     cta = config.get("nav_cta", {"text": "Get Started", "url": "#"})
     links = "\n".join(
-        f'<li><a href="{escape(l.get("url", "#"))}">{escape(l.get("text", ""))}</a></li>'
+        f'<li><a href="{html_href(l.get("url", "#"))}">{escape(l.get("text", ""))}</a></li>'
         for l in nav_links
     )
     return f"""
     <nav><div class="container">
         <a href="#" class="nav-logo">{brand}</a>
         <ul class="nav-links">{links}</ul>
-        <a href="{escape(cta.get('url', '#'))}" class="nav-cta">{escape(cta.get('text', 'Get Started'))}</a>
+        <a href="{html_href(cta.get('url', '#'))}" class="nav-cta">{escape(cta.get('text', 'Get Started'))}</a>
     </div></nav>"""
 
 
@@ -450,9 +462,9 @@ def render_hero(hero: Dict[str, Any]) -> str:
     sub = escape(hero.get("subheadline", ""))
     primary_cta = hero.get("primary_cta", {"text": "Get Started", "url": "#"})
     secondary_cta = hero.get("secondary_cta", None)
-    cta_html = f'<a href="{escape(primary_cta.get("url", "#"))}" class="btn-primary">{escape(primary_cta.get("text", "Get Started"))}</a>'
+    cta_html = f'<a href="{html_href(primary_cta.get("url", "#"))}" class="btn-primary">{escape(primary_cta.get("text", "Get Started"))}</a>'
     if secondary_cta:
-        cta_html += f'\n<a href="{escape(secondary_cta.get("url", "#"))}" class="btn-secondary">{escape(secondary_cta.get("text", "Learn More"))}</a>'
+        cta_html += f'\n<a href="{html_href(secondary_cta.get("url", "#"))}" class="btn-secondary">{escape(secondary_cta.get("text", "Learn More"))}</a>'
     return f"""
     <section class="hero"><div class="container">
         <h1>{h1}</h1>
@@ -514,7 +526,7 @@ def render_pricing(pricing: Dict[str, Any]) -> str:
             <ul class="pricing-features">
                 {"".join(f'<li>{escape(f)}</li>' for f in p.get('features', []))}
             </ul>
-            <a href="{escape(p.get('cta_url', '#'))}" class="btn-primary">{escape(p.get('cta_text', 'Choose Plan'))}</a>
+            <a href="{html_href(p.get('cta_url', '#'))}" class="btn-primary">{escape(p.get('cta_text', 'Choose Plan'))}</a>
         </div>""" for p in plans)
     return f"""
     <section class="pricing"><div class="container">
@@ -528,7 +540,7 @@ def render_cta(cta: Dict[str, Any]) -> str:
     <section class="cta-section"><div class="container">
         <h2>{escape(cta.get('headline', 'Ready to get started?'))}</h2>
         <p>{escape(cta.get('subheadline', ''))}</p>
-        <a href="{escape(cta.get('url', '#'))}" class="btn-white">{escape(cta.get('text', 'Start Free Trial'))}</a>
+        <a href="{html_href(cta.get('url', '#'))}" class="btn-white">{escape(cta.get('text', 'Start Free Trial'))}</a>
     </div></section>"""
 
 
@@ -597,7 +609,7 @@ def main():
         output = generate_html(config)
 
     if args.output:
-        with safe_user_path(args.output).open("w") as f:
+        with safe_user_path(args.output).open("x", encoding="utf-8") as f:
             f.write(output)
         print(f"Landing page written to {args.output}")
     else:

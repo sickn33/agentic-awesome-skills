@@ -1,5 +1,7 @@
 # Tool Use Concepts
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 This file covers the conceptual foundations of tool use with the Claude API. For language-specific code examples, see the `python/`, `typescript/`, or other language folders.
 
 ## User-Defined Tools
@@ -74,7 +76,7 @@ if response.stop_reason == "pause_turn":
     ]
     # Make another API request — server resumes automatically
     response = client.messages.create(
-        model="claude-opus-5", messages=messages, tools=tools
+        model="claude-opus-5-5", messages=messages, tools=tools
     )
 ```
 
@@ -105,7 +107,7 @@ The code execution tool lets Claude run code in a secure, sandboxed container. U
 ### Key Facts
 
 - Runs in an isolated container (1 CPU, 5 GiB RAM, 5 GiB disk)
-- No internet access (fully sandboxed)
+- Network access depends on current tool/container configuration; verify it before processing sensitive data.
 - Python 3.11 with data science libraries pre-installed
 - Containers persist for 30 days and can be reused across requests
 - Free when used with web search/web fetch tools; otherwise $0.05/hour after 1,550 free hours/month per organization
@@ -154,7 +156,7 @@ The response contains interleaved text and tool result blocks:
 - `bash_code_execution_tool_result` — Code execution output (check `return_code` for success/failure)
 - `text_editor_code_execution_tool_result` — File operation results
 
-> **Security:** Always sanitize filenames with `os.path.basename()` / `path.basename()` before writing downloaded files to disk to prevent path traversal attacks. Write files to a dedicated output directory.
+> **Security:** A basename alone does not prevent collisions, symlink writes or oversized downloads. Use a newly created private output directory, generated unique names, size/type checks and exclusive creation; never execute downloaded content automatically.
 
 ---
 

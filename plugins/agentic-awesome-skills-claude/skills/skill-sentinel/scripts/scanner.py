@@ -14,6 +14,9 @@ Uso:
 from __future__ import annotations
 
 import ast
+import os
+import yaml
+from source_io import read_text
 import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -28,40 +31,33 @@ from config import (
 
 def _parse_yaml_frontmatter(content: str) -> Dict[str, str]:
     """Extrai frontmatter YAML simples de um arquivo SKILL.md."""
-    if not content.startswith("---"):
-        return {}
-    end = content.find("---", 3)
-    if end == -1:
-        return {}
-    frontmatter = content[3:end].strip()
-    result = {}
-    for line in frontmatter.split("\n"):
-        line = line.strip()
-        if not line or line.startswith("#"):
-            continue
-        # Tratar continuacao de description com >-
-        if ":" in line and not line.startswith("-") and not line.startswith(" "):
-            key, _, value = line.partition(":")
-            key = key.strip()
-            value = value.strip().strip('"').strip("'")
-            if value == ">-" or value == ">":
-                # Multi-line: coletar proximas linhas indentadas
-                continue
-            result[key] = value
-        elif line.startswith(" ") and "description" not in result:
-            # Continuacao multi-line de description
-            result.setdefault("description", "")
-            result["description"] += " " + line.strip()
-    # Limpar description
-    if "description" in result:
-        result["description"] = result["description"].strip().strip('"').strip("'")
-    return result
+    lines = content.splitlines()
+    if not lines or lines[0].strip() != "---": return {}
+    try: end = next(i for i in range(1, len(lines)) if lines[i].strip() == "---")
+    except StopIteration: return {}
+    raw = "\n".join(lines[1:end])
+    try:
+        if any(isinstance(token, (yaml.tokens.AliasToken, yaml.tokens.AnchorToken)) for token in yaml.scan(raw)):
+            raise ValueError("YAML aliases/anchors are not supported")
+        node = yaml.compose(raw, Loader=yaml.SafeLoader)
+        if not isinstance(node, yaml.MappingNode): return {}
+        result = {}
+        seen = set()
+        for key, value in node.value:
+            if not isinstance(key, yaml.ScalarNode) or key.value in seen:
+                raise ValueError("Duplicate or non-scalar metadata key")
+            seen.add(key.value)
+            if key.value in {"name", "description", "version"} and isinstance(value, yaml.ScalarNode):
+                result[key.value] = value.value
+        return result
+    except (yaml.YAMLError, RecursionError) as exc:
+        raise ValueError("Invalid YAML frontmatter") from None
 
 
 def _count_lines(filepath: Path) -> int:
     """Conta linhas de um arquivo de texto."""
     try:
-        return len(filepath.read_text(encoding="utf-8", errors="replace").splitlines())
+        return len(read_text(filepath).splitlines())
     except (OSError, UnicodeDecodeError):
         return 0
 
@@ -75,16 +71,18 @@ def _list_python_files(directory: Path) -> List[Path]:
     result = []
     if not directory.exists():
         return result
-    for p in directory.rglob("*.py"):
-        if not any(part in _PY_IGNORE_DIRS for part in p.parts):
-            result.append(p)
+    for root, dirs, files in os.walk(directory, followlinks=False):
+        dirs[:] = [name for name in dirs if name not in _PY_IGNORE_DIRS and not (Path(root) / name).is_symlink()]
+        for name in files:
+            candidate = Path(root) / name
+            if name.endswith(".py") and not candidate.is_symlink(): result.append(candidate)
     return sorted(result)
 
 
 def _extract_functions(filepath: Path) -> List[Dict[str, Any]]:
     """Extrai informacoes de funcoes/classes via AST."""
     try:
-        source = filepath.read_text(encoding="utf-8", errors="replace")
+        source = read_text(filepath)
         tree = ast.parse(source, filename=str(filepath))
     except (SyntaxError, OSError):
         return []
@@ -97,11 +95,7 @@ def _extract_functions(filepath: Path) -> List[Dict[str, Any]]:
                 "type": "async_function" if isinstance(node, ast.AsyncFunctionDef) else "function",
                 "line": node.lineno,
                 "end_line": getattr(node, "end_lineno", node.lineno),
-                "has_docstring": (
-                    isinstance(node.body[0], ast.Expr)
-                    and isinstance(node.body[0].value, (ast.Constant, ast.Str))
-                    if node.body else False
-                ),
+                "has_docstring": ast.get_docstring(node) is not None,
                 "args_count": len(node.args.args),
             })
         elif isinstance(node, ast.ClassDef):
@@ -110,11 +104,7 @@ def _extract_functions(filepath: Path) -> List[Dict[str, Any]]:
                 "type": "class",
                 "line": node.lineno,
                 "end_line": getattr(node, "end_lineno", node.lineno),
-                "has_docstring": (
-                    isinstance(node.body[0], ast.Expr)
-                    and isinstance(node.body[0].value, (ast.Constant, ast.Str))
-                    if node.body else False
-                ),
+                "has_docstring": ast.get_docstring(node) is not None,
                 "args_count": 0,
             })
     return functions
@@ -127,7 +117,7 @@ def _parse_requirements(skill_dir: Path) -> List[Dict[str, str]]:
         return []
     deps = []
     try:
-        for line in reqs_path.read_text(encoding="utf-8").splitlines():
+        for line in read_text(reqs_path).splitlines():
             line = line.strip()
             if not line or line.startswith("#") or line.startswith("-"):
                 continue
@@ -170,7 +160,7 @@ class SkillScanner:
     def _find_skill_dirs(self) -> List[Path]:
         """Encontra diretorios que contem SKILL.md."""
         found = []
-        for search_path in SKILL_SEARCH_PATHS:
+        for search_path in [self.skills_root, self.skills_root / ".claude" / "skills"]:
             if not search_path.exists():
                 continue
             self._search_recursive(search_path, found, depth=0)
@@ -190,15 +180,14 @@ class SkillScanner:
             return
         try:
             for item in sorted(directory.iterdir()):
-                if not item.is_dir():
+                if item.is_symlink() or not item.is_dir():
                     continue
                 if item.name in IGNORE_DIRS:
                     continue
                 skill_md = item / "SKILL.md"
-                if skill_md.exists():
+                if skill_md.is_file() and not skill_md.is_symlink():
                     found.append(item)
-                else:
-                    self._search_recursive(item, found, depth + 1)
+                self._search_recursive(item, found, depth + 1)
         except PermissionError:
             pass
 
@@ -209,7 +198,7 @@ class SkillScanner:
             return None
 
         try:
-            content = skill_md.read_text(encoding="utf-8", errors="replace")
+            content = read_text(skill_md, root=self.skills_root)
         except OSError:
             return None
 
@@ -228,7 +217,7 @@ class SkillScanner:
                 all_functions[str(f.relative_to(skill_dir))] = funcs
 
         ref_dir = skill_dir / "references"
-        ref_files = sorted(ref_dir.glob("*.md")) if ref_dir.exists() else []
+        ref_files = sorted(f for f in ref_dir.glob("*.md") if not f.is_symlink()) if ref_dir.exists() else []
 
         deps = _parse_requirements(skill_dir)
 

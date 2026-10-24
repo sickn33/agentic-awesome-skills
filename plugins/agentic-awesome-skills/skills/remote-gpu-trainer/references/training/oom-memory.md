@@ -23,7 +23,7 @@ To jump: `grep -in '<keyword>' references/training/oom-memory.md` (e.g. `expanda
 
 ### M1 — Anatomy: where the VRAM actually goes (a model that runs inference OOMs in training)
 
-Training memory is **not** just weights. For **Adam mixed-precision**, per parameter:
+Training memory is **not** just weights. For one common **Adam mixed-precision implementation**, per parameter (actual dtypes, master copies, sharding and optimizer implementations vary):
 
 | Bucket | Bytes/param | Note |
 |---|---|---|
@@ -47,9 +47,9 @@ capacity; Z GiB already allocated; A GiB free; B GiB reserved in total by PyTorc
 
 **Root cause — decode the four numbers**:
 - **Tried to allocate X** — the size of the *single* failing request. Large X = a big tensor (long-seq
-  attention score matrix, the longest batch M16); tiny X failing with GBs "free" = **fragmentation**.
+  attention score matrix, the longest batch M16); tiny X failing with apparent free memory may indicate fragmentation, concurrency, allocator limits or memory-accounting differences; inspect the snapshot.
 - **reserved B vs allocated Z** — `reserved` = total the caching allocator grabbed from the driver;
-  `allocated` = live tensors. **`reserved` ≫ `allocated` with a small failing X ⇒ fragmentation** (free
+  `allocated` = live tensors. **`reserved` ≫ `allocated` with a small failing X suggests investigating fragmentation or caching** (free
   blocks exist but none is contiguous enough). This is the explicit PyTorch diagnostic: "if reserved but
   unallocated is large, set `expandable_segments:True`" (M8).
 - **free A** — driver-visible free on the card; if A is large but the alloc still fails, suspect another
@@ -80,7 +80,7 @@ kernel kill (U9), **not** a CUDA OOM. Do not shrink the model to "fix" a host-RA
 
 Each rung costs more (speed, complexity, or risk to the result). Climb only as far as needed:
 
-1. **Reduce micro-batch + grad-accumulation** (M5) — free, exact same effective batch, zero accuracy change.
+1. **Reduce micro-batch + grad-accumulation** (M5) — preserves nominal effective batch, but check normalization, dropout, loss weighting and scheduler behavior.
 2. **bf16 mixed precision** (M6) — halves activations, usually a speedup; bf16 needs no loss scaling.
 3. **Activation / gradient checkpointing** (M7) — trades ~20–30% compute for a large activation cut.
 4. **`PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True`** (M8) — free; fixes *fragmentation* OOM only.
@@ -91,8 +91,7 @@ Each rung costs more (speed, complexity, or risk to the result). Climb only as f
 9. **CPU / NVMe offload** (M10) — last resort on a single GPU; trades a large speed hit for fit.
 10. **LoRA / QLoRA** (M13) — for *finetuning*: freeze base, train adapters; QLoRA quantizes base to 4-bit.
 
-Rungs 1–4 and 7 do **not** alter the model/optimization math; rung 6 does (declare it, re-verify per
-verifying-dl-experiments). Rungs 8–10 change *where* state lives, not the math (LoRA changes capacity).
+Precision and quantized optimizers change numerical behavior; accumulation is not equivalent for BatchNorm, unequal loss denominators or some stochastic layers. Checkpoint recomputation must preserve required RNG/state. LoRA changes the trained parameterization. Record and validate every relevant change; sharding/offload also require implementation parity checks.
 
 ### M5 — Reduce micro-batch + gradient accumulation (the free first move)
 
@@ -112,7 +111,7 @@ sub-batch token counts — a correctness issue owned by **verifying-dl-experimen
 
 **Fix**: `bf16=True` (HF `TrainingArguments`) or `torch.autocast("cuda", dtype=torch.bfloat16)`. The main
 win is **activations stored in 16-bit**. **bf16 over fp16**: bf16 has fp32's exponent range, so it needs no
-loss-scaling and won't overflow/underflow — fewer NaN failures. Note fp16 can *increase* memory at small
+loss-scaling for ordinary bf16 AMP, but can still produce non-finite values or lose small updates — fewer NaN failures. Note fp16 can *increase* memory at small
 batch (it keeps both fp16 and fp32 weight copies); bf16 is the safer default where supported.
 Source: https://huggingface.co/docs/transformers/main/en/perf_train_gpu_one (mixed precision; bf16 needs
 Ampere+). NaN/divergence after switching precision = a numerics question → **verifying-dl-experiments**.
@@ -155,7 +154,7 @@ drop it.
 - **ZeRO-3 / FSDP `FULL_SHARD`** — also partition **parameters** (the 6 B). Maximum savings; needs
   high-bandwidth interconnect (NVLink/NVSwitch) because params are all-gathered per layer.
 Source: DeepSpeed ZeRO tutorial (https://www.deepspeed.ai/tutorials/zero/) and HF DeepSpeed integration
-(https://huggingface.co/docs/transformers/en/deepspeed); FSDP's `ShardingStrategy` maps 1:1 to these stages.
+(https://huggingface.co/docs/transformers/en/deepspeed); FSDP FULL_SHARD and SHARD_GRAD_OP are broadly analogous to ZeRO-3/2; there is no FSDP optim_state_dict-only sharding strategy equivalent to ZeRO-1, and the APIs are not interchangeable.
 Multi-GPU launch + NCCL fabric gotchas (wrong NIC, timeout, MTU) → **references/multinode.md**.
 
 ### M10 — CPU / NVMe offload (single-GPU last resort)
@@ -177,7 +176,7 @@ with seq-len/resolution.
 
 **Fix (cheapest variant first)**:
 - **Use SDPA / FlashAttention** to avoid materializing the full seq² attention matrix —
-  `attn_implementation="sdpa"` (default in PyTorch 2.1.1+) or `"flash_attention_2"`. No accuracy change.
+  for compatible Transformers models use `attn_implementation="sdpa"` or `"flash_attention_2"`; this is a model integration option, not a universal PyTorch default. Verify backend support, mask semantics and numerical parity.
 - Only then **shorten seq-len / lower image resolution / patchify** — this **changes the task/science**;
   declare it and re-verify (the resolution-change-broke-training failure mode is owned by
   **verifying-dl-experiments**, REQUIRED).
@@ -239,7 +238,7 @@ sometimes even at eval batch size 1.
 **Fix**: set `per_device_eval_batch_size` explicitly (don't inherit a too-large value); set
 **`eval_accumulation_steps=N`** so predictions move to CPU every N steps instead of piling on the GPU
 (https://huggingface.co/docs/transformers/main_classes/trainer). In a custom loop: wrap eval in
-`torch.no_grad()` / `torch.inference_mode()`, and `.cpu()` / `.detach()` outputs before appending to any
+`torch.no_grad()` / `torch.inference_mode()`, and `.detach().cpu()` outputs before appending to any
 list. Eval-artifact *sizing* (per-sample dumps blowing up) is owned by **verifying-dl-experiments**.
 
 ### M16 — OOM mid-epoch on the **longest batch** (variable-length / bucketed data)
@@ -266,7 +265,7 @@ backward buffers. Source: the memory-snapshot timeline shows optimizer state app
 (https://pytorch.org/blog/understanding-gpu-memory-1/).
 
 **Fix**: budget for the **post-step** peak, not step-1 — measure peak with `max_memory_allocated()` *after*
-two full steps, not one. Then apply M12 (8-bit optimizer halves this jump) or M5.
+two full steps, not one. Then apply M12 (an 8-bit optimizer reduces the optimizer-state component, subject to implementation overhead) or M5.
 
 ---
 

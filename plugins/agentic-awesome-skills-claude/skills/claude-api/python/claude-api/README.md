@@ -1,5 +1,7 @@
 # Claude API — Python
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 ## Installation
 
 ```bash
@@ -27,13 +29,13 @@ async_client = anthropic.AsyncAnthropic()
 
 ```python
 response = client.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     messages=[
         {"role": "user", "content": "What is the capital of France?"}
     ]
 )
-print(response.content[0].text)
+print("".join(b.text for b in response.content if b.type == "text"))
 ```
 
 ---
@@ -42,7 +44,7 @@ print(response.content[0].text)
 
 ```python
 response = client.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     system="You are a helpful coding assistant. Always provide examples in Python.",
     messages=[{"role": "user", "content": "How do I read a JSON file?"}]
@@ -62,7 +64,7 @@ with open("image.png", "rb") as f:
     image_data = base64.standard_b64encode(f.read()).decode("utf-8")
 
 response = client.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     messages=[{
         "role": "user",
@@ -85,7 +87,7 @@ response = client.messages.create(
 
 ```python
 response = client.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     messages=[{
         "role": "user",
@@ -115,7 +117,7 @@ Use top-level `cache_control` to automatically cache the last cacheable block in
 
 ```python
 response = client.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     cache_control={"type": "ephemeral"},  # auto-caches the last cacheable block
     system="You are an expert on this large document...",
@@ -129,7 +131,7 @@ For fine-grained control, add `cache_control` to specific content blocks:
 
 ```python
 response = client.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     system=[{
         "type": "text",
@@ -141,7 +143,7 @@ response = client.messages.create(
 
 # With explicit TTL (time-to-live)
 response = client.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     system=[{
         "type": "text",
@@ -156,13 +158,12 @@ response = client.messages.create(
 
 ## Extended Thinking
 
-> **Opus 4.6 and Sonnet 4.6:** Use adaptive thinking. `budget_tokens` is deprecated on both Opus 4.6 and Sonnet 4.6.
-> **Older models:** Use `thinking: {type: "enabled", budget_tokens: N}` (must be < `max_tokens`, min 1024).
+> **Thinking:** Verify the selected model and SDK support adaptive/enabled/disabled modes and effort. Do not assume a fixed budget or adaptive option is accepted by every model.
 
 ```python
 # Opus 4.6: adaptive thinking (recommended)
 response = client.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=16000,
     thinking={"type": "adaptive"},
     output_config={"effort": "high"},  # low | medium | high | max
@@ -224,25 +225,27 @@ class ConversationManager:
 
     def send(self, user_message: str, **kwargs) -> str:
         """Send a message and get a response."""
-        self.messages.append({"role": "user", "content": user_message})
-
+        if {"model", "system", "messages"} & kwargs.keys():
+            raise ValueError("Reserved conversation parameters cannot be overridden")
+        request_messages = [*self.messages, {"role": "user", "content": user_message}]
         response = self.client.messages.create(
             model=self.model,
-            max_tokens=kwargs.get("max_tokens", 1024),
-            system=self.system,
-            messages=self.messages,
+            **({"system": self.system} if self.system is not None else {}),
+            max_tokens=kwargs.pop("max_tokens", 1024),
+            messages=request_messages,
             **kwargs
         )
-
-        assistant_message = response.content[0].text
-        self.messages.append({"role": "assistant", "content": assistant_message})
+        if response.stop_reason != "end_turn":
+            raise RuntimeError("Incomplete/tool response: handle it explicitly before committing history")
+        assistant_message = "".join(block.text for block in response.content if block.type == "text")
+        self.messages = [*request_messages, {"role": "assistant", "content": response.content}]
 
         return assistant_message
 
 # Usage
 conversation = ConversationManager(
     client=anthropic.Anthropic(),
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     system="You are a helpful assistant."
 )
 
@@ -252,14 +255,14 @@ response2 = conversation.send("What's my name?")  # Claude remembers "Alice"
 
 **Rules:**
 
-- Messages must alternate between `user` and `assistant`
+- Preserve valid role/content structure; consecutive same-role inputs may be combined by the API
 - First message must be `user`
 
 ---
 
 ### Compaction (long conversations)
 
-> **Beta, Opus 4.6 only.** When conversations approach the 200K context window, compaction automatically summarizes earlier context server-side. The API returns a `compaction` block; you must pass it back on subsequent requests — append `response.content`, not just the text.
+> **Version-sensitive compaction example.** Verify the selected model, context limit, trigger and required beta header before enabling server-side history summarization. The API returns a `compaction` block; you must pass it back on subsequent requests — append `response.content`, not just the text.
 
 ```python
 import anthropic
@@ -272,7 +275,7 @@ def chat(user_message: str) -> str:
 
     response = client.beta.messages.create(
         betas=["compact-2026-01-12"],
-        model="claude-opus-5",
+        model="claude-opus-5-5",
         max_tokens=4096,
         messages=messages,
         context_management={
@@ -300,7 +303,7 @@ The `stop_reason` field in the response indicates why the model stopped generati
 | Value | Meaning |
 |-------|---------|
 | `end_turn` | Claude finished its response naturally |
-| `max_tokens` | Hit the `max_tokens` limit — increase it or use streaming |
+| `max_tokens` | Output is truncated; review and adjust within the selected model and budget limits |
 | `stop_sequence` | Hit a custom stop sequence |
 | `tool_use` | Claude wants to call a tool — execute it and continue |
 | `pause_turn` | Model paused and can be resumed (agentic flows) |
@@ -315,7 +318,7 @@ The `stop_reason` field in the response indicates why the model stopped generati
 ```python
 # Automatic caching (simplest — caches the last cacheable block)
 response = client.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     cache_control={"type": "ephemeral"},
     system=large_document_text,  # e.g., 50KB of context
@@ -331,21 +334,21 @@ response = client.messages.create(
 ```python
 # Default to Opus for most tasks
 response = client.messages.create(
-    model="claude-opus-5",  # $5.00/$25.00 per 1M tokens
+    model="claude-opus-5-5",  # verify current pricing for this model
     max_tokens=1024,
     messages=[{"role": "user", "content": "Explain quantum computing"}]
 )
 
 # Use Sonnet for high-volume production workloads
 standard_response = client.messages.create(
-    model="claude-sonnet-4-6",  # $3.00/$15.00 per 1M tokens
+    model="claude-sonnet-4-6",  # verify current pricing for this model
     max_tokens=1024,
     messages=[{"role": "user", "content": "Summarize this document"}]
 )
 
 # Use Haiku only for simple, speed-critical tasks
 simple_response = client.messages.create(
-    model="claude-haiku-4-5",  # $1.00/$5.00 per 1M tokens
+    model="claude-haiku-4-5",  # verify current pricing for this model
     max_tokens=256,
     messages=[{"role": "user", "content": "Classify this as positive or negative"}]
 )
@@ -355,12 +358,15 @@ simple_response = client.messages.create(
 
 ```python
 count_response = client.messages.count_tokens(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     messages=messages,
     system=system
 )
 
-estimated_input_cost = count_response.input_tokens * 0.000005  # $5/1M tokens
+input_price_per_million = float(input("Approved current input price per million: "))
+if not __import__("math").isfinite(input_price_per_million) or input_price_per_million < 0:
+    raise ValueError("Price must be finite and nonnegative")
+estimated_input_cost = count_response.input_tokens * input_price_per_million / 1_000_000
 print(f"Estimated input cost: ${estimated_input_cost:.4f}")
 ```
 
@@ -383,6 +389,8 @@ def call_with_retry(
     **kwargs
 ):
     """Call the API with exponential backoff retry."""
+    if not 1 <= max_retries <= 10 or not 0 < base_delay <= max_delay <= 60:
+        raise ValueError("Use bounded positive retry settings")
     last_exception = None
 
     for attempt in range(max_retries):
@@ -398,7 +406,8 @@ def call_with_retry(
 
         delay = min(base_delay * (2 ** attempt) + random.uniform(0, 1), max_delay)
         print(f"Retry {attempt + 1}/{max_retries} after {delay:.1f}s")
-        time.sleep(delay)
+        if attempt + 1 < max_retries:
+            time.sleep(delay)
 
     raise last_exception
 ```

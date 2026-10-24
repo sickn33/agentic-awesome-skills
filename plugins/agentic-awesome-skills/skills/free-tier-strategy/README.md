@@ -19,13 +19,13 @@ The best free tiers feel generous to individual developers while naturally scali
 
 **Free tier should:**
 - Allow building and running real side projects
-- Cover hobbyist use cases completely
+- Define sustainable hobbyist allowances with disclosed caps
 - Be easy to predict when limits hit
 - Never require credit card
 
 **Gate behind paid:**
 - Team collaboration
-- Enterprise features (SSO, audit logs)
+- Advanced enterprise administration and extended audit retention; keep basic account security available
 - Higher scale and performance
 - SLAs and priority support
 

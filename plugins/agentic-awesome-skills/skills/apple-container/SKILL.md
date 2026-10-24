@@ -16,6 +16,8 @@ license_source: "https://github.com/sanjay3290/ai-skills/blob/main/LICENSE"
 
 # Apple `container`
 
+> Reference scope: this imported guide mixes release-era and later branch documentation; its `1.0.0+` annotations are not verified introduction versions. Match the installed `container --version` and subcommand `--help` to the same upstream release tag before using flags or defaults. Current branch documentation can describe unreleased behavior. No container runtime was executed for this static review.
+
 ## When to Use
 
 - Use when building, running, or managing OCI/Linux containers on Apple-silicon macOS with Apple's open-source `container` CLI
@@ -24,8 +26,8 @@ license_source: "https://github.com/sanjay3290/ai-skills/blob/main/LICENSE"
 
 Apple's `container` is an open-source CLI for building, running, and managing OCI/Linux
 containers on Apple-silicon Macs. Each container runs inside its own lightweight virtual
-machine (backed by the Containerization framework and the Virtualization API), so there is no
-shared daemon like Docker — services run per-user via `launchd`. Images are standard OCI
+machine (backed by the Containerization framework and the Virtualization API). A shared per-user
+API server and helpers run via `launchd`, with a separate runtime helper per container. Images are standard OCI
 artifacts, so they interoperate with Docker registries and other OCI tooling. The CLI is
 deliberately Docker-like (`container run`, `container build`, and image ops under
 `container image push`/`pull`), but it is a distinct tool: do not assume Docker command paths,
@@ -35,10 +37,7 @@ top-level command — image verbs live under `container image`).
 ## Safety Gate
 
 Container installation, service startup, image pulls, builds, runs, registry login, pushes,
-and resource cleanup change local or remote state. Explain the exact command, image registry,
-mounts, ports, privileges, and data-persistence impact, then obtain explicit user approval
-before executing it. Do not provide registry credentials, mount sensitive paths, or expose
-ports without the user's explicit instruction.
+and resource cleanup change local or remote state. Keep the exact registry, mounts, ports, privileges and persistence impact within existing task authorization. Clarify missing destructive scope, sensitive mounts, credentials or external exposure before acting; do not ask again for actions already authorized.
 
 ## Requirements
 
@@ -48,7 +47,7 @@ ports without the user's explicit instruction.
   still runs on **macOS 15 (Sequoia)** but with reduced networking: only the single default
   subnet is available, and the `container network` group and `--network` flag error out.
   macOS-26-gated features are called out throughout the reference files.
-- **Version:** this skill documents the **1.0.0** release (the fullest feature set). The `machine`
+- **Version:** this skill documents the **1.0.0** release (the historical reference snapshot). The `machine`
   group, `container cp`, `container export`, `container prune`, `container image prune`,
   `container registry list`, and `container system version` were **added in 1.0.0** (not in 0.7.1)
   — features that postdate 0.7.1 are flagged *(1.0.0+)* in the reference files. Run `container --version` and
@@ -64,8 +63,7 @@ Install the signed package, then start the background services once:
 1. **Download** the latest signed installer `.pkg` from the
    [GitHub releases page](https://github.com/apple/container/releases).
 2. **Double-click** the downloaded package and follow the prompts, entering your admin
-   password so it can place files under `/usr/local`. (There is no documented CLI `installer`
-   invocation — installation is via the GUI package.)
+   password so it can place files under `/usr/local`. For automated package installation, verify macOS installer syntax and package signature rather than inventing a container subcommand.
 3. **Start the services** and confirm they are healthy:
 
 ```bash
@@ -79,7 +77,7 @@ container system status
 ```
 
 `container system start` must have run before any container/image/build command works — a
-connection/XPC error almost always means the services are stopped, so run it again. Stop and
+connection/XPC error can indicate stopped services, incompatible components, permissions or launch failures. Inspect `container system status`, installed versions and logs before deciding whether startup or repair is needed. Stop and
 deregister the `launchd` services with `container system stop` (which takes only `-p/--prefix`).
 The startup flags for `container system start` (`-a/--app-root`, `--install-root`, `--log-root`,
 `--enable-kernel-install`/`--disable-kernel-install`, `--timeout`) are in
@@ -137,9 +135,7 @@ Read the reference file that matches the task; do not guess flags or behavior.
 
 - **This is not Docker.** The CLI resembles Docker, but flags, defaults, and daemon behavior
   differ. Verify syntax in `references/commands.md` instead of assuming Docker equivalence.
-- **Always ensure services are up first.** Run `container system start` (and confirm with
-  `container system status`) before any container/image/build command; connection errors
-  usually mean the services are stopped.
+- **Check service state when runtime operations need it.** Inspect `container system status`; start stopped services when the task authorizes it. Diagnose other failures rather than repeatedly starting or reinstalling.
 - **Images are standard OCI artifacts** and interoperate with Docker registries and other OCI
   tools. Image references that omit a registry default to `docker.io` (configurable via the
   `registry.domain` property — see `references/configuration.md`).
@@ -162,4 +158,12 @@ Read the reference file that matches the task; do not guess flags or behavior.
 - This skill does not make container workloads safe by default: mounts, published ports,
   privileged settings, registry credentials, and cleanup can expose or destroy data.
 - Stop before uninstalling, pruning, deleting containers, volumes, or images, and require
-  explicit approval for each destructive action.
+  task authorization covering the exact destructive scope; obtain clarification when that scope is missing.
+
+## Operational boundaries
+
+Use trusted pinned images and verify custom kernels, init images and plugin executables before use. Builds execute Dockerfile instructions; build args and printed environments can expose secrets. Use supported secret mounts rather than credential build args. Disable shell tracing when passing credentials, and prefer explicit HTTPS: historical `auto` scheme behavior may choose plaintext even on private networks. HTTP is only for an explicitly authorized disposable local test registry without reusable secrets.
+
+Container machines weaken ordinary container defaults: the image controls init, expanded Linux capabilities, and potentially host home and SSH-agent access. Default examples disable the home mount; verify that flag on the installed release. Read-only home mounts still disclose keys and dotfiles. Agent forwarding allows guest processes to authenticate as the host user; do not forward it for untrusted workloads. Ordinary mounts, socket publishing and `--ssh` need the same explicit scope. VM isolation is not a guarantee against host compromise.
+
+Prefer explicit loopback bindings and inspect actual listeners; do not assume an omitted host address is loopback-only. Before cleanup, inventory exact resources and preserve needed data. Stopping services interrupts other user workloads; builder deletion discards cache. Backup data and consult version-specific migration guidance before downgrading; keeping data with `-k` does not guarantee backward compatibility. Performance and journaling choices require workload/durability measurements, not fastest/safest guarantees.

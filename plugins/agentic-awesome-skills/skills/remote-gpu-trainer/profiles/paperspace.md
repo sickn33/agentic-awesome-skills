@@ -16,12 +16,14 @@ local_nvme: host-dependent  # ephemeral workspace on Notebooks; block storage on
 
 # Paperspace (DigitalOcean) — platform profile
 
+Historical June 2026 snapshot: confirm current official product availability, API lifecycle, quotas, prices, shutdown settings and storage retention before authorized use. This review did not exercise Paperspace. Deprecated tooling is not a recommendation to install unsupported versions.
+
 One-line purpose: substrate for running detached GPU jobs on Paperspace Gradient (managed Jupyter
 notebooks/deployments) and Paperspace Core (raw Linux VMs, "Machines") — what stops the meter, what
 survives a stop vs a destroy, and the auto-shutdown clock that ends every long run. Universal gotchas are
 NOT repeated here — see `references/gotchas_universal.md`.
 
-> **Surface to the user up front (principle #10):** ⚠️ Danger clocks — an **auto-shutdown timer ends every Notebook/Core run** (set it consciously; Gradient free notebooks hard-cap at 6 h); **snapshots / block storage keep billing after a machine is destroyed** (orphan bleed). Heads-up — the **Gradient CLI/API was deprecated 15 Jul 2024** (pin `gradient<3.0`; the three-CLI mess, §1).
+> **Surface to the user up front (principle #10):** ⚠️ Danger clocks — an **an enabled auto-shutdown timer can end a Notebook/Core run** (set it consciously; Gradient free notebooks hard-cap at 6 h); **snapshots / block storage keep billing after a machine is destroyed** (orphan bleed). Heads-up — the **Gradient CLI/API was deprecated 15 Jul 2024** (verify a currently supported tool; the tooling split, §1).
 
 To jump: `grep -in '<keyword>' profiles/paperspace.md`.
 
@@ -61,7 +63,7 @@ reproduces it. **On Notebooks, a plain `pip install` does NOT survive a restart*
 **The three-CLI mess (gates ALL automation).** The tooling fragmented across the DigitalOcean acquisition;
 the draft's "migrate to the current API/CLI" understates the trap (verified github.com/Paperspace 2026-06):
 - The **legacy Gradient REST API endpoints were deprecated 15 Jul 2024** — stale calls 404 or no-op.
-- **`gradient-cli` v2 is deprecated**; pin `pip install "gradient<3.0"` only to keep *old* scripts alive.
+- **`gradient-cli` v2 is deprecated**; do not install an unsupported old version just to preserve old scripts; migrate using current official documentation.
 - **`gradient-python` (github.com/digitalocean/gradient-python) is NOT the orchestration CLI** — it is the
   new DigitalOcean *Gradient AI / GenAI inference* SDK. **Name collision** — do not install it expecting
   notebook/machine control.
@@ -137,13 +139,12 @@ No documented inode cap on either tier; still monitor `df -i` (universal, U7 / p
 ## 4. SPOT / INTERRUPTION + RESUME  *(principle #7/#8)*
 
 **No AWS-style spot/preemptible tier** with a 2-minute interruption warning. The two interruption modes are
-different in kind and BOTH are deterministic, not random eviction:
+include the following planned limits; hardware failures, maintenance and provider incidents can still interrupt a running job:
 
 1. **Capacity-at-launch.** The desired GPU type may be unavailable when launching — a *launch-time*
    availability problem, not a runtime eviction. On free notebooks this surfaces as **"out of capacity" /
    the notebook sits "pending" in queue for the next free machine** (verified DO notebooks/how-to docs
-   2026-06). Build **retry-launch-until-available** logic, not a 2-minute-grace flush handler; for assured
-   access, a paid instance type bypasses the free queue.
+   2026-06). Build **retry-launch-until-available** logic, not a 2-minute-grace flush handler; a paid instance may use a different capacity pool but does not guarantee availability.
 2. **Auto-shutdown clock — the hard ceiling on any long run.** The timer is the real killer:
    - **Gradient free** notebooks hard-stop at a **6-hour** maximum auto-shutdown (cannot be raised).
    - **Paid notebooks** default to **12-hour** auto-shutdown; range **1 hour – 1 week**.
@@ -239,8 +240,7 @@ If `tmux` is absent on a minimal image, fall back to `nohup <cmd> </dev/null >lo
   Root cause: `pip` writes to `/usr/local/lib`, which is **ephemeral workspace** — only `/storage` and
   `/notebooks` persist (verified fast.ai forum + DO storage-architecture 2026-06). "Machines are snapshots,
   not servers," so in-session installs do not persist.
-  Fix: install into a persisted dir — `pip install --user` (lands in the home dir under a persisted tree)
-  or `pip install --target /storage/pyenv && export PYTHONPATH=/storage/pyenv`; write all
+  Fix: use a reproducible custom image or an isolated persisted environment after confirming the mount and compatible interpreter. `pip install --user` does not establish persistence, and a mutable team-shared PYTHONPATH can execute other users' code; write all
   checkpoints/logs/outputs under `/storage`; verify they landed (`ls`/checksum) before stop.
 
 - **PS4 — Automation 404s / silently no-ops / installs the wrong SDK.**
@@ -249,8 +249,7 @@ If `tmux` is absent on a minimal image, fall back to `nohup <cmd> </dev/null >lo
   Root cause: **legacy Gradient REST endpoints deprecated 15 Jul 2024**; **`gradient-cli` v2 deprecated**;
   **`gradient-python` v3 is the DigitalOcean Gradient AI inference SDK — a name collision**, not the
   orchestration CLI (verified github.com/Paperspace/gradient-cli + digitalocean/gradient-python 2026-06).
-  Fix: for new work use the **`pspace` CLI** (github.com/Paperspace/cli); to keep old scripts alive pin
-  `pip install "gradient<3.0"`. Pin and verify the CLI binary + version in any automation.
+  Fix: for new work use the **`pspace` CLI** (github.com/Paperspace/cli); migrate old scripts against the currently supported API; do not pin unsupported legacy tooling as a workaround. Pin and verify the CLI binary + version in any automation.
 
 - **PS5 — Custom template / storage / volume "not found" in a different datacenter.**
   Symptom: a saved template or block volume is unavailable when launching elsewhere; block-storage resize
@@ -279,8 +278,7 @@ If `tmux` is absent on a minimal image, fall back to `nohup <cmd> </dev/null >lo
   Root cause: free tier = **1 concurrent running notebook, ≤5 projects, 5 GB `/storage`**, and free machines
   are pooled — a pending notebook is queued for the next free machine (verified Paperspace free-instances
   docs + blog 2026-06).
-  Fix: expect queueing on free; stop the other free notebook (only one runs); for assured access use a paid
-  instance type, which skips the free queue.
+  Fix: expect queueing on free; stop the other free notebook (only one runs); a paid instance may use a different pool, without guaranteeing capacity.
 
 - **PS9 — A destroyed machine keeps billing via a leftover snapshot.**
   Symptom: machine destroyed, yet a small monthly charge persists.
@@ -317,7 +315,7 @@ If `tmux` is absent on a minimal image, fall back to `nohup <cmd> </dev/null >lo
   Notebook-only items are the platform delta):
   - **Confirm GPU + driver/torch match:** `nvidia-smi` (driver/CUDA version) then
     `python -c "import torch;print(torch.__version__, torch.version.cuda, torch.cuda.is_available())"` —
-    a mismatch here is `PS11`/U28, not a code bug.
+    different CUDA numbers alone are normal: nvidia-smi reports driver capability and torch.version.cuda the build toolkit. Diagnose actual compatibility errors using PS11/U28.
   - **Find what is eating the 5 GB / over-allowance `/storage` (the platform's own recommended cmd):**
     `du -sch .[!.]* * | sort -h` (or `!du -sch …` in a cell); install `ncdu` for an interactive view
     (verified DO notebooks/how-to/manage-storage 2026-06). Check `df -h` AND `df -i` (inodes, U7).
@@ -348,7 +346,7 @@ HF_HOME=/storage/.cache/huggingface     # redirect cache off ephemeral workspace
 PROXY_HOOK=                      # none — direct egress (no network_turbo)
 CRED_FILE=""                     # Paperspace keys are Gradient secrets / env vars, not files — WANDB_API_KEY/HF_TOKEN arrive via the secret/env (run_one's [ -n "$CRED_FILE" ] guard skips the file read); never write keys to /storage (team-shared)
 DETACH=                          # no clean tmux; Jupyter kernel + hard 6h/12h auto-shutdown ceiling
-# NOTE: pip into /storage to persist — pip install --target /storage/pyenv && export PYTHONPATH=/storage/pyenv (PS3)
+# NOTE: prefer a reproducible image or isolated environment on a verified private persistent mount (PS3)
 
 # --- Core machine (preferred for daemonized training) ---
 DATA_DIR=/path/to/blockstore     # placeholder — the attached block disk mount

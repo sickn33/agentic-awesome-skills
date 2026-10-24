@@ -70,7 +70,7 @@ function ParallaxSection() {
 }
 ```
 
-### CSS Native (2024+)
+### CSS Native (feature-detect support)
 ```css
 @keyframes reveal {
   from { opacity: 0; transform: translateY(50px); }
@@ -207,8 +207,8 @@ Keep scroll experiences smooth
 
 ## Performance Optimization
 
-### The 60fps Rule
-- Animations must hit 60fps
+### Frame Budget
+- Profile against the device refresh rate; no property guarantees a frame rate
 - Only animate transform and opacity
 - Use will-change sparingly
 - Test on real mobile devices
@@ -218,8 +218,8 @@ Keep scroll experiences smooth
 |-----------------|-----------------|
 | transform | width/height |
 | opacity | top/left/right/bottom |
-| filter | margin/padding |
-| clip-path | font-size |
+| filter (profile paint cost) | margin/padding |
+| clip-path (profile paint cost) | font-size |
 
 ### Lazy Loading
 ```javascript
@@ -228,6 +228,8 @@ ScrollTrigger.create({
   trigger: '.heavy-section',
   onEnter: () => initHeavyAnimation(),
   onLeave: () => destroyHeavyAnimation(),
+  onEnterBack: () => initHeavyAnimation(),
+  onLeaveBack: () => destroyHeavyAnimation(),
 });
 ```
 
@@ -342,7 +344,7 @@ Recommended fix:
 ```javascript
 const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 // Or better: check viewport width
-const isMobile = window.innerWidth < 768;
+const isNarrowViewport = window.innerWidth < 768; // Alternative, not a second declaration
 ```
 
 ### Reduce or Disable
@@ -413,7 +415,7 @@ Recommended fix:
 ```css
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
-    animation-duration: 0.01ms !important;
+    animation: none !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
@@ -438,9 +440,9 @@ if (!prefersReducedMotion) {
 
 ### Keyboard Navigation
 ```javascript
-// Ensure scroll sections are keyboard navigable
-document.querySelectorAll('.scroll-section').forEach(section => {
-  section.setAttribute('tabindex', '0');
+// For skip-link destinations only, enable programmatic focus.
+document.querySelectorAll('.skip-link-target').forEach(section => {
+  section.setAttribute('tabindex', '-1');
 });
 ```
 
@@ -576,3 +578,7 @@ Workflow:
 ## Related Skills
 
 Works well with: `3d-web-experience`, `frontend`, `ui-design`, `landing-page-design`
+
+## Implementation limits
+
+Examples are fragments requiring pinned dependencies, DOM elements and cleanup on unmount. Native timeline animations need a visible static fallback outside `@supports`; reduced-motion paths must restore readable content and disable JS pinning too. Re-evaluate preferences when they change. `requestAnimationFrame` coalesces work within a frame, not a lower-frequency throttle. Avoid blanket GPU promotion: `will-change`, filters and clip paths can increase memory or painting. Register trigger cleanup and make heavy initialization/destruction idempotent. Test keyboard focus through pinned/horizontal sections, zoom, no-JS and real assistive technology; adding tabindex does not make an experience accessible.

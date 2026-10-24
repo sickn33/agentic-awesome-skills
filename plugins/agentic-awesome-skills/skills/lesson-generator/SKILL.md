@@ -54,9 +54,9 @@ Use a learning-platform-inspired resource pattern:
 - Per-lesson quiz or knowledge check
 - Final review section
 
-Create a complete browser-ready artifact in index.html, styles.css, and script.js. Keep the artifact self-contained with plain HTML/CSS/JS unless a CDN library clearly improves an interactive visualization.
+Create a complete browser-ready artifact in index.html, styles.css, and script.js. Keep the artifact self-contained with plain HTML/CSS/JS unless an authorized reviewed CDN library clearly improves an interactive visualization; disclose that this adds a network dependency and the result is no longer fully offline.
 
-Write artifact files only to the workspace root paths: index.html, styles.css, and script.js. Never write files inside node_modules, plugin folders, skill folders, or hidden directories.
+Use a new dedicated output folder inside the authorized workspace containing index.html, styles.css and script.js, or the user-specified existing artifact location. Inspect first and never overwrite unrelated root site files. Never write files inside node_modules, plugin folders, skill folders, or hidden directories.
 
 Use these reusable design tokens for a warm, readable learning UI: background #fbf7ef, surface #fffdf8, text #231f1a, muted #766f66, border #e8ded0, primary #2d2924, accent #c2410c, success #15803d, warning #b45309, radius 8px.
 
@@ -81,6 +81,8 @@ When the user asks for source links or web-backed content, render real clickable
 Prioritize teaching usefulness over decoration: one focused course topic, clear prerequisites, progressive lesson sequencing, short checks for understanding, and no placeholder-only lessons.
 
 Keep the UI responsive and dense enough for repeated study. Avoid oversized marketing hero layouts; this should feel like a polished lesson workspace, not a landing page.
+
+Escape source text into DOM text nodes and validate link schemes; do not inject retrieved markup or source strings through innerHTML. State whether course claims are grounded in supplied sources or general explanation. Test keyboard navigation, labels/focus and quiz feedback; a parse check alone is not evidence that controls work.
 
 ## Example
 

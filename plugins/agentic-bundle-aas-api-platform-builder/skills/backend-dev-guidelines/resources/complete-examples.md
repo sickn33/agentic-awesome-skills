@@ -1,6 +1,9 @@
-# Complete Examples - Full Working Code
+# Implementation Sketches - Application Wiring Required
 
-Real-world examples showing complete implementation patterns.
+> Scope: independent illustrative fragments, not a supplied runnable application. Private project paths, helpers, DTOs and Prisma models must be implemented/adapted in the target repository. Pin and check installed Express/Sentry/Zod/Prisma versions. Authentication does not grant object/tenant access; authorize before reads/writes, enforce CSRF for cookie authentication, allowlist DTOs and project public response fields. Capture unexpected errors once at an approved, redacted boundary; never send raw request bodies, credentials or personal data to telemetry.
+
+
+Independent implementation sketches. They do not compile as a combined application: no Prisma schema, helper implementations or package setup is bundled. Adapt one coherent example and supply tests before use.
 
 ## Table of Contents
 
@@ -39,7 +42,7 @@ export class UserController extends BaseController {
                 userId: req.params.id,
             });
 
-            const user = await this.withTransaction(
+            const user = await this.withSpan(
                 'user.get',
                 'db.query',
                 () => this.userService.findById(req.params.id)
@@ -75,7 +78,7 @@ export class UserController extends BaseController {
             const validated = createUserSchema.parse(req.body);
 
             // Track performance
-            const user = await this.withTransaction(
+            const user = await this.withSpan(
                 'user.create',
                 'db.mutation',
                 () => this.userService.create(validated)
@@ -111,7 +114,7 @@ export class UserController extends BaseController {
     async deleteUser(req: Request, res: Response): Promise<void> {
         try {
             await this.userService.delete(req.params.id);
-            this.handleSuccess(res, null, 'User deleted', 204);
+            res.status(204).end();
         } catch (error) {
             this.handleError(error, res, 'deleteUser');
         }
@@ -186,7 +189,16 @@ export class UserService {
             }
         }
 
-        return await this.userRepository.update(id, data);
+        const { firstName, lastName, email } = data;
+        return await this.userRepository.update(id, {
+            ...(email !== undefined ? { email } : {}),
+            ...((firstName !== undefined || lastName !== undefined) ? {
+                profile: { update: {
+                    ...(firstName !== undefined ? { firstName } : {}),
+                    ...(lastName !== undefined ? { lastName } : {}),
+                } },
+            } : {}),
+        });
     }
 
     async delete(id: string): Promise<void> {
@@ -397,7 +409,8 @@ export class PostController extends BaseController {
 
             const result = await this.postService.createPost(
                 validated,
-                res.locals.userId
+                res.locals.effectiveUserId,
+                res.locals.trustedContext
             );
 
             this.handleSuccess(res, result, 'Post created successfully');
@@ -414,7 +427,8 @@ export class PostController extends BaseController {
 export class PostService {
     async createPost(
         data: CreatePostDTO,
-        userId: string
+        userId: string,
+        context: TrustedRequestContext // trusted middleware context, never caller-controlled body
     ): Promise<SubmissionResult> {
         // Permission check
         const canComplete = await permissionService.canCompleteStep(
@@ -435,6 +449,7 @@ export class PostService {
         );
         const events = await engine.executeCommand(command);
 
+        // context must be passed from a trusted request-scoped source; never request body.
         // Handle impersonation
         if (context.isImpersonating) {
             await this.handleImpersonation(data.stepInstanceId, context);
@@ -467,6 +482,8 @@ export class PostService {
 **1. Types:**
 ```typescript
 // types/user.types.ts
+export interface UserProfile { firstName: string; lastName: string; age: number; }
+
 export interface User {
     id: string;
     email: string;
@@ -516,6 +533,10 @@ export class UserRepository {
             where: { id },
             include: { profile: true },
         });
+    }
+
+    async findByEmail(email: string): Promise<User | null> {
+        return PrismaService.main.user.findUnique({ where: { email }, include: { profile: true } });
     }
 
     async create(data: Prisma.UserCreateInput): Promise<User> {

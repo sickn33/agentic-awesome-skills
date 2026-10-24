@@ -60,7 +60,7 @@ print(f"Density matrix shape: {density_matrix.shape}")
 # Simulate moment-by-moment
 simulator = cirq.Simulator()
 for step in simulator.simulate_moment_steps(circuit):
-    print(f"State after moment {step.moment}: {step.state_vector()}")
+    print(f"State: {step.state_vector()}")
 ```
 
 ## Sampling and Measurements
@@ -132,7 +132,8 @@ phi = sympy.Symbol('phi')
 
 circuit = cirq.Circuit(
     cirq.ry(theta)(q0),
-    cirq.rz(phi)(q1)
+    cirq.rz(phi)(q1),
+    cirq.measure(q0, q1, key='result')
 )
 
 # Product sweep (all combinations)
@@ -225,43 +226,16 @@ plt.show()
 
 QVM simulates realistic quantum hardware with device-specific constraints and noise.
 
-### Using Virtual Devices
+### Virtual device and calibration boundaries
 
-```python
-# Use a virtual Google device
-import cirq_google
+`cirq.Circuit` does not accept a `device=` argument. Create an ordinary circuit,
+choose connected qubits from `device.metadata.nx_graph`, compile to that device's
+native gates, then call `device.validate_circuit(circuit)`.
 
-# Get virtual device
-device = cirq_google.Sycamore
-
-# Create circuit on device
-qubits = device.metadata.qubit_set
-circuit = cirq.Circuit(device=device)
-
-# Add operations respecting device constraints
-circuit.append(cirq.CZ(qubits[0], qubits[1]))
-
-# Validate circuit against device
-device.validate_circuit(circuit)
-```
-
-### Noisy Virtual Hardware
-
-```python
-import os
-import cirq_google as cg
-
-# Simulate with device noise from calibration data
-engine = cg.Engine(project_id=os.environ['GOOGLE_CLOUD_PROJECT'])
-processor = engine.get_processor('weber')
-noise_props = processor.get_device_specification()
-
-noisy_sim = cirq.DensityMatrixSimulator(
-    noise=cg.NoiseModelFromGoogleNoiseProperties(noise_props)
-)
-
-result = noisy_sim.run(circuit, repetitions=1000)
-```
+A device specification is not a Google noise-properties object. Use the installed
+`cirq-google` version's documented calibration-to-noise conversion, with explicit
+project access and calibration timestamp. No cloud access or paid job is implied
+by local simulation. QVM setup is provider/version-specific, not implemented here.
 
 ## Advanced Simulation Techniques
 
@@ -284,7 +258,7 @@ full_state = result.final_state_vector
 
 # Compute reduced density matrix for first qubit
 from cirq import partial_trace
-reduced_dm = partial_trace(result.final_density_matrix, keep_indices=[0])
+reduced_dm = cirq.density_matrix_from_state_vector(full_state, indices=[0])
 ```
 
 ### Intermediate State Access

@@ -53,7 +53,7 @@ func myWorkflow(ctx dbos.DBOSContext, input string) (string, error) {
 		return "", err
 	}
 	// Receive messages from the workflow
-	msg, err := dbos.Recvstring
+	msg, err := dbos.Recv[string](ctx, "notification", 60*time.Second)
 	// Set events from the workflow
 	dbos.SetEvent(ctx, "status", "done")
 	return data, nil

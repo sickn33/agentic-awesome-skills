@@ -5,7 +5,7 @@
 | Item         | Value                                                                                       |
 | ------------ | ------------------------------------------------------------------------------------------- |
 | **Stack**    | Next.js (App Router), Tailwind v4, shadcn/ui, Framer Motion, react-icons, ai-sdk            |
-| **Node**     | v25.3.0+                                                                                    |
+| **Node**     | Supported Node LTS compatible with the selected Next.js version                                                                                    |
 | **Backend**  | `NEXT_PUBLIC_BACKEND_HOST` (default: `localhost:8000`)                                      |
 | **App type** | Single-page app; main view updates in place, no full-page navigations                       |
 | **Layout**   | shadcn Sidebar (left) + main content area; sidebar buttons switch the main view per feature |
@@ -16,7 +16,7 @@
 
 ### 1. Next.js
 
-- **Command:** `npx create-next-app@latest . --yes` (run from repo root; may need `required_permissions: ["all"]` in sandbox)
+- **Command:** `npx create-next-app@latest . --yes` (run only inside a new intended app directory; inspect existing contents first)
 - **Result:** TypeScript, ESLint, Tailwind v4, App Router, Turbopack, `@/*` → `./*`, no `src/`. App in `app/`, static in `public/`.
 - **Scripts:** `dev` | `build` | `start` | `lint`. Dev server: http://localhost:3000.
 - **Routes:** `app/layout.tsx`, `app/page.tsx`. Imports: `@/` = project root.
@@ -102,3 +102,5 @@ Use the actual backend host when not local.
 - [react-icons](https://react-icons.github.io/react-icons)
 - [Framer Motion](https://motion.dev/)
 - [AI SDK](https://ai-sdk.dev/docs/introduction)
+
+NEXT_PUBLIC_* values are exposed to browsers: never place API keys there. Use a full backend origin URL with scheme, HTTPS in deployment, authenticated API access and safe rendering of untrusted answers. Custom SSE events are not automatically the AI SDK stream protocol: add an adapter or use a fetch stream parser. Respect reduced motion and keyboard/screen-reader access.

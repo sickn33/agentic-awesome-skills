@@ -1,3 +1,4 @@
+<!-- Modified for AAS individual review: scope, consent, recovery and factual guidance corrected; upstream attribution retained. -->
 # LWC Trigger Playbook
 
 ## Use when

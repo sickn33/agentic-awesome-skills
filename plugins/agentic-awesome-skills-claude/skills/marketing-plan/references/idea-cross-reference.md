@@ -1,14 +1,15 @@
 # Idea Cross-Reference — 139 Marketing Ideas Mapped to AARRR
 
-The `marketing-ideas` skill catalogs 139 proven marketing tactics. This doc is the source-of-truth mapping: every idea assigned to a primary AARRR stage, with notes for when it's typically active and what category constraints apply.
+Planning contract: user-selected scope, length, language and one-shot/interactive cadence override template defaults. All tier amounts, channel rankings, growth bands and hiring patterns below are illustrative hypotheses, not validated benchmarks. Draft completion is distinct from user approval. Use only available verified skill/tool IDs; missing dependencies are optional. No external execution is authorized by this document.
+The `marketing-ideas` skill catalogs 139 marketing ideas (not guarantees of effectiveness). This doc is the source-of-truth mapping: every idea assigned to a primary AARRR stage, with notes for when it's typically active and what category constraints apply.
 
 The plan's Section 12 ("Tactical idea bank") uses this mapping as the base, then layers client-specific filters: brand voice rules might skip some ideas; funding stage might shift Q-status; client category might rule out others.
 
 ## How to read this doc
 
-- **139 unique ideas, 144 entries.** Five ideas cross-cut multiple AARRR stages and appear under each stage they serve (#79 Early-Access Referrals, #86 Lifetime Deals, #91 In-App Upsells, #114 Moneyball Marketing, #117 Product Competitions). Each duplicate row carries a cross-cut note.
+- **139 unique ideas,143 entries.** Four ideas cross-cut multiple AARRR stages and appear under each stage they serve (#79 Early-Access Referrals, #91 In-App Upsells, #114 Moneyball Marketing, #117 Product Competitions). Each duplicate row carries a cross-cut note.
 - **"Entries" counts rows; idea IDs are unique.** Section header counts reflect rows in this doc, not unique ideas from `marketing-ideas`.
-- **Numbers correspond exactly to the `marketing-ideas` skill ordering.** If `marketing-ideas` reorders or expands, update this doc.
+- **IDs are this bundled snapshot, not a promise that every installed marketing-ideas version has the same ordering. Match IDs and titles against the available source before use.** If `marketing-ideas` reorders or expands, update this doc.
 
 ## AARRR assignment for all 139 ideas
 
@@ -60,7 +61,7 @@ These ideas primarily serve top-of-funnel awareness, traffic, and lead generatio
 | 40 | Instagram Audience | Social & Community | Q2+ |
 | 41 | X Audience | Social & Community | Depends on founder bandwidth |
 | 42 | Short Form Video | Social & Community | Q3+ |
-| 43 | Engagement Pods | Social & Community | Generally off-brand |
+| 43 | Engagement Pods | Social & Community | Skip artificial/coordinated engagement manipulation |
 | 44 | Comment Marketing | Social & Community | Q2+ |
 | 49 | Monthly Newsletters | Email | Q2+ (Acquisition use: subscriber capture) |
 | 54 | Affiliate Discovery via Backlinks | Partnerships | Q2+ |
@@ -69,7 +70,7 @@ These ideas primarily serve top-of-funnel awareness, traffic, and lead generatio
 | 57 | Expert Networks | Partnerships | Q3+ |
 | 58 | Newsletter Swaps | Partnerships | Q2+ |
 | 59 | Article Quotes (HARO) | Partnerships | Now |
-| 60 | Pixel Sharing | Partnerships | Post-paid |
+| 60 | Pixel Sharing | Partnerships | Exclude by default; only an approved lawful and consented use with platform permission |
 | 61 | Shared Slack Channels | Partnerships | Q3+ |
 | 63 | Integration Marketing | Partnerships | Q3+ |
 | 64 | Community Sponsorship | Partnerships | Q2+ |
@@ -152,7 +153,7 @@ These ideas primarily serve top-of-funnel awareness, traffic, and lead generatio
 
 | # | Idea | Category | Typical stage available |
 |---|---|---|---|
-| 45 | Mistake Email Marketing | Email | Opportunistic |
+| 45 | Mistake Email Marketing | Email | Genuine correction only; never fabricate a mistake |
 | 46 | Reactivation Emails | Email | Now |
 | 50 | Inbox Placement | Email | Now (technical setup) |
 | 52 | Win-back Emails | Email | Q1+ |
@@ -263,3 +264,5 @@ If `marketing-ideas` adds new ideas (it's a living skill — the 139 may become 
 
 - `skills/marketing-ideas/SKILL.md` (in the `marketingskills` repo)
 - `skills/marketing-ideas/references/ideas-by-category.md` (in the `marketingskills` repo)
+
+Count unique IDs once in client summaries; cross-cutting rows are not additional tactics. Timing labels are scenarios, not commitments. Skip deceptive mistakes, artificial engagement, unauthorized scraping/targeting, undisclosed endorsements, fake reviews and sensitive-trait exploitation. Legitimate alternatives must respect consent, platform rules, factual claims and explicit execution authorization.

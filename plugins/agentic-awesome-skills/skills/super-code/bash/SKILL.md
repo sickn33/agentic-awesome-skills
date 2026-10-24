@@ -7,6 +7,8 @@ date_added: "2026-06-16"
 ---
 # Bash / Shell: Idiomatic Efficiency Reference
 
+Apply only within the requested scope and current project conventions. Preserve behavior, ownership, error handling, accessibility and security; examples are independent fragments, not equivalent rewrites in every context. Verify language/library versions and run relevant checks. Required tests and user-facing progress/results take precedence over brevity rules. Do not install dependencies or delete files merely to follow these examples.
+
 ## When to Use
 - Use this skill when the task matches this description: Language-specific super-code guidelines for bash.
 
@@ -37,8 +39,9 @@ path=$(find . -name config)
 cat $path  # breaks on spaces
 
 # ✅
-path="$(find . -name config)"
-cat "$path"
+while IFS= read -r -d '' path; do
+    cat -- "$path"
+done < <(find . -name config -type f -print0)
 ```
 
 ```bash
@@ -118,7 +121,7 @@ done
 for line in $(cat file.txt); do  # splits on words, not lines
 
 # ✅
-while IFS= read -r line; do
+while IFS= read -r line || [[ -n "$line" ]]; do
     process "$line"
 done < file.txt
 ```
@@ -137,14 +140,14 @@ for (( i = 1; i <= 10; i++ )); do
 # ❌ Processing command output line-by-line with pipe (subshell trap)
 count=0
 cat file.txt | while read -r line; do
-    (( count++ ))  # count resets after loop — subshell
+    (( ++count ))  # count resets after loop — subshell
 done
 echo "$count"  # always 0
 
 # ✅ — redirect, not pipe
 count=0
-while IFS= read -r line; do
-    (( count++ ))
+while IFS= read -r line || [[ -n "$line" ]]; do
+    (( ++count ))
 done < file.txt
 echo "$count"
 ```
@@ -245,7 +248,8 @@ rm -rf *  # if cd fails, deletes from wrong directory
 set -euo pipefail
 
 cd /some/dir || { echo "cd failed" >&2; exit 1; }
-rm -rf ./*
+# Deletion requires a separately verified target and user scope;
+# changing directory and strict mode alone do not make deletion safe.
 ```
 
 ```bash

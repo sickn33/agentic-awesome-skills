@@ -42,4 +42,4 @@ for exactly that reason. `Variance Reason` in particular is not a menu to pick f
 nobody investigated is `Under Investigation`, never the first plausible option.
 
 
-See the [Relations](references/relations.md) reference for the full guidance.
+See the [Relations](relations.md) reference for the full guidance.

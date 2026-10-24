@@ -46,7 +46,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.ref }}
+          ref: refs/pull/${{ github.event.issue.number }}/head  # issue_comment has no pull_request object; still untrusted PR code
       - run: ./version.sh -u -n
 ```
 
@@ -110,7 +110,9 @@ grep -A30 "issue_comment" .github/workflows/*.yml | grep "comment\.body"
 
 ---
 
-## The Fix: Author Association Check
+## The Fix: Explicit Authorization
+
+`author_association` is a coarse relationship label, not a current write/maintain permission check. Resolve the triggering actor's effective permission with a trusted API or explicit allowlist, bind approval to the exact PR head SHA, and parse the whole command. Membership alone does not authorize production deployment.
 
 ```yaml
 # SAFE: Only org members can trigger commands
@@ -145,7 +147,7 @@ jobs:
 | `FIRST_TIME_CONTRIBUTOR` | First PR to this repo | Untrusted |
 | `NONE` | No association | Untrusted |
 
-**Recommended:** Only allow `MEMBER`, `OWNER`, and `COLLABORATOR`.
+Use association only as a preliminary filter; verify effective permission and environment protection before privileged operations.
 
 ### Additional Protections
 

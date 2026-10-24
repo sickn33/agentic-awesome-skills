@@ -31,65 +31,17 @@ Reference for calculating sample sizes and test duration.
 - Implementation cost (worth the effort?)
 - Realistic expectations (what have past tests shown?)
 
-**Statistical significance (95%)**: Means there's less than 5% chance the observed difference is due to random chance.
+**Alpha (0.05)** controls a procedure's long-run false-positive rate under its assumptions. A p-value is the probability of data at least as incompatible with the null under that model, not the probability the result is random or the null is true.
 
 **Statistical power (80%)**: Means if there's a real effect of size MDE, you have 80% chance of detecting it.
 
 ---
 
-## Sample Size Quick Reference Tables
+## Sample-size calculation boundary
 
-### Conversion Rate: 1%
+The imported tables disagreed with the root quick reference and lacked a reproducible method; they have been removed. Use a named calculator/method and record baseline, **relative versus absolute** MDE, alpha, power, sidedness, allocation, planned comparisons and randomization unit. Recompute for clustering/repeated users or unequal allocation. A two-independent-proportions normal approximation is a planning aid, not exact inference for sparse data.
 
-| Lift to Detect | Sample per Variant | Total Sample |
-|----------------|-------------------|--------------|
-| 5% (1% → 1.05%) | 1,500,000 | 3,000,000 |
-| 10% (1% → 1.1%) | 380,000 | 760,000 |
-| 20% (1% → 1.2%) | 97,000 | 194,000 |
-| 50% (1% → 1.5%) | 16,000 | 32,000 |
-| 100% (1% → 2%) | 4,200 | 8,400 |
-
-### Conversion Rate: 3%
-
-| Lift to Detect | Sample per Variant | Total Sample |
-|----------------|-------------------|--------------|
-| 5% (3% → 3.15%) | 480,000 | 960,000 |
-| 10% (3% → 3.3%) | 120,000 | 240,000 |
-| 20% (3% → 3.6%) | 31,000 | 62,000 |
-| 50% (3% → 4.5%) | 5,200 | 10,400 |
-| 100% (3% → 6%) | 1,400 | 2,800 |
-
-### Conversion Rate: 5%
-
-| Lift to Detect | Sample per Variant | Total Sample |
-|----------------|-------------------|--------------|
-| 5% (5% → 5.25%) | 280,000 | 560,000 |
-| 10% (5% → 5.5%) | 72,000 | 144,000 |
-| 20% (5% → 6%) | 18,000 | 36,000 |
-| 50% (5% → 7.5%) | 3,100 | 6,200 |
-| 100% (5% → 10%) | 810 | 1,620 |
-
-### Conversion Rate: 10%
-
-| Lift to Detect | Sample per Variant | Total Sample |
-|----------------|-------------------|--------------|
-| 5% (10% → 10.5%) | 130,000 | 260,000 |
-| 10% (10% → 11%) | 34,000 | 68,000 |
-| 20% (10% → 12%) | 8,700 | 17,400 |
-| 50% (10% → 15%) | 1,500 | 3,000 |
-| 100% (10% → 20%) | 400 | 800 |
-
-### Conversion Rate: 20%
-
-| Lift to Detect | Sample per Variant | Total Sample |
-|----------------|-------------------|--------------|
-| 5% (20% → 21%) | 60,000 | 120,000 |
-| 10% (20% → 22%) | 16,000 | 32,000 |
-| 20% (20% → 24%) | 4,000 | 8,000 |
-| 50% (20% → 30%) | 700 | 1,400 |
-| 100% (20% → 40%) | 200 | 400 |
-
----
+For example, a 20% relative lift from 5% means 6%, an absolute difference of one percentage point (0.01 in proportion units). Never enter 20 percentage points by mistake.
 
 ## Duration Calculator
 
@@ -166,12 +118,7 @@ https://vwo.com/tools/ab-test-duration-calculator/
 
 With more than 2 variants (A/B/n tests), you need more sample:
 
-| Variants | Multiplier |
-|----------|------------|
-| 2 (A/B) | 1x |
-| 3 (A/B/C) | ~1.5x |
-| 4 (A/B/C/D) | ~2x |
-| 5+ | Consider reducing variants |
+Do not use a universal variant multiplier. Define the family of comparisons (each against control or all pairwise), apply the chosen multiplicity method and recalculate per-arm sample/total duration for the allocation.
 
 **Why?** More comparisons increase chance of false positives. You're comparing:
 - A vs B
@@ -235,7 +182,7 @@ Statistical method that adjusts for multiple looks at data.
 ### Tools that support it
 - Optimizely (Stats Accelerator)
 - VWO (SmartStats)
-- PostHog (Bayesian approach)
+- Check the installed tool's actual inference/stopping policy; Bayesian labeling alone does not authorize arbitrary repeated stopping.
 
 ### Tradeoff
 - More flexibility to stop early
@@ -254,7 +201,7 @@ Baseline conversion rate: _____
 MDE I care about: _____
 
 Sample needed per variant: _____ (from tables above)
-Days to run: Sample / Daily traffic = _____
+Days to run: total required across arms / daily eligible exposed unique units = _____
 
 If days > 60: Consider alternatives
 If days > 30: Acceptable for high-impact tests

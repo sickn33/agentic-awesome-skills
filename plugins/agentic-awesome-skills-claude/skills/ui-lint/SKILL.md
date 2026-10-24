@@ -27,7 +27,7 @@ Target: **$ARGUMENTS**
 
 ## What This Does
 
-Fast, grep-based scan for common design violations. Runs in seconds (unlike /ss-review which is a deep manual audit). Run this after every file change.
+Fast, grep-based candidate scan. First read the project design tokens and conventions: pure black, physical spacing, `data-slot`, `cn()` and `size-*` are project-dependent choices, not universal violations. Replace `[file]` with a quoted actual path. The `/ss-*` commands are upstream host conventions and may not be installed. Inspect each match in context before reporting a defect.
 
 ## Checks
 
@@ -75,13 +75,12 @@ grep -n 'data-slot' [file]       # check if present
 **Violation:** Component without `data-slot`
 **Fix:** Add `data-slot="component-name"`
 
-### 7. Font Size CSS Variables (CRITICAL — Tailwind v4 conflict)
+### 7. Ambiguous Font Size Arbitrary Values
 ```bash
 grep -n 'text-\[var(--' [file]
 grep -n '\-\-text-.*px\|--fs-.*px' [file]
 ```
-**Violation:** `text-[var(--text-sm)]` or `--text-sm: 13px` in theme.css
-**Fix:** Use explicit `text-[13px]`. CSS variable font sizes conflict with Tailwind v4's `--text-*` namespace — Tailwind reads them as color, not font-size.
+**Check:** An arbitrary `text-[var(...)]` value may need a length type hint. Tailwind v4 intentionally uses the `--text-*` namespace for font-size theme tokens; defining `--text-sm` is valid. Prefer the semantic `text-sm` utility or explicit `text-(length:--custom-size)` when needed. Verify compiled CSS. See [official font-size documentation](https://tailwindcss.com/docs/font-size).
 
 ### 8. className Without cn()
 ```bash

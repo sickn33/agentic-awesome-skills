@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Modified by AAS: see UPSTREAM-NOTICE.md for scope and validation limits.
 from __future__ import annotations
 
 import json
@@ -176,7 +177,7 @@ def main() -> int:
         capture_stage = run(command("prepare-comparison", "--results", str(results), "--run-dir", str(run_dir)))
         assert capture_stage["stage"] == "capture_completed"
         assert capture_stage["analysisExecution"]["mode"] == "single_pass"
-        assert capture_stage["analysisExecution"]["maxToolCallsAfterStageAcknowledgement"] == 3
+        assert capture_stage["analysisExecution"]["suggestedToolCallsAfterStageAcknowledgement"] == 3
         assert len(capture_stage["analysisExecution"]["instructions"]) == 3
         assert capture_stage["artifacts"]["answerReferenceReport"] == str((run_dir / "capture" / "report.html").resolve())
         assert capture_stage["deliverables"][0]["path"] == str((run_dir / "01-capture-report.html").resolve())

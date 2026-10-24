@@ -1,3 +1,5 @@
+> Catalog review modification (2026-10-23): corrected runnable examples and obsolete platform assumptions; upstream attribution retained.
+
 # Slack Bot Builder - Detailed Guide
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
@@ -241,7 +243,7 @@ def build_notification_blocks(incident: dict) -> list:
                 },
                 {
                     "type": "mrkdwn",
-                    "text": f"*Reported:*\n<!date^{incident['timestamp']}^{date_short} {time}|{incident['timestamp']}>"
+                    "text": f"*Reported:*\n<!date^{incident['timestamp']}^{{date_short}} {{time}}|{incident['timestamp']}>"
                 }
             ]
         },
@@ -404,8 +406,7 @@ Key OAuth concepts:
 - Installation data must be stored persistently
 - Users can add scopes later (additive)
 
-70% of users abandon installation when confronted with excessive
-permission requests - request only what you need!
+Request only needed permissions; the former installation-abandonment percentage was unsupported.
 
 **When to use**: Distributing app to multiple workspaces,Building public Slack apps,Enterprise-grade integrations
 
@@ -606,7 +607,9 @@ if __name__ == "__main__":
 - Forgetting to create app-level token
 - Using bot token instead of app token
 
-### Workflow Builder Step Pattern
+### Legacy Workflow Builder Step Pattern
+
+Historical WorkflowStep API: do not deploy this legacy example as a current custom-step implementation; consult Slack's supported workflow APIs.
 
 Extend Slack's Workflow Builder with custom steps powered by your app.
 Users can include your custom steps in their no-code workflows.
@@ -812,16 +815,15 @@ def handle_modal(ack, body, client, view):
 ## For Bolt framework - use lazy listeners
 
 ```python
-# Bolt handles ack() automatically with lazy listeners
-@app.command("/slow-task")
-def handle_slow_task(ack, command, respond):
-    ack()  # Still call ack() first!
+def acknowledge(ack):
+    ack()
 
-@handle_slow_task.lazy
 def process_slow_task(command, respond):
-    # This runs after ack, can take as long as needed
     result = slow_operation(command["text"])
     respond(result)
+
+# Use a supported lazy-listener deployment/runner; this is not an unbounded job queue.
+app.command("/slow-task")(ack=acknowledge, lazy=[process_slow_task])
 ```
 
 ### Not Validating OAuth State Parameter (CSRF)
@@ -1137,10 +1139,9 @@ def paginate_blocks(blocks: list, page: int = 0, per_page: int = 45):
             "type": "actions",
             "elements": [
                 {"type": "button", "text": {"type": "plain_text", "text": "Previous"},
-                 "action_id": f"page_{page-1}", "disabled": page == 0},
+                 "action_id": f"page_{page-1}"  # omit this button when page == 0},
                 {"type": "button", "text": {"type": "plain_text", "text": "Next"},
-                 "action_id": f"page_{page+1}",
-                 "disabled": end >= len(blocks)}
+                 "action_id": f"page_{page+1}"  # omit when end >= len(blocks)}
             ]
         })
 
@@ -1158,9 +1159,8 @@ Bot works in development but is unreliable in production.
 Missed events. Connection drops. Can't scale horizontally.
 
 Why this breaks:
-Socket Mode is designed for development:
-- Single WebSocket connection per app
-- Can't scale to multiple instances
+Socket Mode supports production and multiple active connections; verify current connection/distribution limits.
+- Manage disconnections and instance delivery/deduplication
 - Connection can drop (needs reconnect logic)
 - No built-in load balancing
 
@@ -1170,7 +1170,7 @@ HTTP webhooks are more reliable.
 Recommended fix:
 
 
-## Socket Mode: Only for development
+## Socket Mode: Example environment selection (not a platform restriction)
 
 ```python
 # Development with Socket Mode
@@ -1277,7 +1277,7 @@ def verify_slack_signature(request):
     signature = request.headers.get("X-Slack-Signature", "")
 
     # Reject old timestamps (replay attack prevention)
-    if abs(time.time() - int(timestamp)) > 60 * 5:
+    if not timestamp.isdigit() or abs(time.time() - int(timestamp)) > 60 * 5:
         return False
 
     # Compute expected signature

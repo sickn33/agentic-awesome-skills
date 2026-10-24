@@ -45,3 +45,5 @@ function LoadingSpinner() {
 ```
 
 This applies to all CSS transforms and transitions (`transform`, `opacity`, `translate`, `scale`, `rotate`). The wrapper div allows browsers to use GPU acceleration for smoother animations.
+
+GPU compositing depends on the browser, properties and layer heuristics; a wrapper is not an acceleration guarantee. Profile on target devices and honor prefers-reduced-motion.

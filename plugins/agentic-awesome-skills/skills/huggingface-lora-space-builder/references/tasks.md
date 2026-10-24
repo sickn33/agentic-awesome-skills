@@ -1,3 +1,5 @@
+_Modified in the local catalog review: corrected authority, credential, reproducibility and runtime guidance; examples remain environment-dependent._
+
 # Tasks: per-task baseline UI patterns
 
 This file describes the *baseline* UI shape for each task category. Use it after the LoRA's task is identified, as a starting skeleton. Then read `adapting-to-the-lora.md` to shape the actual UI to the specific LoRA — the baseline is rarely the right final answer.
@@ -33,7 +35,7 @@ The five tasks: text-to-image, image-to-image, text-to-video, image-to-video, vi
 
 **Resolution handling:** for instruction-edit pipelines (Qwen-Image-Edit, Flux Kontext, Flux.2 Klein), resize the input to the nearest multiple of the model's bucket size, preserving aspect. Don't crop unless the LoRA expects a specific aspect.
 
-**Validation:** raise `gr.Error("Please upload an image first.")` when the input is empty. Consider disabling Generate until an image is loaded (`run_button.interactive = False`, flip on `input_image.change`).
+**Validation:** raise `gr.Error("Please upload an image first.")` when the input is empty. Consider disabling Generate until an image is loaded (initial `interactive=False`, then return `gr.Button(interactive=...)` from an `input_image.change` handler; Python attribute mutation alone does not update the rendered browser control).
 
 **Sub-task variants change a lot here.** Read `adapting-to-the-lora.md` — relighting, face swap, object move, style transfer, instruction edits, inpainting all live under "I2I" but call for different UIs.
 
@@ -41,7 +43,7 @@ The five tasks: text-to-image, image-to-image, text-to-video, image-to-video, vi
 
 **Inputs:** prompt. Duration slider (1–10 seconds typical, depending on the model's max). Resolution/aspect picker.
 
-**Outputs:** `gr.Video(autoplay=True)`. Set `format="mp4"` and pick fps explicitly (24 is a safe default; some models prefer 16 or 30).
+**Outputs:** `gr.Video(autoplay=True)`. Set `format="mp4"` and pick fps explicitly (use the documented training/inference rate; some models prefer 16 or 30).
 
 **Standard advanced controls:** seed, randomize seed, fps. Steps usually locked for distilled video models.
 
@@ -122,3 +124,6 @@ The current `sdk_version` (6.x at time of writing — verify with `pip index ver
 - **The Gradio version the Space runs at is set by `sdk_version:` in the README YAML, *not* by `requirements.txt`.** Pinning `gradio` in `requirements.txt` is at best ignored and at worst causes a runtime mismatch; set the version once, in the README, and write `app.py` against that version.
 
 If the first build fails on a `TypeError` or signature mismatch in a Gradio component, this is the most common cause — read `/logs/container` (build) or `/logs/run` (runtime), look at the line in `app.py`, and check the current component signature.
+## Input and privacy limits
+
+Validate limits on the server before GPU allocation, even when UI controls constrain values. Use per-model frame/dimension rules, not universal divisibility assumptions. A seed alone does not guarantee reproducibility across model/library/hardware revisions. Shared example caching is for approved public examples only; do not cache private uploads or persist sensitive prompts in BrowserState or deep links.

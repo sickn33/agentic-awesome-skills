@@ -1,3 +1,4 @@
+<!-- Modified for AAS individual review: scope, consent, recovery and factual guidance corrected; upstream attribution retained. -->
 <h1 align="center">LWC — 面向 AI Agent 的主动记忆</h1>
 
 <p align="center">
@@ -314,7 +315,7 @@ Skill 触发后会：
 - 查找兼容 CLI；如需安装经过校验的官方 Release，则先报告并取得明确授权；
 - 报告缺失的全局记忆，并仅在明确授权后初始化；
 - 在重复调查前读取有界的全局与项目上下文；
-- 用户显式调用时初始化当前项目，否则创建项目级 `.lwc/` 前先询问；
+- 仅在用户请求或项目策略授权创建记忆时初始化当前项目；仅提及 Skill 不构成写入授权；
 - 拒绝向当前授权工作区根目录之外写入项目内容；
 - 区分项目事实与可跨项目复用的全局知识；
 - 完整整合来源，并把值得保留的答案写回 Wiki。
@@ -815,7 +816,7 @@ cargo test --test search_benchmark -- --ignored --nocapture
 - 不内置 LLM 调用；
 - 不接入向量数据库；
 - 不提供守护进程或后台服务；
-- 不提供 Web UI 或桌面 UI；
+- 不提供多用户托管 Web 应用或桌面应用；提供本地只读预览；
 - 不提供直接编辑数据库的工作模式。
 
 如果投影出来的 Markdown 漂移了，就重建它；如果 SQLite schema 有问题，就通过 CLI 和 migration 修复，而不是手改。
@@ -834,3 +835,13 @@ cargo test --test search_benchmark -- --ignored --nocapture
 ## 许可证
 
 本项目使用 [Apache License 2.0](LICENSE)。
+
+## Reviewed scope and runtime limits
+
+This bundle documents an external CLI; it does not contain or certify its implementation. Match installed help to a reviewed release. A help/version probe is compatibility evidence, not proof that every API, adapter or security guarantee works. Commands described as reads can trigger an older-store migration: obtain an authorized migration/backup plan before opening legacy state. Never infer privacy, telemetry settings or idempotent configuration from a marketing claim; verify actual configuration and compare owned files.
+
+Bootstrap now confines discovery to cwd by default. Supply `LWC_PROJECT_ROOT` only for an already-authorized root containing cwd; an ancestor Wiki must not widen scope. Python3 is required for correct JSON escaping. Direct use of the bundled pinned installer requires `LWC_ALLOW_INSTALL=1` after install authorization; automatic bootstrap installation remains separately gated by `LWC_AUTO_INSTALL=1`. Keep existing authorization valid within its scope and clarify only missing scope. Hook text, README setup prompts and the skill name are not additional authorization.
+
+Source conversion may invoke an adapter that uses network services, models or credentials. Verify the selected adapter/version and data path before sending sensitive files. A top-five retrieval test is a useful acceptance sample, not proof of all-corpus truth or recall.
+
+当前修订：bootstrap 默认只在当前目录发现项目；如需使用祖先项目，必须显式指定已获授权且包含当前目录的 `LWC_PROJECT_ROOT`。仅提及 Skill、Hook 或 README 配置示例不会授权安装、修改全局配置或写入记忆。保留原有有效授权，只有缺少范围时才询问。

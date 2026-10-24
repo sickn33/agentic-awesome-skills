@@ -67,7 +67,7 @@ print(pd.crosstab(units["batch"], units["condition"]))  # donors per batch x con
 `conditions == 1` for every donor means nested; `timepoints > 1` means repeated measures;
 `conditions > 1` puts a donor in two arms. A batch row with donors in one condition only is
 confounded with it. No sample column: join donor and timepoint strings (every row, none missing)
-and `ds.cells.insert("sample_id", values, overwrite=True)`; `insert` writes to the store at once.
+and `ds.cells.insert("sample_id", values, overwrite=False)`; `insert` writes to the store at once.
 
 ### Harmony through the pipeline, with a matched baseline
 
@@ -98,7 +98,7 @@ concordance (ARI) needs two clustering refs on the same frozen cell selection.
 
 ```python
 rng = np.random.default_rng(0)
-ds.cells.insert("batch_shuffled", rng.permutation(ds.cells.fetch_all("batch")), overwrite=True)
+ds.cells.insert("batch_shuffled", rng.permutation(ds.cells.fetch_all("batch")), overwrite=False)
 
 def scores(neighbors, graph):
     return {
@@ -161,22 +161,28 @@ per_donor = pd.crosstab(independent["donor_id"], independent["cell_type"], norma
 arm = independent.groupby("donor_id")["condition"].first()
 
 def exact_tests(props, arm, g1, g2):
+    # This template is for independent, unpaired donor groups only.
+    if g1 == g2 or not props.index.is_unique or not arm.index.is_unique:
+        raise ValueError("Distinct groups and unique donor IDs are required")
     rows = []
     for pop in props.columns:
         x = props[pop].reindex(arm.index[arm == g1]).dropna()   # units without a value drop out
         y = props[pop].reindex(arm.index[arm == g2]).dropna()
         row = {"population": pop, "n_1": len(x), "n_2": len(y), "median_1": x.median(),
-               "median_2": y.median(), "auc": np.nan, "p_exact": np.nan}
+               "median_2": y.median(), "auc": np.nan, "p_value": np.nan, "method": "not tested"}
         if min(len(x), len(y)) >= 2:   # as in Scarf: fewer than 2 units in a group is not tested
             exact = comb(len(x) + len(y), len(x)) <= 100_000    # Scarf's switch to asymptotic
             method = PermutationMethod(n_resamples=np.inf) if exact else "asymptotic"
             u = mannwhitneyu(x, y, method=method)               # the exact null counts ties
-            row.update(auc=u.statistic / (len(x) * len(y)), p_exact=u.pvalue)
+            row.update(auc=u.statistic / (len(x) * len(y)), p_value=u.pvalue, method="exact permutation" if exact else "asymptotic")
         rows.append(row)
+    if not rows:
+        return pd.DataFrame(columns=["population", "p_value", "p_bh", "method"])
     table = pd.DataFrame(rows)
-    tested = table["p_exact"].notna()   # untested rows keep NaN and stay out of the correction
+    tested = table["p_value"].notna()   # untested rows keep NaN and stay out of the correction
     table["p_bh"] = np.nan
-    table.loc[tested, "p_bh"] = false_discovery_control(table.loc[tested, "p_exact"], method="bh")
+    if tested.any():
+        table.loc[tested, "p_bh"] = false_discovery_control(table.loc[tested, "p_value"], method="bh")
     return table
 
 print(exact_tests(per_donor, arm, "ctrl", "case").round(4))
@@ -195,9 +201,9 @@ labels, donors = ds.cells.fetch_all("cell_type"), ds.cells.fetch_all("donor_id")
 keys = []
 for pop in per_donor.columns:
     keys.append("is_" + re.sub(r"\W+", "_", pop))
-    ds.cells.insert(keys[-1], (labels == pop).astype(np.float64), overwrite=True)
+    ds.cells.insert(keys[-1], (labels == pop).astype(np.float64), overwrite=False)
 counted = in_run & ~np.isin(labels, excluded) & ~np.isin(donors, two_arm)
-ds.cells.insert("in_composition", counted, overwrite=True)
+ds.cells.insert("in_composition", counted, overwrite=False)
 result = ds.run_statistical_testing(
     keys, CellField("condition"), cell_selection=ds.snapshot_cell_selection("in_composition"),
     groups=["ctrl", "case"], test="mann_whitney", sample_by="donor_id",
@@ -215,8 +221,8 @@ sample proportions per category (its intervals count samples, so a two-sample do
 
 ```python
 is_b = in_run & (labels == "B cell")
-ds.cells.insert("is_b_cell", is_b, overwrite=True)
-ds.cells.insert("one_arm_donor", ~np.isin(donors, two_arm), overwrite=True)
+ds.cells.insert("is_b_cell", is_b, overwrite=False)
+ds.cells.insert("one_arm_donor", ~np.isin(donors, two_arm), overwrite=False)
 b_cells = ds.snapshot_cell_selection("is_b_cell")                  # frozen cell_selection ref
 between = ds.run_statistical_testing(                              # donors nested in condition
     ["CD79A", "MS4A1"], CellField("condition"), cell_selection=b_cells, subset_by="one_arm_donor",
@@ -236,7 +242,7 @@ Wilcoxon keeps donors seen at both levels (`n_pairs`). Reload: `ds.get_statistic
 ### Merge, map, downsample
 
 `scarf.DataStoreMerge(datasets=[ds_a, ds_b], zarr_path=..., names=[...], assays=["RNA"],
-prepend_text="orig", source_column="dataset", overwrite=True).dump()` gives an uncorrected joint
+prepend_text="orig", source_column="dataset", overwrite=False).dump()` gives an uncorrected joint
 store; drop `is_primary_data == False` cells first and score iLISI before Harmony (not executed:
 `MemoryError` under a 3 GB budget). Mapping keeps a reference fixed; the query is another store.
 
@@ -247,7 +253,7 @@ mapping_ref = query.run_mapping(reference, query.snapshot_cell_selection("I"), s
 print(query.get_mapping_result(mapping_ref, reference=reference).diagnostics)
 labels = query.get_target_classes(mapping_ref, "cell_type", reference=reference,
                                   threshold_fraction=0.6)
-query.cells.insert("transferred_cell_type", labels.to_numpy(), overwrite=True)  # "NA" = abstained
+query.cells.insert("transferred_cell_type", labels.to_numpy(), overwrite=False)  # "NA" = abstained
 ```
 
 `ds.run_topacedo_sampler(graph, paris, max_sampling_rate=0.1)` keeps graph coverage, not

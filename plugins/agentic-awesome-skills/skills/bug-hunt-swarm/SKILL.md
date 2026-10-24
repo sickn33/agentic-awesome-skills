@@ -186,7 +186,7 @@ Do not implement fixes as part of this skill. The output is a read-only diagnosi
 
 **User request:**
 
-> Investigate this failure with @bug-hunt-swarm, prove the root cause, implement the smallest safe fix, and verify it.
+> Investigate this failure with @bug-hunt-swarm and return evidence-backed hypotheses plus the smallest proof step; keep the investigation read-only.
 
 ## Limitations
 

@@ -19,9 +19,9 @@ Proven architectural patterns for building n8n workflows.
 
 ## The 5 Core Patterns
 
-Based on analysis of real workflow usage:
+Common design patterns:
 
-1. **Webhook Processing** (Most Common)
+1. **Webhook Processing**
    - Receive HTTP requests → Process → Output
    - Pattern: Webhook → Validate → Transform → Respond/Notify
 
@@ -115,6 +115,8 @@ All patterns share these building blocks:
 
 ---
 
+Before activation, confirm credential scope, destination recipients and paid/API effects. Authenticate webhooks, validate payloads, deduplicate delivery IDs and use idempotent writes. Retry with bounds and backoff; a timeout may follow a successful side effect. Restrict AI tools and treat retrieved content as untrusted. The Error Trigger belongs to a separate configured error workflow, not an ordinary branch of the main workflow. Sequential branches are not necessarily concurrent execution.
+
 ## Workflow Creation Checklist
 
 When building ANY workflow, follow this checklist:
@@ -201,7 +203,7 @@ See: n8n Expression Syntax skill
 
 **Solution**: Use "Execute Once" mode or process first item only
 ```javascript
-{{$json[0].field}}  // First item only
+{{$input.first().json.field}}  // First item only
 ```
 
 ### 3. Authentication Issues
@@ -254,32 +256,9 @@ These skills work together with Workflow Patterns:
 
 ---
 
-## Pattern Statistics
+## Evidence and version scope
 
-Common workflow patterns:
-
-**Most Common Triggers**:
-1. Webhook - 35%
-2. Schedule (periodic tasks) - 28%
-3. Manual (testing/admin) - 22%
-4. Service triggers (Slack, email, etc.) - 15%
-
-**Most Common Transformations**:
-1. Set (field mapping) - 68%
-2. Code (custom logic) - 42%
-3. IF (conditional routing) - 38%
-4. Switch (multi-condition) - 18%
-
-**Most Common Outputs**:
-1. HTTP Request (APIs) - 45%
-2. Slack - 32%
-3. Database writes - 28%
-4. Email - 24%
-
-**Average Workflow Complexity**:
-- Simple (3-5 nodes): 42%
-- Medium (6-10 nodes): 38%
-- Complex (11+ nodes): 20%
+The patterns are design heuristics, not measured usage statistics. No dataset or methodology is bundled to establish prevalence, percentages or average editing times. Node names and available operations vary by installed n8n and MCP version. The detailed pattern files listed later are not bundled here; use installed documentation or the official n8n docs rather than claiming they were read.
 
 ---
 
@@ -385,7 +364,7 @@ Use `search_templates` and `get_template` from n8n-mcp tools to find examples!
 
 ### ❌ Don't
 
-- Build workflows in one shot (iterate! avg 56s between edits)
+- Build workflows in one shot (iterate and inspect each change)
 - Skip validation before activation
 - Ignore error scenarios
 - Use complex patterns when simple ones suffice
@@ -399,8 +378,8 @@ Use `search_templates` and `get_template` from n8n-mcp tools to find examples!
 ## Summary
 
 **Key Points**:
-1. **5 core patterns** cover 90%+ of workflow use cases
-2. **Webhook processing** is the most common pattern
+1. **5 core patterns** provide a starting structure
+2. **Webhook processing** suits incoming events
 3. Use the **workflow creation checklist** for every workflow
 4. **Plan pattern** → **Select nodes** → **Build** → **Validate** → **Deploy**
 5. Integrate with other skills for complete workflow development

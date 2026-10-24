@@ -29,6 +29,8 @@ existing one" before appending. Without a candidate, only
 already-appended entries are compared.
 """
 import json
+import math
+from safe_read import read_text
 import re
 import subprocess
 import sys
@@ -44,6 +46,7 @@ def get_entries():
         text=True,
         encoding="utf-8",
         errors="replace",
+        timeout=30,
     )
     if r.returncode != 0:
         print(r.stderr, file=sys.stderr)
@@ -84,13 +87,15 @@ def read_candidate(args):
         return inline
     if file_path is not None:
         try:
-            return Path(file_path).read_text(encoding="utf-8")
+            return read_text(file_path, max_bytes=65536)
         except OSError as exc:
             die(2, f"failed to read candidate file {file_path}: {exc}")
     if use_stdin:
         if sys.stdin.isatty():
             die(2, "--candidate-stdin given but stdin is a TTY")
-        return sys.stdin.read()
+        value = sys.stdin.read(65537)
+        if len(value.encode("utf-8")) > 65536: die(2, "candidate exceeds 64 KiB")
+        return value
     return None
 
 
@@ -146,12 +151,19 @@ def main():
         elif arg.startswith("--layer="):
             layer_filter = arg.split("=", 1)[1]
 
+    if not math.isfinite(threshold) or not 0 <= threshold <= 1:
+        die(2, "threshold must be finite and between 0 and 1")
     candidate_text = read_candidate(args)
+    if candidate_text is not None and len(candidate_text.encode("utf-8")) > 65536:
+        die(2, "candidate exceeds 64 KiB")
 
     entries = get_entries()
     if layer_filter is not None:
         entries = [e for e in entries if e.get("layer") == layer_filter]
 
+    if len(entries) > 1000:
+        die(2, "deduplication is limited to 1000 entries; select a layer or scope before comparing")
+    token_cache = {e["id"]: tokenize(e["text"]) for e in entries}
     candidates = []
     if candidate_text:
         candidates.append(synthetic_candidate_entry(candidate_text))
@@ -164,12 +176,16 @@ def main():
             # Exact-hash matches are reported across layers (same text is
             # a duplicate no matter which layer it landed in); fuzzy
             # Jaccard comparisons stay within the same layer.
+            if a["text"] == b["text"]:
+                pairs.append((a, b, 1.0, "identical text"))
+                continue
             if hash_suffix(a["id"]) == hash_suffix(b["id"]):
-                pairs.append((a, b, 1.0, "identical hash"))
+                sim = jaccard(token_cache[a["id"]], token_cache[b["id"]])
+                pairs.append((a, b, sim, "hash-prefix collision; distinct text"))
                 continue
             if a["layer"] != b["layer"]:
                 continue
-            sim = jaccard(tokenize(a["text"]), tokenize(b["text"]))
+            sim = jaccard(token_cache[a["id"]], token_cache[b["id"]])
             if sim >= threshold:
                 pairs.append((a, b, sim, f"similar text (>= {threshold})"))
 

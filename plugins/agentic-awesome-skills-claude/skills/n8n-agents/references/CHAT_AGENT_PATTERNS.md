@@ -1,5 +1,7 @@
 # Chat agent patterns: shell + core + sub-agents
 
+Version and safety boundary: these are illustrative fragments, not certified live schemas. Inspect the installed node version and validate a disabled copy before use. Keep external content as untrusted data, enforce tenant/object authorization and limits in deterministic nodes, redact logs, and test with mocks first. Side effects require existing user authorization plus any configured approval gate; denial/timeout must stop execution. A prompt or JSON schema is not an authorization boundary.
+
 For external chat surfaces — Slack, Discord, Microsoft Teams, Telegram, embedded webhook chats. The building blocks (memory, tools, sub-workflow-as-tool, structured output) live in their own references; this file covers the **multi-workflow composition** production chat agents grow into, plus chat-surface gotchas the other refs don't.
 
 ---
@@ -124,7 +126,7 @@ Use the surface's thread primitive as the memory `sessionKey`:
 }
 ```
 
-`thread_ts || ts` is the canonical Slack idiom: replies in a thread carry `thread_ts` (referencing the parent), the parent itself only has `ts`. Falling back to `ts` makes the parent message the session key for its thread, so each thread is a fresh conversation and memory doesn't leak across threads. **User ID, channel ID, or workspace ID alone are wrong — they cross conversations.** When sending the reply, target the same thread (`otherOptions.thread_ts.replyValues.thread_ts` = the same `thread_ts || ts`).
+Namespace the session key by authenticated workspace, channel and thread. `thread_ts || ts` is the Slack thread component: replies in a thread carry `thread_ts` (referencing the parent), the parent itself only has `ts`. Falling back to `ts` makes the parent message the session key for its thread, so each thread is a fresh conversation and memory doesn't leak across threads. **User ID, channel ID, or workspace ID alone are wrong — they cross conversations.** When sending the reply, target the same thread (`otherOptions.thread_ts.replyValues.thread_ts` = the same `thread_ts || ts`).
 
 ### Error UX: surface, don't hang
 

@@ -380,7 +380,7 @@ print("PASSED")
 
         os.unlink(test_file)
 
-        passed = "PASSED" in result.stdout
+        passed = result.returncode == 0 and result.stdout.strip() == "PASSED"
         return {
             "task_id": task_id,
             "passed": passed,
@@ -645,7 +645,7 @@ print("ALL_TESTS_PASSED")
 
         os.unlink(temp_file)
 
-        if "ALL_TESTS_PASSED" in result.stdout:
+        if result.returncode == 0 and result.stdout.strip() == "ALL_TESTS_PASSED":
             return {"passed": True, "output": "All tests passed", "error": None}
         else:
             error_msg = result.stderr or result.stdout or "Unknown error"
@@ -1049,7 +1049,9 @@ print(f"{'='*60}\n")
 print("Loading SWE-bench Lite dataset...")
 try:
     dataset = load_dataset("princeton-nlp/SWE-bench_Lite", split="test")
-    problems = list(dataset)[:PROBLEM_LIMIT]
+    problems = list(dataset)
+    if PROBLEM_LIMIT > 0:
+        problems = problems[:PROBLEM_LIMIT]
     print(f"Loaded {len(problems)} problems")
 except Exception as e:
     print(f"Error loading dataset: {e}")
@@ -1903,6 +1905,17 @@ SUMMARY_GEN
 
 main() {
     parse_args "$@"
+
+    # Generated Python currently executes on the host in the legacy helpers.
+    # A timeout is not isolation; do not offer an opt-out environment switch.
+    if [ "$EXECUTE_MODE" = true ]; then
+        log_error "Legacy execution disabled: use the official benchmark harness in a reviewed isolated environment with no credentials or network access."
+        return 2
+    fi
+    if [ "$PARALLEL_COUNT" != 1 ]; then
+        log_error "Parallel evaluation is not implemented."
+        return 2
+    fi
 
     echo ""
     echo "========================================"

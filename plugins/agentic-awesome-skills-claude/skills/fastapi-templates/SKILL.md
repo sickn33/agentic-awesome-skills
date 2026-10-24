@@ -8,7 +8,7 @@ date_added: "2026-02-27"
 
 # FastAPI Project Templates
 
-Production-ready FastAPI project structures with async patterns, dependency injection, middleware, and best practices for building high-performance APIs.
+Starting-point FastAPI project structures with async patterns, dependency injection, middleware, and best practices for building high-performance APIs.
 
 ## Use this skill when
 
@@ -29,6 +29,12 @@ Production-ready FastAPI project structures with async patterns, dependency inje
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
 - If detailed examples are required, open `resources/implementation-playbook.md`.
+
+## Example
+
+```text
+Create a PostgreSQL-backed user API using the playbook. First define request/output/internal schemas and object authorization, then test registration, inactive-token rejection and forbidden cross-user reads. Report missing project files before claiming a runnable service.
+```
 
 ## Resources
 

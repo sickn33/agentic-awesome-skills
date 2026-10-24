@@ -1,7 +1,7 @@
 ---
 name: gha-security-review
-description: "Find exploitable vulnerabilities in GitHub Actions workflows. Every finding MUST include a concrete exploitation scenario — if you can't build the attack, don't report it."
-risk: safe
+description: "Review GitHub Actions workflows for exploitable vulnerabilities with concrete attack paths and harmless proof-of-concept sketches. Require explicit authorization for active testing."
+risk: critical
 source: community
 date_added: 2026-03-16
 ---
@@ -11,12 +11,12 @@ Supporting files are included at skill-relative paths. See [UPSTREAM-NOTICE.md](
 
 <!--
 Attack patterns and real-world examples sourced from the HackerBot Claw campaign analysis
-by StepSecurity (2025): https://www.stepsecurity.io/blog/hackerbot-claw-github-actions-exploitation
+by StepSecurity (2026): https://www.stepsecurity.io/blog/hackerbot-claw-github-actions-exploitation
 -->
 
 # GitHub Actions Security Review
 
-Find exploitable vulnerabilities in GitHub Actions workflows. Every finding MUST include a concrete exploitation scenario — if you can't build the attack, don't report it.
+Find exploitable vulnerabilities in GitHub Actions workflows. Every finding MUST include a concrete exploitation scenario — if you cannot trace an attack path, do not report it as confirmed. Use harmless PoC sketches only; do not trigger workflows, exfiltrate secrets or post attacker content without explicit test authorization.
 
 This skill encodes attack patterns from real GitHub Actions exploits — not generic CI/CD theory.
 
@@ -144,17 +144,17 @@ Before reporting, check if the pattern is actually safe:
 
 | Pattern | Why Safe |
 |---|---|
-| `pull_request_target` WITHOUT checkout of fork code | Never executes attacker code |
+| `pull_request_target` WITHOUT checkout of fork code | Still inspect metadata injection, actions, artifacts and other untrusted inputs |
 | `${{ github.event.pull_request.number }}` in `run:` | Numeric only — not injectable |
 | `${{ github.repository }}` / `github.repository_owner` | Repo owner controls this |
 | `${{ secrets.* }}` | Not an expression injection vector |
 | `${{ }}` in `if:` conditions | Evaluated by Actions runtime, not shell |
-| `${{ }}` in `with:` inputs | Passed as string parameters, not shell-evaluated |
-| Actions pinned to full SHA | Immutable reference |
-| `pull_request` trigger (not `_target`) | Runs in fork context with read-only token |
+| `${{ }}` in `with:` inputs | No automatic shell interpolation here; trace how the action consumes the input |
+| Actions pinned to full SHA | Pins that action source; not proof of safe code or immutable runtime downloads |
+| `pull_request` trigger (not `_target`) | Fork token/secrets are normally restricted; same-repo PRs, settings and self-hosted infrastructure still need review |
 | Any expression in `workflow_dispatch`/`schedule`/`push` to protected branches | Requires write access — outside threat model |
 
-**Key distinction:** `${{ }}` is dangerous in `run:` blocks (shell expansion) but safe in `if:`, `with:`, and `env:` at the job/step level (Actions runtime evaluation).
+**Key distinction:** `${{ }}` is dangerous in `run:` blocks (shell expansion) while `if:`, `with:` and `env:` avoid that direct substitution sink; downstream `eval`, shell-built commands, JavaScript execution and unsafe action inputs can reintroduce injection.
 
 ## Step 3: Validate Before Reporting
 
@@ -193,7 +193,7 @@ If any link is broken, mark MEDIUM (needs verification) or drop the finding.
 [Workflows reviewed and confirmed safe]
 ````
 
-If no findings: "No exploitable vulnerabilities identified. All workflows reviewed and cleared."
+If no findings: "No exploitable vulnerabilities identified within the reviewed scope and stated assumptions." List unread workflows, inaccessible settings and unverified runtime links; do not certify all workflows safe.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

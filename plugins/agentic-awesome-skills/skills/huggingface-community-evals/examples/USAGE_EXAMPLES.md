@@ -1,5 +1,7 @@
 # Usage Examples
 
+Provider-backed Inspect runs send prompts to a remote inference provider and may incur charges; they are not local inference. The lighteval wrapper below is blocked pending a release-specific migration; these are historical examples, not runnable recommendations.
+
 This document provides practical examples for **running evaluations locally** against Hugging Face Hub models.
 
 ## What this skill covers
@@ -22,7 +24,7 @@ If you want to run these same scripts remotely, use the `hugging-face-jobs` skil
 ## Setup
 
 ```bash
-cd skills/hugging-face-evaluation
+cd skills/huggingface-community-evals
 export HF_TOKEN=hf_xxx
 uv --version
 ```
@@ -48,7 +50,7 @@ uv run scripts/inspect_eval_uv.py \
 
 ```bash
 uv run scripts/inspect_vllm_uv.py \
-  --model meta-llama/Llama-3.2-8B-Instruct \
+  --model meta-llama/Llama-3.1-8B-Instruct \
   --task gsm8k \
   --limit 20
 ```

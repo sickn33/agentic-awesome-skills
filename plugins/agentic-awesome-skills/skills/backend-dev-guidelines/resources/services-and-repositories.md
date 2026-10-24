@@ -1,5 +1,8 @@
 # Services and Repositories - Business Logic Layer
 
+> Scope: independent illustrative fragments, not a supplied runnable application. Private project paths, helpers, DTOs and Prisma models must be implemented/adapted in the target repository. Pin and check installed Express/Sentry/Zod/Prisma versions. Authentication does not grant object/tenant access; authorize before reads/writes, enforce CSRF for cookie authentication, allowlist DTOs and project public response fields. Capture unexpected errors once at an approved, redacted boundary; never send raw request bodies, credentials or personal data to telemetry.
+
+
 Complete guide to organizing business logic with services and data access with repositories.
 
 ## Table of Contents
@@ -89,6 +92,7 @@ export class NotificationService {
             // Get template and render content
             const template = getNotificationTemplate(type);
             const rendered = renderNotificationContent(template, context);
+            const { title: finalTitle, message: finalMessage, link: finalLink } = rendered;
 
             // Create in-app notification record
             const notificationId = await createNotificationRecord({
@@ -116,7 +120,7 @@ export class NotificationService {
                 });
             }
 
-            return notification;
+            return { id: notificationId };
         } catch (error) {
             ErrorLogger.log(error, {
                 context: {
@@ -189,6 +193,7 @@ export class NotificationService {
         const finalPreferences = preference || DEFAULT_PREFERENCES;
 
         // Update cache
+        if (this.preferencesCache.size >= 1000) this.preferencesCache.clear();
         this.preferencesCache.set(userId, {
             preferences: finalPreferences,
             timestamp: Date.now(),
@@ -266,14 +271,13 @@ class PermissionService {
     /**
      * Check if user can complete a workflow step
      */
-    async canCompleteStep(userId: string, stepInstanceId: number): Promise<boolean> {
-        const cacheKey = `${userId}:${stepInstanceId}`;
+    async canEditPost(userId: string, postId: number): Promise<boolean> {
+        const cacheKey = `${userId}:${postId}`;
 
         // Check cache
         const cached = this.permissionCache.get(cacheKey);
-        if (cached && Date.now() - cached.timestamp < this.CACHE_TTL) {
-            return cached.canAccess;
-        }
+        // Recheck authorization on every sensitive action; stale positive cache entries
+        // must not survive role/ownership revocation. This sketch does not use cached grants.
 
         try {
             const post = await this.prisma.post.findUnique({
@@ -293,16 +297,16 @@ class PermissionService {
             }
 
             // Check if user has permission
-            const canEdit = post.authorId === userId ||
-                await this.isUserAdmin(userId);
+            const canEdit = post.authorId === userId // administrative access needs a separate trusted policy check;
 
             // Cache result
+            if (this.permissionCache.size >= 1000) this.permissionCache.clear();
             this.permissionCache.set(cacheKey, {
-                canAccess: isAssigned,
+                canAccess: canEdit,
                 timestamp: Date.now(),
             });
 
-            return isAssigned;
+            return canEdit;
         } catch (error) {
             console.error('[PermissionService] Error checking step permission:', error);
             return false;
@@ -338,7 +342,7 @@ export const permissionService = PermissionService.getInstance();
 import { permissionService } from '../services/permissionService';
 
 // Use anywhere in the codebase
-const canComplete = await permissionService.canCompleteStep(userId, stepId);
+const canComplete = await permissionService.canEditPost(userId, postId);
 
 if (!canComplete) {
     throw new ForbiddenError('You do not have permission to complete this step');
@@ -516,8 +520,8 @@ export class UserService {
             throw new ConflictError('Email already exists');
         }
 
-        // Business rule: Validate roles
-        const validRoles = ['admin', 'operations', 'user'];
+        // Public creation cannot grant privileged roles. Admin changes need separate authorization.
+        const validRoles = ['user'];
         const invalidRoles = data.roles.filter((role) => !validRoles.includes(role));
         if (invalidRoles.length > 0) {
             throw new ValidationError(`Invalid roles: ${invalidRoles.join(', ')}`);
@@ -686,9 +690,11 @@ class UserService {
 
         // Update cache
         if (user) {
+            if (this.cache.size >= 1000) this.cache.clear();
             this.cache.set(userId, { user, timestamp: Date.now() });
         }
 
+        if (!user) throw new NotFoundError('User not found');
         return user;
     }
 
@@ -697,6 +703,8 @@ class UserService {
     }
 }
 ```
+
+Keep cache keys scoped by tenant/identity and projection; bound entries and invalidate across every worker on relevant mutations. TTL alone is not an authorization revocation policy. Notification persistence plus email delivery needs an idempotent transactional outbox; a DB insert followed by a send is not atomic. Uniqueness checks require a database unique constraint and P2002 mapping to close races.
 
 ### 2. Cache Invalidation
 

@@ -1,9 +1,11 @@
+> Legacy illustrative case study. Architecture, private-project facts, latency distributions, memory figures, security ticks and invariants below are unverified historical inputs, not current audit findings. Rebuild the model from the authorized target and measure it; no access to the original private workspace is implied.
+
 # Auri/EarLLM — Contexto Completo para Análise Matemática
 
 ## Visão Geral do Sistema
 
 **Projeto**: Auri v2.5.0 (EarLLM One)
-**Localização**: `C:\Users\renat\earbudllm`
+**Origem ilustrativa**: private author workspace; not a path to access or the current target
 **Tipo**: Android app multi-módulo (Kotlin + Jetpack Compose)
 **Função**: Pipeline de voz → STT → LLM → TTS via Bluetooth earbuds
 
@@ -67,10 +69,10 @@ SPEAKING + ttsComplete → IDLE
 ERROR + timeout(3s) → IDLE
 ERROR + userReset → IDLE
 
-Propriedades verificadas:
+Model properties to verify against real code (not independently verified here):
 ✅ Sem estados inalcançáveis (todos estados têm caminho de IDLE)
-✅ Sem deadlocks (todos estados têm transição de saída)
-✅ Auto-healing: ERROR sempre resolve para IDLE
+Outgoing transitions alone do not prove deadlock freedom or callback progress
+A timeout transition is intended to return ERROR to IDLE; scheduling/cancellation can prevent progress
 ⚠️  SPEAKING não tem cancel — bloqueio possível se TTS travar
 ```
 
@@ -131,7 +133,7 @@ Recomendação: implementar idempotency keys por ferramenta
 
 ## Análise de Performance
 
-### Pipeline de Latência (E2E medido no A04)
+### Pipeline de Latência (legacy illustrative estimates; no raw measurement supplied)
 ```
 Componente          Latência típica    Modelo
 ──────────────────────────────────────────────
@@ -172,7 +174,7 @@ Total com Ollama local: ~850MB → crítico em dispositivos 2GB RAM
 ### Superfície de Ataque
 ```
 1. API Keys: EncryptedSharedPreferences (AES-256-GCM) ✅
-2. Bluetooth SCO: comunicação de voz sem criptografia (design limitation) ⚠️
+2. Bluetooth SCO security depends on pairing/link/version; do not assume all voice links are unencrypted ⚠️
 3. HTTP cleartext (Ollama localhost): permitido explicitamente via network_security_config ⚠️
 4. LAN access: cleartext permitido para 192.168.*.* — risco em redes públicas ❌
 5. Gmail OAuth2 tokens: persistidos em token store — verificar criptografia

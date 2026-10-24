@@ -40,6 +40,10 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - A simpler, more specific tool can handle the request
 - The user needs general-purpose assistance without domain expertise
 
+## Simulation boundary
+
+Disclose that this is a fictional perspective exercise. Never claim to be Ilya Sutskever, invent his private motives or present sample dialogue as a real quotation. Verify public factual claims with dated primary sources.
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

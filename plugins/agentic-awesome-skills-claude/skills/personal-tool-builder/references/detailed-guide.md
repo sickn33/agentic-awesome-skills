@@ -53,7 +53,7 @@ Bad itches (usually):
 Day 1: Script that solves YOUR problem
 - No UI, just works
 - Hardcoded paths, your data
-- Zero error handling
+- Validate inputs, fail safely and default to dry-run for writes
 - You understand every line
 
 Week 1: Script that works reliably
@@ -82,6 +82,7 @@ Building command-line tools that last
 {
   "name": "my-tool",
   "version": "1.0.0",
+  "type": "module",
   "bin": {
     "mytool": "./bin/cli.js"
   },
@@ -163,7 +164,7 @@ Benefits:
 - Your data stays yours
 - No server costs
 - Instant, no latency
-- Works forever (no shutdown)
+- Can remain usable offline while runtime/OS/storage remain compatible
 
 Trade-offs:
 - Sync is hard
@@ -183,7 +184,7 @@ Trade-offs:
 ### Simple Local Storage
 ```javascript
 // For simple tools: JSON file storage
-import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync, renameSync } from 'fs';
 import { homedir } from 'os';
 import { join } from 'path';
 
@@ -196,8 +197,10 @@ function loadData() {
 }
 
 function saveData(data) {
-  if (!existsSync(DATA_DIR)) mkdirSync(DATA_DIR);
-  writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+  mkdirSync(DATA_DIR, { recursive: true, mode: 0o700 });
+  const temporary = `${DATA_FILE}.${process.pid}.tmp`;
+  writeFileSync(temporary, JSON.stringify(data, null, 2), { flag: 'wx', mode: 0o600 });
+  renameSync(temporary, DATA_FILE); // Single writer; add locking for concurrent processes.
 }
 ```
 
@@ -208,6 +211,7 @@ import Database from 'better-sqlite3';
 import { join } from 'path';
 import { homedir } from 'os';
 
+// Create a restricted ~/.mytool directory first; back up before schema changes.
 const db = new Database(join(homedir(), '.mytool', 'data.db'));
 
 // Create tables on first run
@@ -237,7 +241,7 @@ Growing a script into a real product
 Characteristics:
 - Only you use it
 - Hardcoded values
-- No error handling
+- Minimal safe error handling and backup before writes
 - Works on your machine
 
 Time: Hours to days
@@ -336,11 +340,13 @@ const dataFile = join(homedir(), '.mytool', 'data.json');
 
 ### Dependency Checking
 ```javascript
-import { execSync } from 'child_process';
+import { spawnSync } from 'child_process';
 
 function checkDep(cmd, installHint) {
   try {
-    execSync(`which ${cmd}`, { stdio: 'ignore' });
+    // Fixed executable/argument array; never interpolate shell syntax.
+    const result = spawnSync(cmd, ['-version'], { stdio: 'ignore', timeout: 5000 });
+    if (result.error || result.status !== 0) throw new Error('Unavailable');
   } catch {
     console.error(`Missing: ${cmd}`);
     console.error(`Install: ${installHint}`);
@@ -512,7 +518,7 @@ Build accordingly:
 try {
   await runMainFeature();
 } catch (err) {
-  console.error('Tool broken. Error:', err.message);
+  console.error('Tool failed; inspect redacted local diagnostics.');
   console.error('');
   console.error('Data location: ~/.mytool/data.json');
   console.error('You can manually access your data there.');

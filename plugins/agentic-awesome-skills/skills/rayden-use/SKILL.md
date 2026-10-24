@@ -25,6 +25,8 @@ Build and maintain Rayden UI components and screens directly in Figma using the 
 - You need to add new variants to an existing Figma component
 - You're syncing React component updates back to Figma
 
+This catalog entry does not bundle tokens.md, helper implementations, craft references or rayden-compose subagent. Locate a separately reviewed installation and actual Figma tool schemas before dependent steps; do not claim token/visual compliance from this overview. Confirm target file/page/nodes and edit scope, preserve originals/variants, and inspect screenshots after writes. Native connector seat/tool capability is determined by current account permissions, not the static tool names listed here.
+
 ## How It Works
 
 1. **Verifies environment** — Checks Figma MCP connection and write access via `whoami`
@@ -87,10 +89,10 @@ Build and maintain Rayden UI components and screens directly in Figma using the 
 
 ## Security & Safety Notes
 
-- This skill only reads local supporting files and calls the Figma MCP — no external network requests beyond Figma's API
+- Review the actual Figma/token integration network behavior; this file cannot guarantee that calls are limited to Figma.
 - Requires Figma Dev or Full seat with write access to the target file
 - Does not modify files outside of the target Figma document
-- All design tokens are bundled in the skill's supporting files — no secrets or credentials involved
+- Supporting token files are not bundled in this catalog copy; Figma content and external token-server calls may disclose private design data. Verify actual destinations and authorized scope.
 
 ## Common Pitfalls
 

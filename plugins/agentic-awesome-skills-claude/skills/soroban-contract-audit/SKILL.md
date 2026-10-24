@@ -36,7 +36,7 @@ Provides a standardized, auditable framework and data model for **Soroban Contra
 
 | # | Field Name | Type | SQL Type | JSON Schema Type | Notion Property Type | Example Value |
 |---|------------|------|----------|------------------|----------------------|---------------|
-| 1 | Audit Finding ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text | `AUD-001` |
+| 1 | Audit Finding ID | `id` | `VARCHAR(64) PRIMARY KEY` | `string` | Text | `AUD-001` |
 | 2 | Contract Address | `text` | `VARCHAR(56)` | `string` | Text | `CA3D5K...` |
 | 3 | Function Name | `text` | `VARCHAR(64)` | `string` | Text | `transfer_with_approval` |
 | 4 | Severity Tier | `select` | `VARCHAR(32)` | `string` | Select | `High` |
@@ -98,6 +98,8 @@ How do I configure and track Soroban Contract Security Audit for our production 
 > Generate the unified field schema, SQL DDL migration, and JSON validation schema to register into your system catalog.
 >
 > Workflow: Define criteria -> Run automated verification -> Record baseline -> Monitor invariants.
+
+This is a finding register, not a completed audit. Bind each finding to network/contract, full source commit and WASM hash, affected function, preconditions, actual test/evidence and remediation commit. Instance/Persistent/Temporary are storage durability categories; the transaction read/write footprint is a separate property to inspect. Mark Remediated only after the specific fix is retested; a panic or enum label alone does not establish exploitability or severity.
 
 ## Best Practices
 

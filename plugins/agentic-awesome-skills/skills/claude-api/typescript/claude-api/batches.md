@@ -1,5 +1,7 @@
 # Message Batches API — TypeScript
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 The Batches API (`POST /v1/messages/batches`) processes Messages API requests asynchronously at 50% of standard prices.
 
 ## Key Facts
@@ -8,7 +10,7 @@ The Batches API (`POST /v1/messages/batches`) processes Messages API requests as
 - Most batches complete within 1 hour; maximum 24 hours
 - Results available for 29 days after creation
 - 50% cost reduction on all token usage
-- All Messages API features supported (vision, tools, caching, etc.)
+- Verify the batch-compatible subset for the selected model and current API; do not assume every Messages feature is available.
 
 ---
 
@@ -24,7 +26,7 @@ const messageBatch = await client.messages.batches.create({
     {
       custom_id: "request-1",
       params: {
-        model: "claude-opus-5",
+        model: "claude-opus-5-5",
         max_tokens: 1024,
         messages: [
           { role: "user", content: "Summarize climate change impacts" },
@@ -34,7 +36,7 @@ const messageBatch = await client.messages.batches.create({
     {
       custom_id: "request-2",
       params: {
-        model: "claude-opus-5",
+        model: "claude-opus-5-5",
         max_tokens: 1024,
         messages: [
           { role: "user", content: "Explain quantum computing basics" },
@@ -54,7 +56,8 @@ console.log(`Status: ${messageBatch.processing_status}`);
 
 ```typescript
 let batch;
-while (true) {
+const deadline = Date.now() + 300_000; // bounded slice; persist batch ID to resume
+while (Date.now() < deadline) {
   batch = await client.messages.batches.retrieve(messageBatch.id);
   if (batch.processing_status === "ended") break;
   console.log(
@@ -63,7 +66,8 @@ while (true) {
   await new Promise((resolve) => setTimeout(resolve, 60_000));
 }
 
-console.log("Batch complete!");
+if (!batch || batch.processing_status !== "ended") throw new Error("Batch remains pending; preserve its ID");
+console.log("Batch processing ended; individual requests may have failed");
 console.log(`Succeeded: ${batch.request_counts.succeeded}`);
 console.log(`Errored: ${batch.request_counts.errored}`);
 ```
@@ -79,7 +83,7 @@ for await (const result of await client.messages.batches.results(
   switch (result.result.type) {
     case "succeeded":
       console.log(
-        `[${result.custom_id}] ${result.result.message.content[0].text.slice(0, 100)}`,
+        `[${result.custom_id}] ${result.result.message.content.filter(b => b.type === "text").map(b => b.text).join("").slice(0, 100)}`,
       );
       break;
     case "errored":
@@ -88,6 +92,9 @@ for await (const result of await client.messages.batches.results(
       } else {
         console.log(`[${result.custom_id}] Server error - safe to retry`);
       }
+      break;
+    case "canceled":
+      console.log(`[${result.custom_id}] Canceled`);
       break;
     case "expired":
       console.log(`[${result.custom_id}] Expired - resubmit`);

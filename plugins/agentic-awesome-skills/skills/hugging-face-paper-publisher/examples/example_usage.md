@@ -193,7 +193,7 @@ cat paper_info.txt
 ## Example 9: Search and Discover Papers
 
 ```bash
-# Search for papers (opens browser)
+# Print a search URL (the helper does not open a browser or query results)
 uv run scripts/paper_manager.py search \
   --query "transformer attention mechanism"
 ```
@@ -298,13 +298,13 @@ uv run scripts/paper_manager.py check --arxiv-id "2301.12345"
 
 ```bash
 # Verify your token has write access
-echo $HF_TOKEN
+test -n "$HF_TOKEN" && echo "HF_TOKEN is set"
 
 # Set token if missing
-export HF_TOKEN="your_token_here"
+hf auth login  # interactive; do not put real tokens in command history
 
 # Or use .env file
-echo "HF_TOKEN=your_token_here" > .env
+# Use an existing protected secret store; do not overwrite a project .env.
 ```
 
 ### arXiv ID format issues

@@ -39,21 +39,25 @@ Use this skill when:
 | **Pinecone** | Zero-ops managed, serverless | Managed only | Good | Very High |
 | **Chroma** | Local dev, prototyping | Self only | Basic | Low-Medium |
 
+## Deployment/evidence boundaries
+
+Single-node unauthenticated containers below are local examples, not a production security/availability configuration. Pin reviewed images/config schemas, use authenticated encrypted access and restore-tested backups. Derive tenant filters from authenticated server identity, never an arbitrary client tenant string. Match embedding dimensions/model/metric on ingestion and query; table scale labels are qualitative. `indexing_threshold=0` disables indexing rather than forcing it; restore an appropriate nonzero threshold after bulk upload and verify actual index state with a bounded wait.
+
 ## Qdrant — Production Deployment
 
 ```bash
 # Docker (single node)
 docker run -d \
   --name qdrant \
-  -p 6333:6333 \
-  -p 6334:6334 \
+  -p 127.0.0.1:6333:6333 \
+  -p 127.0.0.1:6334:6334 \
   -v $(pwd)/qdrant-data:/qdrant/storage \
   qdrant/qdrant:latest
 
 # With custom config
 docker run -d \
   --name qdrant \
-  -p 6333:6333 \
+  -p 127.0.0.1:6333:6333 \
   -v $(pwd)/qdrant-data:/qdrant/storage \
   -v $(pwd)/qdrant-config.yaml:/qdrant/config/production.yaml \
   qdrant/qdrant:latest
@@ -135,7 +139,7 @@ print(f"Vectors: {info.vectors_count}, Status: {info.status}")
 ## Qdrant Filtered Search
 
 ```python
-from qdrant_client.models import Filter, FieldCondition, MatchValue, Range
+from qdrant_client.models import Filter, FieldCondition, MatchValue, DatetimeRange
 
 # Tenant-isolated search (multi-tenant RAG)
 results = client.query_points(
@@ -147,7 +151,7 @@ results = client.query_points(
             FieldCondition(key="doc_type", match=MatchValue(value="contract")),
         ],
         should=[
-            FieldCondition(key="created_at", range=Range(gte="2024-01-01")),
+            FieldCondition(key="created_at", range=DatetimeRange(gte="2024-01-01T00:00:00Z")),
         ],
     ),
     limit=10,
@@ -197,7 +201,7 @@ docker run -d \
   --name pgvector \
   -e POSTGRES_PASSWORD=secret \
   -e POSTGRES_DB=vectordb \
-  -p 5432:5432 \
+  -p 127.0.0.1:5432:5432 \
   -v pgvector-data:/var/lib/postgresql/data \
   pgvector/pgvector:pg16
 ```
@@ -256,7 +260,7 @@ pg_restore -h localhost -U postgres -d vectordb documents-backup.dump
 # Qdrant — optimize collection after bulk load
 client.update_collection(
     collection_name="documents",
-    optimizer_config={"indexing_threshold": 0},  # force indexing now
+    optimizers_config={"indexing_threshold": 10000},  # illustrative nonzero threshold; restore the reviewed value
 )
 
 # Wait for optimization to complete

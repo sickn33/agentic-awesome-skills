@@ -60,6 +60,7 @@ body {
   position: absolute;
   top: 4px; left: 4px; right: 4px; bottom: 4px;
   border: 1px dashed #D4AF37;
+  pointer-events: none; /* Decorative border must not cover controls. */
 }
 
 .max-title {
@@ -87,7 +88,7 @@ struct MaximalismView: View {
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 4) {
-                // Feature span
+                // Feature styling only: LazyVGrid does not span this item across columns.
                 MaxItem(title: "MUSEUM", isFeature: true)
                 // Dense data blocks
                 MaxItem(title: "1892")
@@ -246,7 +247,7 @@ fun MaximalismScreen() {
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalArrangement = Arrangement.spacedBy(4.dp)
     ) {
-        // Feature spanning all 3 columns
+        // Feature styling only: LazyVGrid does not span this item across columns.ning all 3 columns
         item(span = { GridItemSpan(3) }) {
             MaxItem("MUSEUM", isFeature = true)
         }
@@ -285,7 +286,7 @@ fun MaxItem(title: String, isFeature: Boolean = false) {
     }
 }
 ```
-- `LazyVerticalGrid` with `GridCells.Fixed(3)` is perfect.
+- `GridCells.Fixed(3)` is a visual starting point; adapt column count and item height to available width and text scale.
 - Use `GridItemSpan(3)` for the hero elements to make them span the full width, mimicking editorial or museum layouts.
 
 ## Do's and Don'ts

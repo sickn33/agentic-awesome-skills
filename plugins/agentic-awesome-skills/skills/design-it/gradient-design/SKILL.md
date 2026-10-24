@@ -56,7 +56,7 @@ body {
   padding: 32px;
   border-radius: 12px;
   position: relative;
-  /* Use a pseudo-element for the gradient border */
+  isolation: isolate; /* Keep the negative pseudo-element behind this card, above its surroundings. */
 }
 .gradient-border-card::before {
   content: '';
@@ -143,11 +143,17 @@ class _GradientDesignScreenState extends State<GradientDesignScreen> with Single
     super.initState();
     _controller = AnimationController(vsync: this, duration: const Duration(seconds: 5))..repeat(reverse: true);
     _topAlignment = TweenSequence<Alignment>([
-      TweenSequenceItem(tween: AlignmentTween(begin: Alignment.topLeft, end: Alignment.topRight), weight: 1),
+      TweenSequenceItem(tween: Tween<Alignment>(begin: Alignment.topLeft, end: Alignment.topRight), weight: 1),
     ]).animate(_controller);
     _bottomAlignment = TweenSequence<Alignment>([
-      TweenSequenceItem(tween: AlignmentTween(begin: Alignment.bottomRight, end: Alignment.bottomLeft), weight: 1),
+      TweenSequenceItem(tween: Tween<Alignment>(begin: Alignment.bottomRight, end: Alignment.bottomLeft), weight: 1),
     ]).animate(_controller);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override

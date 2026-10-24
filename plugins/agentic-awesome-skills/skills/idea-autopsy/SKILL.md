@@ -22,8 +22,7 @@ Turns the agent into a ruthless business-idea pathologist: instead of encouragin
 the user, it hunts for the one sentence that kills an idea — before any money or
 weeks are spent building it. Built from a real founder kill-list of 42 dead ideas
 (including a 9/10-scored idea and one that turned out to be federally illegal to
-charge for). Every autopsy ends in a hard verdict: DEAD with a named kill-pattern,
-or SURVIVED with the one cheapest test that could still kill it.
+charge for). End with DEAD, SURVIVED or INCONCLUSIVE according to available evidence, plus the cheapest test of the decisive assumption.
 
 ## When to Use This Skill
 
@@ -37,8 +36,7 @@ or SURVIVED with the one cheapest test that could still kill it.
 ### Step 1: Kill-list check
 
 If the project contains a `REJECTION.md` (the user's personal kill-list), read it
-first. A NICHE match (same niche as a killed row) = verdict DEAD, cite the row,
-stop. A KILL-PATTERN match alone (new niche, previously-seen pattern) is a strong
+first. A niche match is historical evidence, not an automatic verdict: cite the row, compare changed customers, timing and assumptions, then test whether its reason still applies. A KILL-PATTERN match alone (new niche, previously-seen pattern) is a strong
 prior, NOT a verdict: name the matching pattern, then run the specific check for
 that pattern (the relevant filter or test below) to confirm it actually applies
 before declaring death. If no kill-list exists, ask the user for permission to create one
@@ -71,21 +69,20 @@ Demand evidence, not optimism. One hard NO = dead.
 ### Step 3: The free-AI test
 
 Try to produce the idea's core deliverable with one prompt to a frontier model.
-If one prompt produces the whole deliverable free, the verdict is DEAD with
-kill-pattern `free-AI`: the user doesn't have a product, they have a prompt.
+If one prompt produces a candidate deliverable, test whether buyers still value quality control, workflow integration, trust or distribution. Treat `free-AI` as a competing alternative, not automatic evidence that nobody will pay.
 
 ### Step 4: Live-market verification (own eyes)
 
 Desk research lies. Walk the user through the Meta Ad Library (or equivalent) with
 an explicit checklist: number of ACTIVE advertisers, age of the oldest running ad
-(90+ days = someone is paying because it works), and the three traps — zero ads
+(90+ days indicates longevity, not proof of profitability, spend or attribution), and the three traps — zero ads
 (`wrong-channel`), a few giants (`incumbent-owned`), or hundreds of ads
 (`crowded` commodity knife-fight: demand ≠ room for you).
 
 ### Step 5: Verdict
 
 ```
-VERDICT: DEAD | SURVIVED
+VERDICT: DEAD | SURVIVED | INCONCLUSIVE
 KILL-PATTERN: <name>            (if dead)
 THE ONE SENTENCE: <the single finding that decided it>
 EVIDENCE: <2-4 hard facts with sources/numbers>

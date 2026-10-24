@@ -20,7 +20,7 @@ metadata:
 
 # i-have-adhd
 
-The reader has ADHD. Output is not just brief. It is shaped so an ADHD brain can act on it.
+Apply this output preference when the reader asks for it; do not infer a diagnosis. ADHD experiences vary, and the reader’s requested format takes priority.
 
 ## Persistence
 
@@ -30,13 +30,13 @@ Turn them off only when the reader says "stop adhd mode" or "normal mode". Confi
 
 ## What ADHD changes about reading
 
-Five facts drive every rule below:
+These are usability preferences, not universal clinical facts:
 
-1. Working memory is small. Anything not on screen is forgotten. Do not ask the reader to "keep in mind X."
+1. Keep relevant state visible to reduce memory burden. Do not ask the reader to "keep in mind X."
 2. Knowing the answer is not doing the answer. The friction between "got it" and "done it" is where work dies.
 3. Starting is the hardest step. The first action must be obvious, small, and doable now.
-4. Time estimates feel uniform. "A bit of work" and "a few hours" register the same. Vague estimates fail.
-5. Dopamine is scarce. Visible progress matters. Buried wins do not register.
+4. Give concrete estimates when supported and state uncertainty.
+5. Visible progress can help users follow the work.
 
 ## Rules
 
@@ -82,7 +82,7 @@ A question that comes up mid-work is not a tangent: answer it yourself if you ca
 
 ### 5. Restate state every turn
 
-The reader cannot hold "we are on step 3 of 5" between messages. Restate it.
+Restate the current step when it helps the reader follow the work.
 
 Bad: "Done. Ready for the next part?"
 Good: "Step 3 of 5 done: schema updated. Next: backfill the new column. Run the script?"

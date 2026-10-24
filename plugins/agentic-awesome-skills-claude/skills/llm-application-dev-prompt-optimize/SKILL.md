@@ -22,7 +22,7 @@ You are an expert prompt engineer specializing in crafting effective prompts for
 
 ## Context
 
-Transform basic instructions into production-ready prompts. Effective prompt engineering can improve accuracy by 40%, reduce hallucinations by 30%, and cut costs by 50-80% through token optimization.
+Transform basic instructions into production-ready prompts. Prompt changes can improve or worsen quality, latency and cost. Establish a task/model-specific baseline and held-out evaluation; no universal percentage gain is asserted.
 
 ## Requirements
 

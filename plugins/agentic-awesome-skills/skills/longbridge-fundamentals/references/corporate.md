@@ -61,4 +61,4 @@ When data is empty, state so explicitly (e.g. _"No corporate actions on record."
 | stderr `not logged in` / `unauthorized`     | These subcommands are public quote scope; if auth is requested, hint `longbridge auth login`. |
 | Empty result (no shareholders / no actions) | State explicitly: _"No data for this symbol."_ Do not invent.                                 |
 | Symbol mapping fails                        | Ask the user for the `<CODE>.<MARKET>` form.                                                  |
-| Other stderr                                | Relay verbatim — never silently retry.                                                        |
+| Other stderr                                | Relay a redacted error summary — never silently retry.                                                        |

@@ -49,7 +49,7 @@ Use standard materials and effects — such as [blur](https://developer.apple.co
 
 **Choose materials and effects based on semantic meaning and recommended usage.** Avoid selecting a material or effect based on the apparent color it imparts to your interface, because system settings can change its appearance and behavior. Instead, match the material or vibrancy style to your specific use case.
 
-**Help ensure legibility by using vibrant colors on top of materials.** When you use system-defined vibrant colors, you don’t need to worry about colors seeming too dark, bright, saturated, or low contrast in different contexts. Regardless of the material you choose, use vibrant colors on top of it. For guidance, see [System colors](https://developer.apple.com/design/human-interface-guidelines/color#System-colors).
+**Help ensure legibility by using vibrant colors on top of materials.** When you use system-defined vibrant colors, the system can adapt their appearance, but you still need to test legibility over actual backgrounds and accessibility settings. Regardless of the material you choose, use vibrant colors on top of it. For guidance, see [System colors](https://developer.apple.com/design/human-interface-guidelines/color#System-colors).
 
 ![An illustration of a Share button with a translucent background material and a symbol. The symbol uses the systemGray3 color and is difficult to see against the background material.](https://docs-assets.developer.apple.com/published/8a395765f911660a5e16b3bdb30ddd2f/materials-legibility-non-vibrant-label%402x.png)Poor contrast between the material and `systemGray3` label
 

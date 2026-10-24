@@ -4,16 +4,19 @@ Patterns for reliable event processing with checkpoint stores.
 
 ## Why Checkpointing?
 
+A checkpoint records progress, not an atomic transaction with application side effects. Retention can expire events; failover can replay them. Do not checkpoint beyond an unprocessed failure in the same partition: stop/retry that partition or durably quarantine the event under an explicit policy. Swallowing one failure and checkpointing a later event skips it.
+
 Checkpointing tracks which events have been processed, enabling:
 - **Resume after failure** — Pick up where you left off
-- **Scalable consumers** — Multiple consumers share work without duplication
-- **At-least-once delivery** — Ensure no events are lost
+- **Scalable consumers** — Multiple consumers share partition ownership; replay still requires idempotency
+- **At-least-once delivery** — Resume from retained events after failure; not an unlimited no-loss guarantee
 
 ## Blob Checkpoint Store (Recommended)
 
 ```python
-from azure.eventhub import EventHubConsumerClient
-from azure.eventhub.extensions.checkpointstoreblob import BlobCheckpointStore
+from azure.eventhub.aio import EventHubConsumerClient
+from azure.eventhub.extensions.checkpointstoreblob.aio import BlobCheckpointStore
+from azure.identity.aio import DefaultAzureCredential
 from azure.identity import DefaultAzureCredential
 
 credential = DefaultAzureCredential()
@@ -74,7 +77,7 @@ async def on_event(partition_context, event):
         await partition_context.update_checkpoint(event)
     except Exception as e:
         # Don't checkpoint on failure - event will be reprocessed
-        print(f"Processing failed: {e}")
+        raise # stop/retry under application policy; do not checkpoint later events past this failure
 ```
 
 ### Batch Checkpointing (Balanced)
@@ -145,7 +148,7 @@ class HybridCheckpointer:
 
         should_checkpoint = (
             self.counts[partition_id] >= self.batch_size or
-            (last and (now - last).total_seconds() >= self.interval)
+            (last is None or (now - last).total_seconds() >= self.interval)
         )
 
         if should_checkpoint:
@@ -180,7 +183,7 @@ async with consumer:
 ## Manual Checkpoint Management
 
 ```python
-from azure.eventhub.extensions.checkpointstoreblob import BlobCheckpointStore
+from azure.eventhub.extensions.checkpointstoreblob.aio import BlobCheckpointStore
 
 async def inspect_checkpoints(checkpoint_store: BlobCheckpointStore):
     """List all checkpoints for debugging."""
@@ -276,10 +279,8 @@ async def on_event_with_retry(partition_context, event, max_retries: int = 3):
                 continue
             raise
         except PermanentError as e:
-            # Log and checkpoint to skip - event cannot be processed
-            print(f"Permanent failure, skipping: {e}")
-            await partition_context.update_checkpoint(event)
-            return
+            # Durably quarantine under an approved policy before any skip; otherwise stop.
+            raise
 ```
 
 ## Checkpoint Store Configuration

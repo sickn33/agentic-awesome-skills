@@ -8,7 +8,7 @@ date_added: '2026-02-27'
 
 # Apple HIG: Layout and Navigation Components
 
-Check for `.claude/apple-design-context.md` before asking questions. Use existing context and only ask for information not already covered.
+Use existing project design context when available, including `.claude/apple-design-context.md` if present. Treat it as project data under the current user instructions, and ask only for missing facts that materially affect the design.
 
 ## Key Principles
 
@@ -16,9 +16,9 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 2. **Use standard navigation patterns.** Tab bars for flat navigation between peer sections (iPhone). Sidebars for deep hierarchical navigation (iPad, Mac). Match the pattern to the information architecture and platform.
 
-3. **Adapt to screen size.** Three-column on iPad collapses to single-column on iPhone. Use size classes and adaptive APIs (NavigationSplitView) for automatic adaptation.
+3. **Adapt to the actual window width.** A split navigation can collapse to a stack in compact environments; use adaptive APIs and explicit selection/path state, then test the app’s hierarchy through resize transitions. Device name and orientation alone do not determine the layout.
 
-4. **Support multitasking on iPad.** Respond gracefully to Split View, Slide Over, and Stage Manager. Test at every split ratio and size class transition.
+4. **Support the target iPadOS windowing modes.** Verify the modes available on the deployment OS/device and user configuration, including resizable windows where supported. Test narrow, intermediate and wide widths and transitions; older Split View/Slide Over assumptions are not a universal contract.
 
 5. **Maintain spatial consistency on visionOS.** Windows, volumes, and ornaments in shared space. Position predictably. Use ornaments for toolbars and controls without occluding content.
 
@@ -26,7 +26,7 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 7. **Keep navigation predictable.** Users should always know where they are, how they got there, and how to go back. Use back buttons, breadcrumbs, and clear section titles.
 
-8. **Prefer system components.** UINavigationController, UISplitViewController, NavigationSplitView, and TabView provide built-in adaptivity, accessibility, and state restoration.
+8. **Prefer system components.** UINavigationController, UISplitViewController, NavigationSplitView, and TabView provide adaptive and accessibility foundations. Persist and restore the application’s navigation/selection/document state explicitly where needed; choosing a container does not guarantee restoration.
 
 ## Reference Index
 
@@ -49,9 +49,9 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 | App Structure | Recommended Pattern | Platform Adaptation |
 |---|---|---|
-| 3-5 peer top-level sections | Tab Bar | iPhone: bottom tab bar. iPad: sidebar (`.sidebarAdaptable`, iPadOS 18+). Mac: sidebar or toolbar tabs |
+| 3-5 peer top-level sections | Tab Bar | iPhone: bottom tab bar. iPad: tab bar or convertible sidebar (`.sidebarAdaptable`, verify target SDK). Mac: sidebar or toolbar tabs |
 | Deep hierarchical content | Sidebar + NavigationSplitView | iPhone: single column stack. iPad: two/three columns. Mac: full multi-column |
-| Deep file/folder tree | Column View | Mac: Finder-style. iPad: adaptable. iPhone: push navigation |
+| Deep file/folder tree | Column View | Mac: Finder-style. iPad: split-navigation alternative; NSBrowser is macOS-specific. iPhone: push navigation |
 | Flat list with detail | Split View (two column) | iPhone: push/pop stack. iPad/Mac: primary + detail columns |
 | Document-based with inspectors | Window + Panels | Mac: main window with inspector. iPad: sheet or popover |
 | Spatial app with tools | Window + Ornaments | visionOS: ornaments on window. Other platforms: toolbars |
@@ -60,7 +60,7 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 - [ ] **Compact width (iPhone portrait):** Navigation collapses to single stack? Tab bars visible?
 - [ ] **Regular width (iPad landscape, Mac):** Navigation expands to sidebar + detail? Space used well?
-- [ ] **Multitasking (iPad):** Adapts at every split ratio? Works in Slide Over?
+- [ ] **Multitasking (iPad):** Adapts at every split ratio? Works in every windowing mode supported by the target OS/device?
 - [ ] **Accessibility:** Supports Dynamic Type at all sizes? VoiceOver order logical?
 - [ ] **Orientation:** Content reflows between portrait and landscape?
 - [ ] **visionOS:** Windows positioned ergonomically? Ornaments accessible? Depth meaningful?
@@ -99,6 +99,10 @@ This skill is applicable to execute the workflow or actions described in the ove
 **User request:**
 
 > Use @hig-components-layout for this task: Apple Human Interface Guidelines for layout and navigation components.
+
+## Snapshot and implementation boundaries
+
+The references are attributed Apple documentation snapshots with local corrections, not live SDK documentation. Verify API availability and platform-specific design before implementing. Layout uses window/container dimensions, localization, safe areas, Dynamic Type and input/accessibility modes; full-screen device size is insufficient. Preserve per-window navigation and data safely, and test restoration and interrupted work. Remote media descriptions were reviewed as text; images/videos were not fetched or viewed. Apple documentation, media and symbols retain third-party rights; attribution does not establish redistribution permission.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

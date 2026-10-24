@@ -30,7 +30,7 @@ Web Debugging:      Mobile Debugging:
 
 | ❌ Default | ✅ Mobile-Correct |
 |------------|-------------------|
-| "Add console.logs" | Use Flipper / Reactotron |
+| "Log everything" | Use sanitized targeted diagnostics and current React Native DevTools/native profilers |
 | "Check network tab" | Use Charles Proxy / Proxyman |
 | "It works on simulator" | **Test on Real Device** (HW specific bugs) |
 | "Reinstall node_modules" | **Clean Native Build** (Gradle/Pod cache) |
@@ -45,7 +45,7 @@ Web Debugging:      Mobile Debugging:
 | Tool | Purpose | Best For |
 |------|---------|----------|
 | **Reactotron** | State/API/Redux | JS side debugging |
-| **Flipper** | Layout/Network/db | Native + JS bridge |
+| **React Native DevTools** | Supported JS/Hermes diagnostics | Use with a compatible RN version; legacy Flipper setup is not universal |
 | **Expo Tools** | Element inspector | Quick UI checks |
 
 ### 🛠️ Native Layer (The Deep Dive)
@@ -70,10 +70,10 @@ Web Debugging:      Mobile Debugging:
 **Scenario B: Crash to Home Screen (Native Crash)**
 - **Cause:** Native module failure, memory OOM, permission usage without declaration.
 - **Tools:**
-    - **Android:** `adb logcat *:E` (Filter for Errors)
+    - **Android:** `adb logcat '*:E'` (Filter for Errors)
     - **iOS:** Open Xcode → Window → Devices → View Device Logs
 
-> **💡 Pro Tip:** If app crashes immediately on launch, it's almost 100% a native configuration issue (Info.plist, AndroidManifest.xml).
+> **💡 Pro Tip:** If app crashes immediately on launch, it's possibly configuration, startup JS, resources, signing or native code; inspect the actual crash evidence (Info.plist, AndroidManifest.xml).
 
 ### 🌐 "API Request Failed" (Network)
 
@@ -85,7 +85,7 @@ Web Debugging:      Mobile Debugging:
 
 **Solution 2: Proxy (Charles/Proxyman)**
 - **Hard but powerful.** See ALL traffic even from native SDKs.
-- Requires installing SSL cert on device.
+- Use only an authorized isolated debug device/build; scope and remove a test certificate afterward. Never disable production TLS/pinning or inspect unrelated traffic.
 
 ### 🐢 "The UI is Laggy" (Performance)
 
@@ -102,11 +102,11 @@ Web Debugging:      Mobile Debugging:
 
 ### Android
 - **Gradle Sync Fail:** Usually Java version mismatch or duplicate classes.
-- **Emulator Network:** Emulator `localhost` is `10.0.2.2`, NOT `127.0.0.1`.
-- **Cached Builds:** `./gradlew clean` is your best friend.
+- **Emulator Network:** Android Emulator reaches the host loopback through `10.0.2.2`; the emulator's own `localhost` is still `127.0.0.1`. Other emulators/devices differ.
+- **Cached Builds:** Inspect the exact build failure first; clean only the relevant rebuildable output when justified.
 
 ### iOS
-- **Pod Issues:** `pod deintegrate && pod install`.
+- **Pod Issues:** Inspect Pod/Xcode errors and the lockfile first; use a targeted repair, preserving local changes and dependency versions.
 - **Signing Errors:** Check Team ID and Bundle Identifier.
 - **Cache:** Xcode → Product → Clean Build Folder.
 
@@ -120,3 +120,9 @@ Web Debugging:      Mobile Debugging:
 - [ ] **Did you check the native logs?** (Not just terminal output)
 
 > **Remember:** If JavaScript looks perfect but the app fails, look closer at the Native side.
+
+A red screen/home-screen distinction is a clue, not a definitive JS/native
+diagnosis. Preserve and inspect sanitized stack/crash evidence. React Native
+DevTools replaces many legacy Flipper/remote-debugging assumptions; use tools
+supported by the installed runtime. A successful simulator run is useful evidence
+with hardware limits, not a reason to discard simulator testing entirely.

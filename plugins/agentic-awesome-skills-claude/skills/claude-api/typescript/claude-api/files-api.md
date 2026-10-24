@@ -1,5 +1,7 @@
 # Files API — TypeScript
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 The Files API uploads files for use in Messages API requests. Reference files via `file_id` in content blocks, avoiding re-uploads across multiple API calls.
 
 **Beta:** Pass `betas: ["files-api-2025-04-14"]` in your API calls (the SDK sets the required header automatically).
@@ -41,7 +43,7 @@ console.log(`Size: ${uploaded.size_bytes} bytes`);
 
 ```typescript
 const response = await client.beta.messages.create({
-  model: "claude-opus-5",
+  model: "claude-opus-5-5",
   max_tokens: 1024,
   messages: [
     {
@@ -60,7 +62,7 @@ const response = await client.beta.messages.create({
   betas: ["files-api-2025-04-14"],
 });
 
-console.log(response.content[0].text);
+console.log(response.content.filter(b => b.type === "text").map(b => b.text).join(""));
 ```
 
 ---
@@ -94,5 +96,8 @@ const response = await client.beta.files.download(
   { betas: ["files-api-2025-04-14"] },
 );
 const content = Buffer.from(await response.arrayBuffer());
-await fs.promises.writeFile("output.txt", content);
+if (content.length > 16 * 1024 * 1024) throw new Error("Download limit exceeded");
+await fs.promises.writeFile("output.txt", content, { flag: "wx", mode: 0o600 });
 ```
+
+Uploads/listing/deletion require authorized file scope. Close local handles with context managers, retain IDs privately, paginate listings when needed, and delete only files owned by this workflow under the agreed retention plan. Downloads must be bounded, type-checked, saved exclusively into a new private directory and never executed automatically. Limits/platform coverage above are historical examples requiring current verification.

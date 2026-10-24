@@ -58,16 +58,16 @@ fun CoroutineScope.counterActor() = actor<CounterMsg> {
 }
 
 // Propriedades formais:
-// - Sem race conditions: estado encapsulado
-// - Sem deadlocks: se mailbox unbounded e sem cycles
-// - Linearizabilidade: operações parecem atômicas para clientes
+// - Confinement protects local state only if references do not escape
+// - Unbounded mailboxes do not prove deadlock freedom and can exhaust memory
+// - Linearizability requires a defined protocol and proof of operation ordering
 ```
 
 ---
 
 ## 3. Modelo de Memória Android (JMM - Java Memory Model)
 
-### Happens-Before Relations
+### Happens-Before Relations (abbreviated; consult the JMM for synchronization order)
 ```
 Regras do JMM que garantem visibilidade:
 1. Program order: a₁ →ₚ a₂ se a₁ vem antes de a₂ no mesmo thread
@@ -81,8 +81,9 @@ Regras do JMM que garantem visibilidade:
 ### StateFlow e Atomicidade
 ```kotlin
 // MutableStateFlow usa CAS (Compare-And-Swap) internamente
-// Garantia: atualização via compareAndSet é lock-free e wait-free
-// Leitura de .value é sempre a versão mais recente (volatile semantics)
+// Atomic operations are thread-safe; no blanket lock-free/wait-free guarantee.
+// update lambdas may be evaluated repeatedly under contention; avoid side effects.
+// .value returns current synchronized state; collectors may skip intermediate values.
 
 // CORRETO: update atômico
 _state.update { currentState ->
@@ -146,7 +147,7 @@ launch {
 // Se não há nenhum receiver ativo → coroutine fica suspensa para sempre
 // Pode causar memory leak se scope sobrevive
 
-// CORRETO: usar Channel(BUFFERED) ou garantir receiver existe
+// Ensure a receiver, lifecycle cancellation and overflow handling; buffering alone only delays saturation.
 ```
 
 ---
@@ -167,9 +168,9 @@ Em termos de LTL:
 ### No Contexto Android/Kotlin
 ```kotlin
 // Fairness do scheduler de coroutines:
-// - Dispatchers.Default: trabalho processor-bound, round-robin entre coroutines
-// - Dispatchers.IO: thread pool expansível (default 64 threads), fair scheduling
-// - Dispatchers.Main: fila FIFO no Main thread
+// - Dispatchers.Default is for CPU-bound work; do not assume strict round-robin fairness.
+// - Dispatchers.IO has configurable/version-dependent concurrency; do not assume fairness or a universal64 limit.
+// - Dispatchers.Main follows the platform event loop; bounded progress needs workload assumptions.
 
 // Risco de starvation:
 // 1. Dispatchers.Default com muitas coroutines CPU-bound → novas ficam esperando
@@ -208,11 +209,13 @@ STTComplete ==
     /\ UNCHANGED <<llmResult>>
 
 -- Propriedade de Safety:
-NoDeadlock == state \in {"IDLE","RECORDING","TRANSCRIBING",
+StateTypeInvariant == state \in {"IDLE","RECORDING","TRANSCRIBING",
                           "QUERYING_LLM","SPEAKING","ERROR"}
 
 -- Propriedade de Liveness:
-EventuallyIdle == <>(state = "IDLE")
+RecurringIdle == []<>(state = "IDLE")
+\* Requires a complete Next relation plus fairness and callback assumptions.
+\* This fragment alone is not an executable TLA+ module or a liveness proof.
 ```
 
 ---
@@ -266,10 +269,9 @@ class LlmClient(val context: Context) {  // se context = Activity → leak
 }
 
 // ✅ CORRETO: Application context para objetos de longa vida
-class LlmClient(val context: Context) {
-    init {
-        // usar context.applicationContext para operações longas
-    }
+class LlmClient(context: Context) {
+    private val appContext = context.applicationContext
+    // Do not store the original Activity context in a constructor property.
 }
 ```
 

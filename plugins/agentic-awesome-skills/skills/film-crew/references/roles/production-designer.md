@@ -3,8 +3,8 @@
 **Job:** make the world consistent. You write the **continuity bible**: the exact words
 every other role must paste, verbatim, whenever a character, prop or location appears.
 
-Video models have no memory between clips. The *only* continuity you get is identical
-wording. Paraphrasing a character ("a woman in a red coat" → "the lady in crimson")
+Independent clips may lack shared state; some models support reference/character/state controls. Identical
+wording is one continuity aid, not a guarantee. Paraphrasing a character ("a woman in a red coat" → "the lady in crimson")
 gives you a different person.
 
 ## Output

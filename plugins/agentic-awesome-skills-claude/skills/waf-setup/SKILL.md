@@ -30,6 +30,8 @@ Protect web applications with Web Application Firewalls.
 - Access to application logs to tune rules and identify false positives
 - Understanding of HTTP request/response structure
 
+Before mutation, verify the owned account/zone/resource, existing rules and rollback plan. Save current configuration; creating duplicate phase entrypoints or applying Terraform can replace rules. Test the actual application in staging with representative allowed and disallowed requests, then promote a narrowly scoped blocking policy. The blocking examples below are desired enforcement states, not a recommendation to enable all rules immediately. Review sampled-request/log retention and redact tokens, cookies and bodies. WAFs do not replace application authorization, CSRF defenses, parameterized queries or dependency fixes.
+
 ## AWS WAF
 
 ### Create Web ACL with Managed Rules
@@ -43,6 +45,8 @@ aws wafv2 create-web-acl \
   --visibility-config SampledRequestsEnabled=true,CloudWatchMetricsEnabled=true,MetricName=production-waf \
   --rules file://waf-rules.json
 ```
+
+Save the following reviewed JSON as `waf-rules.json` before creation. Inspect managed-rule versions and start with Count overrides and scoped test targets; tune and explicitly remove overrides only after evidence. AWS CLI byte-blob encoding depends on its binary-format setting: verify SearchString encoding for your CLI, rather than assuming the inline JSON is portable.
 
 ### AWS WAF Rules Configuration
 
@@ -154,12 +158,12 @@ aws wafv2 create-web-acl \
 ```bash
 # Associate with Application Load Balancer
 aws wafv2 associate-web-acl \
-  --web-acl-arn arn:aws:wafv2:us-east-1:123456789:regional/webacl/production-waf/abc123 \
-  --resource-arn arn:aws:elasticloadbalancing:us-east-1:123456789:loadbalancer/app/my-alb/abc123
+  --web-acl-arn arn:aws:wafv2:us-east-1:123456789012:regional/webacl/production-waf/abc123 \
+  --resource-arn arn:aws:elasticloadbalancing:us-east-1:123456789012:loadbalancer/app/my-alb/abc123
 
 # Associate with API Gateway
 aws wafv2 associate-web-acl \
-  --web-acl-arn arn:aws:wafv2:us-east-1:123456789:regional/webacl/production-waf/abc123 \
+  --web-acl-arn arn:aws:wafv2:us-east-1:123456789012:regional/webacl/production-waf/abc123 \
   --resource-arn arn:aws:apigateway:us-east-1::/restapis/abc123/stages/prod
 ```
 
@@ -237,14 +241,16 @@ resource "aws_wafv2_web_acl_association" "alb" {
 
 ### API Configuration
 
+Use an approved authenticated connector when available. For curl examples, `CF_CURL_CONFIG` refers to a user-provisioned private untracked config file (mode 0600) containing the authorization header; never pass the token in argv or print the file. Verify zone and token scope. Fetch the existing phase entrypoint/ruleset ID before any create/update, and merge intended changes without dropping other rules. The illustrative Cloudflare Terraform fragment uses provider v4-style blocks; pin and validate the actual provider schema before use.
+
 ```bash
 # List available WAF rulesets
-curl -s "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/rulesets" \
-  -H "Authorization: Bearer ${CF_TOKEN}" | jq '.result[] | {id, name, phase}'
+curl --fail-with-body --max-time 30 -sS "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/rulesets" \
+  --config "$CF_CURL_CONFIG" | jq '.result[] | {id, name, phase}'
 
 # Create a custom WAF rule
-curl -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/rulesets" \
-  -H "Authorization: Bearer ${CF_TOKEN}" \
+curl --fail-with-body --max-time 30 -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/rulesets" \
+  --config "$CF_CURL_CONFIG" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Custom WAF Rules",
@@ -262,21 +268,21 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/rulesets" \
         "description": "Block path traversal attempts"
       },
       {
-        "action": "challenge",
-        "expression": "(cf.threat_score gt 30)",
-        "description": "Challenge high threat score visitors"
+        "action": "managed_challenge",
+        "expression": "(http.request.uri.path eq \"/login\")",
+        "description": "Illustrative login challenge; enable only after application testing"
       },
       {
         "action": "block",
-        "expression": "(http.request.headers[\"user-agent\"] contains \"sqlmap\" or http.request.headers[\"user-agent\"] contains \"nikto\")",
+        "expression": "(lower(http.user_agent) contains \"sqlmap\" or lower(http.user_agent) contains \"nikto\")",
         "description": "Block known attack tools"
       }
     ]
   }'
 
 # Configure rate limiting
-curl -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/rulesets" \
-  -H "Authorization: Bearer ${CF_TOKEN}" \
+curl --fail-with-body --max-time 30 -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/rulesets" \
+  --config "$CF_CURL_CONFIG" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Rate Limiting",
@@ -286,12 +292,12 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/rulesets" \
       {
         "action": "block",
         "ratelimit": {
-          "characteristics": ["ip.src"],
+          "characteristics": ["cf.colo.id", "ip.src"],
           "period": 60,
           "requests_per_period": 100,
           "mitigation_timeout": 600
         },
-        "expression": "(http.request.uri.path matches \"^/api/\")",
+        "expression": "(starts_with(http.request.uri.path, \"/api/\"))",
         "description": "Rate limit API endpoints"
       }
     ]
@@ -315,12 +321,14 @@ resource "cloudflare_ruleset" "waf_custom" {
 
   rules {
     action      = "managed_challenge"
-    expression  = "(cf.threat_score gt 30)"
-    description = "Challenge suspicious visitors"
+    expression  = "(http.request.uri.path eq \"/login\")"
+    description = "Illustrative login challenge; do not use on non-browser API clients"
   }
 }
 ```
 
+
+Cloudflare `cf.threat_score` now always returns zero; do not use old score thresholds as protection. The login challenge above is an explicit path example, not a replacement threat score. Query substring and User-Agent rules are evadable and can block legitimate requests; use managed rules and application fixes. Rate-limit options and periods depend on the plan; confirm them before sending. Geo blocks require business authorization and are not proof of attacker origin.
 
 ## Contents
 

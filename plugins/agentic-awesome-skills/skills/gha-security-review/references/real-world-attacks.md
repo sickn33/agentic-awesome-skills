@@ -4,7 +4,7 @@
 
 ## Overview
 
-This reference documents 7 attacks from the HackerBot Claw campaign (February-March 2025), which targeted high-profile open source repositories using GitHub Actions exploitation techniques. These are real, documented attacks — use them to calibrate severity and validate findings.
+This reference documents 7 attacks from the HackerBot Claw campaign (February-March 2026), which targeted high-profile open source repositories using GitHub Actions exploitation techniques. These are real, documented attacks — use them to calibrate severity and validate findings.
 
 ---
 
@@ -20,7 +20,7 @@ This reference documents 7 attacks from the HackerBot Claw campaign (February-Ma
 | Feb 28, 18:28 | project-akri/akri | — | Script injection via comment | RCE confirmed |
 | Mar 2, 05:57 | RustPython/RustPython | — | Base64 branch injection | Partial execution |
 
-**Success rate:** 5 out of 7 targets achieved code execution or higher.
+The upstream report evolved and contains differing aggregate counts. Treat this as a case-study index, not a measured general success rate; verify linked primary incident evidence for each finding.
 
 ---
 
@@ -62,7 +62,7 @@ func init() {
 
 ### Lesson
 
-Go `init()` functions are invisible to casual review — they execute before `main()` without being called. Any `go run`, `go test`, or `go build` on fork code will trigger them.
+Go `init()` functions are invisible to casual review — they execute before `main()` without being called. `go run` and executed `go test` binaries run package init functions; `go build` compiles/links them without executing init (other build-time tooling/cgo may still execute commands).
 
 ---
 

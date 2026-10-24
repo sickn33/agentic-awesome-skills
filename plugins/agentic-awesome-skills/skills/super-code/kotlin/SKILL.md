@@ -7,6 +7,8 @@ date_added: "2026-06-16"
 ---
 # Kotlin + Compose: Idiomatic Efficiency Reference
 
+Apply only within the requested scope and current project conventions. Preserve behavior, ownership, error handling, accessibility and security; examples are independent fragments, not equivalent rewrites in every context. Verify language/library versions and run relevant checks. Required tests and user-facing progress/results take precedence over brevity rules. Do not install dependencies or delete files merely to follow these examples.
+
 ## When to Use
 - Use this skill when the task matches this description: Language-specific super-code guidelines for kotlin.
 
@@ -238,7 +240,7 @@ fun UserBadge(name: String) { Text(name) }
 Button(onClick = { viewModel.onSave() }) { ... }
 
 // ✅
-val onSave = remember { { viewModel.onSave() } }
+val onSave = remember(viewModel) { { viewModel.onSave() } }
 Button(onClick = onSave) { ... }
 // Or pass it down as a parameter already
 ```

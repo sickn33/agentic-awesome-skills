@@ -32,6 +32,10 @@ pip install azure-keyvault-secrets azure-keyvault-keys azure-keyvault-certificat
 AZURE_KEYVAULT_URL=https://<vault-name>.vault.azure.net/
 ```
 
+## Mutation and recovery boundary
+
+Confirm exact vault/object/version and approved effects before writes, deletes or purge. Independent snippets reuse client names; recovery and purge are alternatives, not sequential cleanup steps. Purge can be irreversible and subject to purge protection; certificate secret export can disclose a private key. Use least privilege, protected outputs and a verified dependency/recovery plan.
+
 ## Secrets
 
 ### SecretClient Setup
@@ -55,7 +59,7 @@ print(f"Created: {secret.name}, version: {secret.properties.version}")
 
 # Get secret
 secret = client.get_secret("database-password")
-print(f"Value: {secret.value}")
+print(f"Retrieved secret: {secret.name}")  # Never print secret values.
 
 # Get specific version
 secret = client.get_secret("database-password", version="abc123")
@@ -214,7 +218,7 @@ async def get_secret():
     
     async with client:
         secret = await client.get_secret("my-secret")
-        print(secret.value)
+        # Consume the value only in the authorized application; do not print it.
 
 import asyncio
 asyncio.run(get_secret())

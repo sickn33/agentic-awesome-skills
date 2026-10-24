@@ -2,6 +2,8 @@
 
 Rules for what to pin, what to leave alone, where to source CUDA wheels, and which torch-side-cars drift silently.
 
+The matrices and empirical reports below are upstream historical observations, not validation of your selected runtime. Resolve wheel URLs to immutable revisions and verify integrity, provenance/license, Python/torch/CUDA/ABI/architecture compatibility before installation. A successful import on one reported configuration is not cross-version ABI proof.
+
 ## What's preinstalled (do not list)
 
 The Gradio SDK base image already installs these on every hardware tier — listing them in `requirements.txt` causes resolution failures or, worse, lets pip silently drift the runtime out of compatibility:
@@ -11,7 +13,7 @@ The Gradio SDK base image already installs these on every hardware tier — list
 | `gradio` | Don't list. Locked by `sdk_version:` in README frontmatter; pinning here is ignored or breaks. |
 | `spaces` | Don't list. Platform-pinned; a user pin always loses. |
 | `huggingface_hub` | Don't list by default. Pin only as a workaround for old `gradio<5` that imports the removed `HfFolder` symbol (see [`known-errors.md`](known-errors.md)). |
-| `torch` | **Pinnable, but only within `{2.8.0, 2.9.1, 2.10.0, 2.11.0}`.** Anything outside causes `CONFIG_ERROR: torch version in requirements.txt is not compatible`. Default is to leave unpinned (runtime preinstalls 2.11), but pinning is appropriate when (a) a specific version is known-good for your model, (b) you're matching a CUDA-extension wheel's `torch2.X` tag, or (c) a dep would otherwise drag torch outside the supported set. When you pin torch, also pin `torchvision` / `torchaudio` to the matching minor — see the "Torch-family side-car drift" section below. |
+| `torch` | **Pin only a currently supported version.** Unsupported versions can cause `CONFIG_ERROR: torch version in requirements.txt is not compatible`. Default is to leave unpinned (runtime preinstalls 2.11), but pinning is appropriate when (a) a specific version is known-good for your model, (b) you're matching a CUDA-extension wheel's `torch2.X` tag, or (c) a dep would otherwise drag torch outside the supported set. When you pin torch, also pin `torchvision` / `torchaudio` to the matching minor — see the "Torch-family side-car drift" section below. |
 
 ## What to list
 
@@ -27,7 +29,7 @@ If a research repo ships a Python package directory (`models/`, `pipeline/`, …
 
 ## Pinning torch
 
-ZeroGPU accepts only `2.8.0`, `2.9.1`, `2.10.0`, `2.11.0`. Default is unpinned (runtime preinstalls the latest). Pinning is fine — and sometimes warranted — within that set:
+The supported ZeroGPU torch list changes; consult the official compatibility table before pinning. Default is unpinned (runtime preinstalls the latest). Pinning is fine — and sometimes warranted — within that set:
 
 - A specific torch is known-good for your model (numerics, attention kernel availability, etc.).
 - A direct-URL CUDA wheel encodes a `torch2.X` tag (see "Prebuilt CUDA wheels" below) — pin torch to match.
@@ -37,12 +39,7 @@ ZeroGPU accepts only `2.8.0`, `2.9.1`, `2.10.0`, `2.11.0`. Default is unpinned (
 
 When a dep would silently downgrade torch (e.g. some forks of `demucs`, `audiocraft` pin `torchaudio<2.1`), install the offender from `app.py` with `--no-deps` rather than pinning torch around it:
 
-```python
-import subprocess, sys
-subprocess.run([sys.executable, "-m", "pip", "install", "--no-deps",
-                "git+https://github.com/facebookresearch/demucs"], check=True)
-import spaces  # safe now — torch wasn't touched
-```
+Resolve this at image/build time using an inspected immutable revision or verified wheel and explicitly declared compatible runtime dependencies. Do not install a moving Git branch during application import; `--no-deps` does not validate compatibility.
 
 List the offender's real runtime deps yourself in `requirements.txt`.
 
@@ -71,7 +68,7 @@ For CUDA-extension packages without an upstream wheel matching the ZeroGPU torch
 
 Wheels live at `wheels/<cell>/<package>-<ver>-<tag>.whl`. Current cells:
 
-- `pt212-cu130-cp310` — built against torch 2.12 / CUDA 13.0 / Python 3.10. **Works on the live ZeroGPU runtime (torch 2.11)** for all packages below.
+- `pt212-cu130-cp310` — built against torch 2.12 / CUDA 13.0 / Python 3.10. **Reported by the upstream snapshot on torch 2.11; not a general compatibility guarantee.**
 - `pt212-cu130-cp312`, `pt212-cu130-cp313` — same matrix at other Python versions.
 - `pt28-cu128-cp310` — older fallback for Spaces stuck on torch 2.8 / CUDA 12.8.
 
@@ -136,7 +133,7 @@ ABI / symbol mismatches at any of these → `ImportError` on first import. Pin `
 
 ## Don't pin `xformers`
 
-Leave bare in `requirements.txt` (or use the prebuilt URL above). Pip picks the wheel matching your installed torch.
+Select a reviewed compatible release or verified immutable wheel. An unpinned resolver may replace torch; inspect the resolved dependency plan and lock the tested set.
 
 ## Don't pin `spaces`
 

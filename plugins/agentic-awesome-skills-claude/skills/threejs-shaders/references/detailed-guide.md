@@ -2,6 +2,8 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+Examples target a pinned Three.js r183 WebGLRenderer unless labeled TSL; core/addons must match. Assume existing scene/camera/geometry/clock and supply UVs/normals as needed. ShaderMaterial does not automatically add built-in material lighting, tone mapping, color conversion or correct normals after custom displacement; decide the color pipeline and use appropriate chunks/output pass. GLSL fragments and alternative snippets are not one complete application.
+
 ## Quick Start
 
 ```javascript
@@ -71,10 +73,8 @@ Full control - you define everything.
 
 ```javascript
 const material = new THREE.RawShaderMaterial({
-  uniforms: {
-    projectionMatrix: { value: camera.projectionMatrix },
-    modelViewMatrix: { value: new THREE.Matrix4() },
-  },
+  // Declare built-in matrix uniforms in raw GLSL; WebGLRenderer supplies their values.
+  // Do not shadow modelViewMatrix with an identity matrix.
   vertexShader: `
     precision highp float;
 
@@ -264,22 +264,22 @@ const material = new THREE.ShaderMaterial({
 const material = new THREE.ShaderMaterial({
   vertexShader: `
     varying vec3 vNormal;
-    varying vec3 vWorldPosition;
+    varying vec3 vViewPosition;
 
     void main() {
       vNormal = normalize(normalMatrix * normal);
-      vWorldPosition = (modelMatrix * vec4(position, 1.0)).xyz;
+      vViewPosition = (modelViewMatrix * vec4(position, 1.0)).xyz;
       gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     }
   `,
   fragmentShader: `
     varying vec3 vNormal;
-    varying vec3 vWorldPosition;
+    varying vec3 vViewPosition;
 
     void main() {
-      // cameraPosition is auto-provided by ShaderMaterial
-      vec3 viewDirection = normalize(cameraPosition - vWorldPosition);
-      float fresnel = pow(1.0 - dot(viewDirection, vNormal), 3.0);
+      // Keep view vector and inverse-transpose normal in the same view space.
+      vec3 viewDirection = normalize(-vViewPosition);
+      float fresnel = pow(1.0 - clamp(dot(viewDirection, normalize(vNormal)), 0.0, 1.0), 3.0);
 
       vec3 baseColor = vec3(0.0, 0.0, 0.5);
       vec3 fresnelColor = vec3(0.5, 0.8, 1.0);
@@ -353,7 +353,7 @@ const material = new THREE.ShaderMaterial({
 
     void main() {
       vec3 viewDir = normalize(-vViewPosition);
-      float rim = 1.0 - max(0.0, dot(viewDir, vNormal));
+      float rim = 1.0 - max(0.0, dot(viewDir, normalize(vNormal)));
       rim = pow(rim, 4.0);
 
       vec3 baseColor = vec3(0.2, 0.2, 0.8);
@@ -370,6 +370,7 @@ const material = new THREE.ShaderMaterial({
 ```glsl
 uniform float progress;
 uniform sampler2D noiseMap;
+varying vec2 vUv; // Matching vertex shader must assign this.
 
 void main() {
   float noise = texture2D(noiseMap, vUv).r;
@@ -423,7 +424,9 @@ if (material.userData.shader) {
 }
 ```
 
-### Common Injection Points
+#For onBeforeCompile, keep a shared time-uniform object rather than only the last compiled shader when material variants exist. If structural patch options vary, implement customProgramCacheKey and set needsUpdate when they change. GPU displacement also needs appropriate bounds/culling and custom shadow depth/distance material handling; deformed visible geometry alone does not update those paths.
+
+## Common Injection Points
 
 ```javascript
 // Vertex shader chunks
@@ -433,7 +436,7 @@ if (material.userData.shader) {
 
 // Fragment shader chunks
 "#include <color_fragment>"; // After diffuse color
-"#include <output_fragment>"; // Final output
+"#include <opaque_fragment>"; // r183 output chunk; verify exact installed shader source
 "#include <fog_fragment>"; // After fog applied
 ```
 
@@ -519,16 +522,10 @@ const material = new THREE.ShaderMaterial({
   wireframe: false,
   wireframeLinewidth: 1, // Note: >1 has no effect on most platforms (WebGL limitation)
 
-  // Extensions
-  extensions: {
-    derivatives: true, // For fwidth, dFdx, dFdy
-    fragDepth: true, // gl_FragDepth
-    drawBuffers: true, // Multiple render targets
-    shaderTextureLOD: true, // texture2DLod
-  },
+  // r183 uses WebGL2; old WebGL1 extension toggles are not this API.
 
   // GLSL version
-  glslVersion: THREE.GLSL3, // For WebGL2 features
+  glslVersion: null, // These fragments use GLSL1-style syntax. For GLSL3 rewrite in/out and fragment output.
 });
 ```
 
@@ -558,9 +555,9 @@ const fragmentShader = `
 ### External Shader Files
 
 ```javascript
-// With vite/webpack
-import vertexShader from "./shaders/vertex.glsl";
-import fragmentShader from "./shaders/fragment.glsl";
+// Vite raw-string imports; webpack needs a matching asset/source rule or loader
+import vertexShader from "./shaders/vertex.glsl?raw";
+import fragmentShader from "./shaders/fragment.glsl?raw";
 
 const material = new THREE.ShaderMaterial({
   vertexShader,
@@ -626,7 +623,7 @@ renderer.debug.checkShaderErrors = true;
 ## Performance Tips
 
 1. **Minimize uniforms**: Group related values into vectors
-2. **Avoid conditionals**: Use mix/step instead of if/else
+2. **Profile conditionals**: mix/step can help some shaders but may evaluate both expensive branches; preserve semantics at boundary values
 3. **Precalculate**: Move calculations to JS when possible
 4. **Use textures**: For complex functions, use lookup tables
 5. **Limit overdraw**: Avoid transparent objects when possible
@@ -640,39 +637,31 @@ if (value > 0.5) {
 }
 
 // Use:
-color = mix(colorB, colorA, step(0.5, value));
+color = mix(colorB, colorA, float(value > 0.5)); // Same strict threshold; profile on the target GPU
 ```
 
 
 ## TSL (Three.js Shading Language) - Future Direction
 
-TSL is the new shader authoring system for Three.js, designed to work with both WebGL and WebGPU renderers. GLSL patterns above are **WebGL-only** and will not work with the WebGPU renderer.
+TSL is the new shader authoring system for Three.js, used by WebGPURenderer and its supported WebGL2 fallback; it is not a drop-in material for the legacy WebGLRenderer. GLSL patterns above are **WebGL-only** and will not work with the WebGPU renderer.
 
 ### TSL Quick Start
 
 ```javascript
-import { MeshStandardNodeMaterial } from "three/addons/nodes/Nodes.js";
-import {
-  uv, sin, timerLocal, vec4, color, positionLocal, normalLocal,
-  float, mul, add
-} from "three/addons/nodes/Nodes.js";
+import { MeshStandardNodeMaterial } from "three/webgpu";
+import { uv, sin, time, vec3, positionLocal, normalLocal } from "three/tsl";
 
 const material = new MeshStandardNodeMaterial();
-
-// Animated color based on UV and time
-const time = timerLocal();
-material.colorNode = color(sin(add(uv().x, time)), uv().y, 0.5);
-
-// Vertex displacement
-material.positionNode = add(
-  positionLocal,
-  mul(normalLocal, sin(add(positionLocal.x, time)).mul(0.1))
+material.colorNode = vec3(sin(uv().x.add(time)).mul(0.5).add(0.5), uv().y, 0.5);
+material.positionNode = positionLocal.add(
+  normalLocal.mul(sin(positionLocal.x.add(time)).mul(0.1))
 );
+
 ```
 
 ### Key Differences from GLSL
 
-| GLSL (WebGL only)       | TSL (WebGL + WebGPU)         |
+| GLSL (WebGL only)       | TSL (WebGPURenderer + supported fallback)         |
 | ----------------------- | ---------------------------- |
 | `ShaderMaterial`        | `MeshStandardNodeMaterial`   |
 | String-based shaders    | JavaScript node graph        |

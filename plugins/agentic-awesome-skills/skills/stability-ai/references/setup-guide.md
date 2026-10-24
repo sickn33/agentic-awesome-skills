@@ -5,7 +5,7 @@
 1. Acesse **https://platform.stability.ai**
 2. Clique em **Sign Up** (ou Login se ja tem conta)
 3. Pode usar Google, GitHub ou email/senha
-4. A **Community License** e gratuita e automatica para uso pessoal ou empresas com faturamento < $1M/ano
+4. Verifique os termos e precos atuais da API. Licencas de pesos/modelos e creditos de API sao produtos diferentes.
 
 ## 2. Obter API Key
 
@@ -16,7 +16,7 @@
 
 ## 3. Configurar a Key
 
-Edite o arquivo `.env` na raiz da skill (`stable-diffusion/.env`):
+Edite o arquivo `.env` na raiz da skill (`stability-ai/.env`):
 
 ```
 STABILITY_API_KEY=sk-sua-chave-aqui
@@ -31,7 +31,7 @@ export STABILITY_API_KEY="sk-sua-chave-aqui"
 ## 4. Instalar Dependencias
 
 ```bash
-cd stable-diffusion
+cd stability-ai
 pip install -r scripts/requirements.txt
 ```
 
@@ -44,7 +44,7 @@ As chamadas HTTP usam `urllib` (stdlib do Python).
 python scripts/generate.py --list-models
 ```
 
-Se a key estiver correta, voce vera a lista de modelos disponiveis.
+Este comando imprime apenas a configuracao local; nao usa a chave nem testa a conexao. So uma chamada autorizada a API pode verificar acesso, e pode consumir creditos.
 
 ## 6. Primeira Geracao
 
@@ -63,11 +63,11 @@ A imagem sera salva em `data/outputs/`.
 
 ### Erro 402 (Payment Required)
 - Sua conta pode ter excedido limites de credito
-- Community License tem uso generoso mas pode ter restricoes em pico
+- A API hospedada requer creditos conforme as regras atuais da conta.
 - Verifique o dashboard para status
 
 ### Erro 429 (Rate Limited)
-- Limite: 150 requests a cada 10 segundos
+- Verifique o rate limit atual da conta/documentacao oficial
 - O script ja faz retry automatico com backoff
 - Se persistir, aguarde alguns minutos
 
@@ -84,11 +84,11 @@ A imagem sera salva em `data/outputs/`.
 
 | Plano | Requests/10s | Modelos |
 |-------|-------------|---------|
-| Community | 150 | Todos SD3.5, Ultra, Core |
+| API hospedada | Depende da conta/servico | Verificar disponibilidade atual |
 
 ## Seguranca
 
 - A key nunca e logada ou exibida em outputs
-- O `.env` esta no `.gitignore` (nao committar!)
+- Verifique que `.env` e outputs privados estao ignorados antes de escrever segredos; nunca committar credenciais.
 - Limite diario configuravel: `SAFETY_MAX_IMAGES_PER_DAY=100` (env var)
 - Contador diario em `data/daily_counter.json`

@@ -34,9 +34,11 @@ Run containerized applications on Amazon ECS with Fargate serverless compute or 
 
 - AWS CLI v2 installed and configured
 - Docker installed for building and pushing images
-- IAM permissions: `ecs:*`, `ecr:*`, `elasticloadbalancing:*`, `logs:*`, `iam:PassRole`
+- Least-privilege IAM permissions for the selected ECS/ECR/ELB/log operations and `iam:PassRole` restricted to the exact task roles
 - An ECR repository for storing container images
 - A VPC with subnets and an ALB (see aws-vpc (`aws-vpc`))
+
+Confirm account, region, budget, cluster/service ownership, deployment window and rollback before changes. Use immutable image digests or versioned tags for reproducible deployments. Private tasks need verified NAT or VPC endpoint access for ECR, logs, secrets and SSM as used. Fargate ALB target groups must use target type `ip`. Execution roles fetch image/log/secret dependencies; task roles grant application and optional ECS Exec permissions. ECS Exec also requires a supported task platform, SSM channels and authorized audited access; enabling a flag is insufficient. The examples reference roles, networking, discovery and ALB resources that are not defined here.
 
 ## Cluster Setup
 
@@ -371,7 +373,7 @@ aws logs filter-log-events \
 | Exec command fails | SSM agent not initialized | Ensure `enableExecuteCommand` is true; check task role |
 | High Fargate costs | Not using Fargate Spot for tolerant workloads | Add FARGATE_SPOT capacity provider |
 | Container OOM killed | Memory limit too low | Increase `memory` in task definition; check for leaks |
-| Slow deployments | minimumHealthyPercent too high | Set to 50% for faster rolling updates |
+| Slow deployments | minimumHealthyPercent too high | Tune only after validating available capacity and minimum serving availability; lowering it can reduce healthy capacity |
 
 ## Related Skills
 

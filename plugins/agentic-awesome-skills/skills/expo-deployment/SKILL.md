@@ -28,6 +28,8 @@ Consult these resources as needed:
 - ./references/play-store.md -- Submitting Android builds to Google Play Store
 - ./references/ios-app-store.md -- iOS App Store submission and review process
 
+Before cloud builds, submissions, metadata pushes or deployments, confirm the exact project/account, artifact, track/channel and cost. Prepare configuration first; publishing requires the user’s authorized scope. Pin a reviewed CLI version for automation rather than floating @latest.
+
 ## Quick Start
 
 ### Install EAS CLI
@@ -43,7 +45,7 @@ eas login
 npx eas-cli@latest init
 ```
 
-This creates `eas.json` with build profiles.
+`eas init` links/creates the EAS project. Run `eas build:configure` to configure build profiles and review the resulting eas.json.
 
 ## Build Commands
 
@@ -64,13 +66,13 @@ npx eas-cli@latest build --profile production
 
 ```bash
 # iOS: Build and submit to App Store Connect
-npx eas-cli@latest build -p ios --profile production --submit
+npx eas-cli@latest build -p ios --profile production --auto-submit
 
 # Android: Build and submit to Play Store
-npx eas-cli@latest build -p android --profile production --submit
+npx eas-cli@latest build -p android --profile production --auto-submit
 
 # Shortcut for iOS TestFlight
-npx testflight
+eas build -p ios --profile production --auto-submit
 ```
 
 ## Web Deployment
@@ -129,7 +131,7 @@ Standard `eas.json` for production deployments:
 
 ### iOS
 
-- Use `npx testflight` for quick TestFlight submissions
+- Use `eas build -p ios --profile production --auto-submit` for quick TestFlight submissions
 - Configure Apple credentials via `eas credentials`
 - See ./references/testflight.md for credential setup
 - See ./references/ios-app-store.md for App Store submission
@@ -159,7 +161,7 @@ EAS manages version numbers automatically with `appVersionSource: "remote"`:
 eas build:version:get
 
 # Manually set version
-eas build:version:set -p ios --build-number 42
+eas build:version:set -p ios  # interactive; verify selected project/value
 ```
 
 ## Monitoring
@@ -172,7 +174,7 @@ eas build:list
 eas build:view
 
 # View submission status
-eas submit:list
+# Inspect the exact submission in the EAS project dashboard
 ```
 
 ## Limitations

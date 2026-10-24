@@ -7,7 +7,7 @@
 - Start simple, add complexity only when needed
 - Test with real data before going live
 - Document every automation with clear naming
-- Monitor errors - 95% error rate auto-disables Zaps
+- Monitor errors - high recurring error rates can disable Zaps; consult current plan policy
 - Know when to graduate to code-based solutions
 - Operations/tasks cost money - design efficiently
 
@@ -248,8 +248,8 @@ Make has visual error handling:
 
 Error handler types:
 1. Break: Stop scenario, send notification
-2. Rollback: Undo completed operations
-3. Commit: Save partial results, continue
+2. Rollback: Revert supported transactional modules only; external sends are not undone
+3. Commit: Commit supported transactional changes and stop the scenario
 4. Ignore: Skip error, continue with next item
 
 Example:
@@ -286,7 +286,7 @@ Zap: "Process Order Items"
    - Log to spreadsheet
 
 Note: Each loop iteration counts as tasks!
-10 items = 10 tasks consumed
+10 items with one chargeable successful action each = 10 tasks; Looping itself is not charged
 """
 
 
@@ -422,7 +422,7 @@ Zap suddenly stops running. Email notification about auto-disable.
 
 Why this breaks:
 Zapier automatically disables Zaps that have 95% or higher error
-rate over 7 days. This prevents runaway automation failures from
+rate, with more than 20 runs in the past 7 days; plan grace periods and override settings can apply. This prevents runaway automation failures from
 consuming your task quota and creating data problems.
 
 Recommended fix:
@@ -476,7 +476,7 @@ Recommended fix:
 # Understand the math:
 
 Order with 10 items, 5 actions per item:
-= 1 trigger + (10 items × 5 actions) = 51 tasks
+= 10 items × 5 chargeable successful actions = 50 tasks (trigger and Looping are not charged)
 
 # Strategies to reduce task usage:
 
@@ -582,9 +582,9 @@ Recommended fix:
    - Track in spreadsheet
    - Handoff process when people leave
 
-4. Prefer connections that don't expire
-   - API keys over OAuth when available
-   - Long-lived tokens
+4. Prefer managed, revocable connections
+   - Use the supported least-privilege authentication mechanism
+   - Rotate credentials and maintain an owned renewal process; longevity is not a security advantage
 
 # Zapier Enterprise:
 - Admin controls for managing connections
@@ -654,22 +654,19 @@ Operations quota depleted quickly. Scenario runs "succeeded" but
 used many operations. Same scenario running more than expected.
 
 Why this breaks:
-Make counts operations per module execution, including failed
-attempts and retries. Error handler modules consume operations.
+Make uses current credit-based pricing with module-specific rules; inspect actual usage for failed attempts and retries. Error-route actions may consume credits; error-handler directives themselves do not.
 Scenarios that fail and retry can use 3-5x expected operations.
 
 Recommended fix:
 
 # Understand operation counting:
 
-Successful run: Each module = 1 operation
-Failed + retry (3x): 3 operations for that module
-Error handler: Additional operation per handler module
+Use the current credit schedule for each module and retry. Router and error-handler directives themselves are not charged; actions on error routes may be.
 
 # Reduce operation waste:
 
 1. Add error handlers that break early:
-   [Module] → Error → [Break] (1 additional op)
+   [Module] → Error → [Break] (directive itself is not charged)
    vs
    [Module] → Error → [Log] → [Alert] → [Update] (3+ ops)
 

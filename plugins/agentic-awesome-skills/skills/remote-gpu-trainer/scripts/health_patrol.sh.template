@@ -21,11 +21,18 @@ DATA_MOUNT="${DATA_MOUNT:-/root/autodl-tmp}"               # disk to watch (byte
 N_TOTAL="${N_TOTAL:-0}"                                     # expected cell count (0 = don't grade completion)
 DISK_PCT_MAX="${DISK_PCT_MAX:-95}"                          # escalate when used% (bytes or inodes) >= this
 
-# ── ONE combined READ-ONLY round-trip (quoted heredoc → sent verbatim; safe args via bash -s) ──
+# ── ONE combined READ-ONLY round-trip; SSH needs explicit remote-shell quoting ──
+case "$HOST" in ""|-*|*[!a-zA-Z0-9_.@-]*) echo "Invalid SSH alias" >&2; exit 1 ;; esac
+# Limit transported values to literal, whitespace-free patterns/paths. SSH concatenates
+# argv into a remote shell command, so local double quotes alone do not protect them.
+for value in "$RUN_GLOB" "$RESULT_DIR" "$RUN_LOG" "$DATA_MOUNT"; do
+  case "$value" in ""|*[!a-zA-Z0-9_./:*?+-]*) echo "Unsupported patrol argument; use a simple path/pattern" >&2; exit 1 ;; esac
+done
 OUT="$(ssh -o ConnectTimeout=15 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 "$HOST" \
-        bash -s "$RUN_GLOB" "$RESULT_DIR" "$RUN_LOG" "$DATA_MOUNT" <<'REMOTE'
+        "bash -s -- '$RUN_GLOB' '$RESULT_DIR' '$RUN_LOG' '$DATA_MOUNT'" <<'REMOTE'
 set -u
 RUN_GLOB=$1; RESULT_DIR=$2; RUN_LOG=$3; DATA_MOUNT=$4
+[ -d "$RESULT_DIR" ] && [ -r "$RUN_LOG" ] && [ -d "$DATA_MOUNT" ] || exit 1
 RESULT_GLOB='*.json'                                        # CUSTOMIZE: one file per finished cell
 CRASH_RE='Traceback|Error|CUDA out of memory|OutOfMemory|Killed'  # CUSTOMIZE; QUOTED → | is alternation, never a pipe
 echo "ALIVE=$(pgrep -af "$RUN_GLOB" 2>/dev/null | grep -v grep | wc -l)"
@@ -41,6 +48,9 @@ REMOTE
 g(){ printf '%s\n' "$OUT" | sed -n "s/^$1=//p"; }
 ALIVE=$(g ALIVE); DONE=$(g DONE); EPOCH=$(g EPOCH); CRASH=$(g CRASH); DISK=$(g DISK); INODE=$(g INODE)
 dp=${DISK%\%}; ip=${INODE%\%}
+for number in "$ALIVE" "$DONE" "$CRASH" "$dp" "$ip" "$N_TOTAL" "$DISK_PCT_MAX"; do
+  case "$number" in ""|*[!0-9]*) echo "PATROL: incomplete or invalid measurements; inspect manually" >&2; exit 1 ;; esac
+done
 
 # ── always report, even if nothing changed (§3-L2) ──
 echo "PATROL $HOST: proc=${ALIVE:-?} done=${DONE:-?}/${N_TOTAL} epoch=${EPOCH:-n/a} disk=${DISK:-?} inode=${INODE:-?}"

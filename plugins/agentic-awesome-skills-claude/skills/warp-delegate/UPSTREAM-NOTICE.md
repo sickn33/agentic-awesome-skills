@@ -8,6 +8,6 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 
 | Local file | Original upstream path | Original Git blob SHA | Import changes |
 | --- | --- | --- | --- |
-| `scripts/relay.mjs` | `skills/warp-delegate/scripts/relay.mjs` | `0b1d74eecad7ff51cc5c48e5c369085b431d7199` | content unchanged |
+| `scripts/relay.mjs` | `skills/warp-delegate/scripts/relay.mjs` | `0b1d74eecad7ff51cc5c48e5c369085b431d7199` | local: private new run-directory permissions and refuse artifact overwrite |
 
 The relay launches the user-installed, authenticated agent CLI. Write-capable modes can approve child tools automatically; they are not a host sandbox. Invoke only for explicitly authorized delegation, keep credentials out of task briefs, and review the child output and project changes before landing them. This import does not run the CLI.

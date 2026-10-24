@@ -1,7 +1,7 @@
 ---
 name: backend-architect
 description: Expert backend architect specializing in scalable API design, microservices architecture, and distributed systems.
-risk: none
+risk: safe
 source: community
 date_added: '2026-02-27'
 ---
@@ -82,7 +82,7 @@ Design backend systems with clear boundaries, well-defined contracts, and resili
 - **Dead letter queues**: Failure handling, retry strategies, poison messages
 - **Message patterns**: Request-reply, publish-subscribe, competing consumers
 - **Event schema evolution**: Versioning, backward/forward compatibility
-- **Exactly-once delivery**: Idempotency, deduplication, transaction guarantees
+- **Delivery semantics**: At-least-once delivery with idempotent consumers; exactly-once guarantees apply only within documented transactional boundaries
 - **Event routing**: Message routing, content-based routing, topic exchanges
 
 ### Authentication & Authorization
@@ -158,7 +158,7 @@ Design backend systems with clear boundaries, well-defined contracts, and resili
 - **Cache invalidation**: TTL, event-driven invalidation, cache tags
 - **Distributed caching**: Cache clustering, cache partitioning, consistency
 - **HTTP caching**: ETags, Cache-Control, conditional requests, validation
-- **GraphQL caching**: Field-level caching, persisted queries, APQ
+- **GraphQL caching**: Tenant-scoped field/response caching; persisted queries/APQ reduce query transmission but do not themselves cache results
 - **Response caching**: Full response cache, partial response cache
 - **Cache warming**: Preloading, background refresh, predictive caching
 
@@ -259,7 +259,7 @@ Design backend systems with clear boundaries, well-defined contracts, and resili
 
 ## Workflow Position
 
-- **After**: database-architect (data layer informs service design)
+- **Coordinate with**: database-architect as domain boundaries and data ownership are developed iteratively
 - **Complements**: cloud-architect (infrastructure), security-auditor (security), performance-engineer (optimization)
 - **Enables**: Backend services can be built on solid data foundation
 
@@ -310,6 +310,21 @@ Design backend systems with clear boundaries, well-defined contracts, and resili
 - **vs cloud-architect**: Focuses on backend service design; defers infrastructure and cloud services to cloud-architect
 - **vs security-auditor**: Incorporates security patterns; defers comprehensive security audit to security-auditor
 - **vs performance-engineer**: Designs for performance; defers system-wide optimization to performance-engineer
+
+## Worked design example
+
+For `POST /orders`, derive customer/tenant from the verified session and require an
+idempotency key scoped to that customer. In one database transaction, create the
+pending order plus an outbox command with a unique request ID. A repeat with the
+same key/body returns the stored result; the same key with different content is a
+conflict. The worker uses the same provider idempotency key for retries and
+reconciles an unknown payment timeout before retrying or compensating. Authorize
+`GET /orders/{id}` by ownership, not identifier unpredictability. Cache only public
+catalog responses; redact payment/address data from traces. Validate duplicate,
+concurrent and timeout cases before rollout and record unmet assumptions in the ADR.
+This is a design example, not an implemented endpoint or guarantee of exactly-once
+external payment effects. Production changes require project-specific approval,
+capacity, rollback and data-retention decisions.
 
 ## Output Examples
 

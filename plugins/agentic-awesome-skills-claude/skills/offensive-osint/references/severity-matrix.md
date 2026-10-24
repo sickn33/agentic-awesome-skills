@@ -18,13 +18,13 @@ In the table, severity labels are possible impact ceilings if the described harm
 | Open Firebase RTDB returning data | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | Listable S3 bucket containing PII | **CRITICAL** | Direct data exfil. |
 | Listable S3 bucket containing logs only | HIGH | Internal hostnames + paths in logs; pivot data. |
-| Spring Boot `/actuator/env` exposed | **CRITICAL** | DB creds, JWT secrets, cloud keys in env. |
-| Spring Boot `/actuator/heapdump` exposed | **CRITICAL** | Heap contains live secrets in string form. |
+| Spring Boot `/actuator/env` reachable | Review lead | Values may be masked; confirm minimum approved unintended sensitive disclosure. |
+| Spring Boot `/actuator/heapdump` reachable | Review lead | Potential memory disclosure; do not download without explicit sensitive-data and byte-budget approval. |
 | Open Elasticsearch (`/_cat/indices` returns) | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | Open MongoDB (no auth) | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | Open Redis (no AUTH) | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | Open Docker API (port 2375) | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
-| Public PMAK validated live with broad scope | **CRITICAL** | Full Postman account + all team workspaces. |
+| Public PMAK accepted by identity endpoint | Review lead | Identity acceptance does not establish access to all workspaces or collections. |
 | Public AWS root access key validated live | **CRITICAL** | Full account compromise. |
 | Live AWS IAM-user key found on GitHub | HIGH | Limited scope (depends on IAM policy); often elevatable. |
 | Live GitHub PAT found in JS bundle | HIGH | Repo write access (depends on scope). |
@@ -32,7 +32,7 @@ In the table, severity labels are possible impact ceilings if the described harm
 | Sourcemap (`.js.map`) accessible on prod | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | Open GraphQL introspection on prod | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | Subdomain takeover possible (Heroku / GitHub Pages / etc.) | HIGH | Takeover → phishing on trusted domain. |
-| Reflected CORS with credentials on `/api/billing` | HIGH | CSRF-via-CORS for billing data. |
+| Reflected CORS with credentials on `/api/billing` | Review lead | Confirm browser-readable unintended sensitive data under an owned approved origin; CORS and CSRF are distinct controls. |
 | Verb tampering: DELETE allowed on documented-GET-only endpoint | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | `phpinfo.php` reachable on prod | HIGH | Discloses paths, env vars, modules → vuln-version pivot. |
 | Tomcat `/manager/html` reachable | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
@@ -50,9 +50,9 @@ In the table, severity labels are possible impact ceilings if the described harm
 | Slack webhook URL leaked | MEDIUM | Send to channel; can be used for social-eng. |
 | Twilio Account SID leaked (no auth token) | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | Wildcard CORS on data-returning API | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
-| Missing `X-Frame-Options` | LOW | Clickjacking. |
-| `.DS_Store` exposed | LOW | Directory listing of dev's machine. |
-| Stripe **test** key leaked | LOW | No real money risk. |
+| Missing `X-Frame-Options` | Review lead | Check effective CSP frame-ancestors and an actual sensitive framing impact. |
+| `.DS_Store` exposed | Review lead | May reveal names from the represented directory; not a full machine directory listing. |
+| Stripe **test** key leaked | Review lead | Assess test-data exposure and allowed actions; test mode does not make credentials harmless. |
 | Firebase URL exposed (no open RTDB) | LOW | Project-ID disclosure only. |
 | Cert pinning missing in mobile app | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | Outdated WordPress install detected | LOW | Pending CVE confirmation. |
@@ -64,7 +64,7 @@ In the table, severity labels are possible impact ceilings if the described harm
 | Open etcd on 2379 | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | K8s API on 6443 with anonymous-auth | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | K8s dashboard exposed without auth | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
-| Helm Tiller (Helm 2) on 44134 | HIGH | Cluster-admin scope. |
+| Helm Tiller (Helm 2) on 44134 | Review lead | Confirm configured service-account permissions; port reachability does not establish cluster-admin. |
 | Citrix Netscaler with KEV CVE | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | F5 BIG-IP TMUI accessible | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | Pulse Secure with CVE-2024-21887 | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
@@ -75,9 +75,9 @@ In the table, severity labels are possible impact ceilings if the described harm
 | MS Exchange with ProxyShell/Logon/NotShell unpatched | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | AWS Lambda Function URL accessible anonymously | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | Public Cloud Run / Cloud Function unauthenticated | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
-| Public Docker registry (anonymous catalog) | MEDIUM | Image enum + secret hunt in layers. |
+| Public Docker registry (anonymous catalog) | Review lead | Catalogs may be intentionally public; sensitive layer access requires separate bounded acquisition approval. |
 | GitHub Actions secrets echoed in workflow logs | HIGH | Secret-in-log = full secret disclosure. |
-| GitHub Actions `pull_request_target` checkout of fork code | HIGH | Class of bug; secrets accessible to attacker PRs. |
+| GitHub Actions `pull_request_target` checkout of fork code | Review lead | Check whether untrusted code actually executes with privileged credentials and effective workflow permissions. |
 | GitLab self-hosted with CVE-2021-22205 | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | Jenkins with `pull_request_target`-equivalent misconfig | HIGH | Build secrets accessible to PRs. |
 | Public Notion page with internal SOPs | MEDIUM | Operational intel; sometimes credentials. |
@@ -88,7 +88,7 @@ In the table, severity labels are possible impact ceilings if the described harm
 | SPF `~all` (softfail) without strict DMARC | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | MX server allows open relay (test with 250 OK to RCPT TO foreign domain) | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | Live Anthropic / OpenAI API key with broad scope | Context-dependent | Owner-confirmed spending/data permissions; model access alone does not expose past responses. |
-| Live npm token with `publish` scope | **CRITICAL** | Supply-chain compromise of all maintained packages. |
+| Live npm token with `publish` scope | **CRITICAL** | Potential supply-chain impact depends on package selection, token permissions, publishing controls and actual exposure. |
 | Live PyPI / Docker Hub / GHCR token with publish scope | **CRITICAL** | Supply-chain compromise. |
 | Atlassian token with admin scope | HIGH | Workspace-wide read; sometimes write. |
 | Subdomain takeover candidate confirmed | HIGH | Trusted-domain phishing surface. |
@@ -101,12 +101,12 @@ In the table, severity labels are possible impact ceilings if the described harm
 | Self-signed cert on prod | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | Heartbleed (CVE-2014-0160) detected | **CRITICAL** | Memory disclosure including session tokens + keys. |
 | Public Slack invite link discoverable | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
-| Vendor / supplier / e-procurement portal publicly exposed + breach corpus shows vendor accounts compromised | **HIGH** | Vendor impersonation + procurement fraud (BEC vector); regulatory exposure if PII/payment data flows. |
+| Public procurement portal plus historical vendor breach matches | Review lead | Historical associations do not establish current account control, impersonation or a transaction failure. |
 | Job-application / careers portal collects PII over plain HTTP (no TLS) | **HIGH** | Cleartext PII at scale; regulatory exposure under GDPR / CCPA / India DPDP Act / LGPD. |
 | Decommissioned legacy mail (NXDOMAIN today) + breach corpus has historical employee URLs against it + cloud SSO migration confirmed via autodiscover IPs | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | Public-facing intranet (`intranet.<domain>` resolves and returns content without VPN) | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 | Staging / preprod / UAT / sandbox subdomain publicly resolvable | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
-| `vpn.<domain>` resolves but vendor + version unknown (passive only) | INFO | Attack surface flag only; escalate to HIGH-CRITICAL after active fingerprint matches a KEV CVE (§16.16). |
+| `vpn.<domain>` resolves but vendor + version unknown | INFO | Asset lead only; a fingerprint/CVE association needs exact affected-version and prerequisite corroboration. |
 | DMARC RUA points to a third-party reporting vendor (kdmarc / dmarcian / Valimail / Agari / EasyDMARC) | Review lead | Confirm intended access, affected version/configuration and actual impact; discovery alone is insufficient. |
 
 ---

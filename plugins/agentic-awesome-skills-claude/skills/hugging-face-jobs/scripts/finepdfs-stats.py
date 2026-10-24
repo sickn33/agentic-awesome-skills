@@ -1,3 +1,4 @@
+# Modified in the local catalog review: credential, bounded execution and data-quality corrections.
 # /// script
 # requires-python = ">=3.12"
 # dependencies = [
@@ -31,11 +32,12 @@ Example usage:
     hf jobs uv run \\
         -s HF_TOKEN \\
         -e HF_XET_HIGH_PERFORMANCE=1 \\
-        https://huggingface.co/datasets/uv-scripts/dataset-stats/raw/main/finepdfs-stats.py \\
+        https://huggingface.co/datasets/uv-scripts/dataset-stats/raw/<reviewed-full-commit-sha>/finepdfs-stats.py \\
         -- --output-repo username/stats
 """
 
 import argparse
+import math
 import logging
 import os
 import sys
@@ -58,7 +60,7 @@ def safe_user_path(path_value, base_dir="."):
 import polars as pl
 from ascii_graph import Pyasciigraph
 from datasets import Dataset
-from huggingface_hub import HfApi, create_repo, list_repo_tree, login
+from huggingface_hub import HfApi, create_repo, list_repo_tree
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -98,7 +100,7 @@ def list_available_languages(dataset_id: str) -> list[str]:
         return sorted(languages)
     except Exception as e:
         logger.warning(f"Could not list languages: {e}")
-        return list(COMMON_LANGUAGES.keys())
+        raise RuntimeError("Language discovery failed; no fabricated fallback coverage") from e
 
 
 def compute_temporal_stats(df: pl.LazyFrame, output_path: Path) -> pl.DataFrame:
@@ -107,6 +109,7 @@ def compute_temporal_stats(df: pl.LazyFrame, output_path: Path) -> pl.DataFrame:
         pl.len().alias("doc_count"),
         pl.col("token_count").sum().alias("total_tokens"),
         pl.col("fw_edu_scores").list.mean().mean().alias("avg_edu_score"),
+        pl.col("fw_edu_scores").list.mean().is_not_null().sum().alias("scored_doc_count"),
         (pl.col("fw_edu_scores").list.mean() >= 3).sum().alias("high_edu_count"),
     )
     query.sink_parquet(output_path, engine="streaming")
@@ -116,14 +119,16 @@ def compute_temporal_stats(df: pl.LazyFrame, output_path: Path) -> pl.DataFrame:
 def compute_global_stats(temporal: pl.DataFrame) -> pl.DataFrame:
     """Compute global stats from temporal breakdown."""
     total = temporal["doc_count"].sum()
+    scored = temporal["scored_doc_count"].sum()
+    if not total or not scored: raise ValueError("No documents with observed educational scores")
     return pl.DataFrame(
         {
             "total_docs": [total],
             "total_tokens": [temporal["total_tokens"].sum()],
             "avg_edu_score": [
-                (temporal["avg_edu_score"] * temporal["doc_count"]).sum() / total
+                (temporal["avg_edu_score"] * temporal["scored_doc_count"]).sum() / scored
             ],
-            "high_edu_rate": [temporal["high_edu_count"].sum() / total],
+            "high_edu_rate": [temporal["high_edu_count"].sum() / scored],
             "num_dumps": [len(temporal)],
         }
     )
@@ -133,9 +138,9 @@ def format_temporal_stats(temporal: pl.DataFrame) -> pl.DataFrame:
     """Format temporal stats with high_edu_rate, sorted chronologically."""
     return (
         temporal.with_columns(
-            (pl.col("high_edu_count") / pl.col("doc_count")).alias("high_edu_rate")
+            (pl.col("high_edu_count") / pl.col("scored_doc_count")).alias("high_edu_rate")
         )
-        .select(["dump", "doc_count", "avg_edu_score", "high_edu_rate"])
+        .select(["dump", "doc_count", "scored_doc_count", "avg_edu_score", "high_edu_rate"])
         .sort(
             "dump"
         )  # Chronological order (CC-MAIN-2017-xx comes before CC-MAIN-2024-xx)
@@ -150,11 +155,12 @@ def create_ascii_charts(temporal_stats: pl.DataFrame) -> str:
         temporal_stats.with_columns(
             pl.col("dump").str.extract(r"CC-MAIN-(\d{4})", 1).alias("year")
         )
+        .filter(pl.col("year").is_not_null())
         .group_by("year")
         .agg(
             pl.col("doc_count").sum(),
-            pl.col("avg_edu_score").mean(),
-            pl.col("high_edu_rate").mean(),
+            ((pl.col("avg_edu_score") * pl.col("scored_doc_count")).sum() / pl.col("scored_doc_count").sum()).alias("avg_edu_score"),
+            ((pl.col("high_edu_rate") * pl.col("scored_doc_count")).sum() / pl.col("scored_doc_count").sum()).alias("high_edu_rate"),
         )
         .sort("year")
     )
@@ -198,14 +204,16 @@ def create_readme(
         temporal_stats.with_columns(
             pl.col("dump").str.extract(r"CC-MAIN-(\d{4})", 1).alias("year")
         )
+        .filter(pl.col("year").is_not_null())
         .group_by("year")
         .agg(
             pl.col("doc_count").sum(),
-            pl.col("avg_edu_score").mean(),
-            pl.col("high_edu_rate").mean(),
+            ((pl.col("avg_edu_score") * pl.col("scored_doc_count")).sum() / pl.col("scored_doc_count").sum()).alias("avg_edu_score"),
+            ((pl.col("high_edu_rate") * pl.col("scored_doc_count")).sum() / pl.col("scored_doc_count").sum()).alias("high_edu_rate"),
         )
         .sort("year")
     )
+    if yearly.is_empty(): raise ValueError("No valid year labels; no temporal claim can be made")
     first_year = yearly.head(1).to_dicts()[0]
     last_year = yearly.tail(1).to_dicts()[0]
 
@@ -222,7 +230,6 @@ tags:
   - polars
   - finepdfs-edu
   - temporal-analysis
-license: odc-by
 configs:
   - config_name: global_stats
     data_files: global_stats/train-*.parquet
@@ -231,9 +238,9 @@ configs:
 default_viewer_config: temporal_stats
 ---
 
-# Is the Web Getting More Educational?
+# Educational-score distribution in the selected dataset sample
 
-Temporal analysis of educational quality in **{scope}** across {stats.get("num_dumps", 0)} CommonCrawl dumps.
+Descriptive analysis of a model-derived educational score in **{scope}** across {stats.get("num_dumps", 0)} CommonCrawl dumps.
 
 ## Trend
 
@@ -252,7 +259,7 @@ Temporal analysis of educational quality in **{scope}** across {stats.get("num_d
 
 - **{total_docs:,} documents** processed in **{scan_time:.0f} seconds**
 - **{docs_per_sec:,.0f} docs/sec** using Polars streaming
-- Single scan, no full dataset download required
+- Projected remote reads still transfer data; this is not a representative causal trend of the entire web
 
 ## Summary
 
@@ -273,7 +280,7 @@ Temporal analysis of educational quality in **{scope}** across {stats.get("num_d
 ## Reproduce
 
 ```bash
-uv run https://huggingface.co/datasets/uv-scripts/dataset-stats/raw/main/finepdfs-stats.py \\
+uv run https://huggingface.co/datasets/uv-scripts/dataset-stats/raw/<reviewed-full-commit-sha>/finepdfs-stats.py \\
     {"--all-languages" if args.all_languages else f"--lang {args.lang}"} --output-repo your-username/stats
 ```
 
@@ -342,19 +349,21 @@ def main():
         help="Local directory for output files",
     )
 
-    parser.add_argument(
-        "--hf-token",
-        type=str,
-        help="HuggingFace API token (or set HF_TOKEN env var)",
-    )
 
     parser.add_argument(
         "--private",
         action="store_true",
+        default=True,
         help="Make the output dataset private",
     )
 
+    parser.add_argument("--allow-publish", action="store_true")
     args = parser.parse_args()
+    if args.limit is not None and args.limit <= 0: parser.error("limit must be positive")
+    if args.output_repo and not args.allow_publish: parser.error("--allow-publish required for output upload")
+    import re
+    if not re.fullmatch(r"[A-Za-z0-9_-]+/[A-Za-z0-9_.-]+", args.source_dataset): parser.error("Invalid Hub dataset ID")
+    if not re.fullmatch(r"[A-Za-z0-9_-]+", args.lang): parser.error("Invalid language subset")
 
     # Check for high-performance mode
     if os.environ.get("HF_XET_HIGH_PERFORMANCE"):
@@ -415,7 +424,7 @@ def main():
 
     # Create output directory
     output_dir = safe_user_path(args.output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=False)
 
     # Single scan: compute temporal stats
     logger.info("Computing temporal stats (single scan)...")
@@ -480,9 +489,9 @@ def main():
 
     # Upload to HF Hub if requested
     if args.output_repo:
-        hf_token = args.hf_token or os.environ.get("HF_TOKEN")
+        hf_token = os.environ.get("HF_TOKEN")
         if hf_token:
-            login(token=hf_token)
+            os.environ["HF_TOKEN"] = hf_token
 
         api = HfApi(token=hf_token)
 
@@ -492,7 +501,7 @@ def main():
             repo_type="dataset",
             private=args.private,
             token=hf_token,
-            exist_ok=True,
+            exist_ok=False,
         )
 
         # Upload each as a dataset config
@@ -534,7 +543,7 @@ if __name__ == "__main__":
         print("Is the Web Getting More Educational?")
         print("=" * 40)
         print("\nAnalyze educational quality trends across CommonCrawl dumps")
-        print("using Polars streaming - no download needed!\n")
+        print("using Polars streaming - projected remote reads still transfer data!\n")
         print("Example commands:\n")
         print("# Quick test:")
         print("uv run finepdfs-stats.py --limit 10000\n")
@@ -551,7 +560,7 @@ if __name__ == "__main__":
         print("    -s HF_TOKEN \\")
         print("    -e HF_XET_HIGH_PERFORMANCE=1 \\")
         print(
-            "    https://huggingface.co/datasets/uv-scripts/dataset-stats/raw/main/finepdfs-stats.py \\"
+            "    https://huggingface.co/datasets/uv-scripts/dataset-stats/raw/<reviewed-full-commit-sha>/finepdfs-stats.py \\"
         )
         print("    -- --output-repo username/stats")
         sys.exit(0)

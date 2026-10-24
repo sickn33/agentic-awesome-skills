@@ -7,7 +7,7 @@ Category codes: INPUT · AUTH · DATA · TIME · NET · DEV · CONC · PAY · FI
 ## INPUT — input and validation
 - EC-INPUT-01 Empty / whitespace-only / only ZWNJ or invisible characters → treated as empty; field-level error; no request.
 - EC-INPUT-02 Maximum length reached / exceeded on paste → hard limit enforced client and server; counter shown; truncation policy explicit.
-- EC-INPUT-03 Invisible or control characters pasted (zero-width, RTL marks, tabs) → stripped or rejected before validation.
+- EC-INPUT-03 Invisible or control characters pasted → validate per field; reject unsafe controls without stripping legitimate ZWNJ/combining marks from names or natural-language text.
 - EC-INPUT-04 Emoji, combining marks, unusual scripts in names/text → stored and rendered correctly; length counted in graphemes.
 - EC-INPUT-05 HTML/script/SQL-looking input → escaped on output, parameterised queries; never executed; shown back verbatim as text.
 - EC-INPUT-06 Leading zeros, plus signs, spaces, dashes in numeric identifiers (phone, card, code) → normalised by one shared function; original never stored.
@@ -91,7 +91,7 @@ Category codes: INPUT · AUTH · DATA · TIME · NET · DEV · CONC · PAY · FI
 ## PAY — payments and money
 - EC-PAY-01 Gateway redirect never returns (user closes browser after paying) → server-side verification via callback/inquiry; order reconciled; receipt on next visit.
 - EC-PAY-02 Callback missing, delayed or duplicated → idempotent handler; inquiry job for pending payments; duplicate callbacks ignored.
-- EC-PAY-03 Amount mismatch between request and callback → payment rejected, flagged, alert; user copy: nothing charged / contact support.
+- EC-PAY-03 Amount mismatch between request and callback → fulfilment held, discrepancy flagged and reconciled with the provider; tell the user the payment status is under verification. Never claim nothing was charged without provider evidence.
 - EC-PAY-04 Gateway down or rejects merchant → alternative gateway policy or explicit "temporarily unavailable" with retry; order kept pending with expiry.
 - EC-PAY-05 Refunds (full, partial, failed refund) → API availability verified; manual fallback process documented; copy for each state.
 - EC-PAY-06 Currency unit and rounding (Toman vs Rial; no decimals) → one conversion function; tests on boundaries; labels always shown.

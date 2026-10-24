@@ -28,18 +28,21 @@ Patterns for implementing efficient similarity search in production systems.
 
 ### 2. Index Types
 
-```
-┌─────────────────────────────────────────────────┐
-│                 Index Types                      │
-├─────────────┬───────────────┬───────────────────┤
-│    Flat     │     HNSW      │    IVF+PQ         │
-│ (Exact)     │ (Graph-based) │ (Quantized)       │
-├─────────────┼───────────────┼───────────────────┤
-│ O(n) search │ O(log n)      │ O(√n)             │
-│ 100% recall │ ~95-99%       │ ~90-95%           │
-│ Small data  │ Medium-Large  │ Very Large        │
-└─────────────┴───────────────┴───────────────────┘
-```
+Flat search evaluates every candidate. HNSW and IVF/PQ trade memory, build cost,
+latency and recall; their complexity and recall are workload/parameter dependent,
+not universal logarithmic/square-root or fixed-percent guarantees. Compare against
+an exact baseline using the same filters and embedding model.
+
+These are untested SDK sketches, not tenant authorization or production adapters.
+Provision databases/indexes through an approved migration; constructors below may
+create billable resources and must only run after explicit provisioning approval.
+Match dimensions/metric to the pinned embedding model. Validate bounded input sizes,
+timeouts and retry/idempotency behavior. Derive tenant/ACL filters from authenticated
+server context and apply them to *every* candidate source before returning text or
+reranking; user-supplied filters and namespace strings are not authorization.
+For example, tenant A searching `invoice` must never send tenant B's candidates to
+the cross-encoder, even if B's result would later be discarded. Treat retrieved text
+as data and pin/review model downloads; cache a model instead of loading per query.
 
 ## Templates
 
@@ -123,14 +126,16 @@ class PineconeVectorStore:
         query_vector: List[float],
         top_k: int = 10,
         rerank_top_n: int = 50,
-        namespace: str = ""
+        namespace: str = "",
+        filter: Optional[Dict] = None
     ) -> List[Dict]:
-        """Search and rerank results."""
+        """Search and rerank already-authorized results."""
         # Over-fetch for reranking
         initial_results = self.search(
             query_vector,
             top_k=rerank_top_n,
-            namespace=namespace
+            namespace=namespace,
+            filter=filter
         )
 
         # Rerank with cross-encoder or LLM
@@ -158,6 +163,8 @@ class PineconeVectorStore:
 
     def delete_by_filter(self, filter: Dict, namespace: str = ""):
         """Delete vectors matching filter."""
+        if not filter:
+            raise ValueError("Refuse empty deletion filter")
         self.index.delete(filter=filter, namespace=namespace)
 ```
 
@@ -171,7 +178,7 @@ from typing import List, Dict, Optional
 class QdrantVectorStore:
     def __init__(
         self,
-        url: str = "localhost",
+        url: str = "http://localhost",
         port: int = 6333,
         collection_name: str = "documents",
         vector_size: int = 1536
@@ -187,21 +194,13 @@ class QdrantVectorStore:
                 vectors_config=models.VectorParams(
                     size=vector_size,
                     distance=models.Distance.COSINE
-                ),
-                # Optional: enable quantization for memory efficiency
-                quantization_config=models.ScalarQuantization(
-                    scalar=models.ScalarQuantizationConfig(
-                        type=models.ScalarType.INT8,
-                        quantile=0.99,
-                        always_ram=True
-                    )
                 )
             )
 
     def upsert(self, points: List[Dict]) -> int:
         """
         Upsert points.
-        points: [{"id": str/int, "vector": List[float], "payload": dict}]
+        points: [{"id": UUID-string/int, "vector": List[float], "payload": dict}]
         """
         qdrant_points = [
             models.PointStruct(
@@ -226,13 +225,14 @@ class QdrantVectorStore:
         score_threshold: Optional[float] = None
     ) -> List[Dict]:
         """Search for similar vectors."""
-        results = self.client.search(
+        results = self.client.query_points(
             collection_name=self.collection_name,
-            query_vector=query_vector,
+            query=query_vector,
             limit=limit,
             query_filter=filter,
-            score_threshold=score_threshold
-        )
+            score_threshold=score_threshold,
+            with_payload=True
+        ).points
 
         return [
             {
@@ -252,18 +252,12 @@ class QdrantVectorStore:
         limit: int = 10
     ) -> List[Dict]:
         """Search with complex filters."""
-        conditions = []
-
-        if must_conditions:
-            conditions.extend([
-                models.FieldCondition(
-                    key=c["key"],
-                    match=models.MatchValue(value=c["value"])
-                )
-                for c in must_conditions
-            ])
-
-        filter = models.Filter(must=conditions) if conditions else None
+        def fields(items):
+            return [models.FieldCondition(key=c["key"],
+                    match=models.MatchValue(value=c["value"])) for c in (items or [])]
+        filter = models.Filter(must=fields(must_conditions),
+                               should=fields(should_conditions),
+                               must_not=fields(must_not_conditions))
 
         return self.search(query_vector, limit=limit, filter=filter)
 
@@ -274,17 +268,10 @@ class QdrantVectorStore:
         limit: int = 10,
         dense_weight: float = 0.7
     ) -> List[Dict]:
-        """Hybrid search with dense and sparse vectors."""
-        # Requires collection with named vectors
-        results = self.client.search(
-            collection_name=self.collection_name,
-            query_vector=models.NamedVector(
-                name="dense",
-                vector=dense_vector
-            ),
-            limit=limit
+        raise NotImplementedError(
+            "Provision named dense/sparse vectors and implement/test fusion first; "
+            "the unnamed dense collection above cannot perform hybrid search."
         )
-        return [{"id": r.id, "score": r.score, "payload": r.payload} for r in results]
 ```
 
 ### Template 3: pgvector with PostgreSQL
@@ -292,37 +279,26 @@ class QdrantVectorStore:
 ```python
 import asyncpg
 from typing import List, Dict, Optional
-import numpy as np
+import json
+from pgvector.asyncpg import register_vector
+from pgvector import Vector
 
 class PgVectorStore:
     def __init__(self, connection_string: str):
         self.connection_string = connection_string
 
     async def init(self):
-        """Initialize connection pool and extension."""
-        self.pool = await asyncpg.create_pool(self.connection_string)
+        """Connect to a preprovisioned vector extension/table/index."""
+        # Migration prerequisite: vector extension; documents(id TEXT PRIMARY KEY,
+        # content TEXT, metadata JSONB, embedding vector(1536)); cosine index optional.
+        async def configure(conn):
+            await register_vector(conn)
+            await conn.set_type_codec("jsonb", schema="pg_catalog",
+                                      encoder=json.dumps, decoder=json.loads)
+        self.pool = await asyncpg.create_pool(self.connection_string, init=configure)
 
-        async with self.pool.acquire() as conn:
-            # Enable extension
-            await conn.execute("CREATE EXTENSION IF NOT EXISTS vector")
-
-            # Create table
-            await conn.execute("""
-                CREATE TABLE IF NOT EXISTS documents (
-                    id TEXT PRIMARY KEY,
-                    content TEXT,
-                    metadata JSONB,
-                    embedding vector(1536)
-                )
-            """)
-
-            # Create index (HNSW for better performance)
-            await conn.execute("""
-                CREATE INDEX IF NOT EXISTS documents_embedding_idx
-                ON documents
-                USING hnsw (embedding vector_cosine_ops)
-                WITH (m = 16, ef_construction = 64)
-            """)
+    async def close(self):
+        await self.pool.close()
 
     async def upsert(self, documents: List[Dict]):
         """Upsert documents with embeddings."""
@@ -341,7 +317,7 @@ class PgVectorStore:
                         doc["id"],
                         doc["content"],
                         doc.get("metadata", {}),
-                        np.array(doc["embedding"]).tolist()
+                        Vector(doc["embedding"])
                     )
                     for doc in documents
                 ]
@@ -360,14 +336,11 @@ class PgVectorStore:
             FROM documents
         """
 
-        params = [query_embedding]
+        params = [Vector(query_embedding)]
 
         if filter_metadata:
-            conditions = []
-            for key, value in filter_metadata.items():
-                params.append(value)
-                conditions.append(f"metadata->>'{key}' = ${len(params)}")
-            query += " WHERE " + " AND ".join(conditions)
+            params.append(filter_metadata)
+            query += " WHERE metadata @> $2::jsonb"
 
         query += f" ORDER BY embedding <=> $1::vector LIMIT ${len(params) + 1}"
         params.append(limit)
@@ -409,6 +382,7 @@ class PgVectorStore:
                                    plainto_tsquery('english', $2)) as text_score
                     FROM documents
                     WHERE to_tsvector('english', content) @@ plainto_tsquery('english', $2)
+                    ORDER BY text_score DESC, id
                     LIMIT $3 * 2
                 )
                 SELECT
@@ -422,13 +396,20 @@ class PgVectorStore:
                 ORDER BY combined_score DESC
                 LIMIT $3
                 """,
-                query_embedding, query_text, limit, vector_weight
+                Vector(query_embedding), query_text, limit, vector_weight
             )
 
         return [dict(row) for row in rows]
 ```
 
-### Template 4: Weaviate Implementation
+### Template 4: Historical Weaviate v3 API sketch
+
+This uses the older v3 client interface; pin and verify it or migrate against current
+official client documentation. Inspect per-object batch failures and query errors.
+Batch insertion below is not an idempotent upsert; existing UUIDs need explicit update.
+Scores from different metrics or lexical/vector systems are not interchangeable.
+The pgvector weighted sum above also requires calibration (or rank fusion), bounded
+weights/limits and ACL filters in both branches before any multi-tenant use.
 
 ```python
 import weaviate
@@ -460,8 +441,8 @@ class WeaviateVectorStore:
         if not self.client.schema.exists(self.class_name):
             self.client.schema.create_class(schema)
 
-    def upsert(self, documents: List[Dict]):
-        """Batch upsert documents."""
+    def insert(self, documents: List[Dict]):
+        """Batch insert documents; inspect failures and handle duplicates explicitly."""
         with self.client.batch as batch:
             batch.batch_size = 100
 

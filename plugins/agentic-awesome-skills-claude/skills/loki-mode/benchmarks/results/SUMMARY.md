@@ -1,3 +1,5 @@
+> Historical upstream archive. The outputs have not been independently reproduced. Retry-based pass fractions are not pass@1, and patch generation is not SWE-bench resolution. The legacy host-execution path is disabled pending a reviewed isolated evaluation harness.
+
 # Loki Mode Benchmark Results
 
 **Generated:** 2026-01-05 09:31:14

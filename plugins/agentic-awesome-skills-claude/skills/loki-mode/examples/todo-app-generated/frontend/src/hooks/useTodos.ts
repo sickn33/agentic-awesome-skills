@@ -37,7 +37,7 @@ export const useTodos = (): UseTodosReturn => {
   const addTodo = async (title: string) => {
     try {
       const newTodo = await createTodo(title);
-      setTodos([newTodo, ...todos]);
+      setTodos(current => [newTodo, ...current]);
     } catch (err) {
       setError('Failed to create todo');
       console.error(err);
@@ -51,7 +51,7 @@ export const useTodos = (): UseTodosReturn => {
 
     try {
       const updatedTodo = await updateTodo(id, !todo.completed);
-      setTodos(todos.map(t => t.id === id ? updatedTodo : t));
+      setTodos(current => current.map(t => t.id === id ? updatedTodo : t));
     } catch (err) {
       setError('Failed to update todo');
       console.error(err);
@@ -62,7 +62,7 @@ export const useTodos = (): UseTodosReturn => {
   const removeTodo = async (id: number) => {
     try {
       await deleteTodo(id);
-      setTodos(todos.filter(t => t.id !== id));
+      setTodos(current => current.filter(t => t.id !== id));
     } catch (err) {
       setError('Failed to delete todo');
       console.error(err);

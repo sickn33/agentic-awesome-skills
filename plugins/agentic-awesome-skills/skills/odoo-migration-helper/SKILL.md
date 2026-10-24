@@ -27,25 +27,13 @@ Migrating Odoo modules between major versions requires careful handling of API c
 
 ## Key Migration Changes by Version
 
-### Odoo 16 → 17
+### Odoo 16 → 17 view modifiers
 
-| Topic | Old (v16) | New (v17) |
-|---|---|---|
-| View visibility | `attrs="{'invisible': [...]}"` | `invisible="condition"` |
-| Chatter | `<div class="oe_chatter">` | `<chatter/>` |
-| Required/Readonly | `attrs="{'required': [...]}"` | `required="condition"` |
-| Python minimum | 3.10 | 3.10+ |
-| JS modules | Legacy `define(['web.core'])` | ES module `import` syntax |
+Replace domain-based `attrs`/`states` modifiers with the target version's inline expressions. Ensure fields used in expressions are present in the view (invisible is sufficient). Test inherited views as well as base views.
 
-### Odoo 15 → 16
+### Other API and schema changes
 
-| Topic | Old (v15) | New (v16) |
-|---|---|---|
-| Website published flag | `website_published = True` | `is_published = True` |
-| Mail aliases | `alias_domain` on company | Moved to `mail.alias.domain` model |
-| Report render | `_render_qweb_pdf()` | `_render_qweb_pdf()` (same, but signature changed) |
-| Accounting move | `account.move.line` grouping | Line aggregation rules updated |
-| Email threading | `mail_thread_id` | Deprecated; use `message_ids` |
+Do not apply a blanket field rename or assume a report-method signature. Compare each used model, field and method in the exact source/target branches and installed addons. Record the old API, verified replacement, data transformation and test. JavaScript migration depends on the module and asset framework, not only the major version.
 
 ## Examples
 
@@ -61,43 +49,21 @@ Migrating Odoo modules between major versions requires careful handling of API c
 <field name="discount" required="state == 'sale'"/>
 ```
 
-### Example 2: Migrate Chatter block
-
-```xml
-<!-- v16 -->
-<div class="oe_chatter">
-    <field name="message_follower_ids"/>
-    <field name="activity_ids"/>
-    <field name="message_ids"/>
-</div>
-
-<!-- v17 -->
-<chatter/>
-```
-
-### Example 3: Migrate website_published flag (v15 → v16)
-
-```python
-# v15
-record.website_published = True
-
-# v16+
-record.is_published = True
-```
-
 ## Best Practices
 
 - ✅ **Do:** Test with `--update=your_module` on each version before pushing to production.
-- ✅ **Do:** Use the official [Odoo Upgrade Guide](https://upgrade.odoo.com/) to get an automated pre-upgrade analysis report.
+- ✅ **Do:** Use the official [Odoo Upgrade Guide](https://www.odoo.com/documentation/17.0/administration/upgrade.html) to select the supported database upgrade path and request a test upgrade when applicable.
 - ✅ **Do:** Check OCA migration notes and the module's `HISTORY.rst` for community modules.
-- ✅ **Do:** Run `npm run validate` after migration to catch manifest or frontmatter issues early.
-- ❌ **Don't:** Skip intermediate versions — go v14→v15→v16→v17 sequentially; never jump.
+- ✅ **Do:** Install/update the module on a disposable upgraded database and run its Odoo tests; inspect logs, access rules, accounting balances and attachments before production cutover.
+- ❌ **Don't:** Assume every upgrade must run each intermediate database version. Follow the supported upgrade service/tool path; review all intervening custom-code changes even for a direct upgrade.
 - ❌ **Don't:** Forget to update `version` in `__manifest__.py` (e.g., `17.0.1.0.0`).
 - ❌ **Don't:** Assume OCA modules are migration-ready; check their GitHub branch for the target version.
 
 ## Limitations
 
-- Covers **v14 through v17** only — does not address v13 or older (pre-manifest era has fundamentally different module structure).
+- Covers **v14 through v17** only — does not address v13 or older.
 - The **Odoo.sh automated upgrade** path has additional steps not covered here; refer to Odoo.sh documentation.
 - **Enterprise-specific modules** (e.g., `account_accountant`, `sign`) may have undocumented breaking changes; test on a staging environment with Enterprise license.
 - JavaScript OWL component migration (v15 Legacy → v16 OWL) is a complex topic not fully covered by this skill.
+
+Before migration, take a consistent database/filestore backup and test recovery. Module source migration alone does not migrate production data; neutralize email, scheduled jobs and external integrations in the test copy.

@@ -262,7 +262,7 @@ fun NeoCard() {
 - Shift the container using `Modifier.offset` on press, while hiding the shadow layer.
 
 ## Do's and Don'ts
-- **DO**: Make the active/pressed state visually translate the button to cover its shadow, creating a physical "click" feel.
+- **DO**: Use a semantic Button or clickable with role and an interaction source for the pressed state. Gesture-only examples here are visual studies; they do not implement a complete keyboard-accessible action. Keep the action and hit target stable, and reset press state on cancellation.
 - **DON'T**: Use gradients or blurred shadows. The aesthetic relies entirely on flat, sharp vectors.
 
 ## Limitations

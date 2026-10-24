@@ -1,8 +1,11 @@
 ---
 title: "Loading | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/loading
+---
 
 # Loading
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 The best content-loading experience finishes before people become aware of it.
 
@@ -57,3 +60,7 @@ Date| Changes
 June 9, 2025| Revised guidance for storing downloads to reflect downloading large assets in the background.  
 June 10, 2024| Added guidelines for showing progress and storing downloads, and enhanced guidance for games.  
   
+
+## Implementation checks
+
+Report measured completed work or bytes when available; do not invent a percentage or ETA. Include failure, offline, retry and cancellation behavior, avoid duplicate side effects on retries, and respect metered-network/download preferences. Background Assets eligibility and completion remain system-controlled.

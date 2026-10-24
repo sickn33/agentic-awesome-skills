@@ -10,3 +10,5 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | --- | --- | --- | --- |
 | `references/data-monitor-creation.md` | `skills/monitoring-advisor/references/data-monitor-creation.md` | `b7f199090969f98a3c9a21ed11bdc99f89c0adaa` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/agent-monitor-creation.md` | `skills/monitoring-advisor/references/agent-monitor-creation.md` | `699b8bec38bee317d894e7adbd20f97ac8f72247` | text-only trailing whitespace and EOF blank lines normalized |
+
+2026-10-23 adaptations: corrected absent server/per-type reference claims, partial coverage and transient-table inference, transcript privacy/untrusted-data treatment, schedule and deployment/threshold assumptions. License and original source identities above are preserved.

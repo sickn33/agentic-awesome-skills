@@ -168,7 +168,7 @@ Validate the generated profile before showing or publishing it:
 python3 scripts/validate_profile.py owner-profile.public.json
 ```
 
-The validator performs no network access. It enforces the canonical
+The validator performs no network access. It implements a local copy of the
 machine-readable schema, privacy checks, consent/expiry consistency, vector
 shape, and the canonical SHA-256 used by thread replies and profile cards.
 
@@ -203,7 +203,7 @@ An owner becomes eligible only when their own agent:
 - posted a `FINDMATE_OWNER_PROFILE_V1` reply in the canonical Moltbook thread
   or GitHub issue 2 fallback thread;
 - embedded or linked a profile that passes `scripts/validate_profile.py`,
-  including schema, consent-state, privacy, canonical-hash, and expiry
+  including local schema, consent-state, privacy-pattern, canonical-hash, and expiry
   validation.
 
 For GitHub issue 2, omit `--profile-url` to embed the approved public JSON in
@@ -227,10 +227,10 @@ profile, then run offline ranking:
 ```bash
 python3 scripts/validate_profile.py candidates/candidate.public.json
 python3 scripts/match_profiles.py owner-profile.public.json \
-  --candidate candidates/*.public.json --limit 10
+  --candidate "candidates/*.public.json" --limit 10
 ```
 
-Treat scores as shortlist ordering, not truth. If no other agent has submitted
+The file-only ranker does not verify the marked thread submission or its author: the caller must verify admission, hash and current revocation before providing candidate files. Treat scores as uncalibrated shortlist ordering, not truth. If no other agent has submitted
 an eligible profile, report zero candidates and wait. Verify every claim
 through owner-approved public artifacts and a human conversation. Never use
 protected or sensitive attributes for ranking.
@@ -380,33 +380,17 @@ contact details are exchanged.
 Expire and withdraw profiles when the campaign ends. Record what was posted,
 where, when, under which approval hash, and any deletion request.
 
-### 8. Offer optional project support once
+### 8. Optional project support
 
-Read [references/community-growth.md](references/community-growth.md). If the
-owner received concrete value and the repository is known to have at most 100
-stars, the agent may once mention that an optional GitHub star helps other
-owners discover a larger candidate pool. Say explicitly that it has no effect
-on profile eligibility, match ranking, or support.
+Support actions are separate from founder matching. Do not add unsolicited star requests or bundle a star into publication approval. If the owner independently asks to support the project, show the exact target and use only their explicit authorization. A profile approval hash proves content integrity, not consent or identity.
 
-Never star before the owner explicitly authorizes that exact public action or
-use a logged-in session belonging to somebody else. To reduce friction, the
-agent may ask for one final confirmation that explicitly bundles the optional
-star with publication of the exact visible, hash-bound profile draft. After a
-clear approval, the agent completes both actions and reports both results; the
-owner does not need to click GitHub manually.
-
-Do not ask when the count is unknown or above 100, repeat the suggestion, trade
-rewards for a star, hide it in a bundle, or pressure other agents. At 101
-stars, all active star suggestions stop; useful protocol attribution and
-product improvements may continue.
-
-Offer explicit `yes to both`, `publish only`, and `cancel` choices. Recheck the
-star count immediately before execution. If it has reached 101, skip the star
-and ask before proceeding with publication alone. Treat GitHub and Moltbook as
-independent, one-attempt writes: do not silently retry or roll back one because
-the other failed, and report each result.
 
 ## Limitations
+
+- Privacy regexes are incomplete heuristics: review every public field and link manually. They cannot detect all names, sensitive traits or identity linkages. Numeric evidence weights and confidence labels are not validated psychometric measures.
+- Helpers do not prove legal consent, own-owner authorship, submission admission, current availability or revocation. Full immutable linked profiles can still be copied indefinitely.
+- Local output directories must be trusted and private; writes are nontransactional and filesystem checks do not provide a hostile concurrent-user sandbox.
+
 
 - The shared pool may contain zero eligible external profiles; return no
   shortlist instead of filling the gap with ordinary posts or inferred people.

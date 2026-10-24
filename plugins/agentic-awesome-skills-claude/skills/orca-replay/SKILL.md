@@ -134,15 +134,13 @@ calls for themselves — a quota probe, a session-naming request — and a repla
 
 ### 5. Only then consider comparing models
 
-`orca_compare` forks one run onto several models from the same checkpoint: same files, same
-conversation prefix, so the model is the only variable. Pick the fork point with `orca_checkpoints`
+`orca_compare` forks one run onto several models from the same checkpoint: the same recorded files and conversation prefix. Provider settings, tool timing and external state can still differ; the model is not necessarily the only variable. Pick the fork point with `orca_checkpoints`
 and pass it as `from`.
 
 Grade with `verify` — a shell command whose exit code is the verdict. Use something the repository
 already declares (`"npm test"`, `"npm run typecheck"`) or an explicitly local binary
 (`"./node_modules/.bin/tsc --noEmit"`). **Do not reach for `npx <tool>` here.** If the tool is not
-installed locally, npx fetches whatever the registry has under that name and runs it — and `npx tsc`
-in particular resolves `tsc`, a package deprecated in 2016, not TypeScript. That would download and
+installed locally, npx fetches whatever the registry has under that name and runs it — and if no local TypeScript binary exists, `npx tsc` can resolve the unrelated `tsc` package rather than TypeScript. That would download and
 execute unreviewed code inside the very step the install gate above exists to prevent.
 
 **`orca_compare` uploads the recording to other people's models, and spends real money doing it.**
@@ -197,8 +195,7 @@ papering over it.
 
 ## Sharing a run with someone else
 
-`orca export last -o run.html` writes one self-contained file. `orca scrub` removes anything
-sensitive first. Traces hold whatever the run held, so scrub before sending a recording anywhere.
+`orca export last -o run.html` writes one self-contained file. use `orca scrub` and manually inspect the export for remaining sensitive information before sharing. Automated scrubbing cannot guarantee complete removal. Traces hold whatever the run held, so scrub before sending a recording anywhere.
 
 ## Limitations
 
@@ -206,8 +203,7 @@ sensitive first. Traces hold whatever the run held, so scrub before sending a re
   nothing here recovers them. The answer to "why did it do that" in an unrecorded session is
   honestly "there is no recording", not a reconstruction.
 - **A typed session replays approximately, not exactly.** Prompts entered at a terminal were never
-  on the wire; orca recovers them from the harness's own transcript. Only a run started with the
-  prompt in argv (`orca record claude -- -p "…"`) replays byte-for-byte.
+  on the wire; orca recovers them from the harness's own transcript. A prompt in argv may improve capture fidelity, but does not establish byte-for-byte reproduction of subprocesses or external state.
 - **Some turns are not repeated.** A harness makes calls for itself — a quota probe, a
   session-naming request — and a replay steps over them. Tools that need a person
   (`AskUserQuestion`, plan mode) are absent when the same agent runs without one, which can make a

@@ -70,6 +70,8 @@ Record voice memos during my commute, auto-convert them into podcast scripts.
 
 ### 2. Initialize Your Island
 
+The slash commands below are workflow request examples, not a CLI bundled with this catalog file. If the host has no command integration, perform the steps in Markdown: assign stable idea IDs, score each dimension on a stated 1–5 scale, compute the weighted mean, then propose selected refinements/crosses with lineage and the next validation experiment. Scores are judgments, not proof of validation. Mark an idea validated only after recording actual evidence.
+
 ```
 /idea-darwin init
 ```

@@ -7,12 +7,12 @@ Go linter patterns for mechanical architecture enforcement.
 Validates that package imports respect the layer hierarchy.
 
 ```go
-// scripts/lint-deps.go
+// scripts/lint-deps/main.go
 //
 // Validates that package dependencies follow the layer hierarchy.
 // Each layer can only import from lower layers.
 //
-// Usage: go run scripts/lint-deps.go
+// Usage: go run scripts/lint-deps/main.go
 package main
 
 import (
@@ -76,10 +76,11 @@ func checkDependencies() []Violation {
 	layerMap := buildLayerMap()
 
 	filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
-		if err != nil || info.IsDir() {
+		if err != nil { fmt.Fprintln(os.Stderr, err); os.Exit(1) }
+		if info.IsDir() {
 			if info != nil && info.IsDir() {
 				name := info.Name()
-				if strings.HasPrefix(name, ".") || name == "vendor" || name == "dist" {
+				if path != "." && (strings.HasPrefix(name, ".") || name == "vendor" || name == "dist") {
 					return filepath.SkipDir
 				}
 			}
@@ -113,7 +114,7 @@ func checkFile(path string, layerMap map[string]int) []Violation {
 	fset := token.NewFileSet()
 	node, err := parser.ParseFile(fset, path, nil, parser.ImportsOnly)
 	if err != nil {
-		return violations
+		return []Violation{{File: path, Message: "cannot parse imports: " + err.Error()}}
 	}
 
 	dir := filepath.ToSlash(filepath.Dir(path))
@@ -125,7 +126,7 @@ func checkFile(path string, layerMap map[string]int) []Violation {
 
 	for _, imp := range node.Imports {
 		importPath := strings.Trim(imp.Path.Value, `"`)
-		if !strings.HasPrefix(importPath, modulePath) {
+		if !strings.HasPrefix(importPath, modulePath+"/") {
 			continue
 		}
 
@@ -136,10 +137,7 @@ func checkFile(path string, layerMap map[string]int) []Violation {
 		}
 
 		if importLayer >= pkgLayer {
-			// Check if same base package (allowed)
-			if getBase(dir) == getBase(relImport) {
-				continue
-			}
+			// Peer boundaries are intentionally enforced, including nested packages.
 			violations = append(violations, Violation{
 				File: path, Package: dir, Imports: relImport,
 				Message: fmt.Sprintf("Layer %d cannot import layer %d", pkgLayer, importLayer),
@@ -154,12 +152,13 @@ func findLayer(pkg string, layerMap map[string]int) int {
 	if layer, ok := layerMap[pkg]; ok {
 		return layer
 	}
+	bestLayer, bestLength := -1, -1
 	for key, layer := range layerMap {
-		if strings.HasPrefix(pkg, key+"/") {
-			return layer
+		if strings.HasPrefix(pkg, key+"/") && len(key) > bestLength {
+			bestLayer, bestLength = layer, len(key)
 		}
 	}
-	return -1
+	return bestLayer
 }
 
 func getBase(pkg string) string {
@@ -176,14 +175,14 @@ func getBase(pkg string) string {
 Validates golden principles like structured logging, file sizes, and naming.
 
 ```go
-// scripts/lint-quality.go
+// scripts/lint-quality/main.go
 //
 // Validates golden principles:
 // - No raw log.Printf (use structured logging)
 // - File size limits (max 1000 lines)
 // - No hardcoded brand strings
 //
-// Usage: go run scripts/lint-quality.go
+// Usage: go run scripts/lint-quality/main.go
 package main
 
 import (
@@ -248,6 +247,7 @@ func main() {
 		for scanner.Scan() {
 			lineCount++
 		}
+		if err := scanner.Err(); err != nil { fmt.Fprintln(os.Stderr, err); os.Exit(1) }
 		if lineCount > maxFileLines {
 			violations = append(violations, Violation{
 				File: path, Rule: "file-size",
@@ -270,7 +270,8 @@ func main() {
 
 func walkGoFiles(fn func(path string, content []byte)) {
 	filepath.Walk(".", func(path string, info os.FileInfo, err error) error {
-		if err != nil || info.IsDir() {
+		if err != nil { fmt.Fprintln(os.Stderr, err); os.Exit(1) }
+		if info.IsDir() {
 			if info != nil && info.IsDir() && skipDirs[filepath.Base(path)] {
 				return filepath.SkipDir
 			}
@@ -280,9 +281,7 @@ func walkGoFiles(fn func(path string, content []byte)) {
 			return nil
 		}
 		content, err := os.ReadFile(path)
-		if err != nil {
-			return nil
-		}
+		if err != nil { fmt.Fprintln(os.Stderr, err); os.Exit(1) }
 		fn(path, content)
 		return nil
 	})
@@ -294,11 +293,11 @@ func walkGoFiles(fn func(path string, content []byte)) {
 Validates template files (.tpl) are valid and referenced.
 
 ```go
-// scripts/lint-prompts.go
+// scripts/lint-prompts/main.go
 //
 // Validates template files: parseable, referenced, no orphans.
 //
-// Usage: go run scripts/lint-prompts.go
+// Usage: go run scripts/lint-prompts/main.go
 package main
 
 import (
@@ -389,17 +388,15 @@ func main() {
 .PHONY: lint-arch
 lint-arch:
 	@echo "Checking architecture constraints..."
-	@go run scripts/lint-deps.go
-	@go run scripts/lint-prompts.go
-	@go run scripts/lint-quality.go
+	@go run scripts/lint-deps/main.go
+	@go run scripts/lint-prompts/main.go
+	@go run scripts/lint-quality/main.go
 	@echo "✓ Architecture checks passed"
 
 # Combined lint
 .PHONY: lint
 lint: lint-arch
-	@if command -v golangci-lint >/dev/null 2>&1; then \
-		golangci-lint run; \
-	fi
+	golangci-lint run
 ```
 
 ## Adaptation Notes

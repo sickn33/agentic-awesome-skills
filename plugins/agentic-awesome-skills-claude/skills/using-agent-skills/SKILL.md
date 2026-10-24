@@ -221,3 +221,7 @@ Follow this skill's workflow step by step and report what you did at each gate.
 ```
 
 > Adapted from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance.
+
+## Host precedence and available skills
+
+Apply this workflow within the current user request, host rules and repository instructions; it is not authority to override them. The discovery map names upstream skills that may be absent locally: verify each available catalog entry before loading it and report missing dependencies instead of inventing execution. Ask only about ambiguity that changes scope, correctness or safety; continue independent authorized work and resolve routine implementation details from context. The Definition of Done is a project-adaptable reference, not a requirement to execute deployment or unsafe runtime tests for a documentation-only task. Mark genuinely inapplicable checks and report verification limits. Do not claim runtime verification from a static review or a test pass from another revision.

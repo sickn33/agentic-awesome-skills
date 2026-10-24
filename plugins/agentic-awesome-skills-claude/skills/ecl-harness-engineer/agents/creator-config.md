@@ -1,4 +1,4 @@
-﻿# Config & Environment Creation Agent
+# Config & Environment Creation Agent
 
 You are creating or updating harness configuration and environment files.
 
@@ -88,81 +88,16 @@ The runtime ecosystem contract. Describes what the application needs to run.
 
 Follow `references/environment-detection-guide.md` for detection strategies.
 
-### harness/scripts/setup-env.sh
+### Runtime script generation contract
 
-Start external dependencies (DB, Redis, etc.):
+Generate scripts only after inspecting the actual application's supported startup and service configuration. There is no universally runnable DB/server template in this bundle.
 
-```bash
-#!/bin/bash
-set -euo pipefail
-umask 077
-
-mkdir -p harness/.runtime
-HARNESS_ENV_FILE="${HARNESS_ENV_FILE:-harness/.runtime/env}"
-if [ ! -f "$HARNESS_ENV_FILE" ]; then
-  HARNESS_POSTGRES_PASSWORD="$(openssl rand -hex 24)"
-  HARNESS_REDIS_PASSWORD="$(openssl rand -hex 24)"
-  {
-    printf 'HARNESS_POSTGRES_PASSWORD=%s\n' "$HARNESS_POSTGRES_PASSWORD"
-    printf 'HARNESS_REDIS_PASSWORD=%s\n' "$HARNESS_REDIS_PASSWORD"
-  } > "$HARNESS_ENV_FILE"
-fi
-. "$HARNESS_ENV_FILE"
-
-# Start PostgreSQL
-docker run -d --name harness-postgres \
-  -p 127.0.0.1:5432:5432 \
-  -e POSTGRES_PASSWORD="$HARNESS_POSTGRES_PASSWORD" \
-  postgres:16
-
-# Wait for ready
-until docker exec harness-postgres pg_isready; do sleep 1; done
-
-echo "✓ Environment ready"
-```
-
-If `docker-compose.yml` already exists, create a thin wrapper instead.
-
-### harness/scripts/start-server.sh
-
-Start the application with test environment:
-
-```bash
-#!/bin/bash
-set -euo pipefail
-
-export PORT=8081
-export ENV=test
-. harness/.runtime/env
-export DATABASE_URL="postgres://postgres:${HARNESS_POSTGRES_PASSWORD}@localhost:5432/testdb?sslmode=disable"
-
-# Start server
-go run cmd/api/main.go &
-SERVER_PID=$!
-
-# Wait for ready
-for i in $(seq 1 30); do
-  if curl -s http://localhost:$PORT/health > /dev/null 2>&1; then
-    echo "✓ Server ready (PID: $SERVER_PID)"
-    exit 0
-  fi
-  sleep 1
-done
-
-echo "✗ Server failed to start"
-exit 1
-```
-
-### harness/scripts/teardown-env.sh
-
-Stop and cleanup:
-
-```bash
-#!/bin/bash
-docker stop harness-postgres 2>/dev/null || true
-docker rm harness-postgres 2>/dev/null || true
-echo "✓ Cleaned up"
-```
+- Setup must create or reuse only an explicitly approved isolated test environment. Record a unique run/project ID, exact resource IDs and ownership labels in a private ignored runtime directory; reject links/junctions and foreign resources. Do not use fixed global container names or production connection defaults.
+- Store generated secrets in private ignored files or an approved secret provider; parse values as data, never source an env file or place passwords in command arguments. Verify ignore rules before writing them.
+- Specify the intended database/user explicitly, bind published ports to loopback, use a supported pinned image, and bound readiness with a timeout and resource-health check. A TCP socket alone does not validate application readiness.
+- Start the complete package (for example `go run ./cmd/api`, only if that package exists). Prefer foreground `exec` under a supervisor. For detached starts, persist an owned PID/start identity, check child exit, require the exact expected HTTP status, and clean up that process on failure. A wrapper exiting zero must not claim a still-running child was supervised.
+- Teardown must use the recorded resource identities, verify ownership, stop the owned app and dependencies, preserve logs/evidence and user data, and propagate failures. Never stop/remove a same-named global container or delete traces as routine cleanup.
+- Inspect existing Compose files and use the supported `docker compose` command with a unique explicit project, bounded readiness and exact approved services; do not run migrations/seeds implicitly.
 
 ### Makefile Targets
 
@@ -343,7 +278,7 @@ Rules:
 - Wire Makefile/package scripts/CI to the selected entrypoint, for example
   `bash scripts/lint-ecl.sh` for Bash or `{pkg_manager} run lint:harness` for package scripts.
 - If the PowerShell profile is selected, detect whether `pwsh` exists before documenting or wiring
-  commands. If `pwsh` is unavailable, use `powershell -NoProfile -ExecutionPolicy Bypass`.
+  commands. If `pwsh` is unavailable, use `powershell -NoProfile`.
 - Keep PowerShell profile scripts compatible with Windows PowerShell 5.1. Avoid ambiguous overloads such as
   `TrimStart(".\")`; use typed arguments such as `[char[]]@(".", "\")`.
 - Avoid non-ASCII mojibake marker literals in PowerShell templates. Use Unicode codepoints or another

@@ -10,8 +10,8 @@ Edge Requests dominate (every page view is an edge request; static assets even m
 
 1. **Pre-render everything that can be pre-rendered.** Blog index, individual posts, docs pages, category pages. Use `generateStaticParams` for App Router or `getStaticPaths` for Pages Router. Anything CMS-driven should run on a webhook revalidation, not on every request.
 2. **ISR with a sensible cadence.** Pages that need fresh-ish content but don't need real-time accuracy go ISR. `revalidate: 3600` (hourly) is a good starting point for docs; `60s` for blog index pages.
-3. **`next/image` for every image asset.** Hero images, author photos, post inline images, OG images. Even thumbnail-only sites benefit from format negotiation (WebP/AVIF).
-4. **`next/font` for self-hosted fonts.** Eliminates FOIT/FOUT, eliminates the third-party request, prevents CLS.
+3. **Choose the image path by format and measured delivery.** Optimize suitable raster photos and hero media; ordinary SVGs, tiny icons, animated formats and generated OG endpoints require separate treatment. Even thumbnail-only sites benefit from format negotiation (WebP/AVIF).
+4. **`next/font` for self-hosted fonts.** Can remove third-party font requests; verify fallback metrics and measured CLS because font replacement does not guarantee zero layout shift.
 5. **Prefetch on hover.** `next/link` does this by default. For other frameworks, consider intersection-observer-based prefetch on the visible link set.
 
 ## Frequent gotchas

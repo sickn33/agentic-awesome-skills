@@ -26,6 +26,7 @@ from qiskit import QuantumCircuit, transpile
 from qiskit_ibm_runtime import QiskitRuntimeService, EstimatorV2 as Estimator, Session
 from qiskit.quantum_info import SparsePauliOp
 from scipy.optimize import minimize
+from qiskit_algorithms.optimizers import COBYLA
 import numpy as np
 
 def vqe_algorithm(hamiltonian, ansatz, backend, initial_params):
@@ -40,7 +41,7 @@ def vqe_algorithm(hamiltonian, ansatz, backend, initial_params):
     """
 
     with Session(backend=backend) as session:
-        estimator = Estimator(session=session)
+        estimator = Estimator(mode=session)
 
         def cost_function(params):
             # Bind parameters to circuit
@@ -50,7 +51,7 @@ def vqe_algorithm(hamiltonian, ansatz, backend, initial_params):
             qc_isa = transpile(bound_circuit, backend=backend, optimization_level=3)
 
             # Compute expectation value
-            job = estimator.run([(qc_isa, hamiltonian)])
+            job = estimator.run([(qc_isa, hamiltonian.apply_layout(qc_isa.layout))])
             result = job.result()
             energy = result[0].data.evs
 
@@ -77,7 +78,7 @@ qc = QuantumCircuit(4)
 # ... define ansatz structure ...
 
 service = QiskitRuntimeService()
-backend = service.backend("ibm_brisbane")
+backend = service.least_busy(operational=True, simulator=False)
 
 energy, params = vqe_algorithm(hamiltonian, qc, backend, np.random.rand(10))
 print(f"Ground state energy: {energy}")
@@ -163,7 +164,7 @@ def grover_oracle(marked_states):
 
     for target in marked_states:
         # Flip phase of target state
-        for i, bit in enumerate(target):
+        for i, bit in enumerate(reversed(target)):
             if bit == '0':
                 qc.x(i)
 
@@ -172,7 +173,7 @@ def grover_oracle(marked_states):
         qc.mcx(list(range(num_qubits - 1)), num_qubits - 1)
         qc.h(num_qubits - 1)
 
-        for i, bit in enumerate(target):
+        for i, bit in enumerate(reversed(target)):
             if bit == '0':
                 qc.x(i)
 
@@ -225,7 +226,7 @@ qc_grover = grover_algorithm(marked, iterations)
 
 **Install Qiskit Nature:**
 ```bash
-uv pip install qiskit-nature qiskit-nature-pyscf
+uv pip install qiskit-nature pyscf
 ```
 
 **Example: H2 Molecule**
@@ -366,7 +367,7 @@ vqc = VQC(
     sampler=sampler,
     feature_map=feature_map,
     ansatz=ansatz,
-    optimizer='COBYLA'
+    optimizer=COBYLA()
 )
 
 # Train
@@ -437,7 +438,7 @@ unitary = QuantumCircuit(num_qubits)
 # ... define unitary ...
 
 # Phase estimation
-pe = PhaseEstimation(num_evaluation_qubits=3, quantum_instance=backend)
+pe = PhaseEstimation(num_evaluation_qubits=3, sampler=sampler)
 result = pe.estimate(unitary=unitary, state_preparation=initial_state)
 ```
 
@@ -476,7 +477,7 @@ portfolio = PortfolioOptimization(
 qp = portfolio.to_quadratic_program()
 
 # Solve with QAOA
-qaoa = QAOA(sampler=sampler, optimizer='COBYLA', reps=2)
+qaoa = QAOA(sampler=sampler, optimizer=COBYLA(), reps=2)
 optimizer = MinimumEigenOptimizer(qaoa)
 
 result = optimizer.solve(qp)
@@ -496,10 +497,8 @@ hamiltonian = SparsePauliOp(["XX", "YY", "ZZ"], coeffs=[1.0, 1.0, 1.0])
 
 # Time evolution
 time = 1.0
-evolution_gate = SuzukiTrotter(order=2, reps=10).synthesize(
-    hamiltonian,
-    time
-)
+from qiskit.circuit.library import PauliEvolutionGate
+evolution_gate = PauliEvolutionGate(hamiltonian, time=time, synthesis=SuzukiTrotter(order=2, reps=10))
 
 qc = QuantumCircuit(2)
 qc.append(evolution_gate, range(2))
@@ -548,7 +547,7 @@ from qiskit.primitives import StatevectorSampler
 sampler_sim = StatevectorSampler()
 
 # Switch to hardware for production
-# sampler_hw = Sampler(backend)
+# sampler_hw = Sampler(mode=backend)
 ```
 
 ### 3. Monitor Convergence

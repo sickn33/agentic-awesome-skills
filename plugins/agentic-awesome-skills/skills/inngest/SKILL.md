@@ -2,7 +2,7 @@
 name: inngest
 description: Inngest expert for serverless-first background jobs, event-driven
   workflows, and durable execution without managing queues or workers.
-risk: none
+risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
 ---
@@ -12,6 +12,8 @@ date_added: 2026-02-27
 Inngest expert for serverless-first background jobs, event-driven workflows,
 and durable execution without managing queues or workers.
 
+These are source sketches for a version-pinned SDK, not a complete deployable application. Supply reviewed database/email/payment adapters and compile against the installed SDK. Events and webhook payloads require server-side validation and authorization. Verify provider signatures before enqueueing webhook events. Keep secrets and unnecessary personal data out of durable step outputs; these may be retained remotely.
+
 ## Principles
 
 - Events are the primitive - everything triggers from events, not queues
@@ -20,7 +22,7 @@ and durable execution without managing queues or workers.
 - Retries are automatic - but you control the policy
 - Functions are just HTTP handlers - deploy anywhere that serves HTTP
 - Concurrency is a first-class concern - protect downstream services
-- Idempotency keys prevent duplicates - use them for critical operations
+- Workflow deduplication does not make external side effects exactly-once; use provider idempotency keys and reconcile uncertain outcomes
 - Fan-out is built-in - one event can trigger many functions
 
 ## Capabilities
@@ -65,7 +67,9 @@ and durable execution without managing queues or workers.
 - railway
 - fly-io
 
-### Patterns
+#Side effects such as messages, charges, fulfillment, deployments and remote indexing require the user's task scope. Use synthetic records in development and do not execute these examples during review.
+
+## Patterns
 
 - step-functions
 - event-fan-out
@@ -81,7 +85,7 @@ Inngest function with typed events in Next.js
 **When to use**: Starting with Inngest in any Next.js project
 
 // lib/inngest/client.ts
-import { Inngest } from 'inngest';
+import { Inngest, EventSchemas } from 'inngest';
 
 export const inngest = new Inngest({
   id: 'my-app',
@@ -169,12 +173,17 @@ export const processOrder = inngest.createFunction(
       return { status: 'backordered' };
     }
 
+    // Read authoritative amount/currency and customer from the server-side order.
+    // Never charge an amount accepted only from an untrusted event.
+    const order = await step.run('load-order', () => loadAuthorizedOrder(orderId));
+
     // Process payment
     const charge = await step.run('charge-payment', async () => {
       return await stripe.charges.create({
-        amount: event.data.total,
+        amount: order.totalMinorUnits,
+        currency: order.currency,
         customer: payment.customerId,
-      });
+      }, { idempotencyKey: `order:${orderId}:charge:v1` });
     });
 
     // Ship order
@@ -374,7 +383,7 @@ Severity: WARNING
 
 Message: Consider configuring retry policy for failure handling
 
-Fix action: Add retries: 3 or retries: { attempts: 3, backoff: { ... } }
+Fix action: Configure the retries option supported by the pinned SDK; do not invent a backoff object schema
 
 ### Idempotency key for payment functions
 
@@ -382,7 +391,7 @@ Severity: ERROR
 
 Message: Payment-related functions should use idempotency keys
 
-Fix action: Add idempotency: 'event.data.orderId' to function config
+Fix action: Bind workflow deduplication and provider-side idempotency to the authorized order; workflow configuration alone cannot prevent duplicate charges after a crash
 
 ## Collaboration
 

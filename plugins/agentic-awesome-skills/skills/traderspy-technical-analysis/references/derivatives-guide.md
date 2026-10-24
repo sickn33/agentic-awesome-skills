@@ -7,7 +7,7 @@ symbol; an unknown or non-Binance symbol comes back as `{ symbol, error, message
 
 - `markPrice`, `indexPrice`, `premiumPct` — mark vs index; a persistent positive premium is
   another face of long crowding.
-- `funding`: `rate` (raw, per 8h), `ratePct`, `annualizedPct`, `nextFundingTime`,
+- `funding`: `rate` (raw, verify actual funding interval), `ratePct`, `annualizedPct`, `nextFundingTime`,
   `minutesToNextFunding`, `avg24hPct`, `avg3dPct`, `label`.
 - `openInterest`: `contracts`, `valueUsd`, `change4hPct`, `change24hPct`, `priceChange24hPct`,
   `regime`.
@@ -18,6 +18,13 @@ symbol; an unknown or non-Binance symbol comes back as `{ symbol, error, message
 
 ## Labels
 
+These are provider heuristic labels, not verified causal diagnoses. The table's
+8-hour thresholds apply only if that interval is confirmed; do not apply them to
+one-/four-hour settlement schedules. Position-ratio percentages refer to the
+specified top-trader position cohort, not a percentage of all market participants.
+See [Binance market-data definitions](https://developers.binance.info/en/docs/catalog/core-trading-derivatives-trading-usd-s-m-futures/api/rest-api/market-data).
+
+
 | `funding.label` | Rule (per 8h) | Reading |
 | --- | --- | --- |
 | `extreme_shorts_paying` | ≤ −0.05% | Shorts crowded and paying heavily; squeeze risk |
@@ -26,14 +33,14 @@ symbol; an unknown or non-Binance symbol comes back as `{ symbol, error, message
 | `longs_paying` | ≥ +0.03% | Longs paying shorts — leverage leaning long |
 | `extreme_longs_paying` | ≥ +0.10% | Longs crowded and paying heavily; long-squeeze / flush risk |
 
-Quote `annualizedPct` alongside — "0.05%/8h" means little to most readers, "≈ 55% APR" does.
+For a verified 8-hour interval, 0.05% × 3 × 365 ≈ 54.75% simple annualized rate. This assumes an unchanged rate and is not compounded yield; intervals can change.
 
 | `openInterest.regime` | OI 24h | Price 24h | Reading |
 | --- | --- | --- | --- |
-| `new_longs` | up | up | Fresh money buying; trend being funded |
-| `short_covering` | down | up | Rally driven by shorts closing — less durable |
-| `new_shorts` | up | down | Fresh shorts pressing; trend being funded to the downside |
-| `long_liquidation` | down | down | Longs being flushed — capitulation-type move |
+| `new_longs` | up | up | OI/price both increased; not proof of new longs alone |
+| `short_covering` | down | up | OI decreased while price rose; short covering is one hypothesis |
+| `new_shorts` | up | down | OI rose while price fell; new shorts are one hypothesis |
+| `long_liquidation` | down | down | OI and price fell; liquidations need separate evidence |
 | `flat` | < 1% OI or < 0.5% price | No meaningful OI story |
 
 | `positioning.label` | Rule | Reading |
@@ -42,7 +49,7 @@ Quote `annualizedPct` alongside — "0.05%/8h" means little to most readers, "�
 | `balanced` | between | No lean |
 | `short_heavy` | ratio ≤ 0.67 (≈ 40% or less long) | Leaders leaning short |
 
-Top-trader positioning (by position size) is read first because it is the informed cohort; the
+Top-trader positioning (by position size) is read first as a separately defined cohort, not evidence it is informed; the
 all-account ratio shows the crowd. When they disagree ("top traders 69% long, all accounts 45%
 long"), that disagreement is the interesting sentence.
 

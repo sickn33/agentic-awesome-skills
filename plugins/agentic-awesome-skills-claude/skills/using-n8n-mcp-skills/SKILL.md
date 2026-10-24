@@ -54,8 +54,7 @@ but breaks in production.
 
 n8n changes constantly. "Remembered" parameter names are often silently wrong — they
 validate as plain strings and then do nothing at runtime. Trust the skills and the live
-tools (`get_node`, `search_nodes`, `tools_documentation`) over recollection. If a skill
-contradicts your memory, trust the skill. If `get_node` contradicts a skill, trust the
+tools (`get_node`, `search_nodes`, `tools_documentation`) over recollection. Treat a skill as versioned guidance; verify consequential behavior against current schemas and owning documentation. If `get_node` contradicts a skill, trust the
 tool and flag the drift.
 
 ## Strong defaults
@@ -77,7 +76,7 @@ If you catch yourself thinking any of these, stop and invoke the named skill fir
 
 | Thought | Invoke |
 |---|---|
-| "This workflow is simple, I'll just build it" | `n8n-workflow-patterns` — most "simple" flows ship at 10+ nodes |
+| "This workflow is simple, I'll just build it" | `n8n-workflow-patterns` — choose the smallest correct graph, not an arbitrary node-count target |
 | "I'll add a Set node to map these fields" | `n8n-expression-syntax` — Set feeding ≤1 consumer is the #1 antipattern |
 | "I'll just use a Code node, it's easier" | `n8n-code-javascript` — the bar is high; most reaches are expressions or Edit Fields |
 | "The user mentioned data, I'll write Python" | `n8n-code-javascript` — default JS; Python (`n8n-code-python`) only on explicit ask |
@@ -143,7 +142,7 @@ closes the gap where a tool's full description isn't loaded until first use.
 **Test & run**
 - `n8n_test_workflow` — runs real nodes (Code, HTTP, DB writes, sends all fire). Ask the user before running when side effects exist.
 - `n8n_executions` — list/inspect executions. **There is no `execute_workflow` tool.**
-- `n8n_evaluations` — read evaluation test runs (n8n ≥ 2.30): list runs, aggregated metrics, per-case results. Read-only — runs are started from the n8n editor, not the API; a 403 usually means the API key predates 2.30 (re-create it for the testRun scopes).
+- `n8n_evaluations` — read evaluation test runs (n8n ≥ 2.30): list runs, aggregated metrics, per-case results. Read-only — runs are started from the n8n editor, not the API; a 403 indicates denied access: inspect actual version, scopes and policy before proposing any credential replacement.
 
 **Data, credentials, audit**
 - `n8n_manage_datatable` — Data Table CRUD, filtering, dry-run.
@@ -191,3 +190,5 @@ sequence:
 - The router describes a moving n8n MCP surface; live tool schemas and the target instance override stale examples.
 - Availability of lifecycle, credential, evaluation, and multi-instance tools depends on server version and permissions.
 - Routing to a specialist skill does not authorize mutations, executions, activation, deletion, or credential changes.
+
+A missing companion skill or Skill tool is a disclosed prerequisite gap, not permission to invent one. Upstream hooks are not installed by this catalog source. Do not update the skill pack or instance automatically merely because drift is observed. Per-item execution, item linking and binary/tool boundaries depend on node mode/version; validate the actual data shape with controlled fixtures.

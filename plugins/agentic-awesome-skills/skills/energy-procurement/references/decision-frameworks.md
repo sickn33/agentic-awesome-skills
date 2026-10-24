@@ -44,7 +44,7 @@ START: What is the organization's tolerance for energy cost variance?
 
 ├── Budget variance >10% triggers executive escalation
 │   ├── Contract tenor ≤ 24 months?
-│   │   └── YES → Fixed-price full requirements
+│   │   └── YES → Fixed-price full requirements (covered components only)
 │   │       - Accept the risk premium (5-12% above forward curve)
 │   │       - Negotiate volume tolerance band (±10-15%)
 │   │       - Ensure contract includes change-of-use provisions
@@ -77,7 +77,7 @@ START: What is the organization's tolerance for energy cost variance?
 
 ### 1.3 Layered Procurement Methodology
 
-Layering eliminates single-point market timing risk. The methodology:
+Layering distributes execution-date exposure; it does not eliminate market timing risk. The methodology:
 
 **Step 1: Determine the hedging horizon.**
 Most C&I buyers layer 18–36 months ahead of the delivery period. For a January 2028
@@ -95,8 +95,8 @@ Standard approaches:
 
 **Step 3: Execution rules.**
 - Execute each tranche at the prevailing market price on the scheduled date — do not try to time within the tranche window.
-- Exception: if the forward curve drops into the bottom 20th percentile of the 5-year range, accelerate by buying 2 tranches immediately ("buy the dip" rule).
-- Exception: if the forward curve spikes into the top 20th percentile, defer the current tranche by 30 days (skip and catch up later).
+- Exception: if the forward curve drops into the bottom 20 th percentile of the 5-year range, accelerate by buying 2 tranches immediately ("buy the dip" rule).
+- Exception: if the forward curve spikes into the top 20 th percentile, defer the current tranche by 30 days (skip and catch up later).
 - Never defer more than 2 consecutive tranches — rolling deferrals leave you unhedged.
 
 **Step 4: Document and report.**
@@ -104,24 +104,24 @@ Maintain a procurement log showing: tranche date, volume procured, price locked,
 forward curve price at execution, cumulative weighted average price, and remaining
 open position. Report to finance quarterly.
 
-**Example — 10 MW peak load, 60M kWh annual consumption:**
+**Example — 10 MW peak load, 60 M kWh annual consumption:**
 
 ```
 Delivery year: 2028
 Hedging start: July 2026
-Tranches: 6 (bimonthly, ~10M kWh each)
+Tranches: 6 (bimonthly, 10 million kWh =10,000 MWh each)
 
-Tranche 1 (Jul 2026): 10M kWh @ $44.50/MWh  — Forward was $45.20
-Tranche 2 (Sep 2026): 10M kWh @ $42.80/MWh  — Forward was $43.10
-Tranche 3 (Nov 2026): 10M kWh @ $46.30/MWh  — Forward was $46.30
-Tranche 4 (Jan 2027): 10M kWh @ $41.20/MWh  — Forward was $41.50 (buy-the-dip rule: 
+Tranche 1 (Jul 2026): 10 M kWh @ $44.50/MWh  — Forward was $45.20
+Tranche 2 (Sep 2026): 10 M kWh @ $42.80/MWh  — Forward was $43.10
+Tranche 3 (Nov 2026): 10 M kWh @ $46.30/MWh  — Forward was $46.30
+Tranche 4 (Jan 2027): 10 M kWh @ $41.20/MWh  — Forward was $41.50 (buy-the-dip rule:
                                                  also executed Tranche 5 early)
-Tranche 5 (Jan 2027): 10M kWh @ $41.40/MWh  — Accelerated from March
-Tranche 6 (May 2027): 10M kWh @ $43.80/MWh  — Forward was $44.00
+Tranche 5 (Jan 2027): 10 M kWh @ $41.40/MWh  — Accelerated from March
+Tranche 6 (May 2027): 10 M kWh @ $43.80/MWh  — Forward was $44.00
 
 Weighted average: $43.33/MWh
 Range of execution prices: $41.20 - $46.30 ($5.10 spread)
-If locked all-at-once in Jul 2026: $44.50/MWh → layering saved $1.17/MWh = $70,200
+If locked all-at-once in Jul2026:$44.50/MWh; exact average43.3333 means1.16667×60000=$70000 hypothetical savings beforefees, not guaranteed or$70200.
 ```
 
 ### 1.4 RFP Process for Deregulated Markets
@@ -143,7 +143,7 @@ If locked all-at-once in Jul 2026: $44.50/MWh → layering saved $1.17/MWh = $70
 
 | Criterion | Weight | Scoring Guide |
 |-----------|--------|---------------|
-| Total cost (energy + adder + shaped premium) | 35-45% | Lowest total cost = 100 pts. Each 1% above lowest = -5 pts. Model across 3 price scenarios. |
+| Total cost (energy + adder + shaped premium) | 35-45% | Lowest total cost = 100 pts. Score=max(0,100−5×percentagepremium). Model across 3 price scenarios. |
 | Credit quality | 15-20% | Investment grade (S&P BBB- or above) = 100 pts. Sub-investment grade = 50 pts. No rating / private = 70 pts with parent guarantee, 30 pts without. |
 | Contract flexibility | 10-15% | Volume tolerance ±15% = 100. Volume tolerance ±5% = 50. No tolerance = 0. Early termination available = +20 pts. Change-of-use provisions = +15 pts. |
 | Sustainability services | 10-15% | Bundled RECs from named projects = 100. Unbundled RECs available = 60. No REC options = 0. Carbon reporting support = +20 pts. |
@@ -205,7 +205,7 @@ Year N PPA Net Value = (Market Price at Hub - PPA Strike Price) × Expected Gene
 
 **Step 4: Calculate NPV, IRR, and levelized cost of energy (LCOE) under each scenario.**
 A PPA is economically justified if NPV is positive under base and bull cases and
-the loss under bear case is tolerable (typically <$2M cumulative over the PPA term
+the loss under bear case is tolerable (typically <$2 M cumulative over the PPA term
 for a mid-size C&I buyer).
 
 ### 2.2 Virtual PPA (VPPA) Evaluation
@@ -230,7 +230,7 @@ Annual Basis Cost = Σ(hourly basis × hourly expected generation)
 
 If generation-weighted average basis = $5/MWh and annual generation = 200,000 MWh:
 Annual Basis Cost = $1,000,000/year
-Over a 15-year PPA: $15M in basis costs (undiscounted)
+Over a 15-year PPA: $15 M in basis costs (undiscounted)
 ```
 
 **Red flags for basis risk:**
@@ -264,10 +264,10 @@ risk" on a VPPA — this transfers a risk the buyer cannot manage or influence.
 
 | Requirement | Details |
 |-------------|---------|
-| ISDA Master Agreement | Required for VPPA. Negotiate credit thresholds, margin call provisions, and termination values. |
-| Credit support | Investment grade: typically no collateral for first $5-10M notional. Sub-IG: letter of credit or parent guarantee for 2-3 years of potential negative settlement. |
+| ISDA Master Agreement | A possible documentation framework; not universally required for every VPPA. Negotiate credit thresholds, margin call provisions, and termination values. |
+| Credit support | Investment grade: typically no collateral for first $5-10 M notional. Sub-IG: letter of credit or parent guarantee for 2-3 years of potential negative settlement. |
 | Accounting treatment | VPPAs may qualify for hedge accounting (ASC 815) if they meet effectiveness testing requirements. Without hedge accounting, mark-to-market gains/losses flow through the P&L, creating earnings volatility. Consult treasury and accounting early. |
-| Board / CFO approval | VPPAs are multi-year financial commitments. Most organizations require board approval for commitments >$10M notional or >10 years. Present as an energy cost management tool, not a speculative position. |
+| Board / CFO approval | VPPAs are multi-year financial commitments. Most organizations require board approval for commitments >$10 M notional or >10 years. Present as an energy cost management tool, not a speculative position. |
 
 ### 2.3 Physical vs. Virtual PPA Decision Matrix
 
@@ -335,8 +335,7 @@ Annual ratchet cost = (3,840 - 3,500) × $15/kW × 11 months = $56,100
 1. Determine the target peak reduction (kW to shave).
 2. Calculate the required energy capacity: target kW × duration of peak events.
    For demand charge management, 1-2 hours of duration is typically sufficient.
-3. Apply round-trip efficiency (88-92% for lithium-ion): size the battery 10% larger
-   than the calculated energy requirement.
+3. Account separately for discharge efficiency, usable depth of discharge, reserve, degradation, temperature, inverterpower and chargingopportunity; round-trip efficiency alone does not determine installed capacity.
 
 **Example — 500 kW peak shaving at a manufacturing plant:**
 
@@ -352,12 +351,14 @@ Annual savings stack:
   Demand charge savings: 500 kW × $15/kW × 12 months = $90,000
   Capacity tag reduction: 500 kW × $60/kW-yr (PJM example) = $30,000
   TOU energy arbitrage: charge off-peak ($0.04/kWh), discharge on-peak ($0.08/kWh)
-    1,100 kWh × $0.04/kWh spread × 250 days × 90% efficiency = $9,900
+    For 1000 kWhdelivered/day and 90%round-trip efficiency:
+    netarbitrage/day=1000×$0.08−(1000/0.90)×$0.04=$35.56
+    250 days≈$8889 before degradation/O&M and charging-demand effects
   Demand response revenue: 500 kW × $40/kW-yr (PJM Economic DR) = $20,000
 
-Total annual value: $149,900
-Simple payback: $1,100,000 / $149,900 = 7.3 years
-With ITC (30% for standalone storage as of IRA): payback = $770,000 / $149,900 = 5.1 years
+Illustrative gross annual value before costs/program conflicts: $148,889
+Illustrative gross simple payback:$1,100,000/$148,889≈7.39 years; net-cost model required
+If qualified for an illustrative 30%credit on eligible basis:$770,000/$148,889≈5.17 years before timing/financing/O&M. Eligibility/rate must be confirmed under current tax law.
 ```
 
 **Decision thresholds:**
@@ -436,9 +437,9 @@ prior system has reached steady state.
 | Forward Curve Position | Procurement Action |
 |-----------------------|-------------------|
 | Bottom 20% of 5-year range | Accelerate buying — lock more volume at favorable prices |
-| 20th-40th percentile | Proceed with scheduled layering — prices are reasonable |
-| 40th-60th percentile | Maintain default layering schedule |
-| 60th-80th percentile | Slow buying — defer non-critical tranches 30 days |
+| 20 th-40 th percentile | Proceed with scheduled layering — prices are reasonable |
+| 40 th-60 th percentile | Maintain default layering schedule |
+| 60 th-80 th percentile | Slow buying — defer non-critical tranches 30 days |
 | Top 20% of 5-year range | Defer where possible, increase index exposure, evaluate financial hedges instead of physical locks |
 
 ### 4.3 Capacity Market Exposure
@@ -450,7 +451,7 @@ cost component — $30–$120/kW-yr depending on the zone and auction results.
 - Auction held 3 years ahead of delivery year (Base Residual Auction)
 - Incremental auctions adjust quantities closer to delivery
 - Your capacity obligation is based on your PLC (Peak Load Contribution)
-- PLC is set by your metered load during the 5 highest system coincident peak hours (5CP) in the prior delivery year
+- PLC is set by your metered load during the 5 highest system coincident peak hours (5 CP) in the prior delivery year
 
 **Managing capacity exposure:**
 
@@ -463,12 +464,12 @@ cost component — $30–$120/kW-yr depending on the zone and auction results.
 
 ```
 Facility peak: 5,000 kW
-PLC (measured during prior year 5CP hours): 4,200 kW
+PLC (measured during prior year 5 CP hours): 4,200 kW
 PJM BRA clearing price for your zone: $85/MW-day
 
 Annual capacity charge: 4,200 kW × $85/MW-day × 365 / 1,000 = $130,305/year
 
-If you had curtailed 500 kW during the 5CP hours:
+If you had curtailed 500 kW during the 5 CP hours:
 Reduced PLC: 3,700 kW
 Annual capacity charge: 3,700 kW × $85/MW-day × 365 / 1,000 = $114,793/year
 Savings: $15,512/year from 5 hours of load curtailment
@@ -485,7 +486,7 @@ Savings: $15,512/year from 5 hours of load curtailment
 | Fixed-price contract (through REP) | Low | None (embedded in price) | Full price certainty for contracted volume |
 | Block purchases (through REP) | Low-Medium | None | Price certainty on base load; variable load exposed |
 | Financial swap (through broker/bank) | Medium | ISDA + possible margin | Converts floating price to fixed on specified volume |
-| Call option (through broker/bank) | Medium-High | Premium ($/MWh upfront) | Price ceiling at strike + premium; unlimited downside benefit retained |
+| Purchased matched call option (subject to contract) | Medium-High | Premium ($/MWh upfront) | Price ceiling at strike + premium; unlimited downside benefit retained |
 | Heat rate call option | High | Premium | Protects against gas-to-power price spike (useful when gas drives marginal power price) |
 | Collar (sell put, buy call) | Medium-High | Reduced premium (put proceeds offset call cost) | Ceiling and floor — limits both upside and downside |
 
@@ -503,7 +504,8 @@ Savings: $15,512/year from 5 hours of load curtailment
 When buying call options to cap index pricing exposure, evaluate:
 
 ```
-Option value = Max(0, Spot Price - Strike Price) × Volume
+Illustrative matched cash-settled call payoff = max(0, settlement index−strike) × covered MWh
+# Specify per interval vs averaged index, exercise/settlement rules and volume; not universal option value.
 
 Cost: Premium per MWh × Contracted Volume
 Annual premium for a $50/MWh cap on day-ahead pricing: $2-5/MWh (varies by market volatility)
@@ -517,7 +519,7 @@ Example — protecting 50,000 MWh annual index volume:
   If spot averages $65/MWh: option pays $15/MWh, effective cost = $65 - $15 + $3 = $53/MWh
   If spot spikes to $200/MWh (weather event): option pays $150/MWh, effective cap = $53/MWh
 
-  Maximum effective rate: strike + premium = $53/MWh regardless of market price
+  For perfectly matched quantity/index/interval and performing counterparty, the covered energy component is capped at$53/MWh. Uncovered volume, fees, basis and credit risks remain.
 ```
 
 **When to use options vs. fixed contracts:**
@@ -590,7 +592,7 @@ Track at the portfolio level, not just site-by-site:
 | Supplier concentration | Largest supplier MWh / Total MWh | <50% (avoid single-supplier dependence) |
 | Contract expiration clustering | % of portfolio MWh expiring in any 12-month period | <40% (stagger expirations) |
 | Renewable coverage | Renewable MWh / Total MWh | On track to target |
-| Portfolio load factor | Total kWh / (Sum of site peak kW × hours) | Track trend, higher is better |
+| Portfolio coincident load factor | Total kWh / (max interval sum of concurrent sitekW × hours) | Track trend, higher is better |
 
 ### 7.3 Site Prioritization for Demand-Side Investment
 
@@ -653,14 +655,12 @@ without protection is reckless in that market.
 For facilities with both electricity and natural gas loads, recognize the coupling:
 
 - **When gas prices spike, electricity prices spike.** Natural gas is the marginal fuel
-  for electricity generation in most US ISOs. A $2/MMBtu increase in Henry Hub
-  translates to approximately $10-$15/MWh increase in wholesale electricity prices
+  for electricity generation in most US ISOs. A$2/MMBtu increase at a 7–8 MMBtu/MWh marginal heatrate implies$14–$16/MWh of fuelcost change, before basis/market effects; it does not mechanically translate to that wholesaleprice change. The original$10–$15 estimate was inconsistent. A price increase in wholesale electricity prices
   (depending on the average heat rate of marginal gas plants, typically 7,000-8,000 BTU/kWh).
 
 - **CHP economics are gas-price dependent.** A CHP system generating electricity at
   a heat rate of 6,500 BTU/kWh has a fuel cost of $6.50 × gas price per MWh. At gas
-  $3/MMBtu, generation cost is $19.50/MWh. At gas $8/MMBtu, generation cost is
-  $52/MWh. If your grid electricity cost exceeds your CHP generation cost, run the
+  $3/MMBtu, fuel-only cost is$19.50/MWh. At gas $8/MMBtu, fuel-only cost is$52/MWh. If your grid electricity cost exceeds your CHP generation cost, run the
   CHP. If grid electricity drops below CHP cost (e.g., during spring shoulder months
   with mild weather and low grid demand), consider shutting down CHP and buying
   from the grid.
@@ -721,10 +721,10 @@ Where:
 
 | Impact Level | Annual Cost Increase | Recommended Action |
 |-------------|---------------------|-------------------|
-| <$50K | Negligible for large C&I | Monitor only — track filing through settlement |
-| $50K-$200K | Material but not critical | Join existing intervenor group (OIEC, etc.) |
-| $200K-$500K | Significant | Individual intervention with regulatory counsel |
-| >$500K | Critical | Full intervention with expert witnesses, rate design testimony |
+| <$50 K | Negligible for large C&I | Monitor only — track filing through settlement |
+| $50 K-$200 K | Material but not critical | Join existing intervenor group (OIEC, etc.) |
+| $200 K-$500 K | Significant | Individual intervention with regulatory counsel |
+| >$500 K | Critical | Full intervention with expert witnesses, rate design testimony |
 
 **Rate case timeline (typical):**
 
@@ -761,8 +761,7 @@ If your retail energy provider files for bankruptcy or fails to perform:
 **Immediate actions (24-48 hours):**
 1. Verify your account status with the utility. If the supplier defaults, your
    account reverts to the utility's Provider of Last Resort (POLR) service or standard
-   offer service. You will NOT lose power — the grid keeps delivering regardless of
-   supplier status.
+   offer service. Verify the actual default-service transfer/continuity procedure with the utility; supplier failure alone is not a guarantee against outage, disconnection or enrollment failure.
 2. Determine the POLR rate. In most states, the POLR rate is set quarterly based on
    wholesale market prices plus a premium (10-20% above competitive supply). This may
    be higher or lower than your current contract rate.
@@ -796,14 +795,15 @@ your energy supply or operations:
 When evaluating whether to terminate a supply contract early:
 
 ```
-Early Termination Fee (ETF) = Σ(remaining months × monthly volume × |contract price - current market price|)
+Illustrative replacement-value component = Σ(interval remainingMWh × (contract$/MWh−replacement$/MWh) × discountfactor)
+# Actual ETF/closeout sign, fees, rights and offsets depend on contract/law; no automatic absolute value.
 
 If contract price > current market:
   You owe the supplier (you're paying above market)
   ETF = remaining months × volume × (contract price - market) × discount factor
 
 If contract price < current market:
-  Supplier owes you (you have a favorable contract)
+  Any termination payment depends on the actual signed contract, eligible closeout method and law; favorable pricing does not itself entitle you to payment
   You would NOT terminate — the contract is in-the-money
 
 Decision: Terminate if ETF < cumulative savings from alternative contract + risk reduction value
@@ -814,10 +814,10 @@ Decision: Terminate if ETF < cumulative savings from alternative contract + risk
 ```
 Current contract: $0.062/kWh, 18 months remaining, 50 GWh remaining
 Current market: $0.055/kWh (market has dropped since contract signing)
-ETF: 50,000 MWh × ($0.062 - $0.055) = $350,000
+ETF: 50,000 MWh × ($62-$55)/MWh = $350,000
 
 Alternative contract: $0.054/kWh for 18 months
-Savings from alternative: 50,000 MWh × ($0.062 - $0.054) = $400,000
+Savings from alternative: 50,000 MWh × ($62-$54)/MWh = $400,000
 
 Net benefit of termination: $400,000 savings - $350,000 ETF = $50,000
 
@@ -825,7 +825,7 @@ Decision: Marginal. Factor in:
   - Renegotiation risk (can you lock $0.054 before market moves?)
   - Administrative cost of switching suppliers
   - Relationship cost with current supplier
-  - If net benefit < $100K, generally not worth the disruption
+  - If net benefit < $100 K, generally not worth the disruption
 ```
 
 ---
@@ -842,10 +842,40 @@ procurement activities align with market conditions.
 | March | Begin RFP preparation for contracts expiring in Q4 or Q1 next year | — |
 | April | Issue RFPs for fall contract starts, review summer DR enrollment | Apr 15 for PJM DR enrollment |
 | May | Evaluate bids, begin summer peak preparation (generator testing, BAS settings) | May 31 for summer rate elections |
-| June | Summer peak demand management begins, monitor 5CP forecasts (PJM) | — |
-| July | Peak season monitoring, execute Q3 procurement tranches | Jul 15 for ERCOT 4CP mgmt |
+| June | Summer peak demand management begins, monitor 5 CP forecasts (PJM) | — |
+| July | Peak season monitoring, execute Q3 procurement tranches | Jul 15 for ERCOT 4 CP mgmt |
 | August | Peak season monitoring, finalize fall contract awards | Aug 31 for ISO-NE FCA positions |
 | September | Post-summer review, capacity tag assessment, RE100 progress check | Sep 30 for Q4 procurement |
 | October | Begin winter gas hedging, review heating load forecasts | Oct 31 for winter gas locks |
 | November | Budget season — prepare next year's energy cost forecast | Nov 15 for budget submission |
 | December | Year-end RE100 reconciliation, REC inventory check, contract renewals | Dec 31 for REC vintage retirement |
+
+## Financial and technical qualifications
+
+Choose explicit scoring weights totaling 100% and cap each subscore at 100; safety,
+eligibility, credit authority and compliance are gates. Annual repricing is not
+multiyear budget certainty. Do not infer price outcomes or lowest expected cost
+from a 5 year percentile. Block-and-index cashflow is block MWh× block Price plus
+(load MWh−block MWh)×contracted imbalance price, including negative residuals where
+applicable; ensure price/adder components are counted once.
+
+PPA value models must use actual interval cash flows, generation-weighted prices,
+curtailment/deemed energy contract and attributes. A curtailment penalty is not
+automatically curtailed MWh×strike. Discount all cashflows consistently; IRR may
+be undefined/multiple. FTRs settle day-ahead congestion differences for specified
+MW/path/time and can incur charges; they do not hedge all LMP basis/loss/real-time
+volume risk. Procurement participation, fees, collateral and revenue adequacy matter.
+
+Battery dispatch must jointly optimize and respect program exclusivity, available
+state of charge, reserve, degradation and rebound peaks. Do not simply stack full
+standalone demand/arbitrage/DR/capacity values. Monthly billing demand may be
+max(actual peak, ratchet floor, contract minimum) with specific TOU rules; shifting
+loads outside energy-peak hours may leave noncoincident demand unchanged.
+Short motor inrush is not a 15 minute average energy-demand spike of the same size.
+
+REC/SBTi/RE100 eligibility, retirement and deadlines are framework/version-specific;
+no universal 12-month delivery or 4.2% annual trajectory follows from this guide.
+Qualify Scope 2 instruments under applicable quality criteria; avoid double claims
+and distinguish attributes, physical supply and causal additionality. IRS credit
+rate/basis/timing/eligibility require current qualified review; 30% is not automatic.
+A program/enrollment calendar here is a planning example, never a current ISO deadline.

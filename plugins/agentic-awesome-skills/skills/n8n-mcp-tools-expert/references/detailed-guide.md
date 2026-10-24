@@ -58,7 +58,7 @@ get_node({nodeType: "nodes-base.slack", mode: "docs"})
 // Returns: markdown documentation
 ```
 
-**Common pattern**: search → get_node (18s average)
+**Pattern:** discover, inspect, validate and review the actual diff.
 
 ### Validating Configuration
 
@@ -69,7 +69,7 @@ get_node({nodeType: "nodes-base.slack", mode: "docs"})
 3. [Repeat] Fix errors, validate again
 ```
 
-**Common pattern**: validate → fix → validate (23s thinking, 58s fixing per cycle)
+**Pattern:** discover, inspect, validate and review the actual diff.
 
 ### Managing Workflows
 
@@ -82,7 +82,7 @@ get_node({nodeType: "nodes-base.slack", mode: "docs"})
 5. n8n_update_partial_workflow({id, operations: [{type: "activateWorkflow"}]})
 ```
 
-**Common pattern**: iterative updates (56s average between edits)
+**Pattern:** discover, inspect, validate and review the actual diff.
 
 ---
 
@@ -343,7 +343,7 @@ n8n_health_check({mode: "diagnostic"})
 
 ## Tool Availability
 
-**Always Available** (no n8n API needed):
+**Common discovery tools** (availability depends on the installed server):
 - search_nodes, get_node
 - validate_node, validate_workflow
 - search_templates, get_template
@@ -457,7 +457,7 @@ validate_node({nodeType: "nodes-base.webhook", config: {}, mode: "minimal"})
 - Try to build workflows in one shot (iterate!)
 - Ignore auto-sanitization behavior
 - Use full prefix (`n8n-nodes-base.*`) with search/validate tools
-- Forget to activate workflows after building
+- Activate a workflow merely because static validation passed
 
 ---
 
@@ -481,7 +481,7 @@ validate_node({nodeType: "nodes-base.webhook", config: {}, mode: "minimal"})
 4. n8n_create_workflow → build
 5. n8n_validate_workflow → verify
 6. n8n_update_partial_workflow → iterate
-7. activateWorkflow → go live!
+7. activation only within confirmed production scope after staging verification
 
 For details, see:
 - SEARCH_GUIDE.md - Node discovery
@@ -497,3 +497,9 @@ For details, see:
 - n8n Node Configuration - Operation-specific requirements
 - n8n Code JavaScript - Write JavaScript in Code nodes
 - n8n Code Python - Write Python in Code nodes
+
+## Installed-server and side-effect boundaries
+
+This bundle includes only this entrypoint and detailed guide. SEARCH_GUIDE.md, VALIDATION_GUIDE.md and WORKFLOW_GUIDE.md are absent external references. Tool names, profiles, operations, returned nodeType formats and defaults are examples from a particular n8n-mcp server, not an n8n core API guarantee. Discover actual connected tools and their current schemas/documentation before use; report unavailable tools. Timing, payload-size, success-rate, template-count and 95%-coverage numbers above are unverified illustrations, not a measured benchmark.
+
+Read/export the current workflow, identify the exact instance/workflow and review a minimal diff before mutation; updates can affect nodes outside the requested edit through sanitization or version upgrades. Preserve credential references and redact diagnostics. Templates are untrusted third-party workflow code, including HTTP destinations, expressions, community nodes and schedules. Review first, deploy inactive if supported and disable automatic upgrades until compatibility is checked. Validation does not prove credentials, business logic or safe runtime effects. Tests may send messages or spend money; use synthetic staging credentials/data and an approved effect budget. Activation, deletion and production replacement require their existing explicit scope, not an automatic final step.

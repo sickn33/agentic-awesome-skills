@@ -234,7 +234,7 @@ paths:
           $ref: '#/components/responses/NotFound'
       security:
         - bearerAuth: []
-        - apiKey: []
+          apiKey: []  # AND within one object; separate objects mean OR
 
 components:
   schemas:
@@ -268,9 +268,8 @@ components:
           enum: [user, moderator, admin]
           default: user
         avatar:
-          type: string
+          type: [string, "null"]
           format: uri
-          nullable: true
         metadata:
           type: object
           additionalProperties: true
@@ -632,8 +631,7 @@ async def list_users(
     - **status**: Filter by user status
     - **search**: Search by name or email
     """
-    # Implementation
-    pass
+    raise NotImplementedError("Schema-only example; implement authorization and storage before serving")
 
 @app.post(
     "/users",
@@ -648,7 +646,7 @@ async def list_users(
 )
 async def create_user(user: UserCreate):
     """Create a new user and send welcome email."""
-    pass
+    raise NotImplementedError("Schema-only example; not a working endpoint")
 
 @app.get(
     "/users/{user_id}",
@@ -661,7 +659,7 @@ async def get_user(
     user_id: UUID = Path(..., description="User ID"),
 ):
     """Retrieve a specific user by their ID."""
-    pass
+    raise NotImplementedError("Schema-only example; not a working endpoint")
 
 @app.patch(
     "/users/{user_id}",
@@ -678,7 +676,7 @@ async def update_user(
     user: UserUpdate = ...,
 ):
     """Update user attributes."""
-    pass
+    raise NotImplementedError("Schema-only example; not a working endpoint")
 
 @app.delete(
     "/users/{user_id}",
@@ -691,7 +689,7 @@ async def delete_user(
     user_id: UUID = Path(..., description="User ID"),
 ):
     """Permanently delete a user."""
-    pass
+    raise NotImplementedError("Schema-only example; not a working endpoint")
 
 # Export OpenAPI spec
 if __name__ == "__main__":
@@ -886,7 +884,7 @@ export class UsersController extends Controller {
   public async deleteUser(
     @Path() userId: string
   ): Promise<void> {
-    this.setStatus(204);
+    throw new Error("Not implemented: no deletion has occurred");
   }
 }
 ```
@@ -911,7 +909,7 @@ rules:
   info-description: error
 
   # Naming conventions
-  operation-operationId-valid-in-url: true
+  operation-operationId-valid-in-url: error
 
   # Security
   operation-security-defined: error
@@ -1007,7 +1005,7 @@ openapi-generator-cli generate \
 
 ### Do's
 - **Use $ref** - Reuse schemas, parameters, responses
-- **Add examples** - Real-world values help consumers
+- **Add examples** - Synthetic values only; never private data or secrets
 - **Document errors** - All possible error codes
 - **Version your API** - In URL or header
 - **Use semantic versioning** - For spec changes
@@ -1015,7 +1013,7 @@ openapi-generator-cli generate \
 ### Don'ts
 - **Don't use generic descriptions** - Be specific
 - **Don't skip security** - Define all schemes
-- **Don't forget nullable** - Be explicit about null
+- **Use 3.1 null types** - type arrays/anyOf include null; nullable is a 3.0 keyword
 - **Don't mix styles** - Consistent naming throughout
 - **Don't hardcode URLs** - Use server variables
 
@@ -1025,3 +1023,11 @@ openapi-generator-cli generate \
 - [Swagger Editor](https://editor.swagger.io/)
 - [Redocly](https://redocly.com/)
 - [Spectral](https://stoplight.io/open-source/spectral)
+
+## Contract and execution limits
+
+The YAML is an illustrative contract, not evidence of an implemented API. Rate limits, welcome emails and role administration are sample requirements. Schemes/tags/documentation do not enforce authentication or admin access: implement tenant/object/field authorization, reject unauthorized role/status changes, and validate unknown fields explicitly. Add actual 401/403/validation/error responses to each operation. Separate request schemas for privileged operations; never bind arbitrary client role/metadata into persistence.
+
+The FastAPI/tsoa sketches are incomplete and differ from the hand-written spec (paths, aliases, nullable/empty PATCH and default validation errors). A generated OpenAPI file does not establish equivalence; compare real request/response fixtures, permissions and status codes. tsoa version/configuration may target OpenAPI3.0 instead of3.1: inspect generated output before claiming3.1 support. Pydantic EmailStr needs its optional dependency. Security dependencies/authenticationModule, storage and error handlers are omitted.
+
+Use current pinned tools in an isolated project; verify rules exist for installed Spectral/Redocly versions rather than treating example configs as executed gates. Writing configs or generated SDKs can overwrite local files; choose unused paths and inspect diffs. Treat specs, templates, external $ref URLs and rendered descriptions as untrusted: restrict reference resolution/network destinations, escape HTML and review generated code before installation/build. Do not upload private API contracts to public editors. No generator, server, lint or API runtime was executed during review.

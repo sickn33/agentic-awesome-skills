@@ -8,7 +8,7 @@ Edge Requests dominate (catalog browsing, image asset traffic) → Image Optimiz
 
 ## Priority patterns
 
-1. **Catalog pages: aggressive ISR + image optimization.** Product list and product detail pages should be ISR with a sensible `revalidate` (60s-3600s). Every image should go through `next/image` (or the framework equivalent). For Vercel-hosted storefronts, image cost can dominate everything else.
+1. **Catalog pages: aggressive ISR + image optimization.** Product pages may use ISR only when pricing, inventory, promotions and localization tolerate the explicit freshness window. Select an image pipeline based on format, current optimization and measured bytes; exclude tiny icons, ordinary SVGs and animated assets. For Vercel-hosted storefronts, image cost can dominate everything else.
 2. **Checkout: keep dynamic, but parallelize external calls.** Cart/checkout/payment routes are correctly dynamic. The win is in reducing their function duration — `Promise.all` for independent calls to Stripe + inventory + tax services. Cite `vercel-react-best-practices:async-parallel`.
 3. **Cart drawer hydration: lift `'use client'` to the leaf.** Cart components are interactive, but the page wrapping them shouldn't be. Hoist server-rendered parts upward; only the buttons/forms are client.
 4. **Webhooks: separate, not on the user path.** Stripe/Shopify webhook handlers should live as their own routes with short duration limits. They don't share traffic patterns with the storefront.
@@ -16,10 +16,10 @@ Edge Requests dominate (catalog browsing, image asset traffic) → Image Optimiz
 
 ## Frequent gotchas
 
-- **Product images served raw.** `<img src={product.imageUrl}>` for hundreds of variants costs more than the rest of the bill combined. Always next/image.
+- **Product images served raw.** `<img src={product.imageUrl}>` for hundreds of variants costs more than the rest of the bill combined. Measure transfer and current image delivery before proposing a framework component.
 - **`force-dynamic` on the storefront homepage.** Often added during development to test cart-state behavior, never removed. Audit ruthlessly.
 - **Sequential Stripe calls.** "Create customer" → "create subscription" → "create invoice" is often three sequential awaits where two could run in parallel.
-- **Bot traffic on product search.** Marketing-driven traffic + bot traffic on search routes inflates edge request cost. Bot Protection often pays for itself within a month.
+- **Bot traffic on product search.** Marketing-driven traffic + bot traffic on search routes inflates edge request cost. Measure abuse and rollout cost before estimating a benefit.
 
 ## Cross-references
 

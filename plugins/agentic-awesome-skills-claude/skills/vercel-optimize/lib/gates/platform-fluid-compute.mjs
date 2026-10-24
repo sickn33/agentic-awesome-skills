@@ -19,6 +19,8 @@ export function gate(signals) {
     signals.project?.resourceConfig?.fluid === true
     || signals.project?.defaultResourceConfig?.fluid === true;
   if (fluidEnabled) return [];
+  if (signals.project?.resourceConfig?.fluid !== false
+      && signals.project?.defaultResourceConfig?.fluid !== false) return [];
 
   const cold = extractHighColdRoutes(signals);
   const slow = extractSlowHotRoutes(signals);

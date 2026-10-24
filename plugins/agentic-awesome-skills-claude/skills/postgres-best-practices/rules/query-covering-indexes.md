@@ -24,7 +24,7 @@ select email, name, created_at from users where email = 'user@example.com';
 -- Include non-searchable columns in the index
 create index users_email_idx on users (email) include (name, created_at);
 
--- All columns served from index, no table access needed
+-- Index-only scans still need heap visibility checks unless pages are all-visible.
 select email, name, created_at from users where email = 'user@example.com';
 ```
 

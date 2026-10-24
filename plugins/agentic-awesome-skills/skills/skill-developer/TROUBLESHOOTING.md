@@ -133,7 +133,7 @@ Expected: Your skill should appear in the output.
 ]
 ```
 - Editing: `frontend/src/components/Dashboard.tsx` → ✅ Matches
-- Editing: `frontend/tests/Dashboard.test.tsx` → ✅ Matches (add exclusion!)
+- Editing: `frontend/tests/Dashboard.test.tsx` → ❌ Outside frontend/src
 - Editing: `backend/src/app.ts` → ❌ Doesn't match
 
 **Fix:** Adjust glob patterns or add the missing path

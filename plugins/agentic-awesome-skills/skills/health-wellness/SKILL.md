@@ -98,6 +98,8 @@ If an artifact was requested, build it after resolving essential missing facts. 
 
 **Workflow:** Benefit offered → Uptake count → Anonymous feedback → Review
 
+The check-in schema below is an optional synthetic survey-design example, not the default uptake register. For benefits/uptake-only requests, output Benefit, Period and Aggregate Uptake Count instead; omit individual wellbeing, stress, support, department and exact-date fields. An Anonymous flag does not anonymize a row: small groups, timestamps and linked support requests can identify people. Do not promise anonymity, and keep voluntary support contact separate from survey responses.
+
 ### Step 5 - Build only on request
 
 Once the user asks for it, derive the fields from the confirmed context and emit the
@@ -121,14 +123,13 @@ A CSV carries no types, so after it, name the columns
 that need a number, date or currency format applied.
 
 ```csv
-Check-in Title,Employee Name,Anonymous,Department,Check-in Date,Wellbeing Score,Stress Level,Energy Level,Support Requested,Resource Shared,Confidential,Status,Wellness ID
-Weekly wellbeing check,Aarav Sharma,FALSE,Delivery,2026-01-15,4,Low,Low,FALSE,FALSE,Internal,Completed,
+Check-in Title,Anonymous,Department,Check-in Date,Wellbeing Score,Stress Level,Energy Level,Support Requested,Resource Shared,Confidential,Status,Wellness ID
+Weekly wellbeing check,FALSE,Delivery,2026-01-15,4,Low,Low,FALSE,FALSE,Internal,Completed,
 ```
 
 ```sql
 CREATE TABLE health_wellness (
   check_in_title VARCHAR(255),
-  employee_name VARCHAR(255),
   anonymous BOOLEAN NOT NULL,
   department VARCHAR(255),
   check_in_date DATE NOT NULL,
@@ -155,7 +156,6 @@ CREATE INDEX idx_health_wellness_status ON health_wellness (status);
   "additionalProperties": false,
   "properties": {
       "Check-in Title": { "type": "string" },
-      "Employee Name": { "type": "string" },
       "Anonymous": { "type": "boolean" },
       "Department": { "type": "string" },
       "Check-in Date": { "type": "string", "format": "date" },
@@ -169,6 +169,9 @@ CREATE INDEX idx_health_wellness_status ON health_wellness (status);
       "Wellness ID": { "type": "integer" }
   },
   "required": [
+      "Anonymous",
+      "Support Requested",
+      "Resource Shared",
       "Check-in Date",
       "Wellbeing Score",
       "Stress Level",
@@ -183,7 +186,6 @@ CREATE INDEX idx_health_wellness_status ON health_wellness (status);
 | CSV column | Notion property | Set after import |
 |---|---|---|
 | Check-in Title | Title | Use as the database title |
-| Employee Name | Text | Leave as Text |
 | Anonymous | Checkbox | Convert to Checkbox |
 | Department | Text | Leave as Text |
 | Check-in Date | Date | Convert to Date |
@@ -205,7 +207,6 @@ and anything pointing at another table stays `relation`.
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
 | 1 | Check-in Title | `text` | `VARCHAR(255)` | `string` | Text | `Weekly wellbeing check` |
-| 2 | Employee Name | `text` | `VARCHAR(255)` | `string` | Text | `Aarav Sharma` |
 | 3 | Anonymous | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
 | 4 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 5 | Check-in Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
@@ -319,7 +320,7 @@ We want a wellness benefit but do not know whether anyone uses it.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 

@@ -1,8 +1,11 @@
 ---
 title: "Live Activities | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/live-activities
+---
 
 # Live Activities
+
+> Imported Apple HIG reference snapshot, with local review corrections. Source attribution is retained; this is not an official Apple skill or a guarantee of current API availability. Confirm target OS/SDK, device capabilities and current linked developer documentation before implementation. Dimension tables are design references, not fixed layout contracts. No Apple app, device or entitlement validation was performed.
 
 A Live Activity lets people track the progress of an activity, event, or task at a glance.
 
@@ -440,3 +443,7 @@ June 5, 2023| Updated guidance to include features of iOS 17 and iPadOS 17.
 November 3, 2022| Updated artwork and specifications.  
 September 23, 2022| New page.  
   
+
+## Delivery and availability constraints
+
+Frequent content updates do not provide a guaranteed refresh rate or reliable real-time alarm. Respect ActivityKit eligibility, user settings, APNs budgets and activity lifetime/dismissal rules for the target OS. Supply timestamps and stale states; end the activity with a truthful final state. Paired Mac, Watch and CarPlay presentations depend on OS/device/account settings and are not universally automatic. Validate action authorization in the app/intent; a visible control does not itself authenticate a sensitive operation.

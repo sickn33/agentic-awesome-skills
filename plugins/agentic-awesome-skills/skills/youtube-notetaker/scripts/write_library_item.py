@@ -79,7 +79,7 @@ def main():
     library.mkdir(parents=True, exist_ok=True)
     library = library.resolve()
     path = library / f"{a.id}.md"
-    flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
     if hasattr(os, "O_NOFOLLOW"):
         flags |= os.O_NOFOLLOW
     fd = os.open(path, flags, 0o600)

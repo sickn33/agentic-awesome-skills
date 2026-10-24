@@ -15,7 +15,7 @@ Preload heavy bundles before they're needed to reduce perceived latency.
 function EditorButton({ onClick }: { onClick: () => void }) {
   const preload = () => {
     if (typeof window !== 'undefined') {
-      void import('./monaco-editor')
+      void import('./monaco-editor').catch(() => { /* optional preload failed; retry on actual use */ })
     }
   }
 
@@ -37,7 +37,7 @@ function EditorButton({ onClick }: { onClick: () => void }) {
 function FlagsProvider({ children, flags }: Props) {
   useEffect(() => {
     if (flags.editorEnabled && typeof window !== 'undefined') {
-      void import('./monaco-editor').then(mod => mod.init())
+      void import('./monaco-editor').then(mod => mod.init()).catch(() => { /* optional preload failed; retry on actual use */ })
     }
   }, [flags.editorEnabled])
 
@@ -47,4 +47,6 @@ function FlagsProvider({ children, flags }: Props) {
 }
 ```
 
-The `typeof window !== 'undefined'` check prevents bundling preloaded modules for SSR, optimizing server bundle size and build speed.
+The window guard prevents browser-only execution on the server; bundle splitting depends on the bundler.
+
+Preloading spends bandwidth before a click. Respect consent/data-saving constraints and handle rejected imports without unhandled rejections.

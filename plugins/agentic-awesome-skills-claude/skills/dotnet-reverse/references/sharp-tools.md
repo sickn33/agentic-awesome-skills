@@ -46,7 +46,7 @@ P/Invoke: Rubeus.Interop.Lsa* / Native.cs → native Kerberos API
 ```powershell
 # dnSpyEx 里看 Resources（资源树）
 # 或命令行
-powershell -c "[System.Reflection.Assembly]::LoadFile('target.exe').GetManifestResourceNames()"
+# 优先通过 ILSpy/dnSpyEx 元数据资源树静态列出资源；不要在分析主机反射加载未知程序集。
 # 找到资源后 dnSpyEx 右键 → 提取 / Save
 ```
 
@@ -60,7 +60,7 @@ powershell -c "[System.Reflection.Assembly]::LoadFile('target.exe').GetManifestR
 
 ```powershell
 # 方式 A：Chocolatey
-choco install dnspy ilspy de4dot detect-it-easy
+# 检查发行来源和版本；dnspy 包不保证是 dnSpyEx，优先核对下方官方 release。
 
 # 方式 B：手动下载 release（推荐，版本可控）
 # dnSpyEx:    https://github.com/dnSpyEx/dnSpy/releases

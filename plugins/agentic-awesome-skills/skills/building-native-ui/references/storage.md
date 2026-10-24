@@ -2,7 +2,7 @@
 
 ## Key-Value Storage
 
-Use the localStorage polyfill for key-value storage. **Never use AsyncStorage**
+Use the localStorage polyfill for key-value storage. AsyncStorage from its maintained community package is also an option; neither stores secrets safely.
 
 ```tsx
 import "expo-sqlite/localStorage/install";
@@ -58,18 +58,23 @@ export const storage = {
 
 ```tsx
 // hooks/use-storage.ts
-import { useSyncExternalStore } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import { storage } from "@/utils/storage";
 
 export function useStorage<T>(
   key: string,
   defaultValue: T
 ): [T, (value: T) => void] {
-  const value = useSyncExternalStore(
+  const raw = useSyncExternalStore(
     (cb) => storage.subscribe(key, cb),
-    () => storage.get(key, defaultValue)
+    () => localStorage.getItem(key),
+    () => null
   );
 
+  const value = useMemo(() => {
+    if (raw === null) return defaultValue;
+    try { return JSON.parse(raw) as T; } catch { return defaultValue; }
+  }, [raw, defaultValue]);
   return [value, (newValue: T) => storage.set(key, newValue)];
 }
 ```
@@ -119,3 +124,5 @@ const events = await db.getAllAsync("SELECT * FROM events WHERE date > ?", [
   "2024-01-01",
 ]);
 ```
+
+The snapshot must be a stable primitive, not a newly parsed object on every read. This demo only broadcasts writes through its own wrapper; add validation, storage errors and cross-context synchronization as required.

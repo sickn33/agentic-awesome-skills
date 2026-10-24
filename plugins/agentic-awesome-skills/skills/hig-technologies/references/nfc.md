@@ -1,8 +1,12 @@
 ---
 title: "NFC | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/nfc
+---
 
 # NFC
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
 
 Near-field communication (NFC) allows devices within a few centimeters of each other to exchange information wirelessly.
 
@@ -41,7 +45,7 @@ Background tag reading lets people scan tags quickly any time, without needing t
 
 ## [Platform considerations](https://developer.apple.com/design/human-interface-guidelines/nfc#Platform-considerations)
 
- _No additional considerations for iOS or iPadOS. Not supported in macOS, tvOS, visionOS, or watchOS._
+ Core NFC reading requires supported hardware and API availability; do not infer iPad support from this snapshot. Check [NFCReaderSession.readingAvailable](https://developer.apple.com/documentation/corenfc/nfcreadersession-swift.class/readingavailable), required capabilities and usage descriptions before offering a scanning flow. Background reading has additional device and state restrictions.
 
 ## [Resources](https://developer.apple.com/design/human-interface-guidelines/nfc#Resources)
 

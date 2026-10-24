@@ -1,5 +1,8 @@
 # Messaging toolset
 
+**Operation boundary.** Embedded-signup codes, access tokens, and bot credentials must travel through supported secure client authorization flows, never chat or ordinary tool arguments visible to the model. If no such handoff exists, have the user complete connection in Famulor. Webhook tests make real external requests; use only the approved destination and sanitized fixture.
+
+
 WhatsApp, Messenger, email, Slack, messaging connectors, templates, and sender profiles. Connect only this group with `https://app.famulor.io/mcp?toolsets=messaging`.
 
 This 2026-08-23 snapshot covers all 44 tools assigned to `messaging` in the canonical 282-tool registry. The live MCP `tools/list` response is authoritative for arguments, current availability, annotations, and plan or role gating. Never invent fields from this catalog.

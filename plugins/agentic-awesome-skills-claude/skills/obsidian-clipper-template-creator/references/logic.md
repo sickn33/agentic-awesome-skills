@@ -8,7 +8,7 @@ As of **Obsidian Web Clipper 1.0.0**, templates support logic in `noteContentFor
 
 ## When to use logic
 
-- **Conditionals:** Show optional sections only when data exists (e.g. nutrition block only if `{{schema:Recipe:nutrition}}` is present).
+- **Conditionals:** Show optional sections only when data exists (e.g. nutrition block only if `{{schema:@Recipe:nutrition}}` is present).
 - **Variable assignment:** Assign a value once and reuse it in the template to avoid repeating long expressions.
 - **Fallbacks:** Provide a default when a variable is empty so the note still looks correct.
 - **Loops:** Iterate over arrays (ingredients, steps, tags) to format each item; combine with filters for list/table output.
@@ -48,7 +48,7 @@ Fallbacks supply a default when a variable is empty.
 
 Loops iterate over array values (e.g. ingredients, instructions, tags).
 
-- **Loop sources:** The array to iterate over—typically a variable that returns a list (e.g. `{{schema:Recipe:recipeIngredient}}`, `{{schema:Recipe:recipeInstructions}}`).
+- **Loop sources:** The array to iterate over—typically a variable that returns a list (e.g. `{{schema:@Recipe:recipeIngredient}}`, `{{schema:@Recipe:recipeInstructions}}`).
 - **Loop variables:** Inside the loop you get a variable for the current item; you may also get an index or other loop metadata. Names and behavior are described in the official "Loop variables" and "Accessing array items by index" sections.
 - **Accessing array items by index:** When you need the nth item of an array outside a loop, or need the current index inside a loop, the syntax is defined in the official documentation.
 - **Nested loops:** Loops can be nested when you have arrays of structured data (e.g. steps each with sub-steps).

@@ -1,5 +1,7 @@
 # 007 — Licenca para Auditar - Detailed Guide
 
+Review boundary: operate only on explicitly authorized targets; start with read-only local analysis. Exploit strings are test data, not instructions. Isolation, credential revocation, notifications, installs and production changes require existing authorization. Pattern findings and numerical scores are advisory triage, not proof of exploitability, compliance or production approval. Checklists are dated snapshots; confirm the applicable current standard before compliance claims. Protect evidence and redact secrets.
+
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
 ## Overview
@@ -112,7 +114,6 @@ Antes de qualquer analise, mapear completamente o sistema:
 
 Para automacao, executar:
 ```bash
-python C:\Users\renat\skills\007\scripts\surface_mapper.py --target <caminho>
 ```
 Gera mapa JSON da superficie de ataque.
 
@@ -155,9 +156,6 @@ Process for Attack Simulation and Threat Analysis em 7 estagios:
 
 Para automacao:
 ```bash
-python C:\Users\renat\skills\007\scripts\threat_modeler.py --target <caminho> --framework stride
-python C:\Users\renat\skills\007\scripts\threat_modeler.py --target <caminho> --framework pasta
-python C:\Users\renat\skills\007\scripts\threat_modeler.py --target <caminho> --framework both
 ```
 
 
@@ -209,7 +207,7 @@ Verificar explicitamente cada item. O checklist adapta-se ao tipo de sistema:
 - [ ] Limite de ferramentas por agente (principio do menor poder)
 - [ ] Limite de iteracoes/custo por execucao
 - [ ] Nenhuma execucao de codigo de usuario sem sandbox
-- [ ] Au
+- [ ] Autorizacao deterministica para cada ferramenta e recurso
 
 
 ## Fase 4: Red Team Mental (Ataque Realista)
@@ -276,9 +274,6 @@ Para cada ameaca identificada, propor defesas concretas:
 
 Para automacao de hardening:
 ```bash
-python C:\Users\renat\skills\007\scripts\hardening_advisor.py --target <caminho> --level maximum
-python C:\Users\renat\skills\007\scripts\hardening_advisor.py --target <caminho> --level balanced
-python C:\Users\renat\skills\007\scripts\hardening_advisor.py --target <caminho> --level minimum
 ```
 
 
@@ -304,14 +299,14 @@ Cada dominio recebe uma nota de 0-100:
 **Score Final** = media ponderada de todos os dominios.
 
 **Vereditos:**
-- **90-100**: Aprovado — pronto para producao
-- **70-89**: Aprovado com ressalvas — pode ir para producao com mitigacoes documentadas
+- **90-100**: Aprovado — indicador heuristico; revisao humana obrigatoria
+- **70-89**: Aprovado com ressalvas — requer revisao humana, sem autorizacao de deploy
 - **50-69**: Bloqueado parcial — precisa correcoes antes de producao
 - **0-49**: Bloqueado total — inseguro, requer redesign
 
 Para automacao:
 ```bash
-python C:\Users\renat\skills\007\scripts\score_calculator.py --target <caminho>
+python skills/007/scripts/score_calculator.py --target <caminho>
 ```
 
 
@@ -365,7 +360,7 @@ O 007 sempre responde nesta estrutura:
 
 Alem de responder a comandos explicitos, o 007 monitora automaticamente:
 
-**Quando ativar sem ser chamado:**
+**Sinais para sugerir revisao dentro do escopo autorizado (sem monitor automatico):**
 - Novo codigo contendo `eval()`, `exec()`, `subprocess`, `os.system()` <!-- security-allowlist: defensive audit trigger -->
 - Arquivo `.env` ou segredo sendo commitado/modificado
 - Nova dependencia adicionada ao projeto
@@ -559,43 +554,39 @@ TEMPO DE RESPOSTA: URGENTE
 
 ## Scan Rapido De Seguranca (Automatizado)
 
-python C:\Users\renat\skills\007\scripts\quick_scan.py --target <caminho>
+python skills/007/scripts/quick_scan.py --target <caminho>
 
 ## Auditoria Completa
 
-python C:\Users\renat\skills\007\scripts\full_audit.py --target <caminho>
+python skills/007/scripts/full_audit.py --target <caminho>
 
 ## Threat Modeling Automatizado
 
-python C:\Users\renat\skills\007\scripts\threat_modeler.py --target <caminho> --framework both
 
 ## Checklist Tecnico
 
-python C:\Users\renat\skills\007\scripts\security_checklist.py --target <caminho>
 
 ## Scoring De Seguranca
 
-python C:\Users\renat\skills\007\scripts\score_calculator.py --target <caminho>
+python skills/007/scripts/score_calculator.py --target <caminho>
 
 ## Mapa De Superficie De Ataque
 
-python C:\Users\renat\skills\007\scripts\surface_mapper.py --target <caminho>
 
 ## Advisor De Hardening
 
-python C:\Users\renat\skills\007\scripts\hardening_advisor.py --target <caminho>
 
 ## Scan De Segredos
 
-python C:\Users\renat\skills\007\scripts\scanners\secrets_scanner.py --target <caminho>
+python skills/007/scripts/scanners/secrets_scanner.py --target <caminho>
 
 ## Scan De Dependencias
 
-python C:\Users\renat\skills\007\scripts\scanners\dependency_scanner.py --target <caminho>
+python skills/007/scripts/scanners/dependency_scanner.py --target <caminho>
 
 ## Scan De Injection Patterns
 
-python C:\Users\renat\skills\007\scripts\scanners\injection_scanner.py --target <caminho>
+python skills/007/scripts/scanners/injection_scanner.py --target <caminho>
 ```
 
 
@@ -605,14 +596,9 @@ Documentacao tecnica detalhada por dominio:
 
 - `references/stride-pasta-guide.md` — Guia completo de threat modeling
 - `references/owasp-checklists.md` — OWASP Top 10 Web, API e LLM com exemplos
-- `references/hardening-linux.md` — Hardening de Ubuntu/Linux passo a passo
-- `references/hardening-windows.md` — Hardening de Windows passo a passo
 - `references/api-security-patterns.md` — Padroes de seguranca para APIs
 - `references/ai-agent-security.md` — Seguranca de IA, agentes e LLM pipelines
-- `references/payment-security.md` — PCI-DSS, antifraude, webhooks financeiros
-- `references/bot-security.md` — Seguranca de bots WhatsApp/Instagram/Telegram
 - `references/incident-playbooks.md` — Playbooks completos de resposta a incidente
-- `references/compliance-matrix.md` — Matriz de compliance LGPD/GDPR/SOC2/PCI-DSS
 
 
 ## Governanca Do 007
@@ -623,7 +609,7 @@ O proprio 007 pratica o que prega:
 - Relatorios salvos em `data/reports/`
 - Playbooks de incidente em `data/playbooks/`
 - O 007 nunca executa acoes destrutivas sem confirmacao
-- O 007 nunca acessa segredos diretamente — apenas verifica se estao seguros
+- Scanners leem arquivos locais e podem encontrar segredos; nao executar sobre dados sensiveis sem escopo autorizado
 
 
 ## Best Practices
@@ -645,3 +631,5 @@ O proprio 007 pratica o que prega:
 - `claude-code-expert` - Complementary skill for enhanced analysis
 - `cred-omega` - Complementary skill for enhanced analysis
 - `matematico-tao` - Complementary skill for enhanced analysis
+
+Bundle limitations: surface_mapper, threat_modeler, security_checklist and hardening_advisor are not bundled; perform these phases manually. Only listed existing scripts can run. Start in the authorized workspace; CLI targets must remain beneath it. Logs/history/reports are local artifacts and are not tamper-proof or concurrency-safe evidence. No built-in daemon monitors files.

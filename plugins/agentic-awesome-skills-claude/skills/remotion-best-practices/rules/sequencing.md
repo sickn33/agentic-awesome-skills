@@ -20,7 +20,7 @@ const {fps} = useVideoConfig();
 </Sequence>
 ```
 
-This will by default wrap the component in an absolute fill element.  
+This will by default wrap the component in an absolute fill element.
 If the items should not be wrapped, use the `layout` prop:
 
 ```tsx
@@ -31,8 +31,8 @@ If the items should not be wrapped, use the `layout` prop:
 
 ## Premounting
 
-This loads the component in the timeline before it is actually played.  
-Always premount any `<Sequence>`!
+This loads the component in the timeline before it is actually played.
+Premount media-heavy sequences when useful; avoid unnecessary work for lightweight content.
 
 ```tsx
 <Sequence premountFor={1 * fps}>

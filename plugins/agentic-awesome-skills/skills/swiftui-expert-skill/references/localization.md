@@ -53,11 +53,11 @@ Text("Save to Favorites", bundle: #bundle,
      comment: "Button to bookmark a recipe.")
 ```
 
-`#bundle` is the preferred form; `Bundle.module` and `Bundle(for:)` still work but are older patterns.
+The #bundle macro requires a supporting toolchain (introduced with Xcode 26) even when it back-deploys. Bundle.module for a SwiftPM resource target and Bundle(for:) for an appropriate framework class remain valid alternatives.
 
 ## Localizing Variables and Custom Types
 
-A `String` variable passed to `Text` runs the `StringProtocol` overload and is **not** localized. Wrapping it in `LocalizedStringKey(_:)` doesn't help — Xcode can't extract a literal from a runtime value, so nothing lands in the catalog. To localize a value chosen from a known set, model it with a type that exposes `LocalizedStringResource`:
+A `String` variable passed to `Text` runs the `StringProtocol` overload and is **not** localized. Wrapping a runtime key in LocalizedStringKey can look up an already-maintained catalog entry, but cannot make Xcode extract a runtime literal automatically. Do not turn arbitrary user text into localization keys. To localize a value chosen from a known set, model it with a type that exposes `LocalizedStringResource`:
 
 ```swift
 enum Category {
@@ -74,11 +74,11 @@ enum Category {
 Text(category.name)
 ```
 
-When a view or model exposes user-facing text, type the property as `LocalizedStringKey` or `LocalizedStringResource` rather than `String`. Every SwiftUI view that takes localized text accepts both, so deferring resolution costs nothing at the display site and preserves locale/bundle context.
+When a view or model exposes user-facing text, type the property as `LocalizedStringKey` or `LocalizedStringResource` rather than `String`. Check the specific initializer: overload support differs by type/SDK, and resolution carries locale/bundle context that must be tested.
 
 ## LocalizedStringResource for Non-View Types
 
-When a non-view type carries user-facing text — a model object, a tip, a queued notification — use `LocalizedStringResource` instead of `String`. It defers resolution to display time, so it honors the locale active when the value actually renders, not when it was created.
+When a non-view type carries user-facing text — a model object, a tip, a queued notification — use `LocalizedStringResource` instead of `String`. It carries deferred localization information, including its locale and bundle. Do not assume every consumer automatically replaces a captured locale with the current SwiftUI environment; test environment changes and set locale explicitly when resolving outside views.
 
 ```swift
 // AVOID: resolved at creation time, can't re-render in another locale

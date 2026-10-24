@@ -44,7 +44,12 @@ def detect_mime_type(file_path):
     return "application/octet-stream"
 
 def upload_file(file_path, display_name=None, api_key=None):
-    """Performs an upload using google-genai SDK, with automatic pre-processing for large videos."""
+    """Upload an authorized local file; optionally preprocess a large video after prompting."""
+    from pathlib import Path
+    local_path = Path(file_path).expanduser().resolve()
+    if not local_path.is_relative_to(Path.cwd().resolve()) or not local_path.is_file():
+        raise ValueError("Upload requires a regular file under the current workspace")
+    file_path = str(local_path)
     file_size = os.path.getsize(file_path)
     mime_type = detect_mime_type(file_path)
 
@@ -156,7 +161,7 @@ def wait_for_active(file_name, api_key, poll_interval=3, max_attempts=30, backof
                     file_dict["mimeType"] = file_dict["mime_type"]
                 return file_dict
             elif state_str == "FAILED":
-                raise RuntimeError("Error: File processing failed on the backend.")
+                raise ValueError("Error: File processing failed on the backend.")
 
             print(f"Current state: {state_str}. Retrying in {current_interval:.1f}s...")
             time.sleep(current_interval)
@@ -165,6 +170,8 @@ def wait_for_active(file_name, api_key, poll_interval=3, max_attempts=30, backof
             current_interval = min(current_interval * backoff_factor, max_interval)
             attempt += 1
 
+        except ValueError:
+            raise
         except Exception as e:
             consecutive_errors += 1
             if consecutive_errors >= max_consecutive_errors:

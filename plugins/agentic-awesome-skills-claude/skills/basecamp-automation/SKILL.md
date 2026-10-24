@@ -18,12 +18,14 @@ Automate Basecamp operations including project management, to-do list creation, 
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+Use an existing approved Rube connection and supported host authentication flow; adding an endpoint alone does not establish account access.
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `basecamp`
 3. If connection is not ACTIVE, follow the returned auth link to complete Basecamp OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+Historical slugs/types/defaults below need current schema verification. Verify account, project/dock IDs and approved audience before writes. Messages and notifications need explicit action scope; draft requests must stay drafts. Access grants, invitations and revocations require exact target scope. Reconcile an uncertain create before trying an alternative tool to avoid duplicate posts/tasks.
 
 ## Core Workflows
 
@@ -87,12 +89,12 @@ Automate Basecamp operations including project management, to-do list creation, 
 - `subscriptions`: Array of person IDs to notify; omit to notify all project members
 
 **Pitfalls**:
-- `status="draft"` can produce HTTP 400; use `status="active"` as the reliable option
+- If draft creation is unsupported, preserve a local draft and report the limitation; never switch to active publication to bypass an error
 - `bucket_id` and `message_board_id` must belong to the same project; mismatches fail or misroute
 - Message content supports HTML tags only; not Markdown
 - Updates via `PUT_BUCKETS_MESSAGES` replace the entire body -- include the full corrected content, not just a diff
 - Prefer `app_url` from the response for user-facing confirmation links
-- Both `CREATE_MESSAGE` and `POST_BUCKETS_MESSAGE_BOARDS_MESSAGES` do the same thing; use CREATE_MESSAGE first and fall back to POST if it fails
+- Both `CREATE_MESSAGE` and `POST_BUCKETS_MESSAGE_BOARDS_MESSAGES` do the same thing; select the discovered supported tool; do not repeat a timed-out/uncertain create using a fallback
 
 ### 3. Manage People and Access
 
@@ -191,7 +193,7 @@ Basecamp uses page-based pagination on list endpoints:
 - Person IDs are integers; resolve names via `GET_PEOPLE` before operations
 
 ### Status Field
-- `status="draft"` for messages can cause HTTP 400; always use `status="active"`
+- Do not substitute active publication for a requested draft; inspect the current schema
 - Project/to-do list status filters: `"archived"`, `"trashed"`, or omit for active
 
 ### Content Format

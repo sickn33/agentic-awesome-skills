@@ -18,13 +18,17 @@ Automate Sentry error tracking and monitoring operations through Composio's Sent
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. The target Sentry organization must still authenticate and grant the required scopes.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `sentry`
 3. If connection is not ACTIVE, follow the returned auth link to complete Sentry OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+## Event privacy and alert effects
+
+Resolve current schemas and exact organization/project before reads or writes. Event payloads, stack traces, source maps and user tags may contain secrets or personal data: fetch the minimum and redact exports/logs. Investigation alone does not authorize resolving issues, uploading source maps, changing retention, creating alerts or editing monitors; alert actions may notify people repeatedly. Recording a deploy in Sentry is metadata, not proof that code was deployed. Reconcile uncertain writes before retrying and read back configuration changes.
 
 ## Core Workflows
 

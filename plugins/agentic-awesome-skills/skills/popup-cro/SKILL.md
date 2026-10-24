@@ -86,7 +86,7 @@ Multiple CTAs or mixed goals destroy performance.
 ### Exit Intent
 
 * Desktop: Cursor movement toward browser UI
-* Mobile: Back button / upward scroll
+* Mobile: Use only non-interfering engagement signals; never hijack browser Back navigation or trap users trying to leave.
 * Best for: E-commerce, lead recovery
 
 ### Click-Triggered (Highest Intent)
@@ -255,7 +255,7 @@ Multiple CTAs or mixed goals destroy performance.
 ### Accessibility
 
 * Keyboard navigable
-* Focus trapped while open
+* Trap focus only for a modal dialog, restore it to the invoker on close, and keep non-modal banners/slide-ins from trapping focus.
 * Screen-reader compatible
 * Sufficient contrast
 

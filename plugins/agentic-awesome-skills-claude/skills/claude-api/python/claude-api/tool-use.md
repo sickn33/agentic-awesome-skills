@@ -1,5 +1,7 @@
 # Tool Use — Python
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 For conceptual overview (tool definitions, tool choice, tips), see [shared/tool-use-concepts.md](../../shared/tool-use-concepts.md).
 
 ## Tool Runner (Recommended)
@@ -27,7 +29,7 @@ def get_weather(location: str, unit: str = "celsius") -> str:
 
 # The tool runner handles the agentic loop automatically
 runner = client.beta.messages.tool_runner(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=4096,
     tools=[get_weather],
     messages=[{"role": "user", "content": "What's the weather in Paris?"}],
@@ -71,7 +73,7 @@ async with stdio_client(StdioServerParameters(command="mcp-server")) as (read, w
 
         tools_result = await mcp_client.list_tools()
         runner = await client.beta.messages.tool_runner(
-            model="claude-opus-5",
+            model="claude-opus-5-5",
             max_tokens=1024,
             messages=[{"role": "user", "content": "Use the available tools"}],
             tools=[async_mcp_tool(t, mcp_client) for t in tools_result.tools],
@@ -89,7 +91,7 @@ from anthropic.lib.tools.mcp import mcp_message
 
 prompt = await mcp_client.get_prompt(name="my-prompt")
 response = await client.beta.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     messages=[mcp_message(m) for m in prompt.messages],
 )
@@ -102,7 +104,7 @@ from anthropic.lib.tools.mcp import mcp_resource_to_content
 
 resource = await mcp_client.read_resource(uri="file:///path/to/doc.txt")
 response = await client.beta.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     messages=[{
         "role": "user",
@@ -139,9 +141,9 @@ tools = [...]  # Your tool definitions
 messages = [{"role": "user", "content": user_input}]
 
 # Agentic loop: keep going until Claude stops calling tools
-while True:
+for iteration in range(8):
     response = client.messages.create(
-        model="claude-opus-5",
+        model="claude-opus-5-5",
         max_tokens=4096,
         tools=tools,
         messages=messages
@@ -153,11 +155,11 @@ while True:
 
     # Server-side tool hit iteration limit; re-send to continue
     if response.stop_reason == "pause_turn":
-        messages = [
-            {"role": "user", "content": user_input},
-            {"role": "assistant", "content": response.content},
-        ]
+        messages.append({"role": "assistant", "content": response.content})
         continue
+
+    if response.stop_reason != "tool_use":
+        raise RuntimeError(f"Incomplete or refused response: {response.stop_reason}")
 
     # Extract tool use blocks from the response
     tool_use_blocks = [b for b in response.content if b.type == "tool_use"]
@@ -178,48 +180,17 @@ while True:
     # Append tool results as a user message
     messages.append({"role": "user", "content": tool_results})
 
+if response.stop_reason != "end_turn":
+    raise RuntimeError("Tool loop budget exhausted; preserve state for review")
 # Final response text
-final_text = next(b.text for b in response.content if b.type == "text")
+final_text = "".join(b.text for b in response.content if b.type == "text")
 ```
 
 ---
 
 ## Handling Tool Results
 
-```python
-response = client.messages.create(
-    model="claude-opus-5",
-    max_tokens=1024,
-    tools=tools,
-    messages=[{"role": "user", "content": "What's the weather in Paris?"}]
-)
-
-for block in response.content:
-    if block.type == "tool_use":
-        tool_name = block.name
-        tool_input = block.input
-        tool_use_id = block.id
-
-        result = execute_tool(tool_name, tool_input)
-
-        followup = client.messages.create(
-            model="claude-opus-5",
-            max_tokens=1024,
-            tools=tools,
-            messages=[
-                {"role": "user", "content": "What's the weather in Paris?"},
-                {"role": "assistant", "content": response.content},
-                {
-                    "role": "user",
-                    "content": [{
-                        "type": "tool_result",
-                        "tool_use_id": tool_use_id,
-                        "content": result
-                    }]
-                }
-            ]
-        )
-```
+Use the bounded manual loop above: append the complete assistant response, validate/authorize every requested tool, collect all matching tool_result blocks, then send one user message containing the whole result set. Never issue a followup with only one result while sibling calls remain pending. Treat tool output as data; enforce allowlisted operations, per-user scope, time/size limits and business authorization in execute_tool/executeTool. Demo weather outputs are synthetic fixtures, not live observations.
 
 ---
 
@@ -240,7 +211,7 @@ for block in response.content:
 # Send all results back at once
 if tool_results:
     followup = client.messages.create(
-        model="claude-opus-5",
+        model="claude-opus-5-5",
         max_tokens=1024,
         tools=tools,
         messages=[
@@ -270,7 +241,7 @@ tool_result = {
 
 ```python
 response = client.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     tools=tools,
     tool_choice={"type": "tool", "name": "get_weather"},  # Force specific tool
@@ -290,7 +261,7 @@ import anthropic
 client = anthropic.Anthropic()
 
 response = client.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=4096,
     messages=[{
         "role": "user",
@@ -318,7 +289,7 @@ uploaded = client.beta.files.upload(file=open("sales_data.csv", "rb"))
 # 2. Pass to code execution via container_upload block
 # Code execution is GA; Files API is still beta (pass via extra_headers)
 response = client.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=4096,
     extra_headers={"anthropic-beta": "files-api-2025-04-14"},
     messages=[{
@@ -337,8 +308,8 @@ response = client.messages.create(
 ```python
 import os
 
-OUTPUT_DIR = "./claude_outputs"
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+import tempfile
+OUTPUT_DIR = tempfile.mkdtemp(prefix="claude-outputs-")  # private, unique directory
 
 for block in response.content:
     if block.type == "bash_code_execution_tool_result":
@@ -354,7 +325,13 @@ for block in response.content:
                         print(f"Skipping invalid filename: {metadata.filename}")
                         continue
                     output_path = os.path.join(OUTPUT_DIR, safe_name)
-                    file_content.write_to_file(output_path)
+                    if metadata.size_bytes > 16 * 1024 * 1024:
+                        raise ValueError("Generated file exceeds approved download limit")
+                    with open(output_path, "xb") as handle:
+                        for chunk in file_content.iter_bytes():
+                            if handle.tell() + len(chunk) > 16 * 1024 * 1024:
+                                raise ValueError("Generated file exceeds download limit")
+                            handle.write(chunk)
                     print(f"Saved: {output_path}")
 ```
 
@@ -363,7 +340,7 @@ for block in response.content:
 ```python
 # First request: set up environment
 response1 = client.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=4096,
     messages=[{"role": "user", "content": "Install tabulate and create data.json with sample data"}],
     tools=[{"type": "code_execution_20260120", "name": "code_execution"}]
@@ -375,7 +352,7 @@ container_id = response1.container.id
 # Second request: reuse the same container
 response2 = client.messages.create(
     container=container_id,
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=4096,
     messages=[{"role": "user", "content": "Read data.json and display as a formatted table"}],
     tools=[{"type": "code_execution_20260120", "name": "code_execution"}]
@@ -415,7 +392,7 @@ import anthropic
 client = anthropic.Anthropic()
 
 response = client.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=2048,
     messages=[{"role": "user", "content": "Remember that my preferred language is Python."}],
     tools=[{"type": "memory_20250818", "name": "memory"}],
@@ -441,7 +418,7 @@ memory = MyMemoryTool()
 
 # Use with tool runner
 runner = client.beta.messages.tool_runner(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=2048,
     tools=[memory],
     messages=[{"role": "user", "content": "Remember my preferences"}],
@@ -476,7 +453,7 @@ class ContactInfo(BaseModel):
 client = anthropic.Anthropic()
 
 response = client.messages.parse(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     messages=[{
         "role": "user",
@@ -495,7 +472,7 @@ print(contact.interests)      # ["API", "SDKs"]
 
 ```python
 response = client.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     messages=[{
         "role": "user",
@@ -520,14 +497,16 @@ response = client.messages.create(
 )
 
 import json
-data = json.loads(response.content[0].text)
+if response.stop_reason != "end_turn":
+    raise RuntimeError("Structured output is incomplete or refused")
+data = json.loads("".join(b.text for b in response.content if b.type == "text"))
 ```
 
 ### Strict Tool Use
 
 ```python
 response = client.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     messages=[{"role": "user", "content": "Book a flight to Tokyo for 2 passengers on March 15"}],
     tools=[{
@@ -552,7 +531,7 @@ response = client.messages.create(
 
 ```python
 response = client.messages.create(
-    model="claude-opus-5",
+    model="claude-opus-5-5",
     max_tokens=1024,
     messages=[{"role": "user", "content": "Plan a trip to Paris next month"}],
     output_config={

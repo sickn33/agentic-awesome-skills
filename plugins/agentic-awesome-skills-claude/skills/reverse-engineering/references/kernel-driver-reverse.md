@@ -132,7 +132,7 @@ decode_ioctl(0x80002034)
 | 工具 | 用途 |
 |------|------|
 | `crash` | 内核 dump 分析 |
-| `volatility3` | 内存取证（Linux profile） |
+| `volatility3` | 内存取证（匹配内核符号表，不是 Volatility 2 profile） |
 | `dmesg` / `journalctl` | 内核日志 |
 | `lsmod` / `/proc/modules` | 已加载模块列表 |
 | `modinfo` | 模块元信息 |
@@ -179,8 +179,8 @@ decode_ioctl(0x80002034)
    - 构造函数中 `mov [rcx], offset vtable` 写入 vtable 指针
 
 2. 确定类层次
-   - vtable 前 -8 偏移处通常是 RTTI 指针（如果未 strip）
-   - 多个 vtable 共享前几个条目 → 继承关系
+   - 先确定 ABI、位宽和 RTTI 设置；Itanium/MSVC 的 vtable 元信息位置及析构槽不同
+   - 共享条目只是继承候选，需构造、调整 thunk 和 RTTI 交叉验证
 
 3. 标注虚函数
    - vtable[0] 通常是析构函数（或 deleting destructor）
@@ -203,7 +203,7 @@ decode_ioctl(0x80002034)
   call malloc(0x30) → 结构体大小 0x30 (48 bytes)
   
 方法 3：从构造函数推断
-  构造函数会初始化所有字段 → 字段类型和偏移一目了然
+  构造函数可提供部分初始化证据，未必初始化所有字段；优化和未初始化成员会隐藏信息
 
 方法 4：用 IDA 的 "Create struct" 功能
   选中访问模式 → Edit → Struct → Create struct from selection
@@ -228,7 +228,7 @@ decode_ioctl(0x80002034)
 | -O0 | 大量冗余 mov、每个变量都在栈上、函数不内联 |
 | -O1 | 基本优化、部分变量在寄存器 |
 | -O2 | 循环展开、函数内联、尾调用优化 |
-| -O3 / -Os | 激进内联、向量化（SIMD）、代码难读 |
+| -O3 / -Os | -O3 偏性能，-Os 偏代码大小；不能仅凭模式可靠恢复优化标志 |
 | PGO | 热路径优化、冷代码分离到 `.text.cold` |
 | LTO | 跨模块内联、全局死代码消除 |
 
@@ -296,3 +296,7 @@ lx-dmesg             # 内核日志
 | Windows Driver Samples | 微软官方驱动示例 | https://github.com/microsoft/Windows-driver-samples |
 | Linux Kernel Module Programming | 内核模块开发教程 | https://sysprog21.github.io/lkmpg/ |
 | Trail of Bits - Devirtualizing C++ | vtable 逆向方法 | https://blog.trailofbits.com/2017/02/13/devirtualizing-c-with-binary-ninja/ |
+
+## Scope
+
+Only inspect authorized driver files statically by default. Do not load unknown or vulnerable drivers on a host system. Kernel debugging requires a dedicated recoverable VM, loopback/restricted debugger transport and no production access; preserve configuration and disable debugging afterward. Pointer layouts and compiler patterns are ABI-dependent evidence, not conclusive vulnerability or compiler identification.

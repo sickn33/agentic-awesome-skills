@@ -16,9 +16,9 @@ def ensure_output_dir():
 
 def _assess_data_freshness(report: schema.Report) -> dict:
     """Assess how much data is actually from the last 30 days."""
-    reddit_recent = sum(1 for r in report.reddit if r.date and r.date >= report.range_from)
-    x_recent = sum(1 for x in report.x if x.date and x.date >= report.range_from)
-    web_recent = sum(1 for w in report.web if w.date and w.date >= report.range_from)
+    reddit_recent = sum(1 for r in report.reddit if r.date and report.range_from <= r.date <= report.range_to)
+    x_recent = sum(1 for x in report.x if x.date and report.range_from <= x.date <= report.range_to)
+    web_recent = sum(1 for w in report.web if w.date and report.range_from <= w.date <= report.range_to)
 
     total_recent = reddit_recent + x_recent + web_recent
     total_items = len(report.reddit) + len(report.x) + len(report.web)
@@ -55,7 +55,7 @@ def render_compact(report: schema.Report, limit: int = 15, missing_keys: str = "
     freshness = _assess_data_freshness(report)
     if freshness["is_sparse"]:
         lines.append("**⚠️ LIMITED RECENT DATA** - Few discussions from the last 30 days.")
-        lines.append(f"Only {freshness['total_recent']} item(s) confirmed from {report.range_from} to {report.range_to}.")
+        lines.append(f"Only {freshness['total_recent']} item(s) dated from {report.range_from} to {report.range_to}.")
         lines.append("Results below may include older/evergreen content. Be transparent with the user about this.")
         lines.append("")
 
@@ -66,7 +66,7 @@ def render_compact(report: schema.Report, limit: int = 15, missing_keys: str = "
         lines.append("---")
         lines.append("**⚡ Want better results?** Add API keys to unlock Reddit & X data:")
         lines.append("- `OPENAI_API_KEY` → Reddit threads with real upvotes & comments")
-        lines.append("- `XAI_API_KEY` → X posts with real likes & reposts")
+        lines.append("- `XAI_API_KEY` → X search results (verify reported engagement)")
         lines.append("- Edit `~/.config/last30days/.env` to add keys")
         lines.append("---")
         lines.append("")
@@ -222,7 +222,7 @@ def render_context_snippet(report: schema.Report) -> str:
 
     all_items.sort(key=lambda x: -x[0])
     for score, source, text, url in all_items[:7]:
-        lines.append(f"- [{source}] {text}")
+        lines.append(f"- [{source}: {text}]({url})")
 
     lines.append("")
     lines.append("## Summary")

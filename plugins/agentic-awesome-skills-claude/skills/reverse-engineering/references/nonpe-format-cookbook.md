@@ -3,9 +3,9 @@
 > ⚠️ Security notice: examples below may include download-and-execute patterns, shown for defensive understanding and authorized testing only. Never run them against systems you do not own.
 
 
-> 与 PE 反调试菜谱 A–T（../anti-analysis.md）并列：按**文件类型**给出「触发 → 动作一行 → Evidence」。  
-> **不是**第二套主流程。Triage 识别类型后跳转到对应 skill + 本表。  
-> 默认 **授权隔离 lab / 已授权样本与设备**。格机、BYOVD、反射注入等写**检测与取证**，不写未授权破坏/利用教程。  
+> 与 PE 反调试菜谱 A–T（../anti-analysis.md）并列：按**文件类型**给出「触发 → 动作一行 → Evidence」。
+> **不是**第二套主流程。Triage 识别类型后跳转到对应 skill + 本表。
+> 执行前实际确认 **授权隔离 lab / 已授权样本与设备**。格机、BYOVD、反射注入等写**检测与取证**，不写未授权破坏/利用教程。
 > 绕过或还原失败也 MUST 记 Evidence；禁止静默当「无害」。
 >
 > §1–§8 / U–AV = 原始规则（Issue #65）。§9–§23 / AW–DN = 扩展规则（Issue #87，去重后 + 语义增强 + edge-case 补丁）。
@@ -139,7 +139,7 @@ DLL/SYS 硬门仍：E-imports + E-exports（见 re-agent-workflow）。
 
 | ID | 触发 | 动作（摘要） | Evidence | 优先 |
 |----|------|--------------|----------|------|
-| **BC** | 文件以 \x00asm 魔术字节开头；或 JS 代码含 WebAssembly 实例化逻辑 | wasm2wat 转文本；检查 import 段识别宿主环境导入函数；wasm-decompile 生成伪代码；检查 Emscripten 胶水签名（__wasm_call_ctors）判断是否由 JS 编译而来 | E-wasm-struct | P0 |
+| **BC** | 文件以 \x00asm 魔术字节开头；或 JS 代码含 WebAssembly 实例化逻辑 | wasm2wat 转文本；检查 import 段识别宿主环境导入函数；wasm-decompile 生成伪代码；检查 Emscripten 胶水线索；__wasm_call_ctors 不是 JS 作为原始语言的证据 | E-wasm-struct | P0 |
 | **BD** | WASM 函数数量多但逻辑简单、函数体被拆分为微小函数；或存在无意义 block/loop 嵌套 | diswasm 评估函数最小化级别；JEB Pro / IDA WASM 插件深度分析；动态追踪执行日志 | E-wasm-obfuscation | P1 |
 | **BE** | WASM 模块通过 JS 导入/导出函数与浏览器交互，存在 WebSocket、fetch、WebGL 调用 | 同时分析 JS 胶水代码和 WASM 模块；浏览器 DevTools 追踪数据交换；提取网络通信 URL/域名 | E-wasm-c2 | P1 |
 
@@ -182,9 +182,9 @@ DLL/SYS 硬门仍：E-imports + E-exports（见 re-agent-workflow）。
 
 | ID | 触发 | 动作（摘要） | Evidence | 优先 |
 |----|------|--------------|----------|------|
-| **BT** | MSI 文件含 CustomAction 表（Binary / Script / DLL 类型自定义操作） | msiexec /a 或 lessmsi 提取内容；检查 CustomAction 表；提取自定义操作二进制文件 | E-msi-custom-action | P0 |
+| **BT** | MSI 文件含 CustomAction 表（Binary / Script / DLL 类型自定义操作） | 优先 lessmsi 等静态解析器提取；msiexec /a 可能执行自定义操作，只限隔离实验；检查 CustomAction 表；提取自定义操作二进制文件 | E-msi-custom-action | P0 |
 | **BU** | MSI Binary 表含 VBScript/JScript 自定义操作脚本 | 从 Binary 表提取脚本二进制解码为可读脚本；按 VBS/JS 规则分析 | E-msi-script | P1 |
-| **BV** | MSI 通过 /quiet /passive /qn 静默安装；ALLUSERS=1 提权 | 记录安装命令行参数；分析 Property 表权限设置；标记静默+提权组合 | E-msi-privilege | P1 |
+| **BV** | MSI 通过 /quiet /passive /qn 静默安装；ALLUSERS=1 为安装范围请求，不自动绕过权限 | 记录安装命令行参数；分析 Property 表权限设置；标记静默+提权组合 | E-msi-privilege | P1 |
 
 ## 17. REG 注册表脚本（BW BX BY）
 
@@ -243,7 +243,7 @@ DLL/SYS 硬门仍：E-imports + E-exports（见 re-agent-workflow）。
 | ID | 触发 | 动作（摘要） | Evidence | 优先 |
 |----|------|--------------|----------|------|
 | **CR** | AndroidManifest.xml 无 android:name 入口 Activity；meta-data 指定 xposedmodule=true | 检查 assets/xposed_init 确定入口类；搜索 IXposedHookLoadPackage/ZygoteInit/CmdInit 接口实现 | E-xp-entry | P0 |
-| **CS** | 代码含 XposedHelpers.findAndHookMethod / XposedBridge.hookMethod / findClass | 提取 findAndHookMethod 第一参数（目标类）+ 第二参数（目标方法）；建立目标应用清单 | E-xp-hook-targets | P0 |
+| **CS** | 代码含 XposedHelpers.findAndHookMethod / XposedBridge.hookMethod / findClass | 提取 按具体重载解析目标类、ClassLoader、方法名与参数类型，不能假定第二参数恒为方法名；建立目标应用清单 | E-xp-hook-targets | P0 |
 | **CT** | 模块含 DexClassLoader/PathClassLoader 动态加载；或 Runtime.exec / ProcessBuilder 执行命令 | 追踪 DexClassLoader 构造参数；提取动态加载 DEX 独立分析；检查 exec 命令参数 | E-xp-dynamic-load | P0 |
 | **CU** | Hook 目标涉及支付/生物识别/短信/通讯录/位置/加密密钥等敏感 API | 对 Hook 目标类/方法进行敏感度分类；标记支付类/生物识别类/短信通讯录类；汇总威胁等级 | E-xp-sensitive-hooks | P0 |
 | **CV** | 代码含 XposedBridge 检测规避 / Zygote 注入痕迹清除 / 自定义网络通信 | 检查 stacktrace 修改 / XposedBridge 类引用清除；检查独立网络请求（OkHttp/Socket）；识别 C2 目标 | E-xp-anti-detection | P1 |
@@ -269,10 +269,10 @@ DLL/SYS 硬门仍：E-imports + E-exports（见 re-agent-workflow）。
 
 ## 24. 约束（全局）
 
-1. **不平行主流程**：阶段门闩仍以 re-agent-workflow / 各 skill 为准。  
-2. **Evidence 必记**：含失败、半还原、quality= 标注。  
-3. **与 A–T 去重**：PE 反调试不重复；AM→R；AJ 补 DLL 视角不推翻 TLS 火箭。  
-4. **工具缺失**：记 n/a + 手工等价，不假装已用商业套件。  
+1. **不平行主流程**：阶段门闩仍以 re-agent-workflow / 各 skill 为准。
+2. **Evidence 必记**：含失败、半还原、quality= 标注。
+3. **与 A–T 去重**：PE 反调试不重复；AM→R；AJ 补 DLL 视角不推翻 TLS 火箭。
+4. **工具缺失**：记 n/a + 手工等价，不假装已用商业套件。
 5. **授权**：破坏性/注入/驱动漏洞类只做防御分析与取证表述。
 6. **扩展规则去重**：ELF → elf-analysis.md；Mach-O → platforms.md；Python → languages.md。本表不重复这些格式的规则。
 
@@ -299,3 +299,7 @@ DLL/SYS 硬门仍：E-imports + E-exports（见 re-agent-workflow）。
 □ xposed 模块 → CR + CS + CT + CU（+ CV–CX）
 □ magisk 深度 → DG + DH + CY + DI + CZ + DA（+ DB/DC）
 ```
+
+## Parsing and evidence constraints
+
+Treat external links, embedded scripts, macros and archive names as data. Do not follow links, enable macros, install MSI/APK, resolve document relationships or run decoders by default. Apply byte/depth/time limits, reject traversal/symlink outputs, and use unprivileged isolated storage. Tool names/options and historical actor/format labels require selected-version validation; missing source or a suspicious API is not proof of malice. All dynamic fallback descriptions remain subordinate to the root authorization/isolation gate, never an instruction to execute a sample on the host.

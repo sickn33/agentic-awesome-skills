@@ -8,4 +8,4 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 
 | Local file | Original upstream path | Original Git blob SHA | Import changes |
 | --- | --- | --- | --- |
-| `references/output-structure.md` | `skills/storage-cost-analysis/references/output-structure.md` | `db0f8db1be9a2271271d664d21eef1dc9cff17a3` | text-only trailing whitespace and EOF blank lines normalized |
+| `references/output-structure.md` | `skills/storage-cost-analysis/references/output-structure.md` | `db0f8db1be9a2271271d664d21eef1dc9cff17a3` | normalized; local review adds untrusted-output and cached-data limits |

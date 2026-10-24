@@ -75,7 +75,7 @@ Agent: Logged ✅ TSM July calls · Long · Open
        ❓ To-confirm: which strike/expiry, how many contracts, at what price?
        ❓ And the plan — holding through earnings, or is there a stop?
 User:  0731 475C, 1 contract at 18.50, holding to earnings
-Agent: Updated ✅ Ticker: TSM 0731C475 · Thesis: pre-earnings run-up · Plan: hold through earnings
+Agent: Updated ✅ Ticker: TSM 0731C475 · Thesis: same as before earnings [exact thesis to confirm] · Plan: hold through earnings
 ```
 
 ### Example 2: Review day
@@ -86,7 +86,7 @@ Agent: 3 closed since last review:
        · NVDA long — thesis played out, exited per plan. Good trade.
        · TSLA short — thesis wrong, but stopped exactly where planned. Good trade, bad outcome.
        · SPY calls — profitable, but Entry was tagged FOMO and there was no plan. Lucky, not good.
-       Open positions: TSM call — earnings run-up thesis still holds until the 7/29 print.
+       Open positions: TSM call — ask the user whether the recorded thesis still holds; no current-market conclusion was verified.
 ```
 
 ## Best Practices
@@ -99,6 +99,7 @@ Agent: 3 closed since last review:
 - ❌ A review is not a P&L total — it grades thesis and execution
 
 ## Limitations
+- Query/write field syntax varies by Notion connector version; inspect the live schema and read back values. A review request authorizes analysis; confirm before changing review/status fields if the user did not request ledger updates.
 
 - Requires the user's own Notion workspace, the companion database (duplicate the template from the source repo), and the official Notion connector granted access — connector/skill setups currently live on paid Claude tiers.
 - Close, reconcile, and review flows require reliable Notion database query/search access to open, closed, and `To-confirm` rows. If the connector cannot query the ledger, stop after logging the user's new facts and ask them to provide the relevant row details instead of guessing matches.

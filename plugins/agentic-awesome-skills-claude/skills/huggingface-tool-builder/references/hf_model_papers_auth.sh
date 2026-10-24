@@ -47,7 +47,7 @@ hf_api_call() {
         headers+=(-H "Authorization: Bearer $HF_TOKEN")
     fi
 
-    curl -s "${headers[@]}" "$url" 2>/dev/null || echo '{"error": "Network error"}'
+    curl -fsS --connect-timeout 10 --max-time 30 "${headers[@]}" "$url"
 }
 
 # Function to extract papers from text
@@ -95,6 +95,9 @@ extract_papers() {
 # Function to get model papers
 get_model_papers() {
     local model_id="$1"
+    if [[ ! "$model_id" =~ ^[A-Za-z0-9][A-Za-z0-9_.-]*(/[A-Za-z0-9][A-Za-z0-9_.-]*)?$ || "$model_id" == *..* ]]; then
+        echo "Invalid model ID" >&2; return 1
+    fi
 
     echo "=== $model_id ==="
 
@@ -117,7 +120,8 @@ get_model_papers() {
 
     # Get model card
     local card_url="https://huggingface.co/$model_id/raw/main/README.md"
-    local card_content=$(curl -s "$card_url" 2>/dev/null || echo "")
+    local card_content
+    card_content=$(hf_api_call "$card_url") || return 1
 
     if [[ -n "$card_content" ]]; then
         extract_papers "$card_content" "Papers from model card:"

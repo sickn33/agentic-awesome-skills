@@ -1,8 +1,11 @@
 ---
 title: "App Clips | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/app-clips
+---
 
 # App Clips
+
+> Imported Apple HIG reference snapshot, with local review corrections. Source attribution is retained; this is not an official Apple skill or a guarantee of current API availability. Confirm target OS/SDK, device capabilities and current linked developer documentation before implementation. Dimension tables are design references, not fixed layout contracts. No Apple app, device or entitlement validation was performed.
 
 An App Clip is a lightweight version of your app or game that provides an on-the-go or demo experience that’s instantly available.
 
@@ -60,7 +63,7 @@ For developer guidance, see [App Clips](https://developer.apple.com/documentatio
 
 **On launch, show the most relevant part of your App Clip.** Skip unnecessary steps and take people immediately to the part of the App Clip that best fits their context.
 
-**Ensure people can use your App Clip immediately.** App Clips need to include all required assets, omit splash screens, and never make people wait on launch.
+**Ensure people can use your App Clip immediately.** Include essential launch assets and omit unnecessary splash screens. Where the supported App Clip type permits additional assets, show honest loading/progress behavior rather than promising zero wait.
 
 **Ensure your App Clip is small.** The smaller your App Clip, the faster it will launch on a person’s device. Keeping your App Clip small is especially important when bandwidth is limited. As much as possible, reduce unnecessary code and remove unused assets. Avoid downloading additional data, which can take away the feeling of immediacy.
 
@@ -74,9 +77,9 @@ For developer guidance, see [App Clips](https://developer.apple.com/documentatio
 
 ### [Preserving privacy](https://developer.apple.com/design/human-interface-guidelines/app-clips#Preserving-privacy)
 
-The system imposes limits on App Clips to ensure people’s privacy. For example, App Clips can’t perform background operations. For developer guidance, see [Choosing the right functionality for your App Clip](https://developer.apple.com/documentation/AppClip/choosing-the-right-functionality-for-your-app-clip).
+The system imposes limits on App Clips to ensure people’s privacy. For example, App Clips do not support ordinary background execution modes. Do not infer that every system-managed extension or permitted asset delivery mechanism is unavailable; verify the specific OS/API. For developer guidance, see [Choosing the right functionality for your App Clip](https://developer.apple.com/documentation/AppClip/choosing-the-right-functionality-for-your-app-clip).
 
-**Limit the amount of data you store and handle yourself.** If you need to store people’s data — for example, login information — store it securely. In addition, don’t rely on the availability of data you previously stored on the device — the system may have removed the App Clip from the device between launches and deleted all of its data. If you store login information, securely store it off the device.
+**Limit the amount of data you store and handle yourself.** If you need to store people’s data — for example, login information — store it securely. In addition, don’t rely on the availability of data you previously stored on the device — the system may have removed the App Clip from the device between launches and deleted all of its data. Keep account records server-side where appropriate and use secure, short-lived session credentials; never upload or store a person’s password merely to survive App Clip removal. Plan for local session loss and supported data handoff.
 
 **Consider offering Sign in with Apple.** Sign in with Apple securely retains login information off people’s devices and preserves their privacy. For guidance, see [Sign in with Apple](https://developer.apple.com/design/human-interface-guidelines/sign-in-with-apple).
 
@@ -385,3 +388,7 @@ Date| Changes
 June 9, 2025| Updated guidance to include demo App Clips.  
 May 2, 2023| Consolidated guidance into one page.  
   
+
+## Current implementation checks
+
+App Clip size limits depend on OS, invocation type and demo eligibility; avoid treating one numerical limit as universal. Current developer guidance permits larger digital/demo configurations under specific conditions and describes limited Live Activity extension support. Validate these requirements in [Choosing the right functionality](https://developer.apple.com/documentation/AppClip/choosing-the-right-functionality-for-your-app-clip), including unsupported frameworks, privacy limits and launch testing. An invocation URL or scanned code is untrusted input: validate its business/location identifiers and authorization before allowing payments or account access.

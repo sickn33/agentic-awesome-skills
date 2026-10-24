@@ -29,7 +29,7 @@ Derive voice per persona from the persona sheet, then write a tone matrix.
 | Low tech comfort / reads slowly | Shorter lines, plain words, one action per screen, explicit next steps, no icons without labels |
 | Expert / high frequency | Terse labels, keyboard hints, fewer confirmations, dense tables allowed |
 | Under time pressure (shop floor, driving) | Front-load the key fact, large targets, minimal choices |
-| Anxious about money or data | Show amounts and consequences before the action, explicit "nothing was charged" on failure, receipts |
+| Anxious about money or data | Show amounts and consequences before the action, explicit payment status; say "nothing was charged" only when verified, receipts |
 | Formal expectation (B2B, older, official) | Formal register («شما», formal verbs), no jokes, no emoji |
 | Casual expectation (young consumers, community) | Warmer, lighter, still respectful; emoji only if the design direction allows and never in errors |
 | Screen-reader user | Every icon has text, every state change is announced, no meaning by colour alone |
@@ -50,7 +50,7 @@ Tone matrix (write it in the blueprint):
 ## 3. Message formulas
 
 - **Validation error (inline):** `<what is wrong in the field> + <how to fix>` — "شماره باید ۱۱ رقم و با ۰۹ شروع شود."
-- **Operation failure:** `<what didn't happen> + <state of their data/money> + <action>` — "پرداخت انجام نشد. مبلغی از حساب شما کم نشده است. دوباره تلاش کنید."
+- **Operation failure:** `<what didn't happen> + <state of their data/money> + <action>` — "وضعیت پرداخت در حال بررسی است. پیش از پرداخت دوباره، وضعیت سفارش را بررسی کنید." (uncertain outcome; do not invite a second charge until reconciled)
 - **Empty state:** `<what lives here> + <what to do first>` — "هنوز سفارشی ندارید. اولین آیتم منو را اضافه کنید تا مشتری‌ها بتوانند سفارش بدهند." + button «افزودن آیتم».
 - **Success:** `<outcome> + <next>` — "منو منتشر شد. مشتری‌ها با اسکن QR همین الان می‌بینند."
 - **Destructive confirm:** `<consequence, incl. who else is affected> + <question>` + buttons `<verb>` / `<keep>`.

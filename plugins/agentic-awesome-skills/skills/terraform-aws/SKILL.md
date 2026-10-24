@@ -123,3 +123,7 @@ terraform destroy
 - Infrastructure commands can disrupt services: confirm target host/scope and have backups/snapshots before mutating state.
 - Docs-only import: upstream scripts and templates not bundled.
 
+
+## Execution boundaries
+
+The HCL snippets omit application-specific resources and are not a complete deployable configuration. Pin module versions against the reviewed provider/runtime. Treat apply and destroy as separate authorized operations, not a command sequence to run wholesale. Verify account, region, backend identity, locking, encryption and the saved plan before applying; keep state and plan files private.

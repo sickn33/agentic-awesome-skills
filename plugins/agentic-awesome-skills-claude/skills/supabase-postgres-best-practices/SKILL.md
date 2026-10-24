@@ -1,7 +1,7 @@
 ---
 name: supabase-postgres-best-practices
 description: Postgres performance optimization and best practices from Supabase. Use this skill when writing, reviewing, or optimizing Postgres queries, schema designs, or database configurations.
-risk: safe
+risk: critical
 source: https://github.com/supabase/agent-skills/tree/main/skills/supabase-postgres-best-practices
 source_repo: supabase/agent-skills
 source_type: official
@@ -27,6 +27,10 @@ Reference these guidelines when:
 - Configuring connection pooling or scaling
 - Optimizing for Postgres-specific features
 - Working with Row-Level Security (RLS)
+
+## Execution and evidence boundaries
+
+SQL is illustrative, not an instruction to mutate a live database. Confirm target, permissions, locks, backups and rollback before DDL/DML, global settings, resets or extension changes. EXPLAIN ANALYZE executes its statement and can invoke side effects even for SELECT; inspect first and use a disposable environment when needed. All speedups, row counts, memory estimates and plan outputs here are examples, not measured guarantees. Benchmark equivalent workloads and preserve RLS semantics while optimizing.
 
 ## Rule Categories by Priority
 

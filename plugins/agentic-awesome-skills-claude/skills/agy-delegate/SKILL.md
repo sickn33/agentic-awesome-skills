@@ -41,6 +41,10 @@ Code; treat other orchestrators as designed-for, not yet proven.
 - You want to write the code yourself, or you only need Antigravity's opinion on code you wrote (a
   `--read-only` dispatch covers review without edits, but a plain review may not need delegation at all).
 
+## Runtime availability
+
+This is a docs-only import: `scripts/relay.mjs` is absent. Do not run the dispatch commands from this directory or invent its output. Obtain a separately authorized upstream checkout and inspect runtime, dependencies and license first. The flags/result schema below describe the imported upstream contract, not tested functionality in this bundle.
+
 ## Prerequisites (check once)
 
 1. `agy help` succeeds. If not, install the Antigravity CLI and complete first-launch setup.
@@ -71,9 +75,9 @@ Antigravity it will **not** commit (you will). Keep one task per brief. Full gui
 
 ### 2. Dispatch
 
-Send the brief to Antigravity with the bundled helper. It wraps `agy --print`, captures the run, and
+Send the brief to Antigravity with a separately obtained, reviewed upstream helper. It wraps `agy --print`, captures the run, and
 writes a structured `result.json` - so your only job is "run a command, read a file." (`<skill-dir>`
-below is this skill's installed directory - the folder containing this `SKILL.md`.)
+below means the reviewed upstream runtime directory; this installed catalog directory has no executable helper.)
 
 ```bash
 node "<skill-dir>/scripts/relay.mjs" --brief brief.txt --cd /path/to/repo
@@ -123,19 +127,23 @@ diff holds:
 - Commit the verified work yourself, with a clear message.
 - If it needs changes, send a delta brief with `--resume-last` and review again.
 
+## Data and scope
+
+Confirm authorized external provider/data sharing and workspace paths before dispatch. Briefs travel in process arguments and logs, so exclude secrets; restrict artifact permissions/retention. A resumed session may retain prior data and permissions: use the recorded conversation ID and restate current scope. `--resume-last` can select the wrong conversation when several runs exist. Do not treat a requested report format as a guarantee of compliance.
+
 ## Permission model
 
 Antigravity owns its own permission policy. The relay does not bypass it by default. Use
 `--dangerously-skip-permissions` only when the human explicitly accepts that Antigravity may
 auto-approve tool permission requests. `--read-only` runs `agy` in plan mode (`--mode plan`),
-removing write and edit paths, and is mutually exclusive with `--dangerously-skip-permissions`.
+requesting read-only behavior, and is mutually exclusive with `--dangerously-skip-permissions`.
 Use `--sandbox` when you want Antigravity's terminal sandbox enabled for the run.
 Antigravity's own help says `--dangerously-skip-permissions` auto-approves all tool permission
 requests without prompting, including a request to act outside the sandbox. Do not treat
 `--sandbox` as an enforced boundary when the flags are combined; treat the run as full access.
 If headless `--print` auto-denies a write, the relay reports `status: "failed"` and exits non-zero.
 The relay fingerprints the working tree before and after a `--read-only` run to report
-`readOnlyViolation` in `result.json`. Settings allow-rules are not documented here as a fix
+`readOnlyViolation` in `result.json`. Fingerprints observe covered paths only and cannot undo writes or establish network/secret isolation. Use enforced containment when read-only scope is required. Settings allow-rules are not documented here as a fix
 because they have not been demonstrated to apply to this headless path. Do not add the bypass
 flag without explicit human approval.
 

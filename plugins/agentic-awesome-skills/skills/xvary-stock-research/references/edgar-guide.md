@@ -41,7 +41,10 @@ python3 tools/edgar.py ASML --mode facts
 
 ## Practical Notes
 
-- SEC requests should include a reasonable `User-Agent`.
+- Set `SEC_USER_AGENT` to your own application name and genuine contact email; do not impersonate the upstream author.
+- Follow [SEC fair access](https://www.sec.gov/about/developer-resources): at most 10 requests per second across all machines, with backoff/caching and less traffic where practical.
+- Companyfacts contains entity-wide standard taxonomy facts; custom concepts and context-specific disclosures can be absent. See [SEC API documentation](https://www.sec.gov/search-filings/edgar-application-programming-interfaces).
+- A 10-Q/6-K can contain cumulative six- or nine-month flows; filing form alone does not make every value a standalone quarter.
 - SEC endpoints can rate-limit bursty traffic; avoid aggressive loops.
 - International tickers may have sparse EDGAR coverage.
 - Values should be tied to filing metadata when presented in analysis.

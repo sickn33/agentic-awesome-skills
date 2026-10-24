@@ -1,3 +1,5 @@
+> Catalog review modification (2026-10-23): bounded async work and truthful write reporting; original attribution/license retained.
+
 # Triage Stages
 
 Each stage of a triage workflow is optional and customisable. Design your workflow around the stages that match how your team manually reviews alerts — automate the parts that are repetitive or time-consuming, and keep humans in the loop for the parts that need judgement.
@@ -79,7 +81,7 @@ You can adjust this threshold based on your environment — for example, also ru
 - `queued` — the job was accepted but hasn't started yet; wait ~30 seconds then start polling
 - `running` — the job is in progress; poll with increasing intervals (30s, 60s, 60s…)
 
-Fire all eligible alerts simultaneously, then poll each with `get_troubleshooting_agent_results(incident_id=...)` until it returns `success` or `failed`. Classify each alert as its result arrives. This avoids the timeout issues of synchronous calls and removes the need to limit concurrency.
+Use a bounded, approved concurrency for eligible alerts, then poll each with `get_troubleshooting_agent_results(incident_id=...)` until it returns `success` or `failed`. Classify each alert as its result arrives. Async calls still require concurrency and spend limits, bounded polling and cancellation/timeout handling.
 
 ---
 
@@ -106,7 +108,7 @@ What you do after triage depends on your integrations, your team's workflow, and
 
 ### Adding comments
 
-`create_or_update_alert_comment` — always a good starting point. Comments provide a record of what the agent found and recommended, without taking any irreversible action. Useful at every stage, regardless of whether you automate anything else.
+`create_or_update_alert_comment` — always a good starting point. Comments provide a record of what the agent found and recommended, as an externally visible write that may notify people. Useful at every stage, regardless of whether you automate anything else.
 
 Suggested comment content:
 - **Scored but not troubleshot**: one sentence describing the anomaly and the incident likelihood/potential impact scores. Do not explain why it wasn't troubleshot. No recommendations.

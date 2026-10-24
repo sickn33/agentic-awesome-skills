@@ -31,6 +31,10 @@ Use this skill when:
 - Securing the software supply chain
 - Automating vulnerability detection
 
+## Scan and exception boundaries
+
+Inventory every relevant manifest/lockfile, including nested projects; a clean root scan does not cover them. Review tools at fixed versions and scan with lifecycle scripts disabled where supported. Some scanners upload dependency metadata or source, so confirm permitted data/account scope. `fix`, `--force`, ignores and suppressions mutate dependencies or policy: review diffs and test before adopting them. Historical suppression IDs/dates are examples, never reusable approval; bind each real exception to evidence, owner and expiry. A missing vulnerable-function call is not automatically a false positive or a license exemption.
+
 ## Prerequisites
 
 - Package manifest files (package.json, requirements.txt, etc.)
@@ -231,8 +235,8 @@ dependency-check --project "MyProject" \
 ### Suppression File
 
 ```xml
-<!-- suppression.xml -->
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- suppression.xml -->
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
   <suppress>
     <notes>False positive - not using vulnerable function</notes>

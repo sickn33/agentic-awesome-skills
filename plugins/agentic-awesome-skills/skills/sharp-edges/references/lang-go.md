@@ -1,5 +1,8 @@
 # Go Sharp Edges
 
+> Catalog correction (CC-BY-SA-4.0 adaptation; original attribution/license in UPSTREAM-NOTICE.md): snippets are isolated teaching fragments, not production implementations or an assertion of exploitability. Confirm the installed language/library version, trust boundary, reachable input and impact. Use inert local fixtures only; do not execute the intentionally unsafe snippets, untrusted audited code or destructive payloads. No network attack or configuration change is authorized by this guide.
+
+
 ## Silent Integer Overflow
 
 ```go
@@ -14,7 +17,7 @@ func allocate(count int32, size int32) []byte {
 }
 ```
 
-**The Problem**: Unlike Rust (debug panics), Go silently wraps. Fuzzing with go-fuzz may never find overflow bugs because they don't crash.
+**The Problem**: Unlike Rust (debug panics), Go silently wraps. Fuzz tests need explicit overflow/property oracles; absence of a crash is not proof that arithmetic is safe.
 
 **Detection**: Arithmetic on integer types, especially:
 - Multiplication for size calculations
@@ -107,7 +110,7 @@ decoder := json.NewDecoder(r.Body)
 decoder.DisallowUnknownFields()  // Reject unknown fields
 ```
 
-For case-sensitivity, consider alternative JSON libraries or custom UnmarshalJSON.
+DisallowUnknownFields does not reject duplicate recognized keys or make matching case-sensitive. Add bounded decoding, duplicate-key rejection, exact field policy and a check for trailing JSON values.
 
 ## Defer in Loops
 
@@ -161,7 +164,7 @@ func search(query string) string {
     }
 }
 
-// SAFE: Use buffered channel
+// Buffered send avoids this specific abandoned-receiver leak; bound/cancel slowSearch too
 func search(query string) string {
     ch := make(chan string, 1)  // Buffered - send won't block
     go func() {
@@ -196,7 +199,7 @@ for _, v := range []int{1, 2, 3} {
 }
 ```
 
-**Note**: Fixed in Go 1.22 with GOEXPERIMENT=loopvar (default in Go 1.23+).
+**Note**: Per-iteration variables apply to loops declared with := in packages using Go 1.22+ language semantics (go.mod). Assignment to an already-declared variable with = still reuses it; Go 1.21 exposed a loopvar experiment.
 
 ## String/Byte Slice Conversion
 
@@ -261,7 +264,7 @@ defer func() {
 |---------|------|
 | `x * y` with int types | Silent overflow |
 | `slice[a:b]` without copy | Aliasing |
-| `return &ConcreteType{}` as interface | Interface nil confusion |
+| Returning a typed nil pointer as interface | Interface nil confusion |
 | `json.Unmarshal` without DisallowUnknownFields | Field injection |
 | `defer` inside `for` | Resource leak |
 | `go func()` with unbuffered channel | Goroutine leak |

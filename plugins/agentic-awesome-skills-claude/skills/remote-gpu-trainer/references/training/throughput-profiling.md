@@ -1,4 +1,4 @@
-﻿# Throughput & profiling — make training FAST, find the one bottleneck
+# Throughput & profiling — make training FAST, find the one bottleneck
 
 How to tell *why* a rented GPU is underfed (GPU-bound vs data-bound vs comms-bound), then apply the
 right speedup in cost order — from a free dataloader knob to `torch.compile` and fused attention. This
@@ -86,9 +86,7 @@ waits the whole fetch.
 **Root cause**: with `num_workers=0` "the data will be loaded in the main process" — no overlap between
 data prep and compute (https://docs.pytorch.org/docs/2.12/data.html).
 
-**Fix**: set `num_workers > 0` to load asynchronously and overlap fetch with the GPU step. Start at
-`cores − 1`, but **size against per-worker RAM, not CPU count** — each worker `fork`s a full copy of any
-large in-dataset object; too many OOM the cgroup with a bare `Killed` (the quadratic trap + sizing rule are
+**Fix**: set `num_workers > 0` to load asynchronously and overlap fetch with the GPU step. Benchmark a small worker-count sweep within the cgroup CPU and RAM budgets; fork initially shares pages copy-on-write, whereas spawn and mutable Python caches can duplicate dataset memory; too many OOM the cgroup with a bare `Killed` (the quadratic trap + sizing rule are
 **gotchas_universal.md U9**). Not monotonic: past the point where the GPU is fed, extra workers only add RAM
 and startup cost.
 
@@ -114,9 +112,7 @@ a synchronous `.to(device)` blocks the step. "When using a GPU it's better to se
 (https://docs.pytorch.org/tutorials/recipes/recipes/tuning_guide.html).
 
 **Fix**: `DataLoader(pin_memory=True)` allocates batches page-locked, **then** transfer
-`x = x.to(device, non_blocking=True)` so the copy runs async on a copy stream and overlaps compute. Both
-halves needed — `pin_memory` alone still blocks; `non_blocking` without pinned memory silently falls back to
-a blocking copy. Costs host RAM (pinned pages aren't swappable) — back off if it pressures the cgroup (U9).
+`x = x.to(device, non_blocking=True)` to reduce host blocking. This does not automatically create a separate CUDA stream or overlap transfer with compute: use pinned buffers, a separate stream and correct synchronization/lifetime management for actual device overlap. Non-blocking pageable copies have different staging behavior; measure rather than assuming a universal synchronous fallback. Costs host RAM (pinned pages aren't swappable) — back off if it pressures the cgroup (U9).
 
 ### T7 — `prefetch_factor`: deepen the queue when fetch time is bursty
 
@@ -185,7 +181,7 @@ verifying-dl-experiments (U36, **REQUIRED**).
 `model = model.to(memory_format=torch.channels_last)` and `x = x.to(memory_format=torch.channels_last)`.
 Optimizes convolutional networks with Tensor Cores + AMP
 (https://docs.pytorch.org/tutorials/recipes/recipes/tuning_guide.html). Marked experimental and CNN-specific
-(no benefit for pure transformers). No numerics change — purely a layout speedup.
+(no benefit for pure transformers). The layout preserves mathematical semantics, but kernel selection and numerical rounding can change; benchmark throughput and output parity.
 
 ### T12 — `set_to_none` + disable debug APIs (two free per-step taxes to remove)
 
@@ -306,7 +302,7 @@ actually fits without it.
 **Fix**: checkpointing **recomputes** activations in backward instead of storing them — trading **~20–30%
 extra compute** for a large memory cut (https://docs.pytorch.org/tutorials/recipes/recipes/tuning_guide.html,
 oom-memory.md M7). Enable it **only when activations actually OOM** (full rationale + `use_reentrant=False` /
-`use_cache=False` gotchas = **oom-memory.md M7**); if it fits without, turning it off is a free ~25% speedup.
+`use_cache=False` gotchas = **oom-memory.md M7**); benchmark total throughput with and without it: the saved memory can enable a larger, faster micro-batch, so removal is not universally beneficial.
 On the frontier, checkpoint only the *fewest/heaviest* blocks needed to fit, not the whole model.
 
 ### T18 — Bigger micro-batch ≈ better GPU utilization (up to the memory wall)
@@ -391,8 +387,7 @@ py-spy top  --pid <PID>            # live "which functions burn time" (Unix top-
 py-spy record -o prof.svg --pid <PID>   # flame graph over a window
 ```
 "The profiled program needs no import, no decorator, and no restart." On a rented box mid-run, `py-spy dump`
-instantly distinguishes a *hung* process (stuck in `recv`/lock/`all_reduce`) from a *slow* one (busy in a
-transform) — pairs with the "is it actually hung?" check (gotchas_universal.md U17, verifying-dl-experiments
+shows sampled stacks; repeated samples plus progress/artifact checks help distinguish waiting, slow work and a hang (one stack alone is not conclusive) — pairs with the "is it actually hung?" check (gotchas_universal.md U17, verifying-dl-experiments
 **REQUIRED**). May need `--native` for C-extension frames and `sudo`/`SYS_PTRACE` to attach.
 
 ### T22 — CUDA memory snapshot/visualizer → oom-memory.md M19
@@ -413,7 +408,7 @@ trace shows `all_reduce`/`all_gather` *not* overlapped with backward compute.
 **Root cause**: DDP overlaps gradient all-reduce with backward by bucketing gradients and launching each
 bucket's reduce on a separate CUDA stream as soon as it's ready
 (https://github.com/pytorch/pytorch/issues/67570). Overlap *breaks* when something forces a sync: an
-unused-parameter recompute, an off-by-default `find_unused_parameters=True`, a `.item()`/print/`.cpu()` in
+unused-parameter recompute, an off-by-default `find_unused_parameters=True` can add traversal overhead but does not inherently disable overlap; a `.item()`/print/`.cpu()` in
 the step, or too-small/too-large buckets.
 
 **Fix (single box, DDP/FSDP — the launch/sharding mechanics live in
@@ -425,7 +420,7 @@ references/training/distributed-launch.md, REQUIRED)**:
   `forward_prefetch` so comms hide under compute; `limit_all_gathers` if memory-pressured.
 - Remove per-step host syncs (`loss.item()` every step, prints, eager `.cpu()`) that serialize the stream.
 
-**Inter-node** transport (NCCL picking the wrong NIC, fabric-manager hang, 1800 s timeout masking a
+**Inter-node** transport (NCCL picking the wrong NIC, fabric-manager hang, configured process-group timeout masking a
 straggler, MTU mismatch) is **references/multinode.md** (**REQUIRED** for ≥2 instances) — a comms "slowdown"
 across boxes is usually one of those, not a bucket-size tune. Whether a world-size change silently rescaled
 the effective batch/LR is a science question → verifying-dl-experiments (**REQUIRED**).

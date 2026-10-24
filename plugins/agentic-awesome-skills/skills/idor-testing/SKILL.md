@@ -130,8 +130,8 @@ Cookie: session=attacker_session
 GET /api/admin/users/1000 → 403 Forbidden
 
 # Try alternative methods
-POST /api/admin/users/1000 → 200 OK (Vulnerable!)
-PUT /api/admin/users/1000 → 200 OK (Vulnerable!)
+POST /api/admin/users/1000 → 200 OK (verify protected data/action and policy)
+PUT /api/admin/users/1000 → 200 OK (verify protected data/action and policy)
 ```
 
 ### 4. Exploitation with Burp Suite
@@ -223,8 +223,8 @@ Payload: Numbers 1-1000
 | Status Code | Interpretation |
 |-------------|----------------|
 | 200 OK | Potential IDOR - verify data ownership |
-| 403 Forbidden | Access control working |
-| 404 Not Found | Resource doesn't exist |
+| 403 Forbidden | This request denied; not proof of overall authorization coverage |
+| 404 Not Found | Missing or deliberately concealed resource; verify with authorized owner session |
 | 401 Unauthorized | Authentication required |
 | 500 Error | Potential input validation issue |
 
@@ -301,7 +301,7 @@ Cookie: session=attacker_session
   "city": "Exploit City"
 }
 
-# If 200 OK: Address created under victim's account
+# Verify actual state in the second controlled account; 200 alone is not proof.
 ```
 
 ### Example 3: Static File IDOR
@@ -336,7 +336,7 @@ Body Template:
 }
 
 # Analyze results:
-# - 200 responses indicate successful modification
+# - 200 responses require controlled-account state verification
 # - Check victim's account for new addresses
 ```
 
@@ -429,7 +429,10 @@ def update_address(request, address_id):
         return HttpResponseForbidden("Unauthorized")
     
     # Proceed with update
-    address.update(request.data)
+    # Application-specific allowlisted validation; never pass arbitrary request fields.
+    address.street = validated_street
+    address.city = validated_city
+    address.save(update_fields=["street", "city"])
 ```
 
 ### Use Indirect References
@@ -460,3 +463,5 @@ def download_receipt(request, receipt_id):
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+Use known objects belonging to two authorized test accounts; enumeration ranges are lab illustrations, not permission to scan arbitrary records. Set request budgets and stop conditions before testing; do not rotate IPs or continue through throttling without that scope. GET requests can still have side effects. UUID randomness does not replace authorization and brute-force UUID discovery is generally infeasible. Response length, timing and status are leads, not impact proof. Django examples omit authentication/method/CSRF handling and input validation; define validated fields and handle missing objects before use. Prove only minimum necessary access with synthetic canary data and restore authorized test changes.

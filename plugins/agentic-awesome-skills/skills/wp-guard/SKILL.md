@@ -59,17 +59,17 @@ Pair this skill with clean-code-guard when both are installed: clean-code-guard 
 
 ### Security — must fix, no exceptions
 
-1. **Escape late, escape everything.** Every variable crossing into HTML output goes through the context-correct function: `esc_html()`, `esc_attr()`, `esc_url()`, or `wp_kses()`/`wp_kses_post()` for rich content. Data passed to inline JS goes through `wp_json_encode()` + `wp_add_inline_script()` — `esc_js()` is legacy, for single-quoted strings in inline attributes only. Escaping happens at output, not at storage. `echo $anything;` without an `esc_*` wrapper fails review.
+1. **Escape late, escape everything.** Every variable crossing into HTML output goes through the context-correct function: `esc_html()`, `esc_attr()`, `esc_url()`, or `wp_kses()`/`wp_kses_post()` for rich content. Data passed to inline JS goes through `wp_json_encode()` + `wp_add_inline_script()` — `esc_js()` is legacy, for single-quoted strings in inline attributes only. Escaping happens at output, not at storage. Review the output context and provenance: context-safe generated markup or values already escaped for that exact sink should not be blindly double-escaped.
 
-2. **Sanitize early, and unslash first.** Request data (`$_POST`, `$_GET`, `$_REQUEST`, `$_SERVER`) never touches logic raw: `wp_unslash()` first, then the type-correct sanitizer (`sanitize_text_field()`, `sanitize_key()`, `absint()`, `sanitize_email()`, …). Sanitization is not escaping; doing one never excuses the other.
+2. **Sanitize early, and unslash first.** Request data (`$_POST`, `$_GET`, `$_REQUEST`, `$_SERVER`) never touches logic raw: validate the expected input shape first; for WordPress-slashed strings use `wp_unslash()`, then the type-correct sanitizer (`sanitize_text_field()`, `sanitize_key()`, `absint()`, `sanitize_email()`, …). Sanitization is not escaping; doing one never excuses the other.
 
-3. **Every state change proves identity and intent.** Form handlers, AJAX endpoints, and REST routes that change anything require BOTH a capability check (`current_user_can()`) AND a nonce (`check_admin_referer()`, `check_ajax_referer()`, or REST nonce handling). A nonce is not authorization. A REST `permission_callback` of `__return_true` on a writing route fails review.
+3. **Every state change proves identity and intent.** Privileged form/AJAX handlers and cookie-authenticated REST mutations require capability authorization and CSRF nonce validation. Non-cookie REST clients may use Application Passwords over HTTPS without a browser nonce; verify the actual authentication and permission callback. A nonce is not authorization. A REST `permission_callback` of `__return_true` on a writing route fails review.
 
 4. **`$wpdb->prepare()` for every query containing a variable.** Placeholders (`%s`, `%d`, `%f`, and `%i` for identifiers on WP ≥ 6.2), never interpolation or concatenation. Prefer `WP_Query`, the meta and options APIs over raw SQL when they can express the query.
 
 ### Core API discipline
 
-5. **Use the platform; don't reinvent it.** Outbound HTTP via `wp_remote_get()`/`wp_remote_post()`, never curl. Assets via `wp_enqueue_script()`/`wp_enqueue_style()`, never echoed `<script>`/`<style>` tags. Scheduling via WP-Cron or Action Scheduler. Redirects via `wp_safe_redirect()` followed by `exit`. File writes via `WP_Filesystem`. Simple persistent data via options/transients, not a custom table.
+5. **Use the platform; don't reinvent it.** Outbound HTTP via WordPress HTTP APIs. For user-controlled URLs use `wp_safe_remote_get()`/`wp_safe_remote_post()`, constrain destinations and redirects, and avoid forwarding credentials. Assets via `wp_enqueue_script()`/`wp_enqueue_style()`, never echoed `<script>`/`<style>` tags. Scheduling via WP-Cron or Action Scheduler. Redirects via `wp_safe_redirect()` followed by `exit`. File writes via `WP_Filesystem`. Simple persistent data via options/transients, not a custom table.
 
 6. **Verify every hook and function exists.** Before `add_action()`, `add_filter()`, or calling a core/plugin function, confirm it exists in the supported versions — read the source or the project's installed code. Hallucinated hooks fail silently in WordPress: no error, no behavior. Also match the hook to the moment — front-end code does not load on `admin_init`, queries do not run before `init` expects them.
 

@@ -25,6 +25,10 @@ This skill provides a set of best practices and patterns for creating ViewModels
 - [Navigation & Sections](navigation_sections.md): Managing navigation and section-based UIs.
 - [Composition & Mapping](composition.md): Best practices for View-ViewModel wiring and DI.
 
+## Integration boundaries
+
+Guide snippets omit imports, interfaces and application services; verify APIs/source-generator syntax against the installed Zafiro/ReactiveUI version. Do not mix field-based and partial-property generator styles without checking compatibility. Use one actual section registration method rather than assuming both are required. Keep the service provider alive for the app lifetime and dispose it and subscriptions on shutdown; handle wizard cancellation/failure before committing side effects. Angor files named below are external examples, not bundled prerequisites.
+
 ## Example Reference
 
 For real-world implementations, refer to the **Angor** project:

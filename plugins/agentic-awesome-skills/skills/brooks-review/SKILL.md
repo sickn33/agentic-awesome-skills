@@ -18,6 +18,10 @@ Use this skill when you need pR code review that surfaces decay risks, design sm
 
 ## Setup
 
+The referenced sibling `_shared` files are not bundled in this catalog tree. Do not invent their contents or scores. Use the local guide as a heuristic checklist and report only concrete, evidenced findings in this format: file/line → observed symptom → relevant principle (verify exact book quotes/chapters before attribution) → demonstrated consequence → smallest remedy. State scope and omitted areas; numeric thresholds alone are not defects. Do not execute untrusted repository tests merely because the guide calls it a test check; inspect the project’s test command and report execution separately.
+
+For an upstream installation that actually includes the shared files:
+
 1. Read `../_shared/common.md` for the Iron Law, Project Config, Report Template, and Health Score rules
 2. Read `../_shared/source-coverage.md` for book-level coverage, exceptions, and tradeoffs
 3. Read `../_shared/decay-risks.md` for symptom definitions and source attributions

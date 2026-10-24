@@ -6,7 +6,7 @@ source_repo: remotion-dev/skills
 source_type: official
 source: remotion-dev
 date_added: '2026-09-21'
-risk: unknown
+risk: critical
 ---
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
@@ -16,6 +16,8 @@ These are instructions for making a new Remotion project and composition.
 If this is not the next task, see Remotion Best Practices
 
 ## Scaffold a project
+
+Inspect the selected create-video package/version and generated manifest/scripts before installation. Replace @latest with the reviewed version for reproducibility; --yes is appropriate only within authorized package installation. Keep all remotion packages compatible. This bundle includes layout/Tailwind notes and an SVG icon, but the named React Markup, interactivity, multi-scene and rendering guides are external prerequisites; do not claim to have loaded them unless actually available.
 
 If a project already exists, skip this.
 Ensure Node.js and Git is installed, and the current folder is appropriate for starting a new project.
@@ -50,7 +52,7 @@ npm i
 ## Designing a video
 
 Keep the scaffold and add React Markup.
-Follow Remotion React Markup Best Practices and [Video Layout Rules for video-first layout and text sizing guidance.
+Follow the installed Remotion React Markup guidance when available and [Video Layout Rules](video-layout.md) for video-first layout and text sizing.
 
 ## Is this a multi-scene video?
 
@@ -62,7 +64,7 @@ By structuring the React Markup following Remotion Interactivity Best Practices,
 
 ## TailwindCSS
 
-If Tailwind is requested, see [tailwind.md for using TailwindCSS in Remotion.
+If Tailwind is requested, see [tailwind.md](tailwind.md) for using TailwindCSS in Remotion.
 
 ## Open the preview
 

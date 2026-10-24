@@ -152,7 +152,7 @@ Method: [two-proportion test / bootstrap or model for unit-level cost data]
 Effect and 95% CI: [estimate, lower, upper]
 P-value and alpha: [p, alpha]
 Verdict: [Statistically significant / Not enough data / Too close to call]
-Recommended action: [Pick winner / Continue test / Increase budget to reach significance]
+Recommended action: [Pick winner / Continue test / Continue within the approved budget and stopping rule; do not spend merely to chase significance]
 ```
 
 Use impressions as the CTR denominator and clicks/sessions as the conversion-rate denominator. Compute sample size from baseline rate, minimum detectable effect, alpha, and desired power; fixed sample-count rules do not establish significance. For CPA, require unit-level cost/outcome data and use a justified bootstrap or model. With aggregate spend and conversion totals only, report CPA descriptively and mark significance as unavailable. Do not repeatedly peek and stop early unless using a sequential method.
@@ -191,7 +191,7 @@ When data spans multiple channels, perform cross-channel budget optimization.
 
 The index equals blended CPA divided by channel CPA. It summarizes historical attributed efficiency only; it does not show under-investment, incrementality, or marginal return. Use it to prioritize experiments, not to justify an immediate reallocation.
 
-### 4B: Marginal Return Analysis
+### 4B: Marginal Return Analysis (table entries below are hypotheses, not default findings)
 
 For each channel, look for spend-response curves, randomized holdouts, geo tests, lift studies, or repeated budget-step evidence. Without such evidence, label marginal-return estimates as low-confidence hypotheses.
 
@@ -365,7 +365,7 @@ Present the report inline by default. When a file is requested, create `campaign
 
 ## Tools Required
 
-- No external tools needed — pure reasoning skill
+- No mandatory external service; use reproducible local calculation tools for arithmetic, intervals and statistical tests
 - User provides campaign data as CSV, paste, or screenshot
 
 ## Examples
@@ -382,3 +382,5 @@ Present the report inline by default. When a file is requested, create `campaign
 - "Optimize my multi-channel ad budget"
 
 Platform budget, bid, targeting and audience changes are proposals unless separately authorized. Report undefined ratios as unavailable when their denominator is zero; do not average channel CPA or ROAS without the corresponding weights.
+
+Calculate pooled ratios from compatible numerators/denominators and distinguish relative lift from percentage-point differences. Keep fractional attributed conversions descriptive; they are not independent Bernoulli trials for a two-proportion test. Reach is not additive across overlapping campaigns and attributed conversions can duplicate across channels; show an undeduplicated sum only with that label. Negative-keyword, exclusion and schedule actions in tables are proposed tests subject to business constraints, not automatic fixes. Missing funnel rates make modeled CAC unavailable; rate products require coherent cohorts and nonzero denominators.

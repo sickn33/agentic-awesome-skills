@@ -1,5 +1,7 @@
 # Features Avancados - WhatsApp Cloud API
 
+Scope and snapshot: examples target an older Graph API version, not the current Meta contract. Verify supported versions, pricing, messaging/throughput limits, template edit rules and eligibility in official Meta documentation and the actual account before use. Legal tables are illustrative, not universal GDPR/LGPD requirements. Sending, deleting templates, account migration, purchases, tunnels and deployment require user-authorized scope. Confirm exact recipient/content and applicable consent/service window. Never log tokens, personal message bodies or full API errors. Boilerplates are local demos: production needs durable enqueue-before-ack, authenticated account routing, idempotency/replay protection, opt-out checks and a worker; HMAC alone does not prevent replay.
+
 Guia dos recursos avancados da WhatsApp Business Platform: Flows, Commerce, Channels, Click-to-WhatsApp Ads e Status Tracking.
 
 ---
@@ -403,9 +405,7 @@ function handleAdReferral(message: IncomingMessage): void {
 
 ### Metricas
 
-- **Taxa de abertura:** ~99% (mensagens WhatsApp)
-- **Reducao de custo:** Ate 32% menor custo por lead vs formularios
-- **Aumento:** Ate 46% mais mensagens de clientes
+Meça abertura, custo por lead e conversoes no seu proprio contexto; nao ha percentuais garantidos por esta integracao.
 
 ---
 
@@ -414,7 +414,7 @@ function handleAdReferral(message: IncomingMessage): void {
 ### Ciclo de Vida da Mensagem
 
 ```
-Enviada (sent) → Entregue ao servidor (delivered) → Entregue ao dispositivo (delivered) → Lida (read)
+Aceita/enviada (sent) → Entregue ao dispositivo (delivered) → Lida (read); failed e separado
 ```
 
 ### Status via Webhook
@@ -506,15 +506,15 @@ async function processStatusUpdate(status: WebhookStatus): Promise<void> {
 | Tempo Medio de Resolucao      | Timestamp fechamento - timestamp inicio| < 30 minutos        |
 | Taxa de Resolucao no Bot      | Resolvidos pelo bot / total            | > 60%               |
 | Taxa de Escalacao              | Escalados para humano / total          | < 40%               |
-| CSAT (Satisfacao)              | Pesquisa NPS pos-atendimento           | > 4.0 / 5.0         |
+| CSAT (Satisfacao)              | Pesquisa de satisfacao (CSAT) pos-atendimento           | > 4.0 / 5.0         |
 | Taxa de Entrega                | Delivered / sent                       | > 95%               |
 | Taxa de Leitura                | Read / delivered                       | > 70%               |
 | Taxa de Opt-out               | Optouts / total da base                | < 2% por campanha   |
 
-### Pesquisa NPS via WhatsApp
+### Pesquisa de satisfacao (CSAT) via WhatsApp
 
 ```typescript
-async function sendNPSSurvey(to: string): Promise<void> {
+async function sendCSATSurvey(to: string): Promise<void> {
   await sendMessage({
     messaging_product: 'whatsapp',
     to,
@@ -544,3 +544,5 @@ Para analytics avancados, considere integrar com:
 - **Trengo** - CSAT tracking, response times, trending topics
 - **Wassenger** - Comparacao de agentes, exportacao CSV/JSON/PDF
 - **Solucao propria** - MongoDB/PostgreSQL + Grafana/Metabase
+
+Channels and product-catalog app limits do not establish Cloud API availability. Flow samples need current Flow JSON validation, declared screen data, component compatibility and fresh available dates. An order webhook is not proof of payment: verify SKU, price, currency, stock and payment server-side. The cited marketing performance percentages are unverified examples, not promised results.

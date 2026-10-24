@@ -27,18 +27,20 @@ return (
 )
 ```
 
-**Correct (a single function instance passed to each item):**
+**Correct (stable parent dispatcher; bind the ID inside a memoized item for stable item props):**
 
 ```typescript
-const onPress = useCallback(() => handlePress(item.id), [handlePress, item.id])
+const onPress = useCallback((id: string) => handlePress(id), [handlePress])
 
 return (
   <LegendList
     renderItem={({ item }) => (
-      <Item key={item.id} item={item} onPress={onPress} />
+      <Item item={item} onPressId={onPress} />
     )}
   />
 )
 ```
 
-Reference: [Link to documentation or resource](https://example.com)
+`Item` accepts `onPressId: (id: string) => void` and calls `onPressId(item.id)` from its own press handler.
+
+Reference: [React useCallback](https://react.dev/reference/react/useCallback)

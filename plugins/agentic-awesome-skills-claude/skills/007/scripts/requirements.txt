@@ -6,7 +6,7 @@
 #
 #   - No pip install required for basic scanning and auditing
 #   - Works out of the box on any Python 3.10+ installation
-#   - Zero supply-chain risk from third-party dependencies
+#   - No third-party runtime dependencies; interpreter and bundled code still need review
 #   - Portable across Windows, Linux, and macOS
 #
 # Modules used from stdlib:

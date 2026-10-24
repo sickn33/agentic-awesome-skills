@@ -7,26 +7,23 @@ dependencias importadas mas nao listadas.
 from __future__ import annotations
 
 import re
+import ast
+import sys
 from pathlib import Path
+from source_io import read_text
 from typing import Any, Dict, List, Set, Tuple
 
 
 def _extract_imports(source: str) -> Set[str]:
     """Extrai nomes de pacotes importados de um arquivo Python."""
+    try: tree = ast.parse(source)
+    except SyntaxError: return set()
     imports = set()
-    for match in re.finditer(r'^(?:import|from)\s+(\w+)', source, re.MULTILINE):
-        pkg = match.group(1)
-        # Ignorar stdlib e imports relativos
-        if pkg not in {
-            "os", "sys", "re", "json", "ast", "pathlib", "datetime", "typing",
-            "uuid", "hashlib", "sqlite3", "argparse", "collections", "functools",
-            "time", "math", "io", "csv", "logging", "traceback", "textwrap",
-            "urllib", "http", "shutil", "subprocess", "tempfile", "threading",
-            "concurrent", "asyncio", "dataclasses", "enum", "abc", "copy",
-            "config", "db", "governance", "scanner", "analyzers",  # modulos internos
-        }:
-            imports.add(pkg)
-    return imports
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import): imports.update(x.name.split(".")[0] for x in node.names)
+        elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
+            imports.add(node.module.split(".")[0])
+    return imports - set(sys.stdlib_module_names)
 
 
 def _normalize_pkg_name(name: str) -> str:
@@ -72,7 +69,7 @@ def analyze(skill_data: Dict[str, Any]) -> Tuple[float, List[Dict[str, Any]]]:
             "category": "unpinned_versions",
             "title": f"{len(unpinned)} dependencia(s) sem versao pinada",
             "description": f"Pacotes sem ==: {names}",
-            "recommendation": "Pinar versoes com == para reproducibilidade (ex: requests==2.31.0)",
+            "recommendation": "Pinar versoes com == para reproducibilidade (ex: pacote==<versao-revisada>)",
             "effort": "low",
             "impact": "medium",
         })
@@ -85,10 +82,13 @@ def analyze(skill_data: Dict[str, Any]) -> Tuple[float, List[Dict[str, Any]]]:
         if not filepath.exists():
             continue
         try:
-            source = filepath.read_text(encoding="utf-8", errors="replace")
+            source = read_text(filepath, root=skill_path)
         except OSError:
             continue
         all_imports.update(_extract_imports(source))
+
+    local_names = {Path(f).stem for f in skill_data.get("python_files", [])} | {"analyzers"}
+    all_imports -= local_names
 
     listed_names = {_normalize_pkg_name(r["name"]) for r in requirements}
 

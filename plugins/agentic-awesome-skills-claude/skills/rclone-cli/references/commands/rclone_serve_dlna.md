@@ -33,6 +33,10 @@ Use `--addr` to specify which IP address and port the server should
 listen on, e.g. `--addr 1.2.3.4:8000` or `--addr :8080` to listen to all
 IPs.
 
+DLNA exposes the selected media to reachable clients without per-user login.
+Use a trusted LAN, restrict the listener/interface and firewall scope, and serve
+only the intended media subtree.
+
 Use `--name` to choose the friendly server name, which is by
 default "rclone (hostname)".
 
@@ -143,8 +147,8 @@ cost of using disk space.
 Note that files are written back to the remote only when they are
 closed and if they haven't been accessed for `--vfs-write-back`
 seconds. If rclone is quit or dies with files that haven't been
-uploaded, these will be uploaded next time rclone is run with the same
-flags.
+uploaded, rclone can retry them on restart with the same remote and cache
+settings, provided the persistent cache and metadata remain intact.
 
 If using `--vfs-cache-max-size` or `--vfs-cache-min-free-space` note
 that the cache may exceed these quotas for two reasons. Firstly
@@ -254,7 +258,7 @@ an extra API call per object, or extra work per object).
 
 For example `hash` is slow with the `local` and `sftp` backends as
 they have to read the entire file and hash it, and `modtime` is slow
-with the `s3`, `swift`, `ftp` and `qinqstor` backends because they
+with the `s3`, `swift`, `ftp` and `qingstor` backends because they
 need to do an extra API call to fetch it.
 
 If you use the `--vfs-fast-fingerprint` flag then rclone will not

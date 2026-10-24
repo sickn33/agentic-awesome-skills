@@ -19,7 +19,7 @@ Technical reference for the management of core hospital information systems and 
 ### HL7 (Health Level Seven)
 - The global standard for messaging between disparate health systems (e.g., ADT - Admission, Discharge, Transfer).
 - **v2.x:** Common for legacy system integrations.
-- **FHIR (Fast Healthcare Interoperability Resources):** The modern, RESTful API standard for health data. Essential for HIMSS Stage 7.
+- **FHIR (Fast Healthcare Interoperability Resources):** The modern, RESTful API standard for health data. Check the current model/version and applicable assessment criteria; FHIR alone does not establish a maturity stage.
 
 ### DICOM (Digital Imaging and Communications in Medicine)
 - Protocol for handling, storing, and transmitting medical imaging information and related data.
@@ -30,13 +30,13 @@ Technical reference for the management of core hospital information systems and 
 - Integration requirements: Authenticating via Gov.br, complying with the "Modelo de Informação" (RAC, Sumário de Alta), and securing data transmission.
 
 ## 3. Critical Infrastructure & Availability
-Zero-downtime is mandatory for:
+Set clinically approved availability, RTO/RPO and downtime procedures for:
 - Main HIS Database.
 - Clinical Decision Support (CDSS).
 - Laboratory Results delivery.
 - Radiology (PACS) access in the Operating Room.
 
-*Recommendation:* Use active-active clustering and tiered Disaster Recovery (RTO < 15 min for critical systems).
+*Recommendation:* Derive RTO/RPO and topology from the clinical impact assessment and vendor-supported architecture. Active-active is not universally safe/supported; test failover, data consistency, rollback and downtime workflows. No topology guarantees zero downtime.
 
 ---
 *Reference for it-manager-hospital HIS/PEP domain expertise.*

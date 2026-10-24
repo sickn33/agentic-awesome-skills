@@ -30,7 +30,7 @@ report_count: 12
 > Without that confirmation, remain read-only and provide defensive guidance only. Prefer a sandbox, disposable VM, or controlled lab.
 
 ##  HTTP REQUEST SMUGGLING
-> Lowest dup rate. $5K–$30K. PortSwigger research by James Kettle.
+> Parser disagreement between hops requires controlled validation; bounty amounts and duplicate rates are not established here.
 
 ### CL.TE (Content-Length front, Transfer-Encoding back)
 ```http
@@ -59,45 +59,25 @@ Cache poisoning → stored XSS at scale
 
 ---
 
-## Target-Suitability Matrix (2026 reality check)
+## Topology and controlled validation
 
-The classic CL.TE / TE.CL payloads are NOT universally exploitable in 2026. Modern proxies are RFC 9112 strict by default. Fingerprint the front-end BEFORE investing time.
+Do not infer safety or vulnerability from a Server header or broad product/version
+matrix. Identify the actual client/front-end/origin protocol, exact release,
+configuration, connection reuse and vendor advisory. Header banners may be hidden
+or forged. HTTP/2 downgrading can introduce inconsistencies, but HTTP/2 alone does
+not prove a flaw. Use a tool that supports the specific wire protocol and disable
+automatic content-length rewriting only in an isolated authorized lab.
 
-| Front-end | CL.TE | TE.CL | H2.CL | H2.TE | Notes |
-|---|---|---|---|---|---|
-| **Nginx ≥ 1.21** | NO | NO | partial (H2 ingress) | partial | RFC-strict; rejects CL+TE with HTTP 400. Verified locally on Nginx 1.27 — all 9 documented variants killed by front-end ([docs/verification/phase2h-smuggling-cachepoison.md](references/phase2h-smuggling-cachepoison.md)). |
-| **Caddy 2.x** | NO | NO | — | — | Hardened by default |
-| **Envoy ≥ 1.20** | NO | NO | partial | partial | Hardened in most paths |
-| **HAProxy ≤ 2.4** | ✓ | ✓ | — | — | **Vulnerable**, see CVE-2021-40346 |
-| **AWS ALB + specific upstream** | partial | partial | ✓ | ✓ | Several disclosed-paid reports 2022-2024 |
-| **Cloudflare → S3 / Lambda chains** | — | — | ✓ | ✓ | H2-downgrade attacks remain viable |
-| **Older F5 BIG-IP (TMM < 16)** | ✓ | — | — | — | Vendor advisories |
-| **Citrix ADC / NetScaler (older firmware)** | ✓ | ✓ | — | — | Disclosed in 2020-2022 |
-| **Squid 3.x** | ✓ | — | — | — | Older deployments |
-| **Apache Traffic Server (older)** | ✓ | ✓ | ✓ | ✓ | PortSwigger research |
-| **Apache mod_proxy_ajp → Tomcat** | — | — | — | — | Cross-protocol HTTP→AJP desync (CVE-2022-26377); smuggled request is opaque to the WAF and reaches internal AJP admin/status paths that lack the external auth controls |
-| **Custom Python / Go proxies** | ✓ | ✓ | — | — | Frequently miss RFC enforcement |
+Timing changes can result from network jitter or rejection; compare repeated
+baseline/control probes within the permitted request budget, then demonstrate
+cross-request interference with two accounts and connections you control. Never
+harvest real users' headers or poison a shared production cache. Use a harmless
+unique marker, isolated cache key, stop condition and cleanup plan. If third-party
+traffic could be affected, stop and reproduce in the owner's isolated environment.
+The inline HTTP fragment is a byte-sensitive teaching sketch, not a ready probe:
+include Host, explicit CRLF and correct encoded lengths for the chosen transport.
 
-### Operator fingerprint quick-check
-
-```bash
-curl -sI https://target/ | grep -i "Server:"
-```
-
-- `nginx/1.21+`, `Caddy`, `envoy` → CL/TE classic is dead — pivot to H2.CL/H2.TE if the front-end speaks HTTP/2, or look for legacy proxies upstream
-- `HAProxy`, header points to AWS/CDN → run the full payload matrix
-- No Server header → assume hardened, but run a single quick `space-before-colon` probe; if it doesn't 400, dig deeper
-
-### H2.CL / H2.TE (the modern dominant vector)
-
-H2-downgrade smuggling attacks rely on the front-end speaking HTTP/2 to the client and HTTP/1.1 to origin. The downgrade introduces CL/TE confusion because HTTP/2's frame-length headers don't survive the conversion cleanly. Most CDN+origin chains in 2024-2026 use this exact topology.
-
-Tools that send HTTP/2 raw frames (Burp Pro's HTTP Request Smuggler extension, `h2csmuggler`, `smuggler.py`) are the right starting point against CDN-fronted targets. Avoid HTTP/1.1-only test clients (curl, raw sockets) against H2-front-ended targets — you'll send the wrong protocol entirely.
-
-### Mass credential harvesting — the "collector gadget"
-The highest-impact smuggling outcome needs no per-victim interaction. Instead of blindly poisoning the queue, smuggle a request aimed at a **back-end handler that echoes the full request** — a search endpoint that reflects headers, or a redirect that mirrors the request line. The next victim's headers (`Cookie`, `Authorization`, `X-Access-Token`) get attributed to your smuggled request, and the reflecting handler returns them **in a response you read**. Repeated on a busy keep-alive socket, this harvests live credentials from arbitrary users at scale — and it works even through a CDN (Akamai/Cloudflare) when the CDN↔origin hop desyncs. Chains to `hunt-ato`.
-
----
+Reference: [PortSwigger request smuggling](https://portswigger.net/web-security/request-smuggling).
 
 ## Related Skills & Chains
 
@@ -106,7 +86,7 @@ The highest-impact smuggling outcome needs no per-victim interaction. Instead of
 - **`hunt-idor`** — Smuggling attaches the NEXT user's session cookies to an attacker-controlled request path. Chain primitive: smuggle `GET /api/me HTTP/1.1` with no cookies → backend pairs it with the next legitimate user's incoming connection cookies → victim's session cookie attached to attacker's smuggled request → attacker reads the response containing victim's PII/tokens.
 - **`hunt-xss`** — Smuggling injects XSS payloads into the response stream of the next victim without ever appearing in a URL parameter. Chain primitive: smuggled request body contains reflected payload that the backend renders into the next response in the queue → next visitor to `/` receives attacker HTML inline → reflected XSS at every visitor without any URL parameter visible to them or to logs.
 - **`security-arsenal`** — Reach for the smuggling payload bank (CL.TE / TE.CL / TE.TE obfuscations, H2.CL downgrade probes, h2csmuggler one-liners, Burp HTTP Request Smuggler extension config) and the time-delay confirmation template before manual hex-editing.
-- **`triage-validation`** — Run the Pre-Severity Gate before claiming Critical: the smuggled-request effect MUST land on a request issued by a different client/session, not your own follow-up. A timing delta in your own browser alone is parser disagreement, not exploitable smuggling.
+- **`triage-validation`** — Run the Pre-Severity Gate before claiming Critical: the smuggled-request effect MUST land on a request issued by a different client/session, not merely a timing anomaly; use a separate controlled test client, never an unsuspecting user. A timing delta in your own browser alone is parser disagreement, not exploitable smuggling.
 
 ## When to Use
 

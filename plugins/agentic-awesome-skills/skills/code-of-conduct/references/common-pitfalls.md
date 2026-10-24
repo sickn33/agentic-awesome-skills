@@ -11,9 +11,9 @@
   **Solution:** name an independent recipient before the policy is written. A reporting
   route that dead-ends is worse than none, because it teaches people not to report.
 - **Problem:** the signature sheet is the record of understanding.
-  **Solution:** `Understood` is a conversation. A signature proves a PDF was opened.
+  **Solution:** `Understood` is a conversation. A signature records acknowledgement, not necessarily understanding; keep evidence of the process without claiming certainty.
 - **Problem:** the complaint was resolved with an apology and nothing was written down.
-  **Solution:** record it, with `Closed - no further action`. In six months the same
+  **Solution:** have the responsible human record the actual status; do not infer closure from an apology. In six months the same
   complaint is the second incident, and nobody can prove the first was handled.
 - **Problem:** a 40-page handbook nobody has read.
   **Solution:** two pages in plain language, read at induction. Length is not rigour.

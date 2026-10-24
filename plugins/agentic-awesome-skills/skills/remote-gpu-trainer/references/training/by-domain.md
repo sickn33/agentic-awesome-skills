@@ -26,10 +26,10 @@ To jump: `grep -in '<keyword>' references/training/by-domain.md` (e.g. `padding`
 
 ## LLM / transformer
 
-### L1 — Padding side: right for causal-LM SFT, **left** for generation/DPO
+### L1 — Padding side: follow trainer collation; typically right for SFT, left for decoder-only generation
 **Symptom**: a fine-tuned causal LM produces garbage, or DPO/batched-generation logprobs disagree with single-example decoding.
-**Root cause**: causal-LM **training** wants **right-padding** (pad lands after content, attention mask zeroes it). Batched **generation/DPO** want **left-padding** — with right-padding the "last real token" position differs per row, so a shared decode step reads pad. TRL's `DPOTrainer` requires `processing_class` padding side `"left"`.
-**Fix**: `tokenizer.padding_side="right"` for SFT collation; `"left"` for generation/eval/DPO — set it per phase, not globally. ([HF causal-LM](https://huggingface.co/docs/transformers/tasks/language_modeling), [TRL DPO](https://huggingface.co/docs/trl/dpo_trainer))
+**Root cause**: causal-LM **training** wants **right-padding** (pad lands after content, attention mask zeroes it). Batched decoder-only **generation** commonly needs **left-padding** — with right-padding the "last real token" position differs per row, so a shared decode step reads pad. DPO teacher-forced scoring and trainer-internal collation have version-specific contracts; inspect the selected trainer instead of imposing a universal DPO padding rule.
+**Fix**: `tokenizer.padding_side="right"` for SFT collation; `"left"` for compatible decoder-only generation; follow the trainer contract for teacher-forced eval/DPO — set it per phase, not globally. ([HF causal-LM](https://huggingface.co/docs/transformers/tasks/language_modeling), [TRL DPO](https://huggingface.co/docs/trl/dpo_trainer))
 
 ### L2 — Loss over prompt + pad tokens dilutes the signal → mask with −100
 **Symptom**: SFT "trains" but parrots the prompt / barely follows instructions; loss plausible but flat.
@@ -39,12 +39,12 @@ To jump: `grep -in '<keyword>' references/training/by-domain.md` (e.g. `padding`
 ### L3 — `pad_token` unset → pad error or silent pad-with-token-0
 **Symptom**: `ValueError: Asking to pad but the tokenizer does not have a padding token`, or it pads with id 0 (a real token, often `<unk>`/`!`).
 **Root cause**: many base LMs (GPT-2, Llama, Mistral) ship no `pad_token`.
-**Fix**: `tokenizer.pad_token = tokenizer.eos_token` and `model.config.pad_token_id = tokenizer.pad_token_id`. With right-padding + attention mask, reusing EOS as PAD is safe. If a *new* token is added, `model.resize_token_embeddings(len(tokenizer))` or its id indexes out of range.
+**Fix**: `tokenizer.pad_token = tokenizer.eos_token` and `model.config.pad_token_id = tokenizer.pad_token_id`. When reusing EOS as PAD, mask padding by attention_mask or actual padding positions, not every token equal to eos_token_id; otherwise real EOS supervision is lost. If a *new* token is added, `model.resize_token_embeddings(len(tokenizer))` or its id indexes out of range.
 
 ### L4 — Sequence packing leaks attention across documents → contaminated training
 **Symptom**: throughput jumps after enabling packing, but quality drops vs unpacked; the model "completes" one doc with content from a packed neighbor.
 **Root cause**: naive packing concatenates examples into one `max_len` sequence; a vanilla causal mask lets a token in doc 2 attend back into doc 1 — cross-sequence contamination.
-**Fix**: **document masking** — emit `position_ids` that reset per sub-sequence + an attention impl that honors boundaries. TRL/HF `DataCollatorWithFlattening` packs into one stream, returns `position_ids`, and sets each example's first label to `-100`; FlashAttention-2 varlen restricts attention within-document. Requires `attn_implementation="flash_attention_2"` — packing without it silently contaminates. ([HF blog](https://huggingface.co/blog/packing-with-FA2), [transformers #31629](https://github.com/huggingface/transformers/pull/31629), [IBM](https://research.ibm.com/blog/hugging-face-training-flash-attention))
+**Fix**: **document masking** — emit `position_ids` that reset per sub-sequence + an attention impl that honors boundaries. TRL/HF `DataCollatorWithFlattening` packs into one stream, returns `position_ids`, and sets each example's first label to `-100`; FlashAttention-2 varlen restricts attention within-document. Requires `attn_implementation="flash_attention_2"` — other backends can also support explicit document boundaries. Position resets or first-label masking alone do not block cross-document attention; verify the selected model/backend boundary contract. ([HF blog](https://huggingface.co/blog/packing-with-FA2), [transformers #31629](https://github.com/huggingface/transformers/pull/31629), [IBM](https://research.ibm.com/blog/hugging-face-training-flash-attention))
 
 ### L5 — Fine-tuning past pretrain context without RoPE scaling → garbage past N tokens
 **Symptom**: a 4k-context model is incoherent past ~4k at inference even when trained on longer sequences; or long-context finetune won't converge.
@@ -83,7 +83,7 @@ To jump: `grep -in '<keyword>' references/training/by-domain.md` (e.g. `padding`
 ### V1 — Normalization mismatch train↔eval → near-zero accuracy on a "trained" model
 **Symptom**: training loss falls but val/test is near-chance; or a fine-tuned backbone is far worse than its pretrained eval.
 **Root cause**: pretrain `(mean,std)` (ImageNet `mean=[.485,.456,.406] std=[.229,.224,.225]`) differs between train/eval paths, or one normalizes to `[0,1]` and the other `[0,255]`; or RGB vs BGR (OpenCV loads BGR). A reported CenterNet case got post-norm mean `-115`, std `8` from wrong channel stats.
-**Fix**: use the **exact** pretrain normalization, identically in train and eval; match channel order. Print one input tensor's per-channel mean/std — should be ~`N(0,1)`. Remaining gap = real-effect vs this bug → cross-link **verifying-dl-experiments** (**REQUIRED**; input-normalization is a named check). ([why-normalize](https://inside-machinelearning.com/en/why-and-how-to-normalize-data-object-detection-on-image-in-pytorch-part-1/), [tf/models #10778](https://github.com/tensorflow/models/issues/10778))
+**Fix**: use the **exact** pretrain normalization, identically in train and eval; match channel order. Print one input tensor's per-channel mean/std — need not be N(0,1) on an individual image or a shifted dataset; compare against the specified preprocessing contract. Remaining gap = real-effect vs this bug → cross-link **verifying-dl-experiments** (**REQUIRED**; input-normalization is a named check). ([why-normalize](https://inside-machinelearning.com/en/why-and-how-to-normalize-data-object-detection-on-image-in-pytorch-part-1/), [tf/models #10778](https://github.com/tensorflow/models/issues/10778))
 
 ### V2 — Train-time augmentation applied at eval → unstable/depressed metrics
 **Symptom**: eval numbers flicker run-to-run or sit below the training-curve val.
@@ -103,7 +103,7 @@ To jump: `grep -in '<keyword>' references/training/by-domain.md` (e.g. `padding`
 ### V5 — Segmentation mIoU=0 or NaN → `ignore_index` / label off-by-one
 **Symptom**: seg loss trains but mIoU is 0 (or a class NaN); or loss is NaN from step 1.
 **Root cause**: label/class-index inconsistency — a void value (commonly `255`) not excluded → treated as a class id ≥ `num_classes` (out-of-range / pollutes IoU); or off-by-one (0=background but labels start at 1, or a `reduce_labels` 0→255 shift applied inconsistently between loss and metric).
-**Fix**: set the **same** `ignore_index` in **both** loss and metric — `CrossEntropyLoss(ignore_index=255)` and mIoU mask `(label != 255)`; confirm `label.max() < num_classes` after any shift; apply reduction identically. mIoU=0 with falling loss = all-zero-metric pattern → cross-link **verifying-dl-experiments** (**REQUIRED**). ([torchmetrics #2747](https://github.com/Lightning-AI/torchmetrics/issues/2747), [HF ignore_index](https://discuss.huggingface.co/t/understanding-ignore-index-and-reduce-labels/64587))
+**Fix**: set the **same** `ignore_index` in **both** loss and metric — `CrossEntropyLoss(ignore_index=255)` and mIoU mask `(label != 255)`; confirm every non-ignored label lies in `[0,num_classes)` after any shift; apply reduction identically. mIoU=0 with falling loss = all-zero-metric pattern → cross-link **verifying-dl-experiments** (**REQUIRED**). ([torchmetrics #2747](https://github.com/Lightning-AI/torchmetrics/issues/2747), [HF ignore_index](https://discuss.huggingface.co/t/understanding-ignore-index-and-reduce-labels/64587))
 
 ### V6 — Severe class imbalance → model predicts only the majority class
 **Symptom**: high pixel/sample accuracy but rare classes never predicted; minority recall ~0.
@@ -141,7 +141,7 @@ To jump: `grep -in '<keyword>' references/training/by-domain.md` (e.g. `padding`
 
 ### DF5 — Conditioning never dropped during training → CFG is a no-op / model ignores prompt
 **Symptom**: changing `guidance_scale` at inference barely changes output, or the model ignores conditioning.
-**Root cause**: CFG needs a learned **unconditional** path, trained by randomly replacing the condition with a null embedding for a fraction `p_drop` of examples. No dropout ⇒ no usable unconditional estimate ⇒ CFG no-op.
+**Root cause**: CFG needs a learned **unconditional** path, trained by randomly replacing the condition with a null embedding for a fraction `p_drop` of examples. Without suitable unconditional training, the unconditional prediction is unreliable; CFG can still change outputs but may degrade them rather than becoming a literal no-op.
 **Fix**: during training drop the condition `p_drop≈0.1` (replace with null embedding). At inference use `guidance_scale` ~5–15 for T2I (higher = more prompt adherence, lower diversity). Model-ignores-input is a verifying-dl-experiments concern (**REQUIRED**); the training-side root cause is the missing dropout. ([CFG theory](https://apxml.com/courses/advanced-diffusion-architectures/chapter-4-advanced-diffusion-training/classifier-free-guidance-theory))
 
 ### DF6 — Sampler ≠ model: a sampler config that doesn't match the trained objective
@@ -152,7 +152,7 @@ To jump: `grep -in '<keyword>' references/training/by-domain.md` (e.g. `padding`
 ### DF7 — Uniform-timestep loss weighting → blurry samples → Min-SNR weighting
 **Symptom**: samples are systematically blurry / low-detail despite long training.
 **Root cause**: uniform loss weight over-weights high-noise (easy) steps relative to low-noise steps that carry fine detail; the gradient is dominated by the easy regime.
-**Fix**: apply **Min-SNR-γ** weighting (γ≈5) so low-noise steps get their share; `diffusers` scripts expose `--snr_gamma`. Compounds with DF2/DF3 — fix these details together, not in isolation. ([Min-SNR](https://arxiv.org/abs/2303.09556))
+**Fix**: apply **Min-SNR-γ** weighting (γ≈5) to rebalance conflicting timestep objectives using the objective-specific formula; do not infer its direction from a generic easy/hard-step story; `diffusers` scripts expose `--snr_gamma`. Compounds with DF2/DF3 — fix these details together, not in isolation. ([Min-SNR](https://arxiv.org/abs/2303.09556))
 
 ---
 
@@ -161,7 +161,7 @@ To jump: `grep -in '<keyword>' references/training/by-domain.md` (e.g. `padding`
 ### R1 — Reward collapses / output degenerates mid-training
 **Symptom**: average reward suddenly drops, responses get short/repetitive or refuse, length collapses.
 **Root cause**: reward hacking / over-optimization — the policy exploits the reward model's blind spots and drifts far, often after the ratio gets clipped much more and approximate KL spikes.
-**Fix**: strengthen the KL penalty (raise the KL coefficient), lower LR (`≈1e-6` for LLM PPO), reduce PPO update epochs/batch, add a length penalty if length is gamed. Watch reward **and** KL together — a reward jump with a KL spike is hacking, not progress. Bug-vs-real-effect on the collapse → cross-link **verifying-dl-experiments** (**REQUIRED**; it owns collapse/degenerate-output). ([PPO instability](https://apxml.com/courses/rlhf-reinforcement-learning-human-feedback/chapter-4-rl-ppo-fine-tuning/troubleshooting-ppo-instability), [N-details RLHF](https://huggingface.co/blog/the_n_implementation_details_of_rlhf_with_ppo))
+**Fix**: strengthen the KL penalty (raise the KL coefficient), lower LR (`≈1e-6` for LLM PPO), reduce PPO update epochs/batch, add a length penalty if length is gamed. Watch reward **and** KL together — a reward jump with a KL spike warrants independent evaluation; it does not by itself prove reward hacking. Bug-vs-real-effect on the collapse → cross-link **verifying-dl-experiments** (**REQUIRED**; it owns collapse/degenerate-output). ([PPO instability](https://apxml.com/courses/rlhf-reinforcement-learning-human-feedback/chapter-4-rl-ppo-fine-tuning/troubleshooting-ppo-instability), [N-details RLHF](https://huggingface.co/blog/the_n_implementation_details_of_rlhf_with_ppo))
 
 ### R2 — KL to the reference blows up → policy runs away
 **Symptom**: KL grows without bound; generations go incoherent; "diverges" though loss isn't NaN.
@@ -210,7 +210,7 @@ To jump: `grep -in '<keyword>' references/training/by-domain.md` (e.g. `padding`
 ### X4 — Sequence truncation drops image tokens → shape error or silent loss of vision
 **Symptom**: VLM training errors on image-token-count mismatch, or intermittently ignores images on long examples.
 **Root cause**: image placeholders expand into many tokens (hundreds per image); a `max_length` truncation cuts them, breaking the image-token ↔ feature alignment.
-**Fix**: set `max_length=None` (or large enough never to truncate image tokens) for VLM trainers, or verify truncation never removes placeholders across the whole dataset. Count image tokens vs expected per example as a smoke check. ([TRL VLM note](https://huggingface.co/docs/trl/dpo_trainer))
+**Fix**: use the selected VLM trainer's supported image-aware truncation policy within the actual model context and memory budget; `max_length=None` is appropriate only when that trainer supports it, or verify truncation never removes placeholders across the whole dataset. Count image tokens vs expected per example as a smoke check. ([TRL VLM note](https://huggingface.co/docs/trl/dpo_trainer))
 
 ### X5 — Modality alignment collapse: the LLM answers from text priors, not the image
 **Symptom**: the VLM gives plausible answers that ignore the actual image content (language-prior shortcut).

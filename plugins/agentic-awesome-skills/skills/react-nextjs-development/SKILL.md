@@ -23,6 +23,8 @@ Use this workflow when:
 - Styling with Tailwind CSS
 - Building full-stack Next.js applications
 
+Read the existing package/lockfile and installed framework documentation before selecting versions; Next.js caching, route parameters and server/client APIs differ across releases. Server Components and UI route guards do not replace authorization in every server action/route/data access. Keep secrets server-only, validate runtime inputs, and treat deployment/publication as a separately authorized environment action. Referenced skills are optional available components, not instructions to scaffold, add every library or deploy automatically.
+
 ## Workflow Phases
 
 ### Phase 1: Project Setup
@@ -35,7 +37,7 @@ Use this workflow when:
 
 #### Actions
 1. Choose project type (React SPA, Next.js app)
-2. Select build tool (Vite, Next.js, Create React App)
+2. Select a supported framework/build tool (for example Next.js or Vite); do not choose deprecated Create React App for a new project
 3. Scaffold project structure
 4. Configure TypeScript
 5. Set up ESLint and Prettier
@@ -216,7 +218,7 @@ Use @vercel-deployment to deploy Next.js app to production
 - [ ] TypeScript compiles without errors
 - [ ] All tests passing
 - [ ] Linting clean
-- [ ] Performance metrics met (LCP, CLS, FID)
+- [ ] Performance metrics met (LCP, CLS, INP) for the chosen measurement setup
 - [ ] Accessibility checked (WCAG 2.1)
 - [ ] Responsive design verified
 

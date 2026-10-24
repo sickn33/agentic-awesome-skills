@@ -1,3 +1,5 @@
+'use client';
+
 // react-spline-wrapper.tsx
 // Production-ready Spline wrapper for React / Next.js
 // Features: lazy loading, mobile detection, GPU check, fallback, fade-in on load
@@ -43,7 +45,7 @@ export default function SplineBackground({
   const [splineLoaded, setSplineLoaded] = useState(false);
   const [splineFailed, setSplineFailed] = useState(false);
   const [canLoad, setCanLoad] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     setCanLoad(shouldLoadSpline(mobileBreakpoint));

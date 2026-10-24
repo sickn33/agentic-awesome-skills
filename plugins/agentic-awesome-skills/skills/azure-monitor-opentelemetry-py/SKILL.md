@@ -161,7 +161,7 @@ configure_azure_monitor(
 from azure.monitor.opentelemetry import configure_azure_monitor
 
 configure_azure_monitor(
-    instrumentations=["flask", "requests"]  # Only enable these
+    instrumentation_options={"flask": {"enabled": False}}  # Disable Flask; others keep defaults
 )
 ```
 
@@ -186,6 +186,8 @@ configure_azure_monitor(
 )
 ```
 
+Configure once per process. Pin and inspect the installed distro: supported libraries and defaults change, and Azure Monitor versus Microsoft OpenTelemetry distros use different APIs. Do not initialize both. [Azure SDK reference](https://github.com/Azure/azure-sdk-for-python/blob/main/sdk/monitor/azure-monitor-opentelemetry/README.md) documents `instrumentation_options`; confirm optional instrumentations/dependencies rather than assuming every library below is included. Telemetry leaves the process: authorize its destination/retention, redact secrets and personal data from logs/spans, limit cardinality and ingestion cost, and verify export using synthetic data. Trace sampling does not imply metrics or all logs are sampled.
+
 ## Auto-Instrumentations Included
 
 | Library | Telemetry Type |
@@ -208,10 +210,10 @@ configure_azure_monitor(
 |-----------|-------------|---------|
 | `connection_string` | Application Insights connection string | From env var |
 | `credential` | Azure credential for AAD auth | None |
-| `sampling_ratio` | Sampling rate (0.0 to 1.0) | 1.0 |
+| `sampling_ratio` | Explicit trace sampling fraction | Version-dependent; inspect sampler/environment |
 | `resource` | OpenTelemetry Resource | Auto-detected |
-| `instrumentations` | List of instrumentations to enable | All |
-| `enable_live_metrics` | Enable Live Metrics stream | False |
+| `instrumentation_options` | Per-library enabled dictionary | Version-dependent defaults |
+| `enable_live_metrics` | Enable Live Metrics stream | Version-dependent; set explicitly |
 
 ## Best Practices
 

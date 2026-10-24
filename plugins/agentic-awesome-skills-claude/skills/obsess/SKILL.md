@@ -10,7 +10,7 @@ metadata:
   opencode/slash: "true"
   opencode/autoinvoke: "false"
 category: development
-risk: safe
+risk: critical
 source: community
 source_repo: UmarSiddiqui/obsess
 source_type: community
@@ -46,7 +46,8 @@ Don't settle for an unchecked first answer. Don't keep changing something that a
 
 - Verifying rendered UI behaviour needs a browser or screenshot tool in the host; without one it gives a single labelled, unverified proposal and stops.
 - Every run has an attempt ceiling; it does not run unbounded.
-- Live evaluations so far cover Claude Code only (Sonnet 5.5 and Haiku 5.5): https://github.com/UmarSiddiqui/obsess#tested-results
+- Upstream reports host evaluations at https://github.com/UmarSiddiqui/obsess#tested-results; this catalog review does not certify those results or model availability.
+- The optional installer writes host skill/command configuration. Review target paths and use `--dry-run` before an authorized installation; `--upgrade` replaces an existing copy while keeping a backup.
 
 ## Start with the user's words
 

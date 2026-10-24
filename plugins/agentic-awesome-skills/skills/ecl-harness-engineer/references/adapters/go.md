@@ -151,7 +151,7 @@ adapter:
   linter:
     template_section: "go-linter"
     script_extension: ".go"
-    run_command: "go run scripts/lint-deps.go"
+    run_command: "go run scripts/lint-deps/main.go"
 
   naming:
     file_pattern: "^[a-z][a-z0-9_]*\\.go$"
@@ -173,7 +173,7 @@ adapter:
 Priority order for detecting the server start command:
 
 1. Existing `harness/config/environment.json` startup command, if present
-2. `cmd/server/main.go` exists → `go run cmd/server/main.go`
+2. `cmd/server/main.go` exists → `go run ./cmd/server`
 3. `cmd/api/main.go` exists → `go run cmd/api/main.go`
 4. `main.go` at root with `http` import → `go run main.go`
 5. Fail with actionable error
@@ -210,3 +210,8 @@ Go projects should use structured loggers. Common patterns to detect:
 - `github.com/sirupsen/logrus` → `logrus.WithFields()`
 
 Unstructured patterns to flag: `log.Printf`, `log.Println`, `log.Fatalf`, `fmt.Printf` (in non-CLI code)
+
+
+## Adapter limits
+
+This adapter is a proposed detection specification, not an included runtime. Regex matches are partial hints (comments, multiline syntax, aliases, computed routes and imports can be missed); use native parsers and verify exact paths and commands. Do not execute inferred package scripts, wrappers, build hooks or installs without inspection and an approved isolated environment. Use the project manifest/toolchain and lockfile for versions; examples are historical snapshots. Resolve placeholders without shell eval, preserve failed exit statuses, and do not infer a required database vendor from a general ORM dependency. Missing optional tools or commands are unknown, not a passing check.

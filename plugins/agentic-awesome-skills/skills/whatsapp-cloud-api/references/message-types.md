@@ -1,5 +1,7 @@
 # WhatsApp Cloud API - Tipos de Mensagem (Referencia Completa)
 
+Scope and snapshot: examples target an older Graph API version, not the current Meta contract. Verify supported versions, pricing, messaging/throughput limits, template edit rules and eligibility in official Meta documentation and the actual account before use. Legal tables are illustrative, not universal GDPR/LGPD requirements. Sending, deleting templates, account migration, purchases, tunnels and deployment require user-authorized scope. Confirm exact recipient/content and applicable consent/service window. Never log tokens, personal message bodies or full API errors. Boilerplates are local demos: production needs durable enqueue-before-ack, authenticated account routing, idempotency/replay protection, opt-out checks and a worker; HMAC alone does not prevent replay.
+
 > Referencia completa de todos os tipos de mensagem suportados pela WhatsApp Cloud API v21.0.
 > Exemplos em Node.js/TypeScript (axios) e Python (httpx async).
 

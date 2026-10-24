@@ -11,6 +11,8 @@ metadata:
 
 Essential tools and frameworks for modern product management, from discovery to delivery.
 
+Resolve script paths from the installed skill root and run in the task output directory. Sample creation writes `sample_features.csv` and now refuses overwrite. The RICE sizes map to illustrative person-months (XS=1, S=3, M=5, L=8, XL=13); calibrate them rather than treating ordinal sizes as measured effort. Reach must share one time horizon and overlapping audiences must not be counted as unique combined users. The roadmap is a greedy capacity sketch and does not implement dependency scheduling. Interview analysis is an English keyword/regex heuristic, not validated NLP: review negation, speaker attribution and every extracted quote against the consented transcript. Keep transcripts/results restricted and redact before sharing.
+
 ## Quick Start
 
 ### For Feature Prioritization
@@ -57,7 +59,7 @@ python scripts/customer_interview_analyzer.py interview_transcript.txt
 
 4. **Generate Roadmap**
    - Quarterly capacity planning
-   - Dependency mapping
+   - Dependency mapping (manual; not implemented by the script)
    - Stakeholder alignment
 
 ### Customer Discovery Process
@@ -132,7 +134,7 @@ python scripts/rice_prioritizer.py features.csv --output json
 ```
 
 ### customer_interview_analyzer.py
-NLP-based interview analysis for extracting actionable insights.
+Keyword/regex-assisted interview triage producing candidate insights for human review.
 
 **Capabilities**:
 - Pain point extraction with severity assessment
@@ -329,7 +331,7 @@ Key Metrics:
 
 ## Integration Points
 
-This toolkit integrates with:
+The outputs can be manually transferred to these systems; no connectors are bundled or configured:
 - **Analytics**: Amplitude, Mixpanel, Google Analytics
 - **Roadmapping**: ProductBoard, Aha!, Roadmunk
 - **Design**: Figma, Sketch, Miro

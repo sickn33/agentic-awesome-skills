@@ -42,7 +42,9 @@ Design de produto nivel Apple — sistemas visuais, UX flows, acessibilidade, li
 
 ---
 
-## Os 10 Principios De Jony Ive / Apple
+## 10 Heuristicas Inspiradas Em Design Apple
+
+Esta lista e uma sintese editorial, nao uma lista oficial atribuida a Jony Ive ou Apple. Tokens Auri abaixo sao exemplos de marca; adaptar a identidade existente, testar contraste real e respeitar reduced motion, teclado e leitores de tela.
 
 1. **Simplicidade radical** — remova tudo que nao e essencial
 2. **Honestidade material** — cada elemento existe por uma razao

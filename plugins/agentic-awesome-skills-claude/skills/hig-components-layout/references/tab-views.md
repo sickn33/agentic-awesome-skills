@@ -1,6 +1,7 @@
 ---
 title: "Tab views | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/tab-views
+---
 
 # Tab views
 
@@ -18,7 +19,7 @@ A tab view presents multiple mutually exclusive panes of content in the same are
 
 **Avoid using a pop-up button to switch between tabs.** A tabbed control is efficient because it requires a single click or tap to make a selection, whereas a pop-up button requires two. A tabbed control also presents all choices onscreen at the same time, whereas people must click a pop-up button to see its choices. Note that a pop-up button can be a reasonable alternative in cases where there are too many panes of content to reasonably display with tabs.
 
-**Avoid providing more than six tabs in a tab view.** Having more than six tabs can be overwhelming and create layout issues. If you need to present six or more tabs, consider another way to implement the interface. For example, you could instead present each tab as a view option in a pop-up button menu.
+**Avoid providing more than six tabs in a tab view.** Having more than six tabs can be overwhelming and create layout issues. If you need to present more than six tabs, consider another way to implement the interface. For example, you could instead present each tab as a view option in a pop-up button menu.
 
 For developer guidance, see [`NSTabView`](https://developer.apple.com/documentation/AppKit/NSTabView).
 
@@ -34,7 +35,7 @@ When you hide the tabbed control, the content area can be borderless, bezeled, o
 
 ## [Platform considerations](https://developer.apple.com/design/human-interface-guidelines/tab-views#Platform-considerations)
 
- _Not supported in iOS, iPadOS, tvOS, or visionOS._
+ _The enclosed AppKit NSTabView pane treatment described above is macOS-specific. SwiftUI TabView is a different cross-platform API whose tab-bar/page presentation depends on its style and target OS; the restriction does not apply to the API as a whole._
 
 ### [iOS, iPadOS](https://developer.apple.com/design/human-interface-guidelines/tab-views#iOS-iPadOS)
 

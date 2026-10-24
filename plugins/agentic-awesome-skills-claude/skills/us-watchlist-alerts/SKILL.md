@@ -78,7 +78,7 @@ Run `alerts.py --dry-run --format json` and `brief.py --kind morning`, then summ
 ## Best Practices
 
 - ✅ Run scripts from the project root by path; do not `cd` into the skill folder.
-- ✅ Say that free quotes may be delayed about 15 minutes.
+- ✅ Report the quote timestamp and source; free quotes can be delayed, stale or unavailable. Do not promise a fixed 15-minute delay without provider evidence.
 - ❌ Do not place, modify or cancel orders, even if a broker tool is connected.
 - ❌ Do not present alerts or briefs as financial advice or trade signals.
 

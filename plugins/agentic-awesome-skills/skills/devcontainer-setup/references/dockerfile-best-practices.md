@@ -1,3 +1,5 @@
+> AAS review adaptation (2026-10-23): corrected shell compatibility and removed unsupported template/architecture guarantees. CC-BY-SA-4.0 retained.
+
 > AAS import adaptation (2026-10-14): the pipefail example uses a local producer and consumer instead of a remote shell installer. This adapted reference retains CC-BY-SA-4.0.
 
 # Dockerfile Best Practices
@@ -24,7 +26,7 @@ Choose minimal, trusted base images:
 
 Pin images to specific digests for reproducible builds:
 ```dockerfile
-FROM alpine:3.21@sha256:a8560b36e8b8210634f77d9f7f9efd7ffa463e380b75e2e74aff4511df3ef88c
+FROM alpine:3.21@sha256:<VERIFIED_MANIFEST_DIGEST>
 ```
 
 Avoid `latest` tag - it can change unexpectedly and cause breaking builds.
@@ -50,10 +52,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 ## Pipe Safety
 
-When using pipes, prepend `set -o pipefail &&` to fail if any command fails:
+Use a shell that supports pipefail (install Bash if the image lacks it); default /bin/sh may reject `set -o pipefail`:
 
 ```dockerfile
-RUN set -o pipefail && printf 'build status\n' | tee /tmp/build-status.txt
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN printf 'build status\n' | tee /tmp/build-status.txt
 ```
 
 Without this, a failed producer command can be masked by a successful consumer. Do not pipe a remote installer into a shell: download a pinned file, verify its digest from a trusted source, and review it before explicitly authorizing execution.
@@ -84,11 +87,12 @@ RUN cd /app && make install
 
 ## Architecture Support
 
-The templates support both AMD64 and ARM64 (Apple Silicon) automatically. Use `TARGETARCH` build arg for architecture-specific downloads:
+No templates are bundled here and multi-architecture support is not established. Map TARGETARCH to the vendor’s actual artifact names, verify a trusted digest for each architecture, inspect archive paths before extraction, and fail on unsupported values. Download/extraction sketch (not a runnable installer):
 
 ```dockerfile
 ARG TARGETARCH
-RUN curl -fsSL "https://example.com/tool-${TARGETARCH}.tar.gz" | tar xz
+# Download the pinned artifact to a file, verify the trusted digest,
+# then inspect and extract into a fresh directory. Never pipe network bytes to tar.
 ```
 
 ## Devcontainer-Specific Tips

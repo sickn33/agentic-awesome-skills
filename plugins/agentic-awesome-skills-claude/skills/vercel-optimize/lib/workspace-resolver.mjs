@@ -4,8 +4,8 @@
 // traversal, and suffix fan-out for likely data-loading modules. This stays string-based
 // and falls through ("couldn't resolve") on shapes that need a full TS resolver.
 
-import { readFile, readdir, stat } from 'node:fs/promises';
-import { dirname, join, resolve as pathResolve } from 'node:path';
+import { readFile, readdir, stat, realpath } from 'node:fs/promises';
+import { dirname, join, resolve as pathResolve, relative, isAbsolute, sep } from 'node:path';
 
 const DEFAULT_RESOLVE_OPTIONS = {
   pureBarrelDepth: 3,
@@ -22,6 +22,7 @@ export async function detectMonorepoRoot(startDir) {
   let dir = pathResolve(startDir);
   for (let depth = 0; depth < 15; depth++) {
     if (await fileExists(join(dir, 'pnpm-workspace.yaml'))) return dir;
+    if (!await withinRoot(monorepoRoot, dir)) continue;
     const pkg = await tryReadJson(join(dir, 'package.json'));
     if (pkg && (Array.isArray(pkg.workspaces) || Array.isArray(pkg.workspaces?.packages))) {
       return dir;
@@ -79,6 +80,7 @@ export async function listWorkspacePackages(monorepoRoot) {
 
 // Handles workspace-shape globs only. `**` collapses to one level — npm/pnpm don't document deep `**`.
 async function expandWorkspaceGlob(root, glob) {
+  if (typeof glob !== 'string' || isAbsolute(glob) || glob.replace(/\\/g, '/').split('/').includes('..') || glob.startsWith('!')) return [];
   const parts = glob.replace(/\\/g, '/').split('/');
   return await expandParts(root, parts);
 }
@@ -192,18 +194,19 @@ function pickConditionalTarget(value) {
 }
 
 export async function resolveWorkspaceImports(sourceFilePath, resolver, options = {}) {
+  const opts = { ...DEFAULT_RESOLVE_OPTIONS, rootDir: process.cwd(), ...options };
+  if (!await withinRoot(opts.rootDir, sourceFilePath)) return [];
   let text;
   try {
     text = await readFile(sourceFilePath, 'utf-8');
   } catch {
     return [];
   }
-  const opts = { ...DEFAULT_RESOLVE_OPTIONS, ...options };
   const refs = extractModuleReferences(text);
   const out = [];
   const seen = new Set();
   for (const ref of refs) {
-    const resolved = await resolveModuleSpecifier(sourceFilePath, ref.specifier, resolver);
+    const resolved = await resolveModuleSpecifier(sourceFilePath, ref.specifier, resolver, opts.rootDir);
     if (!resolved) continue;
     const expanded = await expandResolvedSpecifier(resolved, ref.importedNames, resolver, opts);
     for (const file of expanded) {
@@ -221,7 +224,9 @@ export function extractImportSpecifiers(text) {
 }
 
 function joinPackagePath(packageDir, relativeTarget) {
-  return join(packageDir, relativeTarget.replace(/^\.\//, ''));
+  const target = pathResolve(packageDir, relativeTarget.replace(/^\.\//, ''));
+  const rel = relative(pathResolve(packageDir), target);
+  return rel && rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel) ? target : null;
 }
 
 async function expandResolvedSpecifier(startFile, importedNames, resolver, opts) {
@@ -252,7 +257,7 @@ async function expandResolvedSpecifier(startFile, importedNames, resolver, opts)
     barrelVisited.add(file);
     const text = await tryReadText(file);
     if (text == null || !isPureBarrel(text)) return;
-    const refs = await selectRelevantForwards(file, extractExportForwardRefs(text), requestedNames, resolver);
+    const refs = await selectRelevantForwards(file, extractExportForwardRefs(text), requestedNames, resolver, opts.rootDir);
     for (const { ref, next } of refs) {
       if (!add(next)) return;
       await expandPureBarrel(next, requestedNamesForForward(ref, requestedNames), depth + 1);
@@ -268,7 +273,7 @@ async function expandResolvedSpecifier(startFile, importedNames, resolver, opts)
     const text = await tryReadText(file);
     if (text == null) return;
     for (const ref of extractModuleReferences(text)) {
-      const next = await resolveModuleSpecifier(file, ref.specifier, resolver);
+      const next = await resolveModuleSpecifier(file, ref.specifier, resolver, opts.rootDir);
       if (!next) continue;
       if (!add(next)) return;
       if (isSuffixFanoutFile(next)) await expandSuffixFanout(next, depth + 1);
@@ -276,10 +281,10 @@ async function expandResolvedSpecifier(startFile, importedNames, resolver, opts)
   }
 }
 
-async function selectRelevantForwards(fromFile, refs, requestedNames, resolver) {
+async function selectRelevantForwards(fromFile, refs, requestedNames, resolver, rootDir) {
   const resolved = [];
   for (const [index, ref] of refs.entries()) {
-    const next = await resolveModuleSpecifier(fromFile, ref.specifier, resolver);
+    const next = await resolveModuleSpecifier(fromFile, ref.specifier, resolver, rootDir);
     if (!next) continue;
     let score = requestedNames && requestedNames.size > 0
       ? forwardRelevanceScore(ref, requestedNames, refs.length)
@@ -318,23 +323,23 @@ function requestedNamesForForward(ref, requestedNames) {
   return out.size > 0 ? out : requestedNames;
 }
 
-async function resolveModuleSpecifier(fromFile, specifier, resolver) {
+async function resolveModuleSpecifier(fromFile, specifier, resolver, rootDir) {
   const raw = specifier.startsWith('.')
     ? join(dirname(fromFile), specifier)
     : resolver(specifier);
   if (!raw) return null;
-  return await resolveExistingPath(raw);
+  return await resolveExistingPath(raw, rootDir);
 }
 
-async function resolveExistingPath(basePath) {
+async function resolveExistingPath(basePath, rootDir) {
   for (const ext of EXTENSIONS) {
     const candidate = ext === '' ? basePath : basePath + ext;
     if (!isSourcePath(candidate)) continue;
-    if (await isFile(candidate)) return candidate;
+    if (await withinRoot(rootDir, candidate) && await isFile(candidate)) return candidate;
   }
   for (const indexFile of INDEX_FILES) {
     const candidate = join(basePath, indexFile);
-    if (await isFile(candidate)) return candidate;
+    if (await withinRoot(rootDir, candidate) && await isFile(candidate)) return candidate;
   }
   return null;
 }
@@ -519,4 +524,13 @@ async function tryReadJson(path) {
   } catch {
     return null;
   }
+}
+
+async function withinRoot(root, file) {
+  try {
+    const base = await realpath(pathResolve(root));
+    const target = await realpath(file);
+    const rel = relative(base, target);
+    return rel === '' || (rel !== '..' && !rel.startsWith(`..${sep}`) && !isAbsolute(rel));
+  } catch { return false; }
 }

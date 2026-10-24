@@ -43,13 +43,13 @@ func processWorkflow(ctx dbos.DBOSContext, items []string) (string, error) {
 
 // Read the stream synchronously (blocks until closed)
 handle, _ := dbos.RunWorkflow(ctx, processWorkflow, items)
-values, closed, err := dbos.ReadStreamstring, "results")
+values, closed, err := dbos.ReadStream[string](ctx, handle.GetWorkflowID(), "results")
 ```
 
 **Async stream reading with channels:**
 
 ```go
-ch, err := dbos.ReadStreamAsyncstring, "results")
+ch, err := dbos.ReadStreamAsync[string](ctx, handle.GetWorkflowID(), "results")
 if err != nil {
 	log.Fatal(err)
 }

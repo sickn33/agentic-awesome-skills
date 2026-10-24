@@ -38,6 +38,10 @@ Use this skill when:
 - Google Cloud account (Firebase is part of GCP)
 - A Firebase project (create at console.firebase.google.com)
 
+## Security and deployment boundaries
+
+Test rules with allowed/denied identities in the emulator before authorized deployment to an explicitly selected project. User-editable profile fields must never grant admin permissions; the admin example uses a server-managed custom claim. The message rules are an intentionally public-to-authenticated example, not private-channel membership enforcement. Admin SDK HTTP functions bypass Firestore rules, so authenticate/authorize there or expose only explicitly public fields. CORS is not authorization. Firestore triggers may retry/out-of-order: the counter/timestamp illustration needs event-ID deduplication and monotonic timestamp handling before production. Keep secrets in supported secret storage and verify current runtime/config migration guidance; budget alerts do not cap spend. See [rule conditions](https://firebase.google.com/docs/firestore/security/rules-conditions).
+
 ## Quick Start
 
 ```bash
@@ -82,14 +86,19 @@ service cloud.firestore {
         && request.resource.data.userId == request.auth.uid
         && request.resource.data.body is string
         && request.resource.data.body.size() <= 5000;
-      allow update, delete: if request.auth != null
+      allow update: if request.auth != null
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.userId == resource.data.userId
+        && request.resource.data.body is string
+        && request.resource.data.body.size() <= 5000;
+      allow delete: if request.auth != null
         && resource.data.userId == request.auth.uid;
     }
 
     // Admin-only collection
     match /admin/{document=**} {
       allow read, write: if request.auth != null
-        && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+        && request.auth.token.admin == true; // custom claim set only by trusted server admin
     }
 
     // Default: deny everything
@@ -199,7 +208,7 @@ onAuthStateChanged(auth, (user) => {
 // functions/src/index.ts
 import { onRequest } from "firebase-functions/v2/https";
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
-import { getFirestore } from "firebase-admin/firestore";
+import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import { initializeApp } from "firebase-admin/app";
 
 initializeApp();
@@ -230,7 +239,7 @@ export const onMessageCreated = onDocumentCreated(
     });
 
     // Send notification (example)
-    console.log(`New message in ${event.params.channelId}: ${data.body.substring(0, 50)}`);
+    // Do not log message bodies; emit a redacted event identifier only.
   }
 );
 ```

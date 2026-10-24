@@ -10,8 +10,7 @@ tags: rerender, hooks, performance, react-compiler
 This rule is only applicable if you are using the React Compiler.
 
 Destructure functions from hooks at the top of render scope. Never dot into
-objects to call functions. Destructured functions are stable references; dotting
-creates new references and breaks memoization.
+objects to call functions. Destructuring can narrow captured dependencies; property access itself does not create a new function. Stability depends on the hook/API implementation. Do not detach methods that require their receiver.
 
 **Incorrect (dotting into object):**
 

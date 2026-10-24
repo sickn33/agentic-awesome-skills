@@ -7,13 +7,13 @@ tags: pattern, idempotency, workflow-id, deduplication
 
 ## Use Workflow IDs for Idempotency
 
-Assign a workflow ID to ensure a workflow executes only once, even if called multiple times. This prevents duplicate side effects like double payments.
+Assign a workflow ID to ensure a workflow executes only once, even if called multiple times. This deduplicates workflow starts while records are retained. External steps can still repeat after interruption; use provider-side idempotency for payments.
 
 **Incorrect (no idempotency):**
 
 ```typescript
 async function processPaymentFn(orderId: string, amount: number) {
-  await DBOS.runStep(() => chargeCard(amount), { name: "chargeCard" });
+  await DBOS.runStep(() => chargeCard(amount, { idempotencyKey: `payment-${orderId}` }), { name: "chargeCard" });
   await DBOS.runStep(() => updateOrder(orderId), { name: "updateOrder" });
 }
 const processPayment = DBOS.registerWorkflow(processPaymentFn);
@@ -27,16 +27,17 @@ await processPayment("order-123", 50); // Double charge!
 
 ```typescript
 async function processPaymentFn(orderId: string, amount: number) {
-  await DBOS.runStep(() => chargeCard(amount), { name: "chargeCard" });
+  await DBOS.runStep(() => chargeCard(amount, { idempotencyKey: `payment-${orderId}` }), { name: "chargeCard" });
   await DBOS.runStep(() => updateOrder(orderId), { name: "updateOrder" });
 }
 const processPayment = DBOS.registerWorkflow(processPaymentFn);
 
 // Same workflow ID = only one execution
+const orderId = "order-123";
 const workflowID = `payment-${orderId}`;
 await DBOS.startWorkflow(processPayment, { workflowID })("order-123", 50);
 await DBOS.startWorkflow(processPayment, { workflowID })("order-123", 50);
-// Second call returns the result of the first execution
+// Second call returns a handle to the existing workflow; getResult() retrieves its result
 ```
 
 Access the current workflow ID inside a workflow:

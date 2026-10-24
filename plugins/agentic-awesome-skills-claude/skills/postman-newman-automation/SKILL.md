@@ -309,3 +309,5 @@ If the user says **no**:
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+Collections and pre-request/test scripts execute code and can call real services; inspect them and run with scoped test credentials in an authorized environment. Keep API keys out of query strings/command arguments and public HTML/JUnit reports; use approved secret injection with logging/artifact redaction. In Jenkins bind credentials to environment variables and use single-quoted Groovy shell blocks rather than interpolating secrets. With `set -e`, capture the Newman exit status explicitly if cleanup/reporting must run, then return that status; never suppress required failures.

@@ -50,6 +50,8 @@ eas metadata:push
 
 ## Configuration File
 
+Examples are schema/version-sensitive and include fictional marketing claims; do not publish them as evidence. Pull into a fresh backup, inspect the diff and current age-rating schema, then push only the reviewed target listing. Never commit live review passwords or keys.
+
 Create `store.config.json` at your project root:
 
 ```json
@@ -97,7 +99,7 @@ Create `store.config.json` at your project root:
       "lastName": "Doe",
       "email": "review@example.com",
       "phone": "+1 555-123-4567",
-      "notes": "Demo account: test@example.com / password123"
+      "notes": "Configure a dedicated least-privilege review account securely; never commit working credentials"
     }
   }
 }
@@ -120,7 +122,7 @@ The title is the most important ranking factor. Include your brand name and 1-2 
 - Brand name first for recognition
 - Include highest-volume keyword
 - Avoid generic words like "app" or "the"
-- Title keywords boost rankings by ~10%
+- Measure title changes against a local baseline; no ranking uplift is guaranteed
 
 ### Subtitle Optimization (30 characters max)
 
@@ -158,7 +160,7 @@ Hidden from users but crucial for discoverability. Use comma-separated keywords 
 - No duplicates from title/subtitle
 - Include singular forms (Apple handles plurals)
 - Add synonyms and alternate spellings
-- Include competitor brand names (carefully)
+- Use relevant terms you have rights to use; avoid misleading competitor trademarks
 - Use digits instead of spelled numbers ("5" not "five")
 - Skip articles and prepositions
 
@@ -402,7 +404,7 @@ Provide contact info and test credentials for the App Review team.
     "email": "app-review@company.com",
     "phone": "+1 (555) 123-4567",
     "demoUsername": "demo@example.com",
-    "demoPassword": "ReviewDemo2025!",
+    "demoPassword": "<inject-securely-at-runtime>",
     "notes": "To test premium features:\n1. Log in with demo credentials\n2. Navigate to Settings > Subscription\n3. Tap 'Restore Purchase' - sandbox purchase will be restored\n\nFor location features, allow location access when prompted."
   }
 }
@@ -489,9 +491,4 @@ jobs:
 
 ## Tips
 
-- Update metadata every 4-6 weeks for optimal ASO
-- 70% of App Store visitors use search to find apps
-- Apps with 4+ star ratings get featured more often
-- Localized apps see 128% more downloads per country
-- First 3 lines of description are most critical (shown before "more")
-- Use all 100 keyword characters—every character counts
+Numeric ASO uplifts/search-share claims are not verified benchmarks. Measure per locale and release cohort, substantiate all user-count/savings/security claims in the illustrative copy, and verify current metadata/advisory schemas before pushing. Protect review-account credentials and use manual release timing unless automatic release is in the authorized scope.

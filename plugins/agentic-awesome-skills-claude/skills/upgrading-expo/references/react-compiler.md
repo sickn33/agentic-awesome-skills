@@ -1,6 +1,6 @@
 # React Compiler
 
-React Compiler is stable in Expo SDK 54 and later. It automatically memoizes components and hooks, eliminating the need for manual `useMemo`, `useCallback`, and `React.memo`.
+React Compiler is stable in Expo SDK 54 and later. It automatically memoizes components and hooks, reducing the need for manual memoization in code it can safely optimize.
 
 ## Enabling React Compiler
 
@@ -21,11 +21,11 @@ Add to `app.json`:
 - Automatically memoizes components and values
 - Eliminates unnecessary re-renders
 - Removes the need for manual `useMemo` and `useCallback`
-- Works with existing code without modifications
+- Requires adherence to React rules; measure and test before changing existing memoization
 
 ## Cleanup After Enabling
 
-Once React Compiler is enabled, you can remove manual memoization:
+Do not mass-remove existing memoization on enablement. After confirming compilation and behavior, an eligible pure component may be simplified:
 
 ```tsx
 // Before (manual memoization)

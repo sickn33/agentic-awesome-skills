@@ -10,9 +10,11 @@ SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "$SCRIPT_DIR/scratch_safety.sh"
 OUT=$(validate_ytnote_scratch "$OUT")
 
+[[ "$THRESH" =~ ^(0(\.[0-9]+)?|1(\.0+)?)$ ]] || { echo "threshold must be 0..1" >&2; exit 1; }
+
 # showinfo on the scene-selected frames prints pts_time per cut.
 ffmpeg -hide_banner -i "$VIDEO" \
-  -vf "select='gt(scene,$THRESH)',showinfo" -vsync vfr -f null - 2>"$OUT/ffinfo.log" || true
+  -vf "select='gt(scene,$THRESH)',showinfo" -vsync vfr -f null - 2>"$OUT/ffinfo.log"
 
 grep -oE 'pts_time:[0-9.]+' "$OUT/ffinfo.log" | sed 's/pts_time://' | sort -n -u > "$OUT/scene_times.txt"
 

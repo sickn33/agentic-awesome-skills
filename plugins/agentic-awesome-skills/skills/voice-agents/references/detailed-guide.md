@@ -5,7 +5,7 @@
 ## Principles
 
 - Latency is the constraint - target <800ms end-to-end
-- Jitter (variance) matters as much as absolute latency
+- Jitter (timing variation) matters as much as absolute latency
 - VAD quality determines conversation flow
 - Interruption handling makes or breaks the experience
 - Start with focused MVP, iterate based on real conversations
@@ -43,14 +43,14 @@
 ### Speech_to_text
 
 - OpenAI Whisper - When: Highest accuracy, multilingual Note: gpt-4o-transcribe for best results
-- Deepgram Nova-3 - When: Production workloads, 54% lower WER Note: 150-184ms TTFT, 90%+ accuracy on noisy audio
+- Deepgram Nova-3 - When: Production workloads, vendor/model-specific WER claims require representative evaluation Note: 150-184ms TTFT, quality depends on language/noise/codec/dataset
 - AssemblyAI - When: Real-time streaming, speaker diarization Note: Good accuracy-latency balance
 
 ### Text_to_speech
 
 - ElevenLabs - When: Most natural voice, emotional control Note: Flash model 75ms latency, V3 for expression
 - OpenAI TTS - When: Integrated with OpenAI stack Note: gpt-4o-mini-tts, 13 voices, streaming
-- Deepgram Aura-2 - When: Cost-effective production TTS Note: 40% cheaper than ElevenLabs, 184ms TTFB
+- Deepgram Aura-2 - When: Cost-effective production TTS Note: compare current prices using the actual billing units/workload, 184ms TTFB
 
 ### Frameworks
 
@@ -69,7 +69,7 @@ Direct audio-to-audio processing for lowest latency
 
 # SPEECH-TO-SPEECH ARCHITECTURE:
 
-"""
+```
 [User Audio] → [S2S Model] → [Agent Audio]
 
 Advantages:
@@ -81,11 +81,11 @@ Disadvantages:
 - Less control over responses
 - Harder to debug/audit
 - Can't easily modify what's said
-"""
+```
 
 
 ## OpenAI Realtime API
-"""
+```
 import { RealtimeClient } from '@openai/realtime-api-beta';
 
 const client = new RealtimeClient({
@@ -121,7 +121,7 @@ client.on('response.audio.delta', (event) => {
 
 // Send user audio
 client.appendInputAudio(audioBuffer);
-"""
+```
 
 ### Use Cases:
 - Real-time customer support
@@ -137,11 +137,11 @@ Separate STT → LLM → TTS for maximum control
 
 # PIPELINE ARCHITECTURE:
 
-"""
+```
 [Audio] → [STT] → [Text] → [LLM] → [Text] → [TTS] → [Audio]
 
 Advantages:
-- Full control at each step
+- More control at each step; output and tool safety still require validation
 - Can log/audit all text
 - Easier to debug
 - Mix best-in-class components
@@ -150,11 +150,11 @@ Disadvantages:
 - Higher latency (700-1200ms typical)
 - Loses some emotion/nuance
 - More components to manage
-"""
+```
 
 
 ## Silero VAD (Popular Open Source)
-"""
+```
 import { SileroVAD } from '@pipecat-ai/silero-vad';
 
 const vad = new SileroVAD({
@@ -179,11 +179,11 @@ vad.on('speech_end', () => {
 audioStream.on('data', (chunk) => {
   vad.process(chunk);
 });
-"""
+```
 
 
 ## OpenAI Semantic VAD
-"""
+```
 // In Realtime API session config
 client.updateSession({
   turn_detection: {
@@ -192,11 +192,11 @@ client.updateSession({
     // Responds faster after "Yes, that's correct."
   },
 });
-"""
+```
 
 
 ## Barge-In Handling
-"""
+```
 // When user interrupts:
 function handleBargeIn() {
   // 1. Stop TTS immediately
@@ -218,7 +218,7 @@ vad.on('speech_start', () => {
     handleBargeIn();
   }
 });
-"""
+```
 
 ### Latency Optimization Pattern
 
@@ -228,17 +228,17 @@ Achieving <800ms end-to-end response time
 
 # LATENCY OPTIMIZATION:
 
-"""
+```
 Target Metrics:
 - End-to-end: <800ms (ideal: <500ms)
 - Time-to-First-Token (TTFT): <300ms
 - Barge-in response: <200ms
-- Jitter variance: <100ms std dev
-"""
+- Latency standard deviation: <100ms (illustrative target, not variance)
+```
 
 
 ## Pipeline Latency Breakdown
-"""
+```
 Typical breakdown:
 - VAD processing: 50-100ms
 - STT first result: 150-200ms
@@ -247,13 +247,13 @@ Typical breakdown:
 - Audio buffering: 50-100ms
 
 Total: 425-900ms
-"""
+```
 
 
 ## Optimization Strategies
 
 ### 1. Streaming Everything
-"""
+```
 // Stream STT results as they come
 stt.on('partial_transcript', (text) => {
   // Start processing before final transcript
@@ -269,10 +269,10 @@ const llmStream = await openai.chat.completions.create({
 for await (const chunk of llmStream) {
   tts.appendText(chunk.choices[0].delta.content);
 }
-"""
+```
 
 ### 2. Pre-computation
-"""
+```
 // While user is speaking, predict and prepare
 stt.on('partial_transcript', async (text) => {
   // Pre-fetch relevant context
@@ -281,22 +281,22 @@ stt.on('partial_transcript', async (text) => {
   // Pre-compute likely first sentence
   const firstSentence = await generateOpener(context);
 });
-"""
+```
 
 ### 3. Use Low-Latency Models
-"""
+```
 // STT: Deepgram Nova-3 (150ms TTFT)
 // LLM: gpt-4o-mini (fastest GPT-4 class)
 // TTS: ElevenLabs Flash (75ms) or Deepgram Aura-2 (184ms)
-"""
+```
 
 ### 4. Edge Deployment
-"""
+```
 // Run inference closer to user
 // - Cloud regions near user
 // - Edge computing for VAD/STT
 // - WebSocket over HTTP for lower overhead
-"""
+```
 
 ### Conversation Design Pattern
 
@@ -308,17 +308,17 @@ Designing natural voice conversations
 
 
 ## Voice-First Principles
-"""
+```
 Voice is different from text:
 - No undo button - say it right the first time
 - Linear - user can't scroll back
 - Ephemeral - easy to miss information
 - Emotional - tone matters as much as words
-"""
+```
 
 
 ## Response Design
-"""
+```
 # Keep responses short (10-20 seconds max)
 # Front-load the answer
 # Use signposting for lists
@@ -329,11 +329,11 @@ Good: "I found 3 options. Want me to go through them?"
 # Confirm understanding
 Bad: "I'll transfer $500 to John."
 Good: "So that's $500 to John Smith. Should I proceed?"
-"""
+```
 
 
 ## Prompting for Voice
-"""
+```
 system_prompt = '''
 You are a voice assistant. Follow these rules:
 
@@ -341,18 +341,18 @@ You are a voice assistant. Follow these rules:
 2. Use natural speech - contractions, casual language
 3. Never use formatting (bullets, numbers in lists)
 4. Spell out numbers and abbreviations
-5. End with a question to keep conversation flowing
+5. Ask a question only when it advances the user's task
 6. If unclear, ask for clarification
-7. Never say "I'm an AI" unless asked
+7. Disclose automated identity and recording/processing as required by the interaction and applicable policy
 
 Good: "Got it. I'll set that reminder for three pm. Anything else?"
 Bad: "I have set a reminder for 3:00 PM. Is there anything else I can assist you with today?"
 '''
-"""
+```
 
 
 ## Error Recovery
-"""
+```
 // Handle recognition errors gracefully
 const errorResponses = {
   no_speech: "I didn't catch that. Could you say it again?",
@@ -364,7 +364,7 @@ const errorResponses = {
 if (confidenceScore < 0.6) {
   response = "I want to make sure I get this right. Would you like to speak with a human agent?";
 }
-"""
+```
 
 
 ## Sharp Edges
@@ -520,7 +520,7 @@ const pipeline = new Pipeline({
 ### Fallback: Adaptive silence threshold:
 function calculateSilenceThreshold(transcript) {
   const endsWithComplete = transcript.match(/[.!?]$/);
-  const hasFillers = transcript.match(/um|uh|like|well/i);
+  const hasFillers = /\b(?:um|uh|like|well)\b/i.test(transcript);
 
   if (endsWithComplete && !hasFillers) {
     return 300;  // Fast response
@@ -780,7 +780,7 @@ if (confidence < 0.8) {
 ### 4. Multiple hypothesis handling:
 // Some STT APIs return n-best list
 const alternatives = transcription.alternatives;
-if (alternatives[0].confidence - alternatives[1].confidence < 0.1) {
+if (alternatives?.length >= 2 && alternatives[0].confidence - alternatives[1].confidence < 0.1) {
   // Ambiguous - ask for clarification
 }
 
@@ -888,3 +888,11 @@ Message: Consider adding noise handling for real-world audio quality.
 ## Related Skills
 
 Works well with: `agent-tool-builder`, `multi-agent-orchestration`, `llm-architect`, `backend`
+
+## Version, privacy and implementation boundaries
+
+These mixed-version SDK sketches are conceptual and were not executed. Deepgram constructor/transcription.live, ElevenLabs stream signatures, the beta Realtime client and the named Silero JavaScript package must be checked against the installed official SDKs before use; do not infer missing package/runtime availability. smart_format formats text and is not noise reduction; model keyword/keyterm flags vary. A model-VAD probability threshold cannot be set from raw amplitude without a calibrated mapping. Confidence scores/latency figures are not universally comparable.
+
+Define end-of-user-turn to first audible output and measure p50/p95 on representative devices/networks/languages. STT first partial, LLM first token and TTS first audio times are not simply additive end-to-end guarantees. Do not send partial/stale hypotheses to irreversible tools: serialize turns, deduplicate final transcripts, buffer complete TTS-safe segments, maintain history, and cancel/discard obsolete generation/audio. On barge-in truncate unheard assistant content in server history as well as stopping local playback; a checkpoint alone is insufficient.
+
+Clients need appropriate ephemeral/session credentials, not long-lived API keys. Obtain authorized microphone/recording/voice/recipient scope, minimize audio/transcript retention and external-provider transfers, and avoid voice cloning/impersonation without rights. Bound sockets, retries, queues and costs; clean up listeners/streams on disconnect. Spoken names/numbers and claimed identity are not authentication. Validate tenant/recipient/action and obtain transaction-specific confirmation where needed. Text cleanup must preserve decimal numbers, currency, URLs and code semantics; SSML requires supported engines and escaping. A voice prompt is not a tool-authorization boundary. No call, recording or provider request was made.

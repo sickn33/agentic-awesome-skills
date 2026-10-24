@@ -1,5 +1,7 @@
 # 2slides Pricing & Credit Information
 
+Review update 2026-10-23: API/pricing examples below are a historical snapshot; verify the current [API](https://2slides.com/api.md) and [pricing](https://2slides.com/pricing) before billable calls. Subscription credits and purchased-package credits have different expiry rules. No live generation was tested.
+
 Complete pricing details and credit system information.
 
 ## Credit System Overview
@@ -93,11 +95,11 @@ Complete pricing details and credit system information.
 
 ### Scenario 3: Training Presentation with Audio
 - **Need:** 30-slide 2K presentation with voice narration
-- **Credits required:** 6,300 credits
+- **Credits required:** 9,300 credits
   - Slides: 3,000 credits (30 pages × 100 credits)
-  - Narration: 3,300 credits (30 pages × 110 credits - voice only)
-- **Cost with 10,000 package:** $14.18
-- **Cost with 40,000 package:** $12.60
+  - Narration: 6,300 credits (30 pages × 210 credits)
+- **Cost with 10,000 package:** $20.93
+- **Cost with 40,000 package:** $18.60
 
 ### Scenario 4: High-Resolution Portfolio
 - **Need:** 10-slide 4K Nano Banana presentation
@@ -107,12 +109,12 @@ Complete pricing details and credit system information.
 
 ### Scenario 5: Complete Package
 - **Need:** 25-slide 2K presentation with narration, exported as PNG/WAV
-- **Credits required:** 5,250 credits
+- **Credits required:** 7,750 credits
   - Slides: 2,500 credits (25 pages × 100 credits)
-  - Narration: 2,750 credits (25 pages × 110 credits - voice only)
+  - Narration: 5,250 credits (25 pages × 210 credits)
   - Export: 0 credits (FREE)
-- **Cost with 10,000 package:** $11.81
-- **Cost with 40,000 package:** $10.50
+- **Cost with 10,000 package:** $17.44
+- **Cost with 40,000 package:** $15.50
 
 ## Payment Methods
 

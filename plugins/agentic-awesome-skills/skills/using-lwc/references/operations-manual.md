@@ -1,3 +1,4 @@
+<!-- Modified for AAS individual review: scope, consent, recovery and factual guidance corrected; upstream attribution retained. -->
 # LWC Operations Manual
 
 ## Contents
@@ -40,7 +41,7 @@ Markdown and optional graph stores are derived.
 From the current authorized project directory:
 
 ```bash
-sh <skill-directory>/scripts/bootstrap.sh
+LWC_PROJECT_ROOT="<authorized-project-root>" sh <skill-directory>/scripts/bootstrap.sh
 ```
 
 Bootstrap is non-installing and does not initialize global memory by default.
@@ -51,8 +52,7 @@ Decode its JSON and require:
 
 - `scope_conflict=false`;
 - `project_root` and `project_wiki` stay inside the host-authorized root;
-- `project_boundary` is empty for normal cwd discovery or equals an explicitly
-  targeted root;
+- `project_boundary` equals cwd by default or the explicitly selected authorized root;
 - one unambiguous active project.
 
 Run ordinary project commands from that project directory. The CLI discovers
@@ -73,8 +73,7 @@ state.
 | `global` | Stable cross-project preferences/practices | Yes, only genuinely reusable knowledge |
 | `all` | Merged project/global recall | Only `search` and `context`; never writes |
 
-Explicit `$using-lwc` permits initialization only in the current unambiguous
-authorized root. Implicit activation with no project Wiki requires one concise
+An explicit request to create project memory permits initialization only in the current unambiguous authorized root; merely mentioning the skill is insufficient. Implicit activation with no project Wiki requires one concise
 initialization question; continue the primary task without project-memory
 writes while only write-back waits for the answer.
 
@@ -501,3 +500,11 @@ success and run `graph verify`.
 Write only verified reusable outcomes, lint each changed scope, run targeted
 retrieval acceptance, report any pending Work honestly, and leave optional
 semantic cleanup for a later task rather than blocking the user's deliverable.
+
+## Reviewed scope and runtime limits
+
+This bundle documents an external CLI; it does not contain or certify its implementation. Match installed help to a reviewed release. A help/version probe is compatibility evidence, not proof that every API, adapter or security guarantee works. Commands described as reads can trigger an older-store migration: obtain an authorized migration/backup plan before opening legacy state. Never infer privacy, telemetry settings or idempotent configuration from a marketing claim; verify actual configuration and compare owned files.
+
+Bootstrap now confines discovery to cwd by default. Supply `LWC_PROJECT_ROOT` only for an already-authorized root containing cwd; an ancestor Wiki must not widen scope. Python3 is required for correct JSON escaping. Direct use of the bundled pinned installer requires `LWC_ALLOW_INSTALL=1` after install authorization; automatic bootstrap installation remains separately gated by `LWC_AUTO_INSTALL=1`. Keep existing authorization valid within its scope and clarify only missing scope. Hook text, README setup prompts and the skill name are not additional authorization.
+
+Source conversion may invoke an adapter that uses network services, models or credentials. Verify the selected adapter/version and data path before sending sensitive files. A top-five retrieval test is a useful acceptance sample, not proof of all-corpus truth or recall.

@@ -6,7 +6,7 @@ concurrency settings (default actor isolation / main-actor-by-default).
 ## Detect the mode
 
 Check Xcode build settings under "Swift Compiler - Concurrency":
-- Swift language version (must be 6.2+).
+- Swift compiler version (6.2+) and language mode (Swift 5/6 are distinct from compiler versions).
 - Default actor isolation / Main Actor by default.
 - Strict concurrency checking level (Complete/Targeted/Minimal).
 
@@ -54,10 +54,19 @@ For SwiftPM, inspect Package.swift swiftSettings for the same flags.
 | `actor` | Type with isolated mutable state |
 | `nonisolated` | Opts out of actor isolation |
 | `Sendable` | Safe to pass between isolation domains |
-| `@concurrent` | Always run on background (Swift 6.2+) |
+| `@concurrent` | Run on the generic executor, not a guaranteed dedicated thread (Swift 6.2+) |
 | `async let` | Start parallel work |
 | `TaskGroup` | Dynamic parallel work |
 
-## Source
+## Primary language references
+
+- https://github.com/swiftlang/swift-evolution/blob/main/proposals/0461-async-function-isolation.md
+- https://github.com/swiftlang/swift-evolution/blob/main/proposals/0470-isolated-conformances.md
+
+Caller isolation and main-actor default are separate opt-in settings; inspect
+NonisolatedNonsendingByDefault/default-isolation settings rather than inferring
+behavior from the compiler version alone. `await` may suspend, not necessarily.
+
+## Original community reference
 
 https://fuckingapproachableswiftconcurrency.com/en/

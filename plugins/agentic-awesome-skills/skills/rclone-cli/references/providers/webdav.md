@@ -330,7 +330,9 @@ to an unknown webserver.
 
 However this is desirable in some circumstances. If you are getting
 an error like "401 Unauthorized" when rclone is attempting to read
-files from the webdav server then you can try this option.
+files from the webdav server, inspect the redirect target first. Enable this
+only when the destination host is trusted to receive the same credentials; a
+401 alone is not a reason to forward them.
 
 
 Properties:
@@ -419,7 +421,10 @@ the actual data stored on your OneDrive.
 Add the remote to rclone like this:
 Configure the `url` as `https://[YOUR-DOMAIN]-my.sharepoint.com/personal/[YOUR-EMAIL]/Documents`
 and use your normal account email and password for `user` and `pass`.
-If you have 2FA enabled, you have to generate an app password.
+This legacy authentication flow may be blocked by tenant policy and may not
+support MFA. Prefer the OAuth-based OneDrive backend; do not weaken MFA or
+tenant authentication policy to make WebDAV work. Use an app password only
+if your administrator explicitly supports that flow.
 Set the `vendor` to `sharepoint`.
 
 Your config file should look like this:
@@ -465,14 +470,17 @@ user = DOMAIN\user
 pass = encryptedpassword
 ```
 
-#### Required Flags for SharePoint
+#### Handling confirmed SharePoint file transformations
 
 As SharePoint does some special things with uploaded documents, you won't be
 able to use the documents size or the documents hash to compare if a file has
 been changed since the upload / which file is newer.
 
 For Rclone calls copying files (especially Office files such as .docx, .xlsx, etc.)
-from/to SharePoint (like copy, sync, etc.), you should append these flags to ensure
+from/to SharePoint (like copy, sync, etc.), the following flags can work around
+confirmed server transformations. They skip size and checksum validation and can
+miss changes; scope them to affected files and independently verify results.
+With these flags,
 Rclone uses the "Last Modified" datetime property to compare your documents:
 
 ```text
@@ -551,7 +559,7 @@ fetch the access token from oidc-agent.
 Configure as a normal WebDAV endpoint, using the 'other' vendor,
 leaving the username and password empty.  When prompted, choose to
 edit the advanced config and enter the command to get a bearer token
-(e.g., `oidc-agent XDC`).
+(e.g., `oidc-token XDC`).
 
 The following example config shows a WebDAV endpoint that uses
 oidc-agent to supply an access token from the *XDC* OIDC Provider.

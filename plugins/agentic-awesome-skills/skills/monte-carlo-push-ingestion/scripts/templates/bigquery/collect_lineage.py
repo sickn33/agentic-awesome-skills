@@ -75,46 +75,6 @@ def _parse_full_name(full_name: str) -> tuple[str, str, str]:
     return "", "", parts[0]
 
 
-def _collect_schema_link_lineage(
-    bq_client: bigquery.Client,
-    project_id: str,
-    region: str,
-) -> list[dict]:
-    """Collect cross-project lineage from INFORMATION_SCHEMA.SCHEMATA_LINKS."""
-    project_id = _require_bq_identifier(project_id, "project_id")
-    region = _require_bq_identifier(region, "region")
-    query = f"""
-        SELECT
-            CATALOG_NAME            AS source_project,
-            SCHEMA_NAME             AS source_dataset,
-            LINKED_SCHEMA_CATALOG_NAME AS destination_project,
-            LINKED_SCHEMA_NAME      AS destination_dataset
-        FROM `{project_id}`.`{region}`.INFORMATION_SCHEMA.SCHEMATA_LINKS
-    """  # ← SUBSTITUTE: update project_id and region as needed
-    edges: list[dict] = []
-    try:
-        for row in bq_client.query(query).result():
-            edges.append(
-                {
-                    "destination": {
-                        "database": row.destination_project,
-                        "schema": row.destination_dataset,
-                        "table": "*",
-                    },
-                    "sources": [
-                        {
-                            "database": row.source_project,
-                            "schema": row.source_dataset,
-                            "table": "*",
-                        }
-                    ],
-                }
-            )
-    except Exception:
-        log.warning("SCHEMATA_LINKS query failed — skipping dataset-share lineage", exc_info=True)
-    return edges
-
-
 def _collect_query_lineage(
     bq_client: bigquery.Client,
     project_id: str,
@@ -187,7 +147,7 @@ def collect(
     bq_client = bigquery.Client(project=project_id)
 
     log.info("Collecting lineage from project %s ...", project_id)
-    schema_edges = _collect_schema_link_lineage(bq_client, project_id, region)
+    schema_edges = []  # Dataset shares are not verified table-level lineage.
     query_edges = _collect_query_lineage(bq_client, project_id, lookback_hours)
     all_edges = schema_edges + query_edges
 
@@ -198,6 +158,7 @@ def collect(
 
     manifest = {
         "resource_type": RESOURCE_TYPE,
+        "lineage_candidates": True,
         "collected_at": datetime.now(timezone.utc).isoformat(),
         "schema_link_edges": len(schema_edges),
         "query_derived_edges": len(query_edges),

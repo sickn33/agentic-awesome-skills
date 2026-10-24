@@ -20,7 +20,7 @@ from typing import Any, Dict, List, Optional
 # Garantir que o diretorio scripts esta no path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from config import DIMENSION_WEIGHTS, get_score_label
+from config import DIMENSION_WEIGHTS, get_score_label, SKILLS_ROOT
 from db import Database
 from governance import SentinelGovernance
 from report_generator import generate_report, save_report
@@ -64,6 +64,9 @@ def _run_analyzers(skill_data: Dict[str, Any]) -> Dict[str, Any]:
     }
 
     for dim_name, analyzer_fn in analyzers.items():
+        if not skill_data.get("python_files") and dim_name != "documentation":
+            results["scores"][dim_name] = None
+            continue
         score, findings = analyzer_fn(skill_data)
         results["scores"][dim_name] = score
         results["findings"].extend(findings)
@@ -83,6 +86,7 @@ def run_audit(
     include_recommendations: bool = True,
     compare_previous: bool = False,
     output_format: str = "markdown",
+    skills_root: Path = SKILLS_ROOT,
 ) -> Dict[str, Any]:
     """
     Executa auditoria completa. Retorna dict com resultados.
@@ -91,7 +95,7 @@ def run_audit(
     db.init()
     gov = SentinelGovernance(db)
 
-    scanner = SkillScanner()
+    scanner = SkillScanner(skills_root)
     all_skills = scanner.discover_all()
 
     if skill_filter:
@@ -99,6 +103,8 @@ def run_audit(
         if not all_skills:
             return {"error": f"Skill '{skill_filter}' nao encontrada."}
 
+    if not all_skills:
+        raise ValueError("No skills found in the selected root; not a successful audit")
     gov.log_audit_start([s["name"] for s in all_skills])
 
     # Criar audit run
@@ -177,6 +183,8 @@ def run_audit(
     gov.log_audit_complete(run_id, ecosystem_score, len(all_findings))
 
     result = {
+        "advisory_only": True,
+        "coverage": "Python source and metadata only; no semantic review, execution or merge authority",
         "run_id": run_id,
         "skills_scanned": len(all_skills),
         "overall_score": ecosystem_score,
@@ -207,7 +215,7 @@ def show_history(db: Database) -> None:
     print("-" * 70)
     for r in runs:
         score = r.get("overall_score")
-        score_str = f"{score:.0f}/100" if score else "N/A"
+        score_str = f"{score:.0f}/100" if score is not None else "N/A"
         print(f"  #{r['id']} | {r['started_at'][:19]} | "
               f"{r['status']:10s} | Score: {score_str} | "
               f"Skills: {r['skills_scanned']} | Findings: {r['total_findings']}")
@@ -233,7 +241,12 @@ Exemplos:
     parser.add_argument("--history", action="store_true", help="Mostrar historico de auditorias")
     parser.add_argument("--format", choices=["markdown", "json"], default="markdown", help="Formato de output")
 
+    parser.add_argument("--root", type=Path, default=SKILLS_ROOT, help="Explicit authorized skill root (read only)")
     args = parser.parse_args()
+    if args.recommend:
+        skills = SkillScanner(args.root).discover_all()
+        print(json.dumps({"advisory_only": True, "recommendations": recommender.recommend(skills)}, ensure_ascii=False, indent=2))
+        return
 
     if args.history:
         db = Database()
@@ -243,6 +256,7 @@ Exemplos:
 
     result = run_audit(
         skill_filter=args.skill,
+        skills_root=args.root,
         include_recommendations=True,
         compare_previous=args.compare,
         output_format=args.format,

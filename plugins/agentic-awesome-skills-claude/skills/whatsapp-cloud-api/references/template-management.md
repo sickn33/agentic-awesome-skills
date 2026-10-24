@@ -1,5 +1,7 @@
 # Gerenciamento de Templates via API - WhatsApp Cloud API
 
+Scope and snapshot: examples target an older Graph API version, not the current Meta contract. Verify supported versions, pricing, messaging/throughput limits, template edit rules and eligibility in official Meta documentation and the actual account before use. Legal tables are illustrative, not universal GDPR/LGPD requirements. Sending, deleting templates, account migration, purchases, tunnels and deployment require user-authorized scope. Confirm exact recipient/content and applicable consent/service window. Never log tokens, personal message bodies or full API errors. Boilerplates are local demos: production needs durable enqueue-before-ack, authenticated account routing, idempotency/replay protection, opt-out checks and a worker; HMAC alone does not prevent replay.
+
 Guia completo para criar, listar, deletar e gerenciar templates de mensagem programaticamente via WhatsApp Business Management API.
 
 ---
@@ -26,7 +28,7 @@ Templates sao mensagens pre-aprovadas pela WhatsApp. Sao a **unica forma** de in
 **Limites:**
 - Ate 6,000 traducoes de templates por conta WABA
 - Aprovacao leva de minutos a poucas horas
-- Templates **nao podem ser editados** apos submissao (delete e crie novo)
+- Verifique as regras atuais de edicao por estado/categoria; nao delete automaticamente
 - Template body: max 1,600 caracteres
 
 **Endpoint base:** `https://graph.facebook.com/v21.0/{waba-id}/message_templates`
@@ -535,7 +537,7 @@ Exemplos:
 
 ### Versionamento
 
-Como templates nao podem ser editados:
+Se a mudanca exigir uma nova versao:
 1. Crie nova versao: `template_name_v2`
 2. Teste a nova versao
 3. Quando aprovada, migre o codigo para usar a v2

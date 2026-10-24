@@ -19,6 +19,13 @@ import argparse
 from pathlib import Path
 
 
+def mask_kotlin(content: str) -> str:
+    """Mask comments/strings for approximate scans; not a complete Kotlin parser."""
+    pattern = r'//[^\n]*|/\*.*?\*/|""".*?"""|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\''
+    return re.sub(pattern, lambda m: ''.join('\n' if ch == '\n' else ' ' for ch in m[0]),
+                  content, flags=re.DOTALL)
+
+
 def safe_user_path(path_value, base_dir="."):
     """Resolve a CLI path under the current workspace."""
     if base_dir != ".":
@@ -29,6 +36,8 @@ def safe_user_path(path_value, base_dir="."):
         resolved_path.relative_to(base_path)
     except ValueError as exc:
         raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    if resolved_path.exists():
+        raise ValueError("Output already exists; choose a new report path")
     return resolved_path
 
 # Fix Unicode output on Windows (cp1252 terminal)
@@ -102,14 +111,12 @@ class ModuleCoupling:
 
 
 class KotlinComplexityAnalyzer:
-    """Analisa complexidade de código Kotlin com rigor matemático."""
+    """Approximate lexical Kotlin scan; not McCabe/Sonar certification or a Kotlin parser."""
 
     # Tokens que incrementam complexidade ciclomática
     CYCLOMATIC_TOKENS = [
-        r'\bif\b', r'\belse if\b', r'\bwhen\b', r'\bfor\b', r'\bwhile\b',
-        r'\bdo\b', r'\btry\b', r'\bcatch\b', r'\band\b', r'\bor\b',
-        r'\?\?', r'\?\.',  # Elvis operator e safe call
-        r'&&', r'\|\|',
+        r'\bif\b', r'\bwhen\b', r'\bfor\b', r'\bwhile\b',
+        r'\bcatch\b', r'\?:', r'&&', r'\|\|',
     ]
 
     # Tokens de quebra de fluxo (aumentam complexidade cognitiva mais que cicl.)
@@ -119,16 +126,23 @@ class KotlinComplexityAnalyzer:
     ]
 
     def __init__(self, project_root: str, threshold: int = 10):
-        self.project_root = Path(project_root)
+        self.project_root = Path(project_root).expanduser().resolve()
+        if not self.project_root.is_relative_to(Path.cwd().resolve()):
+            raise ValueError("Project root escapes current workspace")
+        if not self.project_root.is_dir():
+            raise ValueError("Project root must be an existing directory")
         self.threshold = threshold
         self.metrics: List[FileMetrics] = []
 
     def analyze(self, module_filter: Optional[str] = None) -> None:
         """Analisa todos os arquivos Kotlin no projeto."""
+        self.metrics = []
         pattern = "**/*.kt"
         kt_files = list(self.project_root.glob(pattern))
 
-        for kt_file in kt_files:
+        for kt_file in sorted(kt_files):
+            if kt_file.is_symlink() or not kt_file.resolve().is_relative_to(self.project_root):
+                continue
             # Filtra arquivos de teste se não especificado
             if 'test' in kt_file.parts and module_filter is None:
                 continue
@@ -154,9 +168,10 @@ class KotlinComplexityAnalyzer:
     def _analyze_file(self, file_path: Path, module: str) -> FileMetrics:
         """Analisa um arquivo Kotlin."""
         try:
-            content = file_path.read_text(encoding='utf-8', errors='ignore')
-        except Exception:
-            return FileMetrics(str(file_path), module)
+            content = file_path.read_text(encoding='utf-8')
+            content = mask_kotlin(content)
+        except (OSError, UnicodeError) as exc:
+            raise ValueError(f"Cannot analyze source: {file_path}") from exc
 
         lines = content.split('\n')
         metrics = FileMetrics(
@@ -197,7 +212,7 @@ class KotlinComplexityAnalyzer:
             fun_name = match.group(3)
             params_str = match.group(4)
             is_suspend = 'suspend' in match.group(2)
-            line_num = content[:match.start()].count('\n') + 1
+            line_num = content[:match.start(2)].count('\n') + 1
 
             # Extrair corpo da função
             body = self._extract_function_body(content, match.end())
@@ -228,22 +243,24 @@ class KotlinComplexityAnalyzer:
 
     def _extract_function_body(self, content: str, start: int) -> str:
         """Extrai o corpo de uma função por contagem de chaves."""
-        i = start
+        tail = content[start:]
+        next_decl = re.search(r'\n[ \t]*(?:(?:private|public|internal|override|suspend)\s+)*fun\s', tail)
+        limit = start + next_decl.start() if next_decl else len(content)
+        opening = content.find('{', start, limit)
+        expression = content.find('=', start, limit)
+        if expression >= 0 and (opening < 0 or expression < opening):
+            return content[expression:content.find('\n', expression) if '\n' in content[expression:] else limit]
+        if opening < 0:
+            return ''  # abstract declarations do not consume the next function
         depth = 0
-        started = False
-
-        while i < len(content):
-            c = content[i]
-            if c == '{':
+        for i in range(opening, limit):
+            if content[i] == '{':
                 depth += 1
-                started = True
-            elif c == '}':
+            elif content[i] == '}':
                 depth -= 1
-                if started and depth == 0:
-                    return content[start:i+1]
-            i += 1
-
-        return content[start:min(start + 500, len(content))]
+                if depth == 0:
+                    return content[opening:i + 1]
+        return ''  # incomplete body, not an invented500-character body
 
     def _cyclomatic_complexity(self, code: str) -> int:
         """Calcula CC de McCabe."""
@@ -304,8 +321,10 @@ class KotlinComplexityAnalyzer:
 
         for mod in all_modules:
             c = ModuleCoupling(module=mod)
-            c.efferent = list(module_imports.get(mod, set()))
-            for other_mod, deps in module_imports.items():
+            c.efferent = sorted(module_imports.get(mod, set()) - {mod})
+            for other_mod, deps in sorted(module_imports.items()):
+                if other_mod == mod:
+                    continue
                 if mod.replace('-', '.') in deps or mod in deps:
                     c.afferent.append(other_mod)
             coupling[mod] = c
@@ -402,6 +421,8 @@ class KotlinComplexityAnalyzer:
             }
 
         return {
+            'analysis_kind': 'approximate lexical Kotlin scan, not formal verification',
+            'limitations': ['Regex extraction misses Kotlin constructs and nested comments', 'Coupling module mapping is tailored to the documented Auri example', 'Scores are advisory estimates, not security severity'],
             'summary': {
                 'total_files': len(self.metrics),
                 'total_functions': sum(len(f.functions) for f in self.metrics),
@@ -427,7 +448,7 @@ class KotlinComplexityAnalyzer:
         elif cc <= 20:
             return "HIGH — refactor recommended"
         else:
-            return "CRITICAL — must refactor"
+            return "VERY HIGH estimate — review context before refactoring"
 
     def print_report(self, report: Dict) -> None:
         """Imprime relatório formatado."""
@@ -475,7 +496,7 @@ class KotlinComplexityAnalyzer:
                 print(f"  {item['function']}: {item['nullable_params']} nullable params ({item['file']})")
 
         print("\n" + "="*70)
-        print("  Análise matemática completa. Consulte Prof. Euler para interpretação.")
+        print("  Approximate scan complete. Verify findings against real source and a Kotlin parser.")
         print("="*70 + "\n")
 
 
@@ -484,7 +505,7 @@ def main():
         description='Prof. Euler — Análise de Complexidade Matemática para Kotlin/Android'
     )
     parser.add_argument('path', nargs='?',
-                        default=r'C:\Users\renat\earbudllm',
+                        default='.',
                         help='Caminho raiz do projeto')
     parser.add_argument('--module', '-m', help='Analisar apenas este módulo')
     parser.add_argument('--threshold', '-t', type=int, default=10,
@@ -495,9 +516,9 @@ def main():
 
     args = parser.parse_args()
 
-    print(f"🔬 Prof. Euler analisando: {args.path}")
+    print(f"Analyzing approximate metrics: {args.path}", file=sys.stderr)
     if args.module:
-        print(f"   Módulo: {args.module}")
+        print(f"   Module: {args.module}", file=sys.stderr)
 
     analyzer = KotlinComplexityAnalyzer(args.path, threshold=args.threshold)
     analyzer.analyze(module_filter=args.module)
@@ -517,7 +538,7 @@ def main():
         else:
             # Salvar como markdown
             save_as_markdown(report, output_path, args.threshold)
-        print(f"✅ Relatório salvo em: {args.output}")
+        print(f"Report saved: {args.output}", file=sys.stderr)
 
     return report
 

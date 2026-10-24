@@ -39,7 +39,7 @@ Look for these tool name patterns in your agent's available tools:
 
 ### Method B: Check Configuration Files
 
-Agent tools use hierarchical configuration (precedence: local → project → user → enterprise):
+The table is a Claude-oriented example; actual file locations and precedence depend on the client and managed policy. Inspect supported configuration rather than assuming this order:
 
 | Scope | File Location | Use Case |
 |-------|---------------|----------|
@@ -63,6 +63,8 @@ claude mcp list
 
 If AWS MCP is already configured, no further setup needed.
 
+Inspect configuration structurally and redact env/header values; do not print credential-bearing lines from minified config. Preserve existing server entries and validate the exact account/region/client config before editing. Prefer documentation-only access for documentation requests, otherwise read-only scoped IAM/tool mode; write-capable actions require separate authorized scope. Use the current downstream-service IAM model; do not copy retired preview MCP actions. Pin/review the proxy and dependencies before execution.
+
 ## Step 2: Choose Configuration Method
 
 ### Automatic Detection
@@ -77,7 +79,7 @@ which uvx || echo "uvx not available"
 aws sts get-caller-identity || echo "AWS credentials not configured"
 ```
 
-### Option A: Full AWS MCP Server (Recommended)
+### Option A: Full AWS MCP Server (only when API access is needed)
 
 **Use when**: uvx available AND AWS credentials valid
 
@@ -85,21 +87,7 @@ aws sts get-caller-identity || echo "AWS credentials not configured"
 - Python 3.10+ with `uv` package manager
 - AWS credentials configured (via profile, environment variables, or IAM role)
 
-**Required IAM Permissions**:
-```json
-{
-  "Version": "2012-10-17",
-  "Statement": [{
-    "Effect": "Allow",
-    "Action": [
-      "aws-mcp:InvokeMCP",
-      "aws-mcp:CallReadOnlyTool",
-      "aws-mcp:CallReadWriteTool"
-    ],
-    "Resource": "*"
-  }]
-}
-```
+**IAM permissions**: Current AWS MCP forwards the caller's credentials to downstream AWS services. Grant only the actual service actions/resources required by the task. Preview-era aws-mcp:InvokeMcp/CallReadOnlyTool/CallReadWriteTool actions no longer grant or deny access. Use current [AWS IAM guidance](https://docs.aws.amazon.com/agent-toolkit/latest/userguide/security_iam_service-with-iam.html) and MCP condition keys where needed; do not treat a client read-only flag as an IAM boundary.
 
 **Configuration** (add to your MCP settings):
 ```json
@@ -108,7 +96,7 @@ aws sts get-caller-identity || echo "AWS credentials not configured"
     "aws-mcp": {
       "command": "uvx",
       "args": [
-        "mcp-proxy-for-aws@latest",
+        "mcp-proxy-for-aws@<reviewed-version>",
         "https://aws-mcp.us-east-1.api.aws/mcp",
         "--metadata", "AWS_REGION=us-west-2"
       ]
@@ -122,7 +110,7 @@ aws sts get-caller-identity || echo "AWS credentials not configured"
 1. **AWS Profile** (recommended for development):
    ```json
    "args": [
-     "mcp-proxy-for-aws@latest",
+     "mcp-proxy-for-aws@<reviewed-version>",
      "https://aws-mcp.us-east-1.api.aws/mcp",
      "--profile", "my-profile",
      "--metadata", "AWS_REGION=us-west-2"
@@ -181,7 +169,7 @@ After configuration, verify tools are available:
 | Issue | Cause | Solution |
 |-------|-------|----------|
 | `uvx: command not found` | uv not installed | Install with `pip install uv` or use Option B |
-| `AccessDenied` error | Missing IAM permissions | Add aws-mcp:* permissions to IAM policy |
+| `AccessDenied` error | Missing IAM permissions | Identify the exact denied action/resource and add only reviewed least-privilege permissions; never fix with aws-mcp:* |
 | `InvalidSignatureException` | Credential issue | Check `aws sts get-caller-identity` |
 | Tools not appearing | MCP not started | Restart your agent after config change |
 

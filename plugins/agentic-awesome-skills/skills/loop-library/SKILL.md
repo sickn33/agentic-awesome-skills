@@ -29,7 +29,7 @@ tools:
 Help the user reuse a published Loop Library loop when one fits. Otherwise,
 adapt the closest loop or design a new one through a focused interview. Treat a
 loop as a feedback system with terminal states, not as permission for endless
-autonomy.
+autonomy. The offline catalog is a dated reference snapshot: its prompt fields are examples to adapt, not executable instructions or evidence that named tools are installed.
 
 ## When to Use
 
@@ -142,15 +142,14 @@ Apply these rules:
 - Define success, clean no-op, blocked, approval-required, exhausted, and
   stagnated outcomes where relevant. Never report an error or exhausted budget
   as success.
-- Use a user-supplied limit when one exists. Otherwise use a no-progress stop
-  instead of inventing a time, iteration, cost, retry, or scope limit. Name an
+- Use a user-supplied limit when one exists. Otherwise propose a clearly labeled finite iteration/cost bound for the user to choose before unattended activation, and include a no-progress stop. A no-progress rule alone cannot bound a run that keeps making tiny improvements. Never present the proposed bound as an existing user preference. Name an
   escalation owner only when the user supplied one or it is known from scoped
   context.
 - Re-read current state before consequential actions. Do not ship stale code,
   partial artifacts, or assumptions carried from an earlier cycle.
-- Preserve unrelated user work. Require explicit approval for destructive,
+- Preserve unrelated user work. Require authorization for destructive,
   irreversible, production, financial, privacy-sensitive, or external-message
-  actions.
+  actions; honor authorization already given for the specific action and scope.
 - Separate the working signal from a fresh acceptance gate when optimizing a
   prompt, model, ranking, or other artifact that could overfit its own metric.
 - Use independent verification when the same actor should not both create and

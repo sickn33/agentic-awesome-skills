@@ -197,37 +197,7 @@ strings binary | grep "embed"
 
 ### Go Binary UUID Patching for C2 Client Enumeration (BSidesSF 2026)
 
-**Pattern (see-two):** A Go-compiled C2 client has a UUID embedded via `-ldflags -X`. The C2 server uses mTLS for authentication. To enumerate other clients and their files, patch the UUID to register as a new client, then use the C2 API to list all clients and download their exfiltrated files.
-
-**Approach:**
-1. Extract embedded UUID from Go build metadata: `go version -m client_binary`
-2. Binary-patch the UUID (simple byte replacement — Go strings have fixed-length backing arrays)
-3. Register with the C2 server using the patched binary (mTLS certs are embedded or in distfiles)
-4. Enumerate clients via API: `GET /api/clients` or iterate known endpoints
-5. List and download files from each client's GCS bucket or file store
-6. Grep downloaded files for the flag
-
-```bash
-# Extract Go build info
-go version -m ./client_binary | grep ldflags
-# Output shows: -X main.clientUUID=<uuid>
-
-# Patch UUID in binary (replace old UUID bytes with new UUID)
-python3 -c "
-import sys
-data = open('client_binary', 'rb').read()
-old_uuid = b'original-uuid-value-here'
-new_uuid = b'attacker-uuid-value-here'
-patched = data.replace(old_uuid, new_uuid)
-open('client_patched', 'wb').write(patched)
-"
-chmod +x client_patched
-./client_patched --register
-```
-
-**Key insight:** Go binaries embed string values from `-ldflags -X` directly in the binary data section. Since Go strings are `{ptr, len}` pairs pointing to backing byte arrays, replacing the UUID bytes (same length) produces a valid patched binary. The mTLS certificates authenticate the client to the server but don't bind to a specific UUID.
-
-**References:** BSidesSF 2026 "see-two"
+**Defensive case interpretation:** An embedded UUID is an identifier, not authentication. Inspect the binary and server-side identity binding offline. A same-length string replacement is not proof that registration, mTLS identity or authorization can be impersonated. Test only a local synthetic server that rejects mismatched certificate/client IDs and cross-client file access. Do not register patched clients with a live C2, enumerate victims or download exfiltrated files. Preserve the binary hash and distinguish build metadata from live storage values.
 
 ---
 
@@ -255,7 +225,7 @@ strings binary | grep "core::panicking"   # Panic infrastructure
 ### Symbol Demangling
 
 ```bash
-# Rust uses Itanium ABI mangling (same as C++)
+# Rust supports legacy _ZN-style and v0 _R mangling; Rust ABI and layout are not C++ ABI
 # rustfilt demangles Rust-specific symbols
 cargo install rustfilt
 nm binary | rustfilt | grep "main"
@@ -365,7 +335,7 @@ strings classes.dex | grep "kotlin"
 
 # Decompile
 jadx classes.dex                     # Best for Kotlin bytecode
-cfr classes.jar --kotlin             # CFR with Kotlin mode
+java -jar cfr.jar classes.jar        # produces Java-like output; do not assume a --kotlin mode
 fernflower classes.jar output/       # IntelliJ's decompiler
 
 # Kotlin-specific patterns in decompiled output:
@@ -400,7 +370,7 @@ strings binary | grep "konan"
 # Much harder to reverse — no reflection metadata
 # Uses LLVM backend, looks similar to C/C++ in disassembly
 # Key functions: InitRuntime, DeinitRuntime, CreateStablePointer
-# Memory management: automatic reference counting (not GC)
+# Memory management depends on Kotlin/Native version; modern runtimes use tracing garbage collection
 ```
 
 **Detection:** `kotlin.Metadata` annotations (JVM), `konan` strings (Native), `kotlin/` package paths.
@@ -432,7 +402,7 @@ def reverse_d_cipher(encrypted, num_functions=500):
     """D binaries may chain multiple transformation functions.
     Each function XORs with key character, then XORs with key length.
     Process in reverse order."""
-    result = encrypted[:]
+    result = bytearray(encrypted)
     for i in range(num_functions - 1, -1, -1):
         key = str(i) * 3  # e.g., "499499499" for function enc!("499")
         key_len = len(key)
@@ -461,7 +431,7 @@ Closures are structs where the first qword points to the info table/code. The in
 
 ```bash
 # Identify Haskell binary
-ldd ./binary | grep libHS
+readelf -d ./binary | grep libHS  # static dependency records, no target execution
 readelf -s ./binary | grep hs_main
 
 # Decompile with hsdecomp (github.com/gereeter/hsdecomp)
@@ -515,7 +485,9 @@ def char_at(n, offset):
     offset -= fsize(n-1)
     if offset < len(s2): return s2[offset]
     offset -= len(s2)
-    return char_at(n-1, offset)
+    if offset < fsize(n-1): return char_at(n-1, offset)
+    offset -= fsize(n-1)
+    return s3[offset]
 ```
 
 **Key insight:** GHC's CMM (C minus minus) intermediate representation preserves enough structure to identify algorithms. For recursive string constructions that double in size each level, compute segment sizes with memoization and binary-search for target indices instead of materializing the exponentially-growing string.
@@ -585,3 +557,7 @@ std::map<K,V>:
 std::unordered_map<K,V>:
   Hash table: {bucket_array, size, load_factor_max, ...}
 ```
+
+## ABI and solver limits
+
+Rust Vec/String field order and enum discriminants/niches are not a portable fixed layout; use target/compiler-specific evidence. Go register returns and map representations change across versions (newer maps need not use runtime.hmap); main.main is a logical application entry, not necessarily ELF e_entry. C++ RTTI/vtables and Swift string layouts depend on ABI. Same-sized weight or data structures alone do not establish semantics. Haskell patching requires relocations and ABI compatibility; copied code is not automatically valid. All runtime experiments require isolated authorized fixtures.

@@ -37,6 +37,13 @@ Picks:
 
 from __future__ import annotations
 
+# AAS adaptation: local-only explicit run gate; no automatic publication or telemetry.
+import os as _offline_env
+_offline_env.environ["HF_HUB_OFFLINE"] = "1"
+_offline_env.environ["HF_DATASETS_OFFLINE"] = "1"
+_offline_env.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
+from training_safety import prepare_run, safe_model, load_dataset, group_split
+
 import argparse
 import logging
 import os
@@ -44,7 +51,7 @@ from contextlib import nullcontext
 
 import numpy as np
 import torch
-from datasets import DatasetDict, load_dataset
+from datasets import DatasetDict
 
 from sentence_transformers import (
     SentenceTransformer,
@@ -115,7 +122,7 @@ def setup_logging():
     for noisy in ("httpx", "httpcore", "huggingface_hub", "urllib3", "filelock", "fsspec"):
         logging.getLogger(noisy).setLevel(logging.WARNING)
     if torch.cuda.is_available():
-        torch.set_float32_matmul_precision("high")  # TF32 on Ampere+, no quality loss
+        torch.set_float32_matmul_precision("high")  # TF32 changes numerical precision; benchmark on this task.
 
 
 def load_parallel_data() -> tuple[DatasetDict, DatasetDict]:
@@ -133,9 +140,9 @@ def load_parallel_data() -> tuple[DatasetDict, DatasetDict]:
             train_ds = train_ds.select(range(MAX_SENTENCES_PER_LANGUAGE))
 
         try:
-            eval_ds = load_dataset(PARALLEL_DATASET, subset, split="dev").select(range(EVAL_SENTENCES_PER_LANGUAGE))
+            eval_ds = load_dataset(PARALLEL_DATASET, subset, split="dev").select(range(min(EVAL_SENTENCES_PER_LANGUAGE, int(os.environ.get("ST_MAX_ROWS", "200")))))
         except Exception:
-            split = train_ds.train_test_split(test_size=EVAL_SENTENCES_PER_LANGUAGE, shuffle=True, seed=12)
+            split = train_ds.train_test_split(test_size=min(EVAL_SENTENCES_PER_LANGUAGE, max(1, len(train_ds)//5)), shuffle=True, seed=12)
             train_ds, eval_ds = split["train"], split["test"]
 
         train_dict[subset] = train_ds
@@ -173,6 +180,7 @@ def build_evaluator(eval_dict: DatasetDict, teacher: SentenceTransformer) -> Seq
 
 
 def main() -> None:
+    prepare_run()
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--eval-only", type=str, default=None, help="Skip training; load this saved model and run only the evaluator."
@@ -183,8 +191,8 @@ def main() -> None:
 
     if cli.eval_only:
         logging.info(f"Eval-only mode: loading model from {cli.eval_only}")
-        student = SentenceTransformer(cli.eval_only)
-        teacher = SentenceTransformer(TEACHER_MODEL_NAME)
+        student = safe_model(SentenceTransformer, cli.eval_only)
+        teacher = safe_model(SentenceTransformer, TEACHER_MODEL_NAME)
         _, eval_dict = load_parallel_data()
         evaluator = build_evaluator(eval_dict, teacher)
         with autocast_ctx():
@@ -192,10 +200,10 @@ def main() -> None:
         return
 
     logging.info(f"Loading teacher: {TEACHER_MODEL_NAME}")
-    teacher = SentenceTransformer(TEACHER_MODEL_NAME)
+    teacher = safe_model(SentenceTransformer, TEACHER_MODEL_NAME)
 
     logging.info(f"Loading student: {STUDENT_MODEL_NAME}")
-    student = SentenceTransformer(
+    student = safe_model(SentenceTransformer,
         STUDENT_MODEL_NAME,
         model_card_data=SentenceTransformerModelCardData(
             language=[SOURCE_LANGUAGE, *TARGET_LANGUAGES],
@@ -246,13 +254,13 @@ def main() -> None:
     args = SentenceTransformerTrainingArguments(
         output_dir=OUTPUT_DIR,
         num_train_epochs=3,
-        max_steps=1 if SMOKE_TEST else -1,
+        max_steps=1 if SMOKE_TEST else int(os.environ["ST_MAX_STEPS"]),
         per_device_train_batch_size=TRAIN_BATCH_SIZE,
         per_device_eval_batch_size=TRAIN_BATCH_SIZE,
         learning_rate=2e-5,
         weight_decay=0.01,
-        warmup_steps=0.1,
-        bf16=True,
+        warmup_steps=0,
+        bf16=torch.cuda.is_available() and torch.cuda.is_bf16_supported(),
         eval_strategy="steps",
         eval_steps=0.1,
         save_strategy="steps",
@@ -263,7 +271,7 @@ def main() -> None:
         load_best_model_at_end=True,
         metric_for_best_model="eval_sequential_score",
         greater_is_better=True,
-        report_to="none" if SMOKE_TEST else "trackio",
+        report_to="none",
         run_name=RUN_NAME,
         seed=12,
     )
@@ -276,32 +284,21 @@ def main() -> None:
         loss=loss,
         evaluator=evaluator,
     )
-    if not SMOKE_TEST:
-        log_trackio_dashboard()
+
     trainer.train()
 
     logging.info("Final student evaluation:")
     with autocast_ctx():
         score = evaluator(student)["sequential_score"]
     delta = score - baseline_eval
-    verdict = "WIN" if delta >= 0.005 else "MARGINAL" if delta >= 0 else "REGRESSION"
+    verdict = "SMOKE_ONLY" if SMOKE_TEST else "OBSERVED_GAIN" if delta >= 0.005 else "MARGINAL" if delta >= 0 else "REGRESSION"
     logging.info(f"VERDICT: {verdict} | score={score:.4f} | baseline={baseline_eval:.4f} | delta={delta:+.4f}")
 
     final_dir = f"{OUTPUT_DIR}/final"
     student.save_pretrained(final_dir)
     logging.info(f"Saved to {final_dir}")
 
-    if SMOKE_TEST:
-        logging.info("SMOKE_TEST=1: skipping Hub push")
-        return
-
-    try:
-        commit_url = student.push_to_hub(RUN_NAME)
-        logging.info(f"Pushed model to {commit_url.rsplit('/commit/', 1)[0]}")
-    except Exception:
-        import traceback
-
-        logging.error(f"Hub push failed:\n{traceback.format_exc()}")
+    logging.info("Saved locally; publication is a separate explicitly authorized action.")
 
 
 if __name__ == "__main__":

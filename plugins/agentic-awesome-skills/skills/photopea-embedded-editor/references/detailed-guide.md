@@ -47,7 +47,7 @@ import Photopea from "photopea";
 | `pea.openFromURL(url, asSmart)` | Open remote URL as new doc or smart object layer |
 | `pea.exportImage(type)` | Export current doc; returns `Blob` (`"png"` or `"jpg"`) |
 
-All methods return Promises — always `await` or `.then()`.
+Await asynchronous wrapper operations and catch failures. Constructor calls are not Promises. The wrapper API is version-specific; no wrapper implementation is bundled for verification. Serialize operations per iframe and invalidate/reload a timed-out session before issuing more commands, since a timeout does not cancel an in-flight Photopea script.
 
 ---
 
@@ -100,7 +100,10 @@ await pea.openFromURL("https://example.com/overlay.png", true);
 
 // Local file (user input → ArrayBuffer → loadAsset)
 document.getElementById("fileInput").addEventListener("change", async (e) => {
-  const buf = await e.target.files[0].arrayBuffer();
+  const file = e.target.files?.[0];
+  if (!file) return;
+  if (file.size > 25 * 1024 * 1024) throw new Error("File exceeds this example’s 25 MiB limit");
+  const buf = await file.arrayBuffer();
   await pea.loadAsset(buf);
 });
 
@@ -158,6 +161,7 @@ async function download(pea, filename = "export.png") {
     download: filename
   });
   a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 }
 ```
 
@@ -229,37 +233,38 @@ Plugin config:
 ### addImageAndWait — robust async layer insertion
 ```js
 async function addImageAndWait(pea, imgURI) {
-  let count = "done";
-  while (count === "done")
-    count = (await pea.runScript(`app.echoToOE(app.activeDocument.layers.length)`))[0];
-  count = parseInt(count);
-
-  const imageUrlLiteral = JSON.stringify(imgURI);
-  await pea.runScript(`app.open(${imageUrlLiteral}, null, true);`);
-
-  return new Promise((resolve) => {
-    const check = async () => {
-      const n = parseInt((await pea.runScript(
-        `app.echoToOE(app.activeDocument.layers.length)`
-      ))[0]);
-      n === count + 1 ? resolve() : setTimeout(check, 50);
-    };
-    check();
-  });
+  const deadline = Date.now() + 20000;
+  const call = (script) => Promise.race([
+    pea.runScript(script),
+    new Promise((_, reject) => setTimeout(() => reject(new Error('Photopea timed out; reset session before reuse')), Math.max(0, deadline - Date.now())))
+  ]);
+  const readCount = async () => {
+    const out = await call('app.echoToOE(app.activeDocument.layers.length)');
+    const count = Number(out[0]);
+    if (!Number.isInteger(count) || count < 0) throw new Error('Missing layer count');
+    return count;
+  };
+  const count = await readCount();
+  await call(`app.open(${JSON.stringify(imgURI)}, null, true);`);
+  while (Date.now() < deadline) {
+    if (await readCount() === count + 1) return;
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  throw new Error('Layer insertion unconfirmed; stop and reset session');
 }
 ```
+
+Run this only with exclusive document access: layer-count changes do not identify a specific asset if the user or another script edits concurrently.
 
 ### getDocumentAsImage — returns `<img>` element
 ```js
 async function getDocumentAsImage(pea) {
   const result = await pea.runScript(`app.activeDocument.saveToOE('png')`);
-  return new Promise((resolve) => {
-    const fr = new FileReader();
-    fr.addEventListener("load", (e) => {
-      const img = new Image(); img.src = e.target.result; resolve(img);
-    });
-    fr.readAsDataURL(new Blob([result[0]], { type: "image/png" }));
-  });
+  if (!(result[0] instanceof ArrayBuffer)) throw new Error('Expected PNG bytes');
+  const url = URL.createObjectURL(new Blob([result[0]], { type: 'image/png' }));
+  const img = new Image();
+  try { img.src = url; await img.decode(); return img; }
+  finally { URL.revokeObjectURL(url); }
 }
 ```
 
@@ -269,6 +274,8 @@ async function getDocumentAsImage(pea) {
 ## Real-World Patterns
 
 ### Pattern A — Open + Export UI
+
+Minimal sketch: additionally disable controls until ready, show initialization/export errors, enforce file type/size limits, and serialize operations. The React snippet above does not implement cancellation/listener teardown and is not StrictMode-safe production lifecycle code; an unresolved createEmbed Promise can create duplicates. Implement and verify a version-specific owned-iframe/listener cleanup mechanism before mounting/unmounting.
 ```html
 <input type="file" id="fileInput" accept="image/*,.psd">
 <button id="exportBtn">Export PNG</button>
@@ -279,14 +286,18 @@ let pea;
 Photopea.createEmbed(document.getElementById("editor")).then(p => pea = p);
 
 document.getElementById("fileInput").addEventListener("change", async e => {
-  await pea.loadAsset(await e.target.files[0].arrayBuffer());
+  if (!pea || !e.target.files?.[0]) return;
+  try { await pea.loadAsset(await e.target.files[0].arrayBuffer()); }
+  catch (error) { console.error("Import failed", error); }
 });
 document.getElementById("exportBtn").addEventListener("click", async () => {
+  if (!pea) return;
   const blob = await pea.exportImage("png");
   const a = Object.assign(document.createElement("a"), {
     href: URL.createObjectURL(blob), download: "export.png"
   });
   a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
 });
 </script>
 ```
@@ -330,7 +341,7 @@ async function batchWatermark(pea, imageURLs, watermarkURL) {
 
 > All code in this section runs **inside `pea.runScript("...")`** strings.
 > Photopea implements the Adobe Photoshop CC 2015 JavaScript scripting interface.
-> Any Photoshop script targeting that version should work in Photopea.
+> Compatibility is partial and runtime-dependent. Verify each used method/enum with current Photopea documentation and a disposable fixture; the large table below is reference material, not a tested compatibility matrix.
 
 ---
 
@@ -462,7 +473,7 @@ doc.flipCanvas(Direction.HORIZONTAL);
 doc.changeMode(ChangeMode.GRAYSCALE);
 
 // One undo step for many operations
-doc.suspendHistory("Batch Edit", "action");
+doc.suspendHistory("Batch Edit", "app.activeDocument.activeLayer.opacity = 80;");
 // (Inside Photopea, all ops become one history state)
 
 // Export PNG to filesystem (triggers ZIP download)
@@ -1192,9 +1203,10 @@ var l = doc.layers.getByName("SmartObj");
 doc.activeLayer = l;
 executeAction(stringIDToTypeID("placedLayerEditContents"));
 // Smart Object is now the active document
-doc.activeLayer.rotate(90);
-doc.save();
-doc.close();
+var smartDoc = app.activeDocument;
+smartDoc.activeLayer.rotate(90);
+smartDoc.save();
+smartDoc.close();
 
 // Apply Hue/Saturation as destructive adjustment
 var desc = new ActionDescriptor();
@@ -1229,7 +1241,7 @@ function selectLayerByName(name) {
 | `createEmbed` never resolves | Container has no size | Add `width` + `height` CSS to the container `<div>` |
 | `runScript` returns `["done"]` with no data | No `echoToOE` in script | Add `app.echoToOE(value)` for anything you want back |
 | `result[0]` is `"done"`, not the expected value | `echoToOE` not reached | Check script logic for early exit or errors |
-| Images won't load (network error) | CORS | Server must respond with `Access-Control-Allow-Origin: *` |
+| Images won't load (network error) | CORS | Configure CORS for the exact requesting origin; do not use wildcard for credentialed/private assets |
 | `openFromURL(url, true)` layer not ready | Async loading lag | Use `addImageAndWait` utility |
 | `exportImage` only PNG/JPG | `exportImage` limitation | Use `runScript("saveToOE('webp:0.85')")` for other formats |
 | Pixel coordinates behave unexpectedly | Wrong ruler units | Always set `app.preferences.rulerUnits = Units.PIXELS` first |
@@ -1237,7 +1249,7 @@ function selectLayerByName(name) {
 | Layer not found by name | Wrong layer level | Layers are scoped; use recursive search for nested layers |
 | `layer.bounds[0]` returns a UnitValue, not number | Ruler units issue | Force `Units.PIXELS` before reading bounds |
 | Smart Object edit hangs | Missing `doc.save(); doc.close()` | Always save + close when done editing SO |
-| React double-mount in dev | Strict Mode | Use `if (peaRef.current) return` guard in `useEffect` |
+| React double-mount in dev | Strict Mode | An async ref guard is insufficient; implement cancellation, owned iframe cleanup and wrapper listener teardown |
 
 ---
 

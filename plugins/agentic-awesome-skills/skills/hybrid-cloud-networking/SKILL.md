@@ -1,7 +1,7 @@
 ---
 name: hybrid-cloud-networking
 description: "Configure secure, high-performance connectivity between on-premises and cloud environments using VPN, Direct Connect, and ExpressRoute."
-risk: safe
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -45,6 +45,8 @@ Establish secure, reliable network connectivity between on-premises data centers
 - Migrate to cloud gradually
 
 ## Connection Options
+
+Confirm the exact account/subscription/project, CIDRs, routing policy and maintenance window before provisioning or advertising routes. The throughput/SLA figures below are version/topology-dependent examples, not guarantees; verify current provider documentation and prerequisites. Private circuits are not inherently end-to-end encrypted: select supported MACsec/IPsec/TLS where required. Avoid advertising the example entire 10.0.0.0/8 unless explicitly intended; overlapping routes or broad propagation can leak traffic or break connectivity. Plan rollback and test MTU, asymmetric routing, DNS and failover. Dual tunnels to one device/facility are not independent physical redundancy.
 
 ### AWS Connectivity
 
@@ -224,7 +226,7 @@ resource "aws_vpn_connection" "secondary" {
 ```bash
 # AWS VPN
 aws ec2 describe-vpn-connections
-aws ec2 get-vpn-connection-telemetry
+# Inspect VgwTelemetry in describe-vpn-connections and CloudWatch VPN metrics
 
 # Azure VPN
 az network vpn-connection show

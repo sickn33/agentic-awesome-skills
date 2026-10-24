@@ -15,7 +15,7 @@ tools: [claude, cursor, gemini, codex, antigravity]
 
 ## Overview
 
-This skill transforms a raw game concept into a fully structured Unity development plan with AI-generated assets, scenes, music, scripts, and deployment-ready builds. It guides the agent through a 5-phase pipeline — from extracting core game dimensions to producing ready-to-use AI prompts for every asset category — using the latest Unity 6+ features and AI tooling ecosystem. Unlike generic Unity reference skills, this skill is workflow-driven: the user provides an idea, and the agent delivers a complete, actionable game development roadmap.
+This skill transforms a raw game concept into a fully structured Unity development plan with specifications for assets, scenes, music, scripts and build validation. A plan or prompt kit is not a completed Unity project or verified build. It guides the agent through a 5-phase pipeline — from extracting core game dimensions to producing ready-to-use AI prompts for every asset category — using the latest Unity 6+ features and AI tooling ecosystem. Unlike generic Unity reference skills, this skill is workflow-driven: the user provides an idea, and the agent delivers a complete, actionable game development roadmap.
 
 ## When to Use This Skill
 
@@ -31,7 +31,7 @@ This skill transforms a raw game concept into a fully structured Unity developme
 
 ### Master Pipeline
 
-Execute these phases in order. Each phase produces concrete deliverables before advancing.
+Use these phases for the requested scope. Planning does not authorize paid generation, package/MCP installation, telemetry, store publication or submission; perform those only when the user authorizes the action and target.
 
 ```
 PHASE 1: IDEATION ──▶ PHASE 2: BLUEPRINT ──▶ PHASE 3: GENERATION ──▶ PHASE 4: ASSEMBLY ──▶ PHASE 5: DEPLOYMENT
@@ -59,11 +59,11 @@ Extract and clarify these dimensions from the user's game idea. Ask only for wha
 
 **Also provide:**
 1. **Top 3 Reference Games** — What they do well, what the user can learn
-2. **Market Gap** — What opportunity exists that competitors miss
+2. **Market Gap Hypothesis** — What opportunity to research; distinguish evidence from assumptions
 3. **Core Differentiator** — The one unique thing about this game
 4. **Risk Assessment** — Technical and market risks with mitigations
 
-**Scope Calibration:**
+**Illustrative Scope Calibration (not delivery estimates):**
 
 | Scope | Timeline | Team Size | Feature Budget |
 |-------|----------|-----------|----------------|
@@ -164,7 +164,7 @@ Generate specifications for Unity UI Toolkit or AI image generation including:
 #### Project Initialization Checklist
 
 - Unity version (recommend latest Unity 6 LTS)
-- Render pipeline (URP for mobile/stylized, HDRP for high-fidelity, Built-in for 2D)
+- Render pipeline (URP for mobile/stylized, HDRP for high-fidelity, URP 2D Renderer or Built-in for 2D depending on requirements)
 - Build settings, player settings (color space, scripting backend, API compatibility)
 - Essential packages (Input System, Cinemachine, TextMeshPro, Addressables, Unity AI Assistant)
 - Git LFS configuration for large assets
@@ -181,7 +181,7 @@ Generate specifications for Unity UI Toolkit or AI image generation including:
 
 - GameManager → Singleton or Service Locator
 - Events → Observer Pattern (C# events + ScriptableObject Events)
-- Save System → JSON serialization + encryption
+- Save System → Versioned JSON, validated loading, atomic writes and recovery; encryption only with a defined threat/key-management model
 - Object Pooling → Generic pool for bullets, enemies, VFX
 - State Machine → Player states, game states, enemy AI
 - Audio → Singleton with Audio Mixer Groups
@@ -191,13 +191,15 @@ Generate specifications for Unity UI Toolkit or AI image generation including:
 
 #### Unity AI Assistant & MCP Integration
 
-- Setup steps for Unity AI Assistant (Unity 6.3+)
+- Verify current Unity AI Assistant package, editor compatibility, account and pricing before setup
 - MCP server configuration for external IDE/agent control
 - Example in-editor prompts for scene manipulation, scripting, profiling
 
 ### Phase 5: Quality & Deployment
 
 #### Performance Budgets
+
+Illustrative starting targets only; rendering pipeline, hardware and platform requirements determine real budgets.
 
 |                    | Mobile    | PC        | Console   |
 |--------------------|-----------|-----------|-----------|
@@ -255,7 +257,7 @@ App icon, feature graphic, screenshots, promotional video, descriptions, keyword
 - ✅ **Start with the core loop** — Nail the 30-second cycle before anything else
 - ✅ **Profile before optimizing** — Use Unity Profiler to find real bottlenecks
 - ✅ **Use ScriptableObjects for data** — Decouple data from logic for flexibility
-- ✅ **Generate multiple AI asset variations** — Pick the best from 3–5 generations
+- ✅ **Generate multiple AI asset variations** — Only within the approved call/cost budget; inspect topology, rig, scale, PBR maps and rights rather than assuming prompt constraints were met
 - ✅ **Test on real devices early** — Emulators miss platform-specific issues
 - ✅ **Version control from day one** — Git + LFS, commit often
 - ❌ **Don't hardcode tool choices** — Always present alternatives to the user

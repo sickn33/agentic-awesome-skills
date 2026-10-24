@@ -63,10 +63,10 @@ struct ClayCard: View {
         VStack(spacing: 16) {
             Image(systemName: "cloud.sun.fill")
                 .font(.system(size: 48))
-                .foregroundColor(.white)
+                .foregroundColor(Color(white: 0.15))
             Text("Claymorphic Card")
                 .font(.system(size: 20, weight: .bold, design: .rounded))
-                .foregroundColor(.white)
+                .foregroundColor(Color(white: 0.15))
         }
         .padding(40)
         .background(Color(red: 0.97, green: 0.71, blue: 0.65)) // Soft coral
@@ -134,28 +134,17 @@ class _ClayCardState extends State<ClayCard> with SingleTickerProviderStateMixin
                 blurRadius: 24,
               ),
             ],
-            // Gradient border for the clay volume effect
-            border: GradientBorder(
-              gradient: LinearGradient(
-                colors: [
-                  Colors.white.withOpacity(0.5),
-                  Colors.transparent,
-                  Colors.black.withOpacity(0.1),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              width: 3,
-            ),
+            // Standard Flutter fallback; a gradient border needs a custom painter.
+            border: Border.all(color: Colors.white.withOpacity(0.5), width: 3),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.wb_sunny, size: 48, color: Colors.white),
+              const Icon(Icons.wb_sunny, size: 48, color: Colors.black87),
               const SizedBox(height: 16),
               const Text('Claymorphic Card',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold,
-                  color: Colors.white)),
+                  color: Colors.black87)),
             ],
           ),
         ),
@@ -211,7 +200,7 @@ const ClayCard = () => {
       }}>
         <Text style={{ fontSize: 48 }}>☀️</Text>
         <Text style={{
-          fontSize: 20, fontWeight: '700', color: '#FFF', marginTop: 16,
+          fontSize: 20, fontWeight: '700', color: '#262626', marginTop: 16,
         }}>
           Claymorphic Card
         </Text>
@@ -265,11 +254,11 @@ fun ClayCard() {
         contentAlignment = Alignment.Center,
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            Icon(Icons.Default.WbSunny, tint = Color.White,
+            Icon(Icons.Default.WbSunny, contentDescription = null, tint = Color(0xFF262626),
                 modifier = Modifier.size(48.dp))
             Spacer(Modifier.height(16.dp))
             Text("Claymorphic Card",
-                fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color.White)
+                fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color(0xFF262626))
         }
     }
 }

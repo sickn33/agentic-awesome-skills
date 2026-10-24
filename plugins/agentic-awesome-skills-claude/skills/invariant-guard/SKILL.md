@@ -120,7 +120,7 @@ function findMajority(arr: number[]): number | null {
 }
 ```
 
-This implementation fails on `[1,2,3]` (returns `3`, expected `null`) and `[2,2,1,1]` (returns `1`, expected `null`). The voting loop is correct; the postcondition is wrong.
+This implementation fails on `[1,2,3]` (returns `3`, expected `null`) and `[2,2,1,1]` (returns `2`, expected `null`). The voting loop is correct; the postcondition is wrong.
 
 **Why the protocol catches it.** Writing **step 1 (function contract)** forces the postcondition in plain language:
 
@@ -128,7 +128,7 @@ This implementation fails on `[1,2,3]` (returns `3`, expected `null`) and `[2,2,
 
 Then writing **step 2 (loop invariant)** forces the invariant of the voting pass:
 
-> If a strict majority element exists in `arr`, it equals `candidate` when the loop exits.
+> The processed prefix can be partitioned into pairs of unequal values plus `count` copies of `candidate`. This cancellation invariant implies the final candidate is the majority if a strict majority exists.
 
 These two statements are not equivalent. The loop invariant guarantees "if a majority exists, it is the candidate" — not "the candidate is a majority." Once you write both down, the gap is visible: you need a second pass to verify, or the postcondition is unmet.
 
@@ -139,7 +139,8 @@ function findMajority(arr: number[]): number | null {
   if (arr.length === 0) return null;
   // Pass 1: vote.
   let candidate = arr[0], count = 0;
-  // inv: if a strict majority exists in arr, it equals candidate at every count===0 reset.
+  // inv: processed prefix = unequal canceled pairs plus count copies of candidate.
+  // term: the finite array iterator advances once per iteration.
   for (const x of arr) {
     if (count === 0) candidate = x;
     if (x === candidate) count++; else count--;
@@ -173,7 +174,7 @@ Most "I know binary search" implementations are written for "find any match." Th
 function leftmost(a: number[], target: number): number {
   let lo = 0, hi = a.length - 1;
   while (lo <= hi) {
-    const mid = (lo + hi) >> 1;
+    const mid = lo + Math.floor((hi - lo) / 2);
     if (a[mid] === target) return mid;       // returns ANY occurrence
     if (a[mid] < target) lo = mid + 1; else hi = mid - 1;
   }
@@ -189,13 +190,13 @@ The loop invariant ("target lies in `a[lo..hi]` if anywhere") is satisfied. But 
 ```ts
 function leftmost(a: number[], target: number): number {
   // contract:
-  //   pre:  a is sorted ascending
+  //   pre:  a contains finite numbers sorted ascending; target is finite
   //   post: returns smallest i with a[i] === target, or -1 if absent
   let lo = 0, hi = a.length;                 // half-open [lo, hi)
-  // inv: every index < lo has a[i] < target; every index ≥ hi has a[i] > target OR is past leftmost match
-  // term: hi - lo strictly halves each iteration
+  // inv: 0 <= lo <= hi <= n; indices < lo are < target; indices >= hi are >= target
+  // term: nonnegative integer hi - lo strictly decreases each iteration
   while (lo < hi) {
-    const mid = (lo + hi) >> 1;
+    const mid = lo + Math.floor((hi - lo) / 2);
     if (a[mid] < target) lo = mid + 1; else hi = mid;
   }
   // exit: lo === hi, and by invariant lo is the leftmost index where a[lo] >= target
@@ -213,10 +214,10 @@ Same loop shape. The difference is the contract was written first — and the lo
 | Two-pointer (sorted) | `target (if any) lies in a[lo..hi]` | `hi − lo` strictly decreases |
 | Binary search | `target (if present) ∈ a[lo..hi]` and `a[lo..hi]` non-empty | `hi − lo` strictly halves |
 | Sliding window | window `[l..r)` satisfies the constraint; answer ≥ best so far | `r` advances at least once per outer iter |
-| BFS | every node at distance < d has been popped; queue contains some at distance d | strict node count decrease per pop |
+| BFS | every node at distance < d has been popped; queue contains some at distance d | finite graph; each node enqueued at most once, processed count increases |
 | DFS / recursion on tree | result for subtree rooted at v = combine(children results) | depth (or remaining nodes) strictly decreases |
 | Divide and conquer | result on `a[lo..hi]` = combine(results on the two halves) | `hi − lo` strictly halves |
-| Greedy with priority queue | extracted item is globally optimal for the remaining problem | heap size strictly decreases per extract |
+| Greedy with priority queue | extracted item is globally optimal for the remaining problem | prove a bounded total number of insertions/extractions; heap size may grow |
 | Union-Find op | `find(x)` always returns the canonical root of x's component | tree height bounded by O(log n) (with rank) |
 | In-place partition | `a[0..i)` < pivot; `a[i..j)` ≥ pivot; `a[j..n)` unseen | `n − j` strictly decreases |
 
@@ -227,7 +228,7 @@ Same loop shape. The difference is the contract was written first — and the lo
 | Array / list | empty, singleton, all-equal, sorted, reversed, with duplicates |
 | String | empty, single char, all whitespace, unicode (surrogates, combining), bytes vs code points |
 | Integer | 0, 1, −1, MIN, MAX, MAX − 1, near overflow in arithmetic, division by 0 |
-| Float | 0.0, −0.0, NaN, ±Inf, denormal, exact comparison should be ε-based |
+| Float | 0.0, −0.0, NaN, ±Inf, denormal, choose exact or tolerance semantics from the contract; no universal epsilon |
 | Map / dict | empty, missing key (default vs error), key collision semantics |
 | Tree / graph | empty, single node, cycle (if undirected), self-loop, multigraph, disconnected |
 | Stream / iterator | empty, infinite, single yield, exception mid-iteration |
@@ -257,8 +258,8 @@ Code you emit must:
 | "I know this algorithm — single pass, done." | Knowing the loop ≠ knowing the contract. The trap usually lives in the postcondition the loop does not enforce. |
 | "I traced it in my head, it works." | Mental tracing skips edge cases. Write the invariant; check it implies the postcondition. |
 | "Edge cases are obvious." | Then write them down in 30 seconds. If they are obvious, the table is cheap. If they are not, the table just saved you. |
-| "Tests will catch it." | Tests catch the examples you thought of. The trap is the example you did not. Postconditions catch all examples. |
-| "The postcondition is implied." | If it were, the natural loop invariant would equal it. When they differ (Boyer–Moore, leftmost search, QuickSelect), you need a second pass, an extra check, or auxiliary state. |
+| "Tests will catch it." | Tests catch the examples you thought of. The trap is the example you did not. A correctly proved postcondition covers its assumptions; writing it alone proves nothing. |
+| "The postcondition is implied." | An invariant need not equal the postcondition; it must imply it together with the exit condition and preconditions. When they differ (Boyer–Moore, leftmost search, QuickSelect), you need a second pass, an extra check, or auxiliary state. |
 | "Adding a verification pass feels redundant." | Boyer–Moore voting + verification is still O(n). "Feels redundant" is the rationalization that ships the bug. |
 
 ## Red flags — STOP and write the invariant first

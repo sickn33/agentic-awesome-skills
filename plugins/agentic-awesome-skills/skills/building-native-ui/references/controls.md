@@ -50,13 +50,13 @@ const [index, setIndex] = useState(0);
 - Keep labels short (1-2 words)
 - Avoid custom colors — native styling adapts to dark mode
 
-### With Icons (iOS 14+)
+### Text segments (portable package API)
 
 ```tsx
 <SegmentedControl
   values={[
-    { label: "List", icon: "list.bullet" },
-    { label: "Grid", icon: "square.grid.2x2" },
+    "List",
+    "Grid",
   ]}
   selectedIndex={index}
   onChange={({ nativeEvent }) => setIndex(nativeEvent.selectedSegmentIndex)}
@@ -174,21 +174,9 @@ const [date, setDate] = useState(new Date());
 
 ## Stepper
 
-Increment/decrement numeric values.
-
-```tsx
-import { Stepper } from "react-native";
-import { useState } from "react";
-
-const [count, setCount] = useState(0);
-
-<Stepper
-  value={count}
-  onValueChange={setCount}
-  minimumValue={0}
-  maximumValue={10}
-/>;
-```
+React Native core does not export Stepper. Use a version-compatible native UI
+package or accessible Pressable decrement/increment buttons with bounded state
+updates. Provide labels and disabled states at the minimum/maximum.
 
 ## TextInput
 
@@ -263,7 +251,7 @@ const [selected, setSelected] = useState("js");
 ## Best Practices
 
 - **Haptics**: Switch and DateTimePicker have built-in haptics — don't add extra
-- **Accessibility**: Native controls have proper accessibility labels by default
+- **Accessibility**: Native controls expose roles and values; supply meaningful labels and test assistive technology
 - **Dark Mode**: Avoid custom colors — native styling adapts automatically
 - **Spacing**: Use consistent padding around controls (12-16pt)
 - **Labels**: Place labels above or to the left of controls

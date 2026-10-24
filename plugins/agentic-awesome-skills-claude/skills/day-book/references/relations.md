@@ -4,7 +4,7 @@ Link fields: `Source Documents`
 
 `Source Documents` points at the filing register, so a day-book line can be traced back to the
 voucher, receipt or bank advice behind it. In SQL it is `VARCHAR(255)` with a comment rather than
-a foreign key, and in Notion it resolves only once the filing register has been imported. The
+a foreign key, and in Notion it requires importing the target register, creating a Relation property and explicitly linking each target page; CSV does not resolve it automatically. The
 `VARCHAR(255)` with a comment is deliberate: no `FOREIGN KEY` is declared to a table this build
 does not create.
 

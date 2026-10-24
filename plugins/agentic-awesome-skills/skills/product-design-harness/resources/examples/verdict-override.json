@@ -1,0 +1,29 @@
+{
+  "override_id": "override-example-001",
+  "review_id": "example-stop-001",
+  "overridden_verdict": "stop_reframe",
+  "acknowledged_weakest_flow": "evidence",
+  "authorized_scope": {
+    "may_do": [
+      "Draw a paper prototype of a draft-review queue using synthetic text.",
+      "Inspect twenty synthetic ticket examples without writing product code or contacting customers."
+    ],
+    "must_not_do": [
+      "Send any AI-written reply to a customer without human approval.",
+      "Announce, demo externally, or sell the feature."
+    ],
+    "must_ask": [
+      "Who reviews every draft during the trial, by name?"
+    ]
+  },
+  "accountable_owner": "Jordan Lee, founder",
+  "rationale": "Fictional example: an owner requests a paper-only learning exercise while accepting the evidence gap. This is neither a cryptographic signature nor authority for product code, customer data or external actions.",
+  "expires_at": "2099-01-01T00:00:00Z",
+  "tripwires": [
+    "Any AI-drafted reply reaches a customer without human approval.",
+    "The partner demo is cancelled or moved beyond the override window."
+  ],
+  "renewal_requires": [
+    "Twenty synthetic paper-prototype observations recorded as explicitly simulated evidence."
+  ]
+}

@@ -19,7 +19,7 @@ To provide a consolidated guide of patterns and best practices for creating and 
 This skill should be used when:
 - The user asks about "boas praticas do sankhya" or "Sankhya best practices".
 - The user mentions "dashboard sankhya" or is working on a Sankhya BI dashboard.
-- The user asks for anything related to the word "Sankhya".
+- The request specifically concerns Sankhya dashboard/JSP/BI implementation or review.
 - The user wants to create or modify code files for Sankhya dashboards.
 
 ## Core Capabilities
@@ -30,6 +30,10 @@ This skill should be used when:
 4. **BI Construction Guide**: Use the HTML5 component flow in BI to ensure correct rendering, reactivity, and navigation.
 
 ## Patterns
+
+### Contrato de versão, dados e autorização
+
+Os trechos são exemplos independentes, não um componente compilado ou uma API certificada. Confirme versão Sankhya/JSTL, taglibs disponíveis, banco, esquema, binds e eventos do container na documentação/instância autorizada. snk:query, executeQuery, openLevel, CODUSU_LOG e STP_GET_CODUSULOGADO precisam do contrato real; uma variável JSP não é automaticamente bind SQL. Não execute consultas amplas, DBExplorer, uploads/publicação ou alterações transacionais sem escopo e orçamento autorizados. Use dados sintéticos, limites/paginação e identidade de sessão derivada no servidor.
 
 ### Melhores Práticas de Código
 Aplicar padrões de JSP/JSTL e organização server-side para reduzir erros de compilação, falhas de renderização e regressões em dashboards/telas.
@@ -82,28 +86,27 @@ Aplicar padrões de JSP/JSTL e organização server-side para reduzir erros de c
     </c:when>
     <c:otherwise>
         <c:forEach var="linha" items="${qDados.rows}">
-            ${linha.NUNOTA}
+            <c:out value="${linha.NUNOTA}" />
         </c:forEach>
     </c:otherwise>
 </c:choose>
 ```
 
-**Sanitização de parâmetros antes da SQL**
+**Validação de tipo e autorização antes da SQL**
 - Normalizar valor de entrada.
-- Remover aspas (`"` e `&quot;`) antes de injetar em query.
-- Definir fallback seguro para evitar SQL inválida.
+- Não remover aspas como defesa SQL: rejeite entradas fora do tipo/faixa e use binds reais; nomes de tabelas/colunas exigem allowlist estática.
+- Ausência de parâmetro crítico deve bloquear a operação; um fallback0 não é autorização nem garantia contra erro500.
 
 ```jsp
-<c:set var="raw_codusu" value="${empty param.P_CODUSU ? '0' : param.P_CODUSU}" />
-<c:set var="codusu_limpo" value="${fn:replace(raw_codusu, '\"', '')}" />
-<c:set var="codusu_limpo" value="${fn:replace(codusu_limpo, '&quot;', '')}" />
-<c:set var="codusu_seguro" value="${empty codusu_limpo ? '0' : codusu_limpo}" />
-
+<%-- Pseudocódigo: validar identificador inteiro no controlador e verificar
+     autorização; fornecer bind tipado pela API real da versão instalada.
+     Não usar param.P_CODUSU como identidade do usuário autenticado. --%>
 <snk:query var="qAcessos">
     SELECT CODUSU, NOMEUSU
       FROM TSIUSU
-     WHERE CODUSU = :codusu_seguro
+     WHERE CODUSU = :CODUSU_AUTORIZADO
 </snk:query>
+<%-- :CODUSU_AUTORIZADO precisa de binding real, não fornecido neste trecho. --%>
 ```
 
 **Estado de tela e lazy-load em dashboard único**
@@ -131,22 +134,19 @@ function trocarAba(aba) {
 **Exemplo de Blindagem e Separação de Camadas**
 
 ```jsp
-<%-- 1. Blindagem no topo do arquivo --%>
-<c:set var="v_salesagent" value="${empty param.SALESAGENT ? '0' : param.SALESAGENT}" />
-
-<%-- 2. Container oculto para dados (Separação JSP vs JS) --%>
-<div id="data-container" style="display:none;">
-    [
-    <c:forEach var="row" items="${qDados.rows}" varStatus="loop">
-        { "id": ${row.ID}, "nome": "${fn:replace(row.NOME, '"', '\\"')}" }${!loop.last ? ',' : ''}
-    </c:forEach>
-    ]
-</div>
-
+<%-- O controlador cria payloadJson com um serializador JSON real e dados
+     autorizados. c:out escapa HTML na textarea; JS lê .value. --%>
+<textarea id="data-container" hidden><c:out value="${payloadJson}" /></textarea>
 <script>
-    // 3. JS apenas lê os dados do container
-    const rawData = document.getElementById('data-container').textContent.trim();
-    const myData = rawData ? JSON.parse(rawData) : [];
+  const element = document.getElementById("data-container");
+  let myData = [];
+  try {
+    const parsed = JSON.parse(element?.value || "[]");
+    if (!Array.isArray(parsed)) throw new Error("Expected array");
+    myData = parsed; // validar esquema/tamanho antes de renderizar com textContent
+  } catch {
+    // Mostrar erro controlado; não logar payload nem dados pessoais.
+  }
 </script>
 ```
 
@@ -157,7 +157,7 @@ Padronizar identidade visual em componentes BI para consistência entre gadgets 
 - Definir paleta via tokens (`--color-*`) para evitar valores espalhados.
 - Priorizar contraste mínimo entre texto/fundo (legibilidade operacional).
 - Manter semântica visual consistente: sucesso, alerta, erro, neutro.
-- Permitir sobrescrita por dados vindos do SQL (`BKCOLOR`, `FGCOLOR`) quando necessário.
+- Mapear status de dados para classes/cores de allowlist; não injetar CSS arbitrário vindo do SQL.
 - Usar cabeçalho sticky e colunas fixas para tabelas largas com alto volume de leitura.
 - Diferenciar status de linha via classes CSS (aprovado, parcial, histórico, crítico) para leitura operacional rápida.
 
@@ -271,8 +271,7 @@ Aplicar fluxo de desenvolvimento de componentes HTML5 no BI para garantir render
 - Definir variáveis SQL ou BeanShell conforme complexidade.
 - Usar prefixos de tradução de parâmetro:
   - `:` para bind padrão.
-  - `:#` para substituição literal (avaliar com cautela e validação).
-  - `:@` para literal textual em cenários como `LIKE`.
+  - Substituição literal depende da versão e não é bind seguro. Não usar entradas de usuário em :#/:@; projetar alternativas tipadas e verificar API oficial.
 - Em parâmetros multi-list extensos, usar `/*inCollection*/`.
 
 > Os nomes de tabelas e campos abaixo são representativos e podem variar conforme a implementação da instância.
@@ -298,11 +297,12 @@ WHERE /*inCollection*/ C.CODCID IN :P_CODCID /*inCollection*/
   }
 
   function iniciar() {
-    const dadosIniciais = window.snkBIData || [];
+    const dadosIniciais = window.snkBIData || []; // placeholder, não API garantida
     renderizarComponente(dadosIniciais);
   }
 
-  setTimeout(iniciar, 300);
+  // Invocar no evento real de montagem/dados do container; atraso fixo não
+  // garante DOM/dados prontos. Cancelar tarefas e listeners no descarte.
 </script>
 ```
 
@@ -325,9 +325,10 @@ var NIVEL_DETALHE = cfg.NIVEL_DETALHE || "NIVEL_B";
 var NIVEL_ITEM = cfg.NIVEL_ITEM || "NIVEL_C";
 
 function abrirNivelDetalhe(codigoEntidade) {
-  if (!codigoEntidade || typeof openLevel !== "function") return;
+  const codigo = Number(codigoEntidade);
+  if (!Number.isSafeInteger(codigo) || codigo <= 0 || typeof openLevel !== "function") return;
   openLevel(NIVEL_DETALHE, {
-    ARG_CODENT: parseInt(codigoEntidade, 10),
+    ARG_CODENT: codigo,
     P_PERIODO_INI: cfg.P_PERIODO_INI || "",
     P_PERIODO_FIN: cfg.P_PERIODO_FIN || "",
     P_CODMETA: cfg.P_CODMETA || ""
@@ -335,9 +336,10 @@ function abrirNivelDetalhe(codigoEntidade) {
 }
 
 function abrirNivelItem(codigoEntidadeFilha) {
-  if (!codigoEntidadeFilha || typeof openLevel !== "function") return;
+  const codigo = Number(codigoEntidadeFilha);
+  if (!Number.isSafeInteger(codigo) || codigo <= 0 || typeof openLevel !== "function") return;
   openLevel(NIVEL_ITEM, {
-    ARG_CODENT_FILHA: parseInt(codigoEntidadeFilha, 10),
+    ARG_CODENT_FILHA: codigo,
     P_PERIODO_INI: cfg.P_PERIODO_INI || "",
     P_PERIODO_FIN: cfg.P_PERIODO_FIN || "",
     P_CODMETA: cfg.P_CODMETA || ""
@@ -380,8 +382,8 @@ GROUP BY M.CODMETA, M.CODENTIDADE
 - Em filtros de texto, incluir ancestrais dos nós encontrados para preservar rastreabilidade hierárquica.
 
 ```js
-var filhosPorPai = {};
-var nosExpandidos = {};
+var filhosPorPai = Object.create(null);
+var nosExpandidos = Object.create(null);
 
 function alternarNo(codNo) {
   var id = String(codNo);
@@ -391,7 +393,10 @@ function alternarNo(codNo) {
 
 function obterVisiveis(raiz) {
   var lista = [];
+  var vistos = new Set(); // também impor tamanho/profundidade máximos na fonte
   function visitar(pai) {
+    if (vistos.has(pai)) return;
+    vistos.add(pai);
     (filhosPorPai[pai] || []).forEach(function (no) {
       lista.push(no);
       if (nosExpandidos[String(no.CODNO)]) visitar(String(no.CODNO));
@@ -401,6 +406,8 @@ function obterVisiveis(raiz) {
   return lista;
 }
 ```
+
+Ao alternar produto/aba, use cancelamento ou token de geração para rejeitar respostas antigas; marcar abaCarregada só após sucesso, limpar flags de carregamento em finally e permitir retry. O exemplo inicial de estado não implementa esses controles.
 
 **Resiliência de carregamento**
 - Separar a carga principal da carga complementar (ex.: realizado mensal) e não bloquear a visualização principal por falha secundária.
@@ -412,12 +419,15 @@ function obterVisiveis(raiz) {
 - Tratar o JSP único como shell de navegação: tabela principal + modal de detalhe + abas internas + modais auxiliares.
 - Encadear cliques sem trocar de nível Sankhya: KPI → lista modal, gráfico → filtro de tabela, linha da tabela → detalhe.
 - Aplicar atalhos de ação no detalhe para abrir cadastro nativo no contexto da chave primária.
-- Fechar modal por clique no overlay para reduzir atrito de uso.
+- Modal precisa de nome acessível, foco/retorno de foco, teclado/Escape e proteção de alterações não salvas; overlay é opção adicional.
 
 ```js
 function abrirTelaNativa(resourceIdBase64, pkObj) {
-  var pk = btoa(JSON.stringify(pkObj));
-  top.location.href = "/mge/system.jsp#app/" + resourceIdBase64 + "/" + pk + "&pk-refresh=" + Date.now();
+  // Esboço apenas: validar resourceId por allowlist; usar codificação UTF-8
+  // e contrato oficial de navegação. btoa direto falha com texto Unicode.
+  var pk = encodeApprovedPrimaryKey(pkObj); // adapter real não fornecido
+  // Não mudar top.location sem autorização do container/usuário.
+  navigateApprovedResource(resourceIdBase64, pk); // adapter real não fornecido
 }
 
 function onKpiClick(lista) {

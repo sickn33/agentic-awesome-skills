@@ -26,6 +26,10 @@ Comprehensive patterns and techniques for analyzing compiled binaries, understan
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
 
+## Analysis boundaries
+
+Analyze only authorized binaries as inert data first; execute/emulate unknown code only in an isolated disposable environment without host credentials or external network access. Record file hash, architecture, ABI and compiler assumptions. Assembly snippets are patterns, not directly assemblable programs: floating-point/aggregate arguments and ABI alignment rules need separate handling. Structure offsets below assume an LP64-style layout; Windows x64 `long` is 32-bit. Decompiler types/names and suspicious API references are hypotheses, not source truth or proof of a vulnerability.
+
 ## Disassembly Fundamentals
 
 ### x86-64 Instruction Patterns
@@ -297,8 +301,8 @@ and edx, 7              ; For divide by 8
 add eax, edx            ; Adjust for negative
 sar eax, 3              ; Arithmetic shift right
 
-; Modulo power of 2
-and eax, 7              ; x % 8
+; Modulo power of 2 for unsigned/nonnegative values
+and eax, 7              ; x % 8 (not signed negative C remainder)
 ```
 
 ### Bit Manipulation
@@ -318,7 +322,9 @@ and eax, ~0x10          ; Clear bit 4
 xor eax, 0x10           ; Toggle bit 4
 
 ; Count leading zeros
-bsr eax, ecx            ; Bit scan reverse
+test ecx, ecx          ; BSR result is undefined for zero input
+jz zero_input          ; application-specific branch: CLZ(0) is 32
+bsr eax, ecx            ; Bit scan reverse for nonzero input
 xor eax, 31             ; Convert to leading zeros
 
 ; Population count (popcnt)

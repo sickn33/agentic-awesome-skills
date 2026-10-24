@@ -114,7 +114,7 @@ class FlatCard extends StatelessWidget {
             onPressed: () {},
             style: ElevatedButton.styleFrom(
               elevation: 0,           // Critical: no shadow
-              backgroundColor: Colors.blue,
+              backgroundColor: const Color(0xFF125A94),
               foregroundColor: Colors.white,
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.zero, // Sharp corners
@@ -133,7 +133,7 @@ class FlatCard extends StatelessWidget {
 - Override `ThemeData` globally to kill all elevation:
   ```dart
   ThemeData(
-    cardTheme: const CardTheme(elevation: 0, shape: RoundedRectangleBorder()),
+    cardTheme: const CardThemeData(elevation: 0, shape: RoundedRectangleBorder()),
     appBarTheme: const AppBarTheme(elevation: 0),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(elevation: 0),
   )
@@ -159,7 +159,7 @@ const FlatCard = () => (
     </Text>
     <TouchableOpacity
       style={{
-        backgroundColor: '#2196F3',
+        backgroundColor: '#125A94',
         paddingHorizontal: 24,
         paddingVertical: 12,
         alignSelf: 'flex-start',
@@ -200,7 +200,7 @@ fun FlatCard() {
                 defaultElevation = 0.dp,  // No shadow
                 pressedElevation = 0.dp,
             ),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2196F3)),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF125A94)),
             contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp),
         ) {
             Text("ACTION", fontWeight = FontWeight.Bold, letterSpacing = 1.sp)

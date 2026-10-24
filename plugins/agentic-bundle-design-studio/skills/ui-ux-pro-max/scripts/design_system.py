@@ -11,8 +11,10 @@ Usage:
 
 import csv
 import json
+import re
+import html
 from pathlib import Path
-from core import search, DATA_DIR
+from core import search, DATA_DIR, _load_csv
 
 
 # ============ CONFIGURATION ============
@@ -39,13 +41,14 @@ class DesignSystemGenerator:
         filepath = DATA_DIR / REASONING_FILE
         if not filepath.exists():
             return []
-        with open(filepath, 'r', encoding='utf-8') as f:
-            return list(csv.DictReader(f))
+        return _load_csv(filepath)
 
     def _multi_domain_search(self, query: str, style_priority: list = None) -> dict:
         """Execute searches across multiple domains."""
         results = {}
         for domain, config in SEARCH_CONFIG.items():
+            if domain == "product":
+                continue
             if domain == "style" and style_priority:
                 # For style, also search with priority keywords
                 priority_query = " ".join(style_priority[:2]) if style_priority else query
@@ -57,7 +60,9 @@ class DesignSystemGenerator:
 
     def _find_reasoning_rule(self, category: str) -> dict:
         """Find matching reasoning rule for a category."""
-        category_lower = category.lower()
+        category_lower = category.lower().strip()
+        if not category_lower or category_lower == "general":
+            return {}
 
         # Try exact match first
         for rule in self.reasoning_data:
@@ -67,7 +72,7 @@ class DesignSystemGenerator:
         # Try partial match
         for rule in self.reasoning_data:
             ui_cat = rule.get("UI_Category", "").lower()
-            if ui_cat in category_lower or category_lower in ui_cat:
+            if ui_cat and (ui_cat in category_lower or category_lower in ui_cat):
                 return rule
 
         # Try keyword match
@@ -126,7 +131,7 @@ class DesignSystemGenerator:
             priority_lower = priority.lower().strip()
             for result in results:
                 style_name = result.get("Style Category", "").lower()
-                if priority_lower in style_name or style_name in priority_lower:
+                if priority_lower and style_name and (priority_lower in style_name or style_name in priority_lower):
                     return result
 
         # Second: score by keyword match in all fields
@@ -189,7 +194,7 @@ class DesignSystemGenerator:
         combined_effects = style_effects if style_effects else reasoning_effects
 
         return {
-            "project_name": project_name or query.upper(),
+            "project_name": re.sub(r"[\x00-\x1f\x7f-\x9f]", " ", project_name or query.upper())[:200],
             "category": category,
             "pattern": {
                 "name": best_landing.get("Pattern Name", reasoning.get("pattern", "Hero + Features + CTA")),
@@ -269,6 +274,7 @@ def format_ascii_box(design_system: dict) -> str:
     lines = []
     w = BOX_WIDTH - 1
 
+    lines.append("Advisory keyword matches; missing domains use defaults. Implementation remains unverified.")
     lines.append("+" + "-" * w + "+")
     lines.append(f"|  TARGET: {project} - RECOMMENDED DESIGN SYSTEM".ljust(BOX_WIDTH) + "|")
     lines.append("+" + "-" * w + "+")
@@ -360,7 +366,7 @@ def format_ascii_box(design_system: dict) -> str:
 
 def format_markdown(design_system: dict) -> str:
     """Format design system as markdown."""
-    project = design_system.get("project_name", "PROJECT")
+    project = re.sub(r"([\\`*_{}\[\]()#+.!|>-])", r"\\\1", html.escape(design_system.get("project_name", "PROJECT")))
     pattern = design_system.get("pattern", {})
     style = design_system.get("style", {})
     colors = design_system.get("colors", {})
@@ -370,6 +376,7 @@ def format_markdown(design_system: dict) -> str:
 
     lines = []
     lines.append(f"## Design System: {project}")
+    lines.append("Advisory keyword matches; missing domains use defaults. Accessibility, security, conversion and performance remain unverified.")
     lines.append("")
 
     # Pattern section

@@ -10,3 +10,5 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | --- | --- | --- | --- |
 | `references/workflows.md` | `skills/asset-health/references/workflows.md` | `9a37965124d9a82ca442cfddbbbade33f0e09fe8` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/parameters.md` | `skills/asset-health/references/parameters.md` | `9e9f4b25dd08275433cafe67ae73b527e62bbda9` | text-only trailing whitespace and EOF blank lines normalized |
+
+Local review changes (2026-10-23): supporting workflow and parameter files now distinguish missing metrics, bounded parent checks and timestamp meanings. Original blob IDs above remain provenance identifiers.

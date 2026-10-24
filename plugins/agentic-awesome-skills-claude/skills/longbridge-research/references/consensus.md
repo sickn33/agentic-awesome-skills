@@ -1,5 +1,7 @@
 # longbridge-consensus
 
+Scope: read-only research template; verify current CLI flags/entitlements, cite actual sources and timestamps, and distinguish estimates from observations. Never expose account credentials or raw sensitive error output. Examples and thresholds are illustrative, not current quotes or validated trading signals. Account-specific data is optional and requires user-authorized minimum read access.
+
 Prompt-only analysis skill. Orchestrates Longbridge CLI commands to surface analyst consensus estimates, estimate revision trends, beat/miss history, and post-earnings announcement drift (PEAD) signals.
 
 ## CLI
@@ -33,10 +35,10 @@ longbridge <subcommand> TSLA.US --format json   # run --help for available flags
 
    | Quantity                        | Method                                                                                                                                                                            |
    | ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------- | ------- |
-   | **Estimate revision direction** | Compare current mean EPS vs prior period from rating history; rising / flat / falling                                                                                             |
+   | **Estimate revision direction** | Compare timestamped EPS estimates for the same fiscal period and accounting basis; rating/price-target history is not EPS revision history                                                                                             |
    | **Beat / miss**                 | Actual EPS vs consensus mean; beat threshold > +2%                                                                                                                                |
    | **PEAD signal**                 | Consecutive beats + upward revisions → positive momentum; consecutive misses + downward revisions → negative momentum. **Note**: PEAD is a statistical tendency, not a guarantee. |
-   | **Surprise %**                  | `(Actual − Estimate) /                                                                                                                                                            | Estimate | × 100%` |
+| **Surprise %** | `(Actual - Estimate) / abs(Estimate) * 100`; undefined for zero estimate, label near-zero instability. |
 
 4. Output structured report; cite **Longbridge Securities**; end with disclaimer.
 
@@ -83,10 +85,10 @@ As of: {date}
 ## Error handling
 
 | Situation                            | 简体中文回复                                                  | 繁體中文 / English                                                                                                                     |
-| ------------------------------------ | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `command not found: longbridge`      | 回退到 MCP；如 MCP 也不可用，请用户安装 longbridge-terminal。 | 回退到 MCP；如也不可用，請安裝 longbridge-terminal。/ Fall back to MCP; if also unavailable, tell user to install longbridge-terminal. |
 | stderr `not logged in`               | 请运行 `longbridge auth login` 登录。                         | 請執行 `longbridge auth login`。/ Run `longbridge auth login`.                                                                         |
 | Consensus data has < 3 analysts      | 覆盖分析师不足 3 位，一致预期仅供参考。                       | 覆蓋分析師不足 3 位，僅供參考。/ Fewer than 3 analysts — consensus is indicative only.                                                 |
 | Analyst estimates data returns empty | "{symbol} 暂无分析师预期数据。"                               | "{symbol} 暫無分析師預期。" / "{symbol} has no analyst estimates."                                                                     |
 | No actuals for beat/miss             | 跳过超预期/低于预期分析，注明无历史实际值。                   | 跳過超預期分析，注明無歷史數據。/ Skip beat/miss analysis; note no historical actuals available.                                       |
-| Other stderr                         | 直接显示原始错误，不静默重试。                                | 顯示原始錯誤。/ Surface verbatim — do not retry silently.                                                                              |
+| Other stderr                         | 直接显示原始错误，不静默重试。                                | 顯示原始錯誤。/ Surface a redacted error summary — do not retry silently.                                                                              |

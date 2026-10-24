@@ -114,7 +114,7 @@ def strip_json_comments(text: str) -> str:
 
 def read_json(path: Path) -> tuple[Any | None, str | None]:
     try:
-        return json.loads(strip_json_comments(path.read_text(encoding="utf-8"))), None
+        return json.loads(path.read_text(encoding="utf-8")), None
     except Exception as exc:  # noqa: BLE001 - error text is reported to the caller.
         return None, str(exc)
 
@@ -380,6 +380,9 @@ def check_duplicate_values(
         value = entry.get(key)
         if value is None:
             continue
+        if not isinstance(value, (str, int)) or isinstance(value, bool):
+            add_issue(issues, "error", "invalid-journal-value", journal, root, f"Invalid scalar type for {key}")
+            continue
         values[value] = values.get(value, 0) + 1
     for value, count in values.items():
         if count > 1:
@@ -454,7 +457,7 @@ def check_snapshot_chain(
 
     known_ids = set(id_to_paths.keys())
     for path, snap_id, prev_id in parsed:
-        if prev_id is None or prev_id == "":
+        if prev_id is None or prev_id == "" or prev_id == "00000000-0000-0000-0000-000000000000":
             continue
         if prev_id not in known_ids:
             add_issue(
@@ -652,6 +655,8 @@ def check_directory(directory: Path, root: Path) -> DirectoryReport:
             ],
         )
 
+    if not directory.is_dir():
+        return DirectoryReport(relative(directory, root), "invalid", [Issue("error", "not-directory", relative(directory, root), "Migration path is not a directory")])
     structure = detect_structure(directory)
     if structure == "mixed":
         return check_mixed(directory, root)

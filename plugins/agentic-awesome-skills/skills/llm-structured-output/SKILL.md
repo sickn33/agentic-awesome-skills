@@ -30,6 +30,8 @@ Do NOT use this skill when:
 - The user needs prompt engineering for better text quality (not structure)
 - The user wants to call real external tools/APIs (this skill covers using tool_use as a structured output hack, not actual tool orchestration)
 
+Examples use historical model IDs and SDK helper paths; verify availability and pin a supported SDK/model before deployment. Strict output support and schema subsets differ by provider/API. A schema-valid value is untrusted data, never authorization for a database write or external call. Keep source-document instructions separate from the extraction instruction, and enforce allowed actions in application code.
+
 ## Core Workflow
 
 1. Identify the target schema. Ask the user what fields they need extracted. Define every field with its type, whether it's required or optional, and valid enum values if applicable. Do not proceed without a concrete schema.
@@ -54,7 +56,7 @@ Do NOT use this skill when:
 
 9. Build a retry loop for validation failures. When validation fails, send the original input plus the failed output and the validation error back to the model with an instruction like `"Your previous output failed validation: {error}. Fix the output."` Cap retries at 3 attempts.
 
-10. Log every structured output call with: the input, the raw response, the parsed result, and any validation errors. When structured output breaks in production, you need these logs to determine whether the failure was a schema design issue, a prompt issue, or a model regression.
+10. Log schema/model versions, request IDs, validation outcomes and redacted diagnostic samples. Keep raw inputs/responses only when authorized and necessary, with access controls and retention limits; never routinely log secrets or sensitive source documents. When structured output breaks in production, you need these logs to determine whether the failure was a schema design issue, a prompt issue, or a model regression.
 
 ## Examples
 
@@ -72,7 +74,7 @@ class Sentiment(str, Enum):
 
 class ReviewAnalysis(BaseModel):
     sentiment: Sentiment = Field(description="Overall sentiment of the review")
-    key_topics: list[str] = Field(description="Main topics mentioned, max 5")
+    key_topics: list[str] = Field(max_length=5, description="Main topics mentioned, max 5")
     purchase_intent: bool = Field(description="Whether the reviewer would buy again")
     confidence_score: float = Field(ge=0.0, le=1.0, description="Model confidence 0-1")
 
@@ -85,7 +87,10 @@ response = client.beta.chat.completions.parse(
     ],
     response_format=ReviewAnalysis,
 )
-result = response.choices[0].message.parsed
+message = response.choices[0].message
+if message.refusal or message.parsed is None:
+    raise ValueError("Refused or incomplete extraction; do not write downstream")
+result = message.parsed
 # result.sentiment == Sentiment.positive
 # result.key_topics == ["battery life", "keyboard"]
 # result.purchase_intent == True
@@ -129,8 +134,10 @@ response = client.messages.create(
     messages=[{"role": "user", "content": "Invoice from Acme Corp: 3x Widget A at $10 each, 1x Widget B at $25. Total: $55."}]
 )
 # Find the tool_use block — do NOT parse text blocks
-tool_block = next(b for b in response.content if b.type == "tool_use")
-invoice = tool_block.input
+blocks = [b for b in response.content if b.type == "tool_use" and b.name == "extract_invoice"]
+if response.stop_reason != "tool_use" or len(blocks) != 1:
+    raise ValueError("Missing, ambiguous or truncated extraction")
+invoice = blocks[0].input  # Validate against the invoice schema before any downstream use.
 # invoice["vendor_name"] == "Acme Corp"
 # invoice["total_amount"] == 55.0
 ```
@@ -159,7 +166,9 @@ const completion = await client.beta.chat.completions.parse({
   ],
   response_format: zodResponseFormat(EventSchema, "event_extraction"),
 });
-const event = completion.choices[0].message.parsed;
+const message = completion.choices[0].message;
+if (message.refusal || !message.parsed) throw new Error("Refused or incomplete extraction");
+const event = EventSchema.parse(message.parsed);
 // event.event_name === "Tech Summit 2025"
 // event.is_virtual === false
 ```
@@ -190,7 +199,7 @@ const event = completion.choices[0].message.parsed;
 
 4. **Enum values not matching due to casing.** If you define an enum as `["Active", "Inactive"]` but the model returns `"active"`, validation fails. Either lowercase all enum values in the schema or add a normalization step before validation. OpenAI's strict mode respects exact casing; Anthropic may not.
 
-5. **Streaming with structured output.** OpenAI supports streaming structured output where partial JSON arrives chunk by chunk. You cannot parse intermediate chunks as valid JSON. Use the `openai` SDK's built-in partial parsing or buffer chunks until the stream completes. Anthropic's tool_use blocks arrive complete in a single `content_block_stop` event — no partial assembly needed.
+5. **Streaming with structured output.** OpenAI supports streaming structured output where partial JSON arrives chunk by chunk. You cannot parse intermediate chunks as valid JSON. Use the `openai` SDK's built-in partial parsing or buffer chunks until the stream completes. Anthropic tool input arrives in `input_json_delta` fragments. Accumulate `partial_json` by block index and parse after `content_block_stop`, or use the SDK’s final-message accumulator.
 
 ## Best Practices
 
@@ -202,7 +211,7 @@ const event = completion.choices[0].message.parsed;
 
 4. **Test schema changes against 20+ real inputs before deploying.** Schema changes (adding a field, changing a type, modifying a description) can break extraction on inputs that previously worked. Build a test suite of real inputs with expected outputs and run it on every schema change. This is the structured output equivalent of unit testing.
 
-5. **Use `default` values in Pydantic models for optional fields.** When a field might not have relevant data in the source text, define it as `Optional[str] = None` in Pydantic or `.optional()` in Zod. Without defaults, the model is forced to hallucinate a value for fields where the source text has no answer.
+5. **Use `default` values in Pydantic models for optional fields.** When a field might not have relevant data in the source text, use a required nullable field in the provider schema (for example `str | None` or `.nullable()`), with instructions to return null for unknown facts. OpenAI strict schemas require every property in `required`; absent/optional keys are not the same as a nullable value. Map nulls to application defaults only after validation.
 
 6. **Separate extraction schemas from application schemas.** Your LLM extraction schema should match what the model can reliably produce. Your application database schema may have additional computed fields, foreign keys, or constraints. Map between them in application code — do not force the LLM to understand your database schema.
 

@@ -64,12 +64,14 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
    这样 env->FindClass / env->GetMethodID 等调用会自动识别
 
 3. 找 RegisterNatives
-   搜索对 JNIEnv vtable offset 0x35C (ARM64) 的调用
+   根据实际 jni.h、指针大小和架构定位 RegisterNatives 的 vtable 项；不要硬编码偏移
    → 第三个参数是 JNINativeMethod 数组
    → 从数组中提取所有 native 函数地址
 ```
 
 ---
+
+> 下列示例依赖具体 Frida/API/应用版本；旧 Module 静态 API、占位偏移与函数签名需先核对。创建独立 SSLContext 不会自动替换应用连接；枚举 DEX 路径也不是实际 dump。只记录授权测试数据，保护密钥/令牌日志。
 
 ## Frida 高级用法
 

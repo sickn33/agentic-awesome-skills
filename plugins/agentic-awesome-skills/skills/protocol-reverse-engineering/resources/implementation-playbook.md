@@ -47,7 +47,8 @@ tcpdump -i eth0 -X port 80
 mitmproxy --mode transparent -p 8080
 
 # SSL/TLS interception
-mitmproxy --mode transparent --ssl-insecure
+# Keep upstream certificate verification enabled; configure a trusted lab CA.
+mitmproxy --mode transparent
 
 # Dump to file
 mitmdump -w traffic.mitm
@@ -108,7 +109,7 @@ packets = rdpcap("capture.pcap")
 
 # Analyze packets
 for pkt in packets:
-    if pkt.haslayer(TCP):
+    if pkt.haslayer(IP) and pkt.haslayer(TCP):
         print(f"Src: {pkt[IP].src}:{pkt[TCP].sport}")
         print(f"Dst: {pkt[IP].dst}:{pkt[TCP].dport}")
         if pkt.haslayer(Raw):
@@ -215,7 +216,13 @@ def parse_messages(data: bytes):
     messages = []
 
     while offset < len(data):
+        if len(data) - offset < 12:
+            raise ValueError("Truncated header")
         header = MessageHeader.from_bytes(data[offset:])
+        if header.magic != b"PROT" or header.length > 1_048_576:
+            raise ValueError("Invalid header or oversized payload")
+        if header.length > len(data) - offset - 12:
+            raise ValueError("Truncated payload")
         payload = data[offset+12:offset+12+header.length]
         messages.append((header, payload))
         offset += 12 + header.length
@@ -228,8 +235,12 @@ def parse_tlv(data: bytes):
     offset = 0
 
     while offset < len(data):
+        if len(data) - offset < 3:
+            raise ValueError("Truncated TLV header")
         field_type = data[offset]
         length = struct.unpack(">H", data[offset+1:offset+3])[0]
+        if length > len(data) - offset - 3:
+            raise ValueError("Truncated TLV value")
         value = data[offset+3:offset+3+length]
         fields.append((field_type, value))
         offset += 3 + length
@@ -242,6 +253,8 @@ def parse_tlv(data: bytes):
 ```python
 def hexdump(data: bytes, width: int = 16):
     """Format binary data as hex dump."""
+    if width <= 0:
+        raise ValueError("width must be positive")
     lines = []
     for i in range(0, len(data), width):
         chunk = data[i:i+width]
@@ -405,6 +418,7 @@ local msg_types = {
 function proto.dissector(buffer, pinfo, tree)
     pinfo.cols.protocol = "CUSTOM"
 
+    if buffer:len() < 12 then return 0 end
     local subtree = tree:add(proto, buffer())
 
     -- Parse header
@@ -419,6 +433,7 @@ function proto.dissector(buffer, pinfo, tree)
     local length = buffer(8, 4):uint()
     subtree:add(f_length, buffer(8, 4))
 
+    if length > buffer:len() - 12 then return 0 end
     if length > 0 then
         subtree:add(f_payload, buffer(12, length))
     end
@@ -428,6 +443,8 @@ end
 local tcp_table = DissectorTable.get("tcp.port")
 tcp_table:add(8888, proto)
 ```
+
+The Lua snippet assumes one complete message per buffer. Real TCP streams may split or combine messages; implement desegmentation and multi-PDU handling before using it as a production dissector. Signatures and entropy are clues, not protocol/cryptography proof.
 
 ## Active Testing
 
@@ -446,12 +463,12 @@ def main():
     # Define protocol structure
     s_initialize("HELLO")
     s_static(b"\x50\x52\x4f\x54")  # Magic
-    s_word(1, name="version")       # Version
-    s_word(0x01, name="type")       # Type (HELLO)
-    s_size("payload", length=4)     # Length field
+    s_word(1, name="version", endian=">")       # Version
+    s_word(0x01, name="type", endian=">")       # Type (HELLO)
+    s_size("payload", length=4, endian=">")     # Length field
     s_block_start("payload")
-    s_dword(0x12345678, name="client_id")
-    s_word(0, name="flags")
+    s_dword(0x12345678, name="client_id", endian=">")
+    s_word(0, name="flags", endian=">")
     s_block_end()
 
     session.connect(s_get("HELLO"))
@@ -474,12 +491,13 @@ for pkt in packets:
 
 # Modify and replay
 for pkt in packets:
-    if pkt.haslayer(Raw):
+    if pkt.haslayer(IP) and pkt.haslayer(TCP) and pkt.haslayer(Raw):
         # Modify payload
         original = pkt[Raw].load
         modified = original.replace(b"client", b"CLIENT")
         pkt[Raw].load = modified
         # Recalculate checksums
+        del pkt[IP].len
         del pkt[IP].chksum
         del pkt[TCP].chksum
         send(pkt)

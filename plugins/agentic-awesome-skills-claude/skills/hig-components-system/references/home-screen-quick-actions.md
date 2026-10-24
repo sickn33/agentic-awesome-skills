@@ -1,8 +1,11 @@
 ---
 title: "Home Screen quick actions | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/home-screen-quick-actions
+---
 
 # Home Screen quick actions
+
+> Imported Apple HIG reference snapshot, with local review corrections. Source attribution is retained; this is not an official Apple skill or a guarantee of current API availability. Confirm target OS/SDK, device capabilities and current linked developer documentation before implementation. Dimension tables are design references, not fixed layout contracts. No Apple app, device or entitlement validation was performed.
 
 Home Screen quick actions give people a way to perform app-specific actions from the Home Screen.
 
@@ -40,3 +43,7 @@ If you design your own interface icon, use the Quick Action Icon Template thatâ€
 
 [Add Home Screen quick actions](https://developer.apple.com/documentation/UIKit/add-home-screen-quick-actions) â€” UIKit
 
+
+## Handler checks
+
+Treat shortcut items as entry points rather than authorization. Handle cold launch and an already-running scene, re-check signed-in account and permissions, and route to a safe fallback if a recent item no longer exists. Keep sensitive names out of public Home Screen labels. Four app-specific items is an upper bound, not a requirement to invent three or four tasks.

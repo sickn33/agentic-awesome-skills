@@ -1,7 +1,7 @@
 ---
 name: x-article-publisher-skill
 description: "Publish articles to X/Twitter"
-risk: safe
+risk: critical
 source: "https://github.com/wshuyi/x-article-publisher-skill"
 date_added: "2026-02-27"
 ---
@@ -16,11 +16,11 @@ Publish articles to X/Twitter
 
 Use this skill when you need to work with publish articles to x/twitter.
 
-## Instructions
+## Procedure
 
-This skill provides guidance and patterns for publish articles to x/twitter.
+This entrypoint does not bundle an X publishing client. Resolve the target account, article text, media rights, visibility and timing. Prepare a draft and inspect it before publication. Use only a configured integration whose current schema supports articles; do not substitute a post or invent an endpoint. Publish only the exact content and destination authorized by the user. Record the returned article identity and verify its state before reporting success; reconcile an ambiguous timeout before retrying. Keep credentials out of text and logs.
 
-For more information, see the [source repository](https://github.com/wshuyi/x-article-publisher-skill).
+The [source repository](https://github.com/wshuyi/x-article-publisher-skill) is an external prerequisite; inspect its complete content and license before installation.
 
 ## Example
 

@@ -16,6 +16,8 @@ local_nvme: true
 
 # RunPod — platform profile
 
+These are historical provider observations stamped 2026-06, not current account guarantees. Recheck official billing, retention, networking and API docs before acting; network-volume storage continues billing after Pod termination. Preserve host guards and use public-only credential-free third-party mirrors only with informed authorization.
+
 One-line purpose: the per-platform substrate for RunPod Pods — **the Docker image IS the env contract**, a three-tier storage model where the durable mount differs from the parking one, and a teardown verb (`terminate`) that DELETES the volume disk. Read this before Phase 0; it owns every path, port, billing verb, and spot rule the SKILL.md phases delegate here. Universal gotchas are NOT repeated — see `references/gotchas_universal.md`.
 
 > **Surface to the user up front (principle #10):** convenience — RunPod's HTTP proxy auto-HTTPS-exposes TB/Jupyter (no tunnel). ⚠️ Danger clocks — a **stopped Pod still bills its volume disk at 2×** and may restart with **zero GPUs** (RP1/RP4), so stop is NOT safe parking; a **low account balance auto-deletes** the Pod; the **~5 GB container disk** silently fills (redirect caches, §8). Decouple durable state onto a Network Volume + **terminate** to truly stop the meter.
@@ -109,7 +111,7 @@ Two purchase modes, two distinct interruption vectors:
 - **Billing granularity:** compute + container/volume disk bill **per second**; Network Volumes bill **hourly** (verified docs.runpod.io/references/billing-information 2026-06).
 - Savings Plans are prepaid 3- or 6-month non-refundable commitments — a separate billing knob, orthogonal to stop/terminate.
 
-> **Teardown Iron Law (SKILL.md Phase 5):** NO `terminate` until checkpoints are **pulled to local OR confirmed present on a Network Volume, AND verified by load**, and the user has explicitly approved the cost-affecting action. On RunPod the meter-stop verb is irreversible by design and there is **no backup safety net** (low-balance deletion above) — "it looked done in the log" is not evidence (principle #3). Cross-link: superpowers:verification-before-completion **REQUIRED**.
+> **Teardown Iron Law (SKILL.md Phase 5):** NO `terminate` until checkpoints are **pulled to local AND verified by load (a Network Volume is an additional recovery copy)**, and the user has explicitly approved the cost-affecting action. On RunPod the meter-stop verb is irreversible by design and there is **no backup safety net** (low-balance deletion above) — "it looked done in the log" is not evidence (principle #3). Cross-link: superpowers:verification-before-completion **REQUIRED**.
 
 ---
 
@@ -145,7 +147,7 @@ Quick checks when a RunPod Pod misbehaves (run inside the Pod unless noted):
 - **GPU actually attached?** `nvidia-smi` — if it errors or shows no device, suspect zero-GPU-on-restart (RP1) or a driver/CUDA mismatch (RP9). Cross-check the image's CUDA vs the host driver: `nvcc --version` (image) against the driver line in `nvidia-smi` (host).
 - **Stuck initializing / image pull?** A Pod looping in "initializing" is usually a slow/failing image pull or a throttled machine. Watch the **container logs** (web console → the Pod's *Logs* tab, or `runpodctl get pod <id>`); cloning the template to a different machine / cloud often unsticks it.
 - **SSH won't connect on a custom image?** Confirm `sshd` is actually running (`ps aux | grep sshd`), TCP 22 is exposed, and the Dockerfile used `CMD` not `ENTRYPOINT` (RP10); confirm the public key is on the account and matches the local private key.
-- **Env var missing over SSH?** `env | grep <VAR>` in the SSH shell vs the web terminal — divergence is RP12.
+- **Env var missing over SSH?** Check only whether each named variable is present (for example, print a boolean from `os.environ`), never its value, in the SSH shell vs the web terminal — divergence is RP12.
 - **Detect a stuck/zombie download:** watch the target grow — `watch -n5 'du -sh /workspace/hf 2>/dev/null; ls -la <partial-file>'`; a `.incomplete`/`.part` file whose size is frozen means a stalled HF pull → re-run with `HF_HUB_ENABLE_HF_TRANSFER=1` (§3). For a robust remote ssh-poll loop, see `references/gotchas_universal.md` U17.
 - **Billing reality check:** the running meter and remaining-balance runtime live in the web console billing page; do not trust "it should be cheap because it's stopped" — a stopped Pod still bills the volume disk at 2× (RP4) and a low balance silently deletes (RP8).
 
@@ -159,6 +161,6 @@ Values to parameterize the `scripts/` templates for RunPod:
 - `DURABLE_DIR=` a **Network Volume** mount (`/workspace` on Pods, `/runpod-volume` on Serverless) — terminate-safe durable checkpoints. Point `DURABLE_DIR` at the Network Volume when `terminate` is the teardown verb so `best` checkpoints survive Pod deletion AND the low-balance auto-delete (RP8).
 - `PROXY_HOOK=` none. No China mirror. Instead `export HF_HUB_ENABLE_HF_TRANSFER=1` (after `pip install huggingface_hub[hf_transfer]`).
 - `CRED_FILE=""` — no credential file on disk; the key is a RunPod secret / env var injected at Pod creation, so `WANDB_API_KEY` / `HF_TOKEN` arrive via the platform env and `run_one`'s `[ -n "$CRED_FILE" ]` guard skips the file read. **Caveat (RP12):** a full-SSH-over-TCP login shell may NOT see these env vars. Prefer platform secrets or pass named values directly to the command that needs them. If a temporary bridge file is unavoidable, create it on container disk with `umask 077`, write only named required exports, delete it after use, and never place it under `/workspace` or a Network Volume.
-- `SCRATCH=` periodic/`latest` checkpoints under the Network Volume; keep `best` only (`save_top_k` small). Pruning matters more here — the volume disk grows-only and stopped storage is double-priced (RP4).
+- `SCRATCH=` only verified redundant checkpoints under the Network Volume; retain a full-state latest checkpoint for resume as well as the best inference weights. Pruning matters more here — the volume disk grows-only and stopped storage is double-priced (RP4).
 - `HF_HOME=` a path on the Network Volume (e.g. `/workspace/hf` on a Network-Volume-backed Pod) so model caches survive Pod churn instead of re-downloading — AND to keep the cache off the tiny ~5 GB container disk (RP11). Likewise `PIP_CACHE_DIR=/workspace/.cache/pip`.
 - `DETACH=` `tmux` (after `apt-get install -y tmux`); fall back to `nohup … </dev/null >log 2>&1 &`. Neither survives a Pod restart — checkpoint-to-Network-Volume is the resilience layer.

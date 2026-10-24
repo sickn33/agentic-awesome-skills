@@ -43,7 +43,7 @@ files and directories by applying prefixes, suffixes, and other alterations.
 | `--name-transform nfd` | Converts the file name to NFD Unicode normalization form. |
 | `--name-transform nfkc` | Converts the file name to NFKC Unicode normalization form. |
 | `--name-transform nfkd` | Converts the file name to NFKD Unicode normalization form. |
-| `--name-transform command=/path/to/my/programfile names.` | Executes an external program to transform. |
+| `--name-transform command=/path/to/my/program` | Executes an external program to transform. |
 
 Conversion modes:
 

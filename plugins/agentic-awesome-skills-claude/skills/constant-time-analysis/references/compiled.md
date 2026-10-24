@@ -60,13 +60,7 @@ x86_64, arm64, arm, riscv64, ppc64le, s390x, i386
 
 ### Replace Division
 
-```c
-// VULNERABLE: Compiler emits DIV instruction
-int32_t q = a / divisor;
-
-// SAFE: Barrett reduction (precompute mu = ceil(2^32 / divisor))
-uint32_t q = (uint32_t)(((uint64_t)a * mu) >> 32);
-```
+A division involving secrets is a review candidate, not automatically an exploitable leak. Do not replace it with a truncated reciprocal-multiply sketch: signedness, overflow, operand bounds and correction steps determine arithmetic correctness. Use a reviewed cryptographic implementation with a documented input domain, then inspect generated native code on the deployment CPU. Python/Ruby integers and JavaScript arithmetic do not become constant-time merely by replacing division with multiplication or masking.
 
 ### Replace Branches
 
@@ -74,7 +68,7 @@ uint32_t q = (uint32_t)(((uint64_t)a * mu) >> 32);
 // VULNERABLE: Branch timing reveals secret
 if (secret) { result = a; } else { result = b; }
 
-// SAFE: Constant-time selection
+// Candidate selection pattern: generated native code still requires review
 uint32_t mask = -(uint32_t)(secret != 0);
 result = (a & mask) | (b & ~mask);
 ```

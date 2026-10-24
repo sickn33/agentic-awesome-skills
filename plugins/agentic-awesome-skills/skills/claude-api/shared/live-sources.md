@@ -1,5 +1,7 @@
 # Live Documentation Sources
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 This file contains WebFetch URLs for fetching current information from platform.claude.com and Agent SDK repositories. Use these when users need the latest data that may have changed since the cached content was last updated.
 
 ## When to Use WebFetch
@@ -15,7 +17,7 @@ This file contains WebFetch URLs for fetching current information from platform.
 
 | Topic           | URL                                                                   | Extraction Prompt                                                               |
 | --------------- | --------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
-| Models Overview | `https://platform.claude.com/docs/en/about-claude/models/overview.md` | "Extract current model IDs, context windows, and pricing for all Claude models" |
+| Models Overview | `https://platform.claude.com/docs/en/models/overview` | "Extract current model IDs, context windows, and pricing for all Claude models" |
 | Pricing         | `https://platform.claude.com/docs/en/pricing.md`                      | "Extract current pricing per million tokens for input and output"               |
 
 ### Core Features

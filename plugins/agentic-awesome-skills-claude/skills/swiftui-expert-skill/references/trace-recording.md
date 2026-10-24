@@ -42,15 +42,17 @@ When you (the agent) are running non-interactively — e.g. via
 recording to end cleanly:
 
 ```bash
-# Start recording (background)
+# Create a fresh private directory; keep this variable for the stop call.
+TRACE_RUN_DIR=$(mktemp -d)
+# Start recording through the host tool's supported background facility:
 python3 "${SKILL_DIR}/scripts/record_trace.py" \
-  --attach Helm --stop-file /tmp/stop-trace \
+  --attach Helm --stop-file "$TRACE_RUN_DIR/stop" \
   --output ~/Desktop/session.trace
 
 # ...user does their thing...
 
 # Stop cleanly (from another shell or tool call)
-touch /tmp/stop-trace
+touch "$TRACE_RUN_DIR/stop"
 ```
 
 The script polls every 0.5s for the stop-file, sends SIGINT to xctrace
@@ -81,13 +83,7 @@ plug them in before recording.
 
 ## Picking a template
 
-> **Hard rule: the `SwiftUI` template only populates the SwiftUI lane on a
-> real device — a physical iOS/iPadOS device or the host Mac. On the iOS
-> Simulator it records but the SwiftUI lane comes back empty.** If the
-> chosen UDID falls under the `simulators` kind from `--list-devices`,
-> switch to `Time Profiler`. It still gives you Time Profiler + Hangs +
-> Animation Hitches, which `analyze_trace.py` analyses and correlates
-> normally; only the `swiftui` lane will report `available: false`.
+Template lanes depend on the Xcode version, target and recording configuration. Some SwiftUI Instruments configurations do not support Simulator lanes. Confirm templates and the actual exported schemas; do not assume every physical device or Time Profiler recording contains SwiftUI, Hangs and Animation Hitches data. Missing lanes are unavailable, not a passed measurement.
 
 Decision flow:
 
@@ -98,9 +94,8 @@ Decision flow:
 | iOS / iPadOS / watchOS / tvOS Simulator      | `Time Profiler`      |
 
 Always confirm the target kind with `--list-devices` before starting a
-recording: entries under `simulators` mean you must switch to Time
-Profiler; entries under `devices` (both connected devices and the host
-Mac) support the SwiftUI template. Entries under `devices offline` need
+recording: entries under `simulators` often need a supported Time Profiler configuration; entries under `devices` (both connected devices and the host
+Mac) may support SwiftUI profiling when the installed toolchain and app configuration do. Entries under `devices offline` need
 the user to connect/unlock/trust the device before recording.
 
 For ad-hoc hang hunting on any target, `Time Profiler` or
@@ -112,10 +107,12 @@ The recording script prints `trace written: <path>` on exit. Feed that
 path straight into `analyze_trace.py`:
 
 ```bash
-TRACE=$(python3 "${SKILL_DIR}/scripts/record_trace.py" \
-    --attach Helm --stop-file /tmp/stop-trace --output ~/Desktop/session.trace \
-    2>&1 | awk '/trace written:/ {print $NF}')
-python3 "${SKILL_DIR}/scripts/analyze_trace.py" --trace "$TRACE" --json-only
+# Use the known output path, not awk over a log (paths can contain spaces).
+TRACE_RUN_DIR=$(mktemp -d)
+python3 "${SKILL_DIR}/scripts/record_trace.py" --attach Helm \
+  --time-limit 30s --output "$TRACE_RUN_DIR/session.trace"
+# Continue only if recording exited successfully and the bundle was finalized.
+python3 "${SKILL_DIR}/scripts/analyze_trace.py" --trace "$TRACE_RUN_DIR/session.trace" --json-only
 ```
 
 If the user wanted a specific scope, combine with `--list-logs` /
@@ -126,9 +123,11 @@ If the user wanted a specific scope, combine with `--list-logs` /
 - **Device offline** — `--list-devices` shows it in `devices offline`.
   Ask the user to connect/unlock the device and retry.
 - **Output path exists** — the script refuses to overwrite. Either pick
-  a new `--output` or delete the existing bundle.
+  a new `--output` preserve the existing bundle; do not delete it merely to make a retry succeed.
 - **App not running (for `--attach`)** — xctrace exits with an error;
   fall back to `--launch` or tell the user to open the app first.
 - **Signing / trust on device** — iOS requires a development build
   signed with the user's team. If xctrace returns a signing error, point
   the user to trust the developer profile on the device.
+
+Before recording, confirm the authorized device, exact app/process and duration; all-process capture requires an explicit broader scope. Launch mode executes the selected app. Do not pass secrets with --env unless that exposure is accepted: the wrapper hides them from its command log, but they remain process arguments to xctrace. Use fresh private output/stop paths, retain raw traces as sensitive data and do not upload them. A stop-file must not already exist. Test that the selected app/build and Instruments permissions support profiling; host device enumeration is not proof that recording will work.

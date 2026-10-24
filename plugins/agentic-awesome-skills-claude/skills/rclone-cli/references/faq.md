@@ -10,8 +10,7 @@ description: "Rclone Frequently Asked Questions"
 
 ### Do all cloud storage systems support all rclone commands
 
-Yes they do.  All the rclone commands (e.g. `sync`, `copy`, etc.) will
-work on all the remote storage systems.
+Supported operations depend on the backend and its permissions. Read-only backends cannot be sync destinations; optional features such as hashes, server-side moves and quota reports vary. Consult the backend reference and installed version.
 
 ### Can I copy the config from one machine to another
 
@@ -158,7 +157,7 @@ file.
 The FTP and SFTP backends have their own `http_proxy` settings to
 support an HTTP CONNECT proxy (
 [--ftp-http-proxy](https://rclone.org/ftp/#ftp-http-proxy) and
-[--sftp-http-proxy](https://rclone.org/ftp/#sftp-http-proxy) )
+[--sftp-http-proxy](https://rclone.org/sftp/#sftp-http-proxy) )
 
 ### Rclone gives x509 SSL root certificates error
 
@@ -179,25 +178,9 @@ these places on Linux.
 "/etc/pki/tls/cacert.pem",            // OpenELEC
 ```
 
-So doing something like this should fix the problem.  It also sets the
-time which is important for SSL to work properly.
+Repair the operating system CA package through its authenticated package manager and verify the system clock. For a private CA, obtain the certificate through an independently authenticated channel and use a task-specific `--ca-cert` file after verifying its fingerprint. Do not overwrite the system trust store with a floating download or use `curl --insecure` to bootstrap trust.
 
-```console
-mkdir -p /etc/ssl/certs/
-curl -o /etc/ssl/certs/ca-certificates.crt https://raw.githubusercontent.com/bagder/ca-bundle/master/ca-bundle.crt
-ntpclient -s -h pool.ntp.org
-```
-
-The two environment variables `SSL_CERT_FILE` and `SSL_CERT_DIR`, mentioned in
-the [x509 package](https://godoc.org/crypto/x509), provide an additional way to
-provide the SSL root certificates on Unix systems other than macOS.
-
-Note that you may need to add the `--insecure` option to the `curl` command line
-if it doesn't work without.
-
-```console
-curl --insecure -o /etc/ssl/certs/ca-certificates.crt https://raw.githubusercontent.com/bagder/ca-bundle/master/ca-bundle.crt
-```
+On supported Unix systems, `SSL_CERT_FILE`/`SSL_CERT_DIR` can select a reviewed trust bundle; consult the Go x509 documentation for platform behavior.
 
 On macOS, you can install
 [ca-certificates](https://formulae.brew.sh/formula/ca-certificates) with
@@ -219,11 +202,7 @@ docs](https://golang.org/doc/install) for full details.
 
 ### All my uploaded docx/xlsx/pptx files appear as archive/zip
 
-This is caused by uploading these files from a Windows computer which
-hasn't got the Microsoft Office suite installed.  The easiest way to
-fix is to install the Word viewer and the Microsoft Office
-Compatibility Pack for Word, Excel, and PowerPoint 2007 and later
-versions' file formats
+OOXML files are ZIP containers. Check the source MIME association, backend metadata and application interpretation before attributing this to an upload problem. Do not install retired Office viewers/compatibility packs as a general fix; use supported applications and, where appropriate, the backend's supported content-type metadata configuration.
 
 ### tcp lookup some.domain.com no such host
 
@@ -264,6 +243,7 @@ A simple solution may be restarting the Host Network Service with eg. Powershell
 
 ```powershell
 Restart-Service hns
+# Administrative, disruptive: may interrupt containers/virtual networking; coordinate a maintenance window first.
 ```
 
 ### The total size reported in the stats for a sync is wrong and keeps changing

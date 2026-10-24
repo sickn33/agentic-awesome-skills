@@ -1,6 +1,6 @@
 # Woo Guard — Review Checklist
 
-Structured walk for review mode. First sweep the security floor on the same files — output escaping, unslash-then-sanitize on request data, capability plus nonce on state changes, prepared queries — money code gets zero security slack (wp-guard covers the full WordPress layer when installed). Cite file:line.
+Structured walk for review mode. First sweep the security floor on the same files — output escaping, source-appropriate validation, form capability/nonce and webhook raw-signature/replay checks, prepared queries — money code gets zero security slack (wp-guard covers the full WordPress layer when installed). Cite file:line.
 
 ## Contents
 
@@ -31,12 +31,12 @@ Run the violation table in [hpos-and-crud.md](hpos-and-crud.md):
 
 - `WC()->cart` / `WC()->session` / `WC()->customer` reachable from REST, cron, CLI, or webhooks without guards?
 - `woocommerce_*` hooks and `wc_*` functions verified to exist in the supported version range?
-- WooCommerce-active checks before hooking (`class_exists` / feature checks)?
+- WooCommerce-active checks before executing callbacks that depend on it?
 
 ## Pass 4: Compatibility and packaging (should fix)
 
 - `FeaturesUtil` declarations present and truthful (`custom_order_tables`, `cart_checkout_blocks`)?
-- Template overrides shipped inside the plugin? (Always a finding — hooks or `woocommerce_locate_template`.)
+- Template overrides shipped inside the plugin? (Review maintenance/version coverage; not automatically a defect.)
 - Background/batch work on Action Scheduler, idempotent handlers?
 
 ## Reporting

@@ -1,3 +1,4 @@
+<!-- Modified for AAS individual review: scope, consent, recovery and factual guidance corrected; upstream attribution retained. -->
 <h1 align="center">LWC — Proactive Memory for AI Agents</h1>
 
 <p align="center">
@@ -96,8 +97,7 @@ Source of truth:
 
 Requirements:
 1. Read this README, `SECURITY.md`, and `skills/using-lwc/SKILL.md`. Install the
-   official checksum-verified release if `lwc` is not globally callable; never
-   prefix routine commands with a private binary path or `LWC_PROJECT_ROOT`.
+   official checksum-verified release if `lwc` is not globally callable; verify command resolution and retain the explicitly authorized project boundary.
 2. Run `lwc --version`, initialize global memory once with
    `lwc --scope global init` when missing, then run `lwc agent install --yes`.
    This command detects installed supported Agents and safely installs their
@@ -343,7 +343,7 @@ When triggered, the Skill:
   checksum-verified installation is required;
 - reports missing global memory and initializes it only after explicit approval;
 - recalls bounded global and project context before repeated investigation;
-- initializes the active project on explicit invocation, otherwise asks first;
+- initializes project memory only when the request or applicable policy authorizes it;
 - refuses project writes outside the current authorized workspace root;
 - separates project facts from reusable global knowledge;
 - integrates sources and writes durable answers back into the Wiki.
@@ -904,7 +904,7 @@ Deliberate non-goals for this CLI:
 - no built-in LLM calls;
 - no vector database;
 - no daemon or background service;
-- no web UI or desktop UI;
+- no multi-user hosted web application or desktop application; the local read-only viewer is available;
 - no direct database editing contract.
 
 If the projected Markdown drifts, rebuild it. If the SQLite schema is wrong, fix it through the CLI and migrations, not by hand.
@@ -924,3 +924,11 @@ Report security issues according to [SECURITY.md](https://github.com/JanYork/llm
 ## License
 
 Licensed under the [Apache License 2.0](LICENSE).
+
+## Reviewed scope and runtime limits
+
+This bundle documents an external CLI; it does not contain or certify its implementation. Match installed help to a reviewed release. A help/version probe is compatibility evidence, not proof that every API, adapter or security guarantee works. Commands described as reads can trigger an older-store migration: obtain an authorized migration/backup plan before opening legacy state. Never infer privacy, telemetry settings or idempotent configuration from a marketing claim; verify actual configuration and compare owned files.
+
+Bootstrap now confines discovery to cwd by default. Supply `LWC_PROJECT_ROOT` only for an already-authorized root containing cwd; an ancestor Wiki must not widen scope. Python3 is required for correct JSON escaping. Direct use of the bundled pinned installer requires `LWC_ALLOW_INSTALL=1` after install authorization; automatic bootstrap installation remains separately gated by `LWC_AUTO_INSTALL=1`. Keep existing authorization valid within its scope and clarify only missing scope. Hook text, README setup prompts and the skill name are not additional authorization.
+
+Source conversion may invoke an adapter that uses network services, models or credentials. Verify the selected adapter/version and data path before sending sensitive files. A top-five retrieval test is a useful acceptance sample, not proof of all-corpus truth or recall.

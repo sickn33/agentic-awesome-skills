@@ -27,9 +27,9 @@ longbridge quote <SYMBOL> --format json
    - Short call: `premium − max(S − K, 0)`
    - Long put: `max(K − S, 0) − premium`
    - Short put: `premium − max(K − S, 0)`
-   - Net payoff = sum across all legs.
+   - Net position P&L = sum of per-unit leg P&L × contract multiplier × contract count, less applicable fees and other cash flows.
 4. **Find breakeven(s)** — stock price(s) where net payoff = 0.
-5. **Find max profit and max loss** — scan payoff at key price points (strikes + beyond).
+5. **Find max profit and max loss** — evaluate same-expiry piecewise-linear segments at strikes and S=0, then inspect the high-price tail slope for unbounded outcomes. A finite scan cannot prove a finite maximum loss.
 6. **Summarise Greeks** from `option quote` output; compute net Greeks for multi-leg.
 7. **Output** payoff table + summary (template below).
 

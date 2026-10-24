@@ -31,6 +31,10 @@ Use this skill when:
 - Setting up CI environments that match local dev
 - Creating ephemeral, disposable dev environments
 
+## Environment execution boundaries
+
+Devcontainer features, lifecycle hooks, Nix shell hooks, direnv and dependency installers execute code; inspect the complete configuration, locked inputs and source before activation. Do not run moving downloaded installers or accept a hash mismatch by deleting/recreating state; verify publisher/version and integrity first. Avoid privileged Docker-in-Docker and host sockets for untrusted repositories. Never pass production credentials into a development environment by default. Offline operation needs every dependency/artifact already available locally; a lockfile alone is insufficient. `nix build/run` need corresponding outputs, which the devShell-only example does not define.
+
 ## Dev Containers
 
 ### Basic Configuration
@@ -98,12 +102,12 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
 
   redis:
     image: redis:7-alpine
     ports:
-      - "6379:6379"
+      - "127.0.0.1:6379:6379"
 
 volumes:
   pgdata:
@@ -258,7 +262,7 @@ devbox run node --version
   "shell": {
     "init_hook": [
       "echo 'Dev environment ready'",
-      "npm install --silent 2>/dev/null || true"
+      "npm ci --ignore-scripts"
     ],
     "scripts": {
       "dev": "npm run dev",

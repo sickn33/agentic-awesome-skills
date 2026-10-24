@@ -1,5 +1,7 @@
 # Agent SDK Patterns — TypeScript
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 ## Basic Agent
 
 ```typescript
@@ -10,7 +12,7 @@ async function main() {
     prompt: "Explain what this repository does",
     options: {
       cwd: "/path/to/project",
-      allowedTools: ["Read", "Glob", "Grep"],
+      tools: ["Read", "Glob", "Grep"], allowedTools: ["Read", "Glob", "Grep"],
     },
   })) {
     if ("result" in message) {
@@ -45,7 +47,7 @@ for await (const message of query({
   prompt: "Refactor utils.py to improve readability",
   options: {
     allowedTools: ["Read", "Edit", "Write"],
-    permissionMode: "acceptEdits",
+    permissionMode: "default",
     hooks: {
       PostToolUse: [{ matcher: "Edit|Write", hooks: [logFileChange] }],
     },
@@ -90,7 +92,7 @@ for await (const message of query({
   prompt: "Open example.com and describe what you see",
   options: {
     mcpServers: {
-      playwright: { command: "npx", args: ["@playwright/mcp@latest"] },
+      playwright: { command: "/absolute/path/to/reviewed-playwright-mcp", args: [] },
     },
   },
 })) {
@@ -117,10 +119,11 @@ for await (const message of query({
   }
 }
 
-// Resume with full context from the first query
+if (!sessionId) throw new Error("No session ID; refusing a new broader session");
+// Resume only the same authorized scope
 for await (const message of query({
   prompt: "Now find all places that call it",
-  options: { resume: sessionId },
+  options: { resume: sessionId, tools: ["Read", "Glob"], maxTurns: 8 },
 })) {
   if ("result" in message) console.log(message.result);
 }
@@ -136,7 +139,7 @@ import { query } from "@anthropic-ai/claude-agent-sdk";
 for await (const message of query({
   prompt: "Review this code",
   options: {
-    allowedTools: ["Read", "Glob", "Grep"],
+    tools: ["Read", "Glob", "Grep"], allowedTools: ["Read", "Glob", "Grep"],
     systemPrompt: `You are a senior code reviewer focused on:
 1. Security vulnerabilities
 2. Performance issues
@@ -148,3 +151,5 @@ Always provide specific line numbers and suggestions for improvement.`,
   if ("result" in message) console.log(message.result);
 }
 ```
+
+For every actual run set an approved cwd, explicit tools/deny rules, max turns, cost and time budget, and an approval handler where required. Resume only an existing authorized session with the same scope and restrictions; a missing ID must fail rather than start a new broader session. Do not log untrusted paths or full message objects without sanitization.

@@ -336,7 +336,7 @@ remote,parameter=value,parameter2=value2:path/to/dir
 :backend,parameter=value,parameter2=value2:path/to/dir
 ```
 
-If the `parameter` has a `:` or `,` then it must be placed in quotes `"` or
+If the parameter value has a `:` or `,` then it must be placed in quotes `"` or
 `'`, so
 
 ```text
@@ -374,7 +374,7 @@ special characters within them.
 
 If you are a shell master then you'll know which strings are OK and
 which aren't, but if you aren't sure then enclose them in `"` and use
-`'` as the inside quote. This syntax works on all OSes.
+`'` as the inside quote. Check the actual shell: cmd.exe, PowerShell and POSIX shells have different quoting rules.
 
 ```console
 rclone copy ":http,url='https://example.com':path/to/dir" /tmp/dir
@@ -535,8 +535,7 @@ Note how the global flag name loses its initial `--` and gets `-` replaced with
 `_` and gets a `global.` prefix.
 
 Any global variable can be set like this and it is exactly equivalent to using
-the equivalent flag on the command line. This means it will affect all uses of
-rclone.
+the equivalent flag on the command line. This affects other operations in the same rclone process, not every future rclone invocation. RC-created remotes have additional restrictions; consult the current RC security documentation.
 
 If two remotes set the same global variable then the first one instantiated will
 be overridden by the second one. A `global.var` will override all other config
@@ -740,10 +739,7 @@ The goal of the implementation is to
 1. Preserve metadata if at all possible
 2. Interpret metadata if at all possible
 
-The consequences of 1 is that you can copy an S3 object to a local
-disk then back to S3 losslessly. Likewise you can copy a local file
-with file attributes and xattrs from local disk to s3 and back again
-losslessly.
+Lossless metadata round trips are a goal, not a universal guarantee: verify the actual backend metadata support, local filesystem, ownership privileges and options on a test subset before migration.
 
 The consequence of 2 is that you can copy an S3 object with metadata
 to Azureblob (say) and have the metadata appear on the Azureblob
@@ -990,7 +986,7 @@ example:
 Is equivalent to this:
 
 ```text
---bwlimit "Mon-00:00,512Mon-12:00,1M Tue-12:00,1M Wed-12:00,1M Thu-12:00,1M Fri-12:00,1M Sat-12:00,1M Sun-12:00,1M Sun-20:00,off"
+--bwlimit "Mon-00:00,512 Mon-12:00,1M Tue-12:00,1M Wed-12:00,1M Thu-12:00,1M Fri-12:00,1M Sat-12:00,1M Sun-12:00,1M Sun-20:00,off"
 ```
 
 Bandwidth limit apply to the data transfer for all backends. For most
@@ -1000,8 +996,8 @@ being the non HTTP backends, `ftp`, `sftp` and `storj`).
 Note that the units are **Byte/s**, not **bit/s**. Typically
 connections are measured in bit/s - to convert divide by 8. For
 example, let's say you have a 10 Mbit/s connection and you wish rclone
-to use half of it - 5 Mbit/s. This is 5/8 = 0.625 MiB/s so you would
-use a `--bwlimit 0.625M` parameter for rclone.
+to use half of it - 5 Mbit/s. This is 5,000,000/8 = 625,000 B/s, about 0.596 MiB/s, so you would
+use a `--bwlimit 625000B` parameter for rclone.
 
 On Unix systems (Linux, macOS, …) the bandwidth limiter can be toggled by
 sending a `SIGUSR2` signal to rclone. This allows to remove the limitations
@@ -1038,7 +1034,7 @@ effect at the start of the transfer.
 
 ### --buffer-size SizeSuffix
 
-Use this sized buffer to speed up file transfers.  Each `--transfer`
+Use this sized buffer to speed up file transfers.  Each parallel transfer controlled by `--transfers`
 will use this much memory for buffering.
 
 When using `mount` or `cmount` each open file descriptor will use this much
@@ -1302,7 +1298,7 @@ for more information as to what these options mean.
 
 ### --default-time Time
 
-If a file or directory does have a modification time rclone can read
+If a file or directory does not have a modification time rclone can read
 then rclone will display this fixed time instead.
 
 The default is `2000-01-01 00:00:00 UTC`. This can be configured in
@@ -1392,7 +1388,7 @@ response headers after fully writing the request headers if the
 request has an "Expect: 100-continue" header. Not all backends support
 using this.
 
-Zero means no timeout and causes the body to be sent immediately,
+Zero disables the wait and causes the body to be sent immediately,
 without waiting for the server to approve.  This time does not include
 the time to send the request header.
 
@@ -1957,7 +1953,7 @@ If set, don't allocate more than given amount of memory as buffers. If
 not set or set to `0` or `off` this will not limit the amount of memory
 in use.
 
-This includes memory used by buffers created by the `--buffer` flag
+This includes memory used by buffers controlled by the `--buffer-size` flag
 and buffers used by multi-thread transfers.
 
 Most multi-thread transfers do not take additional memory, but some do
@@ -1977,7 +1973,7 @@ in use and the use of HTTP1 vs HTTP2.
 
 When downloading files, backends only limit the initial opening of the
 stream. The bulk data download is not counted as a connection. This
-means that the `--max--connections` flag won't limit the total number
+means that the `--max-connections` flag won't limit the total number
 of downloads.
 
 Note that it is possible to cause deadlocks with this setting so it
@@ -2746,12 +2742,12 @@ See also `--tpslimit-burst`.
 Max burst of transactions for `--tpslimit` (default `1`).
 
 Normally `--tpslimit` will do exactly the number of transaction per
-second specified.  However if you supply `--tps-burst` then rclone can
+second specified.  However if you supply `--tpslimit-burst` then rclone can
 save up some transactions from when it was idle giving a burst of up
 to the parameter supplied.
 
 For example if you provide `--tpslimit-burst 10` then if rclone has
-been idle for more than 10*`--tpslimit` then it can do 10 transactions
+been idle long enough to replenish its 10-token bucket (about 10 / `--tpslimit` seconds) then it can do 10 transactions
 very quickly before they are limited again.
 
 This may be used to increase performance of `--tpslimit` without
@@ -3216,17 +3212,7 @@ at rest or transfer. Detailed instructions for popular OSes:
 
 #### Windows
 
-- Generate and store a password
-
-  ```powershell
-  New-Object -TypeName PSCredential -ArgumentList "rclone", (ConvertTo-SecureString -String ([System.Web.Security.Membership]::GeneratePassword(40, 10)) -AsPlainText -Force) | Export-Clixml -Path "rclone-credential.xml"
-  ```
-
-- Add the password retrieval instruction
-
-  ```powershell
-  [Environment]::SetEnvironmentVariable("RCLONE_PASSWORD_COMMAND", "[System.Runtime.InteropServices.Marshal]::PtrToStringAuto([System.Runtime.InteropServices.Marshal]::SecureStringToBSTR((Import-Clixml -Path "rclone-credential.xml").Password))")
-  ```
+Use a supported credential store or a reviewed password helper appropriate to the installed PowerShell version. The original expression-only RCLONE_PASSWORD_COMMAND was not an executable command, and its nested quotes were invalid. A helper must have an absolute executable path, print only the password to stdout, and be tested locally with its actual quoting and same-user permissions. Do not use System.Web Membership as a cross-version password generator or assume Export-Clixml is portable across users/machines.
 
 #### Encrypt the config file (all systems)
 
@@ -3506,7 +3492,8 @@ Note also that now rclone has [connection strings](#connection-strings),
 it is probably easier to use those instead which makes the above example
 
 ```console
-rclone lsd :s3,access_key_id=XXX,secret_access_key=XXX:
+# Prefer a configured remote or workload identity; connection-string secrets are exposed in process arguments/history.
+rclone lsd mys3:
 ```
 
 ### Precedence

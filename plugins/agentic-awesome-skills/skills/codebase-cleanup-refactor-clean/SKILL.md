@@ -57,3 +57,11 @@ $ARGUMENTS
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Behavior preservation and evidence
+
+The numeric smell/coverage/ROI thresholds are heuristics, not universal quality gates or measured benefits. Preserve public behavior, duplicate ordering, transactions, side-effect timing, errors and compatibility unless a change is explicitly intended. Characterize meaningful invariants before a risky refactor; do not mechanically split functions to meet line/parameter limits.
+
+Examples are incomplete independent fragments, not a compiled project: repository find_by_id, framework helpers, discount implementation, EmailService and Logger are missing. Persistence plus email needs an idempotent/outbox strategy because a failed notification after commit must not repeat the order. Validate authorization and server-trusted prices before processing money. Email regex checks shape, not deliverability/ownership; caches need tenant keys, invalidation and sensitive-data policy.
+
+Static-analysis snippets are leads: generic execute($QUERY) is not proof of SQL injection, and CodeQL analyze alone is not a full initialized/extracted workflow. Inspect actual tool versions/configuration before running; preserve existing gates and do not replace tests with an AI pass. Report only measured before/after metrics and actual dashboard URLs; no coverage, security absence or performance improvement is certified by these sketches. No code from the playbook was executed.

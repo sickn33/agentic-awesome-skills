@@ -38,7 +38,7 @@ Production patterns for Linkerd service mesh - the lightweight, security-first s
 ┌─────────────────────────────────────────────┐
 │                Control Plane                 │
 │  ┌─────────┐ ┌──────────┐ ┌──────────────┐ │
-│  │ destiny │ │ identity │ │ proxy-inject │ │
+│  │ destination │ │ identity │ │ proxy-inject │ │
 │  └─────────┘ └──────────┘ └──────────────┘ │
 └─────────────────────────────────────────────┘
                       │
@@ -62,6 +62,10 @@ Production patterns for Linkerd service mesh - the lightweight, security-first s
 | **TrafficSplit** | Canary deployments, A/B testing |
 | **Server** | Define server-side policies |
 | **ServerAuthorization** | Access control policies |
+
+## Version and deployment boundaries
+
+Examples mix version-specific APIs and partial manifests. Check the installed Linkerd/Kubernetes CRDs and supported Gateway API/SMI versions before rendering or applying; the Deployment fragment omits required selectors/containers. mTLS protects eligible meshed traffic, not all traffic automatically; verify injection, identities and explicit authorization. The broad unauthenticated CIDR example requires an intentional approved exception. Pin/review installer and image versions, preview rendered changes against the exact context/namespace, and preserve rollout/rollback access. Tap/log output may disclose sensitive traffic.
 
 ## Templates
 
@@ -233,14 +237,14 @@ spec:
   parentRefs:
     - name: my-service
       kind: Service
-      group: core
+      group: ""
       port: 8080
   rules:
     - matches:
         - path:
             type: PathPrefix
             value: /api/v2
-        - headers:
+          headers:
             - name: x-api-version
               value: v2
       backendRefs:

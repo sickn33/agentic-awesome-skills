@@ -37,7 +37,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Removed **xlsx-official**, **pdf-official**, **docx-official** and **pptx-official** after restrictive-license review. Their old `docx` and `pptx` alias links were also removed. Update stacks that reference these IDs; use an appropriately licensed retained alternative after reviewing it for the task.
 - Reinstall or update to **20.0.0** to receive the reviewed catalog and refreshed plugin distributions. Existing pinned installs keep their previous version until updated. Independently pinned catalog revisions retain their runtime compatibility requirements.
-- Review findings improve this release's baseline; they are not a guarantee that all possible defects are absent. Cloud/provider workloads, model behavior and native-client operation still require task-specific validation.
 
 ### Thanks
 

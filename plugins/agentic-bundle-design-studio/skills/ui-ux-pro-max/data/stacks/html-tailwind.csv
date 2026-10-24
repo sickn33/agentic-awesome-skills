@@ -1,5 +1,5 @@
 No,Category,Guideline,Description,Do,Don't,Code Good,Code Bad,Severity,Docs URL
-1,Animation,Use Tailwind animate utilities,Built-in animations are optimized and respect reduced-motion,Use animate-pulse animate-spin animate-ping,Custom @keyframes for simple effects,animate-pulse,@keyframes pulse {...},Medium,https://tailwindcss.com/docs/animation
+1,Animation,Use Tailwind animate utilities,Animation utilities need explicit reduced-motion handling,Use motion-safe:animate-spin and motion-reduce:animate-none,Custom @keyframes for simple effects,animate-pulse,@keyframes pulse {...},Medium,https://tailwindcss.com/docs/animation
 2,Animation,Limit bounce animations,Continuous bounce is distracting and causes motion sickness,Use animate-bounce sparingly on CTAs only,Multiple bounce animations on page,Single CTA with animate-bounce,5+ elements with animate-bounce,High,
 3,Animation,Transition duration,Use appropriate transition speeds for UI feedback,duration-150 to duration-300 for UI,duration-1000 or longer for UI elements,transition-all duration-200,transition-all duration-1000,Medium,https://tailwindcss.com/docs/transition-duration
 4,Animation,Hover transitions,Add smooth transitions on hover state changes,Add transition class with hover states,Instant hover changes without transition,hover:bg-gray-100 transition-colors,hover:bg-gray-100 (no transition),Low,

@@ -126,3 +126,9 @@ it only after the user agrees, and run the script again to show it passes.
 ## Related Skills
 
 - `@wcag-audit-patterns` - For a full WCAG 2.2 audit beyond color contrast.
+
+## Parser and suggestion limits
+
+This checker uses regular expressions rather than the browser CSS cascade: scoped selectors, specificity, nested rules, layers, imports and computed values can be misinterpreted. Review explicit pairs against computed rendered styles. A single suggestion is sought within each measured theme, not guaranteed across all themes or backgrounds. Lightness is searched on a discrete grid while chroma may be reduced; neither exact nearest color nor unchanged hue after sRGB clipping/rounding is guaranteed. Re-measure the exact serialized color before applying it. Transparent backgrounds need their actual underlying composite; the checker refuses those pairs rather than assuming white.
+
+Unparsed tokens make coverage incomplete. The lightweight color parser is not a CSS validator and cannot certify color syntax or gamut mapping. Focus requirements also depend on state/context and other WCAG criteria. Read the source before running it on approved inputs; report output uses exclusive private file creation and will fail if the destination exists. No checker or rendered-page validation was executed during this review.

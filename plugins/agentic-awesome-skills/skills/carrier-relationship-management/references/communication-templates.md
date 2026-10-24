@@ -2,7 +2,7 @@
 
 > **Reference Type:** Tier 3 — Load on demand when composing or reviewing carrier communications.
 >
-> **Usage:** Each template includes variable placeholders in `{{double_braces}}` for direct substitution. Templates are organized by communication type and business context. Select the template matching your scenario, substitute variables, review tone guidance, and send.
+> **Usage:** Each template includes variable placeholders in `{{double_braces}}` for direct substitution. Templates are organized by communication type and business context. Select the template matching your scenario, substitute variables, review tone guidance, and return a draft. Send only after explicit authorization for the recipients and final message.
 
 ---
 
@@ -275,7 +275,7 @@ Regards,
 
 Welcome to {{our_company}}'s carrier network. We're pleased to have {{carrier_name}} as a transportation partner and look forward to a productive relationship.
 
-This email contains everything you need to get started. Please review carefully and let me know if you have questions.
+This draft lists the proposed onboarding items; confirm applicable requirements and approvals before tendering freight. Please review carefully and let me know if you have questions.
 
 **Your Awarded Lanes:**
 
@@ -287,7 +287,7 @@ This email contains everything you need to get started. Please review carefully 
 **Onboarding Checklist (please complete by {{onboarding_deadline}}):**
 
 - [ ] Return signed Carrier Transportation Agreement (attached)
-- [ ] Provide current Certificate of Insurance meeting our minimums ($1M auto liability, $100K cargo)
+- [ ] Provide insurer-confirmed coverage meeting the approved commodity/jurisdiction-specific requirements (the example $1M/$100K levels are commercial assumptions, not universal law)
 - [ ] Complete W-9 form (attached)
 - [ ] Provide EDI/API contact for system integration setup (if applicable)
 - [ ] Confirm operational contact for daily dispatching (name, phone, email)
@@ -505,7 +505,7 @@ We've reviewed the detention invoice for PRO# {{pro_number}} ({{lane_origin}} to
 - Our records show actual dock dwell time (from check-in to BOL signature) of {{actual_dwell}} hours, of which {{free_time_hours}} hours is free time. Billable detention per our records: {{adjusted_detention}} hours.
 
 **Our Proposed Resolution:**
-We'll pay {{adjusted_amount}} ({{adjusted_detention}} hours × ${{detention_rate}}/hr) against this invoice. If you believe our records are inaccurate, please provide driver GPS or ELD data showing dock arrival and departure times, and we'll reconcile.
+Subject to authorized settlement approval, we propose {{adjusted_amount}} ({{adjusted_detention}} hours × ${{detention_rate}}/hr) against this invoice. If you believe our records are inaccurate, please provide driver GPS or ELD data showing dock arrival and departure times, and we'll reconcile.
 
 We want to get this right for both of us. If detention on this lane is a recurring issue, I'd welcome a discussion about adjusting appointment scheduling or implementing a drop-trailer program to address the root cause.
 
@@ -582,3 +582,19 @@ Best regards,
 | Exit notification | Formal email + same-day phone call | N/A — always deliver exit decisions via both channels |
 | Detention/accessorial dispute | Email with documentation | If not resolved in 15 business days, escalate to carrier account manager |
 | Partnership proposal | Formal letter/email → in-person meeting | N/A — partnership proposals require in-person discussion |
+
+## Before releasing a draft
+
+Replace or remove every placeholder. Verify facts, data periods/denominators,
+attachments, approved allocation/volume guarantees, recipients and notice clauses.
+Sample compliments, avoided costs and prior corrective notices are not real
+events: include only documented statements. Do not imply that an email/read
+receipt automatically satisfies contractual service or notice requirements.
+Banking/tax forms belong in an approved secure channel, not open email attachments.
+
+Detention clocks, appointment treatment and payment obligations follow the actual
+contract; a BOL signature may precede driver release. Reconcile timestamp zones,
+gate-out and any disputed records without automatically withholding undisputed
+amounts. An exit effective date and transition tender window must be consistent.
+Route legal notices and settlement/termination decisions through the authorized
+owner; these templates do not grant authority to send or change contracts.

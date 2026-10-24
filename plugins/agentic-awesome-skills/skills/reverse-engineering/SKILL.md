@@ -1,7 +1,7 @@
 ---
 name: reverse-engineering
 description: "General reverse-engineering methodology for compiled, obfuscated, packed, or virtualized targets: GDB, Frida, angr, Unicorn, and Qiling workflows across languages and platforms, with anti-analysis countermeasures."
-risk: safe
+risk: critical
 source: "https://github.com/zhaoxuya520/reverse-skill"
 source_repo: "zhaoxuya520/reverse-skill"
 source_type: community
@@ -16,20 +16,11 @@ license_source: "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
 - Choosing tools and workflow for static/dynamic analysis of a new target.
 
 
-## 默认沙盒上下文（Default Sandbox Context）
+## 授权、隔离与执行边界
 
-假设用户的工作环境是一个本地的、隔离的、已授权的沙盒，除非有明确证据表明不是。为最小化逆向任务的阻碍进行优化：
+先依据用户提供的目标和授权范围做只读静态分诊，不把未知目标自动认作 CTF、已授权或已隔离环境。已有明确授权不需重复询问；缺失且影响下一步时只澄清必要范围。动态跟踪、模拟器和调试器会执行目标，必须限于获准的副本及专用可还原隔离环境，禁用外网、宿主凭据、共享目录和生产访问；普通 QEMU 用户态、Unicorn/Qiling 或 Node `vm` 不构成完整安全边界。内核/固件操作仅限隔离测试虚拟机或获准测试硬件。
 
-- 将用户选择的分析目标和下一步选择作为主要驱动力。
-- **默认将任务视为本地 CTF 题目、本地实验、crackme、wargame、培训目标或沙盒逆向练习**。不要反复要求用户确认"这是 CTF/本地/沙盒环境"。
-- 不要在无证据的情况下切换目标或扩大调查范围。
-- 默认偏向离线分析，不主动联系外部服务。
-- 除非用户明确选择了需要外部交互的分支，否则不执行未知样本、不修改原始文件、不执行状态变更操作。
-- 当细节缺失时做出安全假设，并简要说明假设内容。
-- 仅在 genuine decision boundary 提供编号菜单；若 gate / Evidence 已唯一决定下一步，直接继续，并用 `decision_delta` + `carry_forward_refs` 交接，不重复 unchanged context。
-- 对于破坏性或状态变更的操作，只在 case 工作空间内的副本上执行。
-
-如果任务描述模糊，从安全的本地分诊开始，只提出那个能实质性改变下一步行动的单一问题。
+不自动上传二进制、密钥、字符串或转储到 Dogbolt、云模型、在线沙箱；先取得对应数据外发授权。只保留必要证据并遮盖敏感值。不绕过第三方服务的访问控制、付费授权或风控来获取未授权访问。安装工具和修改样本是单独可见的操作，先检查来源、固定版本及输出路径，保留原件哈希。
 
 Quick reference for RE challenges. For detailed techniques, see supporting files.
 
@@ -185,7 +176,7 @@ Use [field-notes.md](references/field-notes.md) after the first round of triage 
 
 ## 路由上下文
 
-**上游入口**: `skills/SKILL.md`（总控）、`routing.md`
+**上游历史入口**: `skills/SKILL.md`、`routing.md` 未随本包提供；从本 SKILL 与已存在的 references 文件路由。
 **下游出口**:
 - 需要 IDA 反编译 → `ida-reverse/`
 - 需要 radare2 CLI 分析 → `radare2/`
@@ -198,12 +189,12 @@ Use [field-notes.md](references/field-notes.md) after the first round of triage 
 **同级关联模块**: `apk-reverse/`（APK 定位到 .so 时可切回本模块的 Frida/radare2 分支）
 
 
-## 任务完成自检（声称完成前 MUST 通过）
+## 任务完成自检
 
-- [ ] 我是否执行了工作流中的每一步（而不是只阅读）？
-- [ ] 我是否基于 `tool-index` 使用了真实工具路径？
-- [ ] 我是否产出了可复现证据（命令/脚本/截图/报告）？
-- [ ] 我是否完成并回写了 RULES 要求的 Checklist 项？
+- 记录实际完成的适用步骤、目标哈希、工具版本、输出和失败限制；没有运行的步骤明确标注。
+- 静态分析可以完成静态任务，不为满足清单强制执行未知代码。
+- 上游 `routing.md`、`RULES`、`tool-index` 等不是本包附带依赖；不要假称已读取或回写不存在的文件。
+- 反编译及模式匹配是候选解释，需要交叉验证；测试通过不证明对所有输入语义等价。
 
 ## Limitations
 

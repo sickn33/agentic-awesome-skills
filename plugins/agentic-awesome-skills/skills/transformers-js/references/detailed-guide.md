@@ -115,6 +115,7 @@ const answer = await qa({
 const generator = await pipeline('text-generation', 'onnx-community/gemma-3-270m-it-ONNX');
 const text = await generator('Once upon a time', {
   max_new_tokens: 100,
+  do_sample: true,
   temperature: 0.7
 });
 ```
@@ -344,7 +345,7 @@ await generator.dispose();
 5. **Filter by Library**: Use `library=transformers.js` to find compatible models: https://huggingface.co/models?library=transformers.js
 6. **Version Pin**: Use specific git commits in production for stability:
    ```javascript
-   const pipe = await pipeline('task', 'model-id', { revision: 'abc123' });
+   const pipe = await pipeline('task', 'model-id', { revision: '<full-model-commit-SHA>' });
    ```
 
 
@@ -373,14 +374,9 @@ env.cacheDir = './.cache';     // Cache directory location
 env.logLevel = LogLevel.INFO;
 
 // Optional: custom fetch for auth headers, retries, abort signals, etc.
-env.fetch = (url, options) =>
-  fetch(url, {
-    ...options,
-    headers: {
-      ...options?.headers,
-      Authorization: `Bearer ${HF_TOKEN}`,
-    },
-  });
+// Server-side only: let the library scope HF_TOKEN to the Hugging Face Hub.
+// Set process.env.HF_TOKEN through your secret manager; never embed it in browser code.
+// Do not attach bearer tokens to arbitrary model/CDN/WASM URLs.
 ```
 
 **Configuration Patterns:**
@@ -510,7 +506,7 @@ const fileProgress = {};
 
 function onProgress(info) {
   if (info.status === 'progress_total') {
-    console.log(`Total: ${info.progress.toFixed(1)}%`);
+    console.log(`Total: ${(Number.isFinite(info.progress) ? info.progress : 0).toFixed(1)}%`);
     return;
   }
 
@@ -518,7 +514,7 @@ function onProgress(info) {
 
   if (info.status === 'progress') {
     fileProgress[info.file] = info.progress;
-    console.log(`${info.file}: ${info.progress.toFixed(1)}%`);
+    console.log(`${info.file}: ${(Number.isFinite(info.progress) ? info.progress : 0).toFixed(1)}%`);
   }
 
   if (info.status === 'done') {

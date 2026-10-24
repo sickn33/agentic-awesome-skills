@@ -1,8 +1,8 @@
-# PCI-DSS v4.0 — Engineering Control Reference
+# PCI-DSS v4.0.1 — Engineering Control Reference
 
-Engineering-relevant controls from PCI-DSS v4.0, organized by what a code/architecture change typically touches. Control numbers follow the official standard (PCI Security Standards Council). This is a working summary for triage, not the standard itself — for formal scoping consult the full standard and a QSA.
+Engineering-relevant controls from PCI-DSS v4.0.1, organized by what a code/architecture change typically touches. Control numbers follow the official standard (PCI Security Standards Council). This is a working summary for triage, not the standard itself — for formal scoping consult the full standard and a QSA.
 
-**Key v4.0 dates:** v4.0 became mandatory March 2024; the ~50 future-dated requirements (marked FD below) became mandatory **31 March 2025** — they are now in force.
+**Version context:** v3.2.1 retired on 31 March 2024 and v4.0 retired on 31 December 2024; verify the applicable current v4.0.1 document and program scope. the ~50 future-dated requirements (marked FD below) became mandatory **31 March 2025** — they are now in force.
 
 ## Contents
 
@@ -30,8 +30,8 @@ Engineering-relevant controls from PCI-DSS v4.0, organized by what a code/archit
 | Control | Requirement (summary) | Engineering check |
 |---------|----------------------|-------------------|
 | 7.2.1 | Access by least privilege, need-to-know, defined roles | New endpoints/services declare required roles; no wildcard IAM |
-| 8.3.6 (FD) | Passwords minimum 12 characters with complexity | Password validators, policy configs |
-| 8.3.9 | Password change every 90 days OR dynamic risk analysis OR MFA-always | Session/auth design |
+| 8.3.6 (FD) | Applicable passwords minimum 12 characters (or at least 8 if the system cannot support 12), with alphabetic and numeric characters; inspect applicability notes | Password validators, policy configs |
+| 8.3.9 | For applicable single-factor password authentication, verify the 90-day change or dynamic account-security analysis alternative and the full applicability notes; do not infer universal MFA exemption | Session/auth design |
 | 8.4.2 (FD) | MFA for ALL access into the CDE (not just admins) | Auth flows for any CDE-touching application access |
 | 8.6.1-8.6.3 (FD) | Interactive use of system/service accounts restricted; their passwords managed and rotated | Service account credentials in pipelines, cron jobs |
 | 8.2.2 | No shared/group accounts except documented exceptional circumstances | Service design, break-glass procedures |
@@ -55,7 +55,7 @@ Engineering-relevant controls from PCI-DSS v4.0, organized by what a code/archit
 | 10.2.1 | Audit logs capture: individual user access to cardholder data, admin actions, auth attempts (success/failure), log access, security event types | Audit events emitted for these actions with user identity |
 | 10.2.1.2 | All actions by accounts with admin access logged | Admin tooling, support backdoors |
 | 10.3.1-10.3.4 | Logs protected from modification, access limited, integrity monitored | Append-only/immutable log storage, restricted access |
-| 10.4.1 (FD: automated) | Daily review of security events — automated mechanisms required in v4.0 | Alerting rules exist for new security-relevant events |
+| 10.4.1 / 10.4.1.1 (FD: automated) | Daily review of security events — automated mechanisms required in v4.0 | Alerting rules exist for new security-relevant events |
 | — | **Never log:** full PAN, CVV, passwords, full track data | grep logging statements in payment/auth paths |
 
 ## 5. Network & Segmentation

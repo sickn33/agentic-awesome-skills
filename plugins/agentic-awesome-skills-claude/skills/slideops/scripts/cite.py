@@ -49,7 +49,17 @@ def parse_ref(ref: str) -> tuple[str, int | None, int | None]:
 
 def cite_one(ref: str, repo: Path, show_snippet: bool) -> bool:
     path, start, end = parse_ref(ref)
-    file_path = repo / path
+    root = repo.resolve()
+    candidate = Path(path)
+    file_path = root / candidate
+    sensitive = {'.git', '.env', '.npmrc', '.pypirc', '.ssh', '.aws', '.azure'}
+    if (candidate.is_absolute() or '..' in candidate.parts
+            or any(part in sensitive or part.startswith('.env.') for part in candidate.parts)
+            or not file_path.resolve().is_relative_to(root)
+            or any(root.joinpath(*candidate.parts[:i]).is_symlink() for i in range(1, len(candidate.parts) + 1))
+            or not git(root, 'ls-files', '--error-unmatch', '--', path)):
+        print("Refusing source outside approved tracked repository files", file=sys.stderr)
+        return False
     if not file_path.is_file():
         print(f"{ref}: no such file under {repo}", file=sys.stderr)
         return False
@@ -64,7 +74,7 @@ def cite_one(ref: str, repo: Path, show_snippet: bool) -> bool:
         selected, src = lines[start - 1 : end], f"{path}:{start}-{end}"
 
     digest = hashlib.sha256("\n".join(selected).encode("utf-8")).hexdigest()[:HASH_LENGTH]
-    print(f'data-src="{src}" data-sha256="{digest}"')
+    print(f'data-src="{html.escape(src, quote=True)}" data-sha256="{digest}"')
 
     longest = max((len(line) for line in selected), default=0)
     if longest > FULL_WIDTH:
@@ -85,7 +95,7 @@ def stamp(deck: Path, repo: Path) -> int:
         print(f"Deck not found: {deck}", file=sys.stderr)
         return 2
 
-    commit = git(repo, "rev-parse", "--short", "HEAD")
+    commit = git(repo, "rev-parse", "HEAD")
     if not commit:
         print(f"Not a git repository (or no commits): {repo}", file=sys.stderr)
         return 2
@@ -94,7 +104,8 @@ def stamp(deck: Path, repo: Path) -> int:
 
     name = (git(repo, "rev-parse", "--show-toplevel") or str(repo)).rsplit("/", 1)[-1]
     today = datetime.date.today().isoformat()
-    meta = f'<meta name="slideops-build" content="commit={commit} date={today} repo={name}">'
+    content = html.escape(f"commit={commit} date={today} repo={name}", quote=True)
+    meta = f'<meta name="slideops-build" content="{content}">'
 
     text = deck.read_text()
     if BUILD_META_RE.search(text):

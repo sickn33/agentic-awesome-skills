@@ -1,6 +1,6 @@
 # SQL API Resources
 
-Patterns for managing SQL (Core) API databases, containers, and programmability objects.
+Patterns for managing SQL (Core) API databases, containers, and programmability objects. Modified: TTL semantics, blocked incomplete destructive procedure and partition-key caveats. A 24-hour TTL deletes eligible existing/new items based on last modification; confirm retention before enabling. Creating a trigger does not invoke it automatically: data-plane requests must explicitly request it. Unique keys apply within a logical partition.
 
 ## SQL Database Operations
 
@@ -77,7 +77,7 @@ var containerData = new CosmosDBSqlContainerCreateOrUpdateContent(
         {
             Paths = { "/tenantId" },
             Kind = CosmosDBPartitionKind.Hash,
-            Version = 2  // Use V2 for hierarchical partition keys
+            Version = 2  // Hash V2; hierarchical keys additionally require MultiHash and multiple paths
         }
     });
 
@@ -166,7 +166,7 @@ var containerData = new CosmosDBSqlContainerCreateOrUpdateContent(
             Paths = { "/partitionKey" },
             Kind = CosmosDBPartitionKind.Hash
         },
-        // Default TTL in seconds (-1 = off, 0 = on but no default, >0 = default seconds)
+        // Default TTL: null = off; -1 = enabled with no default expiration; >0 = seconds; 0 is invalid
         DefaultTtl = 86400  // 24 hours
     });
 ```
@@ -247,27 +247,10 @@ var sprocData = new CosmosDBSqlStoredProcedureCreateOrUpdateContent(
     {
         Body = @"
 function bulkDelete(query) {
-    var context = getContext();
-    var container = context.getCollection();
-    var response = context.getResponse();
-    var deleted = 0;
-
-    var accepted = container.queryDocuments(
-        container.getSelfLink(),
-        query,
-        function(err, docs) {
-            if (err) throw err;
-            docs.forEach(function(doc) {
-                container.deleteDocument(doc._self);
-                deleted++;
-            });
-            response.setBody({ deleted: deleted });
-        }
-    );
-
-    if (!accepted) {
-        response.setBody({ deleted: deleted, continuation: true });
-    }
+    // Deliberately blocked: the previous sketch counted unaccepted/asynchronous
+    // deletes and ignored query pagination. Supply a reviewed bounded procedure
+    // that checks every callback/acceptance and returns resumable continuation.
+    throw new Error('Bulk deletion requires a reviewed implementation');
 }"
     });
 
@@ -331,7 +314,6 @@ await triggerCollection.CreateOrUpdateAsync(
 |-----------|------------|
 | `All` | All operations |
 | `Create` | Document creation |
-| `Update` | Document updates |
 | `Delete` | Document deletion |
 | `Replace` | Document replacement |
 
@@ -363,7 +345,7 @@ await udfCollection.CreateOrUpdateAsync(
 | Single property | `/tenantId` | Multi-tenant apps |
 | Synthetic key | `/partitionKey` | Computed from multiple fields |
 | Hierarchical | `/tenantId`, `/userId` | Large tenants with sub-partitioning |
-| ID-based | `/id` | Even distribution, no cross-partition queries |
+| ID-based | `/id` | Can distribute by ID; queries lacking the ID partition key still fan out |
 
 ### Choosing Partition Key
 

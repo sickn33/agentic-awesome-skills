@@ -5,7 +5,7 @@
 
 ## 概述
 
-FridaBypassKit 是一个集成了四大绕过能力的 Frida 脚本，无需针对特定 APP 定制，开箱即用。
+FridaBypassKit 是一个集成了四大绕过能力的 Frida 脚本，无需针对特定 APP 定制，需按目标与版本验证。
 
 ## 四大绕过能力
 

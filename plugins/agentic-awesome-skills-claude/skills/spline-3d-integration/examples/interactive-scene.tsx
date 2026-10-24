@@ -1,3 +1,5 @@
+'use client';
+
 // interactive-scene.tsx
 // Full interactive Spline example — React
 // Demonstrates: events, object manipulation, animation triggers, variable access
@@ -11,7 +13,7 @@ import type { Application } from '@splinetool/runtime';
 const SCENE_URL = 'https://prod.spline.design/REPLACE_ME/scene.splinecode';
 
 export default function InteractiveScene() {
-  const splineApp = useRef<Application>();
+  const splineApp = useRef<Application | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [lastEvent, setLastEvent] = useState<string>('');
 

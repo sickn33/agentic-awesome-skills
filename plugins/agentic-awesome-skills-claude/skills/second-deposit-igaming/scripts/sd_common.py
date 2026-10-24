@@ -15,13 +15,14 @@ import datetime as dt
 import glob
 import io
 import json
+import math
 import os
 import re
 import sys
 import zipfile
 from xml.etree import ElementTree as ET
 
-csv.field_size_limit(sys.maxsize)
+csv.field_size_limit(1_000_000)
 ENCODINGS = ('utf-8-sig', 'utf-8', 'cp1251', 'latin-1')
 NS = {'m': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main',
       'r': 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'}
@@ -41,6 +42,8 @@ class MappingError(Exception):
 
 def read_table(path, sheet=None):
     """(header, rows): rows это списки строк той же длины, что и header."""
+    if os.path.getsize(path) > 100_000_000:
+        raise MappingError('файл превышает лимит 100 MB; разделите выгрузку')
     if path.lower().endswith(('.xlsx', '.xlsm')):
         header, rows = read_xlsx(path, sheet)
     else:
@@ -65,8 +68,13 @@ def read_table(path, sheet=None):
 
 def _col_index(ref):
     i = 0
-    for ch in re.match(r'[A-Z]+', ref).group(0):
+    match = re.fullmatch(r'([A-Z]{1,3})([1-9][0-9]*)', ref or '')
+    if not match or int(match.group(2)) > 1048576:
+        raise MappingError('неверная ссылка ячейки XLSX')
+    for ch in match.group(1):
         i = i * 26 + ord(ch) - 64
+    if i > 16384:
+        raise MappingError('слишком много колонок XLSX')
     return i - 1
 
 
@@ -91,6 +99,9 @@ def _date_styles(z):
 
 def read_xlsx(path, sheet=None):
     z = zipfile.ZipFile(path)
+    if sum(i.file_size for i in z.infolist()) > 250_000_000 or len(z.infolist()) > 10000:
+        z.close()
+        raise MappingError('XLSX превышает лимит распаковки 250 MB / 10000 файлов')
     shared = []
     if 'xl/sharedStrings.xml' in z.namelist():
         for si in ET.fromstring(z.read('xl/sharedStrings.xml')).findall('m:si', NS):
@@ -99,7 +110,12 @@ def read_xlsx(path, sheet=None):
     sheets = [(s.get('name'), s.get('{%s}id' % NS['r'])) for s in wb.find('m:sheets', NS)]
     rels = ET.fromstring(z.read('xl/_rels/workbook.xml.rels'))
     target = {r.get('Id'): r.get('Target') for r in rels}
-    _, rid = next(((n, r) for n, r in sheets if sheet in (None, n)), sheets[0])
+    if not sheets or (sheet is not None and not any(n == sheet for n, _ in sheets)):
+        z.close()
+        raise MappingError('запрошенный лист XLSX отсутствует')
+    _, rid = next((n, r) for n, r in sheets if sheet in (None, n))
+    props = wb.find('m:workbookPr', NS)
+    epoch = dt.datetime(1904, 1, 1) if props is not None and props.get('date1904', '').lower() in ('1', 'true') else EXCEL0
     t = target[rid].lstrip('/')
     inner = t if t.startswith('xl/') else 'xl/' + t
     dates = _date_styles(z)
@@ -118,13 +134,14 @@ def read_xlsx(path, sheet=None):
                 val = v.text if v is not None and v.text is not None else ''
                 if val and c.get('s') and int(c.get('s')) in dates:
                     try:
-                        t = EXCEL0 + dt.timedelta(days=float(val))
+                        t = epoch + dt.timedelta(days=float(val))
                         val = (t + dt.timedelta(microseconds=500000)).replace(microsecond=0).strftime('%Y-%m-%d %H:%M:%S')
                     except (ValueError, OverflowError):
                         pass
             cells[_col_index(c.get('r'))] = val
         if cells:
             rows.append([cells.get(i, '') for i in range(max(cells) + 1)])
+    z.close()
     return (rows[0], rows[1:]) if rows else ([], [])
 
 
@@ -154,6 +171,8 @@ def parse_tz(v):
     if v is None or v == '':
         return None
     if isinstance(v, (int, float)):
+        if not math.isfinite(v) or abs(v) > 14:
+            raise MappingError('часовой пояс должен быть конечным, от -14 до +14 часов')
         return float(v)
     v = str(v).strip().upper()
     if v in ('UTC', 'Z', 'GMT'):
@@ -162,6 +181,8 @@ def parse_tz(v):
     if not m:
         raise MappingError(f'не понял часовой пояс "{v}": нужно "+03:00", "-05:00" или "UTC"')
     hours = int(m.group(2)) + int(m.group(3) or 0) / 60
+    if int(m.group(3) or 0) >= 60 or hours > 14:
+        raise MappingError('неверное смещение часового пояса')
     return -hours if m.group(1) == '-' else hours
 
 
@@ -189,7 +210,13 @@ def _parse_time(s, dayfirst=True):
         if tz and tz.upper() not in ('Z', 'UTC'):
             sign = 1 if tz[0] == '+' else -1
             z = tz[1:].replace(':', '')
-            t -= sign * dt.timedelta(hours=int(z[:2]), minutes=int(z[2:4] or 0))
+            zh, zm = int(z[:2]), int(z[2:4] or 0)
+            if zm >= 60 or zh > 14 or (zh == 14 and zm):
+                return None
+            try:
+                t -= sign * dt.timedelta(hours=zh, minutes=zm)
+            except OverflowError:
+                return None
         return t
     m = RX_DMY.match(s)
     if m:
@@ -235,7 +262,8 @@ def parse_amount(s, decimal=None):
     if not s:
         return None
     if re.fullmatch(r'[-+]?\d+(\.\d+)?[eE][-+]?\d+', s):
-        return float(s)  # экспонента из Excel и Google Таблиц: 1E-3
+        value = float(s)
+        return value if math.isfinite(value) else None
     neg = s.startswith('-') or s.endswith('-') or (s.startswith('(') and s.endswith(')'))
     s = re.sub(r'[^\d,.]', '', s)
     if not re.search(r'\d', s):
@@ -255,7 +283,7 @@ def parse_amount(s, decimal=None):
         v = float(s)
     except ValueError:
         return None
-    return -v if neg else v
+    return (-v if neg else v) if math.isfinite(v) else None
 
 
 def norm_id(s):
@@ -363,6 +391,8 @@ def load_data(m):
     """Читает файлы по mapping и возвращает данные в единой схеме и отчет о качестве разбора."""
     base, files = m['_base'], m['files']
     fx = {k.upper(): float(v) for k, v in (m.get('fx') or {}).items()}
+    if any(not math.isfinite(v) or v <= 0 for v in fx.values()):
+        raise MappingError('FX rates must be finite and positive')
     report_ccy = (m.get('currency') or 'EUR').upper()
     quality = {'files': {}, 'unmapped_status': {}, 'unmapped_type': {}, 'missing_fx': {}, 'bad_values': {},
                'deposit_status': True, 'deposit_statuses': {}, 'tz': {}, 'withdrawal_status': False,
@@ -432,7 +462,7 @@ def load_data(m):
 
     def add_withdrawal(table, pid, t, amount, status, row):
         # выплачен или в обработке: запрос на вывод; declined: вывод отклонен; abandoned и cancelled: отменен игроком, не считается
-        kind = {'declined': 'rejected', 'abandoned': 'cancelled', 'cancelled': 'cancelled', 'pending': 'pending'}.get(status, 'paid')
+        kind = {'declined': 'rejected', 'abandoned': 'cancelled', 'cancelled': 'cancelled', 'pending': 'pending', 'success': 'paid'}.get(status, 'other')
         done = table.time(row, 'done_time') if table.has('done_time') else None
         withdrawals.append((pid, t, amount or 0.0, kind, done))
 

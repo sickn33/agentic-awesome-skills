@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Customer Interview Analyzer
-Extracts insights, patterns, and opportunities from user interviews
+English keyword/regex triage; outputs are candidate observations, not validated findings
 """
 
 import re
@@ -254,7 +254,7 @@ class InterviewAnalyzer:
             if context.lower() not in ['the', 'a', 'an', 'and', 'or', 'of']:
                 metrics.append(f"{num} {context}")
         
-        return list(set(metrics))[:10]
+        return list(dict.fromkeys(metrics))[:10]
     
     def _extract_competitors(self, text: str) -> List[str]:
         """Extract competitor mentions"""
@@ -276,7 +276,7 @@ class InterviewAnalyzer:
         common_words = {'this', 'that', 'it', 'them', 'other', 'another', 'something'}
         competitors = [c for c in competitors if c.lower() not in common_words and len(c) > 2]
         
-        return list(competitors)[:5]
+        return sorted(competitors, key=str.casefold)[:5]
     
     def _assess_severity(self, text: str) -> str:
         """Assess severity of pain point"""
@@ -364,7 +364,7 @@ def aggregate_interviews(interviews: List[Dict]) -> Dict:
     aggregated['common_pain_points'] = dict(aggregated['common_pain_points'])
     aggregated['common_requests'] = dict(aggregated['common_requests'])
     aggregated['top_themes'] = dict(aggregated['top_themes'].most_common(10))
-    aggregated['metrics_summary'] = list(aggregated['metrics_summary'])
+    aggregated['metrics_summary'] = sorted(aggregated['metrics_summary'])
     aggregated['competitors_mentioned'] = dict(aggregated['competitors_mentioned'])
     
     return aggregated
@@ -438,7 +438,10 @@ def main():
         sys.exit(1)
     
     # Read interview transcript
-    with safe_user_path(sys.argv[1]).open('r') as f:
+    input_path = safe_user_path(sys.argv[1])
+    if input_path.stat().st_size > 5 * 1024 * 1024:
+        raise ValueError('Transcript exceeds 5 MiB review limit')
+    with input_path.open('r', encoding='utf-8') as f:
         interview_text = f.read()
     
     # Analyze

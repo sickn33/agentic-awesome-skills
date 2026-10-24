@@ -1,8 +1,11 @@
 ---
 title: "Offering help | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/offering-help
+---
 
 # Offering help
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 Although the most effective experiences are approachable and intuitive, you can provide contextual help when necessary.
 
@@ -22,7 +25,7 @@ Although the most effective experiences are approachable and intuitive, you can 
 
 A tip is a small, transient view that briefly describes how to use a feature in your app. Tips are a great way to teach people about new or less obvious features in your app, or help them discover faster ways to accomplish a task. For developer guidance, see [TipKit](https://developer.apple.com/documentation/TipKit).
 
-**Use the most appropriate tip type for your app’s user interface.** Display a popover tip when you want to preserve the content flow, or an inline tip when you want to ensure that surrounding information is visible. You can use an annotation-style inline tip when pointing to a specific UI element, or a hint-style tip when it’s not related to a specific piece of UI.
+**Use the most appropriate tip type for your app’s user interface.** A popover overlays nearby content without reflowing it; an inline tip participates in layout and can shift surrounding content. Choose based on occlusion, context and accessibility. You can use an annotation-style inline tip when pointing to a specific UI element, or a hint-style tip when it’s not related to a specific piece of UI.
 
 ![An illustration of a popover-style tip on iPhone. The tip appears atop nearby content, and points to a feature depicted by a blue star icon. The content beneath the tip is obscured.](https://docs-assets.developer.apple.com/published/2a1deca274cc855ac01321f3a583b858/offering-help-tip-popover%402x.png)
 
@@ -115,3 +118,7 @@ Date| Changes
 December 5, 2023| Included visionOS in guidance for creating tooltips.  
 September 12, 2023| Added guidance for creating tips.  
   
+
+## Implementation checks
+
+Tips supplement accessible labels and help; do not make hover, gaze or an animation the only way to learn a necessary action. Honor dismissal/frequency rules and Reduce Motion, and verify TipKit eligibility on the target release.

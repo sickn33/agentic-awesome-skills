@@ -67,15 +67,7 @@ Anchor text is critical. Follow these rules on every suggestion:
 
 | Rule                                     | Limit                              |
 |------------------------------------------|------------------------------------|
-| Exact match anchor (keyword as-is)       | Max 1 per target page across site  |
-| Partial match anchor (keyword + words)   | Max 2 per target page across site  |
-| Branded anchor (site or product name)    | Unlimited                          |
-| Generic anchor ("click here", "read more")| Never use — flag as error          |
-| Naked URL as anchor                      | Avoid unless no alternative        |
-
-If the skill detects the same exact-match anchor being used
-more than once for the same target page, flag it as a
-**Cannibalization Risk** in the output.
+Use concise descriptive anchor text that accurately describes the destination. Reusing an appropriate anchor is not by itself keyword cannibalization; diagnose overlapping page intent with actual query/page evidence. Avoid repetitive keyword stuffing and inaccessible generic labels, but do not impose invented site-wide anchor quotas.
 
 ---
 
@@ -100,8 +92,7 @@ The skill must always produce output in this exact format:
 
 ## Orphan Page Alert
 
-Pages with no incoming internal links — these are invisible
-to search engines and must be linked immediately:
+Pages with no incoming internal links — these may be harder to discover, but can still be found through sitemaps or external links; confirm crawl scope before calling them site-wide orphans:
 
 | Page Title                  | URL                  | Fix                              |
 |-----------------------------|----------------------|----------------------------------|
@@ -189,7 +180,7 @@ Cross-links between cluster articles:
 |---------------------|----------------|----------------|---------------------------------|
 | [title]             | [n]            | [n]            | ✅ Healthy / ⚠️ Too many outgoing|
 
-**Rule:** No page should have more than 100 outgoing internal links.
+**Rule:** Use a reasonable, useful number of contextual links; there is no universal 100-link ceiling.
 **Rule:** Focus page should have the highest incoming link count.
 
 ---
@@ -198,10 +189,10 @@ Cross-links between cluster articles:
 
 - [ ] All orphan pages have been linked
 - [ ] Every cluster article has a Cluster → Pillar link
-- [ ] No exact-match anchor used more than once per target
+- [ ] Repeated anchors assessed for usefulness, not an arbitrary quota
 - [ ] No generic anchors ("click here", "read more") present
 - [ ] Focus page has the highest incoming link count
-- [ ] No page exceeds 100 outgoing internal links
+- [ ] Outgoing links remain useful and crawlable
 - [ ] Cannibalization risks resolved
 ```
 
@@ -225,12 +216,12 @@ Cross-links between cluster articles:
    text feel editorially placed, not forced
 7. Check anchor text across all suggestions — flag any
    exact-match anchor used more than once for the same
-   target page as a Cannibalization Risk
+   target page for editorial review, not automatically as cannibalization
 8. Sort all opportunities into High, Medium, and Low
    priority tiers based on link type and focus page impact
 9. Build the Link Equity Map showing authority flow
 10. Run the Links Per Page check — flag any page
-    exceeding 100 outgoing links
+    with excessive or irrelevant links for its purpose
 11. Check product-page paths separately — confirm each
     foundational article has at least one relevant conversion route
 12. Verify the map against the actual page inventory and links. If the project already provides a semantic-link helper, use it as a supplementary check; otherwise complete the checks manually and record the evidence used.
@@ -247,5 +238,7 @@ Cross-links between cluster articles:
 Use when mapping links between existing pages, identifying orphaned content, or improving conversion paths from informational pages.
 
 ## Limitations
+
+- Counts refer only to inspected pages and links. A proposed link map is not measured PageRank or AI citation impact. Do not claim changes were applied without editing and checking the actual pages.
 
 - Recommendations depend on the completeness and accuracy of the supplied page inventory and cannot replace a live crawl.

@@ -71,13 +71,13 @@ def show_guide() -> None:
     account = db.get_active_account()
 
     checklist = []
-    checklist.append(("Facebook account", "OK" if True else "PENDENTE",
+    checklist.append(("Facebook account", "NÃO VERIFICADO",
                       "Crie em: https://www.facebook.com"))
     checklist.append(("Instagram account", "OK" if account else "PENDENTE",
                       "Crie em: https://www.instagram.com"))
 
     account_type = account.get("account_type") if account else None
-    is_business = account_type in ("BUSINESS", "CREATOR") if account_type else False
+    is_business = account_type in ("BUSINESS", "CREATOR", "MEDIA_CREATOR") if account_type else False
     checklist.append((
         f"Conta Business/Creator (atual: {account_type or '?'})",
         "OK" if is_business else "PENDENTE",
@@ -181,7 +181,7 @@ async def verify_setup() -> None:
     acct_type = profile.get("account_type", "UNKNOWN")
     checks.append({
         "check": "Conta Business/Creator",
-        "passed": acct_type in ("BUSINESS", "CREATOR"),
+        "passed": acct_type in ("BUSINESS", "CREATOR", "MEDIA_CREATOR"),
         "detail": f"Tipo: {acct_type}",
     })
 

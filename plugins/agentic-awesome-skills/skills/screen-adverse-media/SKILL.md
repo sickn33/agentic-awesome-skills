@@ -16,14 +16,18 @@ license_source: "https://github.com/Sketchjar/stipple-agent-skills/blob/main/LIC
 
 # Screen Adverse Media
 
-Screen a person or organisation for adverse media coverage, PEP (Politically Exposed Person) status, and sanctions exposure. Every hit is **corroboration-gated**: the screen returns "review", never "guilty", and "nothing found" is never a clean record. Uses the Stipple API (free anonymous tier).
+Screen a person or organisation for adverse media coverage, PEP (Politically Exposed Person) status, and sanctions exposure. Apply a **corroboration gate** to every hit: report review needs rather than guilt, and never describe "nothing found" as a clean record. The historical workflow below uses the Stipple API; verify service availability before use.
 
 ## When to use
 
-- AML/CTF onboarding (Tranche 2 reforms make this mandatory for more Australian businesses)
+- Authorized AML/CTF due diligence; confirm the applicable legal obligations with a qualified reviewer rather than treating this tool as a mandated compliance check
 - Vendor/supplier due diligence before signing
 - Investor or LP vetting
 - Ongoing counterparty monitoring (re-run periodically, compare warrant IDs)
+
+## Service availability check
+
+The documented Stipple endpoints, schemas and allowances are historical examples, not a verified current service contract. Confirm the intended provider and current official API documentation, pricing and privacy terms before any request or upload. If the document-verification/screening API cannot be confirmed, stop the API workflow and report it unavailable; do not send data to a guessed endpoint or a repurposed domain.
 
 ## Instructions
 
@@ -60,7 +64,7 @@ Screen a person or organisation for adverse media coverage, PEP (Politically Exp
    | Nothing found | "No corroborated adverse media found — this is NOT a clean record; coverage is bounded by the source list" |
    | PEP signal | "PEP status identified — enhanced due diligence may apply" |
 
-5. **Contextualize.** Every hit is corroborated across sources before inclusion — but the screen is the start of human review, not the end of it. Date-range and source-coverage limitations are real.
+5. **Contextualize.** Do not assume the API corroborates every hit. Inspect the linked primary records, resolve identity matches and distinguish allegations from findings. Date-range and source-coverage limitations must accompany the report.
 
 ## Output format
 

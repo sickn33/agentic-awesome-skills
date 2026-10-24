@@ -1,5 +1,7 @@
 # Modern C++20/23 Features
 
+Examples are independent sketches requiring the relevant standard headers and compiler/library feature support. Coroutine owners below use `<utility>` for `std::exchange`. Modules require build-system support; separate interface, implementation and consumer translation units.
+
 ## Concepts and Constraints
 
 ```cpp
@@ -58,7 +60,8 @@ auto result = numbers
     | std::views::take(3);
 
 // Copy to vector only when needed
-std::vector<int> materialized(result.begin(), result.end());
+std::vector<int> materialized;
+std::ranges::copy(result, std::back_inserter(materialized));
 
 // Custom range adaptor
 auto is_even = [](int n) { return n % 2 == 0; };
@@ -102,9 +105,13 @@ struct Generator {
     std::coroutine_handle<promise_type> handle;
 
     Generator(std::coroutine_handle<promise_type> h) : handle(h) {}
+    Generator(const Generator&) = delete;
+    Generator& operator=(const Generator&) = delete;
+    Generator(Generator&& other) noexcept : handle(std::exchange(other.handle, {})) {}
     ~Generator() { if (handle) handle.destroy(); }
 
     bool move_next() {
+        if (!handle || handle.done()) return false;
         handle.resume();
         return !handle.done();
     }
@@ -117,7 +124,8 @@ struct Generator {
 // Usage
 Generator<int> fibonacci() {
     int a = 0, b = 1;
-    while (true) {
+    // Bounded prefix avoids signed integer overflow.
+    for (int i = 0; i < 40; ++i) {
         co_yield a;
         auto next = a + b;
         a = b;
@@ -125,28 +133,10 @@ Generator<int> fibonacci() {
     }
 }
 
-// Async coroutine
-#include <future>
+// Coroutines alone are not an async scheduler. Use a library task type
+// with documented frame ownership, cancellation and exception propagation
+// for I/O; suspending a raw handle without an owner leaks its frame.
 
-struct Task {
-    struct promise_type {
-        Task get_return_object() {
-            return Task{std::coroutine_handle<promise_type>::from_promise(*this)};
-        }
-        std::suspend_never initial_suspend() { return {}; }
-        std::suspend_never final_suspend() noexcept { return {}; }
-        void return_void() {}
-        void unhandled_exception() {}
-    };
-
-    std::coroutine_handle<promise_type> handle;
-};
-
-Task async_operation() {
-    std::cout << "Starting async work\n";
-    co_await std::suspend_always{};
-    std::cout << "Resuming async work\n";
-}
 ```
 
 ## Three-Way Comparison (Spaceship)
@@ -272,18 +262,20 @@ int main() {
     double pi = 3.14159265;
     auto formatted = std::format("Pi: {:.2f}", pi); // "Pi: 3.14"
 
-    // Custom types
-    struct Point { int x, y; };
+    // Custom Point formatter is defined separately below.
 }
 
+// Separate translation unit example: Point must be namespace-scoped,
+// and the specialization must appear before formatting Point.
+struct Point { int x, y; };
 // Custom formatter
 template<>
 struct std::formatter<Point> {
-    constexpr auto parse(format_parse_context& ctx) {
+    constexpr auto parse(std::format_parse_context& ctx) {
         return ctx.begin();
     }
 
-    auto format(const Point& p, format_context& ctx) const {
+    auto format(const Point& p, std::format_context& ctx) const {
         return std::format_to(ctx.out(), "({}, {})", p.x, p.y);
     }
 };

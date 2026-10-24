@@ -1,5 +1,8 @@
 # Architecture Overview - Backend Services
 
+> Scope: independent illustrative fragments, not a supplied runnable application. Private project paths, helpers, DTOs and Prisma models must be implemented/adapted in the target repository. Pin and check installed Express/Sentry/Zod/Prisma versions. Authentication does not grant object/tenant access; authorize before reads/writes, enforce CSRF for cookie authentication, allowlist DTOs and project public response fields. Capture unexpected errors once at an approved, redacted boundary; never send raw request bodies, credentials or personal data to telemetry.
+
+
 Complete guide to the layered architecture pattern used in backend microservices.
 
 ## Table of Contents
@@ -124,22 +127,23 @@ Complete guide to the layered architecture pattern used in backend microservices
 **Critical:** Middleware executes in registration order
 
 ```typescript
-app.use(Sentry.Handlers.requestHandler());  // 1. Sentry tracing (FIRST)
+app.use(requestContextMiddleware /* application-defined; initialize Sentry in instrument.ts */);  // 1. Sentry tracing (FIRST)
 app.use(express.json());                     // 2. Body parsing
 app.use(express.urlencoded({ extended: true })); // 3. URL encoding
 app.use(cookieParser());                     // 4. Cookie parsing
 app.use(SSOMiddleware.initialize());         // 5. Auth initialization
 // ... routes registered here
-app.use(auditMiddleware);                    // 6. Audit (if global)
-app.use(errorBoundary);                      // 7. Error handler (LAST)
-app.use(Sentry.Handlers.errorHandler());     // 8. Sentry errors (LAST)
+// Register auditMiddleware before routes that need it.
+app.use(auditMiddleware);                    // request context must precede handlers
+app.use(approvedTelemetryErrorHandler);      // capture once before response formatter
+app.use(errorBoundary);                      // final response formatter (no duplicate capture)
 ```
 
 **Rule:** Error handlers must be registered AFTER routes!
 
 ---
 
-## Service Comparison
+## Illustrative Service Comparison
 
 ### Email Service (Mature Pattern ✅)
 
@@ -260,7 +264,7 @@ form/src/
 - Caching layer
 - Hide Prisma implementation details
 
-**Current Gap:** Only 1 repository exists (WorkflowRepository)
+**Upstream illustration:** WorkflowRepository is an example name, not an inventory of the current application.
 
 ### Routes Directory
 

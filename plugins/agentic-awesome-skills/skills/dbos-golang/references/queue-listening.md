@@ -32,6 +32,8 @@ if workerType == "gpu" {
 	ctx.ListenQueues(ctx, gpuQueue)
 } else if workerType == "cpu" {
 	ctx.ListenQueues(ctx, cpuQueue)
+} else {
+	log.Fatal("WORKER_TYPE must be cpu or gpu")
 }
 
 dbos.Launch(ctx)

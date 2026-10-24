@@ -23,6 +23,8 @@ Do **not** use this skill when:
 
 ---
 
+This is a read-only audit by default. Confirm jurisdiction and current bar/professional advertising rules before recommending public claims, testimonials, solicitation or case outcomes. Use verified credentials/results, preserve client confidentiality and obtain publication authority before editing profiles/listings or contacting reviewers. Rankings, ROI and audit priorities are hypotheses requiring actual query/location data; E-E-A-T is a quality framework, not a measurable direct ranking score.
+
 ## Initial Assessment
 
 Before auditing, gather context:
@@ -92,7 +94,7 @@ For legal services, GBP is often the single highest-ROI local SEO asset.
 - Average star rating
 - Owner responses to reviews (all, especially negative)
 - Review velocity (frequency of new reviews)
-- Strategy for ethically requesting reviews from satisfied clients
+- A neutral review-request policy for eligible clients; do not selectively solicit only positive reviews or disclose client relationships in replies
 
 **GBP Posts**
 - Regular posts (news, case type highlights, legal tips)
@@ -198,7 +200,7 @@ For firms serving multiple cities or regions:
 Focus on issues most common in legal site CMS platforms (WordPress, Wix, Squarespace):
 
 **Mobile Experience**
-- Most legal searches happen on mobile
+- Inspect the actual device/query mix rather than assuming a mobile majority
 - Click-to-call button prominent on mobile
 - Fast load time on 4G/mobile networks
 - No intrusive pop-ups that block content on mobile
@@ -262,7 +264,7 @@ Legal FAQ pages rank well for long-tail queries and build trust.
 
 - Create FAQ pages per practice area
 - Target "question" queries: "o que fazer quando", "quanto tempo demora", "qual a diferença entre"
-- Use FAQ schema markup for rich results
+- Use accurate FAQ markup where appropriate, but do not promise rich results: Google retired FAQ rich results in May 2026 ([official update log](https://developers.google.com/search/updates)); do not present FAQ markup as a current rich-result opportunity
 - Keep answers accurate, brief, and written in plain language
 
 ### Blog / Legal Articles

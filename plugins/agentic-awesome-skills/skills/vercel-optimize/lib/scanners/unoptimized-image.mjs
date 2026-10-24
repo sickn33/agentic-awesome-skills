@@ -9,9 +9,9 @@ export const metadata = {
   billingDimension: 'image-optimization',
   trafficIndependent: false,
   description:
-    'Four shapes of image-cost waste: raw <img> tags bypass the framework Image component; `images.unoptimized: true` disables Vercel image optimization globally; <Image fill> without `sizes` forces serving the largest source variant; <Image src=".svg"> without `unoptimized` routes vector data through the raster pipeline.',
+    'Four shapes of image-cost waste: raw <img> tags bypass the framework Image component; `images.unoptimized: true` disables Vercel image optimization globally; <Image fill> without `sizes` forces serving the largest source variant; SVG behavior depends on the loader/config and is not inferred from an omitted prop.',
   fix:
-    'For raw <img>: switch to next/image, enhanced-img (SvelteKit), <Image /> (Astro), or NuxtImg. For global unoptimized:true: remove the flag unless the project is hosted outside Vercel. For fill without sizes: add `sizes="(max-width: 768px) 100vw, 50vw"` or whatever matches your layout. For SVG: add `unoptimized` so the raw SVG ships instead of rastering it.',
+    'For raw <img>: switch to next/image, enhanced-img (SvelteKit), <Image /> (Astro), or NuxtImg. For global unoptimized:true: remove the flag unless the project is hosted outside Vercel. For fill without sizes: add `sizes="(max-width: 768px) 100vw, 50vw"` or whatever matches your layout. Ordinary SVG sources are automatically served without raster optimization; inspect custom loader behavior separately.',
   citations: [
     'https://nextjs.org/docs/app/api-reference/components/image',
     'https://vercel.com/docs/image-optimization',
@@ -77,21 +77,9 @@ export function scan({ files }) {
             trafficIndependent: metadata.trafficIndependent,
           });
         }
-        // Inline data: URLs never round-trip through the optimizer.
-        const srcMatch = /\bsrc\s*=\s*["']([^"']+)["']/.exec(tag);
-        if (srcMatch) {
-          const src = srcMatch[1];
-          if (/\.svg(\?|$)/i.test(src) && !src.startsWith('data:') && !/\bunoptimized\b/.test(tag)) {
-            out.push({
-              pattern: metadata.id,
-              subtype: 'image-svg-no-unoptimized',
-              file: path,
-              line: lineOf(content, m.index),
-              evidence: tag.slice(0, 200),
-              trafficIndependent: metadata.trafficIndependent,
-            });
-          }
-        }
+        // Next.js skips optimization for ordinary .svg sources automatically.
+        // A custom loader/config needs separate evidence; do not flag omission alone.
+
       }
     }
   }

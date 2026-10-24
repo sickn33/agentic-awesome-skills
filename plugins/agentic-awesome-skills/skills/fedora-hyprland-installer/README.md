@@ -20,8 +20,8 @@ The agent inspects your system hardware, creates timestamped backups of existing
 
 - 🛡️ **Safety First & Mandatory Backups**: Never overwrites your existing `~/.config/hypr/` without creating a timestamped backup in `~/.local/state/fedora-hyprland-installer/backups/`.
 - 🐧 **Fedora-Native**: Built specifically for Fedora. Uses `dnf`, `systemctl`, and standard Fedora package repositories.
-- ⚡ **GPU Aware**: Detects NVIDIA, AMD Radeon, Intel, and hybrid setups and adds a conservative Hyprland-native cursor workaround for detected NVIDIA hardware.
-- 🤝 **Desktop Coexistence**: Never removes GNOME, KDE, or Xfce. Hyprland is added as a session option at your GDM/SDDM login screen.
+- ⚡ **GPU Aware**: Detects NVIDIA, AMD Radeon, Intel, and hybrid setups and leaves driver-specific settings for version-aware manual review.
+- 🤝 **Desktop Coexistence**: Review the resolved removal transaction to preserve GNOME, KDE, or Xfce. Hyprland is added as a session option at your GDM/SDDM login screen.
 - 🛠️ **Scoped Repair**: Reports a missing config or portal package and inactive PipeWire/WirePlumber services; approved fixes can be applied with `repair.sh --apply`.
 - 🧼 **Scoped Removal**: Removes the listed Hyprland-specific packages while preserving your base desktop and backups.
 

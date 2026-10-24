@@ -11,6 +11,13 @@ config file as text. The configs below only name the variable; the client fills
 it in when it connects. Revoke the key at once if it is pasted into a shared
 chat, committed, or shown on screen.
 
+## Client version boundary
+
+Client configuration examples describe upstream interfaces, not verified current
+commands for every installed version. Confirm local help and supported secret
+interpolation without printing the resolved key. Avoid plaintext-config alternatives;
+read-only self-identification should establish the intended wallet before jobs.
+
 ## OpenClaw
 
 ```bash

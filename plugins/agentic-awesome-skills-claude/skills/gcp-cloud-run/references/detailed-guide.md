@@ -1,3 +1,4 @@
+<!-- Modified 2026-10-23: corrected auth, execution, concurrency and reliability guidance. -->
 # GCP Cloud Run - Detailed Guide
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
@@ -105,7 +106,7 @@ steps:
       - '--image=gcr.io/$PROJECT_ID/my-service:$COMMIT_SHA'
       - '--region=us-central1'
       - '--platform=managed'
-      - '--allow-unauthenticated'
+      - '--no-allow-unauthenticated'
       - '--memory=512Mi'
       - '--cpu=1'
       - '--min-instances=1'
@@ -134,7 +135,7 @@ project/
 gcloud run deploy my-service \
   --source . \
   --region us-central1 \
-  --allow-unauthenticated \
+  --no-allow-unauthenticated \
   --memory 512Mi \
   --cpu 1 \
   --min-instances 1 \
@@ -163,17 +164,17 @@ functions.http('helloHttp', (req, res) => {
 // Pub/Sub Function
 const functions = require('@google-cloud/functions-framework');
 
-functions.cloudEvent('processPubSub', (cloudEvent) => {
+functions.cloudEvent('processPubSub', async (cloudEvent) => {
   // Decode Pub/Sub message
   const message = cloudEvent.data.message;
   const data = message.data
     ? JSON.parse(Buffer.from(message.data, 'base64').toString())
     : {};
 
-  console.log('Received message:', data);
+  console.log('Received Pub/Sub event');
 
   // Process message
-  processMessage(data);
+  await processMessage(data);
 });
 ```
 
@@ -200,7 +201,7 @@ gcloud functions deploy hello-http \
   --gen2 \
   --runtime nodejs20 \
   --trigger-http \
-  --allow-unauthenticated \
+  --no-allow-unauthenticated \
   --region us-central1
 
 # Deploy Pub/Sub function
@@ -284,10 +285,10 @@ app.get('/api/analytics', async (req, res) => {
 ```
 
 
-## 5. Increase Memory (More CPU)
+## 5. Tune CPU and Memory Independently
 
 ```bash
-# Higher memory = more CPU during startup
+# CPU is configured separately; choose a supported CPU/memory pair
 gcloud run deploy my-service \
   --memory 1Gi \
   --cpu 2 \
@@ -296,8 +297,8 @@ gcloud run deploy my-service \
 
 ### Optimization_impact
 
-- Startup_cpu_boost: 50% faster cold starts
-- Min_instances: Eliminates cold starts for traffic spikes
+- Startup_cpu_boost: workload-dependent improvement; measure it
+- Min_instances: Reduces cold starts for warm capacity; scale-out and replacement still start cold
 - Distroless_image: Smaller attack surface, faster pull
 - Lazy_init: Defers heavy loading to first request
 
@@ -382,7 +383,7 @@ def get_data():
 - Concurrency=1: Only for CPU-bound or unsafe code
 - Concurrency=8 20: Memory-intensive workloads
 - Concurrency=80: Default, good for I/O-bound
-- Concurrency=250: Maximum, for very lightweight handlers
+- Concurrency=250: Illustrative setting, not the platform maximum; verify current service limits and load-test
 
 ### Pub/Sub Integration Pattern
 
@@ -401,6 +402,7 @@ gcloud pubsub topics create orders
 gcloud pubsub subscriptions create orders-push \
   --topic orders \
   --push-endpoint https://my-service-xxx.run.app/pubsub \
+  --push-auth-service-account "$PUSH_SERVICE_ACCOUNT" \
   --ack-deadline 600
 ```
 
@@ -411,7 +413,7 @@ const app = express();
 app.use(express.json());
 
 app.post('/pubsub', async (req, res) => {
-  // Verify the request is from Pub/Sub
+  // Validate envelope only; authenticity must be enforced by Cloud Run IAM/OIDC
   if (!req.body.message) {
     return res.status(400).send('Invalid Pub/Sub message');
   }
@@ -423,7 +425,7 @@ app.post('/pubsub', async (req, res) => {
       ? JSON.parse(Buffer.from(message.data, 'base64').toString())
       : {};
 
-    console.log('Processing order:', data);
+    console.log('Processing Pub/Sub event');
 
     await processOrder(data);
 
@@ -463,6 +465,8 @@ async function publishOrder(order) {
 
 
 ## Dead Letter Queue
+
+Configure Pub/Sub service-agent publish/subscription permissions for dead-letter forwarding and create a subscription on the DLQ topic. Delivery-attempt limits are approximate. Handlers must be idempotent; malformed permanent messages need a deliberate quarantine/ack policy to avoid endless retries.
 
 ```bash
 # Create DLQ topic
@@ -526,8 +530,9 @@ def get_engine():
     db_pass = os.environ["DB_PASS"]
     db_name = os.environ["DB_NAME"]
 
+    from sqlalchemy.engine import URL
     engine = create_engine(
-        f"postgresql+pg8000://{db_user}:{db_pass}@/{db_name}",
+        URL.create("postgresql+pg8000", username=db_user, password=db_pass, database=db_name),
         connect_args={
             "unix_sock": f"/cloudsql/{instance_connection_name}/.s.PGSQL.5432"
         },
@@ -547,6 +552,8 @@ def get_engine():
 - Consider Cloud SQL Proxy for local development
 
 ### Secret Manager Integration
+
+Use attached service identity and least-privilege Secret Accessor grants. Populate secrets from a protected file/stdin, never literal values in shell history. Prefer pinned secret versions for reproducible revisions and plan rotation. JavaScript alternatives below are separate snippets, not one module.
 
 Securely manage secrets in Cloud Run
 
@@ -690,7 +697,7 @@ app.get('/api/data', async (req, res) => {
   res.json(enriched);
 });
 
-// Concurrency 80+ is safe for async I/O workloads
+// Async I/O alone does not make concurrency 80 safe; load-test memory and downstream limits.
 ```
 
 
@@ -710,19 +717,19 @@ async def get_data():
         response = await client.get("https://api.example.com/data")
         return response.json()
 
-# Concurrency 80+ safe with async framework
+# Async alone does not guarantee safe high concurrency.
 ```
 
 
 ## Calculate concurrency
 
 ```
-concurrency = memory_limit / per_request_memory
+concurrency <= (memory_limit - baseline_memory - safety_margin) / peak_per_request_memory
 
 Example:
 - 512MB container
 - 20MB per request overhead
-- Safe concurrency: ~25
+- 25 excludes baseline/margin and is not safe by itself; determine a lower measured bound.
 ```
 
 ### CPU Throttled When Not Handling Requests
@@ -756,7 +763,7 @@ Recommended fix:
 ```bash
 # CPU allocated even outside requests
 gcloud run deploy my-service \
-  --cpu-throttling=false \
+  --no-cpu-throttling \
   --min-instances=1
 
 # Note: This increases costs but enables background work
@@ -769,7 +776,7 @@ gcloud run deploy my-service \
 # Boost CPU during cold start only
 gcloud run deploy my-service \
   --cpu-boost \
-  --cpu-throttling=true  # Default, throttle after request
+  --cpu-throttling  # Default, throttle after request
 ```
 
 
@@ -790,7 +797,8 @@ def create_background_task(payload):
             "http_method": tasks_v2.HttpMethod.POST,
             "url": "https://my-service.run.app/process",
             "body": json.dumps(payload).encode(),
-            "headers": {"Content-Type": "application/json"}
+            "headers": {"Content-Type": "application/json"},
+            "oidc_token": {"service_account_email": TASK_CALLER_SERVICE_ACCOUNT, "audience": WORKER_AUDIENCE}
         }
     }
 
@@ -816,12 +824,12 @@ steps:
   # Main service - responds quickly
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['run', 'deploy', 'api-service',
-           '--cpu-throttling=true']
+           '--cpu-throttling']
 
   # Worker service - processes messages
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['run', 'deploy', 'worker-service',
-           '--cpu-throttling=false',
+           '--no-cpu-throttling',
            '--min-instances=1']
 ```
 
@@ -838,8 +846,7 @@ Sporadic failures to VPC resources.
 Database connections drop unexpectedly.
 
 Why this breaks:
-Cloud Run's VPC connector has a 10-minute idle timeout on connections.
-If a connection is idle for 10 minutes, it's silently closed.
+Idle connections can be closed by components along the network path. Diagnose the actual connector, NAT, firewall and server timeouts; do not assume a universal 10-minute VPC connector limit.
 
 Affects:
 - Database connection pools
@@ -958,8 +965,7 @@ Recommended fix:
 
 ```bash
 gcloud run deploy my-service \
-  --cpu-boost \
-  --startup-cpu-boost
+  --cpu-boost
 ```
 
 
@@ -995,7 +1001,7 @@ async def predict(data: dict):
 
 ```python
 import asyncio
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 import uvicorn
 
 app = FastAPI()
@@ -1077,13 +1083,12 @@ File system behavior differences.
 Container behaves differently than in first-gen.
 
 Why this breaks:
-Cloud Run's second-generation execution environment uses a different
-sandbox (gVisor) with different characteristics:
+Cloud Run's second-generation execution environment provides full Linux compatibility; first generation uses gVisor. Differences include:
 
 - More Linux syscalls supported
-- Full /proc and /sys access
+- Broader Linux compatibility, subject to sandbox privilege restrictions
 - Different network stack
-- No automatic HTTPS redirect
+- Verify ingress/TLS behavior independently of execution generation
 - Different tmp filesystem behavior
 
 Recommended fix:
@@ -1105,7 +1110,7 @@ gcloud run deploy my-service \
 ## Handle network differences
 
 ```python
-# Second-gen doesn't auto-redirect HTTP to HTTPS
+# Optional application redirect; trust forwarded headers only from configured ingress
 from fastapi import FastAPI, Request
 from fastapi.responses import RedirectResponse
 
@@ -1138,15 +1143,8 @@ gcloud run deploy ml-service \
 import os
 
 def get_execution_environment():
-    # Second-gen has different /proc structure
-    try:
-        with open('/proc/version', 'r') as f:
-            version = f.read()
-            if 'gVisor' in version:
-                return 'gen2'
-    except:
-        pass
-    return 'gen1'
+    # Inspect deployed revision configuration via the control plane instead.
+    raise NotImplementedError("Do not infer generation from /proc/version")
 ```
 
 ### Request Timeout Configuration Mismatch
@@ -1180,41 +1178,14 @@ gcloud run deploy my-service \
 ```
 
 
-## Handle long-running with webhooks
+## Durable asynchronous processing
 
-```python
-from fastapi import FastAPI, BackgroundTasks
-import httpx
-
-app = FastAPI()
-
-@app.post("/process")
-async def process(data: dict, background_tasks: BackgroundTasks):
-    task_id = create_task_id()
-
-    # Start background processing
-    background_tasks.add_task(
-        long_running_process,
-        task_id,
-        data,
-        data.get("callback_url")
-    )
-
-    # Return immediately
-    return {"task_id": task_id, "status": "processing"}
-
-async def long_running_process(task_id, data, callback_url):
-    result = await heavy_computation(data)
-
-    # Callback when done
-    if callback_url:
-        async with httpx.AsyncClient() as client:
-            await client.post(callback_url, json={
-                "task_id": task_id,
-                "result": result
-            })
-```
-
+Do not rely on in-process FastAPI BackgroundTasks after returning a response:
+instances can terminate and request-based billing can throttle CPU. Queue durable
+work before acknowledging, store job status, implement idempotency and retries,
+and use a transactional outbox when saving an order and enqueueing must be atomic.
+Caller-supplied callback URLs require an allowlisted destination registry and
+SSRF protection; do not POST results to arbitrary URLs.
 
 ## Use Cloud Tasks for reliable long-running
 
@@ -1230,7 +1201,8 @@ def create_long_running_task(data):
             "http_method": tasks_v2.HttpMethod.POST,
             "url": "https://worker.run.app/process",
             "body": json.dumps(data).encode(),
-            "headers": {"Content-Type": "application/json"}
+            "headers": {"Content-Type": "application/json"},
+            "oidc_token": {"service_account_email": TASK_CALLER_SERVICE_ACCOUNT, "audience": WORKER_AUDIENCE}
         },
         "dispatch_deadline": {"seconds": 1800}  # 30 min
     }

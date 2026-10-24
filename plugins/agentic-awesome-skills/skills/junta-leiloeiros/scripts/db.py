@@ -13,12 +13,15 @@ Uso:
 from __future__ import annotations
 
 import json
+import os
+from contextlib import contextmanager
 import sqlite3
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+from private_state import state_dir, private_dir, check_regular
 
 # Caminho padrão do banco — relativo ao diretório pai de scripts/
-_DEFAULT_DB = Path(__file__).parent.parent / "data" / "leiloeiros.db"
+_DEFAULT_DB = state_dir() / "leiloeiros.db"
 
 DDL = """
 CREATE TABLE IF NOT EXISTS leiloeiros (
@@ -86,14 +89,25 @@ VALUES
 class Database:
     def __init__(self, db_path: Path = _DEFAULT_DB):
         self.db_path = Path(db_path)
-        self.db_path.parent.mkdir(parents=True, exist_ok=True)
+        # Defer all writes to an explicit database operation.
 
-    def _connect(self) -> sqlite3.Connection:
-        conn = sqlite3.connect(self.db_path)
-        conn.row_factory = sqlite3.Row
-        conn.execute("PRAGMA journal_mode=WAL")
-        conn.execute("PRAGMA synchronous=NORMAL")
-        return conn
+    @contextmanager
+    def _connect(self):
+        private_dir(self.db_path.absolute().parent)
+        for path in [self.db_path, Path(str(self.db_path)+"-wal"), Path(str(self.db_path)+"-shm")]:
+            check_regular(path)
+        fd = os.open(self.db_path, os.O_CREAT|os.O_RDWR|getattr(os,"O_NOFOLLOW",0), 0o600)
+        os.close(fd)
+        os.chmod(self.db_path, 0o600)
+        conn = sqlite3.connect(self.db_path, timeout=10)
+        try:
+            conn.row_factory = sqlite3.Row
+            conn.execute("PRAGMA journal_mode=WAL")
+            conn.execute("PRAGMA synchronous=NORMAL")
+            with conn:
+                yield conn
+        finally:
+            conn.close()
 
     def init(self) -> None:
         """Cria tabelas e índices se não existirem."""
@@ -115,7 +129,7 @@ class Database:
                 conn.executemany(UPSERT_SQL, with_matricula)
                 count += len(with_matricula)
             if without_matricula:
-                # Evitar duplicatas exatas por (estado + nome + scraped_at)
+                # Append records with unknown registration; identity/deduplication is not inferred.
                 conn.executemany(INSERT_SQL, without_matricula)
                 count += len(without_matricula)
         return count
@@ -129,6 +143,8 @@ class Database:
         offset: int = 0,
     ) -> List[Dict[str, Any]]:
         """Retorna registros com filtros opcionais."""
+        if limit < 0 or offset < 0:
+            raise ValueError("limit and offset must be nonnegative")
         conditions = []
         params: List[Any] = []
 
@@ -186,6 +202,8 @@ class Database:
             ORDER BY estado, nome
             LIMIT ?
         """
+        if not 1 <= limit <= 5000:
+            raise ValueError("search limit must be 1..5000")
         q = f"%{query}%"
         with self._connect() as conn:
             rows = conn.execute(sql, [q, q, q, q, limit]).fetchall()

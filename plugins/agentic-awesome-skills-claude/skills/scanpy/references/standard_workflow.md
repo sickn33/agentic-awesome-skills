@@ -24,6 +24,8 @@ adata = sc.read_10x_mtx('path/to/data/')  # For 10X data
 ### 2. Quality Control (QC)
 
 ```python
+# Gene symbols/species must be verified; this example uses human symbols.
+adata.var['mt'] = adata.var_names.str.startswith('MT-')
 # Calculate QC metrics
 sc.pp.calculate_qc_metrics(adata, qc_vars=['mt'], percent_top=None, log1p=False, inplace=True)
 
@@ -44,6 +46,8 @@ sc.pl.scatter(adata, x='total_counts', y='n_genes_by_counts')
 ### 3. Normalization
 
 ```python
+# Preserve counts before normalization (only if X contains counts)
+adata.layers['counts'] = adata.X.copy()
 # Normalize to 10,000 counts per cell
 sc.pp.normalize_total(adata, target_sum=1e4)
 
@@ -165,6 +169,7 @@ sc.pl.paga(adata, color=['leiden'])
 
 # Diffusion pseudotime (DPT)
 adata.uns['iroot'] = np.flatnonzero(adata.obs['leiden'] == '0')[0]
+sc.tl.diffmap(adata)
 sc.tl.dpt(adata)
 sc.pl.umap(adata, color=['dpt_pseudotime'])
 ```
@@ -199,7 +204,7 @@ sc.pl.umap(adata, color='T_cell_score')
 ## Best Practices
 
 1. Always visualize QC metrics before filtering
-2. Save raw counts before normalization (`adata.raw = adata`)
+2. Preserve counts before normalization (`adata.layers["counts"] = adata.X.copy()`); document .raw contents separately
 3. Use Leiden instead of Louvain for clustering (more efficient)
 4. Try multiple clustering resolutions to find optimal granularity
 5. Validate cell type annotations with known marker genes

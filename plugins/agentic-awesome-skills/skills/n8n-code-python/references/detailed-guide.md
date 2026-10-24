@@ -1,10 +1,10 @@
-# Python Code Node (Beta) - Detailed Guide
+# Python Code Node (Native) - Detailed Guide
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
 ## ⚠️ Important: JavaScript First
 
-**Recommendation**: Use **JavaScript for 95% of use cases**. Only use Python when:
+**Recommendation**: Use **JavaScript when n8n-specific helpers are needed**. Only use Python when:
 - You need specific Python standard library functions
 - You're significantly more comfortable with Python syntax
 - You're doing data transformations better suited to Python
@@ -12,7 +12,7 @@
 **Why JavaScript is preferred:**
 - Full n8n helper functions ($helpers.httpRequest, etc.)
 - Luxon DateTime library for advanced date/time operations
-- No external library limitations
+- Module access is deployment-restricted
 - Better n8n documentation and community support
 
 ---
@@ -22,7 +22,7 @@
 
 ```python
 # Basic template for Python Code nodes
-items = _input.all()
+items = _items
 
 # Process data
 processed = []
@@ -31,7 +31,7 @@ for item in items:
         "json": {
             **item["json"],
             "processed": True,
-            "timestamp": datetime.now().isoformat()
+            "processed": True
         }
     })
 
@@ -41,11 +41,11 @@ return processed
 ### Essential Rules
 
 1. **Consider JavaScript first** - Use Python only when necessary
-2. **Access data**: `_input.all()`, `_input.first()`, or `_input.item`
-3. **CRITICAL**: Must return `[{"json": {...}}]` format
-4. **CRITICAL**: Webhook data is under `_json["body"]` (not `_json` directly)
-5. **CRITICAL LIMITATION**: **No external libraries** (no requests, pandas, numpy)
-6. **Standard library only**: json, datetime, re, base64, hashlib, urllib.parse, math, random, statistics
+2. **Access data**: `_items`, `_items[0]`, or `_item`
+3. Return a list in all-items mode, a single item object in per-item mode.
+4. **CRITICAL**: Webhook data is under the current item's `json.body` for JSON POST payloads (inspect actual input)
+5. **CRITICAL LIMITATION**: **Imports depend on runner policy**, not the language alone
+6. Every import below is conditional on the deployed runner allowlist.
 
 ---
 
@@ -56,16 +56,16 @@ Same as JavaScript - choose based on your use case:
 
 ### Run Once for All Items (Recommended - Default)
 
-**Use this mode for:** 95% of use cases
+**Use this mode for:** bounded batch transformations
 
 - **How it works**: Code executes **once** regardless of input count
-- **Data access**: `_input.all()` or `_items` array (Native mode)
+- **Data access**: `_items` or `_items` array (Native mode)
 - **Best for**: Aggregation, filtering, batch processing, transformations
 - **Performance**: Faster for multiple items (single execution)
 
 ```python
 # Example: Calculate total from all items
-all_items = _input.all()
+all_items = _items
 total = sum(item["json"].get("amount", 0) for item in all_items)
 
 return [{
@@ -79,87 +79,31 @@ return [{
 
 ### Run Once for Each Item
 
-**Use this mode for:** Specialized cases only
-
-- **How it works**: Code executes **separately** for each input item
-- **Data access**: `_input.item` or `_item` (Native mode)
-- **Best for**: Item-specific logic, independent operations, per-item validation
-- **Performance**: Slower for large datasets (multiple executions)
+Use `_item` for the current item and return one object:
 
 ```python
-# Example: Add processing timestamp to each item
-item = _input.item
-
-return [{
-    "json": {
-        **item["json"],
-        "processed": True,
-        "processed_at": datetime.now().isoformat()
-    }
-}]
+return {"json": {**_item["json"], "processed": True}}
 ```
 
 ---
 
+## Runtime selection
 
-## Python Modes: Beta vs Native
-
-n8n offers two Python execution modes:
-
-### Python (Beta) - Recommended
-- **Use**: `_input`, `_json`, `_node` helper syntax
-- **Best for**: Most Python use cases
-- **Helpers available**: `_now`, `_today`, `_jmespath()`
-- **Import**: `from datetime import datetime`
-
-```python
-# Python (Beta) example
-items = _input.all()
-now = _now  # Built-in datetime object
-
-return [{
-    "json": {
-        "count": len(items),
-        "timestamp": now.isoformat()
-    }
-}]
-```
-
-### Python (Native) (Beta)
-- **Use**: `_items`, `_item` variables only
-- **No helpers**: No `_input`, `_now`, etc.
-- **More limited**: Standard Python only
-- **Use when**: Need pure Python without n8n helpers
-
-```python
-# Python (Native) example
-processed = []
-
-for item in _items:
-    processed.append({
-        "json": {
-            "id": item["json"].get("id"),
-            "processed": True
-        }
-    })
-
-return processed
-```
-
-**Recommendation**: Use **Python (Beta)** for better n8n integration.
-
----
-
+Use the native runtime contract and complete examples in the root skill. Python
+Beta/Pyodide was removed in n8n 2. Historical helper names are not interchangeable
+with native Python; use only `_items` or `_item` as appropriate. Imports below
+require runner policy approval and may be unavailable. The native cloud runtime
+must not be assumed to include even standard modules.
 
 ## Data Access Patterns
 
-### Pattern 1: _input.all() - Most Common
+### Pattern 1: _items - Most Common
 
 **Use when**: Processing arrays, batch operations, aggregations
 
 ```python
 # Get all items from previous node
-all_items = _input.all()
+all_items = _items
 
 # Filter, transform as needed
 valid = [item for item in all_items if item["json"].get("status") == "active"]
@@ -176,62 +120,35 @@ for item in valid:
 return processed
 ```
 
-### Pattern 2: _input.first() - Very Common
+### Pattern 2: _items[0] - Very Common
 
 **Use when**: Working with single objects, API responses
 
 ```python
 # Get first item only
-first_item = _input.first()
+first_item = _items[0]
 data = first_item["json"]
 
 return [{
     "json": {
         "result": process_data(data),
-        "processed_at": datetime.now().isoformat()
+        "processed": True
     }
 }]
 ```
 
-### Pattern 3: _input.item - Each Item Mode Only
-
-**Use when**: In "Run Once for Each Item" mode
+### Pattern 3: Per-item transformation
 
 ```python
-# Current item in loop (Each Item mode only)
-current_item = _input.item
-
-return [{
-    "json": {
-        **current_item["json"],
-        "item_processed": True
-    }
-}]
+return {"json": {**_item["json"], "item_processed": True}}
 ```
 
-### Pattern 4: _node - Reference Other Nodes
+### Accessing other nodes
 
-**Use when**: Need data from specific nodes in workflow
-
-```python
-# Get output from specific node
-webhook_data = _node["Webhook"]["json"]
-http_data = _node["HTTP Request"]["json"]
-
-return [{
-    "json": {
-        "combined": {
-            "webhook": webhook_data,
-            "api": http_data
-        }
-    }
-}]
-```
-
-**See**: DATA_ACCESS.md for comprehensive guide
-
----
-
+Native Python has no `_node` helper. Map required fields into this node's input
+with ordinary workflow nodes; do not guess undeclared variables or search for
+credentials. References to DATA_ACCESS.md and other uppercase auxiliary files
+below are upstream-only, not bundled resources.
 
 ## Critical: Webhook Data Structure
 
@@ -239,19 +156,19 @@ return [{
 
 ```python
 # ❌ WRONG - Will raise KeyError
-name = _json["name"]
-email = _json["email"]
+name = _item["json"]["name"]
+email = _item["json"]["email"]
 
 # ✅ CORRECT - Webhook data is under ["body"]
-name = _json["body"]["name"]
-email = _json["body"]["email"]
+name = _item["json"]["body"]["name"]
+email = _item["json"]["body"]["email"]
 
 # ✅ SAFER - Use .get() for safe access
-webhook_data = _json.get("body", {})
+webhook_data = _item["json"].get("body", {})
 name = webhook_data.get("name")
 ```
 
-**Why**: Webhook node wraps all request data under `body` property. This includes POST data, query parameters, and JSON payloads.
+**Why**: Webhook node wraps all request data under `body` property. JSON POST content is typically under body; query parameters and headers are separate fields. Inspect the actual configured Webhook output and validate its type.
 
 **See**: DATA_ACCESS.md for full webhook structure details
 
@@ -260,7 +177,14 @@ name = webhook_data.get("name")
 
 ## Return Format Requirements
 
-**CRITICAL RULE**: Always return list of dictionaries with `"json"` key
+List examples in this section are ALL-ITEMS mode. In per-item mode return one
+`{"json": {...}}` object (root example), not a list. Preserve `pairedItem` when
+filtering or reordering input, and binary fields if required. `.get()` does not
+validate null/non-dict objects; reject invalid input rather than invent defaults
+for required amounts or identifiers. Imported examples are conditional on policy.
+
+
+**All-items rule**: Return a list of item dictionaries with `"json"` key
 
 ### Correct Return Formats
 
@@ -282,7 +206,7 @@ return [
 # ✅ List comprehension
 transformed = [
     {"json": {"id": item["json"]["id"], "processed": True}}
-    for item in _input.all()
+    for item in _items
     if item["json"].get("valid")
 ]
 return transformed
@@ -330,7 +254,7 @@ Based on production workflows, here are the most useful Python patterns:
 Transform all items with list comprehensions
 
 ```python
-items = _input.all()
+items = _items
 
 return [
     {
@@ -348,7 +272,7 @@ return [
 Sum, filter, count with built-in functions
 
 ```python
-items = _input.all()
+items = _items
 total = sum(item["json"].get("amount", 0) for item in items)
 valid_items = [item for item in items if item["json"].get("amount", 0) > 0]
 
@@ -366,8 +290,8 @@ Extract patterns from text
 ```python
 import re
 
-items = _input.all()
-email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+items = _items
+email_pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b'
 
 all_emails = []
 for item in items:
@@ -390,7 +314,7 @@ return [{
 Validate and clean data
 
 ```python
-items = _input.all()
+items = _items
 validated = []
 
 for item in items:
@@ -420,7 +344,7 @@ Calculate statistics with statistics module
 ```python
 from statistics import mean, median, stdev
 
-items = _input.all()
+items = _items
 values = [item["json"].get("value", 0) for item in items if "value" in item["json"]]
 
 if values:
@@ -449,7 +373,7 @@ else:
 
 ```python
 # ❌ WRONG: Trying to import external library
-import requests  # ModuleNotFoundError!
+import requests  # Available only when installed AND explicitly allowlisted.
 
 # ✅ CORRECT: Use HTTP Request node or JavaScript
 # Add HTTP Request node before Code node
@@ -460,12 +384,12 @@ import requests  # ModuleNotFoundError!
 
 ```python
 # ❌ WRONG: No return statement
-items = _input.all()
+items = _items
 # Processing...
 # Forgot to return!
 
 # ✅ CORRECT: Always return data
-items = _input.all()
+items = _items
 # Processing...
 return [{"json": item["json"]} for item in items]
 ```
@@ -484,23 +408,23 @@ return [{"json": {"result": "success"}}]
 
 ```python
 # ❌ WRONG: Direct access crashes if missing
-name = _json["user"]["name"]  # KeyError!
+name = _item["json"]["user"]["name"]  # KeyError!
 
 # ✅ CORRECT: Use .get() for safe access
-name = _json.get("user", {}).get("name", "Unknown")
+name = _item["json"].get("user", {}).get("name", "Unknown")
 ```
 
 ### #5: Webhook Body Nesting
 
 ```python
 # ❌ WRONG: Direct access to webhook data
-email = _json["email"]  # KeyError!
+email = _item["json"]["email"]  # KeyError!
 
 # ✅ CORRECT: Webhook data under ["body"]
-email = _json["body"]["email"]
+email = _item["json"]["body"]["email"]
 
 # ✅ BETTER: Safe access with .get()
-email = _json.get("body", {}).get("email", "no-email")
+email = _item["json"].get("body", {}).get("email", "no-email")
 ```
 
 **See**: ERROR_PATTERNS.md for comprehensive error guide
@@ -603,9 +527,9 @@ return []  # No results
 
 ```python
 # Debug statements appear in browser console (F12)
-items = _input.all()
+items = _items
 print(f"Processing {len(items)} items")
-print(f"First item: {items[0] if items else 'None'}")
+# Do not print complete items: they may contain personal data or credentials.
 ```
 
 ---
@@ -655,8 +579,8 @@ Before deploying Python Code nodes, verify:
 - [ ] **Code is not empty** - Must have meaningful logic
 - [ ] **Return statement exists** - Must return list of dictionaries
 - [ ] **Proper return format** - Each item: `{"json": {...}}`
-- [ ] **Data access correct** - Using `_input.all()`, `_input.first()`, or `_input.item`
-- [ ] **No external imports** - Only standard library (json, datetime, re, etc.)
+- [ ] **Data access correct** - Use `_items` only in batch mode and `_item` only in per-item mode
+- [ ] **Imports reviewed** - Confirm packages and explicit runner allowlists
 - [ ] **Safe dictionary access** - Using `.get()` to avoid KeyError
 - [ ] **Webhook data** - Access via `["body"]` if from webhook
 - [ ] **Mode selection** - "All Items" for most cases

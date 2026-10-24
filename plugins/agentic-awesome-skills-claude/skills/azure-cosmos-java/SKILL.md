@@ -16,7 +16,7 @@ Client library for Azure Cosmos DB NoSQL API with global distribution and reacti
 <dependency>
     <groupId>com.azure</groupId>
     <artifactId>azure-cosmos</artifactId>
-    <version>LATEST</version>
+    <version>{reviewed_exact_version}</version>
 </dependency>
 ```
 
@@ -107,8 +107,8 @@ CosmosClient client = new CosmosClientBuilder()
 
 ```java
 // Sync
-client.createDatabaseIfNotExists("myDatabase")
-    .map(response -> client.getDatabase(response.getProperties().getId()));
+var dbResponse = client.createDatabaseIfNotExists("myDatabase");
+var database = client.getDatabase(dbResponse.getProperties().getId());
 
 // Async with chaining
 asyncClient.createDatabaseIfNotExists("myDatabase")
@@ -176,7 +176,9 @@ import com.azure.cosmos.util.CosmosPagedIterable;
 
 CosmosContainer container = client.getDatabase("myDatabase").getContainer("myContainer");
 
-String query = "SELECT * FROM c WHERE c.status = @status";
+var query = new com.azure.cosmos.models.SqlQuerySpec(
+    "SELECT * FROM c WHERE c.status = @status",
+    java.util.List.of(new com.azure.cosmos.models.SqlParameter("@status", "active")));
 CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
 
 CosmosPagedIterable<User> results = container.queryItems(
@@ -264,3 +266,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+The CRUD example requires a User model whose serialized partition-key property matches the container path. The shown `new PartitionKey(user.getId())` is valid only when that actual partition-key value equals the ID; otherwise pass the model's true partition-key value. Keep sample writes/deletes in an authorized test container, bound RU costs, and close clients on shutdown. Reactive subscriptions need completion/error handling; do not infer completion from calling `subscribe()`.

@@ -66,21 +66,15 @@ Do not let the guest own global app routing unless the product *is* a full-scree
 
 ## 2. WebGPU Adoption
 
-### Browser Support (2025)
+### Runtime support
 
-| Browser | Support |
-|---------|---------|
-| Chrome | ✅ Since v113 |
-| Edge | ✅ Since v113 |
-| Firefox | ✅ Since v131 |
-| Safari | ✅ Since 18.0 |
-| **Total** | **~73%** global |
+WebGPU support depends on browser version, OS, adapter, driver and secure context; do not infer availability from a browser-name table or a historical global percentage. See [MDN WebGPU](https://developer.mozilla.org/en-US/docs/Web/API/WebGPU_API).
 
 ### Decision
 
 - **New GPU-heavy projects**: Use WebGPU with WebGL fallback
 - **Broad legacy / simple 2D**: Start with WebGL or Canvas 2D
-- **Feature detection**: Check `navigator.gpu`
+- **Feature detection**: Check `navigator.gpu`, handle a null `requestAdapter()` result, device creation failures and device loss; offer a tested fallback
 
 ---
 
@@ -90,7 +84,7 @@ Do not let the guest own global app routing unless the product *is* a full-scree
 
 | Constraint | Strategy |
 |------------|----------|
-| No local file access | Asset bundling, CDN |
+| Local files require user-granted access or selected file input | Respect permissions; bundle public assets |
 | Tab throttling | Pause when hidden (`visibilitychange`) |
 | Mobile data limits | Compress assets |
 | Audio autoplay | Require user interaction |
@@ -124,14 +118,14 @@ Do not let the guest own global app routing unless the product *is* a full-scree
 ## 5. PWA for Games
 
 **Benefits:** offline play, install, fullscreen, optional push.
-**Requirements:** service worker, web app manifest, HTTPS.
+**Installation:** requirements vary by browser; use an appropriate web app manifest and secure context. A service worker is useful for offline behavior but is not universally an installation prerequisite. Explicitly implement and test cache/version updates and offline recovery; installation alone does not provide offline gameplay. [Installability guidance](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/Guides/Making_PWAs_installable).
 
 ---
 
 ## 6. Audio Handling
 
 - Create/resume `AudioContext` on first click/tap
-- Prefer Web Audio API; pool sources; preload common SFX
+- Prefer Web Audio API; reuse decoded AudioBuffers, but create a new AudioBufferSourceNode for each playback (source nodes are one-shot); preload common SFX
 - Compress with WebM/Opus when possible
 
 ---

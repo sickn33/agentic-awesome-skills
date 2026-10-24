@@ -84,7 +84,7 @@ User journey:
 Implementation:
 ├── React Navigation: Each tab has own navigator
 ├── Flutter: IndexedStack for state preservation
-└── Never reset tab stack on switch
+└── Preserve user state according to the intended flow; reset deliberately only where appropriate
 ```
 
 ---
@@ -130,7 +130,7 @@ Android:
 └── Must handle back correctly (Activity/Fragment)
 
 Cross-Platform Rule:
-├── Back ALWAYS navigates up the stack
+├── Back follows platform history/dismissal semantics; Up represents hierarchy
 ├── Never hijack back for other purposes
 ├── Confirm before discarding unsaved data
 └── Deep links should allow full back traversal
@@ -314,29 +314,14 @@ SHOULD NOT persist:
 
 ### Implementation
 
-```javascript
-// React Navigation - State Persistence
-const [isReady, setIsReady] = useState(false);
-const [initialState, setInitialState] = useState();
-
-useEffect(() => {
-  const loadState = async () => {
-    const savedState = await AsyncStorage.getItem('NAV_STATE');
-    if (savedState) setInitialState(JSON.parse(savedState));
-    setIsReady(true);
-  };
-  loadState();
-}, []);
-
-const handleStateChange = (state) => {
-  AsyncStorage.setItem('NAV_STATE', JSON.stringify(state));
-};
-
-<NavigationContainer
-  initialState={initialState}
-  onStateChange={handleStateChange}
->
-```
+Persist only a versioned, allowlisted, non-sensitive route subset. Catch read,
+parse and write errors; validate route names/parameters and size limits before
+restoration. Clear/account-scope it on logout or tenant changes. A current deep
+link and authentication state take precedence over old navigation. Do not persist
+tokens, private form contents or complete raw navigation objects in AsyncStorage.
+`lazy` controls initial mounting, not whether an already mounted tab keeps state.
+React Navigation normally handles Android Back; adding a custom global listener
+can break that default and must be justified by actual behavior.
 
 ---
 
@@ -400,7 +385,7 @@ Implementation:
 
 | Anti-Pattern | Problem | Solution |
 |--------------|---------|----------|
-| **Inconsistent back** | User confused, can't predict | Always pop stack |
+| **Inconsistent back** | User confused, can't predict | Respect platform history and modal dismissal |
 | **Hidden navigation** | Features undiscoverable | Visible tabs/drawer trigger |
 | **Deep nesting** | User gets lost | Max 3-4 levels, breadcrumbs |
 | **Breaking swipe back** | iOS users frustrated | Never override gesture |
@@ -456,3 +441,8 @@ Don't reinvent navigation.
 ---
 
 > **Remember:** Navigation is invisible when done right. Users shouldn't think about HOW to get somewhere—they just get there. If they notice navigation, something is wrong.
+
+Validate deep-link scheme, host, path and parameters against an allowlist, then
+enforce server authorization on the actual resource. A link never grants access
+or permission to perform checkout/destructive operations. Prefer verified app/
+universal links where available; handle state/PKCE for authentication redirects.

@@ -1,8 +1,11 @@
 ---
 title: "Undo and redo | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/undo-and-redo
+---
 
 # Undo and redo
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 Undo and redo gives people easy ways to reverse many types of actions, which can also help people explore and experiment safely as they learn a new interface or task.
 
@@ -56,3 +59,7 @@ People expect undo and redo to let them reverse their recent actions, so they’
 
 [![](https://devimages-cdn.apple.com/wwdc-services/images/7/2546ECBD-6443-41EC-921D-6429026F8B67/1700_wide_250x141_1x.jpg) Essential Design Principles ](https://developer.apple.com/videos/play/wwdc2017/802)
 
+
+## Implementation checks
+
+Register reversible model changes with correctly scoped undo groups. Clear or rebase history when the document/account changes, and bound retained data to protect privacy and memory. Undo is not a rollback for an already sent message, external payment or permanent server deletion; use explicit compensation workflows and truthful labels for such effects.

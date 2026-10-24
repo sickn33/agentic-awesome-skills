@@ -33,6 +33,8 @@ Use this skill when:
 
 ## Prerequisites
 
+Pin supported scanner/action versions (never use moving @master in production); verify custom-rule/query APIs against that release. The CodeQL class-style query is historical and must be migrated/tested before use. CodeQL availability/licensing depends on repository and product plan. Scanners may download rules, execute builds or upload private source/results: inspect those effects and credentials before scanning untrusted code. A clean SAST result is not a security certification; report language/path/rule coverage and errors.
+
 - Source code access
 - CI/CD pipeline
 - SAST tool installation
@@ -113,7 +115,7 @@ rules:
     message: Use secrets module for security-sensitive randomness
     severity: WARNING
     languages: [python]
-    fix: secrets.token_hex()
+    # Do not auto-fix: random.random returns a float, token_hex returns text.
 ```
 
 ### CI Configuration
@@ -224,11 +226,11 @@ services:
   sonarqube:
     image: sonarqube:lts-community
     ports:
-      - "9000:9000"
+      - "127.0.0.1:9000:9000"
     environment:
       - SONAR_JDBC_URL=jdbc:postgresql://db:5432/sonar
       - SONAR_JDBC_USERNAME=sonar
-      - SONAR_JDBC_PASSWORD=sonar
+      - SONAR_JDBC_PASSWORD=${SONAR_DB_PASSWORD:?set a protected password}
     volumes:
       - sonarqube_data:/opt/sonarqube/data
       - sonarqube_logs:/opt/sonarqube/logs
@@ -239,7 +241,7 @@ services:
     image: postgres:15
     environment:
       - POSTGRES_USER=sonar
-      - POSTGRES_PASSWORD=sonar
+      - POSTGRES_PASSWORD=${SONAR_DB_PASSWORD:?set a protected password}
       - POSTGRES_DB=sonar
     volumes:
       - postgresql_data:/var/lib/postgresql/data
@@ -302,7 +304,7 @@ bandit -r src/ -c bandit.yaml
 
 ```yaml
 # bandit.yaml
-skips: ['B101', 'B601']
+skips: []  # add only reviewed, scoped suppressions with rationale
 exclude_dirs: ['tests', 'venv']
 
 assert_used:
@@ -343,7 +345,7 @@ gem install brakeman
 brakeman -o brakeman-report.json -f json
 
 # CI configuration
-brakeman --no-exit-on-warn --no-exit-on-error -o report.html
+brakeman -o report.html  # preserve failure exit codes in a blocking gate
 ```
 
 ## Quality Gates
@@ -375,28 +377,7 @@ brakeman --no-exit-on-warn --no-exit-on-error -o report.html
 
 ### Custom Gate Script
 
-```bash
-#!/bin/bash
-# security-gate.sh
-
-CRITICAL=$(cat results.json | jq '[.results[] | select(.severity == "critical")] | length')
-HIGH=$(cat results.json | jq '[.results[] | select(.severity == "high")] | length')
-
-echo "Critical: $CRITICAL, High: $HIGH"
-
-if [ "$CRITICAL" -gt 0 ]; then
-  echo "FAILED: Critical vulnerabilities found"
-  exit 1
-fi
-
-if [ "$HIGH" -gt 5 ]; then
-  echo "FAILED: Too many high severity vulnerabilities"
-  exit 1
-fi
-
-echo "PASSED: Security gate"
-exit 0
-```
+A gate must validate the selected scanner’s actual JSON/SARIF schema, scan completion, parse errors and findings severities before deciding pass/fail. Missing/malformed output or a failed scanner is an error, never zero findings. Semgrep ERROR/WARNING/INFO are rule severities, not automatically CVSS critical/high. Use the tool’s documented CI exit behavior or a tested schema-specific adapter; do not apply a generic `.severity == "critical"` query to arbitrary results.
 
 ## Common Issues
 

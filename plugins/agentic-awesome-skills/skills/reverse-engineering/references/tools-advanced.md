@@ -174,7 +174,7 @@ Free, open-source alternative to BinDiff, runs as IDA plugin.
 
 ## Deobfuscation Frameworks
 
-> OLLVM 脱密的完整工作流、变种生态和社区工具调研见 [ollvm-deobfuscation.md](references/ollvm-deobfuscation.md)。
+> OLLVM 脱密的完整工作流、变种生态和社区工具调研见 [ollvm-deobfuscation.md](ollvm-deobfuscation.md)。
 
 ### d810-ng (IDA) — 本地首选
 
@@ -288,22 +288,15 @@ from qiling.const import QL_VERBOSE
 ql = Qiling(["./binary"], "rootfs/x8664_linux",
             verbose=QL_VERBOSE.DEBUG)
 
-# Hook specific address
-@ql.hook_address
-def hook_check(ql, address, size):
-    if address == 0x401234:
-        ql.arch.regs.rax = 0  # Bypass check
-        ql.log.info("Anti-debug bypassed")
+# Hook one verified fixture address; callbacks take the emulation object.
+def stop_at_check(ql):
+    ql.emu_stop()
+ql.hook_address(stop_at_check, 0x401234)
 
-# Hook syscall
-@ql.hook_syscall(name="ptrace")
+# Linux syscall replacement; do not apply Windows API hooks to this ELF instance.
 def hook_ptrace(ql, request, pid, addr, data):
-    return 0  # Always succeed
-
-# Hook API (Windows)
-@ql.set_api("IsDebuggerPresent", target=ql.os.user_defined_api)
-def hook_isdebug(ql, address, params):
     return 0
+ql.os.set_syscall("ptrace", hook_ptrace)
 
 ql.run()
 ```
@@ -427,7 +420,7 @@ LLVM-based decompiler supporting many architectures. Free and open-source.
 
 ```bash
 # Install
-pip install retdec-decompiler
+# Install a verified release from https://github.com/avast/retdec; not an assumed PyPI package.
 # Or use web: https://retdec.com/decompilation/
 
 # CLI
@@ -592,7 +585,7 @@ pwndbg> plt               # Show PLT entries
 
 # GEF (alternative)
 # https://github.com/hugsy/gef
-bash -c "$(curl -fsSL https://gef.blah.cat/sh)"
+# Download and inspect a pinned GEF release from https://github.com/hugsy/gef before sourcing it.
 
 # Key GEF commands:
 gef> xinfo $rdi           # Detailed info about address
@@ -643,7 +636,7 @@ decomp.openProgram(currentProgram)
 
 for func in fm.getFunctions(True):
     result = decomp.decompileFunction(func, 30, monitor)
-    if result.depiledFunction():
+    if result.decompileCompleted() and result.getDecompiledFunction() is not None:
         code = result.getDecompiledFunction().getC()
         if "strcmp" in code or "memcmp" in code:
             print(f"Comparison in {func.getName()} at {func.getEntryPoint()}")
@@ -724,7 +717,9 @@ for xi in x:
     prob += xi >= 32
     prob += xi <= 126
 
-prob.solve(PULP_CBC_CMD(msg=0))
+status = prob.solve(PULP_CBC_CMD(msg=0))
+if LpStatus[status] != 'Optimal' or any(value(xi) is None for xi in x):
+    raise RuntimeError('No complete feasible assignment; do not print a flag')
 flag = ''.join(chr(int(value(xi))) for xi in x)
 print("Flag:", flag)
 ```
@@ -761,7 +756,7 @@ class ZFMonitor(gdb.Breakpoint):
         if zf:
             rip = int(gdb.parse_and_eval('$rip'))
             # Disassemble at rip to find the compared immediate
-            disasm = gdb.execute(f'x/1i {rip-5}', to_string=True)
+            disasm = gdb.execute(f'x/1i {rip}', to_string=True)  # Decode verified previous instruction separately; x86 width is variable
             print(f"ZF set at {rip:#x}: {disasm.strip()}")
         return False
 
@@ -769,9 +764,9 @@ class ZFMonitor(gdb.Breakpoint):
 # ZF fires when comparison matches the position's own value -> that IS the key byte
 ```
 
-Maps each input byte to its required value in one pass without manual reversing.
+Position encoding is only a probe. ZF reports equality for the executed comparison, not arbitrary missing key bytes; recover operands and dataflow, then validate candidates.
 
-**Key insight:** Position-encoded input (`input[i]=i`) combined with zero flag monitoring reveals the full key/password in one pass — the zero flag fires when the expected value for position i equals i itself.
+**Key insight:** ZF alone cannot recover the full key. Log actual comparison operands and their mapping to input, preserve other flag-setting instructions, and distinguish candidates from proven accepted inputs.
 
 **References:** EKOPARTY CTF 2017
 
@@ -820,3 +815,7 @@ __attribute__((constructor)) void dump() {
 **Key insight:** Execute-only prevents file reading but not execution. LD_PRELOAD constructors run inside the process where `/proc/self/mem` provides access to mapped memory regardless of file permissions.
 
 **References:** BackdoorCTF 2017
+
+## Boundaries and API limits
+
+Apply the root isolation/authorization gate. All hardcoded addresses, omitted initialization and loader stubs are explanatory sketches; do not run them as universal working scripts. Triton must map ELF load segments/stack and initialize ABI state rather than treating an entire file as memory. Success of concolic tests is not full equivalence. Qiling, LIEF, Ghidra, RetDec and plugin APIs depend on installed versions; inspect official documentation and available signatures. Never upload to cloud plugins without data-sharing authorization. The execute-only dump example is an incomplete historical sketch: it lacks I/O and mapping validation, uses an unsafe shared /tmp destination, may omit segments and is not a reconstructed original binary. Do not execute it; use an approved debugger on an authorized isolated copy and a private exclusive output path instead.

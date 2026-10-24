@@ -83,7 +83,7 @@ for p in resp.json().get("posts", []):
 
 Either `placeId` **or** `dataId` is required. Optional: `hl` (UI language), `nextPageToken` (cursor pagination). 10 credits/call.
 
-Per-post fields (verified live): `postId`, `locationId`, `title`, `description`, `image`, `cta` (`label` + `url`), `createdAt` (ISO), `postedAt` (human-readable), `shareUrl`, `postUrl`. Response top-level: `posts`, `pagination`, `source`, `requestMetadata`.
+Per-post fields (illustrative snapshot; verify current schema): `postId`, `locationId`, `title`, `description`, `image`, `cta` (`label` + `url`), `createdAt` (ISO), `postedAt` (human-readable), `shareUrl`, `postUrl`. Response top-level: `posts`, `pagination`, `source`, `requestMetadata`.
 
 Posts surface current offers, holiday hours, events, and product launches the business is actively promoting. Cheaper signal than the homepage scrape, and `cta.url` is the canonical landing page.
 
@@ -127,7 +127,7 @@ For higher volume, switch to the `contacts` Scraper Job (see `scraper-jobs.md`) 
 
 ### New-business discovery
 
-Filter Maps by review count `< 5` — usually means recently opened.
+A review count `< 5` can identify low-review businesses, but does not establish opening date. Verify independent evidence.
 
 ```python
 new = [b for b in localResults if (b.get("reviews") or 0) < 5]
@@ -135,7 +135,7 @@ new = [b for b in localResults if (b.get("reviews") or 0) < 5]
 
 ### Multi-location chain mapping
 
-Search the brand name; every `localResults` entry is a branch.
+Search the brand name; verify each result belongs to the chain before treating it as a branch.
 
 ## Gotchas
 

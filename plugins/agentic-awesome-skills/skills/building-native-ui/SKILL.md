@@ -40,7 +40,7 @@ references/
 
 ## Running the App
 
-**CRITICAL: Always try Expo Go first before creating custom builds.**
+**Check required native modules before choosing Expo Go or a development build.**
 
 Most Expo apps work in Expo Go without any custom native code. Before running `npx expo run:ios` or `npx expo run:android`:
 
@@ -61,10 +61,10 @@ You need `npx expo run:ios/android` or `eas build` ONLY when using:
 
 Expo Go supports a huge range of features out of the box:
 
-- All `expo-*` packages (camera, location, notifications, etc.)
+- Many Expo packages; check each module’s Expo Go and SDK compatibility.
 - Expo Router navigation
 - Most UI libraries (reanimated, gesture handler, etc.)
-- Push notifications, deep links, and more
+- Supported navigation and development features; remote push and app-specific native configuration may require a development build.
 
 **If you're unsure, try Expo Go first.** Creating custom builds adds complexity, slower iteration, and requires Xcode/Android Studio setup.
 
@@ -91,7 +91,7 @@ See `./references/route-structure.md` for detailed route conventions.
 - Never use legacy expo-permissions
 - `expo-audio` not `expo-av`
 - `expo-video` not `expo-av`
-- `expo-image` with `source="sf:name"` for SF Symbols, not `expo-symbols` or `@expo/vector-icons`
+- `expo-image` with `source="sf:name"` for SF Symbols, or version-compatible `expo-symbols`; provide Android/web icon fallbacks
 - `react-native-safe-area-context` not react-native SafeAreaView
 - `process.env.EXPO_OS` not `Platform.OS`
 - `React.use` not `React.useContext`
@@ -102,7 +102,7 @@ See `./references/route-structure.md` for detailed route conventions.
 
 ## Responsiveness
 
-- Always wrap root component in a scroll view for responsiveness
+- Use ScrollView for bounded scrollable content and FlatList/SectionList for large collections; avoid nesting virtualized lists in same-direction ScrollViews.
 - Use `<ScrollView contentInsetAdjustmentBehavior="automatic" />` instead of `<SafeAreaView>` for smarter safe area insets
 - `contentInsetAdjustmentBehavior="automatic"` should be applied to FlatList and SectionList as well
 - Use flexbox instead of Dimensions API
@@ -186,7 +186,7 @@ import { colors } from "@/theme/colors";
 
 - iOS re-resolves these colors automatically when the system theme changes. On Android, call `useColorScheme()` inside any component that renders them so it re-renders when the theme flips (required when React Compiler memoizes the component).
 - Don't pass `Color` / `PlatformColor` values into Reanimated styles — use static colors there (see `references/animations.md`).
-- `Platform.select({...})!` returns `string | OpaqueColorValue`. Most React Native style props accept `ColorValue` (`string | OpaqueColorValue`) so this works fine. But some third-party props only accept `string` (e.g. `tintColor` on `expo-image`). Cast when needed: `colors.label as string`.
+- `Platform.select({...})!` returns `string | OpaqueColorValue`. Most React Native style props accept `ColorValue` (`string | OpaqueColorValue`) so this works fine. But some third-party props only accept `string` (e.g. `tintColor` on `expo-image`). A TypeScript cast does not convert an opaque native color to a string; use a supported ColorValue prop or resolve a concrete color for string-only APIs.
 
 ## Text Styling
 
@@ -390,3 +390,7 @@ export default function Layout({ segment }) {
 - Use this skill only when the task clearly matches its upstream product or API scope.
 - Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
 - Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+## Snapshot boundaries
+
+Examples mix SDK generations and abbreviated application scaffolding. Check installed Expo/Router/React Native versions, platform support and package types before copying; hooks belong inside components or custom hooks, and omitted styles/data/components must be supplied. Respect reduced motion and transparency preferences, label interactive controls, test VoiceOver/TalkBack and keyboard focus. Obtain camera/microphone/library access at the user action and explain purpose. No module installation, native generation or publication is implicit.

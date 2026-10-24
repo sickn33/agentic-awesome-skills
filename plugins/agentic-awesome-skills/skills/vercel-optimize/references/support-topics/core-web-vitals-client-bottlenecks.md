@@ -13,10 +13,10 @@ maxBriefChars: 850
 Core Web Vitals candidates need metric-specific investigation. LCP, INP, and CLS usually have different causes and fixes.
 
 ## Evidence To Check
-Use the poor metric in the deep dive first. For LCP, inspect server response and critical media. For INP, inspect heavy client JavaScript and interaction handlers. For CLS, inspect dimensions, fonts, and injected content.
+Use the metric exceeding its good threshold in the deep dive first. For LCP, inspect server response and critical media. For INP, inspect heavy client JavaScript and interaction handlers. For CLS, inspect dimensions, fonts, and injected content.
 
 ## Do Not Recommend When
-Do not emit a generic “improve Web Vitals” recommendation. Do not optimize a metric that is not poor for this route.
+Do not emit a generic “improve Web Vitals” recommendation. Do not optimize a metric that is within its good threshold for this route.
 
 ## Verification
-Name the poor p75 metric, its value, and the exact source mechanism behind that metric.
+Name the p75 exceeding its good threshold metric, its value, and the exact source mechanism behind that metric.

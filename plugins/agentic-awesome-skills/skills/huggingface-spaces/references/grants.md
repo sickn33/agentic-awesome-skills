@@ -4,9 +4,7 @@ When a non-PRO user has a good use case for ZeroGPU (open research demo, hobbyis
 
 ## The flow
 
-1. **Build the Space.** Create it as `--flavor cpu-basic` (the user is not PRO, so creating with `--flavor zero-a10g` will fail at `create_repo`). Code the app for ZeroGPU anyway — `import spaces`, `@spaces.GPU`, module-scope `.to("cuda")`. The Space will technically run on CPU until the grant is approved, but it'll be ready to switch over instantly.
-
-   In this mode you **can't iterate-with-real-inference** before the grant — the CPU Space won't actually run heavy compute. Get the app to BUILD cleanly and `RUNNING` (even if the runtime would OOM on real input), then submit.
+1. **Check current eligibility first.** Some free personal accounts can host ZeroGPU directly under current account-standing limits. If ineligible, prepare a CPU-safe skeleton without an unconditional module-scope CUDA move; `@spaces.GPU` is effect-free on CPU hardware and does not emulate CUDA there. A CPU build is not proof of GPU inference readiness.
 
 2. **Submit a Community Tab discussion** on the Space. Title:
 
@@ -24,9 +22,9 @@ When a non-PRO user has a good use case for ZeroGPU (open research demo, hobbyis
 
    If the user didn't give you a justification, a reasonable default is "Non-PRO wants to build a public ZeroGPU app — happy to provide more context if helpful."
 
-3. **Wait.** Open and publicly-facing applications by researchers, tinkerers, and institutions are typically approved. Approval can take days.
+3. **Wait for a decision.** Approval, timing and hardware allocation are discretionary; do not promise acceptance. Submit the public discussion only when the user explicitly authorizes posting.
 
-4. **Once approved**, the Space is moved to ZeroGPU automatically — no code change needed. The user comes back and you can iterate / refine with real GPU access.
+4. **Once approved**, the Space is moved to ZeroGPU automatically — no code change needed. Verify the actual hardware assignment and run inference checks before claiming readiness.
 
 ## When to suggest this
 
@@ -44,7 +42,8 @@ When a non-PRO user has a good use case for ZeroGPU (open research demo, hobbyis
 ```python
 from huggingface_hub import HfApi
 
-api = HfApi(token="hf_...")
+import os
+api = HfApi(token=os.environ["HF_TOKEN"])
 api.create_discussion(
     repo_id="<ns>/<space>",
     repo_type="space",

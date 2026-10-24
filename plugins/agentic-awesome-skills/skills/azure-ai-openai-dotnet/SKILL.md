@@ -19,14 +19,14 @@ dotnet add package Azure.AI.OpenAI
 dotnet add package OpenAI
 ```
 
-**Current Version**: 2.1.0 (stable)
+**Historical example baseline**: 2.1.0; verify and pin compatible Azure.AI.OpenAI/OpenAI versions. Newer v1 API examples below may require newer packages.
 
 ## Environment Variables
 
 ```bash
 AZURE_OPENAI_ENDPOINT=https://<resource-name>.openai.azure.com
 AZURE_OPENAI_API_KEY=<api-key>                    # For key-based auth
-AZURE_OPENAI_DEPLOYMENT_NAME=gpt-4o-mini          # Your deployment name
+AZURE_OPENAI_DEPLOYMENT_NAME=<deployment-name>    # Azure deployment, not necessarily the model ID
 ```
 
 ## Client Hierarchy
@@ -415,22 +415,22 @@ if (completion.FinishReason == ChatFinishReason.ToolCalls)
 ## Error Handling
 
 ```csharp
-using Azure;
+using System.ClientModel;
 
 try
 {
     ChatCompletion completion = await chatClient.CompleteChatAsync(messages);
 }
-catch (RequestFailedException ex) when (ex.Status == 429)
+catch (System.ClientModel.ClientResultException ex) when (ex.Status == 429)
 {
     Console.WriteLine("Rate limited. Retry after delay.");
     await Task.Delay(TimeSpan.FromSeconds(10));
 }
-catch (RequestFailedException ex) when (ex.Status == 400)
+catch (System.ClientModel.ClientResultException ex) when (ex.Status == 400)
 {
     Console.WriteLine($"Bad request: {ex.Message}");
 }
-catch (RequestFailedException ex)
+catch (System.ClientModel.ClientResultException ex)
 {
     Console.WriteLine($"Azure OpenAI error: {ex.Status} - {ex.Message}");
 }
@@ -462,3 +462,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Examples are separate fragments, not a compiled application; add required imports, variables and model-specific deployment names. Chat/audio/image features and options differ by deployment/API version: Whisper transcription and speech generation generally require different deployments. Check refusal, finish reason and content count before indexing; structured output does not guarantee successful non-refusal responses. Treat retrieved text/tool arguments as untrusted and authorize side effects independently. Bound retries and honor retry hints; sleeping once is not a retry loop. Do not log prompts, citations or raw service errors containing sensitive data. Model names, package versions and preview APIs here are historical illustrations, not current availability claims.

@@ -14,8 +14,7 @@
   **Solution:** record only the answered part; leave the rest `Unknown` and never turn it
   into 0.
 - **Problem:** no bill, so a Kharche/Kharpai was raised to close the entry.
-  **Solution:** check the transaction type first. Only farmer and individual purchases, wage
-  sheets and rent records genuinely lack a formal invoice. Everywhere else, chase the bill.
+  **Solution:** check the transaction type first. Do not infer invoice requirements from a supplier category. Record available evidence and ask a qualified reviewer to determine what the jurisdiction and transaction require.
 - **Problem:** VAT rate was filled in with 18 because the business is registered.
   **Solution:** registration is not a rate. Leave it `Unknown` until the user supplies it.
 - **Problem:** `Amount` was treated as tax-exclusive because that is what the last vendor
@@ -38,4 +37,4 @@
   **Solution:** that is expected. Apply the property mapping table once, after import.
 
 
-See the [Related Skills](references/related-skills.md) reference for the full guidance.
+See the [Related Skills](related-skills.md) reference for the full guidance.

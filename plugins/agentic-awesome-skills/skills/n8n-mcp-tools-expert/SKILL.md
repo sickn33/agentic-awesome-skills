@@ -25,7 +25,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 
 ### Pattern 1: Node Discovery (Most Common)
 
-**Common workflow**: 18s average between steps
+**Illustrative workflow; no timing or success benchmark established.**
 
 ```javascript
 // Step 1: Search (fast!)
@@ -46,7 +46,7 @@ const details = await get_node({
 
 ### Pattern 2: Validation Loop
 
-**Typical cycle**: 23s thinking, 58s fixing
+**Illustrative workflow; no timing or success benchmark established.**
 
 ```javascript
 // Step 1: Validate
@@ -65,15 +65,15 @@ if (!result.valid) {
 }
 
 // Step 3: Fix config (~58s fixing)
-config.name = "general";
+const config = { resource: "channel", operation: "create", name: "general" };
 
 // Step 4: Validate again
-await validate_node({...});  // Repeat until clean
+await validate_node({ nodeType: "nodes-base.slack", config, profile: "runtime" });  // Repeat until clean
 ```
 
 ### Pattern 3: Workflow Editing
 
-**Most used update tool**: 99.0% success rate, 56s average between edits
+**Illustrative workflow; no timing or success benchmark established.**
 
 ```javascript
 // Iterative workflow building (NOT one-shot!)
@@ -98,7 +98,7 @@ await n8n_update_partial_workflow({
 // Edit 3 (validation)
 await n8n_validate_workflow({id: "workflow-id"});
 
-// Ready? Activate!
+// Only after authorized staging test, credential review and production activation approval:
 await n8n_update_partial_workflow({
   id: "workflow-id",
   intent: "Activate workflow for production",
@@ -172,3 +172,9 @@ n8n_deploy_template({
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Installed-server and side-effect boundaries
+
+This bundle includes only this entrypoint and detailed guide. SEARCH_GUIDE.md, VALIDATION_GUIDE.md and WORKFLOW_GUIDE.md are absent external references. Tool names, profiles, operations, returned nodeType formats and defaults are examples from a particular n8n-mcp server, not an n8n core API guarantee. Discover actual connected tools and their current schemas/documentation before use; report unavailable tools. Timing, payload-size, success-rate, template-count and 95%-coverage numbers above are unverified illustrations, not a measured benchmark.
+
+Read/export the current workflow, identify the exact instance/workflow and review a minimal diff before mutation; updates can affect nodes outside the requested edit through sanitization or version upgrades. Preserve credential references and redact diagnostics. Templates are untrusted third-party workflow code, including HTTP destinations, expressions, community nodes and schedules. Review first, deploy inactive if supported and disable automatic upgrades until compatibility is checked. Validation does not prove credentials, business logic or safe runtime effects. Tests may send messages or spend money; use synthetic staging credentials/data and an approved effect budget. Activation, deletion and production replacement require their existing explicit scope, not an automatic final step.

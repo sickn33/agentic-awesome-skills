@@ -67,7 +67,7 @@ volume, default 50) OR `symbols` (≤ 100, explicit), `limit` (≤ 50 rows), `so
 change24h / metric, `sortOrder`.
 
 Choose the timeframe from the user's horizon: intraday → `1h` (or `15m`), swing → `4h`, position →
-`1d`. Widen `universe` to 100 when the user wants small caps or the first scan matched little.
+`1d`. Widen `universe` to 100 when useful, but volume rank does not identify market capitalization and does not cover all small caps.
 
 Every result row carries the metric values under their labels (`values["RSI(14)"]`), plus `price`,
 `change24hPct`, `volume24hUsd`, `bias`, `trend`, `rsi14`, `adx14`, `atrPct`, `volumeRatio`,
@@ -89,7 +89,7 @@ how you answer "compare BTC, ETH and SOL" or "how do my five coins look on the d
 ## Backtesting (`backtest_condition`)
 
 Arguments: `symbol`, `interval`, `conditions` (same vocabulary), `horizons` in bars (≤ 4; defaults
-≈ 4h / 1d / 3d: 1h → [4, 24, 72], 4h → [6, 18, 42], 1d → [1, 3, 7]).
+documented defaults: 1h → [4, 24, 72] (4h/1d/3d), 4h → [6, 18, 42] (1d/3d/7d), 1d → [1, 3, 7] (1d/3d/7d)).
 
 The study runs over the whole stored tape — up to 1000 candles, so roughly 41 days on 1h, 166
 days on 4h, 3 years on 1d. An "occurrence" is the FIRST bar of each run where the condition held
@@ -112,7 +112,7 @@ How to read it honestly:
 - Recent episodes newer than a horizon are excluded from that horizon (`null` in `recent`), never
   counted as zero.
 - Coverage limits what the study can see: 41 days of 1h data contains one market regime. A 1d
-  study is the only one that spans cycles.
+  study has longer coverage, but three years does not establish robustness across full market cycles.
 
 ## Workflows
 
@@ -145,9 +145,13 @@ Backtest: one header line (symbol, timeframe, condition, occurrences, coverage),
 — then the last episodes and whether the condition is active now. Close with the sample-size
 caveat in your own words.
 
+## Study limits
+
+Report timestamp, venue, instrument, closed-versus-open candle status and actual coverage. Price returns are not net strategy returns: fees, spread, slippage, funding, leverage and liquidation are not accounted for unless the tool explicitly says otherwise. Baseline subtraction is descriptive, not a statistically established causal edge. Overlapping horizons, current-universe survivorship and repeated condition searches can bias results; use separate out-of-sample data before treating a pattern as robust. Never fabricate missing observations or assume freshness.
+
 ## Conduct
 
-- A screen is a list of things that are true about the chart right now; a backtest is a sample of
+- A screen describes the returned chart snapshot; a backtest is a sample of
   what followed in the past. Neither is a recommendation. Present the evidence, note what would
   invalidate the setup, and leave the trade — and the sizing — to the user.
 - Never turn "70% win rate on 12 samples" into a forecast; historical stats describe their sample.
@@ -170,7 +174,7 @@ Historically, what happened on SOLUSDT 4h after RSI crossed above 30? Compare it
 ## Limitations
 
 - Needs the hosted TraderSpy MCP server connected in the client (`https://mcp.traderspy.app/mcp`, Streamable HTTP), authorized with OAuth or a personal key from https://traderspy.app/mcp. A free TraderSpy account is enough. Without the server the skill has no data to work from.
-- Tool calls are metered per day: 300 on the free tier, 5,000 on premium.
+- Tool calls are metered; confirm current plan quotas and tool schemas before use rather than treating historical tier numbers as current.
 - Every tool is read-only. Nothing here places, closes or modifies an order, and there is no withdrawal or transfer tool.
 - The output is market data and analysis for the user's own research, not investment advice.
 - Conditions are AND-ed, at most three per scan, from the fixed metric list above. An OR needs two scans.

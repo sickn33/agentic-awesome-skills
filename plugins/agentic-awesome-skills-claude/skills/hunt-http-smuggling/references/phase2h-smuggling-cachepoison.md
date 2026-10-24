@@ -1,3 +1,5 @@
+> Historical upstream lab account; this catalog includes no compose/origin/nginx fixture or packet captures. No described live test was rerun or independently verified here. Product-wide conclusions and severity below cannot be inferred from this single reported topology.
+
 # Verification — Phase 2H: cache poisoning + HTTP smuggling
 
 > Two-server lab (Nginx 1.27 proxy + gunicorn/Flask origin) via Docker. Cache poisoning succeeded; HTTP smuggling **didn't** — and the failure mode is exactly the kind of honest negative that updates the skill content.
@@ -6,7 +8,7 @@
 
 `docker-compose.yml` building Nginx 1.27 (front-end with `proxy_cache`) + gunicorn-served Flask (origin reflecting `X-Forwarded-Host`).
 
-Shipped at `docs/verification/phase2h-lab/`.
+External fixture path: `docs/verification/phase2h-lab/` (not bundled).
 
 ```bash
 mkdir -p ~/phase2h-lab && cd ~/phase2h-lab
@@ -94,7 +96,7 @@ X-Cache-Status: HIT
 
 ### Probes from the skill
 
-Eight payload variants tried, raw TCP to Nginx 1.27:
+Nine payload variants reported, raw TCP to Nginx 1.27:
 
 | Variant | Headers | Result |
 |---|---|---|
@@ -112,48 +114,14 @@ Eight payload variants tried, raw TCP to Nginx 1.27:
 
 The tab-separator variant returned `501 Not Implemented` — Nginx parses the encoding name `\tchunked` and rejects it as unknown rather than treating it as the same encoding as `chunked`. Either way, smuggling fails.
 
-### Verification finding: modern Nginx is HTTP-smuggling-hardened
+### Scope of the reported negative
 
-Nginx >= 1.21 (and definitively 1.27) implements strict RFC 9112 parsing for `Content-Length` and `Transfer-Encoding`. The classic CL.TE / TE.CL / obfuscation variants documented in `hunt-http-smuggling` do not reproduce against the default Nginx configuration.
-
-**This does NOT invalidate the skill's payloads.** Targets known to remain vulnerable to one or more variants:
-
-| Target ecosystem | CL.TE | TE.CL | H2.CL | H2.TE | Status (2024-2026) |
-|---|---|---|---|---|---|
-| HAProxy ≤ 2.4 (older configs) | ✓ | ✓ | — | — | **Vulnerable**, see CVE-2021-40346 |
-| AWS ALB + specific upstream | partial | partial | ✓ | ✓ | Several disclosed-paid reports 2022-2024 |
-| Cloudflare → S3 / Lambda combos | — | — | ✓ | ✓ | H2-downgrade attacks |
-| Older F5 BIG-IP (TMM < 16) | ✓ | — | — | — | Vendor advisories |
-| Citrix ADC / NetScaler (older firmware) | ✓ | ✓ | — | — | Disclosed in 2020-2022 |
-| Squid 3.x | ✓ | — | — | — | Older deployments |
-| Apache Traffic Server (older) | ✓ | ✓ | ✓ | ✓ | PortSwigger research |
-| Custom Python proxies (no RFC enforcement) | ✓ | ✓ | — | — | Frequently vulnerable |
-| **Nginx 1.21+** | **NO** | **NO** | partial (HTTP/2 ingress only) | partial | Hardened |
-| **Caddy 2.x** | NO | NO | — | — | Hardened |
-| **Envoy 1.20+** | NO | NO | partial | partial | Hardened in most paths |
-
-**Operator rule:** before sinking time into CL/TE smuggling, fingerprint the front-end:
-
-```bash
-curl -sI https://target/ | grep -i "Server:"
-# If: nginx/1.21+, caddy 2.x, envoy 1.20+ → CL/TE classic is dead
-# If: HAProxy, AWS ALB, Cloudflare → run the matrix
-# If: server header absent or unidentifiable → assume hardened until proven otherwise
-```
-
-The HTTP/2 downgrade attacks (H2.CL / H2.TE) remain viable against many CDN+origin chains in 2024-2026 because the CDN speaks HTTP/2 to the client but HTTP/1.1 to origin — and the downgrade can introduce CL/TE confusion. These require an HTTP/2 capable proxy at the front; **`hunt-http-smuggling` should add H2-downgrade-specific probes for modern targets**.
-
----
-
-## Skill content gap closed (hunt-http-smuggling)
-
-Adding a Target-Suitability Matrix to `hunt-http-smuggling` so operators don't waste time on hardened Nginx/Caddy/Envoy and instead pivot to:
-
-1. **H2.CL / H2.TE attacks against CDN+origin chains** (the modern dominant vector)
-2. **Legacy proxy fingerprints** (HAProxy, Squid, F5, Citrix) where CL/TE classic still works
-3. **Custom proxy implementations** in less-scrutinized stacks
-
----
+The reported rejection applies only to the described configuration and payloads.
+It does not certify every Nginx version, other proxy products or arbitrary CDN
+chains. Do not reconstruct a vulnerability matrix from banners or this record.
+Verify exact affected/fixed versions against current primary vendor advisories.
+The displayed cached HTML proves a reflected asset URL, not execution of JavaScript
+in a browser; a critical XSS claim needs additional controlled browser evidence.
 
 ## Summary — Phase 2H
 
@@ -162,7 +130,7 @@ Adding a Target-Suitability Matrix to `hunt-http-smuggling` so operators don't w
 | 19 | Cache poisoning via X-Forwarded-Host | `hunt-cache-poison` | PASS — victim served attacker's CSS/JS URLs from cache |
 | 20 | HTTP smuggling on Nginx 1.27 | `hunt-http-smuggling` | **Negative — Nginx hardened**. Gap closed with target-suitability matrix. |
 
-**Combined Phase 2 verification now: 24+ skills exercised. 9+ skill-content gaps catalogued and closed.**
+Upstream aggregate exercise counts are unverified historical claims, not this catalog review’s validation.
 
 This is the second honest negative + content-update cycle in two phases (Phase 2G XXE + Phase 2H smuggling). Both produce updates that make the skill content more accurate for 2026 deployment realities.
 

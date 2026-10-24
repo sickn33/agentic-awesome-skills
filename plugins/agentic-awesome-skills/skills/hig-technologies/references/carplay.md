@@ -1,8 +1,14 @@
 ---
 title: "CarPlay | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/carplay
+---
 
 # CarPlay
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
+**Implementation boundary.** The category and device guidance below is a snapshot. Check current [CarPlay eligibility and capabilities](https://developer.apple.com/carplay/), requested entitlements, supported vehicles, and parked-only restrictions; do not infer that an omitted category is forbidden or that video is allowed while driving.
+
 
 CarPlay lets people get directions, make calls, send and receive messages, listen to music, and more from their car’s built-in display, all while staying focused on the road.
 

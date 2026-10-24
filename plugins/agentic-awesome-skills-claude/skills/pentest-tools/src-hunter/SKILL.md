@@ -11,11 +11,7 @@ license_source: "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
 ---
 ## Supporting material availability
 
-This catalog copy contains the inline guidance below, but does not include the following supporting paths. They are external prerequisites, not bundled files:
-
-- `<support-root>/templates/report-submission.md`
-
-Obtain the required material from the [declared upstream source](https://github.com/zhaoxuya520/reverse-skill), or from a user-provided installation of that source. Resolve each path relative to that installation, inspect its contents, and verify any applicable license and execution prerequisites. Do not run a command or claim a referenced procedure was followed until its required file exists. Do not fabricate the missing scripts or treat an unrelated file with the same name as equivalent. Independent steps fully documented here can proceed within the user’s authorized scope; report any dependent step as unavailable.
+The report template is bundled at `references/templates/report-submission.md`. Historical upstream inventories below describe raw H1/WooYun datasets and router tools that are not all included in this catalog tree; do not claim those datasets were read or those tools were run. Resolve available references relative to this directory.
 
 > **⚠️ AUTHORIZED USE ONLY**
 > This skill is for educational purposes or authorized security assessments only.
@@ -69,7 +65,7 @@ Obtain the required material from the [declared upstream source](https://github.
 - 抓测试账号 / 测试 header（如 `X-Bug-Bounty: <handle>`）
 
 **优先级判断**（基于命中类型预估命中率，参考 `references/methodology/05-srctimebox-priority.md`）：
-- 6 小时窗口 → 跑高命中率类型（密码重置 88% / 任意账号 86.4% / 提现 83.1%）
+- 6 小时窗口 → 跑高命中率类型（按当前项目风险与授权排序；历史已披露案例的高危占比不是新目标命中率）
 - 单日窗口 → 加上信息泄露 + 资产暴露 + Actuator
 - HVV / 重点期 → 全谱
 

@@ -40,7 +40,7 @@ empty templates only - it never holds or processes real employee or customer dat
 
 ## How It Works
 
-Follow the shared execution contract. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+The upstream shared contract is not bundled; follow the explicit intent, artifact and authorization rules below. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -122,7 +122,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Invoice Number,Client,Project,Issue Date,Payment Terms (Days),Due Date,Currency,Time Entries,Subtotal,Discount,Tax Rate %,Tax Amount,Withholding Tax,Total,Payments,Amount Paid,Balance,Days Overdue,Aging,Payment Status,Status,Sent Date,Prepared By,Approved By,Notes,Invoice ID
-INV-1041,Northwind Traders,Website Redesign,2026-08-15,30,2026-09-14,INR,"TIME-2026-011, TIME-2026-012",118000.00,4720.00,18,21240.00,20000.00,134520.00,PAY-2210,120000.00,14520.00,12,0-30 days,Part Paid,Issued,2026-08-15,Ananya Rao,Vikram Singh,"Follow-up sent in February; the client queried the retainer line, not the hours.",
+INV-1041,Northwind Traders,Website Redesign,2026-08-15,30,2026-09-14,INR,"TIME-2026-011, TIME-2026-012",118000.00,4720.00,18,20390.40,20000.00,133670.40,PAY-2210,100000.00,13670.40,12,0-30 days,Part Paid,Issued,2026-08-15,Ananya Rao,Vikram Singh,"Follow-up sent in September; the client queried the retainer line, not the hours.",INVREC-1041
 ```
 
 ```sql
@@ -152,7 +152,7 @@ CREATE TABLE invoices_billing (
   prepared_by VARCHAR(255),
   approved_by VARCHAR(255),
   notes TEXT,
-  invoice_id SERIAL PRIMARY KEY,
+  invoice_id VARCHAR(255) PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -192,7 +192,7 @@ CREATE INDEX idx_invoices_billing_status ON invoices_billing (status);
       "Prepared By": { "type": "string" },
       "Approved By": { "type": "string" },
       "Notes": { "type": "string" },
-      "Invoice ID": { "type": "integer" }
+      "Invoice ID": { "type": "string" }
   },
   "required": [
       "Issue Date",
@@ -248,6 +248,8 @@ CREATE INDEX idx_invoices_billing_status ON invoices_billing (status);
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
+For the synthetic row, taxable base = subtotal − discount = 113280.00; illustrative tax = 20390.40; gross total = 133670.40; net collectible after withholding = 113670.40; balance = net collectible − amount paid = 13670.40. This assumes withholding is separately credited and not included again in cash payments; local tax/discount rules must be verified. Aging requires an explicit as-of date (2026-09-26 for this example), timezone and treatment of draft/void invoices. A template does not calculate or enforce these relationships.
+
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
@@ -263,12 +265,12 @@ and anything pointing at another table stays `relation`.
 | 9 | Subtotal | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `118000.00` |
 | 10 | Discount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `4720.00` |
 | 11 | Tax Rate % | `number` | `NUMERIC` | `number` | Number | `18` |
-| 12 | Tax Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `21240.00` |
+| 12 | Tax Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `20390.40` |
 | 13 | Withholding Tax | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `20000.00` |
-| 14 | Total | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `134520.00` |
+| 14 | Total | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `133670.40` |
 | 15 | Payments | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `PAY-2210` |
-| 16 | Amount Paid | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `120000.00` |
-| 17 | Balance | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `14520.00` |
+| 16 | Amount Paid | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `100000.00` |
+| 17 | Balance | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `13670.40` |
 | 18 | Days Overdue | `number` | `NUMERIC` | `number` | Number | `12` |
 | 19 | Aging | `text` | `VARCHAR(255)` | `string` | Text | `0-30 days` |
 | 20 | Payment Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Part Paid` |
@@ -276,8 +278,8 @@ and anything pointing at another table stays `relation`.
 | 22 | Sent Date | `date` | `DATE` | `string, format: date` | Date | `2026-08-15` |
 | 23 | Prepared By | `text` | `VARCHAR(255)` | `string` | Text | `Ananya Rao` |
 | 24 | Approved By | `text` | `VARCHAR(255)` | `string` | Text | `Vikram Singh` |
-| 25 | Notes | `long_text` | `TEXT` | `string` | Text | `Follow-up sent in February; the client queried the retainer line, not the hours.` |
-| 26 | Invoice ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
+| 25 | Notes | `long_text` | `TEXT` | `string` | Text | `Follow-up sent in September; the client queried the retainer line, not the hours.` |
+| 26 | Invoice ID | `id` | `VARCHAR(255) PRIMARY KEY` | `string` | Text (preserve source ID) | `INVREC-1041` |
 
 ## Select Options
 
@@ -370,7 +372,7 @@ We invoice from three places and cannot tell what is overdue.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Module catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 

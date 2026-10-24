@@ -23,10 +23,10 @@ redis-cli
 redis-cli -h redis15.localnet.org -p 6390 PING
 
 # Password authentication
-redis-cli -a myUnguessablePazzzzzword123 PING
+redis-cli --askpass PING
 
 # ACL-style authentication (Redis 6+)
-redis-cli --user admin --pass myPassword PING
+redis-cli --user admin --askpass PING
 
 # Specific database number
 redis-cli -n 2 DBSIZE
@@ -68,7 +68,7 @@ Connection:
   -t <timeout>       Connection timeout in seconds (decimals allowed, default: 0 = no limit)
   -s <socket>        Unix socket (overrides hostname and port)
   -a <password>      Password (also via REDISCLI_AUTH env var)
-  --user <username>  ACL username (requires -a)
+  --user <username>  ACL username (combine with a supported authentication source)
   --pass <password>  Alias of -a
   --askpass          Prompt for password from STDIN (ignores -a and REDISCLI_AUTH)
   -u <uri>           Connection URI: redis://user:password@host:port/dbnum
@@ -135,7 +135,7 @@ Special Modes:
 
 Examples:
   redis-cli -u redis://default:PASSWORD@localhost:6379/0
-  cat /etc/passwd | redis-cli -x set mypasswd
+  cat /path/to/non-sensitive-fixture.txt | redis-cli -x SET demo:fixture
   redis-cli -D "" --raw dump key > key.dump && redis-cli -X dump_tag restore key2 0 dump_tag replace < key.dump
   redis-cli -r 100 lpush mylist x
   redis-cli -r 100 -i 1 info | grep used_memory_human:

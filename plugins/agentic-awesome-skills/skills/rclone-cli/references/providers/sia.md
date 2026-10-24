@@ -25,8 +25,8 @@ guide and install one.
 
 rclone interacts with Sia network by talking to the Sia daemon via [HTTP API](https://sia.tech/docs/)
 which is usually available on port *9980*. By default you will run the daemon
-locally on the same computer so it's safe to leave the API password blank
-(the API URL will be `http://127.0.0.1:9980` making external access impossible).
+locally on `http://127.0.0.1:9980`. Keep API authentication enabled and use the
+daemon's API password even on localhost; local processes can reach that port.
 
 However, if you want to access Sia daemon running on another node, for example
 due to memory constraints or because you want to share single daemon between
@@ -35,8 +35,9 @@ several rclone and Sia-UI instances, you'll need to make a few more provisions:
 - Ensure you have *Sia daemon* installed directly or in
   a [docker container](https://github.com/SiaFoundation/siad/pkgs/container/siad)
   because Sia-UI does not support this mode natively.
-- Run it on externally accessible port, for example provide `--api-addr :9980`
-  and `--disable-api-security` arguments on the daemon command line.
+- Keep the daemon API on loopback and use an authenticated SSH tunnel or
+  another protected private transport. Do not expose the wallet-capable API
+  publicly or disable API security as a routine remote-access setup.
 - Enforce API password for the `siad` daemon via environment variable
   `SIA_API_PASSWORD` or text file named `apipassword` in the daemon directory.
 - Set rclone backend option `api_password` taking it from above locations.
@@ -84,7 +85,7 @@ Choose a number from below, or type in your own value
 ...
 Storage> sia
 Sia daemon API URL, like http://sia.daemon.host:9980.
-Note that siad must run with --disable-api-security to open API port for other hosts (not recommended).
+Prefer a protected tunnel to a loopback-bound daemon; keep API security enabled.
 Keep default if Sia daemon runs on localhost.
 Enter a string value. Press Enter for the default ("http://127.0.0.1:9980").
 api_url> http://127.0.0.1:9980
@@ -143,7 +144,7 @@ Here are the Standard options specific to sia (Sia Decentralized Cloud).
 
 Sia daemon API URL, like http://sia.daemon.host:9980.
 
-Note that siad must run with --disable-api-security to open API port for other hosts (not recommended).
+Prefer a protected tunnel to a loopback-bound daemon; keep API security enabled.
 Keep default if Sia daemon runs on localhost.
 
 Properties:

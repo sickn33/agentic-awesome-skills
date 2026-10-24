@@ -131,7 +131,7 @@ CREATE TABLE sop_company_wiki (
   category VARCHAR(100) NOT NULL,
   department VARCHAR(255),
   description TEXT,
-  last_reviewed DATE NOT NULL,
+  last_reviewed DATE,
   next_review DATE NOT NULL,
   owner VARCHAR(255),
   priority VARCHAR(100) NOT NULL,
@@ -157,7 +157,7 @@ CREATE INDEX idx_sop_company_wiki_status ON sop_company_wiki (status);
       "Category": { "type": "string" },
       "Department": { "type": "string" },
       "Description": { "type": "string" },
-      "Last Reviewed": { "type": "string", "format": "date" },
+      "Last Reviewed": { "type": ["string", "null"], "format": "date" },
       "Next Review": { "type": "string", "format": "date" },
       "Owner": { "type": "string" },
       "Priority": { "type": "string" },
@@ -168,7 +168,6 @@ CREATE INDEX idx_sop_company_wiki_status ON sop_company_wiki (status);
   },
   "required": [
       "Category",
-      "Last Reviewed",
       "Next Review",
       "Priority",
       "Status"
@@ -309,7 +308,7 @@ New joiners keep asking how to do client onboarding and nobody answers the same 
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Module Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 
@@ -322,3 +321,5 @@ Then recommend the smallest setup that fits, and wait for me to ask before you b
 When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
 
+
+A draft that has never been reviewed has a blank/null Last Reviewed date. Publication status and version are declared metadata, not approval evidence or version control; do not invent review dates or publish without authorized scope.

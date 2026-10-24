@@ -36,11 +36,11 @@ Provides a standardized, auditable framework and data model for **Zero-Knowledge
 
 | # | Field Name | Type | SQL Type | JSON Schema Type | Notion Property Type | Example Value |
 |---|------------|------|----------|------------------|----------------------|---------------|
-| 1 | ZK Verification ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text | `ZK-001` |
+| 1 | ZK Verification ID | `id` | `VARCHAR(64) PRIMARY KEY` | `string` | Text | `ZK-001` |
 | 2 | Proving System Architecture | `select` | `VARCHAR(64)` | `string` | Select | `Groth16 (BN254)` |
 | 3 | Circuit Identifier | `text` | `VARCHAR(64)` | `string` | Text | `private_identity_membership` |
-| 4 | Public Inputs Count | `number` | `INTEGER` | `number` | Number | `4` |
-| 5 | Verification Key Hash | `text` | `VARCHAR(64)` | `string` | Text | `0x98f4a...` |
+| 4 | Public Inputs Count | `number` | `INTEGER` | `integer` | Number | `4` |
+| 5 | Verification Key Hash | `text` | `VARCHAR(66)` | `string` | Text | `0x98f4a...` |
 | 6 | Proof Generation Time Ms | `number` | `INTEGER` | `number` | Number | `420` |
 | 7 | On-Chain Verification Gas | `number` | `INTEGER` | `number` | Number | `185000` |
 | 8 | Nullifier Collision Checked | `select` | `VARCHAR(16)` | `string` | Select | `Yes` |
@@ -86,6 +86,8 @@ How do I configure and track Zero-Knowledge Proof Verification Pipeline for our 
 > Generate the unified field schema, SQL DDL migration, and JSON validation schema to register into your system catalog.
 >
 > Workflow: Define criteria -> Run automated verification -> Record baseline -> Monitor invariants.
+
+This is a register template, not a cryptographic verifier. Bind the proving-system/version, circuit and verifier artifact hashes, exact public-input ordering/encoding, network/contract and domain-separated nullifier to evidence from the actual implementation. Nullifier collision checks alone do not prevent reuse: acceptance and spent-nullifier recording must be enforced atomically. Record a verifier verdict only after actual verification; truncated hash examples are not valid inputs. Generated schemas must add required fields, nonnegative integer bounds and complete hash formats.
 
 ## Best Practices
 

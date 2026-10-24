@@ -11,8 +11,7 @@
   them to match how the business talks.
 - **Problem:** the ID column is plain text, or IDs are generated for records that have
   none.
-  **Solution:** convert to Unique ID with the source prefix where that fits, or keep the
-  imported value as Text. Never mint production IDs.
+  **Solution:** keep imported values as Text. Add a separate Notion-generated Unique ID only if requested; it cannot preserve external IDs.
 - **Problem:** relation columns do not link.
   **Solution:** the target database has to exist first. Import both, then convert the
   column to Relation by hand and verify the links.

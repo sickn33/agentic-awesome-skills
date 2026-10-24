@@ -16,6 +16,10 @@ license_source: https://github.com/LambdaTest/agent-skills/blob/main/LICENSE
 Use this skill when you need generates Cucumber BDD tests with Gherkin feature files and step definitions in Java, JavaScript, or Ruby. Use when user mentions "Cucumber", "Gherkin", "Feature/Scenario", "Given/When/Then", "BDD". Triggers on: "Cucumber", "Gherkin", "BDD", "Feature file", "Given/When/Then", "step...
 
 
+## Example prerequisites
+
+The feature and step files below are partial sketches, not an executable suite. Supply scenario-scoped browser/page objects, all missing matching steps (including password and error assertions), driver imports, base URL and guaranteed teardown. `reference/playbook.md` is not bundled. Cloud execution transmits test data/screens/video and consumes provider quota: obtain exact environment/disclosure approval first.
+
 ## Core Patterns
 
 ### Feature File (Gherkin)
@@ -196,7 +200,7 @@ driver = new RemoteWebDriver(new URL("https://hub.lambdatest.com/wd/hub"), brows
 **JavaScript:**
 ```javascript
 const driver = new Builder()
-  .usingServer(`https://${process.env.LT_USERNAME}:${process.env.LT_ACCESS_KEY}@hub.lambdatest.com/wd/hub`)
+  .usingServer("https://hub.lambdatest.com/wd/hub")
   .withCapabilities({ browserName: 'chrome', 'LT:Options': {
     user: process.env.LT_USERNAME, accessKey: process.env.LT_ACCESS_KEY,
     build: 'Cucumber Build', platformName: 'Windows 11', video: true

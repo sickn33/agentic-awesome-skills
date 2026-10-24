@@ -72,7 +72,7 @@ which is the default. HTTP is provided primarily for debugging purposes.
        \ "http"
      2 / HTTPS protocol
        \ "https"
-    protocol> 1
+    protocol> 2
     ```
 
 6. Specify your NetStorage host, CP code, and any necessary content paths using
@@ -92,7 +92,9 @@ this format: `<domain>/<cpcode>/<content>/`
 
 8. Set the Netstorage account secret/G2O key which will be used for authentication
 purposes. Select the `y` option to set your own password then enter your secret.
-Note: The secret is stored in the `rclone.conf` file with hex-encoded encryption.
+The secret is stored obscured in `rclone.conf`; obscuring is reversible and
+is not protection for an exposed config. Restrict config-file access or use
+rclone config encryption.
 
     ```text
     y) Yes type in my own password
@@ -109,7 +111,7 @@ Note: The secret is stored in the `rclone.conf` file with hex-encoded encryption
     ```text
     [ns1]
     type = netstorage
-    protocol = http
+    protocol = https
     host = baseball-nsu.akamaihd.net/123456/content/
     account = username
     secret = *** ENCRYPTED ***
@@ -136,7 +138,7 @@ rclone lsd ns1:/974012/testing/
 ### Sync the contents local with remote
 
 ```console
-rclone sync . ns1:/974012/testing/
+rclone sync --interactive . ns1:/974012/testing/
 ```
 
 ### Upload local content to remote

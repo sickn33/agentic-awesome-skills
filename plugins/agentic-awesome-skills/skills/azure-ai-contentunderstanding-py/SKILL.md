@@ -187,8 +187,10 @@ poller = client.begin_analyze(
 result = poller.result()
 
 # Access extracted fields
-print(result.fields["vendor_name"])
-print(result.fields["invoice_total"])
+for content in result.contents or []:
+    fields = content.fields or {}
+    print(fields.get("vendor_name"))
+    print(fields.get("invoice_total"))
 ```
 
 ## Analyzer Management
@@ -279,3 +281,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+SDK/service versions differ: verify analyzer schemas and result fields against the pinned package; guard empty `contents` before indexing and missing extracted fields before use. These are fragments, not a full analyzer lifecycle. Close async clients and credentials with context managers, bound polling and report failures. Documents/audio/video leave the local environment; authorize sensitive transfer, redact extracted fields and validate outputs before financial/legal decisions. See [official SDK guide](https://learn.microsoft.com/en-us/python/api/overview/azure/ai-contentunderstanding-readme?view=azure-python-preview).

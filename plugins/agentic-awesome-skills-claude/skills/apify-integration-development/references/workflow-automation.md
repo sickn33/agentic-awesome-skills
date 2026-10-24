@@ -105,7 +105,7 @@ Downstream steps map fields by name regardless of which action produced the run,
 
 ## 8. Guard against large datasets
 
-Estimate the full download size before inlining: fetch one item, multiply by the requested item count with a safety margin (e.g. 1.2x), compare to a payload cap (e.g. 10 MB). If it exceeds the cap, **do not attempt the inline download** - return a warning item plus the dataset file URLs. When a trigger fetches more items than the cap allows, push a warning pointing users to the "Get Dataset Items" action with `run.defaultDatasetId` for full results. The host platform has payload/time limits the Apify API does not; always offer a file-download fallback.
+Estimate the full download size before inlining: a sample may help estimate, but item sizes vary. Enforce an actual serialized-byte cap while fetching bounded pages in addition to any estimate (e.g. 10 MB). If it exceeds the cap, **do not attempt the inline download** - return a warning item plus the dataset file URLs. When a trigger fetches more items than the cap allows, push a warning pointing users to the "Get Dataset Items" action with `run.defaultDatasetId` for full results. Host and Apify payload/time limits both apply; always offer a file-download fallback.
 
 ## 9. Files and binary records
 
@@ -122,7 +122,7 @@ Use the host's hook type backed by Apify webhooks:
 - **Perform**: read the webhook payload and enrich it (section 7).
 - **Fallback list**: fetch the 3 most recent matching runs so users see realistic test data when configuring the trigger without waiting for a real event.
 
-Offer an event multi-select (SUCCEEDED / FAILED / TIMED-OUT / ABORTED) plus an "any" shortcut that expands to all four. Build the `condition: { actorId }` or `{ actorTaskId }` from the watched resource. Pass the webhook payload through as workflow data - it already carries the run metadata.
+Offer an event multi-select (SUCCEEDED / FAILED / TIMED-OUT / ABORTED) plus an "any" shortcut that expands to all four. Build the `condition: { actorId }` or `{ actorTaskId }` from the watched resource. Authenticate webhook deliveries, validate the actor/task/run relationship against the stored subscription, deduplicate events and retrieve authoritative run state via your API client. Treat payload fields as untrusted workflow data.
 
 ## 11. Error UX
 

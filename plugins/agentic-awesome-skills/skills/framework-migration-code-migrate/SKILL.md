@@ -1,7 +1,7 @@
 ---
 name: framework-migration-code-migrate
 description: "You are a code migration expert specializing in transitioning codebases between frameworks, languages, versions, and platforms. Generate comprehensive migration plans, automated migration scripts, and"
-risk: safe
+risk: critical
 source: community
 date_added: "2026-02-27"
 ---
@@ -27,6 +27,8 @@ The user needs to migrate code from one technology stack to another, upgrade to 
 $ARGUMENTS
 
 ## Instructions
+
+Work on a topic branch or isolated copy with a baseline and explicit file scope. Preview transformations and review the diff before applying; database cutover, production writes or deployment require separate authorized scope. The playbook’s undefined helpers are not an installed tool. Preserve licenses and validate source/target version compatibility.
 
 - Clarify goals, constraints, and required inputs.
 - Apply relevant best practices and validate outcomes.

@@ -35,7 +35,7 @@ Use FAF Expert when you need:
 
 ### Example 1: Legacy Enterprise Java System
 ```yaml
-# Achieved: 92% Gold tier with FAF Expert
+# Illustrative context; no score was measured here
 project:
   name: enterprise-payment-api
   goal: Mission-critical payment processing system
@@ -54,7 +54,7 @@ human_context:
 
 ### Example 2: Modern React Dashboard
 ```yaml
-# Achieved: 97% Gold tier performance
+# Illustrative context; no performance was measured here
 project:
   name: analytics-dashboard
   goal: Real-time analytics for SaaS platform
@@ -71,7 +71,7 @@ stack:
 ## Core Capabilities
 
 ### 🏆 Championship Scoring System
-- **Gold Tier (95%+)**: Production-ready AI context
+- **Gold Tier (95%+)**: Upstream internal completeness label, not production certification
 - **Silver Tier (85%+)**: Professional development standard  
 - **Bronze Tier (70%+)**: Solid foundation for AI assistance
 
@@ -82,7 +82,7 @@ Expert setup of claude-faf-mcp with 33 tools:
   "mcpServers": {
     "faf": {
       "command": "npx",
-      "args": ["-y", "claude-faf-mcp@latest"]
+      "args": ["-y", "claude-faf-mcp@<reviewed-version>"]
     }
   }
 }
@@ -104,6 +104,8 @@ Keep context synchronized across platforms:
 - Deployment configuration
 
 ## Getting Started
+
+Review an exact CLI/MCP version and dependency/lifecycle/network behavior before installation. Back up and inspect exact changes before init/bi-sync/enhance/MCP configuration; do not overwrite existing agent instructions or send private context to a model without authorization. Named commands/tools are external prerequisites, not bundled.
 
 ### Quick Installation
 ```bash
@@ -137,12 +139,7 @@ faf enhance --model claude --focus completeness
 
 ## Success Metrics
 
-**Real Performance Data:**
-- **52k+ downloads** across FAF ecosystem
-- **800+ comprehensive tests** (CLI + MCP)
-- **IANA-registered format** (application/vnd.faf+yaml)
-- **153+ validated formats** supported
-- **Championship-grade performance** (<50ms execution)
+The upstream project reports adoption/tests/latency figures, but no measurement artifacts are bundled here. Do not repeat those numbers as verified. FAF scores are internal completeness heuristics, not production-readiness, security, compliance or model-quality certification. Example YAML values and achieved scores are illustrative, not executed results. The [IANA media-type registry](https://www.iana.org/assignments/media-types) lists application/vnd.faf+yaml; this registration does not validate performance or completeness claims.
 
 ## Platform Compatibility
 
@@ -196,7 +193,7 @@ stack:
 ## Expert Resources
 
 - **Documentation**: https://faf.one
-- **MCP Registry**: Official Anthropic steward
+- **MCP Registry**: Verify the current registry listing and maintainer identity; a listing is not endorsement
 - **CLI Reference**: `faf --help`
 - **Community**: Discord server with 1000+ developers
 - **Enterprise**: Professional support available

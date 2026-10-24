@@ -13,10 +13,10 @@ license_source: https://github.com/jonathimer/devmarketing-skills/blob/main/LICE
 # Developer Audience Context
 ## When to Use
 
-Use this skill when you need when the user wants to establish or update their developer audience context. Also use when starting any other developer marketing skill to ensure foundational context is loaded. Trigger phrases include "developer persona," "target developers," "who are our developers," "developer...
+Use this skill when the user wants to establish or update their developer audience context. Also use when starting any other developer marketing skill to ensure foundational context is loaded. Trigger phrases include "developer persona," "target developers," "who are our developers," "developer audience."
 
 
-This skill helps you create and maintain `.agents/developer-audience-context.md` — a foundational document that captures everything about your target developers. All other developer marketing skills reference this document first, so you only define your audience once.
+This skill helps you create and maintain `.agents/developer-audience-context.md` — a foundational document that captures everything about your target developers. Related developer marketing skills can consult this document when explicitly instructed, so you only define your audience once.
 
 ---
 
@@ -269,3 +269,7 @@ After establishing context, these skills will reference it:
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+## Research evidence and privacy
+
+Label codebase-derived personas and channel preferences as hypotheses until supported by actual research. For every real quote or adoption metric, record its source, collection date, scope and permission to reuse; never invent verbatim customer language, endorsements or benchmark evidence. Stars, downloads and pulls are different measurements and do not establish unique active users or conversion. Keep private support/sales/community material out of tracked context unless authorized and appropriately minimized. External listening tools are optional examples, not required subscriptions or guaranteed integrations; do not post, join groups, contact people or buy access as part of drafting. Preview updates to existing context and preserve user-confirmed facts.

@@ -33,22 +33,20 @@ Use the Hub page first, and only fall back to the generic heuristics below when 
 
 ## Quantization Formats
 
-**GGUF** (GPT-Generated Unified Format) - Standard format for llama.cpp models.
+**GGUF** (GGML Universal File) - Standard format for llama.cpp models.
 
-### Format Comparison
+### Illustrative Format Comparison
 
-| Format | Perplexity | Size (7B) | Tokens/sec | Notes |
-|--------|------------|-----------|------------|-------|
-| FP16 | 5.9565 (baseline) | 13.0 GB | 15 tok/s | Original quality |
-| Q8_0 | 5.9584 (+0.03%) | 7.0 GB | 25 tok/s | Nearly lossless |
-| **Q6_K** | 5.9642 (+0.13%) | 5.5 GB | 30 tok/s | Best quality/size |
-| **Q5_K_M** | 5.9796 (+0.39%) | 4.8 GB | 35 tok/s | Balanced |
-| **Q4_K_M** | 6.0565 (+1.68%) | 4.1 GB | 40 tok/s | **Recommended** |
-| Q4_K_S | 6.1125 (+2.62%) | 3.9 GB | 42 tok/s | Faster, lower quality |
-| Q3_K_M | 6.3184 (+6.07%) | 3.3 GB | 45 tok/s | Small models only |
-| Q2_K | 6.8673 (+15.3%) | 2.7 GB | 50 tok/s | Not recommended |
+The original numerical table had no model, dataset, hardware, context, implementation or source and cannot serve as a benchmark. Use this qualitative starting point, then measure the chosen model with a held-out task set.
 
-**Recommendation**: Use **Q4_K_M** for best balance of quality and speed.
+<!-- Historical unsourced numerical table removed. -->
+
+| Format family | Tradeoff to test |
+|---|---|
+| F16/BF16 | Larger baseline weights; actual quality depends on source precision |
+| Q8/Q6 | More storage than lower-bit choices; measure quality preservation |
+| Q5/Q4 | Common storage/quality candidates, not universal speed winners |
+| Q3/Q2 | Aggressive compression with model/task-dependent degradation |
 
 ## Converting Models
 
@@ -57,6 +55,7 @@ Use the Hub page first, and only fall back to the generic heuristics below when 
 ```bash
 # 1. Download Hugging Face model
 hf download meta-llama/Llama-2-7b-chat-hf \
+    --revision <reviewed-full-hub-sha> \
     --local-dir models/llama-2-7b-chat/
 
 # 2. Convert to FP16 GGUF
@@ -110,9 +109,7 @@ done
     -c 512
 
 # Lower perplexity = better quality
-# Baseline (FP16): ~5.96
-# Q4_K_M: ~6.06 (+1.7%)
-# Q2_K: ~6.87 (+15.3% - too much degradation)
+# Compare the same model/tokenizer/dataset/context; no universal values are asserted.
 ```
 
 ## Use Case Guide
@@ -136,7 +133,7 @@ Q3_K_M - Acceptable for draft generation
 
 ### Technical/medical
 ```
-Q6_K or Q8_0 - Maximum accuracy
+Higher precision is only a candidate; medical correctness requires independent clinical validation
 ```
 
 ### Edge devices (Raspberry Pi)
@@ -144,7 +141,11 @@ Q6_K or Q8_0 - Maximum accuracy
 Q2_K or Q3_K_S - Fit in limited RAM
 ```
 
+The K-quant tensor-type mix is implementation/model dependent; K is a block-quantization family, not a promise that all attention tensors receive higher precision. Quant labels can have different mixed tensor types. Calibration data must be licensed, representative and separate from evaluation; more data is not automatically better.
+
 ## Model Size Scaling
+
+All following size/RAM tables are rough illustrative estimates. Read actual file sizes and include KV cache, context, buffers, projector and operating-system headroom; a 70B recommendation does not prove fit on a particular consumer machine.
 
 ### 7B parameter models
 
@@ -213,9 +214,7 @@ llama-server --hf-repo <repo> --hf-file <filename.gguf>
 
 **What**: Calibration data to improve quantization quality.
 
-**Benefits**:
-- 10-20% perplexity improvement with Q4
-- Essential for Q3 and below
+**Potential benefit**: calibration can improve quantization for supported formats; magnitude depends on model/data and is not guaranteed.
 
 **Usage**:
 ```bash
@@ -252,5 +251,5 @@ llama-server --hf-repo <repo> --hf-file <filename.gguf>
 
 **Slow inference**:
 - Higher quantization uses more compute
-- Q8_0 much slower than Q4_K_M
+- Throughput depends on backend/kernel/hardware; benchmark rather than infer from bits alone
 - Consider speed vs quality trade-off

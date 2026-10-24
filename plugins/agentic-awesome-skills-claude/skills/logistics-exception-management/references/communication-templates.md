@@ -2,7 +2,13 @@
 
 > **Reference Type:** Tier 3 — Load on demand when composing or reviewing exception communications.
 >
-> **Usage:** Each template includes variable placeholders in `{{double_braces}}` for direct substitution. Templates are organized by audience and escalation stage. Select the template matching your scenario, substitute variables, review tone guidance, and send.
+> **Usage:** Each template includes variable placeholders in `{{double_braces}}` for direct substitution. Templates are organized by audience and escalation stage. Select the template matching your scenario, substitute verified variables and prepare a draft. Sending requires direct user authorization.
+
+## Drafting boundaries
+
+All templates are drafts. Preserve the user's authority limits; do not send, file, settle, release rights, spend or disclose records without authorization. Use only verified recipients and minimum necessary information. Remove unsupported statements that a claim has been filed, loss confirmed, replacement approved or action completed. Do not use template urgency to bypass payment verification, legal review or emergency response. Conditional blocks are editorial instructions, not executable templates.
+
+The legal cover letter is only for a verified claim within Carmack/Part 370 scope. Recheck actual contract and legal deadlines, claimant standing and service requirements. Nine months and two years under section 14706(e) are minimum permissible periods, not universal fixed statutory windows. Refer to [decision-frameworks.md](decision-frameworks.md) for the distinction between notice, monetary claim and suit deadlines.
 
 ---
 
@@ -146,7 +152,7 @@ Direct and time-bound. This is not hostile, but it communicates that the situati
 - Do not soften the urgency — "when you get a chance" undermines the entire message.
 - Do not issue ultimatums you cannot enforce at this stage.
 - Do not reference other shipments or unrelated performance issues — stay on this load.
-- Do not leave out the financial exposure figure; it justifies the urgency.
+- Include supported exposure only when appropriate and authorized for this recipient; distinguish estimates from confirmed losses.
 
 ### Subject Line
 
@@ -314,8 +320,9 @@ DAMAGE DETAILS:
   Extent:           {{damage_extent}}
   Pieces Affected:  {{damaged_piece_count}} of {{piece_count}} total
 
-We are handling the carrier claim and investigation on our end — no action is
-needed from your team on that front.
+We propose to coordinate the carrier claim and investigation, subject to
+confirmed claimant authority. Please preserve goods, packaging and relevant
+records and tell us about any notice or insurance deadlines affecting you.
 
 What we do need from you:
   - Confirmation of the affected quantities once your receiving team completes
@@ -340,7 +347,7 @@ Regards,
 ## 5. Customer Proactive Update — Loss
 
 ### When to Use
-- Shipment is confirmed lost — not just delayed or unlocated. A shipment is "lost" when the carrier has confirmed they cannot locate the freight after a thorough trace, OR when {{days_without_scan}} days have passed with no carrier response to trace requests.
+- Shipment is confirmed lost — not just delayed or unlocated. A shipment is "lost" when the carrier has confirmed they cannot locate the freight after a thorough trace. A missing scan or unanswered trace alone does not confirm loss.
 - This is the most sensitive exception communication. The customer is learning that their goods are gone. Do not send this template for a shipment that is merely late or temporarily unlocated.
 
 ### Tone Guidance
@@ -579,7 +586,7 @@ Brief and structured. Your VP does not need the narrative — they need the numb
 - Do not editorialize — "the carrier is terrible" adds nothing. State the facts.
 - Do not bury the financial number. It should be in the first three lines.
 - Do not present problems without proposed solutions.
-- Do not send this without having already exhausted the escalation steps within your authority.
+- For safety, fraud or expiring rights, escalate immediately even if routine steps are incomplete.
 
 ### Subject Line
 
@@ -630,7 +637,7 @@ I need a decision by {{decision_deadline}} to execute the recovery plan.
 ### When to Use
 - Decision has been made to file a formal freight claim against the carrier.
 - All supporting documentation has been gathered (BOL, POD, inspection reports, photos, invoice, packing list).
-- Claim is being sent within the filing window (9 months under Carmack Amendment for interstate; check state law or contract for intrastate or brokered freight).
+- The authorized owner has verified the applicable deadline and filing requirements.
 
 ### Tone Guidance
 Formal and precise. This is a legal document. No emotion, no narrative, no relationship language. State the facts, cite the applicable law, list the enclosed documents, and demand payment. Every statement should be supportable with evidence. Use the carrier's legal name and MC number, not their DBA or sales contact's name.
@@ -638,7 +645,7 @@ Formal and precise. This is a legal document. No emotion, no narrative, no relat
 ### What NOT to Say
 - Do not editorialize about the carrier's service or your frustration.
 - Do not include demands beyond the provable loss amount — consequential damages require separate analysis and legal review.
-- Do not omit the filing date or claim amount — these are jurisdictional requirements.
+- Include the actual filing date and a supported specified or determinable claim amount; verify the requirements for a proper claim.
 - Do not reference settlement discussions or verbal admissions of fault.
 
 ### Subject Line
@@ -710,10 +717,11 @@ ENCLOSED DOCUMENTATION:
 
 DEMAND:
 
-{{our_company}} demands payment of ${{claim_amount}} within thirty (30) days
-of receipt of this claim, per 49 C.F.R. § 370.9. In the alternative, we
-request written acknowledgment within thirty (30) days and final disposition
-within one hundred twenty (120) days, as required by regulation.
+{{our_company}} requests payment of the supported amount of ${{claim_amount}}.
+Where Part 370 applies, please acknowledge this claim under 49 C.F.R. § 370.5
+and process it under § 370.9. If it remains pending after 120 days, provide
+the required written status and reasons, then updates every succeeding
+60-day period. This request does not assert a statutory 30-day payment duty.
 
 Please direct all claim correspondence to:
 
@@ -780,14 +788,14 @@ SETTLEMENT TERMS:
   Settlement Amount: ${{settlement_amount}}
   Payment Method:    {{payment_method}}
   Payment Due:       Within {{payment_days}} business days of this acceptance
-  Scope of Release:  Full and final settlement of all claims arising from PRO
+  Scope of Release:  Only the specific approved claim described in {{approved_release_scope}}, PRO
                      {{pro_number}} / BOL {{bol_number}} for the shipment of
                      {{commodity}} from {{origin_city_state}} to
                      {{dest_city_state}} on {{ship_date}}
 
 Upon receipt of ${{settlement_amount}}, {{our_company}} releases
-{{carrier_legal_name}} (MC-{{carrier_mc}}) from any further liability related
-to the above-referenced shipment.
+{{carrier_legal_name}} (MC-{{carrier_mc}}) only to the extent of {{approved_release_scope}}. No broader
+release or waiver is authorized by this draft.
 
 This release does not extend to any other shipments, claims, or obligations
 between the parties.
@@ -880,8 +888,8 @@ to resolving this matter directly and would welcome a call to discuss if that
 would be productive.
 
 If we are unable to reach a fair resolution, we will need to evaluate our
-options under 49 U.S.C. § 14706, which provides a two-year statute of
-limitations from the date of claim denial.
+options under the applicable terms and law, including action deadlines
+measured from qualifying written disallowance where 49 U.S.C. § 14706(e) applies.
 
 Regards,
 {{our_contact_name}}
@@ -1164,7 +1172,7 @@ Regards,
 - Customer proactive update: within 2 hours of confirmed impact, or before the customer's next business-day start — whichever comes first.
 - Escalation to account manager: after 4 hours without response (2 hours for urgent).
 - Escalation to VP/Director: after 12–24 hours without account manager resolution.
-- Claims filing: as soon as documentation is assembled, within the 9-month statutory window.
+- Claims filing: as soon as documentation is assembled, within the verified contractual/legal deadline, preserving notice and suit rights separately.
 - Post-resolution summary: within 5 business days of closure.
 - Performance warning: after pattern is documented, not during an active exception.
 - Customer apology: 1–2 business days after resolution is confirmed.

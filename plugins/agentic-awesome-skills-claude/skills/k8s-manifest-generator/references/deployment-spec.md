@@ -31,7 +31,6 @@ spec:
   selector:
     matchLabels:
       app: my-app
-      version: v1
 
   # Update strategy
   strategy:
@@ -43,7 +42,7 @@ spec:
   # Minimum time for pod to be ready
   minReadySeconds: 10
 
-  # Deployment will fail if it doesn't progress in this time
+  # Controller reports ProgressDeadlineExceeded; it does not automatically roll back
   progressDeadlineSeconds: 600
 
   # Pod template
@@ -278,7 +277,7 @@ spec:
 
 **`strategy.rollingUpdate.maxUnavailable`** (int or percent, default: 25%)
 - Maximum pods below desired replicas during update
-- Set to 0 for zero-downtime deployments
+- Set to 0 to preserve desired available replicas during rollout; application behavior and capacity still determine downtime
 - Cannot be 0 if maxSurge is 0
 
 **Best practices:**
@@ -345,7 +344,7 @@ ports:
 ```yaml
 resources:
   requests:
-    memory: "256Mi"  # Guaranteed resources
+    memory: "256Mi"  # Scheduling reservation
     cpu: "250m"      # 0.25 CPU cores
   limits:
     memory: "512Mi"  # Maximum allowed
@@ -355,8 +354,8 @@ resources:
 **QoS Classes (determined automatically):**
 
 1. **Guaranteed**: requests = limits for all containers
-   - Highest priority
-   - Last to be evicted
+   - QoS class is separate from Pod Priority
+   - Generally protected in node-pressure ranking; eviction also depends on usage and priority
 
 2. **Burstable**: requests < limits or only requests set
    - Medium priority
@@ -364,12 +363,12 @@ resources:
 
 3. **BestEffort**: No requests or limits set
    - Lowest priority
-   - First to be evicted
+   - Often vulnerable under pressure; not an unconditional order
 
 **Best practices:**
 - Always set requests in production
 - Set limits to prevent resource monopolization
-- Memory limits should be 1.5-2x requests
+- Size memory requests and limits from measured workload behavior, rather than a fixed multiplier
 - CPU limits can be higher for bursty workloads
 
 #### Health Checks
@@ -715,7 +714,7 @@ spec:
         lifecycle:
           preStop:
             exec:
-              command: ["/bin/sh", "-c", "sleep 15 && kill -SIGTERM 1"]
+              command: ["/bin/sh", "-c", "sleep 15"  # kubelet sends TERM after this hook; hook time uses the grace period]
 ```
 
 ## Troubleshooting

@@ -50,7 +50,7 @@ DO NOT use for:
 ### Play Store developer-page scrape
 ```bash
 # Find developer page from the target's brand name
-curl -sk -A "Mozilla/5.0" "https://play.google.com/store/apps/developer?id=<Brand+Name>" -o /tmp/dev.html
+curl --fail --show-error --silent --max-time 30 -A "Mozilla/5.0" "https://play.google.com/store/apps/developer?id=<Brand+Name>" -o /tmp/dev.html
 
 # Extract package IDs
 grep -oE 'id=[a-zA-Z0-9._]+' /tmp/dev.html | sort -u
@@ -68,7 +68,7 @@ com.<corp>.<sub-brand-3>
 ```
 
 ### Cross-reference with stealer logs
-Stealer-log format includes package names like `*@com.<corp>.<app>` — extract these from `creds_userpass.txt` if you have a leaked dump.
+Use only owner-provided, lawfully held incident artifacts; do not acquire leaked credential dumps. Extract package names without copying passwords or personal data. Discovery does not expand authorized scope.
 
 ### Brand permutation guesses (multi-brand conglomerate patterns)
 ```
@@ -84,10 +84,14 @@ in.co.<brand>.app
 
 ## Stage 1 — APK acquisition
 
-### Primary: APKPure direct (no auth required)
+### Acquisition provenance
+
+Prefer an owner-supplied signed build or approved store export. Record package, version, SHA256 and signing-certificate fingerprint; compare to the owner’s trusted signing identity. Third-party mirrors are untrusted and filenames/latest URLs do not prove authenticity. Inspect archives in an isolated nonprivileged workspace with size/path/symlink limits before extraction; never install them on a personal device.
+
+### Historical mirror URL sketch (verify publisher/signature before use)
 ```bash
 # Follow 302 redirects to actual download
-curl -sk -L --max-time 60 \
+curl --fail --show-error --silent --max-time 30 -L --max-time 60 \
   "https://d.apkpure.net/b/APK/<package_id>?version=latest" \
   -o "<package_id>.apk"
 
@@ -96,25 +100,25 @@ curl -sk -L --max-time 60 \
 
 ### Secondary: APKMirror search
 ```bash
-curl -sk -A "Mozilla/5.0" "https://www.apkmirror.com/?post_type=app_release&searchtype=apk&s=<brand>" \
+curl --fail --show-error --silent --max-time 30 -A "Mozilla/5.0" "https://www.apkmirror.com/?post_type=app_release&searchtype=apk&s=<brand>" \
   | grep -oE 'href="[^"]+\.apk[^"]*"' | sort -u
 ```
 
 ### Tertiary: APKPure web search
 ```bash
-curl -sk "https://apkpure.com/search?q=<brand>" | grep -oE 'data-dt-app="[^"]+"'
+curl --fail --show-error --silent --max-time 30 "https://apkpure.com/search?q=<brand>" | grep -oE 'data-dt-app="[^"]+"'
 ```
 
 ### XAPK vs APK
 - `.xapk` = a zip containing multiple split APKs (base + config.armeabi-v7a + config.en + etc.)
 - Unzip outer first, then unzip the inner `base.apk` or `<package>.apk`
-- Some apkpure downloads return truncated XAPK with missing EOCD signature — symptom of CDN rate-limiting; rotate IP and retry, OR use `7z x` which is more lenient than `unzip`
+- A missing EOCD/truncated archive is invalid or incomplete; stop, verify status/length/hash and obtain a valid authorized copy. Do not rotate IPs to evade limits or force extraction as proof of integrity.
 
 ```bash
 # Standard unzip (works for clean APK)
 unzip -o <package>.apk -d extracted_<package>/
 
-# For truncated/repaired XAPK
+# For a valid, independently verified archive only
 7z x -y <package>.apk -o"extracted_<package>"
 
 # For nested XAPK
@@ -132,7 +136,8 @@ done
 # Install
 brew install jadx          # macOS
 # or
-wget https://github.com/skylot/jadx/releases/latest/download/jadx-1.5.x.zip
+# Alternative: select a real pinned release from the official jadx releases page
+# and verify its published integrity/provenance; the filename 1.5.x is not a release.
 
 # Decompile
 jadx -d decompiled_<package>/ <package>.apk
@@ -150,7 +155,15 @@ find extracted_<package> -name "classes*.dex" -exec strings -8 {} \; > strings_<
 
 ---
 
-## Stage 3 — Secret grep (the 60-pattern catalog)
+## Stage 3 — Candidate secret patterns
+
+Patterns are incomplete, format-dependent heuristics, not a 60-pattern guarantee.
+Use a private local scanner that reports file/line and redacted fingerprints; the
+raw grep sketches below would print secrets, so never run them in shared logs.
+Google/Firebase public configuration, Stripe publishable keys and account IDs are
+not by themselves secret credentials. `ya29` commonly identifies an access token,
+not proof of a refresh token. Confirm credential type and permissions with the owner
+without testing discovered credentials automatically.
 
 ```bash
 # URL grep — owned-domain references
@@ -163,7 +176,7 @@ grep -oE 'https?://(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.|127\.)[0-9.]+(:
 grep -oE 'AKIA[A-Z0-9]{16}'                            # AWS Access Key
 grep -oE 'aws_secret_access_key[\s:=]+[A-Za-z0-9/+=]{40}' # AWS Secret
 grep -oE 'AIza[A-Za-z0-9_-]{35}'                       # Google API key
-grep -oE 'ya29\.[A-Za-z0-9_-]+'                        # Google OAuth refresh token
+grep -oE 'ya29\.[A-Za-z0-9_-]+'                        # Google OAuth token candidate
 grep -oE 'gh[ps]_[A-Za-z0-9]{36}'                      # GitHub PAT
 grep -oE 'glpat-[A-Za-z0-9_-]{20}'                     # GitLab PAT
 grep -oE 'xox[pbar]-[A-Za-z0-9-]+'                     # Slack token
@@ -248,24 +261,13 @@ For each exported component, check:
 
 ## Stage 6 — Firebase / cloud-service config inspection
 
-```bash
-# google-services.json — full Firebase config
-find extracted_<package> -name "google-services.json" -exec cat {} \; | python3 -m json.tool
-
-# Look for:
-#   project_id   → can guess Firestore / RTDB URL: https://<project_id>.firebaseio.com/.json
-#   storage_bucket → can guess GCS bucket: gs://<bucket>
-#   web_api_key  → can use to enumerate Firebase tenant config
-
-# Test if Firestore is publicly readable
-curl -s "https://firestore.googleapis.com/v1/projects/<project_id>/databases/(default)/documents/users"
-
-# Test if Realtime DB is publicly readable
-curl -s "https://<project_id>.firebaseio.com/.json"
-
-# Test if Storage Bucket is publicly listable
-curl -s "https://firebasestorage.googleapis.com/v0/b/<bucket>/o"
-```
+Record project/bucket identifiers privately and confirm ownership and exact allowed
+resources with the owner. Client API keys are commonly public configuration; access
+is controlled by service-specific authorization, Firebase rules and restrictions.
+Never list `/users`, database roots or whole buckets merely to test exposure. Use an
+owner-created canary object/document and a single bounded request, recording only
+status and that synthetic canary; stop if real data appears. RTDB regional hostnames
+cannot reliably be inferred from project IDs alone. Test emulator rules first.
 
 ---
 
@@ -275,12 +277,17 @@ For when static analysis isn't enough — you want to dump tokens at runtime, by
 
 ### Setup
 ```bash
-pip install --break-system-packages frida-tools objection
+python3 -m venv .venv
+.venv/bin/python -m pip install frida-tools objection # select reviewed versions first
 adb devices  # ensure device/emulator connected
 # Push frida-server to device (root required, or use rooted emulator like Genymotion / x86_64 AVD)
 ```
 
-### Cert-pinning bypass (universal)
+### Historical version-specific instrumentation sketch
+
+This does not universally bypass pinning or certificate validation. Overloads,
+Conscrypt signatures, native networking and Frida CLI flags vary. Test only a
+disposable owner-approved build, never weaken device-wide trust for normal use.
 ```javascript
 // frida-script-pinning-bypass.js
 Java.perform(function() {
@@ -306,29 +313,13 @@ Java.perform(function() {
 frida -U -l frida-script-pinning-bypass.js -f <package_id> --no-pause
 ```
 
-### Hook HTTP requests
-```javascript
-Java.perform(function() {
-    var OkHttpClient = Java.use('okhttp3.OkHttpClient');
-    var Request = Java.use('okhttp3.Request');
-    var Call = Java.use('okhttp3.Call');
-    
-    OkHttpClient.newCall.implementation = function(req) {
-        var url = req.url().toString();
-        var headers = req.headers().toString();
-        console.log('[REQ] ' + url);
-        console.log('[HDRS] ' + headers);
-        return this.newCall(req);
-    };
-});
-```
+### Observe network behavior without credential dumps
 
-### Quick token extraction via objection
-```bash
-objection --gadget com.target.app explore
-# Inside:
-android hooking watch class_method <class>.<method> --dump-args --dump-return
-```
+Prefer test-build logging of method, approved hostname and synthetic request ID.
+Never print complete URLs, headers, cookies, bodies or method arguments/returns:
+they may carry bearer tokens or personal data. Frida overload hooks must retain the
+original overload handle and call it explicitly; a recursive `this.newCall` sketch
+is not a verified adapter. Instrumentation of production identities is excluded.
 
 ---
 
@@ -355,16 +346,16 @@ mitmproxy --listen-port 8080
 
 | Finding | Next move |
 |---|---|
-| Active JWT (not expired) | Test against the API host — does it grant access? Try sid manipulation |
+| JWT with future exp | Decode locally as untrusted data; expiry alone does not prove validity. Owner validates a synthetic identity under approved scope |
 | Expired JWT | Inspect path tokens / API endpoint structure — useful intel for post-VPN |
 | AWS access key | Use `awscli` to test: `aws sts get-caller-identity` — many leaked keys still have permissions |
 | Firebase project_id + web_api_key | Test public Firestore/RTDB/Storage read |
 | Google API key (AIza*) | Test against `https://www.googleapis.com/customsearch/v1` etc. — see what API the key activates |
 | Hardcoded HTTP URLs (http://) | Possible MITM via downgrade if cert pinning is missing |
-| Pinned cert for internal host | New asset discovery — that host is real |
+| Pinned cert for internal host | Historical name candidate; not proof of current ownership, liveness or scope |
 | Exported Activity with WebView | Test intent-injection → URL-loading abuse |
 | Stack-trace artifacts (Stack Overflow URLs) | Identify the developer's questions → infer architecture |
-| Hardcoded credentials | Spray immediately (respect any caps from related skills) |
+| Hardcoded credentials | Quarantine/redact and notify owner; use synthetic test credentials only after explicit approved validation plan |
 
 ---
 
@@ -383,7 +374,8 @@ mitmproxy --listen-port 8080
 
 ```bash
 brew install jadx p7zip
-pip install --break-system-packages frida-tools objection
+python3 -m venv .venv
+.venv/bin/python -m pip install frida-tools objection # select reviewed versions first
 # Genymotion or AVD for rooted Android emulator
 ```
 
@@ -391,7 +383,7 @@ For APK download convenience, can add a `download-apk` shell function:
 ```bash
 download-apk() {
   local pkg="$1"
-  curl -sk -L --max-time 60 "https://d.apkpure.net/b/APK/$pkg?version=latest" -o "$pkg.apk"
+  curl --fail --show-error --silent --max-time 30 -L --max-time 60 "https://d.apkpure.net/b/APK/$pkg?version=latest" -o "$pkg.apk"
   echo "Downloaded $(wc -c < "$pkg.apk") bytes"
   file "$pkg.apk"
 }
@@ -416,8 +408,8 @@ download-apk() {
 - Subject: Hardcoded artifacts in legacy mobile build reveal internal API surface
 - Observations: Decompilation of `com.<client>.<app>` revealed embedded JWT (expired ~8 years earlier) and 30+ `/v1/*` endpoint paths against `api2.<client>.example` (internal-only externally)
 - Description: APK ships with developer build artifacts. Path tokens are security-by-obscurity; API endpoint inventory is reconnaissance-grade.
-- Impact: Post-VPN-foothold (via cred compromise), attacker has full API surface map without binary reverse. HS256 secret recovery (via SSRF/LFI) would yield arbitrary token forging.
-- Recommendation: rotate HS256 secret, migrate to RS256, remove hardcoded URLs from builds, audit all org APKs.
+- Impact: Endpoint disclosure is an observation; authentication bypass or secret recovery is an unproven hypothesis requiring separate authorized evidence. An expired JWT does not establish either.
+- Recommendation: remove embedded secrets and rotate confirmed exposed keys; keep authorization server-side. HS256 is not inherently broken, and changing algorithms or hiding URLs does not repair missing authorization.
 - Evidence: extracted strings, decoded JWT, endpoint inventory
 
 ---
@@ -433,7 +425,7 @@ download-apk() {
 ## Limitations
 
 - Authorized scope only: the confirmation gate above is mandatory before any probing, exploitation, or credential-access command.
-- Docs-only import: upstream helper scripts, commands, engine, and research assets are not bundled; reinstall tooling from the source repo when needed.
+- Docs-only import: upstream helper scripts, commands, engine, and research assets are not bundled; review and install required tools from their official publishers with pinned provenance when needed.
 - Validate every finding (see `triage-validation`) before reporting; report via `report-writing`. Prefer a sandbox, disposable VM, or controlled lab.
 
 ### Example
@@ -444,3 +436,5 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+Mirror scraping, historical command flags and certificate/manifest grep are discovery hints only; Android exported defaults depend on component type, SDK and permissions. No tool installation, archive extraction, APK execution or finding validation is evidenced here.

@@ -19,6 +19,9 @@ class NoStoreHandler(http.server.SimpleHTTPRequestHandler):
         except ValueError:
             self.send_error(403, "Resource outside preview root")
             return None
+        if any(part.startswith(".") for part in relative.parts):
+            self.send_error(403, "Hidden resources are not served")
+            return None
         target = root / relative
         candidates = [target]
         if target.is_dir():
@@ -31,6 +34,10 @@ class NoStoreHandler(http.server.SimpleHTTPRequestHandler):
                 return None
         return super().send_head()
 
+    def list_directory(self, path):
+        self.send_error(403, "Directory listing disabled")
+        return None
+
     def end_headers(self):
         self.send_header("Cache-Control", "no-store")
         super().end_headers()
@@ -42,7 +49,13 @@ def main() -> None:
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument("--bind", default="127.0.0.1")
     args = parser.parse_args()
+    if args.bind not in {"127.0.0.1", "localhost"}:
+        parser.error("preview is loopback-only; use an independently secured server for sharing")
+    if not 0 <= args.port <= 65535:
+        parser.error("port must be 0..65535")
     root = args.directory.resolve()
+    if not root.is_dir():
+        parser.error("preview directory must exist")
     handler = functools.partial(NoStoreHandler, directory=str(root))
     with http.server.ThreadingHTTPServer((args.bind, args.port), handler) as server:
         print(f"serving {root} at http://{args.bind}:{args.port}/ with Cache-Control: no-store")

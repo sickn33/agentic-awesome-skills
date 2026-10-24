@@ -1,5 +1,7 @@
 # Tuning Table Monitors
 
+> Modified during local review: detection-signal, evidence and apply-verification constraints clarified; upstream attribution retained.
+
 This reference covers type-specific tuning guidance for table monitors. Read this file after
 determining the monitor type in Phase 1.5.
 
@@ -33,7 +35,7 @@ When multiple (table, metric) pairs fire within a short window (minutes to a few
 likely share a common cause — e.g., a delayed pipeline affects freshness across several tables,
 or a bulk load triggers volume anomalies on related tables. Before counting anomalies per pair,
 group alerts by time proximity and assess whether they stem from the same upstream event. A burst
-of correlated alerts is one noise source, not many independent ones — address the root cause
+of correlated alerts may share a real upstream incident, not harmless noise — address the root cause
 rather than tuning each pair separately.
 
 ---
@@ -44,7 +46,7 @@ Only recommend tuning a (table, metric) pair if it has **3 or more anomalies** i
 A pair with 1-2 anomalies is not a clear noise pattern — it could be legitimate.
 
 For pairs with only 3-4 anomalies, require **strong supporting evidence**: consistent marginal
-breaches, TSA confirming normal variation, or NOT_ACKNOWLEDGED status on all. A handful of
+breaches, TSA corroborated by domain-owner/data evidence; NOT_ACKNOWLEDGED alone is not a false-positive label. A handful of
 anomalies alone is not enough — the pattern must clearly indicate noise.
 
 ---

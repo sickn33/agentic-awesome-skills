@@ -1,6 +1,7 @@
 ---
 title: "Gyroscope and accelerometer | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/gyro-and-accelerometer
+---
 
 # Gyroscope and accelerometer
 
@@ -8,7 +9,7 @@ On-device gyroscopes and accelerometers can supply data about a device’s movem
 
 ![A sketch of a gyroscope, suggesting movement. The image is overlaid with rectangular and circular grid lines and is tinted purple to subtly reflect the purple in the original six-color Apple logo.](https://docs-assets.developer.apple.com/published/d095e989767ecf0537fa99b6ea46b50a/inputs-gyroscope-intro%402x.png)
 
-You can use accelerometer and gyroscope data to provide experiences based on real-time, motion-based information in apps and games that run in iOS, iPadOS, and watchOS. tvOS apps can use gyroscope data from the Siri Remote. For developer guidance, see [Core Motion](https://developer.apple.com/documentation/CoreMotion).
+You can use accelerometer and gyroscope data to provide experiences based on real-time, motion-based information in apps and games that run in iOS, iPadOS, and watchOS. Some remote generations provide motion sensors; others do not. Detect the connected controller/remote capabilities instead of assuming gyroscope data. For developer guidance, see [Core Motion](https://developer.apple.com/documentation/CoreMotion).
 
 ## [Best practices](https://developer.apple.com/design/human-interface-guidelines/gyro-and-accelerometer#Best-practices)
 
@@ -16,7 +17,7 @@ You can use accelerometer and gyroscope data to provide experiences based on rea
 
 Important
 
-If your experience needs to access motion data from a device, you must provide copy that explains why. The first time your app or game tries to access this type of data, the system includes your copy in a permission request, where people can grant or deny access.
+If your experience needs to access motion data from a device, you must provide copy that explains why. Purpose strings, authorization and prompts depend on the Core Motion API and platform; not every raw sensor call prompts in the same way. Check the exact API’s requirements and handle denial/unavailable sensors without inferring permission from lack of a prompt.
 
 **Outside of active gameplay, avoid using accelerometers or gyroscopes for the direct manipulation of your interface.** Some motion-based gestures may be difficult to replicate precisely, may be physically challenging for some people to perform, and may affect battery usage.
 

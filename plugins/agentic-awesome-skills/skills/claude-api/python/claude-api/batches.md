@@ -1,5 +1,7 @@
 # Message Batches API — Python
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 The Batches API (`POST /v1/messages/batches`) processes Messages API requests asynchronously at 50% of standard prices.
 
 ## Key Facts
@@ -8,7 +10,7 @@ The Batches API (`POST /v1/messages/batches`) processes Messages API requests as
 - Most batches complete within 1 hour; maximum 24 hours
 - Results available for 29 days after creation
 - 50% cost reduction on all token usage
-- All Messages API features supported (vision, tools, caching, etc.)
+- Verify the batch-compatible subset for the selected model and current API; do not assume every Messages feature is available.
 
 ---
 
@@ -26,7 +28,7 @@ message_batch = client.messages.batches.create(
         Request(
             custom_id="request-1",
             params=MessageCreateParamsNonStreaming(
-                model="claude-opus-5",
+                model="claude-opus-5-5",
                 max_tokens=1024,
                 messages=[{"role": "user", "content": "Summarize climate change impacts"}]
             )
@@ -34,7 +36,7 @@ message_batch = client.messages.batches.create(
         Request(
             custom_id="request-2",
             params=MessageCreateParamsNonStreaming(
-                model="claude-opus-5",
+                model="claude-opus-5-5",
                 max_tokens=1024,
                 messages=[{"role": "user", "content": "Explain quantum computing basics"}]
             )
@@ -53,14 +55,17 @@ print(f"Status: {message_batch.processing_status}")
 ```python
 import time
 
-while True:
+deadline = time.monotonic() + 300  # bounded polling slice; persist batch ID and resume later
+while time.monotonic() < deadline:
     batch = client.messages.batches.retrieve(message_batch.id)
     if batch.processing_status == "ended":
         break
     print(f"Status: {batch.processing_status}, processing: {batch.request_counts.processing}")
     time.sleep(60)
 
-print("Batch complete!")
+if batch.processing_status != "ended":
+    raise TimeoutError("Batch remains pending; preserve its ID instead of resubmitting")
+print("Batch processing ended; individual requests may have failed")
 print(f"Succeeded: {batch.request_counts.succeeded}")
 print(f"Errored: {batch.request_counts.errored}")
 ```
@@ -75,7 +80,8 @@ print(f"Errored: {batch.request_counts.errored}")
 for result in client.messages.batches.results(message_batch.id):
     match result.result.type:
         case "succeeded":
-            print(f"[{result.custom_id}] {result.result.message.content[0].text[:100]}")
+            text = "".join(b.text for b in result.result.message.content if b.type == "text")
+            print(f"[{result.custom_id}] {text[:100]}")
         case "errored":
             if result.result.error.type == "invalid_request":
                 print(f"[{result.custom_id}] Validation error - fix request and retry")
@@ -115,7 +121,7 @@ message_batch = client.messages.batches.create(
         Request(
             custom_id=f"analysis-{i}",
             params=MessageCreateParamsNonStreaming(
-                model="claude-opus-5",
+                model="claude-opus-5-5",
                 max_tokens=1024,
                 system=shared_system,
                 messages=[{"role": "user", "content": question}]
@@ -165,17 +171,20 @@ batch = client.messages.batches.create(requests=requests)
 print(f"Created batch: {batch.id}")
 
 # 3. Wait for completion
-while True:
+deadline = time.monotonic() + 300  # bounded polling slice; persist batch ID and resume later
+while time.monotonic() < deadline:
     batch = client.messages.batches.retrieve(batch.id)
     if batch.processing_status == "ended":
         break
     time.sleep(10)
 
 # 4. Collect results
+if batch.processing_status != "ended":
+    raise TimeoutError("Batch remains pending; preserve its ID")
 results = {}
 for result in client.messages.batches.results(batch.id):
     if result.result.type == "succeeded":
-        results[result.custom_id] = result.result.message.content[0].text
+        results[result.custom_id] = "".join(b.text for b in result.result.message.content if b.type == "text")
 
 for custom_id, classification in sorted(results.items()):
     print(f"{custom_id}: {classification}")

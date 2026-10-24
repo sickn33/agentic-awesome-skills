@@ -15,6 +15,7 @@
 import glob
 import json
 import os
+import re
 import subprocess
 import sys
 
@@ -34,7 +35,12 @@ def latest_session_id():
 
 
 def load_session(sid):
+    if not re.fullmatch(r"[A-Za-z0-9_-]{1,128}", sid):
+        raise ValueError("Invalid session identifier")
     p = os.path.join(SESSIONS_ROOT, sid, sid + ".messages.json")
+    from pathlib import Path
+    if Path(p).is_symlink() or Path(p).parent.is_symlink():
+        raise ValueError("Linked session files are not accepted")
     if not os.path.exists(p):
         return None, None
     with open(p, encoding="utf-8") as f:

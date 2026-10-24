@@ -16,7 +16,11 @@ export const fetchTodos = async (): Promise<Todo[]> => {
   if (!response.ok) {
     throw new Error('Failed to fetch todos');
   }
-  return response.json();
+  const payload = await response.json();
+  if (payload.success !== true || payload.data === undefined) {
+    throw new Error("Invalid API response");
+  }
+  return payload.data;
 };
 
 export const createTodo = async (title: string): Promise<Todo> => {
@@ -30,7 +34,11 @@ export const createTodo = async (title: string): Promise<Todo> => {
   if (!response.ok) {
     throw new Error('Failed to create todo');
   }
-  return response.json();
+  const payload = await response.json();
+  if (payload.success !== true || payload.data === undefined) {
+    throw new Error("Invalid API response");
+  }
+  return payload.data;
 };
 
 export const updateTodo = async (id: number, completed: boolean): Promise<Todo> => {
@@ -44,7 +52,11 @@ export const updateTodo = async (id: number, completed: boolean): Promise<Todo> 
   if (!response.ok) {
     throw new Error('Failed to update todo');
   }
-  return response.json();
+  const payload = await response.json();
+  if (payload.success !== true || payload.data === undefined) {
+    throw new Error("Invalid API response");
+  }
+  return payload.data;
 };
 
 export const deleteTodo = async (id: number): Promise<void> => {

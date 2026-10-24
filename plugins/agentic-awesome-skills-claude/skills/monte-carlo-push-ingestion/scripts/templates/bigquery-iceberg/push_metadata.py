@@ -12,7 +12,7 @@ Substitution points (search for "← SUBSTITUTE"):
   - MCD_RESOURCE_UUID  : Monte Carlo warehouse resource UUID
 
 Prerequisites:
-  pip install pycarlo>=0.12.251
+  python -m pip install pycarlo==0.15.491
 """
 
 from __future__ import annotations
@@ -21,7 +21,6 @@ import argparse
 import json
 import logging
 import os
-from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime, timezone
 
 from pycarlo.core import Client, Session
@@ -33,7 +32,7 @@ from pycarlo.features.ingestion.models import (
     AssetVolume,
     RelationalAsset,
 )
-from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, read_json_file, write_json_file
+from _safe_paths import validate_push, checked_send, safe_existing_directory, safe_input_json_path, safe_output_json_path, read_json_file, write_json_file
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger(__name__)
@@ -94,13 +93,14 @@ def push(
     endpoint = _ENDPOINT
     log.info("Using endpoint: %s", endpoint)
     manifest = read_json_file(input_file)
+    validate_push(manifest, resource_uuid, batch_size)
 
     asset_dicts = manifest.get("assets", [])
     resource_type = manifest.get("resource_type", RESOURCE_TYPE)
     assets = [_asset_from_dict(d) for d in asset_dicts]
     log.info("Loaded %d asset(s) from %s", len(assets), input_file)
 
-    batches = [assets[i : i + batch_size] for i in range(0, max(len(assets), 1), batch_size)]
+    batches = [assets[i : i + batch_size] for i in range(0, len(assets), batch_size)]
     total_batches = len(batches)
 
     def _push_batch(batch: list[RelationalAsset], batch_num: int) -> str | None:
@@ -108,7 +108,7 @@ def push(
             mcd_id=key_id, mcd_token=key_token, scope="Ingestion", endpoint=endpoint,
         ))
         service = IngestionService(mc_client=client)
-        result = service.send_metadata(
+        result = checked_send(service, "send_metadata",
             resource_uuid=resource_uuid,
             resource_type=resource_type,
             events=batch,
@@ -120,21 +120,12 @@ def push(
         )
         return invocation_id
 
-    max_workers = min(4, total_batches)
+    max_workers = 1
     invocation_ids: list[str | None] = [None] * total_batches
 
-    with ThreadPoolExecutor(max_workers=max_workers) as pool:
-        futures = {
-            pool.submit(_push_batch, batch, i + 1): i
-            for i, batch in enumerate(batches)
-        }
-        for future in as_completed(futures):
-            idx = futures[future]
-            try:
-                invocation_ids[idx] = future.result()
-            except Exception as exc:
-                log.error("ERROR pushing batch %d: %s", idx + 1, exc)
-                raise
+    # Sequential delivery stops immediately after an ambiguous/failed batch.
+    for idx, batch in enumerate(batches):
+        invocation_ids[idx] = _push_batch(batch, idx + 1)
 
     log.info("All %d batch(es) pushed.", total_batches)
 
@@ -159,7 +150,7 @@ def main() -> None:
     )
     parser.add_argument("--resource-uuid", default=os.getenv("MCD_RESOURCE_UUID"))
     parser.add_argument("--key-id", default=os.getenv("MCD_INGEST_ID"))
-    parser.add_argument("--key-token", default=os.getenv("MCD_INGEST_TOKEN"))
+    parser.add_argument("--key-token", choices=[], default=os.getenv("MCD_INGEST_TOKEN"))
     parser.add_argument("--input-file", default="metadata_output.json")
     parser.add_argument("--output-file", default="metadata_push_result.json")
     parser.add_argument(

@@ -1,5 +1,8 @@
 # Python Sharp Edges
 
+> Catalog correction (CC-BY-SA-4.0 adaptation; original attribution/license in UPSTREAM-NOTICE.md): snippets are isolated teaching fragments, not production implementations or an assertion of exploitability. Confirm the installed language/library version, trust boundary, reachable input and impact. Use inert local fixtures only; do not execute the intentionally unsafe snippets, untrusted audited code or destructive payloads. No network attack or configuration change is authorized by this guide.
+
+
 ## Mutable Default Arguments
 
 ```python
@@ -88,7 +91,7 @@ a is b  # True - CPython caches small integers [-5, 256]
 
 a = 257
 b = 257
-a is b  # False - different objects!
+a is b  # Implementation/context-dependent, including constant folding; never use identity for numeric equality.
 
 # String interning is also unpredictable
 s1 = "hello"
@@ -100,7 +103,7 @@ s2 = "hello world"
 s1 is s2  # Maybe - depends on context
 
 # DANGEROUS in conditionals
-if x is True:   # Wrong - use: if x is True (for singletons only)
+if x is True:   # Valid only when exact True singleton identity is intended; use if x for truthiness.
 if x is 1:      # Wrong - use: if x == 1
 ```
 
@@ -196,7 +199,7 @@ class User:
 
 ```python
 # DANGEROUS: Format string with user data as format spec
-template = user_input  # "{0.__class__.__mro__[1].__subclasses__()}"
+template = user_input  # e.g. attribute/index traversal such as "{0.__init__.__globals__[SECRET]}"
 template.format(some_object)  # Can access arbitrary attributes!
 
 # DANGEROUS: f-string with user input (if using eval)
@@ -206,7 +209,7 @@ eval(f'f"{user_input}"')  # Code execution
 user_template % (data,)  # Less dangerous but still risky
 ```
 
-**Fix**: Use string concatenation or safe templating (Jinja2 with autoescape).
+**Fix**: Keep the template trusted and pass untrusted values only as data. Jinja2 autoescape addresses HTML output escaping, not arbitrary template execution; an untrusted template needs a separately reviewed sandbox and resource limits.
 
 ## Numeric Precision
 
@@ -232,7 +235,8 @@ a, b, c = user_list  # ValueError if wrong length
 
 # Can be used for DoS:
 # Send list with 10 million elements to function expecting 3
-# Python will iterate entire list before raising ValueError
+# Ordinary fixed-length unpacking does not necessarily consume the whole input.
+# Starred unpacking (a, *rest = iterable) can materialize the remaining iterable; bound input before parsing.
 ```
 
 ## Subprocess Shell Injection
@@ -244,7 +248,7 @@ subprocess.run(f"ls {user_input}", shell=True)
 # user_input = "; rm -rf /" → command injection
 
 # SAFE: Use list form without shell
-subprocess.run(["ls", user_input])  # user_input is just an argument
+subprocess.run(["ls", "--", approved_path], timeout=10, check=True)  # Unix example; validate destination and options too
 ```
 
 ## Attribute Access on None

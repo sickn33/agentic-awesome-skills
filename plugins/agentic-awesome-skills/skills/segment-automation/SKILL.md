@@ -26,6 +26,10 @@ Automate Segment customer data platform operations through Composio's Segment to
 3. If connection is not ACTIVE, follow the returned auth link to complete Segment authentication
 4. Confirm connection status shows ACTIVE before running any workflows
 
+## Source, identity and privacy scope
+
+Confirm the exact source/workspace/environment and downstream destinations. Test events can trigger customer messaging and pollute production metrics; use an approved test source and synthetic IDs. Sending traits/context requires appropriate consent and data-sharing authorization, not merely a configured destination. Preview identity merges/source updates and reconcile stable message IDs before uncertain retries. Inspect actual schemas and destination semantics for deletion/null traits and alias behavior; acceptance is not delivery.
+
 ## Core Workflows
 
 ### 1. Track Events
@@ -151,7 +155,7 @@ Automate Segment customer data platform operations through Composio's Segment to
 - ALIAS is a one-way operation; cannot be undone
 - `previousId` is the anonymous/old ID, `userId` is the new/identified ID
 - Not all destinations support alias calls; check destination documentation
-- ALIAS should be called once when a user first identifies (e.g., signs up)
+- Use alias only when required by the actual destination identity model; do not assume every signup needs an irreversible merge.
 - Source updates may affect data collection; review changes carefully
 
 ## Common Patterns
@@ -162,7 +166,7 @@ Standard Segment user lifecycle:
 ```
 1. Anonymous user visits -> PAGE call with anonymousId
 2. User interacts -> TRACK call with anonymousId
-3. User signs up -> ALIAS (anonymousId -> userId), then IDENTIFY with traits
+3. User signs up -> IDENTIFY with stable userId; alias only if the configured destination identity flow requires it
 4. User takes action -> TRACK call with userId
 5. User joins org -> GROUP call linking userId to groupId
 ```

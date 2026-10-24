@@ -6,23 +6,23 @@ import { matchesFrameworkVersion } from '../citations.mjs';
 const PRE_RELEASE_FEATURES = [
   {
     match: /\bppr\b|partial[- ]?prerendering/i,
-    requires: 'next@canary',
-    message: 'PPR is experimental — verify your Next.js version supports it as stable',
+    requires: 'next@>=16.0.0',
+    message: 'PPR requires Cache Components on stable Next.js 16+; older experimental configurations need version-specific review',
   },
   {
     match: /\buse cache['"]?\s*directive\b|"use cache"|'use cache'/i,
-    requires: 'next@>=15.0.0',
-    message: 'use cache directive is stable in 15+',
+    requires: 'next@>=16.0.0',
+    message: 'use cache directive is stable in 16+ with Cache Components',
   },
   {
     match: /\bcacheLife\(/i,
-    requires: 'next@>=15.0.0',
-    message: 'cacheLife is stable in 15+',
+    requires: 'next@>=16.0.0',
+    message: 'cacheLife is stable in 16+ with Cache Components',
   },
   {
     match: /\bcacheTag\(/i,
-    requires: 'next@>=15.0.0',
-    message: 'cacheTag is stable in 15+',
+    requires: 'next@>=16.0.0',
+    message: 'cacheTag is stable in 16+ with Cache Components',
   },
 ];
 

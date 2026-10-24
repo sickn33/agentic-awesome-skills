@@ -1,8 +1,16 @@
 ---
 title: "Siri | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/siri
+---
 
 # Siri
+
+## Integration scope correction
+
+The detailed custom-intent, exact-phrase, donation, and Siri watch-face examples below describe legacy SiriKit integrations. For new custom actions, evaluate [App Intents](https://developer.apple.com/documentation/appintents) and [App Shortcuts](https://developer.apple.com/design/human-interface-guidelines/app-shortcuts) against the target OS. Do not transfer the old exact-phrase or Add to Siri model to every modern integration. Check current availability of each domain, surface, and API before selecting an implementation.
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
 
 Siri makes it easy for people to accomplish everyday tasks quickly, using voice, touch, or automation.
 
@@ -245,7 +253,7 @@ People supply parameter values to personalize an intent by responding to your fo
 
 **Design parameters that are easy for people to understand and use.** Aim for parameters that represent simple values or attributes and name them using simple, straightforward terms. For example, a soup-ordering app might define parameters for the type of soup, the serving size, and a delivery location, using names like _soup_ , _size_ , and _location_. For guidance, see [Shortcuts and suggestions](https://developer.apple.com/design/human-interface-guidelines/siri#Shortcuts-and-suggestions).
 
-**Ask for confirmation only when necessary.** An intent can ask people for confirmation before completing the task or when interpreting an answer to a follow-up question. Apps that support tasks that have financial impact, like an app that helps people place orders, must ask for confirmation before completing an order. For tasks that don’t have financial impact, asking for confirmation can feel like too much extra work and can sometimes discourage people from completing their request. In all cases, avoid asking for confirmation more than once.
+**Ask for confirmation only when necessary.** An intent can ask people for confirmation before completing the task or when interpreting an answer to a follow-up question. Apps that support tasks that have financial impact, like an app that helps people place orders, must ask for confirmation before completing an order. Financial impact is not the only reason for confirmation: destructive changes, sensitive sharing, security changes, and consequential physical actions also need appropriate authorization and recoverability. Routine low-impact actions may proceed without redundant prompts. In all cases, avoid asking for confirmation more than once.
 
 **Support follow-up questions when it makes sense.** For example, an app that helps people order food might offer options for pickup or delivery, but ask for a specific location only after people choose the delivery option.
 

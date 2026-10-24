@@ -17,7 +17,7 @@ dotnet add package Azure.Messaging.ServiceBus
 dotnet add package Azure.Identity
 ```
 
-**Current Version**: v7.20.1 (stable)
+**Example SDK baseline**: v7.20.1; verify the installed package and compatible API before adapting snippets.
 
 ## Environment Variables
 
@@ -70,6 +70,8 @@ ServiceBusClient
 ServiceBusAdministrationClient (separate client for CRUD)
 ```
 
+Use separate snippets independently and import Azure.Messaging.ServiceBus.Administration for CRUD and System.Transactions for TransactionScope. Confirm namespace/entity and least-privilege sender/receiver/admin roles. Receive can return null; DLQ and transaction examples also need that guard. Completing removes a message: perform the durable business operation first, make it idempotent for redelivery and reconcile uncertain sends/settlements. Abandoning every exception can create poison-message loops. Do not log message bodies or raw exceptions containing sensitive payloads. Session-enabled queues require session receivers; the basic receive example is for a different non-session queue. Processors need async disposal and bounded lock-renewal/shutdown policies.
+
 ## Core Workflows
 
 ### 1. Send Messages
@@ -84,14 +86,10 @@ await sender.SendMessageAsync(message);
 
 // Safe batching (recommended)
 using ServiceBusMessageBatch batch = await sender.CreateMessageBatchAsync();
-if (batch.TryAddMessage(new ServiceBusMessage("Message 1")))
-{
-    // Message added successfully
-}
-if (batch.TryAddMessage(new ServiceBusMessage("Message 2")))
-{
-    // Message added successfully
-}
+if (!batch.TryAddMessage(new ServiceBusMessage("Message 1")))
+    throw new InvalidOperationException("Message 1 exceeds the batch capacity");
+if (!batch.TryAddMessage(new ServiceBusMessage("Message 2")))
+    throw new InvalidOperationException("Message 2 exceeds remaining batch capacity; flush and retry in a new batch");
 await sender.SendMessagesAsync(batch);
 ```
 
@@ -102,6 +100,7 @@ ServiceBusReceiver receiver = client.CreateReceiver("my-queue");
 
 // Single message
 ServiceBusReceivedMessage message = await receiver.ReceiveMessageAsync();
+if (message is null) return; // A timed receive can return no message
 string body = message.Body.ToString();
 Console.WriteLine(body);
 

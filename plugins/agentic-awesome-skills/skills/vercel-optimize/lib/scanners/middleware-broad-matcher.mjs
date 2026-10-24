@@ -32,8 +32,8 @@ export function scan({ files }) {
       problem = 'no config.matcher (runs on every request)';
     } else {
       const m = matcherStr[1];
-      if (/['"`]\s*\/\s*['"`]/.test(m) || /['"`]\/\(\.\*\)['"`]/.test(m)) {
-        problem = 'matcher = "/" or "/(.*)" (still covers everything)';
+      if (/['"`]\/\(\.\*\)['"`]/.test(m)) {
+        problem = 'matcher = "/(.*)" (covers every path)';
       }
     }
 

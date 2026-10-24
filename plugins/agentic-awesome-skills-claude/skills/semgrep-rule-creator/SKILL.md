@@ -139,6 +139,10 @@ eval("print('safe')")  # security-allowlist: safe-literal Semgrep fixture
 
 Run tests (from rule directory): `semgrep --test --config <rule-id>.yaml <rule-id>.<ext>`
 
+## Supporting scope
+
+Only SKILL.md is bundled; quick-reference.md and workflow.md are unavailable. Use the inline checklist plus current official rule/test documentation, report missing support and never claim an absent workflow was followed. Pattern snippets omitting sources/languages/message are fragments, not complete standalone rules.
+
 ## Quick Reference
 
 - For commands, pattern operators, and taint mode syntax, see quick-reference.md.
@@ -161,7 +165,7 @@ Semgrep Rule Progress:
 
 ## Documentation
 
-**REQUIRED**: Before writing any rule, use WebFetch to read **all** of these 4 links with Semgrep documentation:
+**REQUIRED**: Before writing any rule, use WebFetch to read the relevant current documentation from these links with Semgrep documentation:
 
 1. [Rule Syntax](https://semgrep.dev/docs/writing-rules/rule-syntax)
 2. [Pattern Syntax](https://semgrep.dev/docs/writing-rules/pattern-syntax)

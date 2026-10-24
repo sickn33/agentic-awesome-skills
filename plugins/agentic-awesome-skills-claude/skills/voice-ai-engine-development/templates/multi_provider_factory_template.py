@@ -2,7 +2,8 @@
 Template: Multi-Provider Factory
 
 Use this template to create a factory that supports multiple providers
-for transcription, LLM, and TTS services.
+for transcription, LLM, and TTS services. All adapters are intentionally
+unimplemented and raise NotImplementedError; this is not a vendor integration.
 """
 
 from typing import Dict, Any

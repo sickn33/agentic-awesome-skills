@@ -25,23 +25,29 @@ def parse_args():
 
 def markdown_files(root: Path):
     return sorted(
-        p for p in root.rglob("*") if p.is_file() and p.suffix.lower() in {".md", ".markdown", ".mdown"}
+        p for p in root.rglob("*") if p.is_file() and not p.is_symlink()
+        and p.resolve().is_relative_to(root) and p.suffix.lower() in {".md", ".markdown", ".mdown"}
     )
 
 
 def scan_file(path: Path):
     findings = []
-    in_fence = False
+    fence = None
     for lineno, line in enumerate(path.read_text(encoding="utf-8", errors="replace").splitlines(), start=1):
         stripped = line.lstrip()
-        if stripped.startswith("```") or stripped.startswith("~~~"):
-            in_fence = not in_fence
+        marker = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line)
+        if fence:
+            if marker and marker[1][0] == fence[0] and len(marker[1]) >= fence[1] and not marker[2].strip():
+                fence = None
             continue
-        if in_fence:
+        if marker and not (marker[1][0] == "`" and "`" in marker[2]):
+            fence = (marker[1][0], len(marker[1]))
             continue
         for rule, pattern in ACTIVE_PATTERNS.items():
             if pattern.search(line):
                 findings.append({"line": lineno, "rule": rule, "text": line.strip()})
+    if fence:
+        findings.append({"line": lineno, "rule": "unclosed_fence", "text": "Unclosed fenced code block"})
     return findings
 
 
@@ -61,7 +67,7 @@ def main():
         print(json.dumps(report, indent=2, ensure_ascii=False))
     else:
         if not report:
-            print("No active Hugo residue found outside fenced code blocks.")
+            print("No heuristic matches found outside recognized fenced code blocks; manual review remains required.")
         for item in report:
             print(item["path"])
             for finding in item["findings"]:

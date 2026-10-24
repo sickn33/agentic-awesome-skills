@@ -3,7 +3,7 @@ name: hipaa-compliance
 description: Implement HIPAA security and privacy rules. Configure PHI protections
   and BAA requirements. Use when handling healthcare data.
 category: security
-risk: safe
+risk: critical
 source: https://github.com/BagelHole/DevOps-Security-Agent-Skills
 source_repo: BagelHole/DevOps-Security-Agent-Skills
 source_type: community
@@ -28,6 +28,8 @@ Implement HIPAA Security Rule, Privacy Rule, and Breach Notification Rule requir
 - Establishing Business Associate Agreements with vendors
 - Implementing technical safeguards for PHI protection
 - Preparing for HIPAA compliance audits or OCR investigations
+
+This is a control-mapping aid, not a compliance determination. Establish covered-entity/business-associate applicability and have qualified privacy/security counsel verify current effective rules. Proposed rules are not effective requirements. AES-256, TLS versions, MFA, 15-minute sessions, CMKs and annual/quarterly schedules below are baseline design choices, not universal statutory prescriptions. Addressable does not mean optional without documented risk assessment. Never send PHI to an unapproved service.
 
 ## HIPAA Rules and Safeguards
 
@@ -113,9 +115,9 @@ privacy_rule:
   notice_of_practices: "Provide notice of privacy practices to individuals"
 
 breach_notification_rule:
-  individual_notification: "Within 60 days of discovery"
-  hhs_notification: "Annual for <500 records; within 60 days for 500+"
-  media_notification: "Required when 500+ individuals in a state/jurisdiction"
+  individual_notification: "Without unreasonable delay, no later than 60 calendar days after discovery, subject to applicable exceptions"
+  hhs_notification: "Fewer than 500 individuals: within 60 days after discovery year ends; 500+: without unreasonable delay and no later than 60 days"
+  media_notification: "More than 500 residents of a state/jurisdiction; without unreasonable delay, within 60 days"
 ```
 
 ## Technical Safeguards Implementation Checklist
@@ -193,7 +195,7 @@ audit_controls:
     - [ ] Administrative actions logged
     - [ ] Failed access attempts logged
     - [ ] Log integrity protection (hash chaining or WORM storage)
-    - [ ] Logs retained for minimum 6 years
+    - [ ] Log retention set by applicable law, risk analysis and documented policy
     - [ ] Regular log review process documented
 
   monitoring:
@@ -204,6 +206,8 @@ audit_controls:
 ```
 
 ## AWS HIPAA-Eligible Architecture
+
+Provisioning examples incur cost and alter account state. Review account, region, names, eligible-service scope, BAA, KMS/network prerequisites and rollback before an authorized change. A HIPAA tag or encryption flag does not establish compliance. `put-event-selectors` replaces existing selectors: read and merge the full desired configuration before applying it.
 
 ```bash
 # Verify you are using only HIPAA-eligible AWS services
@@ -228,7 +232,8 @@ aws rds create-db-instance \
   --db-instance-class db.r6g.large \
   --engine postgres \
   --master-username admin \
-  --master-user-password "USE_SECRETS_MANAGER" \
+  --manage-master-user-password \
+  --allocated-storage 100 \
   --storage-encrypted \
   --kms-key-id arn:aws:kms:us-east-1:123456789012:alias/phi-rds-key \
   --vpc-security-group-ids sg-XXXXXXXX \
@@ -317,63 +322,17 @@ baa_tracking:
 
 ## Risk Analysis Automation
 
+Use bounded, read-only evidence collection in the approved account and regions. A failed/denied API call is **unknown**, never a passing control. For example:
+
 ```bash
-#!/usr/bin/env bash
-# hipaa-risk-scan.sh - Technical risk analysis checks for HIPAA
-
-echo "=== HIPAA Technical Safeguard Checks ==="
-
-echo "--- Encryption at Rest ---"
-# Check for unencrypted RDS instances
-UNENCRYPTED_RDS=$(aws rds describe-db-instances \
-  --query 'DBInstances[?StorageEncrypted==`false`].DBInstanceIdentifier' --output text)
-[ -z "$UNENCRYPTED_RDS" ] && echo "PASS: All RDS instances encrypted" || \
-  echo "FAIL: Unencrypted RDS: $UNENCRYPTED_RDS"
-
-# Check for unencrypted S3 buckets
-for bucket in $(aws s3api list-buckets --query 'Buckets[*].Name' --output text); do
-  enc=$(aws s3api get-bucket-encryption --bucket "$bucket" 2>/dev/null)
-  [ -z "$enc" ] && echo "FAIL: S3 bucket $bucket has no default encryption"
-done
-
-# Check for unencrypted EBS volumes
-UNENCRYPTED_EBS=$(aws ec2 describe-volumes \
-  --query 'Volumes[?Encrypted==`false`].VolumeId' --output text)
-[ -z "$UNENCRYPTED_EBS" ] && echo "PASS: All EBS volumes encrypted" || \
-  echo "FAIL: Unencrypted EBS: $UNENCRYPTED_EBS"
-
-echo "--- Access Control ---"
-# Check for users without MFA
-aws iam generate-credential-report > /dev/null 2>&1 && sleep 5
-aws iam get-credential-report --output text --query Content | base64 -d | \ <!-- security-allowlist: documented payload decoding technique reference, do not execute outside authorized scope -->
-  awk -F, '$4=="true" && $8=="false" {print "FAIL: User without MFA: "$1}'
-
-# Check for unused access keys (90+ days)
-THRESHOLD=$(date -d '90 days ago' +%Y-%m-%dT%H:%M:%S 2>/dev/null || date -v-90d +%Y-%m-%dT%H:%M:%S)
-aws iam get-credential-report --output text --query Content | base64 -d | \ <!-- security-allowlist: documented payload decoding technique reference, do not execute outside authorized scope -->
-  awk -F, -v t="$THRESHOLD" 'NR>1 && $11!="N/A" && $11<t {print "WARN: Stale access key for "$1}'
-
-echo "--- Audit Controls ---"
-# Verify CloudTrail is logging
-CT_STATUS=$(aws cloudtrail get-trail-status --name hipaa-audit-trail --query 'IsLogging' --output text)
-[ "$CT_STATUS" = "True" ] && echo "PASS: CloudTrail active" || echo "FAIL: CloudTrail not logging"
-
-# Verify VPC flow logs
-for vpc in $(aws ec2 describe-vpcs --query 'Vpcs[*].VpcId' --output text); do
-  fl=$(aws ec2 describe-flow-logs --filter "Name=resource-id,Values=$vpc" --query 'FlowLogs[0].FlowLogId' --output text)
-  [ "$fl" = "None" ] && echo "FAIL: No flow logs for VPC $vpc"
-done
-
-echo "--- Transmission Security ---"
-# Check for ALBs without HTTPS listener
-for alb in $(aws elbv2 describe-load-balancers --query 'LoadBalancers[*].LoadBalancerArn' --output text); do
-  HTTPS=$(aws elbv2 describe-listeners --load-balancer-arn "$alb" \
-    --query 'Listeners[?Protocol==`HTTPS`].ListenerArn' --output text)
-  [ -z "$HTTPS" ] && echo "FAIL: ALB without HTTPS: $alb"
-done
-
-echo "=== Scan complete ==="
+aws sts get-caller-identity
+aws rds describe-db-instances --region us-east-1 \
+  --query 'DBInstances[].{ID:DBInstanceIdentifier,Encrypted:StorageEncrypted}' --output json
+aws cloudtrail get-trail-status --name hipaa-audit-trail --region us-east-1
 ```
+
+Record command exit status, account/region, timestamp, resource inventory and coverage gaps before interpreting results. Validate IAM credential-report CSV by named headers with a real CSV parser; fixed field positions and lexicographic dates can misclassify keys. Poll report generation with a bounded deadline and inspect both keys, active state and last-used/rotation fields separately. TLS listener presence does not prove TLS policy, backend encryption or PHI coverage; S3 encryption defaults do not prove every historical object/key policy is adequate. Never label this scan a complete HIPAA risk analysis.
+
 
 ## HIPAA Compliance Checklist
 
@@ -397,7 +356,7 @@ hipaa_compliance_checklist:
     - [ ] Encryption at rest (AES-256) for all PHI stores
     - [ ] Encryption in transit (TLS 1.2+) for all PHI transmission
     - [ ] Audit logging enabled for all PHI access
-    - [ ] Log retention configured for 6+ years
+    - [ ] Log retention justified and documented; required Security Rule documentation kept for six years from creation or last effective date, whichever is later
     - [ ] Integrity controls on PHI (checksums, signatures)
     - [ ] Emergency access (break-glass) procedure tested
 
@@ -430,12 +389,18 @@ hipaa_compliance_checklist:
 - Use only HIPAA-eligible cloud services and sign BAAs before deploying PHI workloads
 - Encrypt all PHI at rest and in transit with no exceptions
 - Implement the minimum necessary standard: grant access only to the PHI needed for each role
-- Maintain audit logs of all PHI access for a minimum of 6 years
+- Retain required Security Rule documentation for six years from creation or last effective date, whichever is later; determine audit-log retention separately
 - Train all workforce members on HIPAA policies at onboarding and annually
 - Test contingency plans (backup restore, DR failover, emergency access) at least annually
 - Track all Business Associate Agreements in a central registry with review dates
 - Document every addressable specification decision (implement, alternative, or not applicable with rationale)
 - Prepare breach notification templates and procedures before an incident occurs
+
+## Primary References
+
+- [HHS Security Rule summary](https://www.hhs.gov/hipaa/for-professionals/security/laws-regulations/index.html)
+- [HHS encryption guidance](https://www.hhs.gov/hipaa/for-professionals/faq/is-the-use-of-encryption-mandatory-in-the-security-rule/index.html)
+- [HHS breach notification](https://www.hhs.gov/hipaa/for-professionals/breach-notification/index.html)
 
 ## Limitations
 

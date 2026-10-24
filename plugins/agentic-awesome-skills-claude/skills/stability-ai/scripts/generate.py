@@ -19,6 +19,8 @@ from __future__ import annotations
 import argparse
 import base64
 import io
+import math
+import uuid
 import json
 import re
 import sys
@@ -26,7 +28,7 @@ import time
 from datetime import datetime
 from pathlib import Path
 from urllib.error import HTTPError, URLError
-from urllib.request import Request, urlopen
+from urllib.request import Request, build_opener, HTTPRedirectHandler
 
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -124,7 +126,7 @@ def api_call(
             body.write(f"--{boundary}\r\n".encode())
             body.write(
                 f'Content-Disposition: form-data; name="{key}"; '
-                f'filename="{validated.name}"\r\n'.encode()
+                'filename="input-image"\r\n'.encode()
             )
             body.write(f"Content-Type: {mime}\r\n\r\n".encode())
             body.write(validated.read_bytes())
@@ -146,7 +148,10 @@ def api_call(
     )
 
     try:
-        with urlopen(req, timeout=timeout) as resp:
+        class NoRedirect(HTTPRedirectHandler):
+            def redirect_request(self, req, fp, code, msg, headers, newurl):
+                raise APIError("Refusing redirect of authenticated generation request")
+        with build_opener(NoRedirect()).open(req, timeout=timeout) as resp:
             content_type = resp.headers.get("Content-Type", "")
             headers = dict(resp.headers)
             data = resp.read()
@@ -208,8 +213,24 @@ def generate_image(
     Retorna lista de dicts com info de cada imagem:
     [{"path": Path, "size_kb": float, "time_s": float, "seed": int|None}]
     """
+    if mode == "upscale-creative":
+        raise ValueError("Creative upscale needs an asynchronous polling flow not implemented by this helper")
+    if model not in MODELS:
+        raise ValueError("Unsupported model")
+    if style and style not in list_styles():
+        raise ValueError("Unsupported style")
+    if seed is not None and not 0 <= seed <= 4294967294:
+        raise ValueError("Seed outside supported range")
+    if strength is not None and (not math.isfinite(strength) or not 0 <= strength <= 1):
+        raise ValueError("Strength must be finite and between 0 and 1")
+    if mode in {"inpaint", "erase"} and not mask_path:
+        raise ValueError("Explicit mask required for inpaint/erase; implicit alpha behavior is not supported")
+    if mode == "search-replace" and not search_prompt:
+        raise ValueError("Search prompt required")
+    if mode in {"generate", "ultra", "core", "img2img", "upscale", "inpaint", "search-replace"} and not prompt.strip():
+        raise ValueError("Prompt required for this mode")
     output_dir = output_dir or OUTPUT_DIR
-    output_dir.mkdir(parents=True, exist_ok=True)
+    output_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
 
     # Safety check
     allowed, msg = safety_check_daily_limit(1)
@@ -265,6 +286,10 @@ def generate_image(
                 elapsed = time.time() - start_time
 
                 if isinstance(data, bytes) and len(data) > 100:
+                    if resp_headers.get("finish-reason", "").upper() == "CONTENT_FILTERED":
+                        raise ContentFilteredError("Response was filtered")
+                    if not content_type.lower().startswith("image/png"):
+                        raise APIError("Expected PNG image response; refusing unsupported result")
                     image_data = data
                     used_key_index = i
                     break
@@ -296,24 +321,13 @@ def generate_image(
                 break  # Retry com todas as keys
 
             except APIError as e:
-                is_last_key = i >= len(keys) - 1
-                if not is_last_key:
-                    print(f"Key {i+1} falhou, tentando backup...", file=sys.stderr)
-                    continue
-                if attempt < max_retries - 1:
-                    wait = 5 * (attempt + 1)
-                    print(f"Erro. Retry em {wait}s...", file=sys.stderr)
-                    time.sleep(wait)
-                    break
-                print(f"ERRO: {e}", file=sys.stderr)
+                # An ambiguous paid POST may already have succeeded; do not submit again.
+                print(f"ERRO: {e}. No automatic resubmission was made.", file=sys.stderr)
                 return []
 
             except Exception as e:
                 print(f"ERRO inesperado: {type(e).__name__}: {e}", file=sys.stderr)
-                if attempt >= max_retries - 1:
-                    return []
-                time.sleep(5)
-                break
+                return []
 
         if image_data:
             break
@@ -323,12 +337,16 @@ def generate_image(
         return []
 
     # Salvar imagem
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S") + "_" + uuid.uuid4().hex
     style_tag = style or ("raw" if raw else "default")
     filename = f"{mode}_{style_tag}_{timestamp}_0.png"
     filepath = output_dir / filename
 
-    filepath.write_bytes(image_data)
+    from PIL import Image
+    with Image.open(io.BytesIO(image_data)) as generated:
+        generated.verify()
+    with filepath.open("xb") as output:
+        output.write(image_data)
     increment_daily_counter(1)
 
     size_kb = len(image_data) / 1024
@@ -426,6 +444,7 @@ def _build_request(
                 fields["model"] = model_config["id"]
         if mode == "img2img" and image_path:
             fields["mode"] = "image-to-image"
+            fields["model"] = model
             if strength is not None:
                 fields["strength"] = str(min(max(strength, 0.0), 1.0))
             files = {"image": image_path}

@@ -1,6 +1,6 @@
 # Dead-Letter Queue Reference
 
-Handling poison messages and dead-letter queue processing in Azure Service Bus.
+Handling poison messages and dead-letter queue processing in Azure Service Bus. These sketches require application handlers/imports and type-aware body serialization. Peek before replay/discard, redact payloads and exception details, preserve session/identity properties, bound replays and implement idempotency: send plus complete is not atomic. Close async credentials. A failed send or settlement with unknown outcome requires reconciliation before retry. Counts from peek are sample counts, not total queue counts.
 
 ## Dead-Letter Queue Overview
 
@@ -56,8 +56,8 @@ async def receive_dead_letters(namespace: str, queue_name: str):
                 print(f"  Enqueued: {msg.enqueued_time_utc}")
                 print(f"  Delivery count: {msg.delivery_count}")
 
-                # Process or complete
-                await dlq_receiver.complete_message(msg)
+                # Inspect only: leave unprocessed messages in the DLQ.
+                await dlq_receiver.abandon_message(msg)
 ```
 
 ## Explicit Dead-Lettering
@@ -143,14 +143,15 @@ class DeadLetterProcessor:
                         await handler(msg, receiver)
                     except Exception as e:
                         print(f"Error handling DLQ message: {e}")
-                        # Leave message in DLQ for manual review
+                        # Leave message in DLQ; stop instead of immediately receiving it forever.
+                        raise
 
     async def default_handler(self, msg, receiver):
-        """Default: log and complete."""
+        """Default: retain for manual review, then stop this run."""
         print(f"DLQ Message: {msg.message_id}")
         print(f"  Reason: {msg.dead_letter_reason}")
         print(f"  Body: {str(msg.body)[:100]}...")
-        await receiver.complete_message(msg)
+        raise RuntimeError("No authorized handler; retain message and stop the processor")
 
     async def retry_handler(self, msg, receiver):
         """Retry message by sending back to main queue."""
@@ -233,8 +234,10 @@ async def retry_recent_messages(client, queue_name: str, max_age_hours: int = 24
                     await sender.send_messages(retry_msg)
                     retried += 1
                 else:
-                    # Too old - just complete (discard)
+                    # Retain old messages unless a separate discard policy is authorized.
                     expired += 1
+                    await dlq_receiver.abandon_message(msg)
+                    return
 
                 await dlq_receiver.complete_message(msg)
 
@@ -288,7 +291,7 @@ await retry_with_transform(client, "myqueue", fix_json_encoding)
 ### Count Dead-Lettered Messages
 
 ```python
-from azure.servicebus.management import ServiceBusAdministrationClient
+from azure.servicebus.management.aio import ServiceBusAdministrationClient
 
 async def get_dlq_count(namespace: str, queue_name: str) -> int:
     """Get count of messages in dead-letter queue."""
@@ -358,7 +361,7 @@ for reason, count in report['by_reason'].items():
 ### Increase Max Delivery Count
 
 ```python
-from azure.servicebus.management import ServiceBusAdministrationClient
+from azure.servicebus.management.aio import ServiceBusAdministrationClient
 
 async def increase_max_delivery(namespace: str, queue_name: str, max_count: int):
     """Increase max delivery count for a queue."""

@@ -121,22 +121,23 @@ A CSV carries no types, so after it, name the columns
 that need a number, date or currency format applied.
 
 ```csv
-Budget Line,Line Type,Department,Category,Period,Fiscal Year,Budget Amount,Actual Amount,Variance,Used %,Linked Expenses,Owner,Status,Notes,Budget ID
-1000.00,Income,Delivery,General,2026-03,FY2026-27,600.00,400.00,-200.00,67,EXP-EXAMPLE-001,Example Owner,Active,Forecast refreshed after the February numbers; the delivery line is still optimistic.,
+Budget Line,Line Type,Department,Category,Period,Fiscal Year,Budget Amount,Actual Amount,Variance,Used %,Linked Expenses,Owner,Status,Notes,Budget ID,Currency
+BL-2026-001,Income,Delivery,General,2026-03,FY2026,600.00,400.00,-200.00,67,EXP-EXAMPLE-001,Example Owner,Active,Forecast refreshed after the February numbers; the delivery line is still optimistic.,,USD
 ```
 
 ```sql
 CREATE TABLE budget_cash_flow (
-  budget_line NUMERIC(14,2) NOT NULL,
+  budget_line VARCHAR(255) NOT NULL,
   line_type VARCHAR(100) NOT NULL,
   department VARCHAR(255),
   category VARCHAR(100) NOT NULL,
   period VARCHAR(255),
   fiscal_year VARCHAR(255),
+  currency CHAR(3) NOT NULL,
   budget_amount NUMERIC(14,2) NOT NULL,
   actual_amount NUMERIC(14,2) NOT NULL,
-  variance VARCHAR(255),
-  used_pct NUMERIC NOT NULL,
+  variance NUMERIC(14,2),
+  used_pct NUMERIC,
   linked_expenses VARCHAR(255),  -- relation -> target record
   owner VARCHAR(255),
   status VARCHAR(100) NOT NULL,
@@ -156,15 +157,16 @@ CREATE INDEX idx_budget_cash_flow_status ON budget_cash_flow (status);
   "type": "object",
   "additionalProperties": false,
   "properties": {
-      "Budget Line": { "type": "number" },
+      "Budget Line": { "type": "string" },
       "Line Type": { "type": "string" },
       "Department": { "type": "string" },
       "Category": { "type": "string" },
       "Period": { "type": "string" },
       "Fiscal Year": { "type": "string" },
+      "Currency": { "type": "string", "pattern": "^[A-Z]{3}$" },
       "Budget Amount": { "type": "number" },
       "Actual Amount": { "type": "number" },
-      "Variance": { "type": "string" },
+      "Variance": { "type": "number" },
       "Used %": { "type": "number" },
       "Linked Expenses": { "type": "string" },
       "Owner": { "type": "string" },
@@ -175,10 +177,10 @@ CREATE INDEX idx_budget_cash_flow_status ON budget_cash_flow (status);
   "required": [
       "Budget Line",
       "Line Type",
+      "Currency",
       "Category",
       "Budget Amount",
       "Actual Amount",
-      "Used %",
       "Status"
   ]
 }
@@ -187,15 +189,16 @@ CREATE INDEX idx_budget_cash_flow_status ON budget_cash_flow (status);
 ```markdown
 | CSV column | Notion property | Set after import |
 |---|---|---|
-| Budget Line | Number (format: currency) | Convert to Number, set format to Currency |
+| Budget Line | Title | Use as the database title |
 | Line Type | Select (add options after import) | Convert to Select, add options: "Income", "Expense", "Cash In", "Cash Out" |
-| Department | Title | Use as the database title |
+| Department | Text | Leave as Text |
 | Category | Select (add options after import) | Convert to Select, add options: "General", "Operations", "Finance", "People", "Compliance" |
 | Period | Text | Leave as Text |
 | Fiscal Year | Text | Leave as Text |
+| Currency | Text | Use the agreed three-letter currency code |
 | Budget Amount | Number (format: currency) | Convert to Number, set format to Currency |
 | Actual Amount | Number (format: currency) | Convert to Number, set format to Currency |
-| Variance | Text | Leave as Text |
+| Variance | Number (format: currency) | Convert to Number, set format to Currency |
 | Used % | Number | Convert to Number |
 | Linked Expenses | Relation (link to the target database) | Convert to Relation, link to the target database |
 | Owner | Text | Leave as Text |
@@ -211,21 +214,23 @@ and anything pointing at another table stays `relation`.
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Budget Line | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `1000.00` |
+| 1 | Budget Line | `text` | `VARCHAR(255)` | `string` | Title | `BL-2026-001` |
 | 2 | Line Type | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Income` |
 | 3 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 4 | Category | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `General` |
 | 5 | Period | `text` | `VARCHAR(255)` | `string` | Text | `2026-03` |
-| 6 | Fiscal Year | `text` | `VARCHAR(255)` | `string` | Text | `FY2026-27` |
+| 6 | Fiscal Year | `text` | `VARCHAR(255)` | `string` | Text | `FY2026` |
 | 7 | Budget Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `600.00` |
 | 8 | Actual Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `400.00` |
-| 9 | Variance | `text` | `VARCHAR(255)` | `string` | Text | `-200.00` |
+| 9 | Variance | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `-200.00` |
 | 10 | Used % | `number` | `NUMERIC` | `number` | Number | `67` |
 | 11 | Linked Expenses | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `EXP-EXAMPLE-001` |
 | 12 | Owner | `text` | `VARCHAR(255)` | `string` | Text | `Example Owner` |
 | 13 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Active` |
 | 14 | Notes | `long_text` | `TEXT` | `string` | Text | `Forecast refreshed after the February numbers; the delivery line is still optimistic.` |
 | 15 | Budget ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
+
+| 16 | Currency | `text` | `CHAR(3)` | `string` | Text | `USD` |
 
 ## Select Options
 
@@ -321,6 +326,8 @@ We set a budget once and lost track of the actual position by month three.
 - **Problem:** Notion import shows every column as Text.
   **Solution:** that is expected. Apply the property mapping table once, after import.
 
+
+For the synthetic example, FY2026 means calendar year 2026. Define the organization’s fiscal-year boundaries before using another convention. Variance = actual minus budget; used percent = 100 × actual / budget, rounded for display (67 here). Leave used percent blank for a zero budget. Whether a variance is favorable depends on the line type; never infer this from its sign alone. Keep Notion Used % as a plain number when storing 67, rather than a fraction-formatted percent.
 
 ## Budget and Cash Flow Control Rules
 

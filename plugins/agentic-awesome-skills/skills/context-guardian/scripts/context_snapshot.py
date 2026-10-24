@@ -32,7 +32,9 @@ SNAPSHOT_NAME = re.compile(r"\Asnapshot-\d{8}-\d{6}\.md\Z")
 
 def ensure_data_dir():
     """Create data directory if it doesn't exist."""
-    DATA_DIR.mkdir(parents=True, exist_ok=True)
+    if DATA_DIR.is_symlink():
+        raise ValueError("Diretorio de snapshots nao pode ser link simbolico")
+    DATA_DIR.mkdir(parents=True, exist_ok=True, mode=0o700)
 
 
 def snapshot_path(filename: str, *, must_exist: bool = True) -> Path:
@@ -82,7 +84,7 @@ def save_snapshot(project: str = "", phase: str = "", summary: str = "") -> str:
 **Projeto**: {project or 'nao especificado'}
 **Fase**: {phase or 'nao especificada'}
 **Resumo**: {summary or 'snapshot pre-compactacao'}
-**Modelo**: claude-opus-4-6
+**Modelo**: nao informado
 
 ---
 
@@ -122,13 +124,19 @@ def save_snapshot(project: str = "", phase: str = "", summary: str = "") -> str:
 *Para restaurar: leia este arquivo + MEMORY.md + context_manager.py load*
 """
 
-    filepath.write_text(header, encoding="utf-8")
+    # Exclusive creation prevents overwriting a same-second snapshot or following a link.
+    descriptor = os.open(filepath, os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0), 0o600)
+    with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+        handle.write(header)
     return str(filepath)
 
 
 def list_snapshots() -> list[dict]:
     """List all snapshots with metadata."""
-    ensure_data_dir()
+    if DATA_DIR.is_symlink():
+        raise ValueError("Diretorio de snapshots nao pode ser link simbolico")
+    if not DATA_DIR.exists():
+        return []
     snapshots = []
 
     for f in sorted(DATA_DIR.iterdir(), reverse=True):
@@ -180,6 +188,8 @@ def read_snapshot(filename: str) -> dict:
 
 def prune_snapshots(keep: int = 10) -> dict:
     """Remove old snapshots, keeping the N most recent."""
+    if not isinstance(keep, int) or keep < 1:
+        raise ValueError("keep deve ser um inteiro positivo")
     snapshots = list_snapshots()
     if len(snapshots) <= keep:
         return {"pruned": 0, "remaining": len(snapshots)}

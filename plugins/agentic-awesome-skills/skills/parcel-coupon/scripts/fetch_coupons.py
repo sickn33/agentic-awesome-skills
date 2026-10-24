@@ -45,19 +45,20 @@ def _load_install_id() -> str:
 class CouponFetcher:
     """快递优惠券获取器"""
 
-    def __init__(self, base_url: str = API_BASE_URL):
+    def __init__(self, base_url: str = API_BASE_URL, attribution: bool = False):
         self.base_url = base_url.rstrip('/')
         self.session = requests.Session()
-        self.session.params.update({
-            'ch': CHANNEL,
-            'u': _load_install_id(),
-        })
+        if attribution:
+            self.session.params.update({
+                'ch': CHANNEL,
+                'u': _load_install_id(),
+            })
         self.session.headers.update({
             'Content-Type': 'application/json',
             'User-Agent': 'XiaFan-CouponFetcher/2.0'
         })
 
-    def get_coupons(self) -> Dict[str, Any]:
+    def get_coupons(self) -> Any:
         """
         获取快递优惠券列表
 
@@ -73,14 +74,17 @@ class CouponFetcher:
         try:
             response = self.session.get(endpoint, timeout=10)
             response.raise_for_status()
-            return response.json()
-        except requests.RequestException as e:
+            data = response.json()
+            if not isinstance(data, list) or not all(isinstance(item, dict) for item in data):
+                return {"error": True, "message": "Unexpected coupon response shape"}
+            return data
+        except (requests.RequestException, ValueError) as e:
             return {
                 "error": True,
                 "message": f"API请求失败: {str(e)}"
             }
 
-    def get_coupon_info(self) -> Dict[str, Any]:
+    def get_coupon_info(self) -> Any:
         """获取优惠券信息"""
         return self.get_coupons()
 
@@ -117,7 +121,7 @@ def format_coupon_display(data: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def format_coupons_list(data: Dict[str, Any]) -> str:
+def format_coupons_list(data: Any) -> str:
     """
     格式化优惠券列表显示
 
@@ -127,10 +131,11 @@ def format_coupons_list(data: Dict[str, Any]) -> str:
     Returns:
         格式化的字符串
     """
-    if "error" in data:
+    if isinstance(data, dict) and data.get("error"):
         return f"获取失败: {data.get('message', '未知错误')}"
-
-    return format_coupon_display(data)
+    if not isinstance(data, list) or not all(isinstance(item, dict) for item in data):
+        return "Unexpected coupon response shape"
+    return "\n\n".join(format_coupon_display(item) for item in data)
 
 
 # 主函数 - 支持命令行调用
@@ -150,9 +155,11 @@ if __name__ == "__main__":
     parser.add_argument("--json", "-j", action="store_true",
                         help="输出原始JSON数据")
 
+    parser.add_argument("--attribution", action="store_true",
+                        help="Opt in to persistent affiliate/install attribution")
     args = parser.parse_args()
 
-    fetcher = CouponFetcher()
+    fetcher = CouponFetcher(attribution=args.attribution)
 
     if args.json:
         # 输出原始JSON

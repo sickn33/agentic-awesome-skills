@@ -8,13 +8,13 @@ Create `start.sh` in project root:
 
 ```bash
 #!/bin/bash
-set -e
+set -euo pipefail
 
 # Get input from Apify key-value store
-INPUT=$(apify actor:get-input)
+INPUT=${INPUT:-$(apify actor:get-input)}  # verify this command in the pinned CLI
 
 # Parse input values (adjust based on your input schema)
-MY_PARAM=$(echo "$INPUT" | jq -r '.myParam // "default"')
+MY_PARAM=$(printf '%s' "$INPUT" | jq -er '.myParam // "default" | select(type == "string")')
 
 # Run your application with the input
 ./your-application --param "$MY_PARAM"
@@ -59,7 +59,7 @@ CMD ["./start.sh"]
 
 ## Testing CLI-Based Actors
 
-For CLI-based actors (shell wrapper scripts), you may need to test the underlying application directly with mock input, as `apify run` requires a Node.js or Python entry point.
+For CLI-based actors (shell wrapper scripts), you may need to test the underlying application directly with mock input, according to the pinned CLI's supported entrypoint behavior; do not assume every shell wrapper is supported directly.
 
 Test your wrapper script locally:
 

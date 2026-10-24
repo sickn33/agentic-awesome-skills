@@ -6,7 +6,7 @@
 
 GitHub Actions workflows depend on third-party actions referenced by `uses:`. If these actions are not pinned to immutable references (full commit SHAs), attackers can compromise them via tag mutation, account takeover, or fork-and-replace attacks.
 
-**Policy:** pin **third-party** actions and reusable workflows to a full 40-character commit SHA. Do **not** require SHA pins for first-party GitHub actions (`actions/*`, `github/*`) on version tags, or for same-repo / vendored actions.
+**Recommended hardening:** pin all external actions and reusable workflows (including `actions/*` and `github/*`) to a full 40-character commit SHA. A first-party mutable tag is not an independently proven exploit, but remains mutable; distinguish hardening from a traced vulnerability. Local actions inherit the reviewed checkout.
 
 ---
 
@@ -14,8 +14,8 @@ GitHub Actions workflows depend on third-party actions referenced by `uses:`. If
 
 | Source | Classification | Pinning finding? |
 |--------|----------------|------------------|
-| `actions/*` (GitHub official) | First-party | **No** — version tags are fine |
-| `github/*` (GitHub org) | First-party | **No** — version tags are fine |
+| `actions/*` (GitHub official) | First-party | Hardening candidate — version tags remain mutable |
+| `github/*` (GitHub org) | First-party | Hardening candidate — version tags remain mutable |
 | Same-repo / vendored (`./.github/actions/...`) | Not third-party supply chain | **No** as supply-chain pinning (still review in pwn-request context) |
 | Org-owned / internal first-party actions when reviewing that org's repos | First-party for that org | **No** unless the action is external to the org's trust boundary |
 | External orgs (aws-actions, docker, tj-actions, community, unknown) | Third-party | **Yes** — pin to full SHA when privilege makes it relevant |
@@ -59,7 +59,7 @@ SHAs are **immutable** — once a commit exists, its SHA cannot change. Pin thir
 - uses: ./.github/actions/local-build
 ```
 
-First-party `actions/*` and `github/*` on version tags are not findings by themselves. Same-repo or vendored actions are not third-party supply-chain findings (they can still be unsafe if loaded from a PR-controlled checkout — that is a pwn-request / trust-crossing issue, not pinning).
+First-party tags are mutable too; report them as hardening unless a concrete exploit path warrants a finding. Same-repo or vendored actions are not third-party supply-chain findings (they can still be unsafe if loaded from a PR-controlled checkout — that is a pwn-request / trust-crossing issue, not pinning).
 
 ---
 
@@ -154,9 +154,9 @@ Use this only after the ref is classified third-party and the job is privileged 
 | Source | Risk | Action |
 |--------|------|--------|
 | Major orgs (aws-actions, google-github-actions, docker) | Medium | Pin to SHA |
-| Popular community actions (1k+ stars) | Medium | Pin to SHA, review source |
-| Less-known actions (under 100 stars) | High | Pin to SHA, review source carefully, consider vendoring |
-| Unknown / single-maintainer | Critical | Vendor locally or replace with inline `run:` |
+| Popular community actions (1k+ stars) | Popularity is not security evidence | Pin to SHA, review source |
+| Less-known actions (under 100 stars) | Popularity is not security evidence | Pin to SHA, review source carefully, consider vendoring |
+| Unknown / single-maintainer | Requires evidence-based assessment | Vendor locally or replace with inline `run:` |
 
 ---
 
@@ -164,7 +164,7 @@ Use this only after the ref is classified third-party and the job is privileged 
 
 ```yaml
 steps:
-  # First-party: version tags are fine — do not flag
+  # First-party tags shown schematically; use reviewed exact SHAs for reproducible privileged jobs
   - uses: actions/checkout@v4
   - uses: actions/setup-node@v4
 

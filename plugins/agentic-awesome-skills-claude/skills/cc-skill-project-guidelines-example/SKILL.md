@@ -24,6 +24,8 @@ Reference this skill when working on the specific project it's designed for. Pro
 
 ---
 
+This is an illustrative project template, not the current repository's architecture or policy. Verify commands/dependencies, preserve local conventions and obtain the applicable deploy authority before adapting it. Route-group names such as `(auth)` do not enforce authentication. SDK/test snippets need project fixtures, lifecycle setup and supported package/model versions; public Supabase keys still require correctly tested RLS, and service-role keys must remain server-only.
+
 ## Architecture Overview
 
 **Tech Stack:**
@@ -154,7 +156,8 @@ async function fetchApi<T>(
 ### Claude AI Integration (Structured Output)
 
 ```python
-from anthropic import Anthropic
+import os
+from anthropic import AsyncAnthropic
 from pydantic import BaseModel
 
 class AnalysisResult(BaseModel):
@@ -163,10 +166,10 @@ class AnalysisResult(BaseModel):
     confidence: float
 
 async def analyze_with_claude(content: str) -> AnalysisResult:
-    client = Anthropic()
+    client = AsyncAnthropic()
 
-    response = client.messages.create(
-        model="claude-sonnet-4-5-20250514",
+    response = await client.messages.create(
+        model=os.environ["ANTHROPIC_MODEL"]  # verified supported model ID,
         max_tokens=1024,
         messages=[{"role": "user", "content": content}],
         tools=[{
@@ -242,12 +245,13 @@ poetry run pytest tests/test_auth.py -v
 **Test structure:**
 ```python
 import pytest
-from httpx import AsyncClient
+from httpx import ASGITransport, AsyncClient
+import pytest_asyncio
 from main import app
 
-@pytest.fixture
+@pytest_asyncio.fixture
 async def client():
-    async with AsyncClient(app=app, base_url="http://test") as ac:
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
         yield ac
 
 @pytest.mark.asyncio

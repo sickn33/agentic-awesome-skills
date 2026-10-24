@@ -15,7 +15,7 @@ To jump: `grep -in '<keyword>' references/monitoring_patterns.md`.
 - §2 Quick health probes (one round-trip each)
 - §3 Durable monitoring architecture — the four layers (L1 self-completion · L2 patrol · L3 sentinels · L4 handbook)
 - §4 Stale-waiter hygiene — one waiter per live run, right lifetime
-- §5 Two-leg self-completion — guaranteed results + best-effort cadence
+- §5 Two-leg self-completion — durable result sequencing + best-effort cadence
 - §6 Failure triage on the log
 - §7 Monitoring across agent hosts — per-host background/loop/cron primitives + the 2 portability rules (Claude Code · Codex · Cursor · Trae · generic)
 
@@ -23,7 +23,7 @@ To jump: `grep -in '<keyword>' references/monitoring_patterns.md`.
 
 ## §0 Monitoring physics — the four facts every recipe rests on
 
-Verified in-session, not assumed. The whole architecture is engineered around these:
+Historical harness observations below are examples, not portable guarantees. Inspect the active host tools and their current timeout, persistence and notification contracts.
 
 > **Tool-portability note:** `run_in_background`, the ~600 s foreground cap, and `/schedule` (below and
 > §5/§3) are the **Claude Code** harness's primitives. On another Agent-Skills host (Codex / Cursor /
@@ -33,7 +33,7 @@ Verified in-session, not assumed. The whole architecture is engineered around th
 
 1. **Foreground Bash hard-caps at 600 s (10 min).** A long foreground wait/monitor is *killed* at the cap
    — so never foreground-poll a multi-hour run.
-2. **`run_in_background` has NO duration cap and notifies on EXIT.** A 781 s background task ran to
+2. **Background lifetime and exit notifications are host-specific.** A 781 s background task ran to
    completion and notified (verified). Long task that finishes → background it.
 3. **A never-*exiting* watcher never notifies.** No exit event = no notification, ever. A persistent
    `while true` / a stray `grep` reading stdin hangs silently forever and the user reads silence as "dead
@@ -63,10 +63,15 @@ HOST="<alias>"                       # from profiles/<platform>.md
 LOG="/path/to/run.log"               # remote log path (profile-bound)
 PATTERN='QUEUE DONE|Training completed'   # QUOTED → '|' is alternation, never a pipe (fact 4)
 MAX=120                               # bounded: 120 ticks × 90 s ≈ 3 h, then give up cleanly
+# Validate these literals before embedding them in a remote shell command.
+[[ "$HOST" =~ ^[A-Za-z0-9_.-]+$ && "$HOST" != -* ]] || exit 64
+[[ "$LOG" =~ ^/[A-Za-z0-9_./-]+$ ]] || exit 64
+[[ "$PATTERN" =~ ^[A-Za-z0-9\ \|]+$ ]] || exit 64
+# Use a trusted timeout implementation to cap each ssh command as well as the full runner.
 i=0
 while [ "$i" -lt "$MAX" ]; do
   # ConnectTimeout + ServerAlive bound a network blip to ~30 s instead of a multi-minute half-open hang.
-  if ssh -o ConnectTimeout=15 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 "$HOST" \
+  if timeout 45 ssh -o ConnectTimeout=15 -o ServerAliveInterval=10 -o ServerAliveCountMax=3 "$HOST" \
        "grep -qE '$PATTERN' '$LOG'"; then          # quoted regex + a FILENAME → grep reads the file, never stdin
     echo "DONE marker found"; exit 0
   fi
@@ -78,11 +83,10 @@ echo "poll gave up after $MAX ticks — check ground truth manually"; exit 1
 Non-negotiables baked in above:
 - **Quoted regex + a filename** on every remote `grep` — the two independent guards against fact 4.
 - **`ConnectTimeout` / `ServerAliveInterval` / `ServerAliveCountMax`** — a dropped link self-kills fast.
-- **Short connection per tick, bounded local loop** — one ssh per check, a hard tick ceiling so the
+- **Short connection per tick, bounded local loop with an outer wall-clock timeout** — one ssh per check, a hard tick ceiling so the
   waiter always EXITS (fact 3) and therefore always notifies when backgrounded.
 - **Detect "done" by a log MARKER, never by `pgrep`** of the waiter's own pattern — `pgrep -f` matches
-  the waiter's own command line and the loop never ends. On a queue scheduler, `squeue -j <id>` going
-  empty is the equivalent done-signal.
+  the waiter's own command line and the loop never ends. On a queue scheduler, an absent squeue row only means no longer queued/running; inspect sacct exit/state and verify artifacts before declaring success.
 
 Run this via `run_in_background` (fact 2: no cap, notifies on exit), or as a single foreground tick under
 the 600 s cap (fact 1). On a session scheduler use it as the L2 patrol body (§3). **Never foreground-poll
@@ -143,9 +147,9 @@ three. Run four — **correctness in L1, liveness in L2, latency in L3, continui
 | Layer | Lives where | Job | Survives |
 |---|---|---|---|
 | **L1 self-completion chain** | ON the box (tmux / nohup / sbatch dependency) | the work sequences itself: `until grep -q 'Training completed' log; do sleep 150; done && <next stage>`; stages hand off via `touch /path/STAGE_DONE` markers | session death, network loss |
-| **L2 patrol loop** | session scheduler (cron `/loop`) | every ~30 min fire a SELF-CONTAINED patrol: one combined ssh probe + a decision table + "report EVEN IF nothing changed" | idle gaps (NOT session death — see L4) |
+| **L2 patrol loop** | session scheduler (cron `/loop`) | every ~30 min fire a SELF-CONTAINED patrol: one combined ssh probe + a decision table + report meaningful changes per user preference | idle gaps (NOT session death — see L4) |
 | **L3 event sentinels** | session background (`run_in_background`) | the §1 short-poll `until ssh test -f MARKER; …` for minute-level reaction between patrol ticks | nothing — acceptable; L1/L2 carry correctness |
-| **L4 recovery handbook** | persistent notes/memory | exact resume commands, chain definitions, marker paths, "first command on reconnect" — a BRAND-NEW session takes over from one word | everything |
+| **L4 recovery handbook** | persistent task notes (memory only with explicit user authorization) | exact resume commands, chain definitions, marker paths, "first command on reconnect" — a BRAND-NEW session takes over from one word | everything |
 
 ### L1 — on-box self-completion chain (correctness)
 The box finishes its own pipeline regardless of any watcher. Chain stages under one detach primitive and
@@ -172,9 +176,8 @@ nohup bash -c '
   balance/power state); detach session missing AND no completion marker → resume from `latest` + rebuild
   the L1 chain; result CSV exists → `cat` it and report the numbers verbatim; remote file count below the
   local source → resume the transfer; everything done → delete the patrol job itself.
-- **Report a one-line status EVEN WHEN nothing changed** — silence between events is exactly what users
-  read as a dead monitor. ("你有定时看吗??" twice in one campaign is the failure signature of L3-only.)
-- **Completeness = file COUNT against the local source** (bytes/hash when names collide), NEVER `test -d`
+- **Follow the user's notification preference.** By default report meaningful changes, failure, completion or required action; keep unchanged non-actionable checks quiet.
+- **Completeness = a manifest of expected relative paths, sizes and hashes**, NEVER directory existence or file count alone
   — a dir created by a killed transfer passes existence checks forever.
 - **Never blind-restart** — probe session/log/markers first so a patrol firing mid-run cannot
   double-launch (idempotence). Classify each outcome → a fixed remediation; never blind-retry.
@@ -234,22 +237,19 @@ definition, every marker path, the "first command on reconnect." Two durable har
 
 ---
 
-## §5 Two-leg self-completion — guaranteed results + best-effort cadence
+## §5 Two-leg self-completion — durable result sequencing + best-effort cadence
 
 "I'll check periodically" is a lie unless a trigger is ARMED — between turns the assistant does not run.
 Two legs, never conflated:
 
-- **Leg 1 — remote self-completion (guaranteed, survives session/SSH death):** the L1 chain
+- **Leg 1 — remote self-completion (survives session/SSH death while the remote host stays healthy):** the L1 chain
   (`train → eval → touch marker` under one detach primitive). Detect done by a log/marker, never by
-  `pgrep` of the waiter's own pattern. This guarantees RESULTS but gives no reporting cadence.
+  `pgrep` of the waiter's own pattern. This sequences stages on success; remote failures can still prevent results but gives no reporting cadence.
 - **Leg 2 — live progress (best-effort):** a session-bound patrol loop (L2, e.g. `/loop 30m` or cron `3,33 * * * *`)
   polling with the LOCAL ssh key. Be honest it dies when the session closes — the remote still finishes;
   the user re-pings to pull.
 
-> **A cloud scheduler cannot reach a rented box.** A cloud schedule (`/schedule` / RemoteTrigger) runs in
-> an isolated sandbox with its own checkout and **no access to the local SSH key or network** → it cannot
-> ssh the box, and the SSH private key must **never** be placed in a cloud agent (secret-leak). The honest recurring check is the remote self-monitor + a session loop, not a cloud robot pinging
-> the box. Don't promise autonomous cross-session polling that can't be delivered.
+> **A cloud scheduler does not automatically have local access.** Verify the actual execution host, credentials and network route before promising polling; otherwise use an authorized local runner or accessible hosted tracker.
 
 For a hosted tracker whose metrics survive teardown and can be polled as a structured monitor instead of
 brittle ssh-tail, use `huggingface-skills:huggingface-trackio` (REQUIRED for that path) — poll its alerts
@@ -266,7 +266,7 @@ outcome maps to a FIXED remediation; never blind-retry:
 ssh "$HOST" "grep -B2 -A20 'Traceback' '$RUN_LOG' | head -50"
 ```
 - `basic_ios::clear: iostream error` + `unexpected pos N vs M` → **disk full during checkpoint save**;
-  check `df -h`/`df -i`, prune `latest`/periodic snapshots to recover (→ `references/gotchas_universal.md`).
+  check `df -h`/`df -i`, prune only verified redundant periodic snapshots; preserve a full-state latest resume checkpoint (→ `references/gotchas_universal.md`).
 - bare `Killed` / exit 137, no traceback → **cgroup OOM** (workers × big in-RAM tensor); size workers
   vs `memory.max`, not CPU count.
 - `CUDA out of memory` → VRAM, usually consistent across runs (batch too big / concurrent job), rarely
@@ -299,29 +299,13 @@ box **pushing its own notification** at the end of the `&&`-chain — a `curl` w
 rented box. On a host with no background/scheduler primitive, this IS the monitor; the agent just pulls
 results on its next turn.
 
-**Rule 2 — a CLOUD scheduler cannot reach a rented box (§5), on ANY host.** Every host's hosted
-automation runs in an isolated sandbox with no local SSH key or network, so it cannot ssh your box (and
-the key must never be placed in one — secret-leak). Use cloud cron only to **re-wake the agent** or
-**poll a hosted tracker**, never to probe the box. The box-reaching poll must use the host's
-**local/session** runner (which holds your SSH key), or be the L1 on-box loop.
+**Rule 2 — verify the runner's actual reachability.** A cloud runner does not automatically inherit the local SSH key, VPN or private network. A local automation may reach the box using existing authorized credentials. Inspect the active tools and runner environment; never infer reachability from the product name. Use a supported secret store and least-privilege credentials where explicitly authorized, never paste a private key into prompts, logs or source.
 
-| Agent host | Local runner — reaches the box (L3) | Recurring / loop (L2) | Cloud cron/automation — re-wake / tracker only | Foreground/turn limit |
-|---|---|---|---|---|
-| **Claude Code** | `run_in_background` (detach + notify-on-exit); the `Monitor` tool | `/loop` + `ScheduleWakeup` (interval or self-paced) | `/schedule` (cron cloud agent) | ~600 s foreground |
-| **OpenAI Codex** | Codex Cloud background tasks (async, parallel) | a thread that schedules its own wake-up | **Automations** — cron syntax, results → review queue | per cloud task |
-| **Cursor** | Background Agents (async) | — | **Automations** — cron (hourly/daily/weekly) + event triggers | per agent |
-| **Trae** (ByteDance) | Agent / `trae-agent` CLI unattended runs; CI/CD | via a CI/CD pipeline | **no native cron found** → external cron / CI-CD, or rely on Rule 1 | per run |
-| **Generic / none** | any local background-equivalent (else none) | a shell `while`-loop under the turn limit | none | host turn limit |
+| Runner | Evidence required before promising monitoring |
+|---|---|
+| Local/session background task | Actual lifetime, exit notification, timeout and existing SSH connectivity |
+| Local recurring automation | User authorization, active schedule, execution host and verified reachability |
+| Cloud recurring automation | Authorized credential mechanism and network route, or an accessible hosted tracker |
+| Remote on-box process | Approved persistence, bounded lifetime, idempotent state and no automatic billable restart |
 
-> **Hosts not in the table** (Gemini CLI, VS Code / Copilot, Goose, Kiro, …) take the **Generic** row until they expose a local recurring runner that holds your SSH key — until then, wire **Rule 1** (the on-box self-push) and let the agent pull on its next turn.
-
-**Binding the layers:** L1 is unchanged everywhere (on-box). Bind **L2** to the host's local recurring
-runner *if* it reaches the box, else to the box's own `cron`/`at` + a push (Rule 1). Bind **L3** to the
-host's local background runner, re-armed once per resume. When a host offers only cloud automation (or
-nothing), **do not promise agent-side polling of the box** — wire Rule 1 and let the agent pull on its
-next turn (§0 corollary: trust the artifact, not the silence).
-
-Host capabilities verified 2026-06: Codex Automations (cron) + Cloud background tasks —
-`developers.openai.com/codex/app/automations` + `/codex/cloud`; Cursor Automations (cron + event
-triggers) + Background Agents — `cursor.com/docs/cloud-agent/automations`; Trae Agent / `trae-agent` CLI
-+ CI/CD, no native cron surfaced — `docs.trae.ai/ide` + `github.com/bytedance/trae-agent`.
+Bind L2/L3 only to capabilities actually available on the current host. A schedule must be created and confirmed active before promising a future check. Notifications to webhooks/email require explicit authorization. Saving a task recovery file does not authorize writing user memory.

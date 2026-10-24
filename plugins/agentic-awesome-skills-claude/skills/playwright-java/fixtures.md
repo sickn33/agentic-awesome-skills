@@ -21,22 +21,25 @@ public class PlaywrightExtension
     @Override
     public void beforeEach(ExtensionContext ctx) {
         Playwright pw = Playwright.create();
+        ctx.getStore(ExtensionContext.Namespace.create(PlaywrightExtension.class, ctx.getUniqueId())).put("playwright", pw);
         Browser browser = pw.chromium().launch(new BrowserType.LaunchOptions().setHeadless(true));
+        ctx.getStore(ExtensionContext.Namespace.create(PlaywrightExtension.class, ctx.getUniqueId())).put("browser", browser);
         BrowserContext context = browser.newContext();
+        ctx.getStore(ExtensionContext.Namespace.create(PlaywrightExtension.class, ctx.getUniqueId())).put("context", context);
         Page page = context.newPage();
         pageMap.put(ctx.getUniqueId(), page);
 
-        ctx.getStore(ExtensionContext.Namespace.GLOBAL).put("playwright", pw);
-        ctx.getStore(ExtensionContext.Namespace.GLOBAL).put("browser", browser);
-        ctx.getStore(ExtensionContext.Namespace.GLOBAL).put("context", context);
+        ctx.getStore(ExtensionContext.Namespace.create(PlaywrightExtension.class, ctx.getUniqueId())).put("playwright", pw);
+        ctx.getStore(ExtensionContext.Namespace.create(PlaywrightExtension.class, ctx.getUniqueId())).put("browser", browser);
+        ctx.getStore(ExtensionContext.Namespace.create(PlaywrightExtension.class, ctx.getUniqueId())).put("context", context);
     }
 
     @Override
     public void afterEach(ExtensionContext ctx) {
         pageMap.remove(ctx.getUniqueId());
-        closeIfNotNull(ctx.getStore(ExtensionContext.Namespace.GLOBAL).remove("context", BrowserContext.class));
-        closeIfNotNull(ctx.getStore(ExtensionContext.Namespace.GLOBAL).remove("browser", Browser.class));
-        closeIfNotNull(ctx.getStore(ExtensionContext.Namespace.GLOBAL).remove("playwright", Playwright.class));
+        closeIfNotNull(ctx.getStore(ExtensionContext.Namespace.create(PlaywrightExtension.class, ctx.getUniqueId())).remove("context", BrowserContext.class));
+        closeIfNotNull(ctx.getStore(ExtensionContext.Namespace.create(PlaywrightExtension.class, ctx.getUniqueId())).remove("browser", Browser.class));
+        closeIfNotNull(ctx.getStore(ExtensionContext.Namespace.create(PlaywrightExtension.class, ctx.getUniqueId())).remove("playwright", Playwright.class));
     }
 
     @Override
@@ -60,7 +63,9 @@ class CheckoutTest {
     @Test
     void shouldCompleteCheckout(Page page) {
         // Page is injected automatically
-        new LoginPage(page).navigate().loginAs("user@test.com", "pass");
+        LoginPage login = new LoginPage(page);
+        login.navigate();
+        login.loginAs("user@example.test", "fixture-only-password");
     }
 }
 ```
@@ -193,9 +198,10 @@ BrowserContext context = browser.newContext(new Browser.NewContextOptions()
 // Add this to @AfterEach in BaseTest
 @AfterEach
 void captureOnFailure(TestInfo info) {
-    // The test outcome is available via TestInfo with JUnit5 + Allure
+    // TestInfo does not expose success/failure. This captures every completion;
+    // use a TestWatcher/extension with correct resource ordering for failures only.
     byte[] screenshot = page().screenshot(new Page.ScreenshotOptions().setFullPage(true));
-    Allure.addAttachment("Screenshot on failure", "image/png",
+    Allure.addAttachment("Completion screenshot", "image/png",
         new ByteArrayInputStream(screenshot), "png");
 }
 ```
@@ -226,10 +232,10 @@ public final class WaitUtils {
                 .setTimeout(5_000));
     }
 
-    public static void waitForApiResponse(Page page, String urlPattern) {
+    public static void waitForApiResponse(Page page, String urlPattern, Runnable action) {
         page.waitForResponse(resp ->
             resp.url().contains(urlPattern) && resp.status() < 400,
-            () -> {}
+            action
         );
     }
 }
@@ -237,27 +243,6 @@ public final class WaitUtils {
 
 ---
 
-## Retry Logic for Flaky Tests
+## Repetition and retries
 
-```java
-// JUnit 5 built-in retry extension
-// Add to pom.xml:
-// <dependency>
-//   <groupId>org.junit.jupiter</groupId>
-//   <artifactId>junit-jupiter-engine</artifactId>
-//   <version>5.10.2</version>
-// </dependency>
-
-@RepeatedTest(value = 3, failureThreshold = 1) // retry up to 3 times
-void flakySmokeTest() {
-    // test body
-}
-
-// Custom @RetryTest annotation backed by a JUnit Extension:
-@Target(ElementType.METHOD)
-@Retention(RetentionPolicy.RUNTIME)
-@ExtendWith(RetryExtension.class)
-public @interface RetryTest {
-    int times() default 3;
-}
-```
+`@RepeatedTest(value = 3, failureThreshold = 1)` repeats a test and stops after a failure; it is not retry-until-pass. JUnit Jupiter does not provide the custom `@RetryTest`/`RetryExtension` implementation here. If you add a retry library, pin it, retain first-failure artifacts and report flaky outcomes; never make retries hide a defect. Reinitialize resources/data per attempt.

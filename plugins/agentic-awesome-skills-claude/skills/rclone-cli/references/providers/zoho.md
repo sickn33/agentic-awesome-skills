@@ -88,7 +88,8 @@ authorization token from Zoho Workdrive. This is only from the moment
 your browser is opened until the token is returned.
 The webserver runs on `http://127.0.0.1:53682/`.
 If local port `53682` is protected by a firewall you may need to temporarily
-unblock the firewall to complete authorization.
+allow that loopback callback to complete authorization; do not disable the
+firewall or expose this listener to other machines.
 
 Once configured you can then use `rclone` like this (replace `remote` with the
 name you gave your remote):

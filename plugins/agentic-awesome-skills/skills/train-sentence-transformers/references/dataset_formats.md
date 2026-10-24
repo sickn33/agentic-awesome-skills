@@ -1,5 +1,6 @@
 # Dataset Formats
 
+AAS adaptation: follow the root execution/data contract. Examples are version-sensitive sketches; verify APIs in a reviewed lockfile and cached revisions. Local-only/no publication/no remote telemetry defaults override older Hub/tracker recipes below. Numerical hardware, speed, quality, data-volume and loss-ranking claims are illustrative hypotheses, not guaranteed thresholds.
 This reference covers: how datasets map to losses, how to reshape data when it doesn't fit, and how to mine hard negatives.
 
 ## The two rules
@@ -9,13 +10,13 @@ From the sentence-transformers training overview:
 1. If the loss requires a label, the dataset must have a column named **`label`, `labels`, `score`, or `scores`**. Any column with one of these names is the label.
 2. All other columns are **inputs**. The loss defines how many input columns it expects. Column **names don't matter; order does**.
 
-Example: `CoSENTLoss` expects 2 inputs + a float label. A dataset with columns `["premise", "hypothesis", "score"]` works. A dataset with `["score", "premise", "hypothesis"]` does not — reorder first.
+Example: `CoSENTLoss` expects 2 inputs + a float label. A dataset with columns `["premise", "hypothesis", "score"]` works. The recognized label may appear before the inputs: `["score", "premise", "hypothesis"]` also works. Preserve the relative order of the non-label input columns.
 
 ## Per-loss data shapes
 
 The per-type loss references (`losses_sentence_transformer.md`, `losses_cross_encoder.md`, `losses_sparse_encoder.md`) are the canonical mappings from data shape to loss. Cross-cutting recipe bits those tables don't show:
 
-- **`CosineSimilarityLoss`** wants `score` normalized to `[0, 1]`; `CoSENTLoss` / `AnglELoss` are pairwise-ranking and ignore absolute scale, so on `stsb` (raw 0-5) divide by 5 only when using cosine-similarity.
+- **`CosineSimilarityLoss`** requires labels on the intended cosine scale (typically `[-1, 1]`; positive-only tasks may use `[0, 1]`); `CoSENTLoss` / `AnglELoss` are pairwise-ranking and ignore absolute scale, so on `stsb` (raw 0-5) divide by 5 only when using cosine-similarity.
 - **`BatchAllTripletLoss` / `BatchHardTripletLoss` / `BatchSemiHardTripletLoss`** need `batch_sampler=BatchSamplers.GROUP_BY_LABEL` so multiple samples per label appear in the same batch.
 - **`MSELoss` (distillation)** label is the teacher's full embedding vector (a list of floats), not a scalar score.
 - **`MarginMSELoss` (distillation)** label is `teacher_score(q, pos) - teacher_score(q, neg)`, precomputed per row.

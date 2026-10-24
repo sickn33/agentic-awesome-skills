@@ -10,6 +10,10 @@ date_added: "2026-02-27"
 
 Auto-instrument Node.js applications with distributed tracing, metrics, and logs.
 
+## Version and data boundaries
+
+This document describes the existing `@azure/monitor-opentelemetry` distro. Current Microsoft guidance also offers `@microsoft/opentelemetry` for new adoption; do not initialize both. Match all OpenTelemetry package versions and use that version’s logger-provider constructor/processor API. Configure approved telemetry destinations, redact PII/secrets, and protect offline storage; automatic instrumentation may export sensitive request/log data. See [Microsoft enablement guidance](https://learn.microsoft.com/en-us/azure/azure-monitor/app/opentelemetry-enable).
+
 ## Installation
 
 ```bash
@@ -42,8 +46,8 @@ useAzureMonitor({
   }
 });
 
-// Now import your application
-import express from "express";
+// Static ESM imports are hoisted; load the app after initialization.
+const { default: express } = await import("express");
 const app = express();
 ```
 
@@ -233,33 +237,9 @@ try {
 }
 ```
 
-## Custom Span Processor
+## Custom Span Processing
 
-```typescript
-import { SpanProcessor, ReadableSpan } from "@opentelemetry/sdk-trace-base";
-import { Span, Context, SpanKind, TraceFlags } from "@opentelemetry/api";
-import { useAzureMonitor } from "@azure/monitor-opentelemetry";
-
-class FilteringSpanProcessor implements SpanProcessor {
-  forceFlush(): Promise<void> { return Promise.resolve(); }
-  shutdown(): Promise<void> { return Promise.resolve(); }
-  onStart(span: Span, context: Context): void {}
-  
-  onEnd(span: ReadableSpan): void {
-    // Add custom attributes
-    span.attributes["CustomDimension"] = "value";
-    
-    // Filter out internal spans
-    if (span.kind === SpanKind.INTERNAL) {
-      span.spanContext().traceFlags = TraceFlags.NONE;
-    }
-  }
-}
-
-useAzureMonitor({
-  spanProcessors: [new FilteringSpanProcessor()]
-});
-```
+Enrich writable spans in `onStart` with `span.setAttribute()`. Do not mutate `ReadableSpan.attributes` or `spanContext().traceFlags` in `onEnd`: ended spans are read-only and this is not a reliable export filter. Use a supported sampler or a reviewed filtering exporter/processor pipeline for the pinned SDK version, and verify exported data.
 
 ## Sampling
 

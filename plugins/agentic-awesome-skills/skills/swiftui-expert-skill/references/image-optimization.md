@@ -32,7 +32,7 @@ AsyncImage(url: imageURL) { phase in
 .frame(width: 200, height: 200)
 ```
 
-For custom placeholders, replace `ProgressView()` in the `.empty` case with your placeholder view. Add `.transition(.opacity)` to the success case and `.animation(.easeInOut, value: imageURL)` to the container for fade-in transitions.
+For custom placeholders, replace `ProgressView()` in the `.empty` case with your placeholder view. For a load-completion fade, provide an animated AsyncImage transaction and an appropriate transition; animating only imageURL does not react to a phase change when the URL stays the same.
 
 ## Image Decoding and Downsampling (Optional Optimization)
 
@@ -41,7 +41,7 @@ For custom placeholders, replace `ProgressView()` in the `.empty` case with your
 ### Current Pattern That Could Be Optimized
 
 ```swift
-// Current pattern - decodes full image on main thread
+// This initializer does not downsample; decoding may be deferred until rendering
 // Unsafe - force unwrap can crash if imageData is invalid
 Image(uiImage: UIImage(data: imageData)!)
     .resizable()
@@ -68,8 +68,11 @@ struct OptimizedImageView: View {
                 ProgressView()
             }
         }
-        .task {
-            processedImage = await decodeAndDownsample(imageData, targetSize: targetSize)
+        .task(id: imageData) {
+            processedImage = nil
+            let image = await decodeAndDownsample(imageData, targetSize: targetSize)
+            guard !Task.isCancelled else { return }
+            processedImage = image
         }
     }
 
@@ -103,12 +106,12 @@ OptimizedImageView(
 
 ### Reusable Downsampling Actor
 
-For production use, wrap the logic in an `actor` with scale-aware sizing and cache-disabled source options:
+Actor-based sketch with scale supplied by the presenting view (for example its displayScale environment value). Add cancellation, input/size bounds, retry/error UI and strict-concurrency validation before production use:
 
 ```swift
 actor ImageProcessor {
-    func downsample(data: Data, targetSize: CGSize) -> UIImage? {
-        let scale = await UIScreen.main.scale
+    func downsample(data: Data, targetSize: CGSize, scale: CGFloat) -> UIImage? {
+        guard scale.isFinite, scale > 0, targetSize.width.isFinite, targetSize.height.isFinite, targetSize.width > 0, targetSize.height > 0 else { return nil }
         let maxPixel = max(targetSize.width, targetSize.height) * scale
         let sourceOptions: [CFString: Any] = [kCGImageSourceShouldCache: false]
         guard let source = CGImageSourceCreateWithData(data as CFData, sourceOptions as CFDictionary) else { return nil }
@@ -124,7 +127,7 @@ actor ImageProcessor {
 }
 ```
 
-Key details: `kCGImageSourceShouldCache: false` on the source prevents the full-resolution image from being cached in memory. Multiplying `targetSize` by `UIScreen.main.scale` ensures the thumbnail is sharp on Retina displays. `kCGImageSourceShouldCacheImmediately: true` on the thumbnail forces decoding at creation time rather than at first render.
+Key details: `kCGImageSourceShouldCache: false` on the source prevents the full-resolution image from being cached in memory. Multiplying point sizes by the actual view display scale avoids assuming the main screen in multi-window/external-display apps. `kCGImageSourceShouldCacheImmediately: true` on the thumbnail forces decoding at creation time rather than at first render.
 
 ### When to Suggest This Optimization
 
@@ -146,14 +149,14 @@ Mention this optimization when you see `UIImage(data:)` usage, particularly in:
 // Caches in system cache -- memory builds up
 let image = UIImage(named: "Wallpapers/image_001.jpg")
 
-// No system caching -- memory stays flat
+// Bypasses the named-image cache; memory use still depends on retained/decoded images
 guard let path = Bundle.main.path(forResource: "Wallpapers/image_001.jpg", ofType: nil) else { return nil }
 let image = UIImage(contentsOfFile: path)
 ```
 
 ### NSCache for Controlled Image Caching
 
-When image processing (resizing, filtering) is needed, use `NSCache` with a `countLimit` to bound memory instead of relying on system caching:
+When image processing (resizing, filtering) is needed, use NSCache with count/cost policies to encourage eviction. Its limits are advisory, not hard memory bounds:
 
 ```swift
 struct ImageCache {
@@ -201,3 +204,5 @@ Variants are available via naming convention: `star.circle.fill`, `star.square.f
 - [ ] Use SF Symbols with appropriate rendering modes
 
 **Performance Note**: Image downsampling is an optional optimization. Only suggest it when you encounter `UIImage(data:)` usage in performance-sensitive contexts like scrollable lists or grids.
+
+The first sketch uses pixel dimensions directly; convert from points using the presenting view scale. A detached task does not inherit parent cancellation automatically; cancel its handle and include target size/scale in request identity in a real pipeline. UIKit image sendability and actor isolation must be checked with the installed Swift SDK. Neither sketch is a complete loader or memory/cancellation guarantee.

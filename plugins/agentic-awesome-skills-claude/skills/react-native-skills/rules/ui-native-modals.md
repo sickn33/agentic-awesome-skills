@@ -36,6 +36,7 @@ function MyScreen() {
 **Correct (native Modal with formSheet):**
 
 ```tsx
+import { useState } from 'react'
 import { Modal, View, Text, Button } from 'react-native'
 
 function MyScreen() {
@@ -49,6 +50,7 @@ function MyScreen() {
         presentationStyle='formSheet'
         animationType='slide'
         onRequestClose={() => setVisible(false)}
+        onDismiss={() => setVisible(false)}
       >
         <View>
           <Text>Sheet content</Text>
@@ -75,3 +77,5 @@ function MyScreen() {
 
 Native modals provide swipe-to-dismiss, proper keyboard avoidance, and
 accessibility out of the box.
+
+`presentationStyle` is iOS-specific; test Android separately. Supply an explicit close control, synchronize dismissal state, and verify focus/keyboard/accessibility behavior. Native modals are not a universal replacement for custom bottom-sheet requirements.

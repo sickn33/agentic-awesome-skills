@@ -1,5 +1,7 @@
 # Greenfield Templates
 
+> Review boundary: These are starter fragments with placeholders and optional integrations, not a complete installable project. Instantiate identifiers safely, choose supported runtime/dependency versions from the project, and verify every advertised command. Jest/ESLint require real test/configuration files before those scripts can pass. Bind local development servers to loopback, keep unknown commands nonzero, and preserve any pre-existing workflow. Keep each Go tool in its own scripts/<tool>/ directory so go build ./... does not see duplicate main/Violation declarations. No template score or generated file grants review/merge authority.
+
 Complete, ready-to-use templates for 0→1 project scaffolding. Each section provides real file contents — not placeholders — for bootstrapping a new project with core harness infrastructure.
 
 ## Table of Contents
@@ -105,20 +107,20 @@ lint: lint-arch
 	@if command -v golangci-lint >/dev/null 2>&1; then \
 		golangci-lint run; \
 	else \
-		echo "golangci-lint not installed, skipping"; \
+		echo "golangci-lint required but unavailable" >&2; exit 1; \
 	fi
 
 lint-arch:
 	@echo "Checking architecture constraints..."
-	@go run scripts/lint-deps.go
-	@go run scripts/lint-quality.go
+	@go run scripts/lint-deps/main.go
+	@go run scripts/lint-quality/main.go
 	@echo "✓ Architecture checks passed"
 
 clean:
 	rm -rf bin/
 ```
 
-### scripts/lint-deps.go
+### scripts/lint-deps/main.go
 
 Use the template from `references/linter-templates.md`, with:
 - `modulePath` set to the project's module path
@@ -131,7 +133,7 @@ Use the template from `references/linter-templates.md`, with:
   }
   ```
 
-### scripts/lint-quality.go
+### scripts/lint-quality/main.go
 
 Use the template from `references/linter-templates.md`, with file size limit set to 500 for new projects (can grow to 1000 later).
 
@@ -147,17 +149,19 @@ Same as Go CLI Tool, with these additions/changes:
 package main
 
 import (
-	"log"
+	"log/slog"
 	"net/http"
+	"os"
 
 	"{module-path}/internal/api"
 )
 
 func main() {
 	router := api.NewRouter()
-	log.Println("Starting server on :8080")
-	if err := http.ListenAndServe(":8080", router); err != nil {
-		log.Fatalf("Server failed: %v", err)
+	slog.Info("Starting server", "address", "127.0.0.1:8080")
+	if err := http.ListenAndServe("127.0.0.1:8080", router); err != nil {
+		slog.Error("Server failed", "error", err)
+		os.Exit(1)
 	}
 }
 ```
@@ -258,6 +262,7 @@ function main(): void {
       console.log("{project-name} v0.1.0");
       break;
     default:
+      if (command) { console.error(`Unknown command: ${command}`); process.exitCode = 1; return; }
       console.log("{project-name} - {description}");
       console.log("\nUsage:");
       console.log("  {project-name} <command>");
@@ -447,11 +452,12 @@ Same as TypeScript CLI, with these additions:
 import http from "http";
 import { router } from "./api/router";
 
-const PORT = process.env.PORT || 8080;
+const PORT = Number(process.env.PORT ?? "8080");
+if (!Number.isInteger(PORT) || PORT < 1 || PORT > 65535) throw new Error("Invalid PORT");
 
 const server = http.createServer(router);
 
-server.listen(PORT, () => {
+server.listen(PORT, "127.0.0.1", () => {
   console.log(`Server running on port ${PORT}`);
 });
 ```
@@ -485,7 +491,7 @@ export function router(
 ```toml
 [build-system]
 requires = ["setuptools>=68.0", "wheel"]
-build-backend = "setuptools.backends._legacy:_Backend"
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "{project-name}"
@@ -655,7 +661,7 @@ violations = []
 
 def get_layer(filepath: Path) -> int:
     """Determine the layer of a file based on its path."""
-    parts = filepath.parts
+    parts = (*filepath.parts[:-1], filepath.stem)
     for part in parts:
         if part in LAYER_MAP:
             return LAYER_MAP[part]
@@ -673,29 +679,39 @@ def check_file(filepath: Path) -> None:
 
     try:
         tree = ast.parse(filepath.read_text())
-    except SyntaxError:
+    except SyntaxError as exc:
+        violations.append(f"Cannot parse {filepath}: {exc}")
         return
 
+    import importlib.util
+    relative = filepath.relative_to(Path("src") / PACKAGE_NAME)
+    parent_parts = relative.parts[:-1]
+    current_package = ".".join((PACKAGE_NAME, *parent_parts))
+    source_boundary = relative.parts[0] if parent_parts else filepath.stem
     for node in ast.walk(tree):
-        if isinstance(node, (ast.Import, ast.ImportFrom)):
-            module = ""
-            if isinstance(node, ast.ImportFrom) and node.module:
-                module = node.module
-            elif isinstance(node, ast.Import):
-                for alias in node.names:
-                    module = alias.name
-
-            if not module.startswith(PACKAGE_NAME):
+        modules = []
+        if isinstance(node, ast.Import):
+            modules = [alias.name for alias in node.names]
+        elif isinstance(node, ast.ImportFrom):
+            base = node.module or ""
+            if node.level:
+                try:
+                    base = importlib.util.resolve_name("." * node.level + base, current_package)
+                except (ImportError, ValueError) as exc:
+                    violations.append(f"Invalid relative import {filepath}:{node.lineno}: {exc}")
+                    continue
+            modules = [base]
+            if base == PACKAGE_NAME:
+                modules += [base + "." + alias.name for alias in node.names]
+        for module in modules:
+            if not module.startswith(PACKAGE_NAME + "."):
                 continue
-
-            for target, target_layer in LAYER_MAP.items():
-                if target in module and target_layer >= source_layer and target != filepath.stem:
-                    violations.append(
-                        f"  ✗ {filepath}:{node.lineno} — "
-                        f"Layer {source_layer} imports '{module}' (layer {target_layer})\n"
-                        f"    Fix: Move this logic to a higher layer, "
-                        f"or pass the dependency as a parameter."
-                    )
+            boundary = module[len(PACKAGE_NAME) + 1:].split(".")[0]
+            target_layer = LAYER_MAP.get(boundary)
+            if target_layer is None:
+                violations.append(f"Unmapped internal import {filepath}:{node.lineno}: {module}")
+            elif boundary != source_boundary and target_layer >= source_layer:
+                violations.append(f"Layer violation {filepath}:{node.lineno}: {module}")
 
 
 def main() -> None:
@@ -821,7 +837,7 @@ class APIHandler(BaseHTTPRequestHandler):
 def main() -> None:
     """Start the HTTP server."""
     port = 8080
-    server = HTTPServer(("", port), APIHandler)
+    server = HTTPServer(("127.0.0.1", port), APIHandler)
     print(f"Server running on port {port}")
     server.serve_forever()
 
@@ -936,7 +952,7 @@ graph TD
     style CMD fill:#f3e5f5
 \`\`\`
 
-> Planned structure. To be enforced by: [\`scripts/lint-deps.go\`]()
+> Planned structure. To be enforced by: [\`scripts/lint-deps/main.go\`]()
 
 ### 2.2 Layer Hierarchy
 
@@ -946,7 +962,7 @@ graph TD
 | L1 | \`internal/core/\` | L0 | L2 | Business logic |
 | L2 | \`cmd/\` | L0, L1 | — | CLI commands, entry points |
 
-> Will be enforced by: [\`scripts/lint-deps.go\`]()
+> Will be enforced by: [\`scripts/lint-deps/main.go\`]()
 
 ### 2.3 Forbidden Dependencies
 
@@ -1082,9 +1098,9 @@ Last updated: {today's date}
 
 | Layer | Coverage | Lint Pass | Doc Fresh |
 |-------|----------|-----------|-----------|
-| Types (L0) | N/A | ✓ | ✓ |
-| Core (L1) | N/A | ✓ | ✓ |
-| CLI (L2) | N/A | ✓ | ✓ |
+| Types (L0) | N/A | unknown | unknown |
+| Core (L1) | N/A | unknown | unknown |
+| CLI (L2) | N/A | unknown | unknown |
 
 ## 3 Golden Principles
 
@@ -1094,7 +1110,7 @@ Last updated: {today's date}
 4. Layer hierarchy enforced by linters
 5. All public APIs documented
 
-> Enforced by: [\`scripts/lint-quality.go\`]()
+> Enforced by: [\`scripts/lint-quality/main.go\`]()
 
 ## 4 Quality Trend
 
@@ -1312,8 +1328,8 @@ jobs:
 
       - name: Lint Architecture
         run: |
-          go run scripts/lint-deps.go
-          go run scripts/lint-quality.go
+          go run scripts/lint-deps/main.go
+          go run scripts/lint-quality/main.go
 ```
 
 ### .github/workflows/ci.yml (TypeScript version)

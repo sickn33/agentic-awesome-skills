@@ -132,9 +132,6 @@ def check_page(file_path: Path) -> dict:
         if 'alt=' not in img.lower():
             issues.append("Image missing alt attribute")
             break
-        if 'alt=""' in img or "alt=''" in img:
-            issues.append("Image has empty alt attribute")
-            break
     
     # 6. Check for canonical link (nice to have)
     # has_canonical = 'rel="canonical"' in content.lower()
@@ -161,11 +158,11 @@ def main():
     if not pages:
         print("\n[!] No page files found.")
         print("    Looking for: HTML, JSX, TSX in pages/app/routes directories")
-        output = {"script": "seo_checker", "files_checked": 0, "passed": True}
+        output = {"script": "seo_checker", "files_checked": 0, "passed": None, "status": "not-assessed"}
         print("\n" + json.dumps(output, indent=2))
         sys.exit(0)
     
-    print(f"Found {len(pages)} page files to analyze\n")
+    print(f"Selected {len(pages)} candidate files (maximum 50); advisory source heuristics only\n")
     
     # Check each page
     all_issues = []
@@ -207,7 +204,8 @@ def main():
         "files_checked": len(pages),
         "files_with_issues": len(all_issues),
         "issues_found": total_issues,
-        "passed": passed
+        "passed": passed,
+        "scope": "advisory source heuristics, at most 50 candidate files; not a site audit"
     }
     
     print("\n" + json.dumps(output, indent=2))

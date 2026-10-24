@@ -129,7 +129,7 @@ class SynthesisWorkerWithInterrupts:
     def __init__(self, agent, output_device):
         self.agent = agent
         self.output_device = output_device
-        self.current_task = None
+        self.current_task = None  # Own only a generation task, not this playback task.
     
     async def send_speech_to_output(
         self,
@@ -154,7 +154,7 @@ class SynthesisWorkerWithInterrupts:
         """
         chunk_idx = 0
         
-        async for chunk_result in synthesis_result.chunk_generator:
+        async for chunk_result in synthesis_result.chunk_generator():
             # CRITICAL: Check for interrupt before sending each chunk
             if stop_event.is_set():
                 logger.info(f"🛑 [SYNTHESIZER] Interrupted after {chunk_idx} chunks")
@@ -163,7 +163,7 @@ class SynthesisWorkerWithInterrupts:
                 seconds_spoken = chunk_idx * seconds_per_chunk
                 partial_message = synthesis_result.get_message_up_to(seconds_spoken)
                 
-                logger.info(f"📝 [SYNTHESIZER] Partial message: '{partial_message}'")
+                logger.info("[SYNTHESIZER] Partial playback estimate recorded")
                 
                 return partial_message, True  # cut_off = True
             
@@ -287,11 +287,11 @@ async def example_interrupt_scenario():
     conversation.synthesizer_worker = synthesis_worker
     
     # Create interruptible event
-    stop_event = threading.Event()
     interruptible_event = InterruptibleEvent(
         payload="Bot is speaking...",
         is_interruptible=True
     )
+    stop_event = interruptible_event.interruption_event
     conversation.add_interruptible_event(interruptible_event)
     
     # Start bot speaking
@@ -316,7 +316,6 @@ async def example_interrupt_scenario():
     
     # Trigger interrupt
     conversation.broadcast_interrupt()
-    stop_event.set()
     
     # Wait for synthesis to finish
     message_sent, was_cut_off = await synthesis_task

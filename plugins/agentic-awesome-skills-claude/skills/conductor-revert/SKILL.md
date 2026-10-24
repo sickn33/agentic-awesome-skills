@@ -99,6 +99,8 @@ Select option:
 
 ## Commit Discovery
 
+Treat message matches as candidates, not proof. Validate track IDs as literal identifiers (no path traversal or shell interpolation), inspect full commit diffs and ancestry, and exclude unrelated/mixed commits. Merge commits need an explicitly chosen mainline; never guess `-m`. Deduplicate SHAs and detect existing reverts before executing. Honor user instructions that prohibit plan-file edits; do not automatically stash/commit/delete unrelated work.
+
 ### For Task Revert
 
 1. Search git log for task-specific commits:
@@ -253,7 +255,7 @@ After successful git reverts, update plan.md:
    - Update `status` if needed
    - Update `updated` timestamp
 
-**Do NOT commit plan.md changes** - they are part of the revert operation
+Review any authorized metadata reconciliation separately; report it as uncommitted until it is actually committed. Do not decrement counters blindly or rewrite a user-protected plan.
 
 ## Track Status Updates
 
@@ -296,7 +298,7 @@ Verify the revert was successful:
 If issues are found, you may need to:
   - Fix conflicts manually
   - Re-implement the reverted tasks
-  - Use 'git revert HEAD~{N}..HEAD' to undo the reverts
+  - Inspect and revert only the exact recorded revert SHAs to undo this operation
 
 ================================================================================
 ```
@@ -360,15 +362,11 @@ If user needs to undo the revert itself:
 ```
 To undo this revert operation:
 
-  git revert HEAD~{N}..HEAD
+  git revert <exact-revert-sha>  # inspect each recorded revert, newest first
 
 This will create new commits that restore the reverted changes.
 
-Alternatively, if not yet pushed:
-  git reset --soft HEAD~{N}
-  git checkout -- .
-
-(Use with caution - this discards the revert commits)
+Do not use reset plus checkout as a shortcut: it can discard unrelated work.
 ```
 
 ## Limitations

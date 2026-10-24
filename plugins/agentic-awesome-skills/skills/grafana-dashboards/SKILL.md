@@ -61,6 +61,8 @@ Design effective Grafana dashboards for monitoring applications, infrastructure,
 
 ### API Monitoring Dashboard
 
+The following JSON uses legacy graph panels and embedded alert fields. It illustrates query intent, not a portable current provisioning artifact. Export supported panel JSON from the target Grafana version; configure alert rules separately through its supported alerting interface. Test missing/zero traffic and verify datasource UIDs before deployment.
+
 ```json
 {
   "dashboard": {

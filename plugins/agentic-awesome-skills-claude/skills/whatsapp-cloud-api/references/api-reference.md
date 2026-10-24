@@ -1,5 +1,7 @@
 # API Reference - WhatsApp Cloud API
 
+Scope and snapshot: examples target an older Graph API version, not the current Meta contract. Verify supported versions, pricing, messaging/throughput limits, template edit rules and eligibility in official Meta documentation and the actual account before use. Legal tables are illustrative, not universal GDPR/LGPD requirements. Sending, deleting templates, account migration, purchases, tunnels and deployment require user-authorized scope. Confirm exact recipient/content and applicable consent/service window. Never log tokens, personal message bodies or full API errors. Boilerplates are local demos: production needs durable enqueue-before-ack, authenticated account routing, idempotency/replay protection, opt-out checks and a worker; HMAC alone does not prevent replay.
+
 Referencia tecnica completa dos endpoints, autenticacao, codigos de erro, rate limits e pricing da WhatsApp Cloud API (Graph API v21.0).
 
 ---
@@ -279,7 +281,7 @@ DELETE /{waba-id}/message_templates
 }
 ```
 
-**Nota:** Nao e possivel editar um template apos submissao. Para alterar, delete e crie um novo.
+**Nota:** Verifique as opcoes atuais de edicao; criar uma nova versao pode ser preferivel. Excluir traducoes exige autorizacao especifica.
 
 **Limite:** Ate 6,000 traducoes de templates por conta.
 
@@ -407,7 +409,7 @@ POST /{phone-number-id}/whatsapp_business_profile
 }
 ```
 
-Valores de `status`: `sent` → `delivered` → `read` → `failed`
+Valores de `status`: `sent` → `delivered` → `read`; `failed` e um desfecho de erro separado (eventos podem chegar fora de ordem)
 
 ---
 
@@ -541,7 +543,7 @@ Desde julho 2025, o modelo e **por mensagem** (nao mais por conversa).
 
 ### Versao Atual
 
-**Graph API v21.0** (lancada janeiro 2026)
+**Graph API v21.0** (snapshot de exemplo; nao e uma afirmacao de versao atual)
 
 ### Compatibilidade
 

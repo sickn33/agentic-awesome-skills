@@ -35,3 +35,5 @@ function processOrders(orders: Order[], users: User[]) {
 
 Build map once (O(n)), then all lookups are O(1).
 For 1000 orders × 1000 users: 1M ops → 2K ops.
+
+Map construction has a cost and duplicate keys select the last match, whereas find selects the first. Preserve that behavior explicitly when duplicates are allowed; expected average lookup cost and benchmark figures are not universal.

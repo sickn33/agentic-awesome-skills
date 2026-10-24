@@ -88,7 +88,7 @@ When auto-detection is in effect, `lore init` populates this field with the user
 
 Default: `"index"`.
 
-Only `"index"` is accepted. The mirror renders a small index structure pointing into `.lore/` (see `references/platform-mirrors.md` for the template and adaptive rendering rules). Per-session token cost stays flat (~600 B worst case, including a one-line operational opening and per-scope descriptions) regardless of entry count.
+Only `"index"` is accepted. The mirror renders a small index structure pointing into `.lore/` (see `references/platform-mirrors.md` for the template and adaptive rendering rules). Per-session token cost is reduced for small indexes (size proportional to the number and length of scope descriptions, including a one-line operational opening and per-scope descriptions) regardless of entry count.
 
 Any other value (e.g., the historical `"summary"` or `"full"`) is rejected at config-load time with an error. Remove the field, or set it to `"index"`.
 
@@ -120,5 +120,5 @@ The git commit SHA from which the next `sync` will compute its delta. Written au
 Edit `.lore/.config.json` directly. After editing:
 
 - `sync` and `compress` re-read the config on every run; no restart needed.
-- Invalid JSON → fall back to defaults + warn the user.
+- Invalid JSON, wrong field types, unknown writer schema, or invalid target paths → fail closed for writes; read-only inspection may warn without rewriting configuration. Never silently enable defaults that change write targets.
 - For breaking-config changes, see `references/compatibility.md` and look for the `BREAKING:` commit in the project's git history.

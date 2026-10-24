@@ -1,6 +1,7 @@
+import * as React from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Cross2Icon } from '@radix-ui/react-icons';
-import './dialog.css';
+// Supply dialog.css in your application; it is not bundled.
 
 /**
  * Example: Basic Dialog Component
@@ -37,7 +38,7 @@ export function BasicDialog() {
           </Dialog.Description>
 
           {/* Form Content */}
-          <form className="dialog-form">
+          <form className="dialog-form" onSubmit={(event) => event.preventDefault()}>
             <fieldset className="fieldset">
               <label className="label" htmlFor="name">
                 Name

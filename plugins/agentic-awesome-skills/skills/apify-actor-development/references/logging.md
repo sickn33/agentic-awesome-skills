@@ -2,9 +2,9 @@
 
 ## JavaScript and TypeScript
 
-**ALWAYS use the `apify/log` package for logging** - This package contains critical security logic including censoring sensitive data (Apify tokens, API keys, credentials) to prevent accidental exposure in logs.
+**ALWAYS use the `@apify/log` (or `log` exported by `apify`) package for logging** - Use the SDK logger, but never assume it censors every credential, personal field or exception payload. Redact structured fields before logging and verify the exact logger configuration.
 
-### Available Log Levels in `apify/log`
+### Available Log Levels in `@apify/log` (or `log` exported by `apify`)
 
 The Apify log package provides the following methods for logging:
 
@@ -29,7 +29,7 @@ The Apify log package provides the following methods for logging:
 
 ## Python
 
-**ALWAYS use `Actor.log` for logging** - This logger contains critical security logic including censoring sensitive data (Apify tokens, API keys, credentials) to prevent accidental exposure in logs.
+**ALWAYS use `Actor.log` for logging** - Use the SDK logger and explicit field redaction; no logger guarantees detection of every secret or personal field.
 
 ### Available Log Levels
 

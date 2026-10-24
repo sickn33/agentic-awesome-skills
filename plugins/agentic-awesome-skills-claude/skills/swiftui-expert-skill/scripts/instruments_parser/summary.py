@@ -24,7 +24,9 @@ def render(result: dict) -> str:
     _render_causes(lines, lanes_by_name.get("swiftui-causes"))
     _render_correlations(lines, result.get("correlations", []))
 
-    return "\n".join(lines).rstrip() + "\n"
+    text = "\n".join(lines).rstrip() + "\n"
+    # Escape terminal controls from untrusted trace names/log fields.
+    return "".join(c if (c in "\n\t" or (ord(c) >= 32 and ord(c) != 127 and ord(c) not in range(0x202A, 0x202F) and ord(c) not in range(0x2066, 0x206A))) else f"\\u{ord(c):04x}" for c in text)
 
 
 def _skipped_block(title: str, lane: dict | None) -> list[str]:
@@ -102,7 +104,7 @@ def _render_hitches(lines: list[str], lane: dict | None) -> None:
             lines.append(f"Apple attribution: {nb}")
     if m.get("system_hitches") is not None:
         lines.append(
-            f"System vs app: system={m['system_hitches']}, app={m['app_hitches']}"
+            f"System vs app: system={m['system_hitches']}, app={m['app_hitches']}, unknown={m.get('unknown_origin_hitches', 0)}"
         )
     lines.append("")
     for i, h in enumerate(lane["top_offenders"], 1):
@@ -202,7 +204,7 @@ def _render_correlations(lines: list[str], correlations: list[dict]) -> None:
             lines.append(
                 f"  - Main thread: {tp['samples_on_main']} running samples "
                 f"({cov:.0f}% coverage — "
-                f"{'blocked' if cov < 25 else 'mostly running'})"
+                f"sampling estimate; not a blocking diagnosis)"
             )
             for s in tp["hot_symbols"][:3]:
                 lines.append(

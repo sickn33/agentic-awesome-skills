@@ -7,7 +7,7 @@ source_repo: apify/agent-skills
 source_type: official
 source: apify
 date_added: '2026-09-21'
-risk: unknown
+risk: critical
 ---
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
@@ -20,7 +20,7 @@ You are generating output schema files for an Apify Actor. The output schema tel
 ## Core principles
 
 - **Analyze code first**: Read the Actor's source to understand what data it actually pushes to the dataset — never guess
-- **Every field is nullable**: APIs and websites are unpredictable — always set `"nullable": true`
+- **Derive nullability from evidence**: Missing, null and guaranteed fields differ; preserve actual type/runtime contracts and verify Apify validator support.
 - **Anonymize examples**: Never use real user IDs, usernames, or personal data in examples
 - **Verify against code**: If TypeScript types exist, cross-check the schema against both the type definition AND the code that produces the values
 - **Reuse existing patterns**: Before generating schemas, check if other Actors in the same repository already have output schemas — match their structure, naming conventions, description style, and formatting
@@ -62,7 +62,7 @@ Present findings to user: list all discovered dataset output fields, key-value s
 
 ### File structure
 
-```json
+```jsonc
 {
     "actorSpecification": 1,
     "fields": {
@@ -104,16 +104,16 @@ If existing output schemas were found in the repository during Phase 1 (step 5),
 - Match the **view structure** (number of fields in overview, display format choices)
 - Match the **JSON formatting** (indentation, property ordering, spacing) — all schemas in the same repository must use identical formatting, including standalone Actors
 
-When the Actor code already has well-defined TypeScript interfaces or Python type classes, derive fields directly from those types rather than re-analyzing pushData/push_data calls from scratch. The type definition is the canonical source.
+When the Actor code already has well-defined TypeScript interfaces or Python type classes, derive fields directly from those types rather than re-analyzing pushData/push_data calls from scratch. Types guide inference, but verify serialized output and all runtime branches; annotations may be stale.
 
-### Hard rules (no exceptions)
+### Generation conventions (verify against the selected Actor contract)
 
 | Rule | Detail |
 |------|--------|
 | **All fields in `properties`** | The `fields.properties` object must contain **every** field the Actor can output, not just the fields shown in the overview view. The views section selects a subset for display — the `properties` section must be the complete superset |
-| `"nullable": true` | On **every** field — APIs are unpredictable |
-| `"additionalProperties": true` | On the **top-level `fields` object** AND on **every nested object** within `properties`. This is the most commonly missed rule — it must appear at both levels |
-| `"required": []` | Always empty array — on the **top-level `fields` object** AND on **every nested object** within `properties` |
+| Nullability | Represent actual nullability; do not weaken guaranteed fields automatically |
+| `additionalProperties` | Choose from the actual extensibility contract; permissiveness is not always correct |
+| `required` | Derived from actual guaranteed fields; optional and nullable are separate |
 | Anonymized examples | No real user IDs, usernames, or content |
 | `"type"` required with `"nullable"` | AJV rejects `nullable` without a `type` on the same field |
 
@@ -126,7 +126,7 @@ When the Actor code already has well-defined TypeScript interfaces or Python typ
 ### Field type patterns
 
 **String field:**
-```json
+```jsonc
 "title": {
     "type": "string",
     "description": "Title of the scraped item",
@@ -136,7 +136,7 @@ When the Actor code already has well-defined TypeScript interfaces or Python typ
 ```
 
 **Number field:**
-```json
+```jsonc
 "viewCount": {
     "type": "number",
     "description": "Number of views",
@@ -146,7 +146,7 @@ When the Actor code already has well-defined TypeScript interfaces or Python typ
 ```
 
 **Boolean field:**
-```json
+```jsonc
 "isVerified": {
     "type": "boolean",
     "description": "Whether the account is verified",
@@ -156,7 +156,7 @@ When the Actor code already has well-defined TypeScript interfaces or Python typ
 ```
 
 **Array field:**
-```json
+```jsonc
 "hashtags": {
     "type": "array",
     "description": "Hashtags associated with the item",
@@ -167,7 +167,7 @@ When the Actor code already has well-defined TypeScript interfaces or Python typ
 ```
 
 **Nested object field:**
-```json
+```jsonc
 "authorInfo": {
     "type": "object",
     "description": "Information about the author",
@@ -183,7 +183,7 @@ When the Actor code already has well-defined TypeScript interfaces or Python typ
 ```
 
 **Enum field:**
-```json
+```jsonc
 "contentType": {
     "type": "string",
     "description": "Type of content",
@@ -194,7 +194,7 @@ When the Actor code already has well-defined TypeScript interfaces or Python typ
 ```
 
 **Union type (e.g., TypeScript `ObjectType | string`):**
-```json
+```jsonc
 "metadata": {
     "type": ["object", "string"],
     "description": "Structured metadata object, or error string if unavailable",
@@ -338,7 +338,7 @@ For most Actors that push data to a dataset, this is a minimal file:
 > **Critical**: Each property entry **must** include `"type": "string"` — this is an Apify-specific convention. The Apify meta-validator rejects properties without it (and rejects `"type": "object"` — only `"string"` is valid here).
 
 If `key_value_store_schema.json` was generated in Phase 3, add a second property:
-```json
+```jsonc
 "files": {
     "type": "string",
     "title": "Files",
@@ -393,9 +393,9 @@ If `key_value_store_schema.json` was generated in Phase 3, add a second property
 
 **Checklist**:
 - [ ] **Every** output field from the source code is in `dataset_schema.json` `fields.properties` — not just the overview view fields but ALL fields the Actor can produce
-- [ ] Every field has `"nullable": true`
-- [ ] The **top-level `fields` object** has both `"additionalProperties": true` and `"required": []`
-- [ ] Every **nested object** within `properties` also has `"additionalProperties": true` and `"required": []`
+- [ ] Nullability matches actual emitted data and the installed validator
+- [ ] Top-level required and extensibility rules match the output contract
+- [ ] Nested objects preserve their actual required/extensibility contract
 - [ ] Every field has a `"description"` and an `"example"`
 - [ ] All example values are anonymized
 - [ ] `"type"` is present on every field that has `"nullable"`
@@ -408,7 +408,7 @@ If `key_value_store_schema.json` was generated in Phase 3, add a second property
 - [ ] If existing schemas were found in the repo, the new schema follows their conventions (description style, example format, view structure)
 - [ ] Schema fields are derived from existing type definitions (interfaces, TypedDicts, dataclasses) where available — no duplicated or divergent field definitions
 
-Present the generated schemas to the user for review before writing them.
+When schema edits were requested, write a reviewable local source diff and report unresolved fields; obtain publication/deployment approval only if it is not already authorized.
 
 ---
 
@@ -436,3 +436,7 @@ Assistant: Follow the workflow in this skill, cite limitations, and ask before r
 
 - Imported upstream skill; verify credentials, permissions, and safety boundaries before execution.
 - Does not replace environment-specific validation, testing, or maintainer review.
+
+## Validation boundaries
+
+The [dataset schema specification](https://docs.apify.com/storage/dataset-schema) distinguishes optional fields validation from required views. This guide’s 8–12 columns, examples and permissive-schema choices are editorial conventions, not universal platform rules. JSONC fragments and bare property snippets must become complete strict JSON files before parsing. `nullable` is an AJV/OpenAPI extension, not standard draft-07 semantics; standard JSON Schema can use types including null, and enum must include null if null is permitted. Validate both the platform schema and synthetic emitted records with the actual validator. Preserve existing actor.json keys during merges. Views do not authorize data disclosure or change API export formats. Local apify run executes project code and can crawl, send data and incur charges: review it and use fixture/mock data before any authorized live run.

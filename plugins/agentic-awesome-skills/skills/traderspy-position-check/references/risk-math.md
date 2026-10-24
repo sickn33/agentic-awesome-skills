@@ -12,23 +12,21 @@ Entry, side and leverage come from the user; mark is the current `price` from th
 ## Liquidation
 
 - Exact: the liquidation price the user's exchange shows → distance % = |liq − mark| / mark × 100.
-- Approximation when the user has none: distance % ≈ 100 / leverage − maintenance margin (assume ~0.5–1%
-  and say "approximately"). 10x → ~9%, 20x → ~4%, 40x → ~2%. Cross margin can be wider (the whole
-  account backs it) or tighter (other positions drain it); the exact figure is the exchange's.
+- If no exchange liquidation price is supplied, report it as unavailable. Leverage alone is insufficient: collateral mode/balance, contract type, fees, maintenance tiers and other positions affect liquidation.
 
-Bands: ≤ 5% at risk · ≤ 15% watch · > 15% comfortable.
+Distance bands are illustrative attention labels, not calibrated safety thresholds or recommendations. A distant liquidation level does not make a position safe.
 
 ## Stop sanity
 
 - Stop distance % = |stop − mark| / mark × 100.
 - In ATRs = |stop − mark| / ATR(14) on the timeframe the user trades (use the 4h if unstated).
-  < 1 ATR: inside normal noise; 1–2 ATR: typical swing stop; > 3 ATR: wide.
+  ATR is a historical volatility measure, not a probability or guarantee that a stop is safe; compare only matching instrument/timeframe data.
 - Reward-to-risk = |target − mark| / |stop − mark| from the CURRENT mark (the original R:R from
   entry is history).
 
 ## Funding
 
-- Per-day cost ≈ `funding.ratePct` × 3 (three 8h settlements) × notional; a positive rate is paid
+- Per-day cost ≈ (`funding.ratePct` / 100) × 3 (only when the contract settles every 8 hours) × notional; a positive rate is paid
   by longs to shorts. Quote it as "≈ $x/day" or "≈ y% APR against / for this side".
 - `avg3dPct` says whether today's rate is typical.
 
@@ -47,9 +45,9 @@ LONG ETH 10x cross, entry 2,434, mark 2,534, liq 2,290, stop 2,380, ATR(4h) 62, 
 +0.002%/8h, OI regime `new_longs`, top traders 55% long.
 
 - Price move +4.1%, on margin ≈ +41%.
-- Liquidation 9.6% away → comfortable.
+- Liquidation 9.6% away → watch.
 - Stop 6.1% / 2.5 ATR away → outside 4h noise.
-- Funding ≈ 0.006%/day → negligible cost for a long (≈ 2% APR).
+- Funding ≈ 0.006% of notional/day at this fixed rate/interval; annualization is arithmetic, not a prediction, and is not margin APR.
 - Chart 4h bullish, 1d neutral → mixed; the 4h is doing the work.
 - Derivatives: new longs entering; leaders lean long only mildly (55%).
 - Thesis check: the position needs the 4h uptrend to hold; a 4h close below the nearest support

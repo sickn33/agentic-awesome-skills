@@ -1,5 +1,7 @@
 # Tuning Custom SQL Monitors
 
+> Modified during local review: detection-signal, evidence and apply-verification constraints clarified; upstream attribution retained.
+
 This reference covers type-specific tuning guidance for custom SQL monitors (custom rules).
 Read this file after determining the monitor type in Phase 1.5.
 
@@ -63,6 +65,8 @@ When the SQL itself contributes to noise, recommend targeted modifications:
 - Certain dimensions or categories are known-noisy and should be excluded
 - NULL handling is missing and causes spurious results
 - The query could benefit from a more targeted WHERE clause
+
+Validate time zones, timestamp/date casts, NULL behavior and late-arrival windows against the warehouse and business definition. A narrower WHERE condition can hide genuine historical defects.
 
 **NEVER** rewrite the full SQL without showing a diff. Present the original query and the proposed
 change side by side so the user can review exactly what changed.

@@ -94,7 +94,7 @@ If an artifact was requested, build it after resolving essential missing facts. 
 
 **Recommended approach:** Keep a warm pool with consent and a re-engage date. It is a contact list with a purpose, not a resume archive.
 
-**Why this one:** Rejected candidates are the cheapest hiring source you have, and the most commonly thrown away. Consent and a re-engage date are what make it reusable.
+**Why this one:** Previous applicants may be a relevant source when retention and re-contact are appropriate. Consent and a re-engage date are what make it reusable.
 
 **Workflow:** Candidate added → Consent → Re-engage date → Reminder → Reopen role
 
@@ -133,8 +133,8 @@ CREATE TABLE candidate_talent_pool (
   candidate_id SERIAL PRIMARY KEY,
   department VARCHAR(255),
   email VARCHAR(255),
-  experience_years NUMERIC NOT NULL,
-  last_contact DATE NOT NULL,
+  experience_years NUMERIC CHECK (experience_years >= 0),
+  last_contact DATE,
   linkedin_url TEXT,
   notes TEXT,
   phone VARCHAR(255),
@@ -148,9 +148,10 @@ CREATE TABLE candidate_talent_pool (
   target_role VARCHAR(255),
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW(),
-  -- Re-engage lists are only lawful for recorded consent.
+  -- Conservative workflow gate; not a determination of legal basis.
   CHECK (consent_status IN ('Not recorded', 'Granted', 'Declined')),
-  CHECK (consent_status = 'Granted' OR re_engage_date IS NULL)
+  CHECK (consent_status = 'Granted' OR re_engage_date IS NULL),
+  CHECK (consent_status <> 'Granted' OR consent_date IS NOT NULL)
 );
 
 CREATE INDEX idx_candidate_talent_pool_status ON candidate_talent_pool (status);
@@ -168,23 +169,24 @@ CREATE INDEX idx_candidate_talent_pool_re_engage_date ON candidate_talent_pool (
       "Candidate ID": { "type": "integer" },
       "Department": { "type": "string" },
       "Email": { "type": "string", "format": "email" },
-      "Experience (Years)": { "type": "number" },
-      "Last Contact": { "type": "string", "format": "date" },
+      "Experience (Years)": { "type": ["number", "null"], "minimum": 0 },
+      "Last Contact": { "type": ["string", "null"], "format": "date" },
       "LinkedIn URL": { "type": "string", "format": "uri" },
       "Notes": { "type": "string" },
       "Phone": { "type": "string" },
-      "Consent Status": { "type": "string" },
-      "Consent Date": { "type": "string", "format": "date" },
-      "Re-engage Date": { "type": "string", "format": "date" },
+      "Consent Status": { "enum": ["Not recorded", "Granted", "Declined"] },
+      "Consent Date": { "type": ["string", "null"], "format": "date" },
+      "Re-engage Date": { "type": ["string", "null"], "format": "date" },
       "Referred By": { "type": "string" },
       "Skills": { "type": "string" },
       "Source": { "type": "string" },
       "Status": { "type": "string" },
       "Target Role": { "type": "string" }
   },
+  "allOf": [
+    {"if": {"properties": {"Consent Status": {"const": "Granted"}}, "required": ["Consent Status"]}, "then": {"required": ["Consent Date"], "properties": {"Consent Date": {"type": "string", "format": "date"}}}, "else": {"properties": {"Re-engage Date": {"type": "null"}}}}
+  ],
   "required": [
-      "Experience (Years)",
-      "Last Contact",
       "Consent Status",
       "Status"
   ]
@@ -220,7 +222,7 @@ and anything pointing at another table stays `relation`.
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Candidate Name | `text` | `VARCHAR(255)` | `string` | Text | `Example Person` |
+| 1 | Candidate Name | `text` | `VARCHAR(255)` | `string` | Title | `Example Person` |
 | 2 | Candidate ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
 | 3 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 4 | Email | `email` | `VARCHAR(255)` | `string, format: email` | Email | `person@example.com` |
@@ -246,7 +248,7 @@ and anything pointing at another table stays `relation`.
 Not recorded | Granted | Declined
 ```
 
-Only `Granted` unlocks a `Re-engage Date`. A verbal yes on a call is not recorded consent — record `Not recorded` and say why, so the gap stays visible instead of becoming a silent yes.
+Only `Granted` unlocks a `Re-engage Date`. A verbal agreement without an auditable record must remain `Not recorded` under this workflow; record its scope and evidence before changing the field, so the gap stays visible instead of becoming a silent yes.
 
 **Status**
 
@@ -333,7 +335,7 @@ We keep losing good candidates we rejected 6 months ago.
 - **Problem:** Notion import shows every column as Text.
   **Solution:** that is expected. Apply the property mapping table once, after import.
 - **Problem:** a re-engagement list built from a pool with no recorded consent.
-  **Solution:** the list is unlawful, not just untidy. Block on `Consent Status` and report the count instead of emitting dates.
+  **Solution:** the conservative re-contact gate is unmet; legal basis depends on jurisdiction and purpose. Block on `Consent Status` and report the count instead of emitting dates.
 
 
 ## Candidate Pool Consent Rules
@@ -357,3 +359,5 @@ Then recommend the smallest setup that fits, and wait for me to ask before you b
 When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
 
+
+Granted is a workflow condition, not proof of lawful consent or an instruction to contact someone. Enforce date/scope checks in import validation too; Notion select fields alone do not enforce the SQL/JSON rules. `updated_at` needs an application update or trigger. Candidate identifiers differ between generated SQL IDs and preserved external IDs; map them explicitly. Companion skills are optional and may be unavailable; provide the included manual mapping if absent.

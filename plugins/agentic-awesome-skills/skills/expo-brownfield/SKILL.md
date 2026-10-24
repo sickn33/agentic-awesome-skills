@@ -52,17 +52,21 @@ Both approaches require, in the environment that _builds_ the React Native side:
 - **Node.js (LTS)** — runs the Expo CLI and JavaScript code.
 - **Yarn** — manages JavaScript dependencies.
 
-The integrated approach additionally requires **CocoaPods** on iOS (`sudo gem install cocoapods`). The isolated approach does **not** require CocoaPods or any RN tooling in the consuming native app.
+The integrated approach additionally requires **CocoaPods** on iOS, installed using the project’s supported Ruby/Bundler toolchain (avoid changing system Ruby with sudo). The isolated approach does **not** require CocoaPods or any RN tooling in the consuming native app.
 
 ## Versioning note
 
-**Expo SDK 55 is the minimum supported version for brownfield integration.** Earlier SDKs lack `expo-brownfield`, the required `ExpoReactHostFactory` / `ExpoReactNativeFactory` entry points, and the current autolinking surface. When creating the Expo project, always pin the SDK explicitly:
+The examples below are SDK-55-era sketches, not a verified cross-version recipe. Choose a supported SDK/RN pair and use that exact SDK’s templates, native deployment targets, plugin APIs and build tool versions. The current official guide may target a newer SDK (SDK 58 at this review); do not combine its artifacts with the old code snippets blindly. A single minimum version for every approach/API is not established here. Historical pinned example:
 
 ```sh
 npx create-expo-app@latest my-project --template default@sdk-55
 ```
 
-Pin the same Expo SDK across both the RN project and any embedded dependencies.
+Keep the RN/Expo native runtime and embedded module versions compatible. Isolated artifacts must not introduce a second conflicting RN runtime into a host that already embeds one.
+
+## Preserve the native host
+
+Take a clean baseline and apply integration changes on a topic branch. Never run prebuild --clean on hand-maintained host native projects; it can delete custom code. Use a separate generated Expo workspace for isolated artifacts and compare version-matched templates when manually adapting an integrated host. Building an Android artifact can publish to configured Maven targets: inspect publication config/tasks first and use only approved destinations. Verify both platforms’ release builds without Metro, host navigation/lifecycle, upgrade/rollback and bundle/dependency provenance before claiming integration complete.
 
 ## Limitations
 

@@ -1,6 +1,7 @@
 ---
 title: "Ornaments | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/ornaments
+---
 
 # Ornaments
 

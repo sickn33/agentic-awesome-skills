@@ -29,9 +29,9 @@ Never apply symptom-focused patches that mask underlying problems. Understand WH
 Before touching any code:
 
 1. **Read error messages thoroughly** - Every word matters
-2. **Reproduce the issue consistently** - If you can't reproduce it, you can't verify a fix
+2. **Reproduce the issue consistently when possible** - If unavailable, state the gap and use scoped static/evidence-based checks without claiming runtime reproduction
 3. **Examine recent changes** - What changed before this started failing?
-4. **Gather diagnostic evidence** - Logs, stack traces, state dumps
+4. **Gather diagnostic evidence** - Scoped redacted logs/stack traces; avoid secret-bearing full state dumps
 5. **Trace data flow** - Follow the call chain to find where bad values originate
 
 **Root Cause Tracing Technique:**
@@ -148,7 +148,7 @@ Before claiming a bug is fixed:
 
 ## Success Metrics
 
-Systematic debugging achieves ~95% first-time fix rate vs ~40% with ad-hoc approaches.
+No comparative fix-rate measurement is established by this guide. Track actual reproductions, attempted fixes and regression results for the project.
 
 Signs you're doing it right:
 - Fixes don't create new bugs

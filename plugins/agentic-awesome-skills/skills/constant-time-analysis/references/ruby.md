@@ -112,19 +112,7 @@ random_number = SecureRandom.random_number(2**128)
 
 ### Division Operations
 
-```ruby
-# VULNERABLE: Division has variable timing
-quotient = secret / divisor
-
-# SAFE: Barrett reduction for constant divisors
-def barrett_reduce(value, divisor, mu, bits)
-  q = (value * mu) >> (2 * bits)
-  r = value - q * divisor
-  # Constant-time correction using bitwise operations
-  mask = -(r >= divisor ? 1 : 0)
-  r - (divisor & mask)
-end
-```
+A division involving secrets is a review candidate, not automatically an exploitable leak. Do not replace it with a truncated reciprocal-multiply sketch: signedness, overflow, operand bounds and correction steps determine arithmetic correctness. Use a reviewed cryptographic implementation with a documented input domain, then inspect generated native code on the deployment CPU. Python/Ruby integers and JavaScript arithmetic do not become constant-time merely by replacing division with multiplication or masking.
 
 ## Rails/Rack Integration
 

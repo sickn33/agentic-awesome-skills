@@ -14,6 +14,8 @@ Sankhya ERP deployments frequently demand the creation of custom visualizations,
 
 ## Installation
 
+Install only when requested and confirm the host actually supports the chosen discovery path. Commands assume this repository root and refuse an existing destination; do not overwrite an unrelated installation. This bundle supplies documentation, not a running Sankhya dashboard.
+
 This skill can be installed locally per-repository or globally for use across all your Sankhya development projects.
 
 ### Global Installation (Recommended)
@@ -22,13 +24,13 @@ This approach sets up a symlink that makes the skill available no matter which r
 #### For Claude Code
 ```bash
 mkdir -p ~/.claude/skills
-ln -sf $(pwd)/skills/sankhya-dashboard-html-jsp-custom-best-pratices ~/.claude/skills/sankhya-dashboard-html-jsp-custom-best-pratices
+ln -s "$PWD/skills/sankhya-dashboard-html-jsp-custom-best-pratices" ~/.claude/skills/sankhya-dashboard-html-jsp-custom-best-pratices
 ```
 
 #### For GitHub Copilot CLI
 ```bash
 mkdir -p ~/.copilot/skills
-ln -sf $(pwd)/skills/sankhya-dashboard-html-jsp-custom-best-pratices ~/.copilot/skills/sankhya-dashboard-html-jsp-custom-best-pratices
+ln -s "$PWD/skills/sankhya-dashboard-html-jsp-custom-best-pratices" ~/.copilot/skills/sankhya-dashboard-html-jsp-custom-best-pratices
 ```
 
 ### Local Repository Installation
@@ -36,7 +38,7 @@ If you prefer to restrict the skill to a specific project workspace, simply move
 
 ## Usage Examples
 
-Once installed, this skill is automatically triggered when discussing Sankhya dashboards. Try these example prompts with your AI assistant:
+Once installed, the host may select this skill when its discovery configuration supports it when discussing Sankhya dashboards. Try these example prompts with your AI assistant:
 
 - *"Crie a estrutura inicial de um dashboard Sankhya com uma tabela básica e integração JSTL."*
 - *"Quais são as melhores práticas do Sankhya para montar uma query SQL parametrizada no JSP?"*

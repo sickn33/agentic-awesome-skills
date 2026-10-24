@@ -69,7 +69,7 @@ function Counter() {
   const [name, setName] = useState('');
 
   const increment = () => {
-    setCount(count + 1);
+    setCount(c => c + 1);
   };
 
   return (
@@ -123,10 +123,12 @@ function DataFetcher({ id }) {
 
   useEffect(() => {
     let cancelled = false;
+    setLoading(true);
 
     const fetchData = async () => {
       try {
         const response = await fetch(`/api/${id}`);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const result = await response.json();
 
         if (!cancelled) {
@@ -136,6 +138,7 @@ function DataFetcher({ id }) {
       } catch (error) {
         if (!cancelled) {
           console.error(error);
+          setLoading(false);
         }
       }
     };
@@ -149,7 +152,7 @@ function DataFetcher({ id }) {
   }, [id]); // Re-run when id changes
 
   if (loading) return <div>Loading...</div>;
-  return <div>{data}</div>;
+  return <pre>{JSON.stringify(data)}</pre>;
 }
 ```
 
@@ -324,16 +327,16 @@ function ProfileTimeline() {
 npm install -g jscodeshift
 
 # React 16.9 codemod (rename unsafe lifecycle methods)
-npx react-codeshift <transform> <path>
+npx react-codemod <transform> <path>
 
 # Example: Rename UNSAFE_ methods
-npx react-codeshift --parser=tsx \
-  --transform=react-codeshift/transforms/rename-unsafe-lifecycles.js \
+npx react-codemod --parser=tsx \
+  --transform=react-codemod/transforms/rename-unsafe-lifecycles.js \
   src/
 
 # Update to new JSX Transform (React 17+)
-npx react-codeshift --parser=tsx \
-  --transform=react-codeshift/transforms/new-jsx-transform.js \
+npx react-codemod --parser=tsx \
+  --transform=react-codemod/transforms/new-jsx-transform.js \
   src/
 
 # Class to Hooks (third-party)
@@ -482,7 +485,7 @@ function List<T>({ items, renderItem }: ListProps<T>) {
 - [ ] Performance testing
 ```
 
-## Resources
+## Upstream resource suggestions (not bundled)
 
 - **references/breaking-changes.md**: Version-specific breaking changes
 - **references/codemods.md**: Codemod usage guide
@@ -510,3 +513,5 @@ function List<T>({ items, renderItem }: ListProps<T>) {
 - Mixing class and functional patterns
 - Ignoring StrictMode warnings
 - Breaking change assumptions
+
+This playbook targets historical React 17/18 migration. Consult the target React release guide before upgrades. Imports and application helpers are omitted in fragments; the before-fetch example is intentionally incomplete. Suspense data fetching requires a compatible framework/cache, not arbitrary Effect fetching. Transitions defer rendering work, not synchronous expensive calculations. Verify and pin codemod packages/transforms and preview diffs on a clean branch; sample transform flags are version-dependent. Error boundaries and some lifecycle behavior do not have direct Hook equivalents.

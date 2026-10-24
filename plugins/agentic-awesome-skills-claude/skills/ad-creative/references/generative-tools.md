@@ -1,6 +1,6 @@
 # Generative AI Tools for Ad Creative
 
-Reference for using AI image generators, video generators, and code-based video tools to produce ad visuals at scale.
+Reference for using AI image generators, video generators, and code-based video tools to produce ad visuals at scale. Provider names below are discovery candidates. Verify current account access, model IDs, input rights, commercial-use terms, retention, regional availability, supported durations and a capped cost estimate before generating. No ranking or historical number here proves present capability.
 
 ---
 
@@ -30,7 +30,7 @@ Google DeepMind's image generation model, available through the Gemini API.
 
 **Best for:** High-quality ad images, product visuals, text rendering
 **API:** Gemini API (Google AI Studio, Vertex AI)
-**Pricing:** ~$0.04/image (Gemini 2.5 Flash Image), ~$0.24/4K image (Nano Banana Pro)
+**Pricing:** Obtain the current model/provider price and billing unit; include retries, resolution, audio, storage and rendering compute. Do not infer free use from a subscription or software license.
 
 **Strengths:**
 - Strong text rendering in images (logos, headlines)
@@ -66,7 +66,7 @@ Open-weight image generation models with API access through Replicate and BFL's 
 
 **Best for:** Photorealistic images, brand-consistent variations, multi-reference generation
 **API:** Replicate, BFL API, fal.ai
-**Pricing:** ~$0.01-0.06/image depending on model and resolution
+**Pricing:** Obtain the current model/provider price and billing unit; include retries, resolution, audio, storage and rendering compute. Do not infer free use from a subscription or software license.
 
 **Model variants:**
 | Model | Speed | Quality | Cost | Best For |
@@ -98,12 +98,12 @@ Specialized in typography and text rendering within images.
 
 **Best for:** Ad banners with text, branded graphics, social ad images with headlines
 **API:** Ideogram API, Runware
-**Pricing:** ~$0.06/image (API), ~$0.009/image (subscription)
+**Pricing:** Obtain the current model/provider price and billing unit; include retries, resolution, audio, storage and rendering compute. Do not infer free use from a subscription or software license.
 
 **Strengths:**
-- Best-in-class text rendering (~90% accuracy vs ~30% for most tools)
+- Text rendering support; proofread every final text element
 - Style reference system (upload up to 3 reference images)
-- 4.3 billion style presets for consistent brand aesthetics
+- Style controls; confirm supported presets and reference limits
 - Strong at logos and branded typography
 
 **Ad creative use cases:**
@@ -134,10 +134,10 @@ Google DeepMind's video generation model, available through the Gemini API and V
 
 **Best for:** High-quality video ads with native audio, vertical video for social
 **API:** Gemini API, Vertex AI
-**Pricing:** ~$0.15/sec (Veo 3.1 Fast), ~$0.40/sec (Veo 3.1 Standard)
+**Pricing:** Obtain the current model/provider price and billing unit; include retries, resolution, audio, storage and rendering compute. Do not infer free use from a subscription or software license.
 
 **Capabilities:**
-- Up to 60 seconds at 1080p
+- Confirm permitted duration/resolution for the chosen model and extension workflow
 - Native audio generation (dialogue, sound effects, ambient)
 - Vertical 9:16 output for Stories/Reels/Shorts
 - Upscale to 4K
@@ -159,7 +159,7 @@ Video generation with simultaneous audio-visual generation and camera controls.
 
 **Best for:** Cinematic video ads, longer-form content, audio-synced video
 **API:** Kling API, PiAPI, fal.ai
-**Pricing:** ~$0.09/sec (via fal.ai third-party)
+**Pricing:** Obtain the current model/provider price and billing unit; include retries, resolution, audio, storage and rendering compute. Do not infer free use from a subscription or software license.
 
 **Capabilities:**
 - Up to 3 minutes at 1080p/30-48fps
@@ -204,10 +204,10 @@ OpenAI's video generation model with synchronized audio.
 
 **Best for:** High-fidelity video with dialogue and sound
 **API:** OpenAI API
-**Pricing:** Free tier available; Pro from $0.10-0.50/sec depending on resolution
+**Pricing:** Obtain the current model/provider price and billing unit; include retries, resolution, audio, storage and rendering compute. Do not infer free use from a subscription or software license.
 
 **Capabilities:**
-- Up to 60 seconds with synchronized audio
+- Confirm allowed duration and audio for the selected API model; do not assume product-UI limits apply
 - Dialogue, sound effects, and ambient audio
 - sora-2 (fast) and sora-2-pro (quality) variants
 - Text-to-video and image-to-video
@@ -227,7 +227,7 @@ ByteDance's video generation model with simultaneous audio-visual generation and
 
 **Best for:** Fast, affordable video ads with native audio, multimodal reference inputs
 **API:** BytePlus (official), Replicate, WaveSpeedAI, fal.ai (third-party); OpenAI-compatible API format
-**Pricing:** ~$0.10-0.80/min depending on resolution (estimated 10-100x cheaper than Sora 2 per clip)
+**Pricing:** Obtain the current model/provider price and billing unit; include retries, resolution, audio, storage and rendering compute. Do not infer free use from a subscription or software license.
 
 **Capabilities:**
 - Up to 20 seconds at up to 2K resolution
@@ -269,16 +269,8 @@ Full-stack video creation platform with cinematic camera controls.
 
 ### Video Tool Comparison
 
-| Tool | Max Length | Audio | Resolution | API | Best For |
-|------|-----------|-------|------------|-----|----------|
-| **Veo 3.1** | 60 sec | Native | 1080p/4K | Gemini | Vertical social video |
-| **Kling 2.6** | 3 min | Native | 1080p | Third-party | Longer cinematic |
-| **Runway Gen-4** | 10 sec | No | 1080p | Official | Controlled, consistent |
-| **Sora 2** | 60 sec | Native | 1080p | Official | Dialogue-heavy |
-| **Seedance 2.0** | 20 sec | Native | 2K | Official + third-party | Affordable high-volume |
-| **Higgsfield** | Varies | Yes | 1080p | Web-based | Social, mobile-first |
+Build this comparison from dated primary documentation for the exact models in scope. Report price units, permitted clip duration, resolution, audio support, region/access and commercial rights separately; benchmark quality/latency on the same approved sample rather than treating them as fixed rankings.
 
----
 
 ## Voice & Audio Generation
 
@@ -288,7 +280,7 @@ For layering realistic voiceovers onto video ads, adding narration to product de
 
 Many video generators (Veo, Kling, Sora, Seedance) now include native audio. Use standalone voice tools when you need:
 
-- **Voiceover on silent video** — Runway Gen-4 and Remotion produce silent output
+- **Voiceover on silent video** — a silent generation or a Remotion composition without an audio track
 - **Brand voice consistency** — Clone a specific voice for all ads
 - **Multi-language versions** — Same ad script in 20+ languages
 - **Script iteration** — Re-record voiceover without reshooting video
@@ -302,7 +294,7 @@ The market leader in realistic voice generation and voice cloning.
 
 **Best for:** Most natural-sounding voiceovers, brand voice cloning, multilingual
 **API:** REST API with streaming support
-**Pricing:** ~$0.12-0.30 per 1,000 characters depending on plan; starts at $5/month
+**Pricing:** Obtain the current model/provider price and billing unit; include retries, resolution, audio, storage and rendering compute. Do not infer free use from a subscription or software license.
 
 **Capabilities:**
 - 29+ languages with natural accent and intonation
@@ -339,10 +331,10 @@ Simple, affordable text-to-speech built into the OpenAI API.
 
 **Best for:** Quick voiceovers, cost-effective at scale, simple integration
 **API:** OpenAI API (same SDK as GPT/DALL-E)
-**Pricing:** $15/million chars (standard), $30/million chars (HD); ~$0.015/min with gpt-4o-mini-tts
+**Pricing:** Obtain the current model/provider price and billing unit; include retries, resolution, audio, storage and rendering compute. Do not infer free use from a subscription or software license.
 
 **Capabilities:**
-- 13 built-in voices (no custom cloning)
+- Select currently available voices; custom-voice access and consent requirements differ by account/model
 - Multiple languages
 - Real-time streaming
 - HD quality option
@@ -363,10 +355,10 @@ Ultra-low latency voice generation built for real-time applications.
 
 **Best for:** Real-time voice, lowest latency, emotional expressiveness
 **API:** REST + WebSocket streaming
-**Pricing:** Starts at $5/month; pay-as-you-go from $0.03/min
+**Pricing:** Obtain the current model/provider price and billing unit; include retries, resolution, audio, storage and rendering compute. Do not infer free use from a subscription or software license.
 
 **Capabilities:**
-- 40ms time-to-first-audio (fastest in class)
+- Streaming latency depends on model, region, network and measurement method
 - 15+ languages
 - Nonverbal expressiveness: laughter, breathing, emotional inflections
 - Sonic Turbo for even lower latency
@@ -387,16 +379,16 @@ Free, local-first voice synthesis studio powered by Qwen3-TTS. The open-source a
 
 **Best for:** Free voice cloning, local/private generation, zero-cost batch production
 **API:** Local REST API at `http://localhost:8000`
-**Pricing:** Free (MIT license). Runs entirely on your machine.
+**Pricing:** Obtain the current model/provider price and billing unit; include retries, resolution, audio, storage and rendering compute. Do not infer free use from a subscription or software license.
 **Stack:** Tauri (Rust) + React + FastAPI (Python)
 
 **Capabilities:**
 - Voice cloning from short audio samples via Qwen3-TTS
 - Multi-language support (English, Chinese, more planned)
 - Multi-track timeline editor for composing conversations
-- 4-5x faster inference on Apple Silicon via MLX Metal acceleration
+- Hardware-specific inference; benchmark on the selected local model and device
 - Local REST API for programmatic generation
-- No cloud dependency — all processing on-device
+- Verify the chosen configuration’s network behavior, model downloads and telemetry before claiming on-device privacy
 
 **Ad creative use cases:**
 - Free voice cloning for brand spokesperson across all ad variations
@@ -427,8 +419,8 @@ cd voicebox && make setup && make dev
 |------|----------|---------------|-----|
 | **PlayHT** | Large voice library, low latency | 900+ voices, <300ms latency, ultra-realistic | [play.ht](https://play.ht/) |
 | **Resemble AI** | Enterprise voice cloning | On-premise deployment, real-time speech-to-speech | [resemble.ai](https://www.resemble.ai/) |
-| **WellSaid Labs** | Ethical, commercial-safe voices | Voices from compensated actors, safe for commercial use | [wellsaid.io](https://www.wellsaid.io/) |
-| **Fish Audio** | Budget-friendly, emotion control | ~50-70% cheaper than ElevenLabs, emotion tags | [fish.audio](https://fish.audio/) |
+| **WellSaid Labs** | Ethical, commercial-safe voices | Voices from compensated actors, review license scope and permitted usage | [wellsaid.io](https://www.wellsaid.io/) |
+| **Fish Audio** | Budget-friendly, emotion control | compare current like-for-like pricing, emotion tags | [fish.audio](https://fish.audio/) |
 | **Murf AI** | Non-technical teams | Browser-based studio, 200+ voices | [murf.ai](https://murf.ai/) |
 | **Google Cloud TTS** | Google ecosystem, scale | 220+ voices, 40+ languages, enterprise SLAs | [Google TTS](https://cloud.google.com/text-to-speech) |
 | **Amazon Polly** | AWS ecosystem, cost | Neural voices, SSML control, cheap at volume | [Amazon Polly](https://aws.amazon.com/polly/) |
@@ -437,15 +429,8 @@ cd voicebox && make setup && make dev
 
 ### Voice Tool Comparison
 
-| Tool | Quality | Cloning | Languages | Latency | Price/1K chars |
-|------|---------|---------|-----------|---------|----------------|
-| **ElevenLabs** | Best | Yes (instant + pro) | 29+ | ~200ms | $0.12-0.30 |
-| **OpenAI TTS** | Good | No | 13+ | ~300ms | $0.015-0.030 |
-| **Cartesia Sonic** | Very good | No | 15+ | ~40ms | ~$0.03/min |
-| **PlayHT** | Very good | Yes | 140+ | <300ms | ~$0.10-0.20 |
-| **Fish Audio** | Good | Yes | 13+ | ~200ms | ~$0.05-0.10 |
-| **WellSaid** | Very good | No (actor voices) | English | ~300ms | Custom pricing |
-| **Voicebox** | Good | Yes (local) | 2+ | Local | Free (open source) |
+Build this comparison from dated primary documentation for the exact models in scope. Report price units, permitted clip duration, resolution, audio support, region/access and commercial rights separately; benchmark quality/latency on the same approved sample rather than treating them as fixed rankings.
+
 
 ### Choosing a Voice Tool
 
@@ -461,11 +446,11 @@ Need voiceover for ads?
 ├── Need free / open source / local?
 │   └── Voicebox (MIT, runs on your machine)
 ├── Need cheap, fast, good-enough?
-│   └── OpenAI TTS ($0.015/min)
-├── Need commercially-safe licensing?
+│   └── OpenAI TTS (verify current pricing)
+├── Need a reviewed commercial license?
 │   └── WellSaid Labs (actor-compensated voices)
 └── Need real-time/interactive?
-    └── Cartesia Sonic (40ms TTFA)
+    └── Cartesia Sonic (benchmark actual TTFA)
 ```
 
 ### Workflow: Voice + Video
@@ -477,7 +462,7 @@ Need voiceover for ads?
    a. Silent video from Runway/Remotion → layer voice track
    b. Or use Veo/Sora/Seedance with native audio (skip separate VO)
 4. Combine with ffmpeg if layering separately:
-   ffmpeg -i video.mp4 -i voiceover.mp3 -c:v copy -c:a aac output.mp4
+   ffmpeg -i video.mp4 -i voiceover.mp3 -map 0:v:0 -map 1:a:0 -c:v copy -c:a aac -shortest output.mp4
 5. Generate variations (different scripts, voices, or languages)
 ```
 
@@ -485,18 +470,18 @@ Need voiceover for ads?
 
 ## Code-Based Video: Remotion
 
-For templated, data-driven video ads at scale, Remotion is the best option. Unlike AI video generators that produce unique video from prompts, Remotion uses React code to render deterministic, brand-perfect video from templates and data.
+For templated, data-driven video ads at scale, Remotion is one option. Unlike AI video generators that produce unique video from prompts, Remotion uses React code to render template-controlled video from templates and data.
 
 **Best for:** Templated ad variations, personalized video, brand-consistent production
 **Stack:** React + TypeScript
-**Pricing:** Free for individuals/small teams; commercial license required for 4+ employees
+**Pricing:** Obtain the current model/provider price and billing unit; include retries, resolution, audio, storage and rendering compute. Do not infer free use from a subscription or software license.
 **Docs:** [remotion.dev](https://www.remotion.dev/)
 
 ### Why Remotion for Ads
 
 | AI Video Generators | Remotion |
 |---------------------|----------|
-| Unique output each time | Deterministic, pixel-perfect |
+| Unique output each time | Template-controlled; pin assets, fonts and runtime |
 | Prompt-based, less control | Full code control over every frame |
 | Hard to match brand exactly | Exact brand colors, fonts, spacing |
 | One-at-a-time generation | Batch render hundreds from data |
@@ -508,6 +493,9 @@ For templated, data-driven video ads at scale, Remotion is the best option. Unli
 Feed a JSON array of products and render a unique video ad for each:
 ```tsx
 // Simplified Remotion component for product ads
+import React from "react";
+import { AbsoluteFill, Img } from "remotion";
+
 export const ProductAd: React.FC<{
   productName: string;
   price: string;
@@ -566,7 +554,8 @@ npx create-video@latest
 npx remotion render src/index.ts MyComposition out/video.mp4
 
 # Batch render from data
-npx remotion render src/index.ts MyComposition --props='{"data": [...]}'
+# Create a valid JSON props file and an entrypoint registering the composition first.
+npx remotion render src/index.ts MyComposition out/variation.mp4 --props=props.json
 ```
 
 ---
@@ -597,14 +586,8 @@ Need image ads?
 
 ### Cost Comparison for 100 Ad Variations
 
-| Approach | Tool | Approximate Cost |
-|----------|------|-----------------|
-| 100 static images | Nano Banana Pro | ~$4-24 |
-| 100 static images | Flux Dev | ~$1-2 |
-| 100 static images | Ideogram API | ~$6 |
-| 100 × 15-sec videos | Veo 3.1 Fast | ~$225 |
-| 100 × 15-sec videos | Remotion (templated) | ~$0 (self-hosted render) |
-| 10 hero videos + 90 templated | Veo + Remotion | ~$22 + render time |
+Build this comparison from dated primary documentation for the exact models in scope. Report price units, permitted clip duration, resolution, audio support, region/access and commercial rights separately; benchmark quality/latency on the same approved sample rather than treating them as fixed rankings.
+
 
 ### Recommended Workflow for Scaled Ad Production
 
@@ -635,3 +618,5 @@ When generating images for ads, request the correct dimensions:
 | Twitter/X Card | Landscape | 1.91:1 | 800x418 |
 
 Include these dimensions in your generation prompts to avoid needing to crop or resize.
+
+Licensing and likeness review applies to all outputs. See current [Remotion licensing](https://www.remotion.dev/docs/license) rather than assuming self-hosted rendering costs or commercial rights are zero. Do not fabricate customer testimonials with generated talking heads. Source builds execute downloaded project code: pin and inspect a revision before running setup.

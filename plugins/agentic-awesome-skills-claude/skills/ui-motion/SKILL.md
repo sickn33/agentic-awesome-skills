@@ -13,7 +13,7 @@ license_source: https://github.com/bitjaru/styleseed/blob/main/LICENSE
 # Motion Seed Applier
 ## When to Use
 
-Use this skill when you need apply a named StyleSeed motion to a component — either one of the 5 personality seeds (Spring/Silk/Snap/Float/Pulse × entrance/exit/hover/press/layout) or a distinctive keyword move from the motion library (toggle-flip, toggle-curtain, reveal-blur, pop-in, shimmer, …). Translates vibe...
+Use when adapting an existing StyleSeed React component to a named motion recipe or personality/context supported by its actual installed motion library.
 
 
 ## When NOT to use
@@ -22,6 +22,10 @@ Use this skill when you need apply a named StyleSeed motion to a component — e
 - For non-React motion (CSS-only transitions, GSAP) — this skill targets `motion.X` JSX only
 - For full scroll-linked timelines or parallax — out of scope per DESIGN-LANGUAGE.md Rule 59
 - For tweaking the existing FadeIn/FadeUp/Stagger wrappers — edit `engine/components/ui/motion.tsx` directly
+
+## Missing library and accessibility boundary
+
+This tree does not bundle engine/motion, DESIGN-LANGUAGE.md, preview routes or calibrated recipes. Verify those paths and exports in the target project before copying named snippets; if absent, report the prerequisite rather than inventing library behavior. Do not assume hover/press is automatically reduced-motion-safe: explicitly honor the user/system preference for all nonessential motion, including one-shot interactions. Re-reading JSX is not a parse/build/runtime check; report actual checks and untested interactions honestly.
 
 ## Vibe → Seed mapping
 

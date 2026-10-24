@@ -156,11 +156,12 @@ If any rule fails regenerate the list.
 
 # FAILURE HANDLING
 
-If text is very short, infer likely topics and still generate keywords. Never exceed 50 keywords.
+If text is very short, return fewer keywords supported by it; do not invent likely topics. If no meaningful topic can be extracted, ask for the source text instead of filling the list.
 
 ---
 
 ## Limitations
+- Relevance ranking is qualitative; extraction alone does not establish search volume, competition, or likely ranking performance.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

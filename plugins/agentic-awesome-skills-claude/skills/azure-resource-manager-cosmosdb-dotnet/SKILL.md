@@ -24,7 +24,7 @@ dotnet add package Azure.ResourceManager.CosmosDB
 dotnet add package Azure.Identity
 ```
 
-**Current Versions**: Stable v1.4.0, Preview v1.4.0-beta.13
+**Version scope**: Imported examples are historical and are not a current-version declaration; pin and compile against the intended SDK. Required common imports include Azure, Azure.Core and Azure.ResourceManager.Resources.
 
 ## Environment Variables
 
@@ -43,7 +43,7 @@ using Azure.Identity;
 using Azure.ResourceManager;
 using Azure.ResourceManager.CosmosDB;
 
-// Always use DefaultAzureCredential
+// Choose the intended tenant/identity explicitly; DefaultAzureCredential is convenient for local development.
 var credential = new DefaultAzureCredential();
 var armClient = new ArmClient(credential);
 
@@ -70,6 +70,8 @@ ArmClient
             ├── MongoDBDatabaseResource
             └── CosmosDBTableResource
 ```
+
+Confirm subscription, tenant, region, exact resources, budget and network/retention policy before provisioning. Deletion/failover/rotation require explicit authorization; ARM RBAC and data-plane RBAC are separate.
 
 ## Core Workflow
 
@@ -185,13 +187,13 @@ await database.CreateOrUpdateCosmosDBSqlDatabaseThroughputAsync(
 ```csharp
 // Get keys
 var keys = await account.GetKeysAsync();
-Console.WriteLine($"Primary Key: {keys.Value.PrimaryMasterKey}");
+// Pass the key directly to an approved secret store; never print it.
 
 // Get connection strings
 var connectionStrings = await account.GetConnectionStringsAsync();
 foreach (var cs in connectionStrings.Value.ConnectionStrings)
 {
-    Console.WriteLine($"{cs.Description}: {cs.ConnectionString}");
+    Console.WriteLine($"Connection available: {cs.Description} (value redacted)");
 }
 ```
 
@@ -213,9 +215,9 @@ foreach (var cs in connectionStrings.Value.ConnectionStrings)
 
 1. **Use `WaitUntil.Completed`** for operations that must finish before proceeding
 2. **Use `WaitUntil.Started`** when you want to poll manually or run operations in parallel
-3. **Always use `DefaultAzureCredential`** — never hardcode keys
+3. **Use a deliberate credential chain** — prefer managed identity in production; never hardcode keys
 4. **Handle `RequestFailedException`** for ARM API errors
-5. **Use `CreateOrUpdateAsync`** for idempotent operations
+5. **Review the full desired state before `CreateOrUpdateAsync`** — repeated requests may converge but updates can change networking, retention and cost
 6. **Navigate hierarchy** via `Get*` methods (e.g., `account.GetCosmosDBSqlDatabases()`)
 
 ## Error Handling
@@ -230,11 +232,11 @@ try
 }
 catch (RequestFailedException ex) when (ex.Status == 409)
 {
-    Console.WriteLine("Account already exists");
+    Console.WriteLine("Conflict: inspect the error code and current resource; 409 does not prove the requested account already exists");
 }
 catch (RequestFailedException ex)
 {
-    Console.WriteLine($"ARM Error: {ex.Status} - {ex.ErrorCode}: {ex.Message}");
+    Console.WriteLine($"ARM Error: {ex.Status} - {ex.ErrorCode}");
 }
 ```
 

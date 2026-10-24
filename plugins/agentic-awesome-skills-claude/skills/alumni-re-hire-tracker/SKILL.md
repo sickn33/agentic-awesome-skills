@@ -143,8 +143,8 @@ CREATE TABLE alumni_re_hire_tracker (
   personal_email VARCHAR(255),
   linkedin TEXT,
   current_company VARCHAR(255),
-  last_contact DATE NOT NULL,
-  re_engage_date DATE NOT NULL,
+  last_contact DATE,
+  re_engage_date DATE,
   notes TEXT,
   alumni_id SERIAL PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
@@ -167,15 +167,14 @@ CREATE TABLE alumni_re_hire_tracker (
       "Personal Email": { "type": "string", "format": "email" },
       "LinkedIn": { "type": "string", "format": "uri" },
       "Current Company": { "type": "string" },
-      "Last Contact": { "type": "string", "format": "date" },
-      "Re-engage Date": { "type": "string", "format": "date" },
+      "Last Contact": { "type": ["string", "null"], "format": "date" },
+      "Re-engage Date": { "type": ["string", "null"], "format": "date" },
       "Notes": { "type": "string" },
       "Alumni ID": { "type": "integer" }
   },
   "required": [
       "Last Working Day",
-      "Last Contact",
-      "Re-engage Date"
+      "Rehire Eligible"
   ]
 }
 ```
@@ -312,3 +311,5 @@ Then recommend the smallest setup that fits, and wait for me to ask before you b
 When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
 
+
+Last Contact and Re-engage Date may be unknown; leave them blank/null rather than inventing interactions or outreach plans. Rehire Eligible records an authorized human decision, not an inferred judgment from sensitive notes; keep access and retention limited.

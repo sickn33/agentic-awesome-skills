@@ -69,7 +69,7 @@ struct SkeuoButton: View {
         Button(action: {}) {
             Text("POWER")
                 .font(.system(size: 14, weight: .bold))
-                .foregroundColor(.white)
+                .foregroundColor(.black)
                 .textCase(.uppercase)
         }
         .frame(width: 80, height: 80)
@@ -153,7 +153,7 @@ class _SkeuoButtonState extends State<SkeuoButton> {
               blurRadius: _isPressed ? 4 : 12,
               offset: Offset(0, _isPressed ? 2 : 6),
             ),
-            // Inner top highlight (faked with a light inset)
+            // Outer highlight approximation; negative spread does not make an inset shadow.
             BoxShadow(
               color: Colors.white.withOpacity(0.6),
               blurRadius: 1,
@@ -165,7 +165,7 @@ class _SkeuoButtonState extends State<SkeuoButton> {
         transform: Matrix4.identity()..scale(_isPressed ? 0.96 : 1.0),
         alignment: Alignment.center,
         child: const Text('POWER',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold,
             fontSize: 14, shadows: [
               Shadow(color: Colors.black54, offset: Offset(0, 1), blurRadius: 2),
             ])),
@@ -175,7 +175,7 @@ class _SkeuoButtonState extends State<SkeuoButton> {
 }
 ```
 - Use `AnimatedContainer` for smooth press transitions. Adjust `boxShadow`, `transform`, and gradient on tap.
-- Layer `BoxShadow` entries: one for the outer drop shadow, one for the inner top-edge highlight.
+- Layer `BoxShadow` entries: one for the outer drop shadow, one for an outer top-edge highlight; use a separate clipped gradient or supported inset API for actual inner shading.
 - For complex textures (leather, wood), use `DecorationImage` with an asset file inside `BoxDecoration`.
 
 ### React Native
@@ -207,7 +207,7 @@ const SkeuoButton = () => {
       }}
     >
       <Text style={{
-        color: '#FFF',
+        color: '#111',
         fontWeight: '700',
         fontSize: 14,
         textShadowColor: 'rgba(0,0,0,0.5)',
@@ -256,7 +256,7 @@ fun SkeuoButton() {
         contentAlignment = Alignment.Center,
     ) {
         Text("POWER",
-            color = Color.White,
+            color = Color.Black,
             fontWeight = FontWeight.Bold,
             fontSize = 14.sp,
             style = TextStyle(shadow = Shadow(
@@ -278,3 +278,5 @@ fun SkeuoButton() {
 ## Limitations
 - This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
 - Ensure appropriate contrast ratios and responsive behaviors are verified separately.
+
+The gesture-only Flutter/Compose and React Native press-state examples illustrate appearance. Implement the actual action with semantic buttons, keyboard activation and cancellation-safe state before use. White POWER text on light metal should be changed to a dark ink color and verified for contrast.

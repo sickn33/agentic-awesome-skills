@@ -1,0 +1,33 @@
+{
+  "review_id": "red-team-unanimous-continue-example",
+  "claim_ids": [
+    "claim-delegated-operations"
+  ],
+  "evidence_receipt_ids": [
+    "ev-support-2026-07"
+  ],
+  "failure_modes": [
+    "The assistant makes an irreversible customer change.",
+    "Operators lose the ability to interrupt the workflow.",
+    "Support volume rises after an incorrect automated action.",
+    "The workflow creates a compliance exception.",
+    "Users keep the current manual workaround."
+  ],
+  "disconfirming_tests": [
+    "A supervised pilot shows no reduction in completion time."
+  ],
+  "hidden_affected_people": [
+    "Customers receiving automated changes."
+  ],
+  "current_workaround": "Operators complete each change manually.",
+  "substitute_threats": {
+    "direct": "A competing automation product.",
+    "indirect": "A shared operations service.",
+    "platform": "A native workflow feature.",
+    "workflow": "A checklist and queue process.",
+    "doing_nothing": "Keep the current manual workflow."
+  },
+  "trust_risk": "An unexplained action damages customer confidence.",
+  "stop_condition": "Any pilot creates an unapproved customer change.",
+  "verdict": "verify"
+}

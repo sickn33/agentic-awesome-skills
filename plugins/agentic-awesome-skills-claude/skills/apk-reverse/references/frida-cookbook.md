@@ -1,7 +1,7 @@
 # Frida 实战脚本速查
 
 > 精选自 [awesome-frida](https://github.com/dweinstein/awesome-frida)、[Frida-Mobile-Scripts](https://github.com/m0bilesecurity/Frida-Mobile-Scripts)、[frida-codeshare-scripts](https://github.com/zengfr/frida-codeshare-scripts) 等开源项目。
-> 按场景分类，直接复制使用。
+> 按场景分类的示意片段；先核对目标 API、重载、架构和 Frida 版本。捕获日志可能含凭证、密钥和个人数据，只在授权测试数据上使用，最小化采集并保护输出。
 
 ---
 
@@ -66,7 +66,7 @@ Java.perform(function() {
     var Cipher = Java.use("javax.crypto.Cipher");
     
     Cipher.doFinal.overload('[B').implementation = function(input) {
-        var mode = this.getOpmode ? this.getOpmode() : "?";
+        var mode = "unknown (track Cipher.init separately)";
         console.log("[Cipher.doFinal] mode=" + mode);
         console.log("  input: " + bytesToHex(input));
         var result = this.doFinal(input);

@@ -39,6 +39,7 @@ public:
 // Pool allocator for fixed-size objects
 template<typename T, size_t PoolSize = 1024>
 class PoolAllocator {
+    static_assert(PoolSize > 0);
     struct Block {
         alignas(T) std::byte data[sizeof(T)];
         Block* next;
@@ -76,8 +77,9 @@ public:
     }
 };
 
-// Usage
-std::vector<int, PoolAllocator<int>> vec;
+// Single-object raw-storage sketch only: NOT a conforming general STL
+// allocator (no shared copy/rebind semantics, allocate(n) support).
+// Do not use it with std::vector; prefer std::pmr resources.
 
 // Arena allocator - bump allocator
 class Arena {
@@ -90,12 +92,16 @@ public:
         buffer_ = new std::byte[size];
     }
 
+    Arena(const Arena&) = delete;
+    Arena& operator=(const Arena&) = delete;
+    // Raw storage only: callers construct/destroy objects before reset.
     ~Arena() {
         delete[] buffer_;
     }
 
     template<typename T>
     T* allocate(size_t n = 1) {
+        if (n > size_ / sizeof(T)) throw std::bad_alloc();
         size_t alignment = alignof(T);
         size_t space = size_ - offset_;
         void* ptr = buffer_ + offset_;
@@ -133,16 +139,17 @@ public:
 
     // Copy constructor
     Buffer(const Buffer& other) : size_(other.size_), data_(new char[size_]) {
-        std::copy(other.data_, other.data_ + size_, data_);
+        if (size_) std::copy_n(other.data_, size_, data_);
     }
 
     // Copy assignment
     Buffer& operator=(const Buffer& other) {
         if (this != &other) {
+            char* replacement = new char[other.size_];
+            if (other.size_) std::copy_n(other.data_, other.size_, replacement);
             delete[] data_;
+            data_ = replacement;
             size_ = other.size_;
-            data_ = new char[size_];
-            std::copy(other.data_, other.data_ + size_, data_);
         }
         return *this;
     }
@@ -179,6 +186,9 @@ void wrapper(T&& arg) {
 ```cpp
 #include <immintrin.h>  // AVX/AVX2
 #include <cstring>
+#include <cmath>
+// Requires AVX/FMA compiler target and runtime CPU support or dispatch.
+// Inputs/output must be valid for size elements with safe overlap semantics.
 
 // Vectorized sum using AVX2
 float simd_sum(const float* data, size_t size) {
@@ -186,7 +196,7 @@ float simd_sum(const float* data, size_t size) {
 
     size_t i = 0;
     // Process 8 floats at a time
-    for (; i + 8 <= size; i += 8) {
+    for (; size - i >= 8; i += 8) {
         __m256 vec = _mm256_loadu_ps(&data[i]);
         sum_vec = _mm256_add_ps(sum_vec, vec);
     }
@@ -210,7 +220,8 @@ float simd_sum(const float* data, size_t size) {
 // Vectorized multiply-add
 void fma_operation(float* result, const float* a, const float* b,
                    const float* c, size_t size) {
-    for (size_t i = 0; i + 8 <= size; i += 8) {
+    size_t i = 0;
+    for (; size - i >= 8; i += 8) {
         __m256 va = _mm256_loadu_ps(&a[i]);
         __m256 vb = _mm256_loadu_ps(&b[i]);
         __m256 vc = _mm256_loadu_ps(&c[i]);
@@ -219,6 +230,7 @@ void fma_operation(float* result, const float* a, const float* b,
         __m256 vr = _mm256_fmadd_ps(va, vb, vc);
         _mm256_storeu_ps(&result[i], vr);
     }
+    for (; i < size; ++i) result[i] = std::fma(a[i], b[i], c[i]);
 }
 ```
 
@@ -275,6 +287,9 @@ void process_with_prefetch(const int* data, size_t size) {
 
 template<typename T, size_t ChunkSize = 256>
 class MemoryPool {
+    static_assert(ChunkSize > 0);
+    // Single-threaded; destroy all live objects before pool destruction.
+    // Only return this pool's live, unique allocations once.
     struct Chunk {
         alignas(T) std::byte data[sizeof(T) * ChunkSize];
     };
@@ -310,7 +325,8 @@ public:
     template<typename... Args>
     T* construct(Args&&... args) {
         T* ptr = allocate();
-        new (ptr) T(std::forward<Args>(args)...);
+        try { new (ptr) T(std::forward<Args>(args)...); }
+        catch (...) { deallocate(ptr); throw; }
         return ptr;
     }
 
@@ -327,7 +343,7 @@ public:
 // Return Value Optimization (RVO)
 std::vector<int> create_vector() {
     std::vector<int> vec{1, 2, 3, 4, 5};
-    return vec;  // RVO applies, no copy/move
+    return vec;  // NRVO is permitted, not guaranteed
 }
 
 // Named Return Value Optimization (NRVO)
@@ -377,8 +393,9 @@ void* aligned_alloc_wrapper(size_t alignment, size_t size) {
     return ptr;
 }
 
+// posix_memalign is POSIX-only; release with free.
 // Placement new with alignment
-alignas(32) std::byte buffer[sizeof(Data)];
+alignas(Data) std::byte buffer[sizeof(Data)];
 Data* obj = new (buffer) Data();
 obj->~Data();  // Manual destruction needed
 ```
@@ -390,7 +407,7 @@ obj->~Data();  // Manual destruction needed
 | Smart Pointers | Ownership management | Memory safety |
 | Move Semantics | Avoid copies | Performance |
 | Custom Allocators | Specialized allocation | Speed + control |
-| SIMD | Parallel computation | 4-8x speedup |
+| SIMD | Data-parallel computation | Measure target CPU and numerical effects |
 | SoA Layout | Sequential access | Cache efficiency |
 | Memory Pools | Frequent alloc/dealloc | Reduced fragmentation |
 | Alignment | SIMD/cache optimization | Performance |

@@ -25,6 +25,8 @@ Use this skill when you need audit screens for UX issues using Nielsen's heurist
 
 Target: **$ARGUMENTS**
 
+Use these as heuristics to test against the actual audience and task, not universal rules or WCAG certification. The 6px grid, four-item card limit, three-tap goal, 300ms skeleton and icon-family choices are upstream design preferences. Grade only observed flows; flag untested states. Use optimistic updates only where failure can be reconciled without misleading users about payments, destructive actions or saved state.
+
 ## Audit Framework
 
 ### Nielsen's 10 Usability Heuristics
@@ -38,7 +40,7 @@ Target: **$ARGUMENTS**
 
 #### 2. Match Between System and Real World
 - [ ] Labels use user's language, not technical jargon
-- [ ] Icons are universally recognizable (Lucide standard set)
+- [ ] Icons have understandable labels or tested meaning; an icon library does not make them universal
 - [ ] Number formats match user expectations (comma separators, currency symbols)
 - [ ] Date formats are locale-appropriate
 
@@ -71,7 +73,7 @@ Target: **$ARGUMENTS**
 #### 7. Flexibility and Efficiency
 - [ ] Key actions reachable within 3 taps from home
 - [ ] Pull-to-refresh on data screens
-- [ ] Touch targets >= 44x44px (no tiny tap areas)
+- [ ] Prefer generous touch targets; distinguish usability preference from normative accessibility failures
 - [ ] Frequently used actions in easy-to-reach zones (bottom of screen)
 
 #### 8. Aesthetic and Minimalist Design
@@ -96,7 +98,7 @@ Target: **$ARGUMENTS**
 ### Mobile-Specific UX Checks
 
 #### Touch & Gesture
-- [ ] Touch targets minimum 44x44px
+- [ ] Prefer 44x44px as a usability goal; assess the applicable platform/accessibility requirement and exceptions
 - [ ] Minimum 8px between adjacent touch targets
 - [ ] No hover-dependent interactions (mobile has no hover)
 - [ ] Swipe gestures have visible affordances (carousel indicators)

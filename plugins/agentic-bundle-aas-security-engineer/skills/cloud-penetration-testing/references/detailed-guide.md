@@ -15,6 +15,10 @@ Conduct comprehensive security assessments of cloud infrastructure across Micros
 4. **Remediation Recommendations** - Hardening guidance per platform
 
 
+## Execution boundaries
+
+These are historical procedure fragments, not a safe sequential script. MSOnline/AzureAD commands require migration to supported Microsoft Graph equivalents; do not install retired modules as a fallback. Enforce the root confirmation gate for every target command. Do not dump production secrets, sync entire buckets, import stolen sessions or create backdoor principals/keys to prove a finding. Use owner-provided synthetic resources, scoped read-only evidence and explicit cleanup. CLI configuration and exported contexts can hold credentials; isolate and protect them. Metadata reachability/permission names alone do not prove full account compromise.
+
 ## Core Workflow
 
 ### Phase 1: Reconnaissance
@@ -44,7 +48,7 @@ Authenticate to Azure environments:
 Import-Module Az
 Connect-AzAccount
 
-# With credentials (may bypass MFA)
+# With credentials only if supported by the tenant; do not bypass MFA
 $credential = Get-Credential
 Connect-AzAccount -Credential $credential
 
@@ -227,7 +231,7 @@ curl http://169.254.169.254/latest/meta-data/iam/security-credentials/
 
 # IMDSv2 access
 TOKEN=$(curl -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 21600")
-curl http://169.254.169.254/latest/meta-data/profile -H "X-aws-ec2-metadata-token: $TOKEN"
+curl http://169.254.169.254/latest/meta-data/iam/info -H "X-aws-ec2-metadata-token: $TOKEN"
 ```
 
 ### Phase 9: AWS Persistence
@@ -313,7 +317,8 @@ gcloud functions logs read <name> --limit 100
 
 # Find stored credentials
 sudo find /home -name "credentials.db"
-sudo cp -r /home/user/.config/gcloud ~/.config
+# Never copy a discovered identity over the operator’s default gcloud configuration.
+# Use an isolated owner-approved test profile; possession alone does not authorize use.
 gcloud auth list
 ```
 
@@ -385,7 +390,7 @@ gcloud auth list
 | Authentication failures | Verify credentials; check MFA; ensure correct tenant/project; try alternative auth methods |
 | Permission denied | List current roles; try different resources; check resource policies; verify region |
 | Metadata service blocked | Check IMDSv2 (AWS); verify instance role; check firewall for 169.254.169.254 |
-| Rate limiting | Add delays; spread across regions; use multiple credentials; focus on high-value targets |
+| Rate limiting | Honor Retry-After and the approved rate budget; stop rather than evade limits with other regions/credentials |
 
 
 ## References

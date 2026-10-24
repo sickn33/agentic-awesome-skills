@@ -123,7 +123,7 @@
     "category": "api-integration",
     "name": "2slides-ppt-generator",
     "description": "AI-powered presentation generation via the 2slides API \u2014 create slides from text, match a reference image style, summarize documents into decks, add AI voice narration, and export pages/audio. Use for any \"make slides\", \"create a deck\", or \"slides from this document\" request.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-06-05",
     "plugin": {
@@ -251,6 +251,39 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "a4a",
+    "path": "skills/a4a",
+    "category": "communication",
+    "name": "a4a",
+    "description": "Connect your AI agent to the A4A end-to-end encrypted agent-to-agent messaging network via local MCP tools or Python SDK.",
+    "risk": "critical",
+    "source": "official",
+    "date_added": "2026-10-23",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "a4a-network/a4a",
+    "license": "MIT",
+    "license_source": "https://github.com/a4a-network/a4a/blob/main/LICENSE",
+    "tags": [
+      "a4a",
+      "mcp",
+      "e2ee",
+      "agent-communication",
+      "messaging"
+    ]
   },
   {
     "id": "aas-compose-stack",
@@ -449,7 +482,7 @@
     "category": "security",
     "name": "access-review",
     "description": "Conduct periodic access reviews and certifications. Implement access governance and recertification workflows. Use when managing access compliance.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
     "date_added": "2026-09-20",
     "plugin": {
@@ -710,7 +743,7 @@
     "path": "skills/active-directory-attacks",
     "category": "security",
     "name": "active-directory-attacks",
-    "description": "Provide comprehensive techniques for attacking Microsoft Active Directory environments. Covers reconnaissance, credential harvesting, Kerberos attacks, lateral movement, privilege escalation, and domain dominance for red team operations and penetration testing.",
+    "description": "Assess Active Directory attack paths using scoped configuration review and controlled synthetic lab validation; identify prerequisites, evidence and mitigations.",
     "risk": "offensive",
     "source": "community",
     "date_added": "2026-02-27",
@@ -969,8 +1002,8 @@
     "path": "skills/advogado-criminal",
     "category": "legal",
     "name": "advogado-criminal",
-    "description": "Advogado criminalista especializado em Maria da Penha, violencia domestica, feminicidio, direito penal brasileiro, medidas protetivas, inquerito policial e acao penal.",
-    "risk": "safe",
+    "description": "Assistente de pesquisa informativa, sem credenciais profissionais, sobre em Maria da Penha, violencia domestica, feminicidio, direito penal brasileiro, medidas protetivas, inquerito policial e acao penal.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -997,8 +1030,8 @@
     "path": "skills/advogado-especialista",
     "category": "legal",
     "name": "advogado-especialista",
-    "description": "Advogado especialista em todas as areas do Direito brasileiro: familia, criminal, trabalhista, tributario, consumidor, imobiliario, empresarial, civil e constitucional.",
-    "risk": "safe",
+    "description": "Apoio a pesquisa juridica brasileira, organizacao de fatos e minutas, com verificacao em fontes oficiais e revisao profissional para casos concretos.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -1610,7 +1643,7 @@
     "path": "skills/agent-tool-builder",
     "category": "ai-ml",
     "name": "agent-tool-builder",
-    "description": "Tools are how AI agents interact with the world. A well-designed tool is the difference between an agent that works and one that hallucinates, fails silently, or costs 10x more tokens than necessary. This skill covers tool design from schema to error handling.",
+    "description": "Tools are how AI agents interact with the world. A well-designed tool is the difference between an agent that works and one that hallucinates, fails silently, or wastes tokens. This skill covers tool design from schema to error handling.",
     "risk": "critical",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
@@ -2245,7 +2278,7 @@
     "category": "security",
     "name": "ai-coding-agent-guardrails",
     "description": "Secure AI coding agents (Claude Code, Cursor, Codex, Copilot) with permission boundaries, secret protection, code review gates, and safe sandbox configurations for team environments.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
     "date_added": "2026-09-20",
     "plugin": {
@@ -2544,7 +2577,7 @@
     "path": "skills/ai-md",
     "category": "ai-ml",
     "name": "ai-md",
-    "description": "Convert human-written CLAUDE.md into AI-native structured-label format. Battle-tested across 4 models. Same rules, fewer tokens, higher compliance.",
+    "description": "Convert human-written CLAUDE.md into AI-native structured-label format. Propose and evaluate structured-label rewrites while preserving rule meaning; benefits require measured evidence.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-11",
@@ -2762,7 +2795,7 @@
     "path": "skills/ai-product",
     "category": "ai-ml",
     "name": "ai-product",
-    "description": "Every product will be AI-powered. The question is whether you'll build it right or ship a demo that falls apart in production.",
+    "description": "Design and evaluate LLM product features, retrieval, validated outputs, latency, and cost controls.",
     "risk": "safe",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
@@ -2951,7 +2984,7 @@
     "category": "ai-ml",
     "name": "ai-studio-image",
     "description": "Geracao de imagens humanizadas via Google AI Studio (Gemini). Fotos realistas estilo influencer ou educacional com iluminacao natural e imperfeicoes sutis.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -3343,7 +3376,7 @@
     "category": "cloud",
     "name": "amazon-alexa",
     "description": "Integracao completa com Amazon Alexa para criar skills de voz inteligentes, transformar Alexa em assistente com Claude como cerebro (projeto Auri) e integrar com AWS ecosystem (Lambda, DynamoDB, Polly, Transcribe, Lex, Smart Home).",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -3470,7 +3503,7 @@
     "path": "skills/analyze-project",
     "category": "meta",
     "name": "analyze-project",
-    "description": "Forensic root cause analyzer for Antigravity sessions. Classifies scope deltas, rework patterns, root causes, hotspots, and auto-improves prompts/health.",
+    "description": "Forensic root cause analyzer for Antigravity sessions. Classifies scope deltas, rework patterns, root causes, hotspots, and recommends prompt and workflow improvements.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-03-14",
@@ -3949,7 +3982,7 @@
     "category": "frontend",
     "name": "anti-slop-design",
     "description": "Autonomous Principal Design Technologist. Cures vibe-coded software from AI frontend slop using curated token archetypes and 7-axis quality gating.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-04-20",
     "plugin": {
@@ -4433,8 +4466,8 @@
     "path": "skills/api-endpoint-builder",
     "category": "development",
     "name": "api-endpoint-builder",
-    "description": "Builds production-ready REST API endpoints with validation, error handling, authentication, and documentation. Follows best practices for security and scalability.",
-    "risk": "safe",
+    "description": "Builds reviewable REST API endpoint scaffolds with validation, error handling, authentication, and documentation. Follows best practices for security and scalability.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-05",
     "plugin": {
@@ -4735,7 +4768,7 @@
     "path": "skills/apify-actor-development",
     "category": "automation",
     "name": "apify-actor-development",
-    "description": "Important: Before you begin, fill in the generatedBy property in the meta section of .actor/actor.json. Replace it with the tool and model you're currently using, such as \"Claude Code with Claude Sonnet 4.5\". This helps Apify monitor and improve AGENTS.md for specific AI tools and models.",
+    "description": "Create, modify and validate Apify Actors with scoped inputs, storage schemas, runtime logic and deployment review.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-03-01",
@@ -4925,7 +4958,7 @@
     "category": "automation",
     "name": "apify-generate-output-schema",
     "description": "Generate output schemas (dataset_schema.json, output_schema.json, key_value_store_schema.json) for an Apify Actor by analyzing its source code. Use when creating or updating Actor output schemas.",
-    "risk": "unknown",
+    "risk": "critical",
     "source": "apify",
     "date_added": "2026-09-21",
     "plugin": {
@@ -4948,7 +4981,7 @@
     "path": "skills/apify-influencer-discovery",
     "category": "automation",
     "name": "apify-influencer-discovery",
-    "description": "Find and evaluate influencers for brand partnerships, verify authenticity, and track collaboration performance across Instagram, Facebook, YouTube, and TikTok.",
+    "description": "Find and evaluate influencers for brand partnerships, assess public authenticity signals, and track collaboration performance across Instagram, Facebook, YouTube, and TikTok.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-03-01",
@@ -4971,7 +5004,7 @@
     "category": "automation",
     "name": "apify-integration-development",
     "description": "Curated upstream guidance for Apify Integration Development; use when the workflow matches the user goal.",
-    "risk": "unknown",
+    "risk": "critical",
     "source": "apify",
     "date_added": "2026-09-21",
     "plugin": {
@@ -5161,7 +5194,7 @@
     "path": "skills/apify-ultimate-scraper",
     "category": "automation",
     "name": "apify-ultimate-scraper",
-    "description": "AI-driven data extraction from 55+ Actors across all major platforms. This skill automatically selects the best Actor for your task.",
+    "description": "Select a candidate Apify Actor for the requested extraction after checking its current schema, provenance, pricing and limits. The Actor table is a historical shortlist, not a verified availability or best-choice guarantee.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-03-01",
@@ -5335,7 +5368,7 @@
     "category": "backend",
     "name": "appdeploy",
     "description": "Deploy web apps with backend APIs, database, and file storage. Use when the user asks to deploy or publish a website or web app and wants a public URL. Uses HTTP API via curl.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "AppDeploy (MIT)",
     "date_added": "2026-02-27",
     "plugin": {
@@ -5975,7 +6008,7 @@
     "path": "skills/assay",
     "category": "testing",
     "name": "assay",
-    "description": "Run assay on a web page you just wrote or changed. It opens the page in a real browser, drives every control, and reports where the page contradicts itself. Deterministic, no API key, no network.",
+    "description": "Run assay on a web page you just wrote or changed. It opens the page in a real browser, drives every control, and reports where the page contradicts itself. Local browser checks without an LLM API key.",
     "risk": "safe",
     "source": "https://github.com/awss1i/assay",
     "date_added": "2026-10-08",
@@ -6010,7 +6043,7 @@
     "category": "security",
     "name": "asset-inventory",
     "description": "Maintain IT asset inventory and configuration management database. Track hardware, software, and cloud resources. Use when managing IT assets.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
     "date_added": "2026-09-20",
     "plugin": {
@@ -6314,7 +6347,7 @@
     "category": "voice-agents",
     "name": "audio-transcriber",
     "description": "Transform audio recordings into professional Markdown documentation with intelligent summaries using LLM integration",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -6512,8 +6545,8 @@
     "path": "skills/auri-core",
     "category": "voice-agents",
     "name": "auri-core",
-    "description": "Auri: assistente de voz inteligente (Alexa + Claude claude-opus-4-20250805). Visao do produto, persona Vitoria Neural, stack AWS, modelo Free/Pro/Business/Enterprise, roadmap 4 fases, GTM, north star WAC e analise competitiva.",
-    "risk": "none",
+    "description": "Auri: assistente de voz inteligente (Alexa + modelo Claude configurado e verificado). Visao do produto, persona Vitoria Neural, stack AWS, modelo Free/Pro/Business/Enterprise, roadmap 4 fases, GTM, north star WAC e analise competitiva.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -6878,7 +6911,7 @@
     "category": "security",
     "name": "aws-compliance-checker",
     "description": "Automated compliance checking against CIS, PCI-DSS, HIPAA, and SOC 2 benchmarks",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -6909,7 +6942,7 @@
     "category": "cloud",
     "name": "aws-cost-cleanup",
     "description": "Automated cleanup of unused AWS resources to reduce costs",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -6983,7 +7016,7 @@
     "category": "cloud",
     "name": "aws-cost-optimizer",
     "description": "Comprehensive AWS cost analysis and optimization recommendations using AWS CLI and Cost Explorer",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -7083,7 +7116,7 @@
     "category": "security",
     "name": "aws-iam-best-practices",
     "description": "IAM policy review, hardening, and least privilege implementation",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -7265,7 +7298,7 @@
     "category": "security",
     "name": "aws-secrets-rotation",
     "description": "Automate AWS secrets rotation for RDS, API keys, and credentials",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -7295,7 +7328,7 @@
     "category": "security",
     "name": "aws-security-audit",
     "description": "Comprehensive AWS security posture assessment using AWS CLI and security best practices",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -8377,7 +8410,7 @@
     "category": "cloud",
     "name": "azure-communication-sms-java",
     "description": "Send SMS messages with Azure Communication Services SMS Java SDK. Use when implementing SMS notifications, alerts, OTP delivery, bulk messaging, or delivery reports.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -8799,7 +8832,7 @@
     "category": "cloud",
     "name": "azure-functions",
     "description": "Expert patterns for Azure Functions development including isolated worker model, Durable Functions orchestration, cold start optimization, and production patterns. Covers .NET, Python, and Node.js programming models.",
-    "risk": "none",
+    "risk": "critical",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
     "plugin": {
@@ -9625,7 +9658,7 @@
     "category": "cloud",
     "name": "azure-monitor-query-java",
     "description": "Azure Monitor Query SDK for Java. Execute Kusto queries against Log Analytics workspaces and query metrics from Azure resources.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -10441,7 +10474,7 @@
     "category": "backend",
     "name": "backend-architect",
     "description": "Expert backend architect specializing in scalable API design, microservices architecture, and distributed systems.",
-    "risk": "none",
+    "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -11154,7 +11187,7 @@
     "path": "skills/bill-gates",
     "category": "agent-persona",
     "name": "bill-gates",
-    "description": "Agente que simula Bill Gates \u2014 cofundador da Microsoft, arquiteto da industria de software comercial, estrategista tecnologico global, investidor sistemico e filantropo baseado em dados.",
+    "description": "Simulacao educativa de analise estrategica inspirada em temas publicos de Bill Gates; nao representa a pessoa real ou suas opinioes atuais.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-06",
@@ -11692,7 +11725,7 @@
     "path": "skills/brand-kit-print-collateral",
     "category": "business",
     "name": "brand-kit-print-collateral",
-    "description": "Print collateral spec: item, finished and trim size, bleed, colour mode, stock and GSM, finish, safe margin, print method, quantity and unit cost. Use for cards and letterhead.",
+    "description": "Print collateral spec: item, finished/trim size and artwork size including bleed, bleed, colour mode, stock and GSM, finish, safe margin, print method, quantity and unit cost. Use for cards and letterhead.",
     "risk": "safe",
     "source": "self",
     "date_added": "2026-09-27",
@@ -12665,7 +12698,7 @@
     "category": "framework",
     "name": "bullmq-specialist",
     "description": "BullMQ expert for Redis-backed job queues, background processing, and reliable async execution in Node.js/TypeScript applications.",
-    "risk": "none",
+    "risk": "critical",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
     "plugin": {
@@ -13631,7 +13664,7 @@
     "path": "skills/cc-skill-security-review",
     "category": "meta",
     "name": "cc-skill-security-review",
-    "description": "This skill ensures all code follows security best practices and identifies potential vulnerabilities. Use when implementing authentication or authorization, handling user input or file uploads, or creating new API endpoints.",
+    "description": "This skill guides review of security practices and potential vulnerabilities; no checklist ensures all code is secure. Use when implementing authentication or authorization, handling user input or file uploads, or creating new API endpoints.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -14316,13 +14349,13 @@
     "category": "ai-ml",
     "name": "claude-code-expert",
     "description": "Especialista profundo em Claude Code - CLI da Anthropic. Maximiza produtividade com atalhos, hooks, MCPs, configuracoes avancadas, workflows, CLAUDE.md, memoria, sub-agentes, permissoes e integracao com ecossistemas.",
-    "risk": "none",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
       "targets": {
         "codex": "blocked",
-        "claude": "blocked"
+        "claude": "supported"
       },
       "setup": {
         "type": "none",
@@ -14330,7 +14363,6 @@
         "docs": null
       },
       "reasons": [
-        "absolute_host_path",
         "target_specific_home_path"
       ]
     },
@@ -14442,7 +14474,7 @@
     "category": "ai-ml",
     "name": "claude-monitor",
     "description": "Monitor de performance do Claude Code e sistema local. Diagnostica lentidao, mede CPU/RAM/disco, verifica API latency e gera relatorios de saude do sistema.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -14673,7 +14705,7 @@
     "category": "security",
     "name": "client-secret-exposure-audit",
     "description": "Audit a deployed web app for secrets exposed to the browser: hardcoded API keys/tokens in JS, secrets in HTML meta/attributes/comments, publicly reachable source/config/deploy files, and header/CORS misconfig.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "self",
     "date_added": "2026-09-10",
     "plugin": {
@@ -14864,7 +14896,7 @@
     "category": "workflow-bundle",
     "name": "cloud-devops",
     "description": "Cloud infrastructure and DevOps workflow covering AWS, Azure, GCP, Kubernetes, Terraform, CI/CD, monitoring, and cloud-native development.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "personal",
     "date_added": "2026-02-27",
     "plugin": {
@@ -15498,7 +15530,7 @@
     "path": "skills/code-review-ai-ai-review",
     "category": "development",
     "name": "code-review-ai-ai-review",
-    "description": "You are an expert AI-powered code review specialist combining automated static analysis, intelligent pattern recognition, and modern DevOps practices. Leverage AI tools (GitHub Copilot, Qodo, GPT-5, C",
+    "description": "Review pull requests with source inspection, available static analysis and evidence-backed AI assistance; report actionable bugs, security risks and unverified coverage.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -16190,7 +16222,7 @@
     "category": "backend",
     "name": "comfyui-gateway",
     "description": "REST API gateway for ComfyUI servers. Workflow management, job queuing, webhooks, caching, auth, rate limiting, and image delivery (URL + base64).",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -16460,12 +16492,12 @@
     "category": "marketing",
     "name": "competitor-analysis",
     "description": "Research competitors with Browserbase discovery, enrichment lanes, screenshots, matrices, and HTML reports.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "official",
     "date_added": "2026-06-19",
     "plugin": {
       "targets": {
-        "codex": "blocked",
+        "codex": "supported",
         "claude": "supported"
       },
       "setup": {
@@ -16473,9 +16505,7 @@
         "summary": "",
         "docs": null
       },
-      "reasons": [
-        "target_specific_home_path"
-      ]
+      "reasons": []
     },
     "source_type": "official",
     "source_repo": "browserbase/skills",
@@ -16921,7 +16951,7 @@
     "category": "api-integration",
     "name": "connection-auth-rules",
     "description": "Build a Connection Auth Rules for a Monte Carlo connection type. Fetches live connector schemas and transform steps from the apollo-agent repo.",
-    "risk": "unknown",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-09-21",
     "plugin": {
@@ -17071,7 +17101,7 @@
     "category": "security",
     "name": "container-security-hardening",
     "description": "Harden Docker/container images and runtime deployments with secure base images, non-root users, CVE scanning, SBOM/signing, seccomp/AppArmor, and Kubernetes pod security controls. Use for Dockerfile security reviews, container CVEs, image scanning, distroless images, or production hardening.\n",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-05-30",
     "plugin": {
@@ -17300,7 +17330,7 @@
     "path": "skills/context-guardian",
     "category": "ai-ml",
     "name": "context-guardian",
-    "description": "Guardiao de contexto que preserva dados criticos antes da compactacao automatica. Snapshots, verificacao de integridade e zero perda de informacao.",
+    "description": "Guardiao de contexto que preserva dados criticos antes da compactacao automatica. Snapshots, verificacao de integridade e reducao de perda de informacao.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
@@ -17615,6 +17645,39 @@
     "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
+    "id": "cooper-email",
+    "path": "skills/cooper-email",
+    "category": "communication",
+    "name": "cooper-email",
+    "description": "Give an AI agent its own email inbox with Cooper Email: send, receive, reply, and wait for replies or verification codes over MCP or HTTP.",
+    "risk": "critical",
+    "source": "https://github.com/cooper-email/cooper-email",
+    "date_added": "2026-10-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "cooper-email/cooper-email",
+    "license": "MIT",
+    "license_source": "https://github.com/cooper-email/cooper-email/blob/main/LICENSE",
+    "tags": [
+      "email",
+      "inbox",
+      "agents",
+      "mcp",
+      "otp"
+    ]
+  },
+  {
     "id": "copilot-delegate",
     "path": "skills/copilot-delegate",
     "category": "agent-orchestration",
@@ -17812,7 +17875,7 @@
     "category": "productivity",
     "name": "court",
     "description": "Put an idea on trial: a prosecutor and a defense Claude argue, 12 juror sub-agents vote independently, and a judge reads the verdict and the changes that would flip it.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-10-03",
     "plugin": {
@@ -17961,7 +18024,7 @@
     "category": "workflow",
     "name": "create-issue-gate",
     "description": "Use when starting a new implementation task and an issue must be created with strict acceptance criteria gating before execution.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-12",
     "plugin": {
@@ -18071,7 +18134,7 @@
     "path": "skills/crewai",
     "category": "agent-orchestration",
     "name": "crewai",
-    "description": "Expert in CrewAI - the leading role-based multi-agent framework used by 60% of Fortune 500 companies.",
+    "description": "Design role-based agents, tasks, crews, and flows with CrewAI.",
     "risk": "critical",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
@@ -18613,8 +18676,8 @@
     "path": "skills/crypto-bd-agent",
     "category": "blockchain",
     "name": "crypto-bd-agent",
-    "description": "Production-tested patterns for building AI agents that autonomously discover, evaluate, and acquire token listings for cryptocurrency exchanges.",
-    "risk": "safe",
+    "description": "Reference patterns (upstream reports, not independently verified here) for building AI agents that autonomously discover, evaluate, and acquire token listings for cryptocurrency exchanges.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -19588,7 +19651,7 @@
     "category": "database-processing",
     "name": "database-architect",
     "description": "Expert database architect specializing in data layer design from scratch, technology selection, schema modeling, and scalable database architectures.",
-    "risk": "none",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -19636,7 +19699,7 @@
     "category": "database",
     "name": "database-cloud-optimization-cost-optimize",
     "description": "You are a cloud cost optimization expert specializing in reducing infrastructure expenses while maintaining performance and reliability. Analyze cloud spending, identify savings opportunities, and implement cost-effective architectures across AWS, Azure, and GCP.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -19876,6 +19939,40 @@
     }
   },
   {
+    "id": "datawebot",
+    "path": "skills/datawebot",
+    "category": "data",
+    "name": "datawebot",
+    "description": "Find products for sale across online shops, list returned sellers' prices with direct links, and run Amazon and Shopify extraction Jobs through the hosted datawebot MCP server.",
+    "risk": "critical",
+    "source": "https://github.com/datawebot/datawebot-mcp/tree/main/skills/datawebot",
+    "date_added": "2026-10-22",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "datawebot/datawebot-mcp",
+    "license": "MIT",
+    "license_source": "https://github.com/datawebot/datawebot-mcp/blob/main/LICENSE",
+    "tags": [
+      "ecommerce",
+      "product-search",
+      "price-comparison",
+      "shopify",
+      "amazon",
+      "mcp"
+    ]
+  },
+  {
     "id": "day-book",
     "path": "skills/day-book",
     "category": "business",
@@ -19919,7 +20016,7 @@
     "category": "development",
     "name": "dbos-golang",
     "description": "Guide for building reliable, fault-tolerant Go applications with DBOS durable workflows. Use when adding DBOS to existing Go code, creating workflows and steps, or using queues for concurrency control.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://docs.dbos.dev/",
     "date_added": "2026-02-27",
     "plugin": {
@@ -19941,7 +20038,7 @@
     "category": "development",
     "name": "dbos-python",
     "description": "Guide for building reliable, fault-tolerant Python applications with DBOS durable workflows. Use when adding DBOS to existing Python code, creating workflows and steps, or using queues for concurrency control.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://docs.dbos.dev/",
     "date_added": "2026-02-27",
     "plugin": {
@@ -19963,7 +20060,7 @@
     "category": "development",
     "name": "dbos-typescript",
     "description": "Guide for building reliable, fault-tolerant TypeScript applications with DBOS durable workflows. Use when adding DBOS to existing TypeScript code, creating workflows and steps, or using queues for concurrency control.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://docs.dbos.dev/",
     "date_added": "2026-02-27",
     "plugin": {
@@ -20128,7 +20225,7 @@
     "category": "code-quality",
     "name": "debate-review",
     "description": "Two-model debate review of a GitHub PR, GitLab MR, Azure DevOps PR, or local working tree, posted as inline comments or printed. Use for any PR/MR review request, or a local review before a PR exists.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/amElnagdy/review-skills",
     "date_added": "2026-08-26",
     "plugin": {
@@ -20250,7 +20347,7 @@
     "category": "development-and-testing",
     "name": "debugging-strategies",
     "description": "Transform debugging from frustrating guesswork into systematic problem-solving with proven strategies, powerful tools, and methodical approaches.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -20461,7 +20558,7 @@
     "path": "skills/defi-protocol-templates",
     "category": "blockchain",
     "name": "defi-protocol-templates",
-    "description": "Implement DeFi protocols with production-ready templates for staking, AMMs, governance, and lending systems. Use when building decentralized finance applications or smart contract protocols.",
+    "description": "Implement DeFi protocols with educational templates for staking, AMMs, governance, and lending systems. Use when building decentralized finance applications or smart contract protocols.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -20782,7 +20879,7 @@
     "category": "devops",
     "name": "deploy-to-vercel",
     "description": "Deploy applications and websites to Vercel. Use when the user requests deployment actions like \"deploy my app\", \"deploy and give me the link\", \"push this live\", or \"create a preview deployment\".",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/vercel-labs/agent-skills",
     "date_added": "2026-06-02",
     "plugin": {
@@ -21342,7 +21439,7 @@
     "category": "development",
     "name": "devcontainer-setup",
     "description": "Creates devcontainers with Claude Code, language-specific tooling (Python/Node/Rust/Go), and persistent volumes. Use when adding devcontainer support to a project, setting up isolated development environments, or configuring sandboxed Claude Code workspaces.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-03-06",
     "plugin": {
@@ -21676,7 +21773,7 @@
     "category": "devops",
     "name": "devops-pipeline-builder",
     "description": "Design and implement CI/CD pipelines, Docker configurations, deployment strategies, and infrastructure automation with production-ready patterns.",
-    "risk": "unknown",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-09-21",
     "plugin": {
@@ -21844,7 +21941,7 @@
     "category": "meta",
     "name": "diary",
     "description": "Unified Diary System: A context-preserving automated logger for multi-project development.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "self",
     "date_added": "2026-03-09",
     "plugin": {
@@ -21916,7 +22013,7 @@
     "category": "security",
     "name": "disaster-recovery",
     "description": "Implement disaster recovery strategies and runbooks. Configure RPO/RTO targets and failover procedures. Use when planning for business continuity.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
     "date_added": "2026-09-20",
     "plugin": {
@@ -22447,7 +22544,7 @@
     "category": "content",
     "name": "docs-generator",
     "description": "Generate technical deliverables from completed analysis: reverse-engineering reports, penetration-test reports, CTF write-ups, and signature-analysis documentation with evidence-backed structure.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/zhaoxuya520/reverse-skill",
     "date_added": "2026-08-25",
     "plugin": {
@@ -22640,28 +22737,6 @@
     }
   },
   {
-    "id": "docx-official",
-    "path": "skills/docx-official",
-    "category": "document-processing",
-    "name": "docx-official",
-    "description": "A user may ask you to create, edit, or analyze the contents of a .docx file. A .docx file is essentially a ZIP archive containing XML files and other resources that you can read or edit. You have different tools and workflows available for different tasks.",
-    "risk": "critical",
-    "source": "community",
-    "date_added": "2026-02-27",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
     "id": "domain-driven-design",
     "path": "skills/domain-driven-design",
     "category": "architecture",
@@ -22718,6 +22793,40 @@
       "architecture",
       "workflow",
       "coding-agents"
+    ]
+  },
+  {
+    "id": "doomsday-escrow",
+    "path": "skills/doomsday-escrow",
+    "category": "security",
+    "name": "doomsday-escrow",
+    "description": "Verify cryptographic Proof-of-Escrow collateral (L1 UTXO outpoint proofs and Base Mainnet wDOOM settlement receipts) on GitHub bounties before spending autonomous agent compute.",
+    "risk": "critical",
+    "source": "https://github.com/doomsday-network/doomsday/tree/2054312f94dd21ab3b25b30fd6f6cf2c08625a42/integrations/mcp",
+    "date_added": "2026-10-23",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "doomsday-network/doomsday",
+    "license": "MIT",
+    "license_source": "https://github.com/doomsday-network/doomsday/blob/2054312f94dd21ab3b25b30fd6f6cf2c08625a42/LICENSE",
+    "tags": [
+      "escrow",
+      "bounties",
+      "github-bounties",
+      "security",
+      "verification",
+      "mcp"
     ]
   },
   {
@@ -22827,7 +22936,7 @@
     "category": "security",
     "name": "dotnet-reverse",
     "description": ".NET/C# binary reverse engineering: managed PE analysis, dnSpyEx debugging, de4dot deobfuscation (ConfuserEx/SmartAssembly/Babel), IL patching, NativeAOT targets, and analysis of red-team Sharp* tooling.",
-    "risk": "safe",
+    "risk": "offensive",
     "source": "https://github.com/zhaoxuya520/reverse-skill",
     "date_added": "2026-08-25",
     "plugin": {
@@ -22968,7 +23077,7 @@
     "category": "database",
     "name": "drizzle-orm-expert",
     "description": "Expert in Drizzle ORM for TypeScript \u2014 schema design, relational queries, migrations, and serverless database integration. Use when building type-safe database layers with Drizzle.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-04",
     "plugin": {
@@ -23078,7 +23187,7 @@
     "category": "reverse-engineering",
     "name": "dsl-vm-reverse",
     "description": "Reverse JavaScript-based custom DSL/VM interpreters and risk-control engines: identify IIFE/switch-based opcode dispatch, extract opcode tables, and capture runtime semantics.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/zhaoxuya520/reverse-skill",
     "date_added": "2026-08-25",
     "plugin": {
@@ -23244,7 +23353,7 @@
     "category": "mobile",
     "name": "eas-app-stores",
     "description": "Curated upstream guidance for Eas App Stores; use when the workflow matches the user goal.",
-    "risk": "unknown",
+    "risk": "critical",
     "source": "expo",
     "date_added": "2026-09-21",
     "plugin": {
@@ -23269,7 +23378,7 @@
     "category": "devops",
     "name": "eas-hosting",
     "description": "Curated upstream guidance for Eas Hosting; use when the workflow matches the user goal.",
-    "risk": "unknown",
+    "risk": "critical",
     "source": "expo",
     "date_added": "2026-09-21",
     "plugin": {
@@ -23294,7 +23403,7 @@
     "category": "devops",
     "name": "eas-observe",
     "description": "Curated upstream guidance for Eas Observe; use when the workflow matches the user goal.",
-    "risk": "unknown",
+    "risk": "critical",
     "source": "expo",
     "date_added": "2026-09-21",
     "plugin": {
@@ -23319,7 +23428,7 @@
     "category": "mobile",
     "name": "eas-simulator",
     "description": "Curated upstream guidance for Eas Simulator; use when the workflow matches the user goal.",
-    "risk": "unknown",
+    "risk": "critical",
     "source": "expo",
     "date_added": "2026-09-21",
     "plugin": {
@@ -23421,7 +23530,7 @@
     "category": "development",
     "name": "ecl-harness-engineer",
     "description": "Create or audit ECL Agent Harness infrastructure: AGENTS.md, change tracking, repository guidance, lint checks, CI gates, and agent handoff docs.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-06-13",
     "plugin": {
@@ -23510,7 +23619,7 @@
     "path": "skills/edr-bypass-re",
     "category": "security",
     "name": "edr-bypass-re",
-    "description": "Reverse engineer EDR internals (user-mode hook tables, ETW, AMSI) and study bypass techniques such as direct syscalls, Hell's Gate, and call-stack spoofing. Lab-only red-team research.",
+    "description": "Review EDR telemetry and known defense-evasion classes using offline evidence and controlled defensive coverage assessments.",
     "risk": "offensive",
     "source": "https://github.com/zhaoxuya520/reverse-skill",
     "date_added": "2026-08-25",
@@ -23618,7 +23727,7 @@
     "category": "development",
     "name": "electron-development",
     "description": "Master Electron desktop app development with secure IPC, contextIsolation, preload scripts, multi-process architecture, electron-builder packaging, code signing, and auto-update.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-12",
     "plugin": {
@@ -23745,7 +23854,7 @@
     "path": "skills/elon-musk",
     "category": "agent-persona",
     "name": "elon-musk",
-    "description": "Agente que simula Elon Musk com profundidade psicologica e comunicacional de alta fidelidade. Ativado para: \"fale como Elon\", \"simule Elon Musk\", \"o que Elon diria sobre X\", \"first principles thinking\", \"think like Elon\", roleplay/simulacao do personagem.",
+    "description": "Simulacao ficticia e explicitamente rotulada de estilo comunicacional associado a Elon Musk, com analise de primeiros principios e verificacao separada de fatos.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-06",
@@ -23887,8 +23996,8 @@
     "path": "skills/email-systems",
     "category": "marketing",
     "name": "email-systems",
-    "description": "Email has the highest ROI of any marketing channel. $36 for every $1 spent. Yet most startups treat it as an afterthought - bulk blasts, no personalization, landing in spam folders.",
-    "risk": "none",
+    "description": "Design transactional and marketing email delivery, queues, templates, authentication, suppression and monitoring.",
+    "risk": "critical",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
     "plugin": {
@@ -24064,8 +24173,8 @@
     "path": "skills/employment-contract-templates",
     "category": "legal",
     "name": "employment-contract-templates",
-    "description": "Templates and patterns for creating legally sound employment documentation including contracts, offer letters, and HR policies.",
-    "risk": "safe",
+    "description": "Templates and patterns for creating draft employment documentation for jurisdiction-specific legal review including contracts, offer letters, and HR policies.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -24409,7 +24518,7 @@
     "path": "skills/error-diagnostics-error-trace",
     "category": "development",
     "name": "error-diagnostics-error-trace",
-    "description": "You are an error tracking and observability expert specializing in implementing comprehensive error monitoring solutions. Set up error tracking systems, configure alerts, implement structured logging,",
+    "description": "You are an error tracking and observability expert specializing in implementing comprehensive error monitoring solutions. Set up error tracking systems, configure alerts, implement structured logging and evaluate monitoring quality.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
@@ -24797,7 +24906,7 @@
     "path": "skills/evolution",
     "category": "meta",
     "name": "evolution",
-    "description": "This skill enables makepad-skills to self-improve continuously during development.",
+    "description": "This skill provides a reviewable workflow for maintaining makepad-skills during development. It does not install automatic evolution by itself.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
@@ -25339,6 +25448,38 @@
       "fact-checking",
       "stipple",
       "authenticity"
+    ]
+  },
+  {
+    "id": "faber-language",
+    "path": "skills/faber-language",
+    "category": "development",
+    "name": "faber-language",
+    "description": "Write, check and run Faber programs, an experimental statically typed language for coding agents and human authors. Uses version-matched faberlang.dev language documentation.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-10-23",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "faberlang/faber",
+    "license": "MIT OR Apache-2.0",
+    "license_source": "https://github.com/faberlang/faber",
+    "tags": [
+      "faber",
+      "programming-language",
+      "compiler",
+      "agents"
     ]
   },
   {
@@ -26063,7 +26204,7 @@
     "category": "design",
     "name": "figma-automation",
     "description": "Automate Figma tasks via Rube MCP (Composio): files, components, design tokens, comments, exports. Always search tools first for current schemas.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -26129,7 +26270,7 @@
     "category": "security",
     "name": "file-uploads",
     "description": "Expert at handling file uploads and cloud storage. Covers S3, Cloudflare R2, presigned URLs, multipart uploads, and image optimization. Knows how to handle large files without blocking.",
-    "risk": "none",
+    "risk": "critical",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
     "plugin": {
@@ -26795,6 +26936,142 @@
     }
   },
   {
+    "id": "footval-follow-matches-and-tables",
+    "path": "skills/footval-follow-matches-and-tables",
+    "category": "data",
+    "name": "footval-follow-matches-and-tables",
+    "description": "Football scores, fixtures, match centres and league tables through FootVal: live and past results, a team's next or last matches, events, statistics, line-ups and standings.",
+    "risk": "safe",
+    "source": "https://github.com/target1m/footval-mcp/tree/e852de8dd9b714a8b159e8d349d8f397f8f35870/skills/follow-matches-and-tables",
+    "date_added": "2026-10-22",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "target1m/footval-mcp",
+    "license": "MIT",
+    "license_source": "https://github.com/target1m/footval-mcp/blob/e852de8dd9b714a8b159e8d349d8f397f8f35870/LICENSE",
+    "tags": [
+      "footval",
+      "football",
+      "soccer",
+      "live-scores",
+      "league-tables",
+      "mcp"
+    ]
+  },
+  {
+    "id": "footval-scout-and-rank-players",
+    "path": "skills/footval-scout-and-rank-players",
+    "category": "data",
+    "name": "footval-scout-and-rank-players",
+    "description": "Scout and rank footballers with FootVal: shortlists by league, position, age, foot and value; undervalued, overvalued, rising and young players; club, league and national squads.",
+    "risk": "safe",
+    "source": "https://github.com/target1m/footval-mcp/tree/e852de8dd9b714a8b159e8d349d8f397f8f35870/skills/scout-and-rank-players",
+    "date_added": "2026-10-22",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "target1m/footval-mcp",
+    "license": "MIT",
+    "license_source": "https://github.com/target1m/footval-mcp/blob/e852de8dd9b714a8b159e8d349d8f397f8f35870/LICENSE",
+    "tags": [
+      "footval",
+      "football",
+      "soccer",
+      "scouting",
+      "player-rankings",
+      "mcp"
+    ]
+  },
+  {
+    "id": "footval-stats-and-transfer-news",
+    "path": "skills/footval-stats-and-transfer-news",
+    "category": "data",
+    "name": "footval-stats-and-transfer-news",
+    "description": "Football season leaderboards and transfer news from FootVal: top scorers, assists, minutes and appearances per competition, plus confirmed transfers and rumours with reliability.",
+    "risk": "safe",
+    "source": "https://github.com/target1m/footval-mcp/tree/e852de8dd9b714a8b159e8d349d8f397f8f35870/skills/stats-and-transfer-news",
+    "date_added": "2026-10-22",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "target1m/footval-mcp",
+    "license": "MIT",
+    "license_source": "https://github.com/target1m/footval-mcp/blob/e852de8dd9b714a8b159e8d349d8f397f8f35870/LICENSE",
+    "tags": [
+      "footval",
+      "football",
+      "soccer",
+      "statistics",
+      "transfer-news",
+      "mcp"
+    ]
+  },
+  {
+    "id": "footval-value-and-compare-players",
+    "path": "skills/footval-value-and-compare-players",
+    "category": "data",
+    "name": "footval-value-and-compare-players",
+    "description": "Explain what a footballer is worth with FootVal: its own transfer value next to the market value, the factors behind the gap, and comparisons of two to four players.",
+    "risk": "safe",
+    "source": "https://github.com/target1m/footval-mcp/tree/e852de8dd9b714a8b159e8d349d8f397f8f35870/skills/value-and-compare-players",
+    "date_added": "2026-10-22",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "target1m/footval-mcp",
+    "license": "MIT",
+    "license_source": "https://github.com/target1m/footval-mcp/blob/e852de8dd9b714a8b159e8d349d8f397f8f35870/LICENSE",
+    "tags": [
+      "footval",
+      "football",
+      "soccer",
+      "player-valuation",
+      "transfer-value",
+      "mcp"
+    ]
+  },
+  {
     "id": "form-cro",
     "path": "skills/form-cro",
     "category": "marketing",
@@ -26885,15 +27162,17 @@
     "date_added": "2026-03-06",
     "plugin": {
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
         "type": "none",
         "summary": "",
         "docs": null
       },
-      "reasons": []
+      "reasons": [
+        "broken_local_reference"
+      ]
     },
     "tags": [
       "fp-ts",
@@ -27092,7 +27371,7 @@
     "path": "skills/fp-react",
     "category": "development",
     "name": "fp-react",
-    "description": "Practical patterns for using fp-ts with React - hooks, state, forms, data fetching. Works with React 18/19, Next.js 14/15.",
+    "description": "Practical patterns for using fp-ts with React - hooks, state, forms, data fetching. Includes version-specific React examples; verify framework/client boundaries.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-01-30",
@@ -27233,7 +27512,7 @@
     "path": "skills/fp-ts-react",
     "category": "development",
     "name": "fp-ts-react",
-    "description": "Practical patterns for using fp-ts with React - hooks, state, forms, data fetching. Use when building React apps with functional programming patterns. Works with React 18/19, Next.js 14/15.",
+    "description": "Practical patterns for using fp-ts with React - hooks, state, forms, data fetching. Use when building React apps with functional programming patterns. Includes version-specific React patterns requiring project verification.",
     "risk": "safe",
     "source": "https://github.com/whatiskadudoing/fp-ts-skills",
     "date_added": "2026-02-27",
@@ -27286,7 +27565,7 @@
     "category": "development",
     "name": "framework-migration-code-migrate",
     "description": "You are a code migration expert specializing in transitioning codebases between frameworks, languages, versions, and platforms. Generate comprehensive migration plans, automated migration scripts, and",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -27307,7 +27586,7 @@
     "path": "skills/framework-migration-deps-upgrade",
     "category": "development",
     "name": "framework-migration-deps-upgrade",
-    "description": "You are a dependency management expert specializing in safe, incremental upgrades of project dependencies. Plan and execute dependency updates with minimal risk, proper testing, and clear migration pa",
+    "description": "You are a dependency management expert specializing in safe, incremental upgrades of project dependencies. Plan and execute dependency updates with minimal risk, proper testing, and clear migration paths.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -27705,7 +27984,7 @@
     "path": "skills/frontend-observability",
     "category": "devops",
     "name": "frontend-observability",
-    "description": "A portable, framework-agnostic field-side observability system for any React or React Native app.",
+    "description": "A portable, framework-agnostic field-side observability pattern for React or React Native integrations.",
     "risk": "critical",
     "source": "https://github.com/stareezy-1/frontend-architecture-skill/tree/main/skills/frontend-observability",
     "date_added": "2026-07-01",
@@ -27926,8 +28205,8 @@
     "path": "skills/fsi-compliance-checker",
     "category": "security",
     "name": "fsi-compliance-checker",
-    "description": "Maps code, architecture, and infrastructure changes to specific control IDs in PCI-DSS v4.0 and MAS TRM (Singapore financial regulator), producing an audit-traceable findings report with per-control remediation.",
-    "risk": "safe",
+    "description": "Maps code, architecture, and infrastructure changes to specific control IDs in PCI-DSS v4.0.1 and MAS TRM (Singapore financial regulator), producing an audit-traceable findings report with per-control remediation.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-06-12",
     "plugin": {
@@ -28209,7 +28488,7 @@
     "category": "security",
     "name": "gcp-audit-logs",
     "description": "Configure GCP Cloud Audit Logs for compliance. Set up log routing and BigQuery analysis. Use when auditing GCP activity.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
     "date_added": "2026-09-20",
     "plugin": {
@@ -28282,7 +28561,7 @@
     "path": "skills/gcp-cloud-sql",
     "category": "devops",
     "name": "gcp-cloud-sql",
-    "description": "Provision Cloud SQL and Spanner databases. Configure high availability, backups, and security. Use when deploying managed databases on GCP.",
+    "description": "Provision Cloud SQL databases. Configure high availability, backups, and security. Use when deploying managed databases on GCP.",
     "risk": "critical",
     "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
     "date_added": "2026-09-20",
@@ -28443,7 +28722,7 @@
     "category": "security",
     "name": "gdpr-compliance",
     "description": "Implement GDPR data protection requirements. Configure consent management, data subject rights, and privacy by design. Use when processing EU personal data.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
     "date_added": "2026-09-20",
     "plugin": {
@@ -28468,8 +28747,8 @@
     "path": "skills/gdpr-data-handling",
     "category": "security",
     "name": "gdpr-data-handling",
-    "description": "Practical implementation guide for GDPR-compliant data processing, consent management, and privacy controls.",
-    "risk": "safe",
+    "description": "Practical implementation guide for GDPR-oriented data-processing design, consent management, and privacy controls.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -28910,7 +29189,7 @@
     "path": "skills/geo-llmstxt",
     "category": "seo",
     "name": "geo-llmstxt",
-    "description": "Analyzes and generates llms.txt files -- the emerging standard for helping AI systems understand website structure and content.",
+    "description": "Analyzes and generates llms.txt files -- a proposed convention for helping AI systems understand website structure and content.",
     "risk": "safe",
     "source": "https://github.com/zubair-trabzada/geo-seo-claude",
     "date_added": "2026-09-20",
@@ -29111,7 +29390,7 @@
     "date_added": "2026-09-20",
     "plugin": {
       "targets": {
-        "codex": "blocked",
+        "codex": "supported",
         "claude": "supported"
       },
       "setup": {
@@ -29119,9 +29398,7 @@
         "summary": "",
         "docs": null
       },
-      "reasons": [
-        "target_specific_home_path"
-      ]
+      "reasons": []
     },
     "source_type": "community",
     "source_repo": "zubair-trabzada/geo-seo-claude",
@@ -29176,7 +29453,7 @@
     "path": "skills/geoffrey-hinton",
     "category": "ai-ml",
     "name": "geoffrey-hinton",
-    "description": "Agente que simula Geoffrey Hinton \u2014 Godfather of Deep Learning, Pr\u00eamio Turing 2018, criador do backpropagation e das Deep Belief Networks.",
+    "description": "Agente que simula Geoffrey Hinton \u2014 Godfather of Deep Learning, Pr\u00eamio Turing 2018, coautor do trabalho de 1986 que popularizou backpropagation e das Deep Belief Networks.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-06",
@@ -29328,8 +29605,8 @@
     "path": "skills/gha-security-review",
     "category": "security",
     "name": "gha-security-review",
-    "description": "Find exploitable vulnerabilities in GitHub Actions workflows. Every finding MUST include a concrete exploitation scenario \u2014 if you can't build the attack, don't report it.",
-    "risk": "safe",
+    "description": "Review GitHub Actions workflows for exploitable vulnerabilities with concrete attack paths and harmless proof-of-concept sketches. Require explicit authorization for active testing.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-16",
     "plugin": {
@@ -29663,7 +29940,7 @@
     "category": "devops",
     "name": "github-actions-advanced",
     "description": "Design, debug, and harden GitHub Actions CI/CD workflows, including reusable workflows, matrix builds, self-hosted runners, OIDC authentication, caching, environments, secrets, and release automation.\n",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-05-30",
     "plugin": {
@@ -30098,7 +30375,7 @@
     "category": "test-automation",
     "name": "go-playwright",
     "description": "Expert capability for robust, stealthy, and efficient browser automation using Playwright Go.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/playwright-community/playwright-go",
     "date_added": "2026-02-27",
     "plugin": {
@@ -30120,7 +30397,7 @@
     "category": "development",
     "name": "go-rod-master",
     "description": "Comprehensive guide for browser automation and web scraping with go-rod (Chrome DevTools Protocol) including stealth anti-bot-detection patterns.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/go-rod/rod",
     "date_added": "2026-02-27",
     "plugin": {
@@ -30998,7 +31275,7 @@
     "category": "browser-automation",
     "name": "hasdata",
     "description": "Use HasData APIs for web scraping and structured web data extraction.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "official",
     "date_added": "2026-06-04",
     "plugin": {
@@ -31024,7 +31301,7 @@
     "category": "browser-automation",
     "name": "hasdata-cli",
     "description": "Command-line access to search, scraping, and structured web data.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "official",
     "date_added": "2026-06-04",
     "plugin": {
@@ -31313,7 +31590,7 @@
     "category": "ai-ml",
     "name": "hf-cli",
     "description": "Curated upstream guidance for Hf Cli; use when the workflow matches the user goal.",
-    "risk": "unknown",
+    "risk": "critical",
     "source": "huggingface",
     "date_added": "2026-09-21",
     "plugin": {
@@ -31467,7 +31744,7 @@
     "path": "skills/hig-components-controls",
     "category": "development",
     "name": "hig-components-controls",
-    "description": "Check for .claude/apple-design-context.md before asking questions. Use existing context and only ask for information not already covered.",
+    "description": "Choose and review Apple selection and input controls: toggles, segmented controls, sliders, pickers, steppers, text fields, labels and keyboard behavior.",
     "risk": "none",
     "source": "community",
     "date_added": "2026-02-27",
@@ -31533,7 +31810,7 @@
     "path": "skills/hig-components-menus",
     "category": "development",
     "name": "hig-components-menus",
-    "description": "Check for .claude/apple-design-context.md before asking questions. Use existing context and only ask for information not already covered.",
+    "description": "Design Apple-platform menus, buttons, toolbars and disclosure controls using the appropriate platform conventions, command hierarchy and accessible interactions.",
     "risk": "none",
     "source": "community",
     "date_added": "2026-02-27",
@@ -31643,7 +31920,7 @@
     "path": "skills/hig-inputs",
     "category": "development",
     "name": "hig-inputs",
-    "description": "Check for .claude/apple-design-context.md before asking questions. Use existing context and only ask for information not already covered.",
+    "description": "Design Apple-platform input interactions for touch, keyboard, pointer, Pencil, controllers, spatial gestures and supported device sensors, with accessible alternatives.",
     "risk": "none",
     "source": "community",
     "date_added": "2026-02-27",
@@ -31666,7 +31943,7 @@
     "category": "development",
     "name": "hig-patterns",
     "description": "Apple Human Interface Guidelines interaction and UX patterns.",
-    "risk": "none",
+    "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -31731,7 +32008,7 @@
     "path": "skills/hig-technologies",
     "category": "development",
     "name": "hig-technologies",
-    "description": "Check for .claude/apple-design-context.md before asking questions. Use existing context and only ask for information not already covered.",
+    "description": "Review Apple-platform technology UX against HIG patterns for payments, health data, identity, Siri, AR, cloud sync, and shared experiences. Use for integration flow design, permission planning, and accessibility checks.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
@@ -31807,7 +32084,7 @@
     "category": "security",
     "name": "hipaa-compliance",
     "description": "Implement HIPAA security and privacy rules. Configure PHI protections and BAA requirements. Use when handling healthcare data.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
     "date_added": "2026-09-20",
     "plugin": {
@@ -31856,7 +32133,7 @@
     "category": "backend",
     "name": "hono",
     "description": "Build ultra-fast web APIs and full-stack apps with Hono \u2014 runs on Cloudflare Workers, Deno, Bun, Node.js, and any WinterCG-compatible runtime.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-18",
     "plugin": {
@@ -31932,7 +32209,7 @@
     "category": "business",
     "name": "hr-pro",
     "description": "Professional, ethical HR partner for hiring, onboarding/offboarding, PTO and leave, performance, compliant policies, and employee relations.",
-    "risk": "none",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -32184,7 +32461,9 @@
         "docs": null
       },
       "reasons": []
-    }
+    },
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/huggingface/skills/blob/main/LICENSE"
   },
   {
     "id": "hugging-face-model-trainer",
@@ -32317,7 +32596,7 @@
     "path": "skills/hugging-face-vision-trainer",
     "category": "ai-ml",
     "name": "hugging-face-vision-trainer",
-    "description": "Train object detection, image classification, and SAM or SAM2 segmentation models locally or on Hugging Face Jobs, with dataset validation and results saved to the Hub.",
+    "description": "Train object detection, image classification, and SAM or SAM2 segmentation models locally or on Hugging Face Jobs, with bounded dataset pilots and explicit artifact persistence.",
     "risk": "critical",
     "source": "https://github.com/huggingface/skills/tree/main/skills/huggingface-vision-trainer",
     "date_added": "2026-07-01",
@@ -33463,7 +33742,7 @@
     "path": "skills/hunt-misc",
     "category": "security",
     "name": "hunt-misc",
-    "description": "Hunting skill for misc vulnerabilities. Built from 225 public bug bounty reports. Use when hunting misc on any target.",
+    "description": "Hunting skill for misc vulnerabilities. Reference for authorized role, token and workflow-boundary reviews. Historical source count is not independently verified.",
     "risk": "offensive",
     "source": "https://github.com/elementalsouls/Claude-BugHunter",
     "date_added": "2026-09-20",
@@ -34136,7 +34415,7 @@
     "category": "cloud",
     "name": "hybrid-cloud-networking",
     "description": "Configure secure, high-performance connectivity between on-premises and cloud environments using VPN, Direct Connect, and ExpressRoute.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -34282,7 +34561,7 @@
     "category": "security",
     "name": "ida-reverse",
     "description": "Reverse engineer binaries with IDA Pro: decompilation, disassembly, data-flow tracking, cross-references, and IDA MCP automation for deep static analysis of PE/ELF/Mach-O targets.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/zhaoxuya520/reverse-skill",
     "date_added": "2026-08-25",
     "plugin": {
@@ -34710,7 +34989,7 @@
     "category": "media",
     "name": "image-generator",
     "description": "Generate and edit images using Gemini's Nano Banana Pro model (gemini-3-pro-image-preview). Use this skill when the user asks you to generate images, create visuals, edit photos, create logos, generate product mockups, or perform any image generation/editing task.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "official",
     "date_added": "2026-06-19",
     "plugin": {
@@ -35142,7 +35421,7 @@
     "category": "media",
     "name": "ingest-youtube",
     "description": "Pull a YouTube video transcript into a queryable markdown vault with yt-dlp subtitle discovery, VTT cleanup, metadata frontmatter, and capture-seed stubs.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-05-09",
     "plugin": {
@@ -35168,7 +35447,7 @@
     "category": "workflow",
     "name": "inngest",
     "description": "Inngest expert for serverless-first background jobs, event-driven workflows, and durable execution without managing queues or workers.",
-    "risk": "none",
+    "risk": "critical",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
     "plugin": {
@@ -36323,7 +36602,7 @@
     "category": "productivity",
     "name": "jobgpt",
     "description": "Job search automation, auto apply, resume generation, application tracking, salary intelligence, and recruiter outreach using the JobGPT MCP server.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-23",
     "plugin": {
@@ -36525,8 +36804,8 @@
     "path": "skills/junta-leiloeiros",
     "category": "backend",
     "name": "junta-leiloeiros",
-    "description": "Coleta e consulta dados de leiloeiros oficiais de todas as 27 Juntas Comerciais do Brasil. Scraper multi-UF, banco SQLite, API FastAPI e exportacao CSV/JSON.",
-    "risk": "safe",
+    "description": "Consulta e coleta assistida de registros p\u00fablicos de leiloeiros nas 27 rotas estaduais; cobertura e atualidade exigem valida\u00e7\u00e3o. Scraper multi-UF, banco SQLite, API FastAPI e exportacao CSV/JSON.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -36604,7 +36883,7 @@
     "path": "skills/k8s-security-policies",
     "category": "devops",
     "name": "k8s-security-policies",
-    "description": "Comprehensive guide for implementing NetworkPolicy, PodSecurityPolicy, RBAC, and Pod Security Standards in Kubernetes.",
+    "description": "Guide for NetworkPolicy, RBAC, and Pod Security Admission/Standards (PodSecurityPolicy was removed in Kubernetes1.25) in Kubernetes.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -37210,7 +37489,7 @@
     "category": "front-end",
     "name": "landing-page-generator",
     "description": "Generates high-converting Next.js/React landing pages with Tailwind CSS. Uses PAS, AIDA, and BAB frameworks for optimized copy/components (Heroes, Features, Pricing). Focuses on Core Web Vitals/SEO.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-18",
     "plugin": {
@@ -37416,13 +37695,13 @@
     "path": "skills/last30days",
     "category": "research",
     "name": "last30days",
-    "description": "Research a topic from the last 30 days on Reddit + X + Web, become an expert, and write copy-paste-ready prompts for the user's target tool.",
+    "description": "Research a topic from the last 30 days on Reddit + X + Web, summarize evidence, and write copy-paste-ready prompts for the user's target tool.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
       "targets": {
-        "codex": "blocked",
+        "codex": "supported",
         "claude": "supported"
       },
       "setup": {
@@ -37430,9 +37709,7 @@
         "summary": "",
         "docs": null
       },
-      "reasons": [
-        "target_specific_home_path"
-      ]
+      "reasons": []
     }
   },
   {
@@ -37462,8 +37739,8 @@
     "path": "skills/launch-check",
     "category": "security",
     "name": "launch-check",
-    "description": "Passive pre-launch check of a live URL for AI-built apps: exposed secret keys, open Supabase/Firebase tables, security headers, phone layout, search and speed.",
-    "risk": "safe",
+    "description": "Bounded pre-launch audit of a live URL for AI-built apps: exposed secret keys, open Supabase/Firebase tables, security headers, phone layout, search and speed.",
+    "risk": "critical",
     "source": "https://github.com/Ces107/agent-forge/tree/main/skills/launch-check",
     "date_added": "2026-10-21",
     "plugin": {
@@ -37768,7 +38045,7 @@
     "path": "skills/leiloeiro-avaliacao",
     "category": "leiloeiro",
     "name": "leiloeiro-avaliacao",
-    "description": "Avaliacao pericial de imoveis em leilao. Valor de mercado, liquidacao forcada, ABNT NBR 14653, metodos comparativo/renda/custo, CUB e margem de seguranca.",
+    "description": "Organize evidence and indicative valuation scenarios for auction properties, with explicit market, method and professional-review limits.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-06",
@@ -37825,7 +38102,7 @@
     "category": "leiloeiro",
     "name": "leiloeiro-ia",
     "description": "Especialista em leiloes judiciais e extrajudiciais de imoveis. Analise juridica, pericial e de mercado integrada. Orquestra os 5 modulos especializados.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -37908,7 +38185,7 @@
     "path": "skills/leiloeiro-risco",
     "category": "leiloeiro",
     "name": "leiloeiro-risco",
-    "description": "Analise de risco em leiloes de imoveis. Score 36 pontos, riscos juridicos/financeiros/operacionais, stress test 4 cenarios e ROI ponderado por risco.",
+    "description": "Analise de risco em leiloes de imoveis. Score 40 pontos, riscos juridicos/financeiros/operacionais, stress test 4 cenarios e ROI ponderado por risco.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-06",
@@ -38001,8 +38278,8 @@
     "path": "skills/lex",
     "category": "legal",
     "name": "lex",
-    "description": "Centralized 'Truth Engine' for cross-jurisdictional legal context (US, EU, CA) and contract scaffolding.",
-    "risk": "safe",
+    "description": "Structured research aid for cross-jurisdictional legal context (US, EU, CA) and contract scaffolding.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-10",
     "plugin": {
@@ -38143,7 +38420,7 @@
     "category": "research",
     "name": "linkdigest-social-link-reader",
     "description": "Read one public Xiaohongshu, Douyin, TikTok, YouTube, X or WeChat article link into text an agent can use (transcript, image text, key points) via the LinkDigest API or MCP server.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/jcaiagent7143-ui/linkdigest-mcp",
     "date_added": "2026-10-07",
     "plugin": {
@@ -38225,8 +38502,8 @@
     "path": "skills/linkedin-content-generator",
     "category": "marketing",
     "name": "linkedin-content-generator",
-    "description": "AI-powered LinkedIn content suite: generate posts, carousels, newsletters, and 30-day calendars with niche-specific SEO rules and a reinforcement-learning personal memory system.",
-    "risk": "safe",
+    "description": "AI-powered LinkedIn content suite: generate posts, carousels, newsletters, and 30-day calendars with niche-specific SEO rules and a feedback-based personal memory system.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-06-04",
     "plugin": {
@@ -38255,7 +38532,7 @@
       "newsletter",
       "carousel",
       "content-calendar",
-      "reinforcement-learning",
+      "feedback-based",
       "seo",
       "copywriting"
     ]
@@ -38265,7 +38542,7 @@
     "path": "skills/linkedin-post-writer",
     "category": "marketing",
     "name": "linkedin-post-writer",
-    "description": "Draft LinkedIn posts from 16 tested hook formulas mapped to engagement goals (comments, reposts, likes, saves), with 2026 algorithm formatting rules and an AI-tell scrub pass before publishing.",
+    "description": "Draft LinkedIn posts from 16 illustrative hook formulas mapped to engagement goals (comments, reposts, likes, saves), with optional formatting conventions and an AI-tell scrub pass before publishing.",
     "risk": "none",
     "source": "community",
     "date_added": "2026-07-06",
@@ -38614,7 +38891,7 @@
     "category": "security",
     "name": "llm-app-security",
     "description": "Secure LLM-powered applications with input validation, output controls, tenant isolation, and abuse prevention.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
     "date_added": "2026-09-20",
     "plugin": {
@@ -38640,7 +38917,7 @@
     "category": "ai-ml",
     "name": "llm-application-dev-ai-assistant",
     "description": "Design and implement conversational AI assistants with context management, integration boundaries, and validation.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -38758,7 +39035,7 @@
     "category": "ai-agents",
     "name": "llm-council",
     "description": "Run Fireworks-hosted open-weight model councils that compare responses and synthesize a final answer.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "official",
     "date_added": "2026-06-19",
     "plugin": {
@@ -38889,7 +39166,7 @@
     "category": "ai-ml",
     "name": "llm-ops",
     "description": "LLM Operations -- RAG, embeddings, vector databases, fine-tuning, prompt engineering avancado, custos de LLM, evals de qualidade e arquiteturas de IA para producao.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -39246,8 +39523,8 @@
     "path": "skills/logistics-exception-management",
     "category": "business",
     "name": "logistics-exception-management",
-    "description": "Codified expertise for handling freight exceptions, shipment delays, damages, losses, and carrier disputes. Informed by logistics professionals with 15+ years operational experience.",
-    "risk": "safe",
+    "description": "Triage freight delays, damage, shortages, loss and carrier disputes; prepare evidence, recovery options and communications with jurisdiction-specific review.",
+    "risk": "critical",
     "source": "https://github.com/ai-evos/agent-skills",
     "date_added": "2026-02-27",
     "plugin": {
@@ -39269,7 +39546,7 @@
     "category": "seo",
     "name": "lognorm",
     "description": "Work a site's SEO and AI-visibility (GEO) backlog through the hosted LogNorm MCP server: audits, fixes, content, AI-answer tracking.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/lognorm/lognorm-mcp/tree/main/skills/lognorm",
     "date_added": "2026-10-03",
     "plugin": {
@@ -39399,9 +39676,9 @@
   {
     "id": "loki-mode",
     "path": "skills/loki-mode",
-    "category": "ai-ml",
+    "category": "uncategorized",
     "name": "loki-mode",
-    "description": "Version 2.35.0 | PRD to Production | Zero Human Intervention > Research-enhanced: OpenAI SDK, DeepMind, Anthropic, AWS Bedrock, Agent SDK, HN Production (2025)",
+    "description": "Historical 2.35.x multi-agent workflow for turning a scoped PRD into reviewed implementation; includes experimental runner and benchmark artifacts.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -39564,7 +39841,7 @@
     "category": "finance",
     "name": "longbridge-quant",
     "description": "Curated upstream guidance for Longbridge Quant; use when the workflow matches the user goal.",
-    "risk": "unknown",
+    "risk": "critical",
     "source": "longbridge",
     "date_added": "2026-09-21",
     "plugin": {
@@ -39589,7 +39866,7 @@
     "category": "research",
     "name": "longbridge-research",
     "description": "Curated upstream guidance for Longbridge Research; use when the workflow matches the user goal.",
-    "risk": "unknown",
+    "risk": "critical",
     "source": "longbridge",
     "date_added": "2026-09-21",
     "plugin": {
@@ -39830,7 +40107,7 @@
     "category": "code-quality",
     "name": "lovable-cleanup",
     "description": "Audits and strips Lovable scaffolding from Vite + React projects \u2014 removes lovable-tagger, swaps placeholder assets, prunes unused Radix deps, cleans generated docs, and neutralizes stale favicon/CDN caching so the codebase ships as yours.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-06-13",
     "plugin": {
@@ -40109,7 +40386,7 @@
     "category": "development",
     "name": "macos-spm-app-packaging",
     "description": "Scaffold, build, sign, and package SwiftPM macOS apps without Xcode projects.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "Dimillian/Skills (MIT)",
     "date_added": "2026-03-25",
     "plugin": {
@@ -40340,7 +40617,7 @@
     "category": "development",
     "name": "makepad-2-0-animation",
     "description": "Makepad 2.0 guidance for animation; use when building or debugging Makepad UI code.",
-    "risk": "unknown",
+    "risk": "safe",
     "source": "community",
     "date_added": "2026-09-21",
     "plugin": {
@@ -40723,7 +41000,7 @@
     "path": "skills/makepad-widgets",
     "category": "development",
     "name": "makepad-widgets",
-    "description": "Version: makepad-widgets (dev branch) | Last Updated: 2026-01-19 > > Check for updates: https://crates.io/crates/makepad-widgets",
+    "description": "Select and compose Makepad widgets, configure their properties and styling, and debug widget behavior against a pinned makepad-widgets version.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-06",
@@ -40746,7 +41023,7 @@
     "category": "security",
     "name": "malware-analysis",
     "description": "Analyze suspected malware through static, dynamic, and behavioral techniques: IOC extraction, YARA/Sigma rule authoring, sandbox orchestration, and anti-analysis detection.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/zhaoxuya520/reverse-skill",
     "date_added": "2026-08-25",
     "plugin": {
@@ -41448,8 +41725,8 @@
     "path": "skills/matematico-tao",
     "category": "science",
     "name": "matematico-tao",
-    "description": "Matem\u00e1tico ultra-avan\u00e7ado inspirado em Terence Tao. An\u00e1lise rigorosa de c\u00f3digo e arquitetura com teoria matem\u00e1tica profunda: teoria da informa\u00e7\u00e3o, teoria dos grafos, complexidade computacional, \u00e1lgebra linear, an\u00e1lise estoc\u00e1stica, teoria das categorias, probabilidade bayesiana e l\u00f3gica formal.",
-    "risk": "none",
+    "description": "Analyze code complexity, dependency graphs, concurrency and invariants using explicit mathematical assumptions. Use for algorithm or architecture reviews; bundled Kotlin scanners produce advisory estimates, not formal proofs.",
+    "risk": "safe",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -41550,7 +41827,8 @@
       },
       "reasons": []
     },
-    "license": "https://github.com/matplotlib/matplotlib/tree/main/LICENSE"
+    "license": "MIT",
+    "license_source": "https://github.com/K-Dense-AI/scientific-agent-skills/blob/0936740e52033a6256085be5fc81e5e56d606110/LICENSE.md"
   },
   {
     "id": "max",
@@ -42036,7 +42314,7 @@
     "category": "memory",
     "name": "memory-systems",
     "description": "Design short-term, long-term, and graph-based memory architectures. Use when building agents that must persist across sessions, needing to maintain entity consistency across conversations, or implementing reasoning over accumulated knowledge.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/tree/main/skills/memory-systems",
     "date_added": "2026-02-27",
     "plugin": {
@@ -42204,7 +42482,7 @@
     "category": "blockchain",
     "name": "meteora-dlmm-pool-screening",
     "description": "Screen and rank Meteora DLMM pools for LP quality using public Meteora APIs (fee/TVL, bin step, organic score). Read-only: never deploys, swaps, or signs.\n",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-09-17",
     "plugin": {
@@ -42251,7 +42529,7 @@
     "category": "architecture",
     "name": "microservices-patterns",
     "description": "Master microservices architecture patterns including service boundaries, inter-service communication, data management, and resilience patterns for building distributed systems.",
-    "risk": "none",
+    "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -42317,7 +42595,7 @@
     "category": "security",
     "name": "mid-engagement-ir-detection",
     "description": "Methodology for detecting client SOC patches, attacker activity, and security-state changes that occur DURING a red-team engagement",
-    "risk": "safe",
+    "risk": "offensive",
     "source": "https://github.com/elementalsouls/Claude-BugHunter",
     "date_added": "2026-09-20",
     "plugin": {
@@ -42635,7 +42913,7 @@
     "path": "skills/mobile-design",
     "category": "mobile",
     "name": "mobile-design",
-    "description": "(Mobile-First \u00b7 Touch-First \u00b7 Platform-Respectful)",
+    "description": "Design and review iOS, Android, React Native or Flutter interfaces for touch, accessibility, navigation, offline behavior and measured performance. Use for mobile app UI work; not a mobile compliance certification.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -42840,7 +43118,7 @@
     "category": "security",
     "name": "model-supply-chain-security",
     "description": "Secure the AI model supply chain with artifact signing, provenance attestation, SBOM workflows, dependency controls, and trusted model promotion.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
     "date_added": "2026-09-20",
     "plugin": {
@@ -43005,7 +43283,7 @@
     "category": "business",
     "name": "monetization",
     "description": "Estrategia e implementacao de monetizacao para produtos digitais - Stripe, subscriptions, pricing experiments, freemium, upgrade flows, churn prevention, revenue optimization e modelos de negocio SaaS.",
-    "risk": "none",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -43083,7 +43361,7 @@
     "category": "architecture",
     "name": "monopoly",
     "description": "MONOPOLY is a Senior System Design Engineer skill for architecting, reviewing, and scaling systems. Triggers on requests involving architecture, databases, scaling, microservices, or infrastructure design. Proactively engages to design resilient backend systems.\n",
-    "risk": "none",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-06-14",
     "plugin": {
@@ -43201,7 +43479,7 @@
     "category": "data",
     "name": "monte-carlo-context-detection",
     "description": "Route data-related requests to the right Monte Carlo skill or workflow. USE WHEN alerts, incidents, data broken, stale, coverage gaps, data quality, or any ambiguous data observability request.",
-    "risk": "unknown",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-09-21",
     "plugin": {
@@ -43307,7 +43585,7 @@
     "category": "data",
     "name": "monte-carlo-prevent",
     "description": "Surfaces Monte Carlo data observability context (table health, alerts, lineage, blast radius) before SQL/dbt edits.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-04-08",
     "plugin": {
@@ -43337,8 +43615,8 @@
     "path": "skills/monte-carlo-push-ingestion",
     "category": "data",
     "name": "monte-carlo-push-ingestion",
-    "description": "Expert guide for pushing metadata, lineage, and query logs to Monte Carlo from any data warehouse.",
-    "risk": "safe",
+    "description": "Review and adapt warehouse metadata, lineage and query-log collection templates for an explicitly authorized Monte Carlo destination.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-04-08",
     "plugin": {
@@ -43421,7 +43699,7 @@
     "category": "data",
     "name": "monte-carlo-validation-notebook",
     "description": "Generates SQL validation notebooks for dbt PR changes with before/after comparison queries.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-04-08",
     "plugin": {
@@ -43509,7 +43787,7 @@
     "category": "shopping",
     "name": "movie-coupon",
     "description": "Fetch movie ticket coupons from platforms like Taopiaopiao and Maoyan. Returns coupon links and QR code images for users to redeem via WeChat.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-10-16",
     "plugin": {
@@ -43613,7 +43891,7 @@
     "category": "ai-agents",
     "name": "multi-advisor",
     "description": "Conselho de especialistas \u2014 consulta multiplos agentes do ecossistema em paralelo para analise multi-perspectiva de qualquer topico. Ativa personas, especialistas e agentes tecnicos simultaneamente, cada um pela sua otica unica, e consolida em sintese decisoria final.",
-    "risk": "none",
+    "risk": "safe",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -43982,7 +44260,7 @@
     "path": "skills/n8n-code-javascript",
     "category": "automation",
     "name": "n8n-code-javascript",
-    "description": "Write JavaScript code in n8n Code nodes. Use when writing JavaScript in n8n, using $input/$json/$node syntax, making HTTP requests with $helpers, working with dates using DateTime, troubleshooting Code node errors, or choosing between Code node modes.",
+    "description": "Write JavaScript code in n8n Code nodes. Use when writing JavaScript in n8n, using $input/$json/$node syntax, selecting the HTTP Request node for network access, working with dates using DateTime, troubleshooting Code node errors, or choosing between Code node modes.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
@@ -44973,7 +45251,7 @@
     "category": "security",
     "name": "nextjs-supabase-auth",
     "description": "Expert integration of Supabase Auth with Next.js App Router",
-    "risk": "none",
+    "risk": "critical",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
     "plugin": {
@@ -45219,7 +45497,7 @@
     "path": "skills/notebooklm",
     "category": "data-ai",
     "name": "notebooklm",
-    "description": "Interact with Google NotebookLM to query documentation with Gemini's source-grounded answers. Each question opens a fresh browser session, retrieves the answer exclusively from your uploaded documents, and closes.",
+    "description": "Interact with Google NotebookLM to query documentation with Gemini's source-grounded answers. Each question opens a fresh browser session, retrieves a source-grounded answer that must be verified against the uploaded documents, and closes.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -45611,7 +45889,7 @@
     "category": "development",
     "name": "obsess",
     "description": "Perfectionist mode for one target: checked attempts on a UI detail or hot path, keeps the best version, stops on a budget. Only on explicit /obsess.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-10-15",
     "plugin": {
@@ -45732,7 +46010,7 @@
     "category": "shopping",
     "name": "obtain-coupons-all-in-one",
     "description": "All-in-one coupon fetcher supporting takeout (Meituan, Ele.me, JD), parcel/courier (SF, ZTO, YTO, etc.), travel (DiDi, Ctrip), and movie tickets (Taopiaopiao, Maoyan) coupons with one-click access to all discounts.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-10-16",
     "plugin": {
@@ -45830,7 +46108,7 @@
     "category": "business",
     "name": "odoo-backup-strategy",
     "description": "Complete Odoo backup and restore strategy: database dumps, filestore backup, automated scheduling, cloud storage upload, and tested restore procedures.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "self",
     "date_added": "2026-03-04",
     "plugin": {
@@ -45874,7 +46152,7 @@
     "category": "business",
     "name": "odoo-ecommerce-configurator",
     "description": "Expert guide for Odoo eCommerce and Website: product catalog, payment providers, shipping methods, SEO, and order-to-fulfillment workflow.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "self",
     "date_added": "2026-03-04",
     "plugin": {
@@ -46160,7 +46438,7 @@
     "category": "business",
     "name": "odoo-rpc-api",
     "description": "Expert on Odoo's external JSON-RPC and XML-RPC APIs. Covers authentication, model calls, record CRUD, and real-world integration examples in Python, JavaScript, and curl.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "self",
     "date_added": "2026-03-04",
     "plugin": {
@@ -46248,7 +46526,7 @@
     "category": "business",
     "name": "odoo-upgrade-advisor",
     "description": "Step-by-step Odoo version upgrade advisor: pre-upgrade checklist, community vs enterprise upgrade path, OCA module compatibility, and post-upgrade validation.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "self",
     "date_added": "2026-03-04",
     "plugin": {
@@ -47017,17 +47295,15 @@
     "date_added": "2026-09-20",
     "plugin": {
       "targets": {
-        "codex": "blocked",
-        "claude": "blocked"
+        "codex": "supported",
+        "claude": "supported"
       },
       "setup": {
         "type": "none",
         "summary": "",
         "docs": null
       },
-      "reasons": [
-        "absolute_host_path"
-      ]
+      "reasons": []
     },
     "source_type": "community",
     "source_repo": "BagelHole/DevOps-Security-Agent-Skills",
@@ -47232,7 +47508,7 @@
     "path": "skills/options-flow-analyzer",
     "category": "finance",
     "name": "options-flow-analyzer",
-    "description": "Real vs lottery call separation for options P/C ratio analysis \u2014 prevents signal inversion from deep OTM noise",
+    "description": "Compare raw and explicitly filtered options put/call ratios with documented premium, delta and expiry assumptions",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-05-13",
@@ -47263,7 +47539,7 @@
     "category": "health",
     "name": "oral-health-analyzer",
     "description": "\u5206\u6790\u53e3\u8154\u5065\u5eb7\u6570\u636e\u3001\u8bc6\u522b\u53e3\u8154\u95ee\u9898\u6a21\u5f0f\u3001\u8bc4\u4f30\u53e3\u8154\u5065\u5eb7\u72b6\u51b5\u3001\u63d0\u4f9b\u4e2a\u6027\u5316\u53e3\u8154\u5065\u5eb7\u5efa\u8bae\u3002\u652f\u6301\u4e0e\u8425\u517b\u3001\u6162\u6027\u75c5\u3001\u7528\u836f\u7b49\u5176\u4ed6\u5065\u5eb7\u6570\u636e\u7684\u5173\u8054\u5206\u6790\u3002",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -47708,7 +47984,7 @@
     "path": "skills/paid-ads",
     "category": "marketing",
     "name": "paid-ads",
-    "description": "You are an expert performance marketer with direct access to ad platform accounts. Your goal is to help create, optimize, and scale paid advertising campaigns that drive efficient customer acquisition.",
+    "description": "You are an expert performance marketer who verifies available authorized account access before taking action. Your goal is to help create, optimize, and scale paid advertising campaigns that drive efficient customer acquisition.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -48233,7 +48509,7 @@
     "category": "security",
     "name": "pci-dss-compliance",
     "description": "Implement PCI DSS requirements for payment card data. Configure cardholder data environment and security controls. Use when processing payment cards.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
     "date_added": "2026-09-20",
     "plugin": {
@@ -48262,28 +48538,6 @@
     "risk": "safe",
     "source": "community",
     "date_added": "2026-05-23",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
-    "id": "pdf-official",
-    "path": "skills/pdf-official",
-    "category": "document-processing",
-    "name": "pdf-official",
-    "description": "This guide covers essential PDF processing operations using Python libraries and command-line tools. For advanced features, JavaScript libraries, and detailed examples, see reference.md. If you need to fill out a PDF form, read forms.md and follow its instructions.",
-    "risk": "critical",
-    "source": "community",
-    "date_added": "2026-02-27",
     "plugin": {
       "targets": {
         "codex": "supported",
@@ -48591,7 +48845,7 @@
     "path": "skills/performance-testing-review-ai-review",
     "category": "development",
     "name": "performance-testing-review-ai-review",
-    "description": "You are an expert AI-powered code review specialist combining automated static analysis, intelligent pattern recognition, and modern DevOps practices. Leverage AI tools (GitHub Copilot, Qodo, GPT-5, C",
+    "description": "Review performance-sensitive code changes with reproducible baselines, workload metrics, static analysis and evidence-backed findings.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -48767,8 +49021,8 @@
     "path": "skills/photopea-embedded-editor",
     "category": "web-development",
     "name": "photopea-embedded-editor",
-    "description": "Embed Photopea in web apps using photopea.js. Covers embedding, file I/O, scripting, exporting, layers, text, filters, and the full Photoshop-compatible API.",
-    "risk": "safe",
+    "description": "Embed Photopea in web apps using photopea.js. Covers embedding, file I/O, scripting, exporting, layers, text, filters, and selected Photoshop-like scripting patterns.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-05-20",
     "plugin": {
@@ -48959,7 +49213,7 @@
     "category": "voice-agents",
     "name": "pipecat-friday-agent",
     "description": "Build a low-latency, Iron Man-inspired tactical voice assistant (F.R.I.D.A.Y.) using Pipecat, Gemini, and OpenAI.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-10",
     "plugin": {
@@ -49123,7 +49377,7 @@
     "category": "project-management",
     "name": "plan-ledger-tasks-yylo",
     "description": "Create a concise Product Development Requirement and one or more implementation-sized YYLO Ledger tasks when the user explicitly asks to plan or register work.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/yylo-dev/yylo-skills",
     "date_added": "2026-09-19",
     "plugin": {
@@ -49271,7 +49525,7 @@
     "category": "test-automation",
     "name": "playwright-java",
     "description": "Scaffold, write, debug, and enhance enterprise-grade Playwright E2E tests in Java using Page Object Model, JUnit 5, Allure reporting, and parallel execution.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2025-03-08",
     "plugin": {
@@ -49301,7 +49555,7 @@
     "path": "skills/playwright-skill",
     "category": "test-automation",
     "name": "playwright-skill",
-    "description": "IMPORTANT - Path Resolution: This skill can be installed in different locations (plugin system, manual installation, global, or project-specific). Before executing any commands, determine the skill directory based on where you loaded this SKILL.md file, and use that path in all commands below.",
+    "description": "Write and run scoped Playwright browser automation, responsive checks, screenshots and login-flow tests with a local Node executor.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -49425,9 +49679,9 @@
   {
     "id": "polars",
     "path": "skills/polars",
-    "category": "data-science",
+    "category": "uncategorized",
     "name": "polars",
-    "description": "Fast in-memory DataFrame library for datasets that fit in RAM. Use when pandas is too slow but data still fits in memory. Lazy evaluation, parallel execution, Apache Arrow backend. Best for 1-100GB datasets, ETL pipelines, faster pandas replacement. For larger-than-RAM data use dask or vaex.",
+    "description": "Expression-based DataFrame library for Python and Rust. Use for eager or lazy tabular analytics, ETL, and pandas migration; streaming support and memory needs depend on the query.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
@@ -49684,7 +49938,7 @@
     "category": "database",
     "name": "postgres-best-practices",
     "description": "Postgres performance optimization and best practices from Supabase. Use this skill when writing, reviewing, or optimizing Postgres queries, schema designs, or database configurations.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -49706,7 +49960,7 @@
     "category": "data",
     "name": "postgres-readonly-queries",
     "description": "Execute safe read-only SQL queries against PostgreSQL databases with multi-connection support and defense-in-depth write protection.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/sanjay3290/ai-skills/tree/main/skills/postgres",
     "date_added": "2026-07-09",
     "plugin": {
@@ -50083,28 +50337,6 @@
       "slide-design",
       "document-generation"
     ]
-  },
-  {
-    "id": "pptx-official",
-    "path": "skills/pptx-official",
-    "category": "presentation-processing",
-    "name": "pptx-official",
-    "description": "A user may ask you to create, edit, or analyze the contents of a .pptx file. A .pptx file is essentially a ZIP archive containing XML files and other resources that you can read or edit. You have different tools and workflows available for different tasks.",
-    "risk": "critical",
-    "source": "community",
-    "date_added": "2026-02-27",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
   },
   {
     "id": "pr-merge-champion",
@@ -50586,12 +50818,44 @@
     ]
   },
   {
+    "id": "product-design-harness",
+    "path": "skills/product-design-harness",
+    "category": "product",
+    "name": "product-design-harness",
+    "description": "Use when a product direction, feature, workflow, experiment, launch, feedback signal, automation, or scale decision needs judgment before execution or the next iteration.",
+    "risk": "safe",
+    "source": "https://github.com/cis2042/ux3-product-design-harness/tree/7f9f724c5e31813d1c35767f9f454fe9a1e96891/skills/product-design-harness",
+    "date_added": "2026-10-23",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "cis2042/ux3-product-design-harness",
+    "license": "MIT",
+    "license_source": "https://github.com/cis2042/ux3-product-design-harness/blob/7f9f724c5e31813d1c35767f9f454fe9a1e96891/skills/product-design-harness/LICENSE",
+    "tags": [
+      "product-design",
+      "decision-making",
+      "evidence",
+      "handoff"
+    ]
+  },
+  {
     "id": "product-inventor",
     "path": "skills/product-inventor",
     "category": "business",
     "name": "product-inventor",
     "description": "Product Inventor e Design Alchemist de nivel maximo \u2014 combina Product Thinking, Design Systems, UI Engineering, Psicologia Cognitiva, Storytelling e execucao impecavel nivel Jobs/Apple.",
-    "risk": "none",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -50618,7 +50882,7 @@
     "path": "skills/product-manager",
     "category": "business",
     "name": "product-manager",
-    "description": "Senior PM agent with 6 knowledge domains, 30+ frameworks, 12 templates, and 32 SaaS metrics with formulas. Pure Markdown, zero scripts.",
+    "description": "Guide product strategy, discovery, prioritization and metrics; upstream templates and formula collections are external prerequisites.",
     "risk": "safe",
     "source": "Digidai/product-manager-skills (MIT)",
     "date_added": "2026-03-06",
@@ -50786,9 +51050,9 @@
   {
     "id": "production-code-audit",
     "path": "skills/production-code-audit",
-    "category": "architecture",
+    "category": "uncategorized",
     "name": "production-code-audit",
-    "description": "Autonomously deep-scan entire codebase line-by-line, understand architecture and patterns, then systematically transform it to production-grade, corporate-level professional quality with optimizations",
+    "description": "Audit an explicitly scoped codebase for evidenced security, correctness and performance issues; implement authorized targeted repairs and report validation plus residual readiness gaps.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -50906,7 +51170,7 @@
     "path": "skills/progressive-estimation",
     "category": "project-management",
     "name": "progressive-estimation",
-    "description": "Estimate AI-assisted and hybrid human+agent development work with research-backed PERT statistics and calibration feedback loops",
+    "description": "Estimate AI-assisted and hybrid human+agent development work with explicit PERT assumptions and calibration feedback loops",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-10",
@@ -50936,7 +51200,7 @@
     "category": "front-end",
     "name": "progressive-web-app",
     "description": "Build Progressive Web Apps (PWAs) with offline support, installability, and caching strategies. Trigger whenever the user mentions PWA, service workers, web app manifests, Workbox, 'add to home screen', or wants their web app to work offline, feel native, or be installable.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-17",
     "plugin": {
@@ -51110,7 +51374,7 @@
     "category": "architecture",
     "name": "projection-patterns",
     "description": "Build read models and projections from event streams. Use when implementing CQRS read sides, building materialized views, or optimizing query performance in event-sourced systems.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -51248,7 +51512,7 @@
     "category": "ai-ml",
     "name": "prompt-caching",
     "description": "Caching strategies for LLM prompts including Anthropic prompt caching, response caching, and CAG (Cache Augmented Generation)",
-    "risk": "none",
+    "risk": "critical",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
     "plugin": {
@@ -51298,7 +51562,7 @@
     "category": "ai-ml",
     "name": "prompt-engineering",
     "description": "Expert guide on prompt engineering patterns, best practices, and optimization techniques. Use when user wants to improve prompts, learn prompting strategies, or debug agent behavior.",
-    "risk": "none",
+    "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -51390,7 +51654,7 @@
     "category": "mcp",
     "name": "protect-mcp-governance",
     "description": "Agent governance skill for MCP tool calls \u2014 Cedar policy authoring, shadow-to-enforce rollout, and Ed25519 receipt verification.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-04-05",
     "plugin": {
@@ -52021,7 +52285,7 @@
     "path": "skills/qiskit",
     "category": "science",
     "name": "qiskit",
-    "description": "Qiskit is the world's most popular open-source quantum computing framework with 13M+ downloads. Build quantum circuits, optimize for hardware, execute on simulators or real quantum computers, and analyze results. Supports IBM Quantum (100+ qubit systems), IonQ, Amazon Braket, and other providers.",
+    "description": "Build and transpile Qiskit circuits, test local simulators and prepare authorized hardware workloads with Sampler/Estimator primitives.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
@@ -52037,7 +52301,7 @@
       },
       "reasons": []
     },
-    "license": "Apache-2.0 license"
+    "license": "MIT"
   },
   {
     "id": "qoder-delegate",
@@ -52070,7 +52334,7 @@
     "path": "skills/qrx",
     "category": "design",
     "name": "qrx",
-    "description": "Make branded, print-ready art QR codes that always scan with QRX (qrx.codes). Use when a link needs a QR code that looks like artwork or matches a brand for print, packaging, signs, slides or event badges, and to list or re-point QRX codes. Not for plain QR codes the agent makes locally.",
+    "description": "Make branded, print-ready art QR codes to validate before use with QRX (qrx.codes). Use when a link needs a QR code that looks like artwork or matches a brand for print, packaging, signs, slides or event badges, and to list or re-point QRX codes. Not for plain QR codes the agent makes locally.",
     "risk": "critical",
     "source": "https://github.com/qrxcodes/qrx-mcp/tree/main/skills/qrx",
     "date_added": "2026-10-10",
@@ -52104,8 +52368,8 @@
     "path": "skills/quality-nonconformance",
     "category": "business",
     "name": "quality-nonconformance",
-    "description": "Codified expertise for quality control, non-conformance investigation, root cause analysis, corrective action, and supplier quality management in regulated manufacturing.",
-    "risk": "safe",
+    "description": "Operational guidance for quality control, non-conformance investigation, root cause analysis, corrective action, and supplier quality management in regulated manufacturing.",
+    "risk": "critical",
     "source": "https://github.com/ai-evos/agent-skills",
     "date_added": "2026-02-27",
     "plugin": {
@@ -52240,7 +52504,7 @@
     "category": "security",
     "name": "radare2",
     "description": "Drive the radare2 CLI for binary reconnaissance, disassembly, analysis, function locating, export, and lightweight patching (r2/rabin2/rasm2/radiff2) without a GUI.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/zhaoxuya520/reverse-skill",
     "date_added": "2026-08-25",
     "plugin": {
@@ -52265,7 +52529,7 @@
     "path": "skills/radio-sdr",
     "category": "security",
     "name": "radio-sdr",
-    "description": "Authorized RF/SDR security research: signal identification, replay-feasibility study in shielded labs, and wireless protocol analysis outside regulated bands.",
+    "description": "Authorized RF/SDR security research: signal identification, replay-feasibility study in shielded labs, and wireless protocol analysis within applicable spectrum and authorization constraints.",
     "risk": "offensive",
     "source": "https://github.com/zhaoxuya520/reverse-skill",
     "date_added": "2026-08-25",
@@ -52549,7 +52813,7 @@
     "path": "skills/react-best-practices",
     "category": "web-development",
     "name": "react-best-practices",
-    "description": "Comprehensive performance optimization guide for React and Next.js applications, maintained by Vercel. Use when writing new React components or Next.js pages, implementing data fetching (client or server-side), or reviewing code for performance issues.",
+    "description": "Comprehensive performance optimization guide for React and Next.js applications, adapted from Vercel\u2019s published guidance. Use when writing new React components or Next.js pages, implementing data fetching (client or server-side), or reviewing code for performance issues.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
@@ -52659,7 +52923,7 @@
     "path": "skills/react-native-architecture",
     "category": "web-development",
     "name": "react-native-architecture",
-    "description": "Production-ready patterns for React Native development with Expo, including navigation, state management, native modules, and offline-first architecture.",
+    "description": "Architecture and integration patterns for React Native development with Expo, including navigation, state management, native modules, and offline-first architecture.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
@@ -52681,7 +52945,7 @@
     "path": "skills/react-native-skills",
     "category": "web-development",
     "name": "react-native-skills",
-    "description": "Use when working with react-native-skills tasks or workflows",
+    "description": "Review React Native and Expo rendering, lists, animations, navigation and native UI against project versions and measured behavior.",
     "risk": "safe",
     "source": "https://github.com/vercel-labs/agent-skills",
     "date_added": "2026-06-02",
@@ -52822,7 +53086,7 @@
     "path": "skills/readme",
     "category": "content",
     "name": "readme",
-    "description": "You are an expert technical writer creating comprehensive project documentation. Your goal is to write a README.md that is absurdly thorough\u2014the kind of documentation you wish every project had.",
+    "description": "You are an expert technical writer creating comprehensive project documentation. Write an accurate README sized to the project and task, with verified setup instructions and links to detailed references.",
     "risk": "safe",
     "source": "https://github.com/Shpigford/skills/tree/main/readme",
     "date_added": "2026-02-27",
@@ -52844,7 +53108,7 @@
     "path": "skills/recallmax",
     "category": "memory",
     "name": "recallmax",
-    "description": "FREE \u2014 God-tier long-context memory for AI agents. Injects 500K-1M clean tokens, auto-summarizes with tone/intent preservation, compresses 14-turn history into 800 tokens.",
+    "description": "Prepare source-linked conversation handoffs and bounded document summaries, preserving decisions, uncertainty and task state within the host context limit.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-13",
@@ -53028,7 +53292,7 @@
     "category": "data-ai",
     "name": "recsys-pipeline-architect",
     "description": "Designs composable recommendation, ranking, and feed pipelines using the six-stage Source\u2192Hydrator\u2192Filter\u2192Scorer\u2192Selector\u2192SideEffect framework",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-05-16",
     "plugin": {
@@ -53317,7 +53581,7 @@
     "path": "skills/referral-program",
     "category": "marketing",
     "name": "referral-program",
-    "description": "You are an expert in viral growth and referral marketing with access to referral program data and third-party tools. Your goal is to help design and optimize programs that turn customers into growth engines.",
+    "description": "You are an expert in viral growth and referral marketing using only referral data and tools actually available and authorized. Your goal is to help design and optimize programs that turn customers into growth engines.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -53362,7 +53626,7 @@
     "category": "ml-ops",
     "name": "remote-gpu-trainer",
     "description": "Deploy, monitor, and debug long GPU jobs on RENTED/remote instances (AutoDL, RunPod, vast.ai, Lambda, Slurm, K8s): teardown/billing safety, spot resilience, resumable checkpointing, OOM/NaN triage.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-06-20",
     "plugin": {
@@ -53444,7 +53708,7 @@
     "category": "media",
     "name": "remotion-best-practices",
     "description": "Best practices for Remotion - Video creation in React",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -53473,7 +53737,7 @@
     "category": "media",
     "name": "remotion-captions",
     "description": "Transcribing, displaying and animating captions",
-    "risk": "unknown",
+    "risk": "critical",
     "source": "remotion-dev",
     "date_added": "2026-09-21",
     "plugin": {
@@ -53497,7 +53761,7 @@
     "category": "media",
     "name": "remotion-create",
     "description": "Create a new Remotion video",
-    "risk": "unknown",
+    "risk": "critical",
     "source": "remotion-dev",
     "date_added": "2026-09-21",
     "plugin": {
@@ -53975,7 +54239,7 @@
     "category": "browser-automation",
     "name": "reverse-browser-automation",
     "description": "Automate browsers (Playwright) and Windows desktop applications (UI automation) for reverse-engineering evidence collection, UI-driven workflows, and network observation during analysis.",
-    "risk": "safe",
+    "risk": "offensive",
     "source": "https://github.com/zhaoxuya520/reverse-skill",
     "date_added": "2026-08-25",
     "plugin": {
@@ -54049,7 +54313,7 @@
     "category": "security",
     "name": "reverse-engineering",
     "description": "General reverse-engineering methodology for compiled, obfuscated, packed, or virtualized targets: GDB, Frida, angr, Unicorn, and Qiling workflows across languages and platforms, with anti-analysis countermeasures.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/zhaoxuya520/reverse-skill",
     "date_added": "2026-08-25",
     "plugin": {
@@ -54317,7 +54581,7 @@
     "path": "skills/risk-manager",
     "category": "business",
     "name": "risk-manager",
-    "description": "Monitor portfolio risk, R-multiples, and position limits. Creates hedging strategies, calculates expectancy, and implements stop-losses.",
+    "description": "Monitor portfolio risk, R-multiples, and position limits. Creates hedging strategies, calculates expectancy, and analyzes proposed stop-loss levels.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
@@ -54769,7 +55033,7 @@
     "category": "database",
     "name": "saas-multi-tenant",
     "description": "Design and implement multi-tenant SaaS architectures with row-level security, tenant-scoped queries, shared-schema isolation, and safe cross-tenant admin patterns in PostgreSQL and TypeScript.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-28",
     "plugin": {
@@ -55070,7 +55334,7 @@
     "category": "api-integration",
     "name": "salesforce-development",
     "description": "Expert patterns for Salesforce platform development including Lightning Web Components (LWC), Apex triggers and classes, REST/Bulk APIs, External Client Apps, and Salesforce DX with scratch orgs and 2nd generation packages (2GP).",
-    "risk": "safe",
+    "risk": "critical",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
     "plugin": {
@@ -55089,9 +55353,9 @@
   {
     "id": "sam-altman",
     "path": "skills/sam-altman",
-    "category": "ai-ml",
+    "category": "uncategorized",
     "name": "sam-altman",
-    "description": "Agente que simula Sam Altman \u2014 CEO da OpenAI, ex-presidente da Y Combinator, arquiteto da era AGI.",
+    "description": "Persona fict\u00edcia inspirada em temas p\u00fablicos associados a Sam Altman; sem representa\u00e7\u00e3o, cita\u00e7\u00f5es verificadas ou acesso interno.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-06",
@@ -55299,7 +55563,7 @@
     "category": "security",
     "name": "sbom-supply-chain",
     "description": "Generate, sign, and verify SBOMs and provenance attestations to secure the software supply chain. Use when implementing SLSA controls, artifact trust policies, or compliance evidence for releases.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
     "date_added": "2026-09-20",
     "plugin": {
@@ -55569,7 +55833,7 @@
     "path": "skills/scientific-writing",
     "category": "content",
     "name": "scientific-writing",
-    "description": "This is the core skill for the deep research and writing tool\u2014combining AI-driven deep research with well-formatted written outputs. Every document produced is backed by comprehensive literature search and verified citations through the research-lookup skill.",
+    "description": "Draft and revise scientific manuscripts with evidence-based structure, citation verification, reporting guidelines and venue-specific formatting.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
@@ -55694,7 +55958,7 @@
     "category": "marketing",
     "name": "screenshots",
     "description": "Generate marketing screenshots of your app using Playwright. Use when the user wants to create screenshots for Product Hunt, social media, landing pages, or documentation.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/Shpigford/skills/tree/main/screenshots",
     "date_added": "2026-02-27",
     "plugin": {
@@ -55821,7 +56085,7 @@
     "path": "skills/search-specialist",
     "category": "content",
     "name": "search-specialist",
-    "description": "Expert web researcher using advanced search techniques and",
+    "description": "Research questions with focused web searches, primary-source verification, and explicit evidence gaps.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -55843,8 +56107,8 @@
     "path": "skills/second-deposit-igaming",
     "category": "business",
     "name": "second-deposit-igaming",
-    "description": "Finds why casino first-time depositors skip a second deposit from local back-office exports: 12 reasons, missed Sum Dep per reason, daily CRM list. For industry teams, 21+.",
-    "risk": "safe",
+    "description": "Explore local casino deposit exports with heuristic signals and descriptive comparisons. Sensitive player data; contact lists and country-rule use require separate operator verification.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-10-21",
     "plugin": {
@@ -55955,7 +56219,7 @@
     "category": "workflow-bundle",
     "name": "security-audit",
     "description": "Comprehensive security auditing workflow covering web application testing, API security, penetration testing, vulnerability scanning, and security hardening.",
-    "risk": "safe",
+    "risk": "offensive",
     "source": "personal",
     "date_added": "2026-02-27",
     "plugin": {
@@ -56113,7 +56377,7 @@
     "category": "security",
     "name": "security-scanning-security-dependencies",
     "description": "You are a security expert specializing in dependency vulnerability analysis, SBOM generation, and supply chain security. Scan project dependencies across multiple ecosystems to identify vulnerabilities, assess risks, and provide automated remediation strategies.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -56179,7 +56443,7 @@
     "category": "data-ai",
     "name": "seek-and-analyze-video",
     "description": "Seek and analyze video content using Memories.ai Large Visual Memory Model for persistent video intelligence",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/kennyzheng-builds/seek-and-analyze-video",
     "date_added": "2026-03-09",
     "plugin": {
@@ -56232,7 +56496,7 @@
     "category": "data",
     "name": "segment-cdp",
     "description": "Expert patterns for Segment Customer Data Platform including Analytics.js, server-side tracking, tracking plans with Protocols, identity resolution, destinations configuration, and data governance best practices.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
     "plugin": {
@@ -56475,7 +56739,7 @@
     "path": "skills/senior-architect",
     "category": "development",
     "name": "senior-architect",
-    "description": "Complete toolkit for senior architect with modern tools and best practices.",
+    "description": "Plan and review system architecture using explicit requirements, tradeoffs and evidence; bundled scripts are incomplete stubs.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -56498,7 +56762,7 @@
     "category": "web-development",
     "name": "senior-frontend",
     "description": "Frontend development skill for React, Next.js, TypeScript, and Tailwind CSS applications. Use when building React components, optimizing Next.js performance, analyzing bundle sizes, scaffolding frontend projects, implementing accessibility, or reviewing frontend code quality.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/alirezarezvani/claude-skills",
     "date_added": "2026-03-07",
     "plugin": {
@@ -57210,7 +57474,7 @@
     "path": "skills/seo-keyword-strategist",
     "category": "content",
     "name": "seo-keyword-strategist",
-    "description": "Analyzes keyword usage in provided content, calculates density, suggests semantic variations and LSI keywords based on the topic. Prevents over-optimization. Use PROACTIVELY for content optimization.",
+    "description": "Analyzes keyword usage in provided content, calculates density, suggests semantic variations and related terms based on the topic. Prevents over-optimization. Use PROACTIVELY for content optimization.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
@@ -57531,7 +57795,7 @@
     "path": "skills/service-mesh-expert",
     "category": "reliability",
     "name": "service-mesh-expert",
-    "description": "Expert service mesh architect specializing in Istio, Linkerd, and cloud-native networking patterns. Masters traffic management, security policies, observability integration, and multi-cluster mesh con",
+    "description": "Review Istio or Linkerd topology, traffic policies, mTLS, observability and multi-cluster operations within an authorized environment.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
@@ -57670,7 +57934,7 @@
     "category": "health",
     "name": "sexual-health-analyzer",
     "description": "Sexual Health Analyzer",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -57792,7 +58056,7 @@
     "path": "skills/sharp-edges",
     "category": "security",
     "name": "sharp-edges",
-    "description": "sharp-edges",
+    "description": "Review misuse-prone security APIs, configuration defaults, cryptographic interfaces and authentication ergonomics; verify concrete failure paths and version assumptions.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-01-30",
@@ -57917,7 +58181,7 @@
     "category": "api-integration",
     "name": "shopify-apps",
     "description": "Expert patterns for Shopify app development including Remix/React Router apps, embedded apps with App Bridge, webhook handling, GraphQL Admin API, Polaris components, billing, and app extensions.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
     "plugin": {
@@ -57976,6 +58240,41 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "shopify-firebase-app",
+    "path": "skills/shopify-firebase-app",
+    "category": "development",
+    "name": "shopify-firebase-app",
+    "description": "Scaffold, extend and deploy Shopify embedded apps on Firebase with Nitrogen. Use for a Shopify app on Cloud Functions, Firestore and Hosting, or inside a Nitrogen project.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-10-23",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "mksd0398/nitrogen",
+    "license": "MIT",
+    "license_source": "https://github.com/mksd0398/nitrogen/blob/master/LICENSE",
+    "tags": [
+      "shopify",
+      "shopify-app",
+      "firebase",
+      "cloud-functions",
+      "firestore",
+      "polaris",
+      "app-bridge"
+    ]
   },
   {
     "id": "shopify-review-triage",
@@ -58226,7 +58525,7 @@
     "path": "skills/skill-audit",
     "category": "security",
     "name": "skill-audit",
-    "description": "Pre-install security scanner for AI agent skills. 7.5% of 14,706 skills are malicious. Audit before you trust.",
+    "description": "Pre-install review framework for AI agent skills: inspect complete content, permissions, dependencies and suspicious behavior before activation.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-05-01",
@@ -58291,8 +58590,8 @@
     "path": "skills/skill-creator",
     "category": "meta",
     "name": "skill-creator",
-    "description": "To create new CLI skills following Anthropic's official best practices with zero manual configuration. This skill automates brainstorming, template application, validation, and installation processes while maintaining progressive disclosure patterns and writing style standards.",
-    "risk": "safe",
+    "description": "Create and review reusable skill drafts with bundled Python scaffolding, basic frontmatter validation and ZIP packaging helpers. Use for skill authoring and packaging; verify target-host requirements separately.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -58341,7 +58640,7 @@
     "path": "skills/skill-developer",
     "category": "meta",
     "name": "skill-developer",
-    "description": "Comprehensive guide for creating and managing skills in Claude Code with auto-activation system, following Anthropic's official best practices including the 500-line rule and progressive disclosure pattern.",
+    "description": "Comprehensive guide for creating and managing skills in Claude Code with auto-activation system, using an illustrative custom hook architecture and concise progressive disclosure and progressive disclosure pattern.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -58419,8 +58718,8 @@
     "path": "skills/skill-installer",
     "category": "meta",
     "name": "skill-installer",
-    "description": "Instala, valida, registra e verifica novas skills no ecossistema. 10 checks de seguranca, copia, registro no orchestrator e verificacao pos-instalacao.",
-    "risk": "safe",
+    "description": "Validate and install explicitly selected local skill trees into a workspace, with full-tree Claude registration, backups and ZIP packaging.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -58540,7 +58839,7 @@
     "category": "meta",
     "name": "skill-rails-upgrade",
     "description": "Analyze Rails apps and provide upgrade assessments",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/robzolkos/skill-rails-upgrade",
     "date_added": "2026-02-27",
     "plugin": {
@@ -58663,7 +58962,7 @@
     "category": "meta",
     "name": "skill-sentinel",
     "description": "Auditoria e evolucao do ecossistema de skills. Qualidade de codigo, seguranca, custos, gaps, duplicacoes, dependencias e relatorios de saude.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -58739,7 +59038,7 @@
     "category": "health",
     "name": "skin-health-analyzer",
     "description": "Analyze skin health data, identify skin problem patterns, assess skin health status. Supports correlation analysis with nutrition, chronic diseases, and medication data.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -58890,7 +59189,7 @@
     "date_added": "2026-08-31",
     "plugin": {
       "targets": {
-        "codex": "blocked",
+        "codex": "supported",
         "claude": "supported"
       },
       "setup": {
@@ -58898,9 +59197,7 @@
         "summary": "",
         "docs": null
       },
-      "reasons": [
-        "target_specific_home_path"
-      ]
+      "reasons": []
     },
     "source_type": "community",
     "source_repo": "glukicov/slideops",
@@ -59103,7 +59400,7 @@
     "path": "skills/soc2-compliance",
     "category": "security",
     "name": "soc2-compliance",
-    "description": "Implement SOC 2 Trust Services Criteria. Configure security, availability, and processing integrity controls. Use when achieving SOC 2 certification.",
+    "description": "Implement SOC 2 Trust Services Criteria. Configure security, availability, and processing integrity controls. Use when preparing for a SOC 2 examination.",
     "risk": "safe",
     "source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills",
     "date_added": "2026-09-20",
@@ -59129,7 +59426,7 @@
     "path": "skills/social-content",
     "category": "marketing",
     "name": "social-content",
-    "description": "You are an expert social media strategist with direct access to a scheduling platform that publishes to all major social networks. Your goal is to help create engaging content that builds audience, drives engagement, and supports business goals.",
+    "description": "Help plan and draft social content; publishing capabilities depend on the actual connected account and tool permissions. Your goal is to help create engaging content that builds audience, drives engagement, and supports business goals.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -59302,7 +59599,7 @@
     "path": "skills/socialclaw",
     "category": "marketing",
     "name": "socialclaw",
-    "description": "Agent-first social media publishing skill \u2014 schedule and publish posts across 13 platforms (X, LinkedIn, Instagram, Facebook Pages, TikTok, Discord, Telegram, YouTube, Reddit, WordPress, Pinterest) via a single workspace API key.",
+    "description": "Agent-first social media publishing skill \u2014 schedule and publish posts across the listed platforms (X, LinkedIn, Instagram, Facebook Pages, TikTok, Discord, Telegram, YouTube, Reddit, WordPress, Pinterest) via a single workspace API key.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-05-25",
@@ -60375,7 +60672,7 @@
     "category": "media",
     "name": "stability-ai",
     "description": "Geracao de imagens via Stability AI (SD3.5, Ultra, Core). Text-to-image, img2img, inpainting, upscale, remove-bg, search-replace. 15 estilos artisticos.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -60996,7 +61293,7 @@
     "category": "agent-orchestration",
     "name": "subagent-orchestrator",
     "description": "Coordinate quota-aware parallel subagents for large, multi-file Antigravity tasks.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-05-21",
     "plugin": {
@@ -61128,7 +61425,7 @@
     "category": "database",
     "name": "supabase-postgres-best-practices",
     "description": "Postgres performance optimization and best practices from Supabase. Use this skill when writing, reviewing, or optimizing Postgres queries, schema designs, or database configurations.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/supabase/agent-skills/tree/main/skills/supabase-postgres-best-practices",
     "date_added": "2026-07-01",
     "plugin": {
@@ -61229,7 +61526,7 @@
     "path": "skills/supply-chain-attack-recon",
     "category": "security",
     "name": "supply-chain-attack-recon",
-    "description": "External recon for software supply-chain attack surface",
+    "description": "Authorized read-only review of public software supply-chain exposure",
     "risk": "offensive",
     "source": "https://github.com/elementalsouls/Claude-BugHunter",
     "date_added": "2026-09-20",
@@ -61330,7 +61627,7 @@
     "category": "research",
     "name": "survey-generator",
     "description": "Generate source-backed AI/ML survey paper artifacts with curated bibliographies and Fireworks/Kimi HTML rendering.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "official",
     "date_added": "2026-06-19",
     "plugin": {
@@ -61838,7 +62135,7 @@
     "category": "shopping",
     "name": "takeout-coupon",
     "description": "Call takeout coupon API to fetch hidden coupon lists, red packets and aggregated redemption pages for platforms (Meituan, Taobao Flash/Ele.me, JD.com). Returns coupon codes and redemption instructions for users to copy and redeem in corresponding apps.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-10-16",
     "plugin": {
@@ -61958,8 +62255,8 @@
     "path": "skills/task-intelligence",
     "category": "workflow",
     "name": "task-intelligence",
-    "description": "Protocolo de Intelig\u00eancia Pr\u00e9-Tarefa \u2014 ativa TODOS os agentes relevantes do ecossistema ANTES de executar qualquer tarefa solicitada pelo usu\u00e1rio.",
-    "risk": "none",
+    "description": "Protocolo de Intelig\u00eancia Pr\u00e9-Tarefa \u2014 planeja a tarefa e consulta apenas agentes dispon\u00edveis, relevantes e autorizados quando o benef\u00edcio justificar o custo.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -62382,7 +62679,7 @@
     "path": "skills/team-collaboration-issue",
     "category": "project-management",
     "name": "team-collaboration-issue",
-    "description": "You are a GitHub issue resolution expert specializing in systematic bug investigation, feature implementation, and collaborative development workflows. Your expertise spans issue triage, root cause an",
+    "description": "You are a GitHub issue resolution expert specializing in systematic bug investigation, feature implementation, and collaborative development workflows. Your expertise spans issue triage, root cause analysis, testing, and pull request preparation.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
@@ -62940,7 +63237,7 @@
     "category": "granular-workflow-bundle",
     "name": "terraform-infrastructure",
     "description": "Terraform infrastructure as code workflow for provisioning cloud resources, creating reusable modules, and managing infrastructure at scale.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "personal",
     "date_added": "2026-02-27",
     "plugin": {
@@ -63072,7 +63369,7 @@
     "category": "development-and-testing",
     "name": "test-fixing",
     "description": "Systematically identify and fix all failing tests using smart grouping strategies. Use when explicitly asks to fix tests (\"fix these tests\", \"make tests pass\"), reports test failures (\"tests are failing\", \"test suite is broken\"), or completes implementation and wants tests passing.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -63306,7 +63603,7 @@
     "path": "skills/theme-factory",
     "category": "design",
     "name": "theme-factory",
-    "description": "This skill provides a curated collection of professional font and color themes themes, each with carefully selected color palettes and font pairings. Once a theme is chosen, it can be applied to any artifact.",
+    "description": "This skill provides a curated collection of professional font and color themes, each with carefully selected color palettes and font pairings. Once a theme is chosen, it can be applied to any artifact.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -63321,7 +63618,8 @@
         "docs": null
       },
       "reasons": []
-    }
+    },
+    "license": "Apache-2.0"
   },
   {
     "id": "thick-client",
@@ -64041,8 +64339,8 @@
     "path": "skills/tool-use-guardian",
     "category": "reliability",
     "name": "tool-use-guardian",
-    "description": "FREE \u2014 Intelligent tool-call reliability wrapper. Monitors, retries, fixes, and learns from tool failures. Auto-recovers from truncated JSON, timeouts, rate limits, and mid-chain failures.",
-    "risk": "safe",
+    "description": "Triage tool failures, validate responses and resume bounded workflows using replay-safe retries and explicit handling of unknown write outcomes.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-13",
     "plugin": {
@@ -64108,7 +64406,7 @@
     "path": "skills/top-web-vulnerabilities",
     "category": "security",
     "name": "top-web-vulnerabilities",
-    "description": "Provide a comprehensive, structured reference for the 100 most critical web application vulnerabilities organized by category. This skill enables systematic vulnerability identification, impact assessment, and remediation guidance across the full spectrum of web security threats.",
+    "description": "Provide an illustrative, overlapping reference for common web application vulnerability patterns organized by category. This skill enables systematic vulnerability identification, impact assessment, and remediation guidance across the full spectrum of web security threats.",
     "risk": "offensive",
     "source": "community",
     "date_added": "2026-02-27",
@@ -64285,7 +64583,7 @@
     "category": "finance",
     "name": "traderspy-technical-analysis",
     "description": "Read one crypto futures pair with TraderSpy: 19 indicators on up to 3 timeframes in one call, key levels, funding, open interest and positioning. Use for \"analyse BTC\" or \"is SOL oversold\".",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/target1m/traderspy-mcp/tree/069aae5a84640d671f92705a2e3bc0b62efca1e0/skills/technical-analysis",
     "date_added": "2026-09-25",
     "plugin": {
@@ -64627,7 +64925,7 @@
     "category": "shopping",
     "name": "trip-coupon",
     "description": "Call trip/travel coupon API to fetch travel coupons including DiDi ride-hailing gift packages and hotel coupon bundles. Returns coupon links and QR code images for users to redeem via WeChat.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-10-16",
     "plugin": {
@@ -66224,7 +66522,7 @@
     "category": "productivity",
     "name": "usage-engineer",
     "description": "Cut wasted tokens in coding-agent sessions: compact long logs, stop identical retries, check stale project maps, and audit local Codex/OpenCode usage.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-10-21",
     "plugin": {
@@ -66307,10 +66605,10 @@
   {
     "id": "user-thoughts",
     "path": "skills/user-thoughts",
-    "category": "web-development",
+    "category": "uncategorized",
     "name": "user-thoughts",
-    "description": "Persist user decisions and project constraints to mdbase across sessions. Trigger on /user-thoughts or /ustht, or when the user discusses architecture, tech stack, rules, UI/UX, or project memory.",
-    "risk": "safe",
+    "description": "Persist user decisions and project constraints to mdbase across sessions. Use on explicit /user-thoughts or /ustht requests, or within previously authorized project-memory capture scope.",
+    "risk": "critical",
     "source": "https://github.com/JularDepick/user-thoughts.SKILL",
     "date_added": "2026-05-31",
     "plugin": {
@@ -66471,7 +66769,7 @@
     "path": "skills/using-superpowers",
     "category": "meta",
     "name": "using-superpowers",
-    "description": "Use when starting any conversation - establishes how to find and use skills, requiring Skill tool invocation before ANY response including clarifying questions",
+    "description": "Use when choosing relevant skills for a task and establishing a skill-selection workflow.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -66494,7 +66792,7 @@
     "category": "development",
     "name": "uv-package-manager",
     "description": "Comprehensive guide to using uv, an extremely fast Python package installer and resolver written in Rust, for modern Python project management and dependency workflows.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -66775,7 +67073,7 @@
     "path": "skills/varlock-claude-skill",
     "category": "security",
     "name": "varlock-claude-skill",
-    "description": "Secure environment variable management ensuring secrets are never exposed in Claude sessions, terminals, logs, or git commits",
+    "description": "Secure environment variable management with explicit checks to reduce secret exposure in Claude sessions, terminals, logs, or git commits",
     "risk": "safe",
     "source": "https://github.com/wrsmith108/varlock-claude-skill",
     "date_added": "2026-02-27",
@@ -66994,7 +67292,7 @@
     "category": "devops",
     "name": "vercel-deployment",
     "description": "Expert knowledge for deploying to Vercel with Next.js",
-    "risk": "safe",
+    "risk": "critical",
     "source": "vibeship-spawner-skills (Apache 2.0)",
     "date_added": "2026-02-27",
     "plugin": {
@@ -67042,7 +67340,7 @@
     "category": "devops",
     "name": "vercel-optimize",
     "description": "Audit deployed Vercel apps for cost and performance issues using metrics, project config, code scans, and version-aware recommendations.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/vercel-labs/agent-skills",
     "date_added": "2026-06-02",
     "plugin": {
@@ -67296,7 +67594,7 @@
     "category": "devops",
     "name": "vibecode-production-qa-validator",
     "description": "13-phase production QA for fullstack Next.js apps: build verification, SEO tags, OG images, favicon, route regression, API auth, page speed, lazy load, vulnerability scan, UI/UX cards, error boundaries, database, secure rendering, and cleanup.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "self",
     "date_added": "2026-05-31",
     "plugin": {
@@ -67356,7 +67654,7 @@
     "path": "skills/viboscope",
     "category": "collaboration",
     "name": "viboscope",
-    "description": "Psychological compatibility matching \u2014 find cofounders, collaborators, and friends through validated psychometrics",
+    "description": "Psychological compatibility matching \u2014 find cofounders, collaborators, and friends with explicit consent and unverified provider scoring",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-29",
@@ -67474,7 +67772,7 @@
     "category": "media",
     "name": "videodb",
     "description": "Video and audio perception, indexing, and editing. Ingest files/URLs/live streams, build visual/spoken indexes, search with timestamps, edit timelines, add overlays/subtitles, generate media, and create real-time alerts.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -67508,7 +67806,7 @@
     "category": "media",
     "name": "videodb-skills",
     "description": "Upload, stream, search, edit, transcribe, and generate AI video and audio using the VideoDB SDK.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
     "plugin": {
@@ -68088,8 +68386,8 @@
     "path": "skills/warren-buffett",
     "category": "finance",
     "name": "warren-buffett",
-    "description": "Agente que simula Warren Buffett \u2014 o maior investidor do seculo XX e XXI, CEO da Berkshire Hathaway, discipulo de Benjamin Graham e socio intelectual de Charlie Munger.",
-    "risk": "safe",
+    "description": "Agente que simula Warren Buffett \u2014 o maior investidor do seculo XX e XXI, historicamente associado a Berkshire Hathaway, discipulo de Benjamin Graham e socio intelectual de Charlie Munger.",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -68357,7 +68655,7 @@
     "path": "skills/weaviate",
     "category": "databases",
     "name": "weaviate",
-    "description": "Search, query, inspect, create, and import data into Weaviate vector database collections using official scripts and references.",
+    "description": "Search, query, inspect, create, and import data into Weaviate vector database collections using bundled adapted scripts and references.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-06-29",
@@ -68391,7 +68689,7 @@
     "category": "ai",
     "name": "weaviate-cookbooks",
     "description": "Build Weaviate AI apps from official cookbook blueprints for RAG, agentic RAG, data exploration, multimodal PDF search, async clients, and frontends.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-06-29",
     "plugin": {
@@ -68423,7 +68721,7 @@
     "path": "skills/web-artifacts-builder",
     "category": "web-development",
     "name": "web-artifacts-builder",
-    "description": "To build powerful frontend claude.ai artifacts, follow these steps:",
+    "description": "Create React frontend artifacts and bundle a reviewed project into a shareable HTML file.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-02-27",
@@ -68577,7 +68875,7 @@
     "category": "data",
     "name": "web-scraper",
     "description": "Web scraping inteligente multi-estrategia. Extrai dados estruturados de paginas web (tabelas, listas, precos). Paginacao, monitoramento e export CSV/JSON.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -68605,7 +68903,7 @@
     "category": "granular-workflow-bundle",
     "name": "web-security-testing",
     "description": "Web application security testing workflow for OWASP Top 10 vulnerabilities including injection, XSS, authentication flaws, and access control issues.",
-    "risk": "safe",
+    "risk": "offensive",
     "source": "personal",
     "date_added": "2026-02-27",
     "plugin": {
@@ -68901,7 +69199,7 @@
     "category": "health",
     "name": "weightloss-analyzer",
     "description": "\u5206\u6790\u51cf\u80a5\u6570\u636e\u3001\u8ba1\u7b97\u4ee3\u8c22\u7387\u3001\u8ffd\u8e2a\u80fd\u91cf\u7f3a\u53e3\u3001\u7ba1\u7406\u51cf\u80a5\u9636\u6bb5",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-06",
     "plugin": {
@@ -69574,8 +69872,8 @@
     "path": "skills/wordpress",
     "category": "workflow-bundle",
     "name": "wordpress",
-    "description": "Complete WordPress development workflow covering theme development, plugin creation, WooCommerce integration, performance optimization, and security hardening. Includes WordPress 7.0 features: Real-Time Collaboration, AI Connectors, Abilities API, DataViews, and PHP-only blocks.",
-    "risk": "safe",
+    "description": "WordPress development workflow covering theme development, plugin creation, WooCommerce integration, performance optimization, and security hardening. Includes WordPress 7.0 features: Real-Time Collaboration, AI Connectors, Abilities API, DataViews, and PHP-only blocks.",
+    "risk": "critical",
     "source": "personal",
     "date_added": "2026-02-27",
     "plugin": {
@@ -69626,7 +69924,7 @@
     "path": "skills/wordpress-penetration-testing",
     "category": "security",
     "name": "wordpress-penetration-testing",
-    "description": "Assess WordPress installations for common vulnerabilities and WordPress 7.0 attack surfaces.",
+    "description": "Assess WordPress installations for common vulnerabilities and installed core/plugin REST permission boundaries.",
     "risk": "offensive",
     "source": "community",
     "date_added": "2026-02-27",
@@ -69693,7 +69991,7 @@
     "category": "granular-workflow-bundle",
     "name": "wordpress-woocommerce-development",
     "description": "WooCommerce store development workflow covering store setup, payment integration, shipping configuration, customization, and WordPress 7.0 features: AI connectors, DataViews, and collaboration tools.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "personal",
     "date_added": "2026-02-27",
     "plugin": {
@@ -70105,7 +70403,7 @@
     "category": "marketing",
     "name": "x-article-publisher-skill",
     "description": "Publish articles to X/Twitter",
-    "risk": "safe",
+    "risk": "critical",
     "source": "https://github.com/wshuyi/x-article-publisher-skill",
     "date_added": "2026-02-27",
     "plugin": {
@@ -70224,28 +70522,6 @@
     ]
   },
   {
-    "id": "xlsx-official",
-    "path": "skills/xlsx-official",
-    "category": "spreadsheet-processing",
-    "name": "xlsx-official",
-    "description": "Unless otherwise stated by the user or existing template",
-    "risk": "critical",
-    "source": "community",
-    "date_added": "2026-02-27",
-    "plugin": {
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": []
-    }
-  },
-  {
     "id": "xss-html-injection",
     "path": "skills/xss-html-injection",
     "category": "security",
@@ -70273,7 +70549,7 @@
     "category": "finance",
     "name": "xvary-stock-research",
     "description": "Thesis-driven equity analysis from public SEC EDGAR and market data; /analyze, /score, /compare workflows with bundled Python tools (Claude Code, Cursor, Codex).",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-03-23",
     "plugin": {
@@ -70317,7 +70593,7 @@
     "path": "skills/yann-lecun",
     "category": "ai-ml",
     "name": "yann-lecun",
-    "description": "Agente que simula Yann LeCun \u2014 inventor das Convolutional Neural Networks, Chief AI Scientist da Meta, Pr\u00eamio Turing 2018.",
+    "description": "Persona fict\u00edcia inspirada em temas p\u00fablicos associados a Yann LeCun, para di\u00e1logo criativo sobre redes neurais e aprendizagem preditiva.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-06",
@@ -70402,7 +70678,7 @@
     "path": "skills/yann-lecun-tecnico",
     "category": "ai-ml",
     "name": "yann-lecun-tecnico",
-    "description": "Sub-skill t\u00e9cnica de Yann LeCun. Cobre CNNs, LeNet, backpropagation, JEPA (I-JEPA, V-JEPA, MC-JEPA), AMI (Advanced Machinery of Intelligence), Self-Supervised Learning (SimCLR, MAE, BYOL), Energy-Based Models (EBMs) e c\u00f3digo PyTorch completo.",
+    "description": "Sub-skill t\u00e9cnica de Yann LeCun. Cobre CNNs, LeNet, backpropagation, JEPA (I-JEPA, V-JEPA, MC-JEPA), AMI (Advanced Machinery of Intelligence), Self-Supervised Learning (SimCLR, MAE, BYOL), Energy-Based Models (EBMs) e exemplos did\u00e1ticos PyTorch.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-03-06",
@@ -70432,7 +70708,7 @@
     "category": "skill-authoring",
     "name": "yao-meta-skill",
     "description": "Create, refactor, evaluate, and package agent skills from workflows, prompts, transcripts, docs, or notes. Use for skill creation, reusable workflow packaging, skill improvement, evals, and team-ready distribution.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "community",
     "date_added": "2026-06-19",
     "plugin": {
@@ -70565,7 +70841,7 @@
     "category": "video",
     "name": "youtube-notetaker",
     "description": "Turn YouTube talks into local study notes with slides, transcripts, editable annotations, and a markdown-backed viewer.",
-    "risk": "safe",
+    "risk": "critical",
     "source": "official",
     "date_added": "2026-06-19",
     "plugin": {
@@ -70678,7 +70954,7 @@
     "path": "skills/youtube-transcript-skills",
     "category": "api-integration",
     "name": "youtube-transcript-skills",
-    "description": "Fetch YouTube video transcripts, search videos/channels, browse channels, and extract playlists via the getyoutubetranscript.com API - free tier, no card required.",
+    "description": "Fetch YouTube video transcripts, search videos/channels, browse channels, and extract playlists via the getyoutubetranscript.com API; verify current account terms.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-09-13",

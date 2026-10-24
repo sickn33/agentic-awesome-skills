@@ -79,3 +79,9 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - **Does not check factual accuracy autonomously** (requires HITL)
 
 ---
+
+## Catalog availability and honest status
+
+This copy is guidance only: neither the referenced normative specification nor claim-ID/hash/validator scripts are bundled. Do not run absent paths, reuse sample digests as actual integrity evidence, set computed ingestion flags, or certify v2.1 compliance from this prose alone. The field examples with REVIEWED/confirmed-by are fictional illustrations; preserve PENDING until actual identified human confirmation of the exact claims and document revision. Hashes detect byte/canonicalization changes, not truth, authenticity or review authority. Eight-hex-character IDs need duplicate detection; use longer IDs for scale.
+
+Missing evidence cannot be repaired by adding a fabricated citation, precision or uncertain qualifier. Retain the original claim and source separately from annotations, preserve genuine historical dates, and report unverifiable facts as unverified. A source being called SOT does not establish reliability. Private source documents must not be sent to a RAG service without authorization. This AAS revision corrects availability, timestamp and status-authenticity guidance while preserving Francesco Marinoni Moretto's CC-BY-4.0 attribution.

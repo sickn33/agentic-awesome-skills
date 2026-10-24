@@ -72,10 +72,11 @@ def create_database():
         "com.sun.star.bridge.UnoUrlResolver", local_ctx
     )
     ctx = resolver.resolve(
-        "uno:socket,host=localhost,port=8100;urp;StarOffice.ComponentContext"
+        "uno:socket,host=127.0.0.1,port=8100;urp;StarOffice.ComponentContext"
     )
     smgr = ctx.ServiceManager
-    doc = smgr.createInstanceWithContext("com.sun.star.sdb.DatabaseDocument", ctx)
+    desktop = smgr.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
+    doc = desktop.loadComponentFromURL("private:factory/sdatabase", "_blank", 0, ())
     doc.storeToURL("file:///path/to/database.odb", ())
     doc.close(True)
 ```
@@ -91,15 +92,16 @@ def connect_to_mysql(host, port, database, user, password):
         "com.sun.star.bridge.UnoUrlResolver", local_ctx
     )
     ctx = resolver.resolve(
-        "uno:socket,host=localhost,port=8100;urp;StarOffice.ComponentContext"
+        "uno:socket,host=127.0.0.1,port=8100;urp;StarOffice.ComponentContext"
     )
     smgr = ctx.ServiceManager
     
-    doc = smgr.createInstanceWithContext("com.sun.star.sdb.DatabaseDocument", ctx)
+    desktop = smgr.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
+    doc = desktop.loadComponentFromURL("private:factory/sdatabase", "_blank", 0, ())
     datasource = doc.getDataSource()
     datasource.URL = f"sdbc:mysql:jdbc:mysql://{host}:{port}/{database}"
-    datasource.Properties["UserName"] = user
-    datasource.Properties["Password"] = password
+    datasource.User = user
+    datasource.IsPasswordRequired = True  # supply password at connection time; do not persist it
     
     doc.storeToURL("file:///path/to/connected.odb", ())
     return doc
@@ -152,7 +154,7 @@ pip install sqlalchemy # SQL toolkit
 2. Create indexes for performance
 3. Backup databases regularly
 4. Use transactions for data integrity
-5. Store ODB source files in version control
+5. Keep private versioned backups; do not commit database contents or credentials
 6. Document database schema
 7. Use appropriate data types
 8. Handle connection errors gracefully
@@ -161,8 +163,8 @@ pip install sqlalchemy # SQL toolkit
 
 ### Cannot open socket
 ```bash
-killall soffice.bin
-soffice --headless --accept="socket,host=localhost,port=8100;urp;"
+# Inspect the listener and stop only the task-owned process after saving its documents.
+soffice --headless --accept="socket,host=127.0.0.1,port=8100;urp;"
 ```
 
 ### Connection Issues
@@ -190,3 +192,9 @@ soffice --headless --accept="socket,host=localhost,port=8100;urp;"
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Automation and document limits
+
+Verify the actual LibreOffice version, filters, Python UNO binding and database drivers; installing unrelated Python libraries does not provide UNO. Bind any UNO listener to loopback in a separate task-owned profile and stop it after use; UNO is not an authenticated sandbox. Do not terminate all office processes or expose the listener publicly. Use a fresh private output directory, check expected file type/nonempty output and inspect the rendered result; exit zero alone is insufficient.
+
+Opening documents can invoke macros, external links or embedded content: use approved inputs with macros/updates disabled and isolate untrusted conversions. Format conversion may lose layout, formulas, links, notes, multiple sheets/pages or features. Retain originals, clarify CSV sheet/delimiter/encoding and preserve formula/identifier semantics. Do not automatically install packages, publish documents or put sensitive records in Git. These examples were statically reviewed only; no LibreOffice process or conversion was run.

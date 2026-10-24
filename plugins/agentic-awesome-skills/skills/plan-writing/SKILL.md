@@ -29,12 +29,12 @@ This skill provides a framework for breaking down work into clear, actionable ta
 - Dependencies identified
 - Parallel work where possible
 - Critical path highlighted
-- **Phase X: Verification is always LAST**
+- Verify each task as it is completed, then run a final acceptance check.
 
 ### 4. Dynamic Naming in Project Root
 - Plan files are saved as `{task-slug}.md` in the PROJECT ROOT
 - Name derived from task (e.g., "add auth" → `auth-feature.md`)
-- **NEVER** inside `.claude/`, `docs/`, or temp folders
+- Follow repository/user conventions when they specify another location; preserve an existing supplied plan.
 
 ## Planning Principles (NOT Templates!)
 
@@ -96,7 +96,7 @@ This skill provides a framework for breaking down work into clear, actionable ta
 | Full-stack | Mix of above based on what you touched |
 
 **Wrong:** Adding all scripts to every plan
-**Right:** Only scripts relevant to THIS task
+**Right:** Only existing, inspected scripts relevant to THIS task; the names above are illustrative, not bundled prerequisites
 
 ---
 
@@ -130,9 +130,7 @@ One sentence: What are we building/fixing?
 > **That's it.** No phases, no sub-sections unless truly needed.
 > Keep it minimal. Add complexity only when required.
 
-## Notes
-[Any important considerations]
-```
+Optional notes may record important considerations.
 
 ---
 

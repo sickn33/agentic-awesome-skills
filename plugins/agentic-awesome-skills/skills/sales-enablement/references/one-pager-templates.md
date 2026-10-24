@@ -183,7 +183,7 @@ Questions? Talk to [Champion name] or [Your name at email].
 
 - Margins: at least 0.75" on all sides
 - Space between sections: enough to visually separate (don't cram)
-- If it feels crowded, cut content. Never shrink font below 9pt.
+- If it feels crowded, cut content. Keep body copy comfortably readable at intended print size; remove content before shrinking it.
 
 ### Font Sizing
 

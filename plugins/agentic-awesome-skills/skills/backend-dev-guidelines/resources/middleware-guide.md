@@ -1,5 +1,8 @@
 # Middleware Guide - Express Middleware Patterns
 
+> Scope: independent illustrative fragments, not a supplied runnable application. Private project paths, helpers, DTOs and Prisma models must be implemented/adapted in the target repository. Pin and check installed Express/Sentry/Zod/Prisma versions. Authentication does not grant object/tenant access; authorize before reads/writes, enforce CSRF for cookie authentication, allowlist DTOs and project public response fields. Capture unexpected errors once at an approved, redacted boundary; never send raw request bodies, credentials or personal data to telemetry.
+
+
 Complete guide to creating and using middleware in backend microservices.
 
 ## Table of Contents
@@ -22,14 +25,22 @@ Complete guide to creating and using middleware in backend microservices.
 ```typescript
 export class SSOMiddlewareClient {
     static verifyLoginStatus(req: Request, res: Response, next: NextFunction): void {
-        const token = req.cookies.refresh_token;
+        const authorization = req.get('authorization');
+        const token = authorization?.startsWith('Bearer ') ? authorization.slice(7) : undefined;
 
         if (!token) {
-            return res.status(401).json({ error: 'Not authenticated' });
+            res.status(401).json({ error: 'Not authenticated' });
+            return;
         }
 
         try {
-            const decoded = jwt.verify(token, config.tokens.jwt);
+            const decoded = jwt.verify(token, config.tokens.jwt, {
+                algorithms: ['HS256'], issuer: config.auth.issuer, audience: config.auth.audience,
+            }); // Match the issuer's actual key/algorithm; never accept arbitrary algorithms.
+            if (typeof decoded === 'string' || typeof decoded.sub !== 'string' || !decoded.sub || decoded.token_use !== 'access') {
+                res.status(401).json({ error: 'Invalid access token' });
+                return;
+            }
             res.locals.claims = decoded;
             res.locals.effectiveUserId = decoded.sub;
             next();
@@ -113,6 +124,7 @@ export function errorBoundary(
     res: Response,
     next: NextFunction
 ): void {
+    if (res.headersSent) { next(error); return; }
     // Determine status code
     const statusCode = getStatusCodeForError(error);
 
@@ -120,10 +132,6 @@ export function errorBoundary(
     Sentry.withScope((scope) => {
         scope.setLevel(statusCode >= 500 ? 'error' : 'warning');
         scope.setTag('error_type', error.name);
-        scope.setContext('error_details', {
-            message: error.message,
-            stack: error.stack,
-        });
         Sentry.captureException(error);
     });
 
@@ -181,7 +189,7 @@ router.post('/:formID/submit',
 
 ```typescript
 // 1. Sentry request handler (FIRST)
-app.use(Sentry.Handlers.requestHandler());
+app.use(requestContextMiddleware /* application-defined; initialize Sentry in instrument.ts */);
 
 // 2. Body parsing
 app.use(express.json());
@@ -197,10 +205,8 @@ app.use(SSOMiddleware.initialize());
 app.use('/api/users', userRoutes);
 
 // 6. Error handler (AFTER routes)
-app.use(errorBoundary);
-
-// 7. Sentry error handler (LAST)
-app.use(Sentry.Handlers.errorHandler());
+app.use(approvedTelemetryErrorHandler); // capture before the response is consumed
+app.use(errorBoundary); // final response formatter; avoid a second capture
 ```
 
 **Rule:** Error handlers MUST be registered AFTER all routes!

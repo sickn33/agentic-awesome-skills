@@ -313,6 +313,7 @@ class Database:
     def insert_post(self, data: Dict[str, Any]) -> int:
         """Cria um novo post (draft por padrão). Retorna o id."""
         data = _normalize_post_data(data)
+        data.setdefault("status", "draft")
         unknown = set(data) - _POSTS_COLUMNS - {"id"}
         if unknown:
             raise ValueError(f"Invalid columns for insert_post: {', '.join(sorted(unknown))}")

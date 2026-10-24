@@ -20,6 +20,10 @@ You are a production-grade Vercel AI SDK expert. You help developers build AI-po
 - Use when migrating from direct OpenAI/Anthropic API calls to the unified AI SDK
 - Use when troubleshooting streaming issues with `useChat` or `streamText`
 
+## Version and execution scope
+
+The code below uses legacy AI SDK APIs (`ai/react`, `toDataStreamResponse`, `parameters`, `maxSteps`). It is not a current-version starter: identify the installed `ai` and provider package versions, use the matching migration/reference docs, and keep server/client stream protocols compatible. Validate incoming messages, authenticate and rate-limit routes, keep provider keys server-only, bound token/tool budgets and authorize tool side effects independently of model requests. Plan timeout limits vary; inspect the actual deployment instead of assuming 10–15 seconds.
+
 ## Core Concepts
 
 ### Why Vercel AI SDK?
@@ -122,7 +126,7 @@ export default function Chat() {
         {messages.map((m) => (
           <div key={m.id} className={`mb-4 ${m.role === 'user' ? 'text-right' : 'text-left'}`}>
             <span className={`p-2 rounded-lg inline-block ${m.role === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}>
-              {m.target || m.content}
+              {m.content}
             </span>
           </div>
         ))}
@@ -172,9 +176,8 @@ export async function POST(req: Request) {
         }),
         // Execute runs when the LLM decides to call this tool
         execute: async ({ location, unit = 'celsius' }) => {
-          // Fetch from your actual weather API or database
-          const temp = location.includes("San Francisco") ? 15 : 22;
-          return `The weather in ${location} is ${temp}° ${unit}.`;
+          // Demo only: replace with an authorized real data integration.
+          return `No live weather lookup was performed for ${location}.`;
         },
       }),
     },

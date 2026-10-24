@@ -26,6 +26,10 @@ Orchestrate comprehensive multi-dimensional code review using specialized review
 
 [Extended thinking: This workflow performs an exhaustive code review by orchestrating multiple specialized agents in sequential phases. Each phase builds upon previous findings to create a comprehensive review that covers code quality, security, performance, testing, documentation, and best practices. The workflow integrates modern AI-assisted review tools, static analysis, security scanning, and automated quality metrics. Results are consolidated into actionable feedback with clear prioritization and remediation guidance. The phased approach ensures thorough coverage while maintaining efficiency through parallel agent execution where appropriate.]
 
+## Scope and truthful evidence
+
+These are workflow labels and suggested agent roles, not installed commands or tool guarantees. Delegate only when the user/applicable instructions authorize it and the host offers those agents; otherwise perform bounded review directly. Freeze the exact diff/base/head and assign disjoint read-only scopes. Do not install scanners, upload private code or run load/security probes without the corresponding authority. Report inspected files, actual checks, skipped areas and evidence for each finding; static inspection cannot prove every vulnerability was found or produce measured performance/coverage. Prioritize actual impact/context, not CVSS or style metrics alone; no compliance certification follows from this checklist.
+
 ## Review Configuration Options
 
 - **--security-focus**: Prioritize security vulnerabilities and OWASP compliance

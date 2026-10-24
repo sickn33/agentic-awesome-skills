@@ -70,8 +70,7 @@ this gate. Re-measure.**
 - **Header / nav / toolbar rows: `flex-wrap: wrap`, never `nowrap`.** A growing
   single-row flex is the #1 source of this bug. Wrapping is a no-op when it fits and
   saves you when it doesn't.
-- **`body { overflow-x: clip }`** as a backstop on every app (clip, not hidden — keeps
-  sticky/anchored layouts working). A backstop, NOT a substitute for measuring.
+- Use clipping only for intentional decorative overflow after checking focus rings, menus and offscreen content; do not apply it globally to conceal a layout defect.
 
 **The check — run before calling ANY page done:** `document.documentElement.scrollWidth - document.documentElement.clientWidth` must equal `0`, tested at your dev width AND resized narrow (≤1024px, and a phone width ~390px). If > 0, find the offender:
 ```js
@@ -130,7 +129,7 @@ arithmetic, not taste — so compute it.
 **Optical center, not geometric.** Target `x = 0.50`, `y ≈ 0.46` — slightly high,
 because a centroid at literal 50% reads as sagging.
 
-**Visual weight = area × ink-density, not area alone.** Same-size ≠ same-weight: a
+**Visual weight estimate = area × guessed ink-density.** These coefficients and optical-center tolerances are exploratory heuristics, not validated perceptual laws. Same-size ≠ same-weight: a
 solid-black heading is heavy; a grey/ASCII/light image reads far lighter than its
 area; body text is sparse. Calibrated starting multipliers (from `asym.html`, re-tune
 per project — these were hand-guesses until corrected against the pixel oracle):
@@ -185,7 +184,7 @@ geometry, color, and pixels, no "does this look right?":
 |---|---|---|
 | **collision** | content-rect intersection ≥12% | gate |
 | **contrast** | WCAG luminance ratio of text vs effective bg (<4.5, large <3) | gate |
-| **tap** | interactive targets <44×44 (Apple HIG) | gate |
+| **tap** | interactive targets <44×44 CSS px (conservative project heuristic, not a WCAG verdict) | review |
 | **overflow** | `scrollWidth − clientWidth` (the §4 gate) | gate |
 | **alignment** | left-edge clusters → near-misses 1–7px off the shared line | signal |
 | **spacing** | gap CoV among a container's children | signal |
@@ -265,6 +264,9 @@ eye-judgments, not gates. (From the Web Interface Guidelines, `vercel-labs/web-i
   final 1px call. Don't let a geometric alignment metric *prevent* an optical correction.
 
 ## Limitations
+
+- WCAG 2.2 AA target minimum is 24×24 CSS px with spacing and other exceptions; 44×44 is a stricter target, not a universal failure threshold. The script does not implement exceptions or full contrast compositing (images, gradients, transparent ancestors and modern color syntax). `gates_pass` only summarizes this partial heuristic; it cannot certify accessibility.
+- `analyze.py` and `asym.html` mentioned above are not bundled. Pixel centroid is background/viewport-dependent and cannot establish visual quality by itself. Verify intentional scroll regions and keyboard/zoom behavior in addition to root scrollWidth.
 
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.

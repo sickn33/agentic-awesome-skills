@@ -30,6 +30,10 @@ Use this skill when:
 - Creating team-shared inference endpoints
 - Prototyping before committing to cloud LLM APIs
 
+## Deployment boundaries
+
+Pin reviewed container images and model revisions before use; table sizes/VRAM are illustrative and context/concurrency change requirements. A local endpoint does not guarantee offline operation: model downloads, WebUI features and proxy backends can make network calls. Confirm mounted data, authentication and network policy; the nginx IP restriction below is not user authentication. Container `OLLAMA_HOST=0.0.0.0` is for the private Compose network while published host ports bind to loopback. See [Ollama networking guidance](https://docs.ollama.com/faq).
+
 ## Prerequisites
 
 - 8 GB+ RAM (16 GB+ recommended for 7B+ models)
@@ -41,7 +45,8 @@ Use this skill when:
 
 ```bash
 # Install Ollama
-curl -fsSL https://ollama.com/install.sh -o /tmp/install-ollama.sh && sh /tmp/install-ollama.sh && rm /tmp/install-ollama.sh
+# Download to a private review directory; inspect the exact script before any authorized execution.
+# Follow the platform-specific official installation method; do not execute a moving installer blindly.
 
 # Start the server
 ollama serve
@@ -81,7 +86,7 @@ services:
     container_name: ollama
     restart: unless-stopped
     ports:
-      - "11434:11434"
+      - "127.0.0.1:11434:11434"
     volumes:
       - ollama_data:/root/.ollama
     environment:
@@ -107,13 +112,13 @@ services:
     container_name: open-webui
     restart: unless-stopped
     ports:
-      - "3000:8080"
+      - "127.0.0.1:3000:8080"
     volumes:
       - webui_data:/app/backend/data
     environment:
       - OLLAMA_BASE_URL=http://ollama:11434
       - WEBUI_AUTH=true
-      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY:-change-me-in-production}
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY:?supply a private generated secret}
       - DEFAULT_MODELS=llama3.1:8b
     depends_on:
       ollama:
@@ -124,7 +129,7 @@ services:
     container_name: litellm
     restart: unless-stopped
     ports:
-      - "4000:4000"
+      - "127.0.0.1:4000:4000"
     volumes:
       - ./litellm-config.yaml:/app/config.yaml
     command: ["--config", "/app/config.yaml"]
@@ -156,8 +161,8 @@ model_list:
       api_base: http://ollama:11434
 
 general_settings:
-  master_key: sk-local-dev-key
-  max_budget: 0  # unlimited for local
+  master_key: os.environ/LITELLM_MASTER_KEY  # supply privately; verify syntax for pinned LiteLLM version
+  # Configure and verify a finite budget separately; zero semantics vary by version.
 ```
 
 ## API Usage
@@ -215,9 +220,12 @@ print(f"Embedding dimensions: {len(result['embeddings'][0])}")
 ### OpenAI SDK Compatibility
 
 ```python
+import os
 from openai import OpenAI
 
-client = OpenAI(base_url="http://localhost:11434/v1", api_key="..." # local endpoint requires no real key)
+# Configure OLLAMA_CLIENT_KEY privately for this endpoint. Local unauthenticated
+# Ollama ignores the SDK-required value; it is not access control.
+client = OpenAI(base_url="http://localhost:11434/v1", api_key=os.environ["OLLAMA_CLIENT_KEY"])
 
 response = client.chat.completions.create(
     model="llama3.1:8b",
@@ -315,7 +323,7 @@ User=ollama
 Group=ollama
 Restart=always
 RestartSec=3
-Environment="OLLAMA_HOST=0.0.0.0"
+Environment="OLLAMA_HOST=127.0.0.1:11434"
 Environment="OLLAMA_NUM_PARALLEL=4"
 Environment="OLLAMA_FLASH_ATTENTION=1"
 LimitNOFILE=65535
@@ -363,7 +371,7 @@ server {
 | Out of memory | Reduce `num_ctx`, use smaller model, set `OLLAMA_MAX_LOADED_MODELS=1` |
 | GPU not detected | Check `nvidia-smi`, reinstall CUDA drivers, verify Docker GPU runtime |
 | Connection refused | Check `OLLAMA_HOST` setting, verify firewall rules |
-| Model download fails | Check disk space, retry with `ollama pull --insecure` for self-signed registries |
+| Model download fails | Check disk space, registry identity, connectivity and certificate trust; repair trusted CA configuration instead of disabling TLS verification |
 
 ## Related Skills
 

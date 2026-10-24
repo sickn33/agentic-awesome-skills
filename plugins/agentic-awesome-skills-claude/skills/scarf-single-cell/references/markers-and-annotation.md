@@ -133,8 +133,8 @@ per_cell = pd.Series(cluster_values).map(labels).fillna("unresolved").to_numpy()
 print(pd.Series(per_cell).value_counts())
 annotation = np.full(ds.cells.N, "not analyzed", dtype=object)
 annotation[in_run] = per_cell
-ds.cells.insert("annotation_v1", annotation, overwrite=True)  # live column, full cell axis
-ds.cells.insert("annotation_v1_cells", in_run, overwrite=True)
+ds.cells.insert("annotation_v1", annotation, overwrite=False)  # live column, full cell axis
+ds.cells.insert("annotation_v1_cells", in_run, overwrite=False)
 named = sorted(int(c) for c, name in labels.items() if name != "unresolved")
 keep = ds.select_cells(clusters, include=named) if named else run["analysis_cell_selection"]
 ```
@@ -267,7 +267,7 @@ case (`Cd3e`, `Ptprc`, `Mki67`), and panel lookups are exact, so convert the pan
 - Ambient genes (HBB, LYZ, S100A8, JCHAIN, immunoglobulins) show nonzero `frac_exp` in most
   clusters. Use `score` and `auc`, not detection alone, and leave them out of co-detection checks.
 - Small groups inflate `fold_change` and can pass `min_score` with odd genes; check group size.
-- `ds.cells.insert(..., overwrite=True)` silently replaces a column; use versioned names.
+- `ds.cells.insert(..., overwrite=False)` silently replaces a column; use versioned names.
 - `select_cells(include=...)` needs integers for integer cluster artifacts (`TypeError` otherwise).
 - Scores from different feature universes, `n_up` or WAGGR `mode`/`log_transform` are not comparable.
 

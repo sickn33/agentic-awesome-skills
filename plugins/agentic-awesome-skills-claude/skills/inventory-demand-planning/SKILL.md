@@ -13,7 +13,7 @@ Use this skill when forecasting product demand, calculating optimal safety stock
 
 ## Role and Context
 
-You are a senior demand planner at a multi-location retailer operating 40–200 stores with regional distribution centers. You manage 300–800 active SKUs across categories including grocery, general merchandise, seasonal, and promotional assortments. Your systems include a demand planning suite (Blue Yonder, Oracle Demantra, or Kinaxis), an ERP (SAP, Oracle), a WMS for DC-level inventory, POS data feeds at the store level, and vendor portals for purchase order management. You sit between merchandising (which decides what to sell and at what price), supply chain (which manages warehouse capacity and transportation), and finance (which sets inventory investment budgets and GMROI targets). Your job is to translate commercial intent into executable purchase orders while minimizing both stockouts and excess inventory.
+Use a demand-planning perspective for a multi-location retailer operating 40–200 stores with regional distribution centers. You manage 300–800 active SKUs across categories including grocery, general merchandise, seasonal, and promotional assortments. Your systems include a demand planning suite (Blue Yonder, Oracle Demantra, or Kinaxis), an ERP (SAP, Oracle), a WMS for DC-level inventory, POS data feeds at the store level, and vendor portals for purchase order management. You sit between merchandising (which decides what to sell and at what price), supply chain (which manages warehouse capacity and transportation), and finance (which sets inventory investment budgets and GMROI targets). Your job is to translate commercial intent into executable purchase orders while minimizing both stockouts and excess inventory.
 
 ## Core Knowledge
 
@@ -27,20 +27,20 @@ You are a senior demand planner at a multi-location retailer operating 40–200 
 
 **Causal/Regression Models:** When external factors drive demand beyond the item's own history — price elasticity, promotional flags, weather, competitor actions, local events. The practical challenge is feature engineering: promotional flags should encode depth (% off), display type, circular feature, and cross-category promo presence. Overfitting on sparse promo history is the single biggest pitfall. Regularize aggressively (Lasso/Ridge) and validate on out-of-time, not out-of-sample.
 
-**Machine Learning (gradient boosting, neural nets):** Justified when you have large data (1,000+ SKUs × 2+ years of weekly history), multiple external regressors, and an ML engineering team. LightGBM/XGBoost with proper feature engineering outperforms simpler methods by 10–20% WAPE on promotional and intermittent items. But they require continuous monitoring — model drift in retail is real and quarterly retraining is the minimum.
+**Machine Learning (gradient boosting, neural nets):** Justified when you have large data (1,000+ SKUs × 2+ years of weekly history), multiple external regressors, and an ML engineering team. Compare LightGBM/XGBoost with simple baselines using leakage-free time-series validation; no fixed improvement is guaranteed. But they require continuous monitoring — model drift in retail is real and quarterly retraining is the minimum.
 
 ### Forecast Accuracy Metrics
 
 - **MAPE (Mean Absolute Percentage Error):** Standard metric but breaks on low-volume items (division by near-zero actuals produces inflated percentages). Use only for items averaging 50+ units/week.
-- **Weighted MAPE (WMAPE):** Sum of absolute errors divided by sum of actuals. Prevents low-volume items from dominating the metric. This is the metric finance cares about because it reflects dollars.
-- **Bias:** Average signed error. Positive bias = forecast systematically too high (overstock risk). Negative bias = systematically too low (stockout risk). Bias < ±5% is healthy. Bias > 10% in either direction means a structural problem in the model, not noise.
+- **Weighted MAPE (WMAPE):** Sum of absolute errors divided by sum of actuals. Prevents low-volume items from dominating the metric. Unit-based WAPE reflects units, not dollars; use explicit consistent value weights for financial error.
+- **Bias:** Define signed error as forecast minus actual, so positive means overforecast. For percentage bias use sum(forecast−actual)/sum(actual), with a defined zero-denominator policy. Positive bias = forecast systematically too high (overstock risk). Negative bias = systematically too low (stockout risk). Bias < ±5% is healthy. Bias > 10% in either direction means a structural problem in the model, not noise.
 - **Tracking Signal:** Cumulative error divided by MAD (mean absolute deviation). When tracking signal exceeds ±4, the model has drifted and needs intervention — either re-parameterize or switch methods.
 
 ### Safety Stock Calculation
 
 The textbook formula is `SS = Z × σ_d × √(LT + RP)` where Z is the service level z-score, σ_d is the standard deviation of demand per period, LT is lead time in periods, and RP is review period in periods. In practice, this formula works only for normally distributed, stationary demand.
 
-**Service Level Targets:** 95% service level (Z=1.65) is standard for A-items. 99% (Z=2.33) for critical/A+ items where stockout cost dwarfs holding cost. 90% (Z=1.28) is acceptable for C-items. Moving from 95% to 99% nearly doubles safety stock — always quantify the inventory investment cost of the incremental service level before committing.
+**Service Level Targets:** 95% service level (Z=1.65) is standard for A-items. 99% (Z=2.33) for critical/A+ items where stockout cost dwarfs holding cost. 90% (Z=1.28) is acceptable for C-items. At fixed uncertainty, moving from 95% to 99% multiplies safety stock by 2.33/1.65 ≈ 1.41 — always quantify the inventory investment cost of the incremental service level before committing.
 
 **Lead Time Variability:** When vendor lead times are uncertain, use `SS = Z × √(LT_avg × σ_d² + d_avg² × σ_LT²)` — this captures both demand variability and lead time variability. Vendors with coefficient of variation (CV) on lead time > 0.3 need safety stock adjustments that can be 40–60% higher than demand-only formulas suggest.
 
@@ -50,7 +50,7 @@ The textbook formula is `SS = Z × σ_d × √(LT + RP)` where Z is the service 
 
 ### Reorder Logic
 
-**Inventory Position:** `IP = On-Hand + On-Order − Backorders − Committed (allocated to open customer orders)`. Never reorder based on on-hand alone — you will double-order when POs are in transit.
+**Inventory Position:** `IP = usable On-Hand + eligible On-Order − outstanding demand obligations (count each once)`. Never reorder based on on-hand alone — you will double-order when POs are in transit.
 
 **Min/Max:** Simple, suitable for stable-demand items with consistent lead times. Min = average demand during lead time + safety stock. Max = Min + EOQ. When IP drops to Min, order up to Max. The weakness: it doesn't adapt to changing demand patterns without manual adjustment.
 
@@ -147,7 +147,7 @@ If flagged, initiate markdown at 30% off for 4 weeks. If still not moving, escal
 
 Brief summaries here. Full analysis in [edge-cases.md](references/edge-cases.md).
 
-1. **New product launch with zero history:** Analogous item profiling is your only tool. Select analogs carefully — match on price point, category, brand tier, and target demographic, not just product type. Commit a conservative initial buy (60% of analog-based forecast) and build in weekly auto-replenishment triggers.
+1. **New product launch with zero history:** Analogous item profiling is one option alongside research, preorders, expert judgment and pilot tests. Select analogs carefully — match on price point, category, brand tier, and target demographic, not just product type. Commit a conservative initial buy (60% of analog-based forecast) and build in weekly auto-replenishment triggers.
 
 2. **Viral social media spike:** Demand jumps 500–2,000% with no warning. Do not chase — by the time your supply chain responds (4–8 week lead times), the spike is over. Capture what you can from existing inventory, issue allocation rules to prevent a single location from hoarding, and let the wave pass. Revise the baseline only if sustained demand persists 4+ weeks post-spike.
 
@@ -227,3 +227,31 @@ Use this skill when you need to **forecast demand and shape inventory policy acr
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Model assumptions and decision authority
+
+All rates, lift/dip ranges, thresholds, cadence, confidence bands and buy/markdown
+percentages are illustrative; validate them locally. WAPE and MAPE need explicit
+zero-demand handling and a comparable aggregation/horizon; a volume cutoff does
+not make MAPE valid. Sales during stockouts are censored demand, not true zeroes.
+Keep original history and event flags; estimate a counterfactual rather than
+silently deleting all promotion/weather periods or leaking future data. Fit all
+transformations inside each training fold, tune on rolling-origin validation at
+the actual replenishment horizon, and retain an untouched final test set.
+
+Normal safety-stock z values target a cycle-service probability under the stated
+model, not unit fill rate or shelf in-stock rate. Use forecast error over the
+protection horizon, independent stationary period errors and fixed/review timing
+only where those assumptions hold. Correlation, variable lead time, trend,
+perishability and lost-sales/backorder policy need a fuller model or simulation.
+Do not count expected demand twice as safety stock. De-duplicate reservations and
+backorders, exclude quarantined/expired stock, and time-phase firm receipts.
+
+Prepare recommendations/drafts. POs, cancellations, ERP/WMS adjustments, prices,
+liquidation/donation/destruction and external messages require approved authority
+and applicable contract/product controls; skill text grants no automatic permission.
+Do not infer recovered margin from gross revenue, or a statistical prediction
+interval from WAPE alone. Preserve honest forecast-error/overbuy explanations.
+
+See [forecast evaluation](https://otexts.com/fpp3/toolbox.html) and
+[decomposition](https://otexts.com/fpp3/decomposition.html).

@@ -14,7 +14,7 @@ source_repo: longbridge/skills
 source_type: official
 source: longbridge
 date_added: '2026-09-21'
-risk: unknown
+risk: critical
 ---
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
@@ -27,9 +27,9 @@ Quantitative analysis frameworks and CLI indicator scripting via Longbridge.
 > **Response language**: match the user's input language — English / Simplified Chinese / Traditional Chinese.
 > **RULE: Response language priority**: English is the default when language is ambiguous. If the user input is only a slash command, command name, ticker / symbol, or contains no natural-language language signal, you MUST respond in English. Do not infer Chinese from trigger keywords, skill metadata, or examples.
 
-> **Data-source policy**: recommend only Longbridge data and platform capabilities.
+> **Data-source scope**: this skill documents Longbridge. If its data is unavailable or insufficient, report the gap rather than inventing data or asserting that other sources are disallowed.
 
-> **ChatGPT usage**: If you are using this skill inside ChatGPT, type `@longbridge` to connect — Longbridge is available as a ChatGPT plugin and all capabilities in this skill work the same way.
+> **Connector availability**: discover the tools actually available in the host; do not assume a Longbridge plugin or parity with CLI capabilities.
 
 ## When to Use
 Trigger when user asks about: quantitative indicator scripts (running against K-line data), pairs trading / cointegration, volatility regime strategies, seasonality / calendar effects, multi-factor stock selection, factor research (IC/IR analysis), factor screening, correlation and cointegration analysis, statistical methods (ADF/GARCH/bootstrap), strategy optimization, execution cost modeling, hedging strategies, or ML-based prediction.
@@ -102,7 +102,7 @@ Rolling walk-forward Random Forest / Gradient Boosting, feature engineering, sig
 
 ## Auth requirements
 
-`quant` CLI: Public — no login required. All frameworks are analytical.
+`quant` execution is analytical but sends the supplied script to a remote service. Market-data access can require login/entitlements; positions require explicit account-access scope. Verify installed CLI capabilities and current permissions. Do not submit proprietary strategy code without authorization.
 
 ## Error handling
 
@@ -146,6 +146,10 @@ Assistant: Follow the workflow in this skill, cite limitations, and ask before r
 ```
 
 ## Limitations
+
+- This skill performs analysis, not order execution. Strategy descriptions are hypotheses requiring realistic costs, liquidity, borrow/margin and out-of-sample validation. Do not invent recommendations from missing data.
+- For historical research, require point-in-time constituents and fundamentals with publication timestamps; current values cannot support a historical factor backtest. Adjust prices for corporate actions and align currency, timestamps and trading calendars.
+- Cite Longbridge only when data was actually retrieved there; report its timestamp, coverage and adjustments. Redact credentials/private account data from errors and reports.
 
 - Imported upstream skill; verify credentials, permissions, and safety boundaries before execution.
 - Does not replace environment-specific validation, testing, or maintainer review.

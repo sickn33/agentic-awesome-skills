@@ -1,3 +1,4 @@
+# Modified in the local catalog review: credential, bounded execution and data-quality corrections.
 # /// script
 # requires-python = ">=3.10"
 # dependencies = [
@@ -12,7 +13,7 @@
 # ]
 # ///
 """
-Generate high-quality synthetic data using Chain-of-Thought Self-Instruct methodology.
+Generate synthetic candidate data requiring independent quality verification using Chain-of-Thought Self-Instruct methodology.
 
 This script implements the CoT-Self-Instruct approach from the paper "CoT-Self-Instruct: 
 Building high-quality synthetic prompts for reasoning and non-reasoning tasks" (2025).
@@ -41,13 +42,14 @@ Example usage:
     # HF Jobs execution
     hf jobs uv run --flavor l4x4 \\
         --image vllm/vllm-openai \\
-        -e HF_TOKEN=$(python3 -c "from huggingface_hub import get_token; print(get_token())") \\
-        https://huggingface.co/datasets/uv-scripts/synthetic-data/raw/main/cot-self-instruct.py \\
+        -s HF_TOKEN \\
+        https://huggingface.co/datasets/uv-scripts/synthetic-data/raw/<reviewed-full-commit-sha>/cot-self-instruct.py \\
         [args...]
 """
 
 import argparse
 import json
+import math
 import logging
 import os
 import random
@@ -60,14 +62,14 @@ from typing import Dict, List, Optional, Tuple, Union
 import numpy as np
 import torch
 from datasets import Dataset, load_dataset
-from huggingface_hub import DatasetCard, login
+from huggingface_hub import DatasetCard, HfApi, get_token
 from sklearn.cluster import KMeans
 from tqdm.auto import tqdm
 from transformers import AutoTokenizer
 from vllm import LLM, SamplingParams
 
 # Enable HF Transfer for faster downloads
-os.environ["HF_HUB_ENABLE_HF_TRANSFER"] = "1"
+os.environ["HF_XET_HIGH_PERFORMANCE"] = "1"
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -123,30 +125,32 @@ def parse_thinking_output(text: str) -> str:
     """Remove thinking tokens from model output."""
     # Remove <think>...</think> blocks
     text = re.sub(r'<think>.*?</think>', '', text, flags=re.DOTALL)
+    if "<think>" in text: return ""
     return text.strip()
 
 
+def boxed_answer(text: str) -> Optional[str]:
+    marker = "\\boxed{"
+    start = text.find(marker)
+    if start < 0: return None
+    start += len(marker)
+    depth = 1
+    for index in range(start, len(text)):
+        if text[index] == "{": depth += 1
+        elif text[index] == "}":
+            depth -= 1
+            if depth == 0: return text[start:index].strip()
+    return None
+
+
 def extract_reasoning_output(text: str) -> Tuple[Optional[str], Optional[str]]:
-    """Extract question and answer from reasoning task output."""
     text = parse_thinking_output(text)
-    
-    # Extract question
-    question_match = re.search(r'\[New Question Begin\](.*?)\[New Question End\]', text, re.DOTALL)
-    if not question_match:
-        return None, None
-    question = question_match.group(1).strip()
-    
-    # Extract answer
-    answer_match = re.search(r'\[Final Answer to New Question Begin\]\\?boxed\{(.*?)\}\[Final Answer to New Question End\]', text, re.DOTALL)
-    if not answer_match:
-        # Try without \boxed
-        answer_match = re.search(r'\[Final Answer to New Question Begin\](.*?)\[Final Answer to New Question End\]', text, re.DOTALL)
-    
-    if not answer_match:
-        return question, None
-    
-    answer = answer_match.group(1).strip()
-    return question, answer
+    question = re.search(r"\[New Question Begin\](.*?)\[New Question End\]", text, re.S)
+    answer = re.search(r"\[Final Answer to New Question Begin\](.*?)\[Final Answer to New Question End\]", text, re.S)
+    if not question: return None, None
+    if not answer: return question[1].strip(), None
+    raw = answer[1].strip()
+    return question[1].strip(), boxed_answer(raw) if "\\boxed{" in raw else raw
 
 
 def extract_instruction_output(text: str) -> Optional[str]:
@@ -170,6 +174,8 @@ def categorize_prompts(prompts: List[str], num_categories: int = 8) -> Dict[int,
     tokenizer = AutoTokenizer.from_pretrained("sentence-transformers/all-MiniLM-L6-v2")
     model = AutoModel.from_pretrained("sentence-transformers/all-MiniLM-L6-v2")
     
+    if not prompts: return {}
+    model.eval()
     # Get embeddings
     embeddings = []
     for prompt in tqdm(prompts, desc="Computing embeddings"):
@@ -179,8 +185,8 @@ def categorize_prompts(prompts: List[str], num_categories: int = 8) -> Dict[int,
             embedding = outputs.last_hidden_state.mean(dim=1).numpy()
         embeddings.append(embedding[0])
     
-    # Cluster
-    kmeans = KMeans(n_clusters=num_categories, random_state=42)
+    # Cluster only available, nonempty samples; evaluation disables dropout.
+    kmeans = KMeans(n_clusters=min(num_categories, len(prompts)), random_state=42, n_init=10)
     labels = kmeans.fit_predict(embeddings)
     
     # Group by category
@@ -206,7 +212,11 @@ def generate_synthetic_data(
     # Set up progress bar
     pbar = tqdm(total=num_samples, desc="Generating synthetic data")
     
-    while len(synthetic_data) < num_samples:
+    if not seed_data or num_samples <= 0: raise ValueError("Nonempty seed data and positive sample count required")
+    attempts = 0
+    seen = set()
+    while len(synthetic_data) < num_samples and attempts < num_samples * 3:
+        attempts += 1
         # Sample seed data
         if task_type == "reasoning":
             # Random sampling for reasoning tasks
@@ -244,7 +254,9 @@ def generate_synthetic_data(
         # Parse output
         if task_type == "reasoning":
             question, answer = extract_reasoning_output(output_text)
-            if question and answer:
+            key = (question, answer)
+            if question and answer and key not in seen:
+                seen.add(key)
                 synthetic_data.append({
                     "question": question,
                     "answer": answer,
@@ -253,7 +265,8 @@ def generate_synthetic_data(
                 pbar.update(1)
         else:
             synthetic_prompt = extract_instruction_output(output_text)
-            if synthetic_prompt:
+            if synthetic_prompt and synthetic_prompt not in seen:
+                seen.add(synthetic_prompt)
                 synthetic_data.append({
                     "prompt": synthetic_prompt,
                     "seed_indices": [seed_data.index(s) for s in seeds],
@@ -261,6 +274,7 @@ def generate_synthetic_data(
                 pbar.update(1)
     
     pbar.close()
+    if len(synthetic_data) < num_samples: raise ValueError(f"Generation budget exhausted: {len(synthetic_data)}/{num_samples} usable examples; nothing published")
     return synthetic_data
 
 
@@ -294,9 +308,9 @@ def answer_consistency_filter(
         for output in outputs:
             text = output.outputs[0].text
             # Try to extract boxed answer
-            match = re.search(r'\\boxed\{(.*?)\}', text)
-            if match:
-                answers.append(match.group(1).strip())
+            answer = boxed_answer(parse_thinking_output(text))
+            if answer is not None:
+                answers.append(answer)
         
         if not answers:
             continue
@@ -308,8 +322,8 @@ def answer_consistency_filter(
             
             # Check if majority answer matches original and meets threshold
             if (majority_answer == original_answer and 
-                count / len(answers) >= threshold):
-                item["consistency_score"] = count / len(answers)
+                count / k_responses >= threshold):
+                item["consistency_score"] = count / k_responses
                 filtered_data.append(item)
     
     logger.info(f"Answer-Consistency: kept {len(filtered_data)}/{len(synthetic_data)} examples")
@@ -324,41 +338,7 @@ def rip_filter(
     threshold: float = 0.5,
 ) -> List[Dict]:
     """Filter using Rejecting Instruction Preferences (RIP)."""
-    logger.info(f"Applying RIP filter with K={k_responses} and reward model {reward_model_id}")
-    
-    # Note: In a full implementation, you would load and use the actual reward model
-    # For this example, we'll use a placeholder scoring mechanism
-    logger.warning("RIP filtering requires a reward model implementation - using placeholder")
-    
-    filtered_data = []
-    
-    for item in tqdm(synthetic_data, desc="RIP filtering"):
-        prompt = item.get("prompt", item.get("question", ""))
-        
-        # Generate K responses
-        prompts = [prompt] * k_responses
-        sampling_params = SamplingParams(
-            temperature=1.0,
-            top_p=1.0,
-            max_tokens=1024,
-        )
-        
-        outputs = llm.generate(prompts, sampling_params)
-        
-        # In real implementation: score each response with reward model
-        # For now, use length as a proxy (longer responses often score higher)
-        scores = [len(output.outputs[0].text) for output in outputs]
-        
-        # Use minimum score as quality indicator
-        min_score = min(scores) if scores else 0
-        normalized_score = min_score / 1000  # Normalize to 0-1 range
-        
-        if normalized_score >= threshold:
-            item["rip_score"] = normalized_score
-            filtered_data.append(item)
-    
-    logger.info(f"RIP filter: kept {len(filtered_data)}/{len(synthetic_data)} examples")
-    return filtered_data
+    raise NotImplementedError("RIP reward-model scoring is not implemented; no length proxy or quality claim is used")
 
 
 def create_dataset_card(
@@ -380,7 +360,7 @@ def create_dataset_card(
 This dataset was filtered using Answer-Consistency:
 - Generated K responses for each synthetic question
 - Kept only examples where majority answer matched the generated answer
-- Ensures high-quality, correctly solved problems"""
+- Measures agreement only; consensus does not establish correctness"""
     elif filter_method == "rip":
         filter_info = """
 ### RIP (Rejecting Instruction Preferences) Filtering
@@ -418,7 +398,7 @@ This dataset contains synthetic {task_type} data generated using the Chain-of-Th
 Generated using CoT-Self-Instruct, which:
 1. Uses Chain-of-Thought reasoning to analyze seed examples
 2. Generates new synthetic examples of similar quality and complexity
-3. Applies quality filtering to ensure high-quality outputs
+3. Applies heuristic filtering; independent correctness checks remain required
 
 Based on the paper: "CoT-Self-Instruct: Building high-quality synthetic prompts for reasoning and non-reasoning tasks" (2025)
 
@@ -428,7 +408,7 @@ Generated using the CoT-Self-Instruct script from [uv-scripts/synthetic-data](ht
 
 To reproduce:
 ```bash
-uv run https://huggingface.co/datasets/uv-scripts/synthetic-data/raw/main/cot-self-instruct.py \\
+uv run https://huggingface.co/datasets/uv-scripts/synthetic-data/raw/<reviewed-full-commit-sha>/cot-self-instruct.py \\
     --seed-dataset {source_dataset} \\
     --output-dataset <your-dataset> \\
     --task-type {task_type} \\
@@ -498,7 +478,7 @@ def main():
     parser.add_argument(
         "--num-samples",
         type=int,
-        default=5000,
+        default=100,
         help="Number of synthetic examples to generate",
     )
     parser.add_argument(
@@ -545,19 +525,24 @@ def main():
     
     # Other arguments
     parser.add_argument(
-        "--hf-token",
-        type=str,
-        default=None,
-        help="HuggingFace API token",
-    )
-    parser.add_argument(
         "--seed",
         type=int,
         default=42,
         help="Random seed",
     )
     
+    parser.add_argument("--model-revision")
+    parser.add_argument("--dataset-revision")
+    parser.add_argument("--filter-model-revision")
+    parser.add_argument("--allow-publish", action="store_true", help="Approve creation of the named private output dataset")
     args = parser.parse_args()
+    if not args.allow_publish: parser.error("--allow-publish required for the named output dataset")
+    if args.filter_method in {"rip", "both"}: parser.error("RIP reward-model filtering is not implemented")
+    if args.num_samples <= 0 or args.k_responses <= 0: parser.error("Positive sample and response counts required")
+    if not math.isfinite(args.quality_threshold) or not 0 < args.quality_threshold <= 1: parser.error("Quality threshold must be in (0,1]")
+    if not 0 < args.gpu_memory_utilization <= 1: parser.error("GPU memory fraction must be in (0,1]")
+    if args.batch_size != 1: parser.error("This implementation supports batch-size=1 only")
+    if args.seed_dataset == args.output_dataset: parser.error("Output must not overwrite seed dataset")
     
     # Set random seeds
     random.seed(args.seed)
@@ -569,13 +554,16 @@ def main():
     tensor_parallel_size = args.tensor_parallel_size or num_gpus
     
     # Authentication
-    hf_token = args.hf_token or os.environ.get("HF_TOKEN")
+    hf_token = os.environ.get("HF_TOKEN") or get_token()
+    if not hf_token: raise ValueError("Hub publication requires an approved environment/login secret")
     if hf_token:
-        login(token=hf_token)
+        os.environ["HF_TOKEN"] = hf_token
     
+    if tensor_parallel_size <= 0 or tensor_parallel_size > num_gpus: raise ValueError("Invalid tensor parallel size")
+    HfApi(token=hf_token).create_repo(args.output_dataset, repo_type="dataset", private=True, exist_ok=False)
     # Load seed dataset
     logger.info(f"Loading seed dataset: {args.seed_dataset}")
-    seed_dataset = load_dataset(args.seed_dataset, split="train")
+    seed_dataset = load_dataset(args.seed_dataset, split="train", revision=args.dataset_revision)
     
     # Auto-detect task type and column if needed
     if args.task_type == "auto":
@@ -600,7 +588,14 @@ def main():
     logger.info(f"Using task column: {args.task_column}")
     
     # Convert to list of dicts
+    if args.task_column not in seed_dataset.column_names: raise ValueError("Selected task column missing")
     seed_data = seed_dataset.to_list()
+    for item in seed_data:
+        value = item.get(args.task_column)
+        if not isinstance(value, str) or not value.strip(): raise ValueError("Seed task text must be nonempty")
+        item["question" if args.task_type == "reasoning" else "prompt"] = value
+    if not seed_data: raise ValueError("No seed examples")
+    if args.task_type != "reasoning" and args.filter_method == "answer-consistency": raise ValueError("Answer-consistency applies to reasoning; choose filter-method=none for instruction prompts")
     
     # Categorize prompts for instruction tasks
     categories = None
@@ -612,12 +607,13 @@ def main():
     logger.info(f"Loading generation model: {args.generation_model}")
     generation_llm = LLM(
         model=args.generation_model,
+        revision=args.model_revision,
         tensor_parallel_size=tensor_parallel_size,
         gpu_memory_utilization=args.gpu_memory_utilization,
     )
     
     # Generate synthetic data
-    start_time = datetime.now()
+    start_time = datetime.now(__import__("datetime").timezone.utc)
     synthetic_data = generate_synthetic_data(
         generation_llm,
         seed_data,
@@ -627,7 +623,7 @@ def main():
     )
     
     # Apply filtering
-    filter_llm = generation_llm
+    filter_llm = None
     if args.filter_model and args.filter_model != args.generation_model:
         logger.info(f"Loading filter model: {args.filter_model}")
         # Clean up generation model
@@ -636,10 +632,12 @@ def main():
         
         filter_llm = LLM(
             model=args.filter_model,
+            revision=args.filter_model_revision,
             tensor_parallel_size=tensor_parallel_size,
             gpu_memory_utilization=args.gpu_memory_utilization,
         )
     
+    if filter_llm is None: filter_llm = generation_llm
     filtered_data = synthetic_data
     if args.filter_method != "none":
         if args.filter_method == "answer-consistency" and args.task_type == "reasoning":
@@ -673,6 +671,7 @@ def main():
                 args.quality_threshold,
             )
     
+    if not filtered_data: raise ValueError("No examples passed filtering; nothing published")
     # Create HuggingFace dataset
     logger.info(f"Creating dataset with {len(filtered_data)} examples")
     dataset = Dataset.from_list(filtered_data)
@@ -689,13 +688,15 @@ def main():
         generation_time,
     )
     
+    dataset_card += f"\nSource revision: {args.dataset_revision or 'unrecorded'}\nModel revision: {args.model_revision or 'unrecorded'}\n"
+
     # Push to hub
     logger.info(f"Pushing dataset to: {args.output_dataset}")
     # Create dataset card
     card = DatasetCard(dataset_card)
-    dataset.push_to_hub(args.output_dataset)
+    dataset.push_to_hub(args.output_dataset, private=True, token=hf_token)
     # Push card separately
-    card.push_to_hub(args.output_dataset)
+    card.push_to_hub(args.output_dataset, token=hf_token)
     
     logger.info("Done! Dataset available at: https://huggingface.co/datasets/" + args.output_dataset)
     
@@ -704,8 +705,8 @@ def main():
         print("\nTo run on HF Jobs:")
         print(f"""hf jobs uv run --flavor l4x4 \\
     --image vllm/vllm-openai \\
-    -e HF_TOKEN=$(python3 -c "from huggingface_hub import get_token; print(get_token())") \\
-    https://huggingface.co/datasets/uv-scripts/synthetic-data/raw/main/cot-self-instruct.py \\
+    -s HF_TOKEN \\
+    https://huggingface.co/datasets/uv-scripts/synthetic-data/raw/<reviewed-full-commit-sha>/cot-self-instruct.py \\
     --seed-dataset {args.seed_dataset} \\
     --output-dataset {args.output_dataset} \\
     --task-type {args.task_type} \\

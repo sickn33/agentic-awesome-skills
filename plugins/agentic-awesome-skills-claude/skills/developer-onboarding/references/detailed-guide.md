@@ -4,14 +4,14 @@
 
 ## Overview
 
-Developer onboarding is the critical window between "I signed up" and "I understand how to use this." You have about 10 minutes of developer attention. Every second of confusion, every error message without guidance, every "it should work but doesn't" moment costs you users.
+Developer onboarding is the critical window between "I signed up" and "I understand how to use this." Use a short, task-specific first-value goal rather than assuming a universal attention limit. Every second of confusion, every error message without guidance, every "it should work but doesn't" moment costs you users.
 
 Great onboarding feels like pair programming with someone who anticipated every question. Bad onboarding feels like being dropped in a foreign city without a map.
 
 
 ## Before You Start
 
-Review the `/devmarketing-skills/skills/developer-audience-context` skill to understand your target developers. A hobbyist building side projects needs different onboarding than an enterprise architect evaluating tools for production. Review `/devmarketing-skills/skills/developer-signup-flow` to ensure signup flows smoothly into onboarding.
+Resolve the installed `developer-audience-context` skill, if available, and review it to understand your target developers. A hobbyist building side projects needs different onboarding than an enterprise architect evaluating tools for production. Resolve and review the installed `developer-signup-flow` skill if available to ensure signup flows smoothly into onboarding.
 
 
 ## Time-to-First-Value Optimization
@@ -41,7 +41,7 @@ first_api_call: 2024-01-15T10:04:45Z
 first_successful_response: 2024-01-15T10:04:46Z  # TTFV = 4:46
 ```
 
-**Benchmarks by category:**
+**Illustrative targets by category (not measured benchmarks):**
 - Simple APIs: <5 minutes
 - SDKs requiring installation: <10 minutes
 - Complex infrastructure: <30 minutes
@@ -77,7 +77,7 @@ Map every step and eliminate blockers:
 What you'll build: [Screenshot or description of end result]
 
 Prerequisites:
-- Node.js 18+ (check: node --version)
+- A currently supported Node.js version matching the selected SDK (check: node --version)
 - npm or yarn
 
 ## Step 1: Install the SDK
@@ -150,7 +150,7 @@ First, make sure Redis is running...
 
 # Good (prerequisites listed upfront)
 Prerequisites:
-- Redis 6+ running locally (docker run -p 6379:6379 redis)
+- A supported Redis release in a disposable local environment (bind any published port to 127.0.0.1; pin the image version)
 ```
 
 
@@ -310,28 +310,19 @@ Error: Request failed with status 401
 ```
 Authentication failed: Invalid API key
 
-Your API key starts with 'sk_test_' but you're calling the production endpoint.
+The configured key is not accepted for this sandbox environment.
 
 To fix:
-1. Use the production API key (starts with 'sk_live_'), or
-2. Change endpoint to https://api.example.com/test/
+1. Verify the product’s documented sandbox key type and endpoint.
+2. Check permissions, expiry and rotation without displaying the key.
+3. Retry the documented test request; do not switch to live credentials merely to bypass the error.
 
 Docs: https://docs.example.com/auth#environments
 ```
 
 ### Proactive Failure Prevention
 
-**Detect common mistakes in real-time:**
-
-```javascript
-// Client SDK that catches common errors
-if (apiKey.startsWith('sk_test_') && endpoint.includes('/v1/')) {
-  console.warn(
-    'Warning: Using test API key with production endpoint. ' +
-    'This will fail. Use production key or test endpoint.'
-  );
-}
-```
+Validate key/environment compatibility using the selected provider’s documented metadata or SDK, not generic key-prefix or URL-substring guesses. Different environments may share an API hostname. Record only redacted error categories and test-mode identifiers in analytics.
 
 ### Recovery Flows
 
@@ -371,13 +362,13 @@ Different products, different activation definitions:
 ```
 Activated users / Signed up users × 100
 ```
-Benchmark: 20-40% for self-serve developer products
+Illustrative target: 20–40%; define the cohort, eligibility and observation window before comparing.
 
 **Time to activation**
 ```
 Median time from signup to activation event
 ```
-Benchmark: <10 minutes for APIs, <1 hour for infrastructure
+Illustrative internal target: <10 minutes for APIs, <1 hour for infrastructure; validate with actual setup requirements.
 
 **Activation by cohort**
 Track weekly or monthly cohorts to identify improvements:
@@ -391,7 +382,7 @@ Week 3 cohort: 35% activation (added interactive tutorial)
 
 Track behaviors that predict activation:
 
-| Leading Indicator | Correlation to Activation |
+| Leading Indicator | Illustrative hypothesis (validate locally) |
 |-------------------|---------------------------|
 | Copied API key | 2x more likely |
 | Viewed quickstart | 1.5x more likely |
@@ -423,7 +414,11 @@ Signed up: 1,000
 ```
 
 
+Obtain appropriate analytics consent and minimize captured identifiers. Never record API keys, request secrets or full sensitive responses in screen recordings, logs or funnel events. Use a sandbox account and synthetic data; do not remove essential authentication or anti-abuse controls to lower friction. Product examples and tool lists are illustrative, not verified current capabilities.
+
 ## Onboarding Email Sequences
+
+Drafting a sequence does not authorize sending it. Use the actual consent, suppression, unsubscribe and user-authorized audience rules. The illustrative schedule below has both a welcome and +1-hour message; choose a cadence consistent with the stated daily limit.
 
 ### Email Timing
 

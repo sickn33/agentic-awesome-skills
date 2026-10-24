@@ -34,7 +34,8 @@ ingest.add_insert_route(
     Docs, path='/upload', uploadfile_inputs=[Docs.document], inputs=[Docs.timestamp],
     outputs=[Docs.document], background=True,
 )
-ingest.add_delete_route(Docs, path='/delete')
+# Omit delete routes unless the application explicitly needs and authorizes deletion.
+# ingest.add_delete_route(Docs, path='/delete')
 
 @pxt.query
 def list_docs():
@@ -92,3 +93,5 @@ Frontend types: `curl -fsS "$URL/openapi.json" -o openapi.json`, then `openapi-t
 No HTTP: apply, then insert from Python. [Self-hosting](https://docs.pixeltable.com/howto/deployment/overview).
 
 [cli.md](cli.md) | [core-api.md](core-api.md#serving)
+
+Local routes in this minimal example have no application authentication. Keep them bound to loopback; add authentication, authorization and request limits before exposing ingestion or query endpoints to other users.

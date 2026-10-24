@@ -2,6 +2,12 @@
 
 > 视角：黑盒，关注流程、状态机、不变量
 
+## 验证与示例边界
+
+仅使用研究员控制的 A/B 测试账户、合成订单及平台沙箱；历史案例的用户量/金额和 P0 标签不决定本次影响。密码/验证码响应篡改只证明前端行为，需验证后续服务器是否真的接受未授权操作。HTTP 200、success 子串、角色参数回显、验证码图片未变均不是成功证据。
+
+CORS `*` 配合 credentials 不能让浏览器读取带凭据响应；CSRF Token 可在同一会话重复使用并不自动是漏洞。SameSite Lax 只在适用的顶级安全方法导航等条件发送 Cookie，跨站 img GET 不等同导航。about:blank 可继承创建者源，不保证 null Origin；修改 Referrer Policy 不会把攻击者源变为目标源。Flash 内容仅为历史研究。data:/blob:/srcdoc 与嵌套 iframe 不自动绕过目标 frame-ancestors，window.top 始终指最顶层。
+
 ## 1. 一句话说清
 
 逻辑漏洞 = 程序按预期工作，但**预期不对**。
@@ -90,7 +96,7 @@ GET /api/address/edit/?addid=100002
 **探针**：
 1. 用账号 A 操作，记下 ID
 2. 用账号 B 重发同一请求，把 ID 换成 A 的
-3. 200 + 返回 A 的数据 = IDOR
+3. 响应必须包含 A 独有的合成标记，并证明 B 无读取权限；单独 HTTP 200 不足
 
 工具：Burp `Autorize` 插件，自动比较两个 session 的响应。
 
@@ -114,7 +120,7 @@ user.aid=1&user.name=test
 3. 用普通用户 token 直接调
 4. 200 + 操作成功 = 提权
 
-枚举角色 ID：通常 `1=超管, 2=管理员, 3=普通用户`。
+枚举角色 ID：角色编码由具体应用定义，不能假定 `1/2/3` 的含义。
 
 #### Header / Cookie 注入越权
 
@@ -156,7 +162,7 @@ for password in wordlist:
 ```
 sms code = 4-6 digit numeric
 no throttle
-→ Burp Intruder 100 线程爆破
+→ 仅在隔离环境以少量批准候选验证限流，不枚举真实验证码空间
 ```
 
 参考：某品牌商城 APP 5 位数字验证码 30 秒爆完。
@@ -336,9 +342,8 @@ GET /api/orders/100  Authorization: A_token  → 200，返回 A 的订单
 GET /api/orders/200  Authorization: A_token  → 200，返回 B 的订单内容
 （请求/响应见附件 2）
 
-## Step 3：用 C（陌生 user_id=99999）证明非测试账号也可遍历
-GET /api/orders/99999  Authorization: A_token  → 200，含订单号、收货人、电话（已脱敏）
-仅取 1 条样本，未尝试遍历更多。
+## Step 3：停止并保留两个测试账户的最小证据
+不访问随机 ID 或真实第三方资源；A/B 的权限边界证据已足够。
 ```
 
 ### 7.3 价格篡改 PoC 模板
@@ -350,7 +355,7 @@ GET /api/orders/99999  Authorization: A_token  → 200，含订单号、收货�
    {"productId":"X","quantity":1,"price":0.01}
 3. 服务端响应订单总额 = 0.01 元
 4. 实际支付页面也是 0.01 元（截图 + 支付平台订单截图）
-5. 收到商品 / 服务（如果是数字商品则看激活页面）
+5. 在沙箱确认异常订单状态；不实际支付、收货或激活服务。
 ```
 
 ### 7.4 CVSS 参考
@@ -373,7 +378,7 @@ GET /api/orders/99999  Authorization: A_token  → 200，含订单号、收货�
 3. 信任损害：被恶意修改地址可导致物流诈骗。
 
 测试时使用了攻击者控制的两个账号 A、B，未访问任何真实用户订单。
-仅在最后一步用 1 个随机 ID 证明可遍历性，立即停止并已脱敏。
+没有访问随机 ID 或真实第三方资源。
 ```
 
 ---
@@ -382,13 +387,13 @@ GET /api/orders/99999  Authorization: A_token  → 200，含订单号、收货�
 
 - **禁**：用支付篡改实际下单实物商品（即使 0.01 元也不行）。改用：
   - 测试环境（如有）
-  - 数字商品（电子卡券，支付后立即截图，**不激活**）
+  - 数字商品同样不得真实支付/领取；使用平台沙箱或只展示异常订单金额
   - 演示到"订单生成 + 金额异常"即停，不进入支付链路
 - **禁**：批量 IDOR 拖库。最多 1–3 条样本，且全部脱敏。
 - **禁**：用密码重置漏洞重置真实用户密码。重置自己的两个测试账号即可。
 - **禁**：用越权账号执行写 / 删 / 改操作。只读证明。
 - **禁**：撞库使用 SRC 平台之外的真实数据库（违反法律）。
-- **禁**：竞态测试发起 1000+ rps（视为 DoS）。控制 50–100 并发即可证明。
+- **禁**：竞态测试发起 1000+ rps（视为 DoS）。不存在通用安全并发值；按隔离测试环境的明确预算，从一对请求开始，异常或限流即停。
 - **报告中不要包含**：他人 PII 原文、订单号、手机号、地址（一律脱敏到只剩前 2 + 后 2 字符）。
 
 ## H1 真实案例
@@ -639,7 +644,7 @@ GET请求会发送Cookie
 默认行为可能允许跨站发送
 
 # 两分钟窗口
-SameSite=Lax有2分钟窗口期
+部分浏览器对未显式设置 SameSite 的新 Cookie 有 Lax+POST 宽限；不适用于所有显式 Lax Cookie
 ```
 
 **WAF/EDR 绕过变体：**
@@ -679,7 +684,7 @@ _绕过SameSite=Lax_
 window.location = "http://target.com/action"
 
 # 两分钟窗口
-在用户交互后2分钟内发起请求
+宽限若存在，从 Cookie 设置时间计算，不是任意用户交互后两分钟
 ```
 
 **2. 2. SameSite=Strict绕过**
@@ -1049,7 +1054,7 @@ _正则匹配绕过_
 target.com.attacker.com
 
 # 攻击代码
-fetch("http://target.com.api.attacker.com/api", {
+fetch("http://target.com/api", {  // 必须请求目标 API；攻击页源属于测试攻击者域
   credentials: "include"
 });
 ```
@@ -1108,7 +1113,7 @@ Authorization: Bearer {TOKEN}
 _遍历用户ID参数，观察响应码和大小差异以确认越权_
 ```
 # 用A用户的Token访问B用户的数据
-for id in $(seq 1000 1010); do
+for id in TEST_ACCOUNT_A_ID TEST_ACCOUNT_B_ID; do
   curl -s -o /dev/null -w "%{http_code} %{size_download}" \
     -H "Authorization: Bearer {TOKEN}" \
     "https://{TARGET}/api/users/$id/profile"
@@ -1365,7 +1370,7 @@ Content-Type: application/json
 _暴力破解4-6位验证码，测试是否有频率限制_
 ```
 # 4位验证码爆破
-for code in $(seq -w 0000 9999); do
+for code in 0000 0001; do  # 两个事先批准的测试候选
   response=$(curl -s -X POST "https://{TARGET}/api/verify-code" \
     -H "Content-Type: application/json" \
     -d "{\"phone\":\"13800138000\",\"code\":\"$code\"}")
@@ -1544,7 +1549,7 @@ for url in $(cat urls.txt); do
   echo -n "$url: "
   xfo=$(curl -sI "$url" | grep -i "x-frame-options")
   csp=$(curl -sI "$url" | grep -i "frame-ancestors")
-  [ -z "$xfo" ] && [ -z "$csp" ] && echo "VULNERABLE" || echo "Protected: $xfo $csp"
+  [ -z "$xfo" ] && [ -z "$csp" ] && echo "CANDIDATE: browser/impact verification required" || echo "Protected: $xfo $csp"
 done
 ```
 
@@ -1651,11 +1656,7 @@ _通过双重嵌套iframe使frame-busting脚本中的top引用指向中间页而
 <iframe src="middle-page.html"></iframe>
 
 <!-- middle-page.html内容 -->
-<html><body>,
-          syntaxBreakdown: [
-            { part: '<script>', explanation: { zh: '脚本标签', en: 'Scripttag' }, type: 'tag' },
-            { part: '<iframe>', explanation: { zh: '内嵌框架', en: 'Inline frame (iframe)' }, type: 'tag' }
-          ]
+<html><body>
 <iframe src="https://target.com" sandbox="allow-forms"></iframe>
 </body></html>
 
@@ -1758,12 +1759,7 @@ _利用sandbox属性中allow-scripts与allow-same-origin组合或allow-popups-to
 ```
 <!-- sandbox allow-scripts允许执行JS -->
 <iframe src="https://target.com" sandbox="allow-scripts allow-same-origin">
-</iframe>,
-          syntaxBreakdown: [
-            { part: '<script>', explanation: { zh: '脚本标签', en: 'Scripttag' }, type: 'tag' },
-            { part: '<iframe>', explanation: { zh: '内嵌框架', en: 'Inline frame (iframe)' }, type: 'tag' },
-            { part: 'alert()', explanation: { zh: '弹窗函数', en: 'Alert function' }, type: 'function' }
-          ]
+</iframe>
 
 <!-- 利用allow-popups逃逸 -->
 <iframe src="https://target.com" sandbox="allow-scripts allow-popups allow-popups-to-escape-sandbox">

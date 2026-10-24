@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+Modified for the AAS catalog: corrected bundled workflow, validation and packaging safeguards (2026-10-23).
+
 Skill Initializer - Creates a new skill from template
 
 Usage:
@@ -31,7 +33,7 @@ def safe_user_path(path_value, base_dir="."):
 
 SKILL_TEMPLATE = """---
 name: {skill_name}
-description: [TODO: Complete and informative explanation of what the skill does and when to use it. Include WHEN to use this skill - specific scenarios, file types, or tasks that trigger it.]
+description: "TODO: Explain what this skill does and when to use it."
 ---
 
 # {skill_title}
@@ -89,7 +91,7 @@ Executable code (Python/Bash/etc.) that can be run directly to perform specific 
 
 **Appropriate for:** Python scripts, shell scripts, or any executable code that performs automation, data processing, or specific operations.
 
-**Note:** Scripts may be executed without loading into context, but can still be read by Claude for patching or environment adjustments.
+**Note:** Review scripts and their side effects before execution; do not assume bundled code is trusted.
 
 ### references/
 Documentation and reference material intended to be loaded into context to inform Claude's process and thinking.
@@ -269,7 +271,7 @@ def init_skill(skill_name, path):
         scripts_dir.mkdir(exist_ok=True)
         example_script = scripts_dir / 'example.py'
         example_script.write_text(EXAMPLE_SCRIPT.format(skill_name=skill_name))
-        example_script.chmod(0o755)
+        example_script.chmod(0o644)
         print("✅ Created scripts/example.py")
 
         # Create references/ directory with example reference doc
@@ -300,12 +302,12 @@ def init_skill(skill_name, path):
 
 
 def main():
-    if len(sys.argv) < 4 or sys.argv[2] != '--path':
+    if len(sys.argv) != 4 or sys.argv[2] != '--path':
         print("Usage: init_skill.py <skill-name> --path <path>")
         print("\nSkill name requirements:")
         print("  - Hyphen-case identifier (e.g., 'data-analyzer')")
         print("  - Lowercase letters, digits, and hyphens only")
-        print("  - Max 40 characters")
+        print("  - Max 64 characters")
         print("  - Must match directory name exactly")
         print("\nExamples:")
         print("  init_skill.py my-new-skill --path skills/public")

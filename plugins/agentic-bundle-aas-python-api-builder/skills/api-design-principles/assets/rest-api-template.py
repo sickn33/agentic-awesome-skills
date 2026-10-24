@@ -1,5 +1,6 @@
 """
-Production-ready REST API template using FastAPI.
+In-memory mock REST API teaching template using FastAPI; not production-ready.
+No persistence/auth/password storage/filtering is implemented. Use synthetic data only.
 Includes pagination, filtering, error handling, and best practices.
 """
 
@@ -22,13 +23,13 @@ app = FastAPI(
 # Trusted Host: Prevents HTTP Host Header attacks
 app.add_middleware(
     TrustedHostMiddleware,
-    allowed_hosts=["*"] # TODO: Configure this in production, e.g. ["api.example.com"]
+    allowed_hosts=["localhost", "127.0.0.1", "testserver"] # TODO: Configure this in production, e.g. ["api.example.com"]
 )
 
 # CORS: Configures Cross-Origin Resource Sharing
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"], # TODO: Update this with specific origins in production
+    allow_origins=["http://localhost:3000"], # TODO: Update this with specific origins in production
     allow_credentials=False, # TODO: Set to True if you need cookies/auth headers, but restrict origins
     allow_methods=["*"],
     allow_headers=["*"],
@@ -87,9 +88,10 @@ class ErrorResponse(BaseModel):
 async def http_exception_handler(request, exc):
     return JSONResponse(
         status_code=exc.status_code,
+        headers=exc.headers,
         content=ErrorResponse(
             error=exc.__class__.__name__,
-            message=exc.detail if isinstance(exc.detail, str) else exc.detail.get("message", "Error"),
+            message=exc.detail if isinstance(exc.detail, str) else exc.detail.get("message", "Error") if isinstance(exc.detail, dict) else "Error",
             details=exc.detail.get("details") if isinstance(exc.detail, dict) else None
         ).model_dump()
     )
@@ -145,7 +147,7 @@ async def get_user(user_id: str = Path(..., description="User ID")):
     if user_id == "999":
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail={"message": "User not found", "details": {"id": user_id}}
+            detail={"message": "User not found", "details": [{"field": "user_id", "message": "User not found", "code": "NOT_FOUND"}]}
         )
 
     return User(
@@ -164,7 +166,7 @@ async def update_user(user_id: str, update: UserUpdate):
     existing = await get_user(user_id)
 
     # Apply updates
-    update_data = update.model_dump(exclude_unset=True)
+    update_data = update.model_dump(exclude_unset=True, exclude_none=True)
     for field, value in update_data.items():
         setattr(existing, field, value)
 
@@ -179,4 +181,4 @@ async def delete_user(user_id: str):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="127.0.0.1", port=8000)

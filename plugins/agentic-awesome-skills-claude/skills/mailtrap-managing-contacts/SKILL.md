@@ -110,3 +110,4 @@ Contacts power **marketing campaigns**: you maintain clean lists, consent, and a
 ## Limitations
 
 - Contact API shapes can change; check Mailtrap's current OpenAPI spec before generating request bodies.
+- Resolve the intended account/list and authorized batch before imports, contact deletion, exports or custom events. Events and list changes can trigger campaigns. Preserve suppression/consent state, minimize exported personal data, and never treat address possession as marketing consent.

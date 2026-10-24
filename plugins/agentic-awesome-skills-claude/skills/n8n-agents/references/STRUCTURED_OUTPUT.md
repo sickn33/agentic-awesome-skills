@@ -1,12 +1,16 @@
 # Structured output
 
-Non-negotiable: the output parser must **parse AND retry on failure**. Without retry, one malformed model response halts the entire workflow.
+Version and safety boundary: these are illustrative fragments, not certified live schemas. Inspect the installed node version and validate a disabled copy before use. Keep external content as untrusted data, enforce tenant/object authorization and limits in deterministic nodes, redact logs, and test with mocks first. Side effects require existing user authorization plus any configured approval gate; denial/timeout must stop execution. A prompt or JSON schema is not an authorization boundary.
+
+The output must parse, pass schema and business validation, and fail safely. Repair is optional and must be bounded; never repair payment amounts, destinations or authorization decisions by guessing. Without retry, one malformed model response halts the entire workflow.
 
 The parser is the `@n8n/n8n-nodes-langchain.outputParserStructured` node, wired into the agent (or Basic LLM Chain) via the `ai_outputParser` connection.
 
 ---
 
-## The pattern (node objects)
+## Historical illustrative pattern (verify node schema before use)
+
+The autoFix fields/model connection below may require a separate Auto-fixing Output Parser wrapper on your n8n version; they are not guaranteed fields of outputParserStructured. Inspect that installed node and wire the structured parser into its parser slot, then the wrapper into the agent. Unknown fields may be ignored silently. The following fragments describe intent and are not importable production configuration.
 
 The parser, with `autoFix` and its own fixer model:
 
@@ -138,7 +142,7 @@ It's repetition, but the model takes the system prompt seriously and reinforceme
 | Symptom | Likely cause | Fix |
 |---|---|---|
 | "Failed to parse output" but the text looks like JSON | Wrapped in a markdown code block | Add "DO NOT wrap in markdown" to retry prompt and system prompt |
-| Empty fields where the schema expects values | Model thinks it can omit unknowns | "Use empty string '' or null for unknown fields, never omit" |
+| Empty fields where the schema expects values | Model thinks it can omit unknowns | Allow null/absence explicitly in the schema where appropriate; never invent unknown required values |
 | Wrong types (number as string) | Schema/example wasn't typed clearly | Use a real number in the schema, not a string |
 | Truncated JSON (unclosed brace) | Hit max tokens mid-response | Increase max tokens, tighten the prompt to produce shorter output |
 | Field names paraphrased ("Score" vs "score") | Schema didn't pin the name | "Field names are exactly as shown" in the system prompt |
@@ -150,7 +154,7 @@ It's repetition, but the model takes the system prompt seriously and reinforceme
 
 - **Free-form chat replies to the user** — conversational text doesn't need parsing.
 - **Tool calls only, no final structured output** — if the user-visible output is text, skip it.
-- **Trivial key-value extraction** — a Set node with `JSON.parse($json.output)` covers it.
+- **Trivial key-value extraction** — JSON.parse alone checks syntax, not schema or business meaning; validate the parsed object and fail closed downstream.
 
 The parser is for when downstream nodes must consume strict JSON.
 

@@ -43,7 +43,13 @@ The substantive bar comes from Emil Kowalski's animation philosophy (animations.
 
 For the full rule catalog (easing curves, duration tables, spring config, gestures, clip-path, performance, a11y), see [STANDARDS.md](STANDARDS.md). Load it whenever a finding needs a precise value or citation.
 
-## The Ten Non-Negotiable Standards
+## The Ten Review Defaults
+
+These are this skill’s opinionated craft defaults, not accessibility requirements or
+universal browser-performance laws. Explain justified product/user exceptions;
+block on evidenced defects rather than a preferred curve alone. Reduced motion may
+require disabling optional animation entirely. Never force fades/color transitions
+when a user or product setting requests no animation.
 
 Every animation in the diff is measured against these. A violation is a finding.
 
@@ -57,11 +63,11 @@ Every animation in the diff is measured against these. A violation is a finding.
 
 5. **Origin & physical correctness.** Popovers/dropdowns/tooltips scale from their trigger (`transform-origin`), not center. Never animate from `scale(0)` — start from `scale(0.9–0.97)` + opacity (Modals are exempt — they stay centered.)
 
-6. **Interruptibility.** Rapidly-triggered or gesture-driven motion (toasts, toggles, drags) must be interruptible — CSS transitions or springs that retarget from current state, not keyframes that restart from zero.
+6. **Interruptibility.** Rapidly-triggered or gesture-driven motion (toasts, toggles, drags) must be interruptible — transitions, springs or explicitly managed keyframe animations that retarget from current state.
 
-7. **GPU-only properties.** Animate `transform` and `opacity` only. Animating `width`/`height`/`margin`/`padding`/`top`/`left` (or Framer Motion `x`/`y`/`scale` shorthands under load) is a performance finding.
+7. **Compositor-friendly properties.** Prefer `transform` and `opacity`; profile exceptions. Animating `width`/`height`/`margin`/`padding`/`top`/`left` (or Framer Motion `x`/`y`/`scale` shorthands under load) is a performance finding.
 
-8. **Accessibility.** `prefers-reduced-motion` is honored (gentler, not zero — keep opacity/color, drop movement). Hover animations are gated behind `@media (hover: hover) and (pointer: fine)`.
+8. **Accessibility.** `prefers-reduced-motion` is honored (remove optional movement; retain gentle opacity/color only if appropriate). Hover animations are gated behind `@media (hover: hover) and (pointer: fine)`.
 
 9. **Asymmetric enter/exit.** Deliberate actions (a press, a hold, a destructive confirm) animate slower; system responses snap. Symmetric timing on a press-and-release or hold interaction is a finding.
 

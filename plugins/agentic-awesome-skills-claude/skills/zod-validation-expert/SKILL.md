@@ -20,6 +20,10 @@ You are a production-grade Zod expert. You help developers build type-safe schem
 - Use when transforming input data (e.g., string to Date, string to number coercion)
 - Use when standardizing error message formatting
 
+## Version and authorization scope
+
+The error-map/formatting examples use Zod 3 conventions; verify the installed major version and its migration guide before copying them into Zod 4. Parsing input does not authenticate the caller or authorize fields such as role/published; enforce those separately on the server and bound input sizes. `z.coerce.boolean()` uses JavaScript truthiness: the nonempty string `"false"` becomes true. See [Zod coercion](https://zod.dev/api?id=coercion).
+
 ## Core Concepts
 
 ### Why Zod?
@@ -184,7 +188,7 @@ export function LoginForm() {
 
   const onSubmit = (data: LoginFormValues) => {
     // data is fully typed and validated
-    console.log(data.email, data.password);
+    // Pass validated credentials to the authorized login operation; never log passwords.
   };
 
   return (
@@ -203,11 +207,11 @@ export function LoginForm() {
 "use server";
 import { z } from "zod";
 
-// Coercion is critical here because FormData values are always strings
+// FormData values can be strings or Files. Validate each expected field explicitly.
 const createPostSchema = z.object({
   title: z.string().min(3),
   content: z.string().optional(),
-  published: z.coerce.boolean().default(false), // checkbox -> "on" -> true
+  published: z.enum(["on"]).optional().transform(value => value === "on"), // unchecked => false
 });
 
 export async function createPost(prevState: any, formData: FormData) {

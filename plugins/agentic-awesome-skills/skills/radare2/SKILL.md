@@ -1,7 +1,7 @@
 ---
 name: radare2
 description: "Drive the radare2 CLI for binary reconnaissance, disassembly, analysis, function locating, export, and lightweight patching (r2/rabin2/rasm2/radiff2) without a GUI."
-risk: safe
+risk: critical
 source: "https://github.com/zhaoxuya520/reverse-skill"
 source_repo: "zhaoxuya520/reverse-skill"
 source_type: community
@@ -61,7 +61,7 @@ Windows 常见可执行文件：
 
 ## 内置资源
 
-这个 skill 自带两个资源，优先复用，不要每次临时组织一套重复命令。
+本副本仅包含 references/cheatsheet.md；recon.ps1 不在包内，不能声称已提供或执行。
 
 ### `scripts/recon.ps1`
 
@@ -147,7 +147,7 @@ ERROR: Cannot find ...\share\format\dll\*.sdb
 
 未记录导入表（或合法等价锚点 / IAT 失败旁路）Evidence 前：MUST NOT 声称「基础侦察完成」，MUST NOT 进入工作流 2+ 的深挖结论。
 
-优先直接运行内置脚本：
+仅当已取得并审查外部脚本时运行；否则使用下面的手动命令：
 
 ```powershell
 powershell -File "<skill-root>\radare2\scripts\recon.ps1" -TargetPath "sample.exe"
@@ -233,14 +233,14 @@ r2 -w sample.exe
 s 0x401000
 wa nop
 wa jmp 0x401050
-wq
+q
 ```
 
 常见写操作：
 
 - `wa <asm>`：写汇编
 - `wx <hex>`：写原始字节
-- `wq`：写入并退出
+- `q`：退出；写模式中的写操作已修改文件，不是事务提交
 
 修改前最好先备份原文件。如果用户没提备份，至少提醒一次。
 
@@ -260,7 +260,7 @@ r2 -A -q -c "afl;iz;ii;q" sample.exe
 
 如果命令很多，优先整理成易读顺序，不要塞入难以维护的超长串。
 
-更推荐先用内置侦察脚本打底，再决定要不要补定制命令。
+先用本文的手动侦察命令；外部脚本需要独立取得并审查。
 
 ## 常用子工具
 
@@ -428,28 +428,7 @@ radare2-skills 项目（radareorg/radare2-skills）提供了更完整的生态�
 
 ## 按需自举（On-Demand Bootstrap）
 
-本 skill 的入口脚本已接入统一自举系统。缺少 radare2 时不会直接报错，而是自动尝试安装。
-
-### 自动化能力边界
-
-| 工具 | 可自动安装 | 安装方式 | 说明 |
-|------|-----------|---------|------|
-| r2 | ✓ | GitHub Release ZIP (w64) | 自动下载解压到 `%USERPROFILE%\Tools\radare2\` |
-| rabin2 | ✓ | 同上（包含在 radare2 发行包中） | — |
-| rasm2 | ✓ | 同上 | — |
-| radiff2 | ✓ | 同上 | — |
-| rahash2 | ✓ | 同上 | — |
-| rax2 | ✓ | 同上 | — |
-
-### 自举触发点
-
-- `scripts/recon.ps1`：缺 `rabin2` 或 `r2` 时自动调用 `bootstrap-reverse.ps1`
-
-### 自举失败时
-
-如果自动安装失败（网络不通、GitHub API 限流等），脚本会抛出明确错误并附带手动安装链接。
-
-手动安装：从 https://github.com/radareorg/radare2/releases 下载 `radare2-*-w64.zip`，解压到 `%USERPROFILE%\Tools\radare2\` 并确保 `bin\` 目录在 PATH 中。
+本副本没有入口脚本或自动安装器。缺少工具时报告前提，先确认所需平台与版本；经用户授权后从 https://github.com/radareorg/radare2/releases 取得并校验对应发布包。不得声称安装已完成或自动运行未随包提供的 bootstrap 脚本。
 
 
 ## 任务完成自检（声称完成前 MUST 通过）
@@ -467,3 +446,7 @@ radare2-skills 项目（radareorg/radare2-skills）提供了更完整的生态�
 - High-level decompilation needs r2ghidra/pdc plugins for readability.
 
 > Adapted from [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill) (MIT).
+
+## Analysis boundaries
+
+Analyze only authorized files in an isolated environment; parsers can contain vulnerabilities even during static inspection. Never execute or dynamically debug unknown samples on the host. Empty imports alone do not prove packing or dynamic loading; report uncertainty and keep unavailable dynamic steps blocked. Patch a verified copy, record its hash/offset/architecture, ensure replacement instruction lengths fit and re-disassemble; patches may invalidate signatures. Never start the HTTP command server or install plugins without specific authorization and a reviewed local-only configuration. Upstream tool-index, RULES and dynamic workflows are external and unavailable in this bundle.

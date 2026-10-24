@@ -24,12 +24,14 @@ execute get_user(123);
 
 ```sql
 -- Option 1: Use unnamed prepared statements (most ORMs do this automatically)
--- The query is prepared and executed in a single protocol message
+-- The driver controls Parse/Bind/Execute; verify pooler and driver compatibility.
 
--- Option 2: Deallocate after use in transaction mode
+-- Option 2: Keep this SQL PREPARE lifecycle inside one explicit transaction
+begin;
 prepare get_user as select * from users where id = $1;
 execute get_user(123);
 deallocate get_user;
+commit;
 
 -- Option 3: Use session mode pooling (port 5432 vs 6543)
 -- Connection is held for entire session, prepared statements persist
@@ -39,7 +41,7 @@ Check your driver settings:
 
 ```sql
 -- Many drivers use prepared statements by default
--- Node.js pg: { prepare: false } to disable
+-- Node.js pg: omit the query configuration name to avoid named preparation.
 -- JDBC: prepareThreshold=0 to disable
 ```
 

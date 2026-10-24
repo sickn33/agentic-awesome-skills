@@ -3,5 +3,5 @@
   "@type": "HowTo",
   "name": "{{name}}",
   "description": "{{description}}",
-  "step": "{{step}}"
+  "step": []
 }

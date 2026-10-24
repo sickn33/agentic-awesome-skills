@@ -77,6 +77,8 @@ class CompetitorAnalyzer:
         Returns:
             Comparative analysis with insights
         """
+        if not competitors_data:
+            raise ValueError("At least one supplied competitor record is required")
         # Analyze each competitor
         analyses = []
         for comp_data in competitors_data:
@@ -86,7 +88,7 @@ class CompetitorAnalyzer:
         # Extract common keywords across competitors
         all_keywords = []
         for analysis in analyses:
-            all_keywords.extend(analysis['keyword_strategy']['primary_keywords'])
+            all_keywords.extend(set(analysis['keyword_strategy']['primary_keywords']))
 
         common_keywords = self._find_common_keywords(all_keywords)
 
@@ -337,7 +339,7 @@ class CompetitorAnalyzer:
                 app for app, keywords in all_keywords_by_app.items()
                 if keyword in keywords
             ]
-            if 1 < len(using_apps) < len(analyses):
+            if 0 < len(using_apps) < len(analyses):
                 gaps.append({
                     'keyword': keyword,
                     'used_by': using_apps,
@@ -356,7 +358,7 @@ class CompetitorAnalyzer:
             'highest_rating': max(ratings),
             'lowest_rating': min(ratings),
             'average_ratings_count': int(sum(ratings_counts) / len(ratings_counts)),
-            'total_ratings_in_category': sum(ratings_counts)
+            'total_ratings_in_supplied_sample': sum(ratings_counts)
         }
 
     def _identify_best_practices(self, ranked_competitors: List[Dict[str, Any]]) -> List[str]:

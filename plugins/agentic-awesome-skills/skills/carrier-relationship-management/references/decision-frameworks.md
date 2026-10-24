@@ -290,21 +290,21 @@ Exiting a carrier requires planning to avoid service disruption on lanes they cu
 
 | Criterion | Weight | Data Source | Scoring Method |
 |-----------|--------|-------------|---------------|
-| Rate competitiveness | 40% | Bid response | Normalize to 100-point scale where lowest total cost (linehaul + modeled FSC + expected accessorials) = 100, and each 1% above lowest = -3 points |
+| Rate competitiveness | 40% | Bid response | Normalize to 100-point scale where lowest total cost (linehaul + modeled FSC + expected accessorials) = 100, and score = max(0, 100 - 3 × percentage premium above the lowest comparable total cost) |
 | Service history / OTD | 25% | Carrier scorecard (for incumbents) or reference checks (for new carriers) | 100 points for ≥96% OTD, 80 for 93-95%, 60 for 90-92%, 40 for 85-89%, 0 for <85% |
 | Capacity commitment | 20% | Bid response (stated tender acceptance commitment, equipment availability, driver count on the lane) | 100 points for ≥95% acceptance commitment with driver count evidence, scaled down based on commitment level and supporting evidence |
-| Operational fit | 15% | Bid response + due diligence | Technology integration (EDI/API), FMCSA compliance score, driver domicile proximity, equipment match, prior relationship quality |
+| Operational fit | 15% | Bid response + due diligence | Technology integration (EDI/API), verified compliance status (a pass/fail gate, not a price-compensable score), driver domicile proximity, equipment match, prior relationship quality |
 
 #### Example Scoring — Lane CHI-DAL (5 loads/week)
 
 ```
                 Rate (40%)  Service (25%)  Capacity (20%)  Ops Fit (15%)  Total
-Carrier A:     85 × 0.40   95 × 0.25      90 × 0.20       80 × 0.15    = 88.75
-Carrier B:     100 × 0.40  70 × 0.25      85 × 0.20       75 × 0.15    = 86.75
-Carrier C:     92 × 0.40   90 × 0.25      80 × 0.20       90 × 0.15    = 89.10
+Carrier A:     85 × 0.40   95 × 0.25      90 × 0.20       80 × 0.15    = 87.75
+Carrier B:     100 × 0.40  70 × 0.25      85 × 0.20       75 × 0.15    = 85.75
+Carrier C:     92 × 0.40   90 × 0.25      80 × 0.20       90 × 0.15    = 88.80
 
-Award: Carrier C as primary (89.10), Carrier A as secondary (88.75).
-Carrier B has lowest rate but weakest service — appropriate as tertiary.
+Award: Carrier C as primary (88.80), Carrier A as secondary (87.75).
+Carrier B has lowest rate but weakest service; qualify backup suitability against minimum service requirements before any award.
 ```
 
 ### 3.3 Incumbent vs. New Carrier Evaluation
@@ -349,8 +349,8 @@ these protections into the contract:
 When procuring on the spot market:
 
 - **Set a rate ceiling** before posting. Use your tertiary contract rate + 15% as the maximum. Anything above that threshold requires manager approval.
-- **Vet the carrier** even for single loads. At minimum: FMCSA authority check, insurance verification, Carrier411 or Highway check for complaints. A 60-second screening prevents catastrophic outcomes (uninsured carrier, double-brokered load, stolen freight).
-- **Demand rate confirmation** before the truck arrives. Verbal agreements on spot loads are unenforceable. Get the rate confirmation signed with all accessorials, FSC, and detention terms specified.
+- **Vet the carrier** even for single loads. At minimum: FMCSA authority check, insurance verification, Carrier411 or Highway check for complaints. A brief screening cannot guarantee prevention of catastrophic outcomes (uninsured carrier, double-brokered load, stolen freight).
+- **Demand rate confirmation** before the truck arrives. Use written confirmations; enforceability of oral agreements depends on applicable law and facts. Get the rate confirmation signed with all accessorials, FSC, and detention terms specified.
 - **Track spot premium** meticulously. Report spot vs. contract spread weekly by lane. If any lane consistently shows >20% spot premium, your routing guide on that lane needs attention.
 
 ---
@@ -532,3 +532,18 @@ ALWAYS: vet the spot carrier (FMCSA check, rate confirmation signed before dispa
 | SAFER | Safety and Fitness Electronic Records — FMCSA's public carrier database |
 | SCAC | Standard Carrier Alpha Code — 2-4 letter identifier for each carrier |
 | TMS | Transportation Management System — software for managing freight operations and carrier relationships |
+
+## Calculation and decision limits
+
+The numerical weights, targets and scenarios above require owner calibration.
+Example allocations are ranges, not simultaneous percentages: choose an explicit
+set totaling 100% and reconcile it with the approved concentration policy. Tender
+waterfall deadlines must fit actual pickup lead time; do not sequentially wait
+6.5 hours for an urgent pickup. Safety/authority/insurance eligibility is a gate
+that a high composite bid score cannot override. SMS percentiles are not an
+FMCSA safety rating and public access/data sufficiency varies. Verify records
+in the official licensing/insurance system, not a presumed SAFER “Insurance tab”.
+Bond requirements apply to the correct broker/forwarder entity; ordinary asset
+carrier financial responsibility is not a broker bond. No unsupported score
+establishes solvency or statutory compliance. Review proposed actions and
+contract terms with the authorized transport/compliance owner before execution.

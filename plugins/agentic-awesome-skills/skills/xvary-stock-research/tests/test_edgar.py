@@ -11,7 +11,7 @@ class EdgarTests(unittest.TestCase):
         self.assertNotIn("WeightedAverageNumberOfDilutedSharesOutstanding", concepts)
         self.assertNotIn("WeightedAverageShares", concepts)
 
-    def test_best_entry_uses_concept_priority_before_recency(self) -> None:
+    def test_best_entry_prefers_current_period_over_concept_alias(self) -> None:
         records = [
             {
                 "concept": "Revenue",
@@ -38,7 +38,7 @@ class EdgarTests(unittest.TestCase):
         )
         self.assertIsNotNone(best)
         assert best is not None
-        self.assertEqual(best["concept"], "Revenues")
+        self.assertEqual(best["concept"], "Revenue")
 
     def test_request_json_retries_then_succeeds(self) -> None:
         class FakeResponse:

@@ -136,7 +136,7 @@ await _context.SaveChangesAsync(ct);
 var products = GenerateLargeProductList();
 
 // ✅ Good - Bulk insert (much faster for large datasets)
-await _context.BulkInsertAsync(products, ct);
+await _context.BulkInsertAsync(products, cancellationToken: ct);
 
 // ❌ Bad - Individual inserts
 foreach (var product in products)
@@ -221,9 +221,8 @@ catch (DbUpdateConcurrencyException ex)
         throw new NotFoundException("Product was deleted by another user");
     }
     
-    // Client wins - overwrite database values
-    entry.OriginalValues.SetValues(databaseValues);
-    await _context.SaveChangesAsync(ct);
+    // Surface a conflict (for example HTTP 409); do not silently overwrite.
+    throw;
 }
 ```
 
@@ -241,7 +240,10 @@ try
     await _context.OrderItems.AddRangeAsync(items, ct);
     await _context.SaveChangesAsync(ct);
     
-    await _paymentService.ProcessAsync(order.Id, ct);
+    // Save an outbox event in this SAME database transaction instead of calling
+    // the payment provider here. A separate idempotent worker handles payment.
+    _context.OutboxMessages.Add(BuildPaymentRequestedEvent(order.Id));
+    await _context.SaveChangesAsync(ct);
     
     await transaction.CommitAsync(ct);
 }
@@ -328,28 +330,16 @@ builder.Property(p => p.FullName)
 builder.HasIndex(p => p.FullName);
 ```
 
-## Monitoring and Diagnostics
+## Monitoring and diagnostics
 
-```csharp
-// Log slow queries
-services.AddDbContext<AppDbContext>(options =>
-{
-    options.UseSqlServer(connectionString);
-    
-    options.LogTo(
-        filter: (eventId, level) => eventId.Id == CoreEventId.QueryExecutionPlanned.Id,
-        logger: (eventData) =>
-        {
-            if (eventData is QueryExpressionEventData queryData)
-            {
-                var duration = queryData.Duration;
-                if (duration > TimeSpan.FromSeconds(1))
-                {
-                    _logger.LogWarning("Slow query detected: {Duration}ms - {Query}",
-                        duration.TotalMilliseconds,
-                        queryData.Expression);
-                }
-            }
-        });
-});
-```
+Use EF relational command execution logging or a `DbCommandInterceptor` to measure
+actual database duration. `QueryExecutionPlanned` describes query compilation;
+`QueryExpressionEventData` does not expose execution duration. Redact parameters,
+connection strings and personal data. Sensitive-data logging needs an explicit
+local test dataset even in a development environment.
+
+`ExecuteUpdate`/`ExecuteDelete` are EF Core 7+ relational APIs, bypass tracking
+and do not automatically coordinate multiple calls in one transaction. Context
+pooling differs from driver connection pooling; reset tenant-specific state and
+never share a DbContext across concurrent tasks. Split queries can see inconsistent
+rows without suitable isolation. BulkExtensions licensing/API varies by version.

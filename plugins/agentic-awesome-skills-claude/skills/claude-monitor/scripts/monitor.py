@@ -35,9 +35,8 @@ def safe_user_path(path_value, base_dir="."):
 
 try:
     import psutil
-except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "psutil", "--quiet"])
-    import psutil
+except ImportError as exc:
+    raise SystemExit("Missing psutil: install a reviewed pinned version in an isolated environment before running") from exc
 
 sys.path.insert(0, str(Path(__file__).parent))
 from config import BROWSER_NAMES, CLAUDE_NAMES, MONITOR_DEFAULTS
@@ -53,7 +52,7 @@ def take_snapshot():
     browser_count = 0
     for proc in psutil.process_iter(["name", "memory_info"]):
         try:
-            name = proc.info["name"].lower()
+            name = (proc.info["name"] or "").lower()
             for bname in BROWSER_NAMES:
                 if bname in name:
                     browser_ram += proc.info["memory_info"].rss
@@ -67,7 +66,7 @@ def take_snapshot():
     claude_count = 0
     for proc in psutil.process_iter(["name", "memory_info"]):
         try:
-            name = proc.info["name"].lower()
+            name = (proc.info["name"] or "").lower()
             for cname in CLAUDE_NAMES:
                 if cname in name:
                     claude_ram += proc.info["memory_info"].rss
@@ -235,6 +234,10 @@ def main():
     parser.add_argument("--json", action="store_true", help="Output em JSON")
     args = parser.parse_args()
 
+    if not 1 <= args.interval <= 3600 or not 1 <= args.duration <= 86400:
+        parser.error("interval must be 1..3600 and duration 1..86400 seconds")
+    if not 0 <= args.alert_cpu <= 100 or not 0 <= args.alert_ram <= 100:
+        parser.error("alert thresholds must be 0..100")
     snapshots = []
     start_time = time.time()
     sample_count = 0
@@ -301,8 +304,10 @@ def main():
 
     if args.json:
         print(json.dumps(report, indent=2, ensure_ascii=False))
-    else:
+    elif "error" not in report:
         print(format_report(report))
+    else:
+        print(report["error"], file=sys.stderr)
 
 
 if __name__ == "__main__":

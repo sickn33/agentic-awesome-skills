@@ -1,5 +1,6 @@
 # Cross-Encoder Losses (reranker)
 
+AAS adaptation: follow the root execution/data contract. Examples are version-sensitive sketches; verify APIs in a reviewed lockfile and cached revisions. Local-only/no publication/no remote telemetry defaults override older Hub/tracker recipes below. Numerical hardware, speed, quality, data-volume and loss-ranking claims are illustrative hypotheses, not guaranteed thresholds.
 All losses live in `sentence_transformers.cross_encoder.losses`.
 
 Cross-encoder losses fall into three families: **pointwise** (score each pair independently), **pairwise** (score pairs of pairs), and **listwise** (score a whole ranked list at once). Plus contrastive/distillation variants for specific setups.

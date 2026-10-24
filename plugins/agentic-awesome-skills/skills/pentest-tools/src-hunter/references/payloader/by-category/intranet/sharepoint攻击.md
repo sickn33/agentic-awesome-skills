@@ -2,6 +2,8 @@
 
 _2 条 intranet payload_
 
+示例中的 sharepoint.com 不是可授权的占位目标：替换为明确在范围内的测试租户。SharePoint Online 通常需要受支持的 OAuth 流程；`curl -u` 和旧版 SharePointOnlineCredentials 片段不是通用的现代租户登录方案。列表 items 返回元数据，不自动下载文件内容。
+
 ### SharePoint枚举  `sharepoint-enum`
 _枚举SharePoint站点和文件_
 子类：**枚举** · tags: `sharepoint` `enum` `recon`
@@ -46,7 +48,7 @@ curl -k "https://sharepoint.com/_api/search/query?querytext='password'"
 
 **概述：** SharePoint REST API可用于枚举。
 
-**漏洞原理：** SharePoint API暴露过多信息。
+**判定边界：** REST API 和已授权用户读取文档属于正常功能。仅在两个测试账户之间证明越权、匿名敏感数据泄露等具体影响时报告漏洞。
 
 **利用方法：** 利用流程：1) 枚举站点 2) 枚举用户 3) 搜索敏感文件
 
@@ -97,14 +99,14 @@ List list = context.Web.Lists.GetByTitle("Documents");
 > OneDrive同步
 ```
 使用OneDrive客户端同步SharePoint文档库
-本地访问所有文件
+本地访问当前账户被授权且客户端实际同步的文件
 离线查看敏感数据
 ```
 
 
 **概述：** SharePoint文件可通过多种方式访问。
 
-**漏洞原理：** 获取凭证后可访问所有授权文档。
+**漏洞原理：** 访问范围取决于账户权限、认证方式、条件访问和租户策略；持有凭证不保证完整访问。
 
 **利用方法：** 利用流程：1) 获取凭证 2) 访问文档库 3) 下载敏感文件
 

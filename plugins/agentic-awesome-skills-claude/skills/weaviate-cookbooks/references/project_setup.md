@@ -73,3 +73,5 @@ For projects developed with Claude Code, add deny rules for local secret files:
 ```
 
 Save this to `.claude/settings.json` at project root.
+
+Reuse existing authorized repositories and .gitignore entries; do not reinitialize Git or replace existing Claude settings. Merge narrow deny rules with existing policy. An ignore rule does not remove already tracked secrets.

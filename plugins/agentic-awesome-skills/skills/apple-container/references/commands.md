@@ -1,14 +1,15 @@
 # `container` — Complete CLI Command Reference
 
+> Reference scope: this imported guide mixes release-era and later branch documentation; its `1.0.0+` annotations are not verified introduction versions. Match the installed `container --version` and subcommand `--help` to the same upstream release tag before using flags or defaults. Current branch documentation can describe unreleased behavior. No container runtime was executed for this static review.
+
 Full command/flag reference for Apple's `container` CLI (repo `apple/container`), invoked as
 `container ...` on Apple-silicon macOS. Flags, defaults, aliases, and behavior are taken from
 the swift-argument-parser declarations in `Sources/ContainerCommands/` (source of truth) and
-`docs/command-reference.md`; on conflicts the source wins.
+`docs/command-reference.md`. On conflicts, compare the installed help and source at its exact release tag; do not substitute main-branch syntax for an installed release.
 
 Not Docker. The CLI is deliberately Docker-like, but flags, defaults, and daemon model differ —
 do not assume Docker behavior carries over. Every container runs in its own lightweight VM;
-there is no shared daemon (per-user `launchd` services). Registry lives under the **Image**
-group, not top-level.
+a shared per-user API server and helpers run under `launchd`, with a runtime helper per container. Registry is the top-level `container registry` group; help headings are not command namespaces.
 
 **Conventions used below:** a value of `—` in the Default column means "no default (unset /
 optional)". "flag" in the Value column means a boolean switch (no argument). `[env: NAME]`
@@ -196,7 +197,7 @@ container run [<options>] <image> [<arguments> ...]
 # interactive shell
 container run -it ubuntu:latest /bin/bash
 # detached web server with a name and a published port
-container run -d --name web -p 8080:80 nginx:latest
+container run -d --name web -p 127.0.0.1:8080:80 nginx:latest
 # env + resource limits
 container run -e NODE_ENV=production --cpus 2 --memory 1G node:18
 # fixed MAC on the default network
@@ -224,7 +225,7 @@ container create [<options>] <image> [<arguments> ...]
 **Options:** identical to [`container run`](#container-run).
 
 ```bash
-container create --name web -p 8080:80 nginx:latest
+container create --name web -p 127.0.0.1:8080:80 nginx:latest
 container start web
 ```
 
@@ -690,7 +691,8 @@ are printed to stdout; rejected members are warned.
 
 ```bash
 container image load -i images.tar
-container image load --force --input suspect-archive.tar
+container image load --input trusted-archive.tar
+# Inspect provenance and integrity first; do not bypass validation with --force.
 cat alpine.tar | container image load
 ```
 
@@ -793,7 +795,7 @@ container image prune --all
 
 ## Registry
 
-Manage registry logins. **Group alias:** `r`. Nested under the Image group. Credentials are
+Manage registry logins. **Group alias:** `r`. Invoked as the top-level `container registry` group. Credentials are
 stored in the macOS keychain.
 
 > Note: source declares only `login`, `logout`, and `list`. There is **no** `registry default`
@@ -831,7 +833,7 @@ the credentials, logging *"Login succeeded"*.
 ```bash
 container registry login registry.example.com                 # prompts for user + password
 container registry login -u alice ghcr.io                      # prompts for password only
-echo "$TOKEN" | container registry login -u alice --password-stdin ghcr.io
+printf '%s\n' "$TOKEN" | container registry login --scheme https -u alice --password-stdin ghcr.io
 container registry login --scheme http localhost:5000
 ```
 
@@ -1332,7 +1334,9 @@ name `anon-…`). Unlike Docker, they do **not** auto-clean with `--rm` — dele
 
 ```bash
 container run -v /data alpine
-VOL=$(container volume list -q | grep anon); container volume rm "$VOL"
+container volume list
+# Inspect the exact volume created for this workload, back up needed data, then:
+# container volume rm EXACT_REVIEWED_VOLUME_NAME
 ```
 
 ---
@@ -1406,7 +1410,7 @@ No arguments, no options beyond global.
 > **⚠️ Requires 1.0.0+** — the entire `container machine` group was added after 0.7.1. Verify with
 > `container machine --help` on your install.
 
-Manage container machines (the Linux VMs that host containers). **Group alias:** `m`.
+Manage container machines (persistent Linux environments, distinct from ordinary per-container VMs). **Group alias:** `m`.
 Commands that take an optional machine ID use the **default** machine when omitted. Changes to
 a running machine's config take effect after stop + restart.
 
@@ -1447,10 +1451,10 @@ container machine create [<options>] <image>
 | `--max-concurrent-downloads` | `<n>` | `3` | Max concurrent blob downloads. |
 
 ```bash
-container machine create alpine:3.22 --name my-machine
-container machine create --cpus 4 --memory 8G --set-default alpine:3.22
-container machine create --no-boot alpine:3.22
-container machine create --virtualization --kernel ./vmlinux-kvm alpine:3.22
+container machine create docker.io/library/alpine:3.22 --home-mount none --name my-machine
+container machine create --home-mount none --cpus 4 --memory 8G --set-default alpine:3.22
+container machine create --home-mount none --no-boot alpine:3.22
+container machine create --home-mount none --virtualization --kernel ./vmlinux-kvm alpine:3.22
 ```
 
 ---
@@ -1591,3 +1595,7 @@ container machine rm     <id>
 ```
 
 **Arguments:** `<id>` (required). No options beyond global.
+
+## Operational boundaries
+
+See the root skill operational boundaries before executing recipes: verify trusted images and kernels, avoid secret environment output and build args, use HTTPS and explicit loopback bindings, restrict host mounts and agent forwarding, and inventory exact resources before cleanup. Machines share substantially more host access than ordinary containers.

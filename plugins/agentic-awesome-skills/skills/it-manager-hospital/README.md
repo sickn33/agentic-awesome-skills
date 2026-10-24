@@ -10,7 +10,7 @@ The definitive advisory companion for technology leaders in the healthcare secto
 - **Clinical Safety:** Reducing medical errors through "Zero-Waste" and "Barcoding" technologies.
 - **Accreditation Excellence:** Mastering the paths to ONA Nível 3, HIMSS Stage 7, and JCI certification.
 - **HIS/PEP Expertise:** Deep context on MV-SOUL, MV-PEP, and Tasy systems.
-- **Legal & Regulatory:** Full compliance with LGPD (Brazil), RNDS standards, and Telemedicine regulations.
+- **Legal & Regulatory:** Planning support for LGPD (Brazil), RNDS and telemedicine obligations; no compliance certification.
 
 ## 👤 The Virtual Board (10 Experts)
 

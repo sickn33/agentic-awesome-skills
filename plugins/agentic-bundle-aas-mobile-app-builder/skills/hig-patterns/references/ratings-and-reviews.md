@@ -1,8 +1,11 @@
 ---
 title: "Ratings and reviews | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/ratings-and-reviews
+---
 
 # Ratings and reviews
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 People often view the ratings and reviews for an app or game before they download it.
 
@@ -22,7 +25,7 @@ People can always rate your app within the App Store.
 
 **Avoid pestering people.** Repeated rating requests can be irritating, and may even negatively influence people’s opinion of your app. Consider allowing at least a week or two between requests, prompting again after people demonstrate additional engagement with your experience.
 
-**Prefer the system-provided prompt.** iOS, iPadOS, and macOS offer a consistent, nonintrusive way for apps and games to request ratings and reviews. When you identify places in your experience where it makes sense to ask for feedback, the system checks for previous feedback and — if there isn’t any — displays an in-app prompt that asks for a rating and an optional written review. People can supply feedback or dismiss the prompt with a single tap or click; they can also opt out of receiving these prompts for all apps they have installed. The system automatically limits the display of the prompt to three occurrences per app within a 365-day period. For developer guidance, see [`RequestReviewAction`](https://developer.apple.com/documentation/StoreKit/RequestReviewAction).
+**Prefer the system-provided prompt.** iOS, iPadOS, and macOS offer a consistent, nonintrusive way for apps and games to request ratings and reviews. When you identify places in your experience where it makes sense to ask for feedback, StoreKit decides whether a prompt is appropriate and may display nothing; never depend on a prompt appearing or claim you can inspect the person’s rating. People can supply feedback or dismiss the prompt with a single tap or click; they can also opt out of receiving these prompts for all apps they have installed. The system automatically limits the display of the prompt to three occurrences per app within a 365-day period. For developer guidance, see [`RequestReviewAction`](https://developer.apple.com/documentation/StoreKit/RequestReviewAction).
 
 **Weigh the benefits of resetting your summary rating against the potential disadvantage of showing fewer ratings.** When you release a new version of your app or game, you can reset the summary of individual ratings you received since the last reset. Although resetting means that the ratings reflect the current version, it also tends to result in having fewer ratings overall, which can discourage some people from downloading your app. For developer guidance, see [Reset app summary rating](https://help.apple.com/app-store-connect/#/devfb7e87af8).
 
@@ -46,3 +49,7 @@ Date| Changes
 ---|---  
 September 12, 2023| Added artwork.  
   
+
+## Implementation checks
+
+The production request is discretionary and rate-limited; development and TestFlight behavior differ. Do not wire the request API to a button that promises a prompt. Use an App Store review link for a persistent explicit review action, and avoid incentives, sentiment gating or custom imitations of the system prompt. Confirm current target availability in [RequestReviewAction](https://developer.apple.com/documentation/StoreKit/RequestReviewAction).

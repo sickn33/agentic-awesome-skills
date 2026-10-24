@@ -33,6 +33,8 @@ Use this skill when:
 
 ## Caching Layers
 
+Cache examples are incomplete until authorization/data boundaries are included. Partition by tenant/user access scope and include model revision, system/developer prompts, conversation/tool context, parameters, locale and source/policy version in keys or eligibility filters. Never serve a privileged cached answer across users merely because queries are similar. Hashing prompts is not encryption: restrict/encrypt stored queries/results, honor deletion/retention and invalidate when permissions/data change. Avoid semantic reuse for sensitive or time-dependent answers unless evaluated false-hit risk is acceptable. Similarity thresholds/latencies/savings are examples, not calibrated guarantees. Cache warming is paid generation: bound concurrency, requests and budget before running.
+
 ```
 Request → Exact Cache → Semantic Cache → Provider Cache → LLM API
              ↓ hit            ↓ hit             ↓ hit
@@ -73,7 +75,7 @@ def cached_completion(model: str, messages: list, temperature: float = 0.0,
     )
     result = response.model_dump()
 
-    # Cache result (only cache deterministic responses)
+    # Cache only eligible responses; temperature 0 does not guarantee determinism.
     if temperature == 0.0:
         r.setex(key, ttl, json.dumps(result))
 
@@ -118,7 +120,7 @@ response = openai.ChatCompletion.create(
 # Second call with similar question ("Explain machine learning") → cache hit
 ```
 
-## Custom Semantic Cache (Production-Grade)
+## Custom Semantic Cache (Illustrative)
 
 ```python
 from sentence_transformers import SentenceTransformer
@@ -200,13 +202,13 @@ def smart_llm_call(query: str, model: str = "gpt-4o-mini") -> dict:
 # Anthropic — cache long system prompts (saves 90% on cached input tokens)
 import anthropic
 
-client = anthropic.Anthropic()
+anthropic_client = anthropic.Anthropic()
 
 # Long system prompt — mark for caching
 SYSTEM_PROMPT = open("knowledge-base.txt").read()  # e.g., 50k tokens
 
 def call_with_prompt_cache(user_question: str) -> str:
-    response = client.messages.create(
+    response = anthropic_client.messages.create(
         model="claude-sonnet-4-6",
         max_tokens=1024,
         system=[
@@ -285,7 +287,9 @@ else:
 
 ## Redis Configuration for LLM Caching
 
-```bash
+These entries belong in redis.conf, not a shell. Verify memory limits and whether disabling persistence is appropriate for the actual Redis instance; do not overwrite unrelated workload policy.
+
+```text
 # redis.conf tuning for LLM cache workload
 maxmemory 8gb
 maxmemory-policy allkeys-lru    # evict least-recently-used when full

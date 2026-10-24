@@ -7,9 +7,9 @@
 When presenting runtime data to the user, always cite the exact numbers from the tool:
 
 - **Average runtime**: The typical execution time for a query group
-- **Total runtime**: Average x run count -- represents total compute consumption
-- **Runtime share**: Percentage of total warehouse compute this query consumes
-- **p50 / p95**: Median and 95th percentile latency -- if p95 >> p50 (>5x), outlier executions are the problem
+- **Total runtime**: Sum of elapsed runtimes for the observed group/window; not necessarily billed compute or monetary cost
+- **Runtime share**: Share of the reported runtime measure; do not equate elapsed time with billed warehouse cost
+- **p50 / p95**: Median and 95th percentile latency -- a large p95/p50 ratio suggests tail variability, not a proven cause
 
 ### Trend analysis
 
@@ -28,7 +28,7 @@ When presenting runtime data to the user, always cite the exact numbers from the
 **Failed/futile patterns**: Use `get_query_rca` to group failures by cause. Common causes:
 - **Timeout**: Query takes too long -- needs optimization or larger warehouse
 - **Permission**: Credentials or roles changed
-- **Futile**: Query runs but returns zero rows or produces no downstream effect
+- **Futile**: A tool-defined category to inspect; zero-row results may be correct and useful
 
 ## Read vs write queries
 

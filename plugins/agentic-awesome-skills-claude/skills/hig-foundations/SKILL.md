@@ -14,11 +14,11 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 1. **Prioritize content over chrome.** Reduce visual clutter. Use system-provided materials and subtle separators rather than heavy borders and backgrounds.
 
-2. **Build in accessibility from the start.** Design for VoiceOver, Dynamic Type, Reduce Motion, Increase Contrast, and Switch Control from day one. Every interactive element needs an accessible label.
+2. **Build in accessibility from the start.** Design for VoiceOver, Dynamic Type, Reduce Motion, Increase Contrast, and Switch Control from day one. Every interactive element needs an accessible name; reuse the semantic control label and avoid redundant manual labels.
 
 3. **Use system colors and materials.** System colors adapt to light/dark mode, increased contrast, and vibrancy. Prefer semantic colors (`label`, `secondaryLabel`, `systemBackground`) over hard-coded values.
 
-4. **Use platform fonts and icons.** SF Pro, SF Compact, SF Mono by default. New York for serif. Follow the type hierarchy at recommended sizes. Use SF Symbols for iconography.
+4. **Use platform fonts and icons.** Use the platform system font via semantic text styles. SF Pro, SF Compact, SF Mono and New York are options with platform and licensing constraints; not all are the default on every platform. Follow the type hierarchy at recommended sizes. Use SF Symbols for iconography.
 
 5. **Match platform conventions.** Align look and behavior with system standards. Provide direct, responsive manipulation and clear feedback for every action.
 
@@ -26,14 +26,14 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 7. **Support internationalization.** Accommodate text expansion, right-to-left scripts, and varying date/number formats. Use Auto Layout for dynamic content sizing.
 
-8. **Use motion purposefully.** Animation should communicate meaning and spatial relationships. Honor Reduce Motion by providing crossfade alternatives.
+8. **Use motion purposefully.** Animation should communicate meaning and spatial relationships. Honor Reduce Motion using reduced or static alternatives appropriate to the setting; a crossfade is an option rather than a requirement for every animation.
 
 ## Reference Index
 
 | Reference | Topic | Key content |
 |---|---|---|
 | [accessibility.md](references/accessibility.md) | Accessibility | VoiceOver, Dynamic Type, color contrast, motor accessibility, Switch Control, audio descriptions |
-| [app-icons.md](references/app-icons.md) | App Icons | Icon grid, platform-specific sizes, single focal point, no transparency |
+| [app-icons.md](references/app-icons.md) | App Icons | Icon grid, platform-specific sizes, single focal point, opaque backgrounds and platform-specific foreground transparency |
 | [branding.md](references/branding.md) | Branding | Integrating brand identity within Apple's design language, subtle branding, custom tints |
 | [color.md](references/color.md) | Color | System colors, Dynamic Colors, semantic colors, custom palettes, contrast ratios |
 | [dark-mode.md](references/dark-mode.md) | Dark Mode | Elevated surfaces, semantic colors, adapted palettes, vibrancy, testing in both modes |
@@ -103,3 +103,9 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Reference status
+
+The bundled Markdown references are attributed documentation snapshots, not proof that every quoted specification remains current. Check the linked Apple source and target OS/SDK for icon formats, system colors, symbol availability, font metrics and APIs before implementation. Preserve source attribution; third-party documentation, fonts, media and trademarks do not become freely reusable merely by being linked here. Remote images and videos are referenced, not included or runtime-tested.
+
+Contrast alone does not establish WCAG conformance. Normal text generally requires 4.5:1 at AA, and large text 3:1 (at least 18pt regular or 14pt bold); bold text below the large-text threshold does not get a blanket 3:1 exception. APCA is a separate assessment method and does not replace the WCAG 2.x contrast criterion. Target sizes, typography defaults and platform guidelines also need device/assistive-technology testing.

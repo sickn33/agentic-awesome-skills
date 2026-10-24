@@ -26,11 +26,16 @@ def load_active_context() -> ActiveContext:
 
     # Parse simples por seções
     current_section = ""
+    priority = "medium"
     for line in text.splitlines():
         if line.startswith("# Contexto Ativo"):
             continue
         if line.startswith("## "):
             current_section = line[3:].strip().lower()
+            continue
+
+        if line.startswith("### "):
+            priority = "high" if "Alta" in line else "low" if "Baixa" in line else "medium"
             continue
 
         stripped = line.strip()
@@ -40,7 +45,6 @@ def load_active_context() -> ActiveContext:
         if current_section == "tarefas pendentes":
             if stripped.startswith("- [ ]"):
                 task_text = stripped[5:].strip()
-                priority = "medium"
                 if "(alta)" in task_text.lower() or "(high)" in task_text.lower():
                     priority = "high"
                 elif "(baixa)" in task_text.lower() or "(low)" in task_text.lower():

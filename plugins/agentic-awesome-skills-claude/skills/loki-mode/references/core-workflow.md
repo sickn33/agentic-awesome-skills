@@ -6,14 +6,7 @@ Full RARV cycle, CONTINUITY.md template, and autonomy rules.
 
 ## Autonomy Rules
 
-**This system runs with ZERO human intervention.**
-
-### Core Rules
-1. **NEVER ask questions** - Do not say "Would you like me to...", "Should I...", or "What would you prefer?"
-2. **NEVER wait for confirmation** - Take immediate action. If something needs to be done, do it.
-3. **NEVER stop voluntarily** - Continue until completion promise is fulfilled or max iterations reached
-4. **NEVER suggest alternatives** - Pick the best option and execute. No "You could also..." or "Alternatively..."
-5. **ALWAYS use RARV cycle** - Every action follows the Reason-Act-Reflect-Verify pattern
+Autonomy is bounded by the user's authorized scope, budget and stop requests. Resolve routine reversible choices independently. Ask for missing consequential information, and obtain approval before external actions outside that scope. Stop when acceptance criteria are met; new improvements require user scope. RARV verifies progress but never grants permissions.
 
 ---
 
@@ -46,7 +39,7 @@ Every iteration follows this cycle:
 | - Check completion promise - are we done?                         |
 | - If not done, loop back to REASON                                |
 +-------------------------------------------------------------------+
-| VERIFY: Let AI test its own work (2-3x quality improvement)       |
+| VERIFY: Let AI test its own work (quality improvement to measure locally)       |
 | - Run automated tests (unit, integration, E2E)                    |
 | - Check compilation/build (no errors or warnings)                 |
 | - Verify against spec (.loki/specs/openapi.yaml)                  |
@@ -68,7 +61,7 @@ Every iteration follows this cycle:
 - Tests every change automatically
 - Learns from failures by updating CONTINUITY.md
 - Retries with learned context
-- Achieves 2-3x quality improvement (Boris Cherny's observed result)
+- Measure quality improvement locally; anecdotal observations are not a guarantee
 
 ---
 
@@ -132,8 +125,8 @@ Current Iteration: [number]
 
 ### Example:
 - **What Failed:** TypeScript compilation error - missing return type annotation
-- **Why It Failed:** Express route handlers need explicit `: void` return type in strict mode
-- **How to Prevent:** Always add `: void` to route handlers: `(req, res): void =>`
+- **Why It Failed:** The pinned route definitions rejected the handler signature; inspect the actual diagnostic
+- **How to Prevent:** Match handler return types to the installed Express types; strict mode alone does not require explicit return annotations
 - **Timestamp:** 2026-01-04T00:16:00Z
 - **Agent:** eng-001-backend-api
 
@@ -148,7 +141,7 @@ ON_ERROR:
 ```
 
 ## Working Context
-[Any critical information needed for current work - API keys in use,
+[Any critical information needed for current work - credential variable names only (never secret values),
 architecture decisions, patterns being followed, etc.]
 
 ## Files Currently Being Modified
@@ -254,14 +247,11 @@ Git-Checkpoint: 2026-01-04T05:45:00Z
 # Find last good checkpoint
 last_good_commit=$(git log --grep="\[Loki\].*task-${last_good_task_id}" --format=%H -n 1)
 
-# Rollback to that checkpoint
-git reset --hard $last_good_commit
-
-# Update CONTINUITY.md
-echo "ROLLBACK: Reset to task-${last_good_task_id} (commit: $last_good_commit)" >> .loki/CONTINUITY.md
-
-# Re-queue failed tasks
-move_tasks_to_pending after_task=$last_good_task_id
+# Inspect the exact task change before proposing a scoped revert.
+# Never reset a shared/dirty checkout or discard unrelated user work.
+test -n "$last_good_commit" && git show --stat "$last_good_commit"
+# A reviewed revert/restore procedure and verified backup are prerequisites.
+# Re-queue affected tasks under the queue transaction after rollback is verified.
 ```
 
 ---
@@ -273,3 +263,5 @@ move_tasks_to_pending after_task=$last_good_task_id
 3. If fix subagent fails 3x, move to dead letter queue
 4. Open circuit breaker for that agent type
 5. Alert orchestrator for human review
+
+The shell/Python sketches contain project-specific helpers and placeholders; they are not an installed checkpoint/queue implementation. Commit only explicitly selected files after inspection.

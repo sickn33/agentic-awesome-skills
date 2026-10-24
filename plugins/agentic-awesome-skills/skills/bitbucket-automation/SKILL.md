@@ -18,12 +18,14 @@ Automate Bitbucket operations including repository management, pull request work
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+Use an existing approved Rube connection; endpoint configuration alone does not authenticate Bitbucket. Follow the host-supported setup/auth flow only if requested.
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `bitbucket`
 3. If connection is not ACTIVE, follow the returned auth link to complete Bitbucket OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+Historical slugs/defaults below require current schema discovery. Verify workspace/repository/branch/PR and visibility before each requested mutation. Comments are messages and require explicit posting scope. A diff truncated by max_chars is incomplete: fetch every affected file/chunk before claiming a complete review. Reconcile uncertain write outcomes before retrying.
 
 ## Core Workflows
 
@@ -81,7 +83,7 @@ Automate Bitbucket operations including repository management, pull request work
 - `BITBUCKET_DELETE_REPOSITORY` is **irreversible** and does not affect forks
 - BBQL string values MUST be enclosed in double quotes: `name~"my-repo"` not `name~my-repo`
 - `repository` is NOT a valid BBQL field; use `name` instead
-- Default pagination is 10 results; set `pagelen` explicitly for complete listings
+- Default pagination may be small; increasing `pagelen` alone does not complete a listing: follow every supported next page
 - `CREATE_REPOSITORY` defaults to private; set `is_private: false` for public repos
 
 ### 3. Manage Issues

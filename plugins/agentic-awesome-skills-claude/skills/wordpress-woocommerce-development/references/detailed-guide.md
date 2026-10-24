@@ -7,6 +7,15 @@
 Specialized workflow for building WooCommerce stores including setup, payment gateway integration, shipping configuration, custom product types, store optimization, and WordPress 7.0 enhancements.
 
 
+## Compatibility boundary
+
+The following feature list is a proposal/checklist, not evidence that WordPress
+core enables WooCommerce DataViews, collaborative order editing or AI fulfillment.
+Verify exact WordPress/WooCommerce/plugin releases and their documented APIs.
+Use backups and staging, sandbox gateway credentials and synthetic personal data.
+Production inventory/order changes, provider costs and publication require approved
+scope. Cache public catalog data only; exclude carts, checkout and account pages.
+
 ## WordPress 7.0 + WooCommerce Features
 
 1. **AI Integration**
@@ -41,7 +50,7 @@ Specialized workflow for building WooCommerce stores including setup, payment ga
 
 #### Skills to Invoke
 - `app-builder` - Project scaffolding
-- `wordpress-penetration-testing` - WordPress patterns
+- `wordpress` - WordPress development patterns
 
 #### Actions
 1. Install WooCommerce
@@ -55,7 +64,8 @@ Specialized workflow for building WooCommerce stores including setup, payment ga
 ```php
 // Minimum requirements for WP 7.0 + WooCommerce
 // Add to wp-config.php for collaboration settings
-define('WP_COLLABORATION_MAX_USERS', 10);
+// No generic WP_COLLABORATION_MAX_USERS setting is established here.
+// Verify the chosen collaboration plugin's documented configuration.
 
 // AI features are enabled by installing a provider plugin
 // Install OpenAI, Anthropic, or Gemini connector from WordPress.org
@@ -70,7 +80,7 @@ Use @app-builder to set up WooCommerce store
 ### Phase 2: Product Configuration
 
 #### Skills to Invoke
-- `wordpress-penetration-testing` - WooCommerce patterns
+- `wordpress` - WooCommerce patterns
 
 #### Actions
 1. Create product categories
@@ -80,52 +90,15 @@ Use @app-builder to set up WooCommerce store
 5. Add product images
 
 #### AI-Powered Product Descriptions (WP 7.0)
-```php
-// Auto-generate product descriptions with AI
-add_action('woocommerce_new_product', 'generate_ai_description', 10, 2);
-
-function generate_ai_product_description($product_id, $product) {
-    if ($product->get_description()) {
-        return; // Skip if description exists
-    }
-
-    // Check if AI client is available
-    if (!function_exists('wp_ai_client_prompt')) {
-        return;
-    }
-
-    $title = $product->get_name();
-    $short_description = $product->get_short_description();
-
-    $prompt = sprintf(
-        'Write a compelling WooCommerce product description for "%s" that highlights key features and benefits. Make it SEO-friendly and persuasive.',
-        $title
-    );
-
-    if ($short_description) {
-        $prompt .= "\n\nShort description: " . $short_description;
-    }
-
-    $result = wp_ai_client_prompt($prompt);
-
-    if (is_wp_error($result)) {
-        return;
-    }
-
-    // Use temperature for consistent output
-    $result->using_temperature(0.3);
-    $description = $result->generate_text();
-
-    if ($description && !is_wp_error($description)) {
-        $product->set_description($description);
-        $product->save();
-    }
-}
-```
+AI description generation should be an explicit editor action, not an automatic
+product-save hook. Verify product-edit capability and nonce, bound input and paid
+provider requests, send only approved public attributes, and save the result as a
+reviewable draft. Preserve human text and treat product input as untrusted data.
+Verify the installed AI-client API; temperature does not guarantee determinism.
 
 #### Copy-Paste Prompts
 ```
-Use @wordpress-penetration-testing to configure WooCommerce products
+Use @wordpress to configure WooCommerce products
 ```
 
 ### Phase 3: Payment Integration
@@ -143,42 +116,11 @@ Use @wordpress-penetration-testing to configure WooCommerce products
 5. Test payment flows
 
 #### WordPress 7.0 AI for Payments
-```php
-// AI-powered fraud detection
-// Note: This is a demonstration - implement proper fraud detection with multiple signals
-
-// Use AI to analyze order for fraud indicators
-function ai_check_order_fraud($order_id) {
-    // Check if AI client is available
-    if (!function_exists('wp_ai_client_prompt')) {
-        return false; // Default to no suspicion if AI unavailable
-    }
-
-    $order = wc_get_order($order_id);
-    if (!$order) {
-        return false;
-    }
-
-    $prompt = sprintf(
-        'Analyze this order for potential fraud. Order total: $%s. Shipping address: %s, %s. Billing: %s. Is this suspicious? Return only "suspicious" or "clean" without explanation.',
-        $order->get_total(),
-        $order->get_shipping_address_1(),
-        $order->get_shipping_city(),
-        $order->get_billing_email()
-    );
-
-    $result = wp_ai_client_prompt($prompt);
-
-    if (is_wp_error($result)) {
-        return false;
-    }
-
-    $result->using_temperature(0.1); // Low temp for consistent classification
-    $analysis = $result->generate_text();
-
-    return (strpos($analysis, 'suspicious') !== false);
-}
-```
+Use the payment gateway's documented risk signals and signed, idempotently handled
+webhooks. An LLM string classifier must not approve/decline payments or infer fraud
+from addresses/email. Provider absence is `unknown`, never evidence of a clean order.
+Do not send billing/shipping personal data to an AI provider without a defined
+legal basis, approved processor and minimization/retention controls.
 
 #### Copy-Paste Prompts
 ```
@@ -192,7 +134,7 @@ Use @paypal-integration to integrate PayPal
 ### Phase 4: Shipping Configuration
 
 #### Skills to Invoke
-- `wordpress-penetration-testing` - WooCommerce shipping
+- `wordpress` - WooCommerce shipping
 
 #### Actions
 1. Set up shipping zones
@@ -202,45 +144,14 @@ Use @paypal-integration to integrate PayPal
 5. Integrate carriers
 
 #### AI Shipping Recommendations (WP 7.0)
-```php
-// AI-powered shipping recommendations
-add_action('woocommerce_after_checkout_form', 'ai_shipping_recommendations');
-
-function ai_shipping_recommendations($checkout) {
-    // Check if AI client is available
-    if (!function_exists('wp_ai_client_prompt')) {
-        return;
-    }
-
-    $cart = WC()->cart;
-    if ($cart->is_empty() || !$cart->get_cart_contents_weight()) {
-        return;
-    }
-
-    $prompt = sprintf(
-        'Based on this cart (total weight: %d kg, destination: %s), recommend the best shipping method from: free shipping (orders over $100), flat rate ($9.99), or express ($24.99). Consider delivery time and cost efficiency. Respond with just the recommended method name.',
-        $cart->get_cart_contents_weight(),
-        WC()->customer->get_shipping_country()
-    );
-
-    $result = wp_ai_client_prompt($prompt);
-
-    if (is_wp_error($result)) {
-        return;
-    }
-
-    $result->using_temperature(0.1); // Low temp for consistent recommendation
-    $recommendation = $result->generate_text();
-
-    if (strpos($recommendation, 'express') !== false) {
-        wc_add_notice(esc_html__('AI Recommendation: Consider Express shipping for faster delivery!', 'woocommerce'), 'info');
-    }
-}
-```
+Calculate eligible shipping methods from WooCommerce zones, current cart currency,
+configured weight units and carrier rates. AI may explain approved options after
+explicit opt-in; it must not invent prices, eligibility or shipping promises. Do
+not make paid remote calls on every checkout render or expose destination data.
 
 #### Copy-Paste Prompts
 ```
-Use @wordpress-penetration-testing to configure shipping
+Use @wordpress to configure shipping
 ```
 
 ### Phase 5: Store Customization
@@ -283,63 +194,14 @@ function add_product_ai_chat() {
     <?php
 }
 
-// AI-powered product Q&A
-add_action('wp_ajax_ai_product_question', 'handle_ai_product_question');
-add_action('wp_ajax_nopriv_ai_product_question', 'handle_ai_product_question');
-
-function handle_ai_product_question() {
-    // Verify nonce for security
-    if (!check_ajax_referer('ai_product_question_nonce', 'nonce', false)) {
-        wp_send_json_error(['message' => 'Security check failed']);
-    }
-
-    $question = isset($_POST['question']) ? sanitize_text_field($_POST['question']) : '';
-    $product_id = isset($_POST['product_id']) ? intval($_POST['product_id']) : 0;
-
-    if (empty($question) || empty($product_id)) {
-        wp_send_json_error(['message' => 'Missing required fields']);
-    }
-
-    $product = wc_get_product($product_id);
-    if (!$product) {
-        wp_send_json_error(['message' => 'Product not found']);
-    }
-
-    // Check if AI client is available
-    if (!function_exists('wp_ai_client_prompt')) {
-        wp_send_json_error(['message' => 'AI service unavailable']);
-    }
-
-    $prompt = sprintf(
-        'Customer question about "%s": %s\n\nProduct details:
-- Price: $%s
-- SKU: %s
-- Stock: %s
-
-Answer helpfully, accurately, and concisely:',
-        $product->get_name(),
-        $question,
-        $product->get_price(),
-        $product->get_sku(),
-        $product->get_stock_status()
-    );
-
-    $result = wp_ai_client_prompt($prompt);
-
-    if (is_wp_error($result)) {
-        wp_send_json_error(['message' => $result->get_error_message()]);
-    }
-
-    $result->using_temperature(0.4); // Slightly higher for more varied responses
-    $answer = $result->generate_text();
-
-    if (is_wp_error($answer)) {
-        wp_send_json_error(['message' => 'Failed to generate response']);
-    }
-
-    wp_send_json_success(['answer' => $answer]);
-}
+// The UI above is a toggle only, not a working chat integration.
 ```
+
+Implement any Q&A endpoint separately with authenticated identity, per-user and
+global spending/rate limits, bounded body/output and an allowlist of published
+products. A public nonce is not authentication or a paid-API abuse limit. Render
+answers as text, redact provider errors, and ground factual answers in approved
+product attributes. Do not enable an unrestricted `wp_ajax_nopriv` provider proxy.
 
 #### Copy-Paste Prompts
 ```
@@ -349,7 +211,7 @@ Use @frontend-developer to customize WooCommerce templates
 ### Phase 6: Extensions
 
 #### Skills to Invoke
-- `wordpress-penetration-testing` - WooCommerce extensions
+- `wordpress` - WooCommerce extensions
 
 #### Actions
 1. Install required extensions
@@ -379,7 +241,7 @@ add_action('wp_abilities_api_init', function() {
             'type' => 'object',
             'properties' => [
                 'product_id' => ['type' => 'integer', 'description' => 'Product ID to update'],
-                'quantity' => ['type' => 'integer', 'description' => 'New stock quantity']
+                'quantity' => ['type' => 'integer', 'minimum' => 0, 'description' => 'New stock quantity']
             ],
             'required' => ['product_id', 'quantity']
         ],
@@ -391,8 +253,8 @@ add_action('wp_abilities_api_init', function() {
             ]
         ],
         'execute_callback' => 'woocommerce_update_inventory_handler',
-        'permission_callback' => function() {
-            return current_user_can('manage_woocommerce');
+        'permission_callback' => function($input) {
+            return current_user_can('manage_woocommerce'); // Also enforce per-object scope in handler.
         }
     ]);
 
@@ -416,8 +278,8 @@ add_action('wp_abilities_api_init', function() {
             ]
         ],
         'execute_callback' => 'woocommerce_process_order_handler',
-        'permission_callback' => function() {
-            return current_user_can('manage_woocommerce');
+        'permission_callback' => function($input) {
+            return current_user_can('manage_woocommerce'); // Also enforce per-object scope in handler.
         }
     ]);
 });
@@ -425,19 +287,28 @@ add_action('wp_abilities_api_init', function() {
 // Handler for inventory update
 function woocommerce_update_inventory_handler($input) {
     $product_id = isset($input['product_id']) ? absint($input['product_id']) : 0;
-    $quantity = isset($input['quantity']) ? absint($input['quantity']) : 0;
+    if (!isset($input['quantity']) || !is_int($input['quantity']) || $input['quantity'] < 0) {
+        return new WP_Error('invalid_quantity', 'Non-negative integer quantity required');
+    }
+    $quantity = $input['quantity'];
 
     $product = wc_get_product($product_id);
     if (!$product) {
         return new WP_Error('invalid_product', 'Product not found');
     }
 
+    if (!current_user_can('edit_post', $product_id)) {
+        return new WP_Error('forbidden', 'Product edit permission required');
+    }
     // Update stock
-    wc_update_product_stock($product, $quantity);
+    $new_quantity = wc_update_product_stock($product, $quantity, 'set');
+    if (is_wp_error($new_quantity) || $new_quantity === false) {
+        return new WP_Error('stock_update_failed', 'Stock update failed');
+    }
 
     return [
         'success' => true,
-        'new_quantity' => $product->get_stock_quantity()
+        'new_quantity' => $new_quantity
     ];
 }
 
@@ -450,6 +321,10 @@ function woocommerce_process_order_handler($input) {
         return new WP_Error('invalid_order', 'Order not found');
     }
 
+    // Production must additionally validate gateway-paid state and transition policy.
+    if (!$order->is_paid() || !$order->has_status('on-hold')) {
+        return new WP_Error('invalid_transition', 'Paid on-hold order required');
+    }
     $order->update_status('processing');
 
     return [
@@ -461,7 +336,7 @@ function woocommerce_process_order_handler($input) {
 
 #### Copy-Paste Prompts
 ```
-Use @wordpress-penetration-testing to configure WooCommerce extensions
+Use @wordpress to configure WooCommerce extensions
 ```
 
 ### Phase 7: Optimization
@@ -508,58 +383,10 @@ Use @web-performance-optimization to optimize WooCommerce store
 - Verify collaboration features
 
 #### AI-Powered Store Testing
-```php
-// Automated AI testing for fraud detection during checkout
-add_action('woocommerce_after_checkout_validation', 'ai_validate_order', 20);
-
-function ai_validate_order($fields, $errors) {
-    // Skip if AI is not available
-    if (!function_exists('wp_ai_client_prompt')) {
-        return;
-    }
-
-    // Skip for logged-in users (assumed trusted)
-    if (is_user_logged_in()) {
-        return;
-    }
-
-    $order_data = [
-        'email' => isset($fields['billing_email']) ? $fields['billing_email'] : '',
-        'phone' => isset($fields['billing_phone']) ? $fields['billing_phone'] : '',
-        'address' => isset($fields['billing_address_1']) ? $fields['billing_address_1'] : '',
-    ];
-
-    // Skip if insufficient data
-    if (empty($order_data['email'])) {
-        return;
-    }
-
-    $prompt = sprintf(
-        'This is a checkout validation. Check if these details seem legitimate: email=%s, phone=%s, address=%s. Return only "valid" or "suspicious" without additional text.',
-        sanitize_email($order_data['email']),
-        sanitize_text_field($order_data['phone']),
-        sanitize_text_field($order_data['address'])
-    );
-
-    $result = wp_ai_client_prompt($prompt);
-
-    if (is_wp_error($result)) {
-        // Don't block checkout on AI errors
-        return;
-    }
-
-    $result->using_temperature(0.1); // Low temp for consistent classification
-    $response = $result->generate_text();
-
-    if (is_wp_error($response)) {
-        return;
-    }
-
-    if (strpos($response, 'suspicious') !== false) {
-        $errors->add('validation', __('Additional verification may be needed for this order. We will contact you if needed.', 'woocommerce'));
-    }
-}
-```
+Run deterministic sandbox tests for successful, failed, delayed and duplicate
+payment webhooks; verify stock, tax, shipping, refunds and emails once per event.
+Authenticated accounts can also be fraudulent. AI guesses about customer identity
+are not test assertions or checkout authorization and must not block purchases.
 
 #### Copy-Paste Prompts
 ```

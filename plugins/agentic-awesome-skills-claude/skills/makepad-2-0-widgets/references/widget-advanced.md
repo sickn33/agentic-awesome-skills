@@ -101,7 +101,7 @@ list.set_tail(cx, true);
 
 ---
 
-## Dock System Complete Example
+## Dock System Illustrative Example
 
 The Dock widget provides a tabbed, splittable panel layout system.
 
@@ -199,6 +199,8 @@ dock := Dock{
 ---
 
 ## Custom Widget Creation
+
+These partial sketches omit required application/trait integration. Keep drawing/turtle begin/end calls balanced for the installed API and use an existing official custom-widget example as the starting point. Virtualized item widgets are reused: bind stable item identity/state and avoid retaining data from a previous item when scrolling.
 
 ### Basic Custom Widget
 
@@ -351,7 +353,7 @@ impl Widget for MyContainer {
 
 MapView renders vector tile-based geographic maps. It has strict requirements:
 
-### MUST use fixed pixel height
+### Establish a bounded, nonzero viewport
 
 ```
 // CORRECT: fixed pixel height
@@ -363,13 +365,13 @@ MapView{
 // WRONG: will cause rendering issues
 MapView{
     width: Fill
-    height: Fill   // NEVER use Fill
+    height: Fill   // needs a known-height parent; verify rendering for this build
 }
 
 // WRONG: will cause rendering issues
 MapView{
     width: Fill
-    height: Fit    // NEVER use Fit
+    height: Fit    // may not supply a usable map viewport
 }
 ```
 
@@ -626,7 +628,7 @@ fn handle_event(&mut self, cx: &mut Cx, event: &Event, scope: &mut Scope) {
 
         // Text input changed
         if let Some(text) = self.view.text_input(ids!(my_input)).changed(action) {
-            log!("Text changed: {}", text);
+            // Process validated input without logging its contents.
         }
 
         // Slider changed

@@ -233,4 +233,6 @@ new ExhaustiveKnnAlgorithmConfiguration("exhaustive-algo")
 3. **Tune EfSearch** based on latency vs. recall requirements
 4. **Apply filters** to reduce search space before vector comparison
 5. **Use integrated vectorization** to simplify client code
-6. **Combine with semantic ranking** for best relevance
+6. **Combine with semantic ranking** and measure relevance
+
+Integrated query vectorization needs an authorized Search-service identity (or securely configured credential), embedding-service roles, network access and a compatible model/deployment; index-time vector generation is a separate pipeline. The shown fields do not define later category/price/titleVector fields: extend the schema before those queries. GetEmbeddingAsync and Product are application-supplied. Preserve embedding model/dimension consistency and test filter recall and latency; HNSW is approximate and not universally preferable.

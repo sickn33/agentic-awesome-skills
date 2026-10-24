@@ -1,11 +1,12 @@
 # Funding-Stage Capability Unlocks
 
+Planning contract: user-selected scope, length, language and one-shot/interactive cadence override template defaults. All tier amounts, channel rankings, growth bands and hiring patterns below are illustrative hypotheses, not validated benchmarks. Draft completion is distinct from user approval. Use only available verified skill/tool IDs; missing dependencies are optional. No external execution is authorized by this document.
 Every marketing plan must include explicit "what changes when funding closes / when budget unlocks" reasoning. This makes the plan investor-friendly and operationally honest.
 
-This doc defines the standard tiers. Use them as anchors, adjust for client category and unit economics.
+This doc defines the illustrative planning tiers. Use them as anchors, adjust for client category and unit economics.
 
 **Related docs:**
-- `budget-planning.md` — two scientific methods for setting the actual budget number (Revenue-Based 5–40%, or Goal-Based reverse-engineered from the revenue target), CAC calculation, experimental buffer
+- `budget-planning.md` — two assumption-based scenarios for setting the actual budget number (Revenue-Based 5–40%, or Goal-Based reverse-engineered from the revenue target), CAC calculation, experimental buffer
 - `growth-patterns.md` — the real shape of SaaS growth by phase ($0–10K / $10K–100K / $100K–1M+), linear vs step-function, S-curve layering
 - `team-and-agency-model.md` — what each tier means for team composition, the first marketing hire, and the in-house vs outsource ratio
 
@@ -17,7 +18,7 @@ The fix: tie every recommendation to a budget tier. The plan stays honest about 
 
 This also helps the founder mid-raise: showing what the round buys is investor-narrative material.
 
-## Standard tiers
+## Illustrative tiers
 
 ### Tier 1 — Pre-seed / bootstrapped
 
@@ -150,16 +151,16 @@ This also helps the founder mid-raise: showing what the round buys is investor-n
 - Tier transitions trigger plan recalibration moments
 
 ### Section 11 (Marketing operations stack)
-- Use the table in `references/ops-stack-mapping.md` capability-unlocks section
+- Use the table in `./ops-stack-mapping.md` capability-unlocks section
 - Make it client-specific: "Today (Tier 1): {client's current capability}. After seed close (Tier 2): + {what changes}."
 
 ## Adjustments by client category
 
-The standard tiers assume a typical software / SaaS / consumer app. Adjust for category:
+The illustrative planning tiers assume a typical software / SaaS / consumer app. Adjust for category:
 
 ### Consumer apps (D2C)
-- Higher paid acquisition floor — apps need to test CAC against download cost benchmarks (~$2-10 install + 5-15% trial conversion benchmark)
-- Tier 2 starts effectively at $10–20K/mo paid (otherwise can't get statistically meaningful reads at app-install CPMs)
+- Higher paid acquisition floor — apps need to test CAC against download cost benchmarks (client-specific install cost and eligible cohort conversion assumptions)
+- Tier 2 starts effectively at $10–20K/mo paid (sample requirements depend on baseline conversion, effect size and the test design)
 
 ### B2B SaaS
 - Lower paid acquisition floor — LinkedIn / Google Ads can produce signal at $3–5K/mo
@@ -182,31 +183,22 @@ The standard tiers assume a typical software / SaaS / consumer app. Adjust for c
 
 ### Open source / developer tools
 - DevRel + community + content > paid
-- GitHub stars / npm installs are the activation event
+- GitHub stars/npm installs are discovery signals; define activation as a meaningful successful build or integration
 - Paid layer often delayed until Series A
 
-## Tier 1 budget detail (most common starting point)
+## Tool and platform budget verification
 
-For Tier 1 clients, the marketing budget breakdown typically looks like:
+Obtain current quotes for the client’s region, currency, billing cadence, seat count and usage. Separate recurring subscriptions, transaction fees, platform commissions, developer enrollment, taxes and implementation labor. App Store Connect is not itself a universal$25/month plus30% charge, and payment processing is not one universal rate. Record official source/date and applicable plan; do not copy example vendor prices as current quotes.
 
-| Line | Typical monthly |
+| Line | Budget input |
 |---|---|
-| Customer.io / lifecycle ESP | $100–500 |
-| App Store Connect / Google Play | $25 + 30% rev share (Apple/Google take) |
-| Stripe | 2.9% + 30¢ per transaction |
-| GA4 | Free |
-| Notion | $0–100 |
-| GitHub | $0–50 |
-| Shopify (if hardware) | $39–100 |
-| Ahrefs (or similar SEO tool) | $129–399 |
-| Typefully (if social cadence) | $13–39 |
-| Dub.co (if ambassador tracking) | $0–39 |
-| Misc SaaS | $200–500 |
-| **Tooling total** | **~$500–1,700/mo** |
-| Paid acquisition | $0 |
-| fCMO retainer | Variable |
-
-For the plan, this becomes: "Current monthly marketing budget: $X (tooling only, no paid)."
+| Lifecycle ESP / CRM | Verified plan, contacts, sends, seats and setup labor |
+| App platforms | Applicable developer enrollment and commission rules, recorded separately |
+| Payments | Contracted processing, FX, refunds and platform fees |
+| Analytics / collaboration / storefront / SEO tools | Current regional quote and actual usage |
+| Paid acquisition | Explicit approved test envelope, possibly zero |
+| People and retainers | Fully loaded capacity and agreed scope |
+| Contingency | Within the approved total, not an automatic surcharge |
 
 ## When to surface tier limits to the founder
 
@@ -215,7 +207,7 @@ If a founder asks for moves that require a future tier:
 - Don't refuse — frame the timing
 
 If a founder underestimates what's needed:
-- Be honest: "To scale paid acquisition meaningfully, expect Tier 2 budget. Tier 1 can validate organic; Tier 2 validates paid."
+- Be honest: "To scale paid acquisition meaningfully, derive the required sample and capped cost from the client baseline; a tier label does not prove statistical power."
 
 If a founder is over-funded for their stage:
 - Don't pad budget to match. Recommend the right work for the funnel state, return excess capacity, suggest investment in compounding rather than scaling.

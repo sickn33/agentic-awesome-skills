@@ -41,7 +41,8 @@ Where:
 |----------|---------|-------------|---------|
 | **iOS (HIG)** | 44pt × 44pt | 48pt+ | All tappable elements |
 | **Android (Material)** | 48dp × 48dp | 56dp+ | All tappable elements |
-| **WCAG 2.2** | 44px × 44px | - | Accessibility compliance |
+| **WCAG 2.2 AA SC 2.5.8** | 24×24 CSS px or its defined spacing/exceptions | Larger targets encouraged | Web pointer targets |
+| **WCAG AAA SC 2.5.5** | 44×44 CSS px, with exceptions | - | Enhanced target size |
 | **Critical Actions** | - | 56-64px | Primary CTAs, destructive actions |
 
 ### Visual Size vs Hit Area
@@ -79,7 +80,7 @@ Where:
 ### One-Handed Phone Usage
 
 ```
-Research shows: 49% of users hold phone one-handed.
+One-handed use varies with task, device and audience; measure rather than assuming a universal percentage.
 
 ┌─────────────────────────────────────┐
 │                                     │
@@ -119,7 +120,7 @@ Right hand holding phone:
 └───────────────────────────────┘
 
 Left hand is mirrored.
-→ Design for BOTH hands or assume right-dominant
+→ Test both hands and assistive input; do not assume a dominant hand
 ```
 
 ### Placement Guidelines
@@ -130,14 +131,14 @@ Left hand is mirrored.
 | **Tab bar** | Bottom | Natural thumb position |
 | **FAB** | Bottom right | Easy for right hand |
 | **Navigation** | Top (stretch) | Less frequent use |
-| **Destructive actions** | Top left | Hard to reach = harder to accidentally tap |
+| **Destructive actions** | Top left | Use clear labeling, separation, confirmation or undo; do not make safety depend on inaccessibility |
 | **Dismiss/Cancel** | Top left | Convention + safety |
 | **Confirm/Done** | Top right or bottom | Convention |
 
 ### Large Phone Considerations (>6")
 
 ```
-On large phones, top 40% becomes "dead zone" for one-handed use.
+On large phones, reach varies by grip, handedness and body size; there is no universal top-40% dead zone.
 
 Solutions:
 ├── Reachability features (iOS)
@@ -366,8 +367,8 @@ Without haptics:
 ### Miller's Law for Mobile
 
 ```
-Desktop: 7±2 items in working memory
-Mobile: Reduce to 5±1 (more distractions)
+Working-memory capacity depends on task/chunking; no validated universal mobile 5±1 rule.
+Choose meaningful groups and test actual decision complexity.
 
 Navigation: Max 5 tab bar items
 Options: Max 5 per menu level
@@ -417,17 +418,12 @@ Design responses:
 ### Touch Target Spacing (A11y)
 
 ```
-WCAG 2.2 Success Criterion 2.5.8:
-
-Touch targets MUST have:
-├── Width: ≥ 44px
-├── Height: ≥ 44px
-├── Spacing: ≥ 8px from adjacent targets
-
-OR the target is:
-├── Inline (within text)
-├── User-controlled (user can resize)
-├── Essential (no alternative design)
+WCAG 2.2 SC 2.5.8 (AA): target at least 24×24 CSS pixels, OR the
+specified 24px-circle spacing condition. Exceptions include equivalent controls,
+inline text, unmodified user-agent controls and essential presentation.
+It does NOT require a universal 44px target plus 8px gap. SC 2.5.5 (AAA)
+uses 44×44 CSS pixels with exceptions. Native iOS points and Android dp are
+separate logical units; test platform hit areas, not physical screenshot pixels.
 ```
 
 ### Accessible Touch Patterns
@@ -508,9 +504,9 @@ Trust signals in touch interactions:
 
 ```
                      iOS        Android     WCAG
-Minimum:           44pt       48dp       44px
+Typical native:    44pt       48dp       Web AA: 24 CSS px / defined exceptions
 Recommended:       48pt+      56dp+      -
-Spacing:           8pt+       8dp+       8px+
+Spacing:           test native layout    Web AA: specified 24px-circle condition
 ```
 
 ### Thumb Zone Actions
@@ -535,3 +531,6 @@ Warning:  Attention needed
 ---
 
 > **Remember:** Every touch is a conversation between user and device. Make it feel natural, responsive, and respectful of human fingers—not precise cursor points.
+
+Official target-size reference: https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html .
+Haptic, visual and sound feedback must respect user settings and cannot be the sole feedback channel.

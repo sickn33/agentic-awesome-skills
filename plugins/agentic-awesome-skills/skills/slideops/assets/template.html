@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Build provenance: write it with `scripts/cite.py --stamp <deck> --repo .` so check.py
+     can report which slides have gone stale. See references/freshness.md. -->
+<meta name="slideops-build" content="commit=[SHORT SHA] date=[YYYY-MM-DD] repo=[REPO NAME]">
+<title>[DECK TITLE]</title>
+<style>
+  /* ── THEME ─────────────────────────────────────────────────────────────────
+     The :root block below is the ENTIRE theme: every color in the deck derives
+     from these tokens (soft tints/borders via color-mix), so switching theme
+     means replacing this one block. Preset palettes (Ledger Light default,
+     Ledger Dark, midnight, graphite) live in references/themes.md; brand
+     extraction rules live in references/style-guide.md § Theming.
+     Do not invent colors and do not reintroduce hex/rgba literals below
+     this block. */
+  :root{
+    /* surfaces */
+    --bg:#faf6ee; --bg2:#f2ecdf; --card:#ffffff; --code-bg:#2b2820;
+    --stage-1:#e8e0cf; --stage-2:#cfc6b2;           /* backdrop behind the deck */
+    --section-1:#f4eede; --section-2:#e6dcc6;       /* section-divider gradient */
+    /* text */
+    --fg:#2b2620;        /* headings */
+    --text:#3d372e;      /* body copy */
+    --strong:#171310;    /* bold/emphasis; the darkest ink */
+    --muted:#8a8069;
+    /* roles */
+    --accent:#7a7f1f; --accent2:#5f6419; --warn:#a34a3f; --bad:#b5544a;
+    /* code block: dark blocks sit on the light surfaces for contrast */
+    --code-fg:#e8dfc0; --code-comment:#948b74; --code-keyword:#d3c87a; --code-string:#c9b98a;
+    /* title gradient */
+    --grad-1:#2b2620; --grad-2:#7a7f1f;
+    /* misc */
+    --card-border:color-mix(in srgb, var(--muted) 30%, transparent);
+    --img-bg:#ffffff;                                /* backing behind embedded images */
+    --shadow:rgba(60,50,30,.25);
+    --radius:14px;
+    --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: "SFMono-Regular", Consolas, Menlo, "Liberation Mono", monospace;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--stage-2);color:var(--fg);font-family:var(--font);height:100%;overflow:hidden;}
+  .stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 0%, var(--stage-1) 0%, var(--stage-2) 70%);}
+  .deck{position:relative;width:1280px;height:720px;transform-origin:center center;box-shadow:0 30px 90px var(--shadow);border-radius:6px;overflow:hidden;background:linear-gradient(160deg,var(--bg) 0%, var(--bg2) 100%);}
+  .slide{position:absolute;inset:0;padding:64px 76px 56px;display:flex;flex-direction:column;opacity:0;visibility:hidden;transition:opacity .25s ease;}
+  .slide.active{opacity:1;visibility:visible;}
+  .kicker{font-size:14px;letter-spacing:.12em;color:var(--accent);font-weight:700;margin:0 0 10px;display:flex;align-items:center;gap:10px;}
+  h1{font-size:44px;line-height:1.15;margin:0 0 14px;font-weight:800;letter-spacing:-.01em;}
+  h2{font-size:34px;line-height:1.2;margin:0 0 18px;font-weight:800;letter-spacing:-.01em;}
+  h3{font-size:20px;margin:0 0 8px;font-weight:700;color:var(--fg);}
+  .subtitle{font-size:19px;color:var(--muted);margin:0 0 6px;line-height:1.5;}
+  .body{flex:1;min-height:0;display:flex;flex-direction:column;gap:16px;}
+  p{margin:0 0 10px;line-height:1.55;font-size:17px;color:var(--text);}
+  ul,ol{margin:0 0 8px;padding-left:22px;}
+  li{margin-bottom:8px;line-height:1.5;font-size:17px;color:var(--text);}
+  li b, p b, td b{color:var(--strong);}
+  .muted{color:var(--muted);}
+  .small{font-size:14px;}
+  /* Status tags: use sparingly and accurately. Don't call something "major"
+     or "critical" unless it genuinely is; a wrong badge is worse than none. */
+  .tag{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.06em;padding:4px 10px;border-radius:999px;border:1px solid transparent;}
+  .tag-new{background:color-mix(in srgb, var(--accent) 13%, transparent);color:var(--accent);border-color:color-mix(in srgb, var(--accent) 40%, transparent);}
+  .tag-major{background:color-mix(in srgb, var(--warn) 14%, transparent);color:var(--warn);border-color:color-mix(in srgb, var(--warn) 45%, transparent);}
+  .tag-existing{background:color-mix(in srgb, var(--accent2) 13%, transparent);color:var(--accent2);border-color:color-mix(in srgb, var(--accent2) 40%, transparent);}
+  .tag-optional{background:color-mix(in srgb, var(--muted) 14%, transparent);color:color-mix(in srgb, var(--muted) 55%, var(--fg));border-color:color-mix(in srgb, var(--muted) 40%, transparent);}
+  .tag-critical{background:color-mix(in srgb, var(--bad) 14%, transparent);color:var(--bad);border-color:color-mix(in srgb, var(--bad) 45%, transparent);}
+
+  .card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:18px 20px;}
+  .card.tint-accent{background:color-mix(in srgb, var(--accent) 8%, transparent);border-color:color-mix(in srgb, var(--accent) 40%, transparent);}
+  .card.tint-warn{background:color-mix(in srgb, var(--warn) 8%, transparent);border-color:color-mix(in srgb, var(--warn) 35%, transparent);}
+  /* Grids default to content height so trailing content never gets pushed under
+     the nav pill. Add the "fill" class only when a grid should stretch to fill
+     the remaining slide height (e.g. tall code comparisons). */
+  .cols-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;flex:0 0 auto;min-height:0;}
+  .cols-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;flex:0 0 auto;min-height:0;}
+  .cols-2.fill,.cols-3.fill{flex:1;}
+  .col{display:flex;flex-direction:column;gap:12px;min-height:0;}
+  .stat{display:flex;flex-direction:column;gap:2px;}
+  .stat .num{font-size:38px;font-weight:800;color:var(--accent);line-height:1;}
+  .stat .lbl{font-size:13px;color:var(--muted);letter-spacing:.06em;}
+  .stat-row{display:flex;gap:22px;flex-wrap:wrap;}
+
+  pre.code{background:var(--code-bg);border:1px solid var(--card-border);border-radius:10px;padding:14px 16px;overflow:hidden;font-family:var(--mono);font-size:14.5px;line-height:1.55;color:var(--code-fg);}
+  pre.code.small{font-size:12.5px;line-height:1.5;}
+  pre.code .c{color:var(--code-comment);} /* comments */
+  pre.code .k{color:var(--code-keyword);} /* keywords */
+  pre.code .s{color:var(--code-string);} /* strings */
+  pre.code .n{color:var(--code-string);} /* names/literals */
+  code.inline{font-family:var(--mono);background:color-mix(in srgb, var(--muted) 15%, transparent);padding:1px 6px;border-radius:5px;font-size:.92em;color:color-mix(in srgb, var(--accent2) 55%, var(--fg));}
+
+  table{width:100%;border-collapse:collapse;font-size:14.5px;}
+  th{text-align:left;color:var(--accent2);font-size:12px;letter-spacing:.05em;padding:6px 10px;border-bottom:1px solid var(--card-border);}
+  td{padding:7px 10px;border-bottom:1px solid color-mix(in srgb, var(--muted) 10%, transparent);color:var(--text);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  td code.inline, th code.inline{white-space:nowrap;}
+
+  /* Simple box-and-arrow diagrams. Keep these plain: no SVG, no external
+     diagramming libs. A row of .flow-box separated by .flow-arrow; stack rows
+     for multi-step flows; .flow-vert-arrow for a row-to-row down arrow. */
+  .flow{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:nowrap;}
+  .flow-box{background:var(--card);border:1px solid var(--card-border);border-radius:12px;padding:14px 16px;text-align:center;flex:1;min-width:0;}
+  .flow-box .t{font-weight:700;font-size:15px;color:var(--strong);margin-bottom:4px;}
+  .flow-box .d{font-size:12.5px;color:var(--muted);line-height:1.35;}
+  .flow-box.accent{border-color:color-mix(in srgb, var(--accent) 50%, transparent);background:color-mix(in srgb, var(--accent) 8%, transparent);}
+  .flow-box.warn{border-color:color-mix(in srgb, var(--warn) 50%, transparent);background:color-mix(in srgb, var(--warn) 8%, transparent);}
+  .flow-arrow{flex:0 0 auto;color:var(--muted);font-size:22px;padding:0 10px;}
+  .flow-vert-arrow{color:var(--muted);font-size:20px;padding:4px 0;}
+
+  /* Lane diagram: for "where X applies vs. doesn't" / critical-path-vs-optional
+     comparisons: one labeled row per case. */
+  .lane{display:flex;align-items:center;gap:14px;margin-bottom:14px;}
+  .lane-label{width:150px;flex:0 0 150px;font-size:12px;letter-spacing:.05em;font-weight:800;text-align:right;padding-right:6px;}
+  .lane-label.critical{color:var(--bad);}
+  .lane-label.parallel{color:var(--accent2);}
+  .lane-label.optional{color:var(--muted);}
+  .lane-track{flex:1;display:flex;align-items:center;gap:0;background:color-mix(in srgb, var(--strong) 2%, transparent);border-radius:12px;padding:10px 14px;border:1px dashed color-mix(in srgb, var(--muted) 22%, transparent);}
+
+  .section-slide{align-items:center;justify-content:center;text-align:center;background:radial-gradient(ellipse at 50% 40%, var(--section-1) 0%, var(--section-2) 75%);}
+  .section-slide .num{font-size:15px;color:var(--accent);font-weight:800;letter-spacing:.2em;margin-bottom:18px;}
+  .section-slide h1{font-size:52px;}
+  .section-slide .subtitle{font-size:20px;max-width:760px;}
+
+  .title-slide{align-items:center;justify-content:center;text-align:center;}
+  .title-slide h1{font-size:58px;}
+  .title-slide h1 .grad{background:linear-gradient(90deg,var(--grad-1),var(--grad-2));-webkit-background-clip:text;background-clip:text;color:transparent;}
+  .title-slide .logo-row{display:flex;gap:12px;margin-bottom:26px;}
+
+  .img-wrap{flex:1;display:flex;align-items:center;justify-content:center;min-height:0;}
+  .img-wrap img{max-width:100%;max-height:100%;object-fit:contain;border-radius:10px;border:1px solid var(--card-border);background:var(--img-bg);}
+  .img-wrap svg{max-width:100%;max-height:100%;height:auto;}
+  .img-placeholder{flex:1;align-self:stretch;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;border:2px dashed var(--card-border);border-radius:10px;color:var(--muted);font-size:15px;}
+  .caption{text-align:center;color:var(--muted);font-size:15px;margin-top:10px;}
+
+  .list-check li{list-style:none;position:relative;padding-left:26px;}
+  .list-check li:before{content:"✓";position:absolute;left:0;color:var(--accent);font-weight:800;}
+  .list-todo li{list-style:none;position:relative;padding-left:26px;}
+  .list-todo li:before{content:"→";position:absolute;left:0;color:var(--accent2);font-weight:800;}
+  .list-x li{list-style:none;position:relative;padding-left:26px;}
+  .list-x li:before{content:"✕";position:absolute;left:0;color:var(--bad);font-weight:800;}
+
+  /* Speaker notes: add <aside class="notes">…</aside> anywhere in a slide;
+     invisible until the presenter presses N (and always excluded from
+     screenshots/PDF unless toggled). */
+  .notes{display:none;}
+  .deck.show-notes .slide.active .notes{display:block;position:absolute;left:24px;right:24px;bottom:76px;background:color-mix(in srgb, var(--code-bg) 92%, transparent);border:1px solid var(--card-border);border-radius:10px;padding:12px 16px;font-size:14px;line-height:1.5;color:var(--muted);z-index:5;}
+  /* Overview grid: Esc toggles, #overview deep-links. Uses zoom so the
+     layout box scales with the render (supported in all evergreen browsers). */
+  .deck.overview{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:16px;overflow-y:auto;align-content:start;}
+  .deck.overview .slide{position:relative;inset:auto;zoom:0.2266;opacity:1;visibility:visible;transition:none;cursor:pointer;border:2px solid var(--card-border);border-radius:18px;}
+
+  /* HUD / navigation: do not remove; every slide relies on the JS below */
+  .progress{position:fixed;top:0;left:0;height:4px;background:var(--accent);z-index:50;transition:width .2s ease;box-shadow:0 0 12px color-mix(in srgb, var(--accent) 60%, transparent);}
+  .hud{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:16px;background:color-mix(in srgb, var(--bg) 85%, transparent);backdrop-filter:blur(6px);border:1px solid var(--card-border);padding:8px 14px;border-radius:999px;z-index:60;}
+  .nav-btn{background:color-mix(in srgb, var(--strong) 6%, transparent);border:1px solid var(--card-border);color:var(--fg);width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .15s;}
+  .nav-btn:hover{background:color-mix(in srgb, var(--accent) 25%, transparent);}
+  .counter{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums;min-width:56px;text-align:center;}
+  .hint{position:fixed;top:16px;right:20px;font-size:12px;color:var(--muted);z-index:60;opacity:.7;}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progressBar"></div>
+<div class="hint">← → or click · Esc overview · N notes</div>
+
+<div class="stage">
+  <div class="deck" id="deck">
+    <!-- SLIDES START (replace everything between this marker and SLIDES END;
+         leave everything outside the markers untouched).
+         Remember: HTML-escape every verbatim code snippet (& < > → &amp; &lt; &gt;). -->
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PATTERN: Title slide. First slide, always.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="slide title-slide">
+      <div class="logo-row">
+        <span class="tag tag-new">[REPO OR PROJECT NAME]</span>
+        <span class="tag tag-existing">[VERSION, e.g. v2.3.0]</span>
+      </div>
+      <h1>[DECK TITLE line one, 2 lines max]<br><span class="grad">[line two, in the accent gradient]</span></h1>
+      <p class="subtitle">[One-sentence description of what this deck covers and who it's for.]</p>
+      <p class="small muted" style="margin-top:26px;">[team/author] · [repo name]</p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PATTERN: Agenda. Second slide for a general-overview deck; optional
+         for a tightly focused single-topic deck (skip straight to content).
+         Card count should match your section count; cards are direct grid
+         children so they read row-major (1,2 on the top row). An odd count
+         leaves the last cell empty, which is fine; don't pad with filler
+         topics.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="slide">
+      <div class="kicker">Agenda</div>
+      <h2>What we'll cover</h2>
+      <div class="body">
+        <div class="cols-2">
+          <div class="card"><h3>1. [Topic]</h3><p class="small muted">[One-line description.]</p></div>
+          <div class="card"><h3>2. [Topic]</h3><p class="small muted">[One-line description.]</p></div>
+          <div class="card"><h3>3. [Topic]</h3><p class="small muted">[One-line description.]</p></div>
+          <div class="card"><h3>4. [Topic]</h3><p class="small muted">[One-line description.]</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PATTERN: Section divider. Use before each major topic in a
+         multi-topic deck ("Deep Dive · 1 of 2", "Refresher", etc.) to give
+         the audience a breath and a landmark. Skip in a single-topic deck.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="slide section-slide">
+      <div class="num">[Deep Dive · 1 of N  /  Refresher  /  New this release]</div>
+      <h1>[Section Title]</h1>
+      <p class="subtitle">[One sentence framing what this section answers.]</p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PATTERN: Prose + two-card row. Good for "what is X" / concept intro
+         slides: a lead paragraph, then two contrasting or complementary
+         cards below it.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="slide">
+      <div class="kicker">[Section name]</div>
+      <h2>[Slide title]</h2>
+      <div class="body">
+        <div class="card">
+          <p style="font-size:19px;margin:0;">[A short framing paragraph: the one or two sentences that matter most on this slide.]</p>
+        </div>
+        <div class="cols-2">
+          <div class="card"><h3>[Aspect A]</h3><p class="small" style="margin:0;">[Detail.]</p></div>
+          <div class="card"><h3>[Aspect B]</h3><p class="small" style="margin:0;">[Detail.]</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PATTERN: Full-bleed image + caption. Use for a real screenshot, a
+         real generated chart/plot, or any other genuine artifact from the
+         repo/run. NEVER fabricate a fake chart or invent numbers in the
+         caption: if you don't have a real image, use a different pattern.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="slide">
+      <div class="kicker">[Section name]</div>
+      <h2>[Slide title]</h2>
+      <!-- Swap the placeholder div for the real image, keeping .img-wrap around it:
+           <img src="relative/or/absolute/path.png" alt="[Descriptive alt text]"> -->
+      <div class="img-wrap"><div class="img-placeholder">[Real screenshot, chart or artifact from the repo. Never a fabricated one.]</div></div>
+      <p class="caption">[What this image shows, in one sentence: real numbers only, taken from the actual image/data.]</p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PATTERN: Reference table. Use for field references, mode/flag
+         tables, CLI option lists: anything naturally row/column shaped.
+         Every cell must be verified against the real source (code, --help
+         output, docs), not approximated.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="slide">
+      <div class="kicker">[Section name]</div>
+      <h2>[Slide title]</h2>
+      <div class="body">
+        <table>
+          <tr><th>[Column A]</th><th>[Column B]</th><th>[Column C]</th></tr>
+          <tr><td><code class="inline">[value]</code></td><td>[description]</td><td>[description]</td></tr>
+          <tr><td><code class="inline">[value]</code></td><td>[description]</td><td>[description]</td></tr>
+        </table>
+        <p class="small muted" style="margin:0;">[Optional one-line footnote, e.g. a caveat, a default value, a "see also".]</p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PATTERN: Before/after or two-variant code comparison. Use for
+         schema migrations, config changes, "old way vs new way". Both
+         snippets must be copied verbatim from real files/diffs: trim for
+         slide space with "…" but never alter meaning.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="slide">
+      <div class="kicker">[Section name]</div>
+      <h2>[Slide title]</h2>
+      <div class="body">
+        <div class="cols-2">
+          <div class="tag tag-existing" style="margin-bottom:6px;">[before · v1 · old]</div>
+          <div class="tag tag-new" style="margin-bottom:6px;">[after · v2 · new]</div>
+        </div>
+        <div class="cols-2 fill">
+          <pre class="code small" style="margin:0;">[real "before" snippet, verbatim from the repo, HTML-escaped]</pre>
+          <pre class="code small" style="margin:0;">[real "after" snippet, verbatim from the repo, HTML-escaped]</pre>
+        </div>
+        <div class="card tint-warn">
+          <p class="small" style="margin:0;"><b>Why it changed:</b> [the real reason, from a commit message, changelog, or code comment, not a guess.]</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PATTERN: Single annotated code/config snippet, with an explanation
+         card alongside it. Use to show one real file (a config class, a
+         CLI command, a YAML example) with commentary. Tag the snippet with
+         its real file path so the audience knows it's not invented, and cite it with
+         data-src/data-sha256 so `check.py` can flag it when the source moves on.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="slide">
+      <div class="kicker">[Section name]</div>
+      <h2>[Slide title]</h2>
+      <div class="body">
+        <div class="cols-2 fill">
+          <div class="col">
+            <div class="tag tag-existing" style="align-self:flex-start;">[real/file/path.py]</div>
+            <pre class="code small" style="margin:0;"
+                 data-src="[real/file/path.py:40-58]" data-sha256="[12 hex chars]">[verbatim snippet from that real file, HTML-escaped]</pre>
+          </div>
+          <div class="col">
+            <div class="card"><p class="small" style="margin:0;"><b>[Point 1]:</b> [explanation]</p></div>
+            <div class="card"><p class="small" style="margin:0;"><b>[Point 2]:</b> [explanation]</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PATTERN: Full-width annotated snippet. Same purpose as the pattern
+         above, but for real code whose lines exceed the half-width budget
+         (~65 chars; full width fits ~95 at the small size — see
+         references/style-guide.md § Code snippets): the pre spans the
+         slide, explanation cards sit in a row beneath it.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="slide">
+      <div class="kicker">[Section name]</div>
+      <h2>[Slide title]</h2>
+      <div class="body">
+        <div class="tag tag-existing" style="align-self:flex-start;">[real/file/path.py]</div>
+        <pre class="code small" style="margin:0;"
+             data-src="[real/file/path.py:40-58]" data-sha256="[12 hex chars]">[verbatim snippet from that real file, HTML-escaped]</pre>
+        <div class="cols-2">
+          <div class="card"><p class="small" style="margin:0;"><b>[Point 1]:</b> [explanation]</p></div>
+          <div class="card"><p class="small" style="margin:0;"><b>[Point 2]:</b> [explanation]</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PATTERN: Architecture / flow diagram. Keep it simple: a row of
+         boxes with arrows, optionally stacked with .flow-vert-arrow between
+         rows for branching. Verify the flow against the real code path
+         (imports, call sites) before drawing it: don't guess at
+         architecture from the file tree alone. For sequence diagrams,
+         branching graphs, or ER diagrams, pre-render Mermaid to inline SVG
+         instead (references/diagrams.md) and use the image pattern's
+         .img-wrap; never load diagram JS at runtime.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="slide">
+      <div class="kicker">[Section name]</div>
+      <h2>[Slide title]</h2>
+      <div class="body" style="justify-content:center;gap:4px;">
+        <div class="flow" style="justify-content:center;">
+          <div class="flow-box" style="flex:0 0 240px;"><div class="t">[Entry point]</div><div class="d">[what triggers it]</div></div>
+        </div>
+        <div class="flow" style="justify-content:center;"><div class="flow-vert-arrow">↓</div></div>
+        <div class="flow">
+          <div class="flow-box accent"><div class="t">[Core component]</div><div class="d">[what it does]</div></div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-box"><div class="t">[Downstream component]</div><div class="d">[what it does]</div></div>
+        </div>
+        <div class="flow" style="justify-content:center;"><div class="flow-vert-arrow">↓</div></div>
+        <div class="flow" style="justify-content:center;">
+          <div class="flow-box" style="flex:0 0 320px;"><div class="t">[Output]</div><div class="d">[what gets produced]</div></div>
+        </div>
+      </div>
+      <p class="small muted" style="text-align:center;margin-top:14px;">[Optional: pointer to the real doc/module this diagram summarizes.]</p>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PATTERN: Chat-bubble examples grid + one real CLI command. Use for
+         "how to use this" / "talk to Copilot" slides. Every bubble's arrow-
+         text must map to real, verified skill/CLI behavior: don't invent
+         a capability the repo doesn't actually have.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="slide">
+      <div class="kicker">[Section name]</div>
+      <h2>[Slide title]</h2>
+      <div class="body">
+        <div class="cols-2">
+          <div class="card"><p class="small" style="margin:0;">💬 <i>"[real example prompt]"</i><br><span class="muted">→ [what it actually does, verified]</span></p></div>
+          <div class="card"><p class="small" style="margin:0;">💬 <i>"[real example prompt]"</i><br><span class="muted">→ [what it actually does, verified]</span></p></div>
+        </div>
+        <pre class="code small">[one real, copy-pasteable CLI command from the repo's own docs/README]</pre>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PATTERN: Lane comparison. Use for "where does X apply": critical
+         path vs. optional, sync vs. async, required vs. advisory, etc. Each
+         lane is one row; label + a track describing that row's reality.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="slide">
+      <div class="kicker">[Section name]</div>
+      <h2>[Slide title]</h2>
+      <div class="body" style="justify-content:center;">
+        <div class="lane">
+          <div class="lane-label critical">[Label A]</div>
+          <div class="lane-track"><span class="small" style="flex:1;">[What happens in this case, with a status tag if useful] <span class="tag tag-critical">[status]</span></span></div>
+        </div>
+        <div class="lane">
+          <div class="lane-label optional">[Label B]</div>
+          <div class="lane-track"><span class="small" style="flex:1;">[What happens in this case] <span class="tag tag-optional">[status]</span></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+         PATTERN: Closing / roadmap. Last slide, always. Split real "shipped
+         roadmap items" (if any) from "coming next" (clearly marked as not
+         yet shipped: use .list-todo, not .list-check, for the latter) so
+         the audience never mistakes a plan for a fact. If the repo has no
+         grounded roadmap artifact, relabel the column "Open items" and list
+         only real, citable ones (issues, TODOs, quarantined tests), or drop
+         the column entirely; never invent roadmap items to fill it.
+         ═══════════════════════════════════════════════════════════════════ -->
+    <section class="slide">
+      <div class="kicker">Closing</div>
+      <h2>[Roadmap &amp; links / Questions?]</h2>
+      <div class="body">
+        <div class="cols-2">
+          <div class="col">
+            <h3>Coming next <span class="muted small">(not yet shipped)</span></h3>
+            <ul class="list-todo small">
+              <li>[real roadmap item, from an actual issue/TODO/README roadmap section]</li>
+              <li>[real roadmap item]</li>
+            </ul>
+          </div>
+          <div class="col">
+            <h3>Start here</h3>
+            <ul class="small" style="padding-left:18px;">
+              <li><code class="inline">[real doc path]</code>: [what it is]</li>
+              <li><code class="inline">[real doc path]</code>: [what it is]</li>
+            </ul>
+          </div>
+        </div>
+        <div class="card tint-accent" style="text-align:center;">
+          <h3 style="margin:0;">Questions?</h3>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDES END -->
+  </div>
+</div>
+
+<div class="hud">
+  <button class="nav-btn" id="prevBtn" aria-label="Previous slide">◂</button>
+  <div class="counter"><span id="counterCur">1</span> / <span id="counterTotal">1</span></div>
+  <button class="nav-btn" id="nextBtn" aria-label="Next slide">▸</button>
+</div>
+
+<script>
+(function(){
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var total = slides.length;
+  var deck = document.getElementById('deck');
+  var progressBar = document.getElementById('progressBar');
+  var counterCur = document.getElementById('counterCur');
+  var counterTotal = document.getElementById('counterTotal');
+  counterTotal.textContent = total;
+
+  var current = 0;
+  var overview = false;
+
+  function setOverview(on){
+    overview = on;
+    deck.classList.toggle('overview', on);
+    if (on){ history.replaceState(null, '', '#overview'); }
+    else { render(); }
+  }
+
+  // click: in overview, jump to the clicked slide; otherwise advance
+  // (except on links/buttons)
+  deck.addEventListener('click', function(e){
+    if (overview){
+      var s = e.target.closest('.slide');
+      if (s){ setOverview(false); go(slides.indexOf(s)); }
+      return;
+    }
+    if (e.target.closest('a, button')) return;
+    go(current + 1);
+  });
+
+  function clamp(i){ return Math.max(0, Math.min(total - 1, i)); }
+
+  function render(){
+    slides.forEach(function(s, i){ s.classList.toggle('active', i === current); });
+    counterCur.textContent = current + 1;
+    progressBar.style.width = (((current + 1) / total) * 100) + '%';
+    history.replaceState(null, '', '#' + (current + 1));
+  }
+
+  function go(i){
+    current = clamp(i);
+    render();
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', function(){ go(current - 1); });
+  document.getElementById('nextBtn').addEventListener('click', function(){ go(current + 1); });
+
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape'){ setOverview(!overview); return; }
+    if (overview) return;
+    if (['ArrowRight','ArrowDown','PageDown',' '].indexOf(e.key) > -1){ go(current + 1); e.preventDefault(); }
+    else if (['ArrowLeft','ArrowUp','PageUp'].indexOf(e.key) > -1){ go(current - 1); e.preventDefault(); }
+    else if (e.key === 'Home'){ go(0); }
+    else if (e.key === 'End'){ go(total - 1); }
+    else if (e.key === 'n' || e.key === 'N'){ deck.classList.toggle('show-notes'); }
+  });
+
+  function initFromHash(){
+    if ((location.hash || '') === '#overview'){ setOverview(true); return; }
+    var h = parseInt((location.hash || '').replace('#',''), 10);
+    current = isNaN(h) ? 0 : clamp(h - 1);
+    render();
+  }
+  window.addEventListener('hashchange', initFromHash);
+
+  function scaleDeck(){
+    var sw = window.innerWidth / 1280;
+    var sh = window.innerHeight / 720;
+    var scale = Math.min(sw, sh, 1.3);
+    deck.style.transform = 'scale(' + scale + ')';
+  }
+  window.addEventListener('resize', scaleDeck);
+
+  initFromHash();
+  scaleDeck();
+})();
+</script>
+
+</body>
+</html>

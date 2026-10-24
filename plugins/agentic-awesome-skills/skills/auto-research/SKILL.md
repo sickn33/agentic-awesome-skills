@@ -86,7 +86,7 @@ Claude: I can search public sources for the exact redacted query
         history will be sent. May I send that text to WebSearch and fetch the results?
 User: Yes, send that query
 Claude: [WebSearch + WebFetch → finds Boyd et al. paper, extracts criteria]
-Claude: Boyd recommends ||r|| < ε·max(||Ax||, ||Bz||, ||c||). Use this?
+Claude: The paper uses separate primal and dual residual tolerances with absolute and relative terms. I will verify its exact definitions/dimensions for this formulation before proposing code.
 User: Yes
 Claude: [Implements]
 ```

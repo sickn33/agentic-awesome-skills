@@ -29,6 +29,8 @@ Audit Azure activity with Monitor, Activity Logs, and Log Analytics for complian
 - Setting up alerting on administrative and security events
 - Building compliance dashboards and automated evidence collection
 
+These are paid provisioning/configuration examples requiring authorized Azure access, not privilege-free checks. Confirm tenant/subscription, data residency, cost/retention and alert recipients before writes. Inspect supported categories for each resource and verify actual ingestion after setup; Entra SigninLogs/AuditLogs require their own connector/licensing, and SQL diagnostics do not enable SQL auditing by themselves. Never place real PagerDuty integration keys in committed command URLs.
+
 ## Create Log Analytics Workspace
 
 ```bash
@@ -51,12 +53,10 @@ WORKSPACE_ID=$(az monitor log-analytics workspace show \
   --workspace-name audit-workspace \
   --query id -o tsv)
 
-# Enable audit solutions
-az monitor log-analytics solution create \
-  --resource-group rg-audit \
-  --solution-type SecurityCenterFree \
-  --workspace audit-workspace
+# Verify required data connectors separately; workspace creation does not ingest logs.
 ```
+
+Diagnostic-setting retentionPolicy no longer enforces storage retention (retired September30,2025); use reviewed Azure Storage lifecycle policies and separately configure Log Analytics table/workspace retention. Retention is not immutability and diagnostic settings do not establish regulatory compliance.
 
 ## Configure Diagnostic Settings for Subscription Activity Log
 
@@ -92,8 +92,8 @@ az monitor diagnostic-settings subscription create \
   --location global \
   --storage-account /subscriptions/{sub}/resourceGroups/rg-audit/providers/Microsoft.Storage/storageAccounts/auditlogsarchive \
   --logs '[
-    {"category": "Administrative", "enabled": true, "retentionPolicy": {"enabled": true, "days": 2555}},
-    {"category": "Security", "enabled": true, "retentionPolicy": {"enabled": true, "days": 2555}}
+    {"category": "Administrative", "enabled": true},
+    {"category": "Security", "enabled": true}
   ]'
 ```
 
@@ -106,7 +106,7 @@ az monitor diagnostic-settings create \
   --resource /subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.KeyVault/vaults/{vault} \
   --workspace "$WORKSPACE_ID" \
   --logs '[
-    {"category": "AuditEvent", "enabled": true, "retentionPolicy": {"enabled": true, "days": 365}},
+    {"category": "AuditEvent", "enabled": true},
     {"category": "AzurePolicyEvaluationDetails", "enabled": true}
   ]' \
   --metrics '[
@@ -136,9 +136,11 @@ az monitor diagnostic-settings create \
     {"category": "AppServicePlatformLogs", "enabled": true}
   ]'
 
-# Enable diagnostics for Network Security Groups
+# NSG diagnostic events below are not flow logs. New deployments should use
+# Network Watcher VNet flow logs; new NSG flow logs cannot be created.
+# Inspect supported diagnostic categories before enabling these event categories.
 az monitor diagnostic-settings create \
-  --name nsg-flow-logs \
+  --name nsg-diagnostic-events \
   --resource /subscriptions/{sub}/resourceGroups/{rg}/providers/Microsoft.Network/networkSecurityGroups/{nsg} \
   --workspace "$WORKSPACE_ID" \
   --logs '[
@@ -149,26 +151,7 @@ az monitor diagnostic-settings create \
 
 ## Azure Policy for Diagnostic Settings Enforcement
 
-```bash
-# Assign built-in policy to require diagnostic settings on Key Vaults
-az policy assignment create \
-  --name require-kv-diagnostics \
-  --policy "951af2fa-529b-416e-ab6e-066fd85ac459" \
-  --scope /subscriptions/{sub} \
-  --params '{
-    "logAnalytics": {"value": "'$WORKSPACE_ID'"},
-    "effect": {"value": "DeployIfNotExists"}
-  }'
-
-# Assign policy to require diagnostic settings on SQL databases
-az policy assignment create \
-  --name require-sql-diagnostics \
-  --policy "b79fa14e-238a-4c2d-b376-442ce508fc84" \
-  --scope /subscriptions/{sub} \
-  --params '{
-    "logAnalyticsWorkspaceId": {"value": "'$WORKSPACE_ID'"}
-  }'
-```
+Discover the applicable built-in policy definition/version and its actual parameter schema before assignment; do not reuse hardcoded unrelated GUIDs. Review scope, managed identity, deployment location, role assignments and remediation tasks for DeployIfNotExists. Existing resources may need a separate authorized remediation. Record current assignments and test the exact definition on a small scope before subscription-wide changes.
 
 ## KQL Queries for Security Investigation
 
@@ -179,7 +162,7 @@ SigninLogs
 | where ResultType != "0"
 | summarize FailureCount = count(),
             DistinctIPs = dcount(IPAddress),
-            Locations = make_set(LocationDetails.city)
+            Locations = make_set(tostring(LocationDetails.city))
     by UserPrincipalName, ResultDescription, AppDisplayName
 | where FailureCount > 5
 | order by FailureCount desc
@@ -228,28 +211,23 @@ AzureDiagnostics
 // Detect changes to Network Security Groups
 AzureActivity
 | where TimeGenerated > ago(7d)
-| where OperationNameValue has_any ("securityRules/write", "securityRules/delete",
-                                     "networkSecurityGroups/write")
+| where (OperationNameValue contains "securityRules/write" or OperationNameValue contains "securityRules/delete" or OperationNameValue contains "networkSecurityGroups/write")
 | where ActivityStatusValue == "Success"
 | project TimeGenerated, Caller, OperationNameValue,
           ResourceGroup, Properties
 | order by TimeGenerated desc
 
-// Azure Policy compliance drift
-PolicyInsights
-| where TimeGenerated > ago(7d)
-| where ComplianceState == "NonCompliant"
-| summarize NonCompliantCount = count() by PolicyDefinitionName, ResourceType
-| order by NonCompliantCount desc
+// Policy compliance is a separate Policy Insights/Resource Graph data source.
+// Query the actual configured policy-state source; no PolicyInsights Log Analytics table is assumed.
 
 // Privileged role assignments (PIM)
 AuditLogs
 | where TimeGenerated > ago(30d)
 | where OperationName has_any ("Add member to role", "Add eligible member to role")
-| extend RoleName = tostring(TargetResources[0].displayName),
-         AssignedUser = tostring(TargetResources[2].displayName),
-         AssignedBy = InitiatedBy.user.userPrincipalName
-| project TimeGenerated, AssignedBy, AssignedUser, RoleName, OperationName
+| mv-expand Target = TargetResources
+| extend TargetType = tostring(Target.type), TargetName = tostring(Target.displayName),
+         TargetId = tostring(Target.id), AssignedBy = tostring(InitiatedBy.user.userPrincipalName)
+| project TimeGenerated, AssignedBy, TargetType, TargetName, TargetId, OperationName
 | order by TimeGenerated desc
 ```
 
@@ -269,8 +247,8 @@ az monitor scheduled-query create \
   --resource-group rg-audit \
   --name brute-force-detection \
   --scopes "$WORKSPACE_ID" \
-  --condition "count > 10" \
-  --condition-query "SigninLogs | where ResultType != '0' | summarize count() by UserPrincipalName, bin(TimeGenerated, 5m) | where count_ > 10" \
+  --condition "count 'FailedSignins' > 0" \
+  --condition-query FailedSignins="SigninLogs | where ResultType != '0' | summarize count() by UserPrincipalName, bin(TimeGenerated, 5m) | where count_ > 10" \
   --evaluation-frequency 5m \
   --window-size 5m \
   --severity 2 \
@@ -281,8 +259,8 @@ az monitor scheduled-query create \
   --resource-group rg-audit \
   --name keyvault-offhours-access \
   --scopes "$WORKSPACE_ID" \
-  --condition "count > 0" \
-  --condition-query "AzureDiagnostics | where ResourceType == 'VAULTS' | where OperationName in ('SecretGet','SecretList') | where hourofday(TimeGenerated) < 6 or hourofday(TimeGenerated) > 22" \
+  --condition "count 'OffHours' > 0" \
+  --condition-query OffHours="AzureDiagnostics | where ResourceType == 'VAULTS' | where OperationName in ('SecretGet','SecretList') | where hourofday(TimeGenerated) < 6 or hourofday(TimeGenerated) > 22" \
   --evaluation-frequency 15m \
   --window-size 15m \
   --severity 3 \
@@ -320,7 +298,7 @@ azure_monitor_checklist:
   workspace_setup:
     - [ ] Log Analytics workspace created in appropriate region
     - [ ] Retention period configured (minimum per compliance framework)
-    - [ ] Daily cap configured to prevent cost overruns
+    - [ ] Budgets/ingestion alerts configured; a daily cap can stop audit ingestion and is not a cost guarantee
     - [ ] RBAC permissions set (Log Analytics Reader for auditors)
 
   diagnostic_settings:
@@ -328,7 +306,7 @@ azure_monitor_checklist:
     - [ ] Subscription activity log archived to storage account
     - [ ] Key Vault audit events enabled
     - [ ] Azure SQL audit logging enabled
-    - [ ] NSG flow logs enabled
+    - [ ] VNet flow logs configured/verified through Network Watcher
     - [ ] App Service audit logs enabled
     - [ ] Azure AD sign-in and audit logs connected
 
@@ -354,7 +332,7 @@ azure_monitor_checklist:
 
 ## Best Practices
 
-- Centralize all audit data into a single Log Analytics workspace per tenant
+- Choose workspace boundaries according to residency, access, billing and operational requirements; one workspace per tenant is not universal
 - Archive logs to immutable storage for long-term retention and compliance
 - Use Azure Policy with DeployIfNotExists to enforce diagnostic settings on new resources
 - Create saved KQL queries for common investigation and compliance scenarios

@@ -1,16 +1,20 @@
 ---
 title: "Photo editing | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/photo-editing
+---
 
 # Photo editing
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
 
 Photo-editing extensions let people modify photos and videos within the Photos app by applying filters or making other changes.
 
 ![A sketch of crop marks surrounded by two arrows, suggesting photo editing. The image is overlaid with rectangular and circular grid lines and is tinted blue to subtly reflect the blue in the original six-color Apple logo.](https://docs-assets.developer.apple.com/published/0923c23bdf3aebd4a8b7d94e43cb0efd/technologies-photo-editing-intro%402x.png)
 
-Edits are always saved in the Photos app as new files, safely preserving the original versions.
+Use PhotoKit’s non-destructive editing contract to preserve the original asset and supply rendered output and adjustment data. This is not a promise that every custom file operation automatically creates a safe copy.
 
-To access a photo editing extension, a photo must be in edit mode. While in edit mode, tapping the extension icon in the toolbar displays an action menu of available editing extensions. Selecting one displays the extension’s interface in a modal view containing a top toolbar. Dismissing this view confirms and saves the edit, or cancels it and returns to the Photos app.
+To access a photo editing extension, a photo must be in edit mode. While in edit mode, tapping the extension icon in the toolbar displays an action menu of available editing extensions. Selecting one displays the extension’s interface in a modal view containing a top toolbar. Handle the host’s Done and Cancel requests explicitly through the content-editing controller lifecycle. Dismissal alone is not proof of a committed save; finish or cancel editing using the host protocol and handle output errors.
 
 ## [Best practices](https://developer.apple.com/design/human-interface-guidelines/photo-editing#Best-practices)
 

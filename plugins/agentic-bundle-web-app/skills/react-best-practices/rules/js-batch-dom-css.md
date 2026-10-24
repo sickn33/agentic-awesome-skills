@@ -9,11 +9,11 @@ tags: javascript, dom, css, performance, reflow
 
 Avoid changing styles one property at a time. Group multiple CSS changes together via classes or `cssText` to minimize browser reflows.
 
-**Incorrect (multiple reflows):**
+**Less maintainable (separate style writes):**
 
 ```typescript
 function updateElementStyles(element: HTMLElement) {
-  // Each line triggers a reflow
+  // Consecutive writes are normally batched; layout reads can force a flush
   element.style.width = '100px'
   element.style.height = '200px'
   element.style.backgroundColor = 'blue'
@@ -21,7 +21,7 @@ function updateElementStyles(element: HTMLElement) {
 }
 ```
 
-**Correct (add class - single reflow):**
+**Alternative (class):**
 
 ```typescript
 // CSS file
@@ -38,7 +38,7 @@ function updateElementStyles(element: HTMLElement) {
 }
 ```
 
-**Correct (change cssText - single reflow):**
+**Alternative (intentionally replace all inline styles):**
 
 ```typescript
 function updateElementStyles(element: HTMLElement) {
@@ -80,3 +80,5 @@ function Box({ isHighlighted }: { isHighlighted: boolean }) {
 ```
 
 Prefer CSS classes over inline styles when possible. Classes are cached by the browser and provide better separation of concerns.
+
+Browsers usually batch style writes until a layout read; each assignment does not inherently force reflow. Avoid interleaving layout reads and writes. cssText replaces existing inline declarations; prefer classList.toggle or intentional individual properties.

@@ -31,6 +31,9 @@ const flagMetrics = {
 ```python
 from datetime import datetime, timedelta
 
+
+# Requires an application-provided FeatureFlag model with a timezone-aware
+# last_evaluated field; that field is not part of the entrypoint model sketch.
 def detect_stale_flags():
     """Find flags that haven't been evaluated recently."""
     stale_threshold = timedelta(days=30)

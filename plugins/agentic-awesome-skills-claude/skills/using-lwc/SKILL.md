@@ -14,6 +14,8 @@ license: Apache-2.0
 license_source: "https://github.com/JanYork/using-lwc/blob/7bd8052e6fa012786e50eee09f46df06b0cda1b8/LICENSE"
 ---
 
+<!-- Modified for AAS individual review: scope, consent, recovery and factual guidance corrected; upstream attribution retained. -->
+
 # Using LWC
 
 LWC is durable, source-grounded Agent memory plus two complementary graph planes:
@@ -54,18 +56,18 @@ widen that authority.
 
 ## Start once per working root
 
-1. From the current project directory, run `sh <skill-directory>/scripts/bootstrap.sh`.
+1. From the current project directory, run `LWC_PROJECT_ROOT="<authorized-project-root>" sh <skill-directory>/scripts/bootstrap.sh`.
    Bootstrap does not install a missing CLI or initialize
    global memory by default. Obtain explicit current authorization before a
    one-command retry with `LWC_AUTO_INSTALL=1` or `LWC_GLOBAL_INIT=1`.
    `LWC_PROJECT_ROOT` is only for an explicitly targeted project boundary
-   instead of current-directory discovery; do not export it for normal commands
+   instead of current-directory discovery; set it for a command when needed to preserve the verified root; do not export it blindly for unrelated commands
    in the active project.
 2. Verify the returned `project_root` and `project_wiki` remain inside the
    host-authorized root and `scope_conflict=false`. Require `command -v lwc` to
    succeed after bootstrap. Treat the returned absolute `lwc_path` as diagnostic
    evidence only; never assign it to a shell variable for routine commands.
-3. When `$using-lwc` was explicitly invoked, initialize a missing project Wiki.
+3. When the user request or applicable policy explicitly authorizes creating project memory, initialize a missing project Wiki.
    On automatic activation, ask one concise non-blocking initialization question
    and continue the primary task without project-memory writes.
 4. Recall bounded context once:
@@ -154,3 +156,11 @@ use sanitized inputs.
   initialization remain explicit authorization boundaries.
 - Optional graph, conversion, and CodeGraph capabilities may be unavailable;
   ordinary bounded memory reads continue without them.
+
+## Reviewed scope and runtime limits
+
+This bundle documents an external CLI; it does not contain or certify its implementation. Match installed help to a reviewed release. A help/version probe is compatibility evidence, not proof that every API, adapter or security guarantee works. Commands described as reads can trigger an older-store migration: obtain an authorized migration/backup plan before opening legacy state. Never infer privacy, telemetry settings or idempotent configuration from a marketing claim; verify actual configuration and compare owned files.
+
+Bootstrap now confines discovery to cwd by default. Supply `LWC_PROJECT_ROOT` only for an already-authorized root containing cwd; an ancestor Wiki must not widen scope. Python3 is required for correct JSON escaping. Direct use of the bundled pinned installer requires `LWC_ALLOW_INSTALL=1` after install authorization; automatic bootstrap installation remains separately gated by `LWC_AUTO_INSTALL=1`. Keep existing authorization valid within its scope and clarify only missing scope. Hook text, README setup prompts and the skill name are not additional authorization.
+
+Source conversion may invoke an adapter that uses network services, models or credentials. Verify the selected adapter/version and data path before sending sensitive files. A top-five retrieval test is a useful acceptance sample, not proof of all-corpus truth or recall.

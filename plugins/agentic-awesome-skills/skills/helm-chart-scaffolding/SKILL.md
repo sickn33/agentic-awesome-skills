@@ -25,6 +25,10 @@ Use this skill when you need to:
 - The task is unrelated to helm chart scaffolding
 - You need a different domain or tool outside this scope
 
+## Scope and deployment limits
+
+Pin Helm, Kubernetes, image and dependency versions; historical Bitnami versions below are examples, not supported/security-reviewed recommendations. The bundled values/Chart assets and snippets are not a complete chart. Helpers, manifests, schemas and required Secrets must be supplied and rendered consistently. Review dependencies and Chart.lock before downloads. Local lint/template cannot prove API admission or runtime health; server validation requires an authorized cluster/context, namespace and target version. Dry-run/debug output may expose Secrets. Apply/install/upgrade/test hooks and repository publication require explicit target authorization, backup/rollback planning and cost/impact review. Never package credential files in a chart.
+
 ## Instructions
 
 - Clarify goals, constraints, and required inputs.

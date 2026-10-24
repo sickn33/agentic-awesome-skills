@@ -69,12 +69,12 @@ Round 2 (sequential, depends on Round 1):
 Integration Check:
   ✓ All imports resolve
   ✓ No duplicate type definitions
-  ✓ Build mentally verified
+  ✓ Build/typecheck result recorded only if actually executed
 ```
 
 ---
 
-## Quota Log
+## Illustrative Quota Log (not measured)
 
 | Event | Impact |
 |-------|--------|
@@ -84,4 +84,4 @@ Integration Check:
 | 0 browser agents used | NONE |
 | **Total estimated** | **~25% sprint** |
 
-> Tip: This mission costs ~25% sprint quota. You can run 3–4 missions like this per day on the free tier.
+> Tip: This mission costs ~25% sprint quota. No free-tier mission count is established by this example.

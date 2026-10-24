@@ -1,8 +1,12 @@
 ---
 title: "Always On | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/always-on
+---
 
 # Always On
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
 
 On devices that include the Always On display, the system can continue to display an app’s interface when people suspend their interactions with the device.
 
@@ -10,7 +14,7 @@ On devices that include the Always On display, the system can continue to displa
 
 In the Always On state, a device can continue to give people useful, glanceable information in a low-power, privacy-preserving way by dimming the display and minimizing onscreen motion. The system can display different items depending on the device.
 
-  * On iPhone 14 Pro and iPhone 14 Pro Max, the system displays Lock Screen items like [Widgets](https://developer.apple.com/design/human-interface-guidelines/widgets) and [Live Activities](https://developer.apple.com/design/human-interface-guidelines/live-activities) when people set aside their device face up and stop interacting with it.
+  * On supported Always-On iPhone models (the original examples were iPhone 14 Pro and iPhone 14 Pro Max), the system displays Lock Screen items like [Widgets](https://developer.apple.com/design/human-interface-guidelines/widgets) and [Live Activities](https://developer.apple.com/design/human-interface-guidelines/live-activities) when people set aside their device face up and stop interacting with it.
 
   * When people drop their wrist while wearing Apple Watch, the system dims the watch face, continuing to display the interface of the app as long as it’s either frontmost or running a background session.
 

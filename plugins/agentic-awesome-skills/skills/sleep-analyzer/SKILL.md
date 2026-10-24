@@ -20,6 +20,10 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - 任务涉及失眠模式、夜间觉醒、PSQI 评分或睡眠问题识别。
 - 需要把睡眠数据与情绪、运动或其他健康因素做关联分析时使用。
 
+## 医学与数据边界
+
+仅描述授权的日记/设备数据；不诊断、不制定用药或睡眠限制方案。严重嗜睡时避免驾驶并及时就医；急性呼吸困难等紧急情况联系当地急救。不要上传、补造或自行关联健康记录。
+
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.

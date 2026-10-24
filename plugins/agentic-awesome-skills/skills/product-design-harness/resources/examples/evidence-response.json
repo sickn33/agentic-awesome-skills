@@ -1,0 +1,42 @@
+{
+  "request_id": "evidence-request-quick-001",
+  "source_connector": "internal-product-sources",
+  "retrieved_at": "2026-07-10T10:00:00Z",
+  "receipts": [
+    {
+      "evidence_id": "support-pattern-001",
+      "source_id": "support-system",
+      "source_type": "internal",
+      "raw_artifact_uri": "evidence://support/setup-empty-state",
+      "signal_type": "quote",
+      "signal": "People repeatedly ask what to do after reaching the empty state.",
+      "interpretation": "The next action is not clear enough.",
+      "decision_impact": "Supports a reversible copy test.",
+      "evidence_tier": "t2",
+      "confidence_level": "medium",
+      "counter_signal": "Some questions may come from missing setup prerequisites rather than copy.",
+      "collected_at": "2026-07-08T09:00:00Z",
+      "source_last_verified_at": "2026-07-10T09:30:00Z",
+      "max_staleness_days": 30
+    },
+    {
+      "evidence_id": "session-replay-pattern-001",
+      "source_id": "session-replay-system",
+      "source_type": "internal",
+      "raw_artifact_uri": "evidence://replays/setup-empty-state",
+      "signal_type": "observed_behavior",
+      "signal": "Several new users pause before selecting the first setup action.",
+      "interpretation": "The action hierarchy or language may be unclear.",
+      "decision_impact": "Supports measuring first-action completion after a copy change.",
+      "evidence_tier": "t2",
+      "confidence_level": "medium",
+      "counter_signal": "The replay sample may overrepresent unsuccessful sessions.",
+      "collected_at": "2026-07-09T08:00:00Z",
+      "source_last_verified_at": "2026-07-10T09:30:00Z",
+      "max_staleness_days": 14
+    }
+  ],
+  "coverage_gaps": [
+    "No segmented completion baseline is available."
+  ]
+}

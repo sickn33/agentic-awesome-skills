@@ -15,12 +15,11 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
-const sanitizeFilename = require('sanitize-filename');
+const { execFileSync } = require('child_process');
 
 function sanitizePathSegments(pathValue) {
   return String(pathValue ?? '').split(/[\\/]+/).filter(Boolean).map((segment) => {
-    const sanitized = sanitizeFilename(segment);
+    const sanitized = /^[A-Za-z0-9_.-]+$/.test(segment) && !['.', '..'].includes(segment) ? segment : '';
     if (sanitized !== segment || !sanitized) {
       throw new Error(`Unsafe path segment: ${segment}`);
     }
@@ -101,7 +100,8 @@ ${bodies.join('\n\n')}
 
 function renderToSvg(dotContent) {
   try {
-    return execSync('dot -Tsvg', {
+    return execFileSync('dot', ['-Tsvg'], {
+      timeout: 10000,
       input: dotContent,
       encoding: 'utf-8',
       maxBuffer: 10 * 1024 * 1024
@@ -134,18 +134,20 @@ function main() {
     process.exit(1);
   }
 
-  const skillDir = safeJoin(process.cwd(), skillDirArg);
+  const requestedDir = path.resolve(skillDirArg);
+  if (fs.lstatSync(requestedDir).isSymbolicLink()) throw new Error('Skill directory must not be a symlink');
+  const skillDir = fs.realpathSync(requestedDir);
   const skillFile = safeJoin(skillDir, 'SKILL.md');
-  const skillName = path.basename(skillDir).replace(/-/g, '_');
+  const skillName = path.basename(skillDir).replace(/[^A-Za-z0-9_]/g, '_');
 
-  if (!fs.existsSync(skillFile)) {
+  if (!fs.existsSync(skillFile) || fs.lstatSync(skillFile).isSymbolicLink()) {
     console.error(`Error: ${skillFile} not found`);
     process.exit(1);
   }
 
   // Check if dot is available
   try {
-    execSync('which dot', { encoding: 'utf-8' });
+    execFileSync('dot', ['-V'], { encoding: 'utf-8', timeout: 10000, stdio: 'pipe' });
   } catch {
     console.error('Error: graphviz (dot) not found. Install with:');
     console.error('  brew install graphviz    # macOS');
@@ -164,6 +166,9 @@ function main() {
   console.log(`Found ${blocks.length} diagram(s) in ${path.basename(skillDir)}/SKILL.md`);
 
   const outputDir = safeJoin(skillDir, 'diagrams');
+  if (fs.existsSync(outputDir) && (fs.lstatSync(outputDir).isSymbolicLink() || !fs.statSync(outputDir).isDirectory())) {
+    throw new Error('Output directory must be a real directory');
+  }
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir);
   }
@@ -174,15 +179,16 @@ function main() {
     const svg = renderToSvg(combined);
     if (svg) {
       const outputPath = safeJoin(outputDir, `${skillName}_combined.svg`);
-      fs.writeFileSync(outputPath, svg);
+      fs.writeFileSync(outputPath, svg, { flag: 'wx' });
       console.log(`  Rendered: ${skillName}_combined.svg`);
 
       // Also write the dot source for debugging
       const dotPath = safeJoin(outputDir, `${skillName}_combined.dot`);
-      fs.writeFileSync(dotPath, combined);
+      fs.writeFileSync(dotPath, combined, { flag: 'wx' });
       console.log(`  Source: ${skillName}_combined.dot`);
     } else {
       console.error('  Failed to render combined diagram');
+      process.exitCode = 1;
     }
   } else {
     // Render each separately
@@ -190,10 +196,11 @@ function main() {
       const svg = renderToSvg(block.content);
       if (svg) {
         const outputPath = safeJoin(outputDir, `${block.name}.svg`);
-        fs.writeFileSync(outputPath, svg);
+        fs.writeFileSync(outputPath, svg, { flag: 'wx' });
         console.log(`  Rendered: ${block.name}.svg`);
       } else {
         console.error(`  Failed: ${block.name}`);
+        process.exitCode = 1;
       }
     }
   }
@@ -201,4 +208,7 @@ function main() {
   console.log(`\nOutput: ${outputDir}/`);
 }
 
-main();
+try { main(); } catch (error) {
+  console.error(error.message);
+  process.exitCode = 1;
+}

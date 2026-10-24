@@ -2,7 +2,7 @@
 
 > **Reference Type:** Tier 3 — Load on demand when composing or reviewing demand planning communications.
 >
-> **Usage:** Each template includes variable placeholders in `{{double_braces}}` for direct substitution. Templates are organized by audience and purpose. Select the template matching your scenario, substitute variables, review tone guidance, and send.
+> **Usage:** Each template includes variable placeholders in `{{double_braces}}` for direct substitution. Templates are organized by audience and purpose. Select the template matching your scenario, substitute variables, review tone guidance, and return a draft pending explicit recipient/message approval.
 
 ---
 
@@ -227,7 +227,7 @@ Please reply or call me directly to confirm action.
 Data-driven and collaborative. You are presenting a financial analysis, not demanding a price change. Merchandising owns pricing decisions — your job is to provide the inventory data and margin impact analysis to inform their decision. Frame recommendations as margin recovery, not "we bought too much."
 
 ### What NOT to Say
-- Do not say "we overbought" or "the forecast was wrong" — frame as "sell-through pace requires price action."
+- State forecast error or overbuying honestly when supported by evidence; focus on corrective action without hiding the cause.
 - Do not propose a specific retail price — propose a markdown depth (% off) and let merchandising set the price.
 
 ### Template
@@ -333,7 +333,7 @@ Structured and transparent. This document is the "source of truth" for promotion
 2. **Lift source:** {{lift_source}} (e.g., "Average of 3 most recent comparable promotions on this SKU, weighted 50/30/20 by recency")
 3. **Cannibalization:** Estimated {{cannibalization_pct}}% cannibalization from {{cannibalized_sku}}, reducing net category lift to {{net_category_lift}}%
 4. **Post-promo dip:** Based on {{dip_source}} (e.g., "Product type: shelf-stable pantry; historical dip factor 45% of incremental lift")
-5. **Confidence range:** Based on historical promotional forecast accuracy for this category (trailing 12-month promo WMAPE: {{promo_wmape}}%)
+5. **Prediction range with stated coverage/calibration:** Not derived from WAPE alone; evaluated on comparable held-out forecast errors. Historical promotional forecast accuracy for this category (trailing 12-month promo WMAPE: {{promo_wmape}}%)
 
 ### Inventory Requirements
 
@@ -476,7 +476,7 @@ Transparent and falsifiable. The purpose of this document is to make every assum
 |---|---|---|
 | Initial buy | {{initial_buy}} units | PO placed {{initial_po_date}} |
 | Safety stock | {{initial_ss}} units (analog-based, 30% uncertainty premium) | Included in initial buy |
-| First reorder trigger | If week 1–2 velocity > {{reorder_trigger}} units/store/week | Auto-trigger PO |
+| First reorder trigger | If week 1–2 velocity > {{reorder_trigger}} units/store/week | Draft proposed PO; approval required |
 | Reserve for reorder | {{reserve_units}} units (held at vendor or allocated in budget) | Weeks 3–5 |
 
 ### Monitoring Plan
@@ -564,3 +564,15 @@ Root cause analysis for this excess is assigned to {{postmortem_owner}} with a d
 
 {{our_contact_name}}
 {{our_contact_title}} | {{our_contact_email}} | {{our_contact_phone}}
+
+## Template checks
+
+Resolve placeholders, verify units/periods/recipients and attach only approved data.
+Label ranges as scenarios unless calibrated prediction coverage is available.
+Compare incremental contribution margin net of product, freight, handling and
+returns against holding/stockout costs; gross recovered revenue is not net benefit.
+Do not promise a service-level improvement from safety stock alone. Donation tax
+benefits, inventory write-downs and disposal require finance/legal/product controls.
+Draft PO/pricing/WMS actions do not execute them. Distinguish usable on-hand,
+firm dated receipts, allocated demand and total inventory position without double
+counting. Keep original demand and correction audit trails.

@@ -32,3 +32,9 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Example
+
+After inventory reservation succeeds, a payment timeout is an unknown outcome.
+Query the provider using the original idempotency key before charging again or
+releasing inventory; record the resolution and retry compensation durably.

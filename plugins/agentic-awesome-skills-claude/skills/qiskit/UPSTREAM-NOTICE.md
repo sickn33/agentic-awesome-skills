@@ -16,3 +16,5 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `references/backends.md` | `skills/qiskit/references/backends.md` | `3c98e4d356ed5eec797318e5470143e4b795d3ff` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/patterns.md` | `skills/qiskit/references/patterns.md` | `f68cf6d88eade0fea2c7bd0e5a56912a019492a8` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/algorithms.md` | `skills/qiskit/references/algorithms.md` | `694fff7a661f84acb01788837ba7585d733f884f` | text-only trailing whitespace and EOF blank lines normalized |
+
+Local review changes update versioned Runtime mode/layout examples, credential handling, mathematical/visualization defects and unsupported performance claims. Original hashes above identify imported source, not current edited bytes.

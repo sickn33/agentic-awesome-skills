@@ -1,5 +1,8 @@
 # Personalization at Scale
 
+The percentages and vendor-attributed findings below are imported historical claims without linked study methods, denominators or controlled comparisons. They are unverified hypotheses for testing, not forecasts or universal causal effects. Open tracking is distorted by privacy protections, image blocking and scanners; compare delivered-mail positive replies/meetings and complaints, with cohort and time window.
+
+
 Personalization drives **50–250% more replies** (Lavender). The key insight: **if your personalization has nothing to do with the problem you solve, it's just an attention hack** (Clay).
 
 ## Four Levels of Personalization
@@ -55,7 +58,7 @@ The personalization must logically connect to the problem. This creates 5 reusab
 - **Demographic** — Age, profession, background
 - **Technographic** — Tech stack, tools used
 - **Firmographic** — Company size, funding, industry, growth stage
-- **Psychographic** — Values, passions, beliefs (highest-impact dimension)
+- **Professional interests** — Use directly relevant public business statements; do not infer sensitive beliefs, health, age or personal vulnerabilities.
 
 Tapping into what prospects are passionate about drives significantly higher response rates.
 

@@ -116,3 +116,18 @@ Use `references/report-template.md` when formatting the final audit.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Example and evidence limits
+
+If a row sorts 5,000 items each time a favorite changes, record that code path as a
+hypothesis; compare the same scrolling/favorite interaction before and after a
+model-owned cached sort on the same device/build. Do not invent CPU or hitch deltas.
+An async `.task` may inherit MainActor; moving CPU-heavy code into it does not by
+itself offload work. Preserve actor isolation/Sendable rules when moving decoding
+and computation, and cancel obsolete tasks. Singleton mutable formatters need actor
+or synchronization discipline and locale-change invalidation.
+
+Reference summaries are paraphrases, not verbatim Apple transcripts or current tool
+compatibility claims. Trace exports/memory graphs may contain private text, identifiers
+and credentials; minimize and redact before sharing through an approved channel.
+No profiling or compilation is performed by merely applying this review checklist.

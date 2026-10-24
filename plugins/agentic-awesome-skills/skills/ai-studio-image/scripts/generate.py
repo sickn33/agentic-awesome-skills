@@ -12,6 +12,7 @@ import json
 import re
 import sys
 import time
+import uuid
 from datetime import datetime
 from pathlib import Path
 
@@ -210,12 +211,14 @@ def save_image(
     ext = "png" if "png" in mime else "jpg"
 
     # Nome descritivo
-    template_clean = template.replace(" ", "-")[:20]
-    filename = f"{mode}_{template_clean}_{timestamp}_{index}.{ext}"
+    template_clean = re.sub(r"[^A-Za-z0-9_-]", "-", template)[:20] or "custom"
+    mode = re.sub(r"[^A-Za-z0-9_-]", "-", mode)[:20] or "image"
+    filename = f"{mode}_{template_clean}_{timestamp}_{uuid.uuid4().hex}_{index}.{ext}"
     filepath = output_dir / filename
 
     # Salvar imagem
-    filepath.write_bytes(image_data["image_bytes"])
+    with filepath.open("xb") as image_file:
+        image_file.write(image_data["image_bytes"])
 
     # Salvar metadados
     if OUTPUT_SETTINGS["save_metadata"]:
@@ -288,7 +291,7 @@ def generate(
     # 2. Resolver formato (suporta aliases)
     format_name = resolve_format(format_name)
     if format_name not in IMAGE_FORMATS:
-        format_name = DEFAULT_FORMAT
+        raise ValueError("Unsupported image format")
 
     # 3. Humanizar prompt
     if skip_humanization:
@@ -305,7 +308,15 @@ def generate(
         )
 
     # 4. Configuracoes do modelo
-    model_config = MODELS.get(model_name, MODELS[DEFAULT_MODEL])
+    model_config = MODELS[model_name]
+    if num_images < 1 or num_images > model_config["max_images"]:
+        raise ValueError("Unsupported number of images for selected model")
+    if reference_images and not model_config.get("supports_reference_images", False):
+        raise ValueError("Selected model does not support reference images")
+    if reference_images and len(reference_images) > model_config.get("max_reference_total", 0):
+        raise ValueError("Too many reference images")
+    if reference_images and any(not Path(p).is_file() for p in reference_images):
+        raise ValueError("A reference image is missing")
     format_config = IMAGE_FORMATS[format_name]
     aspect_ratio = format_config["aspect_ratio"]
 
@@ -369,7 +380,7 @@ def generate(
                     break
 
             except Exception as e:
-                error_msg = str(e)
+                error_msg = type(e).__name__  # Provider exception text can expose credentials or private input.
                 is_rate_limit = "429" in error_msg or "RESOURCE_EXHAUSTED" in error_msg
                 is_last_key = i >= len(api_keys) - 1
 

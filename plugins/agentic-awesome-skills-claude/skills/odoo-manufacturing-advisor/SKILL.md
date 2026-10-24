@@ -10,7 +10,7 @@ date_added: "2026-03-04"
 
 ## Overview
 
-This skill helps you configure and optimize Odoo Manufacturing (MRP). It covers Bills of Materials (BoM), Work Centers, routing operations, production order lifecycle, and Material Requirements Planning (MRP) runs to ensure you never run short of materials.
+This skill helps you configure and optimize Odoo Manufacturing (MRP). It covers Bills of Materials (BoM), Work Centers, routing operations, production order lifecycle, and Material Requirements Planning (MRP) runs to identify material requirements; availability still depends on demand accuracy, lead times, stock and supply execution.
 
 ## When to Use This Skill
 
@@ -59,7 +59,7 @@ Menu: Manufacturing → Configuration → Work Centers → New
 
 Work Center: CNC Machine 1
 Working Hours: Standard 40h/week
-Time Efficiency: 85%      (machine downtime factored in; 85% = 34 effective hrs/week)
+Time Efficiency: 85%      (operation duration factor; verify expected duration calculation in your version)
 Capacity: 2               (can run 2 production operations simultaneously)
 OEE Target: 90%           (Overall Equipment Effectiveness KPI target)
 Costs per Hour: $75.00    (used for manufacturing cost reporting)
@@ -94,7 +94,7 @@ Message Types:
 
 ## Limitations
 
-- This skill targets **Odoo Manufacturing (mrp)** module. **Maintenance**, **PLM** (Product Lifecycle Management), and **Quality** modules are separate Enterprise modules not covered here.
+- This skill targets **Odoo Manufacturing (mrp)**. Maintenance, PLM and Quality are separate apps not covered here; edition availability and menus vary by Odoo version. Do not assume all are Enterprise-only.
 - **Subcontracting** workflows (sending components to a third-party manufacturer) have additional receipt and valuation steps not fully detailed here.
 - **Lot/serial number traceability** in production (tracking which lot was consumed per MO) adds complexity; test with small batches before full rollout.
 - MRP calculations assume demand comes from **Sale Orders** and **Reordering Rules** — forecasts from external systems require custom integration.

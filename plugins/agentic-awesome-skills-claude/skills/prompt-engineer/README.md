@@ -3,7 +3,7 @@
 **Version:** 1.0.1  
 **Status:** ✨ Zero-Config | 🌍 Universal
 
-Transform raw prompts into optimized, production-ready prompts using 11 established prompting frameworks.
+Transform raw prompts into structured draft prompts that still require task-specific evaluation using 11 established prompting frameworks.
 
 ---
 
@@ -266,7 +266,9 @@ Sense check: Validate solution meets latency and scalability requirements.
 
 ---
 
-### 5. **Chain of Density**
+### 5. **Progressive Compression (a density-oriented variant)**
+
+This shrinking-length exercise is not the formal Chain of Density research procedure; verify that method separately if requested. A 25-word summary may omit important points.
 
 **Structure:** Iteration 1 (verbose) → Iteration 2 → ... → Iteration 5 (maximum density)
 
@@ -284,7 +286,7 @@ Compress this article into progressively denser summaries:
 2. Compressed (200 words)
 3. Further compressed (100 words)
 4. Dense (50 words)
-5. Maximum density (25 words, all critical points)
+5. Maximum density (25 words, explicitly list any important omissions)
 ```
 
 ---
@@ -602,46 +604,9 @@ copilot> transform into prompt: learn machine learning from zero
 
 ---
 
-## 🔧 Installation (Global Setup)
+## 🔧 Installation
 
-This skill is designed to work **globally** across all your projects.
-
-### Option 1: Use from Repository
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/eric.andrade/cli-ai-skills.git
-   ```
-
-2. Configure Copilot to load skills globally:
-   ```bash
-   # Add to ~/.copilot/config.json
-   {
-     "skills": {
-       "directories": [
-         "/path/to/cli-ai-skills/.github/skills"
-       ]
-     }
-   }
-   ```
-
-### Option 2: Copy to Global Skills Directory
-
-```bash
-cp -r /path/to/cli-ai-skills/.github/skills/prompt-engineer ~/.copilot/global-skills/
-```
-
-Then configure:
-```bash
-# Add to ~/.copilot/config.json
-{
-  "skills": {
-    "directories": [
-      "~/.copilot/global-skills"
-    ]
-  }
-}
-```
+Use this catalog's installer or your client's documented skill-loading mechanism for this directory. The earlier upstream clone URL and Copilot configuration keys are not verified by this bundle; do not overwrite a client configuration with them. Check the installed client's documentation and confirm discovery before use.
 
 ---
 

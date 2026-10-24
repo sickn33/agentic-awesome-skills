@@ -14,26 +14,23 @@ license_source: https://github.com/chaunsin/agent-skills/blob/master/LICENSE
 
 psql is PostgreSQL's feature-rich interactive terminal. It lets you write and execute queries, inspect database objects, import/export data, script batch operations, and customize output formatting — all from the command line.
 
+## Execution boundary
+
+Confirm the authorized database, role and operation scope before writes, imports, grants or shell commands. Prefer a least-privileged account, `-X -v ON_ERROR_STOP=1` for reviewed scripts and verified TLS (`sslmode=verify-full` with trusted CA) for remote connections. ECHO is not a dry-run and rollback cannot undo every side effect. This reference includes psql 18 features; check client version separately from server version.
+
 ## Prerequisites
-
 Before using psql, verify it is installed and available:
-
 ```bash
 # Check if psql is installed
 psql --version
-
 # If not found, install PostgreSQL client tools:
-
 # macOS (Homebrew)
 brew install libpq
-brew link --force libpq
-
+# Add the installed libpq bin directory to PATH; avoid force-linking over other PostgreSQL tools.
 # Ubuntu / Debian
 sudo apt install postgresql-client
-
 # CentOS / RHEL
 sudo yum install postgresql
-
 # Alpine
 apk add postgresql-client
 
@@ -76,7 +73,7 @@ psql -h localhost -U postgres -d mydb   # no password prompt
 # 5. Execute and exit
 psql -f script.sql dbname                        # execute file then exit
 psql -c "SELECT 1" dbname                        # run single command then exit
-psql -1 -f migration.sql dbname                  # run in single transaction
+psql -X -v ON_ERROR_STOP=1 -1 -f migration.sql dbname                  # run in single transaction
 
 # 6. Service connection (reads from pg_service.conf)
 psql service=mydb_prod
@@ -220,7 +217,7 @@ WARNING: The `program` option executes a shell command. If constructed from user
 
 ```sql
 -- This allows variable interpolation and multi-line queries
-COPY (SELECT * FROM :table WHERE id > :min_id) TO STDOUT WITH (FORMAT csv, HEADER true) \g /tmp/output.csv
+COPY (SELECT * FROM :"table" WHERE id > :'min_id'::bigint) TO STDOUT WITH (FORMAT csv, HEADER true) \g /tmp/output.csv
 ```
 
 ### Output Formatting
@@ -318,7 +315,7 @@ Variables in SQL: `:'varname'` (quoted string value, escapes embedded quotes), `
 \copyright           Show PostgreSQL copyright
 ```
 
-### Pipeline Mode (PostgreSQL 14+)
+### Pipeline Mode (psql 18+)
 
 ```
 \startpipeline
@@ -365,10 +362,10 @@ If the query buffer is empty, `\watch` re-executes the most recently sent query.
 Examples:
 
 ```sql
-SELECT * FROM pg_stat_activity WHERE state = 'active';
+SELECT * FROM pg_stat_activity WHERE state = 'active'
 \watch interval=5 count=10      -- every 5s, stop after 10 runs
 
-SELECT count(*) FROM queue WHERE status = 'pending';
+SELECT id FROM queue WHERE status = 'pending' LIMIT 1
 \watch i=1 min_rows=1            -- every 1s, stop when queue is empty
 ```
 
@@ -416,14 +413,14 @@ psql variables are **plain text substitution**, not parameterized queries. This 
 
 ```sql
 -- UNSAFE: if :name contains "Robert'); DROP TABLE users;--" it will execute the injection
-SELECT * FROM users WHERE name = :'name';
+SELECT * FROM users WHERE name = :name;
 
 -- SAFER: use \prompt for interactive input (user sees what they typed)
 \prompt 'Enter name: ' search_name
 SELECT * FROM users WHERE name = :'search_name';
 
 -- SAFEST: use \bind for programmatic parameter passing (truly parameterized)
-SELECT * FROM users WHERE name = $1;
+SELECT * FROM users WHERE name = $1
 \bind 'Robert' \g
 ```
 
@@ -438,7 +435,7 @@ The `:'varname'` form (quoted) is always safer than `:varname` (unquoted), becau
 | Check indexes on a table      | `\di+ table_name*` or `\d table_name`                      |
 | Export query to CSV           | `\copy (SELECT ...) TO 'file.csv' WITH (FORMAT csv, HEADER)` |
 | Import CSV into table         | `\copy table FROM 'file.csv' WITH (FORMAT csv, HEADER)`      |
-| Run migration script          | `psql -1 -f migration.sql dbname`                            |
+| Run migration script          | `psql -X -v ON_ERROR_STOP=1 -1 -f migration.sql dbname`                            |
 | Watch a live query            | `SELECT ... \watch 5`                                        |
 | Pivot query results           | `SELECT ... \crosstabview`                                   |
 | Script with conditional logic | `\if :var ... \endif`                                        |
@@ -496,3 +493,5 @@ psql works best with servers of the same or an older major version. Backslash co
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+Version source: https://www.postgresql.org/docs/18/release-18.html (psql pipeline and named preparation commands). Examples are independent snippets; unaligned delimiter output is not escaped CSV.

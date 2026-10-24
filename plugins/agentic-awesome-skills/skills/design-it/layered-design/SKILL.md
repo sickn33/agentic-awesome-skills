@@ -48,7 +48,8 @@ Use this sub-style when the user's request matches the aesthetic described above
   z-index: 2; /* Sits above the image */
   background: white;
   padding: 40px;
-  width: 50%;
+  width: min(100%, 40rem);
+  box-sizing: border-box;
   margin-top: 200px; /* Pulls it down over the image */
   box-shadow: 0 20px 40px rgba(0,0,0,0.1);
   /* Optional: border to define edge */
@@ -145,7 +146,7 @@ class LayeredDesignScreen extends StatelessWidget {
   }
 }
 ```
-- The `Stack` widget with `Positioned` children is required.
+- `Stack` with `Positioned` is one option. Fixed-height visual examples can clip translated content or enlarged text; use content-driven constraints for production.
 - You can use negative values in `Positioned` (e.g., `right: -40`) to bleed layers off the edge of the screen, which is a common trope in layered design.
 
 ### React Native

@@ -29,7 +29,7 @@ jobs:
 The key elements:
 1. `pull_request_target` grants target repo permissions/secrets
 2. `actions/checkout` with `ref:` pointing to the PR head checks out **fork code**
-3. Any `run:` step after checkout executes attacker-controlled code
+3. A step must actually consume attacker-controlled code/data through an execution sink; an unrelated trusted command after checkout is not enough.
 
 ---
 
@@ -65,7 +65,7 @@ func init() {
 }
 ```
 
-Any `npm install`, `npm ci`, or `npm test` (which often installs first) will execute these scripts.
+`npm install`/`npm ci` normally execute applicable install lifecycle scripts unless disabled. `npm test` runs pretest/test/posttest, not preinstall merely because it is a test command.
 
 ### Python setup.py
 
@@ -155,7 +155,9 @@ jobs:
 ```
 
 ```yaml
-# Workflow 2: Deploy (runs on trusted code, has secrets)
+# INCOMPLETE trust-boundary sketch: do not deploy arbitrary fork artifacts.
+# Validate source repo, event, protected branch and exact commit/artifact provenance first.
+# Workflow 2: Deploy (trusted workflow code alone does not make artifact content trusted)
 name: Deploy
 on:
   workflow_run:
@@ -172,6 +174,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}  # cross-run download requires authorized token
       # Deploy using trusted code + secrets
 ```
 
@@ -187,7 +190,7 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/labeler@v5  # Only reads PR metadata
-      # No checkout of fork code — attacker can't execute anything
+      # No fork checkout; still review action code and all metadata/input sinks
 ```
 
 ---

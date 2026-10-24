@@ -1,3 +1,7 @@
+# Extended event patterns
+
+Imported revision-dependent sketches; see the root version gate. Source paths below identify upstream files, not files bundled in this skill.
+
 Use dot notation to access nested widgets:
 
 ```rust
@@ -219,7 +223,9 @@ impl MatchEvent for App {
 
     fn handle_http_progress(&mut self, cx: &mut Cx, request_id: LiveId, progress: &HttpProgress) {
         if request_id == live_id!(my_request) {
-            let pct = progress.loaded as f64 / progress.total as f64;
+            let pct = if progress.total > 0 {
+                Some((progress.loaded as f64 / progress.total as f64).clamp(0.0, 1.0))
+            } else { None }; // unknown/zero total: show indeterminate progress
             // Update progress UI...
         }
     }
@@ -255,15 +261,15 @@ net.http_request(req) do net.HttpEvents{
 
 // Streaming HTTP request
 let req = net.HttpRequest{
-    url: "https://api.openai.com/v1/chat/completions"
+    url: "https://your-authorized-backend.example/stream"
     method: net.HttpMethod.POST
     headers: {"Content-Type": "application/json"}
     is_streaming: true
-    body: {model: "gpt-4" messages: [{role: "user" content: "Hello"}]}
+    body: {message: "Hello"} // application schema; encode as required by pinned API
 }
 net.http_request(req) do net.HttpEvents{
     on_stream: fn(res){
-        // Process each streaming chunk
+        // Buffer partial frames across chunks with a byte cap; one chunk is not one complete JSON/SSE event
         let chunk = res.body.to_string()
     }
     on_complete: fn(res){
@@ -548,7 +554,7 @@ Event::WindowClosed    // Popup window was closed
 Event::PopupDismissed  // Popup was dismissed by compositor (Wayland) or click-outside
 ```
 
-`WindowClosed` is always emitted before `PopupDismissed`. Apps must handle `PopupDismissed` for explicit-close semantics.
+Do not rely on a universal event ordering. Inspect the pinned platform implementation and make dismissal cleanup idempotent; either event may require recovery depending on platform and close path.
 
 ### IME Events
 

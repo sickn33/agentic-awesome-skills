@@ -1,6 +1,6 @@
 # Thinking Ledger · 思维台账
 
-> Fill this in when falsify depth mode is active. The ledger is the visible trail of the protocol. Dead hypotheses are assets — keep them.
+> Fill this in when falsify depth mode is active. Record concise findings, evidence and decisions, not private internal reasoning. Dead hypotheses are assets — keep them.
 
 **Mode check (MODE SELECTION):** confirmed this is a **Depth** question? (Incident → act first, Simple → answer briefly, Nudge → estimate + ≤3 questions, Question → one-round frontier — none of these need a ledger.)
 
@@ -9,7 +9,7 @@
 **Orientation check (Stage 0):** conclusion already sealed? (conclusion-preserving / completion-seeking / authority-preserving — name it, compensate)
 
 ## Stage 1 · Axiomatize (公理化)
-| 公理 Axioms (certain) | 假设 Assumptions (unchecked) | 传闻 Hearsay (no evidence) |
+| 公理 Established facts (sourced) | 假设 Assumptions (unchecked) | 传闻 Hearsay (no evidence) |
 |---|---|---|
 |  |  |  |
 
@@ -18,7 +18,7 @@ Hypothesis H:
 Candidate set (3–7 mutually exclusive, incl. at least one awkward hypothesis I don't believe):
 Base rate / prior (reference class):
 PRE-COMMITTED prediction (write BEFORE evidence, scoreable): P(H) = __% (will be scored Brier (p−y)²)
-Falsifiable prediction: If H, we should observe [O]. If we observe [¬O], H is dead.
+Falsifiable prediction: If H, we should observe [O]. If [¬O] occurs, reassess H and auxiliary assumptions; account for probabilistic predictions.
 
 ## Stage 3 · Adversarialize (对抗)
 Strongest counter-argument (steelman):
@@ -27,7 +27,7 @@ Three ways my hypothesis could be wrong:
 1.
 2.
 3.
-Evidence I would refuse to accept (if none, I'm defending, not reasoning):
+Evidence that would change the conclusion, with validity criteria:
 
 ## Stage 4 · Verify (验证)
 | Evidence | Grade (direct/indirect/hearsay/inference) | Source #2 (triangulation) | Supports / Contradicts |
@@ -41,7 +41,7 @@ Cheapest real test that could break H (and its result):
 Verdict (only what evidence supports):
 Checkable claim (what the user can verify):
 Sensitivity check (remove the load-bearing evidence — does the verdict flip?):
-Confidence: __% because [grades], and I could be wrong if [residual risk]:
+Confidence: qualified assessment (numeric only with justified event/model), and I could be wrong if [residual risk]:
 Request-uncertainty signal: 0 fully specified / 0.5 open parameters / 1 critical info missing
 Multi-perspective check: executor / stakeholder / skeptic — agree?
 Kill criteria (what would move this probability down):
@@ -50,7 +50,7 @@ Hard-to-reverse? → decision log / ADR entry:
 Lesson for the next time (复盘):
 
 ---
-*Format: markdown table, compact. If the question is simple, one line per stage. The ledger serves the answer, not the reverse.*
+*Format: markdown table, compact. If the question is simple, skip the ledger. The ledger serves the answer, not the reverse.*
 
 ## Argument map (Stage 2/3) — fill for claims with hidden assumptions
 Contention:
@@ -74,7 +74,7 @@ Route: System 1 (low-stakes/reversible) or System 2 (high-stakes/irreversible/co
 Aspiration threshold for satisfice (if search is unbounded):
 
 ## Reversal test (Stage 3)
-Would I accept the same evidence reversed? [yes / no / unsure] — if no/unsure, adjust probability 10–15% toward 50%.
+Would I accept the same evidence reversed? [yes / no / unsure] — if no/unsure, reassess evidence standards; do not apply an arbitrary numeric shift.
 
 ## Bias audit (Stage 4)
 Hits (direction → magnitude): confirmation / availability / anchoring / affect / overconfidence / sunk cost → correction applied:
@@ -87,7 +87,7 @@ Risk note (one-shot high-stakes → utility):
 ## Situation routing (Stage 0)
 Cynefin domain (clear / complicated / complex / chaotic / disorder):
 Method demanded (runbook / analyze / probe / stabilize first / decompose):
-Time pressure? → OODA at ~70% or full protocol:
+Time pressure? → authorized bounded mitigation/runbook or full protocol:
 
 ## IS/IS-NOT bounding (Stage 1) — for selective defects
 | Dimension | IS | Closest IS-NOT | Distinction |

@@ -1,6 +1,6 @@
 ---
 name: wordpress-penetration-testing
-description: "Assess WordPress installations for common vulnerabilities and WordPress 7.0 attack surfaces."
+description: "Assess WordPress installations for common vulnerabilities and installed core/plugin REST permission boundaries."
 risk: offensive
 source: community
 author: zebbern
@@ -58,11 +58,10 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - Some plugins may have false negatives
 - XML-RPC may be disabled
 
-### Detection Evasion
-- Use random user agents: `--random-user-agent`
-- Throttle requests: `--throttle 1000`
-- Use proxy rotation
-- Avoid aggressive modes on monitored sites
+### Assessment Traffic Controls
+- Agree source IPs, request rates, maintenance window, stop conditions and any proxy with the owner.
+- Throttle requests: `--throttle 1000` is an example to verify against installed WPScan help.
+- A blocked scan is a finding or scope limit; do not rotate proxies or switch authentication channels to evade agreed controls.
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.

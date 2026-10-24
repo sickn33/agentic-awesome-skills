@@ -186,7 +186,10 @@ data:
     echo "Running initialization..."
 
     # Wait for database
-    until nc -z $DATABASE_HOST $DATABASE_PORT; do
+    attempts=0
+    until nc -z "$DATABASE_HOST" "$DATABASE_PORT"; do
+      attempts=$((attempts + 1))
+      [ "$attempts" -lt 60 ] || exit 1
       echo "Waiting for database..."
       sleep 2
     done

@@ -203,13 +203,15 @@ const AuroraView = () => {
   const anim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.loop(
+    const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(anim, { toValue: 1, duration: 10000, useNativeDriver: true }),
         Animated.timing(anim, { toValue: 0, duration: 10000, useNativeDriver: true }),
       ])
-    ).start();
-  }, []);
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [anim]);
 
   const translateY = anim.interpolate({ inputRange: [0, 1], outputRange: [0, 100] });
 

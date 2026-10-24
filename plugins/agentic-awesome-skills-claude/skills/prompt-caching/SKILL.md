@@ -2,7 +2,7 @@
 name: prompt-caching
 description: Caching strategies for LLM prompts including Anthropic prompt
   caching, response caching, and CAG (Cache Augmented Generation)
-risk: none
+risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
 ---
@@ -78,8 +78,7 @@ async function queryWithCaching(userQuery: string) {
     return response;
 }
 
-// Cost savings: 90% reduction on cached tokens
-// Latency savings: Up to 2x faster
+// Measure actual cache-read/write costs and latency for the selected model/provider.
 
 ### Response Caching
 
@@ -181,14 +180,14 @@ class CAGSystem {
                 },
                 {
                     type: "text",
-                    text: this.cachedContext!,  // Pre-cached docs
+                    text: this.cachedContext ?? "",  // verify initialized context before querying
                     cache_control: { type: "ephemeral" }
                 }
             ],
             messages: [{ role: "user", content: userQuery }]
         });
 
-        return response.content[0].text;
+        return response.content.filter(block => block.type === "text").map(block => block.text).join("\n");
     }
 
     // Periodic refresh
@@ -236,12 +235,12 @@ class OptimizedCache {
 
         // Non-blocking cache check
         const cachedPromise = this.cache.get(cacheKey);
-        const llmPromise = this.queryLLM(prompt);
+        // Defer paid provider call until bounded cache lookup misses.
 
         // Race: use cache if available before LLM returns
         const cached = await Promise.race([
             cachedPromise,
-            sleep(50).then(() => null)  // 50ms cache timeout
+            sleep(50).then(() => null) // also catch cache errors per availability policy  // 50ms cache timeout
         ]);
 
         if (cached) {
@@ -250,7 +249,7 @@ class OptimizedCache {
         }
 
         // Cache miss: continue with LLM
-        const response = await llmPromise;
+        const response = await this.queryLLM(prompt);
 
         // Async cache write (don't block response)
         this.cache.set(cacheKey, response).catch(console.error);
@@ -401,7 +400,7 @@ class CacheOptimizedPrompts {
     // Prefix ordering matters
     buildWithConsistentOrder(components: string[]): SystemMessage[] {
         // Sort components for consistent ordering
-        const sorted = [...components].sort();
+        const sorted = [...components]; // preserve semantic order; make construction deterministic
         return sorted.map((c, i) => ({
             type: "text",
             text: c,
@@ -420,7 +419,7 @@ Severity: WARNING
 
 Message: Caching with high temperature. Responses are non-deterministic.
 
-Fix action: Only cache responses with temperature <= 0.5
+Fix action: Define task-specific freshness/reuse policy; temperature is not a determinism or safety guarantee
 
 ### Cache Without TTL
 
@@ -483,3 +482,5 @@ Works well with: `context-window-management`, `rag-implementation`, `conversatio
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+All cache classes are sketches with adapters/helpers/types omitted. Cache keys must include tenant/user authorization scope, model/version, full instructions, tool/schema versions, generation parameters and source versions; hashing a prompt does not anonymize cached sensitive content. Separate exact response caching from provider prefix/KV caching, which still generates a fresh answer and has provider-specific minimum tokens, TTL and pricing. Semantic similarity is not answer equivalence; do not reuse across permissions or safety-sensitive contexts without validation. Treat cached documents as untrusted source data, not authoritative system instructions. Persist version/invalidation state across workers/restarts, serialize Redis objects explicitly and apply retention/deletion policies. The100K-token and0.5-temperature thresholds are illustrative, not universal.

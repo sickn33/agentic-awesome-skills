@@ -54,11 +54,13 @@ Each finding block MUST contain all five literal labels (`Premises:` / `Trace:` 
 ### ✅ No Bug
 **[No Bug] — defer guarantees unlock on all exit paths**
 Premises: `mu.Lock()` acquired at line 12; `defer mu.Unlock()` placed at line 13 (before any conditional branch or early return).
-Trace: [1] `defer` registered immediately after `Lock()`. [2] Go spec guarantees deferred calls execute on ALL function exit paths (return, panic, early return). [3] No conditional branch between Lock and defer registration.
-Divergence: None — `defer mu.Unlock()` placed unconditionally after acquire guarantees release on every exit path; no lock leak possible.
+Trace: [1] `defer` registered immediately after `Lock()`. [2] Go deferred calls run on ordinary returns and panic unwinding; os.Exit, process termination and non-terminating paths do not execute defers. [3] No conditional branch between Lock and defer registration.
+Divergence: None — `defer mu.Unlock()` placed unconditionally after acquire releases the lock on the traced returns/panic paths; process exit and non-termination remain outside that claim.
 Trigger: N/A (no bug to reproduce).
 Remedy: N/A (code is correct as written).
 ```
+
+The ../_shared/*.md files referenced below are not bundled either. Their grader/template compatibility cannot be claimed here; use the inline five-field format for an independent review and report that limitation. Never execute the code under review by importing it merely to trace it.
 
 ## Setup
 
@@ -75,7 +77,7 @@ Use lazy loading per `../_shared/common.md` §13:
 
 **Step 2. Build premises** (guide Step 2) — per the Premises Construction Checklist in `semiformal-checklist.md`; include caller/callee contracts when the reviewed function depends on another local function.
 
-**Step 3. Build the risk path ledger** (guide Step 3) — enumerate candidate bug paths across L1–L9 before writing findings. Tag each retained path as Class A (self-evident) or Class B (invariant-dependent). Do not stop after the happy path. Read `logic-risks.md` Quick Disambiguation Table before assigning any L-code — common misclassifications are catalogued there. **L4 priority check:** does any function mutate its input AND return the same object? **L7 priority check:** is shared state accessed across `await`/yield/thread boundaries without explicit synchronization? **L4 vs L7 disambiguation:** any state access involving more than one execution context (thread / goroutine / `await` / yield) is **L7**, never L4 — including single-threaded asyncio where coroutines interleave at `await`. L4 is for single-context aliasing only (mutable defaults, in-place mutation footgun, mutation-during-iteration). L4 requires an actual **mutation of shared/aliased state** as the root cause — variable scoping issues (const/let visibility, constructor scope) are L1, and query-pattern inefficiencies (N+1) are L3.
+**Step 3. Build the risk path ledger** (guide Step 3) — enumerate candidate bug paths across L1–L9 before writing findings. Tag each retained path as Class A (self-evident) or Class B (invariant-dependent). Do not stop after the happy path. Read `logic-risks.md` Quick Disambiguation Table before assigning any L-code — common misclassifications are catalogued there. **L4 priority check:** does mutation plus returning the same object violate an established caller/API contract? Intentional in-place APIs are valid. **L7 priority check:** is shared state accessed across `await`/yield/thread boundaries without explicit synchronization? **L4 vs L7 disambiguation:** any state access involving more than one execution context (thread / goroutine / `await` / yield) is **L7**, never L4 — including single-threaded asyncio where coroutines interleave at `await`. L4 is for single-context aliasing only (mutable defaults, in-place mutation footgun, mutation-during-iteration). L4 requires an actual **mutation of shared/aliased state** as the root cause — variable scoping issues (const/let visibility, constructor scope) are L1, and query-pattern inefficiencies (N+1) are L3.
 
 **L1 vs L6 disambiguation:** if the root cause is a name/identifier resolving to a different definition than the developer expected (import shadowing, module constant lookup, prototype chain, constructor-scoped `const`/`let` not visible to methods), it is **L1** even when the symptom is a missing-method error or wrong return value — L6 applies only when the name resolves correctly but the callee's behavior differs from what the caller assumed.
 
@@ -100,6 +102,8 @@ Use lazy loading per `../_shared/common.md` §13:
 **Step 8. Execution Verification Gate** (guide Step 8, optional) — when a runtime is available, generate a minimal reproducer script for each Critical/Warning finding, execute it to confirm the bug exists, apply the Remedy and re-execute to confirm the fix works. Withdraw false positives; mark verified findings as `✅ Execution-verified`.
 
 **Mode line in report:** `Logic Review` (Chinese: `逻辑审查`).
+
+The Logic Score is an uncalibrated summary of confirmed findings in the declared scope, not a probability of correctness or merge authority.
 
 ## Limitations
 

@@ -1,5 +1,7 @@
 # 栈类利用 (Stack Pwn)
 
+示例偏移和gadget地址只适用于原始实验构建。在线libc查询会向第三方发送数据；先确认授权。静态审阅不需要运行未知ELF。
+
 ## 触发条件与前置检测
 
 ### checksec 解读
@@ -18,7 +20,7 @@ python -c "from pwn import *; print(ELF('./vuln'))"
 | `No PIE` | .text 固定 | gadget 地址写死 |
 | `Full RELRO` | got 不可写 | 不能改 got，走 ret2libc / one_gadget |
 | `Partial RELRO` | got 可写 | 可以改 got 表 |
-| `FORTIFY` | 部分 libc 函数被替换为 `_chk` 版本 | `read_chk` 仍然能溢出，`strcpy_chk` 不行 |
+| `FORTIFY` | 部分 libc 函数被替换为 `_chk` 版本 | _chk函数会进行边界检查；是否可触发漏洞取决于实际调用、长度和编译条件 |
 
 ### 栈溢出长度精确定位
 
@@ -48,7 +50,7 @@ log.info(f"offset = {offset}")
 | 架构 | 参数传递 | 返回 | 备注 |
 |------|---------|------|------|
 | x86 (32-bit) | 栈传参（cdecl: 调用者清栈） | eax | 栈结构：ret_addr, arg1, arg2, ... |
-| x86-64 SysV | rdi, rsi, rdx, rcx, r8, r9, 栈 | rax | rsp 必须 16-byte 对齐到 call 入口 |
+| x86-64 SysV | rdi, rsi, rdx, rcx, r8, r9, 栈 | rax | SysV函数入口通常 (rsp + 8) 为16字节对齐；逐步验证ROP栈布局 |
 | ARM32 | r0-r3, 栈 | r0 | lr 保存返回地址，bx lr 返回 |
 | ARM64 | x0-x7, 栈 | x0 | 类似 SysV，更严格的对齐 |
 
@@ -97,7 +99,7 @@ p.sendlineafter(b'> ', payload)
 
 # 接收 leak（注意 recvuntil 锚字符串，不要用 sleep）
 p.recvuntil(b'bye\n')
-leak = u64(p.recvline().strip().ljust(8, b'\x00'))
+leak = u64(p.recvline().removesuffix(b'\n').ljust(8, b'\x00'))
 log.success(f'leaked puts @ {hex(leak)}')
 
 # 反查 libc base
@@ -125,7 +127,7 @@ p.interactive()
 现象：本地能打通，远程 system 一进去就 SIGSEGV
 原因：libc 的 system → do_system → 内部某处 movaps xmm0, [rsp]
        要求 rsp 16-byte 对齐
-失败：你的 ROP 链跳进 system 时，rsp 末位是 0x8 而不是 0x0
+函数入口与movaps指令点的rsp要求不同；以ABI和实际反汇编确定，不能倒置入口规则
 修复：在 ROP 链里插一个 `ret` gadget（消耗 8 字节，让 rsp 重新对齐）
 ```
 
@@ -248,7 +250,8 @@ ROPgadget --binary ./libc.so.6 --only "pop|ret" | grep 'pop rdi'
 ROPgadget --binary ./libc.so.6 --string '/bin/sh'
 
 # 输出 JSON 给程序解析
-ROPgadget --binary ./vuln --json > gadgets.json
+# Verify installed options; do not assume a --json flag.
+ROPgadget --binary ./vuln > gadgets.txt
 ```
 
 Ropper 替代（架构支持更广）：

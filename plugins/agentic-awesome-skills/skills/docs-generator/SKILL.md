@@ -1,7 +1,7 @@
 ---
 name: docs-generator
 description: "Generate technical deliverables from completed analysis: reverse-engineering reports, penetration-test reports, CTF write-ups, and signature-analysis documentation with evidence-backed structure."
-risk: safe
+risk: critical
 source: "https://github.com/zhaoxuya520/reverse-skill"
 source_repo: "zhaoxuya520/reverse-skill"
 source_type: community
@@ -64,6 +64,10 @@ Supporting files are included at skill-relative paths. See [UPSTREAM-NOTICE.md](
 - **编码**：UTF-8
 - **语言**：跟随用户对话语言（中文对话出中文报告，英文对话出英文报告）
 
+### 可用性与授权
+
+本 skill 生成文档，不授权新的渗透测试、样本执行、外部发布或数据传输。先使用已有证据；未执行的步骤标记未执行，不为填模板而运行攻击或编造结果。`ops/`、`tool-index`、`RULES`、`diagram-generator` 和其他技能不是本包依赖；缺失时使用本包内联 E/F/P 字段和 Mermaid，说明局限。自动路由、日志回写和厂商风格不是宿主已实现的功能。报告输出使用私有批准目录，避免覆盖已有证据；公开版应脱敏并去除可执行恶意附件。
+
 ### 质量要求
 
 - 所有代码块必须可直接运行或有明确上下文
@@ -71,7 +75,7 @@ Supporting files are included at skill-relative paths. See [UPSTREAM-NOTICE.md](
 - 关键发现必须有证据支撑
 - 复现步骤必须让第三方能独立重现
 - 敏感信息（真实 token、密码、内部 URL）用占位符替代
-- **MUST** 包含 Evidence → Finding → Path 链（见 `../ops/evidence-finding-path.md` 与模板 §0）
+- **MUST** 包含 Evidence → Finding → Path 链（见本包 `references/security-report-templates.md` §0；上游 ops 全文未随包提供）
 - **MUST** 读取 `references/vendor-report-rules.md`：选定 `malware` / `apt` 或 `flavor = null`（漏洞任务可叠加 thin `vuln`）；无 flavor 时只输出原任务模板和适用的 Base 元素，不强制 IOC/ATT&CK
 - **SHOULD** 引用 case `scope.md` / `timeline.md`（`scripts/case-init.ps1`）
 
@@ -133,7 +137,7 @@ Every concept needs a concrete example.
 
 ## Quality Checklist
 
-- [ ] Code examples tested and runnable
+- [ ] Code examples have verified context; clearly distinguish actually tested from illustrative/not run
 - [ ] No placeholder text or TODOs
 - [ ] Matches actual code behavior
 - [ ] Scannable without reading everything
@@ -189,11 +193,11 @@ For README, API endpoint, and file organization templates, see [references/templ
 
 ## 任务完成自检（声称完成前 MUST 通过）
 
-- [ ] 我是否执行了工作流中的每一步（而不是只阅读）？
-- [ ] 我是否基于 `tool-index` 使用了真实工具路径？
+- [ ] 已说明实际执行、未执行和不适用步骤，未为补全模板而越权执行？
+- [ ] 工具/依赖是否确实可用，缺失项是否如实标注？
 - [ ] 我是否产出了可复现证据（命令/脚本/截图/报告）？
 - [ ] 报告是否含 Evidence / Finding / Path（ops 契约）？
-- [ ] 是否完成并回写了 RULES 要求的 Checklist 项？
+- [ ] 是否只按用户授权和当前项目要求保存报告/清单？
 
 ## Limitations
 

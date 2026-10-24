@@ -6,7 +6,7 @@ React 19 is included in Expo SDK 54. This release simplifies several common patt
 
 ### useContext → use
 
-The `use` hook replaces `useContext`:
+React 19 adds `use(Context)` as an alternative; `useContext` remains supported and does not require migration:
 
 ```tsx
 // Before (React 18)
@@ -39,7 +39,7 @@ Context providers no longer need the `.Provider` suffix:
 
 ## ref as a Prop
 
-### Removing forwardRef
+### Optional forwardRef modernization
 
 Components can now receive `ref` as a regular prop. `forwardRef` is no longer needed:
 
@@ -72,8 +72,8 @@ function Input({ ref, ...props }: Props & { ref?: React.Ref<TextInput> }) {
 
 ## Cleanup Checklist
 
-When upgrading to SDK 54:
+Optional modernization after confirming the installed React version:
 
-- [ ] Replace `useContext` with `use`
+- [ ] Consider `use` where conditional context reading helps; keep working `useContext` code
 - [ ] Remove `.Provider` from Context components
 - [ ] Remove `forwardRef` wrappers, use `ref` prop instead

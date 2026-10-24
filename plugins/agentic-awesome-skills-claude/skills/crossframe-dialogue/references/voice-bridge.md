@@ -2,8 +2,8 @@
 
 本文件只负责把 `crossframe-essay` 的现代编辑同志口吻缩短成对话式答复。需要完整口吻时读取：
 
-- `../crossframe-essay/protocols/editorial-comrade-voice-protocol.md`
-- `../crossframe-essay/references/editorial-voice-principles.md`
+- `../../crossframe-essay/protocols/editorial-comrade-voice-protocol.md`
+- `../../crossframe-essay/references/editorial-voice-principles.md`
 
 ## 声口
 
@@ -17,7 +17,7 @@
 
 ## 短答复动作
 
-1. 先靠近：“你这个问题不是想多了，它至少说明有一部分成本没有被看见。”
+1. 先靠近：“这个问题值得认真看；我们先分清你的感受、已知事实和仍需验证的解释。”
 2. 再放慢：“我们先把它拆开，不急着给人贴标签。”
 3. 给判断：“现在更像是修复责任被单边转移。”
 4. 明确批评：“如果每次道歉后现实都不变，这不能叫修复。”

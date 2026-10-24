@@ -1,59 +1,28 @@
-# Base Legal para Coleta de Dados de Leiloeiros
+# Limites jurídicos e de finalidade
 
-## Fundamento Legal
+A disponibilidade pública de um registro não dispensa a análise da finalidade,
+necessidade, base aplicável e direitos das pessoas. A LGPD trata dados pessoais
+identificáveis, inclusive em contextos públicos. Os incisos II e III do art. 7º
+não dão automaticamente a um coletor privado as atribuições do poder público.
+Dados acessíveis ao público continuam sujeitos a finalidade, boa-fé e interesse
+público; não presumir que CPF, contato ou endereço sejam livres para redistribuição.
+O art. 13 trata pesquisas em saúde pública, não uma exceção geral para dados públicos.
 
-### Decreto nº 21.981/1932
-Regulamento dos Leiloeiros Oficiais do Brasil. Estabelece que leiloeiros devem ser
-matriculados nas Juntas Comerciais dos estados e que seus dados de registro são
-**públicos por natureza**, sendo necessários para que o público possa verificar
-a legitimidade do profissional antes de participar de um leilão.
+A página do DREI referencia, entre outras normas profissionais, o Decreto
+21.981/1932 e a IN DREI 52/2022. Não use a antiga IN 72/2019 como única referência
+vigente. Normas profissionais e acesso à informação não substituem a análise do
+tratamento concreto nem certificam autorização para reutilização comercial.
 
-### IN DREI nº 72/2019
-Instrução Normativa do Departamento de Registro Empresarial e Integração.
-Rege os procedimentos de registro de tradutores públicos e leiloeiros.
-Confirma que matrícula, nome e situação cadastral são dados de acesso público.
+Antes de coletar ou compartilhar, defina finalidade e campos mínimos, confirme os
+termos e a fonte, estabeleça retenção e revisão. Evite documentos pessoais e
+contatos desnecessários. Não acesse áreas restritas ou contorne controles. Esta
+skill não fornece parecer jurídico nem garante uma base legal para todo uso.
 
-### Lei Geral de Proteção de Dados (LGPD) — Lei nº 13.709/2018
-**Art. 7º, II**: O tratamento de dados pessoais é permitido para o cumprimento
-de obrigação legal ou regulatória pelo controlador.
+A implementação usa TLS verificado, limites de requisição e saída local privada;
+isso reduz alguns riscos técnicos, não prova conformidade legal. O banco é um
+snapshot atualizável, não uma trilha histórica completa. `PARTIAL` e registros não
+verificados exigem inspeção da fonte; a extração não confirma habilitação atual.
 
-**Art. 7º, III**: Permitido pelo poder público para execução de políticas públicas.
-
-**Art. 13**: Dados anonimizados e dados públicos têm tratamento diferenciado.
-
-Os dados coletados (nome, matrícula, situação, contato profissional) são
-**dados públicos de registro profissional**, divulgados pelas próprias
-juntas comerciais no cumprimento de obrigação legal.
-
-### Lei de Acesso à Informação (LAI) — Lei nº 12.527/2011
-Garante o direito de acesso a informações públicas. Os registros de leiloeiros
-mantidos pelas juntas comerciais (órgãos públicos estaduais) são informações
-de interesse público e devem ser disponibilizados.
-
-## Responsabilidades na Coleta
-
-### O que esta skill faz
-- Acessa páginas **públicas** das juntas comerciais
-- Coleta apenas informações **já disponíveis publicamente** nos sites oficiais
-- Não acessa sistemas internos, áreas restritas ou APIs privadas
-- Não realiza engenharia reversa de sistemas
-
-### Boas Práticas Adotadas
-1. **Rate limiting**: 2 segundos entre requests por domínio
-2. **User-Agent identificável**: Header padrão de browser
-3. **Retry limitado**: Máximo 3 tentativas com backoff exponencial
-4. **Sem sobrecarga**: Máximo 5 scrapers simultâneos
-5. **Dados sem deleção**: Histórico preservado
-
-### Limitações
-- Dados de **contato pessoal** (CPF, email, telefone residencial) tratados com
-  cuidado — usados apenas para fins profissionais de identificação
-- Não publicar nem transmitir dados a terceiros sem consentimento adicional
-- Para uso comercial em larga escala, considerar contato formal com as juntas
-
-## Referências
-
-- [DREI — Tradutores e Leiloeiros](https://www.gov.br/empresas-e-negocios/pt-br/drei/tradutores-e-leiloeiros)
-- [Decreto 21.981/1932](https://www.planalto.gov.br/ccivil_03/decreto/antigos/d21981.htm)
-- [LGPD](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm)
-- [LAI](https://www.planalto.gov.br/ccivil_03/_ato2011-2014/2011/lei/l12527.htm)
+Fontes oficiais consultadas na revisão de 2026-10-23:
+- https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709.htm
+- https://www.gov.br/empresas-e-negocios/pt-br/drei/tradutores-e-leiloeiros

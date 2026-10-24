@@ -1,6 +1,7 @@
 ---
 title: "Edit menus | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/edit-menus
+---
 
 # Edit menus
 
@@ -37,7 +38,7 @@ Editing content is rare in tvOS and watchOS experiences, so the system doesn’t
 
 **When it makes sense, let people select and copy noneditable text.** People appreciate being able to paste static content — such as an image caption or social media status — into a message, note, or web search. In general, let people copy content text, but not control labels.
 
-**Support undo and redo when possible.** Like all menus, an edit menu doesn’t require confirmation before performing its actions, so people can easily use undo and redo to recover a previous state. For guidance, see [Undo and redo](https://developer.apple.com/design/human-interface-guidelines/undo-and-redo).
+**Support undo and redo when possible.** Routine reversible edits should normally execute directly and support undo/redo. Menu placement itself does not remove the need to protect an irreversible or high-impact action; implement appropriate confirmation or recovery. For guidance, see [Undo and redo](https://developer.apple.com/design/human-interface-guidelines/undo-and-redo).
 
 **In general, avoid implementing other controls that perform the same functions as edit menu items.** People typically expect to choose familiar edit commands in an edit menu, or use standard keyboard shortcuts. Offering redundant controls can crowd your interface, giving you less space for presenting actions that people might not already know about.
 

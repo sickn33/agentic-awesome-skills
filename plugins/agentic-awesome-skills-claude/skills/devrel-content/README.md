@@ -41,11 +41,11 @@ The skill will:
 ### Code Example Requirements
 
 Every code snippet must:
-- Run without modification
+- Run after documented prerequisites (or be clearly labeled as a fragment)
 - Include all imports
 - Show expected output
 - Handle errors properly
-- Use real values (not `foo`, `bar`)
+- Use synthetic example values and reserved domains; never credentials or personal data
 
 ### SEO for Developers
 

@@ -119,14 +119,15 @@ func transition_to(state_name: StringName, msg: Dictionary = {}) -> void:
         return
 
     var previous_state := current_state
-    previous_state.exit()
-    previous_state.process_mode = Node.PROCESS_MODE_DISABLED
+    if previous_state:
+        previous_state.exit()
+        previous_state.process_mode = Node.PROCESS_MODE_DISABLED
 
     current_state = states[state_name]
     current_state.process_mode = Node.PROCESS_MODE_INHERIT
     current_state.enter(msg)
 
-    state_changed.emit(previous_state.name, current_state.name)
+    state_changed.emit(previous_state.name if previous_state else &"", current_state.name)
 ```
 
 ```gdscript
@@ -201,10 +202,11 @@ func _ready() -> void:
     _load_high_score()
 
 func _input(event: InputEvent) -> void:
-    if event.is_action_pressed("pause") and state == GameState.PLAYING:
+    if event.is_action_pressed("pause") and state in [GameState.PLAYING, GameState.PAUSED]:
         toggle_pause()
 
 func start_game() -> void:
+    get_tree().paused = false
     score = 0
     state = GameState.PLAYING
     game_started.emit()
@@ -430,11 +432,14 @@ signal returned_to_pool
 
 var direction: Vector2
 var _timer: float
+var _active: bool = false
 
 func on_spawn() -> void:
+    _active = true
     _timer = lifetime
 
 func on_despawn() -> void:
+    _active = false
     direction = Vector2.ZERO
 
 func initialize(pos: Vector2, dir: Vector2) -> void:
@@ -447,9 +452,13 @@ func _physics_process(delta: float) -> void:
 
     _timer -= delta
     if _timer <= 0:
+        _active = false
         returned_to_pool.emit()
 
 func _on_body_entered(body: Node2D) -> void:
+    if not _active:
+        return
+    _active = false
     if body.has_method("take_damage"):
         body.take_damage(10)
     returned_to_pool.emit()
@@ -486,7 +495,7 @@ func take_damage(amount: int, source: Node = null) -> int:
     if _invincible or current_health <= 0:
         return 0
 
-    var actual := mini(amount, current_health)
+    var actual := mini(maxi(amount, 0), current_health)
     current_health -= actual
     damaged.emit(actual, source)
 
@@ -498,7 +507,7 @@ func take_damage(amount: int, source: Node = null) -> int:
     return actual
 
 func heal(amount: int) -> int:
-    var actual := mini(amount, max_health - current_health)
+    var actual := mini(maxi(amount, 0), max_health - current_health)
     current_health += actual
     if actual > 0:
         healed.emit(actual)
@@ -707,8 +716,8 @@ func load_game() -> Dictionary:
     file.close()
 
     var parsed := JSON.parse_string(json)
-    if parsed == null:
-        save_error.emit("Could not parse save data")
+    if not parsed is Dictionary:
+        save_error.emit("Save data must be a validated object")
         return {}
 
     load_completed.emit()

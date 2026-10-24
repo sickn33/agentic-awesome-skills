@@ -110,7 +110,7 @@ const material = new THREE.MeshStandardMaterial({
   metalnessMap: metalTexture, // Per-pixel metalness
   normalMap: normalTexture, // Surface detail
   normalScale: new THREE.Vector2(1, 1),
-  aoMap: aoTexture, // Ambient occlusion (uses uv2!)
+  aoMap: aoTexture, // Ambient occlusion; select the actual UV channel via Texture.channel
   aoMapIntensity: 1,
   displacementMap: dispTexture, // Vertex displacement
   displacementScale: 0.1,
@@ -131,8 +131,10 @@ const material = new THREE.MeshStandardMaterial({
   fog: true,
 });
 
-// Note: aoMap requires second UV channel
-geometry.setAttribute("uv2", geometry.attributes.uv);
+// Current texture API: channel 0 uses uv; channel 1 uses uv1.
+// If the asset has a separate AO UV layout, preserve it and select it explicitly.
+// Duplicating the primary UV layout is only appropriate when both maps share that layout.
+aoTexture.channel = 0;
 ```
 
 
@@ -365,14 +367,10 @@ attribute vec2 uv;
 
 ## RawShaderMaterial
 
-Full control - no built-in uniforms/attributes.
+Full control - declare required built-in uniform/attribute names yourself; the renderer still supplies supported matrix values. Do not override modelViewMatrix with an identity matrix if the mesh should transform.
 
 ```javascript
 const material = new THREE.RawShaderMaterial({
-  uniforms: {
-    projectionMatrix: { value: camera.projectionMatrix },
-    modelViewMatrix: { value: new THREE.Matrix4() },
-  },
   vertexShader: `
     precision highp float;
     attribute vec3 position;
@@ -419,7 +417,8 @@ material.blending = THREE.NormalBlending;
 material.stencilWrite = false;
 material.stencilFunc = THREE.AlwaysStencilFunc;
 material.stencilRef = 0;
-material.stencilMask = 0xff;
+material.stencilWriteMask = 0xff;
+material.stencilFuncMask = 0xff;
 
 // Polygon offset (z-fighting fix)
 material.polygonOffset = false;
@@ -507,7 +506,7 @@ material.needsUpdate = true; // Only needed for some changes
 
 ## Performance Tips
 
-1. **Reuse materials**: Same material = batched draw calls
+1. **Reuse materials**: Reduces duplicate resources/state changes; separate meshes still need draw calls unless explicitly instanced or batched
 2. **Avoid transparent when possible**: Transparent materials require sorting
 3. **Use alphaTest instead of transparency**: When applicable, faster
 4. **Choose simpler materials**: Basic > Lambert > Phong > Standard > Physical

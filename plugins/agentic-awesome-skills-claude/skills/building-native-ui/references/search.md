@@ -158,7 +158,7 @@ function SearchScreen() {
     items.filter(item =>
       item.name.toLowerCase().includes(debouncedSearch.toLowerCase())
     ),
-    [debouncedSearch]
+    [items, debouncedSearch]
   );
 
   return <FlatList data={filteredItems} />;
@@ -235,7 +235,7 @@ function SearchScreen() {
           Recent Searches
         </Text>
         {recentSearches.map((term) => (
-          <Pressable key={term} onPress={() => /* apply search */}>
+          <Pressable key={term} onPress={() => { /* apply search */ }}>
             <Text>{term}</Text>
           </Pressable>
         ))}
@@ -246,3 +246,5 @@ function SearchScreen() {
   return <SearchResults search={search} />;
 }
 ```
+
+Memoize the options passed to useSearch to avoid re-registering header handlers on each render. Examples omit renderItem/data wiring; do not log private search input in production.

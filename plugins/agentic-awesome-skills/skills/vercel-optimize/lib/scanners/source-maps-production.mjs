@@ -7,7 +7,7 @@ export const metadata = {
   billingDimension: 'edge-requests',
   trafficIndependent: true,
   description:
-    'productionBrowserSourceMaps: true ships .map files in the production bundle, increasing transfer size 30-100% per visitor. Useful for error reporting via Sentry; not useful for users.',
+    'productionBrowserSourceMaps: true exposes source maps in production. Browsers normally fetch them for debugging, so availability alone does not prove added transfer per visitor. Review source disclosure, download logs, and error-tracking needs.',
   fix:
     'Keep source maps generation but exclude them from the public bundle. Upload to your error tracker via build-time CI step; do not serve them with the deployment.',
   citations: [

@@ -21,15 +21,9 @@ Use this skill when you need analyze a Monte Carlo monitor and recommend config 
 
 You are a Monte Carlo monitor tuning agent. Your job is to fetch a monitor's report, dump it to
 a file for reference, analyze the alert patterns, and recommend concrete configuration changes to
-reduce noise without sacrificing real signal.
+reduce noise while explicitly assessing the detection signal that could be lost. Save a report only to an approved private location; redact sensitive SQL, resource identifiers and segment values where necessary.
 
-> **Monte Carlo tool routing (required):** Always call Monte Carlo MCP tools through this plugin's
-> bundled server, whose fully-qualified tool names are
-> `mcp__plugin_mc-agent-toolkit_monte-carlo-mcp__<tool>` (e.g.
-> `mcp__plugin_mc-agent-toolkit_monte-carlo-mcp__get_alerts`). Bare tool names used in this skill
-> (`get_alerts`, `search`, `get_table`, …) refer to that bundled server. If the session also has a
-> separately-configured `monte-carlo-mcp` server, do **not** route to it — it may point at a
-> different endpoint or credentials.
+> **Tool routing:** Discover the actual Monte Carlo connector and inspect its tool schemas. The upstream plugin namespace is an example, not a server bundled in this catalog skill. Verify the intended account/workspace and credentials before reads or writes; never silently switch connectors. If unavailable, request the exported report/config and provide offline recommendations without claiming tool execution.
 
 **Arguments:** $ARGUMENTS
 
@@ -79,9 +73,9 @@ If no UUID is provided or it doesn't look like a UUID, stop and tell the user:
 
 Call `get_monitor_report` with:
 - `monitor_uuid`: the UUID from `$ARGUMENTS`
-- `max_incidents`: 50
+- `max_incidents`: 50 as an initial bounded page; inspect actual date coverage, pagination/truncation and total count before claiming 7/30-day totals
 
-If the tool returns an error or empty result, tell the user the monitor was not found and stop.
+Distinguish not-found from authentication/permission/network errors and a valid empty incident history. Report the actual failure or coverage; do not label every empty/error response as missing monitor.
 
 Also fetch the monitor's full config via `get_monitors` with:
 - `monitor_ids`: [`{monitor_uuid}`]
@@ -162,15 +156,14 @@ Skip this section for validation monitors (they don't use ML thresholds), for ta
 with explicit thresholds (for custom SQL monitors, see threshold adjustment in the per-type
 reference instead).
 
-- If anomalies are consistently marginal (observed value just barely above threshold) AND assessed
-  as normal variation → recommend lowering sensitivity one step:
+- If anomalies are consistently marginal AND independently verified as normal variation against business/data-quality requirements (TSA output alone is a hypothesis) → recommend lowering sensitivity one step:
   - If current sensitivity is `HIGH` → recommend `"sensitivity": "medium"`
   - If current sensitivity is `MEDIUM` or `AUTO` → recommend `"sensitivity": "low"`
 - If current sensitivity is already `LOW` and still noisy → note this isn't a sensitivity issue
 
 #### Schedule / interval
 - If the monitor fires multiple times per day but anomalies always resolve within hours → recommend
-  increasing schedule interval (e.g., from 720 min to 1440 min) to reduce duplicate alerts
+  deduplicating notifications first; increasing the interval (e.g., 720 to 1440 min) can miss short incidents and increases detection delay, so compare against the detection SLA
 - If anomalies are caused by data arriving late → recommend increasing `collection_lag`
 
 #### Snooze / training period
@@ -178,8 +171,7 @@ reference instead).
   waiting for the model to stabilize before tuning
 
 #### Audience / notification routing
-- If the monitor has no audiences configured and is generating noise → recommend adding audiences
-  only for high-severity anomalies, or removing notifications entirely for known-noisy monitors
+- If routing is noisy, inspect current audiences and accountable owners. Propose severity-based routing or deduplication while preserving escalation for genuine failures; no audiences does not itself explain noise. Do not remove all notifications without explicit ownership and blind-spot acceptance
 
 ### Type-specific recommendations
 
@@ -233,7 +225,7 @@ miscalibration, genuine issues, etc.}
 {Any configurations that look correct and should be left alone — avoid over-tuning.}
 
 ### If these changes are made
-{Predict the expected outcome: estimated alert reduction, what genuine anomalies would still fire.}
+{Report the expected direction and detection-delay/blind-spot risk. Quantify reduction only from an explicit historical replay or measured trial, including its coverage and limitations.}
 ```
 
 **Next step:** "Want me to apply any of these changes to the monitor config, or explore the alert
@@ -247,9 +239,10 @@ To apply changes, follow the apply-changes instructions in the per-type referenc
 Phase 1.5. Each reference specifies the correct tool and constraints for that monitor type.
 
 General rules for all types:
+0. **Re-fetch before applying.** Compare the current full config/version with the analyzed snapshot; if it changed, recompute the preview. Preserve original config for rollback, and after applying re-read the full config to verify intended changes and unchanged fields. A success link alone is not verification. Define a trial window and rollback trigger based on genuine-incident detection as well as noise.
 1. **Always preview first** — show the user what will change before applying.
 2. **Get explicit confirmation** before applying any change.
-3. **Validate the preview YAML against the schema** — before presenting the preview YAML to the user, fetch the published MaC JSON Schema from `https://clidocs.getmontecarlo.com/mac/schema.json` (WebFetch) and check the preview YAML against it. If any field in the YAML does not appear in the schema for the given monitor type, flag it and correct it. Note: the schema validates field names, types, and enum values only — cross-field semantic constraints are enforced by the backend at apply time, not by the schema.
+3. **Validate the preview YAML against the schema** — before presenting the preview YAML to the user, fetch the published MaC JSON Schema from `https://clidocs.getmontecarlo.com/mac/schema.json` (WebFetch) and check the preview YAML against it. If any field in the YAML does not appear in the schema for the given monitor type, flag it and correct it. Note: the schema validates field names, types, and enum values only — schema constraints vary by version; do not assume validation proves backend compatibility or safe detection. Inspect the installed tool schema too, use a safe YAML loader and retain schema version/hash. If the schema is unavailable, do not claim validation passed or deploy an unverified field.
 4. **MaC-managed monitors** — if `get_monitors` returns a `mac_name` or the user mentions the monitor is managed via a MaC YAML file, note this before applying: changes made via the API will be overwritten the next time `montecarlo monitors apply` runs. Offer to hand off to `/manage-mac` (edit workflow) instead so the YAML file stays the source of truth.
 
 ---

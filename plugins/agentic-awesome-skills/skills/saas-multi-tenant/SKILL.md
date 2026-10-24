@@ -1,7 +1,7 @@
 ---
 name: saas-multi-tenant
 description: "Design and implement multi-tenant SaaS architectures with row-level security, tenant-scoped queries, shared-schema isolation, and safe cross-tenant admin patterns in PostgreSQL and TypeScript."
-risk: safe
+risk: critical
 source: community
 date_added: "2026-03-28"
 tags: [multi-tenancy, saas, row-level-security, postgresql, tenant-isolation]
@@ -28,7 +28,7 @@ Do NOT use this skill when:
 
 ## Core Workflow
 
-1. Determine the tenancy model. Ask the user about their scale expectations and isolation requirements. For most SaaS apps under 1000 tenants, shared-schema with a `tenant_id` column on every table is the correct default. Schema-per-tenant adds operational overhead (migrations run N times). Database-per-tenant is only justified when tenants have regulatory data residency requirements.
+1. Determine the tenancy model. Ask the user about their scale expectations and isolation requirements. For most SaaS apps under 1000 tenants, shared-schema with a `tenant_id` column on every table is the correct default. Schema-per-tenant adds operational overhead (migrations run N times). Database-per-tenant can also be justified by isolation, noisy-neighbor, recovery, customer-managed keys or operational needs; compare actual requirements.
 
 2. Add `tenant_id` to every tenant-scoped table. The column must be `NOT NULL`, type `UUID` or `TEXT`, and included in every composite index. Never allow a tenant-scoped table to exist without this column — a missing `tenant_id` is a data leak waiting to happen.
 
@@ -63,41 +63,35 @@ CREATE POLICY tenant_insert ON projects
   WITH CHECK (tenant_id = current_setting('app.current_tenant_id')::uuid);
 ```
 
-### Example 2: Express Middleware That Sets Tenant Context per Request
+### Example 2: Explicit Transaction Boundary
+
+Do not commit on the HTTP response `finish` event: the handler may fail, the client may disconnect, or the response may already report success before COMMIT fails. Use an awaited transaction wrapper and send the response only after commit:
 
 ```typescript
-import { Pool } from "pg";
-
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-
-async function tenantMiddleware(req, res, next) {
-  const tenantId = req.auth?.tenantId; // extracted from JWT during auth
-  if (!tenantId) return res.status(403).json({ error: "No tenant context" });
-
+async function withTenantTransaction(pool, tenantId, work) {
   const client = await pool.connect();
+  let destroy = false;
   try {
     await client.query("BEGIN");
-    // Use set_config — SET LOCAL does not accept bind placeholders ($1)
     await client.query("SELECT set_config('app.current_tenant_id', $1, true)", [tenantId]);
-    req.db = client;
-    req.tenantId = tenantId;
-
-    // Cleanup on response finish — guarantees release even if handler skips next()
-    res.on("finish", async () => {
-      try { await client.query("COMMIT"); } catch { await client.query("ROLLBACK"); }
-      client.release();
-    });
-
-    next();
-  } catch (err) {
-    await client.query("ROLLBACK").catch(() => {});
-    client.release();
-    next(err);
+    const result = await work(client); // Every tenant query uses this client.
+    await client.query("COMMIT");
+    return result;
+  } catch (error) {
+    try { await client.query("ROLLBACK"); }
+    catch { destroy = true; }
+    throw error;
+  } finally {
+    client.release(destroy); // Destroy on rollback failure; release exactly once.
   }
 }
 ```
 
-### Example 3: Prisma Middleware for Automatic Tenant Scoping
+Add request timeout/cancellation and target-specific integration tests before use. Validate the user's current tenant membership server-side before calling it; never trust an unverified tenant claim or routing header.
+
+### Example 3: Historical Prisma Middleware Sketch
+
+This incomplete legacy $use example is not an isolation layer. It omits findUnique, upsert, nested operations, relation loads and raw queries, and does not bind a transaction-local RLS context. Current Prisma versions may require extensions instead. Do not deploy it as automatic protection; enumerate every operation, forbid client changes to tenant ownership and execute under a non-owner, non-BYPASSRLS database role with tested policies.
 
 ```typescript
 import { PrismaClient } from "@prisma/client";
@@ -152,9 +146,9 @@ function createTenantPrisma(tenantId: string): PrismaClient {
 
 4. **Never let tenant users access admin aggregation endpoints.** A route like `GET /admin/metrics` that queries across all tenants must never be reachable with a regular tenant JWT. Use a separate authentication mechanism (API key, admin role claim with a different issuer) for cross-tenant routes.
 
-5. **Never run migrations with RLS enabled on the migration connection.** The migration user needs to create tables, add columns, and modify policies. If RLS is active on the migration connection, `ALTER TABLE` commands may silently fail or affect only the "current tenant's" view. Use a dedicated superuser or `bypassrls` role for migrations.
+5. **Use a separate least-privilege migration role.** RLS governs row access, not DDL visibility; ALTER TABLE does not silently alter only one tenant. Test data migrations against every intended tenant and grant elevated privileges only for the required operation, never default to superuser.
 
-6. **Never share connection pools across tenants when using `SET LOCAL`.** If you use `SET LOCAL app.current_tenant_id` inside a transaction, that setting is scoped to the transaction. But if a previous request's transaction was not properly committed or rolled back, the connection returns to the pool with stale tenant context. Always `RESET app.current_tenant_id` in the cleanup path.
+6. **Share pools only with reliable transaction cleanup.** If you use `SET LOCAL app.current_tenant_id` inside a transaction, that setting is scoped to the transaction. But if a previous request's transaction was not properly committed or rolled back, the connection returns to the pool with stale tenant context. Commit/rollback before release, destroying the connection if rollback fails. SET LOCAL expires at transaction end; RESET does not repair an open or failed transaction.
 
 ## Edge Cases
 

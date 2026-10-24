@@ -8,6 +8,6 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 
 | Local file | Original upstream path | Original Git blob SHA | Import changes |
 | --- | --- | --- | --- |
-| `scripts/relay.mjs` | `skills/pi-delegate/scripts/relay.mjs` | `19edc868a2ebf311119a9967ed973ed6b1a03e43` | content unchanged |
+| `scripts/relay.mjs` | `skills/pi-delegate/scripts/relay.mjs` | `19edc868a2ebf311119a9967ed973ed6b1a03e43` | Local review: private fresh artifact directories and restrictive artifact modes; direct execution disabled (invoke with node). |
 
 The relay launches the user-installed, authenticated agent CLI. Write-capable modes can approve child tools automatically; they are not a host sandbox. Invoke only for explicitly authorized delegation, keep credentials out of task briefs, and review the child output and project changes before landing them. This import does not run the CLI.

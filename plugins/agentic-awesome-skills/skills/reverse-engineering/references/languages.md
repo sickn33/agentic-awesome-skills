@@ -40,9 +40,10 @@ Challenge gives raw CPython bytecode (dis.dis disassembly). Common pattern:
 ```python
 # Given: p1, p2 (expected values), key1, key2 (XOR keys)
 flag = [''] * flag_length
-for i in range(len(p1)):
-    flag[2*i] = chr(p1[i] ^ key1)      # Even indices
-    flag[2*i+1] = chr(p2[i] ^ key2)    # Odd indices
+for i, value in enumerate(p1):
+    flag[2*i] = chr(value ^ key1)
+for i, value in enumerate(p2):
+    flag[2*i+1] = chr(value ^ key2)
 print(''.join(flag))
 ```
 
@@ -234,7 +235,11 @@ def bytes_read_running_bf(bf_code, input_iter, braces):
     ptr = ip = reads = 0
     input_list = list(input_iter)
     input_idx = 0
+    steps = 0
     while ip < len(bf_code):
+        steps += 1
+        if steps > 1000000 or not 0 <= ptr < len(tape):
+            raise ValueError("BF fixture exceeded step/tape bounds")
         c = bf_code[ip]
         if c == ',':
             if input_idx < len(input_list):
@@ -399,7 +404,7 @@ for pos in range(len(ciphertext)):
 - Heavy use of `seq[nat]`, `string`, `denotation` types
 
 **Reversing approach:**
-1. Pure functions are mathematically invertible — reverse each step in the pipeline
+1. Pure does not imply invertible: test injectivity, lost information and domain; retain multiple preimages when necessary
 2. Identify the transformation chain: `f_final(f_n(...f_2(f_1(input))...))`
 3. For each function, build the inverse
 
@@ -444,7 +449,9 @@ cd Python-3.14.0a4 && ./configure && make -j$(nproc)
 ```python
 # Reverse: flag[i] = sqrt(expected_tuple[i])
 import math
-flag = ''.join(chr(int(math.isqrt(v))) for v in expected_values)
+if any(v < 0 or math.isqrt(v) ** 2 != v for v in expected_values):
+    raise ValueError('Expected exact nonnegative squares')
+flag = ''.join(chr(math.isqrt(v)) for v in expected_values)
 ```
 
 ---
@@ -494,6 +501,10 @@ inverted = [(d, n) for n, d in fraction_table]
 # Run target output through inverted program to recover input
 ```
 
-**Key insight:** FRACTRAN programs can be inverted by swapping numerators and denominators. The prime factorization encoding is the key to understanding I/O -- factor the result to extract exponents of sequential primes, map to ASCII.
+**Key insight:** Swapping fractions only generates candidate predecessors: original first-applicable-rule ordering may make the transition non-injective. Replay each candidate under the forward rules; there is no general inverse algorithm. The prime factorization encoding is the key to understanding I/O -- factor the result to extract exponents of sequential primes, map to ASCII.
 
 **Detection:** Challenge mentions fractions, prime factorization, or provides a list of rational numbers.
+
+## Case limits
+
+BF plus counts alone do not identify expected bytes: cell initialization, wrap width, pointer movement and branch semantics must be recovered. Read-count ties or zero extra reads are inconclusive; do not silently select the first candidate. The equality instrumentation block omits normal execution and cannot recover operands as written. Generic purity, base64/hex appearance, or square dimensions do not imply invertibility or unique recovery. Decompiler version support varies; parse only in an isolated matching-runtime environment, never install into or execute an unknown challenge interpreter on the host. Tools named static may still invoke native helpers.

@@ -35,17 +35,8 @@ jobs:
         with:
           version: EXACT_REVIEWED_VERSION_REQUIRED
       - run: |
-          RESULTS=$(opa eval \
-            --data policies/ \
-            --input terraform/tfplan.json \
-            --format json \
-            "data.terraform" | jq '.result[0].expressions[0].value')
-          DENY_COUNT=$(echo "$RESULTS" | jq '[.. | .deny? // empty | .[] ] | length')
-          if [ "$DENY_COUNT" -gt 0 ]; then
-            echo "::error::Policy violations found:"
-            echo "$RESULTS" | jq '.. | .deny? // empty | .[]'
-            exit 1
-          fi
+          # All custom package namespaces must be evaluated, including missing-input tests.
+          conftest test terraform/tfplan.json --policy policies/ --all-namespaces
 
       - name: Checkov Scan
         uses: bridgecrewio/checkov-action@v12
@@ -82,7 +73,7 @@ jobs:
             --output-format table
 
       - name: Conftest Kubernetes Manifests
-        uses: open-policy-agent/conftest-action@v2
+        uses: open-policy-agent/conftest-action@REVIEWED_FULL_SHA
         with:
           files: kubernetes/manifests/
           policy: policies/kubernetes/
@@ -90,6 +81,13 @@ jobs:
 
 
 ## Policy Exception Management
+
+The YAML below is an illustrative registry, not an implemented exception engine.
+Enforce expiry and policy/resource/namespace identity in code; a date field alone
+expires nothing. Protect approval data separately from change authors and restrict
+who can create PolicyException objects. Confirm the installed CRD version and keep
+exceptions narrowly scoped; never exempt an entire rule because a PR requests it.
+
 
 ```yaml
 exception_workflow:
@@ -121,7 +119,7 @@ exception_workflow:
       apiVersion: kyverno.io/v2beta1
       kind: PolicyException
       metadata:
-        name: allow-public-website
+        name: reviewed-legacy-workload-exception
         namespace: web
       spec:
         exceptions:
@@ -134,7 +132,7 @@ exception_workflow:
               kinds:
               - Pod
               names:
-              - legacy-app-*
+              - legacy-app-reviewed
 
   review_schedule:
     - Review all active exceptions quarterly

@@ -1,8 +1,11 @@
 ---
 title: "Drag and drop | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/drag-and-drop
+---
 
 # Drag and drop
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 Using drag and drop, people can move or duplicate selected photos, text, and other content by dragging the selection from one location to another.
 
@@ -10,7 +13,7 @@ Using drag and drop, people can move or duplicate selected photos, text, and oth
 
 To perform drag and drop, people select content in one location, called the _source_ , and drop it in another, called the _destination_. These locations can be in the same container — like a text view — or in different containers, like text views on opposite sides of a split view, or even in different apps.
 
-Depending on various factors, the drag and drop action might _move_ the selected content to the destination or _copy_ it. After a successful drop, moved content exists only in the destination; copied content exists in both locations. As a general rule, dropping selected content within the same container moves it, whereas dropping content in a different container copies it. Dragging and dropping content between apps always results in a copy.
+Depending on various factors, the drag and drop action might _move_ the selected content to the destination or _copy_ it. After a successful drop, moved content exists only in the destination; copied content exists in both locations. As a general rule, dropping selected content within the same container moves it, whereas dropping content in a different container copies it. Across-app transfer behavior depends on platform, negotiated operation and source/destination support; prefer copy where required and do not delete the original before the destination confirms a supported move.
 
 People use different interactions to perform drag and drop depending on platform. For example:
 
@@ -57,7 +60,7 @@ Drag and drop is a dynamic process that can result in multiple outcomes. To help
 
 **Scroll the contents of a destination when necessary.** When people drag an item within a scrolling container that has a lot of content, the content can automatically scroll as people move the item over it. This behavior makes it easy for people to find the right place to drop the item, but if they continue the drag operation outside of the container, automatic scrolling is no longer necessary. System-provided text views and text fields behave this way by default.
 
-**When there’s a choice, pick the richest version of dropped content your app can accept.** For example, if people drag a chart object from another app, the drag operation might offer both the rich, native chart object and a simple image of it. If your app supports charts, extract and display the native chart object; it it doesn’t, use the image instead.
+**When there’s a choice, pick the richest version of dropped content your app can accept.** For example, if people drag a chart object from another app, the drag operation might offer both the rich, native chart object and a simple image of it. If your app supports charts, extract and display the native chart object; if it doesn’t, use the image instead.
 
 **Extract only the relevant portion of dropped content if necessary.** For example, when people drag a contact to a recipient field in an email, Mail displays only the name and email address, not the contact’s address information.
 
@@ -132,3 +135,7 @@ Date| Changes
 October 24, 2023| Added artwork.  
 June 21, 2023| Updated to include guidance for visionOS.  
   
+
+## Implementation checks
+
+Treat item-provider payloads, URLs and file contents as untrusted. Accept supported types, bound sizes, validate actual contents and copy temporary file representations before their lifetime ends. Do not execute a dropped program or fetch an arbitrary dropped URL. Preserve source data on transfer failure and provide an accessible non-drag alternative.

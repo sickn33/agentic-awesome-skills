@@ -1,6 +1,6 @@
 ---
 name: production-code-audit
-description: "Autonomously deep-scan entire codebase line-by-line, understand architecture and patterns, then systematically transform it to production-grade, corporate-level professional quality with optimizations"
+description: "Audit an explicitly scoped codebase for evidenced security, correctness and performance issues; implement authorized targeted repairs and report validation plus residual readiness gaps."
 risk: critical
 source: community
 date_added: "2026-02-27"
@@ -22,263 +22,29 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - Use when preparing for production deployment
 - Use when code needs to meet corporate standards
 
-## Examples
+## Worked Example: Query Repair
 
-### Example 1: Autonomous Codebase Transformation
+For a request-controlled email used in a concatenated PostgreSQL query, trace the input and confirm the driver, then replace concatenation with its parameter-binding API:
 
-```markdown
-User: @production-code-audit make this production-ready
-
-AI: I'll scan your entire codebase and transform it to production-grade quality.
-
-**Phase 1: Discovering Codebase** (analyzing 247 files)
-- Detected: Node.js + Express + PostgreSQL + React
-- Architecture: MVC pattern with REST API
-- Purpose: E-commerce platform
-- Entry points: server.js, src/index.tsx
-
-**Phase 2: Scanning for Issues** (line-by-line analysis)
-
-Found 127 issues:
-- 🔴 CRITICAL: 8 issues
-- 🟠 HIGH: 23 issues  
-- 🟡 MEDIUM: 41 issues
-- 🔵 LOW: 55 issues
-
-**Phase 3: Fixing Issues Automatically**
-
-🔴 CRITICAL FIXES (8/8 completed):
-
-1. ✅ Fixed SQL injection in UserRepository.findByEmail()
-   - Before: String concatenation in query
-   - After: Parameterized query with $1 placeholder
-
-2. ✅ Removed hardcoded database password from config/database.ts
-   - Before: password: 'SuperSecret123!'
-   - After: password: process.env.DB_PASSWORD
-
-3. ✅ Added authentication to admin routes
-   - Before: No auth middleware
-   - After: authenticateToken + requireRole('admin')
-
-4. ✅ Fixed weak password hashing (MD5 → bcrypt)
-   - Before: crypto.createHash('md5')
-   - After: bcrypt.hash(password, 12)
-
-5. ✅ Fixed circular dependency: OrderService ↔ PaymentService
-   - Before: Direct imports causing cycle
-   - After: Event-based decoupling with EventBus
-
-6. ✅ Added input validation to all API endpoints
-   - Before: No validation
-   - After: Zod schemas validating all inputs
-
-7. ✅ Fixed authentication bypass in auth middleware
-   - Before: next() called on missing token
-   - After: Returns 401 error
-
-8. ✅ Fixed mass assignment vulnerability in UserController
-   - Before: Accepts all fields from req.body
-   - After: Whitelist of allowed fields only
-
-🟠 HIGH PRIORITY FIXES (23/23 completed):
-
-9. ✅ Fixed N+1 query in OrderService.getOrdersWithItems()
-   - Before: Loop with individual queries (2.8s)
-   - After: Single query with joins (45ms)
-   - Performance: 98% improvement
-
-10. ✅ Refactored UserService god class (850 lines → 4 focused services)
-    - UserAuthenticationService (login, logout, password)
-    - UserProfileService (CRUD operations)
-    - UserNotificationService (email, SMS)
-    - UserPermissionService (roles, permissions)
-
-11. ✅ Added Redis caching for product queries
-    - Before: Database query every request
-    - After: Cache with 1-hour TTL
-    - Performance: 95% faster
-
-12. ✅ Optimized bundle size
-    - Before: 850KB (gzipped: 280KB)
-    - After: 380KB (gzipped: 120KB)
-    - Improvement: 55% reduction
-
-13. ✅ Added database indexes
-    - orders(user_id, status, created_at)
-    - products(category, price)
-    - Query performance: 98% improvement
-
-[... 11 more high-priority fixes ...]
-
-🟡 MEDIUM PRIORITY FIXES (41/41 completed):
-[... all medium fixes ...]
-
-🔵 LOW PRIORITY IMPROVEMENTS (55/55 completed):
-[... all low improvements ...]
-
-**Phase 4: Adding Production Infrastructure**
-
-✅ Added structured logging (Winston)
-✅ Added error tracking (Sentry)
-✅ Added health check endpoints (/health, /ready)
-✅ Added monitoring (Prometheus metrics)
-✅ Added rate limiting (Redis-based)
-✅ Added API documentation (Swagger/OpenAPI)
-✅ Added comprehensive README
-✅ Added deployment guide
-✅ Added CI/CD pipeline (.github/workflows)
-
-**Phase 5: Verification**
-
-✅ All tests passing (1,247 tests)
-✅ Test coverage: 42% → 87%
-✅ Security scan: 0 vulnerabilities
-✅ Performance: API response time 3.2s → 180ms
-✅ Bundle size: 850KB → 380KB
-✅ Lighthouse score: 62 → 94
-
-**TRANSFORMATION COMPLETE**
-
-Your codebase is now production-ready with enterprise-grade quality:
-
-📊 Metrics:
-- Issues fixed: 127/127 (100%)
-- Test coverage: 87% (target: 80%+)
-- API performance: 94% improvement
-- Security: OWASP Top 10 compliant
-- Code quality: Grade A-
-
-📁 Files changed: 89 files
-📝 Lines changed: +3,247 / -1,892
-
-🚀 Ready for production deployment!
+```typescript
+// pg-compatible example; driver and database fixtures must be supplied.
+const result = await db.query('SELECT id FROM users WHERE email = $1', [email]);
 ```
 
-### Example 2: Automatic Security Hardening
+Validate a normal match, no match and a synthetic quote-containing input. Record actual commands and results; do not assert the test passed from the snippet alone. If a credential was found, removing it from source does not revoke it: report rotation and history/artifact exposure to the authorized owner without copying the value.
+
+## Output Example (Illustrative Structure)
 
 ```markdown
-User: @production-code-audit secure this codebase
-
-AI: Scanning for security vulnerabilities...
-
-**Security Scan Complete**
-
-Found 15 security issues:
-- 🔴 CRITICAL: 5
-- 🟠 HIGH: 7
-- 🟡 MEDIUM: 3
-
-**Fixing all security issues automatically...**
-
-🔴 CRITICAL (5/5 fixed):
-
-1. ✅ SQL Injection in UserRepository
-\`\`\`typescript
-// Before (VULNERABLE)
-const query = \`SELECT * FROM users WHERE email = '\${email}'\`;
-
-// After (SECURE)
-const query = 'SELECT * FROM users WHERE email = $1';
-await db.query(query, [email]);
-\`\`\`
-
-2. ✅ Hardcoded Secrets Removed
-\`\`\`typescript
-// Before (INSECURE)
-const tokenSigningKey = '[redacted weak value]';
-
-// After (SECURE)
-const JWT_SECRET = process.env.JWT_SECRET;
-if (!JWT_SECRET) throw new Error('JWT_SECRET required');
-\`\`\`
-
-3. ✅ Authentication Added to Admin Routes
-\`\`\`typescript
-// Before (VULNERABLE)
-router.delete('/api/admin/users/:id', deleteUser);
-
-// After (SECURE)
-router.delete('/api/admin/users/:id',
-  authenticateToken,
-  requireRole('admin'),
-  deleteUser
-);
-\`\`\`
-
-4. ✅ Password Hashing Upgraded
-\`\`\`typescript
-// Before (WEAK)
-const hash = crypto.createHash('md5').update(password).digest('hex');
-
-// After (STRONG)
-const hash = await bcrypt.hash(password, 12);
-\`\`\`
-
-5. ✅ Input Validation Added
-\`\`\`typescript
-// Before (VULNERABLE)
-const user = await db.user.create({ data: req.body });
-
-// After (SECURE)
-const schema = z.object({
-  email: z.string().email(),
-  password: z.string().min(12),
-  name: z.string().min(2).max(100)
-});
-const validated = schema.parse(req.body);
-const user = await db.user.create({ data: validated });
-\`\`\`
-
-**Security Status:**
-- ✅ OWASP Top 10: Compliant
-- ✅ SQL Injection: Protected
-- ✅ XSS: Protected
-- ✅ CSRF: Protected
-- ✅ Authentication: Secure
-- ✅ Secrets: Environment variables
-- ✅ Dependencies: No vulnerabilities
-
-🔒 Codebase is now secure and production-ready!
+Scope: repository, base/head, files fully read, excluded/unavailable files.
+Finding: path:line, trigger, observed behavior, impact and severity rationale.
+Repair: minimal change and why it preserves the intended behavior.
+Validation: command/environment/result, or explicitly not run with reason.
+Remaining gaps: unsupported runtime, unreviewed deployment, external configuration.
+Readiness: evidence available and specific unresolved criteria; no blanket certification.
 ```
 
-### Example 3: Performance Optimization
-
-```markdown
-User: @production-code-audit optimize performance
-
-AI: Analyzing performance bottlenecks...
-
-**Performance Analysis Complete**
-
-Current metrics:
-- API response time: 3.2s (target: <200ms)
-- Page load time: 8.5s (target: <2s)
-- Bundle size: 850KB (target: <200KB)
-
-**Optimizing automatically...**
-
-✅ Fixed N+1 queries (3.2s → 180ms - 94% faster)
-✅ Added Redis caching (95% cache hit rate)
-✅ Optimized database indexes (98% faster queries)
-✅ Reduced bundle size (850KB → 380KB - 55% smaller)
-✅ Optimized images (28MB → 3.2MB - 89% smaller)
-✅ Implemented code splitting
-✅ Added lazy loading
-✅ Parallelized async operations
-
-**Performance Results:**
-
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| API Response | 3.2s | 180ms | 94% |
-| Page Load | 8.5s | 1.8s | 79% |
-| Bundle Size | 850KB | 380KB | 55% |
-| Image Size | 28MB | 3.2MB | 89% |
-| Lighthouse | 42 | 94 | +52 points |
-
-🚀 Performance optimized to production standards!
-```
+Any metrics must come from reproducible measurements with dataset, environment and baseline/head. Zero scanner findings does not mean zero vulnerabilities, and OWASP Top 10 is an awareness list rather than a “compliance” certificate. An audit request does not authorize deploying, provisioning telemetry/caches or contacting third parties.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

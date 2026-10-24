@@ -10,7 +10,7 @@ date_added: "2026-03-04"
 
 ## Overview
 
-This skill provides a complete, production-ready Docker setup for Odoo, including PostgreSQL, persistent file storage, environment variable configuration, and an optional Nginx reverse proxy with SSL. It covers both development and production configurations.
+This skill provides a starting Docker configuration requiring environment-specific validation for Odoo, including PostgreSQL, persistent file storage, environment variable configuration, and an optional Nginx reverse proxy with SSL. It covers both development and production configurations.
 
 ## When to Use This Skill
 
@@ -41,6 +41,11 @@ services:
       POSTGRES_DB: odoo
       POSTGRES_USER: odoo
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo -d odoo"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
@@ -53,8 +58,8 @@ services:
       db:
         condition: service_healthy
     ports:
-      - "8069:8069"
-      - "8072:8072"   # Longpolling for live chat / bus
+      - "127.0.0.1:8069:8069"
+      - "127.0.0.1:8072:8072"   # Longpolling for live chat / bus
     environment:
       HOST: db
       USER: odoo
@@ -78,20 +83,21 @@ networks:
 
 ```ini
 [options]
-admin_passwd = ${ODOO_MASTER_PASSWORD}    ; set via env or .env file
+admin_passwd = REPLACE_WITH_PRIVATELY_RENDERED_VALUE
 db_host = db
 db_port = 5432
 db_user = odoo
-db_password = ${POSTGRES_PASSWORD}        ; set via env or .env file
+; Official container entrypoint receives database password through PASSWORD.
+; Plain odoo.conf does not expand Compose-style environment placeholders.
 
 ; addons_path inside the official Odoo Docker image (Debian-based)
 addons_path = /mnt/extra-addons,/usr/lib/python3/dist-packages/odoo/addons
 
-logfile = /var/log/odoo/odoo.log
+; Use container stdout/stderr unless a writable private log volume is configured.
 log_level = warn
 
-; Worker tuning for a 4-core / 8GB server:
-workers = 9                ; (CPU cores × 2) + 1
+; Illustrative worker count; size HTTP+cron+PostgreSQL+OS within measured RAM:
+workers = 4
 max_cron_threads = 2
 limit_memory_soft = 1610612736   ; 1.5 GB — soft kill threshold
 limit_memory_hard = 2147483648   ; 2.0 GB — hard kill threshold
@@ -118,18 +124,20 @@ docker compose down
 # Backup the database to a local SQL dump
 docker compose exec db pg_dump -U odoo odoo > backup_$(date +%Y%m%d).sql
 
-# Update a custom module without restarting the server
-docker compose exec odoo odoo -d odoo --update my_module --stop-after-init
+# Module updates change schema/data: stop normal Odoo workers first and back up DB+filestore.
+# Run a single maintenance instance with the same reviewed DB/config; verify then restart.
 ```
+
+Compose expands `${VAR}` in the Compose file, not arbitrary mounted application config. Render required configuration through an approved private secret mechanism and validate it without printing secrets. A SQL dump alone omits Odoo’s filestore; coordinate consistent DB+filestore backup and prove restore in staging. These examples do not include TLS/proxy/database-selection hardening or a production readiness test.
 
 ## Best Practices
 
 - ✅ **Do:** Store all secrets in a `.env` file and reference them with `${VAR}` — never hardcode passwords in `docker-compose.yml`.
 - ✅ **Do:** Use `depends_on: condition: service_healthy` with a PostgreSQL healthcheck to prevent Odoo starting before the DB is ready.
 - ✅ **Do:** Put Nginx in front of Odoo for SSL termination (Let's Encrypt / Certbot) — never expose Odoo directly on port 80/443.
-- ✅ **Do:** Set `workers = (CPU cores × 2) + 1` in `odoo.conf` — `workers = 0` uses single-threaded mode and blocks all users.
+- ✅ **Do:** Measure worker memory and concurrency; a CPU heuristic alone cannot guarantee a safe RAM budget.
 - ❌ **Don't:** Expose port 5432 (PostgreSQL) to the public internet — keep it on the internal Docker network only.
-- ❌ **Don't:** Use the `latest` or `17` Docker image tags in production — always pin to a specific patch-level tag (e.g., `odoo:17.0`).
+- ❌ **Don't:** Use the `latest` or `17` Docker image tags in production — pin a reviewed image digest; `odoo:17.0` is a mutable series tag, not an immutable patch identity.
 - ❌ **Don't:** Mount `odoo.conf` and rely on it for secrets in CI/CD — use Docker secrets or environment variables instead.
 
 ## Limitations

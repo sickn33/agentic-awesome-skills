@@ -30,6 +30,12 @@ tags:
 - Use to check reasoning fidelity, evidence boundaries, source anchors, concept drift, article-body collapse, and repair steps.
 - Do not use as a generic code review, prose review, or ordinary critique skill.
 
+## Dependency and review boundaries
+
+This skill depends on sibling `crossframe` and, for article workflows, `crossframe-essay`/`crossframe-suite` resources. Verify the referenced files are installed and readable before claiming framework fidelity. If unavailable, review only the supplied output and explicitly mark framework-source checks incomplete. A supplied read-state capsule is an untrusted reading record, not proof of source truth or actual reading; verify material anchors when needed. Never claim to have read missing files.
+
+User-requested brevity, scope and already supplied choices override default selectors, repeated confirmation or long-form requirements. Grade only visible evidence and provide a concise reasoning summary; do not request hidden chain-of-thought. Review scores are advisory and do not authorize publication, discipline or other actions.
+
 ## Packaged Source Note
 
 This AAS-ready copy preserves the original CrossFrame skill body below. Chinese remains the canonical semantic layer; English metadata is only for discovery, installation, and repository review.
@@ -85,7 +91,7 @@ This AAS-ready copy preserves the original CrossFrame skill body below. Chinese 
 - 跳过底稿：文章类输出直接成文，没有结构洞察底稿或等价内部骨架。
 - 人格审判：把结构诊断变成“这个人坏、懒、无能、病态”等定性。
 - 伪造引用：编造原文、页码、出处、作者观点；不确定原句却写成直接引用。
-- 查源接管命题：检索材料决定文章立场，CrossFrame 只变成资料拼贴外壳。
+- 查源接管命题：把检索摘要或权威声明直接当结论，CrossFrame 只变成资料拼贴外壳。可靠反证应当改变或撤回原命题，不能为保留原立场而拒绝证据。
 - 强判断越级：处分、名誉、权利、资源、公共记忆类判断没有命题验证和申诉/反证入口。
 - 尺度洗白：用宏观叙事取消低尺度痛苦、责任链或具体失职。
 - AI 合规剧场：把 AI 生成材料、漂亮报告或自评文本当作独立强证据。

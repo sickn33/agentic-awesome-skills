@@ -143,7 +143,8 @@ The scope are
 This is the default scope and allows full access to all files, except
 for the Application Data Folder (see below).
 
-Choose this one if you aren't sure.
+Choose this only when full read/write access is required; use a narrower scope
+for listing or read-only work.
 
 #### drive.readonly
 
@@ -184,8 +185,8 @@ This option has been moved to the advanced section. You can set the
 Normally you will leave this blank and rclone will determine the
 correct root to use itself.
 
-However you can set this to restrict rclone to a specific folder
-hierarchy or to access data within the "Computers" tab on the drive
+This sets a client-side starting folder, not an authorization boundary. Limit
+permissions through OAuth scopes and sharing. It can also access the "Computers" tab on the drive
 web interface (where files from Google's Backup and Sync desktop
 program go).
 
@@ -412,11 +413,12 @@ Google drive stores revisions of files.  When you upload a change to
 an existing file to google drive using rclone it will create a new
 revision of that file.
 
-Revisions follow the standard google policy which at time of writing
-was
-
-- They are deleted after 30 days or 100 revisions (whatever comes first).
-- They do not count towards a user storage quota.
+Binary-file revisions not marked "Keep Forever" are purgeable, typically after
+30 days or earlier when enough newer revisions exist. Up to 200 revisions may
+be kept forever and those count toward storage. The head revision is not
+normally auto-purged. See the
+[Drive revision policy](https://developers.google.com/workspace/drive/api/guides/manage-revisions).
+Do not treat revision history as an independently verified backup.
 
 ### Deleting files
 
@@ -466,7 +468,7 @@ For shortcuts pointing to folders:
 - When server-side copying the contents of the linked folder is copied, not the shortcut.
 - When deleting with `rclone rmdir` or `rclone purge` the shortcut is deleted not
   the linked folder.
-- **NB** When deleting with `rclone remove` or `rclone mount` the contents of the
+- **NB** When deleting with `rclone delete` or `rclone mount` the contents of the
   linked folder will be deleted.
 
 The [rclone backend](https://rclone.org/commands/rclone_backend/) command can be
@@ -1113,7 +1115,7 @@ recommended usage is using the flag form --drive-size-as-quota when
 doing rclone ls/lsl/lsf/lsjson/etc only.
 
 If you do use this flag for syncing (not recommended) then you will
-need to use --ignore size also.
+need to use --ignore-size also.
 
 Properties:
 
@@ -1820,7 +1822,7 @@ The result is a JSON array of matches, for example:
         "webViewLink": "https://drive.google.com/file/d/0AxBe_CDEF4zkGHI4d0FjYko2QkD/view?usp=drivesdk\u0026resourcekey=0-ABCDEFGHIXJQpIGqBJq3MC"
     }
 ]
-```console
+```
 
 ### rescue
 
@@ -1902,8 +1904,7 @@ experiment to find out if it does work for you!
 ### Duplicated files
 
 Sometimes, for no reason I've been able to track down, drive will
-duplicate a file that rclone uploads.  Drive unlike all the other
-remotes can have duplicated files.
+duplicate a file that rclone uploads.  Drive is one of the backends that permits duplicated filenames.
 
 Duplicated files cause problems with the syncing and you will see
 messages in the log about duplicates.
@@ -1930,7 +1931,8 @@ effective in preventing the problem.
 
 ### SHA1 or SHA256 hashes may be missing
 
-All files have MD5 hashes, but a small fraction of files uploaded may
+Binary files generally provide MD5 hashes; native Google Workspace documents
+do not. A small fraction of uploaded binary files may
 not have SHA1 or SHA256 hashes especially if they were uploaded before 2018.
 
 ## Making your own client_id
@@ -1977,21 +1979,10 @@ in a box in the top left of the screen.
 of "External" above, but this will restrict API use to Google Workspace
 users in your organisation).
 
-    You will also have to add [some scopes](https://developers.google.com/drive/api/guides/api-specific-auth),
-including
-    - `https://www.googleapis.com/auth/docs`
-    - `https://www.googleapis.com/auth/drive` in order to be able to edit,
-        create and delete files with RClone.
-    - `https://www.googleapis.com/auth/drive.metadata.readonly` which you may
-      also want to add.
-
-    To do this, click Data Access on the left side panel, click "add or
-    remove scopes" and select the three above and press update or go to the
-    "Manually add scopes" text box (scroll down) and enter
-    "https://www.googleapis.com/auth/docs,https://www.googleapis.com/auth/drive,https://www.googleapis.com/auth/drive.metadata.readonly", press add to table then update.
-
-    You should now see the three scopes on your Data access page. Now press save
-    at the bottom!
+    Add only the Drive scope selected for this workload, for example
+    `https://www.googleapis.com/auth/drive.readonly` for read-only access or
+    `https://www.googleapis.com/auth/drive` when full read/write access is needed.
+    Extra Docs and metadata scopes are not a general prerequisite.
 
 6. After adding scopes, click Audience
 Scroll down and click "+ Add users". Add yourself as a test user and press save.
@@ -2009,17 +2000,12 @@ Scroll down and click "+ Add users". Add yourself as a test user and press save.
 
 10. Provide the noted client ID and client secret to rclone.
 
-Be aware that, due to the "enhanced security" recently introduced by
-Google, you are theoretically expected to "submit your app for verification"
-and then wait a few weeks(!) for their response; in practice, you can go right
-ahead and use the client ID and client secret with rclone, the only issue will
-be a very scary confirmation screen shown when you connect via your browser
-for rclone to be able to get its token-id (but as this only happens during
-the remote configuration, it's not such a big deal). Keeping the application in
-"Testing" will work as well, but the limitation is that any grants will expire
-after a week, which can be annoying to refresh constantly. If, for whatever
-reason, a short grant time is not a problem, then keeping the application in
-testing mode would also be sufficient.
+Follow Google's current OAuth consent, publishing and verification rules for
+your application's audience. Proceed through an unverified-app screen only
+when you control and have checked the client ID and requested scopes; do not
+dismiss such warnings for unknown applications. Testing-mode refresh tokens can
+expire after seven days for these scopes; choose the supported application
+status appropriate to your organization rather than bypassing policy.
 
 (Thanks to @balazer on github for these instructions.)
 

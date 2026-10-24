@@ -9,8 +9,8 @@ Pick the cheapest update mechanism that fits the change. Going one rung too high
 | Rung | When | Command | Cost |
 |---|---|---|---|
 | 1. Hot-reload | Pure Python edit on a Gradio Space (SDK 6.1+), **no new deps** | `hf spaces hot-reload <id> -f app.py` | seconds, no rebuild |
-| 2. `hf upload` | Code-only change hot-reload can't handle (`gr.Server`, Streamlit, Docker entrypoint, non-Python file) | `hf upload <id> . --include '<file>'` | 30–90 s app restart |
-| 3. Full rebuild | `requirements.txt`, `Dockerfile`, README frontmatter, or hardware change | `hf upload <id> . && hf spaces logs <id> --build --follow` | 1–15 min |
+| 2. `hf upload` | Code-only change hot-reload can't handle (`gr.Server`, Streamlit, Docker entrypoint, non-Python file) | `hf upload <id> . --repo-type space --include '<file>'` | 30–90 s app restart |
+| 3. Full rebuild | `requirements.txt`, `Dockerfile`, README frontmatter, or hardware change | `hf upload <id> . --repo-type space && hf spaces logs <id> --build --follow` | 1–15 min |
 | 4. Factory reboot | Container in inconsistent state (broken pip env, etc.) | `hf spaces restart <id> --factory-reboot` | full rebuild + cold start |
 
 ### How hot-reload works
@@ -26,7 +26,7 @@ Independent of dev mode. Marked experimental in the CLI. Requires Gradio SDK 6.1
 - **Hot-reload poisons factory reboot.** A commit that's only a hot-reload leaves runtime metadata that's valid only while the hot process is alive. `--factory-reboot` on top of one can fail with `fatal: could not read Username for 'https://huggingface.co'`. Recovery: push any normal `hf upload` commit (even a one-line no-op) first, then restart.
 - **`runtime.sha` lags repo SHA on restart.** `hf upload` succeeds → repo updates → `hf spaces info` keeps reporting the *previous* commit's SHA under `runtime` for several minutes while the new container loads. Poll `runtime.sha`, not just `stage`, and don't issue another restart until it flips.
 - **Concurrent uploads or restart-while-uploading collide.** Wait for one to finish.
-- **"Let me try locally first"** for anything that depends on the Space's Python / torch / CUDA env. The Space environment is the only one that matters. `python3 -m py_compile app.py` is the maximum local check worth doing before pushing.
+- **"Let me try locally first"** for anything that depends on the Space's Python / torch / CUDA env. The Space environment is the only one that matters. Local parsing, unit and input-validation checks are useful; they supplement deployed runtime checks before pushing.
 
 ## Reading logs
 
@@ -135,7 +135,7 @@ Look at the tailed run log alongside — silent fallbacks (model snapping resolu
 
 ### What NOT to do
 
-- **Don't launch Playwright / headless browser** to verify backend logic. The Gradio UI calls the same API `gradio_client` does — one `predict` tests both.
+- **Don't launch Playwright / headless browser** to verify backend logic. The Gradio UI calls the same API `gradio_client` does — a `predict` call checks the API path; separately verify browser layout, authentication and event wiring when relevant.
 - **Don't build mock-mode + local-server harnesses** before pushing. Local-green ≠ Space-green.
 - **Don't smoke-test with full-budget inputs.** Smallest input that exercises the GPU code path — short prompt, small image, low step count. You're verifying wiring, not quality.
 
@@ -146,11 +146,11 @@ The Space env is the only one that matters: Python, torch, CUDA, file paths, env
 Workflow:
 
 1. Decide SDK + hardware. Write the smallest `app.py` / `Dockerfile` + `requirements.txt` + README frontmatter — just enough that the entry point loads.
-2. Push immediately. Don't build a Playwright / mock harness first.
+2. Deploy the reviewed candidate within the agreed scope after useful local checks.
 3. Once `RUNNING`: verify with `gradio_client` against the real Space. That's your test loop.
 4. Iterate via the cheapest rung.
 
-`python3 -m py_compile app.py` is the maximum local check worth doing.
+Local parsing, unit and input-validation checks are useful; they supplement deployed runtime checks.
 
 ## Last resort: dev mode + SSH
 
@@ -166,7 +166,7 @@ Reading logs + grepping [`known-errors.md`](known-errors.md) + a tight `gradio_c
 
 1. **PRO / Team / Enterprise plan** — dev mode is a paid feature.
 2. **An SSH key registered on the user's HF profile.** Without this, SSH refuses the connection. If the user doesn't have one yet, they need to:
-   - Generate a keypair locally: `ssh-keygen -t ed25519 -f ~/.ssh/hf_dev -N ''` (no passphrase keeps automation simple; user can pick differently if they prefer).
+   - Generate a keypair locally: `ssh-keygen -t ed25519 -f ~/.ssh/hf_dev` (protect the private key with a passphrase and agent where practical; do not overwrite an existing key).
    - Add the **public** key (`~/.ssh/hf_dev.pub`) at https://huggingface.co/settings/keys.
    - Keep the **private** key (`~/.ssh/hf_dev`) on the machine they'll SSH from.
 3. **The Space must be in `RUNNING` or `RUNTIME_ERROR`** before dev mode lets you in — not `BUILD_ERROR`. If it's in build error, push a stub `app.py` that boots cleanly first (e.g. `import gradio as gr; gr.Interface(lambda: 'ok', None, 'text').launch()`), then enable dev mode.

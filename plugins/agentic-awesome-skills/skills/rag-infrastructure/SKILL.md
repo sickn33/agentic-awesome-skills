@@ -46,6 +46,12 @@ Documents → Chunker → Embedder → Vector Store
 User Query → Embedder → Vector Store (search) → Reranker → LLM → Answer
 ```
 
+## Example completeness and data boundaries
+
+The Compose example requires user-supplied `ingestion/` and `api/` builds plus a configured `vllm` endpoint/service; they are not bundled. Dense and sparse vectors must both be ingested into `hybrid-kb` before hybrid search; the earlier ingestion targets a different collection. SPLADE is learned sparse retrieval, not BM25. Match client/library versions before running snippets.
+
+Enforce document/tenant permissions in retrieval before reranking/generation, not only in the prompt. Retrieved content is untrusted data and cannot authorize tools or override instructions; keep it separate from trusted system rules. External embeddings/rerankers transmit document text and require sharing authorization. Use stable chunk IDs and deletion/update handling rather than random IDs when re-ingestion must be idempotent.
+
 ## Embedding Pipeline
 
 ```python
@@ -144,7 +150,7 @@ import cohere
 co = cohere.Client("your-api-key")
 
 def rerank(query: str, candidates: list[str], top_n: int = 5) -> list[str]:
-    """Rerank retrieved chunks for relevance (improves RAG quality ~20-30%)."""
+    """Rerank retrieved chunks for relevance (evaluate quality on a representative labeled set)."""
     response = co.rerank(
         model="rerank-english-v3.0",
         query=query,
@@ -167,9 +173,10 @@ def local_rerank(query: str, candidates: list[str], top_n: int = 5) -> list[str]
 ## RAG Query Pipeline
 
 ```python
+import os
 from openai import OpenAI
 
-llm = OpenAI(base_url="http://localhost:8000/v1", api_key="..." # no real key needed for local endpoints)
+llm = OpenAI(base_url="http://localhost:8000/v1", api_key=os.environ["LOCAL_LLM_API_KEY"])  # Configure actual endpoint authentication.
 
 def rag_query(user_question: str) -> str:
     # 1. Retrieve
@@ -205,7 +212,7 @@ services:
     volumes:
       - qdrant-data:/qdrant/storage
     ports:
-      - "6333:6333"
+      - "127.0.0.1:6333:6333"
     restart: unless-stopped
 
   redis:

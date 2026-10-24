@@ -22,7 +22,7 @@ Cancel button → Exit survey (1 question) → Dynamic offer → Confirm → Pos
 - Mobile-optimized (significant cancellations on mobile)
 - Clear "continue cancelling" at every step
 
-**Typical save rate:** 20-30%
+**Illustrative unvalidated save target:** 20-30%
 
 **Example flow for a $29/mo productivity app:**
 1. "What's the main reason?" → 6 options
@@ -48,7 +48,7 @@ Cancel button → Exit survey → Offer (or route to CS) → Confirm → Post-ca
 - Longer consideration — allow "schedule a call" as a save option
 - Require admin/owner role to cancel (not any team member)
 
-**Typical save rate:** 30-45% (higher because of personal touch)
+**Illustrative unvalidated save target:** 30-45% (higher because of personal touch)
 
 **MRR-based routing:**
 
@@ -56,8 +56,8 @@ Cancel button → Exit survey → Offer (or route to CS) → Confirm → Post-ca
 |-------------|-------------|
 | <$100/mo | Automated flow with offers |
 | $100-$500/mo | Automated + flag for CS follow-up |
-| $500-$2,000/mo | Route to CS before cancel completes |
-| $2,000+/mo | Block self-serve cancel, require CS call |
+| $500-$2,000/mo | Offer optional CS help while allowing cancellation |
+| $2,000+/mo | Offer optional CS help; honor contract and applicable cancellation rights |
 
 ---
 
@@ -113,6 +113,8 @@ Cancel button → "Switch to Free?" prompt → Exit survey (if still cancelling)
 ---
 
 ## Save Offer Patterns
+
+Optional offers must be skippable. Limit repeated offers and measure cancellation completion time/complaints, not only acceptance. Example retention periods, discounts and resume policies below require product-specific agreement.
 
 ### The Discount Ladder
 
@@ -206,7 +208,7 @@ Your subscription has been cancelled.
 
 What happens next:
 • Your access continues until [billing period end date]
-• Your data will be preserved for 90 days
+• Your data will be preserved for [actual disclosed retention period]
 • You can reactivate anytime from your account settings
 
 [Reactivate My Account]
@@ -297,17 +299,11 @@ The most effective cancel flows use segmentation to show different offers to dif
 
 ## Compliance Notes
 
-### FTC Click-to-Cancel Rule (US)
-- Cancellation must be as easy as signup
-- Cannot require a phone call to cancel if signup was online
-- Cannot add excessive steps to discourage cancellation
-- Save offers are allowed but "continue cancelling" must be clear
+### Jurisdiction-specific review
 
-### GDPR / Data Retention (EU)
-- Inform users about data retention period post-cancel
-- Offer data export before account deletion
-- Honor deletion requests within 30 days
-- Don't use post-cancel data for marketing without consent
+Do not present the FTC's 2024 amended Click-to-Cancel rule as currently binding: it was vacated in July 2025; the FTC's March 2026 advance notice records this. Other federal/state and local consumer requirements can still apply. Verify the current rules and contract for the customer's jurisdiction before rollout.
+
+For EU privacy requests, use the applicable GDPR Articles 12/17 process and exceptions rather than promising universal deletion in exactly 30 days. Communicate the actual retention policy, lawful basis and request-response deadline; required financial records may have different retention from marketing data. Separate transactional receipts from win-back marketing and respect applicable consent/opt-out rules.
 
 ### General Best Practices
 - Always show a clear path to complete cancellation

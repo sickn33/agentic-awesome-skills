@@ -36,11 +36,12 @@ External provider keys:
 
 ```python
 import os
+from weaviate.classes.init import Auth
 from weaviate import connect_to_weaviate_cloud
 
 client = connect_to_weaviate_cloud(
     cluster_url=os.getenv("WEAVIATE_URL", ""),
-    auth_credentials=os.getenv("WEAVIATE_API_KEY", ""),
+    auth_credentials=Auth.api_key(os.environ["WEAVIATE_API_KEY"]),
     headers={
         "X-OpenAI-Api-Key": os.getenv("OPENAI_API_KEY")
     },
@@ -57,7 +58,7 @@ Clients must be closed after completion. Wrap in `try/finally` blocks with `clie
 Multi-tenancy should be checked via 
 
 ```python
-config = await collection.config.get()
+config = collection.config.get()
 config.multi_tenancy_config.enabled # bool
 ```
 
@@ -67,7 +68,7 @@ e.g.
 
 base_collection = client.collections.use(collection_name)
 
-config = collection.config.get()
+config = base_collection.config.get()
 if config.multi_tenancy_config.enabled:
     collection = base_collection.with_tenant("<tenant_name>")
 else:
@@ -129,7 +130,7 @@ def query_transformation(query: str) -> list[str]:
 def retrieve(
     query: str, 
     limit: int = 10,  # optional
-    filters = [] # optional
+    filters = None # optional
     # additional arguments if required can go here and passed down to the search strategy
 ) -> list[dict]:
     
@@ -215,5 +216,5 @@ Hybrid search has an `alpha` parameter, controlling tradeoff between keyword and
 
 ## Done Criteria
 
-- Create test scripts to check each function works independently with test data. Tear down tests after completion, or create a proper test suite with pytest (requires install)
+- Create test scripts to check each function works independently with test data. Retain meaningful regression tests with mocks or an explicitly authorized disposable test collection; never delete tests merely after a successful run
 - User has completed specification of the app.

@@ -54,3 +54,7 @@ Note: `logic-risks.md` is intentionally skipped — logic-explain does not produ
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+### Standalone catalog boundary
+
+The `../_shared/*` files named above are not bundled. Use the inline steps and bundled guide without claiming the missing checklist or template was loaded. Resolve names to current definitions, record input types/state and unverified callees, then present a scenario-bound trace with source locations. Label it a reasoned trace unless code was actually run; do not execute the target simply to explain it.

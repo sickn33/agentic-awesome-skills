@@ -21,7 +21,7 @@ risk: unknown
 
 ## Overview
 
-Makepad 2.0 replaced the compile-time `live_design!` macro with the runtime `script_mod!` macro, powered by the Splash scripting language. This skill covers the complete DSL syntax, property system, registration patterns, and common pitfalls.
+Makepad 2.0 replaced the compile-time `live_design!` macro with the runtime `script_mod!` macro, powered by the Splash scripting language. This reference covers the upstream Splash/script_mod generation; it is not a complete stable Makepad language specification. Record the exact Makepad git revision from Cargo.lock, inspect that revision's widget/script sources and compile a minimal example before migrating an existing live_design application. Do not mix generations merely because a package is called 2.0.
 
 ## Key Syntax Rules
 
@@ -345,6 +345,8 @@ script_apply_eval!(cx, item, {
 });
 ```
 
+Never interpolate untrusted text into executable script/DSL. Set text through typed properties/APIs, validate resource paths and avoid logging sensitive model/user values. Shader/layout examples are partial and must be checked across target GPU/platform, DPI and keyboard/accessibility behavior.
+
 ## Debug Logging
 
 Use `~expression` to log values during script evaluation:
@@ -373,10 +375,10 @@ pub struct MyStruct {
 
 ### 2. Missing `height: Fit` on Containers
 
-Default height is `Fill`. In a `Fit` parent, `Fill` creates a circular dependency = 0 height = invisible:
+An unconstrained Fill child in a Fit-sized axis can create an unresolved sizing cycle. Choose Fit or an explicit bound for that axis; actual behavior depends on parent constraints and the widget. A bounded scroll viewport often needs Fill or fixed size.
 
 ```
-// WRONG - invisible!
+// Potentially unresolved vertical sizing without an ancestor height bound:
 View{ flow: Down
     Label{ text: "You can't see me" }
 }

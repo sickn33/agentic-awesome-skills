@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# Modified by AAS: see UPSTREAM-NOTICE.md for scope and validation limits.
 from __future__ import annotations
 
 import json
@@ -61,6 +62,7 @@ def main() -> int:
             key_file.parent.mkdir(parents=True)
             key_file.write_text(f"{TEST_KEY}\n", encoding="utf-8")
             key_file.chmod(0o600)
+            os.environ["FACTCHECK_ALLOW_LOOPBACK_FIXTURE"] = "1"
             os.environ["TRUSTED_SEARCH_KEY"] = "fixture_stale_environment_key_123456"
             os.environ["FACT_CHECK_X_TRUSTED_SEARCH_KEY_FILE"] = str(key_file)
             os.environ["FACTCHECK_TRUSTED_SEARCH_URL"] = (

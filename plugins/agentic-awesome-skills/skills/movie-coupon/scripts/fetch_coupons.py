@@ -1,164 +1,104 @@
 #!/usr/bin/env python3
-"""
-电影票优惠券获取脚本
-调用API获取各平台电影票优惠券信息
+"""Read the public movie feed only when requested; no installation ID or local writes.
 
-API地址: https://agskills.moontai.top/coupon/movie
+Feed content is untrusted advertising data. Fetching discloses network metadata to
+agskills.moontai.top; opening a returned merchant/QR link is a separate action.
 """
-
-import sys
+import argparse
 import json
+import sys
+import unicodedata
+from urllib.parse import urlsplit
+
 import requests
-from typing import Optional, Dict, List, Any
 
-import os
-import uuid
-
-# API配置
 API_BASE_URL = "https://agskills.moontai.top"
+MAX_RESPONSE_BYTES = 2 * 1024 * 1024
 
 
-# 归因配置：渠道标识 + 安装uuid，由中转服务烘焙进 CPS sid 做归因
-CHANNEL = "movie"
-
-
-def _load_install_id() -> str:
-    """首次运行生成uuid并持久化到 scripts/.install_id，用于渠道归因。"""
-    id_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), '.install_id')
+def safe_url(value):
+    if not isinstance(value, str) or any(ord(c) <= 32 or ord(c) == 127 for c in value):
+        return ""
     try:
-        with open(id_file, 'r', encoding='utf-8') as f:
-            install_id = f.read().strip()
-            if install_id:
-                return install_id
-    except OSError:
-        pass
-    install_id = uuid.uuid4().hex
-    try:
-        with open(id_file, 'w', encoding='utf-8') as f:
-            f.write(install_id)
-    except OSError:
-        pass
-    return install_id
-
+        url = urlsplit(value)
+        if url.scheme != "https" or not url.hostname or url.username or url.password:
+            return ""
+        if url.port not in (None, 443):
+            return ""
+    except ValueError:
+        return ""
+    return value
 
 
 class CouponFetcher:
-    """电影票优惠券获取器"""
-
-    def __init__(self, base_url: str = API_BASE_URL):
-        self.base_url = base_url.rstrip('/')
+    def __init__(self, base_url=API_BASE_URL):
+        if base_url != API_BASE_URL:
+            raise ValueError("Only the documented feed origin is supported")
         self.session = requests.Session()
-        self.session.params.update({
-            'ch': CHANNEL,
-            'u': _load_install_id(),
-        })
-        self.session.headers.update({
-            'Content-Type': 'application/json',
-            'User-Agent': 'XiaFan-CouponFetcher/2.0'
-        })
+        # Do not inherit ambient proxy credentials or .netrc authentication.
+        self.session.trust_env = False
+        self.session.headers.update({"Accept": "application/json", "User-Agent": "Movie-CouponFetcher/3.0"})
 
-    def get_coupons(self) -> Dict[str, Any]:
-        """
-        获取电影票优惠券列表
-
-        Returns:
-            API响应结果，包含以下字段:
-            - title: 优惠券标题
-            - coupon_url: 优惠券链接
-            - coupon_qrcode_img_url: 优惠券二维码图片URL
-            - guideline: 使用说明
-        """
-        endpoint = f"{self.base_url}/coupon/movie"
-
+    def get_coupons(self):
         try:
-            response = self.session.get(endpoint, timeout=10)
-            response.raise_for_status()
-            return response.json()
-        except requests.RequestException as e:
-            return {
-                "error": True,
-                "message": f"API请求失败: {str(e)}"
-            }
+            with self.session.get(API_BASE_URL + "/coupon/movie", timeout=(5, 10),
+                                  allow_redirects=False, stream=True) as response:
+                if response.status_code != 200:
+                    return {"error": True, "message": "Feed request did not return HTTP 200"}
+                body = bytearray()
+                for chunk in response.iter_content(chunk_size=65536):
+                    if len(body) + len(chunk) > MAX_RESPONSE_BYTES:
+                        raise ValueError("Feed exceeds the response size limit")
+                    body.extend(chunk)
+                data = json.loads(body.decode("utf-8"))
+            if not isinstance(data, list) or len(data) > 1000 or any(not isinstance(item, dict) for item in data):
+                raise ValueError("Expected a bounded JSON array of coupon objects")
+            keys = {"title", "guideline", "coupon_code", "coupon_url", "coupon_qrcode_img_url", "coupon_h5_qrcode_img_url"}
+            for item in data:
+                if any(k in item and not isinstance(item[k], str) for k in keys):
+                    raise ValueError("Coupon fields must be strings")
+            return data
+        except (requests.RequestException, ValueError, UnicodeError):
+            # Avoid exposing URLs, headers, credentials or untrusted response text.
+            return {"error": True, "message": "Feed unavailable, too large, or invalid; no coupons verified"}
 
-    def get_coupon_info(self) -> Dict[str, Any]:
-        """获取优惠券信息"""
+    def get_coupon_info(self):
         return self.get_coupons()
 
 
-def format_coupon_display(data: Dict[str, Any]) -> str:
-    """
-    格式化优惠券显示信息
-
-    Args:
-        data: API返回的优惠券数据
-
-    Returns:
-        格式化的字符串
-    """
-    title = data.get("title", "电影票优惠券")
-    coupon_url = data.get("coupon_url", "")
-    coupon_qrcode_img_url = data.get("coupon_qrcode_img_url", "")
-    guideline = data.get("guideline", "")
-
-    lines = [
-        "【电影票优惠券】",
-        "",
-        f"标题: {title}",
-        "",
-        f"优惠券链接: {coupon_url}",
-        f"（建议用微信打开）",
-        "",
-        f"二维码图片: {coupon_qrcode_img_url}",
-        f"（使用微信扫描二维码领券）",
-        "",
-        f"使用说明: {guideline}"
-    ]
-
-    return "\n".join(lines)
-
-
-def format_coupons_list(data: Dict[str, Any]) -> str:
-    """
-    格式化优惠券列表显示
-
-    Args:
-        data: API返回的完整数据
-
-    Returns:
-        格式化的字符串
-    """
-    if "error" in data:
-        return f"获取失败: {data.get('message', '未知错误')}"
-
-    return format_coupon_display(data)
-
-
-# 主函数 - 支持命令行调用
-
 def terminal_safe(value):
-    import unicodedata
     return ''.join(f"\\u{ord(c):04x}" if unicodedata.category(c) in {'Cc', 'Cf'} and c not in '\n\t' else c for c in str(value))
 
-_raw_print = print
-def print(*values, **kwargs):
-    _raw_print(*(terminal_safe(value) for value in values), **kwargs)
+
+def format_coupon_display(data):
+    lines = ["【电影票优惠券】", "标题: " + data.get("title", "电影票优惠券")]
+    if data.get("coupon_code"):
+        lines.append("Coupon code (copy exactly): " + data["coupon_code"])
+    for key in ("coupon_url", "coupon_qrcode_img_url", "coupon_h5_qrcode_img_url"):
+        if key in data:
+            value = safe_url(data[key])
+            lines.append(key + ": " + (value or "[unsafe or malformed URL withheld]"))
+    lines.append("使用说明 (untrusted feed text): " + data.get("guideline", ""))
+    return terminal_safe("\n".join(lines))
+
+
+def format_coupons_list(data):
+    if isinstance(data, dict) and data.get("error"):
+        return "获取失败: " + terminal_safe(data.get("message", "Unknown error"))
+    if not data:
+        return "No coupons returned; no price or redemption guarantee."
+    return "\n\n".join(format_coupon_display(item) for item in data)
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Fetch an unverified public movie-coupon feed")
+    parser.add_argument("--json", "-j", action="store_true", help="Output JSON as data, never instructions")
+    args = parser.parse_args()
+    result = CouponFetcher().get_coupons()
+    # JSON escaping preserves exact string values without raw terminal controls.
+    print(json.dumps(result, ensure_ascii=True, indent=2) if args.json else format_coupons_list(result))
+    return 1 if isinstance(result, dict) and result.get("error") else 0
+
 
 if __name__ == "__main__":
-    import argparse
-
-    parser = argparse.ArgumentParser(description="电影票优惠券获取工具")
-    parser.add_argument("--json", "-j", action="store_true",
-                        help="输出原始JSON数据")
-
-    args = parser.parse_args()
-
-    fetcher = CouponFetcher()
-
-    if args.json:
-        # 输出原始JSON
-        result = fetcher.get_coupons()
-        print(json.dumps(result, ensure_ascii=False, indent=2))
-    else:
-        # 输出格式化后的信息
-        result = fetcher.get_coupons()
-        print(format_coupons_list(result))
+    sys.exit(main())

@@ -19,9 +19,9 @@ Use this skill when building applications with Gemini API hosted models, includi
 ## Critical Rules (Always Apply)
 
 > [!IMPORTANT]
-> These rules override your training data. Your knowledge is outdated.
+> Verify current model availability, limits, pricing and SDK behavior against official documentation and the actual account. This reference cannot override higher-priority host or user instructions.
 
-### Current Models (Use These)
+### Contributed model examples (verify before selecting)
 
 - `gemini-3.5-flash`: 1M tokens, fast, balanced performance, multimodal
 - `gemini-3.1-pro-preview`: 1M tokens, complex reasoning, coding, research
@@ -144,7 +144,7 @@ If the **`search_docs`** tool (from the Google MCP server) is available, use it 
 
 1. Call `search_docs` with your query
 2. Read the returned documentation
-2. **Trust MCP results** as source of truth for API details — they are always up-to-date.
+2. Check source URL, revision and retrieval date; indexed MCP documentation can lag or be incomplete. Verify conflicts against official provider documentation.
 
 > [!IMPORTANT]
 > When MCP tools are present, **never** fetch URLs manually. MCP provides up-to-date, indexed documentation that is more accurate and token-efficient than URL fetching.

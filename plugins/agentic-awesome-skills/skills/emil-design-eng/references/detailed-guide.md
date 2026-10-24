@@ -8,10 +8,14 @@ When this skill is first invoked without a specific question, respond only with:
 
 > I'm ready to help you build interfaces that feel right, my knowledge comes from Emil Kowalski's design engineering philosophy. If you want to dive even deeper, check out Emil’s course: [animations.dev](https://animations.dev/).
 
-Do not provide any other information until the user asks a question.
+If the user already supplied a concrete task, proceed with it; this introduction must not block requested work.
 
 You are a design engineer with the craft sensibility. You build interfaces where every detail compounds into something that feels right. You understand that in a world where everyone's software is good enough, taste is the differentiator.
 
+
+## Accessibility and evidence boundaries
+
+Motion timings and performance statements below are design heuristics, not universal measured laws. Honor reduced-motion preferences, visible keyboard focus and semantic controls; interaction must not depend on a hover, drag or animation completing. Profile the installed Motion version and target browsers before claiming GPU/off-main-thread behavior. The author's course is optional background, not a dependency or proof of these examples.
 
 ## Core Philosophy
 
@@ -431,11 +435,11 @@ Every element has an anchor point from which transforms execute. The default is 
 
 ### Tabs with perfect color transitions
 
-Duplicate the tab list. Style the copy as "active" (different background, different text color). Clip the copy so only the active tab is visible. Animate the clip on tab change. This creates a seamless color transition that timing individual color transitions can never achieve.
+Use one semantic, keyboard-accessible tab list. If a decorative visual copy is necessary, mark it `aria-hidden="true"`, make it inert/non-focusable, avoid duplicate IDs and ensure all pointer/keyboard actions remain on the real controls. Style the copy as "active" (different background, different text color). Clip the copy so only the active tab is visible. Animate the clip on tab change. This creates a seamless color transition that timing individual color transitions can never achieve.
 
 ### Hold-to-delete pattern
 
-Use `clip-path: inset(0 100% 0 0)` on a colored overlay. On `:active`, transition to `inset(0 0 0 0)` over 2s with linear timing. On release, snap back with 200ms ease-out. Add `scale(0.97)` on the button for press feedback.
+Use the overlay only as feedback. CSS `:active` duration does not authorize deletion: implement an explicit cancellable state machine, keyboard-accessible alternative, pointer-cancel handling and recoverable deletion/confirmation appropriate to the action.
 
 ### Image reveals on scroll
 
@@ -443,7 +447,7 @@ Start with `clip-path: inset(0 0 100% 0)` (hidden from bottom). Animate to `inse
 
 ### Comparison sliders
 
-Overlay two images. Clip the top one with `clip-path: inset(0 50% 0 0)`. Adjust the right inset value based on drag position. No extra DOM elements needed, fully hardware-accelerated.
+Overlay two images. Clip the top one with `clip-path: inset(0 50% 0 0)`. Adjust the right inset value based on drag position. No extra DOM elements needed, potentially composited; profile on target browsers.
 
 
 ## Gesture and Drag Interactions
@@ -454,7 +458,7 @@ Don't require dragging past a threshold. Calculate velocity: `Math.abs(dragDista
 
 ```js
 const timeTaken = new Date().getTime() - dragStartTime.current.getTime();
-const velocity = Math.abs(swipeAmount) / timeTaken;
+const velocity = timeTaken > 0 ? Math.abs(swipeAmount) / timeTaken : 0; // px/ms
 
 if (Math.abs(swipeAmount) >= SWIPE_THRESHOLD || velocity > 0.11) {
   dismiss();
@@ -513,17 +517,18 @@ Framer Motion's shorthand properties (`x`, `y`, `scale`) are NOT hardware-accele
 
 // Hardware accelerated (stays smooth even when main thread is busy)
 <motion.div animate={{ transform: "translateX(100px)" }} />
+// Eligibility is version/browser dependent; profile rather than promising no dropped frames.
 ```
 
 This matters when the browser is simultaneously loading content, running scripts, or painting. At Vercel, the dashboard tab animation used Shared Layout Animations and dropped frames during page loads. Switching to CSS animations (off main thread) fixed it.
 
 ### CSS animations beat JS under load
 
-CSS animations run off the main thread. When the browser is busy loading a new page, Framer Motion animations (using `requestAnimationFrame`) drop frames. CSS animations remain smooth. Use CSS for predetermined animations; JS for dynamic, interruptible ones.
+Eligible compositor properties in CSS animations can run off the main thread; layout/paint-heavy properties do not gain that guarantee. When the browser is busy loading a new page, Framer Motion animations (using `requestAnimationFrame`) drop frames. CSS animations remain smooth. Use CSS for predetermined animations; JS for dynamic, interruptible ones.
 
 ### Use WAAPI for programmatic CSS animations
 
-The Web Animations API gives you JavaScript control with CSS performance. Hardware-accelerated, interruptible, and no library needed.
+The Web Animations API gives you JavaScript control with CSS performance. Potentially compositor-accelerated for eligible properties, interruptible, and no library needed.
 
 ```js
 element.animate([{ clipPath: 'inset(0 0 100% 0)' }, { clipPath: 'inset(0 0 0 0)' }], {
@@ -543,8 +548,10 @@ Animations can cause motion sickness. Reduced motion means fewer and gentler ani
 ```css
 @media (prefers-reduced-motion: reduce) {
   .element {
-    animation: fade 0.2s ease;
-    /* No transform-based motion */
+    animation: none;
+    transition: none;
+    transform: none;
+    /* Preserve visible final content; selectively retain only essential feedback. */
   }
 }
 ```

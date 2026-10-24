@@ -48,12 +48,15 @@ Satori operates as a SKILL.md-based Claude skill with 211k+ characters of struct
 
 ## Security & Safety Notes
 
-- No data collection or external API calls
-- All processing happens within the Claude conversation
+- This single Markdown entry performs no API calls; the host and any separately installed upstream tools have their own data handling policies
 - Explicitly not a clinical tool — includes appropriate disclaimers
-- Safe for general use
+- Safety and effectiveness are not established by this catalog entry
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Execution boundaries
+
+The referenced architecture and protocols are not bundled here. Offer supportive, non-diagnostic reflection; do not invent a therapy session protocol or infer a clinical condition. A crisis or immediate danger requires appropriate urgent support, not a presence-only rule. Protect sensitive disclosures and do not promise confidentiality beyond the actual host policy.

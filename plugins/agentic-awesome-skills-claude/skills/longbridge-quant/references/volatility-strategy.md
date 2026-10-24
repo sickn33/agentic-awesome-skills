@@ -6,15 +6,15 @@ Computes 20-day and 60-day historical volatility (HV) for a stock, ranks the cur
 
 1. Fetch 252 daily candles (≈ 1 year): `longbridge kline <SYMBOL> --period day --count 252 --format json`
 2. Compute daily log-returns: `r_t = ln(close_t / close_{t-1})`
-3. HV20 = annualised std of last 20 returns × √252; HV60 = last 60 returns × √252
+3. HV20 = annualised std of last 20 returns × √252; HV60 = std of last 60 returns × √252
 4. HV percentile: rank current HV20 among all rolling-20 HV values in the 252-day window
 5. Regime:
-   - HV percentile < 25% → 历史波动率处于低位区间，Long vega 策略（如跨式/宽跨式）在此环境下具有较低权利金成本 / HV at low percentile — long vega strategies (straddle/strangle) tend to have lower premium cost in this environment
-   - HV percentile > 75% → 历史波动率处于高位区间，Short vega 策略（如铁鹰式）在此环境下权利金收入较高 / HV at high percentile — short vega strategies (iron condor) tend to collect higher premium in this environment
+   - HV percentile < 25% → 历史波动率处于低位区间，Long vega 策略（如跨式/宽跨式）在此环境下具有较低权利金成本 / HV at low percentile — describe the historical regime; option premiums require current implied volatility and prices
+   - HV percentile > 75% → 历史波动率处于高位区间，Short vega 策略（如铁鹰式）在此环境下权利金收入较高 / HV at high percentile — describe the historical regime; do not infer option premium or short-vol attractiveness from HV alone
    - Otherwise → Neutral — vol is within normal historical range
 6. Output the table below and a 2–3 sentence description of the current vol environment
 
-All computation is done by the LLM in Python (inline, no scripts/ needed for simple numpy/pandas math). If the user's environment does not have numpy, approximate HV using the close-to-close Parkinson estimate.
+All computation is done by the LLM in Python (inline, no scripts/ needed for simple numpy/pandas math). If numpy is unavailable, use Python statistics.stdev on log returns. Parkinson is a separate high-low range estimator, not a close-to-close fallback.
 
 ## CLI
 

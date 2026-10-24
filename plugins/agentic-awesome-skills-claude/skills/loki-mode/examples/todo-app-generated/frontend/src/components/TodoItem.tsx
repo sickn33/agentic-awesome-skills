@@ -3,12 +3,12 @@ import { Todo } from '../api/todos';
 interface TodoItemProps {
   todo: Todo;
   onToggle: (id: number) => Promise<void>;
-  onDelete: (id: number) => Promise<void>;
+  onDelete: (id: number) => void;
 }
 
 export const TodoItem = ({ todo, onToggle, onDelete }: TodoItemProps) => {
   const handleToggle = () => {
-    onToggle(todo.id);
+    void onToggle(todo.id).catch(() => { /* Hook exposes the error to the page. */ });
   };
 
   const handleDelete = () => {
@@ -20,6 +20,7 @@ export const TodoItem = ({ todo, onToggle, onDelete }: TodoItemProps) => {
       <div className="todo-content">
         <input
           type="checkbox"
+          aria-label={`Mark ${todo.title} ${todo.completed ? "incomplete" : "complete"}`}
           checked={todo.completed}
           onChange={handleToggle}
           className="todo-checkbox"

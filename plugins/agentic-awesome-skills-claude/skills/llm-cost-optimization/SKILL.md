@@ -20,7 +20,7 @@ metadata:
 
 # LLM Cost Optimization
 
-Cut LLM costs by 50–90% with the right combination of caching, model selection, prompt optimization, and self-hosting.
+Evaluate LLM cost reductions through caching, model selection, prompt optimization and self-hosting; measure quality and total cost before claiming savings.
 
 ## When to Use This Skill
 
@@ -30,6 +30,10 @@ Use this skill when:
 - Implementing caching to avoid redundant LLM calls
 - Deciding when to switch from API providers to self-hosted models
 - Optimizing prompt length without sacrificing quality
+
+## Estimates and cache boundaries
+
+All savings ranges, model IDs and prices below are historical illustrations, not current quotes or guaranteed outcomes. Verify provider pricing, cache-write/read charges, minimum prefixes and batch availability for the chosen model. Use an approved budget/data scope before paid calls or uploads. The semantic cache is a toy: namespace keys by tenant, authorization scope, model/version, system prompt and generation settings, enforce retention and never reuse a similar answer across users or for permission-sensitive/fresh data. Replace blocking Redis KEYS with a bounded index/SCAN or vector query; handle expired entries and zero vectors. The sample is not production-ready.
 
 ## Cost Levers by Impact
 
@@ -114,7 +118,7 @@ response = client.messages.create(
     ],
     messages=[{"role": "user", "content": "Summarize the key points."}],
 )
-# First call: full price. Subsequent calls: 90% discount on cached part.
+# Cache creation/read pricing and eligibility vary by model/provider/TTL; measure actual usage.
 print(f"Cache read tokens: {response.usage.cache_read_input_tokens}")
 
 # OpenAI — prompt caching is automatic for repeated prefixes >1024 tokens
@@ -234,9 +238,11 @@ print(f"Savings: {compressed['saving']}")
 def break_even_analysis(
     monthly_api_spend_usd: float,
     gpu_cost_per_hour_usd: float = 2.50,   # e.g., A10G on AWS
-    utilization: float = 0.70,             # 70% GPU utilization
+    billable_hours: float = 720,          # uptime billed, not GPU utilization
 ) -> dict:
-    monthly_gpu_cost = gpu_cost_per_hour_usd * 24 * 30 * utilization
+    if monthly_api_spend_usd <= 0 or gpu_cost_per_hour_usd < 0 or billable_hours < 0:
+        raise ValueError("spend must be positive; rate and billable hours nonnegative")
+    monthly_gpu_cost = gpu_cost_per_hour_usd * billable_hours
     break_even = monthly_gpu_cost / monthly_api_spend_usd
     recommendation = (
         "Self-host now — strong ROI" if break_even < 0.5 else
@@ -252,7 +258,7 @@ def break_even_analysis(
 
 # Example: $5k/month on OpenAI, $2.50/hr A10G
 print(break_even_analysis(5000))
-# → gpu_cost ~$1,260/mo = 25% of API spend → self-host now
+# → GPU-only cost $1,800/mo = 36% of API spend; add storage, ops, idle capacity and quality costs
 ```
 
 ## Cost Dashboard (Grafana)
@@ -287,7 +293,7 @@ def track_call(model, team, task_type, response):
 - Enable prompt caching for system prompts >1,024 tokens (Anthropic) or >1,024 tokens (OpenAI).
 - Audit your top 5 prompts by token count — compress or cache them.
 - Set hard budget limits with LiteLLM or Bifrost virtual keys before costs spiral.
-- Self-host 7B–8B models when monthly API spend exceeds $2k/month.
+- Compare measured quality, throughput, billable uptime and full operating cost before choosing self-hosting; no monthly-spend threshold alone establishes break-even.
 
 ## Related Skills
 

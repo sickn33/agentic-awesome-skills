@@ -1,5 +1,7 @@
 # Agent SDK — TypeScript
 
+> AAS-reviewed adaptation of the upstream Anthropic skill; see the root SKILL.md for authorization and resource boundaries. SDK/model feature claims below are version-sensitive examples; verify the selected model and pinned SDK before running. No live API or agent execution was performed during this catalog review.
+
 The Claude Agent SDK provides a higher-level interface for building AI agents with built-in tools, safety features, and agentic capabilities.
 
 ## Installation
@@ -17,7 +19,7 @@ import { query } from "@anthropic-ai/claude-agent-sdk";
 
 for await (const message of query({
   prompt: "Explain this codebase",
-  options: { allowedTools: ["Read", "Glob", "Grep"] },
+  options: { tools: ["Read", "Glob", "Grep"], allowedTools: ["Read", "Glob", "Grep"] },
 })) {
   if ("result" in message) {
     console.log(message.result);
@@ -51,7 +53,7 @@ for await (const message of query({
   prompt: "Refactor the authentication module",
   options: {
     allowedTools: ["Read", "Edit", "Write"],
-    permissionMode: "acceptEdits",
+    permissionMode: "default",
   },
 })) {
   if ("result" in message) console.log(message.result);
@@ -61,10 +63,10 @@ for await (const message of query({
 Permission modes:
 
 - `"default"`: Prompt for dangerous operations
-- `"plan"`: Planning only, no execution
+- `"plan"`: Planning policy; do not treat it as an OS sandbox or unconditional prohibition on execution
 - `"acceptEdits"`: Auto-accept file edits
-- `"dontAsk"`: Don't prompt (useful for CI/CD)
-- `"bypassPermissions"`: Skip all prompts (requires `allowDangerouslySkipPermissions: true` in options)
+- `"dontAsk"`: Deny calls needing approval instead of prompting; not blanket permission
+- `"bypassPermissions"`: Bypasses ordinary approval checks after deny/ask policy evaluation; avoid for untrusted tasks (requires `allowDangerouslySkipPermissions: true` in options)
 
 ---
 
@@ -75,7 +77,7 @@ for await (const message of query({
   prompt: "Open example.com and describe what you see",
   options: {
     mcpServers: {
-      playwright: { command: "npx", args: ["@playwright/mcp@latest"] },
+      playwright: { command: "/absolute/path/to/reviewed-playwright-mcp", args: [] },
     },
   },
 })) {
@@ -127,7 +129,7 @@ for await (const message of query({
   prompt: "Refactor utils.py to improve readability",
   options: {
     allowedTools: ["Read", "Edit", "Write"],
-    permissionMode: "acceptEdits",
+    permissionMode: "default",
     hooks: {
       PostToolUse: [{ matcher: "Edit|Write", hooks: [logFileChange] }],
     },
@@ -152,7 +154,7 @@ query({ prompt: "...", options: { ... } })
 | Option                              | Type   | Description                                                                |
 | ----------------------------------- | ------ | -------------------------------------------------------------------------- |
 | `cwd`                               | string | Working directory for file operations                                      |
-| `allowedTools`                      | array  | Tools the agent can use (e.g., `["Read", "Edit", "Bash"]`)                |
+| `allowedTools`                      | array  | Tools allowed without confirmation (does not remove other tools; use `tools`/deny rules) (e.g., `["Read", "Edit", "Bash"]`)                |
 | `tools`                             | array  | Built-in tools to make available (restricts the default set)               |
 | `disallowedTools`                   | array  | Tools to explicitly disallow                                               |
 | `permissionMode`                    | string | How to handle permission prompts                                           |
@@ -199,7 +201,7 @@ for await (const message of query({
 ```typescript
 for await (const message of query({
   prompt: "Find TODO comments",
-  options: { allowedTools: ["Read", "Glob", "Grep"] },
+  options: { tools: ["Read", "Glob", "Grep"], allowedTools: ["Read", "Glob", "Grep"] },
 })) {
   if ("result" in message) {
     console.log(message.result);
@@ -213,8 +215,10 @@ for await (const message of query({
 
 ## Best Practices
 
-1. **Always specify allowedTools** — Explicitly list which tools the agent can use
+1. **Restrict available tools** — Use `tools`/deny rules; `allowedTools` grants automatic approval, not exclusivity
 2. **Set working directory** — Always specify `cwd` for file operations
 3. **Use appropriate permission modes** — Start with `"default"` and only escalate when needed
 4. **Handle all message types** — Check for `result` property to get agent output
 5. **Limit maxTurns** — Prevent runaway agents with reasonable limits
+
+For every actual run set an approved cwd, explicit tools/deny rules, max turns, cost and time budget, and an approval handler where required. Resume only an existing authorized session with the same scope and restrictions; a missing ID must fail rather than start a new broader session. Do not log untrusted paths or full message objects without sanitization.

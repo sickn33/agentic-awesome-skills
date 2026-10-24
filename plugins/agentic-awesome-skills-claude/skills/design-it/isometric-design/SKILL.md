@@ -16,7 +16,7 @@ source_type: self
 Use this sub-style when the user's request matches the aesthetic described above. This is a child reference of the `design-it` skill and is not meant to be triggered directly.
 
 ## Core Principles
-1. **Parallel Lines**: Unlike true 3D, isometric projection has no vanishing point. Everything is viewed from an exact 30-degree angle.
+1. **Parallel Lines**: Isometric projection is an orthographic 3D projection with equal axis foreshortening; its projected axes are 120 degrees apart. Perspective is not required.
 2. **Top-Down, Angled View**: The classic "SimCity" perspective.
 3. **Blocky Architecture**: UI elements often look like city blocks or stacked tiles.
 
@@ -26,7 +26,7 @@ Use this sub-style when the user's request matches the aesthetic described above
 - **Shadows**: Hard, long drop shadows cast at an exact angle (usually -45 or 45 degrees).
 
 ## Web Implementation
-- CSS transforms are perfect for this. Combine `rotateX(60deg)` and `rotateZ(-45deg)`.
+- CSS transforms are perfect for this. The 60°/−45° examples below are stylized oblique tiles, not exact mathematical isometric projections. An orthographic camera aligned to (1,1,1) gives equal axis foreshortening.
 - **CSS Example**:
 ```css
 .isometric-grid {
@@ -93,14 +93,14 @@ struct IsometricView: View {
                     .fill(Color.black.opacity(0.2))
                     .frame(width: 150, height: 20)
             }
-            // The exact 3D transformations for Isometric projection
+            // Stylized oblique transform, not exact isometric projection
             .rotationEffect(.degrees(-45))
             .rotation3DEffect(.degrees(60), axis: (x: 1, y: 0, z: 0))
         }
     }
 }
 ```
-- SwiftUI's `.rotation3DEffect` makes this surprisingly easy. Rotate Z by -45 degrees first (via `.rotationEffect`), then rotate X by 60 degrees.
+- SwiftUI's `.rotation3DEffect` can produce a stylized tile; its default perspective must be disabled when strict parallel projection is needed. Rotate Z by -45 degrees first (via `.rotationEffect`), then rotate X by 60 degrees.
 - You can stack multiple views along the Z-axis (or simulate it with Y offsets before the 3D rotation) to create towering isometric city blocks.
 
 ### Flutter
@@ -117,7 +117,7 @@ class IsometricScreen extends StatelessWidget {
           // The Isometric Matrix Math
           alignment: FractionalOffset.center,
           transform: Matrix4.identity()
-            ..setEntry(3, 2, 0.001) // perspective
+            // No perspective term for parallel projection.
             ..rotateX(pi / 3) // 60 degrees
             ..rotateZ(-pi / 4), // -45 degrees
           child: Container(
@@ -142,7 +142,7 @@ class IsometricScreen extends StatelessWidget {
   }
 }
 ```
-- `Transform` with `Matrix4` is required in Flutter. Applying `rotateX` and `rotateZ` yields the classic isometric grid.
+- `Transform` with `Matrix4` is required in Flutter. Applying `rotateX` and `rotateZ` produces the stylized tile shown here.
 - Isometric shadows are usually completely hard (0 `blurRadius`) and offset perfectly along the grid axes.
 
 ### React Native

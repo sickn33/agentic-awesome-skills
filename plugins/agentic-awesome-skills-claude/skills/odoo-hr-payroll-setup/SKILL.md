@@ -27,26 +27,9 @@ This skill guides HR managers and payroll accountants through setting up Odoo HR
 
 ## Examples
 
-### Example 1: Salary Structure with Deductions
+### Example 1: Review a salary structure
 
-```text
-Menu: Payroll → Configuration → Salary Structures → New
-
-Name: US Employee Monthly
-Payslip Code: MONTHLY
-
-Rules (executed top-to-bottom — order matters):
-  Code  | Name                   | Formula                        | Category
-  ----- | ---------------------- | ------------------------------ | ---------
-  BASIC | Basic Wage             | contract.wage                  | Basic
-  GROSS | Gross                  | BASIC                          | Gross
-  SS    | Social Security (6.2%) | -GROSS * 0.062                 | Deduction
-  MED   | Medicare (1.45%)       | -GROSS * 0.0145                | Deduction
-  FIT   | Federal Income Tax     | -GROSS * inputs.FIT_RATE.amount| Deduction
-  NET   | Net Salary             | GROSS + SS + MED + FIT         | Net
-```
-
-> **Federal Income Tax:** The standard Odoo US localization does not expose a single `l10n_us_w4_rate` field. Use an **input** (salary input type) to pass the withholding rate per employee, or install a community US payroll module (OCA `l10n_us_hr_payroll`) which handles W4 filing status properly.
+Use the installed country localization and effective payroll year as the starting point. Record pay frequency, contract dates, taxable wage bases, approved earnings/deductions, statutory caps and employee withholding elections. Verify rule sequence and available variables against that Odoo version in a synthetic test payslip. Do not approximate US federal withholding as gross wages times a single employee rate: use the applicable [IRS Publication 15-T](https://www.irs.gov/publications/p15t) method and localization documentation, with payroll-professional review. A similarly named community module is not proof of W-4 compliance.
 
 ### Example 2: Configure a Time Off Type
 
@@ -75,19 +58,13 @@ Menu: Time Off → Managers → Allocations → New
 ### Example 3: Payroll Journal Entry Result
 
 ```text
-After validating a payroll batch, Odoo generates:
-
-Debit   Salary Expense Account     $5,000.00
-  Credit  Social Security Payable     $310.00
-  Credit  Medicare Payable             $72.50
-  Credit  Federal Tax Payable         (varies)
-  Credit  Salary Payable           $4,617.50+
-
-When net salary is paid:
-Debit   Salary Payable            $4,617.50
-  Credit  Bank Account              $4,617.50
-
-Employer taxes (e.g., FUTA, SUTA) post as separate journal entries.
+Illustrative accounting reconciliation, not a tax calculation:
+Gross expense: $5,000.00
+Approved deductions/withholding: $600.00
+Net salary payable: $4,400.00
+Debit expense $5,000 = credits deductions payable $600 + net payable $4,400.
+Payment clears the same $4,400 payable against bank.
+Reconcile actual localization, employer liabilities and posted entries separately.
 ```
 
 ## Best Practices
@@ -96,12 +73,12 @@ Employer taxes (e.g., FUTA, SUTA) post as separate journal entries.
 - ✅ **Do:** Use **salary rule inputs** (`inputs.ALLOWANCE.amount`) to pass variable values (bonuses, allowances, withholding rates) rather than hardcoding them in the rule formula.
 - ✅ **Do:** Archive old salary structures rather than deleting them — active payslips reference their structure and will break if the structure is deleted.
 - ✅ **Do:** Always set an active **Employee Contract** with correct dates and salary before generating payslips.
-- ❌ **Don't:** Manually edit posted payslips — cancel and regenerate the payslip batch if corrections are needed.
+- ❌ **Don't:** Rewrite posted payroll/accounting history. Follow the installed localization’s approved reversal/correction process and preserve the audit trail.
 - ❌ **Don't:** Use `contract.wage` in deduction rules without verifying whether the structure is monthly or annual — always check the contract wage period.
 
 ## Limitations
 
 - **Odoo Payroll is Enterprise-only** — the Community Edition does not include the Payroll module (`hr_payroll`).
-- US-specific compliance (W2, 941, state SUI/SDI filing) requires additional modules beyond the base localization; Odoo does not generate tax filings directly.
+- US filing capabilities vary by localization/version/provider; verify current supported forms and jurisdiction requirements rather than assuming this guide supplies legal compliance.
 - Does not cover **multi-country payroll** (employees in different countries require separate structures and localizations).
 - **Expense reimbursements** via payslip (e.g., mileage, home office) require a custom salary rule input and are not covered in standard HR Payroll documentation.

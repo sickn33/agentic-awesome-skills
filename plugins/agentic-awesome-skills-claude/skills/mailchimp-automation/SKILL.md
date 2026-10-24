@@ -18,13 +18,15 @@ Automate Mailchimp email marketing workflows including campaign creation and sen
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+Use an existing approved Rube connection; endpoint configuration alone does not authenticate Mailchimp. Use the supported host flow if setup is requested.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `mailchimp`
 3. If connection is not ACTIVE, follow the returned auth link to complete Mailchimp OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
+
+Listed tools/defaults are historical; use discovered schemas. Drafting or campaign creation does not authorize any test/live send or scheduling. Verify exact audience/segment, suppression/unsubscribe state, sender, content and authorized recipients. Do not resubscribe existing contacts or mark imported contacts subscribed without evidence of applicable consent. Minimize personal engagement data, and reconcile unknown send outcomes before retrying.
 
 ## Core Workflows
 
@@ -37,7 +39,7 @@ Automate Mailchimp email marketing workflows including campaign creation and sen
 2. `MAILCHIMP_ADD_CAMPAIGN` - Create a new campaign with type, audience, subject, from name [Required]
 3. `MAILCHIMP_SET_CAMPAIGN_CONTENT` - Set HTML content for the campaign [Required]
 4. `MAILCHIMP_SEND_TEST_EMAIL` - Send preview to reviewers before live send [Optional]
-5. `MAILCHIMP_SEND_CAMPAIGN` - Send the campaign immediately [Required]
+5. `MAILCHIMP_SEND_CAMPAIGN` - Send immediately only when explicitly requested for this campaign/audience [Optional authorized action]
 6. `MAILCHIMP_SCHEDULE_CAMPAIGN` - Schedule for future delivery instead of immediate send [Optional]
 
 **Key parameters for MAILCHIMP_ADD_CAMPAIGN**:
@@ -117,7 +119,7 @@ Automate Mailchimp email marketing workflows including campaign creation and sen
 - `subscriber_hash` must be MD5 of the **lowercase** email; incorrect casing causes 404s or duplicates
 - Use `MAILCHIMP_ADD_OR_UPDATE_LIST_MEMBER` (upsert) instead of `MAILCHIMP_ADD_MEMBER_TO_LIST` to avoid duplicate errors
 - `status_if_new` determines status only for new contacts; existing contacts use `status`
-- Use `skip_merge_validation: true` to bypass required merge field validation
+- Preserve merge validation; bypass required fields only with documented schema rationale, never as a default error workaround
 - `MAILCHIMP_BATCH_ADD_OR_REMOVE_MEMBERS` manages static segment membership, not list membership
 
 ### 4. View Campaign Reports and Analytics

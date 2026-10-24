@@ -56,25 +56,19 @@ if (-not [string]::IsNullOrWhiteSpace($Sample)) {
 # Cross-platform case presets. Keep semantics aligned with case-init.sh.
 $presetNormalized = $Preset.Trim().ToLowerInvariant()
 if ($presetNormalized -in @('offline-sample', 'own-sample', 'local-sample')) {
-    $AuthGranted = $true
-    $AuthStatus = 'granted'
-    $AuthBasis = 'own_system'
+    # Preset selects a workflow only; it does not prove ownership/authorization.
     if ([string]::IsNullOrWhiteSpace($NetworkProfile)) { $NetworkProfile = 'offline' }
     if ([string]::IsNullOrWhiteSpace($EvidenceOfAuth)) {
-        $EvidenceOfAuth = 'preset:offline-sample (owner-operated local file)'
+        $EvidenceOfAuth = 'preset only; verify separate authorization'
     }
 } elseif ($presetNormalized -in @('ctf-public', 'ctf')) {
-    $AuthGranted = $true
-    $AuthStatus = 'granted'
-    $AuthBasis = 'ctf_public'
+    # CTF preset does not establish authorization for a target.
     if ([string]::IsNullOrWhiteSpace($NetworkProfile)) { $NetworkProfile = 'authorized_target_only' }
-    if ([string]::IsNullOrWhiteSpace($EvidenceOfAuth)) { $EvidenceOfAuth = 'preset:ctf-public' }
+    if ([string]::IsNullOrWhiteSpace($EvidenceOfAuth)) { $EvidenceOfAuth = 'preset only; verify separate authorization' }
 } elseif ($presetNormalized -in @('own-system', 'lab-only')) {
-    $AuthGranted = $true
-    $AuthStatus = 'granted'
-    $AuthBasis = 'own_system'
+    # Preset selects a workflow only; it does not prove ownership/authorization.
     if ([string]::IsNullOrWhiteSpace($NetworkProfile)) { $NetworkProfile = 'lab_only' }
-    if ([string]::IsNullOrWhiteSpace($EvidenceOfAuth)) { $EvidenceOfAuth = 'preset:own-system/lab' }
+    if ([string]::IsNullOrWhiteSpace($EvidenceOfAuth)) { $EvidenceOfAuth = 'preset only; verify separate authorization' }
 } elseif (-not [string]::IsNullOrWhiteSpace($Preset)) {
     throw ("Invalid -Preset '{0}'. Allowed: offline-sample|ctf-public|own-system" -f $Preset)
 }
@@ -100,6 +94,26 @@ if (-not [string]::IsNullOrWhiteSpace($NetworkProfile) -and
     throw "Invalid -NetworkProfile '$NetworkProfile'. Allowed: offline, lab_only, authorized_target_only, unrestricted_lab (aliases: lab, authorized, auth, offline_only)."
 }
 
+# Scope metadata must remain one line; do not allow arguments to inject signoff fields.
+foreach ($value in @($Hint, $AuthBasis, $EvidenceOfAuth, $TargetUrl, $Sample) + $InScopeAssets) {
+    if ($value -match '[\r\n\x00]') { throw 'Scope arguments must be single-line values' }
+}
+# Reject reparse points/symlinks in the output ancestry before writes.
+$current = [System.IO.Path]::GetFullPath($projectRoot)
+while (-not [string]::IsNullOrWhiteSpace($current)) {
+    if (Test-Path -LiteralPath $current) {
+        $entry = Get-Item -LiteralPath $current -Force
+        if ($entry.Attributes -band [System.IO.FileAttributes]::ReparsePoint) { throw 'Linked output ancestry rejected' }
+    }
+    $parent = Split-Path -Parent $current
+    if ($parent -eq $current) { break }
+    $current = $parent
+}
+if (Test-Path -LiteralPath (Join-Path $projectRoot 'work')) {
+    $workEntry = Get-Item -LiteralPath (Join-Path $projectRoot 'work') -Force
+    if ($workEntry.Attributes -band [System.IO.FileAttributes]::ReparsePoint) { throw 'Linked work root rejected' }
+}
+
 $workRoot = Join-Path $projectRoot 'work'
 $caseRoot = Join-Path $workRoot $CaseName
 $dirs = @('evidence', 'notes', 'report')
@@ -123,7 +137,7 @@ if ($PSBoundParameters.ContainsKey('AuthStatus') -and -not [string]::IsNullOrWhi
         $authStatusResolved = $candidate
     } else {
         Write-Host ("WARN: ignoring invalid -AuthStatus '{0}' (allowed: pending|granted|denied|unknown)" -f $AuthStatus) -ForegroundColor Yellow
-        # if user also passed AuthGranted, keep granted; else stay pending
+        $authStatusResolved = 'unknown' # invalid explicit status cannot preserve granted
     }
 }
 
@@ -341,18 +355,18 @@ $utf8 = New-Object System.Text.UTF8Encoding $true
 
 $readmeNext = if ($ready) {
     @"
-1. Scope is ready_for_act=true (auth granted + in_scope set)
+1. Scope records ready_for_act=true; this metadata does not enforce permission/network isolation
 2. Open primary skill: skills/$primary
 3. Append ``timeline.md``; update ``workitems.md``
-4. Append Evidence: ``skills/scripts/append-evidence.ps1 -CaseRoot <this dir> ...``
+4. Record evidence manually using E-id/source_ref/repro_command/hash fields; append-evidence helper is not bundled
 5. Promote findings with Evidence chain (skills/ops/evidence-finding-path.md)
 6. Report via docs-generator; journal via field-journal
 "@
 } else {
     @"
 1. Edit ``scope.md`` — set auth.status=granted and in_scope
-   - network target: re-run with ``-AuthGranted -TargetUrl <url>``
-   - local sample: re-run with ``-Preset offline-sample -Sample <path>``
+   - record the actual authorization and target in this existing file; do not re-run initializer
+   - document the approved local sample and limits; presets are not authorization
 2. Set ready_for_act when checklist complete
 3. Open primary skill: skills/$primary
 4. Append ``timeline.md``; update ``workitems.md``

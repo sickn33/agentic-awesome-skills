@@ -1,8 +1,12 @@
 ---
 title: "ID Verifier | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/id-verifier
+---
 
 # ID Verifier
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
 
 ID Verifier lets your iPhone app read mobile IDs in person without requiring external hardware.
 

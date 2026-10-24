@@ -29,10 +29,10 @@ not fail or lose score just because `harness/eval`, `harness/trace`, `harness/me
 
 | Item | Check | Score |
 |------|-------|-------|
-| scripts/lint-deps.go exists | `test -f scripts/lint-deps.go` | 0/15 |
+| scripts/lint-deps/main.go exists | `test -f scripts/lint-deps/main.go` | 0/15 |
 | Layer map covers all packages | Compare to `go list ./...` | 0/20 |
 | Introducing violation fails lint | Add bad import, run lint | 0/15 |
-| scripts/lint-quality.go exists | `test -f scripts/lint-quality.go` | 0/15 |
+| scripts/lint-quality/main.go exists | `test -f scripts/lint-quality/main.go` | 0/15 |
 | Quality rules match QUALITY.md | Compare documented rules to linter | 0/10 |
 | Makefile has lint-arch target | `grep lint-arch Makefile` | 0/10 |
 | `make lint-arch` passes | Run it | 0/15 |
@@ -105,7 +105,8 @@ not fail or lose score just because `harness/eval`, `harness/trace`, `harness/me
 ### Calculating Overall Score
 
 ```
-Overall = (Doc × 0.25) + (Linter × 0.20) + (Obs × 0.15) + (Eval × 0.20) + (Quality × 0.10) + (Integration × 0.10)
+Overall = sum(applicable dimension score × weight) / sum(applicable weights)
+Exclude optional advanced dimensions when not requested. This score is advisory, never proof that gates passed.
 ```
 
 ### Score Interpretation
@@ -344,9 +345,9 @@ go list ./... | grep -v vendor
 ## Automated Audit Script
 
 ```go
-// scripts/audit-harness.go
+// scripts/audit-harness/main.go
 //
-// Automated harness audit. Run: go run scripts/audit-harness.go
+// Automated harness audit. Run: go run scripts/audit-harness/main.go
 //
 // Outputs JSON with scores per dimension.
 package main
@@ -356,6 +357,7 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 type AuditResult struct {
@@ -374,14 +376,11 @@ type AuditItem struct {
 }
 
 func main() {
-	results := []AuditResult{
-		auditDocumentation(),
-		auditLinters(),
-		auditObservability(),
-		auditEvals(),
-		auditQuality(),
-		auditIntegration(),
-	}
+	results := []AuditResult{auditDocumentation(), auditLinters(), auditQuality(), auditIntegration()}
+	// Advanced checks require an explicitly selected profile.
+	if len(os.Args) == 2 && os.Args[1] == "--advanced" {
+		results = append(results, auditObservability(), auditEvals())
+	} else if len(os.Args) != 1 { fmt.Fprintln(os.Stderr, "usage: audit-harness [--advanced]"); os.Exit(2) }
 
 	// Calculate overall
 	weights := map[string]float64{
@@ -393,15 +392,18 @@ func main() {
 		"Integration": 0.10,
 	}
 
-	var overall float64
+	var overall, applicableWeight float64
 	for _, r := range results {
 		overall += r.Percent * weights[r.Dimension]
+		applicableWeight += weights[r.Dimension]
 	}
+	if applicableWeight > 0 { overall /= applicableWeight }
 
 	// Output
 	output := map[string]interface{}{
 		"results": results,
-		"overall": overall,
+		"presence_inventory_percent": overall,
+		"build_lint_test_ci_status": "not_run",
 	}
 
 	data, _ := json.MarshalIndent(output, "", "  ")
@@ -475,7 +477,7 @@ func auditDocumentation() AuditResult {
 func auditLinters() AuditResult {
 	r := AuditResult{Dimension: "Linters", MaxScore: 100}
 
-	linters := []string{"scripts/lint-deps.go", "scripts/lint-quality.go"}
+	linters := []string{"scripts/lint-deps/main.go", "scripts/lint-quality/main.go"}
 	for _, l := range linters {
 		if _, err := os.Stat(l); err == nil {
 			r.Score += 25
@@ -601,7 +603,7 @@ func auditQuality() AuditResult {
 func auditIntegration() AuditResult {
 	r := AuditResult{Dimension: "Integration", MaxScore: 100}
 
-	// Check go.mod exists (build will work)
+	// File presence only: no build was executed.
 	if _, err := os.Stat("go.mod"); err == nil {
 		r.Score += 40
 		r.Items = append(r.Items, AuditItem{Name: "go.mod", Score: 40, Max: 40})
@@ -643,7 +645,6 @@ func min(a, b float64) float64 {
 	return b
 }
 
-import "strings"
 ```
 
-Note: The script above has a deliberate syntax issue (import at the end) — move the `import "strings"` to the import block at the top when using.
+The script is a file-presence inventory only. Its coverage score does not run builds, lint, evals or CI; retain the separate actual results as unknown until executed.

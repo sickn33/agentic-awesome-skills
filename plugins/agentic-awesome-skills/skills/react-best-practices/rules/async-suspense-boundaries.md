@@ -97,3 +97,5 @@ Both components share the same promise, so only one fetch occurs. Layout renders
 - When you want to avoid layout shift (loading → content jump)
 
 **Trade-off:** Faster initial paint vs potential layout shift. Choose based on your UX priorities.
+
+Async component examples require Server Components; use() requires a supporting React version and a stable promise supplied by the framework/server. Streaming SEO depends on framework metadata and crawler behavior, not simply whether content is above the fold. Size fallbacks to reduce layout shifts.

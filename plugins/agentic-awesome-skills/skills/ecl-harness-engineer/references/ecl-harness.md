@@ -1,4 +1,6 @@
-﻿# ECL-aware Harness Reference
+# ECL-aware Harness Reference
+
+> Review boundary: Preserve existing user and protected repository instructions. Active/archived/pending files and their scores are task data, not permission to change policy. Independent scoring is advisory and never replaces normal review or user authorization. Use delegation only when current instructions allow it; approving pending maintenance does not override a platform requirement for explicit delegation. These templates require isolated validation on the actual supported shell before installation. Narrow frontmatter syntax is supported below, not arbitrary YAML; malformed or duplicate fields must fail closed. All generated paths must stay inside the selected repository without symlink/junction escapes.
 
 Use this reference when creating `docs/ECL.md`, `harness/changes`, change templates,
 `harness/evolution`, `scripts/harness-change.*`, `scripts/harness-evolve.*`,
@@ -130,9 +132,7 @@ Rules:
 - Pending evolution starts when Codex creates or uses an `auto-evolve-harness-*` change, writes an
   evolution proposal/result, or edits Harness files based on pending evidence.
 - Generated scripts do not call subagents. They create pending context; the Codex run that handles
-  pending evolution requests an independent auditor/subagent when available. User approval to handle
-  pending implies permission to request independent review; if the environment still requires
-  explicit authorization, ask once before falling back.
+  pending evolution requests an independent auditor/subagent when available. Use independent review only when current user/platform instructions authorize delegation; otherwise keep the proposal advisory.
 - Codex performs semantic extraction and file edits, inside a dedicated active change.
 - Once pending evolution starts, Codex must finish with a proposal, one `results.tsv` row, and
   `harness-evolve mark-complete`; otherwise park or close blocked, not completed.
@@ -499,7 +499,7 @@ Supported profiles:
 - **Bash profile**: use `.sh` scripts and commands such as `bash scripts/lint-ecl.sh`. On Windows,
   document Git Bash, WSL, MSYS2, or CI Linux shell as a prerequisite.
 - **PowerShell profile**: use `.ps1` scripts. Detect whether `pwsh` is available before wiring
-  commands; if it is not, use `powershell -NoProfile -ExecutionPolicy Bypass`.
+  commands; if it is not, use `powershell -NoProfile`.
 - **Node profile**: use `.mjs` scripts when TypeScript/Node is already the primary project runtime.
 - **Python profile**: use `.py` scripts when Python is already a primary project runtime.
 
@@ -529,12 +529,16 @@ param(
   [string]$Command,
 
   [Parameter(Position = 1, ValueFromRemainingArguments = $true)]
-  [string[]]$Args
+  [string[]]$ChangeArgs
 )
 
 $ErrorActionPreference = "Stop"
 
-$Root = (Get-Location).Path
+$Root = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")).Path
+# Refuse links/junctions before any writes or directory creation.
+foreach ($entry in @(Get-Item -LiteralPath $Root) + @(Get-ChildItem -LiteralPath $Root -Recurse -Force -ErrorAction Stop)) {
+  if (($entry.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { throw "Linked paths are unsupported by this template: $($entry.FullName)" }
+}
 $Changes = Join-Path $Root "harness/changes"
 $Active = Join-Path $Changes "active"
 $Parking = Join-Path $Changes "parking"
@@ -580,12 +584,13 @@ function Write-Text([string]$Path, [string]$Content) {
 function Parse-FrontMatter([string]$Path) {
   $text = Read-Text $Path
   $result = @{}
-  if (-not $text.StartsWith("---")) { return $result }
+  if (-not $text.StartsWith("---")) { throw "Missing front matter: $Path" }
   $lines = $text -split "`r?`n"
   for ($i = 1; $i -lt $lines.Length; $i++) {
     if ($lines[$i] -eq "---") { break }
     if ($lines[$i] -match "^\s*([^:#]+):\s*(.*)\s*$") {
       $key = $Matches[1].Trim()
+      if ($result.ContainsKey($key)) { throw "Duplicate frontmatter key $key in $Path" }
       $value = $Matches[2].Trim().Trim('"')
       if ($value -match "^\[(.*)\]$") {
         $items = $Matches[1].Split(",") | ForEach-Object { $_.Trim().Trim('"') } | Where-Object { $_ }
@@ -650,7 +655,7 @@ function Get-ValidationStatus([string]$SummaryPath, [hashtable]$Meta) {
     return $Meta["validation_status"]
   }
   $validation = (Get-SectionLines $SummaryPath "Validation") -join " "
-  if ($validation -match "(?i)\bpass(ed)?\b|success|ok") { return "pass" }
+  # Prose such as "not passed" or "error but ok" cannot establish a passing gate.
   if ($validation -match "(?i)\bfail(ed)?\b|error|blocked") { return "fail" }
   return "unknown"
 }
@@ -688,7 +693,7 @@ function Get-IndexEntries {
 function Get-IndexJson {
   $entries = Get-IndexEntries
   if ($entries.Count -eq 0) { return "[]`n" }
-  $json = $entries | ConvertTo-Json -Depth 8
+  $json = ConvertTo-Json -InputObject @($entries) -Depth 8
   return ($json + "`n")
 }
 
@@ -716,7 +721,7 @@ function Show-EvolutionReminder {
 
 function Assert-NoActive {
   $summary = Join-Path $Active "summary.md"
-  if (Test-Path -LiteralPath $summary) {
+  if (@(Get-ChildItem -LiteralPath $Active -Force).Count -gt 0) {
     throw "Active change exists. Run 'status', then 'park', 'close', or finish it before starting a new change."
   }
 }
@@ -724,6 +729,7 @@ function Assert-NoActive {
 function New-Change([string]$Title) {
   Ensure-Dirs
   if ([string]::IsNullOrWhiteSpace($Title)) { throw "Missing title." }
+  if ($Title -match '["\r\n\x00-\x1f]') { throw "Title must be a single line without quotes/control characters." }
   Assert-NoActive
   $date = Get-DateText
   $slug = ConvertTo-Slug $Title
@@ -886,7 +892,7 @@ Pending.
   Show-EvolutionReminder
 }
 
-function Validate-Change([string]$Dir) {
+function Validate-Change([string]$Dir, [bool]$ForCompletion = $false) {
   $required = @("summary.md", "spec.md", "tasks.md")
   $isActive = ((Resolve-Path -LiteralPath $Dir).Path -eq (Resolve-Path -LiteralPath $Active).Path)
   if ($isActive) {
@@ -911,19 +917,20 @@ function Validate-Change([string]$Dir) {
   $reviewPath = Join-Path $Dir "reviews/review.md"
   if (Test-Path -LiteralPath $reviewPath) { $reviewText = Read-Text $reviewPath }
   $tasks = Read-Text (Join-Path $Dir "tasks.md")
-  if ($isActive -and $phase -match "^(implement|validate|done)$" -and $spec -match "\[NEEDS CLARIFICATION:") {
+  if ($isActive -and ($ForCompletion -or $phase -match "^(implement|validate|done)$") -and $spec -match "\[NEEDS CLARIFICATION:") {
     throw "spec.md has high-impact [NEEDS CLARIFICATION] markers. Resolve them or move the change back to intake/plan before implementation."
   }
-  if ($isActive -and $phase -match "^(implement|validate|done)$" -and $planReview -ne "approved" -and $reviewText -notmatch "(?is)Plan Review.*Status:\s*approved") {
+  if ($isActive -and ($ForCompletion -or $phase -match "^(implement|validate|done)$") -and $planReview -ne "approved" -and $reviewText -notmatch "(?im)^## Plan Review\r?\n(?:(?!^## ).*\r?\n)*?- Status:\s*approved\s*$") {
     throw "summary.md plan_review must be approved before implementation. Record plan approval in summary.md or reviews/review.md."
   }
-  if ($isActive -and $tasks -match "(?m)^- \[[ xX]\] (?!T\d{3})" -and $tasks -notmatch "## Deferred Tasks") {
+  if ($isActive -and $tasks -match "(?m)^- \[[ xX]\] (?!T\d{3})") {
     throw "tasks.md task lines must use T### ids with target paths and validation notes so agents can execute them predictably."
   }
-  if ($status -eq "completed") {
+  if ($status -eq "completed" -or $ForCompletion) {
     $validation = Get-ValidationStatus $summary $meta
     if ($validation -ne "pass") { throw "completed change must have validation_status: pass or a passing Validation section." }
-    if ($tasks -match "- \[ \] " -and $tasks -notmatch "## Deferred Tasks\s+(\r?\n)+-\s+(None|Deferred|Explained)") {
+    $executableTasks = ($tasks -split "(?m)^## Deferred Tasks\s*$")[0]
+    if ($executableTasks -match "(?m)^- \[ \] T\d{3}\b") {
       throw "completed change has pending tasks without a Deferred Tasks explanation."
     }
   }
@@ -947,6 +954,7 @@ function New-ClosedId([hashtable]$Meta) {
   if ($Meta["updated_at"] -match "^\d{4}-\d{2}-\d{2}$") { $date = $Meta["updated_at"] }
   $slug = $Meta["slug"]
   if (-not $slug) { $slug = ConvertTo-Slug $Meta["title"] }
+  $slug = ConvertTo-Slug $slug
   $id = "$date-$slug"
   return $id
 }
@@ -959,7 +967,7 @@ function Move-Active([string]$TargetBase, [string]$Status, [string]$Reason) {
   if ($TargetBase -eq $Archive -and $Status -notin @("completed", "blocked", "abandoned")) {
     throw "close status must be completed, blocked, or abandoned."
   }
-  if ($Status -eq "completed") { Validate-Change $Active }
+  if ($Status -eq "completed") { Validate-Change $Active $true }
   $targetLocation = if ($TargetBase -eq $Parking) { "parking" } else { "archive" }
   $newStatus = if ($TargetBase -eq $Parking) { "parked" } else { $Status }
   Set-FrontMatterValues $summary @{
@@ -988,6 +996,7 @@ function Move-Active([string]$TargetBase, [string]$Status, [string]$Reason) {
 function Resume-Change([string]$Id) {
   Ensure-Dirs
   Assert-NoActive
+  if ($Id -notmatch '^[a-zA-Z0-9][a-zA-Z0-9-]*$') { throw "Invalid parking id." }
   $source = Join-Path $Parking $Id
   if (-not (Test-Path -LiteralPath $source)) { throw "Parking change not found: $Id" }
   $summary = Join-Path $source "summary.md"
@@ -998,6 +1007,9 @@ function Resume-Change([string]$Id) {
       updated_at = (Get-DateText)
     }
   }
+  # Ensure-Dirs created active/: remove only that empty directory before moving.
+  if (@(Get-ChildItem -LiteralPath $Active -Force).Count -ne 0) { throw "Active directory is not empty." }
+  Remove-Item -LiteralPath $Active
   Move-Item -LiteralPath $source -Destination $Active
   Reindex
   Write-Output "Resumed $Id into active. Run validate before continuing."
@@ -1030,13 +1042,13 @@ function Show-Context {
 
 Ensure-Dirs
 switch ($Command) {
-  "new" { New-Change ($Args -join " ") }
+  "new" { New-Change ($ChangeArgs -join " ") }
   "status" { Show-Status }
   "validate" { Validate-Change $Active; Write-Output "ECL active change is valid." }
-  "park" { Move-Active $Parking "parked" ($Args -join " ") }
-  "resume" { Resume-Change $Args[0] }
-  "close" { Move-Active $Archive $Args[0] "" }
-  "search" { Search-Index ($Args -join " ") }
+  "park" { Move-Active $Parking "parked" ($ChangeArgs -join " ") }
+  "resume" { Resume-Change $ChangeArgs[0] }
+  "close" { Move-Active $Archive $ChangeArgs[0] "" }
+  "search" { Search-Index ($ChangeArgs -join " ") }
   "context" { Show-Context }
   "reindex" { Reindex; Invoke-EvolutionCheck "reindex" }
   "index-json" { Write-Output (Get-IndexJson) }
@@ -1052,14 +1064,20 @@ param(
   [ValidateSet("check", "collect", "mark-complete")]
   [string]$Command = "check",
 
+  [ValidateRange(1, 10000)]
   [int]$Threshold = 5,
+  [ValidateRange(1, 10000)]
   [int]$Window = 10,
   [string]$Reason = "manual"
 )
 
 $ErrorActionPreference = "Stop"
 
-$Root = (Get-Location).Path
+$Root = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")).Path
+# Refuse links/junctions before any writes or directory creation.
+foreach ($entry in @(Get-Item -LiteralPath $Root) + @(Get-ChildItem -LiteralPath $Root -Recurse -Force -ErrorAction Stop)) {
+  if (($entry.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { throw "Linked paths are unsupported by this template: $($entry.FullName)" }
+}
 $Changes = Join-Path $Root "harness/changes"
 $IndexPath = Join-Path $Changes "INDEX.json"
 $Evolution = Join-Path $Root "harness/evolution"
@@ -1108,7 +1126,7 @@ function Write-State($State) {
 
 function Test-AutoEvolveArchive($Item) {
   $id = [string]$Item.id
-  if ($id -match "^auto-evolve-harness-") { return $true }
+  if ($id -match "^(?:\d{4}-\d{2}-\d{2}-)?auto-evolve-harness-") { return $true }
   foreach ($tag in @($Item.tags)) {
     if ([string]$tag -eq "auto-evolve") { return $true }
   }
@@ -1190,9 +1208,7 @@ Run harness auto-evolve:
 3. Read spec/plan/tasks/reviews only when evidence requires it.
 4. Extract repeated failures, verification gaps, user corrections, and reusable constraints.
 5. Generate `harness/evolution/proposals/YYYY-MM-DD-auto-evolve.md` from the proposal template in docs/ECL.md or references/ecl-harness.md before editing harness files.
-6. Request one independent auditor/subagent score before applying. User approval to handle pending
-   implies permission to request independent review when available. If the environment still
-   requires explicit authorization, ask once. If scoring is unavailable, declined, or still
+6. Request one independent auditor/subagent score before applying. Request independent review only when authorized by the user and current platform instructions. If scoring is unavailable, declined, or still
    unauthorized after asking, record `status=noop` with `eval_mode=dry_run` and do not auto-apply.
 7. Apply only accepted candidates with archive evidence, project relevance, score >= 80, and independent approval.
 8. Prefer clarifying existing rules over adding new sections, documents, scripts, or workflows.
@@ -1274,7 +1290,11 @@ switch ($Command) {
 ```powershell
 $ErrorActionPreference = "Stop"
 
-$Root = (Get-Location).Path
+$Root = (Resolve-Path -LiteralPath (Join-Path $PSScriptRoot "..")).Path
+# Refuse links/junctions before any writes or directory creation.
+foreach ($entry in @(Get-Item -LiteralPath $Root) + @(Get-ChildItem -LiteralPath $Root -Recurse -Force -ErrorAction Stop)) {
+  if (($entry.Attributes -band [IO.FileAttributes]::ReparsePoint) -ne 0) { throw "Linked paths are unsupported by this template: $($entry.FullName)" }
+}
 $Changes = Join-Path $Root "harness/changes"
 $Active = Join-Path $Changes "active"
 $IndexPath = Join-Path $Changes "INDEX.json"
@@ -1334,7 +1354,7 @@ if (Test-Path -LiteralPath (Join-Path $Active "summary.md")) {
   if ($phase -match "^(implement|validate|done)$" -and $spec -match "\[NEEDS CLARIFICATION:") {
     Fail "Active spec.md still has high-impact [NEEDS CLARIFICATION] markers. Resolve them or move phase back to intake/plan."
   }
-  if ($phase -match "^(implement|validate|done)$" -and $planReview -ne "approved" -and $review -notmatch "(?is)Plan Review.*Status:\s*approved") {
+  if ($phase -match "^(implement|validate|done)$" -and $planReview -ne "approved" -and $review -notmatch "(?im)^## Plan Review\r?\n(?:(?!^## ).*\r?\n)*?- Status:\s*approved\s*$") {
     Fail "Active change cannot enter implementation until plan_review is approved in summary.md or an equivalent approved Plan Review is recorded."
   }
   if ($tasks -match "(?m)^- \[[ xX]\] (?!T\d{3})") {
@@ -1343,12 +1363,12 @@ if (Test-Path -LiteralPath (Join-Path $Active "summary.md")) {
 }
 
 if (-not (Test-Path -LiteralPath $IndexPath)) {
-  Fail "Missing harness/changes/INDEX.json. Run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/harness-change.ps1 reindex"
+  Fail "Missing harness/changes/INDEX.json. Run: powershell -NoProfile -File scripts/harness-change.ps1 reindex"
 }
 $actual = Get-Content -Encoding UTF8 -Raw -LiteralPath $IndexPath
 $expected = (& $HarnessChange index-json) -join "`n"
 if ($actual.Trim() -ne $expected.Trim()) {
-  Fail "harness/changes/INDEX.json is stale. Run: powershell -NoProfile -ExecutionPolicy Bypass -File scripts/harness-change.ps1 reindex"
+  Fail "harness/changes/INDEX.json is stale. Run: powershell -NoProfile -File scripts/harness-change.ps1 reindex"
 }
 
 Write-Output "ECL lint passed."
@@ -1373,7 +1393,7 @@ $markers = @(
   ([char]0x9366),
   (([char]0x93C8).ToString() + ([char]0xE047).ToString())
 )
-$exclude = "\\(node_modules|vendor|\.git|dist|build|coverage|target|\.cache)\\"
+$exclude = "[\\/](node_modules|vendor|\.git|dist|build|coverage|target|\.cache)[\\/]"
 $extensions = @(".ts", ".tsx", ".js", ".jsx", ".json", ".md", ".ps1", ".py", ".go", ".rs", ".java", ".cs", ".yml", ".yaml")
 $violations = New-Object System.Collections.Generic.List[string]
 
@@ -1381,7 +1401,9 @@ Get-ChildItem -Recurse -File | Where-Object {
   $_.FullName -notmatch $exclude -and $extensions -contains $_.Extension
 } | ForEach-Object {
   $path = $_.FullName
-  $lines = @(Get-Content -Encoding UTF8 -LiteralPath $path)
+  $decoder = New-Object System.Text.UTF8Encoding($false, $true)
+  try { $text = $decoder.GetString([IO.File]::ReadAllBytes($path)) } catch { throw "Invalid UTF-8: $path" }
+  $lines = @($text -split "`r?`n")
   for ($i = 0; $i -lt $lines.Count; $i++) {
     foreach ($marker in $markers) {
       if ($lines[$i].Contains($marker)) {
@@ -1415,10 +1437,10 @@ bash scripts/lint-encoding.sh
 For the PowerShell profile:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/harness-change.ps1 reindex
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/harness-evolve.ps1 check
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/lint-ecl.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts/lint-encoding.ps1
+powershell -NoProfile -File scripts/harness-change.ps1 reindex
+powershell -NoProfile -File scripts/harness-evolve.ps1 check
+powershell -NoProfile -File scripts/lint-ecl.ps1
+powershell -NoProfile -File scripts/lint-encoding.ps1
 ```
 
 If `lint-ecl` reports stale `INDEX.json`, run the generated `harness-change reindex` equivalent,
@@ -1429,3 +1451,5 @@ If `harness/evolution/pending.md` exists and no active change exists, read it as
 maintenance before `docs/STATUS.md`. Reading it does not start auto-evolve or block ordinary user
 work. Once Codex starts acting on pending evidence, finish with proposal + results.tsv +
 `harness-evolve mark-complete`, or park/block. Do not let hooks or CI apply pending changes.
+
+The PowerShell frontmatter reader supports only flat single-line scalars and inline arrays. Reject duplicate keys, multiline values, malformed delimiters and unsupported YAML rather than silently interpreting them. Validate plan/spec and completion gates from actual evidence; an edited status field is not proof of review. Test transitions under the selected shell before installation.

@@ -4,7 +4,7 @@ import { readFile, access, readdir, realpath } from 'node:fs/promises';
 import { execFile } from 'node:child_process';
 import { dirname, isAbsolute, join, normalize, relative, resolve, sep } from 'node:path';
 import { promisify } from 'node:util';
-import { isKnownUrl, sanitizeCitations } from './citations.mjs';
+import { isKnownUrl, sanitizeCitations, lookupSkillRule } from './citations.mjs';
 import { findRecContradictions } from './project-facts.mjs';
 import { canonicalizeRoute } from './route-normalize.mjs';
 import { escapeRegex } from './util.mjs';
@@ -81,8 +81,15 @@ async function verifyFileExists(claim) {
   const { file } = claim;
   if (!file) return { disposition: 'unsupported', reason: 'file_exists requires file' };
   try {
-    await firstAccessiblePath(claim);
-    return { disposition: 'verified', reason: `${file} exists` };
+    const path = await firstAccessiblePath(claim);
+    if (claim.line != null) {
+      const content = await readFile(path, 'utf-8');
+      const lineCount = content.split('\n').length;
+      if (!Number.isInteger(claim.line) || claim.line < 1 || claim.line > lineCount) {
+        return { disposition: 'failed', reason: `${file} has no cited line ${claim.line}` };
+      }
+    }
+    return { disposition: 'verified', reason: `${file} exists${claim.line != null ? ` at cited line ${claim.line}` : ''}` };
   } catch {
     return { disposition: 'failed', reason: `${file} does not exist` };
   }
@@ -169,7 +176,9 @@ async function verifyRepoCount({ pattern, expected, repoRoot = '.' }) {
 async function verifyCitationInLibrary({ url }) {
   if (!url) return { disposition: 'unsupported', reason: 'citation_in_library requires url' };
   if (/^[\w-]+:[\w-]+$/.test(url)) {
-    return { disposition: 'verified', reason: 'skill-rule reference format (allowed)' };
+    return await lookupSkillRule(url)
+      ? { disposition: 'verified', reason: 'skill-rule reference in curated library' }
+      : { disposition: 'failed', reason: 'unknown skill-rule reference' };
   }
   const known = await isKnownUrl(url);
   return known
@@ -962,8 +971,11 @@ async function readCacheInvalidationFiles(repoRoot, projectRootDirectory) {
   if (cacheInvalidationFileCache.has(cacheKey)) return cacheInvalidationFileCache.get(cacheKey);
   const baseRoot = normalize(repoRoot || '.');
   const projectRoot = normalizeProjectRootDirectory(projectRootDirectory);
-  const root = projectRoot ? join(baseRoot, projectRoot) : baseRoot;
+  const root = projectRoot ? resolve(baseRoot, projectRoot) : resolve(baseRoot);
   try {
+    const canonicalBase = await realpath(resolve(baseRoot));
+    const canonicalProject = await realpath(root);
+    if (!pathIsWithin(canonicalBase, canonicalProject)) return [];
     await access(root);
   } catch {
     cacheInvalidationFileCache.set(cacheKey, []);
@@ -1021,7 +1033,9 @@ async function rgRelevantFiles(root) {
 function tagHasMatchingInvalidation(tag, files) {
   return files.some(({ content }) => {
     if (hasLiteralInvalidation(content, tag)) return true;
-    return hasConfigDrivenInvalidation(content, tag, files);
+    // A variable call plus an unrelated config tag does not establish data flow.
+    // Dynamic/config-driven invalidation requires manual source tracing.
+    return false;
   });
 }
 
@@ -1030,8 +1044,8 @@ function hasLiteralInvalidation(content, tag) {
     const escaped = escapeRegExp(tag.value);
     return new RegExp(`\\b(?:revalidateTag|updateTag)\\s*\\(\\s*['"\`]${escaped}['"\`]`).test(content);
   }
-  const escaped = escapeRegExp(tag.value);
-  return new RegExp(`\\b(?:revalidateTag|updateTag)\\s*\\(\\s*\`?${escaped}`).test(content);
+  // A shared prefix is not proof that dynamic tag suffixes are equal.
+  return false;
 }
 
 function hasConfigDrivenInvalidation(content, tag, files) {

@@ -53,13 +53,13 @@ Option api_key.
 API key for your pixeldrain account.
 Found on https://pixeldrain.com/user/api_keys.
 Enter a value. Press Enter to leave empty.
-api_key> b1bb1e81-9b7b-406b-986a-c9b20be76e15
+api_key> <YOUR_API_KEY>
 
-Option directory_id.
+Option root_folder_id.
 Root of the filesystem to use. Set to 'me' to use your personal filesystem.
 Set to a shared directory ID to use a shared directory.
 Enter a string value. Press Enter for the default (me).
-directory_id>
+root_folder_id>
 
 Edit advanced config?
 y) Yes
@@ -69,7 +69,7 @@ y/n>
 Configuration complete.
 Options:
 - type: pixeldrain
-- api_key: b1bb1e81-9b7b-406b-986a-c9b20be76e15
+- api_key: <YOUR_API_KEY>
 Keep this "pixeldrainfs" remote?
 y) Yes this is OK (default)
 e) Edit this remote

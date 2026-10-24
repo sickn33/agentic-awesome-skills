@@ -6,7 +6,7 @@
 ```python
 # Dijkstra's algorithm (weighted graphs)
 path = nx.shortest_path(G, source=1, target=5, weight='weight')
-length = nx.shortest_path_length(G, source=1, target=5, weight='weight')
+length = nx.shortest_path_length(G, source=1, target=4, weight='weight')
 
 # All shortest paths from source
 paths = nx.single_source_shortest_path(G, source=1)
@@ -22,8 +22,8 @@ path = nx.bellman_ford_path(G, source=1, target=5, weight='weight')
 for source, paths in nx.all_pairs_shortest_path(G):
     print(f"From {source}: {paths}")
 
-# Floyd-Warshall algorithm
-lengths = dict(nx.all_pairs_shortest_path_length(G))
+# Floyd-Warshall weighted distances
+lengths = dict(nx.floyd_warshall(G, weight="weight"))
 ```
 
 ### Specialized Shortest Path Algorithms
@@ -197,7 +197,7 @@ for communities in limited:
 ### Maximum Matching
 ```python
 # Maximum cardinality matching
-matching = nx.max_weight_matching(G)
+matching = nx.max_weight_matching(G, maxcardinality=True)
 
 # Check if matching is valid
 is_matching = nx.is_matching(G, matching)
@@ -206,7 +206,7 @@ is_perfect = nx.is_perfect_matching(G, matching)
 
 ### Minimum Vertex/Edge Cover
 ```python
-# Minimum set of nodes covering all edges
+# Approximation to minimum weighted vertex cover
 min_vertex_cover = nx.approximation.min_weighted_vertex_cover(G)
 
 # Minimum edge dominating set
@@ -224,7 +224,7 @@ mst = nx.minimum_spanning_tree(G, weight='weight')
 mst_max = nx.maximum_spanning_tree(G, weight='weight')
 
 # Enumerate all spanning trees
-all_spanning = nx.all_spanning_trees(G)
+all_spanning = nx.SpanningTreeIterator(G)
 ```
 
 ### Tree Properties
@@ -277,7 +277,7 @@ is_dag = nx.is_directed_acyclic_graph(G)
 # Only for DAGs
 try:
     topo_order = list(nx.topological_sort(G))
-except nx.NetworkXError:
+except nx.NetworkXUnfeasible:
     print("Graph has cycles")
 
 # All topological sorts
@@ -295,10 +295,10 @@ cliques = list(nx.find_cliques(G))
 max_clique = nx.approximation.max_clique(G)
 
 # Clique number
-clique_number = nx.graph_clique_number(G)
+clique_number = max((len(c) for c in nx.find_cliques(G)), default=0)
 
 # Number of maximal cliques containing each node
-clique_counts = nx.node_clique_number(G)
+clique_counts = {n: sum(n in c for c in nx.find_cliques(G)) for n in G}  # count maximal cliques, potentially expensive
 ```
 
 ## Graph Coloring

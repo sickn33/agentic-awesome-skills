@@ -1,5 +1,5 @@
 {
-  "_comment": "Minimal seccomp profile for a typical web server container (HTTP/HTTPS, TCP, file I/O). Default action: DENY everything not explicitly listed. Start here and add syscalls as your app requires them. Use 'strace -c <cmd>' or 'sysdig' to discover which syscalls your app actually makes in production.",
+  "_comment": "Experimental broad syscall template, not a hardened runtime-default replacement. Unrestricted clone/clone3, ioctl and io_uring expand kernel exposure. Prefer RuntimeDefault; narrow and test this profile per architecture, kernel and application in an isolated environment without secrets or production network access. Observation is incomplete.",
   "_usage": {
     "docker_run": "docker run --security-opt seccomp=seccomp-profile-template.json myapp:latest",
     "docker_compose": "security_opt:\n  - seccomp:./references/seccomp-profile-template.json",
@@ -7,7 +7,7 @@
   },
   "_discover_syscalls": {
     "with_strace": "strace -c -f -p <PID>  # Attach to running process",
-    "with_docker": "docker run --security-opt seccomp=unconfined --name audit myapp:latest",
+    "with_docker": "Only in an isolated disposable test environment without secrets: docker run --security-opt seccomp=unconfined --name audit myapp:latest",
     "with_sysdig": "sysdig -p '%syscall.type' container.name=audit | sort -u"
   },
   "defaultAction": "SCMP_ACT_ERRNO",
@@ -297,41 +297,6 @@
         "linkat"
       ],
       "action": "SCMP_ACT_ALLOW"
-    },
-    {
-      "_group": "EXPLICITLY BLOCKED — comment out only with documented justification",
-      "_blocked_reason": "These syscalls are dangerous and should never be needed by a web server. Do not uncomment without a security review.",
-      "names": [],
-      "action": "SCMP_ACT_ERRNO",
-      "_examples_that_should_stay_blocked": [
-        "ptrace         -- debug/trace processes; allows container escape",
-        "kexec_load     -- load a new kernel; always block",
-        "kexec_file_load-- load a new kernel; always block",
-        "mount          -- mount filesystems; always block in containers",
-        "umount         -- unmount filesystems",
-        "umount2        -- unmount filesystems",
-        "swapon         -- manage swap",
-        "swapoff        -- manage swap",
-        "reboot         -- reboot/halt system",
-        "syslog         -- read/clear kernel message ring buffer",
-        "bpf            -- load eBPF programs; high privilege",
-        "perf_event_open-- access hardware perf counters",
-        "init_module    -- load kernel modules",
-        "finit_module   -- load kernel modules",
-        "delete_module  -- unload kernel modules",
-        "create_module  -- create loadable modules",
-        "query_module   -- query module info",
-        "get_kernel_syms-- deprecated kernel symbol query",
-        "nfsservctl     -- NFS server control",
-        "pivot_root     -- change root filesystem",
-        "settimeofday   -- set system clock (use capabilities instead)",
-        "adjtimex       -- tune kernel clock",
-        "acct           -- enable/disable process accounting",
-        "setdomainname  -- set domain name",
-        "sethostname    -- set hostname",
-        "setns          -- join a namespace (container escape risk)",
-        "unshare        -- disassociate namespace (container escape risk)"
-      ]
     }
   ]
 }

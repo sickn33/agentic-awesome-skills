@@ -18,6 +18,13 @@ import argparse
 from pathlib import Path
 
 
+def mask_kotlin(content: str) -> str:
+    """Mask comments/strings for approximate scans; not a complete Kotlin parser."""
+    pattern = r'//[^\n]*|/\*.*?\*/|""".*?"""|"(?:\\.|[^"\\])*"|\'(?:\\.|[^\'\\])*\''
+    return re.sub(pattern, lambda m: ''.join('\n' if ch == '\n' else ' ' for ch in m[0]),
+                  content, flags=re.DOTALL)
+
+
 def safe_user_path(path_value, base_dir="."):
     """Resolve a CLI path under the current workspace."""
     if base_dir != ".":
@@ -28,6 +35,8 @@ def safe_user_path(path_value, base_dir="."):
         resolved_path.relative_to(base_path)
     except ValueError as exc:
         raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
+    if resolved_path.exists():
+        raise ValueError("Output already exists; choose a new report path")
     return resolved_path
 from dataclasses import dataclass, field
 from typing import Dict, List, Set, Optional, Tuple
@@ -61,7 +70,7 @@ class Edge:
 
 
 class DependencyGraph:
-    """Grafo de dependências com análise matemática completa."""
+    """Directed graph algorithms over an approximate import graph."""
 
     def __init__(self):
         self.nodes: Dict[str, Node] = {}
@@ -73,7 +82,7 @@ class DependencyGraph:
         self.nodes[node.id] = node
 
     def add_edge(self, edge: Edge) -> None:
-        if edge.src != edge.dst:  # sem self-loops
+        if edge.dst not in self._adj[edge.src]:
             self.edges.append(edge)
             self._adj[edge.src].add(edge.dst)
             self._radj[edge.dst].add(edge.src)
@@ -87,7 +96,7 @@ class DependencyGraph:
     # ─── Algoritmos de Grafos ────────────────────────────────────────────────
 
     def find_cycles(self) -> List[List[str]]:
-        """Detecta ciclos usando DFS com coloração (branco/cinza/preto)."""
+        """Return representative DFS back-edge cycles, not all elementary cycles."""
         WHITE, GRAY, BLACK = 0, 1, 2
         color = {n: WHITE for n in self.nodes}
         cycles = []
@@ -187,7 +196,7 @@ class DependencyGraph:
     def betweenness_centrality(self) -> Dict[str, float]:
         """
         Centralidade de betweenness: nós que fazem "ponte" entre outros.
-        Alto betweenness = single point of failure.
+        High betweenness is structural; it does not prove a runtime single point of failure.
 
         Algoritmo de Brandes: O(V·E)
         """
@@ -230,11 +239,11 @@ class DependencyGraph:
         # Normalizar
         n = len(nodes)
         if n > 2:
-            factor = 2 / ((n - 1) * (n - 2))
+            factor = 1 / ((n - 1) * (n - 2))  # directed graph normalization
             for node in betweenness:
                 betweenness[node] *= factor
 
-        return dict(betweenness)
+        return {node: betweenness.get(node, 0.0) for node in nodes}
 
     def page_rank(self, damping: float = 0.85, iterations: int = 100) -> Dict[str, float]:
         """
@@ -247,15 +256,19 @@ class DependencyGraph:
 
         rank = {node: 1.0 / n for node in self.nodes}
 
+        if not 0 <= damping <= 1 or iterations < 0:
+            raise ValueError("Invalid damping or iteration count")
         for _ in range(iterations):
+            dangling = sum(rank[node] for node in self.nodes
+                           if not any(dst in self.nodes for dst in self._adj.get(node, set())))
             new_rank = {}
             for node in self.nodes:
                 incoming_sum = sum(
-                    rank.get(pred, 0) / max(len(self._adj.get(pred, set())), 1)
+                    rank.get(pred, 0) / max(sum(dst in self.nodes for dst in self._adj.get(pred, set())), 1)
                     for pred in self._radj.get(node, set())
                     if pred in self.nodes
                 )
-                new_rank[node] = (1 - damping) / n + damping * incoming_sum
+                new_rank[node] = (1 - damping) / n + damping * (incoming_sum + dangling / n)
             rank = new_rank
 
         return rank
@@ -315,15 +328,23 @@ class ProjectAnalyzer:
     """Analisa um projeto Kotlin/Android completo."""
 
     def __init__(self, project_root: str):
-        self.project_root = Path(project_root)
+        self.project_root = Path(project_root).expanduser().resolve()
+        if not self.project_root.is_relative_to(Path.cwd().resolve()):
+            raise ValueError("Project root escapes current workspace")
+        if not self.project_root.is_dir():
+            raise ValueError("Project root must be an existing directory")
         self.graph = DependencyGraph()
         self.module_files: Dict[str, List[Path]] = defaultdict(list)
 
     def analyze(self) -> None:
         """Analisa todos os arquivos Kotlin."""
+        self.graph = DependencyGraph()
+        self.module_files.clear()
         kt_files = list(self.project_root.glob("**/*.kt"))
 
-        for kt_file in kt_files:
+        for kt_file in sorted(kt_files):
+            if kt_file.is_symlink() or not kt_file.resolve().is_relative_to(self.project_root):
+                continue
             module = self._detect_module(kt_file)
             self.module_files[module].append(kt_file)
             self._analyze_file(kt_file, module)
@@ -337,9 +358,10 @@ class ProjectAnalyzer:
 
     def _analyze_file(self, file_path: Path, module: str) -> None:
         try:
-            content = file_path.read_text(encoding='utf-8', errors='ignore')
-        except Exception:
-            return
+            content = file_path.read_text(encoding='utf-8')
+            content = mask_kotlin(content)
+        except (OSError, UnicodeError) as exc:
+            raise ValueError(f"Cannot analyze source: {file_path}") from exc
 
         # Extrair package
         pkg_match = re.search(r'^package\s+(.+)$', content, re.MULTILINE)
@@ -357,7 +379,7 @@ class ProjectAnalyzer:
             for match in re.finditer(pattern, content):
                 class_name = match.group(1)
                 node_id = f"{package}.{class_name}"
-                is_abstract = 'abstract' in content[max(0, match.start()-20):match.start()]
+                is_abstract = 'abstract' in match[0] or 'abstract' in content[max(0, match.start()-20):match.start()]
                 is_open = 'open' in content[max(0, match.start()-10):match.start()]
 
                 node = Node(
@@ -407,6 +429,8 @@ class ProjectAnalyzer:
                 'nodes': len(self.graph.nodes),
                 'edges': len(self.graph.edges),
                 'is_dag': topo is not None,
+                'analysis_kind': 'approximate Auri import graph, not complete Kotlin dependencies',
+                'limitations': ['Hardcoded package/module conventions require adaptation', 'Imports approximate uses; wildcard/alias/call resolution is incomplete', 'DFS cycle list is representative; recursive traversal may reach interpreter depth limits'],
                 'cycles_found': len(cycles),
                 'strongly_connected_components': len(real_sccs),
             },
@@ -485,7 +509,7 @@ class ProjectAnalyzer:
                 print(f"  {i}. {' → '.join(c.split('.')[-1] for c in cycle)}")
 
         if report['top_betweenness_centrality']:
-            print(f"\n⚠️  TOP NÓDULOS CRÍTICOS (single points of failure — alto betweenness):")
+            print(f"\n⚠️  HIGH STRUCTURAL BETWEENNESS (not proof of runtime failure impact):")
             for item in report['top_betweenness_centrality'][:5]:
                 short = item['node'].split('.')[-1]
                 print(f"  {short:<35} betweenness={item['betweenness']:.4f}")
@@ -510,7 +534,7 @@ def main():
         description='Prof. Euler — Análise de Grafos de Dependências'
     )
     parser.add_argument('path', nargs='?',
-                        default=r'C:\Users\renat\earbudllm',
+                        default='.',
                         help='Caminho raiz do projeto')
     parser.add_argument('--format', '-f', choices=['text', 'json', 'dot'],
                         default='text', help='Formato de saída')
@@ -518,7 +542,7 @@ def main():
 
     args = parser.parse_args()
 
-    print(f"🔬 Prof. Euler analisando grafos: {args.path}")
+    print(f"Analyzing approximate dependency graph: {args.path}", file=sys.stderr)
 
     analyzer = ProjectAnalyzer(args.path)
     analyzer.analyze()
@@ -532,8 +556,8 @@ def main():
         print(output)
         if args.output:
             safe_user_path(args.output).write_text(output)
-            print(f"\n✅ Arquivo DOT salvo: {args.output}")
-            print("  Para visualizar: dot -Tpng deps.dot -o deps.png")
+            print(f"DOT saved: {args.output}", file=sys.stderr)
+            print("Render with trusted Graphviz separately", file=sys.stderr)
     else:
         analyzer.print_report(report)
 

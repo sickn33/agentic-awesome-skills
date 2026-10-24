@@ -1,7 +1,7 @@
 ---
 name: task-intelligence
-description: "Protocolo de Inteligência Pré-Tarefa — ativa TODOS os agentes relevantes do ecossistema ANTES de executar qualquer tarefa solicitada pelo usuário."
-risk: none
+description: "Protocolo de Inteligência Pré-Tarefa — planeja a tarefa e consulta apenas agentes disponíveis, relevantes e autorizados quando o benefício justificar o custo."
+risk: critical
 source: community
 date_added: '2026-03-06'
 author: renat
@@ -22,7 +22,7 @@ tools:
 
 ## Overview
 
-Protocolo de Inteligência Pré-Tarefa — ativa TODOS os agentes relevantes do ecossistema ANTES de executar qualquer tarefa solicitada pelo usuário. Enriquece o contexto com análise paralela multi-agente, produz estimativa real de tempo (início→fim), mapeia problemas prováveis e improvável, e formula um plano de execução antecipado com estratégias de contingência.
+Protocolo de Inteligência Pré-Tarefa — planeja a tarefa e consulta apenas agentes disponíveis, relevantes e autorizados quando o benefício justificar o custo. Enriquece o contexto com análise paralela multi-agente, produz estimativa real de tempo (início→fim), mapeia problemas prováveis e improvável, e formula um plano de execução antecipado com estratégias de contingência.
 
 ## When to Use This Skill
 
@@ -43,14 +43,14 @@ Protocolo de Inteligência Pré-Tarefa — ativa TODOS os agentes relevantes do 
 
 Antes de qualquer execução, este agente realiza um **briefing inteligente completo**:
 
-1. **Ativa todos os agentes relevantes em paralelo** — cada um analisa a tarefa pela sua ótica
+1. **Seleciona consultas limitadas e autorizadas** — cada um analisa a tarefa pela sua ótica
 2. **Sintetiza o conhecimento coletivo** em um plano unificado
 3. **Estima tempo real** do início ao fim (com breakdown por etapa)
 4. **Mapeia problemas prováveis** e os resolve antecipadamente
 5. **Define pontos de verificação** para detectar desvios antes que virem bloqueadores
 
 A razão central: executar uma tarefa sem esse briefing é como cirurgiar sem exame pré-operatório.
-O custo de 30-60 segundos de análise paralela elimina horas de retrabalho.
+A análise pode reduzir retrabalho, mas também custa tempo/tokens; não há ganho garantido ou medido neste arquivo.
 
 ---
 
@@ -72,23 +72,9 @@ Para **Moderada**, **Complexa** e **Crítica**, execute o protocolo completo aba
 
 ## Fase 2 — Scan E Match Paralelo
 
-Execute simultaneamente:
+Os scripts `agent-orchestrator/scripts/scan_registry.py`, `match_skills.py`, `orchestrate.py` e `scripts/pre_task_check.py` não estão incluídos. Não execute arquivos homônimos de outro projeto nem invente resultados. Use a descoberta real do host e instruções do projeto; sem orquestrador disponível, faça um briefing local claramente identificado. Dependências entre scan/match exigem sequência, não leitura concorrente de um registry que está sendo alterado.
 
-```bash
-
-## Terminal 1 — Atualizar Registry
-
-python agent-orchestrator/scripts/scan_registry.py
-
-## Terminal 2 — Identificar Agentes Relevantes
-
-python agent-orchestrator/scripts/match_skills.py "<tarefa do usuário>"
-```
-
-Se `matched >= 2`, execute orquestração:
-```bash
-python agent-orchestrator/scripts/orchestrate.py --skills <skill1,skill2,...> --query "<tarefa>"
-```
+Subagentes só quando autorizados pelo usuário/host, com escopo e orçamento; não envie mensagens a outras conversas ou provedores por inferência. Minimize dados compartilhados e trate respostas como evidência consultiva. Nomes de personas abaixo são exemplos, não prova de instalação ou expertise.
 
 ---
 
@@ -128,7 +114,7 @@ Confiança: Alta/Média/Baixa — [justificativa]
 
 **Regras de estimativa honesta:**
 - Nunca subestime para agradar — o usuário precisa saber o tempo real
-- Adicione sempre 20-30% de buffer para problemas típicos
+- Considere um buffer justificado por dependências e incerteza; 20-30% é apenas exemplo para problemas típicos
 - Se a confiança for Baixa, explique por quê e o que aumentaria ela
 - Diferencie "tempo de execução do agente" vs "tempo de espera do usuário"
 
@@ -139,10 +125,10 @@ Confiança: Alta/Média/Baixa — [justificativa]
 Pense em TRÊS camadas de problemas:
 
 #### Problemas Prováveis (80%+ de chance de acontecer)
-São os problemas que SEMPRE acontecem. Resolva-os ANTES de começar.
+Essas faixas são categorias qualitativas ilustrativas, não probabilidades estimadas a partir de dados. Resolva-os ANTES de começar.
 
 Exemplos por categoria:
-- **Skills novas**: YAML inválido → valide com `python -c "import yaml; yaml.safe_load(open('SKILL.md').read())"` antes de instalar
+- **Skills novas**: YAML inválido → use o validador real do projeto, que deve extrair o bloco YAML de frontmatter antes de validar o Markdown
 - **APIs externas**: chave expirada, rate limit, mudança de endpoint → verifique autenticação primeiro
 - **Instalações**: dependências faltando, versão incompatível → leia requirements.txt antes de executar
 - **Arquivos**: path não existe, permissão negada, encoding errado → verifique antes de abrir
@@ -219,7 +205,7 @@ Este agente **complementa** o agent-orchestrator — não substitui:
 - **agent-orchestrator**: identifica QUAIS skills usar (routing)
 - **task-intelligence**: enriquece COMO usar + quando + com que riscos (briefing)
 
-Ambos devem ser ativados juntos. O CLAUDE.md já exige o orchestrator — este agente adiciona a camada de inteligência sobre ele.
+Integre apenas quando o orquestrador realmente existir e as instruções locais exigirem isso. Este arquivo não comprova o conteúdo do CLAUDE.md do usuário.
 
 ---
 
@@ -238,11 +224,13 @@ O objetivo não é burocracia — é inteligência a serviço da velocidade real
 
 - `references/problem-catalog.md` — Catálogo de problemas típicos por domínio
 - `references/time-patterns.md` — Padrões históricos de tempo por tipo de tarefa
-- `scripts/pre_task_check.py` — Script de verificação automatizada pré-tarefa
+- `scripts/pre_task_check.py` — referência upstream ausente, não executável neste pacote
 
 ---
 
-## Exemplo De Briefing Completo
+## Exemplo Hipotético De Briefing Completo
+
+Os agentes, consultas, tempos e verificações abaixo são exemplos de formato; não são resultados reais. Para Stripe, verifique a assinatura usando o SDK oficial com corpo bruto, cabeçalho, segredo do endpoint e tolerância temporal; não reutilize um verificador WhatsApp como equivalente. Instalação/ZIP e “10 checks” não são capacidades fornecidas por este skill.
 
 **Tarefa do usuário:** "Crie uma skill para integração com Stripe"
 
@@ -252,9 +240,9 @@ BRIEFING PRÉ-EXECUÇÃO — Skill: stripe-integration
 
 CONTEXTO COLETADO (3 agentes consultados):
   • 007: CRÍTICO — API keys do Stripe NÃO devem ir para SKILL.md ou git.
-    Usar variáveis de ambiente (.env). Webhooks precisam validação HMAC-SHA256.
+    Usar segredo protegido; validar assinatura pelo SDK oficial e contrato Stripe.
   • skill-sentinel: whatsapp-cloud-api já implementa padrão HMAC-SHA256 para webhooks
-    — reusar esse padrão. Skill deve seguir estrutura: config.py + client.py + SKILL.md.
+    — comparar contratos, sem assumir equivalência. Estrutura hipotética:: config.py + client.py + SKILL.md.
   • agent-orchestrator: 3 skills similares (whatsapp, telegram, instagram) como referência
     de arquitetura. Nenhuma conflita com Stripe.
 
@@ -263,7 +251,7 @@ PLANO DE EXECUÇÃO:
   2. Escrever SKILL.md com workflow (~5min) — define comportamento do agente
   3. Criar config.py com variáveis de ambiente (~3min) — sem hardcode de keys
   4. Criar stripe_client.py com autenticação (~10min) — métodos principais
-  5. Criar webhook_handler.py com HMAC-SHA256 (~5min) — reusar padrão whatsapp
+  5. Criar webhook_handler.py com HMAC-SHA256 (~5min) — implementar o contrato específico de assinatura Stripe
   6. Instalar via skill-installer (~2min) — validação + registro
   7. Gerar ZIP (~1min) — para backup/upload manual
 
@@ -276,7 +264,7 @@ PROBLEMAS PRÉ-RESOLVIDOS:
   ✅ Webhook sem autenticação → HMAC-SHA256 incluído no plano
 
 PONTOS DE VERIFICAÇÃO:
-  [ ] Após SKILL.md: yaml.safe_load não levanta exceção
+  [ ] Após SKILL.md: validador do projeto extrai frontmatter e valida esquema
   [ ] Após config.py: sem strings hardcoded de credenciais
   [ ] Final: skill-installer valida os 10 checks
 

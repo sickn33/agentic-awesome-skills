@@ -25,14 +25,20 @@ User Query → AzureAIAgentsProvider → Azure AI Agent Service (Persistent)
               AgentThread (conversation persistence)
 ```
 
+## SDK generation and execution scope
+
+The examples below preserve an older Agent Framework generation (`AzureAIAgentsProvider`, `AgentThread`, `Hosted*Tool`). They are not verified against the current package. Current Microsoft documentation separates model providers from agent services, and the Python README lists `agent-framework-foundry`. Before adapting these snippets, identify the installed version and use its matching official API/sample; no compatible legacy version is established here. Do not combine the old classes with an unpinned latest install and assume it works.
+
+Choose the exact Azure tenant/project/deployment, principal and least-privilege role. Creating agents, uploading files, enabling code/web/MCP tools and running prompts sends data to services, can persist records and incur charges. Scope authorization, budget, timeout, tool allowlist and resource cleanup first. Closing clients does not delete hosted agents/files/vector stores/threads. Treat retrieved/tool text as untrusted and enforce tenant/resource/action authorization in tools; prompts are not access controls.
+
 ## Installation
 
 ```bash
-# Full framework (recommended)
-pip install agent-framework --pre
-
-# Or Azure-specific package only
-pip install agent-framework-azure-ai --pre
+# Current package discovery only; pin reviewed versions in your project lockfile.
+# These installs do not make the legacy snippets below compatible.
+pip install agent-framework
+# Selective current Foundry integration:
+pip install agent-framework-foundry
 ```
 
 ## Environment Variables
@@ -91,7 +97,7 @@ from azure.identity.aio import AzureCliCredential
 def get_weather(
     location: Annotated[str, Field(description="City name to get weather for")],
 ) -> str:
-    """Get the current weather for a location."""
+    """Return fixture weather (not a live observation)."""
     return f"Weather in {location}: 72°F, sunny"
 
 def get_current_time() -> str:
@@ -244,7 +250,7 @@ async def main():
 | `HostedMCPTool` | `from agent_framework import HostedMCPTool` | Service-managed MCP |
 | `MCPStreamableHTTPTool` | `from agent_framework import MCPStreamableHTTPTool` | Client-managed MCP |
 
-## Complete Example
+## Composite Legacy Example (requires migration/compatibility validation)
 
 ```python
 import asyncio
@@ -262,14 +268,14 @@ from azure.identity.aio import AzureCliCredential
 def get_weather(
     location: Annotated[str, Field(description="City name")],
 ) -> str:
-    """Get weather for a location."""
+    """Return fixture weather (not a live observation)."""
     return f"Weather in {location}: 72°F, sunny"
 
 
 class AnalysisResult(BaseModel):
     summary: str
     key_findings: list[str]
-    confidence: float
+    confidence: float = Field(ge=0.0, le=1.0)
 
 
 async def main():
@@ -315,12 +321,14 @@ async def main():
             response_format=AnalysisResult,
         )
         analysis = AnalysisResult.model_validate_json(result.text)
-        print(f"\nConfidence: {analysis.confidence}")
+        print(f"\nModel self-rating (not calibrated reliability): {analysis.confidence}")
 
 
 if __name__ == "__main__":
     asyncio.run(main())
 ```
+
+Current references: [Microsoft provider model](https://learn.microsoft.com/agent-framework/agents/providers/?pivots=programming-language-python), [Python installation and samples](https://github.com/microsoft/agent-framework/blob/main/python/README.md).
 
 ## Conventions
 

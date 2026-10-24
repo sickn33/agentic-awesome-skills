@@ -2,7 +2,13 @@
 
 > **Reference Type:** Tier 3 — Load on demand when composing or reviewing quality communications.
 >
-> **Usage:** Each template includes variable placeholders in `{{double_braces}}` for direct substitution. Templates are organized by audience and situation. Select the template matching your scenario, substitute variables, review tone guidance, and send.
+> **Usage:** Each template includes variable placeholders in `{{double_braces}}` for direct substitution. Templates are organized by audience and situation. Select the template matching your scenario, substitute verified variables and prepare a draft for the authorized owner.
+
+## Draft controls and current applicability
+
+All records and messages below are drafts. No sending, filing, controlled QMS/ERP edit, disposition, release, supplier debit, signature or regulatory admission is authorized by a template. Preserve unknown fields as explicitly unknown or pending; never infer that quarantine, interception, testing or corrective action happened. Confirm recipient identity and minimum necessary confidential information.
+
+For US devices after 2 February 2026, use current QMSR requirements and actual scope. Do not reuse retired QSR clause numbers. Consult [decision-frameworks.md](decision-frameworks.md) for regulatory, statistical, sampling and approval limits. All numeric targets and time periods in examples are hypothetical until approved in the actual plan. MRB/customer approval requirements depend on applicable design authority, standards and contracts, not merely whether a product is “standard.” Engineering examples illustrate one calculation, not complete functional/safety justification.
 
 ---
 
@@ -118,7 +124,7 @@ MRB meeting scheduled: {{mrb_date_time}}.
 - Audit-trail document; this is what auditors review
 
 ### Tone Guidance
-Formal, precise, and complete. This is a controlled document. Every field must be populated. Engineering justification must be technically sound and specific — not "acceptable per engineering review" but a detailed rationale citing functional requirements.
+Formal, precise, and complete. This is a controlled document. Every required field must have verified information or an explicit pending/not-applicable status with rationale. Engineering justification must be technically sound and specific — not "acceptable per engineering review" but a detailed rationale citing functional requirements.
 
 ### Template
 
@@ -143,11 +149,11 @@ Formal, precise, and complete. This is a controlled document. Every field must b
 
 Example: "The OD measurement of 12.52mm (USL 12.50mm) exceeds the drawing tolerance by 0.02mm. Per engineering analysis EA-2025-0034, this dimension interfaces with bore ID 12.60 +0.05/-0.00mm on mating part 7833-B. Minimum clearance at worst-case stack-up (shaft 12.52mm, bore 12.60mm) is 0.08mm. Assembly requirement per DWG 100-ASSY-Rev C specifies minimum 0.05mm clearance. The 0.08mm clearance meets the functional requirement. No impact to form, fit, or function."
 
-**Risk Assessment (required for safety-critical parts):**
+**Risk Assessment (scope and approval per applicable requirements):**
 {{risk_assessment_reference}} (e.g., "Per ISO 14971 risk assessment RA-2025-0012, risk level is acceptable — severity [minor], probability [remote]")
 
-**Customer Approval (required for aerospace Use-As-Is/Repair):**
-☐ Not required (standard/non-regulated) ☐ Requested — Reference: {{customer_approval_ref}} ☐ Approved — Date: {{approval_date}} ☐ Denied
+**Customer/Design Authority Approval (as required by the applicable contract, standard and delegated authority):**
+☐ Not required — documented applicability rationale: {{approval_not_required_rationale}} ☐ Requested — Reference: {{customer_approval_ref}} ☐ Approved — Date: {{approval_date}} ☐ Denied
 
 **Cost Impact:**
 | Item | Amount |
@@ -239,8 +245,8 @@ Professional, specific, and structured. Provide all data the supplier needs to i
 
 **Disposition of Nonconforming Material:**
 ☐ Return to Vendor — please issue RMA# and shipping instructions
-☐ Sort at our facility — credit memo for sort labor will follow
-☐ Scrap at our facility — credit memo for material value will follow
+☐ Sort at our facility — proposed sort cost allocation requires contractual review and approval
+☐ Scrap at our facility — proposed material credit requires contractual review and approval
 
 **Contact for Questions:**
 {{our_quality_contact}} | {{our_quality_email}} | {{our_quality_phone}}
@@ -308,7 +314,7 @@ Example: "Recurring dimensional non-conformance on Part 7832-A Rev D — bore di
 ## 5. CAPA Effectiveness Review
 
 ### When to Use
-- At the end of the effectiveness monitoring period (typically 90 days after implementation)
+- At the end of the effectiveness monitoring period (duration and exposure defined in the approved effectiveness plan)
 - Documents the evidence of effectiveness and the closure/extension decision
 
 ### Tone Guidance
@@ -340,12 +346,12 @@ Data-driven and conclusive. The effectiveness review is where the CAPA either cl
 |---|---|---|---|---|
 | {{metric_1}} | {{baseline_1}} | {{target_1}} | {{actual_1}} | ☐ Pass ☐ Fail |
 | {{metric_2}} | {{baseline_2}} | {{target_2}} | {{actual_2}} | ☐ Pass ☐ Fail |
-| Recurrence count | {{baseline_recurrence}} | Zero | {{actual_recurrence}} | ☐ Pass ☐ Fail |
+| Recurrence count | {{baseline_recurrence}} | {{approved_recurrence_criterion}} | {{actual_recurrence}} | ☐ Pass ☐ Fail |
 
 **Conclusion:**
-☐ **CAPA Effective — Close.** All effectiveness criteria met. Zero recurrences during monitoring period. Process capability meets target.
+☐ **CAPA Effective — Recommend authorized closure.** Approved effectiveness criteria met with adequate exposure and stated uncertainty; implementation and adverse-effect checks documented.
 ☐ **CAPA Partially Effective — Extend monitoring.** Improvement demonstrated but monitoring period insufficient for definitive conclusion. Extend by {{extension_days}} days.
-☐ **CAPA Not Effective — Reopen.** Recurrence observed during monitoring period. Root cause re-investigation required. See {{reopened_investigation_ref}}.
+☐ **CAPA Not Effective — Recommend controlled reassessment/reopening or linked investigation.** Recurrence observed during monitoring period. Root cause re-investigation required. See {{reopened_investigation_ref}}.
 
 **Reviewed By:**
 
@@ -363,7 +369,7 @@ Data-driven and conclusive. The effectiveness review is where the CAPA either cl
 - Structure applies to ISO audit NCRs, customer audit CARs, and FDA 483 responses (with modifications per template 11)
 
 ### Tone Guidance
-Factual, accountable, and solution-oriented. Accept the finding (even if you disagree with the interpretation — debate the interpretation separately, not in the corrective action response). Demonstrate that you understand the intent of the requirement, not just the words. Auditors value self-awareness and systemic thinking.
+Factual, accountable, and solution-oriented. Acknowledge receipt and provide an accurate response; include any evidence-supported disagreement through the applicable review process. Demonstrate that you understand the intent of the requirement, not just the words. Auditors value self-awareness and systemic thinking.
 
 ### Template
 
@@ -383,7 +389,7 @@ Factual, accountable, and solution-oriented. Accept the finding (even if you dis
 **Our Response:**
 
 **1. Acknowledgment:**
-We acknowledge the finding. {{brief_acknowledgment}}
+We acknowledge receipt of the finding. {{verified_response_and_any_supported_disagreement}}
 
 **2. Root Cause Analysis:**
 {{root_cause_analysis}}
@@ -453,8 +459,8 @@ We are contacting you to notify you of a quality concern with material we have s
 {{defect_description_for_customer}}
 
 **Containment Actions Taken:**
-1. All inventory at our facility has been quarantined and placed on hold
-2. Shipments in transit have been intercepted where possible: {{transit_status}}
+1. Verified inventory hold scope/status: {{verified_inventory_hold_status}}
+2. Verified in-transit containment status: {{transit_status}}
 3. We request that you quarantine the following lot(s) in your inventory: {{lots_to_quarantine}}
 
 **Recommended Customer Action:**
@@ -484,7 +490,7 @@ Sincerely,
 - Basis for audit follow-up actions
 
 ### Tone Guidance
-Objective and balanced. Report what was observed, both strengths and deficiencies. An audit report that is exclusively negative suggests the auditor was looking for problems rather than assessing capability. An audit report that is exclusively positive suggests the auditor wasn't thorough. The summary should give management a clear picture of the supplier's quality maturity.
+Objective and balanced. Report what was observed, both strengths and deficiencies. Do not invent positive or negative observations for balance; accurately state the evidence and sampling limits. The summary should give management a clear picture of the supplier's quality maturity.
 
 ### Template
 
@@ -500,7 +506,7 @@ Objective and balanced. Report what was observed, both strengths and deficiencie
 | Standard(s) Audited Against | {{standards}} (e.g., ISO 9001:2015, IATF 16949, AS9100D) |
 | Scope | {{audit_scope}} |
 
-**Overall Assessment:** ☐ Approved ☐ Approved with Conditions ☐ Not Approved
+**Draft Assessment (formal approval requires authorized decision):** ☐ Recommend approval ☐ Recommend conditional approval ☐ Recommend non-approval
 
 **Strengths Observed:**
 1. {{strength_1}}
@@ -585,12 +591,12 @@ Executive-level. Lead with the headline — is quality performance improving, st
 
 | Metric | Target | Prior Period | Current Period | Trend |
 |---|---|---|---|---|
-| Internal defect rate (PPM) | < 1,000 | {{prior_ppm}} | {{current_ppm}} | ↑ ↓ → |
-| Customer complaint rate | < 50/1M units | {{prior_complaints}} | {{current_complaints}} | ↑ ↓ → |
-| Supplier PPM (incoming) | < 500 | {{prior_supplier_ppm}} | {{current_supplier_ppm}} | ↑ ↓ → |
-| NCR closure time (median days) | < 15 | {{prior_ncr_cycle}} | {{current_ncr_cycle}} | ↑ ↓ → |
-| CAPA on-time closure rate | > 90% | {{prior_capa_otc}} | {{current_capa_otc}} | ↑ ↓ → |
-| Cost of quality (% revenue) | < 3% | {{prior_coq}} | {{current_coq}} | ↑ ↓ → |
+| Internal defect rate (PPM) | {{internal_ppm_target}} | {{prior_ppm}} | {{current_ppm}} | ↑ ↓ → |
+| Customer complaint rate | {{complaint_rate_target}} | {{prior_complaints}} | {{current_complaints}} | ↑ ↓ → |
+| Supplier PPM (incoming) | {{supplier_ppm_target}} | {{prior_supplier_ppm}} | {{current_supplier_ppm}} | ↑ ↓ → |
+| NCR closure time (median days) | {{ncr_cycle_target}} | {{prior_ncr_cycle}} | {{current_ncr_cycle}} | ↑ ↓ → |
+| CAPA on-time closure rate | {{capa_timeliness_target}} | {{prior_capa_otc}} | {{current_capa_otc}} | ↑ ↓ → |
+| Cost of quality (% revenue) | {{coq_target}} | {{prior_coq}} | {{current_coq}} | ↑ ↓ → |
 
 **Significant Quality Events:**
 1. {{event_1}}
@@ -632,14 +638,14 @@ Executive-level. Lead with the headline — is quality performance improving, st
 
 ### When to Use
 - Formal response to FDA Form 483 observations
-- Due within 15 business days of receiving the 483
+- Prepare promptly under current FDA instructions and applicable response expectations; verify the trigger/date and distinguish response from completion of all corrective actions.
 - This is a critical document — it becomes part of the public FDA inspection record
 
 ### Tone Guidance
 Respectful, thorough, and accountable. Acknowledge each observation. Do not argue, minimize, or blame individuals. Demonstrate that you understand the intent of the regulations, not just the words. FDA reviewers specifically evaluate whether your response addresses the systemic issue, not just the specific observation.
 
 ### What NOT to Say
-- "We disagree with this observation" — address it even if you disagree
+- Unsupported disagreement or automatic admissions — acknowledge receipt and explain any evidence-supported position accurately
 - "This was an isolated incident" — FDA explicitly looks for systemic issues
 - "Employee has been terminated" — this is punitive, not corrective; FDA wants system fixes
 - "We will address this" without specific actions, dates, and responsible parties

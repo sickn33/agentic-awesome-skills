@@ -7,6 +7,7 @@ output verboso, oportunidades de cache, e padrao de chamadas API.
 from __future__ import annotations
 
 from pathlib import Path
+from source_io import read_text
 from typing import Any, Dict, List, Tuple
 
 
@@ -47,8 +48,8 @@ def analyze(skill_data: Dict[str, Any]) -> Tuple[float, List[Dict[str, Any]]]:
             "severity": severity,
             "category": "large_skill_md",
             "title": f"SKILL.md com {skill_md_lines} linhas (~{est_tokens:,} tokens estimados)",
-            "description": f"Impacto de custo {cost_impact}. Cada ativacao desta skill "
-                           f"consome ~{est_tokens:,} tokens do context window.",
+            "description": f"Impacto de custo {cost_impact}. Estimativa muito aproximada por linhas, dependente do tokenizer e do carregamento; a skill "
+                           f"pode carregar ~{est_tokens:,} tokens; nao e medicao nem custo monetario.",
             "recommendation": "Mover detalhes para references/ e manter SKILL.md < 200 linhas. "
                               "Usar progressive disclosure: SKILL.md = overview, "
                               "references/ = detalhes lidos sob demanda.",
@@ -61,7 +62,7 @@ def analyze(skill_data: Dict[str, Any]) -> Tuple[float, List[Dict[str, Any]]]:
     if ref_dir.exists():
         for ref_file in ref_dir.glob("*.md"):
             try:
-                lines = len(ref_file.read_text(encoding="utf-8", errors="replace").splitlines())
+                lines = len(read_text(ref_file, root=skill_path).splitlines())
             except OSError:
                 continue
             if lines > 300:
@@ -87,7 +88,7 @@ def analyze(skill_data: Dict[str, Any]) -> Tuple[float, List[Dict[str, Any]]]:
         if not filepath.exists():
             continue
         try:
-            source = filepath.read_text(encoding="utf-8", errors="replace")
+            source = read_text(filepath, root=skill_path)
         except OSError:
             continue
 
@@ -121,7 +122,7 @@ def analyze(skill_data: Dict[str, Any]) -> Tuple[float, List[Dict[str, Any]]]:
         if not filepath.exists():
             continue
         try:
-            source = filepath.read_text(encoding="utf-8", errors="replace")
+            source = read_text(filepath, root=skill_path)
         except OSError:
             continue
         if "json.dumps" in source or "json.dump" in source:

@@ -1,6 +1,6 @@
 # Worked Examples — Before/After Offers
 
-Anonymized examples drawn from real engagements. Each shows the weak version, the diagnostic, and the strong version.
+Illustrative scenarios, not verified client case studies. The source supplies no underlying engagement data. Draft outcomes and prices need evidence before public use; no measured conversion or retention results are established here.
 
 ---
 
@@ -8,7 +8,7 @@ Anonymized examples drawn from real engagements. Each shows the weak version, th
 
 ### Before
 
-**The offer (as it was):**
+**Hypothetical starting offer:**
 > Fractional CMO services. $15K/month. We'll help you grow.
 
 **Diagnostic:**
@@ -31,9 +31,9 @@ Anonymized examples drawn from real engagements. Each shows the weak version, th
 | **Name** | "The 90-Day Marketing Reset" |
 | **Price** | $15K → $5K start, $5K week 8, $5K week 16 |
 
-Same delivery, same person, ~3x close rate, longer engagements (because the buyer is clearer about scope).
+Proposed redesign only; measure conversion, refund, retention and fulfillment effects before drawing conclusions.
 
-**Lesson:** the price didn't move. The structure did.
+**Lesson:** compare a consistent price period and service scope; the original monthly fee and revised total engagement fee are not the same price.
 
 ---
 
@@ -61,9 +61,9 @@ Same delivery, same person, ~3x close rate, longer engagements (because the buye
 | **Guarantee** | "Complete all 6 modules, submit the final exercise, and if you haven't written a sales page that lands you a $5K+ client within 12 months, refund in full." |
 | **Scarcity** | Cohort scarcity — doors close Friday, next cohort in 3 months |
 | **Name** | "The $5K Sales Page Bootcamp" |
-| **Price** | $1,997 pay-in-full OR $797 × 3 |
+| **Price** | $1,997 pay-in-full OR $797 × 3 ($2,391 total) |
 
-Same modules. Same instructor. ~4x conversion. Lower refund rate (conditional guarantee qualifies).
+Proposed redesign only; measure conversion, refund, retention and fulfillment effects before drawing conclusions.
 
 **Lesson:** rename the outcome, add proof, install a real scarcity mechanic.
 
@@ -95,7 +95,7 @@ Same modules. Same instructor. ~4x conversion. Lower refund rate (conditional gu
 | **Name** | "The Marketing Ops Stack" |
 | **Price** | $97 pay-in-full |
 
-Same templates. ~2x close rate from the same traffic. The differentiator was the "in one Saturday" outcome anchor and the Loom that proves the speed claim.
+Proposed redesign only; measure conversion, refund, retention and fulfillment effects before drawing conclusions.
 
 **Lesson:** for low-priced info products, the dream outcome and a fast first-win are the levers. Don't over-engineer the guarantee.
 
@@ -127,7 +127,7 @@ Same templates. ~2x close rate from the same traffic. The differentiator was the
 | **Name** | Tier name stayed "Enterprise" but added the engagement name "Strategic Onboarding" |
 | **Price** | $50K annual → $50K annual with quarterly billing + paid 30-day pilot |
 
-Same product. ~30% higher close rate, 50% shorter sales cycle. The pilot + SLA combination removed the procurement objection.
+Proposed redesign only; measure conversion, refund, retention and fulfillment effects before drawing conclusions.
 
 **Lesson:** for enterprise B2B, time-to-value IS the offer. Solve it explicitly.
 
@@ -157,9 +157,9 @@ Same product. ~30% higher close rate, 50% shorter sales cycle. The pilot + SLA c
 | **Guarantee** | "First two weeks — if it's not the room you wanted, full refund. After that, you're in." |
 | **Scarcity** | Cohort size capped at 12 — once full, you're on the waitlist for next quarter |
 | **Name** | "The Founders' Quarter" |
-| **Price** | $4K/quarter pay-in-full OR $1,500 × 3 |
+| **Price** | $4K/quarter pay-in-full OR $1,500 × 3 ($4,500 total) |
 
-Same coach, same cadence. Higher close rate. Notably: members renew at ~70% (was ~35% before) because the "alumni access for 1 year" bonus changed the buying decision frame from "quarter" to "year."
+Proposed redesign only; measure conversion, refund, retention and fulfillment effects before drawing conclusions.
 
 **Lesson:** for coaching, the room IS the offer. Position the room, not the curriculum. Renewal-friendly bonuses lock in long-term LTV.
 
@@ -191,7 +191,7 @@ Same coach, same cadence. Higher close rate. Notably: members renew at ~70% (was
 | **Name** | Tier name: "Growth Retainer"; engagement name: "The 90-Day Content Reset → 9-Month Growth Engine" |
 | **Price** | $8K/month, 6-month minimum, OR $7K/month for 12-month commit |
 
-Same writers. Same SEO methodology. ~2x close rate. 60% of pilots convert to 12-month commits.
+Proposed redesign only; measure conversion, refund, retention and fulfillment effects before drawing conclusions.
 
 **Lesson:** for slow-cycle services (SEO, brand, content), the offer has to address the timeline explicitly. "Trust us, results in 6 months" doesn't sell; "paid pilot → milestone at day 30 → ramp" does.
 
@@ -210,6 +210,6 @@ Look at the changes side-by-side:
 | Coaching mastermind | Positioned the room, not the coach | 1-year alumni access bonus |
 | Agency retainer | Outcome + timeline framing | Paid pilot guarantee |
 
-**The pattern:** in every case, the price barely moved (or didn't move at all). What moved was the *structure* of the offer — naming, framing, guaranteeing, sequencing.
+**The pattern:** these scenarios change offer structure, sometimes scope and total price too. They cannot isolate a causal effect of naming or framing.
 
 The price is the comparison. The value is the offer.

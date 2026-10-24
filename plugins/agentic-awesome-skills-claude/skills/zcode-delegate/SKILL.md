@@ -103,7 +103,7 @@ Two limits stated plainly, because ZCode cannot enforce them:
 
 - **`plan` mode refused edits in testing, but the relay does not treat that as a guarantee.** It
   takes a Git fingerprint before the run and reports a tri-state `readOnlyViolation` afterwards.
-  Confirm `touchedFiles` came back empty rather than assuming no edits.
+  Compare against the pre-run Git baseline and inspect `readOnlyViolation`; pre-existing dirty files can legitimately remain. Ignored files and paths outside the repository are not covered.
 - **ZCode has no `--allowed-tools`.** Only the `--disallowed-tools` denylist exists, and it *is*
   genuinely enforced. An explicit allowlisted tool surface is therefore impossible here — do not
   assume one.
@@ -158,7 +158,7 @@ Do not trust progress trackers over reality: read the working tree, not a status
 - **Re-run the project's gates yourself.** Never take "gates passed" on faith.
 - **Read the diff** against the brief: did ZCode do what was asked, nothing more and nothing less?
   `touchedFiles` is your starting point.
-- **On a `--read-only` run, check `readOnlyViolation` and confirm `touchedFiles` is empty.**
+- **On a `--read-only` run, check `readOnlyViolation` and compare `touchedFiles` with the pre-run baseline.**
 - Run the relevant guard skills on the diff if you have them installed.
 
 Full checklist: [references/review-and-land.md](references/review-and-land.md).
@@ -176,7 +176,7 @@ Full checklist: [references/review-and-land.md](references/review-and-land.md).
 The relay doubles as a way to get an adversarial second opinion with write detection, not a sandbox: dispatch
 `--read-only` with a brief listing the agreed points, then each contested point with both positions,
 and ask ZCode to defend or concede each. Because plan mode's guarantee is measured rather than
-enforced here, verify `touchedFiles` came back empty instead of assuming no edits.
+enforced here, compare Git state against the pre-run baseline instead of assuming no edits.
 
 ## Authorization model
 

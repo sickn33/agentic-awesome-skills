@@ -4,7 +4,7 @@ A Neon Function is a long-lived Node.js 24 process, which makes it a natural hos
 
 The AI SDK is the **recommended** way to build agents on Functions from TypeScript: one set of primitives (`streamText`, `generateText`, tool calling, structured output) over every catalog model. For a memory- and workflow-heavy agent with built-in tracing, use Mastra instead (see [references/mastra-studio.md](mastra-studio.md)); both point at the same gateway.
 
-The pattern below is a complete agent: it streams chat and, when asked, generates an image, uploads it to Object Storage, and indexes it in Postgres.
+The pattern below is an incomplete integration sketch; it requires authentication, tenant filters, input validation and error sanitization before deployment: it streams chat and, when asked, generates an image, uploads it to Object Storage, and indexes it in Postgres.
 
 ## 1. Declare the gateway and the function
 
@@ -50,11 +50,11 @@ export default {
 
     const result = streamText({
       model: neon("claude-sonnet-4-6"), // swap to gpt-5-mini, gemini-2-5-flash, …
-      system: "You are a concise assistant with access to the user's todos.",
+      system: "You are a concise assistant with access to the demonstration todo table.",
       messages,
       tools: {
-        countOpenTodos: tool({
-          description: "Count the user's open todos.",
+        countDemoTodos: tool({
+          description: "Count all rows in the demonstration todo table (not tenant-scoped or filtered by completion).",
           inputSchema: z.object({}),
           execute: async () => ({ open: await db.$count(todos) }),
         }),
@@ -68,7 +68,7 @@ export default {
     });
 
     return result.toUIMessageStreamResponse({
-      onError: (error) => (error instanceof Error ? error.message : String(error)),
+      onError: () => "Agent request failed", // log sanitized diagnostics server-side
     });
   },
 };
@@ -103,7 +103,7 @@ const result = streamText({
   async onStepFinish({ toolResults }) {
     for (const tr of toolResults) {
       if (tr.toolName !== "image_generation") continue;
-      const base64 = imageResultBase64(tr.output);
+      const base64 = imageResultBase64(tr.output); // application helper: validate the installed provider's output schema first
       if (!base64) continue;
       const key = `generated/${randomUUID()}.jpg`;
       await files.upload(key, Buffer.from(base64, "base64"), { contentType: "image/jpeg" });

@@ -2,7 +2,12 @@
 
 ## Overview
 
-Chain-of-Thought (CoT) prompting elicits step-by-step reasoning from LLMs, dramatically improving performance on complex reasoning, math, and logic tasks.
+Chain-of-Thought (CoT) prompting elicits step-by-step reasoning from LLMs, which can improve performance depending on the model and task on complex reasoning, math, and logic tasks.
+
+The following are conceptual sketches, not a complete SDK. Missing helpers
+(`extract_final_answer`, `explore_branch`, etc.) must be implemented and tested.
+Sample agreement is not calibrated confidence, and model self-verification does
+not replace independent tests or tools. Respect model-specific reasoning APIs.
 
 ## Core Techniques
 
@@ -56,19 +61,17 @@ A: Let's think step by step:"""
 Generate multiple reasoning paths and take the majority vote:
 
 ```python
-import openai
 from collections import Counter
 
-def self_consistency_cot(query, n=5, temperature=0.7):
+def self_consistency_cot(client, query, n=5):
+    if n < 1:
+        raise ValueError("n must be positive")
     prompt = f"{query}\n\nLet's think step by step:"
 
     responses = []
     for _ in range(n):
-        response = openai.ChatCompletion.create(
-            model="gpt-5",
-            messages=[{"role": "user", "content": prompt}],
-            temperature=temperature
-        )
+        # Supply an adapter for the chosen provider; parse a task-specific answer.
+        response = client.complete(prompt)
         responses.append(extract_final_answer(response))
 
     # Take majority vote
@@ -77,7 +80,7 @@ def self_consistency_cot(query, n=5, temperature=0.7):
 
     return {
         'answer': final_answer,
-        'confidence': answer_counts[final_answer] / n,
+        'sample_agreement': answer_counts[final_answer] / n,
         'all_responses': responses
     }
 ```
@@ -361,7 +364,7 @@ def evaluate_cot_quality(reasoning_chain):
 ## Best Practices
 
 1. **Clear Step Markers**: Use numbered steps or clear delimiters
-2. **Show All Work**: Don't skip steps, even obvious ones
+2. **Explain Appropriately**: Request a concise rationale, assumptions and verifiable calculations, not hidden internal reasoning
 3. **Verify Calculations**: Add explicit verification steps
 4. **State Assumptions**: Make implicit assumptions explicit
 5. **Check Edge Cases**: Consider boundary conditions

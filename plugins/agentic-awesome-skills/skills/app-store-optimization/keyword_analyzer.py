@@ -50,6 +50,8 @@ class KeywordAnalyzer:
         Returns:
             Dictionary with keyword analysis
         """
+        if not keyword.strip() or any(not isinstance(v, (int, float)) or not __import__("math").isfinite(v) or v < 0 for v in (search_volume, competing_apps, relevance_score)) or relevance_score > 1:
+            raise ValueError("Provide a keyword, nonnegative finite metrics and relevance in [0, 1]")
         competition_level = self._calculate_competition_level(competing_apps)
         volume_category = self._categorize_search_volume(search_volume)
         difficulty_score = self._calculate_keyword_difficulty(
@@ -165,8 +167,8 @@ class KeywordAnalyzer:
             long_tail_keywords.append({
                 'keyword': variation1,
                 'pattern': 'modifier_base',
-                'estimated_competition': 'low',
-                'rationale': f"Less competitive variation of '{base_keyword}'"
+                'estimated_competition': 'unknown',
+                'rationale': f"Candidate variation; competition unmeasured of '{base_keyword}'"
             })
 
             # Base + modifier
@@ -174,7 +176,7 @@ class KeywordAnalyzer:
             long_tail_keywords.append({
                 'keyword': variation2,
                 'pattern': 'base_modifier',
-                'estimated_competition': 'low',
+                'estimated_competition': 'unknown',
                 'rationale': f"Specific use-case variation of '{base_keyword}'"
             })
 
@@ -185,7 +187,7 @@ class KeywordAnalyzer:
             long_tail_keywords.append({
                 'keyword': question_keyword,
                 'pattern': 'question_based',
-                'estimated_competition': 'very_low',
+                'estimated_competition': 'unknown',
                 'rationale': f"Informational search query"
             })
 
@@ -261,7 +263,7 @@ class KeywordAnalyzer:
         densities = {}
         for keyword in target_keywords:
             keyword_lower = keyword.lower()
-            occurrences = text_lower.count(keyword_lower)
+            occurrences = len(re.findall(r"(?<!\w)" + re.escape(keyword_lower) + r"(?!\w)", text_lower)) if keyword_lower.strip() else 0
             density = (occurrences / total_words) * 100 if total_words > 0 else 0
             densities[keyword] = round(density, 2)
 

@@ -14,7 +14,7 @@
 
 ## 必须联读内容
 
-`v3-procedural-judgment-pack` 和 `judgment-responsibility-pack`。
+`v5-strong-judgment-eight-pack` 和 `v5-evidence-downgrade-action-ceiling-pack`。
 
 ## 证据要求
 

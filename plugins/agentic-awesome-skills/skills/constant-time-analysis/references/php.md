@@ -60,8 +60,7 @@ uv run {baseDir}/ct_analyzer/analyzer.py --json crypto.php
 
 | Function | Issue | Safe Alternative |
 |----------|-------|------------------|
-| `chr()` | Table lookup indexed by secret data | `pack('C', $int)` |
-| `ord()` | Table lookup indexed by secret data | `unpack('C', $char)[1]` |
+| `chr()` / `ord()` | Investigate actual implementation and secret dependence | No generic timing guarantee from `pack`/`unpack` |
 | `bin2hex()` | Table lookups indexed on secret data | Custom constant-time implementation |
 | `hex2bin()` | Table lookups indexed on secret data | Custom constant-time implementation |
 | `base64_encode()` | Table lookups indexed on secret data | Custom constant-time implementation |
@@ -109,15 +108,7 @@ $index = random_int(0, count($array) - 1);
 
 ### Character Operations
 
-```php
-// VULNERABLE: Table lookup timing
-$byte = ord($secret_char);
-$char = chr($secret_byte);
-
-// SAFE: No table lookup
-$byte = unpack('C', $secret_char)[1];
-$char = pack('C', $secret_byte);
-```
+Do not substitute `pack`/`unpack` for `chr`/`ord` and claim constant-time behavior. Review the exact PHP implementation and generated/native operations; the function name alone does not establish a secret-indexed table lookup. Use reviewed native cryptographic primitives rather than custom PHP encoding routines for secret-sensitive operations.
 
 ## Troubleshooting
 

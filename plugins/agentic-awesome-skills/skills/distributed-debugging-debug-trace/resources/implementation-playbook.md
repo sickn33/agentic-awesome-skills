@@ -179,7 +179,7 @@ const http = require('http');
 class RemoteDebugServer {
     constructor(options = {}) {
         this.port = options.port || 9229;
-        this.host = options.host || '0.0.0.0';
+        this.host = '127.0.0.1'; // Explicit approved tunnel required for remote access
         this.wsPort = options.wsPort || 9230;
         this.sessions = new Map();
     }
@@ -189,7 +189,7 @@ class RemoteDebugServer {
         inspector.open(this.port, this.host, true);
         
         // Create WebSocket server for remote connections
-        this.wss = new WebSocket.Server({ port: this.wsPort });
+        this.wss = new WebSocket.Server({ host: this.host, port: this.wsPort });
         
         this.wss.on('connection', (ws) => {
             const sessionId = this.generateSessionId();
@@ -219,7 +219,7 @@ class RemoteDebugServer {
         
         switch (command.type) {
             case 'evaluate':
-                this.evaluateExpression(sessionId, command.expression);
+                throw new Error("Remote expression evaluation is disabled; use an approved inspector session");
                 break;
             case 'setBreakpoint':
                 this.setBreakpoint(command.file, command.line);
@@ -265,8 +265,8 @@ RUN apt-get update && apt-get install -y \
     vim
     
 EXPOSE 9229 9230
-ENV NODE_OPTIONS="--inspect=0.0.0.0:9229"
-CMD ["node", "--inspect-brk=0.0.0.0:9229", "index.js"]
+ENV NODE_OPTIONS="--inspect=127.0.0.1:9229"
+CMD ["node", "--inspect-brk=127.0.0.1:9229", "index.js"]
 ```
 
 ### 3. Distributed Tracing
@@ -312,7 +312,7 @@ class TracingSystem {
                     },
                     '@opentelemetry/instrumentation-http': {
                         requestHook: (span, request) => {
-                            span.setAttribute('http.request.body', JSON.stringify(request.body));
+                            // Do not capture request bodies; emit only approved non-sensitive metadata.
                         },
                         responseHook: (span, response) => {
                             span.setAttribute('http.response.size', response.length);
@@ -321,7 +321,7 @@ class TracingSystem {
                     '@opentelemetry/instrumentation-express': {
                         requestHook: (span, req) => {
                             span.setAttribute('user.id', req.user?.id);
-                            span.setAttribute('session.id', req.session?.id);
+                            // Do not record session identifiers.
                         },
                     },
                 }),
@@ -860,7 +860,7 @@ class MemoryLeakDetector {
         return {
             increasing,
             delta,
-            rate: delta / (last.timestamp - first.timestamp) * 1000 * 60, // MB per minute
+            rate: delta / (last.timestamp - first.timestamp) * 1000 * 60 / (1024 * 1024), // MiB per minute
         };
     }
 }
@@ -915,11 +915,11 @@ class DebugConfiguration {
     
     getLevel() {
         const level = process.env.DEBUG_LEVEL || 'info';
-        return this.config.levels[level] || 2;
+        return this.config.levels[level] ?? 2; // Preserve error level zero
     }
     
     shouldSample(type) {
-        const rate = this.config.sampling[type] || 1.0;
+        const rate = this.config.sampling[type] ?? 1.0; // Preserve an explicit zero sample rate
         return Math.random() < rate;
     }
 }
@@ -1026,26 +1026,10 @@ class ProductionDebugger {
             req.debugMode = true;
             req.debugContext = new DebugContext().create(req.id);
             
-            // Override console for this request
-            const originalConsole = { ...console };
-            ['log', 'debug', 'info', 'warn', 'error'].forEach(method => {
-                console[method] = (...args) => {
-                    req.debugContext.log(req.id, method, args[0], args.slice(1));
-                    originalConsolemethod;
-                };
-            });
-            
-            // Restore console on response
-            res.on('finish', () => {
-                Object.assign(console, originalConsole);
-                
-                // Send debug info if requested
-                if (req.headers['x-debug-response'] === 'true') {
-                    const debugInfo = req.debugContext.export(req.id);
-                    res.setHeader('X-Debug-Info', JSON.stringify(debugInfo));
-                }
-            });
-            
+            // Use a request-scoped redacting logger/AsyncLocalStorage instead of
+            // replacing the process-global console (which races concurrent requests).
+            // Export approved diagnostics to a private bounded sink, never response headers.
+
             next();
         };
     }
@@ -1180,7 +1164,7 @@ Create a debug dashboard for monitoring:
         
         function updateMetrics(metrics) {
             const container = document.getElementById('metrics');
-            container.innerHTML = `
+            container.textContent = `
                 <div>CPU: ${metrics.cpu.percent}%</div>
                 <div>Memory: ${metrics.memory.used}MB / ${metrics.memory.total}MB</div>
                 <div>Uptime: ${metrics.uptime}s</div>
@@ -1192,7 +1176,7 @@ Create a debug dashboard for monitoring:
             const container = document.getElementById('traces');
             const entry = document.createElement('div');
             entry.className = 'log-entry';
-            entry.innerHTML = `
+            entry.textContent = `
                 <span>${trace.timestamp}</span>
                 <span>${trace.method} ${trace.path}</span>
                 <span>${trace.duration}ms</span>
@@ -1205,7 +1189,7 @@ Create a debug dashboard for monitoring:
             const container = document.getElementById('logs');
             const entry = document.createElement('div');
             entry.className = `log-entry ${log.level}`;
-            entry.innerHTML = `
+            entry.textContent = `
                 <span>${log.timestamp}</span>
                 <span>[${log.level.toUpperCase()}]</span>
                 <span>${log.message}</span>

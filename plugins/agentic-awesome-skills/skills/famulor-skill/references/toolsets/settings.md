@@ -1,5 +1,8 @@
 # Settings toolset
 
+**Operation boundary.** Workspace/key visibility is not authority to switch tenant, mint credentials, change retention, or enable tracking. Use secure non-model-visible secret handoff; explain irreversible retention effects and obtain the requested policy scope.
+
+
 Account, workspaces, API keys, retention, memory, domains, and sessions. Connect only this group with `https://app.famulor.io/mcp?toolsets=settings`.
 
 This 2026-08-23 snapshot covers all 20 tools assigned to `settings` in the canonical 282-tool registry. The live MCP `tools/list` response is authoritative for arguments, current availability, annotations, and plan or role gating. Never invent fields from this catalog.
@@ -7,7 +10,7 @@ This 2026-08-23 snapshot covers all 20 tools assigned to `settings` in the canon
 | Tool | Effect | Accepted scope | Execution | Purpose snapshot |
 | --- | --- | --- | --- | --- |
 | `add_custom_domain` | Write/action | `settings:write or assistants:write` | Immediate | Attach a hostname to the workspace. The response contains ownership and routing DNS records; the hostname is not activated until ownership, DNS, and TLS are ready. |
-| `create_api_key` | Write/action | `settings:write` | Immediate | Mint a new workspace API key. scopes must be a subset of THIS credential's own scopes — a key can never mint another key with broader access than itself (omitted = same scopes as this credential, or every scope if this credential already has full access). The plaintext key is returned exactly once and is never stored or shown again. |
+| `create_api_key` | Write/action | `settings:write` | Immediate | Mint a new workspace API key. scopes must be a subset of THIS credential's own scopes — a key can never mint another key with broader access than itself (omitted = same scopes as this credential, or every scope if this credential already has full access). The plaintext key is returned exactly once. Mint it only if the client can deliver it directly to an explicitly authorized secret destination without exposing it to the model, transcript, logs, or ordinary files; otherwise direct the user to the platform’s non-agent credential flow. |
 | `create_workspace` | Write/action | `settings:write` | Immediate | Create an additional workspace owned by this credential's user. Requires a user-owned API key or OAuth token; a service-account credential represents one workspace and cannot own more. The active plan and any additional workspace capacity are evaluated across the workspaces this user already owns in the same brand. |
 | `get_ai_inference_settings` | Read | `settings:read` | Immediate | Read the workspace AI inference region (global, eu, or us). |
 | `get_custom_domain` | Read | `settings:read or assistants:read` | Immediate | Read the workspace custom domain and its live ownership, DNS routing, and TLS readiness. Returns the exact TXT/A/CNAME records still required. |

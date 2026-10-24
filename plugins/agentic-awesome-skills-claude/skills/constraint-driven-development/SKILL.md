@@ -18,13 +18,13 @@ compatibility: Portable instruction skill; no CLI, MCP server, or network access
 
 ## Overview
 
-Other skills in this pack describe what good looks like. `code-review-and-quality` gives you five axes. `test-driven-development` gives you a cycle. `security-and-hardening` gives you a threat list. All of that lives in prose the agent reads and may or may not follow, and none of it survives the end of the session.
+Other skills in this pack describe what good looks like. `code-review-and-quality` gives you five axes. `test-driven-development` gives you a cycle. `security-and-hardening` gives you a threat list. All of that lives in prose the agent reads and may or may not follow, and persisted repository instructions can survive sessions, though prose alone does not enforce behavior.
 
 This skill produces something different: a written record of **this project's** bar, with numbers, that outlives the conversation and can be checked mechanically.
 
 The reason matters. When you wrote the code, reading it told you whether it was any good. An agent writes more in an afternoon than you will read that week, so the judgement moves out of your head and into checks that run around the loop. Those checks need to exist, they need numbers you actually chose, and they need to fire close enough to the work that the agent fixes its own output.
 
-Spec-driven development says what to build. Test-driven development proves it works. Constraint-driven development defines what "good enough to ship" means, before anyone argues about it in a pull request.
+Spec-driven development says what to build. Test-driven development supplies evidence for tested cases. Constraint-driven development defines what "good enough to ship" means, before anyone argues about it in a pull request.
 
 ## When to Use
 
@@ -222,13 +222,13 @@ Agents don't craft clever loopholes. They hit a red check and take the cheapest 
 4. **Work is unfinished.** A stub that throws, an empty `catch` turning a failure into silence, a `TODO` standing where the implementation should be.
 5. **An exception appeared.** A new row in the Exceptions table nobody discussed.
 
-None of this needs tooling beyond `git diff`. Tightening the bar should be silent; loosening it should be loud.
+None of this needs tooling beyond `git diff`. All policy changes need review appropriate to their authority and operational effect; do not silently tighten gates during unrelated work.
 
 Unlike the numbered dimensions, the floor has no de facto tool of its own, so an agent asked to enforce it tends to write a checker from scratch, and two agents write two different ones. A reference implementation of these five checks ships with this skill in [references/floor-guard.md](references/floor-guard.md) (diff-scoped, exit `0`/`1`/`2`, patterns adaptable per ecosystem). Adapt that rather than reinventing it, for the same reason every dimension names a de facto tool: so the mechanism is the same across runs and stacks.
 
 **Not all checks are equally circular.** Rank them by one question: can the agent make this pass by writing code that doesn't work?
 
-- **External** — axe-core encodes WCAG, `osv-scanner` reads a vulnerability database, Lighthouse measures a real browser. The agent can't argue with these.
+- **External** — axe-core encodes WCAG, `osv-scanner` reads a vulnerability database, Lighthouse measures a real browser. Their coverage and configuration still require review.
 - **Project** — your lint rules, your layer boundaries. A human owns the file.
 - **Suite** — your own tests. Most useful, and the only genuinely circular one.
 
@@ -333,3 +333,9 @@ Follow this skill's workflow step by step and report what you did at each gate.
 ```
 
 > Adapted from [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance.
+
+### Enforced means observed
+
+The tables are templates, not installed tools or working blockers. Check exact tool versions, valid flags and exit behavior; missing tools/report parsing must fail closed or be explicitly unavailable. vitest coverage alone does not calculate changed-line coverage, Semgrep scan alone may exit0 on findings without enforcement flags, and Lighthouse/axe collection alone does not implement numeric/impact thresholds. Add a reviewed wrapper and meaningful failing fixtures before claiming a gate. Lighthouse is lab data, not field p75CWV; automated axe cannot certify accessibility.
+
+Performance durations, coverage/mutation defaults and ratchet tolerances are local proposals, not universal standards. Measure the real workload and confirm policy scope; avoid new mandatory dependencies/CI gates unless requested. Installing or executing project checks can run untrusted code and send inventories/URLs externally: use a trusted isolated environment, redacted reports and authorized targets. A markdown file does not override protected repository rules or actual CI implementation. No constraint deployment, mutation/coverage test or tool installation was run.

@@ -41,7 +41,7 @@ The two failure modes this skill prevents:
 1. **Wasting the engagement** testing/triaging assets that aren't the target's.
 2. **Attacking an innocent third party** that merely shares the name — out of scope, and real harm.
 
-**Rule: ownership is guilty-until-proven. An asset is the target's only when a concrete ownership signal ties it to the target — never because a scanner's keyword matched.**
+**Rule: ownership must be evidenced, and ownership is not permission.** Even a confirmed subsidiary/domain/bucket remains excluded unless the written scope authorizes its testing.
 
 ---
 
@@ -66,12 +66,15 @@ Automated `.env` / `.git` / `actuator` / admin-panel "Criticals" are overwhelmin
 curl -s -o /tmp/a -w "%{http_code} %{size_download}\n" https://host.target.com/.env
 # a junk control on the same host
 curl -s -o /tmp/b -w "%{http_code} %{size_download}\n" https://host.target.com/zzz-nonsense-$RANDOM
-# identical byte length / body  →  FALSE POSITIVE (catch-all), discard
+# Identical bodies suggest a catch-all; compare status, headers, redirects
+# and content semantics before disposing the finding. Size alone is insufficient.
 cmp -s /tmp/a /tmp/b && echo "SOFT-404 false positive" || echo "differs — investigate"
 ```
-Real exposures have a content-type + signature that differs from the catch-all (`.git/config` starts `[core]`; `.env` has `KEY=value`; phpinfo has the XHTML-transitional doctype + `PHP Version`). A physical `.php`/`phpinfo.php` that returns a *bigger/different* body than the junk control is the real-vs-soft-404 tell.
+Real exposures have a content-type + signature that differs from the catch-all (`.git/config` starts `[core]`; `.env` has `KEY=value`; phpinfo has the XHTML-transitional doctype + `PHP Version`). A different body alone does not prove exposure: confirm actual sensitive content with minimal redacted evidence and avoid downloading credential data unnecessarily.
 
 ---
+
+Use private per-run temporary paths with bounded response size/timeouts rather than shared `/tmp/a` and `/tmp/b`; do not preserve discovered secrets in a general recon report.
 
 ## The triage workflow
 

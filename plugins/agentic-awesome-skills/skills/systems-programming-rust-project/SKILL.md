@@ -30,6 +30,8 @@ $ARGUMENTS
 
 ## Instructions
 
+Choose one scaffold in an empty/approved directory; these fragments omit command modules, CoreType, error implementations and tests, so they are not a complete compiling project. Implement those files and run cargo fmt/check/clippy/test before claiming completion. Pin a supported toolchain/dependency set and verify the declared MSRV; semver ranges can resolve newer dependencies. Select the actual author/license instead of copying placeholder rights. Add authentication/authorization to protected API routes and expose network listeners only intentionally.
+
 ### 1. Analyze Project Type
 
 Determine the project type from user requirements:
@@ -52,7 +54,8 @@ cargo new --lib library-name
 # Initialize git (cargo does this automatically)
 # Add to .gitignore if needed
 echo "/target" >> .gitignore
-echo "Cargo.lock" >> .gitignore  # For libraries only
+# Decide Cargo.lock policy explicitly; libraries may commit it for reproducible CI.
+# Downstream library consumers resolve their own lockfiles.
 ```
 
 ### 3. Generate Binary Project Structure
@@ -380,9 +383,9 @@ async fn main() {
     let app = Router::new()
         .route("/health", get(routes::health::health_check))
         .nest("/api/users", routes::users::router())
-        .layer(CorsLayer::permissive());
+        .layer(CorsLayer::new()); // add only approved origins/methods if cross-origin access is needed
 
-    let addr = SocketAddr::from(([0, 0, 0, 0], 3000));
+    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
     tracing::info!("Listening on {}", addr);
 
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();

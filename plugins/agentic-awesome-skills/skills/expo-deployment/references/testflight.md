@@ -1,11 +1,11 @@
 # TestFlight
 
-Always ship to TestFlight first. Internal testers, then external testers, then App Store. Never skip this.
+Use TestFlight for the project’s beta-validation plan before an approved App Store release; internal/external rollout is a project decision.
 
 ## Submit
 
 ```bash
-npx testflight
+eas build -p ios --profile production --auto-submit
 ```
 
 That's it. One command builds and submits to TestFlight.
@@ -19,12 +19,12 @@ EXPO_APPLE_ID=you@email.com
 EXPO_APPLE_TEAM_ID=XXXXXXXXXX
 ```
 
-The CLI prints your Team ID when you run `npx testflight`. Copy it.
+The CLI prints your Team ID when you run `eas build -p ios --profile production --auto-submit`. Copy it.
 
 ## Why TestFlight First
 
-- Internal testers get builds instantly (no review)
-- External testers require one Beta App Review, then instant updates
+- Internal testers can receive processed, eligible builds without external Beta App Review
+- External testers require one Beta App Review, later builds may still require review
 - Catch crashes before App Store review rejects you
 - TestFlight crash reports are better than App Store crash reports
 - 90 days to test before builds expire
@@ -34,15 +34,15 @@ The CLI prints your Team ID when you run `npx testflight`. Copy it.
 
 **Internal (100 max)**: Your team. Immediate access. Use for every build.
 
-**External (10,000 max)**: Beta users. First build needs review (~24h), then instant. Always have an external group—even if it's just friends. Real feedback beats assumptions.
+**External (10,000 max)**: Beta users. External builds may require Beta App Review; timing and later review are not guaranteed. Always have an external group—even if it's just friends. Real feedback beats assumptions.
 
 ## Tips
 
 - Submit to external TestFlight the moment internal looks stable
-- Beta App Review is faster and more lenient than App Store Review
+- Beta App Review has distinct requirements; do not assume approval or a deadline
 - Add release notes—testers actually read them
 - Use TestFlight's built-in feedback and screenshots
-- Never go straight to App Store. Ever.
+- Choose the release path based on the app’s reviewed validation plan.
 
 ## Troubleshooting
 

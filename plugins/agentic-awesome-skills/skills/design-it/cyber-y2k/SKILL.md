@@ -39,7 +39,7 @@ body {
   background: linear-gradient(124deg, #ff2400, #e81d1d, #e8b71d, #e3e81d, #1de840, #1ddde8, #2b1de8, #dd00f3, #dd00f3);
   background-size: 1800% 1800%;
   animation: rainbow 18s ease infinite;
-  
+
   color: #fff;
   font-weight: 900;
   text-transform: uppercase;
@@ -49,7 +49,7 @@ body {
   mix-blend-mode: screen; /* Makes it interact with background */
 }
 
-@keyframes rainbow { 
+@keyframes rainbow {
   0%{background-position:0% 82%}
   50%{background-position:100% 19%}
   100%{background-position:0% 82%}
@@ -86,11 +86,11 @@ body {
 ```swift
 struct CyberY2KView: View {
     @State private var rotation: Double = 0
-    
+
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
-            
+
             VStack(spacing: 40) {
                 // Glitch Text
                 ZStack {
@@ -98,17 +98,17 @@ struct CyberY2KView: View {
                         .font(.custom("Courier New", size: 40).bold())
                         .foregroundColor(.cyan)
                         .offset(x: -3, y: 2) // RGB split channel 1
-                    
+
                     Text("SYSTEM.ERROR")
                         .font(.custom("Courier New", size: 40).bold())
                         .foregroundColor(.pink)
                         .offset(x: 3, y: -2) // RGB split channel 2
-                    
+
                     Text("SYSTEM.ERROR")
                         .font(.custom("Courier New", size: 40).bold())
                         .foregroundColor(.white)
                 }
-                
+
                 // Holographic Button
                 Button(action: {}) {
                     Text("ENTER MATRIX")
@@ -153,6 +153,12 @@ class _CyberY2KScreenState extends State<CyberY2KScreen> with SingleTickerProvid
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this, duration: const Duration(seconds: 5))..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -225,7 +231,7 @@ const CyberY2KScreen = () => {
   return (
     <View style={{ flex: 1, backgroundColor: '#050505', justifyContent: 'center', alignItems: 'center' }}>
       <GlitchText text="SYSTEM.ERROR" />
-      
+
       <View style={{ marginTop: 60 }}>
         {/* React Native cannot easily animate gradient angles natively.
             Use a complex LinearGradient to simulate the iridescent shine. */}
@@ -277,9 +283,9 @@ fun CyberY2KScreen() {
         verticalArrangement = Arrangement.Center
     ) {
         GlitchText("SYSTEM.ERROR")
-        
+
         Spacer(Modifier.height(60.dp))
-        
+
         // Holographic Button
         Box(
             modifier = Modifier
@@ -290,7 +296,7 @@ fun CyberY2KScreen() {
                     ),
                     shape = RoundedCornerShape(30.dp)
                 )
-                .graphicsLayer { rotationZ = rotation } // Note: This rotates the whole button. 
+                // Keep text and hit target stationary; this example uses a static gradient.
                 // To rotate ONLY the gradient brush requires custom ShaderBrush or drawing the rect manually in drawBehind with a rotating matrix.
                 .border(1.dp, Color.White.copy(alpha = 0.5f), RoundedCornerShape(30.dp))
                 .padding(horizontal = 32.dp, vertical = 16.dp)
@@ -304,7 +310,7 @@ fun CyberY2KScreen() {
 - A `Brush.sweepGradient` creates the holographic CD-ROM colors, though rotating the brush *itself* (not the whole widget) in Compose requires a bit of advanced `Matrix` manipulation inside a `ShaderBrush`.
 
 ## Do's and Don'ts
-- **DO**: Incorporate UI elements that look like raw HTML/CSS (like visible tables or marquee tags) as an ironic nod to early web.
+- **DO**: Keep glitch layers decorative and expose the text once to assistive technology. Use static decoration when reduced motion is requested; avoid obsolete marquee elements.
 - **DON'T**: Use clean, modern geometric layouts. Cyber Y2K is chaotic and rebellious.
 
 ## Limitations

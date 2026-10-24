@@ -16,7 +16,7 @@ This skill provides comprehensive guidance for building serverless applications 
 
 ## AWS Documentation Requirement
 
-Always verify AWS facts using MCP tools (`mcp__aws-mcp__*` or `mcp__*awsdocs*__*`) before answering. The `aws-mcp-setup` dependency is auto-loaded — if MCP tools are unavailable, guide the user through that skill's setup flow.
+Verify changeable AWS facts with available official documentation tools or primary AWS documentation. Dependencies are not automatically loaded by this Markdown skill; do not install MCP servers as a prerequisite for answering.
 
 ## Serverless MCP Servers
 
@@ -204,7 +204,8 @@ rule.addTarget(new targets.LambdaFunction(processOrderFunction));
 **Operations must be idempotent**
 
 ```typescript
-// ✅ GOOD - Idempotent operation
+// INCOMPLETE sketch: this check/process/write sequence races on concurrent
+// deliveries and repeats side effects if the process crashes before recording completion.
 export const handler = async (event: SQSEvent) => {
   for (const record of event.Records) {
     const orderId = JSON.parse(record.body).orderId;
@@ -232,7 +233,9 @@ export const handler = async (event: SQSEvent) => {
 };
 ```
 
-**Implement retry logic with exponential backoff**:
+Use atomic conditional acquisition, explicit in-progress/completed state and expiry, plus provider-side idempotency/reconciliation for external effects. See [AWS Powertools idempotency](https://docs.aws.amazon.com/powertools/typescript/latest/features/idempotency/). A pre-read followed by put is not duplicate protection.
+
+**Illustrative retry loop for replay-safe transient operations only**:
 ```typescript
 async function withRetry<T>(fn: () => Promise<T>, maxRetries = 3): Promise<T> {
   for (let i = 0; i < maxRetries; i++) {
@@ -288,6 +291,8 @@ export const handler = async (event: SQSEvent) => {
     }
   }
 
+  // Requires ReportBatchItemFailures on the event source mapping. For FIFO,
+  // stop after the first failure and return unprocessed records too to preserve order.
   // Return partial batch failures for retry
   return { batchItemFailures: failures };
 };
@@ -342,7 +347,7 @@ Use AWS Documentation MCP to verify service features, regional availability, and
 
 ## Additional Resources
 
-This skill includes comprehensive reference documentation based on AWS best practices:
+The following upstream reference files are not bundled in this single-file catalog copy. Obtain and inspect the original material before dependent steps; do not claim these procedures were followed:
 
 - **Serverless Patterns**: `references/serverless-patterns.md`
   - Core serverless architectures and API patterns

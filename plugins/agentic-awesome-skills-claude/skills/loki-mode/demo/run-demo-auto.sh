@@ -1,8 +1,9 @@
 #!/bin/bash
-# Loki Mode Auto Demo - Non-interactive version for recording
+# Loki Mode SIMULATION - staged output for recording, not an agent/test run
 # Usage: ./demo/run-demo-auto.sh
 
 set -euo pipefail
+echo "SIMULATION: the following output and metrics are scripted illustrations."
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(dirname "$SCRIPT_DIR")"

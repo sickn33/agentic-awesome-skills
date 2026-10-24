@@ -1,6 +1,6 @@
 # Transcription Tools Comparison
 
-Comprehensive comparison of audio transcription engines supported by the audio-transcriber skill.
+Historical comparison notes. Only Faster-Whisper/OpenAI Whisper and optional Claude summary are implemented by the helper; cloud services below require separate integration, authorization and current documentation. All numeric pricing, free tiers, language counts, model sizes and performance ratios below are unverified historical examples, not current quotes or guarantees.
 
 ## Overview
 
@@ -21,9 +21,9 @@ Comprehensive comparison of audio transcription engines supported by the audio-t
 ✅ **Same quality** as original Whisper  
 ✅ **Lower memory usage** (50-60% less RAM)  
 ✅ **Free and open-source**  
-✅ **100% offline** (privacy guaranteed)  
+✅ Local inference after weights are cached; privacy also depends on outputs and optional summary.
 ✅ **Easy installation** (`pip install faster-whisper`)  
-✅ **Drop-in replacement** for Whisper
+✅ **alternative backend** with a different API
 
 ### Cons
 ❌ Requires Python 3.8+  
@@ -222,6 +222,7 @@ pip install azure-cognitiveservices-speech
 ### Usage Example
 
 ```python
+import os
 import azure.cognitiveservices.speech as speechsdk
 
 speech_config = speechsdk.SpeechConfig(
@@ -280,17 +281,18 @@ pip install assemblyai
 ### Usage Example
 
 ```python
+import os
 import assemblyai as aai
 
 aai.settings.api_key = os.environ["ASSEMBLYAI_API_KEY"]
 
 transcriber = aai.Transcriber()
-transcript = transcriber.transcribe("audio.mp3")
+transcript = transcriber.transcribe("audio.mp3", config=aai.TranscriptionConfig(speaker_labels=True))
 
 print(transcript.text)
 
 # Speaker diarization
-for utterance in transcript.utterances:
+for utterance in (transcript.utterances or []):
     print(f"Speaker {utterance.speaker}: {utterance.text}")
 ```
 
@@ -306,7 +308,7 @@ for utterance in transcript.utterances:
 - ✅ Limited budget
 
 ### Use Google Speech-to-Text if:
-- ✅ Need absolute best accuracy
+- ✅ Need to evaluate cloud recognition on representative audio
 - ✅ Have budget for cloud services
 - ✅ Want advanced features (punctuation, diarization)
 - ✅ Already using GCP ecosystem
@@ -325,28 +327,6 @@ for utterance in transcript.utterances:
 
 ---
 
-## Performance Benchmarks
+## Benchmark evidence
 
-**Test:** 1-hour podcast (MP3, 44.1kHz, stereo)
-
-| Tool | Processing Time | Accuracy | Cost |
-|------|----------------|----------|------|
-| Faster-Whisper (small) | 8 min | 94% | $0 |
-| Whisper (small) | 32 min | 94% | $0 |
-| Google Speech | 2 min | 96% | $1.44 |
-| Azure Speech | 3 min | 95% | $1.00 |
-| AssemblyAI | 4 min | 96% | $0.90 |
-
-*Benchmarks run on MacBook Pro M1, 16GB RAM*
-
----
-
-## Conclusion
-
-**For the audio-transcriber skill:**
-
-1. **Primary:** Faster-Whisper (best balance of speed, quality, privacy, cost)
-2. **Fallback:** Whisper (if Faster-Whisper unavailable)
-3. **Optional:** Cloud APIs (user choice for premium features)
-
-This ensures the skill works out-of-the-box for most users while allowing advanced users to integrate commercial services if needed.
+No reproducible benchmark dataset, measurement protocol or underlying results are bundled. The former exact accuracy/speed comparison is removed. Measure word error rate and real-time factor on representative authorized recordings with hardware, model, precision, decoding and language documented.

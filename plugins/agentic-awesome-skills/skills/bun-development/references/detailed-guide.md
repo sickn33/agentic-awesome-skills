@@ -17,8 +17,9 @@ curl -fsSLo "$tmpdir/bun-install.sh" https://bun.sh/install
 cat "$tmpdir/bun-install.sh"  # review the full installer before executing
 bash "$tmpdir/bun-install.sh"
 
-# Windows
-powershell -NoProfile -Command "Invoke-WebRequest https://bun.sh/install.ps1 -OutFile $env:TEMP\\bun-install.ps1; Get-Content $env:TEMP\\bun-install.ps1 -TotalCount 120; powershell -ExecutionPolicy Bypass -File $env:TEMP\\bun-install.ps1"
+# Windows: use the official installation page to save the installer to a private
+# review directory. Read the ENTIRE script, verify its source/version, then run it
+# as a separate authorized step. Do not preview only 120 lines and auto-execute.
 
 # Homebrew
 brew tap oven-sh/bun
@@ -35,12 +36,12 @@ bun upgrade
 
 | Feature         | Bun            | Node.js                     |
 | :-------------- | :------------- | :-------------------------- |
-| Startup time    | ~25ms          | ~100ms+                     |
-| Package install | 10-100x faster | Baseline                    |
-| TypeScript      | Native         | Requires transpiler         |
-| JSX             | Native         | Requires transpiler         |
-| Test runner     | Built-in       | External (Jest, Vitest)     |
-| Bundler         | Built-in       | External (Webpack, esbuild) |
+| Startup/install speed | Measure on the actual project | Workload/platform dependent |
+| TypeScript | Built-in transpilation, separate type checking | Current Node versions support a subset through type stripping; verify syntax |
+| Test runner | Built-in | Node also has a built-in test runner; ecosystem runners are optional |
+| Bundler | Built-in | Separate bundler commonly used |
+
+These are capability comparisons, not measured speedup guarantees.
 
 ---
 
@@ -113,7 +114,7 @@ bun create elysia my-api       # Elysia API
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "allowJs": true,
-    "types": ["bun-types"]
+    "types": ["bun"]
   }
 }
 ```
@@ -181,9 +182,9 @@ bunx cowsay "Hello from Bun!"
 ### 3.4 Lockfile
 
 ```bash
-# bun.lockb is a binary lockfile (faster parsing)
-# To generate text lockfile for debugging:
-bun install --yarn    # Creates yarn.lock
+# Current Bun creates the text bun.lock; commit it. Older bun.lockb is binary.
+# --yarn writes an additional Yarn lockfile, not Bun’s text-lock migration.
+bun install --yarn
 
 # Trust existing lockfile
 bun install --frozen-lockfile
@@ -277,6 +278,7 @@ for await (const chunk of reader) {
 ```typescript
 const server = Bun.serve({
   port: 3000,
+  hostname: "127.0.0.1",
 
   fetch(request) {
     const url = new URL(request.url);
@@ -296,7 +298,7 @@ const server = Bun.serve({
   },
 
   error(error) {
-    return new Response(`Error: ${error.message}`, { status: 500 });
+    return new Response("Internal server error", { status: 500 });
   },
 });
 
@@ -308,6 +310,7 @@ console.log(`Server running at http://localhost:${server.port}`);
 ```typescript
 const server = Bun.serve({
   port: 3000,
+  hostname: "127.0.0.1",
 
   fetch(req, server) {
     // Upgrade to WebSocket
@@ -324,7 +327,7 @@ const server = Bun.serve({
     },
 
     message(ws, message) {
-      console.log(`Received: ${message}`);
+      // Avoid logging arbitrary message content.
       ws.send(`Echo: ${message}`);
     },
 
@@ -335,7 +338,7 @@ const server = Bun.serve({
 });
 ```
 
-### 5.4 SQLite (Bun.sql)
+### 5.4 SQLite (bun:sqlite)
 
 ```typescript
 import { Database } from "bun:sqlite";
@@ -431,7 +434,7 @@ bun test --timeout 5000
 ```typescript
 import { expect, test } from "bun:test";
 
-test("matchers", () => {
+test("matchers", async () => {
   // Equality
   expect(1).toBe(1);
   expect({ a: 1 }).toEqual({ a: 1 });
@@ -467,7 +470,7 @@ test("matchers", () => {
 ### 6.4 Mocking
 
 ```typescript
-import { mock, spyOn } from "bun:test";
+import { mock, spyOn, expect } from "bun:test";
 
 // Mock function
 const mockFn = mock((x: number) => x * 2);
@@ -547,8 +550,8 @@ bun build ./src/cli.ts --compile --outfile myapp
 bun build ./src/cli.ts --compile --target=bun-linux-x64 --outfile myapp-linux
 bun build ./src/cli.ts --compile --target=bun-darwin-arm64 --outfile myapp-mac
 
-# With embedded assets
-bun build ./src/cli.ts --compile --outfile myapp --embed ./assets
+# Embedded assets: use the installed version’s documented file imports/compile asset workflow;
+# do not assume a generic --embed directory flag exists.
 ```
 
 ---
@@ -582,8 +585,8 @@ console.log(__filename);
 # 1. Install Bun
 brew install oven-sh/bun/bun
 
-# 2. Replace package manager
-rm -rf node_modules package-lock.json
+# 2. Test migration in a clean topic checkout; preserve the original lockfile.
+# Bun can migrate package-lock.json. Compare resolved dependencies and run tests.
 bun install
 
 # 3. Update scripts in package.json
@@ -594,31 +597,9 @@ bun install
 bun add -d @types/bun
 ```
 
-### 8.3 Differences from Node.js
+### 8.3 Compatibility is version-specific
 
-```typescript
-// ❌ Node.js specific (may not work)
-require("module")             // Use import instead
-require.resolve("pkg")        // Use import.meta.resolve
-__non_webpack_require__       // Not supported
-
-// ✅ Bun equivalents
-import pkg from "pkg";
-const resolved = import.meta.resolve("pkg");
-Bun.resolveSync("pkg", process.cwd());
-
-// ❌ These globals differ
-process.hrtime()              // Use Bun.nanoseconds()
-setImmediate()                // Use queueMicrotask()
-
-// ✅ Bun-specific features
-const file = Bun.file("./data.txt");  // Fast file API
-Bun.serve({ port: 3000, fetch: ... }); // Fast HTTP server
-Bun.password.hash(password);           // Built-in hashing
-```
-
----
-
+Bun supports CommonJS require/require.resolve, process.hrtime and setImmediate; do not replace them merely because they are Node APIs. queueMicrotask has different scheduling semantics and is not an equivalent setImmediate replacement. Test native addons, resolution, timers and framework behavior against the installed Bun version before migration. Changing the test runner is a separate compatibility change.
 
 ## 9. Performance Tips
 
@@ -641,7 +622,7 @@ const content = await file.text();
 import express from "express";
 const app = express();
 
-// Do: Bun.serve (native, 4-10x faster)
+// Alternative: Bun.serve; benchmark representative routes before speed claims
 Bun.serve({
   fetch(req) {
     return new Response("Hello!");
@@ -656,7 +637,7 @@ new Elysia().get("/", () => "Hello!").listen(3000);
 ### 9.3 Bundle for Production
 
 ```bash
-# Always bundle and minify for production
+# Bundle/minify when compatible with the deployment and dynamic import/native dependency requirements
 bun build ./src/index.ts --outdir ./dist --minify --target node
 
 # Then run the bundle
@@ -689,3 +670,9 @@ bun run ./dist/index.js
 - [Bun GitHub](https://github.com/oven-sh/bun)
 - [Elysia Framework](https://elysiajs.com/)
 - [Bun Discord](https://bun.sh/discord)
+
+## Operational limits
+
+Independent examples require an approved installed version; snippets were not executed. Bun transpilation is not type checking: run the project type checker. Pin dependency/template versions and review lifecycle scripts and registry trust before bunx/create/install; bunx may download code. Protect .env files, never bundle server credentials into browser targets. WebSocket production use needs origin/auth checks, payload/rate caps and graceful shutdown; close owned SQLite connections when finished.
+
+Primary references: [Installation](https://bun.sh/docs/installation), [Node compatibility](https://bun.sh/docs/runtime/nodejs-compat), [lockfile](https://bun.sh/docs/pm/lockfile).

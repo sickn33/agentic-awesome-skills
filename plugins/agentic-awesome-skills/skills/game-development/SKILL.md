@@ -62,10 +62,10 @@ UPDATE → Process game logic (fixed timestep)
 RENDER → Draw the frame (interpolated)
 ```
 
-**Fixed Timestep Rule:**
+**Fixed-timestep starting point (not required for every game):**
 - Physics/logic: Fixed rate (e.g., 50Hz)
-- Rendering: As fast as possible
-- Interpolate between states for smooth visuals
+- Rendering: Synchronize with the display/frame scheduler and chosen power budget
+- Interpolate where appropriate; cap accumulated lag/substeps after pauses to avoid a catch-up spiral
 
 **Hybrid / UI-heavy games:** the outer app may be DOM/event-driven; use a classic game loop only in canvas/WebGL viewports (or wherever simulation ticks).
 
@@ -92,7 +92,7 @@ Abstract input into ACTIONS, not raw keys:
 "move"  → WASD, Left stick, Virtual joystick
 ```
 
-### 4. Performance Budget (60 FPS = 16.67ms)
+### 4. Illustrative Performance Budget (60 FPS = 16.67ms)
 
 | System | Budget |
 |--------|--------|
@@ -103,7 +103,7 @@ Abstract input into ACTIONS, not raw keys:
 | Rendering | 5ms |
 | Buffer | 1.67ms |
 
-**Optimization Priority:** Algorithm → Batching → Pooling → LOD → Culling.
+Profile CPU and GPU paths on target hardware before choosing an optimization; these techniques do not have a universal priority order.
 
 ### 5. AI Selection by Complexity
 

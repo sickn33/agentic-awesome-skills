@@ -42,8 +42,8 @@
 
 | API | Availability | macOS-Only? | Usage |
 |-----|-------------|:-----------:|-------|
-| `onDrag(_:)` / `draggable(_:)` | macOS 11.0+ | No | Drag image follows cursor; items draggable between apps |
-| `onDrop(of:delegate:)` / `dropDestination(for:action:)` | macOS 11.0+ | No | Accepts drops from any macOS app including Finder |
+| `onDrag(_:)` / `draggable(_:)` | Legacy drag on older macOS; Transferable draggable on macOS 13+ | No | Drag image follows cursor; items draggable between apps |
+| `onDrop(of:delegate:)` / `dropDestination(for:action:)` | Legacy drop on older macOS; Transferable dropDestination on macOS 13+ | No | Accepts drops from any macOS app including Finder |
 
 ### AppKit Interop
 
@@ -116,7 +116,7 @@ struct ClipboardView: View {
     var body: some View {
         HStack {
             PasteButton(payloadType: String.self) { strings in
-                pastedText = strings[0]
+                pastedText = strings.first ?? ""
             }
             Divider()
             Text(pastedText)
@@ -165,7 +165,7 @@ On macOS, presents a native `NSOpenPanel` with column/list/gallery view, sidebar
 }
 ```
 
-> **Important:** Always call `startAccessingSecurityScopedResource()` on returned URLs, and `stopAccessingSecurityScopedResource()` when done. These are security-scoped bookmarks — access fails without this.
+> **Important:** Always call `startAccessingSecurityScopedResource()` on returned URLs, and `stopAccessingSecurityScopedResource()` when done. These are URLs that may grant scoped access, not persisted bookmark data. Balance successful scope acquisition over the entire read lifetime; create/resolve bookmark data separately for later access and handle unsandboxed/local paths according to app context.
 
 ### fileExporter
 
@@ -276,7 +276,11 @@ Wraps an AppKit `NSView` for use in SwiftUI. Implement `makeNSView(context:)` an
 struct WebView: NSViewRepresentable {
     let url: URL
     func makeNSView(context: Context) -> WKWebView { WKWebView() }
+    func makeCoordinator() -> Coordinator { Coordinator() }
+    class Coordinator { var requestedURL: URL? }
     func updateNSView(_ nsView: WKWebView, context: Context) {
+        guard context.coordinator.requestedURL != url else { return }
+        context.coordinator.requestedURL = url
         nsView.load(URLRequest(url: url))
     }
 }
@@ -296,6 +300,7 @@ struct SearchField: NSViewRepresentable {
         return field
     }
     func updateNSView(_ nsView: NSSearchField, context: Context) {
+        context.coordinator.text = $text
         nsView.stringValue = text
     }
     func makeCoordinator() -> Coordinator { Coordinator(text: $text) }

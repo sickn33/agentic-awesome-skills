@@ -3,14 +3,16 @@
 ### Apple Silicon (Metal)
 
 ```bash
-make clean && make GGML_METAL=1
+cmake -B build-metal -DGGML_METAL=ON -DCMAKE_BUILD_TYPE=Release
+cmake --build build-metal --config Release -j 4
 llama-cli -m model.gguf -ngl 99 -p "Hello"
 ```
 
 ### NVIDIA (CUDA)
 
 ```bash
-make clean && make GGML_CUDA=1
+cmake -B build-cuda -DGGML_CUDA=ON -DCMAKE_BUILD_TYPE=Release
+cmake --build build-cuda --config Release -j 4
 llama-cli -m model.gguf -ngl 35 -p "Hello"
 
 # Hybrid for large models
@@ -23,7 +25,8 @@ llama-cli -m large-model.gguf --tensor-split 0.5,0.5 -ngl 60
 ### AMD (ROCm)
 
 ```bash
-make LLAMA_HIP=1
+cmake -B build-hip -DGGML_HIP=ON -DCMAKE_BUILD_TYPE=Release
+cmake --build build-hip --config Release -j 4
 llama-cli -m model.gguf -ngl 999
 ```
 
@@ -34,5 +37,7 @@ llama-cli -m model.gguf -ngl 999
 llama-cli -m model.gguf -t 8 -p "Hello"
 
 # BLAS acceleration
-make LLAMA_OPENBLAS=1
+cmake -B build-blas -DGGML_BLAS=ON -DGGML_BLAS_VENDOR=OpenBLAS -DCMAKE_BUILD_TYPE=Release
+cmake --build build-blas --config Release -j 4
 ```
+Use a reviewed source revision and installed backend toolchains; inspect that revision’s documented CMake options and generated binary paths. Replace llama-cli with the corresponding build/bin executable or reviewed installed binary. Layer-offload/thread values are tuning candidates, not fit or speed guarantees; include KV cache/context and shared memory pressure.

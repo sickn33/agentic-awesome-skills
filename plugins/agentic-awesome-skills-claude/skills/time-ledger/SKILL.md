@@ -28,7 +28,9 @@ Conversational time tracking. The user reports time in plain language — *"read
 
 ## How It Works
 
-### Step 1: Find the database (zero-config)
+### Step 1: Find and verify the database
+
+Inspect the actual connector schema and database/data-source properties. `collection://` references and expanded date keys are connector-specific, not universal Notion API formats. Verify parent identity and read back the first written row; discovery does not authorize a new database or unrelated data access.
 
 On the first write of a session, use Notion `search` to find the **database** (type `database`, not a page) whose title contains **"time-ledger"**. Read its `data_source_id` (the `collection://...` UUID) and use it as the parent for `create-pages` / `query` for the rest of the session. If more than one matches, ask the user which to use. Nothing is pasted or configured.
 
@@ -49,7 +51,7 @@ Parse the report → `create-pages` (parent = the data source id above). Set `St
 Parsing rules:
 
 - **Activity**: books/technical material → Reading; coding/building → Coding; leetcode → Practice; gym/running → Fitness; markets/research → Investing; meetings → Meeting; docs → Writing; meals/commute/chores → Life; otherwise → Other. Unsure → To-confirm.
-- **Duration cues**: "two hours"=120, "an hour"=60, "half an hour"=30, "a while"≈30 (mark To-confirm, note it is an estimate), "all morning"≈180. Use exact numbers when given.
+- **Duration cues**: "two hours"=120, "an hour"=60, "half an hour"=30, For vague cues such as "a while" or "all morning", leave Minutes unset and mark To-confirm; ask rather than inserting an invented number. Use exact numbers when given.
 - **Date**: "today" = the user's local date; "yesterday" = prior day; unspecified = today. Unsure which day → ask.
 - **One report, multiple blocks**: "two hours on X, one hour on Y" → split into rows, but confirm whether the totals are additive (a frequent ambiguity) — default additive + one To-confirm row.
 - **Compounding tag**: only tag the obvious — Compounding = leaves a reusable asset (learning, building, writing); Consuming = forget-on-sight entertainment (only if the user volunteers it); leave ambiguous blank.
@@ -67,7 +69,7 @@ User:  log it: read ML system design 2h, gym 1h, did a leetcode
 Agent: Logged 3 entries ✅
        · Reading · ML system design · 120min · Compounding
        · Fitness · gym · 60min
-       · Practice · LeetCode · ~20min ❓ To-confirm: you didn't say how long — I guessed 20min, right?
+       · Practice · LeetCode · duration unset ❓ To-confirm: how many minutes?
 ```
 
 ### Example 2: Batch reconcile

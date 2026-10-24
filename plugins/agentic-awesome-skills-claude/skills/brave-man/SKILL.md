@@ -163,7 +163,7 @@ After writing `prompt.md`, tell the user, plainly:
 
 > Your project spec is saved as `prompt.md`. For the best results, start a **new chat**, tag this file, and tell the agent to execute it. Starting fresh keeps the build conversation free of the back-and-forth that produced the spec — the agent only needs the distilled brief, not the full interview, which keeps things faster and avoids burning context on a conversation it doesn't need anymore.
 
-Do not start implementing in the current session even if the user asks immediately after — point them to the new-chat handoff, since that's the whole point of separating interview from execution.
+A fresh chat is an optional handoff technique. If the user explicitly asks to implement in the current session, honor that updated request and use the completed brief; this skill does not override user instructions.
 
 ## Examples
 
@@ -187,5 +187,5 @@ Do not start implementing in the current session even if the user asks immediate
 ## Limitations
 
 - **No Code Generation:** This skill intentionally does not write any application code or scaffold repositories.
-- **Requires New Session:** The generated `prompt.md` must be executed in a fresh agent session to ensure clean context.
+- **Optional New Session:** A fresh session can reduce interview context, but is not mandatory; preserve the user's chosen workflow.
 - **Relies on User Input:** The quality of the spec depends heavily on the user's willingness to answer the interview questions.

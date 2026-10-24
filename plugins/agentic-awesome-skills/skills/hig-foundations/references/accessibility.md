@@ -49,9 +49,9 @@ watchOS| 16 pt| 12 pt
 
 Text size| Text weight| Minimum contrast ratio  
 ---|---|---  
-Up to 17 pts| All| 4.5:1  
+Below large-text threshold| Regular or bold| 4.5:1
 18 pts| All| 3:1  
-All| Bold| 3:1  
+At least 14 pt| Bold| 3:1
   
 If your app doesn’t provide this minimum contrast by default, ensure it at least provides a higher contrast color scheme when the system setting Increase Contrast is turned on. If your app supports [Dark Mode](https://developer.apple.com/design/human-interface-guidelines/dark-mode), make sure to check the minimum contrast in both light and dark appearances.
 
@@ -289,3 +289,5 @@ June 10, 2024| Added a link to Apple’s Unity plug-ins for supporting Dynamic T
 December 5, 2023| Updated visionOS Zoom lens artwork.  
 June 21, 2023| Updated to include guidance for visionOS.  
   
+
+Review clarification: the contrast table is guidance rather than a complete accessibility conformance assessment. WCAG large text starts at 18 pt regular or 14 pt bold; do not apply 3:1 to all bold text. [WCAG contrast minimum](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html).

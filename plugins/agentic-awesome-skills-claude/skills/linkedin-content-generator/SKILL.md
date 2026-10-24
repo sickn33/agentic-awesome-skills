@@ -1,14 +1,14 @@
 ---
 name: linkedin-content-generator
-description: "AI-powered LinkedIn content suite: generate posts, carousels, newsletters, and 30-day calendars with niche-specific SEO rules and a reinforcement-learning personal memory system."
+description: "AI-powered LinkedIn content suite: generate posts, carousels, newsletters, and 30-day calendars with niche-specific SEO rules and a feedback-based personal memory system."
 category: marketing
-risk: safe
+risk: critical
 source: community
 source_repo: sarveshtalele/linkedin-content-skill
 source_type: community
 date_added: "2026-06-04"
 author: sarveshkishortalele
-tags: [linkedin, content-creation, social-media, marketing, newsletter, carousel, content-calendar, reinforcement-learning, seo, copywriting]
+tags: [linkedin, content-creation, social-media, marketing, newsletter, carousel, content-calendar, feedback-based, seo, copywriting]
 tools: [claude]
 license: "MIT"
 license_source: "https://github.com/sarveshtalele/linkedin-content-skill/blob/main/LICENSE"
@@ -20,8 +20,7 @@ license_source: "https://github.com/sarveshtalele/linkedin-content-skill/blob/ma
 
 A full LinkedIn content-creation suite for Claude Code that turns a topic and niche into
 publish-ready posts, multi-slide carousels, long-form newsletter editions, and 30-day content
-calendars — all wired through a personal reinforcement-learning memory system so every output
-improves as you give feedback.
+calendars — all wired through a personal feedback-based memory system so later prompts can reflect your feedback; improvement is not guaranteed.
 
 Seven coordinated commands cover the full content workflow:
 
@@ -37,7 +36,7 @@ Seven coordinated commands cover the full content workflow:
 
 All helper scripts are bundled inside `skills/linkedin-content-generator/scripts/` and ship
 alongside this `SKILL.md`. They build richly engineered prompts, inject your saved
-preferences, and enforce LinkedIn SEO rules before Claude generates output.
+preferences, and suggest editorial conventions before Claude generates output.
 A local `memory.md` file persists your style, tone, successful hooks, and top-performing
 formats across every session.
 
@@ -59,7 +58,7 @@ The skill is self-contained. Install it from the Agentic Awesome Skills library:
 
 ```bash
 # Install via antigravity CLI (recommended)
-antigravity install linkedin-content-generator
+npx antigravity-awesome-skills --skill linkedin-content-generator
 
 # Or copy manually into your Claude Code skills directory
 cp -r skills/linkedin-content-generator ~/.claude/skills/
@@ -335,18 +334,16 @@ saved patterns.
 
 ### `/clear-memory` — Reset Memory
 
-Resets `memory.md` to factory defaults. The command asks for confirmation before
-executing.
+Resets `memory.md` to factory defaults. The CLI requires `clear --confirm`; review and back up the file before resetting.
 
 **Usage:**
 ```
 /clear-memory
 ```
 
-## LinkedIn SEO Rules (Enforced Automatically)
+## Editorial Conventions (Prompt Suggestions)
 
-The skill injects these rules into every prompt via the bundled `scripts/utils.py`. They are **not**
-optional; they are part of the prompt engineering that makes outputs platform-native.
+The skill injects these rules into every prompt via the bundled `scripts/utils.py`. They are editable suggestions, not verified LinkedIn ranking rules or code-enforced output constraints.
 
 ### Hook Engineering
 - Line 1 must be scroll-stopping (bold claim, surprising stat, provocative question, or
@@ -379,7 +376,7 @@ optional; they are part of the prompt engineering that makes outputs platform-na
   avoid it for topics where nuance is more valuable than edge.
 - ❌ Do not skip the `/feedback` loop — without it, every output starts from generic
   LinkedIn best practices rather than your specific audience data.
-- ❌ Do not post more than 5 hashtags; LinkedIn's algorithm penalises hashtag stuffing.
+- ❌ Do not post more than 5 hashtags; this is an editorial preference; no penalty threshold is established here.
 - ❌ Do not use the `data-driven` style without real statistics to cite; fabricated
   numbers destroy credibility faster than any other LinkedIn mistake.
 - ❌ Do not generate a 30-day calendar without specifying `goal`; the default `growth`
@@ -407,8 +404,7 @@ optional; they are part of the prompt engineering that makes outputs platform-na
 ## Security & Safety Notes
 
 This skill uses the `Bash` allowed-tool to run Python scripts bundled at
-`~/.claude/skills/linkedin-content-generator/scripts/`. All scripts are read-only
-operations except `memory_manager.py`, which writes only to `memory.md` inside that
+`~/.claude/skills/linkedin-content-generator/scripts/`. Generators read memory and print prompts; they do not generate media or call an AI themselves. Slash command names are conventions, not installed command definitions. All scripts are read-only except `memory_manager.py`, which writes only to `memory.md` inside that
 same bundled `scripts/` directory.
 
 - No network requests are made by any script.
@@ -429,24 +425,22 @@ SKILL_SCRIPTS="${HOME}/.claude/skills/linkedin-content-generator/scripts"
 python3 "${SKILL_SCRIPTS}/generate_post.py" --topic "..." --niche "..." --tone professional --style list-based
 python3 "${SKILL_SCRIPTS}/memory_manager.py" add --id "..." --feedback "..." --tags "..."
 python3 "${SKILL_SCRIPTS}/memory_manager.py" read
-python3 "${SKILL_SCRIPTS}/memory_manager.py" clear
+python3 "${SKILL_SCRIPTS}/memory_manager.py" clear --confirm
 ```
 
-<!-- security-allowlist: approved — all commands are local Python script invocations with no network access, no credential handling, and writes scoped to the skill's own bundled scripts/memory.md only -->
+
 
 ## Common Pitfalls
 
 - **Problem:** Script exits with `ModuleNotFoundError` or `No module named 'utils'`.
   **Solution:** Each script uses `sys.path.insert(0, SCRIPT_DIR)` to locate `utils.py`
-  relative to itself, so they must be invoked with an absolute path — not from inside
-  the `scripts/` directory. Use
+  relative to itself, so they work from any directory when their script path resolves correctly. Use
   `python3 "${HOME}/.claude/skills/linkedin-content-generator/scripts/generate_post.py" ...`.
 
 - **Problem:** Memory is not being applied to generated content.
   **Solution:** Check that `memory.md` exists at
   `~/.claude/skills/linkedin-content-generator/scripts/memory.md`. Run `/show-memory`
-  to confirm. If missing, run any generator command once — it auto-creates the file from
-  the bundled template.
+  to confirm. If missing, run any generator command once — it reports no memory; use the memory manager add operation to initialize intentionally.
 
 - **Problem:** Calendar output is missing days or the table is malformed.
   **Solution:** Verify the `--days` value is a positive integer and `--frequency` is
@@ -454,7 +448,7 @@ python3 "${SKILL_SCRIPTS}/memory_manager.py" clear
   values directly into the prompt string.
 
 - **Problem:** Carousel slides exceed the requested count.
-  **Solution:** The `slides` value is clamped server-side to `[3, 12]`. If Claude
+  **Solution:** The `slides` value is clamped locally to `[3, 12]`. If Claude
   generates more slides than requested, it is following the style guide structure
   (cover + content + CTA). Specify an exact count and style to get precise control.
 

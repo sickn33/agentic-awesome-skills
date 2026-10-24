@@ -33,9 +33,9 @@ Deploy and manage Amazon EC2 compute instances for production, staging, and deve
 ## Prerequisites
 
 - AWS CLI v2 installed and configured (`aws configure`)
-- IAM permissions: `ec2:*`, `autoscaling:*`, `elasticloadbalancing:*`, `iam:PassRole`
+- Least-privilege IAM actions for selected compute, scaling and load-balancer resources; restrict iam:PassRole to the intended instance role
 - An existing VPC with subnets (see aws-vpc (`aws-vpc`))
-- SSH key pair created (`aws ec2 create-key-pair --key-name my-key --query 'KeyMaterial' --output text > my-key.pem`)
+- SSH key pair created (`umask 077` before creating a key file in a private directory; prefer approved session access where appropriate)
 
 ## Instance Type Selection Guide
 
@@ -90,7 +90,7 @@ aws ec2 run-instances \
 ```bash
 #!/bin/bash
 # userdata.sh - Bootstrap a web server on Amazon Linux 2023
-set -euxo pipefail
+set -euo pipefail # avoid tracing secrets in user-data logs
 
 # System updates
 dnf update -y
@@ -110,8 +110,7 @@ dnf install -y amazon-cloudwatch-agent
 dnf install -y ruby wget
 cd /home/ec2-user
 wget https://aws-codedeploy-us-east-1.s3.us-east-1.amazonaws.com/latest/install
-chmod +x ./install
-./install auto
+# Verify a reviewed pinned installer and integrity before execution; do not run latest blindly.
 
 # Signal CloudFormation (if launched via CFN)
 # /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource ASG --region ${AWS::Region}
@@ -209,9 +208,7 @@ aws autoscaling put-scaling-policy \
     "PredefinedMetricSpecification": {
       "PredefinedMetricType": "ASGAverageCPUUtilization"
     },
-    "TargetValue": 60.0,
-    "ScaleInCooldown": 300,
-    "ScaleOutCooldown": 60
+    "TargetValue": 60.0
   }'
 
 # Create scheduled scaling for known traffic patterns
@@ -275,7 +272,6 @@ aws ec2 create-image \
   --instance-id i-0abc123def456 \
   --name "web-server-$(date +%Y%m%d)" \
   --description "Web server golden AMI" \
-  --no-reboot \
   --tag-specifications 'ResourceType=image,Tags=[
     {Key=Name,Value=web-server-golden},
     {Key=Version,Value=2026.03.24}
@@ -424,3 +420,5 @@ resource "aws_autoscaling_policy" "cpu" {
 - Infrastructure commands can disrupt services: confirm target host/scope and have backups/snapshots before mutating state.
 - Docs-only import: upstream scripts and templates not bundled.
 
+
+The target-tracking example is for EC2 Auto Scaling, whose configuration differs from Application Auto Scaling cooldown fields; configure supported instance warmup separately. AMI IDs, paths, instance families and dates are placeholders/historical choices: verify region, trusted owner and CPU architecture. Creating an image normally reboots; schedule downtime or explicitly quiesce application state before choosing no-reboot. EBS snapshots do not capture instance-store data. Sharing AMIs, deleting snapshots, changing instance types and recurring scaling need exact approved scope/cost/rollback. User data is retrievable and logged, not secret storage. Changing a launch-template version does not itself replace existing instances; plan a verified refresh. The Terraform fragment omits networking/AMI resources; define security groups and application health routing explicitly. GNU base64 -w0 is not portable to macOS.

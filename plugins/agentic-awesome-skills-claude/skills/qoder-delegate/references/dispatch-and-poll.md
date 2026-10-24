@@ -33,7 +33,7 @@ node "<skill-dir>/scripts/relay.mjs" --brief brief.txt --cd /path/to/repo
 | `--add-dir <dir>` | Add a workspace directory; repeatable. |
 | `--permission-mode <mode>` | `default`, `accept_edits`, `auto`, `bypass_permissions`, `dont_ask`, or `plan`; defaults to `auto`. |
 | `--timeout <dur>` | Relay watchdog; also bounds version preflight to at most 10s. Defaults to `30m`, using h/m/s syntax. |
-| `--out-dir <dir>` | Artifact directory; defaults to a fresh system-temp directory. |
+| `--out-dir <dir>` | New artifact directory (must not exist); defaults to a private fresh system-temp directory. |
 | `-h`, `--help` | Print relay help. |
 
 `--resume` and `--resume-last` are mutually exclusive. Relative `--add-dir` values resolve against
@@ -115,5 +115,5 @@ qodercli --output-format stream-json --permission-mode auto \
   [--add-dir <dir> ...] -p <brief>
 ```
 
-The relay spawns `qodercli` directly without a shell, never commits, and makes no network calls of its
+The relay spawns `qodercli` directly without a shell, never directly commits, and makes no network calls of its
 own. Continue with [review-and-land.md](review-and-land.md).

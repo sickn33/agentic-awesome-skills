@@ -2,18 +2,22 @@
 
 主流 .NET 混淆器的识别、脱壳、anti-tamper 绕过。核心工具：**de4dot**（自动识别大多数壳）+ **dnSpyEx**（手动 patch）+ **dnlib**（脚本化）。
 
+## 版本边界
+
+原版 de4dot 已归档；其支持列表不包含 ConfuserEx。下表是待验证的历史提示，不是兼容保证；`cfze` 等 fork 专属参数不可直接用于原版。先核对具体 fork 的源码、帮助和样本版本。de4dot 可执行样本及依赖，连脱混淆阶段也必须在隔离环境中运行。
+
 ## 总决策表
 
 | 混淆器 | de4dot type | 典型特征 | 自动脱壳 | 手动要点 |
 |--------|-------------|---------|---------|---------|
-| ConfuserEx 1.x/2.x | `cfze` | anti-tamper、控制流变形、字符串加密、反调试 | ✅ 多数自动 | 新版需先 patch anti-tamper |
+| ConfuserEx 1.x/2.x | `cfze` | anti-tamper、控制流变形、字符串加密、反调试 | 需匹配已核实的专用 fork | 新版需先 patch anti-tamper |
 | ConfuserEx 3.x / 私改 | `cfze` | 同上 + 自定义 protector | ⚠️ 部分 | dump 运行时 / dnlib |
-| SmartAssembly | `sa` | 字符串编码、资源压缩、方法调用隐藏 | ✅ 自动 | 资源解压 |
-| Babel.NET | `babel` | 方法体加密、控制流、字符串 | ✅ 自动 | — |
+| SmartAssembly | `sa` | 字符串编码、资源压缩、方法调用隐藏 | 取决于版本与保护配置 | 资源解压 |
+| Babel.NET | `babel` | 方法体加密、控制流、字符串 | 取决于版本与保护配置 | — |
 | Eazfuscator.NET | `eaz` | 字符串/资源加密、表达式混淆 | ⚠️ 部分 | 字符串解密器 |
 | .NET Reactor | `reactor` | necrobit (代码段加密) + anti-tamper | ⚠️ 新版难 | dump + 重建 metadata |
 | Themida .NET | — | 外壳 + 虚拟化 | ❌ de4dot 不行 | dump 内存，走 native 思路 |
-| Agile.NET / CliSecure | `agile` | 方法体加密 | ✅ 自动 | — |
+| Agile.NET / CliSecure | `agile` | 方法体加密 | 取决于版本与保护配置 | — |
 
 ## de4dot 标准用法
 
@@ -22,7 +26,7 @@
 de4dot target.exe -o target-clean.exe
 
 # 显式指定 type（自动识别失败）
-de4dot --type cfze target.exe -o target-clean.exe
+# ConfuserEx: 先确认专用 fork 的真实命令参数，不提供通用 cfze 命令
 
 # 先探测壳类型
 de4dot --detect target.exe
@@ -101,7 +105,7 @@ de4dot 对 SmartAssembly 兼容性最好，基本一键搞定。
 
 ```text
 当 de4dot 失败时：
-1. 让程序跑起来（dotnet target.exe 或直接双击）
+1. 仅在无生产凭据、断开外网或受控模拟网络的可回滚虚拟机中运行样本
 2. MegaDumper / ExtremeDumper dump 进程内存 → 导出解密后的 assembly
 3. 用 de4dot 清理 dump 产物的残留混淆
 4. 如果 metadata 损坏，用 dnlib 重建（见 common-workflow.md）

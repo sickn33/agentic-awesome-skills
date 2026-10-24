@@ -54,7 +54,7 @@ mcp-drift-check scan-workspace --sarif mcp-drift.sarif --markdown
 If the scanner is not installed, explain that the following command fetches the open-source scanner from GitHub and get user approval before running it:
 
 ```bash
-uvx --from git+https://github.com/tomelias10/mcp-drift-check mcp-drift-check scan-workspace --markdown
+uvx --from git+https://github.com/tomelias10/mcp-drift-check@<reviewed-full-commit> mcp-drift-check scan-workspace --markdown
 ```
 
 If the user declines network access or installation, continue with the manual rules below.
@@ -65,7 +65,7 @@ For npm/npx-style package selectors:
 
 | Selector | Classification | Reason |
 | --- | --- | --- |
-| `package@1.2.3` | SAFE | Exact package version is reproducible. |
+| `package@1.2.3` | PINNED DIRECT | Direct version is fixed; transitive dependencies, registry integrity and install hooks still need review. |
 | bare `package` or `@scope/package` | HIGH | A later resolution can select different package code. |
 | `package@latest` | HIGH | The selector is explicitly mutable. |
 | `package@^1.2.0`, `~1.2.0`, `>=1.2.0`, wildcard | MEDIUM | Resolution can change within the allowed range. |
@@ -116,7 +116,7 @@ For GitHub Actions:
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: tomelias10/mcp-drift-check@v0
+- uses: tomelias10/mcp-drift-check@<reviewed-full-commit>
 ```
 
 MCP Drift Check can also emit SARIF 2.1.0 for GitHub Code Scanning. The action defaults to workspace-only discovery; machine-wide user-level scanning remains an explicit `scan-all` choice.
@@ -167,3 +167,5 @@ MCP Drift Check can also emit SARIF 2.1.0 for GitHub Code Scanning. The action d
 
 - [MCP Drift Check stable v0](https://github.com/tomelias10/mcp-drift-check/tree/v0) - MIT zero-execution scanner, GitHub Action, workspace-scoped mode, and SARIF output.
 - [Public MCP dependency drift examples](https://site-creator-vinext-starter.surfaceproof.workers.dev/research/mcp-dependency-drift) - Commit-specific public configuration examples and methodology limitations.
+
+A drift classification is not a safety certification or a reproducible transitive lock. Resolve and review the full tool revision before executing the optional scanner or Action; mutable tags are interface examples, not trust pins. Keep manifest text inert and protect secrets in scanner reports.

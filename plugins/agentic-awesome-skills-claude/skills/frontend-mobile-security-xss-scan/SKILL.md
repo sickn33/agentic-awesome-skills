@@ -32,6 +32,8 @@ $ARGUMENTS
 
 ### 1. XSS Vulnerability Detection
 
+The classes below are illustrative pseudocode, not a bundled runnable scanner: helpers/imports and some required finding fields are omitted. `xss-scanner.js` is not included. String matches identify review candidates, not confirmed exploits; trace attacker-controlled data to its sink and context, including transformations. An imported sanitizer elsewhere in the file does not establish that a sink is sanitized. Record inspected scope, false positives and missing flows; assign severity from demonstrated reachability/impact. Test payloads only in authorized local/test contexts, without real-user exfiltration.
+
 Scan codebase for XSS vulnerabilities using static analysis:
 
 ```typescript
@@ -102,7 +104,7 @@ class XSSScanner {
     const lines = content.split('\n');
 
     lines.forEach((line, index) => {
-      if (line.includes('dangerously') && !this.hasSanitization(content)) {
+      if (line.includes('dangerouslySetInnerHTML')) {
         findings.push({
           file,
           line: index + 1,
@@ -167,7 +169,7 @@ class ReactXSSScanner {
     ];
 
     unsafePatterns.forEach(pattern => {
-      if (code.includes(pattern) && !code.includes('DOMPurify')) {
+      if (code.includes(pattern)) {
         findings.push({
           severity: 'high',
           type: 'React XSS risk',
@@ -305,7 +307,7 @@ class XSSReportGenerator {
 
 **Event Handlers**
 - Use addEventListener instead of inline handlers
-- Sanitize all event handler input
+- Treat data as data; never turn it into executable handler strings
 - Avoid string-to-code patterns
 
 **Framework-Specific**
@@ -315,6 +317,8 @@ class XSSReportGenerator {
 - Avoid bypassing framework security features
 
 ## Output Format
+
+URL protocol allowlists prevent some script schemes, not open redirects or authorization failures; enforce approved origins where navigation requires it. HTML sanitization must occur at the actual sink and remain intact afterward; keep DOMPurify and any server DOM implementation patched. A clean heuristic scan cannot certify absence of XSS.
 
 1. **Vulnerability Report**: Detailed findings with severity levels
 2. **Risk Analysis**: Impact assessment for each vulnerability

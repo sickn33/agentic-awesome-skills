@@ -157,7 +157,7 @@ def newton_converges_to_one(px, py, max_iter=50, target_count=12):
         count += 1
         if abs(x - 1.0) < 1e-6 and abs(y) < 1e-6:
             break
-    return count == target_count
+    return count == target_count and abs(x - 1.0) < 1e-6 and abs(y) < 1e-6
 
 # Read coordinates and render bitmap
 points = [(float(x), float(y)) for x, y in ...]
@@ -238,7 +238,7 @@ username = rc4(b"s3cr3t_k3y_v1", bytes.fromhex("46f5289437bc009c17817e997ae82bfb
 ```
 
 **Stage 2 — VM constraint extraction:**
-1. Download stage 2 from C2 endpoint (e.g., `/updates/check.php`)
+1. Obtain stage 2 from an authorized captured artifact or inert lab fixture; do not contact a live C2 automatically
 2. Reverse VM bytecode interpreter (typically 15-20 opcodes)
 3. Extract linear equality constraints over flag characters
 4. Solve constraint system (Z3 or manual)
@@ -270,6 +270,7 @@ int visited[16][16][16];
 int bad[16][16][16];   // decoy positions across resets
 
 void dfs(int fd, int x, int y, int z) {
+    if (x < 0 || x >= 16 || y < 0 || y >= 16 || z < 0 || z >= 16) return;
     if (visited[x][y][z] || bad[x][y][z]) return;
     visited[x][y][z] = 1;
 
@@ -279,10 +280,10 @@ void dfs(int fd, int x, int y, int z) {
 
     int walls = ioctl_get_walls(fd);
     int dx[] = {1,-1,0,0,0,0}, dy[] = {0,0,1,-1,0,0}, dz[] = {0,0,0,0,1,-1};
-    int opp[] = {2,3,0,1,5,4};  // opposite directions for backtracking
+    int opp[] = {1,0,3,2,5,4};  // opposite directions for backtracking
 
     for (int dir = 0; dir < 6; dir++) {
-        if (!(walls & (1 << dir))) continue;  // wall present
+        if (walls & (1 << dir)) continue;  // 1 means wall only if confirmed by this fixture protocol
         ioctl_move(fd, dir);
         dfs(fd, x+dx[dir], y+dy[dir], z+dz[dir]);
         ioctl_move(fd, opp[dir]);  // backtrack
@@ -343,9 +344,9 @@ def solve_flag(scramble_vals, lookup_table, initial_state, target_state):
 **Pattern (Zombie Lockbox):** A setuid binary uses `strcmp` for password validation. The expected password is visible via `strings` and works under GDB (which drops suid), but fails when run normally. The binary links against a non-standard libc that patches function behavior based on suid status.
 
 **Detection steps:**
-1. Check for non-standard library paths with `ldd`:
+1. Check for non-standard library paths with static dynamic-section inspection:
 ```bash
-ldd ./binary
+readelf -d ./binary  # static DT_NEEDED/RPATH/RUNPATH; does not resolve actual runtime paths
 # Suspicious: libc.so.6 => /lib/libc/libc.so.6  (non-standard path)
 # Normal:    libc.so.6 => /lib32/libc.so.6
 ```
@@ -366,7 +367,7 @@ gdb /lib/libc/libc.so.6
 # and swap the expected password at runtime
 ```
 
-**Key insight:** When a binary behaves differently under GDB vs. normal execution, check `ldd` for non-standard library paths. Suid binaries drop privileges under debuggers, so a backdoored libc can detect this via `getuid`/`geteuid` syscalls and change program behavior accordingly. The `strings | diff` approach quickly reveals injected data without full disassembly.
+**Key insight:** When a binary behaves differently under GDB vs. normal execution, inspect DT_NEEDED/RPATH/RUNPATH statically for non-standard library paths. Suid binaries drop privileges under debuggers, so a backdoored libc can detect this via `getuid`/`geteuid` syscalls and change program behavior accordingly. The `strings | diff` approach quickly reveals injected data without full disassembly.
 
 ---
 
@@ -424,65 +425,11 @@ decrypted = cipher.decrypt(encrypted)
 - Disassembly shows hash computation loops followed by indirect calls
 - RC4-encrypted embedded strings (RSA public key, file paths, passphrases)
 
-**Analysis shortcut — LD_PRELOAD key extraction:**
+**Defensive analysis:**
 
-Rather than reversing the full hash resolution and key derivation, hook the crypto functions that the malware ultimately calls:
+Resolve symbol hashes statically or inspect an already authorized capture from a dedicated offline malware-analysis VM. Do not execute ransomware with a writable host bind mount. A container alone does not establish adequate containment, and deterministic keys across runs cannot be assumed. Preserve copies of encrypted files; never run the sample over originals or shared directories.
 
-```c
-// hook_crypto.c — captures AES key used by the ransomware
-#define _GNU_SOURCE
-#include <dlfcn.h>
-#include <openssl/evp.h>
-#include <stdio.h>
-
-int EVP_CipherInit_ex(EVP_CIPHER_CTX *ctx, const EVP_CIPHER *type,
-                       ENGINE *impl, const unsigned char *key,
-                       const unsigned char *iv) {
-    if (key) {
-        FILE *f = fopen("/tmp/aes_key.bin", "wb");
-        fwrite(key, 1, 32, f);  // AES-256
-        fclose(f);
-        fprintf(stderr, "[HOOK] AES key captured\n");
-    }
-    typedef int (*orig_t)(EVP_CIPHER_CTX*, const EVP_CIPHER*, ENGINE*,
-                          const unsigned char*, const unsigned char*);
-    orig_t orig = (orig_t)dlsym(RTLD_NEXT, "EVP_CipherInit_ex");
-    return orig(ctx, type, impl, key, iv);
-}
-```
-
-```bash
-# Compile and run
-gcc -shared -fPIC -o hook.so hook_crypto.c -ldl
-# Run in Docker container (ransomware may be destructive!)
-docker run --rm -v $(pwd):/work -w /work ubuntu:22.04 \
-  bash -c "LD_PRELOAD=./hook.so ./ransomware; xxd /tmp/aes_key.bin"
-```
-
-**Hash resolution patterns:**
-- **SipHash variant:** Two 64-bit seeds, iterative mixing with symbol name bytes
-- **DJB2/FNV variants:** Simpler hash functions with recognizable constants (`5381`, `0xcbf29ce484222325`)
-- **ROR13-based:** Windows malware favorite: `hash = (hash >> 13) | (hash << 19); hash += c`
-
-**Decryption after key capture:**
-```python
-from Crypto.Cipher import AES
-
-key = open('/tmp/aes_key.bin', 'rb').read()
-iv = open('/tmp/aes_iv.bin', 'rb').read()  # Also hookable
-cipher = AES.new(key, AES.MODE_CBC, iv)
-
-with open('flag.txt.enc', 'rb') as f:
-    ct = f.read()
-pt = cipher.decrypt(ct)
-# Remove PKCS7 padding
-pt = pt[:-pt[-1]]
-print(pt.decode())
-```
-
-**Key insight:** When a binary resolves all imports via hashing, don't waste time reversing the hash function and building a rainbow table. Instead, let the malware resolve everything itself by running it in a sandboxed environment with `LD_PRELOAD` hooks on the functions you care about (OpenSSL crypto functions, file I/O, network calls). The AES key is deterministic across runs — if it works once, it works always.
-
-**Safety:** Always run suspected ransomware in a Docker container or VM. Mount only copies of the encrypted files, never originals.
+An earlier hook used the wrong `EVP_CipherInit_ex` signature (missing the `enc` argument), assumed every key was 32 bytes, and wrote secret data into a shared `/tmp` path. That example is not safe to run. A vetted analysis harness must match the exact OpenSSL ABI, handle null/reused cipher/key inputs, restrict key evidence, and fail closed on unresolved symbols. Prefer metadata and bounded synthetic crypto fixtures. For any approved offline decryption, recover the actual key/IV/mode, validate input lengths and authenticated tags or strict padding, and distinguish failed decryption from a valid plaintext. No universal recovery guarantee follows from API hashing.
 
 **References:** BSidesSF 2026 "Ran Somewhere"
 
@@ -516,7 +463,7 @@ if idx >= 0:
 **Recovery approach:**
 ```bash
 # Patch section header offset to 0 (removes section table)
-printf '\x00\x00\x00\x00\x00\x00\x00\x00' | dd of=binary bs=1 seek=40 conv=notrunc
+printf '\x00\x00\x00\x00\x00\x00\x00\x00' | dd of=binary-analysis-copy bs=1 seek=40 conv=notrunc
 # Now Ghidra/IDA can load it using program headers only
 
 # Or use readelf -l (program headers only, ignores sections)
@@ -530,3 +477,7 @@ readelf -l stubborn_elf
 ---
 
 See also: [patterns-ctf-2.md](patterns-ctf-2.md) for Part 2 (multi-layer self-decrypting binary, embedded ZIP+XOR license, stack string deobfuscation, prefix hash brute-force, CVP/LLL lattice, decision tree obfuscation, GF(2^8) Gaussian elimination), [patterns-ctf-3.md](patterns-ctf-3.md) for Part 3 (Z3 boolean circuit, sliding window popcount, keyboard LED Morse code, C++ destructor-hidden validation, VM sequential key-chain brute-force, BWT inversion, OpenType font ligature exploitation, GLSL shader VM with self-modifying code).
+
+## Source and runtime boundaries
+
+All hardcoded layouts/opcodes, IOCTL values and contest results are unverified historical case records. Verify the target before applying them. ELF symbol virtual addresses are not file offsets; map through PT_LOAD/sections and validate lengths. Kernel maze examples omit syscall wrappers/startup and reset/backtracking handling; they are pseudocode, not a complete static binary. Preserve original files and use private fresh outputs. No live C2, third-party client enumeration, malware execution or device probing is authorized by this reference.

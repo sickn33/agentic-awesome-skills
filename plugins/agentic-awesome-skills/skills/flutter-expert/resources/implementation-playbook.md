@@ -111,7 +111,8 @@ class ProductRepository {
           .map((json) => Product.fromJson(json as Map<String, dynamic>))
           .toList();
     } on DioException catch (e) {
-      throw NetworkFailure('Failed to load products: ${e.message}');
+      // Log sanitized diagnostic details privately; do not expose URLs/headers/tokens.
+      throw const NetworkFailure('Unable to load products. Please try again.');
     }
   }
 }
@@ -122,7 +123,7 @@ class ProductRepository {
 ## 4. Performance: rebuilds, const, and keys
 
 - Mark widgets `const` whenever their inputs are compile-time constants — this
-  lets Flutter skip rebuilds entirely.
+  can let Flutter reuse unchanged widget instances; inherited dependencies and other invalidations can still rebuild them.
 - Split large `build` methods into smaller widgets so only the changing subtree
   rebuilds.
 - Use `ListView.builder` / slivers for long or infinite lists (never map a huge
@@ -130,7 +131,7 @@ class ProductRepository {
 - Give list items stable `Key`s when their order can change.
 
 ```dart
-// Good: const stops this subtree from rebuilding on parent changes.
+// Good: const permits reuse when configuration/dependencies remain unchanged.
 const _Header(title: 'Products');
 
 // Bad: rebuilding a giant Column holds every child in memory.
@@ -167,8 +168,7 @@ void main() {
 }
 ```
 
-Run `flutter test --update-goldens` once to create the baseline, then commit the
-PNG so CI can catch visual regressions.
+Create/update goldens only after visually reviewing the intended rendering; inspect diffs before accepting new baselines. Pin fonts/platform/device pixel ratio in CI so failures indicate actual visual changes.
 
 ---
 
@@ -179,7 +179,7 @@ processing). Offload with `compute`:
 
 ```dart
 Future<List<Product>> parseProducts(String rawJson) {
-  return compute(_decode, rawJson); // runs on a background isolate
+  return compute(_decode, rawJson); // native: separate isolate; web: current event loop
 }
 
 List<Product> _decode(String rawJson) =>

@@ -36,7 +36,7 @@ Provides a standardized, auditable framework and data model for **Cross-Chain Re
 
 | # | Field Name | Type | SQL Type | JSON Schema Type | Notion Property Type | Example Value |
 |---|------------|------|----------|------------------|----------------------|---------------|
-| 1 | Relayer Audit ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text | `REL-001` |
+| 1 | Relayer Audit ID | `id` | `VARCHAR(64) PRIMARY KEY` | `string` | Text | `REL-001` |
 | 2 | Source Chain Domain | `text` | `VARCHAR(32)` | `string` | Text | `Ethereum Sepolia` |
 | 3 | Destination Chain Domain | `text` | `VARCHAR(32)` | `string` | Text | `Stellar Testnet` |
 | 4 | Message Hash Verification | `select` | `VARCHAR(32)` | `string` | Select | `Keccak256 Verified` |
@@ -45,7 +45,7 @@ Provides a standardized, auditable framework and data model for **Cross-Chain Re
 | 7 | Slashing Condition Active | `select` | `VARCHAR(16)` | `string` | Select | `Yes` |
 | 8 | Withdrawal Proof Standard | `select` | `VARCHAR(64)` | `string` | Select | `Merkle Patricia Trie Proof` |
 | 9 | Finality Confirmation Blocks | `number` | `INTEGER` | `number` | Number | `32` |
-| 10 | Bridge Security Posture | `select` | `VARCHAR(32)` | `string` | Select | `Verified Secure` |
+| 10 | Bridge Security Posture | `select` | `VARCHAR(32)` | `string` | Select | `Reviewed Scope Only` |
 | 11 | Audit Stamp Date | `date` | `DATE` | `string, format: date` | Date | `2026-10-01` |
 
 ## Select Options
@@ -77,7 +77,7 @@ Merkle Patricia Trie Proof | ZK-SNARK Validity Proof | Light Client Header
 **Bridge Security Posture**
 
 ```
-Verified Secure | Under Audit | Vulnerable Finding
+Reviewed Scope Only | Under Audit | Vulnerable Finding
 ```
 
 ## Relations
@@ -98,6 +98,8 @@ How do I configure and track Cross-Chain Relayer Security Audit for our producti
 > Generate the unified field schema, SQL DDL migration, and JSON validation schema to register into your system catalog.
 >
 > Workflow: Define criteria -> Run automated verification -> Record baseline -> Monitor invariants.
+
+Record source/destination chain IDs, bridge/verifier addresses, immutable source/artifact versions, message encoding and domain separation, nonce-consumption evidence and validator-set/weight epoch. A hash match or nominal quorum is not proof of an authorized message. Finality/reorg policy is chain-specific; the sample 32 blocks is not portable to Stellar or a universal safety threshold. Bind each finding to an actual test and confirm replay rejection and duplicate delivery handling before marking scope reviewed. This register is not an audit implementation or a guarantee of bridge security.
 
 ## Best Practices
 

@@ -66,7 +66,7 @@ class GeminiAgent:
             Message(role="user", content=user_input)
         )
         
-        logger.info(f"🤖 [AGENT] Generating response for: '{user_input}'")
+        logger.info("[AGENT] Generating mock response")
         
         # Build conversation context for Gemini
         contents = self._build_gemini_contents()
@@ -122,17 +122,9 @@ class GeminiAgent:
         """
         contents = []
         
-        # Add system prompt as first user message
-        if self.system_prompt:
-            contents.append({
-                "role": "user",
-                "parts": [{"text": f"System Instruction: {self.system_prompt}"}]
-            })
-            contents.append({
-                "role": "model",
-                "parts": [{"text": "Understood."}]
-            })
-        
+        # A real adapter must pass system_prompt through the SDK system-instruction
+        # field, not fabricate user/model turns. This example is an offline mock.
+
         # Add conversation history
         for message in self.conversation_history:
             role = "user" if message.role == "user" else "model"
@@ -147,16 +139,9 @@ class GeminiAgent:
         """
         Simulate Gemini streaming response
         
-        In a real implementation, this would be:
-        
-        async def _create_gemini_stream(self, contents):
-            response = await genai.GenerativeModel('gemini-pro').generate_content_async(
-                contents,
-                stream=True
-            )
-            async for chunk in response:
-                if chunk.text:
-                    yield chunk.text
+        This is a deterministic offline simulation, not a Gemini API adapter.
+        Implement a current supported SDK adapter separately, supplying an explicit
+        available model, system instruction config, bounded context and cancellation.
         """
         # Simulate response
         response = f"I understand you said: {user_input}. How can I assist you further?"
@@ -181,7 +166,7 @@ class GeminiAgent:
         if self.conversation_history and self.conversation_history[-1].role == "assistant":
             # Update the last bot message with the partial message
             self.conversation_history[-1].content = partial_message
-            logger.info(f"📝 [AGENT] Updated history with partial message: '{partial_message}'")
+            logger.info("[AGENT] Updated estimated partial playback history")
     
     def cancel_current_task(self):
         """Cancel the current generation task (for interrupts)"""

@@ -26,6 +26,10 @@ Automate Microsoft Teams operations through Composio's Microsoft Teams toolkit v
 3. If connection is not ACTIVE, follow the returned auth link to complete Microsoft OAuth
 4. Confirm connection status shows ACTIVE before running any workflows
 
+## Communication and access scope
+
+Verify the tenant, team/chat/channel IDs and recipients before a write; display names can be ambiguous. Sending messages, creating meetings/chats and adding members require explicit user authorization for those effects. A read/search request does not authorize contacting participants or broadening access. Protect private content and join URLs, follow Retry-After, and inspect returned message/operation IDs after uncertain writes instead of resending. Use live discovered schemas; this static slug/parameter list is not installation or permission evidence.
+
 ## Core Workflows
 
 ### 1. Send Channel Messages

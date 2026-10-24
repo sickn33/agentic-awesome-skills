@@ -18,7 +18,7 @@ A Telegram Bot API permite criar bots que interagem com usuarios via mensagens, 
 **Base URL:** `https://api.telegram.org/bot<TOKEN>/METHOD_NAME`
 **Metodos HTTP:** GET e POST
 **Formatos de parametros:** query string, application/x-www-form-urlencoded, application/json, multipart/form-data (uploads)
-**Limite de arquivos:** 50MB download, 20MB upload (via multipart), 50MB via URL
+**Limites de arquivos:** consulte o metodo e o modo de hospedagem na Bot API oficial; download, upload e envio por URL possuem limites distintos.
 
 **Portas suportadas para webhooks:** 443, 80, 88, 8443
 
@@ -254,16 +254,16 @@ await bot.send_chat_action(chat_id, action="typing")
 
 ```typescript
 // Foto
-bot.sendPhoto(chatId, 'https://example.com/img.jpg', { caption: 'Legenda' });
+bot.telegram.sendPhoto(chatId, 'https://example.com/img.jpg', { caption: 'Legenda' });
 
 // Documento
-bot.sendDocument(chatId, fs.createReadStream('relatorio.pdf'), { caption: 'Relatorio' });
+bot.telegram.sendDocument(chatId, fs.createReadStream('relatorio.pdf'), { caption: 'Relatorio' });
 
 // Localizacao
-bot.sendLocation(chatId, -23.5505, -46.6333);
+bot.telegram.sendLocation(chatId, -23.5505, -46.6333);
 
 // Enquete
-bot.sendPoll(chatId, 'Qual sua cor favorita?', ['Azul', 'Verde', 'Vermelho']);
+bot.telegram.sendPoll(chatId, 'Qual sua cor favorita?', ['Azul', 'Verde', 'Vermelho']);
 ```
 
 ---
@@ -358,13 +358,21 @@ Setup rapido:
 
 from flask import Flask, request
 import requests
+import os
+import hmac
 
 app = Flask(__name__)
 TOKEN = "SEU_TOKEN"
 BASE = f"https://api.telegram.org/bot{TOKEN}"
+SECRET = os.environ["WEBHOOK_SECRET"]
+if len(SECRET) < 32:
+    raise ValueError("Configure a random WEBHOOK_SECRET of at least 32 characters")
 
 @app.route("/webhook", methods=["POST"])
 def webhook():
+    header = request.headers.get("X-Telegram-Bot-Api-Secret-Token", "")
+    if not hmac.compare_digest(header, SECRET):
+        return "Forbidden", 403
     update = request.get_json()
     if "message" in update and "text" in update["message"]:
         chat_id = update["message"]["chat"]["id"]
@@ -380,7 +388,7 @@ def webhook():
 requests.post(f"{BASE}/setWebhook", json={
     "url": "https://seu-dominio.com/webhook",
     "allowed_updates": ["message", "callback_query"],
-    "secret_token": "seu_secret_seguro_aqui"
+    "secret_token": SECRET
 })
 ```
 
@@ -503,36 +511,23 @@ await bot.forward_message(
 from telegram.error import TelegramError, BadRequest, TimedOut, NetworkError
 
 async def safe_send(bot, chat_id, text, **kwargs):
-    """Envio com retry e tratamento de erros."""
-    max_retries = 3
-    for attempt in range(max_retries):
-        try:
-            return await bot.send_message(chat_id, text, **kwargs)
-        except TimedOut:
-            if attempt < max_retries - 1:
-                await asyncio.sleep(2 ** attempt)
-                continue
-            raise
-        except BadRequest as e:
-            if "chat not found" in str(e).lower():
-                print(f"Chat {chat_id} nao encontrado")
-                return None
-            raise
-        except NetworkError:
-            if attempt < max_retries - 1:
-                await asyncio.sleep(2 ** attempt)
-                continue
-            raise
+    """Do not automatically repeat a send with an unknown delivery outcome."""
+    try:
+        return await bot.send_message(chat_id, text, **kwargs)
+    except (TimedOut, NetworkError):
+        # Delivery may have succeeded. Reconcile before any user-authorized retry.
+        raise
+
 ```
 
 ---
 
 ## Rate Limits
 
-- **Mensagens em chat privado:** ~30 msg/segundo
+- **Mensagens em chat privado:** limite por chat distinto do limite global; consulte a FAQ oficial
 - **Mensagens em grupo:** ~20 msg/minuto por grupo
 - **Broadcast geral:** ~30 msg/segundo no total
-- **Bulk notifications:** use `asyncio.sleep(0.05)` entre envios para evitar flood
+- **Bulk notifications:** um atraso fixo nao garante conformidade; aplique filas e limites globais/por chat, respeitando `retry_after`
 
 Se receber erro 429 (Too Many Requests), respeite o `retry_after` retornado.
 

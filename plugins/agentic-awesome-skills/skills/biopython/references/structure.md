@@ -1,5 +1,8 @@
 # Structural Bioinformatics with Bio.PDB
 
+> Adapted reference, not a standalone script. Validate inputs, preserve originals, pin software/tool versions, and authorize any remote sequence/query submission. Examples require the shown external files and application-specific setup; absence of errors is not biological validation.
+
+
 ## Overview
 
 Bio.PDB provides tools for working with macromolecular 3D structures from PDB and mmCIF files. The module uses the SMCRA (Structure/Model/Chain/Residue/Atom) architecture to represent protein structures hierarchically.
@@ -302,7 +305,7 @@ def get_phi_psi(structure):
             for poly in polypeptides:
                 angles = poly.get_phi_psi_list()
                 for residue, (phi, psi) in zip(poly, angles):
-                    if phi and psi:  # Skip None values
+                    if phi is not None and psi is not None:  # Zero is a valid angle
                         phi_psi.append((residue.resname, phi, psi))
 
     return phi_psi
@@ -372,7 +375,7 @@ rotation = rotaxis(angle, axis)
 
 # Apply rotation to all atoms
 for atom in structure.get_atoms():
-    atom.transform(rotation, Vector(0, 0, 0))
+    atom.transform(rotation.T, np.zeros(3))  # transform expects an array translation; verify rotation convention
 ```
 
 ### Superimpose Structures
@@ -472,7 +475,7 @@ SeqIO.write(records, "structure_sequences.fasta", "fasta")
 ## Best Practices
 
 1. **Use mmCIF** for large structures and modern data
-2. **Set QUIET=True** to suppress parser warnings
+2. **Inspect parser warnings first**; QUIET hides messages but does not validate structure quality
 3. **Check for missing atoms** before analysis
 4. **Use NeighborSearch** for efficient spatial queries
 5. **Validate structure quality** with DSSP or Ramachandran analysis
@@ -498,9 +501,10 @@ atoms1 = [atom for atom in structure1[0]["A"].get_atoms() if atom.name == "CA"]
 atoms2 = [atom for atom in structure2[0]["A"].get_atoms() if atom.name == "CA"]
 
 # Ensure same number of atoms
-min_len = min(len(atoms1), len(atoms2))
-atoms1 = atoms1[:min_len]
-atoms2 = atoms2[:min_len]
+if not atoms1 or len(atoms1) != len(atoms2):
+    raise ValueError("Need a nonempty one-to-one aligned atom correspondence")
+# Equal lengths alone are insufficient: map homologous residues using sequence alignment,
+# chain/residue IDs and insertion codes before creating these paired lists.
 
 # Calculate RMSD
 sup = Superimposer()
@@ -522,10 +526,9 @@ def find_binding_site(structure, ligand_chain, ligand_res_id, distance=5.0):
     # Get all protein atoms
     protein_atoms = []
     for chain in structure[0]:
-        if chain.id != ligand_chain:
-            for residue in chain:
-                if residue.id[0] == " ":  # Standard residue
-                    protein_atoms.extend(residue.get_atoms())
+        for residue in chain:
+            if residue is not ligand and residue.id[0] == " ":
+                protein_atoms.extend(residue.get_atoms())
 
     # Find nearby atoms
     ns = NeighborSearch(protein_atoms)
@@ -548,14 +551,16 @@ def center_of_mass(entity):
     masses = []
     coords = []
 
-    # Atomic masses (simplified)
-    mass_dict = {"C": 12.0, "N": 14.0, "O": 16.0, "S": 32.0}
-
+    # Use Biopython atomic masses; never silently substitute carbon for unknown elements.
     for atom in entity.get_atoms():
-        mass = mass_dict.get(atom.element, 12.0)
+        mass = float(atom.mass)
+        if not np.isfinite(mass) or mass <= 0:
+            raise ValueError(f"Unknown atomic mass for {atom.element}")
         masses.append(mass)
         coords.append(atom.coord)
 
+    if not masses:
+        raise ValueError("Cannot calculate center of mass for an empty entity")
     masses = np.array(masses)
     coords = np.array(coords)
 

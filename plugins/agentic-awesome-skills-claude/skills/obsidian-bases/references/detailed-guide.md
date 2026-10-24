@@ -21,9 +21,7 @@ Base files use the `.base` extension and contain valid YAML.
 filters:
   # Can be a single filter string
   # OR a recursive filter object with and/or/not
-  and: []
-  or: []
-  not: []
+  and: [] # choose one operator per filter object; nest other operators as list entries
 
 # Define formula properties that can be used across all views
 formulas:

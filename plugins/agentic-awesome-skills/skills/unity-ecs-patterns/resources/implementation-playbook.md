@@ -38,6 +38,8 @@ Archetype: Unique combination of components
 Chunk: Memory block for same-archetype entities
 ```
 
+Pin Unity/Entities/Collections/Burst versions; these independent snippets require component definitions such as Dead, Spawner, Shield, ProjectilePrefab and SpawnPrefabElement. Do not enable both MovementSystem and MovementJobSystem together or movement doubles. Profile rather than assuming ECS/Burst/parallelism guarantees speedup or linear scaling. Validate positive CellSize, native-container capacity/lifetime and scheduling ownership. Hash collisions require checking actual cell coordinates/distance, not treating a hash as unique.
+
 ## Patterns
 
 ### Pattern 1: Basic ECS Setup
@@ -109,7 +111,7 @@ public partial struct MovementSystem : ISystem
     {
         float deltaTime = SystemAPI.Time.DeltaTime;
 
-        // Simple foreach - auto-generates job
+        // SystemAPI.Query foreach executes on the main thread; IJobEntity schedules jobs.
         foreach (var (transform, speed) in
             SystemAPI.Query<RefRW<LocalTransform>, RefRO<Speed>>())
         {
@@ -201,7 +203,8 @@ public partial struct QueryExamplesSystem : ISystem
 ### Pattern 4: Entity Command Buffers (Structural Changes)
 
 ```csharp
-// Structural changes (create/destroy/add/remove) require command buffers
+// Defer structural changes from iteration/jobs using command buffers;
+// direct EntityManager changes are also possible at safe sync points.
 [BurstCompile]
 [UpdateInGroup(typeof(SimulationSystemGroup))]
 public partial struct SpawnSystem : ISystem
@@ -271,7 +274,7 @@ public readonly partial struct CharacterAspect : IAspect
 
     // Optional component
     [Optional]
-    private readonly RefRO<Shield> _shield;
+    private readonly RefRW<Shield> _shield;
 
     // Buffer
     private readonly DynamicBuffer<InventoryItem> _inventory;
@@ -291,12 +294,14 @@ public readonly partial struct CharacterAspect : IAspect
 
     public void TakeDamage(float amount)
     {
-        float remaining = amount;
+        float remaining = math.max(0, amount);
 
         if (HasShield && _shield.ValueRO.Amount > 0)
         {
             // Shield absorbs damage first
-            remaining = math.max(0, amount - _shield.ValueRO.Amount);
+            float absorbed = math.min(math.max(0, amount), _shield.ValueRO.Amount);
+            _shield.ValueRW.Amount -= absorbed;
+            remaining -= absorbed;
         }
 
         _health.ValueRW.Current = math.max(0, _health.ValueRO.Current - remaining);
@@ -464,7 +469,8 @@ public class SpawnerAuthoring : MonoBehaviour
             }
 
             // Declare dependencies
-            DependsOn(authoring.Prefabs);
+            // Declare dependencies on each referenced non-null prefab as
+            // required by the pinned Baker API; no array overload is assumed.
         }
     }
 }
@@ -517,6 +523,7 @@ public partial struct SpatialHashSystem : ISystem
 
     public void OnDestroy(ref SystemState state)
     {
+        state.Dependency.Complete();
         _hashMap.Dispose();
     }
 
@@ -529,6 +536,8 @@ public partial struct SpatialHashSystem : ISystem
 
         int count = query.CalculateEntityCount();
 
+        // Custom native-container dependencies are not inferred from components.
+        state.Dependency.Complete();
         // Resize if needed
         if (_hashMap.Capacity < count)
         {
@@ -557,8 +566,8 @@ public partial struct SpatialHashSystem : ISystem
         state.Dependency = hashJob.Schedule(count, 64, state.Dependency);
 
         // Cleanup
-        positions.Dispose(state.Dependency);
-        posFloat3.Dispose(state.Dependency);
+        state.Dependency = positions.Dispose(state.Dependency);
+        state.Dependency = posFloat3.Dispose(state.Dependency);
     }
 }
 ```
@@ -590,9 +599,10 @@ partial struct ChunkJob : IJobChunk
         bool useEnabledMask, in v128 chunkEnabledMask)
     {
         var healths = chunk.GetNativeArray(ref HealthHandle);
-        for (int i = 0; i < chunk.Count; i++)
+        var enumerator = new ChunkEntityEnumerator(useEnabledMask, chunkEnabledMask, chunk.Count);
+        while (enumerator.NextEntityIndex(out int i))
         {
-            // Process
+            // Process only matching enabled entities.
         }
     }
 }

@@ -10,7 +10,7 @@ date_added: "2026-02-27"
 
 Execute plan by dispatching fresh subagent per task, with two-stage review after each: spec compliance review first, then code quality review.
 
-**Core principle:** Fresh subagent per task + two-stage review (spec then quality) = high quality, fast iteration
+**Core principle:** Fresh subagent per task and two-stage review can improve isolation and feedback; verify actual quality, latency and cost.
 
 ## When to Use
 ```dot
@@ -36,6 +36,10 @@ digraph when_to_use {
 - Fresh subagent per task (no context pollution)
 - Two-stage review after each task: spec compliance first, then code quality
 - Faster iteration (no human-in-loop between tasks)
+
+## Host and authority prerequisites
+
+Use only delegation tools actually available and allowed for this task. Task, TodoWrite and superpowers names below are host-specific examples, not bundled capabilities. The three local prompt templates are bundled; other superpowers skills/templates are external dependencies. When unavailable, use the equivalent task tracker and independent code/spec review directly rather than claim a subagent ran. Set global concurrency/cost/time limits and cancellation; subagents cannot expand authorization. Commits require the established repository workflow and assigned branch, and reviewer approval does not authorize pushing, merging or publishing. Inspect actual files and command evidence at the exact reviewed head before completion.
 
 ## The Process
 
@@ -169,9 +173,9 @@ Done!
 ## Advantages
 
 **vs. Manual execution:**
-- Subagents follow TDD naturally
+- Require the relevant tests explicitly; subagents do not follow TDD automatically
 - Fresh context per task (no confusion)
-- Parallel-safe (subagents don't interfere)
+- Separate context does not isolate files; assign disjoint ownership or isolated checkouts
 - Subagent can ask questions (before AND during work)
 
 **vs. Executing Plans:**
@@ -226,7 +230,7 @@ Done!
 
 **If subagent fails task:**
 - Dispatch fix subagent with specific instructions
-- Don't try to fix manually (context pollution)
+- The controller may repair directly when clearer or when subagents are unavailable; preserve the review and validation requirements.
 
 ## Integration
 

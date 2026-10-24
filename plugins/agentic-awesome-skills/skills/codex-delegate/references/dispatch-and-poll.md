@@ -1,3 +1,5 @@
+> Documentation-only import: no relay runtime is bundled. Verify the separately reviewed runtime and exact CLI flags/profile; resumed turns must preserve explicit sandbox settings. Logs may contain sensitive data and belong in private storage.
+
 # Dispatch and poll
 
 `scripts/relay.mjs` is the dispatch layer. It wraps `codex exec`, runs the brief in a sandbox, captures

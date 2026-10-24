@@ -1,7 +1,7 @@
 ---
 name: ai-studio-image
 description: Geracao de imagens humanizadas via Google AI Studio (Gemini). Fotos realistas estilo influencer ou educacional com iluminacao natural e imperfeicoes sutis.
-risk: safe
+risk: critical
 source: community
 date_added: '2026-03-06'
 author: renat
@@ -78,7 +78,7 @@ set GEMINI_API_KEY=sua-api-key-aqui
 export GEMINI_API_KEY=sua-api-key-aqui
 ```
 
-Ou crie um arquivo `.env` em `C:\Users\renat\skills\ai-studio-image\`:
+Ou crie um arquivo `.env` em `<skill-root>/`:
 ```
 GEMINI_API_KEY=sua-api-key-aqui
 ```
@@ -86,13 +86,13 @@ GEMINI_API_KEY=sua-api-key-aqui
 ## 2. Instalar Dependencias
 
 ```bash
-pip install -r C:\Users\renat\skills\ai-studio-image\scripts\requirements.txt
+pip install -r <skill-root>/scripts\requirements.txt
 ```
 
 ## 3. Gerar Sua Primeira Imagem
 
 ```bash
-python C:\Users\renat\skills\ai-studio-image\scripts\generate.py --prompt "mulher jovem tomando cafe em cafeteria" --mode influencer --format square
+python <skill-root>/scripts\generate.py --prompt "mulher jovem tomando cafe em cafeteria" --mode influencer --format square
 ```
 
 ## Workflow Principal
@@ -128,7 +128,7 @@ Se nao especificado, deduza pelo contexto (stories → 9:16, feed → 1:1, etc).
 Sempre passe pelo motor de humanizacao:
 
 ```bash
-python C:\Users\renat\skills\ai-studio-image\scripts\prompt_engine.py --prompt "prompt do usuario" --mode influencer
+python <skill-root>/scripts\prompt_engine.py --prompt "prompt do usuario" --mode influencer
 ```
 
 O motor de humanizacao adiciona camadas de realismo:
@@ -166,19 +166,19 @@ O motor de humanizacao adiciona camadas de realismo:
 ## Passo 4: Gerar A Imagem
 
 ```bash
-python C:\Users\renat\skills\ai-studio-image\scripts\generate.py \
+python <skill-root>/scripts\generate.py \
   --prompt "prompt humanizado gerado no passo anterior" \
   --mode influencer \
   --format square \
   --model gemini-2-flash-exp \
-  --output C:\Users\renat\skills\ai-studio-image\data\outputs\
+  --output <skill-root>/data\outputs\
 ```
 
 **Modelos disponiveis (em ordem de recomendacao):**
 
 | Modelo | Velocidade | Qualidade | Custo | Uso Ideal |
 |--------|-----------|-----------|-------|-----------|
-| `gemini-2-flash-exp` | Rapido | Alta | **GRATIS** | **Padrao — usar sempre** |
+| `gemini-2-flash-exp` | Rapido | Alta | Custo a verificar | Snapshot historico; verificar disponibilidade |
 | `imagen-4` | Medio | Alta | $0.03/img | Alta qualidade (requer --force-paid) |
 | `imagen-4-ultra` | Lento | Maxima | $0.06/img | Impressao, 2K (requer --force-paid) |
 | `imagen-4-fast` | Rapido | Boa | $0.02/img | Volume alto (requer --force-paid) |
@@ -198,7 +198,7 @@ Mostre o resultado ao usuario. Se precisar ajustar:
 Para cenarios comuns, use templates prontos. Execute:
 
 ```bash
-python C:\Users\renat\skills\ai-studio-image\scripts\templates.py --list
+python <skill-root>/scripts\templates.py --list
 ```
 
 Templates disponiveis:
@@ -235,7 +235,7 @@ Templates disponiveis:
 
 Usar template:
 ```bash
-python C:\Users\renat\skills\ai-studio-image\scripts\generate.py \
+python <skill-root>/scripts\generate.py \
   --template cafe-lifestyle \
   --custom "mulher ruiva, 30 anos, lendo livro" \
   --format square
@@ -253,7 +253,7 @@ Controle quanto "imperfeicao" injetar:
 | `editorial` | Estilo revista, natural mas com producao |
 
 ```bash
-python C:\Users\renat\skills\ai-studio-image\scripts\generate.py \
+python <skill-root>/scripts\generate.py \
   --prompt "..." --humanization natural
 ```
 
@@ -275,13 +275,13 @@ A iluminacao muda drasticamente:
 Para gerar multiplas variacoes:
 
 ```bash
-python C:\Users\renat\skills\ai-studio-image\scripts\generate.py \
+python <skill-root>/scripts\generate.py \
   --prompt "..." --variations 4 --format square
 ```
 
 ## Instagram Skill
 
-Gere imagens e publique diretamente:
+Gere imagens e publique apenas com autorizacao explicita para a publicacao:
 1. Use `ai-studio-image` para gerar a foto
 2. Use `instagram` skill para publicar com caption otimizada
 
@@ -327,3 +327,9 @@ Para guias detalhados, consulte:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Limites do snapshot e autorizacao
+
+Modelos, precos e recursos citados sao historicos e nao foram verificados no servico. Consulte https://ai.google.dev/gemini-api/docs/image-generation e a tabela de precos antes de usar. Toda chamada exige --force-paid como confirmacao de custo; nenhum modelo e garantido gratuito. O contador diario e local, aproximado, sem atomicidade, e nao limita a conta nem custos de falhas/retries ou diretorios alternativos.
+
+Nao envie imagens pessoais, prompts confidenciais ou referencias sem autorizacao para processamento externo. Prompts e metadados sao gravados localmente: proteja a pasta de saida. Resultados sao sinteticos; realismo nao garante fidelidade, texto correto ou proveniencia fotografica. Multi-turn, thinking e grounding descritos nao sao implementados pela CLI. Nao publique automaticamente. Use um ambiente virtual e caminhos reais no lugar de <skill-root>; proteja e exclua .env do Git. Evite humanizar o prompt duas vezes: generate.py ja aplica o motor.

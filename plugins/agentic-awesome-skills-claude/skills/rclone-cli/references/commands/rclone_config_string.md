@@ -20,6 +20,9 @@ config file, especially if using the RC API.
 
 Backend parameters may be provided to the command also.
 
+The output can contain access keys, tokens, and other credentials. Treat it as
+secret: do not paste it into logs, chat, issue reports, or shared command lines.
+
 Example:
 
 ```sh

@@ -8,8 +8,7 @@ in the changed code. Every finding must follow the Iron Law: Symptom → Source 
 ## Before You Start
 
 **Auto-generated files:** If the diff contains generated files (protobuf stubs, OpenAPI clients,
-ORM migrations, lock files, minified bundles), skip those files entirely. Generated code reflects
-tool choices, not developer decisions. Note in the report which files were skipped and why.
+ORM migrations, lock files, minified bundles), inspect their security and behavioral effects and trace changes to the source/generator. Avoid hand-editing derived outputs; report any omitted areas explicitly.
 
 **Scope calibration:** Adjust analysis depth based on PR size before starting.
 
@@ -19,7 +18,7 @@ tool choices, not developer decisions. Note in the report which files were skipp
 | 50–300 lines | Full process, all steps |
 | > 300 lines | Full process; note in the Scope line that review is sampled — cover the highest-risk areas rather than every file |
 
-For PRs > 500 lines: flag in the Summary that a PR this size is itself a Change Propagation signal. A change that cannot be reviewed in one pass suggests tangled responsibilities.
+For PRs > 500 lines: flag in the Summary that a PR this size is itself a Change Propagation signal. Size is a review-cost signal, not proof of tangled responsibilities; distinguish mechanical migrations and independent catalog changes.
 
 ---
 

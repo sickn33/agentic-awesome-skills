@@ -44,7 +44,7 @@ benchmark:
 # Results Summary
 results:
   patch_generation_rate: 99.67
-  problems_solved: 299
+  problems_solved: null  # Not evaluated by the official harness
   problems_total: 300
   fixed_by_rarv: 0
   avg_attempts: 1.0
@@ -60,7 +60,7 @@ submission:
 
 # Contact
 contact:
-  email: "lokesh@example.com"
+  email: null  # Supply an authorized real contact before submission
   github: "asklokesh"
 
 # Notes

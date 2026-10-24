@@ -56,7 +56,7 @@ Use this sub-style when the user's request matches the aesthetic described above
 /* Weather Widget Example */
 .widget.weather {
   background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-  color: white;
+  color: #12313a;
 }
 .weather-temp { font-size: 3rem; font-weight: 300; }
 .weather-icon { position: absolute; top: 16px; right: 16px; font-size: 2rem; }
@@ -72,16 +72,16 @@ struct WidgetDesignView: View {
     var body: some View {
         ScrollView {
             LazyVGrid(columns: columns, spacing: 16) {
-                // 2x1 Widget
+                // One column: LazyVGrid does not span WeatherWidget across two columns.
                 WeatherWidget()
                     .frame(height: 160) // Base unit height
                 
                 // 1x1 Widget
-                FitnessWidget()
+                Text("Fitness") // Replace with a defined widget component.
                     .frame(height: 160)
                 
                 // 1x1 Widget
-                MusicWidget()
+                Text("Music") // Replace with a defined widget component.
                     .frame(height: 160)
             }
             .padding(24)
@@ -96,7 +96,7 @@ struct WeatherWidget: View {
             LinearGradient(colors: [Color(hex: "4facfe"), Color(hex: "00f2fe")], startPoint: .topLeading, endPoint: .bottomTrailing)
             
             Image(systemName: "cloud.sun.fill")
-                .foregroundColor(.white)
+                .foregroundColor(Color(red: 0.07, green: 0.19, blue: 0.23))
                 .font(.system(size: 40))
                 .padding()
             
@@ -104,10 +104,10 @@ struct WeatherWidget: View {
                 Spacer()
                 Text("72°")
                     .font(.system(size: 48, weight: .thin))
-                    .foregroundColor(.white)
+                    .foregroundColor(Color(red: 0.07, green: 0.19, blue: 0.23))
                 Text("San Francisco")
                     .font(.subheadline)
-                    .foregroundColor(.white.opacity(0.8))
+                    .foregroundColor(Color(red: 0.07, green: 0.19, blue: 0.23))
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding()
@@ -137,8 +137,8 @@ class WidgetDesignScreen extends StatelessWidget {
           // Note: Flutter GridView doesn't easily span rows/cols out of the box.
           // flutter_staggered_grid_view is highly recommended for real widget layouts.
           _buildWeatherWidget(),
-          _buildFitnessWidget(),
-          _buildMusicWidget(),
+          const Center(child: Text("Fitness")),
+          const Center(child: Text("Music")),
         ],
       ),
     );
@@ -156,7 +156,7 @@ class WidgetDesignScreen extends StatelessWidget {
         children: [
           const Align(
             alignment: Alignment.topRight,
-            child: Icon(Icons.cloud, color: Colors.white, size: 40),
+            child: Icon(Icons.cloud, color: const Color(0xFF12313A), size: 40),
           ),
           Align(
             alignment: Alignment.bottomLeft,
@@ -164,8 +164,8 @@ class WidgetDesignScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('72°', style: TextStyle(color: Colors.white, fontSize: 48, fontWeight: FontWeight.w300)),
-                Text('San Francisco', style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14)),
+                const Text('72°', style: TextStyle(color: const Color(0xFF12313A), fontSize: 48, fontWeight: FontWeight.w300)),
+                Text('San Francisco', style: TextStyle(color: const Color(0xFF12313A), fontSize: 14)),
               ],
             ),
           )
@@ -215,8 +215,8 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     borderRadius: 24,
   },
-  temp: { fontSize: 48, fontWeight: '300', color: '#FFF' },
-  sub: { fontSize: 14, color: 'rgba(255,255,255,0.8)' }
+  temp: { fontSize: 48, fontWeight: '300', color: '#12313a' },
+  sub: { fontSize: 14, color: '#12313a' }
 });
 ```
 - In React Native, `flexWrap: 'wrap'` combined with percentage widths (e.g., `47%` for 2 columns with a gap) is the cleanest way to build a responsive widget layout.
@@ -252,12 +252,12 @@ fun WeatherWidget(modifier: Modifier = Modifier) {
             .padding(16.dp)
     ) {
         // Icon
-        Icon(Icons.Filled.Cloud, contentDescription = null, tint = Color.White, modifier = Modifier.align(Alignment.TopEnd).size(40.dp))
+        Icon(Icons.Filled.Cloud, contentDescription = null, tint = Color(0xFF12313A), modifier = Modifier.align(Alignment.TopEnd).size(40.dp))
         
         // Data
         Column(modifier = Modifier.align(Alignment.BottomStart)) {
-            Text("72°", fontSize = 48.sp, fontWeight = FontWeight.Light, color = Color.White)
-            Text("San Francisco", fontSize = 14.sp, color = Color.White.copy(alpha = 0.8f))
+            Text("72°", fontSize = 48.sp, fontWeight = FontWeight.Light, color = Color(0xFF12313A))
+            Text("San Francisco", fontSize = 14.sp, color = Color(0xFF12313A))
         }
     }
 }
@@ -272,3 +272,5 @@ fun WeatherWidget(modifier: Modifier = Modifier) {
 ## Limitations
 - This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
 - Ensure appropriate contrast ratios and responsive behaviors are verified separately.
+
+These in-app widget studies do not implement WidgetKit or Android home-screen widget lifecycles. Fixed heights do not guarantee square shapes or room for enlarged text. Preserve content-driven sizing, use dark text over the bright weather gradient and keep a separate unclipped wrapper for shadows.

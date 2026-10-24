@@ -7,7 +7,7 @@ source_repo: expo/skills
 source_type: official
 source: expo
 date_added: '2026-09-21'
-risk: unknown
+risk: critical
 ---
 ## When to Use
 - Use when this upstream workflow matches the user's stated goal.
@@ -18,6 +18,10 @@ risk: unknown
 > **EAS service - costs apply.** Cloud builds use EAS plan resources, and EAS services have free-tier and paid-plan limits. Apple Developer and Google Play memberships are separate. Check https://expo.dev/pricing for the requested service.
 
 This skill covers building and releasing iOS and Android apps with EAS: Expo and other React Native projects, plus existing native apps. EAS is a delivery service; native apps can use it without adding Expo or React Native to their runtime. The native setup walkthrough currently covers SwiftUI/UIKit on iOS.
+
+## Authorization and artifact boundaries
+
+Store uploads, metadata pushes, invitations, public releases, paid builds and OTA publications require the applicable user scope; drafting or inspection alone does not authorize them. Pin a reviewed CLI version and inspect upload archives/ignore rules for secrets before cloud builds. Never send project logs/feedback externally without explicit instruction; redact secrets and user data. Use exact build IDs, account/team and track; latest-selection shortcuts are unsuitable when multiple candidates exist. Current CLI/store schemas override historical examples and legacy statistics.
 
 ## Choose the project path
 
@@ -180,7 +184,7 @@ If you encounter errors, misleading or outdated information in this skill, repor
 ```bash
 npx --yes submit-expo-feedback@latest --category skills --subject "eas-app-stores" "<actionable feedback>"
 ```
-Only submit when you have something specific and actionable to report. Include as much relevant context as possible.
+Only submit after explicit user instruction to send feedback. Include minimum redacted context; do not upload workspace content, logs or credentials implicitly.
 If an AI agent repeatedly failed or the user had to take over an Expo task, load the expo-skill-feedback skill and follow its eval-candidate flow instead of reusing the command above.
 
 

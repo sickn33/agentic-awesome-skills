@@ -202,7 +202,7 @@ Use for: brand entity (homepage or about page)
 
 ### WebSite (+ SearchAction)
 
-Use for: enabling sitelinks search box
+Use for: describing the website; Google removed the sitelinks search box feature in November 2024
 
 ### Article / BlogPosting
 
@@ -372,3 +372,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Google rich-result support is separate from Schema.org validity: sitelinks search box was removed in November 2024, HowTo rich results were deprecated in September 2023, and FAQ rich results are limited to eligible well-known authoritative government/health sites. Do not promise these enhancements for ordinary FAQ/how-to pages. Use only truthful visible content and real ratings; eligibility tests do not guarantee display. See [search-box removal](https://developers.google.com/search/blog/2024/10/sitelinks-search-box) and [FAQ/HowTo changes](https://developers.google.com/search/blog/2023/08/howto-faq-changes).

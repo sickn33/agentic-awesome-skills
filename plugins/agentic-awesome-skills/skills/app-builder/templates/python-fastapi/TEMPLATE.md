@@ -76,7 +76,7 @@ project-name/
 
 ## Best Practices
 
-- Use async everywhere
+- Use async only with nonblocking drivers; run blocking work in appropriate sync/thread execution and configure an actual async DB driver
 - Pydantic v2 for validation
 - SQLAlchemy 2.0 async sessions
 - Alembic for migrations

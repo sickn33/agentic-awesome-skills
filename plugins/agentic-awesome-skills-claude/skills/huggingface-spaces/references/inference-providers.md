@@ -18,7 +18,7 @@ Some Spaces don't need a GPU at all. If the model is available through HF Infere
   ```bash
   curl "https://huggingface.co/api/models/<ns>/<repo>?expand[]=inferenceProviderMapping"
   ```
-- The Space needs **custom decoding** (special sampling, tool use, retrieval, anything stateful or interactive across calls).
+- The provider lacks the specific required decoding or tool capability. Retrieval and multi-turn state can be implemented in the app when the provider API supports the necessary calls.
 - The Space needs **multimodal** beyond what the provider exposes.
 - The user explicitly wants to own the inference stack (model loading, decoding, performance tuning).
 
@@ -48,7 +48,7 @@ def chat(msg, history):
 gr.ChatInterface(chat).launch()
 ```
 
-Use when you want users to "just click and try it" — no sign-in friction. Cost is on you.
+Before exposing a creator-funded token to public requests, enforce authentication where appropriate, per-user rate/concurrency limits and a spending budget. The token stays server-side; user content is sent to the selected provider under its retention/privacy terms.
 
 ### Mode B — Visitor pays (recommended for public demos)
 

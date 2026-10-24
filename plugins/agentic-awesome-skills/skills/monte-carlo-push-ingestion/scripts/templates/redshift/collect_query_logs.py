@@ -2,7 +2,7 @@
 Redshift — Query Log Collection (collect-only)
 ================================================
 Collects completed query execution records from Redshift using sys_query_history
-and sys_querytext (modern RA3/serverless), assembles full SQL text from
+and sys_query_text (modern RA3/serverless), assembles full SQL text from
 multi-row text chunks, and writes a JSON manifest file that can be consumed
 by push_query_logs.py.
 
@@ -120,6 +120,8 @@ def _dictfetch(cursor: Any, sql: str, params: tuple | None = None) -> list[dict[
         if not chunk:
             break
         rows.extend(dict(zip(cols, row)) for row in chunk)
+        if len(rows) > 100000:
+            raise ValueError("Collection exceeds 100000 rows; narrow scope instead of returning partial success")
     return rows
 
 
@@ -161,7 +163,7 @@ def fetch_query_metadata(
         ORDER BY start_time
         LIMIT %s
         """,  # ← SUBSTITUTE: add AND database_name = 'mydb' to narrow scope
-        (lookback_hours, lag_hours, max_queries),
+        (lookback_hours + lag_hours, lag_hours, max_queries),
     )
 
 
@@ -177,10 +179,10 @@ def fetch_query_texts_batch(cursor: Any, query_ids: list[int]) -> dict[int, str]
         SELECT
             query_id,
             LISTAGG(
-                CASE WHEN LEN(text) <= 200 THEN text ELSE LEFT(text, 200) END,
+                text,
                 ''
             ) WITHIN GROUP (ORDER BY sequence) AS query_text
-        FROM sys_querytext
+        FROM sys_query_text
         WHERE query_id = ANY(%s)
         GROUP BY query_id
         """,
@@ -213,7 +215,7 @@ def collect(
     collected_at = datetime.now(timezone.utc).isoformat()
 
     conn = psycopg2.connect(
-        host=host, port=port, dbname=db, user=user, password=password, connect_timeout=30,
+        host=host, port=port, dbname=db, user=user, password=password, connect_timeout=30, sslmode="verify-full", options="-c statement_timeout=60000",
     )
     try:
         with conn.cursor() as cursor:
@@ -268,7 +270,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Collect Redshift query logs to a manifest file")
     parser.add_argument("--db", default=os.getenv("REDSHIFT_DB"))             # ← SUBSTITUTE
     parser.add_argument("--user", default=os.getenv("REDSHIFT_USER"))         # ← SUBSTITUTE
-    parser.add_argument("--password", default=os.getenv("REDSHIFT_PASSWORD")) # ← SUBSTITUTE
+    parser.add_argument("--password", choices=[], default=os.getenv("REDSHIFT_PASSWORD")) # ← SUBSTITUTE
     parser.add_argument("--port", type=int, default=int(os.getenv("REDSHIFT_PORT", "5439")))
     parser.add_argument("--lookback-hours", type=int, default=LOOKBACK_HOURS)
     parser.add_argument("--lookback-lag-hours", type=int, default=LOOKBACK_LAG_HOURS)

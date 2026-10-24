@@ -134,7 +134,7 @@ ConfigurationSetting setting = configClient.getConfigurationSetting(
     "app/database/connection", 
     "Production"
 );
-System.out.println("Value: " + setting.getValue());
+System.out.println("Setting retrieved; value omitted from logs");
 System.out.println("Content-Type: " + setting.getContentType());
 System.out.println("Last Modified: " + setting.getLastModified());
 ```
@@ -212,7 +212,7 @@ SettingSelector selector = new SettingSelector()
 
 PagedIterable<ConfigurationSetting> settings = configClient.listConfigurationSettings(selector);
 for (ConfigurationSetting s : settings) {
-    System.out.println(s.getKey() + " = " + s.getValue());
+    System.out.println(s.getKey());
 }
 ```
 
@@ -243,7 +243,7 @@ SettingSelector selector = new SettingSelector()
 
 PagedIterable<ConfigurationSetting> revisions = configClient.listRevisions(selector);
 for (ConfigurationSetting revision : revisions) {
-    System.out.println("Value: " + revision.getValue() + ", Modified: " + revision.getLastModified());
+    System.out.println("Modified: " + revision.getLastModified());
 }
 ```
 
@@ -373,7 +373,7 @@ PagedIterable<ConfigurationSetting> settings =
     configClient.listConfigurationSettingsForSnapshot("release-v1.0");
 
 for (ConfigurationSetting setting : settings) {
-    System.out.println(setting.getKey() + " = " + setting.getValue());
+    System.out.println(setting.getKey());
 }
 ```
 
@@ -425,7 +425,7 @@ ConfigurationAsyncClient asyncClient = new ConfigurationClientBuilder()
 // Async list with reactive streams
 asyncClient.listConfigurationSettings(new SettingSelector().setLabelFilter("Production"))
     .subscribe(
-        setting -> System.out.println(setting.getKey() + " = " + setting.getValue()),
+        setting -> System.out.println(setting.getKey()),
         error -> System.err.println("Error: " + error.getMessage()),
         () -> System.out.println("Completed")
     );
@@ -476,3 +476,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+The dependency version and fragments are historical examples, not compiled or current-version claims. Include Azure Identity and required Java imports, verify method signatures against the selected BOM, and bound reactive work/lifetimes. Labels are organizational dimensions, not security boundaries. Feature flags are not authorization controls; setting storage does not evaluate client filters. Key Vault references require separate authorized resolution and do not contain the secret value. Read-only settings can be unlocked by permitted principals; snapshots are not indefinite disaster-recovery guarantees. Scope production writes and do not print configuration values or connection strings.

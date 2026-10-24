@@ -60,6 +60,8 @@ export function deriveRootFromSignals(signals, cwd = process.cwd()) {
 }
 
 export async function resolveRepoRoot(recs, suppliedRoot, cwd = process.cwd(), signals = null) {
+  // An explicit operator root is the read boundary, not a hint inferred output may widen.
+  if (suppliedRoot) return { root: resolve(suppliedRoot), source: 'supplied', probe: null };
   if (signals) {
     const apiRoot = deriveRootFromSignals(signals, cwd);
     if (apiRoot) {
@@ -74,7 +76,8 @@ export async function resolveRepoRoot(recs, suppliedRoot, cwd = process.cwd(), s
   if (suppliedRoot && await fileResolvesAt(suppliedRoot, probe)) {
     return { root: suppliedRoot, source: 'supplied', probe };
   }
-  const detected = await detectRepoRoot(probe, suppliedRoot ?? cwd);
+  // Do not walk up based on model-provided paths; use the current workspace only.
+  const detected = await fileResolvesAt(cwd, probe) ? resolve(cwd) : null;
   if (detected) {
     return {
       root: detected,

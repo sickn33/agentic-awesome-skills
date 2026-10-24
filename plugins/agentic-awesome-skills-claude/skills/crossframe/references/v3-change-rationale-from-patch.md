@@ -46,4 +46,4 @@
 
 ## 使用边界
 
-补丁稿只能帮助理解 v3.0 为什么新增这些保护模块；实际推理时以 `v3-source-spine.md`、`v3-section-digest-index.md`、`v3-term-fidelity.md` 和 `continuity-bundles.md` 为准。
+补丁稿只能帮助理解 v3.0 为什么新增这些保护模块；历史版本核验可查 `v3-source-spine.md`、`v3-section-digest-index.md` 和 `v3-term-fidelity.md`；当前推理按 v5 路由和连读包。

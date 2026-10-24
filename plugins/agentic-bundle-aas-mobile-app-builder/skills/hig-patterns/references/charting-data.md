@@ -1,8 +1,11 @@
 ---
 title: "Charting data | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/charting-data
+---
 
 # Charting data
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 Presenting data in a chart can help you communicate information with clarity and appeal.
 
@@ -49,7 +52,7 @@ Not every collection of data needs to be displayed in a chart. If you simply nee
 
 **Prefer consistency across multiple charts, deviating only when you need to highlight differences.** If multiple charts in your app serve a similar purpose, you generally don’t want to imply that the charts are unrelated by using a different type or style for each one. Also, using a consistent visual approach for the charts in your app lets people use what they learn about one chart to help them understand another. Consider using different chart types and styles when you need to highlight meaningful differences between charts.
 
-**Maintain continuity among multiple charts that use the same data.** When you use multiple charts to help people explore one dataset from different perspectives, it’s important to use one chart type and consistent colors, annotations, layouts, and descriptive text to signal that the dataset remains the same. For example, the Health Trends screen shows small charts that each use a specific visual style to depict a recent trend in an area like steps or resting heart rate. When people choose a chart to reveal all their data in that area, the expanded version uses the same style, colors, marks, and annotations to strengthen the relationship between the versions.
+**Maintain continuity among multiple charts that use the same data.** When you use multiple charts to help people explore one dataset from different perspectives, keep units, scales, labels and visual identity consistent enough to show the relationship; use a different chart type when the analytical task requires it rather than forcing every view into one type. For example, the Health Trends screen shows small charts that each use a specific visual style to depict a recent trend in an area like steps or resting heart rate. When people choose a chart to reveal all their data in that area, the expanded version uses the same style, colors, marks, and annotations to strengthen the relationship between the versions.
 
 ## [Platform considerations](https://developer.apple.com/design/human-interface-guidelines/charting-data#Platform-considerations)
 
@@ -79,3 +82,7 @@ Date| Changes
 ---|---  
 September 23, 2022| New page.  
   
+
+## Implementation checks
+
+Expose units, source time, missing values and uncertainty; do not present fabricated values as live data or truncate a scale misleadingly. Offer accessible summaries and data tables where useful, and distinguish correlation from causal conclusions.

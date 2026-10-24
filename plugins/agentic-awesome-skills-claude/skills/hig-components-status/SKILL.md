@@ -20,7 +20,7 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 3. **Indeterminate when duration is unknown.** A spinner communicates work is happening without promising a timeframe. Use for unpredictable network requests.
 
-4. **Prefer progress bars over spinners.** Determinate progress feels faster and more trustworthy.
+4. **Prefer determinate progress only when measurable.** Never invent a percentage; use a spinner for unknown work or constrained background status, consistent with the platform reference.
 
 5. **Place indicators where content will appear.** Inline progress near the content area, not modal or distant.
 
@@ -42,9 +42,9 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 12. **Respect ring color conventions.** Red (Move), green (Exercise), blue (Stand) are strongly associated with Apple Fitness.
 
-13. **Use HealthKit APIs** for activity data rather than manual tracking.
+13. **Use authorized HealthKit APIs** for activity data; respect permission denial and keep health data private. Do not infer absent activity from missing access.
 
-14. **Celebrate completions** with animation and haptics when rings close.
+14. **Respect motion/haptic preferences** for optional completion feedback. Never fabricate activity completion or duplicate system notifications.
 
 ## Reference Index
 

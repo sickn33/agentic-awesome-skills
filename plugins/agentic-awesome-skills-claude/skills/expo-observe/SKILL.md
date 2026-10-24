@@ -39,6 +39,8 @@ The three reference files in `./references/` cover the three things people typic
 
 ## Limitations
 
+- Enabling telemetry sends device/session/custom-event data to the configured backend. Inspect route URLs/params and event properties for tokens, identifiers and personal data before collection; minimize/redact payloads and obtain required product authorization. Verify project/account and data destination. SDK names and CLI output are version-specific. A successful build or empty query is not proof that instrumentation works; verify an actual controlled event and its environment.
+
 - Use this skill only when the task clearly matches its upstream product or API scope.
 - Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
 - Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.

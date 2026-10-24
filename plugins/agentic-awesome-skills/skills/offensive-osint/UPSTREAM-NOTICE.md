@@ -24,3 +24,7 @@ AAS originally added frontmatter, sections and confirmation boundaries, and rest
 | `references/severity-matrix.md` | `skills/offensive-osint/references/severity-matrix.md` | `5896ede4ecafe82080a187fae00db3f43eca4baf` | AAS scope, evidence, safety, privacy, availability and technical corrections; useful original topics retained |
 | `references/specialized-osint.md` | `skills/offensive-osint/references/specialized-osint.md` | `8b7a37efb36bd5d11ec6181a60de10ce4d1a9812` | AAS scope, evidence, safety, privacy, availability and technical corrections; useful original topics retained |
 | `references/tooling-install.md` | `skills/offensive-osint/references/tooling-install.md` | `5d6ab6e6b3efbe1653f0abfb9c2ab87aee27e534` | AAS scope, evidence, safety, privacy, availability and technical corrections; useful original topics retained |
+
+## Additional AAS review (2026-10-23)
+
+This adaptation further corrects contradictory protocol, tenant-existence, CORS, public-metadata, archive-publication and severity examples; clarifies safe evidence handling, scope validation and tool installation; and preserves the upstream attribution, content license and historical source hashes above. No live tests or external-tool execution were performed.

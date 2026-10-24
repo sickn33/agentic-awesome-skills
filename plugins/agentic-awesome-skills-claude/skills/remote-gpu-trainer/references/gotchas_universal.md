@@ -33,14 +33,9 @@ To jump: `grep -in '<keyword>' references/gotchas_universal.md` (e.g. `inode`, `
 
 **Symptom**: `ssh <host> 'pkill -9 -f train'` returns `Connection reset by peer`, exit 255.
 
-**Root cause**: killing the python tree tears down the PTY chain; the SSH client gets EOF and exits. The
-remote command may have run fine.
+**Root cause**: a broad `pkill -f` can match the remote shell's own command line or unrelated processes, severing SSH. Exit 255 is a transport failure, not proof the intended stop succeeded.
 
-**Fix**: this is **normal, not an error** — re-ssh and verify state, do not panic-retry.
-```bash
-ssh <host> "tmux kill-session -t qN 2>/dev/null; sleep 3; pkill -9 -f 'src.train'"  # SSH exits 255 here
-ssh <host> "pgrep -af 'src.train' | head -1 || echo CLEAN"                            # separate call verifies
-```
+**Fix**: identify the exact owned run PID/job ID and verify its command, owner and start time. Request graceful termination first; escalate only for that confirmed run when necessary. Reconnect and verify process state before any relaunch. Never use a broad kill pattern as routine cleanup.
 
 ### U2 — tmux holds the script in memory; editing it mid-run re-executes blocks
 
@@ -48,7 +43,7 @@ ssh <host> "pgrep -af 'src.train' | head -1 || echo CLEAN"                      
 an ablation completes cleanly yet **restarts from epoch 1** with a second tracker run and the queue never
 advances.
 
-**Root cause**: bash reads a script **by byte-offset on demand**. tmux keeps the launched script as-loaded;
+**Root cause**: bash reads a script **by byte-offset on demand**. tmux only provides the terminal; it does not cache the script.
 `scp`-ing a new version mid-run makes bash seek to its saved offset in a *now-different* file, land
 mid-command, and re-execute a block (duplicate runs, stalled queue). A child invocation (`bash run_one.sh`)
 IS re-read fresh for the *next* item — but only if none is parked mid-script. (principle #6.)
@@ -79,12 +74,12 @@ traceback; `pgrep` shows it gone. The reflex is "OOM-killed."
 
 **Fix — diagnose cheap → conclusive before "fixing"**:
 ```bash
-dmesg 2>/dev/null | grep -iE 'killed process|out of memory' | tail   # OOM? empty = not OOM
-nvidia-smi --query-gpu=memory.used,memory.free --format=csv,noheader  # idle now = died, not hung
+dmesg 2>/dev/null | grep -iE 'killed process|out of memory' | tail   # OOM? empty does not exclude OOM (permissions/log rotation)
+nvidia-smi --query-gpu=memory.used,memory.free --format=csv,noheader  # idle alone does not distinguish hung, waiting or dead
 cat /sys/fs/cgroup/memory.max | numfmt --to=iec                       # roomy = OOM unlikely
 uptime                                                                # low = recent reboot (cause 1)
 ```
-Clean `dmesg` + idle GPU + roomy cgroup + low `uptime` ⇒ **reboot, not OOM**. Do NOT shrink batch size to
+Low uptime supports a recent reboot; clean dmesg and current free memory do not exclude an earlier OOM. Check the applicable cgroup counters, scheduler state and provider events. Do NOT shrink batch size to
 "fix" a phantom OOM — that masks the one variable under test. **Separate trap**: a dropped poll connection
 ≠ the training dying — re-ssh and check the process/artifact directly (`pgrep -af train`, log tail,
 `best.pth` mtime) before concluding the run died (principle #3).
@@ -113,7 +108,7 @@ misfires on heredocs that inline `python -m <pkg>.train`.
 and put a VISIBLE activation in the launch ssh command:
 `ssh <host> 'source /path/to/conda.sh; conda activate <env>; nohup bash /root/job.sh ...'` — the script
 re-activating is harmless. Never `--no-verify` / never bypass the guard. (On a single-tenant rental whose
-base IS the env, the right move is to exempt remote/ephemeral base, not to clone it — that's a profile fact.)
+base IS the env, explain the verified image contract and resolve the guard through its documented configuration with appropriate authorization; do not bypass it.)
 
 ---
 
@@ -125,14 +120,9 @@ base IS the env, the right move is to exempt remote/ephemeral base, not to clone
 `unexpected pos N vs M` from inside `torch.serialization`; a leftover `latest.pth.tmp` sits in the
 checkpoint dir; `df` shows the data mount at 100%.
 
-**Root cause**: `torch.save` writes atomically (write `.tmp` → rename); the `.tmp` write hits disk-full and
-errors. Any quota'd/cgroup disk on any rental does this.
+**Root cause**: the write runs out of storage. `torch.save` is not atomic by itself; a caller must implement temp-file, fsync, atomic replace and directory fsync. Any quota'd/cgroup disk on any rental does this.
 
-**Fix — prevent**: pre-budget `ckpt_size × N_runs + worst_case_latest + tracker_local_cache`; if it exceeds
-the mount, schedule mid-run aggregation to durable storage + delete completed-and-aggregated dirs; in
-`run_one.sh`, on success prune the rolling `latest.pth` and keep only `best.pth` (cross-link
-verifying-dl-experiments **REQUIRED** for the keepable-checkpoint policy). **Recover**: delete the
-`*.tmp`/`latest.pth` to free several GB — `best.pth` survives, the queue can resume.
+**Fix — prevent**: budget current checkpoint, temporary replacement, full-state latest, best and tracker cache across concurrent runs. Copy to verified durable storage before pruning only redundant periodic checkpoints. Preserve a full-state latest resume checkpoint; best weights alone may not resume optimizer/scheduler progress. Recover space using identified redundant files, never blindly deleting every `*.tmp` or latest checkpoint.
 
 ### U7 — Storage fails on the dimension (and location) not being watched
 
@@ -173,13 +163,13 @@ fact (`local_nvme` in the frontmatter); the stage-then-train discipline is unive
 **Symptom**: training dies early with a bare `Killed` / `killed by signal: Killed (-9)` and **no Python
 traceback**; lowering `num_workers` makes it vanish.
 
-**Root cause**: each DataLoader worker is a `fork` that gets its **own copy** of any large object the
+**Root cause**: workers may duplicate dataset memory depending on multiprocessing start method and data representation. Fork initially uses copy-on-write; Python object access can dirty pages, while spawn serializes the dataset. A module-level singleton is not automatically shared across processes. A large object the
 dataset holds (a 16384² float32 matrix ≈ 1 GB). `num_workers=W` ⇒ ~`(W+1)×` that footprint, which blows the
 instance's cgroup `memory.max` even though a bare-process run fits. The kernel OOM-kills with no
 Python-level error, so it reads as a mysterious crash.
 
 **Fix**: size `num_workers` against `memory.max` and the per-worker resident set, **not** CPU count. Share
-one copy across workers (memmap / module-level singleton built once) or generate the object on the fly.
+one copy across workers (read-only memmap or explicit shared-memory tensor) or generate the object on the fly.
 Shrinking the problem also fixes it — a smaller matrix dim shrinks footprint *quadratically* (dim 1024 ≈
 4 MB, 256× less than 16384). Confirm it's OOM: `dmesg | tail` shows `Out of memory: Killed process`, and the
 same config survives `num_workers=0`.
@@ -202,15 +192,9 @@ verifying-dl-experiments **REQUIRED** for local-OOM rationale.)
 **Symptom**: `nvidia-smi` lists no process and shows free memory, yet a fresh job OOMs immediately; common
 after a crashed DDP run or a killed container.
 
-**Root cause**: a defunct/orphaned process (or a dead container's namespace) still holds CUDA context and
-VRAM, but `nvidia-smi`'s process table can't attribute it — so the GPU *looks* empty while memory is locked.
+**Root cause**: namespace visibility, graphics/services, driver state and other live processes can make attribution incomplete. A true defunct zombie has exited and does not itself retain a live CUDA context.
 
-**Fix**: enumerate the real holders via the device nodes and reap them:
-```bash
-fuser -v /dev/nvidia* 2>/dev/null   # or: lsof /dev/nvidia*  → kill -9 the listed PIDs
-```
-If containerized, restart the container. Ship a small reaper that flags any PID with persistent VRAM + ~0%
-util beyond a timeout — cross-link `scripts/reap_vram_zombies.sh`.
+**Fix**: inspect device holders with `fuser -v /dev/nvidia*` or `lsof /dev/nvidia*`, then verify owner, command, start time and workload. Absence from compute-apps or low utilization does not establish a safe kill target. The bundled `reap_vram_zombies.sh` is advisory only. Never kill all listed PIDs, reset a shared GPU or restart a container without verifying ownership and affected work.
 
 ### U41 — On a shared box, `uptime`/`free` describe the whole physical host, not your container — use cgroup-scoped readings + the `oom_kill` counter
 
@@ -227,8 +211,7 @@ needless kill-and-restart of a healthy run.
 **Fix**: judge YOUR container from cgroup-scoped readings, not host tools:
 - memory — `/sys/fs/cgroup/memory.current` vs `memory.max` (not `free -m`);
 - were YOU OOM-killed — the **`oom_kill` counter** in `/sys/fs/cgroup/memory.events`
-  (`grep oom_kill /sys/fs/cgroup/memory.events`); a non-incrementing counter means you were **not**
-  OOM-killed, however red host `free` looks;
+  (`grep oom_kill /sys/fs/cgroup/memory.events`); a delta supports attribution within that cgroup lifetime; no delta does not exclude a parent-cgroup/host OOM, recreated cgroup or wrong path, however red host `free` looks;
 - CPU pressure — `/sys/fs/cgroup/cpu.stat` / `cpu.pressure`.
 
 A high host load with your cgroup roomy and `oom_kill 0` is a **noisy neighbor**, not your bug — don't
@@ -263,18 +246,13 @@ See `scripts/download_loop.sh` for the per-dir pattern.
 **Fix**: make every transfer self-sufficient inside its own retry loop:
 `ssh host 'mkdir -p /root/x' && scp … || retry`. Never assume a sibling created the destination.
 
-### U14 — Egress is a silent ~20% surcharge; co-locate and stay same-AZ
+### U14 — Egress and cross-zone traffic can add material cost
 
-**Symptom**: the monthly bill is ~20% over the rented GPU-hours; a large model/dataset re-pulled daily from
-a hyperscaler bucket dominates cost (a 140 GB model pulled daily from S3 ≈ $378/mo in egress alone).
+**Symptom**: transfer charges exceed the approved compute budget.
 
-**Root cause**: hyperscaler **egress** is metered (AWS ~$0.09/GB, GCP ~$0.08, Azure ~$0.087) while most
-GPU-clouds (Lambda/RunPod/vast/CoreWeave) charge $0. Worse, **cross-AZ traffic bills ~$0.01/GB each
-direction even inside one provider** — storage in a different zone than compute quietly meters every read.
+**Root cause**: rates vary by current provider, offer, route, region, tier and direction; there is no universal surcharge or free-egress GPU-cloud rule. Vast offers in particular can meter both directions.
 
-**Fix**: co-locate storage with compute on the **same provider AND same AZ/region**. Pull a dataset once to
-durable local storage, not per-epoch from a remote bucket. Record `free_egress` / `egress_per_gb` /
-`cross_az_per_gb` as profile fields and prefer a $0-egress GPU-cloud for transfer-heavy jobs.
+**Fix**: inspect current official/offer rates and estimate bytes × rate before an approved transfer. Co-locate compatible storage and compute where the actual tariff favors it; fetch reusable datasets once, and account for storage costs too.
 
 ### U15 — Compress before the wire
 
@@ -282,8 +260,7 @@ durable local storage, not per-epoch from a remote bucket. Record `free_egress` 
 
 **Root cause**: raw tensors and JSON cross the network uncompressed.
 
-**Fix**: zstd/gzip the payload before transfer — cuts checkpoints+datasets 30–60%, JSON 60–80%; store
-weights fp16/int8 where the task tolerates it. Compounds with U14 (less egress $) and U12 (fewer bytes to
+**Fix**: zstd/gzip the payload before transfer — benchmark compression on representative data; already-compressed data may not shrink. Do not quantize a resumable checkpoint or change scientific precision merely to transfer it faster. Compounds with U14 (less egress $) and U12 (fewer bytes to
 resume). Pairs with U25 (tar shards compress and transfer as one stream).
 
 ---
@@ -329,13 +306,11 @@ notification. (Background tasks notify on EXIT only — no 600 s cap; foreground
 the assistant does not run. A cloud scheduler set up to "ssh in and check" silently can't reach the box.
 
 **Root cause**: two conflated things. (a) Making the REMOTE self-complete (a waiter that blocks on a log
-marker then runs eval) guarantees RESULTS but gives no *reporting cadence* — nothing re-invokes the
-assistant on a timer. (b) A cloud schedule runs in an isolated sandbox with its own checkout and **no access
-to the local SSH key or network** → it cannot `ssh` the rented box, and the SSH private key must **never** go
-into a cloud agent (secret-leak).
+marker then runs eval) sequences stages while the host remains healthy but gives no *reporting cadence* — nothing re-invokes the
+assistant on a timer. (b) A cloud schedule does not automatically inherit local SSH credentials or network access; verify the actual runner and authorized secret mechanism before promising polling. Local automation can have a different execution environment.
 
 **Fix — the two-leg pattern**:
-- **Remote self-completion (guaranteed, survives session/SSH death)**: chain `train → eval → touch marker` under one `nohup ... </dev/null >log 2>&1 &`. Detect "done" by a **log marker** (`grep -q 'QUEUE DONE' master.log`), NEVER by `pgrep` — the waiter's own command line contains the pattern, so `pgrep -f` matches itself and loops forever (U17).
+- **Remote self-completion (survives session/SSH death, not host failure)**: chain `train → eval → touch marker` under one `nohup ... </dev/null >log 2>&1 &`. Detect "done" by a **log marker** (`grep -q 'QUEUE DONE' master.log`), NEVER by `pgrep` — the waiter's own command line contains the pattern, so `pgrep -f` matches itself and loops forever (U17).
 - **Live progress (best-effort)**: a session-bound local loop (e.g. `/loop 30m` / cron `3,33 * * * *`) that ssh-polls with the *local* key. Be honest it dies when the session closes — the remote still finishes; the user re-pings to pull.
 - **Don't promise autonomous cross-session polling you can't deliver.** (`tmux` is often absent on a fresh box and `apt-get install` fails offline — `nohup ... </dev/null >log 2>&1 &` is zero-dependency and survives SSH drop; verify with `pgrep -af <script>`.) Full architecture → `references/monitoring_patterns.md`.
 
@@ -347,8 +322,7 @@ history-export minutes later happily re-downloads `<run>__history.csv` for runs 
 **Root cause**: deletion is asynchronous server-side; list/export endpoints serve stale listings for
 minutes.
 
-**Fix**: delete → re-verify on a **later** monitoring tick (not a tight loop; a second
-`delete(delete_artifacts=True)` pass is safe). Order matters: do cloud deletions **before** local exports,
+**Fix**: delete → re-verify on a **later** monitoring tick (not a tight loop; do not repeat destructive deletion or delete associated artifacts unless those exact resources were explicitly authorized). Order matters: do cloud deletions **before** local exports,
 then re-check the export dir for resurrected files and remove them. (cross-link verifying-dl-experiments
 **REQUIRED** for tracker forensics.)
 
@@ -360,7 +334,7 @@ the meter-stop verb runs.
 **Root cause**: a rented box's local disk is not durable past `terminate`/`destroy` (principle #4); the
 metric history lived only there.
 
-**Fix**: log metrics to a **hosted tracker** so they survive teardown — `trackio.init(space_id=...)` or
+**Fix**: with approval for the data transfer and visibility, log metrics to a **hosted tracker** so they survive teardown — `trackio.init(space_id=...)` or
 `wandb` online (push under the platform's proxy if behind a firewall). Poll the tracker's structured alerts
 as the monitor instead of brittle ssh-tail. Cross-link huggingface-skills:huggingface-trackio **REQUIRED**
 for the `init/log/finish/alert` mechanics and `space_id` sync.
@@ -397,14 +371,13 @@ window." A trickle of tiny kernels reads as 100%.
 `nvidia-smi dmon -s pucvmet -d 1`. Low SM clock or low power at "100% util" means the GPU is underfed (go to
 U24). Always sample over several seconds, never one snapshot.
 
-### U22 — Xid 48/79 = a dead GPU; on a rental, re-rent
+### U22 — Xid 48/79 requires hardware/driver investigation
 
 **Symptom**: training crashes or the GPU drops out; `dmesg | grep -i xid` shows an Xid error.
 
-**Root cause**: Xid is NVIDIA's canonical hardware-fault signal. **Xid 48 = double-bit ECC (the GPU is
-dead); Xid 79 = "GPU has fallen off the bus."** These are hardware, not code.
+**Root cause**: Xid codes report NVIDIA driver/GPU errors. Xid 48 is a double-bit ECC error and Xid 79 is a GPU fallen off the bus; neither alone proves permanent hardware death. Consult the current NVIDIA Xid guidance and provider diagnostics.
 
-**Fix**: on a *rental* the card can't be reseated — **stop the instance and re-rent a different box**; don't
+**Fix**: on a *rental* the card can't be reseated — preserve results and report the exact fault to the provider; propose an approved replacement only after diagnosing the recovery options; don't
 burn hours debugging code for a hardware fault. Check `dmesg | grep -i xid` as part of the "vanished
 process" ladder (U3) when the GPU goes idle unexpectedly.
 
@@ -433,8 +406,8 @@ in data fetch, not fwd/bwd.
 on the critical path. (Distinct from U38's *0%* CPU-data-bound transform case; this is the partial-starve
 knob set.)
 
-**Fix — tune in order**: `num_workers = cores − 1` (sized against per-worker footprint, U9),
-`persistent_workers=True`, `pin_memory=True`, `prefetch_factor=2`. Pathological cases show >100× gaps from
+**Fix — tune in order**: benchmark a small `num_workers` sweep within cgroup CPU and memory budgets (sized against per-worker footprint, U9),
+use `persistent_workers` and `prefetch_factor` only when `num_workers > 0`; benchmark `pin_memory` for device transfer. Pathological cases show >100× gaps from
 these alone. If a heavy per-sample transform is the bottleneck, move it to the GPU (cross-link
 verifying-dl-experiments **REQUIRED** for the 0%-util diagnosis, U38). Pairs with U8 (stage to NVMe) and U25.
 
@@ -513,14 +486,7 @@ tenant usually cannot change it on a rental; the CUDA toolkit is per-env and cha
 must match both.** The toolkit must be ≤ what the host driver supports; a project that pins
 `torch<2.9` can *downgrade* the only build with kernels for a new-arch card (e.g. sm_120).
 
-**Fix**: keep the image's working torch — filter framework pins out of the remote install:
-```bash
-grep -ivE '^(torch|torchvision|torchaudio)' requirements.txt > /root/req_remote.txt
-pip install -r /root/req_remote.txt
-```
-Set `LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH` when the per-env toolkit must win. Smoke
-`torch.cuda.get_device_capability()` + a heavy project import before launching; the off-band torch version
-lands in the runtime snapshot — disclose it with results. `host_driver_cuda_max` is a profile field.
+**Fix**: compare the installed driver and framework build with the official compatibility matrix and GPU architecture support. Prefer a known working image. Do not silently filter torch requirements out of a lockfile or override project compatibility constraints: resolve and record an explicit compatible environment, run the project smoke tests, and disclose any version change with results. `nvidia-smi` CUDA is driver capability, not the installed toolkit version.
 
 ### U29 — "Same version, different result": top-level pins let transitive deps drift → install from a lockfile
 
@@ -530,7 +496,7 @@ lands in the runtime snapshot — disclose it with results. `host_driver_cuda_ma
 between installs.
 
 **Fix**: install from a **lock file** (`uv lock` / `pip-tools` / `conda-lock`) that pins the full resolved
-graph, not a hand-edited top-level list. Pairs with U28 (filter the framework pins, then lock the rest).
+graph, not a hand-edited top-level list. Pairs with U28 (resolve the complete compatible environment, then lock it).
 
 ### U30 — A Dockerfile is NOT reproducible: pin the base image by `@sha256:` digest
 
@@ -538,8 +504,7 @@ graph, not a hand-edited top-level list. Pairs with U28 (filter the framework pi
 
 **Root cause**: `FROM image:latest` (or any moving tag) resolves to a different layer set over time.
 
-**Fix**: pin the base image by content digest — `FROM image@sha256:<digest>`, not `:latest` — so the build
-is bit-reproducible. (`pin_image_by_sha256` is a per-platform expectation where the image is the env
+**Fix**: pin the base image by content digest — `FROM image@sha256:<digest>`, not `:latest` — to pin the base layers. Also lock dependencies and build inputs; a base digest alone does not make the whole build bit-reproducible. (`pin_image_by_sha256` is a per-platform expectation where the image is the env
 contract.)
 
 ### U31 — Container runs but trains 100× slower = the GPU was never attached (CPU-only)
@@ -601,7 +566,8 @@ fails but the success line still fires, so monitoring looks green while nothing 
 
 **Fix — checked, gated sync**:
 ```bash
-if mkdir -p "$DST" && cp -f "$CKPT_DIR/best.pth" "$DST/" && [ -f "$DST/best.pth" ]; then
+TMP="$DST/.best.pth.$$.tmp"
+if mkdir -p "$DST" && cp "$CKPT_DIR/best.pth" "$TMP" && cmp -s "$CKPT_DIR/best.pth" "$TMP" && mv -f "$TMP" "$DST/best.pth"; then
     echo "[$(date +%H:%M:%S)] auto-synced $NAME to durable storage"
 else
     echo "[$(date +%H:%M:%S)] !! SYNC FAILED for $NAME (check df -i) — data disk is still source-of-truth"
@@ -621,14 +587,7 @@ security hooks (rightly) block scp-ing a whole `~/.netrc` (it carries other mach
 
 **Root cause**: any secret inside a command string is captured by history/transcript/hook logging.
 
-**Fix**: stream exactly one machine block via **stdin** — the value flows file→pipe→file and never appears in
-any command text or output:
-```bash
-grep -A 2 'machine api.wandb.ai' ~/.netrc | ssh <host> 'umask 077; cat > /root/.netrc && chmod 600 /root/.netrc'
-```
-Verify by capability, not by echoing the value:
-`python -c "import wandb; print(wandb.Api(timeout=20).default_entity)"`. Never write the secret to a
-shared/durable FS that a platform classifier scans (that platform detail is a profile fact).
+**Fix**: use an explicitly authorized, dedicated service credential with least privilege and a private mode-0600 file or supported secret mechanism. Stream only that dedicated file through stdin to a verified host, with `umask 077`; do not extract arbitrary netrc blocks using fixed `grep -A` line counts (netrc has no fixed line layout), and do not overwrite an existing netrc without preserving unrelated entries. Verify by capability without printing the credential. Shared mounts and logs are not secret stores; a provider host operator may still read workload credentials.
 
 ### U35 — `WANDB_MODE=offline` still dies without an API key in wrapper stacks → zero curves
 
@@ -639,11 +598,10 @@ run dirs at all**; the train log shows `Disabled WandB due to initialization err
 (`wandb.login()` / `wandb.Api()`) before `init` and treat key-absence as fatal → they flip to fully-disabled,
 not offline.
 
-**Fix**: push credentials BEFORE the first launch (U34) and run online under the platform's proxy; verify the
+**Fix**: diagnose the wrapper and repair its offline path when offline logging is intended. Do not add credentials or enable online telemetry just to bypass a wrapper bug. For explicitly authorized online logging, provision the dedicated credential privately before launch; verify the
 first log lines show `Syncing run <name>` + a run URL — treat the *absence* of that line as a failure. Run
 already finished without a tracker? Backfill from the train log (regex per-epoch summaries →
-`init(..., tags=["backfilled"]) → run.log(..., step=epoch)`). Still in flight? Kill and relaunch with
-`--resume <latest.pth>` (costs ≤1 epoch). Prefer a hosted tracker so metrics survive teardown (U20).
+`init(..., tags=["backfilled"]) → run.log(..., step=epoch)`). Still in flight? Preserve the healthy run unless a verified checkpoint and an explicitly approved restart justify the interruption; lost work depends on checkpoint cadence. Prefer a hosted tracker so metrics survive teardown (U20).
 
 ---
 

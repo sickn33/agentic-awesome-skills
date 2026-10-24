@@ -23,12 +23,7 @@ builds it only when asked. The default output is a short recommendation, not a
 spreadsheet. Artifacts - CSV, SQL DDL, JSON Schema, Notion mapping - are produced on
 request, from one field list so they cannot drift apart.
 
-Say this plainly at the start: the reconciliations are the hard part and the statements
-follow them, never the other way round. Cash, bank, party ledgers, inventory, withholding
-tax and every other statutory liability have to be agreed before a trial balance means
-anything. The profit and loss account and the balance sheet are then a formatting job on
-figures that are already proven - and a period cannot be closed while a reconciliation is
-outstanding, no matter how complete the reporting pack looks.
+Say this plainly at the start: the reconciliations are the hard part and reconciliations support reliable statements. A trial balance can be prepared during reconciliation and is not proof of completeness, valuation or recognition. Statement preparation also requires accounting judgments and review; unresolved material items must follow the entity's documented close/sign-off policy.
 
 This skill produces an empty template. It does not close your books, does not calculate
 your trial balance and does not draw a balance sheet. It records the checklist, the
@@ -109,7 +104,7 @@ Build an already requested artifact without asking again. For advice-only reques
 
 **Recommended approach:** One closing record per month that carries every reconciliation as an explicit answer before any statement is drawn, then the period figures and a short written read on the position, so the close is repeatable and the next person can see what was still open.
 
-**Why this one:** The statements are the easy part. They are a formatting job on numbers the reconciliations have already proven, and a trial balance built on unreconciled balances is just arithmetic on top of errors. Putting the gates in the record is what stops a month being reported while cash, inventory or tax is still unagreed.
+**Why this one:** The statements are the easy part. They require accounting judgments as well as reconciled inputs, and a trial balance built on unreconciled balances is just arithmetic on top of errors. Putting the gates in the record is what stops a month being reported while cash, inventory or tax is still unagreed.
 
 **Workflow:** Sales and purchase entries completed → Receipts and payments completed → Cash and bank reconciled → Party ledgers reconciled → Inventory reconciled → Statutory liabilities reconciled → Receivables and payables reviewed → Depreciation and adjustments recorded → Trial balance prepared → Statements prepared → Period analysed
 
@@ -121,7 +116,7 @@ provide a usable link. Report material validation failures or limitations separa
 
 **A selected Notion output is rendered by `notion-manual-import`, so route the
 Notion step there.** When the user selects Notion, hand that step to
-](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notion-manual-import/SKILL.md): it holds the CSV, the property
+[notion-manual-import](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notion-manual-import/SKILL.md): it holds the CSV, the property
 mapping, the import steps and the verification checklist, and it renders the Field
 Reference below instead of defining a table of its own. Do not restate the mapping
 here and do not improvise the import steps. Manual CSV and mapping outputs need no
@@ -131,7 +126,7 @@ Never ask for a Notion password or token.
 
 ```csv
 Closing Number,Period Start,Period End,Entries Completed,Cash Reconciled,Bank Reconciled,Party Ledgers Reconciled,Inventory Reconciled,TDS Reconciled,Other Statutory Liabilities Reconciled,Receivables Reviewed,Payables Reviewed,Depreciation Recorded,Accruals & Prepayments Reviewed,VAT/Tax Account Reviewed,Trial Balance Prepared,Financial Statements Prepared,Revenue,Gross Profit,Net Profit/Loss,Receivables Outstanding,Payables Outstanding,Working Capital,Cash Flow Position,Financial Position,Open Adjustments,Closing Date,Prepared By,Reviewed By,Status,Notes,Closing ID
-CL-2026-08,2026-08-01,2026-08-31,Complete,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,48200.00,Yes,Yes,Yes,Yes,4820000.00,1542400.00,612000.00,486200.00,394800.00,91400.00,1284500.00,"Solvent, working capital thin against a 42 day collection cycle.",3,2026-09-05,Ananya Rao,Vikram Singh,Done,Three accruals still open; statements marked draft until cleared.,
+CL-2026-08,2026-08-01,2026-08-31,Complete,Yes,Yes,Yes,Yes,Yes,Yes,Yes,Yes,48200.00,Yes,Yes,Yes,Yes,4820000.00,1542400.00,612000.00,486200.00,394800.00,,1284500.00,"Solvent, working capital thin against a 42 day collection cycle.",3,2026-09-05,Synthetic Preparer,Synthetic Reviewer,In progress,Three accruals still open; statements marked draft until cleared.,
 ```
 
 ```sql
@@ -161,13 +156,13 @@ CREATE TABLE monthly_closing_statements (
   working_capital NUMERIC(14,2),
   cash_flow_position NUMERIC(14,2),
   financial_position TEXT,
-  open_adjustments NUMERIC,
+  open_adjustments INTEGER CHECK (open_adjustments >= 0),
   closing_date DATE,
   prepared_by VARCHAR(255),
   reviewed_by VARCHAR(255),
   status VARCHAR(100) NOT NULL,
   notes TEXT,
-  closing_id SERIAL PRIMARY KEY,
+  closing_id BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -207,7 +202,7 @@ CREATE INDEX idx_monthly_closing_statements_status ON monthly_closing_statements
       "Working Capital": { "type": "number" },
       "Cash Flow Position": { "type": "number" },
       "Financial Position": { "type": "string" },
-      "Open Adjustments": { "type": "number" },
+      "Open Adjustments": { "type": "integer", "minimum": 0 },
       "Closing Date": { "type": "string", "format": "date" },
       "Prepared By": { "type": "string" },
       "Reviewed By": { "type": "string" },
@@ -305,16 +300,16 @@ and anything pointing at another table stays `relation`.
 | 20 | Net Profit/Loss | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `612000.00` |
 | 21 | Receivables Outstanding | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `486200.00` |
 | 22 | Payables Outstanding | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `394800.00` |
-| 23 | Working Capital | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `91400.00` |
+| 23 | Working Capital | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `(blank - requires current assets minus current liabilities)` |
 | 24 | Cash Flow Position | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `1284500.00` |
 | 25 | Financial Position | `long_text` | `TEXT` | `string` | Text | `Solvent, working capital thin against a 42 day collection cycle.` |
 | 26 | Open Adjustments | `number` | `NUMERIC` | `number` | Number | `3` |
 | 27 | Closing Date | `date` | `DATE` | `string, format: date` | Date | `2026-09-05` |
 | 28 | Prepared By | `text` | `VARCHAR(255)` | `string` | Text | `Ananya Rao` |
 | 29 | Reviewed By | `text` | `VARCHAR(255)` | `string` | Text | `Vikram Singh` |
-| 30 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Done` |
+| 30 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `In progress` |
 | 31 | Notes | `long_text` | `TEXT` | `string` | Text | `Three accruals still open; statements marked draft until cleared.` |
-| 32 | Closing ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
+| 32 | Closing ID | `id` | `BIGINT GENERATED BY DEFAULT AS IDENTITY PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
 
 ## Select Options
 
@@ -443,7 +438,7 @@ Month-end takes us ten days and we still find mistakes in the numbers afterwards
   What this tracks is whether each one was done, by when, and what was still open.
 - The template cannot enforce gates by itself. Treat every pending required gate as
   blocking and keep the record out of `Done` until the gate passes.
-- A period cannot be closed while a reconciliation is outstanding - but this skill does
+- Unresolved material reconciliations require the approved close-policy disposition - but this skill does
   not close periods, file returns or sign anything.
 - It does not compute tax, and the amounts it holds are the ones the business enters.
 - Notion relations need both databases imported before the link column resolves.
@@ -486,3 +481,9 @@ Month-end takes us ten days and we still find mistakes in the numbers afterwards
 
 See the [Related Skills](references/related-skills.md) reference for the full guidance.
 
+
+### Measurement and contract limits
+
+Working capital means current assets less current liabilities, not receivables minus payables; those two balances alone are insufficient. Define reporting currency, entity, accounting basis, gross/net profit treatment and whether Cash Flow Position is a balance or period flow. Unknown numeric data must stay omitted/null under an explicitly nullable contract, never zero or the string Unknown. TDS/VAT are jurisdiction-specific; allow an explicitly approved N/A disposition where a gate does not apply.
+
+The templates are not equivalent enforced validators. Add confirmed select enums/checks, period_end >= period_start, nonnegative integer adjustment count and a reviewed Done-state rule; SQL updated_at needs an application update/trigger. Preserve signed balances where credit/debit conventions require them. A reconciliation checkbox is an assertion requiring supporting evidence and reviewer sign-off, not proof of accuracy. No books, accounting decision or close was performed.

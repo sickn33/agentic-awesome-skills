@@ -1,5 +1,7 @@
 # Polars Core Concepts
 
+Use `import polars.selectors as cs` for selector examples.
+
 ## Expressions
 
 Expressions are the foundation of Polars' API. They are composable units that describe data transformations without executing them immediately.
@@ -82,7 +84,7 @@ df.select(pl.all() * 2)
 df.select(pl.col("^.*_value$") * 100)
 
 # All numeric columns
-df.select(pl.col(pl.NUMERIC_DTYPES) + 1)
+df.select(cs.numeric() + 1)
 ```
 
 **Exclude patterns:**
@@ -189,7 +191,7 @@ df.with_columns(
 # Benefits:
 # - Reduced memory usage
 # - Faster grouping and joining
-# - Maintains order information
+# - Does not preserve input row order or define an inherent business category order
 ```
 
 ## Lazy vs Eager Evaluation
@@ -243,7 +245,7 @@ Polars automatically optimizes lazy queries:
 **Predicate Pushdown:**
 Filter operations pushed to data source when possible:
 ```python
-# Only reads rows where age > 25 from CSV
+# Filters during scanning where supported; CSV still must be parsed/scanned
 lf = pl.scan_csv("data.csv")
 result = lf.filter(pl.col("age") > 25).collect()
 ```
@@ -271,7 +273,7 @@ Process data larger than memory:
 ```python
 # Enable streaming for very large datasets
 lf = pl.scan_csv("very_large.csv")
-result = lf.filter(pl.col("age") > 25).collect(streaming=True)
+result = lf.filter(pl.col("age") > 25).collect(engine="streaming")
 ```
 
 **Streaming benefits:**
@@ -330,15 +332,15 @@ Polars parallelizes operations automatically using Rust's concurrency:
 **What to avoid for parallelization:**
 - Python user-defined functions (UDFs)
 - Lambda functions in `.map_elements()`
-- Sequential `.pipe()` chains
+- Python-heavy UDF bodies; `.pipe()` itself does not disable native parallelism
 
 **Best practice:**
 ```python
 # Good: Stays in expression API (parallelized)
 df.with_columns(
-    pl.col("value") * 10,
-    pl.col("value").log(),
-    pl.col("value").sqrt()
+    (pl.col("value") * 10).alias("value_x10"),
+    pl.col("value").log().alias("value_log"),
+    pl.col("value").sqrt().alias("value_sqrt")
 )
 
 # Bad: Uses Python function (sequential)
@@ -358,7 +360,7 @@ Polars enforces strict typing:
 
 # Must cast explicitly
 df.with_columns(
-    pl.col("int_col").cast(pl.Utf8) + "_suffix"
+    pl.col("int_col").cast(pl.Utf8) + pl.lit("_suffix")
 )
 ```
 

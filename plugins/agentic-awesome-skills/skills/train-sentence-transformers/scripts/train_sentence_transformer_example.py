@@ -8,7 +8,7 @@
 #     "trackio",
 # ]
 # ///
-"""Production-ready bi-encoder (SentenceTransformer) training template.
+"""Adaptable example bi-encoder (SentenceTransformer) training template.
 
 This script demonstrates a recommended setup:
 - MultipleNegativesRankingLoss on (anchor, positive, negative) triplets
@@ -38,14 +38,18 @@ Runs identically in two modes:
     })
 
 Adjust MODEL_NAME, DATASET_NAME, OUTPUT_DIR, RUN_NAME at the top of the script.
-Default Hub push: at end of run, public, under your authenticated user as
-`{user}/{RUN_NAME}`, wrapped in try/except. To skip the push, comment out the
-push_to_hub call. For HF Jobs (ephemeral env), also enable in-trainer push:
-add `push_to_hub=True`, `hub_model_id=RUN_NAME`, `hub_strategy="every_save"`
-to TrainingArguments.
+This AAS adaptation saves locally only. Publication and Jobs are separate reviewed actions.
+Copy the sibling training_safety.py with this template; audit cached revisions first.
 """
 
 from __future__ import annotations
+
+# AAS adaptation: local-only explicit run gate; no automatic publication or telemetry.
+import os as _offline_env
+_offline_env.environ["HF_HUB_OFFLINE"] = "1"
+_offline_env.environ["HF_DATASETS_OFFLINE"] = "1"
+_offline_env.environ["HF_HUB_DISABLE_TELEMETRY"] = "1"
+from training_safety import prepare_run, safe_model, load_dataset, group_split
 
 import argparse
 import logging
@@ -53,7 +57,6 @@ import os
 from contextlib import nullcontext
 
 import torch
-from datasets import load_dataset
 
 from sentence_transformers import (
     SentenceTransformer,
@@ -111,10 +114,11 @@ def setup_logging():
     for noisy in ("httpx", "httpcore", "huggingface_hub", "urllib3", "filelock", "fsspec"):
         logging.getLogger(noisy).setLevel(logging.WARNING)
     if torch.cuda.is_available():
-        torch.set_float32_matmul_precision("high")  # TF32 on Ampere+, no quality loss
+        torch.set_float32_matmul_precision("high")  # TF32 changes numerical precision; benchmark on this task.
 
 
 def main() -> None:
+    prepare_run()
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--eval-only", type=str, default=None, help="Skip training; load this saved model and run only the evaluator."
@@ -125,14 +129,14 @@ def main() -> None:
 
     if cli.eval_only:
         logging.info(f"Eval-only mode: loading model from {cli.eval_only}")
-        model = SentenceTransformer(cli.eval_only)
+        model = safe_model(SentenceTransformer, cli.eval_only)
         evaluator = NanoBEIREvaluator()
         with autocast_ctx():
             evaluator(model)
         return
 
     logging.info(f"Loading base model: {MODEL_NAME}")
-    model = SentenceTransformer(
+    model = safe_model(SentenceTransformer,
         MODEL_NAME,
         model_card_data=SentenceTransformerModelCardData(
             language="en",
@@ -143,9 +147,9 @@ def main() -> None:
 
     logging.info(f"Loading dataset: {DATASET_NAME} ({DATASET_SUBSET})")
     train_size = 50 if SMOKE_TEST else TRAIN_SIZE
-    eval_size = 20 if SMOKE_TEST else EVAL_SIZE
-    train_dataset = load_dataset(DATASET_NAME, DATASET_SUBSET, split="train").select(range(train_size))
-    eval_dataset = load_dataset(DATASET_NAME, DATASET_SUBSET, split="dev").select(range(eval_size))
+    eval_size = 20 if SMOKE_TEST else min(EVAL_SIZE, 40)
+    train_dataset = load_dataset(DATASET_NAME, DATASET_SUBSET, split="train").select(range(min(train_size, int(os.environ.get("ST_MAX_ROWS", "200")))))
+    eval_dataset = load_dataset(DATASET_NAME, DATASET_SUBSET, split="dev").select(range(min(eval_size, int(os.environ.get("ST_MAX_ROWS", "200")))))
     if SMOKE_TEST:
         logging.info("SMOKE_TEST=1: trimmed dataset; will run max_steps=1 and skip Hub push")
     logging.info(f"  train: {len(train_dataset):,} examples")
@@ -163,14 +167,14 @@ def main() -> None:
     args = SentenceTransformerTrainingArguments(
         output_dir=OUTPUT_DIR,
         num_train_epochs=1,
-        max_steps=1 if SMOKE_TEST else -1,
+        max_steps=1 if SMOKE_TEST else int(os.environ["ST_MAX_STEPS"]),
         per_device_train_batch_size=64,
         per_device_eval_batch_size=64,
         learning_rate=2e-5,
         weight_decay=0.01,
-        warmup_steps=0.1,
+        warmup_steps=0,
         lr_scheduler_type="linear",
-        bf16=True,
+        bf16=torch.cuda.is_available() and torch.cuda.is_bf16_supported(),
         batch_sampler=BatchSamplers.NO_DUPLICATES,
         eval_strategy="steps",
         eval_steps=0.1,
@@ -182,7 +186,7 @@ def main() -> None:
         load_best_model_at_end=True,
         metric_for_best_model=metric_key,
         greater_is_better=True,
-        report_to="none" if SMOKE_TEST else "trackio",
+        report_to="none",
         run_name=RUN_NAME,
         seed=12,
     )
@@ -195,32 +199,21 @@ def main() -> None:
         loss=loss,
         evaluator=evaluator,
     )
-    if not SMOKE_TEST:
-        log_trackio_dashboard()
+
     trainer.train()
 
     logging.info("Post-training evaluation:")
     with autocast_ctx():
         score = evaluator(model)[evaluator.primary_metric]
     delta = score - baseline_eval
-    verdict = "WIN" if delta >= 0.005 else "MARGINAL" if delta >= 0 else "REGRESSION"
+    verdict = "SMOKE_ONLY" if SMOKE_TEST else "OBSERVED_GAIN" if delta >= 0.005 else "MARGINAL" if delta >= 0 else "REGRESSION"
     logging.info(f"VERDICT: {verdict} | score={score:.4f} | baseline={baseline_eval:.4f} | delta={delta:+.4f}")
 
     final_dir = f"{OUTPUT_DIR}/final"
     model.save_pretrained(final_dir)
     logging.info(f"Saved final model to {final_dir}")
 
-    if SMOKE_TEST:
-        logging.info("SMOKE_TEST=1: skipping Hub push")
-        return
-
-    try:
-        commit_url = model.push_to_hub(RUN_NAME)  # public by default; uses your authenticated user
-        logging.info(f"Pushed model to {commit_url.rsplit('/commit/', 1)[0]}")
-    except Exception:
-        import traceback
-
-        logging.error(f"Hub push failed:\n{traceback.format_exc()}")
+    logging.info("Saved locally; publication is a separate explicitly authorized action.")
 
 
 if __name__ == "__main__":

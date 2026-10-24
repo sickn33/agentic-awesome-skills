@@ -38,7 +38,7 @@ Collect just enough context to fill the template. If the user has not provided d
 If the user cannot answer, proceed with safe defaults and mark TODOs.
 
 ### 2) Draft the Blue Book
-Load `references/bluebook_template.md` and fill it with the provided details. Keep it concise, deterministic, and enforceable.
+If the original supporting installation is available, load `<support-root>/references/bluebook_template.md` and fill it with the provided details. Otherwise draft an independent policy using the Quality checks below and disclose that the upstream template was unavailable. Keep it concise and distinguish proposed controls from controls actually implemented or verified.
 
 ### 3) Enforce guardrails
 - Do not include secrets, tokens, or internal credentials.

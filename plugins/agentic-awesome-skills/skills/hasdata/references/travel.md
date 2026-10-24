@@ -74,7 +74,9 @@ def booking_search(keyword, check_in, check_out, *, adults=2, children=0,
         "rooms":        rooms,
         **filters,
     }
-    if children and children_ages:
+    if children > 0:
+        if children_ages is None or len(children_ages) != children or any(not isinstance(age, int) or not 0 <= age <= 17 for age in children_ages):
+            raise ValueError("Provide exactly one valid age per child")
         params["childrenAgesJson"] = json.dumps(children_ages)
     return requests.get(
         "https://api.hasdata.com/scrape/booking/search",
@@ -89,7 +91,7 @@ def booking_search(keyword, check_in, check_out, *, adults=2, children=0,
 | `checkInDate` / `checkOutDate` | **Required.** `YYYY-MM-DD`. |
 | `adults`, `children`, `rooms` | **Required.** Pass `children=0` explicitly when none. |
 | `childrenAgesJson` | Required iff `children > 0` — JSON array of ages (0–17), one per child. |
-| `price[min]` / `price[max]` | `>= 10` / `>= 20`. Bracketed — `requests`/`axios` serialize nested dicts as `price[min]=…`. |
+| `price[min]` / `price[max]` | `>= 10` / `>= 20`. Bracketed — pass explicit bracketed keys in Python `requests`; verify Axios serialization. |
 | `rating[]`, `reviewScore[]`, `propertyType[]`, `facilities[]`, `meals[]`, `bedPreference[]`, `roomFacilities[]`, `propertyAccessibility[]`, `roomAccessibility[]`, `distanceFromCenter[]`, `travelGroup[]`, `onlinePayment[]`, `reservationPolicy[]` | Multi-value filters (OR). |
 | `bedrooms`, `bathrooms` | Minimum count. |
 | `sort` | `ourTopPicks`, `homesAndApartmentsFirst`, `priceLowestFirst`, `priceHighestFirst`, `bestReviewedAndLowestPrice`, `ratingHighToLow`, `ratingLowToHigh`, `ratingAndPrice`, `distanceFromDowntown`, `topReviewed`. |
@@ -97,7 +99,7 @@ def booking_search(keyword, check_in, check_out, *, adults=2, children=0,
 | `currency` | ISO code or `hotelCurrency` to keep native. |
 | `language` | UI locale. |
 
-Top-level response (verified live): `requestMetadata`, `searchInformation`, `pagination`, `results`. Per-result keys: `hotelId`, `roomId`, `title`, `url`, `location`, `rating`, `reviews`, `price` (object with `total` / `nightly` / `currency`), `room`, `beds`, `bedTypes`, `policies`, `photo`.
+Top-level response (illustrative snapshot; verify current schema): `requestMetadata`, `searchInformation`, `pagination`, `results`. Per-result keys: `hotelId`, `roomId`, `title`, `url`, `location`, `rating`, `reviews`, `price` (object with `total` / `nightly` / `currency`), `room`, `beds`, `bedTypes`, `policies`, `photo`.
 
 ## Booking Place
 
@@ -154,7 +156,7 @@ resp = requests.get(
 
 ## Patterns
 
-### STR yield estimate
+### Descriptive nightly-price sample (not a yield estimate)
 
 ```python
 rentals = airbnb_search(area, ci, co).get("listings", [])           # Airbnb → "listings"
@@ -163,6 +165,8 @@ night   = sum(r.get("price", 0) for r in rentals) / max(len(rentals), 1)
 ```
 
 ### Hotel-vs-rental price diff
+
+Normalize currency, taxes, fees, dates and occupancy first. Asking prices are not realized revenue or evidence of occupancy; neither sample establishes investment yield.
 
 ```python
 b = booking_search(city, ci, co, adults=2, children=0, rooms=1, sort="priceLowestFirst")
@@ -185,9 +189,13 @@ flight = requests.get(
 cheapest_flight = min((f["price"] for f in flight.get("best_flights", [])), default=None)
 
 stay = booking_search(city, dep, ret, adults=2, children=0, rooms=1, sort="priceLowestFirst")
-cheapest_stay = stay.get("results", [{}])[0].get("price", {}).get("total")
+stays = stay.get("results") or []
+cheapest_stay = stays[0].get("price", {}).get("total") if stays else None
 
-total = (cheapest_flight or 0) + (cheapest_stay or 0)
+# Normalize currencies, fare/stay scope and taxes before adding. Missing is not free.
+total = (cheapest_flight + cheapest_stay
+         if isinstance(cheapest_flight, (int, float)) and isinstance(cheapest_stay, (int, float))
+         else None)
 ```
 
 ## Gotchas
@@ -195,7 +203,7 @@ total = (cheapest_flight or 0) + (cheapest_stay or 0)
 - **Airbnb requires `checkIn`** and uses **token** pagination — store `nextPageToken`, not page numbers.
 - **Airbnb property endpoints take URLs**, not IDs.
 - **Booking requires `children` even when zero.** Pass `children=0`. When `children > 0`, also pass `childrenAgesJson` with exactly that many ages.
-- **Booking `price[min]` / `price[max]`** are bracketed — use a nested dict with `requests`/`axios`.
+- **Booking `price[min]` / `price[max]`** are bracketed — use explicit bracketed keys with Python `requests`.
 - **Booking `rooms[i].variants[]` is where prices live** — the parent `rooms[i]` describes the floor-plan, variants are the buyable rates with `priceBreakdown` / `cancellationPolicy` / `mealPlan`.
 - **`bookingDetails` carries the resolved stay context** the response was priced for — echo it back when persisting results so future comparisons use the same dates / occupancy.
 - **Google Flights uses IATA codes**, not city names. `JFK` not `New York`.

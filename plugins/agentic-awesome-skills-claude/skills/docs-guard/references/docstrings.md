@@ -17,7 +17,7 @@ In-code documentation has one extra constraint the other surfaces lack: it sits 
 
 ## The paraphrase test
 
-Delete any docstring whose entire information content is recoverable from the signature:
+Replace or remove content-free docstrings only when project conventions and generated/public API compatibility allow it. Preserve required type metadata, deprecation notices and legal/license text. Example of insufficient prose:
 
 ```php
 // Fails the test — restates the obvious, documents nothing.

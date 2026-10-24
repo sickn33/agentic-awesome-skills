@@ -27,11 +27,11 @@ def zillow_search(keyword, listing_type="forSale", **filters):
     )
     return r.json()
 
-zillow_search("Brooklyn, NY", price={"min": 800000, "max": 2000000})
+zillow_search("Brooklyn, NY", **{"price[min]": 800000, "price[max]": 2000000})
 zillow_search("33321", "sold", daysOnZillow="6m")  # recent comps
 ```
 
-`requests` + `axios` serialize nested dicts as `price[min]=…&price[max]=…` automatically. With raw `URLSearchParams`, build the bracketed keys yourself.
+Python `requests` does not flatten nested dictionaries into bracketed query keys. Pass explicit keys such as `price[min]` and `price[max]`. Axios serialization depends on its version/configuration; verify the encoded query.
 
 | Param | Notes |
 |---|---|
@@ -78,7 +78,7 @@ ppsf = [(l["price"] / l["livingArea"]) for l in sold if l.get("livingArea")]
 
 ## Gotchas
 
-- **Bracketed query keys** — work with `requests`/`axios`, not raw `URLSearchParams`.
+- **Bracketed query keys** — construct explicitly in `requests` and `URLSearchParams`; verify Axios serialization.
 - **`type=sold` + `daysOnZillow` = comps recipe.** Without `daysOnZillow`, history is unbounded.
 - **Property endpoints take URLs**, not IDs.
 - **Agent emails are best-effort.**

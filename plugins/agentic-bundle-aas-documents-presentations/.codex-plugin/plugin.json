@@ -1,6 +1,6 @@
 {
   "name": "aasb-aas-documents-presentations",
-  "version": "19.15.0",
+  "version": "20.0.0",
   "description": "Install the \"AAS Documents & Presentations\" workflow plugin from Agentic Awesome Skills.",
   "author": {
     "name": "sickn33 and contributors",
@@ -20,7 +20,7 @@
   "interface": {
     "displayName": "AAS Documents & Presentations",
     "shortDescription": "Create, edit, convert, and automate DOCX, XLSX, PPTX, PDF, Google Docs, Sheets, and Slides deliverables.",
-    "longDescription": "Create, edit, convert, and automate DOCX, XLSX, PPTX, PDF, Google Docs, Sheets, and Slides deliverables. Coauthor and edit content, produce editable office files and PDFs, and review both source content and rendered output. Recommended for: Operators producing reports, Analysts packaging findings, Teams automating office documents. Not for: A live Google Workspace connection included with installation, Dashboard pipelines and data platforms: use Data Engineering Platform. Covers Office Productivity, DOCX Official, and 9 more skills.",
+    "longDescription": "Create, edit, convert, and automate DOCX, XLSX, PPTX, PDF, Google Docs, Sheets, and Slides deliverables. Coauthor and edit content, produce editable office files and PDFs, and review both source content and rendered output. Recommended for: Operators producing reports, Analysts packaging findings, Teams automating office documents. Not for: A live Google Workspace connection included with installation, Dashboard pipelines and data platforms: use Data Engineering Platform. Covers Office Productivity, PDF Conversion Router, and 5 more skills.",
     "developerName": "sickn33 and contributors",
     "category": "Specialized Product Plugins",
     "capabilities": [

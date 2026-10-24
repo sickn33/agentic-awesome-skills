@@ -70,15 +70,7 @@ uv run {baseDir}/ct_analyzer/analyzer.py --json crypto.swift
 
 ### Replace Division
 
-```swift
-// VULNERABLE: Division instruction emitted
-let q = secretValue / divisor
-
-// SAFE: Barrett reduction (for fixed divisor)
-// Precompute: mu = (1 << 32) / divisor
-let mu: UInt64 = (1 << 32) / UInt64(divisor)
-let q = Int32((UInt64(secretValue) &* mu) >> 32)
-```
+A division involving secrets is a review candidate, not automatically an exploitable leak. Do not replace it with a truncated reciprocal-multiply sketch: signedness, overflow, operand bounds and correction steps determine arithmetic correctness. Use a reviewed cryptographic implementation with a documented input domain, then inspect generated native code on the deployment CPU. Python/Ruby integers and JavaScript arithmetic do not become constant-time merely by replacing division with multiplication or masking.
 
 ### Replace Branches
 
@@ -86,49 +78,26 @@ let q = Int32((UInt64(secretValue) &* mu) >> 32)
 // VULNERABLE: Branch timing reveals secret
 let result = secret != 0 ? a : b
 
-// SAFE: Constant-time selection using bitwise ops
-let mask = Int32(bitPattern: UInt32(bitPattern: -Int32(secret != 0 ? 1 : 0)))
-// Better approach with no branch:
-let nonZero = (secret | -secret) >> 31  // -1 if secret != 0, else 0
+// Candidate selection pattern: generated native code still requires review using bitwise ops
+// For Int32 inputs; wrapping subtraction avoids the Int32.min negation trap:
+let nonZero = (secret | (0 &- secret)) >> 31  // -1 if secret != 0, else 0
 let result = (a & nonZero) | (b & ~nonZero)
 ```
 
 ### Replace Comparisons
 
-```swift
-// VULNERABLE: Standard equality may early-terminate
-if computed == expected { ... }
-
-// SAFE: Constant-time comparison
-import CryptoKit  // Available on iOS 13+, macOS 10.15+
-
-// Use Data's built-in constant-time comparison for crypto
-if computed.withUnsafeBytes({ cPtr in
-    expected.withUnsafeBytes { ePtr in
-        timingSafeCompare(cPtr, ePtr)
-    }
-}) { ... }
-
-// Manual constant-time comparison
-func constantTimeCompare(_ a: [UInt8], _ b: [UInt8]) -> Bool {
-    guard a.count == b.count else { return false }
-    var result: UInt8 = 0
-    for i in 0..<a.count {
-        result |= a[i] ^ b[i]
-    }
-    return result == 0
-}
-```
+`timingSafeCompare` is not a built-in CryptoKit/Data API. For MAC verification use CryptoKit's `HMAC.isValidAuthenticationCode(_:authenticating:using:)`; do not replace it with an unverified byte loop. Swift optimizations, bounds checks and integer overflow traps can change timing even when source appears branchless.
 
 ### Secure Random
 
 ```swift
-// VULNERABLE: Don't use for cryptographic purposes
+// General-purpose API: use the explicitly selected cryptographic API below for keys
 import Foundation
 let value = Int.random(in: 0..<100)  // Uses arc4random, generally OK but not verified
 
 // SAFE: Use CryptoKit (iOS 13+, macOS 10.15+)
 import CryptoKit
+import Security
 
 // Generate secure random bytes
 var randomBytes = [UInt8](repeating: 0, count: 32)

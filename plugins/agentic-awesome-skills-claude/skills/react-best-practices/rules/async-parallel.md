@@ -1,7 +1,7 @@
 ---
 title: Promise.all() for Independent Operations
 impact: CRITICAL
-impactDescription: 2-10× improvement
+impactDescription: workload-dependent parallel latency reduction
 tags: async, parallelization, promises, waterfalls
 ---
 
@@ -17,7 +17,7 @@ const posts = await fetchPosts()
 const comments = await fetchComments()
 ```
 
-**Correct (parallel execution, 1 round trip):**
+**Correct (parallel execution, overlapping latency):**
 
 ```typescript
 const [user, posts, comments] = await Promise.all([
@@ -26,3 +26,5 @@ const [user, posts, comments] = await Promise.all([
   fetchComments()
 ])
 ```
+
+Concurrent requests remain separate requests. Promise.all rejects on the first failure but does not cancel or undo sibling operations; use cancellation and transactions where required.

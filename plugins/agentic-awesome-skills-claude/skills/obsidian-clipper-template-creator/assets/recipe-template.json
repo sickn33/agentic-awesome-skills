@@ -2,7 +2,7 @@
 	"schemaVersion": "0.1.0",
 	"name": "Recipe",
 	"behavior": "create",
-	"noteContentFormat": "![{{schema:Recipe:image|first}}]\n\n## Description\n{{schema:Recipe:description}}\n\n## Ingredients\n{{schema:Recipe:recipeIngredient|list}}\n\n## Instructions\n{{schema:Recipe:recipeInstructions|map:step =>> step.text|list}}\n\n## Nutrition\n- Calories: {{schema:Recipe:nutrition.calories}}",
+	"noteContentFormat": "![]({{schema:@Recipe:image|first}})\n\n## Description\n{{schema:@Recipe:description}}\n\n## Ingredients\n{{schema:@Recipe:recipeIngredient|list}}\n\n## Instructions\n{{schema:@Recipe:recipeInstructions|map:step => step.text|list}}\n\n## Nutrition\n- Calories: {{schema:@Recipe:nutrition.calories}}",
 	"properties": [
 		{
 			"name": "categories",
@@ -11,7 +11,7 @@
 		},
 		{
 			"name": "author",
-			"value": "[[{{schema:Recipe:author.name}}]]",
+			"value": "[[{{schema:@Recipe:author.name}}]]",
 			"type": "text"
 		},
 		{
@@ -21,12 +21,12 @@
 		},
 		{
 			"name": "ingredients",
-			"value": "{{schema:Recipe:recipeIngredient}}",
+			"value": "{{schema:@Recipe:recipeIngredient}}",
 			"type": "multitext"
 		},
 		{
 			"name": "cuisine",
-			"value": "{{schema:Recipe:recipeCuisine}}",
+			"value": "{{schema:@Recipe:recipeCuisine}}",
 			"type": "text"
 		},
 		{
@@ -41,8 +41,8 @@
 		}
 	],
 	"triggers": [
-		"schema:Recipe"
+		"schema:@Recipe"
 	],
-	"noteNameFormat": "{{schema:Recipe:name}}",
+	"noteNameFormat": "{{schema:@Recipe:name}}",
 	"path": "Recipes/"
 }

@@ -24,6 +24,9 @@ Manage the complete track lifecycle including archiving, restoring, deleting, re
 
 ## Instructions
 
+- Detailed path/transaction safeguards in the playbook apply to every mutation. Preserve prior status and unknown metadata fields; restoration must not falsely complete an abandoned track.
+- Preview the exact affected paths and preserve unrelated staged work; do not use broad staging or assume a failed multi-file operation rolled back.
+
 - Verify `conductor/` structure and required files before proceeding.
 - Determine the operation mode from arguments or interactive prompts.
 - Confirm destructive actions (delete/cleanup) before applying.

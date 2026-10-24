@@ -1,5 +1,6 @@
 # Bi-Encoder Losses (SentenceTransformer)
 
+AAS adaptation: follow the root execution/data contract. Examples are version-sensitive sketches; verify APIs in a reviewed lockfile and cached revisions. Local-only/no publication/no remote telemetry defaults override older Hub/tracker recipes below. Numerical hardware, speed, quality, data-volume and loss-ranking claims are illustrative hypotheses, not guaranteed thresholds.
 All losses live in `sentence_transformers.sentence_transformer.losses`.
 
 Losses are grouped by data shape. The #1 rule: **pick a loss that matches your data**, not the other way around.

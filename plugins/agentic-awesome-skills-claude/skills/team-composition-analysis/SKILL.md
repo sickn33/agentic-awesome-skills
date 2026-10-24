@@ -41,6 +41,8 @@ Build the right team at the right time with appropriate compensation and equity.
 
 ## Team Structure by Stage
 
+All staffing, salary, equity, geographic and hiring-time numbers below are illustrative planning assumptions, not verified current benchmarks or rules for funding stages. Replace them with dated market evidence for the target jurisdiction and role. Separate employer cash cost from employee total compensation and speculative equity value. Model scenarios/runway and seek qualified local review for employment, tax and equity agreements; this document does not establish compliance.
+
 ### Pre-Seed (0-$500K ARR)
 
 **Team Size: 2-5 people**
@@ -388,9 +390,9 @@ Total Comp Budget = Σ (Role Count × Fully-Loaded Cost × % of Year)
 
 Example:
 3 Engineers × $202K × 100% = $606K
-2 AEs × $230K × 75% (mid-year start) = $345K
+2 AEs × $230K × 50% (mid-year start) = $230K
 1 PM × $162K × 100% = $162K
-Total: $1.1M
+Total: $998K
 ```
 
 ## Additional Resources

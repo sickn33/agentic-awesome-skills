@@ -50,7 +50,7 @@ Test Brake first. If the brakes don't work, nothing else matters.
 | **Flake** | Timing/network/concurrency noise; passed on rerun, no code change | ✗ Test design defect |
 | **Infra** | Missing secret, runner image change, upstream dep — not the code | ✗ Workflow design defect |
 
-**Signal Integrity Score:** `SI = Real bugs / (Real bugs + Flakes + Infra) × 100`
+**Signal Integrity Score:** `SI = Real bugs / (Real bugs + Flakes + Infra) × 100`. If the denominator is zero, report N/A; a passing rerun alone does not establish a flake.
 
 | SI % | Verdict | Action |
 |------|---------|--------|
@@ -60,11 +60,11 @@ Test Brake first. If the brakes don't work, nothing else matters.
 | 70–84% | ● Eroding | Stop adding tests — fix flakes first |
 | <70% | ○ Dead signal | Block merges until signal restored |
 
-**Eliminate on sight:** hard absolute-time perf asserts on shared runners (`expect(t).toBeLessThan(30)`) → move to a non-gating workflow; network calls in the main suite → mock at the boundary; concurrency tests without explicit ordering; secret-dependent steps that hard-fail when missing → grey-skip.
+**Eliminate on sight:** hard absolute-time perf asserts on shared runners (`expect(t).toBeLessThan(30)`) → move to a non-gating workflow; network calls in the main suite → mock at the boundary; concurrency tests without explicit ordering; optional secret-dependent tests → explicitly report blocked/not-run. Missing required evidence must fail closed; never grey-skip a required release gate.
 
 **The inverse rule:** green CI that passes while something is broken is equally a violation. If a real bug shipped despite green, write the regression test BEFORE the fix lands.
 
-**The conversation is the real gate.** CI is supporting infrastructure for the human + AI audit; flaky CI wastes the audit's bandwidth. Signal Integrity keeps CI worthy of the conversation.
+**Repository protection and required checks remain authoritative.** CI is supporting infrastructure for the human + AI audit; flaky CI wastes the audit's bandwidth. Signal Integrity keeps CI worthy of the conversation.
 
 ## Execution loop
 
@@ -92,7 +92,6 @@ date: "2026-06-26"
 tier: "Engine"            # Brake | Engine | Aero | Tyre | Pit
 result: "PASS"            # PASS | FAIL | BLOCKED
 environment: "OS, runtime version, key deps"
----
 
 ## Summary
 objective: What was tested
@@ -171,7 +170,7 @@ The FAF score is **deterministic** — same input, same score. A test report sho
 - [ ] `faf wjttc --strict` green — every test tiered
 - [ ] Regression (Pit) suite passes
 - [ ] WJTTC report filed in `./wjttc-reports/`
-- [ ] Pass rate ≥ 85% (◇ Bronze, production-ready)
+- [ ] Pass rate recorded; every required test passes and required release criteria are met. No aggregate pass rate establishes production readiness.
 
 ## Resources
 

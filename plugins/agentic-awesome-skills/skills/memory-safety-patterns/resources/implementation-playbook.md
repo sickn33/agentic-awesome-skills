@@ -30,13 +30,11 @@ Cross-language patterns for memory-safe programming including RAII, ownership, s
 
 ### 2. Safety Spectrum
 
-```
-Manual (C) → Smart Pointers (C++) → Ownership (Rust) → GC (Go, Java)
-Less safe                                              More safe
-More control                                           Less control
-```
+Memory safety is not a single ordering: safe Rust checks ownership and data races, GC reclaims memory but does not automatically close resources or prevent races, and C++ smart pointers do not provide bounds/lifetime safety for arbitrary aliases. All languages retain unsafe/FFI and logic boundaries.
 
 ## Patterns by Language
+
+Snippets are independent fragments requiring matching headers/imports and platform APIs; socket examples use POSIX socket/close headers. C++ examples use C++20. Transaction rollback restores only the referenced object, not external side effects; its target must outlive the guard. A moved-from Car must not call start() without a replacement Engine. File writes/close errors require explicit checking when durability matters.
 
 ### Pattern 1: RAII in C++
 
@@ -47,6 +45,12 @@ More control                                           Less control
 #include <memory>
 #include <fstream>
 #include <mutex>
+#include <shared_mutex>
+#include <map>
+#include <string>
+#include <stdexcept>
+#include <utility>
+#include <type_traits>
 
 // File handle with RAII
 class FileHandle {
@@ -81,18 +85,18 @@ private:
 class Database {
 public:
     void update(const std::string& key, const std::string& value) {
-        std::lock_guard<std::mutex> lock(mutex_); // Released on scope exit
+        std::unique_lock<std::shared_mutex> lock(mutex_); // Released on scope exit
         data_[key] = value;
     }
 
     std::string get(const std::string& key) {
-        std::shared_lock<std::shared_mutex> lock(shared_mutex_);
-        return data_[key];
+        std::shared_lock<std::shared_mutex> lock(mutex_);
+        auto it = data_.find(key);
+        return it == data_.end() ? std::string{} : it->second;
     }
 
 private:
-    std::mutex mutex_;
-    std::shared_mutex shared_mutex_;
+    std::shared_mutex mutex_;
     std::map<std::string, std::string> data_;
 };
 
@@ -103,9 +107,14 @@ public:
     explicit Transaction(T& target)
         : target_(target), backup_(target), committed_(false) {}
 
-    ~Transaction() {
+    Transaction(const Transaction&) = delete;
+    Transaction& operator=(const Transaction&) = delete;
+
+    ~Transaction() noexcept {
+        static_assert(std::is_nothrow_swappable_v<T>, "Rollback requires noexcept swap");
         if (!committed_) {
-            target_ = backup_; // Rollback
+            using std::swap;
+            swap(target_, backup_); // Rollback without throwing during unwinding
         }
     }
 
@@ -175,19 +184,19 @@ void sharedPtrExample() {
 class Socket {
 public:
     static void close(int* fd) {
-        if (fd && *fd >= 0) {
-            ::close(*fd);
+        if (fd) {
+            if (*fd >= 0) ::close(*fd);
             delete fd;
         }
     }
 };
 
 auto createSocket() {
-    int fd = socket(AF_INET, SOCK_STREAM, 0);
-    return std::unique_ptr<int, decltype(&Socket::close)>(
-        new int(fd),
-        &Socket::close
-    );
+    // Allocate ownership before opening, so allocation failure cannot leak a descriptor.
+    std::unique_ptr<int, decltype(&Socket::close)> result(new int(-1), &Socket::close);
+    *result = socket(AF_INET, SOCK_STREAM, 0);
+    if (*result < 0) throw std::runtime_error("socket failed");
+    return result;
 }
 
 // make_unique/make_shared best practices
@@ -195,7 +204,7 @@ void bestPractices() {
     // Good: Exception safe, single allocation
     auto ptr = std::make_shared<Widget>();
 
-    // Bad: Two allocations, not exception safe
+    // Also exception-safe when constructed directly; typically two allocations
     std::shared_ptr<Widget> ptr2(new Widget());
 
     // For arrays
@@ -385,7 +394,7 @@ void context_destroy(Context* ctx) {
 // Pattern: Cleanup attribute (GCC/Clang extension)
 #define AUTO_FREE __attribute__((cleanup(auto_free_func)))
 
-void auto_free_func(void** ptr) {
+void auto_free_func(char** ptr) {
     free(*ptr);
 }
 
@@ -418,7 +427,7 @@ void safe_array_access() {
 
     // Modern C++20: std::span for array views
     std::span<int> view(vec);
-    // Iterators are bounds-safe
+    // This range-for stays within the valid span; span indexing is not automatically checked
     for (int& x : view) {
         x *= 2;
     }
@@ -510,6 +519,7 @@ private:
 // Rust: Data race prevention at compile time
 
 use std::sync::{Arc, Mutex, RwLock};
+use std::collections::HashMap;
 use std::sync::atomic::{AtomicI32, Ordering};
 use std::thread;
 
@@ -554,11 +564,12 @@ fn mutex_example() {
 
 // RwLock for read-heavy workloads
 fn rwlock_example() {
-    let data = Arc::new(RwLock::new(HashMap::new()));
+    let data = Arc::new(RwLock::new(HashMap::<String, i32>::new()));
 
     // Multiple readers OK
     let read_guard = data.read().unwrap();
 
+    drop(read_guard); // Do not acquire a write lock while retaining our read lock.
     // Writer blocks readers
     let write_guard = data.write().unwrap();
 }

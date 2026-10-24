@@ -155,12 +155,15 @@ apiClient.interceptors.request.use(async (config) => {
 apiClient.interceptors.response.use(
   (res) => res,
   async (error: AxiosError) => {
-    if (error.response?.status === 401) {
+    const request = error.config as (InternalAxiosRequestConfig & { _retry?: boolean }) | undefined;
+    if (error.response?.status === 401 && request && !request._retry) {
+      request._retry = true; // Retry at most once; refreshToken uses a separate client.
       const newToken = await refreshToken();
       if (newToken) {
         await saveSecureToken(newToken);
         useAuthStore.getState().setLoggedIn(true);
-        return apiClient(error.config!);
+        request.headers.Authorization = `Bearer ${newToken}`;
+        return apiClient(request);
       }
       await clearSecureToken();
       useAuthStore.getState().logout();
@@ -188,6 +191,10 @@ const getItems = async (): Promise<Item[]> => {
   return ItemsResponseSchema.parse(data); // throws ZodError on invalid shape
 };
 ```
+
+The interceptor example requires Axios's `InternalAxiosRequestConfig` type and
+a separate refresh client to avoid recursive refresh. Coordinate concurrent
+401s with a single refresh operation; clear cached private queries on logout.
 
 ## Key Dependencies
 
@@ -239,7 +246,7 @@ describe('HomeScreen', () => {
       )
     );
 
-    const { getByText } = render(
+    const { findByText } = render(
       <QueryClientProvider client={testQueryClient}>
         <HomeScreen navigation={mockNavigation} route={mockRoute} />
       </QueryClientProvider>

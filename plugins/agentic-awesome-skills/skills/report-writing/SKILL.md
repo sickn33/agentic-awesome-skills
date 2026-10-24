@@ -22,8 +22,8 @@ Impact-first. Human tone. No theoretical language. Triagers are people.
 
 ## THE MOST IMPORTANT RULE
 
-> **Never use "could potentially" or "could be used to" or "may allow".**
-> Either it does the thing or it doesn't. If you haven't proved it, don't claim it.
+> **Distinguish demonstrated behavior from untested hypotheses and state uncertainty precisely.**
+> Do not present untested impact as observed. A bounded, labeled hypothesis or suspected vulnerability can still be reported when the program permits it; do not exceed scope to manufacture proof.
 
 ```
 BAD:  "This vulnerability could potentially allow an attacker to access user data."
@@ -232,7 +232,7 @@ CVSS 3.1 Score: X.X ([Severity]) — AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N
 - Severity is set by you: Critical/High/Medium/Low/Exceptional
 - CVSS 3.1 is standard (CVSS 4.0 also accepted on newer programs)
 - PoC video is valued much more than screenshot alone — record with Loom
-- Safe harbor: Intigriti enforces it, be comfortable going slightly aggressive with testing
+- Safe harbor and testing limits are program-specific; read the exact terms and never infer permission for more aggressive tests
 
 ---
 
@@ -288,39 +288,9 @@ Requires $Z gas. Attack is repeatable."]
 CVSS = f(AV, AC, PR, UI, S, C, I, A)
 ```
 
-### Metric Quick Picks
+### Calculate from the actual scenario
 
-| Metric | Value | Weight | When |
-|---|---|---|---|
-| **Attack Vector (AV)** | Network | +0.85 | Via internet |
-| | Local | +0.55 | Local access needed |
-| **Attack Complexity (AC)** | Low | +0.77 | Repeatable |
-| | High | +0.44 | Race/timing needed |
-| **Privileges Required (PR)** | None | +0.85 | No login |
-| | Low | +0.62 | Regular user account |
-| | High | +0.27 | Admin account |
-| **User Interaction (UI)** | None | +0.85 | No victim action |
-| | Required | +0.62 | Victim must click |
-| **Scope (S)** | Changed | higher | Affects browser/OS/other |
-| | Unchanged | lower | Stays in app |
-| **Confidentiality (C)** | High | +0.56 | All data exposed |
-| | Low | +0.22 | Limited data |
-| **Integrity (I)** | High | +0.56 | Can modify any data |
-| **Availability (A)** | High | +0.56 | Crashes service |
-
-### Typical Scores by Bug Class
-
-| Bug | Typical CVSS | Severity |
-|---|---|---|
-| IDOR (read PII) | 6.5 | Medium |
-| IDOR (write/delete) | 7.5 | High |
-| Auth bypass → admin | 9.8 | Critical |
-| Stored XSS (any user) | 5.4–8.8 | Med–High |
-| SQLi (data exfil) | 8.6 | High |
-| SSRF (cloud metadata) | 9.1 | Critical |
-| Race condition (double spend) | 7.5 | High |
-| GraphQL auth bypass | 8.7 | High |
-| JWT none algorithm | 9.1 | Critical |
+Use the official FIRST calculator for the version required by the program. CVSS metrics are not additive points, and a vulnerability class has no fixed score. Record the complete vector and evidence for each metric, including the correct privilege weight under the chosen Scope in v3.1. Program priority/bounty categories are separate from CVSS.
 
 ---
 
@@ -355,13 +325,13 @@ CVSS = f(AV, AC, PR, UI, S, C, I, A)
 
 ## SEVERITY SELF-ASSESSMENT
 
-Each YES raises severity:
+These are evidence questions, not an additive severity formula:
 ```
-1. Exposes PII / health / financial data of other users?        → +1 severity
-2. Allows account takeover or privilege escalation?             → +2 severity
-3. Requires ZERO user interaction from victim?                  → +1 severity
-4. Affects ALL users (not specific condition)?                  → +1 severity
-5. Remotely exploitable with no internal network access?        → baseline for High+
+1. Exposes PII / health / financial data of other users?        → assess the applicable confidentiality/integrity/availability impact
+2. Allows account takeover or privilege escalation?             → assess the demonstrated privilege/impact boundary
+3. Requires ZERO user interaction from victim?                  → assess the applicable confidentiality/integrity/availability impact
+4. Affects ALL users (not specific condition)?                  → assess the applicable confidentiality/integrity/availability impact
+5. Remotely exploitable with no internal network access?        → choose the correct vector metric, without a preset severity
 ```
 
 ---
@@ -392,7 +362,7 @@ Each YES raises severity:
 [ ] No typos in endpoint paths or parameter names
 [ ] Report is < 600 words — triagers skim long reports
 [ ] Severity claimed matches impact described — don't overclaim
-[ ] Never used "could potentially" or "may allow"
+[ ] Observed facts and untested hypotheses are clearly separated
 [ ] PoC is reproducible by triager from a fresh state
 ```
 
@@ -424,3 +394,7 @@ Apply this skill's checklist to the current engagement notes and report gaps.
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+## Evidence, disclosure and template limits
+
+All accounts, counts, financial values, scenarios and reported impacts in templates are illustrative placeholders, not verified findings or evidence of a real engagement. Two test accounts support a cross-account proof, not a claim that all users or 100K records are affected. Do not enumerate or exfiltrate additional records to quantify impact; use owner-provided scope and a minimal approved proof. Mark unknown reach, causality, exploitability and policy explicitly rather than replacing uncertainty with confident language. Report suspected security issues through the authorized disclosure channel even if further proof would be unsafe or prohibited; missing optional sibling skills must not block responsible reporting. Sanitize secrets/PII, retain necessary reproducibility privately, and obtain explicit authorization before submitting a report, replying to triagers or uploading screenshots/videos to external services. A duplicate need not have a publicly visible report; request clarification respectfully without asserting nondisclosure proves novelty. CVSS/VRT/platform templates and word limits are examples requiring current program confirmation, not universal law or payout guarantees.

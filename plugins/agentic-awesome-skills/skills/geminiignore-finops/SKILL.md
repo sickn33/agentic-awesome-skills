@@ -157,10 +157,12 @@ __pycache__/
 
 ## Best Practices
 
-- ✅ **Ignore dependency lock files**: Standard lock files (e.g., `package-lock.json`, `yarn.lock`) contain thousands of lines of redundant package resolution trees. Ignoring them is the single largest FinOps win.
+- ✅ **Exclude lockfiles selectively** from broad context only when the task does not need exact dependency resolution. Security audits, upgrades and reproducible installs require lockfile access; no universal largest-savings claim is established.
 - ✅ **Keep configurations visible**: Ensure manifests like `package.json`, `composer.json`, `Cargo.toml`, and `pyproject.toml` are NEVER ignored, as the AI needs them to understand dependencies.
 - ✅ **Whitelist config examples**: Use rules like `!.env.example` alongside `.env` ignores so the AI understands configuration structure without exposing credentials.
 - ❌ **Do not ignore source code**: Avoid overly broad folder patterns like `lib/` or `app/` if they contain primary source code. Be specific (e.g., block `vendor/bundle/` but not your actual code).
+
+Review this baseline before applying: bin/ may contain source scripts, *.sql may be migrations, *.svg is text, and project assets may be needed for design work. Ignore rules are context-selection hints, not a security boundary or proof a tool cannot read a secret. Only clients that explicitly support .geminiignore honor it; do not assume Claude/Cursor support or measured savings. Verify exclusions with the actual client, and never use ignore rules to hide mandatory audit evidence.
 
 ## Limitations
 

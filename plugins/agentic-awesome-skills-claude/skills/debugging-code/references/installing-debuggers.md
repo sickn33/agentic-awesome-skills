@@ -8,7 +8,7 @@
 
 **Check:** `python3 -m debugpy --version`
 
-**Install:** `pip install debugpy`
+**Install:** `python -m pip install debugpy==REVIEWED_VERSION`
 
 **Virtualenv:** `dap` picks up the active venv automatically via `$VIRTUAL_ENV`.
 Activate the venv (`source .venv/bin/activate`) before running `dap debug`, or pass
@@ -23,8 +23,8 @@ interpreter version.
 **Check:** `dlv version`
 
 **Install:**
-- macOS: `brew install delve` (or `go install github.com/go-delve/delve/cmd/dlv@latest`)
-- Linux: `go install github.com/go-delve/delve/cmd/dlv@latest`
+- macOS: `brew install delve` (or `go install github.com/go-delve/delve/cmd/dlv@REVIEWED_TAG`)
+- Linux: `go install github.com/go-delve/delve/cmd/dlv@REVIEWED_TAG`
 
 macOS note: you may need `sudo DevToolsSecurity -enable` for debugging permissions.
 
@@ -41,9 +41,12 @@ macOS note: you may need `sudo DevToolsSecurity -enable` for debugging permissio
 
 **Standalone install** (only if not found above):
 ```bash
-DAP_VER=$(curl -fsSL https://api.github.com/repos/microsoft/vscode-js-debug/releases/latest | grep -o '"tag_name":"[^"]*"' | cut -d'"' -f4) && \
-mkdir -p ~/.dap-cli/js-debug && \
-curl -fsSL "https://github.com/microsoft/vscode-js-debug/releases/download/${DAP_VER}/js-debug-dap-${DAP_VER}.tar.gz" | tar -xz -C ~/.dap-cli/js-debug
+# Select a reviewed release and platform asset on the official js-debug releases page.
+# Download to a private temporary directory with bounded HTTPS-only curl, verify
+# an independently trusted digest, inspect tar members for absolute/../ paths,
+# links and executable content, then extract to a NEW empty private destination.
+# Do not pipe an unverified release archive directly into tar.
+
 ```
 
 Also supports **Chrome DevTools debugging** for browser-side JavaScript.

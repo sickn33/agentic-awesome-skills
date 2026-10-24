@@ -42,4 +42,4 @@ export const DEFAULT_MAX_CODE_CANDIDATES = 6;
 export const MAX_CODE_CANDIDATES = DEFAULT_MAX_CODE_CANDIDATES;
 
 // Bump on any threshold change so report + iteration baselines can detect gate-logic drift.
-export const GATE_VERSION = '1.8.0';
+export const GATE_VERSION = '1.8.1';

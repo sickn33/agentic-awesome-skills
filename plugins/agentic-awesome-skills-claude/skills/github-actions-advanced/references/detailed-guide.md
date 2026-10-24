@@ -2,6 +2,8 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+These YAML blocks are fragments to adapt, not validated complete workflows. Resolve every action SHA from its owning repository and inspect it; a full-length hash alone proves neither existence nor safety. Historical runtime/action versions are not current support recommendations. The Azure login SHA was malformed and is deliberately a blocking placeholder until verified.
+
 ## Step 1: Understand Context Before Responding
 
 When invoked, first gather context:
@@ -106,7 +108,7 @@ on:
     types: [labeled]                     # Gate with label + author_association check
 ```
 
-> **Security Warning:** `pull_request_target` runs with repo secrets. Only use after a maintainer labels the PR. Never check out fork code without explicit sandboxing.
+> **Security Warning:** A maintainer label or author association is not sufficient approval of the current PR head. Keep privileged target workflows on trusted base code; never build/test/execute untrusted PR code, dependencies or artifacts with secrets/write credentials. Use pull_request with least privilege for those tests.
 
 ---
 
@@ -126,7 +128,7 @@ jobs:
     # uses: org/repo/.github/workflows/build.yml@main  # Cross-repo
     with:
       image-tag: ${{ github.sha }}
-    secrets: inherit                             # Pass all caller secrets down
+    # No secrets needed for this build-only example; pass explicit secrets only when required
 
   call-test:
     uses: ./.github/workflows/_test.yml
@@ -275,15 +277,13 @@ jobs:
   with:
     path: |
       ~/.cache/pip
-      .venv
     key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
     restore-keys: |
       ${{ runner.os }}-pip-${{ hashFiles('**/requirements*.txt') }}
       ${{ runner.os }}-pip-
 
 - name: Install deps (only on cache miss)
-  if: steps.cache-deps.outputs.cache-hit != 'true'
-  run: pip install -r requirements.txt
+  run: pip install -r requirements.txt  # cache contains downloads; always install into the current environment
 ```
 
 ### Docker Layer Caching
@@ -347,7 +347,7 @@ permissions:
   contents: read
 
 steps:
-  - uses: azure/login@a65d910e8af852a8061c627c456678983e180302  # v2.2.0
+  - uses: azure/login@<VERIFIED_FULL_40_HEX_COMMIT_SHA>  # v2.2.0
     with:
       client-id: ${{ secrets.AZURE_CLIENT_ID }}
       tenant-id: ${{ secrets.AZURE_TENANT_ID }}
@@ -421,8 +421,8 @@ env:
 ### Secrets in Composite Actions
 
 ```yaml
-# Secrets cannot be passed as inputs to composite actions
-# Pass them as env vars instead:
+# Composite actions cannot directly use the secrets context; callers can pass
+# secrets explicitly as inputs or env. Minimize either and never log them:
 - uses: ./.github/actions/my-action
   env:
     SECRET_VALUE: ${{ secrets.MY_SECRET }}
@@ -618,21 +618,13 @@ jobs:
 # ACTIONS_RUNNER_DEBUG = true
 # ACTIONS_STEP_DEBUG = true
 
-# Dump full GitHub context for inspection
-- name: Debug — dump github context
+# Log only necessary non-secret diagnostics through env (no complete contexts).
+- name: Debug event
   if: runner.debug == '1'
   env:
-    GITHUB_CONTEXT: ${{ toJson(github) }}
-  run: echo "$GITHUB_CONTEXT" | jq '.'
-
-# Dump all available contexts
-- name: Debug — dump all contexts
-  if: runner.debug == '1'
-  run: |
-    echo "github: ${{ toJson(github) }}"
-    echo "env: ${{ toJson(env) }}"
-    echo "vars: ${{ toJson(vars) }}"
-    echo "runner: ${{ toJson(runner) }}"
+    EVENT_NAME: ${{ github.event_name }}
+    RUN_ID: ${{ github.run_id }}
+  run: printf 'Event=%s Run=%s\n' "$EVENT_NAME" "$RUN_ID"
 
 # SSH into a failing runner for interactive debugging
 - uses: mxschmitt/action-tmate@7b04f3521e6b0a9fc56fa8f9f50da4bcfb5fc7b5  # v3.19.0
@@ -746,7 +738,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          provenance: true    # SLSA provenance attestation
+          provenance: true    # generate provenance metadata; does not itself establish a SLSA level
           sbom: true          # Software Bill of Materials
 
   # ── Deploy Staging ────────────────────────────────────
@@ -765,7 +757,7 @@ jobs:
 
   # ── Deploy Production (manual approval required) ──────
   deploy-production:
-    needs: deploy-staging
+    needs: [deploy-staging, push-image]
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     environment:

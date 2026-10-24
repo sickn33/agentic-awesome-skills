@@ -1,7 +1,8 @@
 ---
 name: matplotlib
 description: "Matplotlib is Python's foundational visualization library for creating static, animated, and interactive plots."
-license: https://github.com/matplotlib/matplotlib/tree/main/LICENSE
+license: MIT
+license_source: https://github.com/K-Dense-AI/scientific-agent-skills/blob/0936740e52033a6256085be5fc81e5e56d606110/LICENSE.md
 metadata:
     skill-author: K-Dense Inc.
 risk: critical
@@ -164,7 +165,7 @@ ax.clabel(contour, inline=True, fontsize=8)
 
 **Box plots** - Statistical distributions
 ```python
-ax.boxplot([data1, data2, data3], labels=['A', 'B', 'C'])
+ax.boxplot([data1, data2, data3], tick_labels=['A', 'B', 'C'])
 ```
 
 **Violin plots** - Distribution densities
@@ -314,6 +315,8 @@ plt.savefig('analysis.png', dpi=300, bbox_inches='tight')
 ## Quick Reference Scripts
 
 This skill includes helper scripts in the `scripts/` directory:
+
+The helper templates require NumPy and Matplotlib; the histogram/all mode additionally imports SciPy. Current examples use Matplotlib 3.10+ (`tick_labels` and `orientation`). The skill content is MIT-licensed under K-Dense attribution; the Matplotlib library has its separate [license](https://github.com/matplotlib/matplotlib/tree/main/LICENSE).
 
 ### `plot_template.py`
 Template script demonstrating various plot types with best practices. Use this as a starting point for creating new visualizations.

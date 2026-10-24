@@ -66,7 +66,7 @@ subagent-orchestrator/
 
 ---
 
-## Quota reference (quick)
+## Historical illustrative quota assumptions (unverified)
 
 | Model | Cost |
 |-------|------|

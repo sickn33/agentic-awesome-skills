@@ -2,7 +2,7 @@
 name: aws-secrets-rotation
 description: "Automate AWS secrets rotation for RDS, API keys, and credentials"
 category: security
-risk: safe
+risk: critical
 source: community
 tags: "[aws, secrets-manager, security, automation, kiro-cli, credentials]"
 date_added: "2026-02-27"
@@ -11,6 +11,12 @@ date_added: "2026-02-27"
 # AWS Secrets Rotation
 
 Automate rotation of secrets, credentials, and API keys using AWS Secrets Manager and Lambda.
+
+## Review scope and execution boundaries
+
+Select the exact account/role, partition, regions and control/framework version before collecting evidence; verify identity with `aws sts get-caller-identity`. Read-only assessment is the default. Commands that create MFA devices, change policies/keys, enable services, rotate secrets or create alarms require an approved change scope and rollback plan. Keep evidence and secret material out of shared logs.
+
+These are partial examples, not certification or complete benchmark implementations. Control numbers are illustrative historical mappings, not a pinned current benchmark. Record PASS/FAIL/UNKNOWN/NOT-APPLICABLE per control with evidence and coverage. AccessDenied, API errors, missing permissions, absent pages and unimplemented checks are UNKNOWN, never PASS. Use paginators for SDK listings and cover all selected regions/accounts; never infer completeness from no findings. Shell snippets require Bash/GNU date, AWS CLI, jq and error checking (`set -euo pipefail` in complete scripts). Generate the IAM credential report first, wait for COMPLETE and decode its base64 Content; parse CSV by header in production. Credential reports are sensitive.
 
 ## When to Use
 Use this skill when you need to implement automated secrets rotation, manage credentials securely, or comply with security policies requiring regular key rotation.
@@ -32,6 +38,8 @@ Use this skill when you need to implement automated secrets rotation, manage cre
 ## Secrets Manager Setup
 
 ### Create a Secret
+
+Placeholders below are not deployable credentials. Use private input files (`--secret-string file://...`) rather than inline real secret values visible in shell history/process arguments. Binary output files need umask 077 and exclusive creation; never overwrite a real private key.
 
 ```bash
 # Create RDS secret
@@ -79,7 +87,7 @@ aws secretsmanager get-secret-value \
 aws secretsmanager get-secret-value \
   --secret-id prod/ssh/private-key \
   --query 'SecretBinary' --output text | \
-  base64 -d > private-key.pem
+  base64 --decode > "$PRIVATE_OUTPUT_FILE"  # fresh private path, umask 077
 ```
 
 ## Automatic Rotation Setup
@@ -97,145 +105,33 @@ aws secretsmanager rotate-secret \
 aws secretsmanager rotate-secret \
   --secret-id prod/db/mysql
 
-# Check rotation status
+# Check configuration only; completion requires expected VersionId at AWSCURRENT
+# and successful target authentication/consumer refresh.
 aws secretsmanager describe-secret \
   --secret-id prod/db/mysql \
   --query 'RotationEnabled'
 ```
 
-### Lambda Rotation Function
+### Lambda rotation implementation
 
-```python
-# lambda_rotation.py
-import boto3
-import json
-import os
+Use the AWS-maintained rotation template appropriate to the database/service and verify its permissions and network prerequisites. A function must validate SecretId, rotation enabled state, ClientRequestToken membership and AWSPENDING stage before mutation; already-current tokens should return idempotently.
 
-secrets_client = boto3.client('secretsmanager')
-rds_client = boto3.client('rds')
+1. `createSecret`: reuse an existing pending version for this token or generate/store it once.
+2. `setSecret`: retrieve that exact pending VersionId and AWSPENDING stage; verify current/pending refer to the same authorized host/account/user before changing the target. Never update the database with AWSCURRENT by mistake.
+3. `testSecret`: connect using the pending credentials, bounded timeouts, TLS verification and minimum permissions; close connections on all paths.
+4. `finishSecret`: promote the tested pending version; remove AWSCURRENT from the previous version only as documented. Monitor consumers and retain a recovery path.
 
-def lambda_handler(event, context):
-    """Rotate RDS MySQL password"""
-    
-    secret_arn = event['SecretId']
-    token = event['ClientRequestToken']
-    step = event['Step']
-    
-    # Get current secret
-    current = secrets_client.get_secret_value(SecretId=secret_arn)
-    secret = json.loads(current['SecretString'])
-    
-    if step == "createSecret":
-        # Generate new password
-        new_password = generate_password()
-        secret['password'] = new_password
-        
-        # Store as pending
-        secrets_client.put_secret_value(
-            SecretId=secret_arn,
-            ClientRequestToken=token,
-            SecretString=json.dumps(secret),
-            VersionStages=['AWSPENDING']
-        )
-    
-    elif step == "setSecret":
-        # Update RDS password
-        rds_client.modify_db_instance(
-            DBInstanceIdentifier=secret['dbInstanceIdentifier'],
-            MasterUserPassword=secret['password'],
-            ApplyImmediately=True
-        )
-    
-    elif step == "testSecret":
-        # Test new credentials
-        import pymysql
-        conn = pymysql.connect(
-            host=secret['host'],
-            user=secret['username'],
-            password=secret['password'],
-            database=secret['dbname']
-        )
-        conn.close()
-    
-    elif step == "finishSecret":
-        # Mark as current
-        secrets_client.update_secret_version_stage(
-            SecretId=secret_arn,
-            VersionStage='AWSCURRENT',
-            MoveToVersionId=token,
-            RemoveFromVersionId=current['VersionId']
-        )
-    
-    return {'statusCode': 200}
+Do not substitute an asynchronous master-password modification for a working database-user rotation implementation. Application refresh, overlapping credentials and retry/idempotency behavior need integration tests.
 
-def generate_password(length=32):
-    import secrets
-    import string
-    alphabet = string.ascii_letters + string.digits + "!@#$%^&*()"
-    return ''.join(secrets.choice(alphabet) for _ in range(length))
-```
+### Stripe and other provider API keys
 
-### Custom Rotation for API Keys
-
-```python
-# api_key_rotation.py
-import boto3
-import requests
-import json
-
-secrets_client = boto3.client('secretsmanager')
-
-def rotate_stripe_key(secret_arn, token, step):
-    """Rotate Stripe API key"""
-    
-    current = secrets_client.get_secret_value(SecretId=secret_arn)
-    secret = json.loads(current['SecretString'])
-    
-    if step == "createSecret":
-        # Create new Stripe key via API
-        response = requests.post(
-            'https://api.stripe.com/v1/api_keys',
-            auth=(secret['api_key'], ''),
-            data={'name': f'rotated-{token[:8]}'}
-        )
-        new_key = response.json()['secret']
-        
-        secret['api_key'] = new_key
-        secrets_client.put_secret_value(
-            SecretId=secret_arn,
-            ClientRequestToken=token,
-            SecretString=json.dumps(secret),
-            VersionStages=['AWSPENDING']
-        )
-    
-    elif step == "testSecret":
-        # Test new key
-        response = requests.get(
-            'https://api.stripe.com/v1/balance',
-            auth=(secret['api_key'], '')
-        )
-        if response.status_code != 200:
-            raise Exception("New key failed validation")
-    
-    elif step == "finishSecret":
-        # Revoke old key
-        old_key = json.loads(current['SecretString'])['api_key']
-        requests.delete(
-            f'https://api.stripe.com/v1/api_keys/{old_key}',
-            auth=(secret['api_key'], '')
-        )
-        
-        # Promote to current
-        secrets_client.update_secret_version_stage(
-            SecretId=secret_arn,
-            VersionStage='AWSCURRENT',
-            MoveToVersionId=token
-        )
-```
+Stripe documents creation, expiration and rotation through its Dashboard. This skill does not provide a verified key-management API. Do not call invented `/v1/api_keys` creation/revocation endpoints or put secret key material in URL paths. Follow the provider's documented workflow, stage the replacement privately in Secrets Manager, update/test consumers, and revoke the old key after confirmed rollout. Webhook signing secrets are a separate credential.
 
 ## Rotation Monitoring
 
 ### CloudWatch Alarms
+
+The following is a **custom metric contract**, not a guaranteed native Secrets Manager metric. Publish `RotationFailed` in your own namespace from monitored failure events; verify a test failure reaches the alarm and SNS destination. An alarm on a nonexistent series does not detect failures.
 
 ```bash
 # Create alarm for rotation failures
@@ -243,12 +139,12 @@ aws cloudwatch put-metric-alarm \
   --alarm-name secrets-rotation-failures \
   --alarm-description "Alert on secrets rotation failures" \
   --metric-name RotationFailed \
-  --namespace AWS/SecretsManager \
+  --namespace MyApp/SecretRotation \
   --statistic Sum \
   --period 300 \
   --evaluation-periods 1 \
   --threshold 1 \
-  --comparison-operator GreaterThanThreshold \
+  --comparison-operator GreaterThanOrEqualToThreshold \
   --alarm-actions arn:aws:sns:us-east-1:123456789012:alerts
 ```
 
@@ -262,7 +158,7 @@ echo "Secrets Rotation Audit"
 echo "====================="
 
 aws secretsmanager list-secrets --query 'SecretList[*].[Name,RotationEnabled,LastRotatedDate]' \
-  --output text | \
+  --output text | tr '\t' '\n' | \
 while read name enabled last_rotated; do
   echo ""
   echo "Secret: $name"
@@ -318,6 +214,8 @@ connection = pymysql.connect(
 ```
 
 ### Node.js SDK
+
+This is legacy AWS SDK v2 syntax. For a new integration use the installed AWS SDK v3 SecretsManagerClient/GetSecretValueCommand API and its current credential chain. Do not log complete SDK errors or secret responses.
 
 ```javascript
 const AWS = require('aws-sdk');
@@ -383,7 +281,7 @@ aws secretsmanager rotate-secret \
   --rotation-lambda-arn arn:aws:lambda:us-east-1:123456789012:function:RotateStripeKey \
   --rotate-immediately
 
-# Verify rotation completed
+# LastRotatedDate alone does not prove this requested rotation completed.
 aws secretsmanager describe-secret \
   --secret-id prod/db/mysql \
   --query 'LastRotatedDate'
@@ -401,7 +299,7 @@ from datetime import datetime, timedelta
 client = boto3.client('secretsmanager')
 
 def generate_compliance_report():
-    secrets = client.list_secrets()['SecretList']
+    secrets = [s for page in client.get_paginator('list_secrets').paginate() for s in page['SecretList']]
     
     compliant = []
     non_compliant = []

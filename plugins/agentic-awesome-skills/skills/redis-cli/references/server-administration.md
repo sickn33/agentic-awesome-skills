@@ -55,13 +55,13 @@ reset                                 # Remove all rules (clean slate)
 -@category                            # Deny command category
 +@all                                 # Allow all commands
 -@all                                 # Deny all commands (default)
-+|command                             # Allow command with subcommand (e.g., +|config|get)
++command|subcommand                   # Allow a specific subcommand (e.g., +config|get)
 
 # Key permissions
 ~pattern                              # Allow key pattern (~* = all keys, default: nothing)
 %R~pattern                            # Read permission on pattern
 %W~pattern                            # Write permission on pattern
-~RW~pattern                           # Read+Write permission (same as ~pattern)
+%RW~pattern                           # Read+Write permission (same as ~pattern)
 allkeys                               # Alias for ~*
 
 # Pub/Sub channel permissions (Redis 6.2+)
@@ -75,20 +75,12 @@ allchannels                          # Allow all channels
 ### ACL SETUSER Examples
 
 ```bash
-# Create admin user
-redis-cli ACL SETUSER admin on >strongpassword ~* +@all
+# Syntax studies only: use protected provisioning for real passwords.
+# Quote shell metacharacters; reset first, then add only intended permissions.
+redis-cli ACL SETUSER readonly reset on '>example-only-password' '~app1:*' '-@all' '+@read'
+redis-cli ACL SETUSER app1 reset on '>example-only-password' '~app1:*' '-@all' '+get' '+set'
+redis-cli ACL SETUSER multi reset on '>example-only-password' '+GET' allkeys '(+SET ~app1:*)'
 
-# Create read-only user
-redis-cli ACL SETUSER readonly on >password ~* +@read -@all
-
-# Create user with limited key access
-redis-cli ACL SETUSER app1 on >password ~app1:* +@read +@string +@hash -@all
-
-# Reset user completely and redefine
-redis-cli ACL SETUSER myuser reset on >newpass ~cache:* +@read +get +set
-
-# User with selectors (Redis 7.0+)
-redis-cli ACL SETUSER multi on +GET allkeys (+SET ~app1:*)
 ```
 
 ### ACL Maintenance
@@ -196,8 +188,8 @@ redis-cli CLIENT NO-EVICT ON|OFF
 redis-cli CONFIG GET maxmemory
 
 # Get with glob patterns (Redis 7.0+ supports multiple)
-redis-cli CONFIG GET *max*
-redis-cli CONFIG GET maxmemory *timeout*
+redis-cli CONFIG GET '*max*'
+redis-cli CONFIG GET maxmemory '*timeout*'
 
 # Get all configuration
 redis-cli CONFIG GET '*'
@@ -243,15 +235,17 @@ Block until write commands are confirmed by the specified number of replicas.
 
 ```bash
 # Wait for 2 replicas to confirm, up to 5 seconds
-redis-cli SET mykey myvalue
-redis-cli WAIT 2 5000
+redis-cli -e <<'REDIS_COMMANDS'
+SET demo:mykey myvalue
+WAIT 2 5000
+REDIS_COMMANDS
 # Returns: number of replicas that confirmed (integer)
 
 # Fire and forget (don't wait)
 redis-cli WAIT 0 0
 ```
 
-Useful for ensuring data durability across replicas before proceeding. The count reflects replicas that acknowledged writes up to the moment WAIT was issued.
+WAIT only covers preceding writes on the same connection. Check the returned acknowledgement count; it improves replication safety but does not guarantee strong consistency or survival of every failover.
 
 ### WAITAOF (Redis 7.2+)
 
@@ -298,7 +292,7 @@ redis-cli BGREWRITEAOF
 # Check AOF status
 redis-cli INFO persistence | grep aof_enabled
 
-# Force AOF rewrite via config
+# Enable/configure AOF persistence; this is not a manual rewrite command
 redis-cli CONFIG SET appendonly yes
 redis-cli CONFIG SET appendfsync everysec    # always|everysec|no
 ```
@@ -348,7 +342,7 @@ redis-cli INFO replication | grep -E "role|connected_slaves|master_repl_offset"
 # Save and shutdown (blocks until complete)
 redis-cli SHUTDOWN NOSAVE|SAVE
 
-# Shutdown with save (default if not specified)
+# Explicit shutdown with save
 redis-cli SHUTDOWN SAVE
 
 # Shutdown without saving
@@ -364,3 +358,5 @@ redis-cli PING
 # Coordinated failover via sentinel-like mechanism
 redis-cli FAILOVER [TO host port [FORCE]] [ABORT] [TIMEOUT milliseconds]
 ```
+
+WAIT and WAITAOF must follow the intended writes on the same connection. Verify returned counts and the target topology. Background persistence may pause during fork and consumes memory/I/O; it is not cost-free. [WAIT semantics](https://redis.io/docs/latest/commands/wait/).

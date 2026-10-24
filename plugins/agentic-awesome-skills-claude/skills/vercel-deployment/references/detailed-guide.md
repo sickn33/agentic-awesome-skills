@@ -13,6 +13,8 @@
 
 ## Patterns
 
+Confirm project/team, preview versus production destination, budget, data policy and rollback before deployment/DNS/environment changes. Builds execute project dependencies; inspect them before exposing secrets. Supabase publishable/anon identifiers are usable client-side only with tested RLS/storage authorization; service-role keys must never reach clients. A server component/action can still leak secrets through serialized props/results/logs.
+
 ### Environment Variables Setup
 
 Properly configure environment variables for all environments
@@ -60,7 +62,8 @@ export async function GET() {
   return Response.json({ message: 'Hello from Edge!' })
 }
 
-// middleware.ts (always edge)
+// Runtime/convention depends on Next.js version; current versions use proxy.ts.
+// Never assume middleware/proxy always runs at Edge.
 export function middleware(request: NextRequest) {
   // Fast auth checks here
 }
@@ -116,7 +119,8 @@ Use preview deployments for PR reviews
 
 **When to use**: Setting up team development workflow
 
-// Every PR gets a unique preview URL automatically
+// A configured Git integration may create previews; verify project/team,
+// branch settings, authorization and secrets exposed to untrusted PR builds.
 
 // Protect preview deployments with password:
 // Vercel Dashboard → Settings → Deployment Protection
@@ -147,11 +151,11 @@ Configure custom domains with proper SSL
 // - www.example.com (subdomain)
 
 // DNS Configuration (at your registrar):
-// Type: A, Name: @, Value: 76.76.21.21
-// Type: CNAME, Name: www, Value: cname.vercel-dns.com
+// Use the exact current DNS records shown for this domain/project in Vercel;
+// do not copy historical global IP/CNAME values.
 
 // Redirect www to apex (or vice versa):
-// Vercel handles this automatically
+// Configure and verify the intended primary-domain redirect explicitly
 
 // In next.config.js for redirects:
 module.exports = {
@@ -259,8 +263,7 @@ Symptoms:
 - Deployment fails with size error
 
 Why this breaks:
-Vercel serverless functions have a 50MB limit (compressed).
-Large functions mean slow cold starts (1-5+ seconds).
+Function size and duration limits depend on runtime, plan and compute settings; consult the current Functions Limits documentation. Bundle size alone does not establish cold-start latency.
 Heavy dependencies like puppeteer, sharp can cause this.
 
 Recommended fix:
@@ -273,8 +276,8 @@ export async function GET() {
   // ...
 }
 
-// 2. Move heavy processing to edge or external service
-export const runtime = 'edge'  // Much smaller, faster cold start
+// 2. Move heavy work to an approved queue/worker. Edge cannot run
+// native Node dependencies such as sharp or Puppeteer.
 
 // 3. Check bundle size
 // npx @next/bundle-analyzer
@@ -354,10 +357,7 @@ Symptoms:
 - Function killed mid-execution
 
 Why this breaks:
-Vercel has timeout limits:
-- Hobby: 10 seconds
-- Pro: 60 seconds (can increase to 300)
-- Enterprise: 900 seconds
+Inspect the deployed runtime/plan/Fluid Compute configuration and current maximum duration; the historical plan table is not authoritative.
 
 Operations exceeding this are killed mid-execution.
 
@@ -382,7 +382,7 @@ export async function GET() {
     async start(controller) {
       for (const chunk of generateChunks()) {
         controller.enqueue(chunk)
-        await sleep(100)  // Prevents timeout
+        await sleep(100)  // Does not bypass maximum execution duration
       }
       controller.close()
     }
@@ -442,11 +442,14 @@ Understand when env vars are read:
 export const dynamic = 'force-dynamic'
 
 // For config that must be runtime:
-// Don't use NEXT_PUBLIC_, read on server and pass to client
+// Keep secrets server-only. Only explicitly approved public derived data
+// may be returned to the client; passing a secret from server still exposes it.
 
 // Check which env vars you need:
 // Build: URLs, public keys, feature flags (if static)
 // Runtime: Secrets, database URLs, user-specific config
+
+CORS examples below apply only to intentionally public, noncredentialed responses. For authenticated browser APIs use an exact allowlisted origin, Vary: Origin, approved credentials policy and CSRF defenses; CORS is not authentication. Revalidation endpoints and mutations require authentication, object authorization, validated inputs and idempotency. Never publicly cache personalized or secret-bearing responses.
 
 ### CORS errors calling API routes from different domain
 
@@ -569,7 +572,7 @@ Severity: WARNING
 
 Message: Hardcoded Vercel URL. Use VERCEL_URL environment variable instead.
 
-Fix action: Use process.env.VERCEL_URL or NEXT_PUBLIC_VERCEL_URL
+Fix action: Select a verified canonical public origin or deployment URL for the use case; VERCEL_URL is a hostname without a scheme and must not replace canonical URLs indiscriminately.
 
 ### Node.js API in Edge Runtime
 

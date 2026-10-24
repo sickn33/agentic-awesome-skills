@@ -1,5 +1,7 @@
 # longbridge-stock-research
 
+Scope: read-only research template; verify current CLI flags/entitlements, cite actual sources and timestamps, and distinguish estimates from observations. Never expose account credentials or raw sensitive error output. Examples and thresholds are illustrative, not current quotes or validated trading signals. Account-specific data is optional and requires user-authorized minimum read access.
+
 Generates a concise equity research snapshot for a single stock by aggregating analyst consensus, key financials, valuation, 60-day price performance, and recent news — structured like a sell-side research brief.
 
 ## Workflow
@@ -58,4 +60,4 @@ Structure the response as a research brief with these sections:
 | `command not found: longbridge`  | 回退到 MCP；否则提示用户安装 longbridge-terminal | 回退到 MCP；否則提示安裝 / Fall back to MCP; otherwise prompt to install longbridge-terminal |
 | `not logged in` / `unauthorized` | 请运行 `longbridge auth login`                   | 請運行 `longbridge auth login` / Run `longbridge auth login`                                 |
 | Invalid symbol / `param_error`   | 请确认股票代码格式，例如 NVDA.US                 | 請確認股票代碼格式 / Check symbol format e.g. NVDA.US                                        |
-| Other stderr                     | 原样展示错误信息，不重试                         | 原樣展示錯誤，不重試 / Surface verbatim, no silent retry                                     |
+| Other stderr                     | 原样展示错误信息，不重试                         | 原樣展示錯誤，不重試 / Surface a redacted error summary, no silent retry                                     |

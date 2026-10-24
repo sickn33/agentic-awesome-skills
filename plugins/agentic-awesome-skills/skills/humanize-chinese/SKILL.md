@@ -28,6 +28,8 @@ Use this skill when you need to detect AI-like Chinese writing, rewrite it to fe
 
 ### 1. Detect Before Rewriting
 
+Treat these as style observations, not proof of AI authorship or a reliable AIGC percentage. Do not promise to pass CNKI/VIP/Wanfang detection or alter disclosure obligations. Preserve the actual research claim: changing 研究表明 to 前人研究发现 can change who conducted the study and requires source evidence.
+
 Start by identifying the most obvious AI markers instead of rewriting blindly:
 
 - rigid `first/second/finally` structures
@@ -62,7 +64,7 @@ For academic text, preserve a scholarly tone. Do not over-casualize.
 
 ## Optional CLI Flow
 
-If the user has a local clone of the source toolkit, these examples are useful:
+The scripts below are not bundled here. Only use an existing reviewed clone with matching flags; do not invent or run a similarly named local script. If available, these examples are useful:
 
 ```bash
 python3 scripts/detect_cn.py text.txt -v

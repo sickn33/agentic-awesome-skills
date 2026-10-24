@@ -62,4 +62,4 @@ function MyScreen() {
 }
 ```
 
-The native approach handles dynamic safe areas (keyboard, toolbars) and allows content to scroll behind the status bar naturally.
+This prop is iOS-specific and does not alone handle the keyboard. On Android and web, use platform-appropriate safe-area/keyboard handling; avoid double-applying insets when a navigator already supplies them.

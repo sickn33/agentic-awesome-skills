@@ -1,5 +1,7 @@
 # Architecture Diagram Templates
 
+> Review boundary: Diagrams below are illustrative templates, not generated facts about the target repository. Replace every path, line, relationship and interface with inspected evidence; partial text searches cannot establish a complete call/import graph.
+
 Auto-generated Mermaid diagrams for visualizing codebase structure. These diagrams are derived
 from actual code analysis — not hand-drawn, not aspirational. Every diagram should reflect
 what the code **actually does**, not what the author wishes it did.

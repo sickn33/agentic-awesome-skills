@@ -18,13 +18,17 @@ Automate Freshservice IT Service Management operations through Composio's Freshs
 
 ## Setup
 
-**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. No API keys needed — just add the endpoint and it works.
+**Get Rube MCP**: Add `https://rube.app/mcp` as an MCP server in your client configuration. Complete the host’s trust/authentication setup; adding an endpoint alone does not establish a working Freshservice connection.
 
 
 1. Verify Rube MCP is available by confirming `RUBE_SEARCH_TOOLS` responds
 2. Call `RUBE_MANAGE_CONNECTIONS` with toolkit `freshservice`
 3. If connection is not ACTIVE, follow the returned auth link to complete Freshservice authentication
 4. Confirm connection status shows ACTIVE before running any workflows
+
+## Record and notification boundaries
+
+Verify tenant/workspace, exact ticket IDs and requested fields before writes. A ticket/service request can notify people, trigger approvals or provisioning, and create contacts; a read request does not authorize those effects. Outbound email requires explicit recipient/content authorization. Redact ticket PII/secrets from reports and use discovered schemas for current IDs/status codes. For bulk changes, preview the ID list and reconcile per-ticket results before retrying uncertain/partial outcomes.
 
 ## Core Workflows
 

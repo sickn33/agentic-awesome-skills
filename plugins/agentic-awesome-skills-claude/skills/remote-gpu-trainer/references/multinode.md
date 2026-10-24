@@ -1,8 +1,8 @@
 # Multi-node NCCL & elastic-training gotchas — ADVANCED
 
-**Single-box users skip this entire file.** None of it applies to a single instance — one node, however many GPUs,
-runs DDP/FSDP over NVLink/PCIe and never touches the inter-node NCCL transport, fabric-manager, or rendezvous logic
-below. This file is **only** for jobs spanning ≥2 rented instances (multi-node DDP, FSDP, pipeline/tensor parallel,
+Most entries concern multiple instances. NVSwitch fabric-manager and local NCCL initialization can also
+affect a single multi-GPU node; use those checks when its hardware requires them. Inter-node transport
+entries apply to jobs spanning ≥2 rented instances (multi-node DDP, FSDP, pipeline/tensor parallel,
 or elastic training). It assumes the checkpoint-to-durable + idempotent-resume spine is already in place
 (`references/principles.md` #8; cadence + atomic-write in `references/spot-resilience.md`) — multi-node only changes
 *how the process group forms and breaks*, never the resume mechanism.
@@ -79,7 +79,7 @@ URL: https://github.com/NVIDIA/nccl/issues/1580
 `Watchdog ... collective ... timed out` / `NCCL timeout` error — or worse, hangs far longer because the watchdog is
 off. The real failure (a rank that OOM'd, crashed, or fell behind) happened 30 min earlier and is buried.
 
-**Root cause.** NCCL's default collective timeout is **1800 s**. When one rank dies or stalls, the others sit in the
+**Root cause.** The process-group timeout depends on backend and PyTorch version (modern NCCL defaults may be 10 minutes, while other configurations use 30). Check the installed version; NCCL does not impose one universal 1800-second default. When one rank dies or stalls, the others sit in the
 collective waiting out the full 30-minute window before anything surfaces — so the symptom appears half an hour after
 the cause, and a transient straggler can trip a hard abort it should have survived.
 
@@ -163,9 +163,10 @@ capacity to return. It only errors once `HOROVOD_ELASTIC_TIMEOUT` (default **600
   training through membership changes instead of pausing.
 - Raise `HOROVOD_ELASTIC_TIMEOUT` if the spot tier's capacity routinely returns slower than 600 s, so a temporary
   capacity dip resumes rather than aborts.
-- **Pin LR-scaling and data-sharding to `--max-np`, not the live worker count** — otherwise the effective learning
-  rate and shard assignment drift on every membership change, quietly corrupting the run (a `verifying-dl-experiments`
-  concern: a metric from a run whose LR silently rescaled is not a clean datapoint).
+- **Rebuild data sharding for the actual live rank/world size after each elastic reset.** Sharding against
+  `--max-np` when fewer workers are live can omit entire shards. Use the framework elastic-state reset
+  callback and restore sampler progress; define and log the LR/effective-batch policy explicitly so
+  membership changes do not silently change the experiment.
 
 URL: https://horovod.readthedocs.io/en/stable/elastic_include.html
 

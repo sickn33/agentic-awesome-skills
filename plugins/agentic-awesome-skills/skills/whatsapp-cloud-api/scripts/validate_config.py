@@ -107,6 +107,7 @@ def test_waba_access() -> tuple[bool, str]:
 def main():
     parser = argparse.ArgumentParser(description="Validate WhatsApp Cloud API configuration")
     parser.add_argument("--env-file", default=".env", help="Path to .env file (default: .env)")
+    parser.add_argument("--online", action="store_true", help="Authorize credentialed read-only provider checks")
     args = parser.parse_args()
 
     # Load environment
@@ -142,6 +143,10 @@ def main():
         print("Cannot test API without required variables. Fix the above and retry.")
         sys.exit(1)
 
+    if not args.online:
+        print("Local configuration checks passed; --online enables authorized provider checks.")
+        return
+
     # Check 2: API connection
     print("[2/3] Testing API connection (Phone Number)...")
     api_ok, api_message = test_api_connection()
@@ -166,7 +171,7 @@ def main():
     print("=" * 50)
     if all_ok:
         print("All checks passed! Your configuration is valid.")
-        print("You can start sending messages.")
+        print("Provider endpoints are reachable; delivery, consent, templates and webhook processing remain unverified.")
     else:
         print("Some checks failed. Please fix the issues above.")
         print("Need help? Read: references/setup-guide.md")

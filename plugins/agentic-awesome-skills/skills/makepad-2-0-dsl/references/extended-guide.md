@@ -1,3 +1,11 @@
+# Additional DSL Pitfalls
+
+### Comment order and source locations
+
+A leading comment may affect diagnostic source mapping in some revisions; it is not established here as a language syntax prohibition. Prefer placing imports first when reproducing this issue, then verify against the pinned compiler revision.
+
+```rust
+// Example with a leading comment:
 script_mod!{
     // This comment shifts error line info
     use mod.prelude.widgets.*
@@ -39,8 +47,8 @@ script_mod!{
 
 ## Reference Files
 
-- [DSL Syntax Reference] -- Complete syntax grammar and examples
-- [Property System] -- Walk, Layout, Draw, and shader properties
+- [DSL Syntax Reference](dsl-syntax-reference.md) -- Syntax examples for this generation
+- [Property System](property-system.md) -- Walk, Layout, Draw and shader properties
 
 
 ## Examples

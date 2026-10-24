@@ -29,6 +29,8 @@ Configure content delivery networks for fast, reliable global asset delivery wit
 - Implementing geo-based routing or content restrictions.
 - Accelerating API responses with edge caching.
 
+Examples use placeholders and create billable resources. Confirm the zone/distribution/account and rollback before provisioning, changing DNS/cache rules or purging. Cache only intentionally public responses; bypass authenticated, tenant-specific and sensitive routes even when paths resemble static assets. Do not strip query parameters that carry authorization or content identity.
+
 ## Prerequisites
 
 - Domain with DNS management access.
@@ -134,6 +136,8 @@ function handler(event) {
 
 ### CloudFront with Terraform
 
+This is a partial configuration: supply the referenced bucket, certificate and API origin, and a least-privilege S3 bucket policy granting this distribution access through OAC. OAC creation alone does not grant bucket reads. Review SPA fallbacks: private S3 origins may return 403 for missing objects; never turn genuine authorization failures into successful HTML responses.
+
 ```hcl
 # cloudfront.tf
 resource "aws_cloudfront_distribution" "site" {
@@ -168,7 +172,8 @@ resource "aws_cloudfront_distribution" "site" {
     response_page_path = "/index.html"
   }
 
-  # API pass-through (no caching)
+  # API pass-through (no caching): add a real origin block with
+  # origin_id = "api-origin" and verified custom_origin_config first.
   ordered_cache_behavior {
     path_pattern     = "/api/*"
     allowed_methods  = ["GET", "HEAD", "OPTIONS", "PUT", "POST", "PATCH", "DELETE"]
@@ -268,20 +273,18 @@ curl -X POST "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/purge_cache" \
 ### nginx Cache Headers
 
 ```nginx
-# Immutable hashed assets (fingerprinted filenames)
+# Put the fingerprinted regex first: nginx uses the first matching regex.
+location ~* \.[a-f0-9]{8,}\.(js|css)$ {
+    add_header Cache-Control "public, max-age=31536000, immutable";
+}
 location ~* \.(js|css)$ {
-    if ($uri ~* "\.[a-f0-9]{8,}\.(js|css)$") {
-        expires 1y;
-        add_header Cache-Control "public, immutable";
-    }
-    expires 7d;
-    add_header Cache-Control "public, must-revalidate";
+    add_header Cache-Control "public, max-age=604800, must-revalidate";
 }
 
 # Images and fonts
 location ~* \.(jpg|jpeg|png|gif|ico|svg|webp|woff2|ttf)$ {
     expires 30d;
-    add_header Cache-Control "public, immutable";
+    add_header Cache-Control "public, must-revalidate";
 }
 
 # HTML — always revalidate
@@ -339,9 +342,10 @@ curl -sI https://www.example.com/style.css | grep -i -E "cf-cache|x-cache|age|ca
 
 # CloudFront cache hit ratio
 aws cloudwatch get-metric-statistics \
+  --region us-east-1 \
   --namespace AWS/CloudFront \
   --metric-name CacheHitRate \
-  --dimensions Name=DistributionId,Value=E1A2B3C4D5E6F7 \
+  --dimensions Name=DistributionId,Value=E1A2B3C4D5E6F7 Name=Region,Value=Global \
   --start-time $(date -u -d '1 hour ago' +%Y-%m-%dT%H:%M:%S) \
   --end-time $(date -u +%Y-%m-%dT%H:%M:%S) \
   --period 300 \

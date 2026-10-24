@@ -1,3 +1,5 @@
+_Modified in the local catalog review: corrected authority, credential, reproducibility and runtime guidance; examples remain environment-dependent._
+
 # Krea 2 reference
 
 Krea 2 (K2) is a flow-matching **text-to-image** model: a 12B dense DiT (grouped-query attention) with a **Qwen3-VL** text encoder (multi-layer feature aggregation) and the **Qwen-Image VAE** (`AutoencoderKLQwenImage`). Pipeline class: `Krea2Pipeline`. It ships as two checkpoints designed to work together:
@@ -61,3 +63,5 @@ Standard T2I: place modules at module scope, `pipe.to("cuda")`, no `torch.compil
 - **`guidance_scale=0` disables guidance** (Krea convention, unlike pipelines where 1.0 is "off"). Turbo = 8 steps, `guidance_scale=0.0`.
 - **LoRAs use `pipe.transformer.load_lora_adapter` + `set_adapters("default", …)`** (transformer-level), and have **trigger words** — read the card.
 - **New pipeline → update diffusers** if `from diffusers import Krea2Pipeline` fails.
+
+Treat model/adapter compatibility, guidance conventions and timings as revision-specific. Verify the official pinned card and installed implementation before using this illustrative recipe; no GPU fit or runtime guarantee is made. Check licenses for the base, LoRA and sample media separately.

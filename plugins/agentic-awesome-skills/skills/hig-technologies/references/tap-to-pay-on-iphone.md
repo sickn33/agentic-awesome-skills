@@ -1,8 +1,12 @@
 ---
 title: "Tap to Pay on iPhone | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/tap-to-pay-on-iphone
+---
 
 # Tap to Pay on iPhone
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
 
 Tap to Pay on iPhone lets merchants accept contactless payments using an app on their iPhone, without having to connect external hardware.
 
@@ -167,7 +171,7 @@ After you receive payment card data, you might also encounter scenarios like the
 
 ## [Additional interactions](https://developer.apple.com/design/human-interface-guidelines/tap-to-pay-on-iphone#Additional-interactions)
 
-Tap to Pay on iPhone lets merchants read a payment card when there’s no transaction amount to support use cases like looking up a past transaction, or retaining card information to ensure future payment, issue refunds, or verify customer information.
+Supported PSP and ProximityReader workflows may read a card without a transaction amount for lookup, tokenized future-payment setup, refunds, or verification. This does not authorize storing raw card data or building a custom PIN collector. Use supported encrypted/tokenized processing, explicit customer intent, and the PSP’s regional and retention requirements.
 
 **Use a generic label in a button that opens the Tap to Pay on iPhone screen to read a payment card when there’s no transaction amount.** Don’t include “Tap to Pay on iPhone” or “Tap to Pay” in such a label; instead, use a generic label like “Look Up,” “Store Card,” “Verify,” or “Refund.”
 

@@ -183,11 +183,8 @@ curl -H "Authorization: Bearer USER_A_TOKEN" \
 # 2. 登出
 # 3. 用旧 token 请求 → 应该返回 401
 
-# 短信验证码爆破
-for code in $(seq 0000 9999); do
-    curl -X POST "https://api.target.com/verify" \
-         -d "phone=13800138000&code=$code"
-done
+# 仅在隔离测试环境中，用已授权的测试账户检查少量失败尝试及限流响应。
+# 不向真实手机号发送验证码；约定请求上限并在触发锁定/限流时停止。
 ```
 
 ---

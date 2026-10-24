@@ -2,6 +2,8 @@
 
 Platform-specific workflow recipes for HubSpot, Salesforce, scheduling tools, and cross-tool automation.
 
+> Design recipes only: validate current platform capabilities, custom fields and licenses. Require authorized activation, deduplicated webhook/event handling, suppression checks and preview/rollback. A booking is not proof of fit and missing notes are not proof of a no-show; queue uncertain cases for human review. Use timestamp/business-hour SLA logic rather than date-only fields for hourly deadlines.
+
 ## HubSpot Workflow Recipes
 
 ### 1. MQL Alert and Assignment
@@ -145,7 +147,7 @@ Platform-specific workflow recipes for HubSpot, Salesforce, scheduling tools, an
 2. Decision: Is lead older than 48 hours with no activity?
    - YES → Reassign to next rep, create urgent task, alert manager
    - NO → Send reminder email to current owner
-**Notes:** Pair with Process Builder for real-time alerts on initial assignment
+**Notes:** Use supported record-triggered/scheduled Flow capabilities after checking the current platform; do not assume Process Builder is appropriate for new automation.
 
 ### 3. Pipeline Stage Automation (Salesforce Flow)
 

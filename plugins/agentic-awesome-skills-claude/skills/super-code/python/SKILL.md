@@ -7,6 +7,8 @@ date_added: "2026-06-16"
 ---
 # Python: Idiomatic Efficiency Reference
 
+Apply only within the requested scope and current project conventions. Preserve behavior, ownership, error handling, accessibility and security; examples are independent fragments, not equivalent rewrites in every context. Verify language/library versions and run relevant checks. Required tests and user-facing progress/results take precedence over brevity rules. Do not install dependencies or delete files merely to follow these examples.
+
 ## When to Use
 - Use this skill when the task matches this description: Language-specific super-code guidelines for python.
 
@@ -96,7 +98,7 @@ for i in range(len(a)):
     process(a[i], b[i])
 
 # ✅
-for x, y in zip(a, b):
+for x, y in zip(a, b, strict=True): # Python 3.10+; fail if lengths differ
     process(x, y)
 ```
 
@@ -259,7 +261,7 @@ except FileNotFoundError:
 ```
 
 ```python
-# ❌ Re-raising with raise e (loses traceback)
+# ❌ Re-raising with raise e (adds a re-raise frame)
 except Exception as e:
     raise e
 

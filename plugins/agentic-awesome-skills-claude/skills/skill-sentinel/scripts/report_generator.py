@@ -7,6 +7,11 @@ findings por severidade, recomendacoes e plano de acao.
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import os
+import uuid
+import re
+import html
+from source_io import private_directory
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -40,6 +45,15 @@ def generate_report(
     previous_snapshots: Optional[List[Dict[str, Any]]] = None,
 ) -> str:
     """Gera relatorio Markdown completo."""
+    def inert(value):
+        if isinstance(value, str):
+            value = html.escape(value).replace("\n", " ").replace("\r", " ")
+            return re.sub(r"([\\`*{}\[\]()#!|])", r"\\\1", value)
+        if isinstance(value, dict): return {k: inert(v) for k, v in value.items()}
+        if isinstance(value, list): return [inert(v) for v in value]
+        return value
+    snapshots, findings, recommendations = inert(snapshots), inert(findings), inert(recommendations)
+    previous_snapshots = inert(previous_snapshots)
     now = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     lines: List[str] = []
 
@@ -50,6 +64,7 @@ def generate_report(
     lines.append(f"**Skills Analisadas:** {len(snapshots)}")
     lines.append(f"**Score Geral:** {overall_score:.0f}/100 ({get_score_label(overall_score)})")
     lines.append("")
+    lines.append("Heuristicas consultivas: cobertura limitada a arquivos Python inventariados e metadados; nao e revisao semantica, prova de seguranca, conformidade ou autorizacao de merge.")
     lines.append("---")
     lines.append("")
 
@@ -214,11 +229,13 @@ def generate_report(
 
 def save_report(content: str, filename: Optional[str] = None) -> str:
     """Salva relatorio em arquivo e retorna o path."""
+    private_directory(REPORTS_DIR)
     if not filename:
-        timestamp = datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S")
-        filename = f"audit_{timestamp}.md"
-
+        filename = "audit_" + datetime.now(timezone.utc).strftime("%Y%m%d_%H%M%S") + "_" + uuid.uuid4().hex[:12] + ".md"
+    if Path(filename).name != filename or filename in {"", ".", ".."}:
+        raise ValueError("Report filename must be a simple leaf name")
     filepath = REPORTS_DIR / filename
-    filepath.parent.mkdir(parents=True, exist_ok=True)
-    filepath.write_text(content, encoding="utf-8")
+    fd = os.open(filepath, os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0), 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as handle:
+        handle.write(content)
     return str(filepath)

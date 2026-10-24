@@ -244,7 +244,7 @@ ubireader_extract_images firmware.ubi
 ubireader_extract_files ubifs.img
 
 # CPIO (initramfs)
-cpio -idv < initramfs.cpio
+# Extract only in a private disposable directory after checking archive paths and size limits; no host-root extraction.
 
 # Device tree blob
 dtc -I dtb -O dts -o output.dts device_tree.dtb
@@ -267,7 +267,7 @@ qemu-arm -L /usr/arm-linux-gnueabihf/ ./arm_binary
 qemu-arm -g 1234 ./arm_binary    # Start GDB server on port 1234
 gdb-multiarch -ex 'target remote :1234' ./arm_binary
 
-# ARM vs Thumb: ARM instructions are 4 bytes, Thumb are 2 bytes
+# ARM vs Thumb: ARM instructions are 4 bytes, Thumb instructions may be 2 or 4 bytes
 # LSB of function pointer indicates mode: 0=ARM, 1=Thumb
 # Ghidra: Right-click → Processor Options → ARM/Thumb mode
 ```
@@ -284,7 +284,7 @@ qemu-mips -L /usr/mips-linux-gnu/ ./mips_binary         # Big-endian
 qemu-mipsel -L /usr/mipsel-linux-gnu/ ./mipsel_binary   # Little-endian
 
 # Key MIPS patterns:
-# Branch delay slots — instruction AFTER branch always executes
+# Branch delay slots — classic delay-slot behavior is instruction/version dependent; branch-likely and newer MIPS variants differ
 # $gp (global pointer) — used for PIC, points to .got
 # lui + addiu pair — loads 32-bit constant (upper 16 + lower 16)
 ```
@@ -422,8 +422,8 @@ candump -l can0                            # Log to file
 cansniffer can0                            # Filter/highlight changes
 
 # Replay CAN messages
-canplayer -I logfile.log can0
-cansend can0 7DF#0201000000000000          # Send single frame (OBD-II request)
+canplayer -I logfile.log vcan0=can0  # isolated virtual CAN fixture only
+cansend vcan0 7DF#0201000000000000          # Send single frame (OBD-II request)
 
 # UDS (Unified Diagnostic Services) — common in automotive CTF
 # Service 0x27: Security Access (seed-key authentication)
@@ -440,3 +440,7 @@ cansend can0 7DF#0201000000000000          # Send single frame (OBD-II request)
 - Seed-key bypass: Reverse the key derivation algorithm from ECU firmware
 - CAN message replay: Capture legitimate command, replay to unlock feature
 - Firmware extraction from ECU via UDS/KWP2000
+
+## Platform boundaries
+
+Only analyze authorized copies/devices. Runtime Objective-C expressions construct objects and can have side effects. Signature removal/ad-hoc re-signing modifies copies and does not restore original trust, entitlements or notarization. Default to virtual CAN; never replay on an active vehicle or safety system. Firmware extraction needs path/symlink/bomb limits and unprivileged disposable storage. Check hardware voltage, power and exact vendor pinout before physical probing. Debug/emulation commands execute code and require the root isolation gate.

@@ -112,17 +112,18 @@ const metadata = await Promise.all(
   files.map((file) => ModelRegistry.get_file_metadata(modelId, file))
 );
 
-const totalBytes = metadata.reduce((sum, item) => sum + (item?.size ?? 0), 0);
+const unknownFiles = metadata.filter(item => !Number.isFinite(item?.size)).length;
+const totalBytes = metadata.reduce((sum, item) => sum + (Number.isFinite(item?.size) ? item.size : 0), 0); // Known-byte lower bound when metadata is missing
 const totalMB = (totalBytes / 1024 / 1024).toFixed(2);
 
 const cached = await ModelRegistry.is_pipeline_cached(task, modelId, modelOptions);
-console.log({ fileCount: files.length, totalMB, cached });
+console.log({ fileCount: files.length, knownMB: totalMB, unknownFiles, cached });
 
 const pipe = await pipeline(task, modelId, {
   ...modelOptions,
   progress_callback: (info) => {
     if (info.status === 'progress_total') {
-      console.log(`Loading: ${info.progress.toFixed(1)}%`);
+      console.log(`Loading: ${(Number.isFinite(info.progress) ? info.progress : 0).toFixed(1)}%`);
     }
   },
 });
@@ -195,3 +196,5 @@ const pipe = await pipeline(task, modelId, { ...modelOptions, local_files_only: 
 - [Configuration Reference](./CONFIGURATION.md) - `env` settings for local/remote loading
 - [Caching Reference](./CACHE.md) - Browser, filesystem, and custom cache behavior
 - [Main Skill Guide](../SKILL.md) - Practical usage patterns
+
+Cache checks cover enumerated model assets, not availability of backend kernels, browser features or WASM/runtime files. Validate an actual cold offline start separately.

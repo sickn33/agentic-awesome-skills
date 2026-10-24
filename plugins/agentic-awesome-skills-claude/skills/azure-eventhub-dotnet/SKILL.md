@@ -66,6 +66,10 @@ var producer = new EventHubProducerClient(
 - **Receiving**: `Azure Event Hubs Data Receiver`
 - **Both**: `Azure Event Hubs Data Owner`
 
+## Delivery, checkpoint and shutdown limits
+
+These are SDK fragments requiring verified installed versions and fixtures. Enqueueing a buffered event is not broker acknowledgement; handle success/failure and shutdown flush explicitly. Receiving is at-least-once: perform durable idempotent processing before partition-local checkpoints, never use the shared counter below across concurrent partitions as a correctness boundary. Check for an actual event before dereferencing empty reads. Wrap processing lifetime in try/finally so cancellation still calls StopProcessingAsync; keep event bodies/errors private. Sender plus Receiver roles can be combined without granting Data Owner. Select credential/tenant deliberately and scope creation/sending/receiving/checkpoint storage authority.
+
 ## Client Types
 
 | Client | Purpose | When to Use |
@@ -90,7 +94,7 @@ await using var producer = new EventHubProducerClient(
     new DefaultAzureCredential());
 
 // Create a batch (respects size limits automatically)
-using EventDataBatch batch = await producer.CreateBatchAsync();
+EventDataBatch batch = await producer.CreateBatchAsync();
 
 // Add events to batch
 var events = new[]
@@ -105,6 +109,7 @@ foreach (var eventData in events)
     {
         // Batch is full - send it and create a new one
         await producer.SendAsync(batch);
+        batch.Dispose();
         batch = await producer.CreateBatchAsync();
         
         if (!batch.TryAdd(eventData))
@@ -114,11 +119,13 @@ foreach (var eventData in events)
     }
 }
 
-// Send remaining events
+// Send remaining events; production code wraps the whole loop in try/finally
+// so the current batch is disposed on every exception path.
 if (batch.Count > 0)
 {
     await producer.SendAsync(batch);
 }
+batch.Dispose();
 ```
 
 ### 2. Send Events (Buffered - High Volume)
@@ -284,7 +291,8 @@ public class EventService
     public async Task SendAsync(string message)
     {
         using var batch = await _producer.CreateBatchAsync();
-        batch.TryAdd(new EventData(message));
+        if (!batch.TryAdd(new EventData(message)))
+            throw new ArgumentException("Message exceeds the empty batch limit", nameof(message));
         await _producer.SendAsync(batch);
     }
 }

@@ -58,7 +58,7 @@ params = {"keyword": "software engineer", "location": "New York, NY", "sort": "r
 
 ## Patterns
 
-### Salary band
+### Dollar amounts in one result sample (not a salary band)
 
 ```python
 import re, statistics
@@ -73,10 +73,12 @@ def salary_band(role, location):
             for j in page.get("jobs", [])
             for m in re.findall(r"\$([\d,]+)", j.get("salary") or "")]
     if not nums: return None
-    return {"n": len(nums), "median": statistics.median(nums)}
+    return {"amount_count": len(nums), "median_dollar_amount": statistics.median(nums)}
 ```
 
-### Hiring velocity by company
+Normalize hourly/monthly/annual units, currency and range endpoints before estimating a salary band; this extraction alone mixes incomparable amounts.
+
+### Listing counts by company (not hiring velocity)
 
 ```python
 from collections import Counter
@@ -85,7 +87,7 @@ page = indeed_listing(role, loc, sort="date")
 Counter(j.get("company") for j in page.get("jobs", []))
 ```
 
-Run weekly; sustained increases often precede earnings/PR signals.
+Deduplicate reposts and track dated snapshots; listing counts alone do not establish hires or predict earnings.
 
 ### Pagination differs
 

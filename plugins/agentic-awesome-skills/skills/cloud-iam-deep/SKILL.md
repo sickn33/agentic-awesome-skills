@@ -46,6 +46,10 @@ Do NOT use for:
 
 ---
 
+## Scope and evidence
+
+Finding a credential does not authorize its use, cross-account pivots, secret retrieval or IAM changes. Use only owner-approved test credentials/accounts and harmless canaries; store tokens privately and redact output. The tables describe possible prerequisites, not sufficient conditions: resource scope, explicit denies, boundaries, SCPs, trust policies and service-specific controls all matter. Do not overwrite production functions or create admin persistence to prove a theoretical path. Current service availability/API names must be checked before use; historical examples and severity numbers are not validated CVSS calculations. Use isolated CLI profiles/configuration so tests do not replace the operator’s default identity.
+
 ## Credential identification (first 60 seconds)
 
 ```bash
@@ -73,7 +77,7 @@ client_secret pattern + UUID    # Azure AD app credential
 }
 
 # K8s SA token (JWT format — decode to confirm)
-eyJhbGciOiJSUzI1...     # decode kid claim to see issuer
+eyJhbGciOiJSUzI1...     # decode iss claim to inspect the claimed issuer; decoding does not verify the signature
 ```
 
 ---
@@ -141,7 +145,7 @@ Quick lookup — if you have any of these IAM actions, escalate via the listed t
 | `iam:PassRole` + glue:CreateDevEndpoint | Notebook runs as admin role |
 | `iam:PassRole` + datapipeline | Pipeline runs as admin role |
 | `iam:PassRole` + codestar:CreateProject | New project gets admin role |
-| `ec2:RunInstances` (with admin instance profile already on the AMI) | Spin instance, exfil creds from IMDS |
+| `ec2:RunInstances` plus authorized instance-profile attachment and iam:PassRole (an AMI does not contain an instance profile) | Spin instance, exfil creds from IMDS |
 | `lambda:UpdateFunctionCode` (function has admin role) | Replace code → exfil creds |
 | `lambda:UpdateFunctionConfiguration` | Add layer / env var that exfils |
 | `cloudformation:UpdateStack` | Modify stack to grant self admin |
@@ -172,7 +176,7 @@ aws sts get-caller-identity  # should now show OTHER_ACCT
 # Re-enumerate from new identity (chain continues)
 ```
 
-**Confused-deputy pattern:** look for `sts:ExternalId` missing or trust policies that allow `arn:aws:iam::*:role/*`. If `ExternalId` is not required, anyone can assume the role.
+**Confused-deputy pattern:** look for `sts:ExternalId` missing or trust policies that allow `arn:aws:iam::*:role/*`. Missing ExternalId can expose a confused-deputy path in a multi-tenant third-party integration; it does not alone allow anyone to assume a role. Evaluate the actual principal, trust conditions and caller permissions.
 
 ---
 
@@ -244,7 +248,7 @@ curl -H "Metadata: true" \
 # Get token for Graph
 curl -H "Metadata: true" \
   "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://graph.microsoft.com"
-# → If Managed Identity has Graph permissions, read all M365 data
+# Access is limited to the actual granted Graph permissions and resource scope.
 ```
 
 ---
@@ -349,7 +353,7 @@ kubectl --token=$TOKEN --server=https://k8s.target.com:6443 --insecure-skip-tls-
 |---|---|
 | `pods/exec` on high-priv pod | exec into pod with admin SA token |
 | `pods/create` + `serviceaccounts/use` | Create pod mounting admin SA token |
-| `secrets/get` | Read any service-account token in cluster |
+| `secrets/get` | Read authorized in-scope secrets; not every service account has a stored long-lived token |
 | `clusterrolebindings/create` | Grant self cluster-admin |
 | `roles/escalate` or `clusterroles/escalate` | Add permissions to role |
 | `nodes/proxy` | Proxy to kubelet on any node → exec via kubelet |
@@ -386,7 +390,7 @@ kubectl --token=$TOKEN --server=https://k8s.target.com:6443 --insecure-skip-tls-
 - **DO NOT use `aws *` with non-test creds without confirming you have the right account** — accidentally hitting prod = career risk
 - **DO NOT confuse "I have the credential" with "this credential is current"** — always check expiration / rotation via STS first
 - **DO NOT assume an STS token from one account works across accounts** — region restrictions and trust policies apply
-- **DO NOT skip CloudTrail/Activity Log awareness** — every API call is logged; pair with `mid-engagement-ir-detection`
+- **DO NOT skip CloudTrail/Activity Log awareness** — logging coverage depends on service/event configuration and retention; pair with `mid-engagement-ir-detection`
 - **DO NOT pivot deeper than the SOW allows** — discovering admin creds doesn't mean using them; some engagements are read-only
 
 ---

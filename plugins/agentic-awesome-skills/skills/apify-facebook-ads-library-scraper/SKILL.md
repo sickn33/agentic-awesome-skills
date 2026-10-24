@@ -40,7 +40,7 @@ Out of scope (the boundary):
 
 ## Prerequisites
 
-- Apify account ([sign up](https://apify.com)). The free plan's monthly credit covers about 10,000 ads.
+- Apify account ([sign up](https://apify.com)). Verify current account credit, plan and Actor pricing before running.
 - Authentication via one of:
   - `apify login` (OAuth, if you use the Apify CLI)
   - `APIFY_TOKEN` environment variable
@@ -102,7 +102,7 @@ Note the field names with a dot, for example `"scrapePageAds.activeStatus"`. The
 
 ```bash
 apify actors info "harshmaur/facebook-ads-library-scraper" --input --json \
-  --user-agent apify-awesome-skills/apify-facebook-ads-library-scraper 2>/dev/null
+  --user-agent apify-awesome-skills/apify-facebook-ads-library-scraper
 ```
 
 ### Step 3 — Estimate the cost, then run
@@ -116,17 +116,16 @@ The price is per ad in the dataset. There is no start fee, and `scrapeAdDetails`
 | Scale | $0.43 |
 | Business and higher | $0.40 |
 
-`cost ≈ count × $0.0005`. 1,000 ads cost at most $0.50. Under about 4,000 ads, run it. Above that, or with `count: 0`, state the estimate and get a yes first.
+The table is a historical example, not a live quote or spending authorization. Inspect current pricing, set a finite count and an explicit authorized budget before running, including retries and detail options. Never infer permission from a 4,000-ad threshold or use unlimited count without a hard cap.
 
 ```bash
 apify actors call "harshmaur/facebook-ads-library-scraper" \
   -i '{"urls":[{"url":"https://www.facebook.com/gymshark"}],"scrapePageAds.activeStatus":"active","count":200}' \
   --json \
-  --user-agent apify-awesome-skills/apify-facebook-ads-library-scraper \
-  2>/dev/null
+  --user-agent apify-awesome-skills/apify-facebook-ads-library-scraper
 ```
 
-The output gives `status` and the dataset ID at `storage.defaultDatasetId`. A measured run of 12 ads from two URLs took 8 seconds. Large runs with `scrapeAdDetails` take minutes; start them without waiting and poll with `apify runs info "RUN_ID" --json --user-agent apify-awesome-skills/apify-facebook-ads-library-scraper 2>/dev/null`.
+The output gives `status` and the dataset ID at `storage.defaultDatasetId`. A measured run of 12 ads from two URLs took 8 seconds. Large runs with `scrapeAdDetails` take minutes; start them without waiting and poll with `apify runs info "RUN_ID" --json --user-agent apify-awesome-skills/apify-facebook-ads-library-scraper `.
 
 ### Step 4 — Fetch and report
 
@@ -134,7 +133,7 @@ The output gives `status` and the dataset ID at `storage.defaultDatasetId`. A me
 EXPORT_DIR="$(mktemp -d)" || exit 1
 apify datasets get-items "DATASET_ID" --format json \
   --user-agent apify-awesome-skills/apify-facebook-ads-library-scraper \
-  2>/dev/null > "$EXPORT_DIR/fb-ads.json"
+   > "$EXPORT_DIR/fb-ads.json"
 ```
 
 Each row is one ad. The fields you use most:
@@ -151,7 +150,7 @@ Each row is one ad. The fields you use most:
 | Provenance | `input_url`, `search_term`, `runTag`, `scraped_at` |
 | Everything else | `snapshot` (Meta's raw object) |
 
-For "winning ads", sort by `ad_duration_days` from high to low. An advertiser keeps paying for an ad that works, so the oldest active ads are the best guess. Ads with the same `collation_id` are versions of one ad; count them once.
+For "winning ads", sort by `ad_duration_days` from high to low. Longevity is only a research proxy; it does not prove spend, profitability, conversions or effectiveness. Label long-running ads as candidates, not verified winners. Ads with the same `collation_id` are versions of one ad; count them once.
 
 Report: the input, the ad count, how many are active, the top ads by `ad_duration_days` with `ad_library_url` links, the common call to action and media type, and which numbers Meta did not disclose.
 
@@ -171,7 +170,7 @@ Save the Page input with `scrapePageAds.period: "last7d"` and `scrapePageAds.sor
 
 ### Option A: Apify CLI (recommended for portability)
 
-Every `apify actors`, `apify runs` and `apify datasets` command in this skill carries `--json` (or `--format json` for `datasets get-items`), `--user-agent apify-awesome-skills/apify-facebook-ads-library-scraper` and `2>/dev/null`.
+Every `apify actors`, `apify runs` and `apify datasets` command in this skill carries `--json` (or `--format json` for `datasets get-items`), `--user-agent apify-awesome-skills/apify-facebook-ads-library-scraper` and ``.
 
 ### Option B: Apify MCP server
 

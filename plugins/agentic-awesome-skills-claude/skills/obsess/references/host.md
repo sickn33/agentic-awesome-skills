@@ -4,7 +4,8 @@
 
 This is a local skill package in the open Agent Skills format. The host follows its instructions in an active session. The installers copy files; they don't launch a model or change account settings. The scalar helper compares receipts; it doesn't perform the work described by the skill.
 
-Distribution routes: the `npx skills` CLI for skills-capable agents, a Claude Code plugin marketplace, a Gemini CLI extension, the local Python installer for Claude Code and OpenCode, `/obsess` adapters in `references/integrations/` and a portable rules file for agents without skills. The repository's INSTALL.md lists each command. This build has package-level checks, not interactive certification in every host.
+Distribution routes: the `npx skills` CLI for skills-capable agents, a Claude Code plugin marketplace, a Gemini CLI extension, the local Python installer for Claude Code and OpenCode, `/obsess` adapters in `references/integrations/` and a portable rules file for agents without skills. Upstream installation documentation is outside this bundle; use the reviewed
+bundled `scripts/install.py --help` and the paths below for this copy. This build has package-level checks, not interactive certification in every host.
 
 ## Native installation
 

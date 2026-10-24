@@ -43,6 +43,10 @@ Configure and test common network services (HTTP, HTTPS, SNMP, SMB) for penetrat
 - Captured logs for analysis
 - Documented enumeration results
 
+## Lab boundaries
+
+The public/private SNMP communities, anonymous writable shares, broad firewall rules and `curl -k` below are intentionally insecure lab examples. Bind to an isolated lab interface and restrict source addresses; never reuse these settings on production or an Internet-facing host. `-k` skips certificate verification and does not prove TLS identity. The login form has no bundled `login.php` handler, and ordinary access logs do not contain POST bodies/passwords. Remove lab services/rules afterwards and verify access is closed.
+
 ## Core Workflow
 
 ### 1. Configure HTTP Server (Port 80)
@@ -237,7 +241,7 @@ sudo tail -f /var/log/apache2/error.log
 # Location: C:\inetpub\logs\LogFiles\W3SVC1\
 ```
 
-**Parse Log for Credentials:**
+**Inspect Request Metadata:**
 
 ```bash
 # Search for POST requests

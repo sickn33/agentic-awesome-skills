@@ -28,7 +28,7 @@ You are an **expert onboarding specialist and knowledge transfer architect** wit
 
 ## Context
 
-This tool orchestrates the complete onboarding experience for new team members, from pre-arrival preparation through their first 90 days. It creates customized onboarding plans based on role, seniority, location, and team structure, ensuring both technical proficiency and cultural integration. The tool emphasizes documentation, mentorship, and measurable milestones to track onboarding success.
+This guidance helps plan the onboarding experience for new team members, from pre-arrival preparation through their first 90 days. It creates customized onboarding plans based on role, seniority, location, and team structure, ensuring both technical proficiency and cultural integration. The tool emphasizes documentation, mentorship, and measurable milestones to track onboarding success.
 
 ## Requirements
 
@@ -42,6 +42,8 @@ Parse the arguments to understand:
 - **Technical requirements**: Languages, frameworks, tools needed
 - **Team context**: Size, distribution, working patterns
 - **Special considerations**: Fast-track needs, domain expertise required
+
+Plans, dates, PR counts, budgets and roles below are illustrative; validate them with the manager and new hire rather than infer readiness from elapsed time or commit counts. Account creation, role grants, purchases, shipping, calendars and welcome messages require authorization for the actual target/action. Use least-privilege roles, personal identities and expiring one-time setup links; never share temporary passwords in the plan. Keep HR/emergency-contact data and feedback restricted, and obtain consent before recordings.
 
 ## Pre-Onboarding Preparation
 
@@ -198,7 +200,7 @@ Structured progress monitoring and feedback:
 
 1. **30-Day Milestone**
    - Complete all mandatory training
-   - Merge at least 3 pull requests
+   - Complete an appropriately scoped reviewed contribution; PR counts are not a performance target
    - Document one process or system
    - Present learnings to team (10 min)
    - Manager feedback session and adjustment
@@ -287,7 +289,7 @@ Ensuring onboarding effectiveness and iteration:
 **Day 60 Checkpoint:**
 - First feature shipped to production
 - Active in code reviews (giving feedback)
-- On-call ready (shadowing complete)
+- On-call readiness assessed against documented skills/runbooks; shadowing alone is insufficient
 - Technical documentation contributed
 - Cross-team relationships building
 
@@ -309,7 +311,7 @@ Ensuring onboarding effectiveness and iteration:
 ### Remote Employee Onboarding (Distributed Team)
 
 **Week 0: Pre-Boarding**
-- [ ] Home office stipend processed ($1,500)
+- [ ] Approved home office stipend processed (amount depends on policy)
 - [ ] Equipment ordered: laptop, monitor, desk accessories
 - [ ] Welcome package sent: swag, notebook, coffee
 - [ ] Virtual team lunch scheduled for Day 1
@@ -392,7 +394,7 @@ Ensuring onboarding effectiveness and iteration:
 - [ ] Laptop setup with IT support (90 min)
 - [ ] Slack and communication tools (30 min)
 - [ ] First Git commit ceremony (30 min)
-- [ ] Team happy hour or social (30 min)
+- [ ] Optional team social (20 min)
 - [ ] Day 1 feedback survey (10 min)
 ```
 
@@ -415,7 +417,7 @@ Ensuring onboarding effectiveness and iteration:
 5. **Prioritize connection**: Technical skills matter, but team integration is crucial
 6. **Maintain momentum**: Keep the new hire engaged and progressing daily
 
-Remember: Great onboarding reduces time-to-productivity from months to weeks while building lasting engagement and retention.
+Remember: Great onboarding reduces time-to-productivity when adapted and measured in the actual team while building lasting engagement and retention.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

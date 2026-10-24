@@ -16,10 +16,11 @@ Usage:
 Environment Variables:
     WEAVIATE_URL: Weaviate Cloud cluster URL
     WEAVIATE_API_KEY: API key for authentication
-    + Any provider API keys (OPENAI_API_KEY, COHERE_API_KEY, etc.) - auto-detected
+    + Explicit WEAVIATE_PROVIDER_KEYS allowlist only; unrelated credentials are never forwarded
 """
 
 import sys
+import os
 import typer
 import weaviate
 from weaviate.client import WeaviateClient
@@ -49,6 +50,29 @@ VECTORIZER_MAP = {
     "multi2vec_bind": lambda: Configure.Vectors.multi2vec_bind(),
     "none": lambda: Configure.Vectors.self_provided(),
 }
+
+
+def example_rows(dataset_id, nrows):
+    revision = os.environ.get("WEAVIATE_EXAMPLE_REVISION", "")
+    if not re.fullmatch(r"[0-9a-f]{40}", revision):
+        raise ValueError("WEAVIATE_EXAMPLE_REVISION must identify the reviewed immutable dataset revision")
+    count = 100 if nrows is None else nrows
+    if not isinstance(count, int) or not 1 <= count <= 1000:
+        raise ValueError("nrows must be 1..1000")
+    rows = list(load_dataset(dataset_id, split="train", revision=revision, streaming=True).take(count))
+    if not rows: raise ValueError("example dataset is empty")
+    return rows
+
+
+def actual_date(value):
+    if value is None or value == "": return None
+    parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    # Date-only source values represent a documented UTC midnight convention.
+    if parsed.tzinfo is None:
+        if "T" in str(value) or " " in str(value):
+            raise ValueError("source timestamp requires an explicit timezone")
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed
 
 
 def _get_sentences(document: str) -> tuple[list[str], list[tuple[int, int]]]:
@@ -106,6 +130,8 @@ def chunk_by_sentences(
     Given a document (string), return the sentences as chunks and span annotations (start and end indices of chunks).
     """
 
+    if num_sentences < 1 or overlap_sentences < 0:
+        raise ValueError("invalid sentence chunk bounds")
     if overlap_sentences >= num_sentences:
         print(
             f"Warning: overlap_sentences ({overlap_sentences}) is greater than num_sentences ({num_sentences}). Setting overlap to {num_sentences - 1}"
@@ -139,16 +165,17 @@ def chunk_by_sentences(
 
 
 def create_ai_arxiv_collection(
-    client: WeaviateClient, vectorizer: str = "text2vec_weaviate", nrows: int = 1000
+    client: WeaviateClient, vectorizer: str = "none", nrows: int = 100
 ):
     # check existence of collection
     if client.collections.exists("AI_Arxiv"):
         print(
-            f"Collection 'AI_Arxiv' already exists. Cannot create. Returning.",
+            f"Collection 'AI_Arxiv' already exists. Cannot create.",
             file=sys.stderr,
         )
-        return
+        raise ValueError("example collection already exists; no writes attempted")
 
+    dataset = example_rows("jamescalam/ai-arxiv2", nrows)
     print(f"Creating collection 'AI_Arxiv'...", file=sys.stderr)
     collection = client.collections.create(
         "AI_Arxiv",
@@ -230,14 +257,13 @@ def create_ai_arxiv_collection(
         inverted_index_config=Configure.inverted_index(index_null_state=True),
     )
 
-    dataset = load_dataset("jamescalam/ai-arxiv2", split="train", keep_in_memory=True)
     nrows = nrows or len(dataset)
 
     with collection.batch.fixed_size(batch_size=100) as batch:
         for i in range(min(nrows, len(dataset))):
             item = dataset[i]
 
-            if i % int(min(nrows, len(dataset)) / 10) == 0:
+            if i % max(1, int(min(nrows, len(dataset)) / 10)) == 0:
                 print(
                     f"Importing {i}/{min(nrows, len(dataset))} objects... (AI_Arxiv)",
                     file=sys.stderr,
@@ -253,14 +279,10 @@ def create_ai_arxiv_collection(
                 del item["id"]
                 del item["references"]
                 item["published"] = (
-                    datetime.strptime("20231126", "%Y%m%d").replace(tzinfo=timezone.utc)
-                    if item["published"]
-                    else None
+                    actual_date(item["published"])
                 )
                 item["updated"] = (
-                    datetime.strptime("20231126", "%Y%m%d").replace(tzinfo=timezone.utc)
-                    if item["updated"]
-                    else None
+                    actual_date(item["updated"])
                 )
                 for chunk, span in zip(chunks, span_annotations):
                     item["chunk"] = chunk
@@ -270,10 +292,10 @@ def create_ai_arxiv_collection(
 
             if batch.number_errors > 10:
                 print(
-                    "Batch import stopped due to excessive errors. Returning.",
+                    "Batch import stopped due to server errors; partial writes may exist.",
                     file=sys.stderr,
                 )
-                break
+                raise ValueError("example import stopped after server errors; partial writes may exist")
 
     failed_objects = collection.batch.failed_objects
     if failed_objects:
@@ -281,8 +303,7 @@ def create_ai_arxiv_collection(
             f"Number of failed imports: {len(failed_objects)}",
             file=sys.stderr,
         )
-        print(f"First failed object: {failed_objects[0]}", file=sys.stderr)
-        return
+        raise ValueError("example import failed; source rows omitted from diagnostics")
 
     print(
         f"Created collection 'AI_Arxiv' with {len(collection)} objects.",
@@ -291,16 +312,17 @@ def create_ai_arxiv_collection(
 
 
 def create_income_tax_returns_collection(
-    client: WeaviateClient, vectorizer: str = "text2vec_weaviate", nrows: int = 1000
+    client: WeaviateClient, vectorizer: str = "none", nrows: int = 100
 ):
     # check existence of collection
     if client.collections.exists("Income_Tax_Returns"):
         print(
-            f"Collection 'Income_Tax_Returns' already exists. Cannot create. Returning.",
+            f"Collection 'Income_Tax_Returns' already exists. Cannot create.",
             file=sys.stderr,
         )
-        return
+        raise ValueError("example collection already exists; no writes attempted")
 
+    dataset = example_rows("AgamiAI/Indian-Income-Tax-Returns", nrows)
     print(f"Creating collection 'Income_Tax_Returns'...", file=sys.stderr)
     collection = client.collections.create(
         "Income_Tax_Returns",
@@ -344,8 +366,7 @@ def create_income_tax_returns_collection(
             ),
             Property(
                 name="pincode",
-                data_type=DataType.NUMBER,
-                index_range_filters=True,
+                data_type=DataType.TEXT,
                 description="Postal PIN code for the taxpayer's address",
             ),
             Property(
@@ -437,16 +458,13 @@ def create_income_tax_returns_collection(
         inverted_index_config=Configure.inverted_index(index_null_state=True),
     )
 
-    dataset = load_dataset(
-        "AgamiAI/Indian-Income-Tax-Returns", split="train", keep_in_memory=True
-    )
     nrows = nrows or len(dataset)
 
     with collection.batch.fixed_size(batch_size=100) as batch:
         for i in range(min(nrows, len(dataset))):
             item = dataset[i]
 
-            if i % int(min(nrows, len(dataset)) / 10) == 0:
+            if i % max(1, int(min(nrows, len(dataset)) / 10)) == 0:
                 print(
                     f"Importing {i}/{min(nrows, len(dataset))} objects... (Income_Tax_Returns)",
                     file=sys.stderr,
@@ -462,7 +480,7 @@ def create_income_tax_returns_collection(
                         "area": item["area"],
                         "city": item["city"],
                         "state": item["state"],
-                        "pincode": item["pincode"],
+                        "pincode": str(item["pincode"]),
                         "state_code": item["state_code"],
                         "country_code": item["country_code"],
                         "entity": item["entity"],
@@ -470,9 +488,7 @@ def create_income_tax_returns_collection(
                         "assessment_year_start": datetime.strptime(
                             item["assessment_year"][:4], "%Y"
                         ).replace(tzinfo=timezone.utc),
-                        "assessment_year_end": datetime.strptime(
-                            item["assessment_year"][5:], "%y"
-                        ).replace(tzinfo=timezone.utc),
+                        "assessment_year_end": datetime(int(item["assessment_year"][:4]) + 1, 1, 1, tzinfo=timezone.utc),
                         "filing_datetime": datetime.strptime(
                             item["filing_time"], "%d-%b-%Y %H:%M:%S"
                         ).replace(tzinfo=timezone.utc),
@@ -513,10 +529,10 @@ def create_income_tax_returns_collection(
 
             if batch.number_errors > 10:
                 print(
-                    "Batch import stopped due to excessive errors. Returning.",
+                    "Batch import stopped due to server errors; partial writes may exist.",
                     file=sys.stderr,
                 )
-                break
+                raise ValueError("example import stopped after server errors; partial writes may exist")
 
     failed_objects = collection.batch.failed_objects
     if failed_objects:
@@ -524,8 +540,7 @@ def create_income_tax_returns_collection(
             f"Number of failed imports: {len(failed_objects)}",
             file=sys.stderr,
         )
-        print(f"First failed object: {failed_objects[0]}", file=sys.stderr)
-        return
+        raise ValueError("example import failed; source rows omitted from diagnostics")
 
     print(
         f"Created collection 'Income_Tax_Returns' with {len(collection)} objects.",
@@ -534,16 +549,17 @@ def create_income_tax_returns_collection(
 
 
 def create_product_catalog_collection(
-    client: WeaviateClient, vectorizer: str = "text2vec_weaviate", nrows: int = 1000
+    client: WeaviateClient, vectorizer: str = "none", nrows: int = 100
 ):
     # check existence of collection
     if client.collections.exists("Product_Catalog"):
         print(
-            f"Collection 'Product_Catalog' already exists. Cannot create. Returning.",
+            f"Collection 'Product_Catalog' already exists. Cannot create.",
             file=sys.stderr,
         )
-        return
+        raise ValueError("example collection already exists; no writes attempted")
 
+    dataset = example_rows("pkghf/ecom-product-catalog", nrows)
     print(f"Creating collection 'Product_Catalog'...", file=sys.stderr)
     collection = client.collections.create(
         "Product_Catalog",
@@ -606,16 +622,13 @@ def create_product_catalog_collection(
         inverted_index_config=Configure.inverted_index(index_null_state=True),
     )
 
-    dataset = load_dataset(
-        "pkghf/ecom-product-catalog", split="train", keep_in_memory=True
-    )
     nrows = nrows or len(dataset)
 
     with collection.batch.fixed_size(batch_size=100) as batch:
         for i in range(min(nrows, len(dataset))):
             item = dataset[i]
 
-            if i % int(min(nrows, len(dataset)) / 10) == 0:
+            if i % max(1, int(min(nrows, len(dataset)) / 10)) == 0:
                 print(
                     f"Importing {i}/{min(nrows, len(dataset))} objects... (Product_Catalog)",
                     file=sys.stderr,
@@ -639,10 +652,10 @@ def create_product_catalog_collection(
 
             if batch.number_errors > 10:
                 print(
-                    "Batch import stopped due to excessive errors. Returning.",
+                    "Batch import stopped due to server errors; partial writes may exist.",
                     file=sys.stderr,
                 )
-                break
+                raise ValueError("example import stopped after server errors; partial writes may exist")
 
     failed_objects = collection.batch.failed_objects
     if failed_objects:
@@ -650,8 +663,7 @@ def create_product_catalog_collection(
             f"Number of failed imports: {len(failed_objects)}",
             file=sys.stderr,
         )
-        print(f"First failed object: {failed_objects[0]}", file=sys.stderr)
-        return
+        raise ValueError("example import failed; source rows omitted from diagnostics")
 
     print(
         f"Created collection 'Product_Catalog' with {len(collection)} objects.",
@@ -692,16 +704,17 @@ def duration_to_days(duration_str: str) -> float | None:
 
 
 def create_hair_medical_collection(
-    client: WeaviateClient, vectorizer: str = "text2vec_weaviate", nrows: int = 1000
+    client: WeaviateClient, vectorizer: str = "none", nrows: int = 100
 ):
     # check existence of collection
     if client.collections.exists("Hair_Medical"):
         print(
-            f"Collection 'Hair_Medical' already exists. Cannot create. Returning.",
+            f"Collection 'Hair_Medical' already exists. Cannot create.",
             file=sys.stderr,
         )
-        return
+        raise ValueError("example collection already exists; no writes attempted")
 
+    dataset = example_rows("Amod/hair_medical_sit", nrows)
     print(f"Creating collection 'Hair_Medical'...", file=sys.stderr)
     collection = client.collections.create(
         "Hair_Medical",
@@ -753,7 +766,6 @@ def create_hair_medical_collection(
         inverted_index_config=Configure.inverted_index(index_null_state=True),
     )
 
-    dataset = load_dataset("Amod/hair_medical_sit", split="train", keep_in_memory=True)
 
     nrows = nrows or len(dataset)
 
@@ -761,7 +773,7 @@ def create_hair_medical_collection(
         for i in range(min(nrows, len(dataset))):
             item = dataset[i]
 
-            if i % int(min(nrows, len(dataset)) / 10) == 0:
+            if i % max(1, int(min(nrows, len(dataset)) / 10)) == 0:
                 print(
                     f"Importing {i}/{min(nrows, len(dataset))} objects... (Hair_Medical)",
                     file=sys.stderr,
@@ -781,10 +793,10 @@ def create_hair_medical_collection(
                 )
             if batch.number_errors > 10:
                 print(
-                    "Batch import stopped due to excessive errors. Returning.",
+                    "Batch import stopped due to server errors; partial writes may exist.",
                     file=sys.stderr,
                 )
-                break
+                raise ValueError("example import stopped after server errors; partial writes may exist")
 
     failed_objects = collection.batch.failed_objects
 
@@ -793,8 +805,7 @@ def create_hair_medical_collection(
             f"Number of failed imports: {len(failed_objects)}",
             file=sys.stderr,
         )
-        print(f"First failed object: {failed_objects[0]}", file=sys.stderr)
-        return
+        raise ValueError("example import failed; source rows omitted from diagnostics")
 
     print(
         f"Created collection 'Hair_Medical' with {len(collection)} objects.",
@@ -803,16 +814,17 @@ def create_hair_medical_collection(
 
 
 def create_helpdesk_tickets_collection(
-    client: WeaviateClient, vectorizer: str = "text2vec_weaviate", nrows: int = 1000
+    client: WeaviateClient, vectorizer: str = "none", nrows: int = 100
 ):
     # check existence of collection
     if client.collections.exists("IT_Support_Tickets"):
         print(
-            f"Collection 'IT_Support_Tickets' already exists. Cannot create. Returning.",
+            f"Collection 'IT_Support_Tickets' already exists. Cannot create.",
             file=sys.stderr,
         )
-        return
+        raise ValueError("example collection already exists; no writes attempted")
 
+    dataset = example_rows("Console-AI/IT-helpdesk-synthetic-tickets", nrows)
     print(f"Creating collection 'IT_Support_Tickets'...", file=sys.stderr)
     collection = client.collections.create(
         "IT_Support_Tickets",
@@ -860,9 +872,6 @@ def create_helpdesk_tickets_collection(
         inverted_index_config=Configure.inverted_index(index_null_state=True),
     )
 
-    dataset = load_dataset(
-        "Console-AI/IT-helpdesk-synthetic-tickets", split="train", keep_in_memory=True
-    )
 
     nrows = nrows or len(dataset)
 
@@ -870,7 +879,7 @@ def create_helpdesk_tickets_collection(
         for i in range(min(nrows, len(dataset))):
             item = dataset[i]
 
-            if i % int(min(nrows, len(dataset)) / 10) == 0:
+            if i % max(1, int(min(nrows, len(dataset)) / 10)) == 0:
                 print(
                     f"Importing {i}/{min(nrows, len(dataset))} objects... (IT_Support_Tickets)",
                     file=sys.stderr,
@@ -892,10 +901,10 @@ def create_helpdesk_tickets_collection(
                 )
             if batch.number_errors > 10:
                 print(
-                    "Batch import stopped due to excessive errors. Returning.",
+                    "Batch import stopped due to server errors; partial writes may exist.",
                     file=sys.stderr,
                 )
-                break
+                raise ValueError("example import stopped after server errors; partial writes may exist")
 
     failed_objects = collection.batch.failed_objects
 
@@ -904,8 +913,7 @@ def create_helpdesk_tickets_collection(
             f"Number of failed imports: {len(failed_objects)}",
             file=sys.stderr,
         )
-        print(f"First failed object: {failed_objects[0]}", file=sys.stderr)
-        return
+        raise ValueError("example import failed; source rows omitted from diagnostics")
 
     print(
         f"Created collection 'IT_Support_Tickets' with {len(collection)} objects.",
@@ -916,15 +924,22 @@ def create_helpdesk_tickets_collection(
 @app.command()
 def main(
     domain: str = typer.Option("academic", "--domain", "-d"),
-    nrows: int = typer.Option(None, "--nrows", "-n"),
+    nrows: int = typer.Option(100, "--nrows", "-n"),
+    allow_write: bool = typer.Option(False, "--allow-write", help="Authorize reviewed example download and new collection"),
     vectorizer: str = typer.Option(
-        "text2vec_weaviate",
+        "none",
         "--vectorizer",
         "-v",
         help=f"Vectorizer to use. Options: {', '.join(VECTORIZER_MAP.keys())}",
     ),
 ):
     """Download an example dataset from the Hugging Face dataset hub."""
+    if not allow_write or not 1 <= nrows <= 1000:
+        raise typer.BadParameter("use --allow-write and nrows 1..1000")
+    if vectorizer not in VECTORIZER_MAP:
+        raise typer.BadParameter("unknown vectorizer")
+    if domain not in {"academic", "finance", "ecommerce", "medical", "customer_support"}:
+        raise typer.BadParameter("unknown example domain")
     with get_client() as client:
         if domain == "academic":
             create_ai_arxiv_collection(client, vectorizer, nrows)

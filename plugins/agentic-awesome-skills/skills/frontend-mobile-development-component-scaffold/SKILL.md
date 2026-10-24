@@ -30,6 +30,8 @@ $ARGUMENTS
 
 ## Instructions
 
+The generator classes below are illustrative partial scaffolds: helper methods, StateDefinition, ComponentFiles, useA11y, axe imports/matchers and project aliases are not bundled implementations. Complete and typecheck them before use. Validate component/prop identifiers, parse types and serialize string/default values safely instead of inserting untrusted text into source. Native components need native test tooling; web DOM tests and ARIA roles do not transfer automatically. Preserve `false`, `0` and empty-string defaults; test behavior rather than claiming accessibility compliance from an axe scan.
+
 ### 1. Analyze Component Requirements
 
 ```typescript
@@ -270,7 +272,7 @@ ${spec.props.filter(p => p.type.includes('()') || p.name.startsWith('on')).map(p
     expect(mock${this.capitalize(p.name)}).toHaveBeenCalledTimes(1);
   });`).join('\n')}
 
-  it('meets accessibility standards', async () => {
+  it('has no detected automated axe violations', async () => {
     const { container } = render(<${spec.name} {...defaultProps} />);
     const results = await axe(container);
     expect(results).toHaveNoViolations();
@@ -372,7 +374,7 @@ type Story = StoryObj<typeof ${spec.name}>;
 
 export const Default: Story = {
   args: {
-${spec.props.map(p => `    ${p.name}: ${p.defaultValue || this.getMockValue(p.type)},`).join('\n')}
+${spec.props.map(p => `    ${p.name}: ${p.defaultValue !== undefined ? JSON.stringify(p.defaultValue) : this.getMockValue(p.type)},`).join('\n')}
   },
 };
 

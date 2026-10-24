@@ -23,6 +23,10 @@ export function gate(signals) {
     || signals.project?.botProtection?.enabled === true
     || signals.project?.delegatedProtection?.bot === true;
   if (botEnabled) return [];
+  const knownDisabled = [signals.project?.security?.botIdEnabled,
+    signals.project?.security?.botProtection, signals.project?.botProtection?.enabled,
+    signals.project?.delegatedProtection?.bot].some((value) => value === false);
+  if (!knownDisabled) return [];
 
   // Project config failed — we can't tell if BotID is on, so stay silent.
   if (signals.project?.error) return [];

@@ -1,16 +1,21 @@
 # /// script
 # dependencies = [
+#     "torch",
 #     "transformers>=5.2.0",
 #     "accelerate>=1.1.0",
 #     "datasets>=4.0",
 #     "torchvision",
 #     "monai",
-#     "trackio",
 #     "huggingface_hub",
 # ]
 # ///
 
 """Fine-tune SAM or SAM2 for segmentation using bounding-box or point prompts with the HF Trainer API."""
+
+# Modified by AAS: bounded, local-only pilot; see root SKILL.md.
+from vision_safety import execution_guard, configure_local_run, load_bounded_dataset, validated_xywh
+if __name__ == "__main__":
+    execution_guard()  # fail before third-party imports, downloads, writes or telemetry
 
 import json
 import logging
@@ -27,7 +32,6 @@ from datasets import load_dataset
 from torch.utils.data import Dataset
 
 import monai
-import trackio
 
 import transformers
 from transformers import (
@@ -88,56 +92,30 @@ class SAMSegmentationDataset(Dataset):
         image = item[self.image_col]
         prompt = self._extract_prompt(item)
 
-        if self.prompt_type == "bbox":
-            inputs = self.processor(image, input_boxes=[[prompt]], return_tensors="pt")
+        mask=np.asarray(item[self.mask_col])
+        if mask.ndim!=2 or mask.shape != (image.height,image.width):
+            raise ValueError("Mask must be two-dimensional and aligned to the image")
+        if not np.isin(mask,[0,1,255]).all():
+            raise ValueError("This example is binary segmentation, not continuous alpha matting")
+        binary=(mask>0).astype(np.uint8)
+        if self.prompt_type=="bbox":
+            validated_xywh(prompt,image.width,image.height,"xyxy")
+            inputs=self.processor(images=image,segmentation_maps=binary,input_boxes=[[prompt]],return_tensors="pt")
         else:
-            if isinstance(prompt[0], (int, float)):
-                prompt = [prompt]
-            inputs = self.processor(image, input_points=[[prompt]], return_tensors="pt")
+            if isinstance(prompt,list) and len(prompt)==2 and all(isinstance(v,(int,float)) for v in prompt):prompt=[prompt]
+            if not isinstance(prompt,list) or not 1<=len(prompt)<=64:raise ValueError("Supply 1..64 foreground points")
+            if any(len(pt)!=2 or any(isinstance(v,bool) or not isinstance(v,(int,float)) or not math.isfinite(v) for v in pt) or not(0<=pt[0]<image.width and 0<=pt[1]<image.height) for pt in prompt):raise ValueError("Invalid point coordinates")
+            inputs=self.processor(images=image,segmentation_maps=binary,input_points=[[prompt]],input_labels=[[[1]*len(prompt)]],return_tensors="pt")
+        if "labels" not in inputs:raise ValueError("Pinned processor did not preprocess segmentation labels")
 
-        mask = np.array(item[self.mask_col])
-        if mask.ndim == 3:
-            mask = mask[:, :, 0]
-        inputs["labels"] = (mask > 0).astype(np.float32)
-        inputs["original_image_size"] = torch.tensor(image.size[::-1])
         return inputs
 
 
 def collate_fn(batch):
-    pixel_values = torch.cat([item["pixel_values"] for item in batch], dim=0)
-    original_sizes = torch.stack([item["original_sizes"] for item in batch])
-    original_image_size = torch.stack([item["original_image_size"] for item in batch])
-
-    has_boxes = "input_boxes" in batch[0]
-    has_points = "input_points" in batch[0]
-
-    labels = torch.cat(
-        [
-            F.interpolate(
-                torch.as_tensor(x["labels"]).unsqueeze(0).unsqueeze(0).float(),
-                size=(256, 256),
-                mode="nearest",
-            )
-            for x in batch
-        ],
-        dim=0,
-    ).long()
-
-    result = {
-        "pixel_values": pixel_values,
-        "original_sizes": original_sizes,
-        "labels": labels,
-        "original_image_size": original_image_size,
-        "multimask_output": False,
-    }
-
-    if has_boxes:
-        result["input_boxes"] = torch.cat([item["input_boxes"] for item in batch], dim=0)
-    if has_points:
-        result["input_points"] = torch.cat([item["input_points"] for item in batch], dim=0)
-        if "input_labels" in batch[0]:
-            result["input_labels"] = torch.cat([item["input_labels"] for item in batch], dim=0)
-
+    allowed={"pixel_values","input_boxes","input_points","input_labels"}
+    result={key:torch.cat([item[key] for item in batch],dim=0) for key in allowed if key in batch[0]}
+    result["labels"]=torch.cat([item["labels"] for item in batch],dim=0).unsqueeze(1).float()
+    result["multimask_output"]=False
     return result
 
 
@@ -150,6 +128,8 @@ seg_loss = monai.losses.DiceCELoss(sigmoid=True, squared_pred=True, reduction="m
 
 def compute_loss(outputs, labels, num_items_in_batch=None):
     predicted_masks = outputs.pred_masks.squeeze(1)
+    if predicted_masks.shape != labels.shape:
+        raise ValueError("Processor/model mask shape mismatch; verify the pinned SDK before training")
     return seg_loss(predicted_masks, labels.float())
 
 
@@ -159,6 +139,7 @@ def compute_loss(outputs, labels, num_items_in_batch=None):
 
 @dataclass
 class DataTrainingArguments:
+    dataset_revision: str = field(default="", metadata={"help": "Full reviewed dataset commit SHA."})
     dataset_name: str = field(
         default="merve/MicroMat-mini",
         metadata={"help": "Hub dataset ID."},
@@ -239,16 +220,11 @@ def main():
     else:
         model_args, data_args, training_args = parser.parse_args_into_dataclasses()
 
-    from huggingface_hub import login
-    hf_token = os.environ.get("HF_TOKEN") or os.environ.get("hfjob")
-    if hf_token:
-        login(token=hf_token)
-        training_args.hub_token = hf_token
-        logger.info("Logged in to Hugging Face Hub")
-    elif training_args.push_to_hub:
-        logger.warning("HF_TOKEN not found in environment. Hub push will likely fail.")
-
-    trackio.init(project=training_args.output_dir, name=training_args.run_name)
+    configure_local_run(model_args, data_args, training_args)
+    from PIL import Image
+    import warnings
+    Image.MAX_IMAGE_PIXELS = 16_000_000
+    warnings.simplefilter("error", Image.DecompressionBombWarning)
 
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
@@ -264,14 +240,15 @@ def main():
     transformers.utils.logging.enable_default_handler()
     transformers.utils.logging.enable_explicit_format()
 
-    logger.info(f"Training/evaluation parameters {training_args}")
+    logger.info("Bounded local pilot; credentials/configuration are not logged")
 
     # ---- Load dataset ----
-    dataset = load_dataset(
+    dataset = load_bounded_dataset(
         data_args.dataset_name,
         data_args.dataset_config_name,
         cache_dir=model_args.cache_dir,
-        trust_remote_code=model_args.trust_remote_code,
+        trust_remote_code=False,
+        revision=data_args.dataset_revision, train_limit=data_args.max_train_samples, eval_limit=data_args.max_eval_samples
     )
 
     if "train" not in dataset:
@@ -300,18 +277,20 @@ def main():
         dataset[eval_key] = dataset[eval_key].select(range(n))
         logger.info(f"Truncated eval set to {n} samples")
 
+    if data_args.prompt_type not in {"bbox","point"}:
+        raise ValueError("prompt_type must be bbox or point")
     # ---- Detect model family (SAM vs SAM2) and load processor/model ----
     model_id = model_args.model_name_or_path.lower()
     is_sam2 = "sam2" in model_id
 
     if is_sam2:
         from transformers import Sam2Processor, Sam2Model
-        processor = Sam2Processor.from_pretrained(model_args.model_name_or_path)
-        model = Sam2Model.from_pretrained(model_args.model_name_or_path)
+        processor = Sam2Processor.from_pretrained(model_args.model_name_or_path, revision=model_args.model_revision, trust_remote_code=False)
+        model = Sam2Model.from_pretrained(model_args.model_name_or_path, revision=model_args.model_revision, trust_remote_code=False, use_safetensors=True)
     else:
         from transformers import SamProcessor, SamModel
-        processor = SamProcessor.from_pretrained(model_args.model_name_or_path)
-        model = SamModel.from_pretrained(model_args.model_name_or_path)
+        processor = SamProcessor.from_pretrained(model_args.model_name_or_path, revision=model_args.model_revision, trust_remote_code=False)
+        model = SamModel.from_pretrained(model_args.model_name_or_path, revision=model_args.model_revision, trust_remote_code=False, use_safetensors=True)
 
     if model_args.freeze_vision_encoder:
         for name, param in model.named_parameters():
@@ -354,8 +333,9 @@ def main():
     )
 
     if training_args.do_train:
-        train_result = trainer.train(resume_from_checkpoint=training_args.resume_from_checkpoint)
+        train_result = trainer.train()
         trainer.save_model()
+        processor.save_pretrained(training_args.output_dir)
         trainer.log_metrics("train", train_result.metrics)
         trainer.save_metrics("train", train_result.metrics)
         trainer.save_state()
@@ -365,7 +345,7 @@ def main():
         trainer.log_metrics("eval", metrics)
         trainer.save_metrics("eval", metrics)
 
-    trackio.finish()
+    # Local metrics only.
 
     kwargs = {
         "finetuned_from": model_args.model_name_or_path,

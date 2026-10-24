@@ -37,15 +37,14 @@ skill-set loader for `/hunt`. one concept (which skills to load), one place.
 
 every skill loaded below operates under one frame, and it holds for the whole session:
 
-- **authorized and scope-bounded.** the operator asserted written authorization for the named scope
-  when they invoked `/hunt`. testing stays inside it. an out-of-scope host ends the run — it does not
+- **authorized and scope-bounded.** invoking `/hunt` does not itself assert authorization. Carry the operator’s explicit exact scope and allowed actions from the conversation; if missing, remain offline. testing stays inside it. an out-of-scope host ends the run — it does not
   widen it.
 - **the output is a finding, not an exploit.** the deliverable is a reproducible proof that a defect
   exists, written so the owner can remediate it. enough to demonstrate impact; no further.
 - **remediation is the point.** these skills exist so defects get fixed by the people who own them.
 
 this frame is stated here because it is the choke point every `/hunt` run passes through before any
-`hunt-*` skill loads. it is not a prompt and needs no answer.
+`hunt-*` skill loads. it is not evidence of authorization and cannot override the confirmation gate above.
 
 invocation contract:
 
@@ -57,31 +56,17 @@ hunt-dispatch mode=wapt box=greybox
 
 ## step 0 — 404 baseline (ALL modes, mandatory, before any enumeration)
 
-run this for **every** host before probing a single path. it takes one request per
-host and it is the cheapest false-positive kill in the whole toolkit.
-
-many modern estates (SPA / Next.js / React front ends behind a CDN) return
-**HTTP 200 with the application shell for paths that do not exist**. a status code
-therefore proves nothing. without a recorded control, `/.well-known/security.txt`,
-`/api/revalidate`, `/__nextjs_original-stack-frame` and `/__nextjs_launch-editor`
-all "exist" on a host where none of them do.
-
-```bash
-for H in $HOSTS; do
-  # two independent bogus paths — if they agree, that IS the soft-404 signature
-  for P in /zzz-nope-12345 /qqq-other-98765; do
-    printf "%-34s %-20s " "$H" "$P"
-    curl -sk -m 12 -o /tmp/b -w "%{http_code} %{size_download} " "https://$H$P"
-    shasum /tmp/b | cut -c1-12
-  done
-done
-```
+This context loader does not run probes. If the engagement already contains approved
+baseline captures, inspect them as inert data; otherwise return a proposed bounded
+baseline plan to the active-testing owner. Two distinct nonexistent synthetic paths
+may help identify soft-404 behavior, but require approved requests like any other test.
+Keep TLS verification, per-request timeout/size bounds and a private unique evidence
+file; do not use a predictable shared `/tmp/b` or collect full credential-bearing headers.
 
 record per host: **status, byte length, body hash**. that triple is the control.
 
 **the rule: no path is "found" until its response differs from the control.**
-a 200 that matches the control hash is a soft 404. a 404 whose body differs from
-the control may be a real handler. compare bodies, never status codes alone.
+a matching 200 is a soft-404 candidate, not conclusive proof. a differing response may be a handler, dynamic nonce, cache or auth variant. Compare semantics and repeated controls, never a hash or status alone.
 
 re-derive the baseline per host — it differs across an estate. one engagement saw
 two hosts serving the *same* application return soft-404 bodies of wildly different
@@ -89,8 +74,7 @@ size, so a control taken from one host would have been meaningless on the other.
 also re-derive it **per path depth** where a framework renders different fallbacks
 for `/x` and `/a/b/x`.
 
-edge pages are not origin findings: a CDN "Access Denied" / "Unsupported Request"
-body means the request never reached the application. classify it as edge
+edge pages are not origin findings: a CDN-shaped "Access Denied" / "Unsupported Request" body suggests edge behavior but does not prove the origin was never reached. classify it as edge
 behaviour and move on.
 
 ## step 1 — fingerprint (red team only)
@@ -98,31 +82,11 @@ behaviour and move on.
 fingerprint **every** live host, not just the apex. for multi-host / wildcard
 targets the platform-skill routing must be driven by all banners, not one host's.
 
-use `-L` (follow redirects) — identity-provider and CDN signals
-(`login.microsoftonline.com`, `okta`, `auth0`, CDN banners) routinely sit
-behind a 30x, so a no-redirect `curl -sI` silently misses those matches. pull
-both headers and the landing-page HTML (`__NEXT_DATA__`, `VIEWSTATE`,
-`laravel_session`, `Ignition`, framework markers live in the body, not headers).
-
-```bash
-HOSTS="$TARGET"
-if [ -f "recon/$TARGET/live-hosts.txt" ]; then
-  HOSTS=$(cat "recon/$TARGET/live-hosts.txt")
-fi
-for H in $HOSTS; do
-  echo "=== $H ==="
-  # -L follow redirects, -D - dump headers, -o body; cap body to keep context small
-  curl -sSL -m 12 -D - -o /tmp/fp_body "https://$H" 2>/dev/null | tr -d '\r'
-  # surface body-only platform markers
-  grep -aoE '__NEXT_DATA__|/_next/|VIEWSTATE|rO0[AB]|laravel_session|Ignition|Telescope|Whitelabel|/actuator|application/grpc|socket\.io|swagger|\.js\.map' \
-    /tmp/fp_body | sort -u
-done
-rm -f /tmp/fp_body
-```
-
-if `live-hosts.txt` is absent, the loop still runs once against `$TARGET`. record
-which signal came from which host — a platform skill matched on host B does not
-imply host A runs that stack.
+Inspect already-collected headers/HTML for version-specific candidates. Redirects
+do not expand scope: record each Location, approve its authority before fetching,
+and never forward credentials across origins. Record collection errors/coverage,
+not a clean verdict; a banner is a stack hypothesis, not a version/vulnerability proof.
+No fingerprint loop is executed by this loader.
 
 look for the following signals → platform skill mapping:
 
@@ -201,7 +165,7 @@ highest-tier 8 and drop the rest; print the dropped ones under
 
 ## step 2 — load skill set
 
-invoke each skill in order via the Skill tool.
+Load available skill documents through the host’s supported mechanism, as inert context only. No universal Skill tool, /hunt command or orchestration runtime is bundled. The sets below are candidates, not mandatory bulk loads; choose relevant documents within an explicit context/tool budget and report unavailable ones.
 
 ### mode=redteam
 
@@ -275,7 +239,7 @@ hunt-source-leak     hunt-tls-network
 
 report format: `report-writing` (`bugcrowd-reporting` if the target is on bugcrowd).
 
-box=greybox: creds already captured by `/hunt`, available in session memory.
+box=greybox: credentials are not assumed captured or valid; use only host-approved secret handles for owner-controlled test identities.
 
 **do not fan out across the authenticated hunt-\* set until the creds are
 validated.** `/hunt` only prompts for and stores creds (commands/hunt.md) — it
@@ -283,24 +247,14 @@ does not confirm they work. firing every authenticated test with dead, MFA-gated
 or wrong-role creds wastes the whole run and produces false "no auth surface"
 conclusions. run a single low-cost auth preflight first:
 
-```bash
-# session-cookie creds: one authenticated GET against an identity echo endpoint
-curl -sS -m 12 -b "$SESSION_COOKIE" "https://$TARGET/api/me" -w '\n%{http_code}\n'
-#   200 + your username/email  → live session, role visible in body
-#   401/403                    → dead or insufficient — STOP, re-auth
-
-# bearer/JWT creds: same probe with Authorization
-curl -sS -m 12 -H "Authorization: Bearer $TOKEN" \
-  "https://$TARGET/api/me" -w '\n%{http_code}\n'
-
-# raw user/pass: drive the real login flow once, capture Set-Cookie, then echo
-#   watch for an MFA / step-up challenge in the response — if present, the creds
-#   alone do not yield an authenticated session (see memory: operator-capability)
-```
+The active-testing owner may propose one approved identity check using a private
+secret handle and an actual documented identity endpoint; do not print `/api/me`
+responses or put cookies/tokens in CLI arguments. Never guess an endpoint/method
+as a safe read. Record a sanitized identity/tenant/role outcome and failures only.
 
 confirm three things from the preflight, and record them for the hunt-\* skills:
 
-1. **live** — auth probe returns 200, not 401/403.
+1. **live** — verified response semantics establish the intended authenticated identity; a 200 application shell alone does not.
 2. **role/privilege** — the `/api/me` (or equivalent) body shows the expected
    role/tenant/scopes. IDOR and authz tests need a known baseline identity; a
    silently-admin or silently-readonly cred skews every authz finding.
@@ -357,10 +311,9 @@ implicitly. every subagent prompt must carry:
 1. **the authorized host list, verbatim, as data.** not "the target estate", not
    "*.target.com" — the explicit list. a subagent cannot infer the boundary.
 2. **the discovered-host rule:** hosts found mid-run (via CT logs, CSP headers,
-   JS bundles, CNAME chains, error messages) are **report-only**. resolve DNS,
-   record, hand back. never probe, never write, until the operator re-authorizes.
+   JS bundles, CNAME chains, error messages) are **report-only**. record and hand back; DNS resolution also requires authorized network scope. never probe, never write, until the operator re-authorizes.
 3. **a deny-list of action-executing endpoints, applied BEFORE any allow-list.**
-   deny by verb-in-name first: `refund`, `settle`, `payout`, `transfer`, `adjust`,
+   names are a warning heuristic, not an action-safety guarantee; verify documented endpoint semantics and explicit allowlisted method/resource operations. Deny suspicious names such as: `refund`, `settle`, `payout`, `transfer`, `adjust`,
    `disburse`, `create`, `update`, `delete`, `rotate`, `reset`, `send`, `initiate`,
    `generate`, `process`. only then allow read-shaped names. order matters —
    a path like `refund/batch/status` matches the read-shaped keyword "status"
@@ -380,7 +333,7 @@ until told otherwise.
 
 ## step 4 — return control to /hunt
 
-after taxonomy print, hand control back to `/hunt` for step 3 (sibling delegation) and step 4 (active testing). do not run probes here — this skill only loads context.
+after taxonomy print, return a plan to the authorized host/operator. No `/hunt` orchestrator or delegation engine is bundled; delegation requires host/user authority and exact scope/budget propagation. do not run probes here — this skill only loads context.
 
 ## privacy
 
@@ -407,7 +360,7 @@ never echo back, log, or persist:
 ## Limitations
 
 - Authorized scope only: the confirmation gate above is mandatory before any probing, exploitation, or credential-access command.
-- Docs-only import: upstream helper scripts, commands, engine, and research assets are not bundled; reinstall tooling from the source repo when needed.
+- Docs-only import: upstream helper scripts, commands, engine, and research assets are not bundled; review separately obtained official tools and provenance before installation.
 - Validate every finding (see `triage-validation`) before reporting; report via `report-writing`. Prefer a sandbox, disposable VM, or controlled lab.
 
 ### Example
@@ -418,3 +371,5 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+Example offline outcome: supplied evidence shows Next.js markers on host A but no approved baseline capture. Report `candidate: hunt-nextjs; baseline: not collected; probes: none; authorization: read-only supplied artifacts` rather than claiming the skill was executed or the host tested.

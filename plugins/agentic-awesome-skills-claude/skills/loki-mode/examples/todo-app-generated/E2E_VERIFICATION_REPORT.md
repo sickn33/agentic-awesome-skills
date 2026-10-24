@@ -1,3 +1,5 @@
+> Archived upstream inspection report, not current E2E, security, dependency-audit or production certification. The original report did not run servers and contains stale/contradictory claims. Current source review found API-envelope integration, accessibility and exposure defects; rerun build, tests and browser flows in a disposable local environment before relying on this example.
+
 # End-to-End (E2E) Verification Report
 **Task ID:** task-018 (eng-qa e2e-test)
 **Test Date:** 2026-01-02

@@ -1,5 +1,8 @@
 # Cryptographic API Footguns
 
+> Catalog correction (CC-BY-SA-4.0 adaptation; original attribution/license in UPSTREAM-NOTICE.md): snippets are isolated teaching fragments, not production implementations or an assertion of exploitability. Confirm the installed language/library version, trust boundary, reachable input and impact. Use inert local fixtures only; do not execute the intentionally unsafe snippets, untrusted audited code or destructive payloads. No network attack or configuration change is authorized by this guide.
+
+
 Detailed patterns for identifying misuse-prone cryptographic interfaces.
 
 ## Algorithm Selection Anti-Patterns
@@ -12,7 +15,7 @@ The JSON Web Token standard allows the token itself to specify which algorithm t
 ```json
 {"alg": "none", "typ": "JWT"}
 ```
-Many libraries accept this and skip signature verification entirely.
+Historically vulnerable or misconfigured libraries accepted unsigned tokens; do not assume maintained verifiers accept them. Check the exact version and verification settings.
 
 **Attack 2: Algorithm confusion (RS256 → HS256)**
 - Server expects RSA signature, uses public key for verification
@@ -21,7 +24,7 @@ Many libraries accept this and skip signature verification entirely.
 
 **Root cause**: Trusting untrusted input to select security mechanisms.
 
-**Fix**: Never let data dictate algorithm. Use one algorithm, hardcoded.
+**Fix**: Never let data dictate algorithm. Use an explicit verifier-side algorithm allowlist tied to the trusted key type and issuer; validate issuer, audience, expiry and token purpose. Algorithm agility is safe only when trusted policy controls it.
 
 ### Cipher Mode Parameters
 
@@ -138,7 +141,7 @@ def decrypt(ciphertext, key):
 # This distinction enables padding oracle attacks
 ```
 
-**Fix**: Decrypt-then-MAC (or authenticated encryption). Never expose padding validity.
+**Fix**: Prefer a reviewed AEAD API. For an established encrypt-then-MAC construction, authenticate before decrypting or unpadding; do not invent a decrypt-then-MAC scheme. Uniform messages alone do not remove timing or status oracles.
 
 ### Error Message Differentiation
 
@@ -161,7 +164,9 @@ key = hashlib.sha256(password.encode()).digest()
 # Reality: Fast hash enables brute force
 
 # CORRECT: use actual KDF
-key = hashlib.scrypt(password.encode(), salt=salt, n=2**14, r=8, p=1)
+# Choose and benchmark current reviewed KDF parameters and a fresh random salt.
+# Do not copy historical work factors as a current production recommendation.
+key = reviewed_password_kdf(password, salt=salt)
 ```
 
 ### Password Storage Misuse
@@ -172,7 +177,8 @@ encrypted_password = encrypt(password, master_key)
 # Compromise of master_key = all passwords exposed
 
 # CORRECT: one-way hash with salt
-hashed_password = argon2.hash(password)
+from argon2 import PasswordHasher
+hashed_password = PasswordHasher().hash(password)
 # No key to steal; each password salted differently
 ```
 
@@ -180,7 +186,7 @@ hashed_password = argon2.hash(password)
 
 For cryptographic APIs, verify:
 
-- [ ] **No algorithm selection**: One safe algorithm, hardcoded
+- [ ] **Trusted algorithm policy**: Explicit allowed algorithms and correct key types; never trust token headers alone
 - [ ] **No mode selection**: GCM/ChaCha20-Poly1305 only, no ECB/CBC
 - [ ] **Distinct types**: Keys, nonces, ciphertexts are different types
 - [ ] **Internal nonce generation**: Don't require developer to provide

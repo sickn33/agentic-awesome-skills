@@ -43,32 +43,7 @@ Store the key file securely and add it to `.gitignore`.
 
 ## Environment Variables
 
-For CI/CD, use environment variables instead of file paths:
-
-```bash
-# Base64-encoded service account JSON
-EXPO_ANDROID_SERVICE_ACCOUNT_KEY_BASE64=...
-```
-
-Or use EAS Secrets:
-
-```bash
-eas secret:create --name GOOGLE_SERVICE_ACCOUNT --value "$(cat google-service-account.json)" --type file
-```
-
-Then reference in `eas.json`:
-
-```json
-{
-  "submit": {
-    "production": {
-      "android": {
-        "serviceAccountKeyPath": "@secret:GOOGLE_SERVICE_ACCOUNT"
-      }
-    }
-  }
-}
-```
+For CI, assign the app’s service-account key using the supported EAS credential flow, or securely materialize an ephemeral key file on the runner and set `serviceAccountKeyPath` to that real path. The former base64 variable and `@secret:` path examples are not supported configuration. Never echo key contents or pass them as command-line values. Scope Play Console permissions to the intended app/track; do not grant broad Google Cloud roles merely to submit.
 
 ## Release Tracks
 
@@ -131,7 +106,7 @@ This releases to 10% of users. Increase via Play Console or subsequent submissio
 
 ```bash
 # Build and submit to internal track
-eas build -p android --profile production --submit
+eas build -p android --profile production --auto-submit
 
 # Submit existing build to Play Store
 eas submit -p android --latest
@@ -146,7 +121,7 @@ eas submit -p android --id BUILD_ID
 
 EAS uses Google Play App Signing by default:
 
-1. First upload: EAS creates upload key, Play Store manages signing key
+1. Enroll/configure Play App Signing in Play Console; EAS Build manages the upload credential, not automatic enrollment in every case.
 2. Play Store re-signs your app with the signing key
 3. Upload key can be reset if compromised
 
@@ -225,16 +200,16 @@ eas build -p android --profile development
 # Share the APK link with testers
 ```
 
-Or use EAS Update for OTA updates to existing installs.
+EAS Update requires an existing compatible runtime and update configuration; it cannot install a missing native binary or add native code.
 
 ## Monitoring Submissions
 
 ```bash
 # Check submission status
-eas submit:list -p android
+# Inspect submission status in the EAS project dashboard
 
 # View specific submission
-eas submit:view SUBMISSION_ID
+# Open the exact submission from its dashboard URL
 ```
 
 ## Tips

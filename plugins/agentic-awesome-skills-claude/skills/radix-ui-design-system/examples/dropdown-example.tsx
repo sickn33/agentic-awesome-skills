@@ -1,11 +1,13 @@
+import * as React from 'react';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import {
+  DotsHorizontalIcon,
   HamburgerMenuIcon,
   DotFilledIcon,
   CheckIcon,
   ChevronRightIcon,
 } from '@radix-ui/react-icons';
-import './dropdown.css';
+// Supply dropdown.css in your application; it is not bundled.
 
 /**
  * Example: Complete Dropdown Menu
@@ -80,7 +82,7 @@ export function CompleteDropdown() {
           <DropdownMenu.CheckboxItem
             className="dropdown-checkbox-item"
             checked={bookmarksChecked}
-            onCheckedChange={setBookmarksChecked}
+            onCheckedChange={(value) => setBookmarksChecked(value === true)}
           >
             <DropdownMenu.ItemIndicator className="dropdown-item-indicator">
               <CheckIcon />
@@ -90,7 +92,7 @@ export function CompleteDropdown() {
           <DropdownMenu.CheckboxItem
             className="dropdown-checkbox-item"
             checked={urlsChecked}
-            onCheckedChange={setUrlsChecked}
+            onCheckedChange={(value) => setUrlsChecked(value === true)}
           >
             <DropdownMenu.ItemIndicator className="dropdown-item-indicator">
               <CheckIcon />
@@ -131,7 +133,7 @@ export function CompleteDropdown() {
  * 
  * Common use case for data tables, cards, etc.
  */
-export function ActionsMenu({ onEdit, onDuplicate, onDelete }) {
+export function ActionsMenu({ onEdit, onDuplicate, onDelete }: { onEdit: () => void; onDuplicate: () => void; onDelete: () => void }) {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>

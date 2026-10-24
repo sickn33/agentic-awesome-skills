@@ -15,6 +15,12 @@ Specialized skill for building production-ready serverless applications on GCP.
 Covers Cloud Run services (containerized), Cloud Run Functions (event-driven),
 cold start optimization, and event-driven architecture with Pub/Sub.
 
+<!-- Modified 2026-10-23: scoped deployment and reliability limits. -->
+
+## Deployment prerequisites
+
+Examples are incomplete integration sketches: application helpers, IAM roles, queues, regions and health/startup probes must be supplied. Select an authorized project/service and budget, private ingress/auth by default, versioned Artifact Registry image and rollback revision. Historical nodejs20/GCR examples require supported-runtime and registry migration checks. Bound max instances and aggregate DB connections; minimum instances and boosts incur costs. A 2xx response must follow completed or durably enqueued work, with idempotency for retries. psutil host-memory readings may not reflect the container cgroup limit; use Cloud Monitoring/container metrics.
+
 ## Detailed Guide
 
 Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.
@@ -61,7 +67,7 @@ Why this breaks:
 Setting concurrency to 1 means each container handles only one
 request at a time. During traffic spikes:
 
-- 100 concurrent requests = 100 container instances
+- 100 simultaneous in-flight requests may need up to 100 instances, subject to capacity, queuing and limits
 - Each instance has cold start overhead
 - More instances = higher costs
 - Scaling takes time, requests queue up
@@ -71,7 +77,7 @@ This should only be used when:
 - Memory-heavy per-request processing
 - Using thread-unsafe libraries
 
-Recommended fix:
+Recommended fix: Load-test a concurrency matching handler thread safety, peak memory, latency and downstream connection limits; concurrency 1 can be appropriate.
 
 ## When to Use
 Use this skill when the request clearly matches the capabilities and patterns described above.

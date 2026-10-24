@@ -98,6 +98,8 @@ If an artifact was requested, build it after resolving essential missing facts. 
 
 **Workflow:** Request → Manager approval → Calendar entry → Balance update → Report
 
+Treat balances as optional dated snapshots from the approved leave system, not authoritative entitlements stored independently on each request. Define calendar, holidays, working pattern and partial-day units before counting days; end date must not precede start date. Collect only the minimum reason needed; exclude diagnoses and keep emergency contact information in a separately restricted directory rather than routine calendar exports.
+
 ### Step 5 - Build only on request
 
 Once the user asks for it, derive the fields from the confirmed context and emit the
@@ -128,7 +130,7 @@ Leave Request,Annual Leave Balance,Approver,Days Requested,Department,Emergency 
 ```sql
 CREATE TABLE leave_management (
   leave_request VARCHAR(255),
-  annual_leave_balance NUMERIC NOT NULL,
+  annual_leave_balance NUMERIC,
   approver VARCHAR(255),
   days_requested NUMERIC NOT NULL,
   department VARCHAR(255),
@@ -141,7 +143,7 @@ CREATE TABLE leave_management (
   manager VARCHAR(255),
   notes TEXT,
   reason VARCHAR(255),
-  sick_leave_balance NUMERIC NOT NULL,
+  sick_leave_balance NUMERIC,
   start_date DATE NOT NULL,
   status VARCHAR(100) NOT NULL,
   created_at TIMESTAMP DEFAULT NOW(),
@@ -177,11 +179,9 @@ CREATE INDEX idx_leave_management_status ON leave_management (status);
       "Status": { "type": "string" }
   },
   "required": [
-      "Annual Leave Balance",
       "Days Requested",
       "End Date",
       "Leave Type",
-      "Sick Leave Balance",
       "Start Date",
       "Status"
   ]
@@ -326,7 +326,7 @@ We are 12 people and want leave requests approved in one place.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 

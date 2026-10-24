@@ -58,7 +58,7 @@ Take a known-good request and break ONE assumption at a time:
   array or object — `{"rating":"x","comment":[1,2,3]}`, `{"quantity":{}}`.
 - **Malformed body:** truncated/!invalid JSON, an unterminated string, a stray
   brace, a wrong/missing Content-Type.
-- **Boundary/oversized:** a very long string, a huge/negative/overflow number.
+- **Boundary/oversized:** test only pre-agreed small bounds and request rates; do not send unbounded payloads or attempt denial of service. Negative/overflow numbers must remain within the permitted test scope.
 - **Null byte / control chars** embedded in a value.
 
 ```
@@ -71,7 +71,7 @@ body contains a stack trace or framework error page is the signal.
 
 ## What counts as a leak (the success signal)
 
-A finding is confirmed when the response body contains a cross-framework error-disclosure signature:
+The following signatures are candidates for error disclosure. Confirm that the response reveals non-public, security-relevant internals in the authorized context; a reflected string, intended debug lab output or public filename alone is not sufficient:
 
 - **Node/Express + Sequelize:** `SequelizeDatabaseError`, `node_modules/sequelize`,
   a JS stack with internal paths.

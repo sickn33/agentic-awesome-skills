@@ -1,5 +1,8 @@
 # Phylogenetics with Bio.Phylo
 
+> Adapted reference, not a standalone script. Validate inputs, preserve originals, pin software/tool versions, and authorize any remote sequence/query submission. Examples require the shown external files and application-specific setup; absence of errors is not biological validation.
+
+
 ## Overview
 
 Bio.Phylo provides a unified toolkit for reading, writing, analyzing, and visualizing phylogenetic trees. It supports multiple file formats including Newick, NEXUS, phyloXML, NeXML, and CDAO.
@@ -169,9 +172,9 @@ ancestor = tree.common_ancestor(*clades)
 ### Tree Comparison
 
 ```python
-# Compare tree topologies
+# Compare pairwise path distances (not topology alone)
 def compare_trees(tree1, tree2):
-    """Compare two trees."""
+    """Compare pairwise path distances, including branch lengths, for matching taxa."""
     # Get terminal names
     taxa1 = set(t.name for t in tree1.get_terminals())
     taxa2 = set(t.name for t in tree2.get_terminals())
@@ -199,7 +202,8 @@ def compare_trees(tree1, tree2):
 
 ```python
 # Prune (remove) specific taxa
-tree_copy = tree.copy()
+import copy
+tree_copy = copy.deepcopy(tree)
 tree_copy.prune("Species_A")
 
 # Keep only specific taxa
@@ -216,9 +220,8 @@ for terminal in terminals:
 # Collapse branches shorter than threshold
 def collapse_short_branches(tree, threshold=0.01):
     """Collapse branches shorter than threshold."""
-    for clade in tree.find_clades():
-        if clade.branch_length and clade.branch_length < threshold:
-            clade.branch_length = 0
+    tree.collapse_all(lambda clade: clade.branch_length is not None
+                      and clade.branch_length < threshold)
     return tree
 ```
 
@@ -281,7 +284,7 @@ plt.savefig("tree.png", dpi=300)
 ### Advanced Visualization Options
 
 ```python
-# Radial (circular) tree
+# Standard rectangular tree with branch-length labels (not a circular layout)
 Phylo.draw(tree, branch_labels=lambda c: c.branch_length)
 
 # Show branch support values
@@ -310,10 +313,10 @@ from Bio.Phylo.TreeConstruction import DistanceTreeConstructor, DistanceMatrix
 dm = DistanceMatrix(
     names=["Alpha", "Beta", "Gamma", "Delta"],
     matrix=[
-        [],
-        [0.23],
-        [0.45, 0.34],
-        [0.67, 0.58, 0.29]
+        [0],
+        [0.23, 0],
+        [0.45, 0.34, 0],
+        [0.67, 0.58, 0.29, 0]
     ]
 )
 
@@ -427,7 +430,7 @@ tree_with_support = add_bootstrap_support(tree, support_values)
 3. **Root trees appropriately** - Use midpoint or outgroup rooting
 4. **Handle bootstrap values** - Store as clade confidence
 5. **Consider tree size** - Large trees may need special handling
-6. **Use tree copies** - Call `.copy()` before modifications
+6. **Use tree copies** - Use `copy.deepcopy(tree)` before modifications
 7. **Export publication-ready figures** - Use matplotlib for high-quality output
 8. **Document tree construction** - Record alignment and parameters used
 9. **Compare multiple trees** - Use consensus methods for bootstrap trees
@@ -471,7 +474,8 @@ plt.show()
 def extract_subtree(tree, taxa_list):
     """Extract subtree containing specific taxa."""
     # Create a copy
-    subtree = tree.copy()
+    import copy
+    subtree = copy.deepcopy(tree)
 
     # Get all terminals
     all_terminals = subtree.get_terminals()
@@ -493,7 +497,9 @@ Phylo.write(subtree, "subtree.nwk", "newick")
 ```python
 def phylogenetic_diversity(tree, taxa_subset=None):
     """Calculate phylogenetic diversity (sum of branch lengths)."""
-    if taxa_subset:
+    if taxa_subset is not None and not taxa_subset:
+        return 0.0
+    if taxa_subset is not None:
         # Prune to subset
         tree = extract_subtree(tree, taxa_subset)
 
@@ -542,7 +548,15 @@ def annotate_tree_from_csv(tree, csv_file):
 
 ```python
 def robinson_foulds_distance(tree1, tree2):
-    """Calculate Robinson-Foulds distance between two trees."""
+    """Count rooted clade-set differences, not general unrooted RF distance.
+
+    Requires identical unique named leaf sets and compatible rooting.
+    """
+    leaves1 = [t.name for t in tree1.get_terminals()]
+    leaves2 = [t.name for t in tree2.get_terminals()]
+    if (None in leaves1 or None in leaves2 or len(set(leaves1)) != len(leaves1)
+            or len(set(leaves2)) != len(leaves2) or set(leaves1) != set(leaves2)):
+        raise ValueError("Trees require identical unique named leaf sets")
     # Get bipartitions for each tree
     def get_bipartitions(tree):
         bipartitions = set()
@@ -562,5 +576,5 @@ def robinson_foulds_distance(tree1, tree2):
 tree1 = Phylo.read("tree1.nwk", "newick")
 tree2 = Phylo.read("tree2.nwk", "newick")
 rf_dist = robinson_foulds_distance(tree1, tree2)
-print(f"Robinson-Foulds distance: {rf_dist}")
+print(f"Rooted clade-set symmetric difference: {rf_dist}")
 ```

@@ -79,6 +79,10 @@ Convert the name to title case if needed (e.g., "my-app" → "My App").
 
 Check if the detected static assets directory exists. If not, create it.
 
+## Image and manifest safeguards
+
+Inspect source dimensions/content, not only its extension. Render untrusted SVGs with resource limits and without external resource access; do not copy an unreviewed SVG into the public site. Use a reviewed square canvas/padding so aspect-preserving resize produces the declared square dimensions; inspect all outputs. Generic resized art is not automatically mask-safe: the manifest below uses `any`. Add separate `maskable` icons only after verifying their safe-zone design. Preserve existing manifest fields such as `start_url`, `scope`, `id`, shortcuts and unrelated icons, and adapt URLs to the actual deployment base. See [app icon purposes](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps/How_to/Define_app_icons).
+
 ## Step 5: Generate Favicon Files
 
 Run these ImageMagick commands to generate all favicon files. Replace `[STATIC_DIR]` with the detected static assets directory from Step 2.
@@ -134,13 +138,13 @@ Create or update `[STATIC_DIR]/site.webmanifest` with this content (substitute t
       "src": "/web-app-manifest-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any"
     },
     {
       "src": "/web-app-manifest-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "maskable"
+      "purpose": "any"
     }
   ],
   "theme_color": "#ffffff",

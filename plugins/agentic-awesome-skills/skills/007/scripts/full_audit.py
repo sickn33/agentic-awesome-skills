@@ -18,6 +18,8 @@ Usage:
     python full_audit.py --target /path/to/project --output json
 """
 
+import contextlib
+import io
 import argparse
 import json
 import os
@@ -39,6 +41,11 @@ def safe_user_path(path_value, base_dir="."):
     except ValueError as exc:
         raise ValueError(f"Path escapes allowed directory: {path_value}") from exc
     return resolved_path
+
+def _run_scanner(scanner, **kwargs):
+    """Capture scanner chatter so the parent emits one redacted JSON document."""
+    with contextlib.redirect_stdout(io.StringIO()):
+        return scanner(**kwargs)
 
 # ---------------------------------------------------------------------------
 # Imports from the 007 config hub (same directory)
@@ -249,7 +256,7 @@ _BLUE_TEAM_TEMPLATES: dict[str, dict] = {
         "recommendation": (
             "Remove all uses of eval(), exec(), and Function(). If dynamic "
             "code execution is absolutely necessary, use a sandboxed environment "
-            "(e.g. RestrictedPython, vm2 in strict mode) with allowlisted "
+            "with an OS/container sandbox and allowlisted "
             "operations only. Never pass user input to code execution functions."
         ),
         "priority": "CRITICAL",
@@ -310,9 +317,9 @@ _BLUE_TEAM_TEMPLATES: dict[str, dict] = {
     },
     "path_traversal": {
         "recommendation": (
-            "Use Path.resolve() and verify the resolved path starts with the "
+            "Use Path.resolve().relative_to(base) for component-aware containment under the "
             "expected base directory. Never pass raw user input to open() or "
-            "file operations. Use os.path.realpath() followed by a prefix check. "
+            "file operations. Never use string prefix checks for containment. "
             "Implement a file access allowlist."
         ),
         "priority": "HIGH",
@@ -411,7 +418,7 @@ def _phase1_surface_mapping(target: Path, verbose: bool = False) -> dict:
     _config_extensions = {".json", ".yaml", ".yml", ".toml", ".ini", ".cfg", ".conf", ".env"}
 
     for fpath in safe_user_path(target).rglob("*"):
-        if not fpath.is_file() or any(part in SKIP_DIRECTORIES for part in fpath.parts):
+        if fpath.is_symlink() or not fpath.is_file() or any(part in SKIP_DIRECTORIES for part in fpath.parts):
             continue
         fname = fpath.name
         total_files += 1
@@ -1106,32 +1113,32 @@ def run_audit(
         logger.info("Running scanners for phases %s...", [p for p in phases_list if p >= 3])
 
         try:
-            secrets_report = secrets_scanner.run_scan(
+            secrets_report = _run_scanner(secrets_scanner.run_scan,
                 target_path=target_str, output_format="json", verbose=verbose,
             )
-        except SystemExit:
-            pass
+        except SystemExit as exc:
+            raise RuntimeError("Scanner failed; audit incomplete") from exc
 
         try:
-            dep_report = dependency_scanner.run_scan(
+            dep_report = _run_scanner(dependency_scanner.run_scan,
                 target_path=target_str, output_format="json", verbose=verbose,
             )
-        except SystemExit:
-            pass
+        except SystemExit as exc:
+            raise RuntimeError("Scanner failed; audit incomplete") from exc
 
         try:
-            inj_report = injection_scanner.run_scan(
+            inj_report = _run_scanner(injection_scanner.run_scan,
                 target_path=target_str, output_format="json", verbose=verbose,
             )
-        except SystemExit:
-            pass
+        except SystemExit as exc:
+            raise RuntimeError("Scanner failed; audit incomplete") from exc
 
         try:
-            quick_report = quick_scan.run_scan(
+            quick_report = _run_scanner(quick_scan.run_scan,
                 target_path=target_str, output_format="json", verbose=verbose,
             )
-        except SystemExit:
-            pass
+        except SystemExit as exc:
+            raise RuntimeError("Scanner failed; audit incomplete") from exc
 
         # Aggregate and deduplicate
         raw = (
@@ -1214,7 +1221,8 @@ def run_audit(
     report_path = REPORTS_DIR / report_filename
 
     try:
-        report_path.write_text(md_report, encoding="utf-8")
+        with report_path.open("x", encoding="utf-8") as report_file:
+            report_file.write(md_report)
         logger.info("Markdown report saved to %s", report_path)
     except OSError as exc:
         logger.warning("Could not save report: %s", exc)

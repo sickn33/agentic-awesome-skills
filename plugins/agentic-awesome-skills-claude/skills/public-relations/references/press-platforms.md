@@ -16,7 +16,8 @@ Journalists posting "I need a source for X" — you respond, sometimes you get q
 
 | Platform | What it is | Cost | Quality |
 |----------|-----------|------|---------|
-| **[Connectively](https://www.connectively.us)** (formerly HARO) | Daily email digest of journalist queries | Free tier; paid for filters | Mixed — high volume, lots of noise |
+| **[HARO](https://docs.connectively.us/en/articles/15233696-haro-is-acquired-by-featured-com)** | Email-based journalist requests relaunched by Featured after its2025 acquisition | Verify current terms | Assess each request |
+| **[Connectively](https://blog.connectively.us/connectively-surpasses-100000-users/)** | Revived2026 publisher/expert platform under Featured | Verify current plan | Distinct from HARO email service |
 | **[Qwoted](https://www.qwoted.com)** | Web app with journalist requests | Free; paid for outreach | Good — better-quality outlets |
 | **[Featured](https://featured.com)** | Web app, expert profiles, journalist requests | Free tier; paid pro | Good for thought-leadership snippets |
 | **[Help A B2B Writer](https://helpab2bwriter.com)** | Twice-weekly email of B2B queries | Free | High — B2B-focused, low spam |
@@ -25,7 +26,7 @@ Journalists posting "I need a source for X" — you respond, sometimes you get q
 | **[JournoRequests](https://twitter.com/journorequests)** | X account aggregating tweets | Free | UK-skewed, real-time |
 | **#JournoRequest** (X hashtag) | Live journalist requests | Free | Real-time, fast-moving |
 
-**Recommended starter set:** Connectively + Qwoted + Help A B2B Writer + monitoring `#JournoRequest` on X.
+Select a small relevant set after verifying current plans/eligibility; the historical Featured/Terkel rows are related brands, not automatically separate platforms.
 
 ---
 

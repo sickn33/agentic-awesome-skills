@@ -1,5 +1,5 @@
 {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  "mainEntity": "{{main_entity}}"
+  "mainEntity": []
 }

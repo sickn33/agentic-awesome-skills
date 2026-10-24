@@ -144,23 +144,10 @@ def _fetch_columns(
     ]
 
 
-def _resolve_freshness(row: dict) -> str:
-    """Return the best available freshness timestamp as ISO8601.
-
-    Uses storage_last_modified_time if Google has populated it (expected
-    early April 2026). Falls back to current time with a warning.
-    """
-    if row.get("storage_last_modified_time"):
-        return row["storage_last_modified_time"].isoformat()
-
-    log.warning(
-        "storage_last_modified_time is NULL for %s.%s — "
-        "falling back to current time. Google's TABLE_STORAGE update "
-        "for Iceberg tables may not have shipped yet.",
-        row["table_schema"],
-        row["table_name"],
-    )
-    return datetime.now(timezone.utc).isoformat()
+def _resolve_freshness(row: dict) -> str | None:
+    """Return actual provider modification time, or unknown; never fabricate freshness."""
+    value = row.get("storage_last_modified_time")
+    return value.isoformat() if value is not None else None
 
 
 def collect(
@@ -187,7 +174,9 @@ def collect(
     iceberg_tables = _fetch_iceberg_tables(client, project_id, datasets, tables)
     if not iceberg_tables:
         log.warning("No Iceberg tables found matching the criteria.")
-        return {"resource_type": RESOURCE_TYPE, "assets": []}
+        manifest = {"resource_type": RESOURCE_TYPE, "assets": []}
+        write_json_file(output_file, manifest)
+        return manifest
 
     assets: list[dict] = []
     for row in iceberg_tables:
@@ -211,6 +200,10 @@ def collect(
         if not only_freshness_and_volume:
             asset["description"] = None
             asset["fields"] = _fetch_columns(client, project_id, dataset, name)
+
+        if len(assets) >= 10000:
+
+            raise ValueError("Collection exceeds 10000 assets; narrow scope")
 
         assets.append(asset)
         log.info(

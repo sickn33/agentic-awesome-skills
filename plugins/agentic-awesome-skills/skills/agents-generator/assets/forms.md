@@ -7,11 +7,7 @@
 ## Form Structure
 
 ```tsx
-{
-  {
-    FORM_EXAMPLE;
-  }
-}
+{{FORM_EXAMPLE}}
 ```
 
 ## Rules
@@ -40,7 +36,7 @@
     - Do not mix `useState` with react-hook-form — use `watch()` or `getValues()`.
   - **formik**:
     - `useFormik<T>()` or `<Formik>` component.
-    - `validationSchema` for Yup/Zod.
+    - `validationSchema` for Yup; Zod needs a reviewed adapter or custom `validate` function.
     - `handleChange`, `handleBlur`, `handleSubmit`.
   - **Manual**:
     - `useState` per field.

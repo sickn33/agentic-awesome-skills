@@ -43,6 +43,10 @@ The multi-agent approach ensures each aspect is handled by domain experts:
 - MLOps engineers handle production deployment
 - Observability engineers ensure monitoring
 
+## Implementable scope and evidence
+
+Replace $ARGUMENTS with a bounded objective, data rights, prediction unit, target window, baseline and acceptance metrics. Task/subagent blocks and phase references are orchestration pseudocode, not executable tools; use authorized available delegation and explicit handoffs only. Split by time/entity before fitting transformations to prevent leakage; preserve lineage and an untouched holdout. Obtain approval before dataset/provider egress, GPU spending, alert delivery or deployment. A drift alarm is not a diagnosis or automatic reason to promote a retrained model: evaluate accuracy/calibration/fairness, delayed labels and rollback against a fixed baseline. The numerical success targets below are illustrative, not universal guarantees or observed results. Record actual tests/artifacts and unresolved risks; generated configuration alone is not production readiness or full coverage.
+
 ## Phase 1: Data & Requirements Analysis
 
 <Task>

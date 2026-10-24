@@ -92,11 +92,13 @@ open_questions: []      # the unanswered ones, in the order worth asking
 
 If an artifact was requested, build it after resolving essential missing facts. Otherwise give a short recommendation and offer the relevant artifact.
 
-**Recommended approach:** Start with three to five metrics per level and a fixed review cadence. Weighting only matters when scores are compared across people.
+**Recommended approach:** Start with three to five metrics per level and a fixed review cadence. Use weights only with a defined aggregate score, including team or company scorecards; agree the formula before comparing results.
 
 **Why this one:** KPI trackers fail from volume, not from schema. Fewer metrics reviewed on a schedule beats a full scorecard nobody opens.
 
 **Workflow:** KPI definition → Target → Actual entry → Achievement → Review meeting
+
+For this higher-is-better example with a positive target, achievement is `100 * actual / target`; weighted score is `achievement * weight / 100` in percentage points, rounded only for display. Lower-is-better, zero/negative targets, caps, missing actuals and composite metrics need an explicitly agreed formula; leave unknown scores blank rather than inventing zero. Validate weights in 0–100 and their total within each scorecard. These templates do not calculate or enforce the formula.
 
 ### Step 5 - Build only on request
 
@@ -122,7 +124,7 @@ that need a number, date or currency format applied.
 
 ```csv
 KPI Name,KPI Level,Department,Job Title,Employee Name,Linked OKR,Unit,Direction,Target,Actual,Achievement %,Weight %,Weighted Score,Period,Data Source,Owner,Status,KPI ID
-On-time delivery,Company,Delivery,Delivery Manager,Aarav Sharma,OKR-2026-Q1-02,Percent,Higher is better,95,88,93,30,4.1,2026-03,Manual,Sneha Iyer,Active,
+On-time delivery,Company,Delivery,Delivery Manager,Aarav Sharma,OKR-2026-Q1-02,Percent,Higher is better,95,88,92.63,30,27.79,2026-03,Manual,Sneha Iyer,Active,
 ```
 
 ```sql
@@ -230,9 +232,9 @@ and anything pointing at another table stays `relation`.
 | 8 | Direction | `text` | `VARCHAR(255)` | `string` | Text | `Higher is better` |
 | 9 | Target | `number` | `NUMERIC` | `number` | Number | `95` |
 | 10 | Actual | `number` | `NUMERIC` | `number` | Number | `88` |
-| 11 | Achievement % | `number` | `NUMERIC` | `number` | Number | `93` |
+| 11 | Achievement % | `number` | `NUMERIC` | `number` | Number | `92.63` |
 | 12 | Weight % | `number` | `NUMERIC` | `number` | Number | `30` |
-| 13 | Weighted Score | `number` | `NUMERIC` | `number` | Number | `4.1` |
+| 13 | Weighted Score | `number` | `NUMERIC` | `number` | Number | `27.79` |
 | 14 | Period | `text` | `VARCHAR(255)` | `string` | Text | `2026-03` |
 | 15 | Data Source | `text` | `VARCHAR(255)` | `string` | Text | `Manual` |
 | 16 | Owner | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
@@ -277,7 +279,7 @@ We have 20 KPIs in a sheet and nobody reviews them.
 
 **Recommended next step** - offered, not built:
 
-> Start with three to five metrics per level and a fixed review cadence. Weighting only matters when scores are compared across people.
+> Start with three to five metrics per level and a fixed review cadence. Use weights only with a defined aggregate score, including team or company scorecards; agree the formula before comparing results.
 >
 > Workflow: KPI definition → Target → Actual entry → Achievement → Review meeting
 >
@@ -330,7 +332,7 @@ We have 20 KPIs in a sheet and nobody reviews them.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 

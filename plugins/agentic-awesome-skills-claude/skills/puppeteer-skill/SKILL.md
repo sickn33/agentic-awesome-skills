@@ -31,8 +31,10 @@ const puppeteer = require('puppeteer');
     await page.goto('https://example.com', { waitUntil: 'networkidle0' });
     await page.type('#username', 'user@test.com');
     await page.type('#password', 'password123');
-    await page.click('button[type="submit"]');
-    await page.waitForNavigation({ waitUntil: 'networkidle0' });
+    await Promise.all([
+        page.waitForNavigation({ waitUntil: 'networkidle0' }),
+        page.click('button[type="submit"]'),
+    ]);
 
     const title = await page.title();
     console.log('Title:', title);
@@ -73,20 +75,18 @@ await page.pdf({ path: 'page.pdf', format: 'A4', printBackground: true });
 
 ```javascript
 await page.setRequestInterception(true);
+// One resolution handler: never continue/abort/respond the same request twice.
 page.on('request', request => {
-    if (request.resourceType() === 'image') request.abort();
-    else request.continue();
-});
-
-// Mock API
-page.on('request', request => {
+    if (request.isInterceptResolutionHandled()) return;
     if (request.url().includes('/api/data')) {
-        request.respond({
+        return request.respond({
             status: 200,
             contentType: 'application/json',
             body: JSON.stringify({ items: [] }),
         });
-    } else request.continue();
+    }
+    if (request.resourceType() === 'image') return request.abort();
+    return request.continue();
 });
 ```
 
@@ -119,7 +119,9 @@ const browser = await puppeteer.connect({
 | Set cookie | `await page.setCookie({ name: 'token', value: 'abc' })` |
 | Emulate device | `await page.emulate(puppeteer.devices['iPhone 12'])` |
 
-## Deep Patterns → `reference/playbook.md`
+## Upstream deep patterns (not bundled)
+
+`reference/playbook.md` is not present in this AAS tree. Check installed-version APIs before using device/cookie/launch examples. The login selectors are illustrative, not elements on example.com. Use disposable contexts and synthetic accounts, close browsers in finally blocks, and authorize cloud transfer/spend before sending credentials or private pages. Cloud capability URLs may contain secrets; never log them.
 
 | § | Section | Lines |
 |---|---------|-------|

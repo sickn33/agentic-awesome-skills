@@ -37,6 +37,10 @@ Core Linux system administration skills for managing production servers, develop
 - Familiarity with a terminal text editor (vim, nano)
 - Package manager available (`apt` on Debian/Ubuntu, `dnf` on RHEL 8+/Fedora)
 
+## Operational boundaries
+
+Examples are alternatives, not a script to run top-to-bottom. Inspect the exact host/distro and proposed package changes first; avoid blanket `-y` upgrades/removals on production without a maintenance plan. Formatting destroys data: verify device identity, mounts and backups before mkfs/fsck, and prefer UUIDs with a backed-up fstab. Keep an independent SSH/console path while changing firewall/mount/auth settings. Verify third-party repository signing-key fingerprints against official documentation before trusting them. Logs and process arguments may contain secrets; bound and redact captured output. Use authenticated TLS for remote log upload.
+
 ## Package Management
 
 ### Debian / Ubuntu (apt)
@@ -170,7 +174,7 @@ mount -a                   # Mount everything in fstab
 
 # Check and repair a filesystem (unmount first)
 umount /dev/sdb1
-fsck.ext4 -y /dev/sdb1
+fsck.ext4 /dev/sdb1  # inspect repair prompts; do not auto-accept on the wrong device
 
 # Monitor disk I/O in real time
 iostat -xz 2
@@ -217,7 +221,7 @@ lsof -i :80
 # Run a process immune to hangups (persists after logout)
 nohup /opt/myapp/start.sh > /var/log/myapp.log 2>&1 &
 
-# Limit CPU usage of a running process with cgroups v2
+# Start a NEW process with a CPU quota (does not constrain an existing PID)
 systemd-run --scope -p CPUQuota=25% --unit=limit-myapp /opt/myapp/start.sh
 ```
 
@@ -298,7 +302,7 @@ cat <<'EOF' > /etc/logrotate.d/myapp
 }
 EOF
 
-# Force a logrotate run for testing
+# Prefer logrotate -d for a non-mutating preview; force only when authorized
 logrotate -f /etc/logrotate.d/myapp
 
 # Centralized logging: forward journal to a remote syslog

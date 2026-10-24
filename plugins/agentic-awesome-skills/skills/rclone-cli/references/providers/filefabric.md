@@ -143,8 +143,8 @@ of your Enterprise File Fabric.
 Normally you will leave this blank and rclone will determine the
 correct root to use itself.
 
-However you can set this to restrict rclone to a specific folder
-hierarchy.
+This selects a client-side starting folder. It does not restrict the token's
+authority; constrain access through server-side user/token permissions.
 
 In order to do this you will have to find the `Folder ID` of the
 directory you wish rclone to display.  These aren't displayed in the

@@ -10,68 +10,72 @@ license: Apache-2.0
 license_source: https://github.com/huggingface/skills/blob/main/LICENSE
 ---
 
-# TRL Training on Hugging Face Jobs
+# Hugging Face Model Training
 
-## Detailed Guide
+## When to Use
 
-Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.
+Use for planning and running language-model SFT, DPO or GRPO training with
+TRL or Unsloth, and for preparing GGUF conversion. The bundled Unsloth example
+is a text-training example; it is not an implementation of vision training or
+streaming support. Read [the detailed guide](references/detailed-guide.md) and
+only the method-specific references needed for the task.
 
-## When to Use This Skill
+## Before Execution
 
-Use this skill when users want to:
-- Fine-tune language models on cloud GPUs without local infrastructure
-- Train with TRL methods (SFT, DPO, GRPO, etc.)
-- Run training jobs on Hugging Face Jobs infrastructure
-- Convert trained models to GGUF for local deployment (Ollama, LM Studio, llama.cpp)
-- Ensure trained models are permanently saved to the Hub
-- Use modern workflows with optimized defaults
+The user must approve the exact training data and model revisions, destination,
+hardware, duration and compute budget before a paid job. Training authorization
+does not automatically authorize public Hub repositories, telemetry, tracking
+Spaces, or uploading private datasets. Confirm current account eligibility,
+quotas and prices through the actual provider; do not infer them from old tables.
 
-### When to Use Unsloth
+Use whichever supported Jobs interface is actually available. Inspect its current
+schema before submitting. The string `$HF_TOKEN` is not a universal secret
+interpolation protocol. Use the host's documented secret binding without printing
+credentials, putting them in source, or changing an unrelated login session.
+Read-only operations need no write token. Grant write access only to an approved
+artifact destination.
 
-Use **Unsloth** (`references/unsloth.md`) instead of standard TRL when:
-- **Limited GPU memory** - Unsloth uses ~60% less VRAM
-- **Speed matters** - Unsloth is ~2x faster
-- Training **large models (>13B)** - memory efficiency is critical
-- Training **Vision-Language Models (VLMs)** - Unsloth has `FastVisionModel` support
+Validate sample values, types, chat roles, model chat templates and the complete
+bounded training subset before reserving compute. Column names alone do not prove
+compatibility. GRPO additionally needs an explicit, tested reward function. Pin
+reviewed dependency versions and immutable model/dataset revisions. Review any
+required remote model code separately; default to `trust_remote_code=False`.
 
-See `references/unsloth.md` for complete Unsloth documentation and `scripts/unsloth_sft_example.py` for a production-ready training script.
+## Workflow
 
-## Prerequisites Checklist
+1. Confirm the method and baseline; inspect the bundled example before adapting it.
+2. Run a bounded pilot with an explicit maximum number of steps and examples.
+   Verify memory use on the actual sequence length, precision and optimizer.
+   Multiple GPUs require a supported distributed launch; their memory is not
+   automatically a shared pool.
+3. Use measured pilot duration and a current user-supplied rate with
+   `scripts/estimate_cost.py --measured-hours 0.1 --hourly-rate 2`.
+   The numbers in this example are arithmetic inputs, not provider prices.
+4. Choose a deadline within the approved budget. Configure private durable
+   checkpoints or an approved storage destination before an ephemeral job starts.
+   Uploading to the Hub is one option; public publishing is never required.
+5. Inspect job state and sanitized logs. Check checkpoint recovery and evaluate
+   on held-out data before calling a run successful. Do not resubmit a job with an
+   uncertain outcome until its status is known.
 
-Before starting any training job, verify:
+## Examples
 
-### ✅ **Account & Authentication**
-- Hugging Face Account with [Pro](https://hf.co/pro), [Team](https://hf.co/enterprise), or [Enterprise](https://hf.co/enterprise) plan (Jobs require paid plan)
-- Authenticated login: Check with `hf_whoami()`
-- **HF_TOKEN for Hub Push** ⚠️ CRITICAL - Training environment is ephemeral, must push to Hub or ALL training results are lost
-- Token must have write permissions
-- **MUST pass `secrets={"HF_TOKEN": "$HF_TOKEN"}` in job config** to make token available (the `$HF_TOKEN` syntax
-  references your actual token value)
+For SFT, adapt `scripts/train_sft_example.py` to the approved model and text or
+chat dataset. For preference learning inspect `scripts/train_dpo_example.py`;
+for online rewards inspect `scripts/train_grpo_example.py`. These are examples
+requiring environment-specific verification, not certified production jobs.
 
-### ✅ **Dataset Requirements**
-- Dataset must exist on Hub or be loadable via `datasets.load_dataset()`
-- Format must match training method (SFT: "messages"/text/prompt-completion; DPO: chosen/rejected; GRPO: prompt-only)
-- **ALWAYS validate unknown datasets** before GPU training to prevent format failures (see Dataset Validation section below)
-- Size appropriate for hardware (Demo: 50-100 examples on t4-small; Production: 1K-10K+ on a10g-large/a100-large)
-
-### ⚠️ **Critical Settings**
-- **Timeout must exceed expected training time** - Default 30min is TOO SHORT for most training. Minimum recommended: 1-2 hours. Job fails and loses all progress if timeout is exceeded.
-- **Hub push must be enabled** - Config: `push_to_hub=True`, `hub_model_id="username/model-name"`; Job: `secrets={"HF_TOKEN": "$HF_TOKEN"}`
-
-## Example Training Scripts
-
-**Production-ready templates with all best practices:**
-
-Load these scripts for correctly:
-
-- **`scripts/train_sft_example.py`** - Complete SFT training with Trackio, LoRA, checkpoints
-- **`scripts/train_dpo_example.py`** - DPO training for preference learning
-- **`scripts/train_grpo_example.py`** - GRPO training for online RL
-
-These scripts demonstrate proper Hub saving, Trackio integration, checkpoint management, and optimized parameters. Pass their content inline to `hf_jobs()` or use as templates for custom scripts.
+For local conversion inspect `scripts/convert_to_gguf.py` before use. Review and
+pin llama.cpp and its dependencies. Keep intermediate artifacts until conversion
+and any separately approved upload succeed. Respect base-model, adapter and data
+licenses; a generated model card cannot grant rights you do not have.
 
 ## Limitations
 
-- Use this skill only when the task clearly matches its upstream product or API scope.
-- Verify commands, API behavior, pricing, quotas, credentials, and deployment effects against current official documentation before making changes.
-- Do not treat generated examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+Unsloth performance and supported architectures depend on versions, kernels,
+hardware and workload; percentages are not guarantees. The cost helper performs
+arithmetic only, not memory sizing, runtime prediction or live quoting. GPU
+training, model loading, uploads and external tracking have not been executed as
+part of this source review. References may show older API versions: resolve them
+against your pinned environment before executing. Do not disable the MPS memory
+watermark as a generic out-of-memory workaround.

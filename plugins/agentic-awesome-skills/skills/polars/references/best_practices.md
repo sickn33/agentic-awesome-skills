@@ -2,6 +2,8 @@
 
 Comprehensive guide to writing efficient Polars code and avoiding common pitfalls.
 
+Use `import polars.selectors as cs` for selector examples.
+
 ## Performance Optimization
 
 ### 1. Use Lazy Evaluation
@@ -24,7 +26,11 @@ result = lf.filter(pl.col("age") > 25).select("name", "age").collect()
 - Query optimization
 - Parallel execution planning
 
-### 2. Filter and Select Early
+### 2. Filter and select without changing semantics
+
+Filtering raw values before a mean is not equivalent to filtering the mean
+result. Push a filter across aggregation/join only after proving equivalence;
+the two examples below intentionally answer different questions.
 
 Push filters and column selection as early as possible in the pipeline:
 
@@ -81,7 +87,7 @@ Enable streaming for datasets larger than RAM:
 ```python
 # Streaming mode processes data in chunks
 lf = pl.scan_parquet("very_large.parquet")
-result = lf.filter(pl.col("value") > 100).collect(streaming=True)
+result = lf.filter(pl.col("value") > 100).collect(engine="streaming")
 
 # Or use sink for direct streaming writes
 lf.filter(pl.col("value") > 100).sink_parquet("output.parquet")
@@ -98,7 +104,7 @@ df = pl.read_csv("data.csv")
 # Good: Specify optimal types
 df = pl.read_csv(
     "data.csv",
-    dtypes={
+    schema_overrides={
         "id": pl.UInt32,  # Instead of Int64 if values fit
         "category": pl.Categorical,  # For low-cardinality strings
         "date": pl.Date,  # Instead of String
@@ -118,7 +124,7 @@ df = pl.read_csv(
 Structure code to maximize parallelization:
 
 ```python
-# Bad: Sequential pipe operations disable parallelization
+# Pipe is a composition helper; its body determines execution/parallelization
 df = (
     df.pipe(operation1)
     .pipe(operation2)
@@ -151,8 +157,8 @@ combined = pl.concat([df1, df2, df3], rechunk=True)
 ```python
 df.with_columns(
     status=pl.when(pl.col("age") >= 18)
-        .then("adult")
-        .otherwise("minor")
+        .then(pl.lit("adult"))
+        .otherwise(pl.lit("minor"))
 )
 ```
 
@@ -160,14 +166,14 @@ df.with_columns(
 ```python
 df.with_columns(
     grade=pl.when(pl.col("score") >= 90)
-        .then("A")
+        .then(pl.lit("A"))
         .when(pl.col("score") >= 80)
-        .then("B")
+        .then(pl.lit("B"))
         .when(pl.col("score") >= 70)
-        .then("C")
+        .then(pl.lit("C"))
         .when(pl.col("score") >= 60)
-        .then("D")
-        .otherwise("F")
+        .then(pl.lit("D"))
+        .otherwise(pl.lit("F"))
 )
 ```
 
@@ -177,12 +183,12 @@ df.with_columns(
     category=pl.when(
         (pl.col("revenue") > 1000000) & (pl.col("customers") > 100)
     )
-    .then("enterprise")
+    .then(pl.lit("enterprise"))
     .when(
         (pl.col("revenue") > 100000) | (pl.col("customers") > 50)
     )
-    .then("business")
-    .otherwise("starter")
+    .then(pl.lit("business"))
+    .otherwise(pl.lit("starter"))
 )
 ```
 
@@ -234,25 +240,25 @@ df.select("col1", "col2", "col3")
 df.select(pl.col("^sales_.*$"))
 
 # Starts with
-df.select(pl.col("^sales"))
+df.select(cs.starts_with("sales"))
 
 # Ends with
-df.select(pl.col("_total$"))
+df.select(cs.ends_with("_total"))
 
 # Contains
-df.select(pl.col(".*revenue.*"))
+df.select(cs.contains("revenue"))
 ```
 
 **By type:**
 ```python
 # All numeric columns
-df.select(pl.col(pl.NUMERIC_DTYPES))
+df.select(cs.numeric())
 
 # All string columns
 df.select(pl.col(pl.Utf8))
 
 # Multiple types
-df.select(pl.col(pl.NUMERIC_DTYPES, pl.Boolean))
+df.select((cs.numeric() | cs.boolean()))
 ```
 
 **Exclude columns:**
@@ -377,7 +383,7 @@ df = pl.read_csv("data.csv")
 # Good: Specify types for correctness and performance
 df = pl.read_csv(
     "data.csv",
-    dtypes={"id": pl.Int64, "date": pl.Date, "category": pl.Categorical}
+    schema_overrides={"id": pl.Int64, "date": pl.Date, "category": pl.Categorical}
 )
 ```
 
@@ -429,7 +435,7 @@ print(lf.explain())  # See query plan
 lf = pl.scan_parquet("data.parquet")
 
 # 2. Stream results
-result = lf.collect(streaming=True)
+result = lf.collect(engine="streaming")
 
 # 3. Select only needed columns
 lf = lf.select("col1", "col2")
@@ -538,7 +544,7 @@ lf = pl.scan_parquet("data/*.parquet")  # Parallel reading
 # 3. Specify schema when known
 lf = pl.scan_csv(
     "data.csv",
-    dtypes={"id": pl.Int64, "date": pl.Date}
+    schema_overrides={"id": pl.Int64, "date": pl.Date}
 )
 
 # 4. Use predicate pushdown
@@ -573,10 +579,10 @@ df.write_parquet(
 # Define reusable expressions
 age_group = (
     pl.when(pl.col("age") < 18)
-    .then("minor")
+    .then(pl.lit("minor"))
     .when(pl.col("age") < 65)
-    .then("adult")
-    .otherwise("senior")
+    .then(pl.lit("adult"))
+    .otherwise(pl.lit("senior"))
 )
 
 revenue_per_customer = pl.col("revenue") / pl.col("customer_count")
@@ -627,8 +633,8 @@ Always document complex expressions and transformations:
 ```python
 # Good: Document intent
 df = df.with_columns(
-    # Calculate customer lifetime value as sum of purchases
-    # divided by months since first purchase
+    # Observed monthly purchase rate, NOT predicted customer lifetime value.
+    # Define a policy for zero/negative observation windows before division.
     clv=(
         pl.col("total_purchases") /
         ((pl.col("last_purchase_date") - pl.col("first_purchase_date"))

@@ -118,8 +118,10 @@ overwrite can leave zero good checkpoints. `os.replace` maps to the atomic POSIX
 filesystem (and, unlike `os.rename`, overwrites atomically on Windows too), so:
 
 1. Write the whole state to `latest.pt.tmp`.
-2. `fsync` the file (and the directory) so bytes hit disk before the rename.
-3. `os.replace("latest.pt.tmp", "latest.pt")` — the swap is all-or-nothing.
+2. Flush and `fsync` the file before rename.
+3. `os.replace("latest.pt.tmp", "latest.pt")`, then `fsync` the containing directory on systems
+   that support it so the new directory entry is durable. Atomic rename needs a single filesystem;
+   remote/object storage may require a different commit protocol.
 4. Keep the previous `latest.pt` until the new one is committed; a kill at any point leaves one intact file.
 
 **Checkpoint to the platform's DURABLE location, not local scratch** (principle #4). A managed replacement
@@ -166,7 +168,10 @@ snapshot restores state.
 ## 5. Python checkpoint/resume skeleton
 
 Read this for the algorithm; adapt into the training script. The shape is platform-agnostic — only
-`DURABLE_DIR` changes per profile (§8 SCRIPT OVERRIDES).
+`DURABLE_DIR` changes per profile (§8 SCRIPT OVERRIDES). This is an incomplete algorithm sketch:
+implement sampler position/epoch, per-rank RNG, optional AMP scaler/EMA, final save and distributed
+coordination before using it for a real resumable job. Incrementing the counter alone does not skip
+previous batches; replaying them changes the experiment.
 
 ```python
 import os, random, signal, time
@@ -179,13 +184,14 @@ CKPT_EVERY_ITERS = 400                     # = round_down(Young/Daly W / sec_per
 
 def save_full_state(model, opt, sched, epoch, step):
     """Atomic write: tmp -> fsync -> os.replace. A kill at any point leaves one intact file."""
+    numpy_rng = np.random.get_state()
     state = {
         "model": model.state_dict(),
         "opt": opt.state_dict(),
         "sched": sched.state_dict(),
         "epoch": epoch, "step": step,        # resume the exact position, not the epoch start
         "rng_python": random.getstate(),
-        "rng_numpy": np.random.get_state(),
+        "rng_numpy": (numpy_rng[0], numpy_rng[1].tolist(), *numpy_rng[2:]),
         "rng_torch": torch.get_rng_state(),
         "rng_cuda": torch.cuda.get_rng_state_all(),
     }
@@ -194,18 +200,25 @@ def save_full_state(model, opt, sched, epoch, step):
         torch.save(state, f)
         f.flush()
         os.fsync(f.fileno())                 # bytes hit disk BEFORE the rename
-    os.replace(tmp, CKPT)                     # POSIX-atomic swap; prev file valid until this returns
+    os.replace(tmp, CKPT)                     # same-filesystem atomic swap
+    if hasattr(os, "O_DIRECTORY"):
+        dir_fd = os.open(DURABLE_DIR, os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            os.fsync(dir_fd)
+        finally:
+            os.close(dir_fd)
 
 def load_latest_if_any(model, opt, sched):
     """Unconditional load-latest: identical command resumes OR starts fresh. Returns (epoch, step)."""
     if not os.path.exists(CKPT):
         return 0, 0                          # first run, no checkpoint -> start from scratch
-    s = torch.load(CKPT, map_location="cpu")
+    s = torch.load(CKPT, map_location="cpu", weights_only=True)
     model.load_state_dict(s["model"])
     opt.load_state_dict(s["opt"])
     sched.load_state_dict(s["sched"])
     random.setstate(s["rng_python"])
-    np.random.set_state(s["rng_numpy"])
+    nr = s["rng_numpy"]
+    np.random.set_state((nr[0], np.asarray(nr[1], dtype=np.uint32), *nr[2:]))
     torch.set_rng_state(s["rng_torch"])
     torch.cuda.set_rng_state_all(s["rng_cuda"])
     return s["epoch"], s["step"]             # caller skips dataloader to this position

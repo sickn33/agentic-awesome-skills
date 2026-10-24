@@ -19,13 +19,15 @@ Practical guide to testing web applications with screen readers for comprehensiv
 
 ### 1. Major Screen Readers
 
-| Screen Reader | Platform  | Browser        | Usage |
-| ------------- | --------- | -------------- | ----- |
-| **VoiceOver** | macOS/iOS | Safari         | ~15%  |
-| **NVDA**      | Windows   | Firefox/Chrome | ~31%  |
-| **JAWS**      | Windows   | Chrome/IE      | ~40%  |
-| **TalkBack**  | Android   | Chrome         | ~10%  |
-| **Narrator**  | Windows   | Edge           | ~4%   |
+| Screen Reader | Platform | Common browser pairing |
+|---|---|---|
+| VoiceOver | macOS/iOS | Safari |
+| NVDA | Windows | Firefox/Chrome |
+| JAWS | Windows | Chrome/Edge |
+| TalkBack | Android | Chrome |
+| Narrator | Windows | Edge |
+
+Choose coverage from the actual audience and supported versions; unsourced market-share percentages are not a test basis.
 
 ### 2. Testing Priority
 
@@ -362,7 +364,7 @@ Reading Controls (swipe up then right):
   aria-labelledby="dialog-title"
   aria-describedby="dialog-desc"
 >
-  <h2 id="dialog-title">Confirm Delete</h2>
+  <h2 id="dialog-title" tabindex="-1">Confirm Delete</h2>
   <p id="dialog-desc">This action cannot be undone.</p>
   <button>Cancel</button>
   <button>Delete</button>
@@ -370,44 +372,12 @@ Reading Controls (swipe up then right):
 ```
 
 ```javascript
-// Focus management
-function openModal(modal) {
-  // Store last focused element
-  lastFocus = document.activeElement;
+// Prefer a native <dialog> and its showModal()/close() behavior in a real implementation.
+// For the custom role=dialog fragment above, implement and test all of:
+// initial focus, visible/enabled tabbable discovery, Tab/Shift+Tab wrapping,
+// Escape close, inert background, listener cleanup and focus restoration.
+// ARIA attributes alone do not implement modal behavior.
 
-  // Move focus to modal
-  modal.querySelector("h2").focus();
-
-  // Trap focus
-  modal.addEventListener("keydown", trapFocus);
-}
-
-function closeModal(modal) {
-  // Return focus
-  lastFocus.focus();
-}
-
-function trapFocus(e) {
-  if (e.key === "Tab") {
-    const focusable = modal.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-    );
-    const first = focusable[0];
-    const last = focusable[focusable.length - 1];
-
-    if (e.shiftKey && document.activeElement === first) {
-      last.focus();
-      e.preventDefault();
-    } else if (!e.shiftKey && document.activeElement === last) {
-      first.focus();
-      e.preventDefault();
-    }
-  }
-
-  if (e.key === "Escape") {
-    closeModal(modal);
-  }
-}
 ```
 
 ### 2. Live Regions
@@ -498,8 +468,8 @@ tablist.addEventListener("keydown", (e) => {
 ## Debugging Tips
 
 ```javascript
-// Log what screen reader sees
-function logAccessibleName(element) {
+// Inspect raw DOM hints only; this is NOT the computed accessible name/tree
+function logRawAccessibilityHints(element) {
   const computed = window.getComputedStyle(element);
   console.log({
     role: element.getAttribute("role") || element.tagName,
@@ -542,3 +512,5 @@ function logAccessibleName(element) {
 - [NVDA User Guide](https://www.nvaccess.org/files/nvda/documentation/userGuide.html)
 - [JAWS Documentation](https://support.freedomscientific.com/Products/Blindness/JAWS)
 - [WebAIM Screen Reader Survey](https://webaim.org/projects/screenreadersurvey/)
+
+Commands/gestures vary by keyboard layout, reader version and user settings; verify the actual configuration. Create live regions before changing their content and avoid duplicate assertive announcements. The form-error fix still needs a visible programmatic label. Tab activateTab is an omitted helper: it must update aria-selected/tabindex/hidden state and click behavior, with manual activation when rendering latency warrants it. Record reader/browser/OS versions, exact speech/focus observations and untested combinations; automated DOM checks do not certify screen-reader accessibility.

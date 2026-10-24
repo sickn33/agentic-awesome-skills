@@ -44,7 +44,7 @@ Options:
 
 ```bash
 # Run with JSON output for AI agents
-longbridge dividend --format json
+longbridge dividend AAPL.US --format json
 
 # See all options
 longbridge dividend --help

@@ -45,7 +45,7 @@ class GenericJuntaScraper(AbstractJuntaScraper):
                 "nome" in k or "leiloeiro" in k or "auxiliar" in k
                 for k in col.keys()
             )
-            if not has_name_col and len(headers) < 2:
+            if not has_name_col:
                 continue
 
             def gcol(cells, frags):
@@ -77,34 +77,6 @@ class GenericJuntaScraper(AbstractJuntaScraper):
             if results:
                 break  # Parar na primeira tabela com resultados
 
-        # Tentativa 2: listas (ul/ol li)
-        if not results:
-            list_items = soup.select("ul.leiloeiros li, ol.leiloeiros li, .lista-leiloeiros li")
-            if not list_items:
-                list_items = soup.select("ul li, ol li")
-
-            for li in list_items:
-                text = self.clean(li.get_text(" | "))
-                if not text or len(text) < 5:
-                    continue
-                results.append(self.make_leiloeiro(nome=text, municipio=self.municipio_default))
-
-        # Tentativa 3: divs/articles com conteúdo textual
-        if not results:
-            content = soup.select_one(
-                ".conteudo-pagina, .page-content, .entry-content, article, main .content"
-            )
-            if content:
-                import re
-                for p in content.find_all(["p", "div", "li"]):
-                    text = self.clean(p.get_text())
-                    if not text or len(text) < 5:
-                        continue
-                    # Filtrar parágrafos que parecem ser registros de pessoas
-                    if re.search(r"\b[A-ZÁÉÍÓÚÀÃÕÇ][a-záéíóúàãõç]{2,}", text):
-                        results.append(self.make_leiloeiro(
-                            nome=text,
-                            municipio=self.municipio_default,
-                        ))
-
+        # Unstructured headings, menus and prose are not verified registry rows.
+        # Retain a truthful empty/candidate result for manual inspection instead.
         return results

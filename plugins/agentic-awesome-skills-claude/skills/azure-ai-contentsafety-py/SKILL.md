@@ -50,6 +50,8 @@ client = ContentSafetyClient(
 )
 ```
 
+Use only an approved endpoint/account, content and cost/retention policy; uploads disclose text/images to a hosted classifier. Bound input bytes and use reviewed SDK models/imports (azure-identity is additionally needed for Entra ID). Classification can miss harm or flag benign context: severity zero is not a universal safety guarantee. Validate thresholds on representative languages/domains, define outage/ambiguous-result handling and human appeal/review. Blocklist mutations can affect real moderation and require explicit scope; redact content in logs and close clients/credentials.
+
 ## Analyze Text
 
 ```python
@@ -83,7 +85,7 @@ client = ContentSafetyClient(endpoint, AzureKeyCredential(key))
 
 # From file
 with open("image.jpg", "rb") as f:
-    image_data = base64.b64encode(f.read()).decode("utf-8")
+    image_data = f.read()  # SDK serializes bytes to the REST base64 representation
 
 request = AnalyzeImageOptions(
     image=ImageData(content=image_data)
@@ -191,7 +193,7 @@ request = AnalyzeTextOptions(
 
 | Level | Text Range | Image Range | Meaning |
 |-------|------------|-------------|---------|
-| 0 | Safe | Safe | No harmful content |
+| 0 | Not detected | Not detected | Model did not detect harm in supported categories |
 | 2 | Low | Low | Mild references |
 | 4 | Medium | Medium | Moderate content |
 | 6 | High | High | Severe content |

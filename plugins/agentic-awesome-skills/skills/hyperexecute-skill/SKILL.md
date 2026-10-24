@@ -27,11 +27,13 @@ Use this skill when you need operates HyperExecute end-to-end for TestMu AI/Lamb
 
 1. Locate the HyperExecute CLI. If missing, ask before downloading it unless the user explicitly approved an autonomous HyperExecute session.
 2. Run `hyperexecute analyze` when the CLI is available; use local inspection only as fallback.
-3. Create or repair `hyperexecute.yaml` from the analyze output, project test commands, and templates in `reference/`.
-4. Run `node scripts/doctor.js --config hyperexecute.yaml` and `node scripts/validate-config.js hyperexecute.yaml`.
+3. Create or repair `hyperexecute.yaml` from the analyze output, project test commands, and the linked upstream recipes; `reference/` templates are not bundled.
+4. Run `node "<absolute-skill-root>/scripts/doctor.js" --config hyperexecute.yaml` and `node "<absolute-skill-root>/scripts/validate-config.js" hyperexecute.yaml`.
 5. Validate with the official CLI: `./hyperexecute --user "$LT_USERNAME" --key "$LT_ACCESS_KEY" --config hyperexecute.yaml --validate`.
 6. Ask before a real cloud job unless the user has explicitly opted into an autonomous HyperExecute session.
 7. For failures, download logs/artifacts/reports and use `reference/troubleshooting.md`.
+
+`analyze`, CLI validation and run/upload behavior depend on the reviewed installed CLI: inspect help and payload selection before invoking. Pin the downloaded binary/version and verify origin, protect logs/credentials and establish exact account/project/data/spend/retry limits; “autonomous” is not unlimited authority. `.gitignore` alone may not define uploaded payload exclusions. Local helper output is advisory, not full YAML/schema or cloud readiness proof. Artifact names/content are untrusted; do not execute downloaded reports/scripts or expose private artifacts publicly.
 
 ## Operating Rules
 
@@ -53,7 +55,7 @@ Use this skill when you need operates HyperExecute end-to-end for TestMu AI/Lamb
 
 - `scripts/doctor.js`: checks CLI readiness, credentials, config presence, and optional official validation.
 - `scripts/validate-config.js`: lightweight config linting for common mistakes before official CLI validation.
-- `scripts/build-command.js`: prints safe validate/run/debug/download commands using environment variable references.
+- `scripts/build-command.js`: prints shell-quoted validate/run/debug commands; printed commands are not execution authorization using environment variable references.
 - `scripts/summarize-artifacts.js`: summarizes downloaded logs, reports, and artifacts for triage.
 
 ## References

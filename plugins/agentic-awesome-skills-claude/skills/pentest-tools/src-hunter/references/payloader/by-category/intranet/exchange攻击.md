@@ -2,6 +2,8 @@
 
 _5 条 intranet payload_
 
+这些是历史漏洞链的说明，不是可直接复现的完整 PoC。所列 proxylogon.py、proxyshell.py、proxytoken.py、oab.py、exchanger.py 均未随此 skill 提供，参数未验证，不应按名称随意下载执行。目标必须替换为授权实验服务器；URL 可达、版本标识或单个 HTTP 状态码都不足以证明漏洞，需核对服务器补丁与链条前置条件。
+
 ### ProxyLogon攻击  `proxylogon`
 _CVE-2021-26855 Exchange SSRF_
 子类：**ProxyLogon** · tags: `exchange` `proxylogon` `cve-2021-26855`
@@ -179,8 +181,8 @@ python proxytoken.py -u https://exchange.com -e user@domain.com -a
 **访问邮箱**
 > 访问EWS接口
 ```
-curl -k https://exchange.com/ews/Exchange.asmx -H "X-ClientApplication: Test"
-绕过认证访问EWS
+# 单独添加 X-ClientApplication: Test 不会证明或实现 ProxyToken 认证绕过。
+# 在隔离实验中按供应商公告核对完整前置条件及修补状态。
 ```
 
 
@@ -245,7 +247,7 @@ New-MailboxExportRequest -Mailbox user@domain.com -FilePath "\\server\share\user
 
 **概述：** Exchange邮箱可通过多种协议访问。
 
-**漏洞原理：** 获取凭证后可完全控制邮箱。
+**判定边界：** 访问取决于账户权限、MFA、协议启用情况和策略；有效凭证不等于完全控制邮箱，也不自动构成漏洞。
 
 **利用方法：** 利用流程：1) 获取凭证 2) 选择访问方式 3) 访问邮箱数据
 

@@ -11,7 +11,7 @@
   usually has them already.
 - @presentation-deck - repurposed into a post, and the source of most good business
   content.
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/seo-directory-backlinks/SKILL.md) - the LinkedIn company page is one of the highest-authority
+- [seo-directory-backlinks](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/seo-directory-backlinks/SKILL.md) - the LinkedIn company page is one of the highest-authority
   citations available.
 - @free-design-resources - the free graphic tools, icon sets and stock sources for posts.
 

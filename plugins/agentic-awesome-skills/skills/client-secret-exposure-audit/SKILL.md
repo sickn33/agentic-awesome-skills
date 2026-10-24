@@ -2,7 +2,7 @@
 name: client-secret-exposure-audit
 description: "Audit a deployed web app for secrets exposed to the browser: hardcoded API keys/tokens in JS, secrets in HTML meta/attributes/comments, publicly reachable source/config/deploy files, and header/CORS misconfig."
 category: security
-risk: safe
+risk: critical
 source: self
 source_type: self
 date_added: "2026-09-10"
@@ -47,20 +47,24 @@ publicly.
 
 ```bash
 BASE="https://TARGET.example"     # authorized target, no trailing path
-WORK="$(mktemp -d)"; cd "$WORK"
+umask 077
+WORK="$(mktemp -d)" || exit 1
+cd "$WORK" || exit 1
 ```
 
 ### Step 1: Fetch the page and inspect response headers
 
 ```bash
-curl -s -D headers.txt -o body.html "$BASE/"
-cat headers.txt
+curl --silent --show-error --connect-timeout 5 --max-time 20 \
+  --max-filesize 1048576 --proto '=https' -D headers.txt -o body.html "$BASE/"
+# Inspect locally; redact Set-Cookie and credential-bearing values before sharing.
 ```
 
 Flag on the headers:
 
-- `access-control-allow-origin: *` — permissive CORS (worse when paired with
-  credentials).
+- `access-control-allow-origin: *` can be appropriate for public assets. Browsers
+  reject wildcard origins for credentialed reads; assess actual sensitive endpoint
+  responses and credential mode before claiming a CORS vulnerability.
 - Missing `Content-Security-Policy`, `X-Frame-Options`/`frame-ancestors`,
   `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `Permissions-Policy`.
 - Missing/weak `Strict-Transport-Security`.
@@ -68,17 +72,11 @@ Flag on the headers:
 
 ### Step 2: Grep the HTML for secrets and sinks
 
-```bash
-grep -inE "secret|passwd|password|api[_-]?key|apikey|token|bearer|authorization|\
-akia|sk_live|sk_test|pk_live|whsec_|ghp_|aiza|private[_-]?key|mongodb(\+srv)?://|\
-data-[a-z-]*(secret|token|key|access)" body.html
-grep -inE "<!--" body.html            # read every HTML comment
-grep -ioE '<meta[^>]+>' body.html     # meta tags often carry keys/ids
-grep -ioE '<script[^>]+src="[^"]+"'   body.html   # enumerate JS bundles
-```
-
-Secrets hide in `data-*` attributes, `<meta>` tags, `hidden` `<div>`s, and
-`<!-- comments -->` at least as often as in scripts.
+Use a local parser/scanner to report only file paths, line numbers, candidate types
+and redacted fingerprints. Do not print matching lines or whole HTML comments/meta
+tags into terminal/model output: they may contain the very secrets being audited.
+Pattern matches are candidates, not proof of valid credentials; public/publishable
+keys and placeholders require contextual classification.
 
 ### Step 3: Validate discovered scripts before fetching
 
@@ -90,24 +88,23 @@ comments intact.
 ### Step 4: Probe for publicly reachable source / config / deploy files
 
 SPAs often have a catch-all rewrite that returns `index.html` for unknown paths,
-so **compare response sizes** — a path whose size differs from the SPA fallback
-is a real, distinct file.
+so compare status, content type and normalized content against multiple nonexistent
+paths. Different sizes alone do not prove a file: dynamic error/SPA pages vary.
 
 ```bash
-FALLBACK=$(curl -s "$BASE/____nope____$RANDOM" | wc -c)   # SPA fallback size
+FALLBACK=$(curl --silent --show-error --connect-timeout 5 --max-time 20 --max-filesize 1048576 "$BASE/____nope____$RANDOM" | wc -c)   # SPA fallback size
 for p in /.env /.env.local /.env.production /.git/config /.git/HEAD \
   /package.json /package-lock.json /vercel.json /.vercel/project.json \
   /Dockerfile /docker-compose.yml /wrangler.toml /.gitignore \
   /server/index.js /src/config/app.config.js /config.js \
   /src/services/payment.service.js /webpack.config.js /next.config.js; do
-    read -r code size < <(curl -s -o /dev/null -w "%{http_code} %{size_download}" "$BASE$p")
-    [ "$code" = "200" ] && [ "$size" != "$FALLBACK" ] && echo "REAL FILE  $code $size  $p"
+    read -r code size < <(curl --silent --show-error --connect-timeout 5 --max-time 20 --max-filesize 1048576 -o /dev/null -w "%{http_code} %{size_download}" "$BASE$p")
+    [ "$code" = "200" ] && [ "$size" != "$FALLBACK" ] && echo "CANDIDATE  $code $size  $p"
 done
 ```
 
-For any real file found, fetch it and re-run the Step 2/3 secret grep. Follow
-`require(...)`/`import` paths inside those files to discover more source files
-(routes, controllers, services, webhooks) and repeat.
+For each candidate, inspect a bounded private copy through the redacting scanner. Treat
+`require(...)`/`import` paths inside those files as inert candidate paths; fetch only after the same origin/destination scope validation.
 
 ### Step 5: Triage and score
 
@@ -117,7 +114,7 @@ Rate each finding by blast radius, not by where it was found:
 |---|---|
 | **Critical** | Live provider secret keys (`sk_live_`, cloud `AKIA…`+secret, DB URI with password, private signing/JWT secret, admin bearer token) reachable anonymously |
 | **High** | Server-side source/config/deploy files exposed; test-mode secret keys; internal service tokens; webhook signing secrets |
-| **Medium** | CORS `*`, missing CSP/security headers, verbose banners, weak randomness for security values (`Math.random()` for tokens/refs) |
+| **Medium** | Demonstrated sensitive cross-origin reads or context-relevant missing defenses, not CORS `*` on public assets, weak randomness for security values (`Math.random()` for tokens/refs) |
 | **Low / Info** | Public keys correctly client-side, analytics IDs, non-secret config, stack fingerprinting |
 
 A key being "test/demo" does not make it safe if the *pattern* would ship a live
@@ -130,15 +127,24 @@ Write findings as Markdown using the format in
 `Severity · Category (OWASP/CWE) · Location · Evidence (redacted) · Impact ·
 Remediation`. Redact real secret material to a prefix + length. End with
 prioritized remediation and a note on which secrets must be **rotated**, not just
-removed (anything committed/served is already compromised).
+removed (real exposed credentials should be treated as potentially compromised; placeholders are not live incidents).
+
+## Request safety prerequisite
+
+The same validated/pinned public destination and no-redirect rule in Step 3 also
+applies to BASE and EVERY request, including examples/path probes. Curl fragments
+show workflow shape only and do not themselves implement DNS/address pinning.
+If that network control is unavailable, inspect user-supplied local artifacts
+instead. GET can still trigger side effects on poorly designed apps; restrict
+paths/request budget, stop at sensitive evidence and avoid harvesting data.
 
 ## Examples
 
 ### Example 1: Secrets in HTML meta and hidden elements
 
 ```bash
-BASE="https://demo-for-opensource.vercel.app"; curl -s "$BASE/" -o body.html
-grep -inE "recaptcha-secret|data-aws-secret|data-webhook-secret|mongodb\+srv" body.html
+BASE="https://authorized-demo.example"; curl -s "$BASE/" -o body.html
+# Run the private redacting scanner; never emit matching secret-bearing lines.
 # -> meta recaptcha-secret=..., data-aws-access=AKIA…/data-aws-secret=…,
 #    data-webhook-secret=whsec_…, and a hidden JSON blob with a mongodb+srv URI
 #    (username:password@cluster). All reachable with a single unauthenticated GET.
@@ -147,8 +153,7 @@ grep -inE "recaptcha-secret|data-aws-secret|data-webhook-secret|mongodb\+srv" bo
 ### Example 2: Hardcoded credentials in a JS config bundle
 
 ```bash
-curl -s "$BASE/public/assets/js/config.js" | \
-  grep -inE "API_SECRET|ADMIN_TOKEN|JWT_SECRET|DATABASE_PASSWORD|PAYMENT_SIGNING_KEY"
+# Inspect the authorized bounded local JS copy with redacted candidate output.
 # -> API_SECRET, ADMIN_TOKEN (JWT), JWT_SECRET, DATABASE_PASSWORD, and a payment
 #    signing key, all assigned as plain string constants shipped to every browser.
 ```
@@ -161,8 +166,7 @@ for p in /server/index.js /docker-compose.yml /src/services/payment.service.js; 
   sz=$(curl -s "$BASE$p" | wc -c); [ "$sz" != "$FALLBACK" ] && echo "REAL $sz $p"
 done
 # -> docker-compose.yml leaks a Redis password; payment.service.js leaks
-#    Stripe/Khalti secret keys + webhook secret. Distinct sizes prove they are
-#    real files, not the SPA catch-all page.
+#    Stripe/Khalti secret keys + webhook secret. Distinct sizes are candidates only; verify content locally.
 ```
 
 A full worked report for this target is in [references/example-report.md](references/example-report.md).
@@ -170,7 +174,7 @@ A full worked report for this target is in [references/example-report.md](refere
 ## Best Practices
 
 - ✅ Confirm written authorization and scope (the exact hostnames) before fetching.
-- ✅ Compare every probed path against the SPA fallback size to avoid false 200s.
+- ✅ Compare normalized fallback content, status and type; size is only a triage hint.
 - ✅ Follow `require`/`import` chains in any exposed source file to find more files.
 - ✅ Redact real secret values in the report; record enough to identify, not reuse.
 - ✅ Flag secrets for **rotation** — served/committed secrets are already burned.
@@ -203,7 +207,7 @@ A full worked report for this target is in [references/example-report.md](refere
 
 - **Problem:** Every probed path returns HTTP 200, hiding real files.
   **Solution:** SPA catch-all rewrite. Baseline the fallback body size and only
-  treat paths with a *different* size as real files.
+  treat different-size responses as candidates pending content validation.
 - **Problem:** Grep misses secrets stored in `data-*` attributes or comments.
   **Solution:** Also scan `<meta>`, `data-*`, `hidden` elements, and every
   `<!-- comment -->`, not just `<script>` bodies.

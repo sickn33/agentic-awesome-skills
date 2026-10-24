@@ -10,7 +10,7 @@
         "Applies three pricing axes framework",
         "Evaluates multiple pricing metrics",
         "Discusses which metric aligns with value delivered",
-        "Recommends good-better-best tier structure",
+        "Evaluates good-better-best against segment evidence",
         "Addresses pricing psychology",
         "Provides specific pricing recommendation with rationale"
       ],
@@ -27,7 +27,7 @@
         "Provides communication strategy",
         "Addresses new vs existing customer timing",
         "Suggests annual billing as softening measure",
-        "Notes some churn is expected"
+        "Quantifies churn/margin tolerance before rollout"
       ],
       "files": []
     },
@@ -49,7 +49,7 @@
     {
       "id": 4,
       "prompt": "We have a Basic ($19), Pro ($49), and Enterprise (custom) plan. The Pro plan gets 70% of signups. Should we add a plan between Pro and Enterprise?",
-      "expected_output": "Should apply the good-better-best tier structure framework. Should analyze the current situation: Pro capturing 70% is actually healthy, but the gap to Enterprise suggests there may be mid-market customers underserved. Should evaluate whether a 4th tier makes sense: does it address a real gap, or will it create choice paralysis? Should apply pricing psychology (Hick's Law — more options can reduce decisions). Should recommend either a 4th tier with clear differentiation or adjusting the Pro plan to better bridge the gap.",
+      "expected_output": "Should apply the good-better-best tier structure framework. Should analyze the current situation: Pro capturing 70% is descriptive and alone does not establish healthy economics, but the gap to Enterprise suggests there may be mid-market customers underserved. Should evaluate whether a 4th tier makes sense: does it address a real gap, or will it create choice paralysis? Should apply pricing psychology (Hick's Law — more options can reduce decisions). Should recommend either a 4th tier with clear differentiation or adjusting the Pro plan to better bridge the gap.",
       "assertions": [
         "Applies good-better-best tier structure",
         "Analyzes current tier performance",
@@ -63,7 +63,7 @@
     {
       "id": 5,
       "prompt": "What pricing psychology tactics should we use on our pricing page? We want the $79 plan to be the most popular.",
-      "expected_output": "Should apply the pricing psychology section: anchoring (show the $79 plan next to a higher-priced plan), decoy effect (make the lower plan look less valuable), visual emphasis (highlight or 'recommend' the $79 plan), charm pricing ($79 vs $80), Rule of 100 (percentage discounts below $100, dollar discounts above), loss framing (show what lower plans miss). Should provide specific pricing page design recommendations. Should cross-reference cro for broader pricing page optimization.",
+      "expected_output": "Should apply the pricing psychology section: anchoring (show the $79 plan next to a higher-priced plan), transparent comparison (show real feature/value differences without a fake decoy), visual emphasis (highlight or 'recommend' the $79 plan), charm pricing ($79 vs $80), Rule of 100 (percentage discounts below $100, dollar discounts above), loss framing (show what lower plans miss). Should provide specific pricing page design recommendations. Should cross-reference cro for broader pricing page optimization.",
       "assertions": [
         "Applies pricing psychology tactics",
         "Applies anchoring effect",

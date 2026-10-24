@@ -9,6 +9,7 @@ import * as THREE from "three";
 
 // Simple procedural animation with Timer (recommended in r183)
 const timer = new THREE.Timer();
+timer.connect(document); // visibility handling; dispose during teardown
 
 renderer.setAnimationLoop(() => {
   timer.update();
@@ -22,8 +23,10 @@ renderer.setAnimationLoop(() => {
 });
 ```
 
-**Note:** `THREE.Timer` is recommended over `THREE.Clock` as of r183. Timer pauses when the page is hidden and has a cleaner API. `THREE.Clock` still works but is considered legacy.
+**Note:** `THREE.Timer` is recommended over `THREE.Clock` as of r183. Timer uses page visibility when connected to document and has a cleaner API. `THREE.Clock` still works but is considered legacy.
 
+
+Examples are independent fragments requiring scene, renderer, model and clock setup; do not concatenate every animate function. Stop loops/listeners, stop mixer actions and uncache disposed roots during teardown. Cap or substep physics delta after suspension; honor reduced-motion preferences in interactive UI.
 
 ## Animation System Overview
 
@@ -56,8 +59,8 @@ const clip = new THREE.AnimationClip("bounce", 2, [track]);
 
 ```javascript
 // Number track (single value)
-new THREE.NumberKeyframeTrack(".opacity", times, [1, 0]);
-new THREE.NumberKeyframeTrack(".material.opacity", times, [1, 0]);
+new THREE.NumberKeyframeTrack(".opacity", [0, 1], [1, 0]);
+new THREE.NumberKeyframeTrack(".material.opacity", [0, 1], [1, 0]);
 
 // Vector track (position, scale)
 new THREE.VectorKeyframeTrack(".position", times, [
@@ -97,11 +100,11 @@ new THREE.ColorKeyframeTrack(".material.color", times, [
 // Boolean track
 new THREE.BooleanKeyframeTrack(".visible", [0, 0.5, 1], [true, false, true]);
 
-// String track (for morph targets)
-new THREE.StringKeyframeTrack(
+// Numeric track (morph influence weights are numbers)
+new THREE.NumberKeyframeTrack(
   ".morphTargetInfluences[smile]",
   [0, 1],
-  ["0", "1"],
+  [0, 1],
 );
 ```
 
@@ -272,6 +275,7 @@ function animate() {
 ```javascript
 // Access skeleton from skinned mesh
 const skinnedMesh = model.getObjectByProperty("type", "SkinnedMesh");
+if (!skinnedMesh) throw new Error("Model has no skinned mesh");
 const skeleton = skinnedMesh.skeleton;
 
 // Access bones
@@ -292,7 +296,9 @@ scene.add(helper);
 
 ```javascript
 function animate() {
-  const time = clock.getElapsedTime();
+  const delta = clock.getDelta(); // sample once per frame
+  const time = clock.elapsedTime;
+  mixer.update(delta); // apply animation clips before manual bone overrides
 
   // Animate bone
   const headBone = skeleton.bones.find((b) => b.name === "Head");
@@ -300,8 +306,7 @@ function animate() {
     headBone.rotation.y = Math.sin(time) * 0.3;
   }
 
-  // Update mixer if also playing clips
-  mixer.update(clock.getDelta());
+  // Manual bone override above remains after mixer update.
 }
 ```
 
@@ -441,8 +446,9 @@ clip.duration;
 // Optimize clip (remove redundant keyframes)
 clip.optimize();
 
-// Reset clip to first frame
+// Recompute duration from tracks (does not rewind playback)
 clip.resetDuration();
+// To rewind an action: action.reset().play();
 ```
 
 
@@ -536,17 +542,11 @@ function animate() {
 5. **Limit active mixers**: Each mixer.update() has a cost
 
 ```javascript
-// Pause animation when not visible
-mesh.onBeforeRender = () => {
-  action.paused = false;
-};
-
-mesh.onAfterRender = () => {
-  // Check if will be visible next frame
-  if (!isInFrustum(mesh)) {
-    action.paused = true;
-  }
-};
+// Evaluate visibility from the application frame loop, even while culled.
+function updateVisibleAnimation(delta) {
+  action.paused = !isInFrustum(mesh); // application-owned frustum test
+  mixer.update(delta);
+}
 
 // Cache clips
 const clipCache = new Map();

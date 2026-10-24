@@ -1,10 +1,13 @@
 # Voice AI Engine Development - Detailed Guide
 
+> These examples are mock implementations and illustrative integration sketches, not production adapters. Full-response buffering is optional and raises first-audio latency; ordered sentence streaming is valid. Muting the sole microphone/transcriber prevents barge-in: use echo cancellation and an independent speech detector for duplex interruption. Pacing must derive from actual sample rate, channels and bytes per sample, account for generator wait and client buffer acknowledgements, and flush stale playback on interruption. Estimated text offsets are not proof of words heard. Keep provider input/output formats compatible rather than universally forcing 16kHz PCM.
+
+
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
 ## Overview
 
-This skill guides you through building production-ready voice AI engines with real-time conversation capabilities. Voice AI engines enable natural, bidirectional conversations between users and AI agents through streaming audio processing, speech-to-text transcription, LLM-powered responses, and text-to-speech synthesis.
+This skill guides you through building prototype voice AI engines with real-time conversation capabilities. Voice AI engines enable natural, bidirectional conversations between users and AI agents through streaming audio processing, speech-to-text transcription, LLM-powered responses, and text-to-speech synthesis.
 
 The core architecture uses an async queue-based worker pipeline where each component runs independently and communicates via `asyncio.Queue` objects, enabling concurrent processing, interrupt handling, and real-time streaming at every stage.
 
@@ -13,7 +16,7 @@ The core architecture uses an async queue-based worker pipeline where each compo
 
 ### The Worker Pipeline Pattern
 
-Every voice AI engine follows this pipeline:
+A common decomposed voice pipeline is:
 
 ```
 Audio In → Transcriber → Agent → Synthesizer → Audio Out
@@ -23,7 +26,7 @@ Audio In → Transcriber → Agent → Synthesizer → Audio Out
 **Key Benefits:**
 - **Decoupling**: Workers only know about their input/output queues
 - **Concurrency**: All workers run simultaneously via asyncio
-- **Backpressure**: Queues automatically handle rate differences
+- **Backpressure**: Use bounded queues and awaited put operations for backpressure; unbounded queues do not limit growth
 - **Interruptibility**: Everything can be stopped mid-stream
 
 ### Base Worker Pattern
@@ -107,7 +110,7 @@ class Transcription:
 **Critical Implementation Details**:
 - Use WebSocket for bidirectional streaming
 - Run sender and receiver tasks concurrently with `asyncio.gather()`
-- Mute transcriber when bot speaks to prevent echo/feedback loops
+- Use echo cancellation and VAD for duplex speech; muting the sole input is a half-duplex fallback that prevents barge-in
 - Handle both final and partial transcriptions
 
 ### 2. Agent (Text → Response)
@@ -140,7 +143,7 @@ class BaseAgent:
 **Critical Implementation Details**:
 - Maintain conversation history in `Transcript` object
 - Stream responses using `AsyncGenerator`
-- **IMPORTANT**: Buffer entire LLM response before yielding to synthesizer (prevents audio jumping)
+- Choose full-response buffering for simple serialized playback or ordered sentence streaming for lower latency; overlapping playback is an orchestration bug, not an inevitable result of streaming
 - Handle interrupts by canceling current generation task
 - Update conversation history with partial messages on interrupt
 
@@ -203,15 +206,15 @@ async def send_speech_to_output(self, message, synthesis_result,
             )
             return message_sent, True  # cut_off = True
 
-        start_time = time.time()
+        start_time = asyncio.get_running_loop().time()
 
         # Send chunk to output device
-        self.output_device.consume_nonblocking(chunk_result.chunk)
+        await self.output_device.consume_nonblocking(chunk_result.chunk)
 
         # CRITICAL: Wait for chunk to play before sending next one
         # This is what makes interrupts work!
         speech_length = seconds_per_chunk
-        processing_time = time.time() - start_time
+        processing_time = asyncio.get_running_loop().time() - start_time
         await asyncio.sleep(max(speech_length - processing_time, 0))
 
         chunk_idx += 1
@@ -259,7 +262,7 @@ def broadcast_interrupt(self):
             interruptible_event = self.interruptible_events.get_nowait()
             if interruptible_event.interrupt():  # Sets interruption_event
                 num_interrupts += 1
-        except queue.Empty:
+        except asyncio.QueueEmpty:
             break
 
     # Cancel current tasks
@@ -423,7 +426,7 @@ async def websocket_endpoint(websocket: WebSocket):
 
 **Cause**: Sending text to synthesizer in small chunks causes multiple TTS calls.
 
-**Solution**: Buffer the entire LLM response before sending to synthesizer:
+**Solution**: Either buffer the response for simple serialized playback or implement ordered sentence streaming; the former raises first-audio latency:
 
 ```python
 # ❌ Bad: Yields sentence-by-sentence
@@ -443,7 +446,7 @@ yield GeneratedResponse(message=BaseMessage(text=full_response))
 
 **Cause**: Transcriber not muted during bot speech.
 
-**Solution**: Mute transcriber when bot starts speaking:
+**Solution**: For a half-duplex fallback only, mute during playback; keep an independent barge-in path for duplex:
 
 ```python
 # Before sending audio to output
@@ -462,13 +465,13 @@ self.transcriber.unmute()
 
 ```python
 async for chunk in synthesis_result.chunk_generator:
-    start_time = time.time()
+    start_time = asyncio.get_running_loop().time()
 
     # Send chunk
-    output_device.consume_nonblocking(chunk)
+    await output_device.consume_nonblocking(chunk)
 
     # Wait for chunk duration before sending next
-    processing_time = time.time() - start_time
+    processing_time = asyncio.get_running_loop().time() - start_time
     await asyncio.sleep(max(seconds_per_chunk - processing_time, 0))
 ```
 
@@ -488,7 +491,7 @@ try:
 finally:
     # Cleanup
     await conversation.terminate()
-    await transcriber.terminate()
+    transcriber.terminate()  # synchronous cancellation; await owned tasks separately
 ```
 
 
@@ -519,8 +522,8 @@ async def terminate(self):
     self.agent.terminate()
     self.synthesizer.terminate()
 
-    # Wait for queues to drain
-    await asyncio.sleep(0.5)
+    # Sleep does not drain queues. Cancel and await tracked tasks; for graceful
+    # draining use Queue.join() paired with task_done() for each retrieved item.
 
     # Close connections
     if self.websocket:
@@ -531,7 +534,7 @@ async def terminate(self):
 
 ```python
 # Log key events
-logger.info(f"🎤 [TRANSCRIBER] Received: '{transcription.message}'")
+logger.info("[TRANSCRIBER] Transcription received")
 logger.info(f"🤖 [AGENT] Generating response...")
 logger.info(f"🔊 [SYNTHESIZER] Synthesizing {len(text)} characters")
 logger.info(f"⚠️ [INTERRUPT] User interrupted bot")
@@ -596,7 +599,8 @@ Maintain conversation history for context:
 
 ```python
 class Transcript:
-    event_logs: List[Message] = []
+    def __init__(self):
+        self.event_logs: List[Message] = []
 
     def add_human_message(self, text):
         self.event_logs.append(Message(sender=Sender.HUMAN, text=text))
@@ -653,11 +657,18 @@ async def test_interrupt():
     conversation = create_test_conversation()
 
     # Start bot speaking
-    await conversation.agent.generate_response("Tell me a long story")
+    # Schedule and consume the async generator rather than awaiting it directly.
+    async def consume_response():
+        async for response in conversation.agent.generate_response("Tell me a long story"):
+            await conversation.response_queue.put(response)
+    generation_task = asyncio.create_task(consume_response())
 
     # Interrupt mid-response
     await asyncio.sleep(1)  # Let it speak for 1 second
     conversation.broadcast_interrupt()
+
+    generation_task.cancel()
+    await asyncio.gather(generation_task, return_exceptions=True)
 
     # Verify partial message in transcript
     last_message = conversation.transcript.event_logs[-1]

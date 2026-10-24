@@ -1,5 +1,13 @@
 # Intent Dialogue
 
+> Catalog scope: this is upstream design guidance. Referenced scripts, commands,
+> reports, fixtures and security policies are not bundled here. They describe
+> proposed/manual output contracts or a separately reviewed upstream toolchain,
+> not verified capabilities of this installation. Do not execute missing or
+> unreviewed code, or claim unrun gates passed. Current user scope and host policy
+> take precedence; metadata alone grants no runtime permission.
+
+
 Use a short, human conversation before deep authoring so the first version of the skill is anchored in the real job rather than in a guessed prompt shape.
 
 ## Why This Step Exists
@@ -24,7 +32,7 @@ Ask only the questions that change the package design.
 
 ## Interview Rule
 
-- prefer `5-7` sharp questions over a long discovery questionnaire
+- ask only the smallest set of unanswered questions that changes the design; do not impose a fixed interview quota
 - start with a calm, human framing before switching into precise design questions
 - guide like a patient teacher or thoughtful coach, not like a rigid intake clerk
 - mirror the user's language and emotional temperature

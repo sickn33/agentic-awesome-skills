@@ -23,8 +23,7 @@ This skill checks the health of a data asset using Monte Carlo's observability
 platform. It produces a structured health report covering freshness, alerts,
 monitoring coverage, importance, and upstream dependency health.
 
-> **Monte Carlo tool routing (required):** Always call Monte Carlo MCP tools through this plugin's
-> bundled server, whose fully-qualified tool names are
+> **Monte Carlo tool routing:** This catalog bundle contains documentation, not an MCP server. Verify an installed server, live tool schema, endpoint and authorized account before calls. The upstream plugin uses a server whose fully-qualified tool names are
 > `mcp__plugin_mc-agent-toolkit_monte-carlo-mcp__<tool>` (e.g.
 > `mcp__plugin_mc-agent-toolkit_monte-carlo-mcp__get_alerts`). Bare tool names used in this skill
 > (`get_alerts`, `search`, `get_table`, …) refer to that bundled server. If the session also has a
@@ -136,23 +135,21 @@ No upstream dependencies found.
 
 ### Diagnosis
 
-1-2 sentences summarizing what is causing the table to be unhealthy, or
-confirming it is healthy. This should naturally lead into the recommendations.
+1-2 sentences describing observed issues and evidence limits. Causal explanations are hypotheses unless independently established; no observed alerts does not prove data correctness. This should naturally lead into the recommendations.
 
 Example (unhealthy):
 Upstream table raw_orders has not been updated in 8 hours, which is likely
 causing staleness in this table. There are also 2 unacknowledged alerts.
 
 Example (healthy):
-Table is healthy — no active alerts, monitored, and all upstream sources
-are in good shape.
+No observed issues in the checked alert window; monitoring is configured. Report upstream checked/total and telemetry gaps before drawing further conclusions.
 
 ### Recommendations
 - Investigate upstream raw_orders freshness — likely root cause of this table's staleness
 - Acknowledge or investigate the 2 active alerts
 
 If there are no recommendations, show:
-No recommendations — table looks healthy.
+No recommendations from the checked telemetry; data correctness and unmeasured coverage remain unverified.
 
 ```
 
@@ -166,7 +163,7 @@ embellish values beyond what the tool returns.
 | **Last Activity** | `get_table` → `last_activity` | Date of last activity (e.g., "Apr 6, 2025") | 🟢 Recent (within 7 days) / 🟡 Stale (older than 7 days) |
 | **Alerts** | `get_alerts` → count | "N active" or "No active alerts" | 🔴 Has alerts / 🟢 No alerts |
 | **Monitoring** | `get_monitors` → count where `is_paused` is false | "N active monitors" or "0 active monitors (M paused)". Include relevant details from monitor fields (incident counts, error counts, types). | 🟢 Monitored (≥1 active) / 🔴 Unmonitored (0 active) |
-| **Upstream** | `get_asset_lineage` (upstream) + Phase 3 checks | "N/M sources unhealthy" or "All N sources healthy" | 🔴 Issues (any unhealthy) / 🟢 Healthy (all healthy) |
+| **Upstream** | `get_asset_lineage` (upstream) + Phase 3 checks | "N/M sources unhealthy" or "No observed issues among N checked sources (state total and unchecked count)" | 🔴 Issues (any unhealthy) / 🟢 Healthy (all healthy) |
 
 **Importance** is shown next to the Status line (not in the metrics table). Source:
 `get_table` → `importance_score` + `is_important`. Show "X.XX (key asset ⭐️)" if
@@ -178,6 +175,8 @@ key asset or importance > 0.8, otherwise just "X.XX".
 **Do NOT include downstream data.** This skill only queries upstream lineage.
 
 ### Status determination
+
+Use these as observed-telemetry labels only. Any failed/missing required query makes the overall status Unknown/Partial. The seven-day created-time filter can omit older still-open alerts: label counts as active alerts created in the checked window, never all open alerts. A monitor that never executed or is failing is configured coverage, not demonstrated healthy operation. For a low-importance unmonitored asset use Unmonitored rather than Healthy. If more than ten parents exist, report checked/total and unchecked counts; never extrapolate all-source health.
 
 - **🔴 Unhealthy:** Any active alerts on the asset (from `get_alerts` with statuses `["NOT_ACKNOWLEDGED", "ACKNOWLEDGED", "WORK_IN_PROGRESS"]` — see `parameters.md`)
 - **🟡 Degraded:** No active alerts, but 0 active monitors on a high-importance

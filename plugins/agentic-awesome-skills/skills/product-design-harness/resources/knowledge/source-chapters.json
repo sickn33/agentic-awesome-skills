@@ -1,0 +1,104 @@
+{
+  "schema_version": "1.0.0",
+  "corpus_id": "ux3-original-curriculum-stage-0-3",
+  "source_document": "UX3 Knowledge System Complete Extraction",
+  "source_sha256": "fabf929c6fe03b67edfd25be8b79991da5056578c7a7fabbd3b709b4a88f50d2",
+  "source_note": "The original corpus has 40 chapter positions; chapter 3-12 has a title but no substantive transcript. This manifest lists only chapters cited by the six newly distilled rules.",
+  "chapters": [
+    {
+      "chapter_id": "0-2",
+      "title": "UX design thinking and logic",
+      "content_status": "substantive"
+    },
+    {
+      "chapter_id": "1-3",
+      "title": "User-centered design",
+      "content_status": "substantive"
+    },
+    {
+      "chapter_id": "1-5",
+      "title": "Market positioning and competitor analysis",
+      "content_status": "substantive"
+    },
+    {
+      "chapter_id": "1-7",
+      "title": "Human factors and product design",
+      "content_status": "substantive"
+    },
+    {
+      "chapter_id": "1-8",
+      "title": "User research and needs analysis",
+      "content_status": "substantive"
+    },
+    {
+      "chapter_id": "1-9",
+      "title": "Product value proposition",
+      "content_status": "substantive"
+    },
+    {
+      "chapter_id": "2-2",
+      "title": "Product and business model",
+      "content_status": "substantive"
+    },
+    {
+      "chapter_id": "2-3",
+      "title": "Introduction to human-computer interaction",
+      "content_status": "substantive"
+    },
+    {
+      "chapter_id": "2-4",
+      "title": "Information architecture and functional design",
+      "content_status": "substantive"
+    },
+    {
+      "chapter_id": "2-6",
+      "title": "Interface design principles",
+      "content_status": "substantive"
+    },
+    {
+      "chapter_id": "2-9",
+      "title": "Prototype testing",
+      "content_status": "substantive"
+    },
+    {
+      "chapter_id": "3-1",
+      "title": "Go-to-market strategy",
+      "content_status": "substantive"
+    },
+    {
+      "chapter_id": "3-2",
+      "title": "Product growth thinking",
+      "content_status": "substantive"
+    },
+    {
+      "chapter_id": "3-3",
+      "title": "End-to-end channel thinking",
+      "content_status": "substantive"
+    },
+    {
+      "chapter_id": "3-4",
+      "title": "First-use experience design",
+      "content_status": "substantive"
+    },
+    {
+      "chapter_id": "3-5",
+      "title": "Return motivation and loyalty engineering",
+      "content_status": "substantive"
+    },
+    {
+      "chapter_id": "3-6",
+      "title": "Gamification design",
+      "content_status": "substantive"
+    },
+    {
+      "chapter_id": "3-7",
+      "title": "Computational design thinking",
+      "content_status": "substantive"
+    },
+    {
+      "chapter_id": "3-8",
+      "title": "Usability engineering",
+      "content_status": "substantive"
+    }
+  ]
+}

@@ -8,7 +8,7 @@
 
 **优先跨平台。** 仅使用 Python 标准库，不依赖 `bash`、`jq` 或任何平台特定工具。Windows / Linux / macOS 行为完全一致。
 
-**JSON 友好输出。** 每个脚本都支持 `--json` 便于机器消费。Agent 调用方解析输出；人类可以直接 `less` 或 `jq`（如果装了）。
+**JSON 友好输出。** 枚举、过期、去重和历史脚本支持 `--json`；id_hash.py 仅输出 hash。其他脚本支持 `--json` 便于机器消费。Agent 调用方解析输出；人类可以直接 `less` 或 `jq`（如果装了）。
 
 **组合而非重复。** `find_duplicates.py`、`find_stale.py` 和 `history.py` 通过 `list_entries.py --json` 复用解析器，不重复实现 entry 格式解析。Entry 格式只在一处定义——将来格式变更只需改 `list_entries.py`。
 
@@ -37,19 +37,15 @@
 
 所有警告都是告知性质；`list_entries.py` 不管配置状态如何，stdout 输出始终一致。完整 schema 版本策略见 `references/compatibility.md`。
 
-## 测试
+## Catalog validation
 
-回归测试在 `tests/`（纯 stdlib `unittest`，以子进程黑盒方式调用真实脚本）。在仓库根目录运行：
-
-```bash
-python -m unittest discover -s tests -v
-```
-
-套件会在临时目录里搭建独立的 `.lore/` 夹具；`history.py` 的用例会创建一次性 git 仓库（PATH 上没有 git 时自动跳过）。
+Upstream tests/ and the upstream root README are not bundled here. Run the catalog’s relevant tests from its tools/scripts/tests directory; do not mistake this skill directory for the upstream project root. Helpers are read-only. The Git helper additionally requires a local Git executable.
 
 ## 局限
 
 - **去重只到词袋重叠程度。** Jaccard 相似度能抓到词汇相似的改写，但抓不到语义等价（如 "use TypeScript" vs "TypeScript-only codebase"）。更深的检查仍需 LLM 介入。
 - **日期计算比较朴素。** `find_stale.py` 直接用 `#verified` / `#added` 标签的日期。如果系统时钟不对，结果会偏差。
 - **不自动 archive。** 脚本会报告已被取代的 entry（带 `#stale`，或带 `#superseded-by`）和坏链，但不会移动或删除任何东西。过期的 entry 留在原 scope 文件、保留原 tag；git 历史保留全部。
-- **理论上可能有 hash 冲突**（4 个十六进制字符 = 16 位 = 1/65536 概率）。实际项目基本不会遇到。如果遇到了，对 entry 文本做微调以改变 hash。
+- **短 hash 冲突：**16 位前缀并不唯一，不能据此判定文本相同；完整 ID 另含日期和层级。应比较全文并拒绝有歧义的重复 ID。
+
+Reads are bounded regular files (2 MiB each), 10,000 entries per inventory, and 1000 entries per duplicate comparison. Unsafe or incomplete input fails instead of certifying no results. History shows at most 200 commits per query. No bound is a coverage or freshness guarantee.

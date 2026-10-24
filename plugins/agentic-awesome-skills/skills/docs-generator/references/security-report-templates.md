@@ -6,14 +6,14 @@
 
 ## 0. Evidence Chain（所有安全报告 MUST 包含）
 
-> 契约全文：`skills/ops/evidence-finding-path.md`  
+> 本包 §0 字段是可用的报告契约；上游 `skills/ops/evidence-finding-path.md` 未随包提供。
 > Case 目录：`work/<case>/`（`case-init.ps1`）
 
 报告正文中 **MUST** 含以下章节（可并入「核心发现」但字段不得省略）：
 
 ### 0.1 Scope 摘要
 - 链到 `scope.md`：`auth` / `in_scope` / `network_profile`
-- 无 scope → 不得宣称任务完成
+- 缺少 scope/授权证据时记录未知，不得宣称测试已授权或分析全部完成；可交付有明确局限的文档草稿
 
 ### 0.2 Evidence
 至少 1 条，字段：`E-id` / `source_ref` / `repro_command` / `content_hash|n/a`
@@ -33,7 +33,7 @@
 
 ## 0.6 Vendor structure overlay（专业厂商报告结构）
 
-> 全文规则：`references/vendor-report-rules.md`（Issue #65）  
+> 全文规则：`references/vendor-report-rules.md`（Issue #65）
 > **MUST** 在生成安全类正式报告时读取并选型；**只抽结构，禁止抄录厂商原文/IOC 实例**。
 
 | Flavor / Overlay | 场景 | 骨架一句话 |
@@ -49,7 +49,7 @@
 
 ## 1. 逆向工程报告模板
 
-```markdown
+````markdown
 # [目标名称] 逆向分析报告
 
 > 分析日期：YYYY-MM-DD
@@ -116,7 +116,7 @@
 ## 8. 附件
 
 <!-- hook 脚本、解密代码、截图等 -->
-```
+````
 
 ---
 
@@ -142,7 +142,7 @@
 
 ## 2. 渗透测试报告模板
 
-```markdown
+````markdown
 # [目标] 渗透测试报告
 
 > 测试日期：YYYY-MM-DD
@@ -217,13 +217,13 @@
 ## 8. 附录
 
 <!-- 完整 payload、脚本、配置文件等 -->
-```
+````
 
 ---
 
 ## 3. CTF Writeup 模板
 
-```markdown
+````markdown
 # [比赛名] - [题目名] Writeup
 
 > 分类：Web / Reverse / Pwn / Crypto / Misc / Forensics
@@ -265,13 +265,13 @@ flag{...}
 ## 知识点
 
 <!-- 这道题涉及的知识点，方便后续复习 -->
-```
+````
 
 ---
 
 ## 4. JS/Web 签名逆向报告模板
 
-```markdown
+````markdown
 # [站点/应用] 签名参数逆向报告
 
 > 分析日期：YYYY-MM-DD
@@ -319,7 +319,7 @@ param1=xxx&sign=<目标字段>
 ## 6. 反爬/风控注意事项
 
 <!-- 频率限制、设备指纹、环境检测等 -->
-```
+````
 
 ---
 

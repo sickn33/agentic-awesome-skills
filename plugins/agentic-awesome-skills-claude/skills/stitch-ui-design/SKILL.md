@@ -10,9 +10,13 @@ date_added: "2026-02-27"
 
 Expert guidance for crafting effective prompts in Google Stitch, the AI-powered UI design tool by Google Labs. This skill helps create precise, actionable prompts that generate high-quality UI designs for web and mobile applications.
 
+## Prototype and privacy boundaries
+
+Confirm actual account capabilities, export options and data terms from current official documentation before using product-specific steps. Use only authorized reference images/assets and synthetic or redacted data; uploading screenshots can expose confidential UI, personal records and credentials. Prompted functional states are visual specifications, not implemented authentication, payment, validation or accessibility evidence. Inspect exported code/dependencies and test semantic structure, keyboard/focus, zoom/reflow, contrast and reduced motion on real devices before production. The example logos, testimonials, ratings, metrics and security badges are placeholders and must never be published as factual claims without evidence/permission. Export/share/deploy and external account changes require authorization.
+
 ## What is Google Stitch?
 
-Google Stitch is an experimental AI UI generator powered by Gemini 2.5 Flash that transforms text prompts and visual references into functional UI designs. It supports:
+Google Stitch is an experimental AI UI generator whose available models/features depend on the current product version that transforms text prompts and visual references into functional UI designs. It supports:
 
 - Text-to-UI generation from natural language prompts
 - Image-to-UI conversion from sketches, wireframes, or screenshots
@@ -69,7 +73,7 @@ Fitness tracking app with:
 - Profile screen with achievements and settings
 ```
 
-Stitch will ask for confirmation before generating multiple screens, ensuring alignment with your vision.
+Review the intended screen list before generation; do not rely on the product to supply a confirmation gate.
 
 ### 4. Specify Platform and Responsive Behavior
 
@@ -152,7 +156,7 @@ Use Stitch's "annotate to edit" feature to make targeted changes without rewriti
 1. Generate initial design from prompt
 2. Annotate specific elements that need changes
 3. Describe modifications in natural language
-4. Stitch updates only the annotated areas
+4. Request a targeted change, then inspect the full result for unintended changes
 
 **Example annotations:**
 - "Make this button larger and use primary color"

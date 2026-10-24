@@ -46,7 +46,10 @@ let cookieCache: Record<string, string> | null = null
 function getCookie(name: string) {
   if (!cookieCache) {
     cookieCache = Object.fromEntries(
-      document.cookie.split('; ').map(c => c.split('='))
+      document.cookie.split(';').map(c => {
+        const i = c.indexOf('=')
+        return [c.slice(0, i).trim(), c.slice(i + 1)]
+      })
     )
   }
   return cookieCache[name]
@@ -59,7 +62,8 @@ If storage can change externally (another tab, server-set cookies), invalidate c
 
 ```typescript
 window.addEventListener('storage', (e) => {
-  if (e.key) storageCache.delete(e.key)
+  if (e.key === null) storageCache.clear()
+  else storageCache.delete(e.key)
 })
 
 document.addEventListener('visibilitychange', () => {
@@ -68,3 +72,5 @@ document.addEventListener('visibilitychange', () => {
   }
 })
 ```
+
+Storage access can throw; guard browser-only access and handle denied storage. Clear the whole cache when storage events have key=null, invalidate on same-tab removals/clear, and do not cache authentication state. Cookie values may contain =; split at the first delimiter, not every =.

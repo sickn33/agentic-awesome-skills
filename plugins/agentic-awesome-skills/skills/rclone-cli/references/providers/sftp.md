@@ -196,7 +196,7 @@ host = example.com
 user = sftpuser
 key_file = ~/id_rsa
 pubkey_file = ~/id_rsa-cert.pub
-````
+```
 
 If you concatenate a cert with a private key then you can specify the
 merged file in both places.
@@ -226,13 +226,18 @@ host = example.com
 user = sftpuser
 pass =
 known_hosts_file = ~/.ssh/known_hosts
-````
+```
 
 Alternatively you can create your own known hosts file like this:
 
 ```console
-ssh-keyscan -t dsa,rsa,ecdsa,ed25519 example.com >> known_hosts
+ssh-keyscan -t ed25519,ecdsa,rsa example.com > candidate_known_hosts
+ssh-keygen -lf candidate_known_hosts
 ```
+
+Verify the candidate fingerprint using an independent trusted channel (such as
+the server administrator) before copying the verified key into `known_hosts`.
+`ssh-keyscan` alone does not authenticate the server and can collect an attacker's key. Configure `known_hosts_file` before the first rclone connection.
 
 There are some limitations:
 
@@ -372,7 +377,7 @@ to produce the checksums for MD5, SHA-1 and SHA-256 when no external
 checksum commands are found (see [shell access](#shell-access)). This
 assumes PowerShell version 4.0 or newer.
 
-The options `md5sum_command`, `sha1_command`, etc. can be used to customize
+The options `md5sum_command`, `sha1sum_command`, etc. can be used to customize
 the commands to be executed for calculation of checksums. You can for
 example set a specific path to where the md5sum executable are located,
 or specify some other tool that print checksums in compatible format.
@@ -386,7 +391,7 @@ picked up if found in PATH, but if not you can set something like
 make sure a specific executable is used.
 
 Remote checksumming is recommended and enabled by default. First time
-rclone is using a SFTP remote, if options `md5sum_command` or `sha1_command`
+rclone is using a SFTP remote, if options `md5sum_command` or `sha1sum_command`
 are not set, it will check if any of the default commands for each of them,
 as described above, can be used. The result will be saved in the remote
 configuration, so next time it will use the same. Value `none`
@@ -397,7 +402,7 @@ Disabling the checksumming completely may be required if you are connecting to
 SFTP servers which are not under your control, and to which the execution of
 remote shell commands is prohibited. Set the configuration option `disable_hashcheck`
 to `true` to disable checksumming entirely (you get the same effect by setting
-option `hashes` to `none` or options `md5sum_command`, `sha1_command` etc.
+option `hashes` to `none` or options `md5sum_command`, `sha1sum_command` etc.
 to `none`). Set option `shell_type` to `none` to not only disable checksumming,
 but also disable all other functionality that are based on remote shell command
 execution.
@@ -1218,7 +1223,9 @@ Not all sftp servers support this.
 Note that hardlinking two files together will use no additional space
 as the source and the destination will be the same file.
 
-This feature may be useful backups made with --copy-dest.
+This feature may be useful for backups made with --copy-dest, but hardlinks
+are not independent recovery copies: modifying one linked file in place affects
+the other. Do not treat them as isolated backup versions.
 
 Properties:
 

@@ -49,6 +49,20 @@ def ensure_dir(path: Path) -> Path:
     return resolved
 
 
+def checked_file(path: Path, root: Path) -> bool:
+    # Reject linked files/ancestors before reading any bytes.
+    try:
+        relative = path.relative_to(root)
+    except ValueError:
+        return False
+    current = root
+    for part in relative.parts:
+        current = current / part
+        if current.is_symlink():
+            return False
+    return path.is_file() and path.resolve().is_relative_to(root)
+
+
 def read_text(path: Path) -> str:
     return path.read_text(encoding="utf-8", errors="replace")
 
@@ -68,10 +82,10 @@ def find_config_files(root: Path):
         root / "config.yml",
         root / "config.json",
     ]
-    found = [p for p in direct if p.is_file()]
+    found = [p for p in direct if checked_file(p, root)]
     config_dir = root / "config"
     if config_dir.is_dir():
-        found.extend(sorted(p for p in config_dir.rglob("*") if p.is_file()))
+        found.extend(sorted(p for p in config_dir.rglob("*") if checked_file(p, root)))
     return found
 
 
@@ -127,14 +141,17 @@ def content_files(root: Path):
     if not content_root.is_dir():
         return []
     exts = {".md", ".markdown", ".mdown", ".gotmpl"}
-    return sorted(p for p in content_root.rglob("*") if p.is_file() and p.suffix.lower() in exts)
+    return sorted(p for p in content_root.rglob("*") if checked_file(p, root) and p.suffix.lower() in exts)
 
 
 def main():
     args = parse_args()
     site_root = ensure_dir(Path(args.site_root))
+    # root is the declared scope; never infer permissions from templates.
 
-    shortcode_files = sorted((site_root / "layouts" / "_shortcodes").glob("*"))
+    shortcode_files = sorted(p for folder in ("_shortcodes", "shortcodes")
+                             for p in (site_root / "layouts" / folder).rglob("*")
+                             if checked_file(p, site_root))
     render_hook_files = sorted((site_root / "layouts" / "_markup").glob("render-*"))
 
     shortcode_usage = Counter()
@@ -172,7 +189,7 @@ def main():
                 "path": relpath(path, site_root),
             }
             for path in shortcode_files
-            if path.is_file()
+            if checked_file(path, site_root)
         ],
         "render_hooks": [
             {
@@ -180,7 +197,7 @@ def main():
                 "path": relpath(path, site_root),
             }
             for path in render_hook_files
-            if path.is_file()
+            if checked_file(path, site_root)
         ],
         "frontmatter_key_frequency": dict(frontmatter_keys.most_common()),
         "shortcode_usage_frequency": dict(shortcode_usage.most_common()),
@@ -192,7 +209,8 @@ def main():
     if args.output:
         output = safe_user_path(args.output)
         output.parent.mkdir(parents=True, exist_ok=True)
-        output.write_text(payload + "\n", encoding="utf-8")
+        with output.open("x", encoding="utf-8") as handle:
+            handle.write(payload + "\n")
     else:
         print(payload)
 

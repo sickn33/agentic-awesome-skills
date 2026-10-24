@@ -16,6 +16,10 @@ license_source: https://github.com/hyhmrright/brooks-lint/blob/main/LICENSE
 Use this skill when you need architecture audit that maps module dependencies, checks layering integrity, and flags structural decay across a codebase, drawing on twelve classic engineering books. Triggers when: user asks to audit architecture, review folder/module structure, check for circular imports, understand...
 
 
+## Supporting material availability
+
+The sibling `_shared` files below are absent from this bundle. Do not invent their Iron Law, scoring rules or book attributions. The two bundled guides can support an evidence-labeled architecture map/tour independently; omit Health Score and book-level certification until the actual upstream prerequisites are supplied and reviewed.
+
 ## Setup
 
 1. Read `../_shared/common.md` for the Iron Law, Project Config, Report Template, and Health Score rules

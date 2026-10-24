@@ -7,8 +7,7 @@
 - **Problem:** asked all five questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** the template looks great and the mail still goes to spam.
-  **Solution:** it is authentication, not design. SPF, DKIM and DMARC, plus a warm-up
-  history on the sending domain.
+  **Solution:** inspect authentication/alignment, reputation, complaints, list quality, content and actual provider diagnostics; do not assign a cause from appearance alone.
 - **Problem:** a `Dear {First Name}` token survived into a send because the sender forgot
   to fill it in.
   **Solution:** an unsubstituted token is the classic spam trigger. Make the field

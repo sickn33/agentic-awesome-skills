@@ -601,4 +601,6 @@ Jottacloud only supports filenames up to 255 characters in length.
 
 Jottacloud exhibits some inconsistent behaviours regarding deleted files and
 folders which may cause Copy, Move and DirMove operations to previously
-deleted paths to fail. Emptying the trash should help in such cases.
+deleted paths to fail. Inspect the conflicting path and preserve any recovery
+items first. Emptying trash permanently removes recovery copies and should not
+be the automatic first troubleshooting step.

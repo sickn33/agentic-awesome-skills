@@ -39,3 +39,7 @@ Systematic threat identification using the STRIDE methodology.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Modeling and scoring limits
+
+The Python helpers produce prompts from user-supplied model data; they do not inspect software or establish actual vulnerabilities, control effectiveness or compliance. Impact×likelihood and all severities/deadlines in examples are illustrative ordinal policy choices, not CVSS or calibrated probabilities. Record evidence, assumptions, assets, trust boundaries, owners and residual-risk acceptance for each candidate. Equal numeric trust levels can still cross tenant/identity/administrative boundaries; model explicit boundary membership rather than relying solely on inequality. Encryption does not prevent authorized-but-abusive access, and authentication lockouts can create denial-of-service risks. Missing elements or unmodeled interaction types must be surfaced, not silently treated as no threats. Templates are partial independent blocks; validate imports, duplicate IDs and structured model inputs before use. Keep secret-bearing diagrams/logs private and do not run attack simulations without separate authorization.

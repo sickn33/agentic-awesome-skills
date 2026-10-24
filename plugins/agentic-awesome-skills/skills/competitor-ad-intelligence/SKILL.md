@@ -69,7 +69,7 @@ Prefer manual browser research. Use automated collection only when the platform 
 - Landing page URL
 - Active duration (first seen, still running or stopped)
 - Platforms (Facebook, Instagram, Audience Network)
-- Ad variations (A/B tests — same landing page, different creative)
+- Possible creative variants (same landing page, different creative; controlled test design unknown)
 
 ## Phase 2: Research Google Ads
 
@@ -156,7 +156,7 @@ Or use `curl` if `fetch_webpage` is unavailable.
 ### Campaign Clustering
 
 Group all ads into logical campaigns by:
-- **Landing page destination** — Ads pointing to the same URL = same campaign
+- **Landing page destination** — Ads sharing a URL form an inferred cluster; this does not establish the advertiser’s campaign IDs
 - **Messaging theme** — Similar copy angles = same strategic bet
 - **Audience signal** — Different copy for different personas
 
@@ -192,7 +192,7 @@ Use ad volume and platform distribution only as directional signals. Do not tran
 
 Identify across all competitors:
 
-1. **Angles nobody is running** — Hook types absent from competitor ads = white space
+1. **Angles absent from the observed sample** — Candidate white space, with region, date and library coverage stated
 2. **Overcrowded angles** — If everyone leads with "save time", avoid it or be more specific
 3. **Format opportunities** — If no one is running video in your space, it may stand out
 4. **Underutilized proof** — Are competitors avoiding specific proof points you could own?
@@ -316,7 +316,7 @@ If authorized Web Archive data exists for their landing pages:
 
 ## Creative Gap Analysis
 
-### Angles Nobody Is Running
+### Angles Absent from the Observed Sample
 1. [Angle] — Why it could work for you: [reasoning]
 2. [Angle] — ...
 
@@ -324,7 +324,7 @@ If authorized Web Archive data exists for their landing pages:
 - [Angle] — [N] of [N] competitors use this
 
 ### Format White Space
-- [Format] is not being used by competitors on [platform]
+- [Format] was not observed in the sampled competitors’ ads on [platform] during [coverage window]
 
 ---
 

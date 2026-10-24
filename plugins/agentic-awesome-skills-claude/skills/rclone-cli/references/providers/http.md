@@ -147,7 +147,9 @@ Here are the Standard options specific to http (HTTP).
 
 URL of HTTP host to connect to.
 
-E.g. "https://example.com", or "https://user:pass@example.com" to use a username and password.
+E.g. "https://example.com". URL userinfo can carry credentials, but embedding
+real passwords in command lines exposes them in history/logs. Protect the
+configuration or obtain headers/credentials from a protected secret source.
 
 Properties:
 

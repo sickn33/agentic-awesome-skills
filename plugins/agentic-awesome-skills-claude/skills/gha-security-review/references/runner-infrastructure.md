@@ -85,47 +85,9 @@ curl http://169.254.169.254/latest/meta-data/  # Cloud metadata (example of atta
     key: npm-${{ hashFiles('package-lock.json') }}
 ```
 
-### Attack: Poisoning the Cache
+### Cache trust boundaries
 
-If an attacker can write to the cache (via a compromised workflow or PR build), subsequent jobs that restore the cache will use the poisoned content.
-
-```yaml
-# Workflow on pull_request (fork code runs)
-steps:
-  - uses: actions/checkout@v4
-  - uses: actions/cache@v4
-    with:
-      path: node_modules
-      key: npm-${{ hashFiles('package-lock.json') }}
-  - run: npm install  # Fork's package.json may install malicious deps
-  # Cache now contains attacker's node_modules
-```
-
-Later, a trusted workflow on `main` restores this cache:
-
-```yaml
-# Workflow on push to main
-steps:
-  - uses: actions/checkout@v4
-  - uses: actions/cache@v4
-    with:
-      path: node_modules
-      key: npm-${{ hashFiles('package-lock.json') }}
-      # Restores attacker's poisoned node_modules if hash matches!
-  - run: npm test  # Runs with poisoned dependencies
-```
-
-### Cache Scope Rules
-
-| Branch | Can Read Cache From | Can Write Cache To |
-|--------|--------------------|--------------------|
-| Default branch (main) | main only | main |
-| Feature branch | Feature + main | Feature only |
-| PR from fork | Fork branch + main | Fork branch |
-
-**Key risk:** Fork PRs can read caches from `main` and write to their own branch cache. If the cache key can be predicted/matched, poisoning is possible.
-
----
+A normal `pull_request` cache is scoped to its merge ref; matching its key does not let `main` restore it. The older direct fork-cache-to-main example is therefore invalid without another scope-crossing vulnerability. Default/base-branch caches may be readable to PRs, so never cache secrets. Evaluate the current cache access mode and trigger, reusable-workflow limits, restore keys and any privileged workflow that processes untrusted content before saving a cache. A known key alone is not proof of poisoning.
 
 ## Artifact Poisoning
 
@@ -161,7 +123,7 @@ steps:
 
 - Artifacts are scoped to a workflow run
 - `workflow_run` triggered workflows can download artifacts from the triggering run
-- Artifacts are not signed or verified — there's no integrity check
+- Transport/digest validation can detect corruption but does not prove a trusted producer. Verify workflow/repository/commit identity and an attestation/signature rooted in a trusted policy when needed.
 
 ---
 
@@ -238,11 +200,16 @@ on:
 jobs:
   deploy:
     # Only deploy artifacts from trusted branches
-    if: github.event.workflow_run.head_branch == 'main'
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.event == 'push' &&
+      github.event.workflow_run.head_repository.full_name == github.repository &&
+      github.event.workflow_run.head_branch == 'main'
     steps:
       - uses: actions/download-artifact@v4
       - run: |
-          # Verify artifact checksums or signatures
+          # Verify a digest/signature from an independently trusted manifest;
+          # a checksum file shipped by the same untrusted producer proves no trust.
           sha256sum -c checksums.txt
           ./deploy.sh dist/
 ```

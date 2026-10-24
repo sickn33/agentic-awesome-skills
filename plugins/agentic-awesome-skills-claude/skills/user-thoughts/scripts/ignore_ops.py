@@ -78,17 +78,12 @@ def remove_last(ustht: Path):
         print("No previous thought to ignore.")
         return
     remove_line(ustht, filepath, idx)
-    append_to_ignored(ustht, ustht / "ignored", entry, "ignored with --last")
-    display = entry
-    if "] " in display:
-        display = display.split("] ", 1)[1]
-    if " | suggested-dim:" in display:
-        display = display.rsplit(" | suggested-dim:", 1)[0]
-    print(f"Ignored previous thought: {display}")
+    # Ignore means remove from capture, not retain another copy of the content.
+    print('Removed previous unprocessed thought. Existing backups/history may retain copies.')
 
 
 def add_suffix(ustht: Path, text: str):
-    append_to_ignored(ustht, ustht / "ignored", text, "ignored by suffix")
+    # Do not persist ignored content, including secrets.
     print("Ignored current message.")
 
 

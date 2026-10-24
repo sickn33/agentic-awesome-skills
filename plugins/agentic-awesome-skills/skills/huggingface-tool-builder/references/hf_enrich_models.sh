@@ -40,12 +40,18 @@ fi
 
 emit_error() {
     local model_id="$1"
+    if [[ ! "$model_id" =~ ^[A-Za-z0-9][A-Za-z0-9_.-]*(/[A-Za-z0-9][A-Za-z0-9_.-]*)?$ || "$model_id" == *..* ]]; then
+        echo "Invalid model ID" >&2; return 1
+    fi
     local message="$2"
     jq -cn --arg id "$model_id" --arg error "$message" '{id: $id, error: $error}'
 }
 
 process_id() {
     local model_id="$1"
+    if [[ ! "$model_id" =~ ^[A-Za-z0-9][A-Za-z0-9_.-]*(/[A-Za-z0-9][A-Za-z0-9_.-]*)?$ || "$model_id" == *..* ]]; then
+        echo "Invalid model ID" >&2; return 1
+    fi
 
     if [[ -z "$model_id" ]]; then
         return 0
@@ -53,7 +59,7 @@ process_id() {
 
     local url="https://huggingface.co/api/models/${model_id}"
     local response
-    response=$(curl -s "${headers[@]}" "$url" 2>/dev/null || true)
+    response=$(curl -fsS --connect-timeout 10 --max-time 30 "${headers[@]}" "$url" 2>/dev/null || true)
 
     if [[ -z "$response" ]]; then
         emit_error "$model_id" "request_failed"

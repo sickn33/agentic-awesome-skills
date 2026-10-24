@@ -36,16 +36,16 @@ Fast-kill rug pull detection and deep token security analysis for EVM and Solana
 
 ## PRE-DIVE KILL SIGNALS
 
-Check these BEFORE reading a single line of code. If any are true, skip the audit — the token is likely a rug or not worth the time.
+Check these BEFORE reading a single line of code. Record these as triage signals requiring evidence, not proof of fraud or a reason to claim an audit was completed.
 
-### Hard Kills (Skip Immediately)
-- **Contract not verified** on Etherscan/Solscan → Cannot audit source = cannot trust
+### High-priority review signals
+- **Contract not verified** on Etherscan/Solscan → source-level review is blocked; verify bytecode/program identity and report the limitation
 - **Deployer wallet** has history of rug pulls (check Etherscan deployer page)
 - **Token age < 1 hour** AND no known team → Too early, wait for more data
-- **Mint authority retained** (Solana) AND no cap → Infinite mint = certain rug
-- **Freeze authority retained** (Solana) on meme coin → Honeypot confirmed
+- **Mint authority retained** (Solana) AND no cap → uncapped issuance capability; intent and exploitability require further evidence
+- **Freeze authority retained** (Solana) on meme coin → freeze capability; not proof of a honeypot
 - **Transfer hook present** (Token-2022) with mutable hook program → Honeypot vector
-- **Permanent delegate** extension (Token-2022) → Can steal all holder tokens
+- **Permanent delegate** extension (Token-2022) → privileged transfer/burn capability whose actual authority and constraints must be examined
 
 ### Soft Kills (Proceed with Extreme Caution)
 - Top holder > 20% of supply (excluding DEX pools)
@@ -60,7 +60,7 @@ Check these BEFORE reading a single line of code. If any are true, skip the audi
 
 > **"Check ALL authorities and owner functions. The retained authority IS the rug vector."**
 >
-> Every rug pull requires a privileged operation: mint, blacklist, fee change, LP removal, or authority abuse. If you find the privilege, you found the bug.
+> Retained privileges can create risk, but ordinary market sales, compromised keys and unprivileged vulnerabilities can also cause loss. A privilege is not automatically a bug: document authority, constraints, intended policy and concrete impact.
 
 ---
 
@@ -79,7 +79,7 @@ grep -rn "function mint\|_mint(\|_balances\[.*\] +=" src/ --include="*.sol" | gr
 grep -rn "MintTo\|mint_to\|mint_authority" src/ --include="*.rs" | grep -v "test\|target"
 ```
 
-**Kill if:** MAX_SUPPLY enforced in every mint path, or mint function removed entirely.
+**Potential mitigating evidence (not proof of safety):** MAX_SUPPLY enforced in every mint path, or mint function removed entirely.
 
 ### 2. HONEYPOT / TRANSFER RESTRICTION
 > Common scam pattern. Buy works, sell blocked.
@@ -94,7 +94,7 @@ grep -rn "blacklist\|isBlacklisted\|_bots\|maxTxAmount\|approve.*override\|tradi
 grep -rn "freeze_authority\|transfer_hook\|TransferHook\|permanent_delegate" src/ --include="*.rs"
 ```
 
-**Kill if:** No blacklist mapping, no transfer hooks, no freeze authority.
+**Potential mitigating evidence (not proof of safety):** No blacklist mapping, no transfer hooks, no freeze authority.
 
 ### 3. FEE MANIPULATION
 > Common rug pattern. Sell fee set to 99% after initial buys.
@@ -105,7 +105,7 @@ grep -rn "setFee\|setSellFee\|_taxFee\|_sellFee" src/ --include="*.sol"
 grep -rn "function set.*Fee" -A5 src/ --include="*.sol" | grep -v "require\|MAX\|<="
 ```
 
-**Kill if:** Fee setter has `require(fee <= MAX_FEE)` with MAX_FEE <= 10%.
+**Potential mitigating evidence (not proof of safety):** Fee setter has `require(fee <= MAX_FEE)` with MAX_FEE <= 10%.
 
 ### 4. LIQUIDITY POOL DRAIN
 > LP removal, migration, or manipulation to crash price.
@@ -115,7 +115,7 @@ grep -rn "function set.*Fee" -A5 src/ --include="*.sol" | grep -v "require\|MAX\
 grep -rn "migrateLP\|emergencyWithdraw\|\.sync()\|setPair\|setRouter" src/ --include="*.sol"
 ```
 
-**Kill if:** LP tokens burned to dead address, no migration function, no pair setter.
+**Potential mitigating evidence (not proof of safety):** LP tokens burned to dead address, no migration function, no pair setter.
 
 ### 5. BONDING CURVE MANIPULATION
 > Exploits in pump.fun-style bonding curves.
@@ -125,7 +125,7 @@ grep -rn "migrateLP\|emergencyWithdraw\|\.sync()\|setPair\|setRouter" src/ --inc
 grep -rn "virtualReserve\|setCurve\|graduate\|bonding_curve" src/ --include="*.sol" --include="*.rs"
 ```
 
-**Kill if:** Curve parameters immutable, graduation permissionless.
+**Potential mitigating evidence (not proof of safety):** Curve parameters immutable, graduation permissionless.
 
 ### 6. AUTHORITY RETENTION (SOLANA)
 > Retained mint/freeze/update authorities on Solana tokens.
@@ -136,7 +136,7 @@ grep -rn "mint_authority\|freeze_authority\|update_authority\|close_authority" s
 grep -rn "set_authority.*None" src/ --include="*.rs"  # Good sign: revocation
 ```
 
-**Kill if:** All authorities = None, verified on-chain.
+**Potential mitigating evidence (not proof of safety):** All authorities = None, verified on-chain.
 
 ### 7. FAKE RENOUNCE / HIDDEN OWNERSHIP
 > Ownership appears renounced but backdoor control retained.
@@ -146,7 +146,7 @@ grep -rn "set_authority.*None" src/ --include="*.rs"  # Good sign: revocation
 grep -rn "renounceOwnership.*override\|_shadowAdmin\|_backupOwner\|selfdestruct" src/ --include="*.sol"
 ```
 
-**Kill if:** renounceOwnership NOT overridden, no second admin role, no selfdestruct.
+**Potential mitigating evidence (not proof of safety):** renounceOwnership NOT overridden, no second admin role, no selfdestruct.
 
 ### 8. SANDWICH AMPLIFICATION BY DESIGN
 > Contract makes holders maximally sandwichable.
@@ -157,13 +157,13 @@ grep -rn "swapExactTokensForETH" -A5 src/ --include="*.sol" | grep "0,"
 grep -rn "swapThreshold\|_rebase\|mandatoryPool" src/ --include="*.sol"
 ```
 
-**Kill if:** Auto-swap has proper slippage, no rebase mechanics.
+**Potential mitigating evidence (not proof of safety):** Auto-swap has proper slippage, no rebase mechanics.
 
 ---
 
 ## FAST RED-FLAG SWEEP
 
-Run the 8 bug-class greps above across the source tree for fast red-flag detection. Together they catch:
+Run the 8 bug-class greps above across the source tree for fast red-flag detection. These incomplete source patterns may help locate:
 - Direct mint/balance manipulation
 - Blacklist and transfer restriction patterns
 - Unbounded fee setters
@@ -270,16 +270,16 @@ contract TokenExploitTest is Test {
 When you don't have source code, check on-chain:
 
 ```
-1. MINT AUTHORITY → solana account <MINT> --output json | check mint_authority
+1. MINT AUTHORITY → decode the mint with the installed SPL Token CLI or a trusted token-aware RPC parser
    - Should be null
-   - If Some(pubkey) → CRITICAL: can mint infinite tokens
+   - If Some(pubkey) → retained mint capability; inspect supply controls
 
 2. FREEZE AUTHORITY → same as above, check freeze_authority
    - Should be null
-   - If Some(pubkey) → CRITICAL: honeypot
+   - If Some(pubkey) → retained freeze capability; assess constraints
 
 3. LP STATUS → Check Raydium/Orca pool
-   - LP burned? (tokens sent to 1111...1111)
+   - Verify token supply burn transactions and pool-specific ownership; an address transfer alone is not proof of burning LP.
    - LP locked? (in verified locker with no backdoor)
    - LP held by deployer? → CRITICAL: instant rug
 
@@ -311,8 +311,7 @@ When you don't have source code, check on-chain:
 ## Operator Notes (Claude-BugHunter)
 
 > Engagement-derived + 2026-specific additions to the vendored foundation.
-> Wisdom from real authorized engagements + Phase 2 verification across
-> this repo's 31+ skill-area live tests. The upstream content covers the WHAT;
+> Upstream engagement/test claims are not independently verified by this catalog review. The upstream content covers the WHAT;
 > this layer covers the WHEN-IT-WORKS-vs-WHEN-IT-DOESN'T.
 
 ### Solana-specific signals — 2025-2026 reality
@@ -325,13 +324,13 @@ spl-token display <MINT_ADDRESS> --program-id TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBq
 # look for: TransferHook { authority: ... }, PermanentDelegate { delegate: ... }
 ```
 
-If TransferHook authority is non-null → the holder of that key can revoke transfer rights mid-trade. If PermanentDelegate is non-null → that delegate can move any holder's tokens at any time (effectively a built-in confiscation). Either alone is rug-class.
+A non-null TransferHook authority can change hook configuration; inspect the referenced program, its upgrade authority and actual transfer behavior. If PermanentDelegate is non-null → that delegate can move any holder's tokens at any time (effectively a built-in confiscation). These are privileged capabilities requiring context, not a determination of malicious intent.
 
-pump.fun bonding curves can be manipulated via the curve's K-parameter; mint authority retained beyond bonding-curve completion is the classic exit-scam shape. Check `mintAuthority` AFTER the curve completes — legitimate launches null it, scams retain it for the post-graduation dump.
+For any bonding-curve launch, identify the exact program/version, graduation state and current authorities from on-chain evidence. Do not generalize a mutable parameter or authority layout across protocols.
 
 ### Honeypot detection — beyond the obvious
 
-`transfer()` succeeds in dry-run but fails on certain addresses (sender allowlist / blocklist). Test with: simulated buy → simulated transfer to a different address → simulated sell. If buy + transfer succeed but sell fails, it's a honeypot.
+`transfer()` succeeds in dry-run but fails on certain addresses (sender allowlist / blocklist). Test with: simulated buy → simulated transfer to a different address → simulated sell. If buy and transfer succeed but sell fails, investigate the revert, liquidity, account setup and route; a failed simulation alone is not proof of intentional trapping.
 
 Quick triage matrix:
 
@@ -366,20 +365,11 @@ The 6-question fast filter:
 5. Top 10 holders concentration < 30% (excluding pools/burn addresses)?
 6. Bonding curve completed (for pump.fun) AND post-completion mint authority null?
 
-Five "no"s = walk away. Three "no"s = high risk, only enter with size you'd walk away from. Two "no"s with strong narrative + thin liquidity = the canonical retail trap.
-
-### MEV / sandwich amplification on illiquid mints
-
-Buying into a mint with < $50K liquidity guarantees you'll be sandwiched. The bot infrastructure on Solana and Ethereum is institutionalized in 2026 — Jito MEV-share and private order-flow auctions. If your trade size > 1% of available liquidity, expect sandwich loss > 5%; > 5% of liquidity, expect > 20% slippage from sandwich alone.
-
-Mitigations (rank by 2026 effectiveness):
-
-1. **Jito bundles** (Solana) — submit with priority tip, atomic with no MEV window
-2. **Flashbots Protect RPC** (Ethereum) — private mempool submission
-3. **MEV-protected DEX aggregators** — Jupiter's slippage protection, 1inch Fusion, CoWSwap
-4. **Splitting orders** — N smaller trades vs 1 large; reduces sandwich profitability per trade
-
-If the mint is so illiquid that even split orders sandwich — that's the signal to skip the trade, not the signal to use better tooling.
+Do not turn this checklist into investment sizing advice or a safety score. Record
+block/slot, chain, mint/program addresses, authorities and verified sources.
+Liquidity depth, holder clustering and admin controls require contextual analysis.
+Private submission routes, bundles and split orders do not guarantee protection
+from MEV or price impact; no percentage loss estimate is established here.
 
 ## When to Use
 
@@ -400,3 +390,7 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+## Evidence limits
+
+Source search is not exhaustive. Verify deployed code matches the reviewed revision, proxy implementation/admin state and actual Token/Token-2022 program. Mint metadata update authority is distinct from mint/freeze authority. LP positions can be concentrated-liquidity NFTs rather than fungible LP tokens. The Foundry template is incomplete pseudocode: Token.sol, liquidity, balances and protocol methods must be supplied and tested on a pinned local fork; it is not a working exploit or a demonstrated price impact. Never broadcast transactions during an audit without the exact authorized command gate above. Findings require reproducible evidence and disclosure through the permitted channel.

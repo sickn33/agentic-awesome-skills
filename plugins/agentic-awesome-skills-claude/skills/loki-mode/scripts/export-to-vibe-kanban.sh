@@ -2,7 +2,7 @@
 # Export Loki Mode tasks to Vibe Kanban format
 # Usage: ./scripts/export-to-vibe-kanban.sh [export_dir]
 
-set -uo pipefail
+set -euo pipefail
 
 LOKI_DIR=".loki"
 EXPORT_DIR="${1:-${VIBE_KANBAN_DIR:-$HOME/.vibe-kanban/loki-tasks}}"
@@ -45,6 +45,7 @@ phase_to_column() {
     esac
 }
 
+# Export is a snapshot overlay: stale destination files are not deleted.
 # Export tasks from all queues
 export_queue() {
     local queue_file="$1"
@@ -60,7 +61,7 @@ import os
 import re
 import sys
 import tempfile
-from datetime import datetime
+from datetime import datetime, timezone
 
 queue_file, requested_export_dir, queue_status, current_phase = sys.argv[1:]
 
@@ -71,8 +72,10 @@ try:
             tasks = []
         else:
             tasks = json.loads(content)
-except (json.JSONDecodeError, FileNotFoundError):
-    tasks = []
+except (json.JSONDecodeError, OSError) as exc:
+    raise SystemExit(f"Cannot read queue: {exc}")
+if not isinstance(tasks, list):
+    raise SystemExit("Queue must be a JSON array")
 
 export_dir = os.path.realpath(os.path.expanduser(requested_export_dir))
 exported = 0
@@ -114,7 +117,7 @@ for task in tasks:
         vibe_status = "doing"
     elif queue_status == "completed":
         vibe_status = "done"
-    elif queue_status == "failed":
+    elif queue_status in ("failed", "dead-letter"):
         vibe_status = "blocked"
     else:
         vibe_status = "todo"
@@ -126,7 +129,7 @@ for task in tasks:
         if 'action' in payload:
             desc_parts.append(f"Action: {payload['action']}")
         if 'description' in payload:
-            desc_parts.append(payload['description'])
+            desc_parts.append(str(payload['description']))
         if 'command' in payload:
             desc_parts.append(f"Command: {payload['command']}")
         description = "\n".join(desc_parts) if desc_parts else json.dumps(payload, indent=2)
@@ -167,7 +170,7 @@ for task in tasks:
             "lokiPriority": priority,
             "lokiPhase": current_phase,
             "lokiRetries": task.get('retries', 0),
-            "createdAt": task.get('createdAt', datetime.utcnow().isoformat() + 'Z'),
+            "createdAt": task.get('createdAt', datetime.now(timezone.utc).isoformat()),
             "claimedBy": task.get('claimedBy'),
             "lastError": task.get('lastError')
         }

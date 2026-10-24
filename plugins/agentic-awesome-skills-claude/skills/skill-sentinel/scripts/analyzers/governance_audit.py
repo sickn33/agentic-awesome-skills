@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
+from source_io import read_text
 from typing import Any, Dict, List, Tuple
 
 from config import GOVERNANCE_LEVELS
@@ -25,7 +26,7 @@ def _detect_governance_level(skill_data: Dict[str, Any], skill_path: Path) -> in
         if not filepath.exists():
             continue
         try:
-            source = filepath.read_text(encoding="utf-8", errors="replace")
+            source = read_text(filepath, root=skill_path)
         except OSError:
             continue
 
@@ -94,7 +95,7 @@ def analyze(skill_data: Dict[str, Any]) -> Tuple[float, List[Dict[str, Any]]]:
             if not filepath.exists():
                 continue
             try:
-                source = filepath.read_text(encoding="utf-8", errors="replace")
+                source = read_text(filepath, root=skill_path)
             except OSError:
                 continue
             if re.search(r'(?:delete|publish|send|post|remove)', source, re.I):
@@ -122,7 +123,7 @@ def analyze(skill_data: Dict[str, Any]) -> Tuple[float, List[Dict[str, Any]]]:
             if not filepath.exists():
                 continue
             try:
-                source = filepath.read_text(encoding="utf-8", errors="replace")
+                source = read_text(filepath, root=skill_path)
             except OSError:
                 continue
             if "get_recent_actions" in source or "__main__" in source:

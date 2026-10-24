@@ -112,7 +112,7 @@ Check the resulting status before reading a final response: `requires_action` ne
 ```java
 PagedIterable<ThreadMessage> messages = messageClient.listMessages(thread.getId());
 for (ThreadMessage message : messages) {
-    System.out.println(message.getRole() + ": " + message.getContent());
+    System.out.println("Message role: " + message.getRole()); // Do not log retained prompt/response payloads.
 }
 ```
 

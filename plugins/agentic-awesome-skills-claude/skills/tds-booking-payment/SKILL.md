@@ -47,7 +47,7 @@ empty templates only - it never holds or processes real employee or customer dat
 
 ## How It Works
 
-Follow the shared execution contract. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+No shared execution-contract file is bundled; follow this file’s empty-template scope and current host authorization rules. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -125,36 +125,36 @@ Never ask for a Notion password or token.
 
 ```csv
 TDS Record Number,Tax Period,Nature of Payment,Payee Name,Payee PAN,Transaction Reference,Payment Date,Gross Payment/Base,TDS Rate %,TDS Deducted,Deducted On,TDS Payable Ledger,Deposit Date,Challan/Bank Reference,Amount Deposited,Return Filed Date,Return Reference,Ledger Reconciliation,Variance Amount,Reconciliation Frequency,Prepared By,Reviewed By,Status,Notes,TDS ID
-TDS-2026-0194,2026-08,Professional Fees,Pixelworks Studio,29ABCDE1234F1Z5,EXP-2026-0338,2026-08-18,32500.00,10,3250.00,2026-08-18,TDS Payable - Professional Fees,2026-09-15,CHL-2026-0912,48200.00,2026-10-15,TDS-Q2-2026-PF,Variance,325.00,Monthly,Sneha Iyer,Vikram Singh,In progress,Deposit and return agree to the challan; ledger short by 325.00 and under investigation.,
+TDS-2026-0194,2026-08,Professional Fees,Pixelworks Studio,PAN-MASKED-EXAMPLE,EXP-2026-0338,2026-08-18,32500.00,10,3250.00,2026-08-18,TDS Payable - Professional Fees,2026-09-15,CHL-2026-0912,2925.00,2026-10-15,TDS-Q2-2026-PF,Variance,325.00,Monthly,Sneha Iyer,Vikram Singh,In progress,Synthetic allocation: deducted 3250.00 minus deposited allocation 2925.00 leaves 325.00 pending; no legal timeliness or filing acceptance asserted.,TDS-001
 ```
 
 ```sql
 CREATE TABLE tds_booking_payment (
-  tds_record_number VARCHAR(255),
+  tds_record_number VARCHAR(255) NOT NULL UNIQUE,
   tax_period VARCHAR(255),
   nature_of_payment VARCHAR(100) NOT NULL,
   payee_name VARCHAR(255),
   payee_pan VARCHAR(255),
   transaction_reference VARCHAR(255),  -- relation -> target record
   payment_date DATE NOT NULL,
-  gross_payment_base NUMERIC(14,2) NOT NULL,
-  tds_rate_pct NUMERIC NOT NULL,
-  tds_deducted NUMERIC(14,2) NOT NULL,
+  gross_payment_base NUMERIC(14,2),
+  tds_rate_pct NUMERIC,
+  tds_deducted NUMERIC(14,2),
   deducted_on DATE,
   tds_payable_ledger VARCHAR(255),
   deposit_date DATE,
   challan_bank_reference VARCHAR(255),
-  amount_deposited NUMERIC(14,2) NOT NULL,
+  amount_deposited NUMERIC(14,2),
   return_filed_date DATE,
   return_reference VARCHAR(255),
   ledger_reconciliation VARCHAR(100) NOT NULL,
-  variance_amount NUMERIC(14,2) NOT NULL,
+  variance_amount NUMERIC(14,2),
   reconciliation_frequency VARCHAR(100) NOT NULL,
   prepared_by VARCHAR(255),
   reviewed_by VARCHAR(255),
   status VARCHAR(100) NOT NULL,
   notes TEXT,
-  tds_id SERIAL PRIMARY KEY,
+  tds_id VARCHAR(255) PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -176,34 +176,31 @@ CREATE INDEX idx_tds_booking_payment_status ON tds_booking_payment (status);
       "Payee PAN": { "type": "string" },
       "Transaction Reference": { "type": "string" },
       "Payment Date": { "type": "string", "format": "date" },
-      "Gross Payment/Base": { "type": "number" },
-      "TDS Rate %": { "type": "number" },
-      "TDS Deducted": { "type": "number" },
+      "Gross Payment/Base": { "type": ["number", "null"] },
+      "TDS Rate %": { "type": ["number", "null"] },
+      "TDS Deducted": { "type": ["number", "null"] },
       "Deducted On": { "type": "string", "format": "date" },
       "TDS Payable Ledger": { "type": "string" },
       "Deposit Date": { "type": "string", "format": "date" },
       "Challan/Bank Reference": { "type": "string" },
-      "Amount Deposited": { "type": "number" },
+      "Amount Deposited": { "type": ["number", "null"] },
       "Return Filed Date": { "type": "string", "format": "date" },
       "Return Reference": { "type": "string" },
       "Ledger Reconciliation": { "type": "string" },
-      "Variance Amount": { "type": "number" },
+      "Variance Amount": { "type": ["number", "null"] },
       "Reconciliation Frequency": { "type": "string" },
       "Prepared By": { "type": "string" },
       "Reviewed By": { "type": "string" },
       "Status": { "type": "string" },
       "Notes": { "type": "string" },
-      "TDS ID": { "type": "integer" }
+      "TDS ID": { "type": "string" }
   },
   "required": [
+      "TDS Record Number",
+      "TDS ID",
       "Nature of Payment",
       "Payment Date",
-      "Gross Payment/Base",
-      "TDS Rate %",
-      "TDS Deducted",
-      "Amount Deposited",
       "Ledger Reconciliation",
-      "Variance Amount",
       "Reconciliation Frequency",
       "Status"
   ]
@@ -247,11 +244,11 @@ and anything pointing at another table stays `relation`.
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | TDS Record Number | `text` | `VARCHAR(255)` | `string` | Text | `TDS-2026-0194` |
+| 1 | TDS Record Number | `text` | `VARCHAR(255)` | `string` | Title | `TDS-2026-0194` |
 | 2 | Tax Period | `text` | `VARCHAR(255)` | `string` | Text | `2026-08` |
 | 3 | Nature of Payment | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Professional Fees` |
 | 4 | Payee Name | `text` | `VARCHAR(255)` | `string` | Text | `Pixelworks Studio` |
-| 5 | Payee PAN | `text` | `VARCHAR(255)` | `string` | Text | `29ABCDE1234F1Z5` |
+| 5 | Payee PAN | `text` | `VARCHAR(255)` | `string` | Text | `PAN-MASKED-EXAMPLE` |
 | 6 | Transaction Reference | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `EXP-2026-0338` |
 | 7 | Payment Date | `date` | `DATE` | `string, format: date` | Date | `2026-08-18` |
 | 8 | Gross Payment/Base | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `32500.00` |
@@ -261,7 +258,7 @@ and anything pointing at another table stays `relation`.
 | 12 | TDS Payable Ledger | `text` | `VARCHAR(255)` | `string` | Text | `TDS Payable - Professional Fees` |
 | 13 | Deposit Date | `date` | `DATE` | `string, format: date` | Date | `2026-09-15` |
 | 14 | Challan/Bank Reference | `text` | `VARCHAR(255)` | `string` | Text | `CHL-2026-0912` |
-| 15 | Amount Deposited | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `48200.00` |
+| 15 | Amount Deposited | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `2925.00` |
 | 16 | Return Filed Date | `date` | `DATE` | `string, format: date` | Date | `2026-10-15` |
 | 17 | Return Reference | `text` | `VARCHAR(255)` | `string` | Text | `TDS-Q2-2026-PF` |
 | 18 | Ledger Reconciliation | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Variance` |
@@ -270,8 +267,8 @@ and anything pointing at another table stays `relation`.
 | 21 | Prepared By | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
 | 22 | Reviewed By | `text` | `VARCHAR(255)` | `string` | Text | `Vikram Singh` |
 | 23 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `In progress` |
-| 24 | Notes | `long_text` | `TEXT` | `string` | Text | `Deposit and return agree to the challan; ledger short by 325.00 and under investigation.` |
-| 25 | TDS ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
+| 24 | Notes | `long_text` | `TEXT` | `string` | Text | `Synthetic allocation: deducted 3250.00 minus deposited allocation 2925.00 leaves 325.00 pending; no legal timeliness or filing acceptance asserted.` |
+| 25 | TDS ID | `id` | `VARCHAR(255) PRIMARY KEY` | `string` | Text (preserve source ID) | `TDS-001` |
 
 ## Select Options
 
@@ -362,8 +359,7 @@ We deduct TDS on a few vendor payments and only find out at filing that the depo
 - Local reads, generation commands, and validation are part of a requested artifact build.
   External writes, messages, provisioning, and publication require authorization for that
   action and target; existing explicit authorization does not need to be repeated.
-- If the user pastes real payee or employee data, generate the template and tell them to
-  delete the pasted data from the conversation.
+- If the user pastes real payee or employee data, minimize repetition, generate empty templates and recommend the host’s privacy controls; do not claim deletion from service storage.
 - A missed deposit or a wrong rate needs a qualified tax professional before anything is
   filed or paid.
 
@@ -378,8 +374,7 @@ We deduct TDS on a few vendor payments and only find out at filing that the depo
   **Solution:** leave `Deposit Date` empty rather than guessing it, and set `Status` to
   `Blocked` until the challan exists.
 - **Problem:** `Amount Deposited` is copied from the challan for one payee onto several rows.
-  **Solution:** deposited amounts are period totals. Keep them on the summary row, not
-  repeated on every deduction.
+  **Solution:** this table’s Amount Deposited is only the documented allocation to this deduction. Maintain the actual challan total once in a separate approved deposit register and reconcile the sum of unique allocations; never repeat the whole total or invent an untyped summary row.
 - **Problem:** the ledger reconciliation is marked `Reconciled` with a variance amount.
   **Solution:** a non-zero variance is `Variance`, not `Reconciled`, until it is explained.
 - **Problem:** all four artifacts drift apart.
@@ -403,3 +398,22 @@ Ask me one short question at a time, and only about what I have not already told
 Then recommend the smallest setup that fits, and wait for me to ask before you build it.
 When I ask, output CSV, SQL DDL, JSON Schema and a Notion property mapping. Data only.
 ```
+
+## Reconciliation boundaries
+
+All names, rates, periods and dates above are synthetic documentation values; 10%
+is arithmetic input, not an applicable TDS rate, and deposit/return dates do not
+establish statutory timeliness or successful acceptance. Record country, fiscal
+period, currency, applicable legal section/rate source and actual verified deadline
+from the responsible tax professional when configuring real use. Monthly reconciliation
+is a suggested internal control, not a universal filing obligation. No tax advice,
+filing or payment was performed.
+
+One row is one deduction/payee. Define variance direction explicitly: here deduction
+minus allocated deposit = pending amount, so 3250 − 2925 = 325. Keep ledger variance
+separate if it compares a different basis. Partial/multiple challan allocations need
+a separate allocation relation; the single reference cannot model them completely.
+Unknown amounts stay null/blank, never zero. Text IDs are supplied stable references.
+Notion Number fields do not enforce cross-field Done/Reconciled checks or compute
+variance automatically; implement validation and receipt verification before marking
+complete. SQL/JSON/CSV are templates, not an executed or reconciled ledger.

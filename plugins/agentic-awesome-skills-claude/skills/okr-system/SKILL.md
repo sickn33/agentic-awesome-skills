@@ -106,7 +106,7 @@ provide a usable link. Report material validation failures or limitations separa
 
 **A selected Notion output is rendered by `notion-manual-import`, so route the
 Notion step there.** When the user selects Notion, hand that step to
-](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notion-manual-import/SKILL.md): it holds the CSV, the property
+[notion-manual-import](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notion-manual-import/SKILL.md): it holds the CSV, the property
 mapping, the import steps and the verification checklist, and it renders the Field
 Reference below instead of defining a table of its own. Do not restate the mapping
 here and do not improvise the import steps. Manual CSV and mapping outputs need no
@@ -122,7 +122,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Objective,Department,End Date,KR1 Progress %,KR2 Progress %,KR3 Progress %,Key Result 1,Key Result 2,Key Result 3,Last Updated,Level,Notes,OKR ID,Owner,Parent OKR,Progress %,Quarter,Start Date,Status,Year
-Make delivery predictable,Delivery,2026-09-30,75,60,40,Reduce churn to 4%,Ship 20 client sites,NPS above 50,2026-01-15,L1,Q2 closed at 60 percent; the two weakest key results were carried into the March review.,,Sneha Iyer,OKR-2026-COMPANY,60,Q1,2026-07-01,Active,2026
+Make delivery predictable,Delivery,2026-09-30,75,60,40,Reduce churn to 4%,Ship 20 client sites,NPS above 50,2026-08-15,L1,Synthetic Q3 check-in; equal-weight progress is 58.33 percent.,,Sneha Iyer,OKR-2026-COMPANY,58.33,Q3,2026-07-01,Active,2026
 ```
 
 ```sql
@@ -131,8 +131,8 @@ CREATE TABLE okr_system (
   department VARCHAR(255),
   end_date DATE NOT NULL,
   kr1_progress_pct NUMERIC NOT NULL,
-  kr2_progress_pct NUMERIC NOT NULL,
-  kr3_progress_pct NUMERIC NOT NULL,
+  kr2_progress_pct NUMERIC,
+  kr3_progress_pct NUMERIC,
   key_result_1 VARCHAR(255),
   key_result_2 VARCHAR(255),
   key_result_3 VARCHAR(255),
@@ -185,8 +185,6 @@ CREATE INDEX idx_okr_system_status ON okr_system (status);
   "required": [
       "End Date",
       "KR1 Progress %",
-      "KR2 Progress %",
-      "KR3 Progress %",
       "Last Updated",
       "Level",
       "Progress %",
@@ -237,14 +235,14 @@ and anything pointing at another table stays `relation`.
 | 7 | Key Result 1 | `text` | `VARCHAR(255)` | `string` | Text | `Reduce churn to 4%` |
 | 8 | Key Result 2 | `text` | `VARCHAR(255)` | `string` | Text | `Ship 20 client sites` |
 | 9 | Key Result 3 | `text` | `VARCHAR(255)` | `string` | Text | `NPS above 50` |
-| 10 | Last Updated | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
+| 10 | Last Updated | `date` | `DATE` | `string, format: date` | Date | `2026-08-15` |
 | 11 | Level | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `L1` |
-| 12 | Notes | `long_text` | `TEXT` | `string` | Text | `Q2 closed at 60 percent; the two weakest key results were carried into the March review.` |
+| 12 | Notes | `long_text` | `TEXT` | `string` | Text | `Synthetic Q3 check-in; equal-weight progress is 58.33 percent.` |
 | 13 | OKR ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
 | 14 | Owner | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
 | 15 | Parent OKR | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `OKR-2026-COMPANY` |
-| 16 | Progress % | `number` | `NUMERIC` | `number` | Number | `60` |
-| 17 | Quarter | `text` | `VARCHAR(255)` | `string` | Text | `Q1` |
+| 16 | Progress % | `number` | `NUMERIC` | `number` | Number | `58.33` |
+| 17 | Quarter | `text` | `VARCHAR(255)` | `string` | Text | `Q3` |
 | 18 | Start Date | `date` | `DATE` | `string, format: date` | Date | `2026-07-01` |
 | 19 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Active` |
 | 20 | Year | `text` | `VARCHAR(255)` | `string` | Text | `2026` |
@@ -308,7 +306,7 @@ We set goals in January and never looked at them again.
 - Notion relations need both databases imported before the link column resolves.
 - Select options are a starting set. Rename them to match how the business talks.
 - No automation, reminders or sync. Those need the integration layer.
-- Does not assess individual performance or connect to compensation.
+- Does not assess individual performance or connect to compensation. Three key results is this template’s capacity, not a universal OKR limit. Leave unused/unknown KR progress absent, not zero. Define baselines, targets, direction, evidence and weights; only average comparable progress values with an agreed missing-value rule. The example uses (75+60+40)/3 = 58.33%. Parent OKR text does not enforce a valid acyclic hierarchy; formulas, check-in dates and authorization need implementation.
 - Legal, tax and HR review is still required before this drives real decisions.
 
 ## Security & Safety Notes
@@ -340,9 +338,9 @@ We set goals in January and never looked at them again.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Module Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notification-reminder-hub/SKILL.md) - turns due dates in this module into reminders.
+- [notification-reminder-hub](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notification-reminder-hub/SKILL.md) - turns due dates in this module into reminders.
 
 ## Reusable Prompt
 

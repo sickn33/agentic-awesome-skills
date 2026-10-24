@@ -22,7 +22,7 @@ df[0:5]  # Row slice
 
 ### 2. Memory Format
 
-**Pandas:** Row-oriented NumPy arrays
+**Pandas:** Column-oriented Series backed by NumPy or extension arrays (including Arrow)
 **Polars:** Columnar Apache Arrow format
 
 **Implications:**
@@ -106,7 +106,7 @@ df.with_columns(
 |-----------|--------|--------|
 | Group by | `df.groupby("col")` | `df.group_by("col")` |
 | Agg single | `df.groupby("col")["val"].mean()` | `df.group_by("col").agg(pl.col("val").mean())` |
-| Agg multiple | `df.groupby("col").agg({"val": ["mean", "sum"]})` | `df.group_by("col").agg(pl.col("val").mean(), pl.col("val").sum())` |
+| Agg multiple | `df.groupby("col").agg({"val": ["mean", "sum"]})` | `df.group_by("col").agg(pl.col("val").mean().alias("val_mean"), pl.col("val").sum().alias("val_sum"))` |
 | Size | `df.groupby("col").size()` | `df.group_by("col").agg(pl.len())` |
 | Count | `df.groupby("col").count()` | `df.group_by("col").agg(pl.col("*").count())` |
 
@@ -146,7 +146,7 @@ df.with_columns(
 
 | Operation | Pandas | Polars |
 |-----------|--------|--------|
-| Pivot | `df.pivot(index="a", columns="b", values="c")` | `df.pivot(values="c", index="a", columns="b")` |
+| Pivot | `df.pivot(index="a", on="b", values="c")` | `df.pivot(values="c", index="a", on="b")` |
 | Melt | `df.melt(id_vars="id")` | `df.unpivot(index="id")` |
 
 ### I/O Operations
@@ -258,10 +258,10 @@ df["category"] = np.where(
 ```python
 df = df.with_columns(
     category=pl.when(pl.col("value") > 100)
-        .then("high")
+        .then(pl.lit("high"))
         .when(pl.col("value") > 50)
-        .then("medium")
-        .otherwise("low")
+        .then(pl.lit("medium"))
+        .otherwise(pl.lit("low"))
 )
 ```
 
@@ -304,7 +304,7 @@ result = df.group_by("category").agg(
 
 ### Anti-Pattern 1: Sequential Pipe Operations
 
-**Bad (disables parallelization):**
+**Composition helper (does not itself disable parallelization):**
 ```python
 df = df.pipe(function1).pipe(function2).pipe(function3)
 ```
@@ -380,6 +380,8 @@ When migrating from pandas to Polars:
 
 ## Compatibility Layer
 
+The Arrow examples require `import pyarrow as pa`. Conversion may copy data; verify dtypes, null/NaN semantics, timezone handling and category order. Pandas aligns indexes in concat, while Polars horizontal concat aligns row positions.
+
 For gradual migration, you can use both libraries:
 
 ```python
@@ -393,7 +395,7 @@ pl_df = pl.from_pandas(pd_df)
 pd_df = pl_df.to_pandas()
 
 # Use Arrow for zero-copy (when possible)
-pl_df = pl.from_arrow(pd_df)
+pl_df = pl.from_arrow(pa.Table.from_pandas(pd_df, preserve_index=False))
 pd_df = pl_df.to_arrow().to_pandas()
 ```
 

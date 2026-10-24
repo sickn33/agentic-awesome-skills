@@ -20,7 +20,7 @@ You may put subdirectories in too, e.g. `remote:bucket/path/to/dir`.
 Sample command to transfer local artifacts to remote:bucket in oracle object storage:
 
 ```console
-rclone -vvv  --progress --stats-one-line --max-stats-groups 10 --log-format date,time,UTC,longfile --fast-list --buffer-size 256Mi --oos-no-check-bucket --oos-upload-cutoff 10Mi --multi-thread-cutoff 16Mi --multi-thread-streams 3000 --transfers 3000 --checkers 64  --retries 2  --oos-chunk-size 10Mi --oos-upload-concurrency 10000  --oos-attempt-resume-upload --oos-leave-parts-on-error sync ./artifacts  remote:bucket -vv
+rclone copy ./artifacts remote:bucket --progress
 ```
 
 ## Configuration
@@ -846,6 +846,7 @@ a bucket or with a bucket and path.
         }
     ]
 }
+```
 
 ### cleanup
 
@@ -910,12 +911,12 @@ The Status will be "RESTORED"" if it was successful or an error message if not.
 ```json
 [
     {
-        "Object": "test.txt"
-        "Status": "RESTORED",
+        "Object": "test.txt",
+        "Status": "RESTORED"
     },
     {
-        "Object": "test/file4.txt"
-        "Status": "RESTORED",
+        "Object": "test/file4.txt",
+        "Status": "RESTORED"
     }
 ]
 ```

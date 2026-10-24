@@ -49,15 +49,21 @@ AllowUsers <confirmed-management-users>
 ## User Security
 
 ```bash
-# Password policy
+# Debian/Ubuntu package example; review the transaction first
 sudo apt install libpam-pwquality
-# /etc/security/pwquality.conf
+```
+
+Merge these settings into `/etc/security/pwquality.conf` after reviewing the distribution PAM policy; these are configuration entries, not shell commands:
+
+```text
 minlen = 14
 dcredit = -1
 ucredit = -1
 ocredit = -1
 lcredit = -1
+```
 
+```bash
 # Set the default for FUTURE accounts: inactivity after password expiry,
 # not 30 days since last login; review service-account consequences first.
 useradd -D -f 30
@@ -118,7 +124,11 @@ Package installation and audit rules are separate steps. Validate and load the a
 # Install auditd
 apt install auditd
 
-# /etc/audit/rules.d/audit.rules
+```
+
+Example rule-file content for `/etc/audit/rules.d/audit.rules` (not shell commands):
+
+```text
 -w /etc/passwd -p wa -k identity
 -w /etc/shadow -p wa -k identity
 -w /etc/sudoers -p wa -k actions

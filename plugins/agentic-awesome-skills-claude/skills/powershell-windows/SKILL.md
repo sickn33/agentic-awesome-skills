@@ -25,9 +25,9 @@ date_added: "2026-02-27"
 
 ---
 
-## 2. Unicode/Emoji Restriction
+## 2. Encoding Compatibility
 
-### CRITICAL: No Unicode in Scripts
+### Prefer portable log markers
 
 | Purpose | ❌ Don't Use | ✅ Use |
 |---------|-------------|--------|
@@ -37,7 +37,7 @@ date_added: "2026-02-27"
 | Info | ℹ️ 🔵 | [i] [INFO] |
 | Progress | ⏳ | [...] |
 
-**Rule:** Use ASCII characters only in PowerShell scripts.
+PowerShell supports Unicode. ASCII log markers are a portability choice, not a syntax requirement. For non-ASCII scripts read by Windows PowerShell 5.1, use UTF-8 with BOM; PowerShell 7 uses UTF-8 without BOM by default. Check the consuming tool before choosing file encoding.
 
 ---
 
@@ -47,8 +47,8 @@ date_added: "2026-02-27"
 
 | ❌ Wrong | ✅ Correct |
 |----------|-----------|
-| `$array.Count -gt 0` | `$array -and $array.Count -gt 0` |
-| `$text.Length` | `if ($text) { $text.Length }` |
+| `$array.Count -gt 0` | `($null -ne $array) -and (@($array).Count -gt 0)` |
+| `$text.Length` | `if ($null -ne $text) { $text.Length }` |
 
 ---
 
@@ -56,9 +56,7 @@ date_added: "2026-02-27"
 
 ### Complex Expressions
 
-| ❌ Wrong | ✅ Correct |
-|----------|-----------|
-| `"Value: $($obj.prop.sub)"` | Store in variable first |
+`"Value: $($obj.prop.sub)"` is valid subexpression interpolation. Store a complex expression in a variable when that improves readability.
 
 **Pattern:**
 ```
@@ -74,13 +72,13 @@ Write-Output "Value: $value"
 
 | Value | Use |
 |-------|-----|
-| Stop | Development (fail fast) |
-| Continue | Production scripts |
+| Stop | Required cmdlet failures must enter catch |
+| Continue | Report a non-terminating error and continue deliberately |
 | SilentlyContinue | When errors expected |
 
 ### Try/Catch Pattern
 
-- Don't return inside try block
+- A return inside try is valid; finally still runs
 - Use finally for cleanup
 - Return after try/catch
 
@@ -136,9 +134,9 @@ Write-Output "Value: $value"
 | Error Message | Cause | Fix |
 |---------------|-------|-----|
 | "parameter 'or'" | Missing parentheses | Wrap cmdlets in () |
-| "Unexpected token" | Unicode character | Use ASCII only |
+| "Unexpected token" | Parsing or quoting error | Inspect the reported token and file encoding |
 | "Cannot find property" | Null object | Check null first |
-| "Cannot convert" | Type mismatch | Use .ToString() |
+| "Cannot convert" | Type mismatch | Validate input and convert to the required type |
 
 ---
 
@@ -147,14 +145,14 @@ Write-Output "Value: $value"
 ```powershell
 # Strict mode
 Set-StrictMode -Version Latest
-$ErrorActionPreference = "Continue"
+$ErrorActionPreference = "Stop"
 
 # Paths
 $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 # Main
 try {
-    # Logic here
+    # Cmdlet logic here; check $LASTEXITCODE after native executables.
     Write-Output "[OK] Done"
     exit 0
 }
@@ -166,10 +164,12 @@ catch {
 
 ---
 
-> **Remember:** PowerShell has unique syntax rules. Parentheses, ASCII-only, and null checks are non-negotiable.
+> **Remember:** Check shell version, encoding, null semantics and native exit codes. `try/catch` alone does not reliably turn native command failures into exceptions.
+
+References: [encoding](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_Character_Encoding), [quoting](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_quoting_rules).
 
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+Use when writing or debugging Windows PowerShell or PowerShell 7 scripts, especially command expressions, encoding, paths and error handling.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

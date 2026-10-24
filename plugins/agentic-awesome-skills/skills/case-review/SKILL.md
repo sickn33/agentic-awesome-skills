@@ -31,6 +31,10 @@ This skill covers:
 
 It MUST NOT perform reconnaissance, exploitation, dynamic instrumentation, or target changes. Those actions belong to the routed analysis skill and require the case scope gate.
 
+## Imported scope
+
+This tree bundles SKILL.md only. `scripts/review_case.py`, `skills/scripts/append-evidence.ps1` and routed modules are not included. Obtain a reviewed matching upstream installation before any dependent command; otherwise perform the inline traceability checks manually and report script/hash/strict-mode verification as not run. Script behavior described below is an upstream claim, not a test result for this import.
+
 ## Tool dependencies
 
 | Tool | Required | Purpose | Auto-bootstrap |

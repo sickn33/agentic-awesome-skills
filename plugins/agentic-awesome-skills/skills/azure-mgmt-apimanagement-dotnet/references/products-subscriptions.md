@@ -12,7 +12,7 @@ var productData = new ApiManagementProductData
     IsSubscriptionRequired = true,
     IsApprovalRequired = true,  // Requires admin approval
     SubscriptionsLimit = 5,
-    State = ApiManagementProductState.Published,
+    State = ApiManagementProductState.NotPublished,
     Terms = "Terms and conditions for premium tier..."
 };
 
@@ -65,7 +65,7 @@ var subscriptionData = new ApiManagementSubscriptionCreateOrUpdateContent
     DisplayName = "Customer A Subscription",
     Scope = $"/products/premium",
     State = ApiManagementSubscriptionState.Active,
-    AllowTracing = true
+    AllowTracing = false
 };
 
 var subscription = await service.GetApiManagementSubscriptions()
@@ -84,8 +84,7 @@ var apiSubscriptionData = new ApiManagementSubscriptionCreateOrUpdateContent
 
 ```csharp
 var secrets = await subscription.Value.GetSecretsAsync();
-Console.WriteLine($"Primary Key: {secrets.Value.PrimaryKey}");
-Console.WriteLine($"Secondary Key: {secrets.Value.SecondaryKey}");
+// Store returned secrets privately; never print primary or secondary keys.
 ```
 
 ## Regenerate Subscription Keys
@@ -115,11 +114,13 @@ var patch = new ApiManagementSubscriptionPatch
 {
     State = ApiManagementSubscriptionState.Suspended
 };
-await subscription.Value.UpdateAsync(patch);
+var currentTag = await subscription.Value.GetEntityTagAsync();
+await subscription.Value.UpdateAsync(currentTag.Value, patch);
 
 // Reactivate
 patch.State = ApiManagementSubscriptionState.Active;
-await subscription.Value.UpdateAsync(patch);
+currentTag = await subscription.Value.GetEntityTagAsync();
+await subscription.Value.UpdateAsync(currentTag.Value, patch);
 ```
 
 ## Create User
@@ -131,7 +132,7 @@ var userData = new ApiManagementUserCreateOrUpdateContent
     FirstName = "John",
     LastName = "Doe",
     State = ApiManagementUserState.Active,
-    Password = "SecurePassword123!"  // Optional, can send invite instead
+    // Use the approved invitation/identity flow; do not embed a password.
 };
 
 var user = await service.GetApiManagementUsers()
@@ -169,5 +170,6 @@ await product.Value.GetProductGroups()
 ## Delete Subscription
 
 ```csharp
-await subscription.Value.DeleteAsync(WaitUntil.Completed);
+var deleteTag = await subscription.Value.GetEntityTagAsync();
+await subscription.Value.DeleteAsync(WaitUntil.Completed, deleteTag.Value);
 ```

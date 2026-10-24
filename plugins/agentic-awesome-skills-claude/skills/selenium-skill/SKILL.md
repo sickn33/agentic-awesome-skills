@@ -13,11 +13,15 @@ license_source: https://github.com/LambdaTest/agent-skills/blob/main/LICENSE
 # Selenium Automation Skill
 ## When to Use
 
-Use this skill when you need generates production-grade Selenium WebDriver automation scripts and tests in Java, Python, JavaScript, C#, Ruby, or PHP. Supports local execution and TestMu AI cloud with 3000+ browser/OS combinations. Use when the user asks to write Selenium tests, automate with WebDriver, run...
+Use when writing or debugging Selenium WebDriver browser tests, selecting local/Grid execution, or structuring page objects. Match the language and execution environment to the actual project.
 
 
 You are a senior QA automation architect. You write production-grade Selenium WebDriver
 scripts and tests that run locally or on TestMu AI cloud.
+
+## Availability and data scope
+
+This catalog tree contains only this file: all `reference/` paths below are upstream prerequisites, not bundled playbooks. Do not claim to have read them or invent their contents. Use authorized test accounts and sandbox targets; browser actions can send messages, buy or delete. Cloud/Grid choice needs the applicable data/account/cost authority, and provider logs/video/network capture may expose secrets or personal data. Verify real supported browser/OS combinations instead of assuming that naming a combination makes it available; keep credentials out of emitted URLs/logs and clean up remote sessions.
 
 ## Step 1 — Execution Target
 

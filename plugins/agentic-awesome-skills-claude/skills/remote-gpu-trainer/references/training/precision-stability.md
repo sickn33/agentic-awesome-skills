@@ -138,9 +138,8 @@ https://docs.pytorch.org/docs/2.12/amp.html
 
 **Symptom**: a copied fp16 recipe carries a GradScaler into a bf16 run — wasted overhead, not a crash or a wrong result.
 
-**Root cause**: bf16 has fp32's exponent range, so gradients don't underflow → loss-scaling is unnecessary
-and the scaler's skip/backoff machinery is dead weight (scale-then-unscale cancels, and it never finds an
-overflow to skip).
+**Root cause**: bf16 has approximately fp32's exponent range, greatly reducing fp16-style underflow risk → loss-scaling is unnecessary
+and the scaler's skip/backoff machinery is dead weight (scale-then-unscale cancels, but non-finite gradients can still occur from invalid operations or large values).
 
 **Fix**: for bf16, drop the scaler entirely — plain `loss.backward(); optimizer.step()`. Only fp16 (and the
 V100/T4 path) uses GradScaler.
@@ -150,8 +149,7 @@ URL: https://docs.pytorch.org/docs/2.12/amp.html
 
 **Symptom**: `clip_grad_norm_` under fp16 AMP has no effect, or clips at the wrong magnitude.
 
-**Root cause**: inside the scaler the grads are still multiplied by the (large) scale factor, so clipping to
-`max_norm=1.0` is really clipping to `1.0 × scale` — effectively never.
+**Root cause**: inside the scaler the grads are still multiplied by the (large) scale factor, so clipping scaled gradients at max_norm=1.0 makes the effective true-gradient threshold `1.0 / scale`, usually severe over-clipping.
 
 **Fix**: `scaler.unscale_(optimizer)` once, THEN clip, THEN `scaler.step`:
 ```python
@@ -160,7 +158,7 @@ scaler.unscale_(optimizer)                                  # grads now in true 
 torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
 scaler.step(optimizer); scaler.update()
 ```
-`unscale_` is idempotent-per-step (call it once). For bf16, just `clip_grad_norm_` directly — no unscale.
+Call `unscale_` at most once per optimizer per step; repeated calls can raise an error. For bf16, just `clip_grad_norm_` directly — no unscale.
 URL: https://github.com/pytorch/pytorch/blob/main/docs/source/notes/amp_examples.rst
 
 ---
@@ -172,7 +170,7 @@ URL: https://github.com/pytorch/pytorch/blob/main/docs/source/notes/amp_examples
 **Symptom**: loss prints `nan` (or `inf`) after N steps; everything was fine before.
 
 **Root cause** — NaN/Inf is produced by a *finite* set of ops on bad inputs:
-- `log(x)` / `log_softmax` with `x ≤ 0` (e.g. `log` of a `sigmoid` output that hit 0).
+- `log(x)` with `x ≤ 0` (log_softmax accepts arbitrary finite logits, including negative values) (e.g. `log` of a `sigmoid` output that hit 0).
 - `sqrt(x)` / `x ** 0.5` with `x < 0`, or its grad at `x = 0` (`d/dx sqrt = 1/(2√x) → inf`).
 - division `a / b` with `b → 0` (un-epsilon'd normalization, variance ≈ 0 in BatchNorm/LayerNorm).
 - `exp(x)` overflow → `inf`, then `inf − inf` / `inf / inf → nan`.
@@ -180,7 +178,7 @@ URL: https://github.com/pytorch/pytorch/blob/main/docs/source/notes/amp_examples
 
 **Fix — make the op stable, don't paper over it**:
 - Never hand-roll `log(softmax(x))` — use `F.log_softmax` / `F.cross_entropy` (fused, log-sum-exp-stable).
-- Add epsilon *inside* the unstable op: `torch.log(x + 1e-8)`, `torch.sqrt(x + 1e-12)`, `a / (b + 1e-8)`.
+- Choose a mathematically valid domain and dtype-aware stabilization: adding a small epsilon does not make arbitrary negative log/sqrt inputs valid, and `b+eps` can still be zero or change signed-denominator semantics.
 - Clamp before the danger op: `x.clamp(min=1e-7)` before `log`; clamp logits before a manual softmax.
 - Use `eps` in the optimizer/norm (AdamW `eps=1e-8`; raise modestly if `v` is tiny and steps explode).
 
@@ -194,7 +192,7 @@ https://medium.com/better-ml/loss-spikes-in-training-causes-detection-and-mitiga
 **Root cause**: by default the NaN surfaces wherever it's *consumed*, not where it was *born*.
 
 **Fix — two tools, cheap → precise**:
-- **Forward NaN hook (cheap, leave on)** — register on every module to catch the *first* layer to emit NaN:
+- **Forward NaN hook (debug only; device reductions and Python branching can synchronize and slow training)** — register on every module to catch the *first* layer to emit NaN:
   ```python
   for name, m in model.named_modules():
       m.register_forward_hook(lambda mod, i, o, n=name:
@@ -203,7 +201,8 @@ https://medium.com/better-ml/loss-spikes-in-training-causes-detection-and-mitiga
 - **`torch.autograd.set_detect_anomaly(True)` (expensive, debug-only)** — records the forward traceback of
   each backward op and raises at the first backward NaN, pointing at the *forward* line that created it.
   ```python
-  with torch.autograd.detect_anomaly():   # or set_detect_anomaly(True, check_nan=True)
+  with torch.autograd.detect_anomaly():   # include forward to capture its traceback
+      loss = loss_fn(model(x), y)
       loss.backward()
   ```
   The docs warn it "will slow down your program" (roughly an order of magnitude) — enable to *locate*, then
@@ -279,8 +278,7 @@ URL: https://medium.com/better-ml/loss-spikes-in-training-causes-detection-and-m
 
 **Root cause**: the optimizer applies a non-finite grad and permanently corrupts the weights.
 
-**Fix**: gate the optimizer step on finiteness (fp16's GradScaler already does this internally, P5; bf16
-needs it explicit):
+**Fix**: gate the optimizer step on finiteness (fp16's GradScaler already does this internally, P5; bf16 custom loops need an explicit check. This minimal single-process sketch does not cover BatchNorm buffer corruption, accumulation state or distributed collective agreement):
 ```python
 loss.backward()
 gnorm = torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
@@ -290,7 +288,7 @@ else:
     optimizer.zero_grad(set_to_none=True)   # skip this batch, keep weights intact
     skipped += 1
 ```
-Log a `skipped` counter — a *rising* skip rate means a systematic problem (P12/P10), not stray bad data.
+For distributed training, reduce an agreed non-finite flag across all participating ranks before the update so all ranks step or skip together; do not let a rank skip required collectives. Check buffers and optimizer state too, and record every skipped sample. Log a `skipped` counter — a *rising* skip rate means a systematic problem (P12/P10), not stray bad data.
 Adaptive spike-clipping (ZClip) and momentum-reset on spike (SPAM) automate this for large runs. URLs:
 https://arxiv.org/pdf/2504.02507 · https://arxiv.org/pdf/2501.06842
 
@@ -306,7 +304,7 @@ numerical instability and (in low precision) overflow → collapse.
 (`log Z = logsumexp(logits)`), pulling `log Z → 0`:
 ```python
 logits = model(x)
-z = torch.logsumexp(logits, dim=-1)
+z = torch.logsumexp(logits.float(), dim=-1)
 loss = F.cross_entropy(logits, y) + 1e-4 * (z ** 2).mean()
 ```
 Coefficient **1e-4** is the PaLM/ST-MoE value; too large lets z-loss dominate. Standard in LLM pretraining;

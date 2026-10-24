@@ -125,8 +125,11 @@ adapter:
       - pattern: "jedis|lettuce-core|spring-data-redis"
         type: "redis"
         default_port: 6379
-      - pattern: "h2|sqlite-jdbc"
+      - pattern: "sqlite-jdbc"
         type: "sqlite"
+        default_port: 0
+      - pattern: "com.h2database|h2database"
+        type: "h2"
         default_port: 0
     services:
       - pattern: "kafka-clients|spring-kafka"
@@ -140,7 +143,7 @@ adapter:
         default_port: 9200
     env_var_patterns:
       - pattern: 'System\.getenv\(\s*["\x27]([^"\x27]+)["\x27]\)'
-      - pattern: '\\$\\{([A-Z_][A-Z0-9_]*)\\}'
+      - pattern: '\$\{([A-Z_][A-Z0-9_]*)\}'
 
   linter:
     template_section: "java-linter"
@@ -166,7 +169,7 @@ adapter:
 
 | File | Build Tool | Build Command | Test Command |
 |------|-----------|---------------|--------------|
-| `pom.xml` | Maven | `mvn package -DskipTests` | `mvn test` |
+| `pom.xml` | Maven | `mvn package` | `mvn test` |
 | `build.gradle` | Gradle (Groovy) | `./gradlew build -x test` | `./gradlew test` |
 | `build.gradle.kts` | Gradle (Kotlin DSL) | `./gradlew build -x test` | `./gradlew test` |
 
@@ -176,7 +179,7 @@ If `mvnw` or `gradlew` wrapper exists, prefer the wrapper over system-installed 
 
 1. Existing `harness/config/environment.json` startup command, if present
 2. Spring Boot → `./gradlew bootRun` or `mvn spring-boot:run`
-3. Fat JAR exists → `java -jar target/*.jar` or `java -jar build/libs/*.jar`
+3. Fat JAR exists → `java -jar target/<verified-single-application-artifact>.jar` or `java -jar build/libs/*.jar`
 4. Main class annotated with `@SpringBootApplication` → infer from pom.xml/build.gradle
 
 ## Framework-Specific Notes
@@ -203,3 +206,8 @@ If `mvnw` or `gradlew` wrapper exists, prefer the wrapper over system-installed 
 - Kotlin: same JUnit 5 + kotest as alternative
 - Integration tests often use `@SpringBootTest` + Testcontainers
 - Test directory: `src/test/java/` or `src/test/kotlin/`
+
+
+## Adapter limits
+
+This adapter is a proposed detection specification, not an included runtime. Regex matches are partial hints (comments, multiline syntax, aliases, computed routes and imports can be missed); use native parsers and verify exact paths and commands. Do not execute inferred package scripts, wrappers, build hooks or installs without inspection and an approved isolated environment. Use the project manifest/toolchain and lockfile for versions; examples are historical snapshots. Resolve placeholders without shell eval, preserve failed exit statuses, and do not infer a required database vendor from a general ORM dependency. Missing optional tools or commands are unknown, not a passing check.

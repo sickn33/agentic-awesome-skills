@@ -77,7 +77,7 @@ gdb ./binary
 (gdb) continue
 
 # 4. Kernel config (requires root)
-echo 0 > /proc/sys/kernel/yama/ptrace_scope
+# Do not lower host ptrace policy. Use an authorized dedicated analysis VM.
 ```
 
 **Double-ptrace pattern:**
@@ -116,7 +116,7 @@ unshare -m bash -c 'mount --bind /dev/null /proc/self/status && ./binary'
 # 3. GDB: set breakpoint at fopen, change filename argument
 (gdb) b fopen
 (gdb) run
-(gdb) set {char[20]} $rdi = "/dev/null"
+(gdb) # Do not overwrite a possibly read-only filename buffer; redirect to a verified private buffer in the fixture
 (gdb) continue
 ```
 
@@ -173,7 +173,7 @@ signal(SIGSEGV, real_logic_handler);
 ```bash
 # GDB: pass signals to program instead of handling them
 (gdb) handle SIGTRAP nostop pass
-(gdb) handle SIGALRM ignore
+(gdb) handle SIGALRM nostop noprint nopass
 (gdb) handle SIGSEGV nostop pass
 
 # For alarm-based: patch alarm() to return immediately
@@ -445,10 +445,10 @@ while ((entry = readdir(dir))) {
 **Frida bypass of Frida detection:**
 ```javascript
 // Hook the detection functions themselves
-Interceptor.attach(Module.findExportByName(null, "strstr"), {
+Interceptor.attach(Module.getGlobalExportByName("strstr"), {
     onEnter(args) {
-        this.haystack = Memory.readUtf8String(args[0]);
-        this.needle = Memory.readUtf8String(args[1]);
+        this.haystack = args[0].readUtf8String();
+        this.needle = args[1].readUtf8String();
     },
     onLeave(retval) {
         if (this.needle && (this.needle.includes("frida") || this.needle.includes("gadget"))) {
@@ -519,8 +519,8 @@ void *watchdog(void *arg) {
 ; Condition that always evaluates the same way but looks data-dependent
 mov eax, [some_memory]
 imul eax, eax          ; x^2
-and eax, 1             ; x^2 mod 2 is always 0 for any x
-jnz fake_branch        ; Never taken, but disassembler doesn't know
+and eax, 1             ; x^2 mod 2 equals x mod 2; NOT an opaque constant
+jnz odd_branch         ; Taken for odd x; do not remove without proof
 ; real code here
 ```
 
@@ -554,7 +554,7 @@ Functions split into non-contiguous chunks connected by unconditional jumps. Def
 
 ### Control Flow Flattening (Advanced)
 
-> 完整的 OLLVM 脱密工作流、变种生态（Hikari/Polaris/O-MVLL/Tigress/Hodur 等）和社区工具调研见 [ollvm-deobfuscation.md](references/ollvm-deobfuscation.md)。
+> 完整的 OLLVM 脱密工作流、变种生态（Hikari/Polaris/O-MVLL/Tigress/Hodur 等）和社区工具调研见 [ollvm-deobfuscation.md](ollvm-deobfuscation.md)。
 
 Beyond basic switch-case (see patterns.md): modern OLLVM variants use:
 - **Bogus control flow:** Fake branches with opaque predicates
@@ -594,7 +594,7 @@ Beyond basic switch-case (see patterns.md): modern OLLVM variants use:
 # pip install simba-simplifier
 from simba import simplify_mba
 expr = "(a | b) + (a & b) - (~a & b)"
-print(simplify_mba(expr))  # → a
+print(simplify_mba(expr))  # Verify equivalence; this expression is not generally a
 ```
 
 ---
@@ -618,7 +618,7 @@ void sigill_handler(int sig, siginfo_t *info, void *ucontext) {
 }
 ```
 
-**Key insight:** If a binary installs signal handlers for SIGILL/SIGSEGV/SIGTRAP early in execution, suspect custom instruction dispatch. Trace signal deliveries with `strace -e signal` or set GDB to not intercept: `handle SIGILL nostop pass`.
+**Key insight:** If a binary installs signal handlers for SIGILL/SIGSEGV/SIGTRAP early in execution, suspect custom instruction dispatch. Trace signal deliveries with `strace -e trace=none -e signal=all` or set GDB to not intercept: `handle SIGILL nostop pass`.
 
 ---
 
@@ -658,7 +658,7 @@ def trace_transforms(start_ea, end_ea):
     while ea < end_ea:
         mnem = idc.print_insn_mnem(ea)
         if mnem not in ('jmp', 'je', 'jne', 'call', 'ret'):
-            instructions.append((ea, mnem, idc.print_operands(ea)))
+            instructions.append((ea, mnem, ', '.join(idc.print_operand(ea, i) for i in range(8) if idc.print_operand(ea, i))))
         ea = idc.next_head(ea)
     return instructions
 
@@ -742,7 +742,7 @@ def reverse_processing(byte):
 3. **LD_PRELOAD** (Linux) — hook libc functions returning fake values
 4. **ScyllaHide** (Windows x64dbg) — patches PEB, hooks NT functions automatically
 5. **Emulation** (Unicorn/Qiling) — no debugger artifacts to detect
-6. **Kernel-level bypass** — modify `/proc/sys/kernel/yama/ptrace_scope`, use `prctl`
+6. **Kernel-level bypass** — modify `/proc/sys/kernel/yama/ptrace_scope`, use documented per-process settings only within an authorized test VM
 
 ### Layered Anti-Debug (Real-World Pattern)
 
@@ -766,14 +766,14 @@ Many CTF challenges stack multiple checks:
 | `NtQueryInformationProcess` | Windows | ScyllaHide, hook ntdll |
 | `rdtsc` timing | Both | NOP rdtsc, Frida time hook, Pin |
 | `/proc/self/status` | Linux | Mount namespace, hook fopen |
-| `alarm(N)` | Linux | `handle SIGALRM ignore` in GDB |
+| `alarm(N)` | Linux | `handle SIGALRM nostop noprint nopass` in GDB |
 | `SIGTRAP` handler | Linux | `handle SIGTRAP nostop pass` |
 | `SIGFPE` handler side-channel | Linux | `strace -e signal=SIGFPE` count per input |
 | TLS callback | Windows | Break on TLS in x64dbg, patch |
 | DR register scan | Windows | Use software BPs, hook GetThreadContext |
 | INT3 scan / CRC | Both | Hardware BPs, patch CRC comparison |
 | Frida detection | Both | Early-load gadget, hook strstr |
-| CPUID hypervisor | Both | Patch CPUID result, bare metal |
+| CPUID hypervisor | Both | Patch CPUID result in a dedicated isolated VM; never move an unknown sample to a normal workstation |
 | Thread hiding | Windows | Hook NtSetInformationThread |
 
 
@@ -783,7 +783,7 @@ Many CTF challenges stack multiple checks:
 
 > 检测类长文仍见 `malware-analysis/references/anti-analysis-techniques.md`；OLLVM 长流程见 `references/ollvm-deobfuscation.md`。  
 > 本节是 **触发 → 动作 → Evidence** 短菜谱，供 agent 在 Dynamic/Static 旁路选用。  
-> **授权隔离 lab 默认**；静态 patch / 改 PEB / 改返回值不是未授权目标上的默认动作。
+> **需实际确认的授权隔离 lab**；静态 patch / 改 PEB / 改返回值不是未授权目标上的默认动作。
 
 ### 使用规则
 
@@ -834,3 +834,6 @@ Many CTF challenges stack multiple checks:
 - PE 结构：PE-bear / CFF Explorer  
 - 平坦化：见 ollvm 专章工具表（d810-ng 等）  
 - 无某工具时：等价命令 + 记失败，禁止假装已验证签名/已脱平坦化
+## Interpretation limits
+
+All snippets are case-specific analysis examples, not standalone bypass scripts. A syscall catchpoint stops on entry and exit: changing rax at entry is not equivalent to changing the return value, and suppressing effects requires explicit entry/exit handling. NOPing rdtsc does not define EDX:EAX values. PEB/heap offsets depend on OS version, architecture and heap implementation; current-thread GetThreadContext does not establish valid context. A single VM artifact, timing threshold or 0xCC byte is not conclusive. Do not change host policies, disable protection or move unknown samples to a normal physical workstation. Runtime analysis stays within the root gate; static reasoning and recorded limitations are valid outcomes.

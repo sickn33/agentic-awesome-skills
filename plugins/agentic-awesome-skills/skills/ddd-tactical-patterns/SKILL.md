@@ -39,7 +39,7 @@ class Order {
   private status: "draft" | "submitted" = "draft";
 
   submit(itemsCount: number): void {
-    if (itemsCount === 0) throw new Error("Order cannot be submitted empty");
+    if (!Number.isInteger(itemsCount) || itemsCount <= 0) throw new Error("Order cannot be submitted empty");
     if (this.status !== "draft") throw new Error("Order already submitted");
     this.status = "submitted";
   }

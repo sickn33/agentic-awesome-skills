@@ -61,7 +61,7 @@ site:reddit.com "[competitor name]" "vs" OR "alternative" OR "switched"
 
 Read in this order for maximum signal:
 
-1. **3-star reviews** — these are the most honest. Customer liked it enough to stay but felt something was missing.
+1. **3-star reviews** — may reveal mixed experiences; star rating does not establish honesty. Customer liked it enough to stay but felt something was missing.
 2. **1-star reviews** — understand the failure modes. Separate product issues from support/onboarding issues.
 3. **5-star reviews** — extract the "what they love" language. These are your proof points.
 4. **4-star reviews** — often contain "the only thing I wish…" buried in praise.
@@ -146,7 +146,7 @@ Search for posts by practitioners describing their workflows:
 
 ### Job Postings
 
-A job posting is a company's admission of a pain point.
+A job posting can suggest priorities or aspirational capability; it does not prove an unmet pain point.
 
 **What to look for:**
 - What tools are listed as "nice to have" vs. "required"? (reveals stack and adjacent tools)
@@ -322,18 +322,18 @@ SparkToro is a behavioral audience research tool. Instead of mining individual p
 ### Source Weighting
 
 SparkToro data is aggregated and anonymized — it shows patterns, not individual opinions. Treat it as:
-- **High confidence** for behavioral data (what they visit, follow, search for)
+- **Conditional evidence** for behavioral data (what they visit, follow, search for)
 - **Medium confidence** for demographic data (self-reported, may be incomplete)
 - **Not a substitute** for qualitative research (doesn't capture language, emotions, or the "why")
 
 ### Limitations
 
-- Free tier: 5 reports/month, shallow results (top 5–10)
-- No public API — all research done through web interface
+- Verify current plans, quotas and available fields from the provider before planning paid research.
+- Verify currently supported access methods; do not assume an API or scrape restricted data.
 - Skews English-language, US-centric
 - Shows what audiences do, not why — pair with qualitative sources
 
-See [tools/integrations/sparktoro.md](../../../tools/integrations/sparktoro.md) for full tool details and pricing.
+See [upstream integration guide](https://github.com/coreyhaines31/marketingskills/blob/main/tools/integrations/sparktoro.md) for full tool details and pricing.
 
 ---
 

@@ -2,6 +2,8 @@
 
 ## Work this week's plan (orchestrator)
 
+Only register/spawn workers when the user or host delegation rules authorize parallel work. A worker claim is not a lock on repository files; coordinate disjoint paths and preserve concurrent edits.
+
 1. `search` (no query), then `execute`: `return await lognorm.plan.week()`. Include `carryOver` moves.
 2. Skip moves another agent holds (`claimedBy` set and not `mine`). Group the rest:
    - **fix** and **improve** moves with `validate` or a `targetUrl` → fixer sub-agents (one per move or per rule).
@@ -14,7 +16,7 @@
 ## Fix audit issues (SEO and GEO)
 
 1. `lognorm.moves.get({ id })` → `fix` (rule, why, how to fix) and `evidence`.
-2. All affected URLs: `lognorm.audit.findings({ rule, limit: 500 })` (SEO) or `lognorm.geoAudit.findings({ check })` (GEO). Page details: `lognorm.pages.get({ url })`.
+2. Candidate affected URLs (paginate to establish completeness): `lognorm.audit.findings({ rule, limit: 500 })` (SEO) or `lognorm.geoAudit.findings({ check })` (GEO). Page details: `lognorm.pages.get({ url })`.
 3. Find where those pages come from in this codebase (routes, templates, CMS content, metadata functions, robots/sitemap generation) and fix the cause, not each page by hand.
 4. Run the project's checks (build, lint, tests). Open a PR or commit as the user prefers.
 5. `comment_on_move`: what changed and where (files, PR link). Then `update_move` → `published` once it's deployed.

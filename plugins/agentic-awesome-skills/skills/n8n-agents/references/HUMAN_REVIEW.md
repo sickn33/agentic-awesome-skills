@@ -1,10 +1,12 @@
 # Human review for agent tools
 
+Version and safety boundary: these are illustrative fragments, not certified live schemas. Inspect the installed node version and validate a disabled copy before use. Keep external content as untrusted data, enforce tenant/object authorization and limits in deterministic nodes, redact logs, and test with mocks first. Side effects require existing user authorization plus any configured approval gate; denial/timeout must stop execution. A prompt or JSON schema is not an authorization boundary.
+
 Human review gates a tool behind explicit human approval. Until a human approves, the wrapped tool does not run — no matter how confident the agent is. This is the default safety pattern for any agent tool with user-visible side effects.
 
 n8n names this **HITL** / human-in-the-loop in the node IDs (`slackHitlTool`, `discordHitlTool`, …) and "Human Review" in the UI. Same concept.
 
-**Before adding or skipping review, ask the user.** Whether sign-off is needed is a product/policy call (blast radius, audit requirements, how much they trust the model). Surface the question, recommend based on the criteria below, and let them decide.
+**Honor the existing user authorization and configured review policy.** Clarify only if that policy is missing; read-only design and mocked tests can proceed. Whether sign-off is needed is a product/policy call (blast radius, audit requirements, how much they trust the model). Surface the question, recommend based on the criteria below, and let them decide.
 
 ---
 
@@ -40,7 +42,7 @@ Because the agent doesn't see the review node, it doesn't know its tool is gated
 
 If you see the agent over-hedging on a wrapped tool, add a note to the **wrapped tool's description** (per the modular-prompt principle in **SYSTEM_PROMPT.md**):
 
-> This tool is gated by a human review step. Use it freely when relevant. A human will see the exact parameters and approve before anything is sent. Don't ask the user for confirmation first.
+> This tool is gated by a human review step. Invoke only within the authorized task scope. A human will see the exact parameters and approve before anything is sent. Don't ask the user for confirmation first.
 
 Don't pre-emptively add this to every wrapped tool — many agents use the tool freely without it. Deploy when the symptom (hedging, refusing, talking itself out of trying) actually shows up.
 
@@ -83,13 +85,13 @@ More platforms are added over time — verify with `search_nodes({ query: 'hitl'
 - **`freeText`** — the human types a free-form response. For when the agent is genuinely asking a question and any answer is valid.
 - **`customForm`** — a multi-field form (text, dropdown, radio, checkbox, file). **This is the practical answer to "editable parameters"**: define a form whose fields match the wrapped tool's parameters and the human can override what the agent picked.
 
-A two-button "semantic choice" ("Schedule today" / "Schedule tomorrow") is NOT a separate type — use `approval` with `approvalType: 'double'` and custom `approveLabel` / `disapproveLabel`.
+Do not relabel disapproval as an alternative approved action. Use a validated form/choice step for today versus tomorrow, then approve the exact resulting parameters.
 
 ---
 
 ## Wait timeout
 
-`options.limitWaitTime` (seconds) bounds how long the workflow pauses before erroring out. Default is 45 minutes. **Set it explicitly on production workflows** — without it, paused executions sit indefinitely if approvers don't act, and the queue piles up.
+`options.limitWaitTime` (seconds) bounds how long the workflow pauses before erroring out. Timeout units/defaults vary by installed node schema. **Set it explicitly on production workflows** — without it, paused executions sit indefinitely if approvers don't act, and the queue piles up.
 
 ---
 
@@ -157,7 +159,7 @@ The customer never sees the Slack channel. The Slack review message routes via `
 
 ## Editable parameters: use customForm
 
-For "approve, but at $40 instead of $50" workflows, use `responseType: 'customForm'`. The human fills a multi-field form whose values feed the wrapped tool. Don't try to build editable approvals on top of the `approval` type — the form mode is the supported path.
+For "approve, but at $40 instead of $50" workflows, use `responseType: 'customForm'`. Verify how the installed node maps form responses: do not assume edits automatically replace the wrapped call. Explicitly validate and bind edited values, then approve the final call; reject mismatches. Don't try to build editable approvals on top of the `approval` type — the form mode is the supported path.
 
 > Note: the form mode UX is reported to feel like a workaround. Sometimes it's better UX to have the user decline and respond with the change in chat.
 
@@ -165,7 +167,7 @@ For "approve, but at $40 instead of $50" workflows, use `responseType: 'customFo
 
 ## UI quirk: test-data autofill
 
-When building a review tool, click "Approve" once on the canvas test execution. n8n autofills the test data so subsequent runs work without manual input. New builders often think the tool is broken because `$tool.parameters.<name>` shows red — that's just missing test data.
+When building a review tool, click "Approve" once on the canvas test execution. Use mock tool effects; never persist an approval fixture as reusable production authorization. New builders often think the tool is broken because `$tool.parameters.<name>` shows red — that's just missing test data.
 
 ---
 

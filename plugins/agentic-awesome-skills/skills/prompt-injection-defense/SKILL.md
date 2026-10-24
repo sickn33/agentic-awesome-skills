@@ -55,6 +55,8 @@ Use this skill when:
 4. **Output policy checks**: validate schema, redact secrets, block unsafe actions.
 5. **Human approval**: required for high-impact operations.
 
+This document’s regexes and markers are advisory signals, not an injection detector with calibrated probability or a security boundary. Keep untrusted documents/tool results in low-trust message fields; enforce authorization in the application before every tool action. Prompt secrecy and text redaction cannot substitute for keeping secrets out of model context, tenant isolation and least privilege. Test task completion as well as adversarial and benign false-positive cases.
+
 ## Input Sanitization Functions
 
 ```python
@@ -101,7 +103,7 @@ def detect_injection(text: str) -> dict:
     return {
         "detected": len(matches) > 0,
         "patterns": matches,
-        "risk_score": risk_score,
+        "heuristic_score": risk_score,
         "input_length": len(text),
     }
 
@@ -111,11 +113,11 @@ def sanitize_input(text: str, max_length: int = 4096) -> str:
 
     - Truncates to max_length
     - Strips null bytes and control characters
-    - Removes Unicode homoglyph tricks
+    - Removes a small set of format characters, not general homoglyph attacks
     - Normalizes whitespace
     """
-    # Truncate
-    text = text[:max_length]
+    if len(text) > max_length:
+        raise ValueError("Input exceeds the documented size limit; chunk explicitly rather than silently truncating")
 
     # Remove null bytes and most control characters (keep newlines and tabs)
     text = re.sub(r'[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]', '', text)
@@ -142,8 +144,7 @@ def sanitize_input(text: str, max_length: int = 4096) -> str:
 def sanitize_retrieved_context(documents: list[str], source_label: str = "RETRIEVED") -> str:
     """Wrap retrieved documents with clear boundary markers.
 
-    This makes it harder for injected instructions in documents
-    to be interpreted as system or user messages.
+    Markers aid readability only; documents can spoof them. They do not enforce roles.
     """
     sanitized_parts = []
     for i, doc in enumerate(documents):
@@ -159,24 +160,34 @@ def sanitize_retrieved_context(documents: list[str], source_label: str = "RETRIE
 
 
 def validate_tool_call(tool_name: str, args: dict, allowed_tools: dict) -> dict:
-    """Validate a tool call against an explicit allow-list.
+    """Illustrative fail-closed policy evaluator for a narrow typed schema.
 
-    allowed_tools format:
-        {"search": {"max_results": 10}, "get_weather": {"allowed_cities": [...]}}
+    Policy: {"search": {"fields": {"results": {"type": "integer", "max": 10}},
+                       "requires_human_approval": False}}
+    This does not establish tenant/resource authorization or approval evidence.
     """
-    if tool_name not in allowed_tools:
-        return {"allowed": False, "reason": f"Tool '{tool_name}' not in allow-list"}
+    policy = allowed_tools.get(tool_name)
+    if not isinstance(policy, dict) or not isinstance(args, dict):
+        return {"allowed": False, "reason": "Unknown tool or malformed arguments"}
+    fields = policy.get("fields")
+    if not isinstance(fields, dict) or set(args) != set(fields):
+        return {"allowed": False, "reason": "Missing or unknown arguments"}
+    for key, spec in fields.items():
+        value = args[key]
+        if not isinstance(spec, dict):
+            return {"allowed": False, "reason": "Malformed policy"}
+        if spec.get("type") == "integer":
+            if type(value) is not int or not 0 <= value <= spec.get("max", -1):
+                return {"allowed": False, "reason": "Invalid bounded integer"}
+        elif spec.get("type") == "string":
+            if not isinstance(value, str) or value not in spec.get("enum", []):
+                return {"allowed": False, "reason": "Invalid enumerated string"}
+        else:
+            return {"allowed": False, "reason": "Unsupported field policy"}
+    if policy.get("requires_human_approval", False):
+        return {"allowed": False, "reason": "Validate exact-payload approval in trusted executor"}
+    return {"allowed": True, "reason": "Schema subset passed; enforce tenant/resource policy separately"}
 
-    constraints = allowed_tools[tool_name]
-    for key, limit in constraints.items():
-        if key.startswith("max_") and key[4:] in args:
-            if args[key[4:]] > limit:
-                return {"allowed": False, "reason": f"{key[4:]} exceeds maximum of {limit}"}
-        if key.startswith("allowed_") and key[8:] in args:
-            if args[key[8:]] not in limit:
-                return {"allowed": False, "reason": f"{key[8:]} not in allowed values"}
-
-    return {"allowed": True, "reason": "OK"}
 ```
 
 ## Canary Token System
@@ -187,7 +198,7 @@ def validate_tool_call(tool_name: str, args: dict, allowed_tools: dict) -> dict:
 import hashlib
 import re
 import secrets
-from datetime import datetime
+from datetime import datetime, timezone
 
 class CanaryTokenManager:
     """Inject and monitor canary tokens to detect data leakage."""
@@ -202,7 +213,7 @@ class CanaryTokenManager:
         token = f"CNRY-{hashlib.sha256(raw.encode()).hexdigest()[:16]}"
         self.active_tokens[token] = {
             "context": context,
-            "created": datetime.utcnow().isoformat(),
+            "created": datetime.now(timezone.utc).isoformat(),
             "triggered": False,
         }
         return token
@@ -225,7 +236,7 @@ class CanaryTokenManager:
         for token, meta in self.active_tokens.items():
             if token in output:
                 meta["triggered"] = True
-                meta["triggered_at"] = datetime.utcnow().isoformat()
+                meta["triggered_at"] = datetime.now(timezone.utc).isoformat()
                 triggered.append({"token": token, **meta})
         return triggered
 
@@ -241,7 +252,7 @@ class CanaryTokenManager:
 
 
 # Usage example
-canary = CanaryTokenManager(secret_key="your-secret-key-here")
+canary = CanaryTokenManager(secret_key=secrets.token_hex(32))
 
 system_prompt = "You are a helpful assistant for Acme Corp."
 secured_prompt, token = canary.inject_into_system_prompt(system_prompt)
@@ -250,8 +261,10 @@ secured_prompt, token = canary.inject_into_system_prompt(system_prompt)
 model_output = "Here is the information you requested..."
 alerts = canary.check_output(model_output)
 if alerts:
-    print(f"ALERT: Canary token leaked! Tokens: {alerts}")
+    print(f"ALERT: {len(alerts)} canary matches; keep token/context details in restricted telemetry")
 ```
+
+Canary detection is exact-match only; encoding, partial leaks and semantic paraphrases can evade it. An ordinary citation of a token inserted into a retrieved document may be expected, not proof of exfiltration. Scope tokens to request/tenant, expire and remove them, and bound active_tokens; the in-memory example does not implement persistence or retention. The configuration below is illustrative and has no bundled loader/enforcer; it is not consumed automatically by validate_tool_call.
 
 ## Multi-Layer Defense Configuration
 
@@ -311,9 +324,9 @@ defense_layers:
 
   layer_6_monitoring:
     enabled: true
-    log_all_detections: true
+    log_redacted_detection_metadata_only: true
     alert_on_canary_trigger: true
-    alert_webhook: "https://hooks.slack.com/services/XXX/YYY/ZZZ"
+    alert_destination: "configure separately with authorized private credentials"
     metrics_endpoint: "/metrics/prompt-security"
 ```
 
@@ -357,7 +370,7 @@ def validate_output(output: str, config: dict) -> dict:
         issues.append({"type": "length_exceeded", "length": len(output), "max": max_len})
 
     return {
-        "safe": len(issues) == 0,
+        "heuristic_checks_passed": len(issues) == 0,
         "issues": issues,
         "output": redact_secrets(output) if issues else output,
     }
@@ -368,6 +381,8 @@ def redact_secrets(text: str) -> str:
         text = re.sub(pattern, '[REDACTED]', text)
     return text
 ```
+
+The output checker does not implement all YAML config fields and matches only a few legacy token patterns. “Checks passed” is not safe-to-release authority. Validate structured output independently and block unauthorized tool calls at the executor; sanitize rendered links/HTML to prevent data-bearing external requests. Do not rely on keyword phrases to decide whether content is an actual secret or disallowed action.
 
 ## Red-Team Test Cases
 
@@ -435,7 +450,7 @@ groups:
           summary: "Elevated prompt injection attempts detected"
 
       - alert: CanaryTokenTriggered
-        expr: canary_token_triggered_total > 0
+        expr: increase(canary_token_triggered_total[5m]) > 0
         for: 0m
         labels:
           severity: critical
@@ -460,7 +475,7 @@ groups:
 | Canary tokens visible to users | Output validation not stripping them | Add canary pattern to `redact_patterns` in output validation config |
 | Multi-turn attacks bypass single-turn checks | Stateless detection | Implement session-level analysis; track conversation risk score over turns |
 | Tool calls still executing despite blocks | Validation happens after execution | Move `validate_tool_call` to run BEFORE tool execution in the agent loop |
-| Unicode bypass tricks | Homoglyph characters not normalized | Expand `confusable_map` in sanitizer; use `unicodedata.normalize('NFKC', text)` |
+| Unicode bypass tricks | Homoglyph characters not normalized | Expand `confusable_map` in sanitizer; evaluate normalization per field; NFKC does not remove arbitrary confusables and may change legitimate text |
 
 ## Related Skills
 

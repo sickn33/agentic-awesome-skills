@@ -8,7 +8,7 @@ date_added: "2026-02-27"
 
 # Requesting Code Review
 
-Dispatch superpowers:code-reviewer subagent to catch issues before they cascade.
+Use an available authorized reviewer to catch issues before they cascade. The named superpowers agent/Task API is host-specific; this guide does not grant delegation or external-code disclosure permission.
 
 **Core principle:** Review early, review often.
 
@@ -105,7 +105,7 @@ You: [Fix progress indicators]
 - Show code/tests that prove it works
 - Request clarification
 
-See template at: requesting-code-review/code-reviewer.md
+See bundled template at: [code-reviewer.md](code-reviewer.md). Use full resolved commit IDs and include dirty/untracked changes separately; HEAD-to-HEAD review does not cover them.
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.

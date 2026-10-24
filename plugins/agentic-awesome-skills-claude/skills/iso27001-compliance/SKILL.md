@@ -30,6 +30,8 @@ Implement an Information Security Management System (ISMS) aligned with ISO/IEC 
 - Transitioning from ISO 27001:2013 to the 2022 revision
 - Meeting customer or regulatory requirements for ISO 27001 certification
 
+This is a planning subset for ISO/IEC 27001:2022, not a complete normative control list or certification decision. Confirm the applicable edition/amendments, scope and accredited certification process using the organization’s licensed standard. The public ISO page lists an amendment; no full licensed standard was reviewed here. Cadences, monetary risk bands, remediation deadlines and evidence durations below are illustrative organization policies, not universal ISO mandates.
+
 ## ISMS Plan-Do-Check-Act Cycle
 
 ```yaml
@@ -52,7 +54,7 @@ pdca_cycle:
     - Establish supplier security management
 
   check:
-    - Conduct internal audits (at least annual)
+    - Conduct internal audits at planned, risk-based intervals
     - Perform management review meetings
     - Monitor and measure control effectiveness
     - Review incident trends and near misses
@@ -104,7 +106,7 @@ isms_scope:
     excluded:
       - "Physical data center operations (inherited from AWS)"
       - "Third-party SaaS platforms beyond integration points"
-    exclusion_justification: "Physical data center controls are inherited from AWS, which maintains its own ISO 27001 certification."
+    exclusion_justification: "Assess dependencies and provider assurance; outsourcing does not remove the organization’s responsibility for information security or physical controls at its own premises."
 
     interfaces:
       - "Customer API endpoints"
@@ -198,6 +200,8 @@ risk_assessment:
       risk_owner: "Head of Infrastructure"
 ```
 
+For the synthetic SQL-injection risk, input validation alone is insufficient: use parameterized queries, least privilege and testing. Residual scores are assumptions until the treatment is implemented and assessed; a lower number is not proof of effective control. Risk transfer does not transfer all accountability.
+
 ## Statement of Applicability (SoA)
 
 ```yaml
@@ -250,7 +254,7 @@ soa_template:
     "A.6.1":
       control: "Screening"
       applicable: true
-      implementation: "Background checks for all employees before hiring"
+      implementation: "Risk-based screening consistent with applicable law, role sensitivity and privacy requirements"
 
     "A.6.3":
       control: "Information security awareness, education and training"
@@ -260,13 +264,13 @@ soa_template:
     "A.6.5":
       control: "Responsibilities after termination or change of employment"
       applicable: true
-      implementation: "Offboarding checklist, access revoked within 24 hours"
+      implementation: "Offboarding at the risk-appropriate termination/change time; revoke promptly under the approved procedure"
 
   physical_controls_7:
     "A.7.1":
       control: "Physical security perimeters"
-      applicable: false
-      exclusion_justification: "No company-operated data centers, inherited from AWS"
+      applicable: true  # Illustrative; assess actual offices, remote locations and provider interfaces
+      implementation: "Document provider responsibilities and the organization’s own physical perimeter controls; do not exclude solely because hosting is outsourced"
 
   technology_controls_8:
     "A.8.1":
@@ -314,6 +318,8 @@ soa_template:
       applicable: true
       implementation: "OWASP guidelines, security code review, automated linting"
 ```
+
+For a complete SoA, record each necessary control, inclusion rationale, implementation status/evidence/owner, and justification for exclusions from Annex A. Do not exclude clauses 4–10 requirements or treat every Annex A control as automatically mandatory. Link each control to assessed risks, obligations and interfaces; provider certifications are assurance inputs, not inherited certification of this organization.
 
 ## Internal Audit Program
 
@@ -401,36 +407,36 @@ management_review:
 ```yaml
 certification_checklist:
   stage_1_audit_preparation:
-    - [ ] ISMS scope documented and approved
-    - [ ] Information security policy published
-    - [ ] Risk assessment methodology defined
-    - [ ] Risk assessment completed with risk register
-    - [ ] Risk treatment plan developed
-    - [ ] Statement of Applicability completed
-    - [ ] ISMS objectives defined with measurable targets
-    - [ ] Internal audit program established
-    - [ ] At least one full internal audit completed
-    - [ ] Management review conducted with minutes documented
-    - [ ] Document control process in place
+    - "ISMS scope documented and approved"
+    - "Information security policy published"
+    - "Risk assessment methodology defined"
+    - "Risk assessment completed with risk register"
+    - "Risk treatment plan developed"
+    - "Statement of Applicability completed"
+    - "ISMS objectives defined with measurable targets"
+    - "Internal audit program established"
+    - "At least one full internal audit completed"
+    - "Management review conducted with minutes documented"
+    - "Document control process in place"
 
   stage_2_audit_preparation:
-    - [ ] All Annex A controls implemented per SoA
-    - [ ] Evidence of control operation for 3+ months
-    - [ ] Corrective actions from internal audit tracked and closed
-    - [ ] Security awareness training delivered and recorded
-    - [ ] Incident management process operational with records
-    - [ ] Supplier security assessments performed
-    - [ ] Business continuity plan tested
-    - [ ] All mandatory documented information available
-    - [ ] Employees aware of security policy and their responsibilities
+    - "Necessary controls selected, justified and implemented as documented in the SoA"
+    - "Evidence of control operation for the duration agreed with the certification body"
+    - "Corrective actions from internal audit tracked and closed"
+    - "Security awareness training delivered and recorded"
+    - "Incident management process operational with records"
+    - "Supplier security assessments performed"
+    - "Business continuity plan tested"
+    - "All mandatory documented information available"
+    - "Employees aware of security policy and their responsibilities"
 
   surveillance_audit_readiness:
-    - [ ] All corrective actions from certification audit closed
-    - [ ] Continuous internal audit schedule maintained
-    - [ ] Management reviews conducted per schedule
-    - [ ] Risk register updated with new threats and changes
-    - [ ] Metrics demonstrate ISMS effectiveness
-    - [ ] Changes to ISMS scope documented
+    - "All corrective actions from certification audit closed"
+    - "Continuous internal audit schedule maintained"
+    - "Management reviews conducted per schedule"
+    - "Risk register updated with new threats and changes"
+    - "Metrics demonstrate ISMS effectiveness"
+    - "Changes to ISMS scope documented"
 ```
 
 ## Best Practices
@@ -444,12 +450,16 @@ certification_checklist:
 - Integrate ISO 27001 controls into daily operations rather than treating them as a separate compliance exercise
 - Use metrics and KPIs to demonstrate ISMS effectiveness to auditors and management
 - Plan for the 3-year certification cycle: certification audit, then two surveillance audits
-- Start collecting evidence of control operation at least 3 months before the Stage 2 audit
+- Agree evidence sufficiency and readiness with the certification body; do not promise a fixed three-month shortcut
 
 ## Limitations
 
 - Guidance and checklists only; not legal advice and not a substitute for a qualified auditor.
 - Docs-only import: upstream templates and scripts not bundled.
+
+## Worked Evidence Example
+
+For a cloud-hosted service, record the provider’s physical-control assurance and its scope/date, then separately assess office access, staff devices and supplier interfaces. Link findings to a risk owner and treatment decision. In the SoA, justify applicability and status using actual evidence; leave implementation unverified until tested. This does not establish certification.
 
 ### Example
 

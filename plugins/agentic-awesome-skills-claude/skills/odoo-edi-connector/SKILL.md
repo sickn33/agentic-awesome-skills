@@ -30,108 +30,35 @@ Electronic Data Interchange (EDI) is the standard for automated B2B document exc
 | EDI Transaction | Odoo Object |
 |---|---|
 | 850 Purchase Order | `sale.order` (inbound customer PO) |
-| 855 PO Acknowledgment | Confirmation email / SO confirmation |
+| 855 PO Acknowledgment | Partner-specific business acknowledgment, mapped from order status |
 | 856 ASN (Advance Ship Notice) | `stock.picking` (delivery order) |
 | 810 Invoice | `account.move` (customer invoice) |
 | 846 Inventory Inquiry | `product.product` stock levels |
-| 997 Functional Acknowledgment | Automated receipt confirmation |
+| 997 Functional Acknowledgment | Syntax/functional acknowledgment, separate from business acceptance |
 
 ## Examples
 
 ### Example 1: Parse EDI 850 and Create Odoo Sale Order (Python)
 
 ```python
-from pyx12 import x12file  # pip install pyx12
-from datetime import datetime
-
-import xmlrpc.client
-import os
-
-odoo_url = os.getenv("ODOO_URL")
-db = os.getenv("ODOO_DB")
-pwd = os.getenv("ODOO_API_KEY") 
-uid = int(os.getenv("ODOO_UID", "2"))
-
-models = xmlrpc.client.ServerProxy(f"{odoo_url}/xmlrpc/2/object")
-
 def process_850(edi_file_path):
-    """Parse X12 850 Purchase Order and create Odoo Sale Order"""
-    with x12file.X12File(edi_file_path) as f:
-        for transaction in f.get_transaction_sets():
-            # Extract header info (BEG segment)                     
-            po_number = transaction['BEG'][3]    # Purchase Order Number                                                    
-            po_date   = transaction['BEG'][5]    # Purchase Order Date 
-
-            # IDEMPOTENCY CHECK: Verify PO doesn't already exist in Odoo
-            existing = models.execute_kw(db, uid, pwd, 'sale.order', 'search', [
-                [['client_order_ref', '=', po_number]]
-            ])
-            if existing:
-                print(f"Skipping: PO {po_number} already exists.")
-                continue 
-
-            # Extract partner (N1 segment — Buyer)
-
-
-                        # Extract partner (N1 segment — Buyer)                  
-            partner_name = transaction.get_segment('N1')[2] if transaction.get_segment('N1') else "Unknown"                                                                             
-            
-            # Find partner in Odoo                                  
-            partner = models.execute_kw(db, uid, pwd, 'res.partner', 'search',                                                  
-                                [[['name', 'ilike', partner_name]]])                
-            
-            if not partner:
-                print(f"Error: Partner '{partner_name}' not found. Skipping transaction.")
-                continue
-                
-            partner_id = partner[0]
-
-            # Extract line items (PO1 segments)
-            order_lines = []
-            for po1 in transaction.get_segments('PO1'):
-                sku     = po1[7]    # Product ID
-                qty     = float(po1[2])
-                price   = float(po1[4])
-
-                product = models.execute_kw(db, uid, pwd, 'product.product', 'search',
-                    [[['default_code', '=', sku]]])
-                if product:
-                    order_lines.append((0, 0, {
-                        'product_id': product[0],
-                        'product_uom_qty': qty,
-                        'price_unit': price,
-                    }))
-
-            # Create Sale Order
-            if partner_id and order_lines:
-                models.execute_kw(db, uid, pwd, 'sale.order', 'create', [{
-                    'partner_id': partner_id,
-                    'client_order_ref': po_number,
-                    'order_line': order_lines,
-                }])
+    # Integration outline: implement against the pinned parser's documented API.
+    raise NotImplementedError("Validate partner-specific X12 and atomic deduplication before creating orders")
 ```
+
+Implement parsing against the selected library/version and the partner implementation guide. Do not assume dictionary access or transaction helpers exist in `pyx12`. Authenticate with an explicitly configured Odoo user and require HTTPS. Resolve the buyer by an agreed external identifier and each product by a unique partner SKU mapping; quarantine ambiguous/missing matches instead of selecting the first record or omitting lines. Validate currency, units, decimals, totals and dates before writing. Enforce atomic uniqueness on partner + interchange/transaction identity; a search followed by create is race-prone. Retain the original message with restricted access and a bounded retention policy.
+
 
 ### Example 2: Send EDI 997 Acknowledgment
 
-```python
-def generate_997(isa_control, gs_control, transaction_control):
-    """Generate a functional acknowledgment for received EDI"""
-    today = datetime.now().strftime('%y%m%d')
-    return f"""ISA*00*          *00*          *ZZ*YOURISAID      *ZZ*PARTNERISAID   *{today}*1200*^*00501*{isa_control}*0*P*>~
-GS*FA*YOURGID*PARTNERGID*{today}*1200*{gs_control}*X*005010X231A1~
-ST*997*0001~
-AK1*PO*{gs_control}~
-AK9*A*1*1*1~
-SE*4*0001~
-GE*1*{gs_control}~
-IEA*1*{isa_control}~"""
-```
+A 997 reports syntax/functional acceptance according to the negotiated guide; it is not a business acceptance or an order confirmation. Use a tested EDI serializer/validator and the partner's required acknowledgment type/version (for example, 997 or 999), control numbers, envelope lengths and rejection details. Never emit an unconditional accepted acknowledgment before validation. The former hardcoded envelope is not a conformant production generator.
+
 
 ## Best Practices
 
 - ✅ **Do:** Store every raw EDI transaction in an audit log table before processing.
-- ✅ **Do:** Always send a **997 Functional Acknowledgment** within 24 hours of receiving a transaction.
-- ✅ **Do:** Negotiate a test cycle with trading partners before going live — use test ISA qualifier `T`.
+- ✅ **Do:** Send the negotiated acknowledgment within the partner-agreed deadline; do not assume 997 or a universal 24-hour rule.
+- ✅ **Do:** Negotiate a test cycle with trading partners before going live — use the partner-agreed test environment and ISA15 usage indicator `T`.
 - ❌ **Don't:** Process EDI files synchronously in web requests — queue them for async processing.
 - ❌ **Don't:** Hardcode trading partner qualifiers — store them in a configuration table per partner.
 

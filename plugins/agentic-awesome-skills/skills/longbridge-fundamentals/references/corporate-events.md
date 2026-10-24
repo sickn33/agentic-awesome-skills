@@ -86,4 +86,4 @@ When no significant events are found, state so explicitly — do not invent sign
 | stderr `not logged in`          | 请运行 `longbridge auth login`              | 請執行 `longbridge auth login`              | Run `longbridge auth login`                           |
 | No events found                 | 所查时段内无重大公司事件                    | 所查時段內無重大公司事件                    | No significant corporate events in the queried period |
 | Symbol mapping fails            | 请提供 `代码.市场` 格式，如 AAPL.US         | 請提供 `代碼.市場` 格式，如 AAPL.US         | Provide `<CODE>.<MARKET>`, e.g. AAPL.US               |
-| Other stderr                    | 原样转述，不静默重试                        | 原樣轉述，不靜默重試                        | Relay verbatim, no silent retry                       |
+| Other stderr                    | 原样转述，不静默重试                        | 原樣轉述，不靜默重試                        | Relay a redacted error summary, no silent retry                       |

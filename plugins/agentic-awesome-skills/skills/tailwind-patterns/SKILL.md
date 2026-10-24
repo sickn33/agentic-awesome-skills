@@ -123,6 +123,8 @@ Use this skill when configuring Tailwind v4, using CSS-first theme and design to
 
 ### Configuration Strategies
 
+In v4 the default dark variant follows the media query. To use a class selector in CSS-first configuration, define `@custom-variant dark (&:where(.dark, .dark *));`. The table below describes behavior choices, not v4 JavaScript config keys.
+
 | Method | Behavior | Use When |
 |--------|----------|----------|
 | `class` | `.dark` class toggles | Manual theme switcher |
@@ -266,7 +268,7 @@ Use this skill when configuring Tailwind v4, using CSS-first theme and design to
 |-----------|----------------|
 | **Purge unused** | Automatic in v4 |
 | **Avoid dynamism** | No template string classes |
-| **Use Oxide** | Default in v4, 10x faster |
+| **Use supported build integration** | Benchmark the actual project; no universal speedup |
 | **Cache builds** | CI/CD caching |
 
 ---

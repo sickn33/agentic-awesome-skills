@@ -88,24 +88,24 @@ msfconsole
 
 ```bash
 # Step 1: Service discovery
-nmap -sV -sC -p 25,465,587 mail.target.com
+nmap -sV -sC -p 25,465,587 mail.target.invalid
 
 # Step 2: Banner grab
-nc mail.target.com 25
+nc mail.target.invalid 25
 EHLO test.com
 QUIT
 
 # Step 3: User enumeration
-smtp-user-enum -M VRFY -U /usr/share/seclists/Usernames/top-usernames-shortlist.txt -t mail.target.com
+smtp-user-enum -M VRFY -U /usr/share/seclists/Usernames/top-usernames-shortlist.txt -t mail.target.invalid
 
 # Step 4: Open relay test
-nmap -p 25 --script smtp-open-relay mail.target.com
+nmap -p 25 --script smtp-open-relay mail.target.invalid
 
 # Step 5: Authentication test
-hydra -l admin -P /usr/share/wordlists/fasttrack.txt smtp://mail.target.com
+hydra -l admin -P /usr/share/wordlists/fasttrack.txt smtp://mail.target.invalid
 
 # Step 6: TLS check
-openssl s_client -connect mail.target.com:25 -starttls smtp
+openssl s_client -connect mail.target.invalid:25 -starttls smtp
 
 # Step 7: Check email authentication
 dig TXT target.com | grep spf
@@ -142,14 +142,14 @@ run
 
 ```bash
 # Test via Telnet
-telnet mail.target.com 25
+telnet mail.target.invalid 25
 HELO attacker.com
 MAIL FROM:<test@attacker.com>
-RCPT TO:<test@gmail.com>
-# If 250 OK - VULNERABLE
+RCPT TO:<controlled-recipient@example.invalid>
+# RCPT acceptance alone is inconclusive; verify authorized external relay and actual controlled delivery policy.
 
 # Document with Nmap
-nmap -p 25 --script smtp-open-relay --script-args smtp-open-relay.from=test@attacker.com,smtp-open-relay.to=test@external.com mail.target.com
+nmap -p 25 --script smtp-open-relay --script-args smtp-open-relay.from=test@attacker.com,smtp-open-relay.to=test@external.com mail.target.invalid
 
 # Output:
 # PORT   STATE SERVICE
@@ -163,8 +163,8 @@ nmap -p 25 --script smtp-open-relay --script-args smtp-open-relay.from=test@atta
 
 1. **Disable Open Relay** - Require authentication for external delivery
 2. **Disable VRFY/EXPN** - Prevent user enumeration
-3. **Enforce TLS** - Require STARTTLS for all connections
-4. **Implement SPF/DKIM/DMARC** - Prevent email spoofing
+3. **Protect submission/authentication with TLS** - Define inter-server transport policy separately (for example MTA-STS/DANE) to avoid unintended mail loss
+4. **Implement SPF/DKIM/DMARC** - Reduce domain impersonation with alignment and receiver enforcement; not universal spoofing prevention
 5. **Rate Limiting** - Prevent brute force attacks
 6. **Account Lockout** - Lock accounts after failed attempts
 7. **Banner Hardening** - Minimize server information disclosure
@@ -174,3 +174,5 @@ nmap -p 25 --script smtp-open-relay --script-args smtp-open-relay.from=test@atta
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
+
+All delivery/relay/spoofing examples require specifically authorized sender and recipient test mailboxes; no third-party delivery, employee deception or password spraying is implicit. Agree rate/attempt/lockout limits and stop when blocked. A manually supplied Bcc/X-Injected header is not command/header injection: demonstrate a vulnerable application input-to-header boundary separately. STARTTLS capability or a completed s_client handshake alone does not verify certificate hostname/trust or downgrade policy; configure SNI/verification and inspect failures. DNS record presence alone does not validate SPF/DKIM/DMARC effectiveness. Redact authentication data and captured addresses.

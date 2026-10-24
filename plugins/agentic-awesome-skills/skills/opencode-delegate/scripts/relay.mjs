@@ -254,6 +254,9 @@ function parseArgs(argv) {
   if (opts.model !== null && opts.model.includes("#") && opts.variant !== null) {
     fail("--model already carries a variant (provider/model#variant); pass either that or --model plus --variant, not both");
   }
+  for (const field of ["agent", "session"]) {
+    if (opts[field] !== null && !SAFE_TOKEN.test(opts[field])) fail(`--${field} contains unsupported characters`);
+  }
   // The watchdog is relay-only (the opencode launch has no timeout flag), so a malformed
   // --timeout must fail loudly here - a silent no-watchdog fallback would be wrong.
   if (opts.timeout !== null && parseDuration(opts.timeout) === null) {
@@ -433,7 +436,10 @@ function prepareRunDir(opts, brief) {
   // Default the run dir to system temp so the repo under review stays pristine —
   // the touched-files report must show only OpenCode's edits, not relay's artifacts.
   const outDir = opts.outDir || join(tmpdir(), "delegate-relay", `${basename(opts.cd) || "repo"}-${timestamp()}`);
-  mkdirSync(outDir, { recursive: true });
+  mkdirSync(outDir, { recursive: true, mode: 0o700 });
+  for (const name of ["brief.txt", "events.jsonl", "final.txt", "result.json"]) {
+    if (existsSync(join(outDir, name))) fail(`refusing to reuse existing run artifacts: ${outDir}`);
+  }
   const run = {
     startedAt,
     eventsPath: join(outDir, "events.jsonl"),

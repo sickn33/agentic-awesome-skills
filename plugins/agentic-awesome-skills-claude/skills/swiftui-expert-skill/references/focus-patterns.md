@@ -261,7 +261,7 @@ Button("Search") { isSearchFocused = true }
 
 ### Redundant `@FocusState` writes revoke focus
 
-`.focusable()` + `.focused()` handles focus-on-click natively. Adding a tap gesture that *also* writes to `@FocusState` triggers a redundant state write, causing a second body evaluation that revokes focus. The result: focus briefly appears then disappears, and key commands like `onDeleteCommand` stop working.
+`.focusable()` + `.focused()` handles focus-on-click natively. A redundant tap-driven focus assignment can interfere with native focus/gesture handling on some configurations; body evaluation alone does not universally revoke focus. The result: focus briefly appears then disappears, and key commands like `onDeleteCommand` stop working.
 
 ```swift
 // WRONG -- tap gesture redundantly sets focus, causing double evaluation
@@ -278,7 +278,7 @@ CardView()
 
 ### Ambiguous focus bindings
 
-Binding the same enum case to multiple views is ambiguous. SwiftUI picks the first candidate and emits a runtime warning.
+Binding the same enum case to multiple views is ambiguous. Programmatic focus becomes ambiguous; do not rely on a particular candidate or warning across platforms/SDKs.
 
 ```swift
 // WRONG -- .name bound to two views

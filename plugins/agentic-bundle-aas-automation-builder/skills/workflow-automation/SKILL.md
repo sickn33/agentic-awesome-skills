@@ -22,12 +22,16 @@ Key insight: The platforms make different tradeoffs. n8n optimizes for
 accessibility, Temporal for correctness, Inngest for developer experience.
 Pick based on your actual needs, not hype.
 
+## Reliability and example limits
+
+Durability does not guarantee exactly-once external effects. Payment/shipment helpers must forward a stable operation key to the provider and reconcile ambiguous success; email needs an outbox/deduplication strategy. Examples are incomplete fragments with version-specific SDK signatures. Validate them against installed types, use test accounts, and keep payloads/credentials out of workflow history and logs.
+
 ## Detailed Guide
 
 Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.
 
 ## Inngest Example (TypeScript)
-"""
+```
 import { inngest } from "./client";
 
 export const processOrder = inngest.createFunction(
@@ -41,7 +45,7 @@ export const processOrder = inngest.createFunction(
 
     // Step 2: Process payment (durable - survives crashes)
     const payment = await step.run("process-payment", async () => {
-      return chargeCard(validated.paymentMethod, validated.total);
+      return chargeCard(validated.paymentMethod, validated.total, { idempotencyKey: `order-${event.data.orderId}-payment` });
     });
 
     // Step 3: Create shipment
@@ -57,10 +61,10 @@ export const processOrder = inngest.createFunction(
     return { success: true, orderId: event.data.orderId };
   }
 );
-"""
+```
 
 ## Temporal Example (TypeScript)
-"""
+```
 import { proxyActivities } from '@temporalio/workflow';
 import type * as activities from './activities';
 
@@ -75,14 +79,14 @@ const { validateOrder, chargeCard, createShipment, sendEmail } =
 
 export async function processOrderWorkflow(order: Order): Promise<void> {
   const validated = await validateOrder(order);
-  const payment = await chargeCard(validated.paymentMethod, validated.total);
+  const payment = await chargeCard(validated.paymentMethod, validated.total, { idempotencyKey: `order-${order.id}-payment` });
   const shipment = await createShipment(validated.items, validated.address);
   await sendEmail(validated.email, { payment, shipment });
 }
-"""
+```
 
 ## Inngest Example
-"""
+```
 export const analyzeDocument = inngest.createFunction(
   { id: "analyze-document" },
   { event: "document/uploaded" },
@@ -108,10 +112,10 @@ export const analyzeDocument = inngest.createFunction(
     return report;
   }
 );
-"""
+```
 
 ## Temporal Example
-"""
+```
 export async function orchestratorWorkflow(task: ComplexTask) {
   // Orchestrator decides what work needs to be done
   const plan = await analyzeTask(task);
@@ -133,7 +137,7 @@ export async function orchestratorWorkflow(task: ComplexTask) {
   // Aggregate results
   return aggregateResults(results);
 }
-"""
+```
 
 ## When to Use
 - User mentions or implies: workflow

@@ -2,6 +2,15 @@
 
 Guide for building UI extensions and Shopify Functions.
 
+## Version boundaries
+
+React snippets below are legacy illustrations, not 2026-01 executable examples.
+Current 2026-01 Admin extensions use Preact and web components; generate target
+configuration/source with the CLI and typecheck against its generated schema.
+Hooks such as useData/useApi must come from the matching SDK; omitted imports,
+backend functions and network capabilities are not bundled implementations.
+Function output schemas differ by target/version; regenerate types first.
+
 ## Checkout UI Extensions
 
 Customize checkout and thank-you pages with native-rendered components.
@@ -404,6 +413,7 @@ query Input {
       quantity
       merchandise {
         ... on ProductVariant {
+          id
           product {
             hasTag(tag: "bulk-discount")
           }
@@ -416,7 +426,7 @@ query Input {
 // function.js
 export default function orderDiscount(input) {
   const targets = input.cart.lines
-    .filter(line => line.merchandise.product.hasTag)
+    .filter(line => line.merchandise?.product?.hasTag)
     .map(line => ({
       productVariant: { id: line.merchandise.id }
     }));
@@ -468,8 +478,8 @@ export default function paymentCustomization(input) {
 export default function cartValidation(input) {
   const errors = [];
 
-  // Max 5 items per cart
-  if (input.cart.lines.length > 5) {
+  // Max 5 total units per cart, not five distinct lines
+  if (input.cart.lines.reduce((sum, line) => sum + line.quantity, 0) > 5) {
     errors.push({
       localizedMessage: "Maximum 5 items allowed per order",
       target: "cart",

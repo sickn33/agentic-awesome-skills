@@ -88,7 +88,7 @@ These are verified facts from official documentation and device testing. Treat t
 
 1. **Bluetooth SCO is limited to 8kHz mono input** on most devices. Some support 16kHz mSBC. BLE Audio (Android 12+, `TYPE_BLE_HEADSET = 26`) supports up to 32kHz stereo. Always prefer BLE Audio when available.
 
-2. **`startBluetoothSco()` is deprecated since Android 12 (API 31).** Use `AudioManager.setCommunicationDevice(AudioDeviceInfo)` and `clearCommunicationDevice()` instead. The project already implements both paths in `AudioRouteController.kt`.
+2. **`startBluetoothSco()` is deprecated in API 34; `setCommunicationDevice` was added in API 31.** Use `AudioManager.setCommunicationDevice(AudioDeviceInfo)` and `clearCommunicationDevice()` instead. The project already implements both paths in `AudioRouteController.kt`.
 
 3. **Samsung One UI 7/8 has a known HFP corruption bug** where A2DP playback corrupts the SCO link. The app handles this with silence detection and automatic fallback to the phone's built-in mic.
 
@@ -194,3 +194,5 @@ powershell -Command "Remove-Item 'EarLLM_One_v1.0.zip' -Force -ErrorAction Silen
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Treat the named personal checkout, file paths and past build outcomes as upstream historical context; locate and inspect the user’s current project before claiming they exist or work. Bluetooth sample-rate/routing capability depends on device, OS and codec; negotiate/verify supported formats instead of promising universal 16/24 kHz support. Before ZIP export, use an explicit source-file allowlist excluding secrets, `.env`, signing keys, credentials, recordings, logs and build caches. Audio/cloud processing needs consent. See [Android AudioManager](https://developer.android.com/reference/android/media/AudioManager#startBluetoothSco()).

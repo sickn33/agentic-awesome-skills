@@ -357,3 +357,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Examples are independent version-specific fragments; verify SDK types against pinned packages. Configuration values and resolved Key Vault secrets must not be logged. Scope writes/deletes/unlocks by exact resource, key and label, use ETags for concurrent updates and keep rollback values. A feature flag is not an authorization boundary; enforce server-side permissions separately. Handle refresh rejection and dispose event listeners at shutdown.

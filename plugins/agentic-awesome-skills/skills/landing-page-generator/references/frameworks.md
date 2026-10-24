@@ -4,6 +4,8 @@
 
 Four copy frameworks with worked SaaS examples you can adapt. Each framework includes a complete before/after example plus specific guidelines for each section.
 
+All worked products, numbers, customer names and claimed studies below are fictional examples, never evidence or ready-to-publish claims. Replace them only with substantiated facts and approved testimonials.
+
 ## 1. AIDA Framework (Attention - Interest - Desire - Action)
 
 The classic direct response formula, ideal for product landing pages.

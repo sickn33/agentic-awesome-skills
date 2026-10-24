@@ -69,11 +69,10 @@ Format: Plain prose, no bullet points.
 
 ### 3. Chain-of-Thought (CoT) Pattern
 
-For reasoning tasks, instruct the model to think step-by-step:
+For reasoning tasks, ask for a concise explanation, key assumptions and checkable result rather than private internal chain-of-thought:
 
 ```
-Solve this problem step by step, showing your work at each stage.
-Only provide the final answer after completing all reasoning steps.
+Solve the problem and give the final answer with a concise explanation of the key steps and verification.
 
 Problem: [your problem here]
 
@@ -170,7 +169,7 @@ Before using a prompt in production:
 ## Troubleshooting
 
 **Problem:** Model ignores format instructions
-**Solution:** Move format instructions to the END of the prompt, after examples. Use strong language: "You MUST return only valid JSON."
+**Solution:** Use supported structured-output/schema constraints where available and validate responses with a parser. Prompt wording alone cannot guarantee valid JSON; bound retries and handle refusal or truncation.
 
 **Problem:** Inconsistent results between runs
 **Solution:** Lower the temperature setting (0.0-0.3 for factual tasks). Add more few-shot examples.

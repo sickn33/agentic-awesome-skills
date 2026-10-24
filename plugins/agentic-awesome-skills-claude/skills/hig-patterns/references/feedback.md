@@ -1,8 +1,11 @@
 ---
 title: "Feedback | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/feedback
+---
 
 # Feedback
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 Feedback helps people know what’s happening, discover what they can do next, understand the results of actions, and avoid mistakes.
 
@@ -31,7 +34,7 @@ The most effective feedback tends to match the significance of the information t
 
 **Use alerts to deliver critical — and ideally actionable — information.** By design, alerts disrupt the current context, so you need to match the importance of the information to the level of interruption. Alerts can lose their impact if you use them too often or to deliver unimportant information. For guidance, see [Alerts](https://developer.apple.com/design/human-interface-guidelines/alerts).
 
-**Warn people when they initiate a task that can cause data loss that’s unexpected and irreversible.** In contrast, don’t warn people when data loss is the expected result of their action. For example, the Finder doesn’t warn people every time they throw away a file because deleting the file is the expected result.
+**Warn people when they initiate a task that can cause data loss that’s unexpected and irreversible.** Avoid repeated warnings for expected reversible actions, such as moving a file to Trash. Permanent deletion, collateral loss or an external effect still needs clear scope and an appropriate safeguard.
 
 **When it makes sense, confirm that a significant action or task has completed.** For example, people appreciate getting feedback that confirms a successful Apple Pay transaction. It’s generally best to reserve this type of confirmation for activities that are sufficiently important — because people typically expect their action or task to succeed, they only need to know when it doesn’t.
 
@@ -43,7 +46,7 @@ The most effective feedback tends to match the significance of the information t
 
 ### [watchOS](https://developer.apple.com/design/human-interface-guidelines/feedback#watchOS)
 
-**Avoid displaying an indeterminate progress indicator — such as a loading indicator — in a watchOS app.** An animated indicator can make people think they need to continue paying attention to the display, which isn’t a good user experience. To provide a better experience, reassure people that they’ll receive a notification when the process completes.
+**Avoid displaying an indeterminate progress indicator — such as a loading indicator — in a watchOS app.** An animated indicator can make people think they need to continue paying attention to the display, which isn’t a good user experience. For a long task, offer an appropriate completion signal if notifications are authorized and available; also make status discoverable in the app rather than promising delivery.
 
 ## [Resources](https://developer.apple.com/design/human-interface-guidelines/feedback#Resources)
 

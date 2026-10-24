@@ -136,7 +136,7 @@ model User {
 
 ### Adding Columns with Defaults
 ```javascript
-// Safe migration: add column with default
+// Illustrative migration: lock/rewrite behavior depends on engine/version/table size
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.addColumn('users', 'status', {
@@ -152,7 +152,9 @@ module.exports = {
 };
 ```
 
-### Renaming Columns (Zero Downtime)
+### Renaming Columns (Expand/Contract Sketch)
+
+This sketch is not sufficient for concurrent writes. Deploy compatible dual writes before a bounded backfill, reconcile changes during backfill, switch reads only after validation, and drop the old column only after all readers/writers migrate. A one-time UPDATE alone can lose updates.
 ```javascript
 // Step 1: Add new column
 module.exports = {
@@ -189,6 +191,8 @@ module.exports = {
 ```
 
 ### Changing Column Types
+
+This example is a breaking, potentially lossy migration, not a zero-downtime recipe. Validate casts and range/null handling first. Preserve original values until a separately approved contract step; casting back cannot recover discarded data.
 ```javascript
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -224,6 +228,8 @@ module.exports = {
 ## Data Transformations
 
 ### Complex Data Migration
+
+Illustrative parsing only: define and validate an address schema first; splitting on commas is lossy. Use bounded batches with checkpoints and keep the source column until reconciliation and a tested recovery plan pass. The down() reconstruction below does not recover original formatting.
 ```javascript
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -309,44 +315,9 @@ module.exports = {
 };
 ```
 
-### Checkpoint-Based Rollback
-```javascript
-module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    // Create backup table
-    await queryInterface.sequelize.query(
-      'CREATE TABLE users_backup AS SELECT * FROM users'
-    );
+### Checkpoint-Based Recovery
 
-    try {
-      // Perform migration
-      await queryInterface.addColumn('users', 'new_field', {
-        type: Sequelize.STRING
-      });
-
-      // Verify migration
-      const [result] = await queryInterface.sequelize.query(
-        "SELECT COUNT(*) as count FROM users WHERE new_field IS NULL"
-      );
-
-      if (result[0].count > 0) {
-        throw new Error('Migration verification failed');
-      }
-
-      // Drop backup
-      await queryInterface.dropTable('users_backup');
-    } catch (error) {
-      // Restore from backup
-      await queryInterface.sequelize.query('DROP TABLE users');
-      await queryInterface.sequelize.query(
-        'CREATE TABLE users AS SELECT * FROM users_backup'
-      );
-      await queryInterface.dropTable('users_backup');
-      throw error;
-    }
-  }
-};
-```
+Use the database engine's tested backup/snapshot and point-in-time recovery procedure, verified in a disposable restore environment. Record the recovery point, schema, constraints, indexes, sequences, permissions and application compatibility before migration. A `CREATE TABLE AS SELECT` copy is not a complete backup and must never be used to DROP and recreate a live table during automatic error recovery. It omits important schema properties and can lose concurrent writes. Stop on uncertain partial state and reconcile before retrying.
 
 ## Zero-Downtime Migrations
 
@@ -433,7 +404,7 @@ module.exports = {
 
 ## Best Practices
 
-1. **Always Provide Rollback**: Every up() needs a down()
+1. **Plan Recovery**: Provide a tested down() only when genuinely reversible; otherwise document a forward fix or tested restore and the data-loss boundary
 2. **Test Migrations**: Test on staging first
 3. **Use Transactions**: Atomic migrations when possible
 4. **Backup First**: Always backup before migration

@@ -50,7 +50,7 @@ Skills load in three levels:
 
 1. **Metadata** (~100 words) — Always in context
 2. **SKILL.md body** (<5k words) — When skill triggers
-3. **References** (unlimited) — As needed
+3. **References** (bounded relevant reads) — As needed
 
 **Keep SKILL.md under 500 lines.** Split into reference files when approaching this limit.
 
@@ -83,7 +83,7 @@ skill-name/
 | `references/` | Detailed patterns | API docs, schemas, detailed guides |
 | `assets/` | Output resources | Templates, images, boilerplate |
 
-**Don't include**: README.md, CHANGELOG.md, installation guides.
+Include supporting documentation only when useful and required by the host repository; preserve upstream license/attribution files.
 
 ---
 
@@ -99,7 +99,7 @@ Follow this structure (based on existing Azure SDK skills):
 1. **Title** — `# SDK Name`
 2. **Installation** — `pip install`, `npm install`, etc.
 3. **Environment Variables** — Required configuration
-4. **Authentication** — Always `DefaultAzureCredential`
+4. **Authentication** — Supported credential flow for the service and deployment
 5. **Core Workflow** — Minimal viable example
 6. **Feature Tables** — Clients, methods, tools
 7. **Best Practices** — Numbered list
@@ -107,7 +107,11 @@ Follow this structure (based on existing Azure SDK skills):
 
 ### Authentication Pattern (All Languages)
 
-Always use `DefaultAzureCredential`:
+Prefer an appropriate Microsoft Entra credential when the SDK supports it.
+DefaultAzureCredential can help local development; production should select the
+intended managed/workload identity explicitly and constrain tenant/scopes/RBAC.
+Browser/public clients require their supported interactive flow, never a server
+secret. The ServiceClient identifiers below are pseudocode, not real package APIs.
 
 ```python
 # Python
@@ -142,7 +146,8 @@ const client = new ServiceClient(endpoint, credential);
 
 ### Standard Verb Patterns
 
-Azure SDKs use consistent verbs across all languages:
+These are naming tendencies, not cross-service contracts. Verify each actual
+method, language, operation result, retry and idempotency semantics:
 
 | Verb | Behavior |
 |------|----------|
@@ -150,12 +155,12 @@ Azure SDKs use consistent verbs across all languages:
 | `upsert` | Create or update |
 | `get` | Retrieve; error if missing |
 | `list` | Return collection |
-| `delete` | Succeed even if missing |
+| `delete` | May return not-found or another error; service-specific |
 | `begin` | Start long-running operation |
 
 ### Language-Specific Patterns
 
-See `references/azure-sdk-patterns.md` for detailed patterns including:
+See the SDK's official versioned documentation for detailed patterns (the upstream `azure-sdk-patterns.md` is not bundled) including:
 
 - **Python**: `ItemPaged`, `LROPoller`, context managers, Sphinx docstrings
 - **.NET**: `Response<T>`, `Pageable<T>`, `Operation<T>`, mocking support
@@ -177,7 +182,7 @@ description: |
 ## Installation
 
 \`\`\`bash
-pip install azure-ai-example
+# Pseudocode package name, do not install azure-ai-example
 \`\`\`
 
 ## Environment Variables
@@ -189,6 +194,7 @@ AZURE_EXAMPLE_ENDPOINT=https://<resource>.example.azure.com
 ## Authentication
 
 \`\`\`python
+import os
 from azure.identity import DefaultAzureCredential
 from azure.ai.example import ExampleClient
 
@@ -230,18 +236,18 @@ client.delete_item(item_id)
 
 ## Skill Creation Process
 
-1. **Gather SDK Context** — User provides SDK/API reference (REQUIRED)
+1. **Gather SDK Context** — Identify package, target language and installed version from the user/project before asking for missing essentials
 2. **Understand** — Research SDK patterns from official docs
 3. **Plan** — Identify reusable resources and product area category
-4. **Create** — Write SKILL.md in `.github/skills/<skill-name>/`
-5. **Categorize** — Create symlink in `skills/<language>/<category>/`
+4. **Create** — Use the destination repository canonical skill path
+5. **Categorize** — Follow its supported metadata/layout
 6. **Test** — Create acceptance criteria and test scenarios
 7. **Document** — Update README.md skill catalog
 8. **Iterate** — Refine based on real usage
 
 ### Step 1: Gather SDK Context (REQUIRED)
 
-**Before creating any SDK skill, the user MUST provide:**
+**Before writing concrete SDK calls, establish from project/user evidence:**
 
 | Required | Example | Purpose |
 |----------|---------|---------|
@@ -304,7 +310,7 @@ Skills are organized by **language** and **product area** in the `skills/` direc
 
 ### Step 4: Create the Skill
 
-**Location:** `.github/skills/<skill-name>/SKILL.md`
+**Location in this catalog:** `skills/<skill-name>/SKILL.md`
 
 **Naming convention:**
 - `azure-<service>-<subservice>-<language>`
@@ -331,32 +337,12 @@ description: |
 ---
 ```
 
-### Step 5: Categorize with Symlinks
+### Step 5: Follow the destination repository layout
 
-After creating the skill in `.github/skills/`, create a symlink in the appropriate category:
-
-```bash
-# Pattern: skills/<language>/<category>/<short-name> -> ../../../.github/skills/<full-skill-name>
-
-# Example for azure-ai-agents-py in python/foundry:
-cd skills/python/foundry
-ln -s ../../../.github/skills/azure-ai-agents-py agents
-
-# Example for azure-cosmos-db-py in python/data:
-cd skills/python/data
-ln -s ../../../.github/skills/azure-cosmos-db-py cosmos-db
-```
-
-**Symlink naming:**
-- Use short, descriptive names (e.g., `agents`, `cosmos`, `blob`)
-- Remove the `azure-` prefix and language suffix
-- Match existing patterns in the category
-
-**Verify the symlink:**
-```bash
-ls -la skills/python/foundry/agents
-# Should show: agents -> ../../../.github/skills/azure-ai-agents-py
-```
+The upstream used `.github/skills/` and language/category symlinks. This catalog
+uses `skills/<skill-id>/SKILL.md`; follow its exact-base AGENTS, template and
+maintenance contract. Do not create aliases/symlinks or copy generated indexes
+from an unrelated repository. Categorization is metadata, not proof of quality.
 
 ### Step 6: Create Tests
 
@@ -461,56 +447,23 @@ scenarios:
 - `mock_response` — complete, working code that passes all checks
 - `tags` — for filtering (`basic`, `async`, `streaming`, `tools`)
 
-#### 6.3 Run Tests
+#### 6.3 Verify honestly
 
-```bash
-cd tests
-pnpm install
+The upstream `pnpm harness`, Ralph loop, tests/scenarios and docs-site extraction
+scripts are not bundled here. Do not install/run them from another checkout or
+invent a pass. Run only checks present and required on the destination exact base.
+Mock/pattern checks test a fixture, not real SDK compatibility or authentication.
+Add negative authorization, invalid inputs, paging/timeouts and cleanup boundaries
+where actual runtime testing is authorized. Record SDK version, test scope and
+unexecuted cloud/provider steps; use synthetic fixtures with no live secrets.
 
-# Check skill is discovered
-pnpm harness --list
+### Step 7: Update source documentation
 
-# Run in mock mode (fast, deterministic)
-pnpm harness <skill-name> --mock --verbose
-
-# Run with Ralph Loop (iterative improvement)
-pnpm harness <skill-name> --ralph --mock --max-iterations 5 --threshold 85
-```
-
-**Success criteria:**
-- All scenarios pass (100% pass rate)
-- No false positives (mock responses always pass)
-- Patterns catch real mistakes
-
-### Step 7: Update Documentation
-
-After creating the skill:
-
-1. **Update README.md** — Add the skill to the appropriate language section in the Skill Catalog
-   - Update total skill count (line ~73: `> N skills in...`)
-   - Update Skill Explorer link count (line ~15: `Browse all N skills`)
-   - Update language count table (lines ~77-83)
-   - Update language section count (e.g., `> N skills • suffix: -py`)
-   - Update category count (e.g., `<summary><strong>Foundry & AI</strong> (N skills)</summary>`)
-   - Add skill row in alphabetical order within its category
-   - Update test coverage summary (line ~622: `**N skills with N test scenarios**`)
-   - Update test coverage table — update skill count, scenario count, and top skills for the language
-
-2. **Regenerate GitHub Pages data** — Run the extraction script to update the docs site
-   ```bash
-   cd docs-site && npx tsx scripts/extract-skills.ts
-   ```
-   This updates `docs-site/src/data/skills.json` which feeds the Astro-based docs site.
-   Then rebuild the docs site:
-   ```bash
-   cd docs-site && npm run build
-   ```
-   This outputs to `docs/` which is served by GitHub Pages.
-
-3. **Verify AGENTS.md** — Ensure the skill count is accurate
+Follow the host repository's source-only PR workflow. Generated catalog/counts,
+mirrors and Pages outputs belong to its prescribed synchronization process; do
+not hand-edit guessed README line numbers or run absent Astro extraction tooling.
 
 ---
-
 
 ## Progressive Disclosure Patterns
 
@@ -577,7 +530,7 @@ azure-ai-agents/
 | Include README.md | Agents don't need meta-docs |
 | Deeply nest references | Keep one level deep |
 | Skip acceptance criteria | Skills without tests can't be validated |
-| Skip symlink categorization | Skills won't be discoverable by category |
+| Assume upstream symlink layout | Destination catalog discovery may use different canonical paths |
 | Use wrong import paths | Azure SDKs have specific module structures |
 
 ---
@@ -594,21 +547,19 @@ Before completing a skill:
 **Skill Creation:**
 - [ ] Description includes what AND when (trigger phrases)
 - [ ] SKILL.md under 500 lines
-- [ ] Authentication uses `DefaultAzureCredential`
-- [ ] Includes cleanup/delete in examples
+- [ ] Authentication fits the actual supported service/deployment and least-privilege identity
+- [ ] Cleanup targets only resources created in the example; deletion requires the authorized scope
 - [ ] References organized by feature
 
 **Categorization:**
-- [ ] Skill created in `.github/skills/<skill-name>/`
-- [ ] Symlink created in `skills/<language>/<category>/<short-name>`
-- [ ] Symlink points to `../../../.github/skills/<skill-name>`
+- [ ] Canonical destination path and metadata match exact-base instructions.
+- [ ] No unrequested aliases, generated files or absent upstream harness commands.
 
 **Testing:**
-- [ ] `references/acceptance-criteria.md` created with correct/incorrect patterns
-- [ ] `tests/scenarios/<skill-name>/scenarios.yaml` created
-- [ ] All scenarios pass (`pnpm harness <skill> --mock`)
-- [ ] Import paths documented precisely
+- [ ] Concrete examples and limitations cover selected operations and failure cases.
+- [ ] Required current-base checks actually run, with results and unrun SDK/cloud steps distinguished.
+- [ ] Import paths/package versions and provenance recorded without invented test evidence.
 
 **Documentation:**
-- [ ] README.md skill catalog updated
-- [ ] Instructs to search `microsoft-docs` MCP for current APIs
+- [ ] Source docs and attribution updated within authorized scope.
+- [ ] Primary reference URLs/version checked; no missing file claimed as bundled.

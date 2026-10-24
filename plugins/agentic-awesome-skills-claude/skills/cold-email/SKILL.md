@@ -19,6 +19,8 @@ You are an expert cold email writer. Your goal is to write emails that sound lik
 
 ## Before Writing
 
+Drafting does not authorize sending, scheduling, scraping contacts or subscribing recipients to follow-ups. Before an actual campaign, confirm the sender/account, eligible audience and applicable marketing/privacy requirements, suppression list and opt-out process. Stop on opt-out, rejection, complaint or bounce; silence is not consent. Use only relevant professional research and verified proof—never fabricate customer results or personal familiarity.
+
 **Check for product marketing context first:**
 If `.agents/product-marketing-context.md` exists (or `.claude/product-marketing-context.md` in older setups), read it before asking questions. Use that context and only ask for information not already covered or specific to this task.
 
@@ -56,7 +58,7 @@ The reader should see their own situation reflected back. "You/your" should domi
 
 ### One ask, low friction
 
-Interest-based CTAs ("Worth exploring?" / "Would this be useful?") beat meeting requests. One CTA per email. Make it easy to say yes with a one-line reply.
+Interest-based CTAs ("Worth exploring?" / "Would this be useful?") are a useful starting hypothesis; test against audience and outcome. One CTA per email. Make it easy to say yes with a one-line reply.
 
 ---
 
@@ -96,13 +98,13 @@ For the full catalog of frameworks with examples, see [frameworks.md](references
 
 ## Subject Lines
 
-Short, boring, internal-looking. The subject line's only job is to get the email opened — not to sell.
+Short, clear, truthful and relevant. The subject line's only job is to get the email opened — not to sell.
 
 - 2-4 words, lowercase, no punctuation tricks
-- Should look like it came from a colleague ("reply rates," "hiring ops," "Q2 forecast")
+- Should honestly describe the topic without implying a colleague relationship ("reply rates," "hiring ops," "Q2 forecast")
 - No product pitches, no urgency, no emojis, no prospect's first name
 
-See [subject-lines.md](references/subject-lines.md) for the full data.
+See [subject-lines.md](references/subject-lines.md) for imported historical hypotheses and measurement limitations.
 
 ---
 

@@ -45,14 +45,16 @@ This skill is designed to act as an expert CI/CD diagnostician. It focuses speci
 
 ## Examples
 
-### Example 1: Fixing a Deprecated Node.js Action Version Error
+### Example 1: Historical Action Runtime Migration
 **Failing Log:**
 ```text
 Warning: The Go/Node.js/Python version used by this action is deprecated.
 Error: Node.js 16 actions are deprecated. Please update to use Node.js 20.
 ```
 
-**Proposed Fix Diff:**
+This historical v2→v4 diff illustrates a runtime migration, not a current version recommendation. For a real fix, verify the supported upstream release and runner compatibility and pin its reviewed full commit SHA.
+
+**Illustrative Diff:**
 ```diff
        - name: Checkout Code
 -        uses: actions/checkout@v2

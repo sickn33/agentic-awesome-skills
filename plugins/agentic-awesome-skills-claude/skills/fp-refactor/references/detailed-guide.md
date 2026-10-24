@@ -2,6 +2,8 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+These are independent migration sketches for fp-ts 2.x; pin a version supporting the shown combinators and supply the omitted domain types/adapters. Preserve behavior with tests before changing error contracts. `Either`/`TaskEither` do not catch arbitrary throws in `map` callbacks: wrap throwing boundaries explicitly. Decode external JSON, bound parallel work, and preserve cancellation, authorization and idempotency around effects.
+
 ## Table of Contents
 
 1. [Converting try-catch to Either/TaskEither](#1-converting-try-catch-to-eithertaskeither)
@@ -228,7 +230,7 @@ const getUserWithPosts = (
   pipe(
     TE.Do,
     TE.bind('user', () => fetchUser(id)),
-    TE.bind('posts', () => fetchUserPosts(id))
+    TE.bind('posts', ({ user }) => fetchUserPosts(user.id))
   );
 
 // Execute and handle results
@@ -329,6 +331,7 @@ const getDatabaseUrl = (config: Config): O.Option<string> =>
     O.flatMap((db) =>
       pipe(
         O.fromNullable(db.host),
+        O.filter((host) => host.length > 0),
         O.map((host) => {
           const port = db.port ?? 5432;
           const auth = pipe(
@@ -336,9 +339,9 @@ const getDatabaseUrl = (config: Config): O.Option<string> =>
             O.flatMap((creds) =>
               pipe(
                 O.Do,
-                O.bind('username', () => O.fromNullable(creds.username)),
-                O.bind('password', () => O.fromNullable(creds.password)),
-                O.map(({ username, password }) => `${username}:${password}@`)
+                O.bind('username', () => pipe(O.fromNullable(creds.username), O.filter(Boolean))),
+                O.bind('password', () => pipe(O.fromNullable(creds.password), O.filter(Boolean))),
+                O.map(({ username, password }) => `${encodeURIComponent(username)}:${encodeURIComponent(password)}@`)
               )
             ),
             O.getOrElse(() => '')
@@ -594,19 +597,27 @@ const processMultipleFilesSequential = (
 ```typescript
 import * as TE from 'fp-ts/TaskEither';
 
+// Callback adapter: callbacks must report failures and a non-null result.
+// fs here is node:fs, not the fs/promises import from the previous example.
+import * as fs from 'node:fs';
+
 // Generic callback-to-TaskEither converter
 const fromCallback = <A>(
   f: (callback: (error: Error | null, result: A | null) => void) => void
 ): TE.TaskEither<Error, A> =>
   () =>
     new Promise((resolve) => {
-      f((error, result) => {
+      try { f((error, result) => {
         if (error) {
           resolve({ _tag: 'Left', left: error });
         } else {
-          resolve({ _tag: 'Right', right: result as A });
+          resolve(result === null
+            ? { _tag: 'Left', left: new Error('Missing callback result') }
+            : { _tag: 'Right', right: result });
         }
-      });
+      }); } catch (error) {
+        resolve({ _tag: 'Left', left: error instanceof Error ? error : new Error(String(error)) });
+      }
     });
 
 // Usage
@@ -777,6 +788,8 @@ const updateEmail = (
     })
   );
 
+// Adapters below assume node-postgres QueryResult rows and void effect adapters.
+// Saving then emailing is not atomic; use an outbox/idempotency for retries.
 // Build the environment
 const createAppEnv = (): AppEnv => ({
   logger: {
@@ -785,17 +798,20 @@ const createAppEnv = (): AppEnv => ({
   },
   userRepo: {
     findById: (id) => TE.tryCatch(
-      () => postgresClient.query('SELECT * FROM users WHERE id = $1', [id]),
+      async () => {
+        const result = await postgresClient.query<User>('SELECT * FROM users WHERE id = $1', [id]);
+        return result.rows[0] ?? null;
+      },
       (e) => new Error(String(e))
     ),
     save: (user) => TE.tryCatch(
-      () => postgresClient.query('UPDATE users SET email = $1 WHERE id = $2', [user.email, user.id]),
+      async () => { await postgresClient.query('UPDATE users SET email = $1 WHERE id = $2', [user.email, user.id]); },
       (e) => new Error(String(e))
     ),
   },
   emailService: {
     send: (to, subject, body) => TE.tryCatch(
-      () => smtpClient.send({ to, subject, body }),
+      async () => { await smtpClient.send({ to, subject, body }); },
       (e) => new Error(String(e))
     ),
   },
@@ -951,7 +967,8 @@ const processProducts = (products: Product[]) => {
   return { totalValue, categoryCounts, expensiveProducts };
 };
 
-// Or using a single pass with foldMap for efficiency
+// foldMap still allocates/concatenates records and arrays; this is not
+// an efficiency guarantee and can become quadratic for large collections.
 import { Monoid as M } from 'fp-ts/Monoid';
 
 interface ProductStats {
@@ -1045,7 +1062,7 @@ const getAllProductIdsSet = (orders: Order[]): Set<string> =>
 #### Before (Imperative)
 
 ```typescript
-function paginate<T>(
+async function paginate<T>(
   fetchPage: (cursor: string | null) => Promise<{ items: T[]; nextCursor: string | null }>
 ): Promise<T[]> {
   const allItems: T[] = [];
@@ -1096,6 +1113,9 @@ const paginate = <T>(
 
   return go(null, []);
 };
+
+// Production pagination needs a page/item limit, repeated-cursor detection,
+// deadlines and cancellation. Repeated array copying grows with total pages.
 
 // Using unfold for generating sequences
 import * as RA from 'fp-ts/ReadonlyArray';
@@ -1226,7 +1246,8 @@ import * as A from 'fp-ts/Array';
 import * as T from 'fp-ts/Task';
 import { pipe } from 'fp-ts/function';
 
-// Parallel execution - fails fast on first error
+// Parallel execution starts every task; a Left does not cancel siblings.
+// The combined result waits for the parallel computations; bound large inputs.
 const fetchAllUsers = (ids: string[]): TE.TaskEither<Error, User[]> =>
   pipe(
     ids,
@@ -1283,13 +1304,14 @@ import * as TE from 'fp-ts/TaskEither';
 import * as T from 'fp-ts/Task';
 import { pipe } from 'fp-ts/function';
 
-// Race - first to complete wins
+// Race - first to complete wins; require nonempty input. Losers keep running
+// unless each underlying operation receives explicit cancellation.
 const raceTaskEithers = <E, A>(
-  tasks: Array<TE.TaskEither<E, A>>
+  tasks: [TE.TaskEither<E, A>, ...Array<TE.TaskEither<E, A>>]
 ): TE.TaskEither<E, A> =>
   () => Promise.race(tasks.map((te) => te()));
 
-// Try alternatives on failure (like Promise.any but typed)
+// Sequential fallback on Left; unlike Promise.any, fallback starts later.
 const tryAlternatives = <E, A>(
   primary: TE.TaskEither<E, A>,
   fallback: TE.TaskEither<E, A>
@@ -1301,7 +1323,7 @@ const tryAlternatives = <E, A>(
 
 // Chain of fallbacks
 const withFallbacks = <E, A>(
-  tasks: Array<TE.TaskEither<E, A>>
+  tasks: [TE.TaskEither<E, A>, ...Array<TE.TaskEither<E, A>>]
 ): TE.TaskEither<E, A> =>
   tasks.reduce((acc, task) => pipe(acc, TE.orElse(() => task)));
 ```
@@ -1496,9 +1518,9 @@ const unsafeUnwrap = <E, A>(either: E.Either<E, A>): A =>
 const catchSync = <A>(f: () => A): E.Either<Error, A> =>
   E.tryCatch(f, (e) => (e instanceof Error ? e : new Error(String(e))));
 
-// Bridge from Promise to TaskEither
-const fromPromise = <A>(p: Promise<A>): TE.TaskEither<Error, A> =>
-  TE.tryCatch(() => p, (e) => (e instanceof Error ? e : new Error(String(e))));
+// Use a factory so constructing the Task does not start the Promise.
+const fromPromise = <A>(create: () => Promise<A>): TE.TaskEither<Error, A> =>
+  TE.tryCatch(create, (e) => (e instanceof Error ? e : new Error(String(e))));
 
 // Bridge from TaskEither to Promise (throws on Left)
 const toPromise = <E, A>(te: TE.TaskEither<E, A>): Promise<A> =>
@@ -1523,7 +1545,7 @@ export const enrichUser = (user: User): TE.TaskEither<Error, EnrichedUser> => /*
 export async function getUser(id: string): Promise<User> {
   const result = await pipe(
     fetchUser(id),
-    TE.flatMap(validateUser >>> TE.fromEither),
+    TE.flatMap((user) => TE.fromEither(validateUser(user))),
     TE.flatMap(enrichUser)
   )();
 
@@ -1538,7 +1560,7 @@ export async function getUser(id: string): Promise<User> {
 export const getUser = (id: string): TE.TaskEither<UserError, User> =>
   pipe(
     fetchUser(id),
-    TE.flatMap(validateUser >>> TE.fromEither),
+    TE.flatMap((user) => TE.fromEither(validateUser(user))),
     TE.flatMap(enrichUser)
   );
 ```
@@ -1622,7 +1644,8 @@ function sumLargeArray(numbers: number[]): number {
   return sum;
 }
 
-// This creates intermediate arrays
+// reduce itself does not create an intermediate mapped/filtered array.
+// Benchmark the actual pipeline instead of assuming this is slower.
 const sumWithFpts = (numbers: number[]): number =>
   pipe(numbers, A.reduce(0, (acc, n) => acc + n));
 ```

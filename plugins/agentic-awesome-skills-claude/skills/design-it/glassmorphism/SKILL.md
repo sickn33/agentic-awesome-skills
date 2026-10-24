@@ -31,20 +31,20 @@ Use this sub-style when the user's request matches the aesthetic described above
 ```css
 body {
   /* Requires a complex background to see the glass effect */
-  background: url('abstract-mesh.jpg') cover; 
+  background: #203040 url('abstract-mesh.jpg') center / cover no-repeat;
 }
 
 .glass-panel {
   background: rgba(255, 255, 255, 0.15); /* Light glass */
   /* OR background: rgba(0, 0, 0, 0.25); for Dark glass */
-  
+
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  
+
   border: 1px solid rgba(255, 255, 255, 0.3); /* The glass edge */
   border-radius: 16px;
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  
+
   padding: 32px;
 }
 ```
@@ -63,7 +63,7 @@ struct GlassCard: View {
                 endPoint: .bottomTrailing
             )
             .ignoresSafeArea()
-            
+
             // Glass panel
             VStack(alignment: .leading, spacing: 16) {
                 Text("Glass Panel")
@@ -72,7 +72,7 @@ struct GlassCard: View {
                 Text("Content floating on frosted glass.")
                     .font(.system(size: 15))
                     .foregroundColor(.white.opacity(0.8))
-                
+
                 Button(action: {}) {
                     Text("Continue")
                         .font(.system(size: 15, weight: .semibold))
@@ -177,7 +177,7 @@ const GlassCard = () => (
       colors={['#9B59B6', '#3498DB', '#1ABC9C']}
       style={StyleSheet.absoluteFill}
     />
-    
+
     {/* Glass panel */}
     <View style={{
       margin: 24,
@@ -231,7 +231,7 @@ fun GlassCard() {
                 end = Offset.Infinite,
             ))
         )
-        
+
         // Glass panel — Compose lacks native backdrop-filter,
         // so use a semi-transparent surface with blur via Modifier.blur()
         Card(
@@ -259,8 +259,8 @@ fun GlassCard() {
     }
 }
 ```
-- **Compose limitation**: True `backdrop-filter` blur doesn't exist natively. Use `Modifier.blur()` (API 31+) on the background, or use `RenderEffect.createBlurEffect()` for lower APIs.
-- Use the `haze` library (`dev.chrisbanes.haze`) for proper glassmorphism in Compose — it provides `Modifier.haze()` and `Modifier.hazeChild()`.
+- **Compose limitation**: True `backdrop-filter` blur doesn't exist natively. Use `Modifier.blur()` (API 31+) on the background, `RenderEffect.createBlurEffect()` also requires API 31 and is not a lower-API fallback. Use an opaque/tinted surface on unsupported devices.
+- Use the `haze` library (`dev.chrisbanes.haze`) for proper glassmorphism in Compose — check the chosen Haze version documentation for its source/effect APIs rather than assuming historical modifier names remain current.
 - Without native blur, fallback to `Color.White.copy(alpha = 0.15f)` with a strong `border` to simulate the glass edge.
 
 ## Do's and Don'ts

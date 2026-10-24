@@ -6,7 +6,7 @@ description: >
   pod security controls. Use for Dockerfile security reviews, container CVEs,
   image scanning, distroless images, or production hardening.
 category: security
-risk: safe
+risk: critical
 source: community
 date_added: "2026-05-30"
 ---
@@ -44,7 +44,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 ## Security Checklist
 
 ### Dockerfile
-- [ ] Minimal base image (distroless, slim, or alpine — not full debian/ubuntu)
+- [ ] Supported minimal base image compatible with the application
 - [ ] Multi-stage build — no build tools, devDependencies, or compilers in runtime image
 - [ ] Non-root `USER` declared before `CMD`/`ENTRYPOINT`
 - [ ] Base image pinned to `@sha256:...` digest (not just tag)
@@ -65,7 +65,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - [ ] `--read-only` filesystem
 - [ ] `--cap-drop ALL` (add back only what's documented as required)
 - [ ] `--security-opt no-new-privileges:true`
-- [ ] `--security-opt seccomp=<profile>` applied
+- [ ] Runtime default seccomp applied; custom profile only after isolated validation
 - [ ] Resource limits set (`--memory`, `--cpus`, `--pids-limit`)
 - [ ] Image signed with Cosign; verified before deploy
 
@@ -84,7 +84,9 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 
 ## Limitations
 
+- Cluster-wide admission policies, registry settings and runtime restrictions can disrupt workloads. Review the intended scope, test in staging and provide rollback before applying. Bundled profiles and manifests are examples, not a security certification.
+
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific penetration testing or a formal security audit.
-- Seccomp profiles and AppArmor are Linux-only; macOS/Windows Docker Desktop uses different mechanisms.
+- Seccomp and AppArmor act on the Linux host/kernel; Docker Desktop may apply them inside its Linux VM depending on runtime support.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

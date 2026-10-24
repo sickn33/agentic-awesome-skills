@@ -48,3 +48,5 @@ function validateUsers(users: User[]) {
   return { valid: true }
 }
 ```
+
+Returning the first error changes behavior if callers require all errors or the last error. Preserve the chosen validation contract.

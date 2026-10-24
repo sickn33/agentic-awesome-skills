@@ -91,8 +91,8 @@ jobs:
     type: submit
     needs: [build-ios]
     params:
-      platform: ios
       profile: production
+      build_id: ${{ needs.build-ios.outputs.build_id }}
 
   submit-android:
     type: submit
@@ -123,9 +123,11 @@ jobs:
       profile: production
 ```
 
+These snippets require current EAS Workflows schema validation. PR code must not receive production credentials or publish to a production update channel; reviewed event policy and runtime/channel targeting are required.
+
 ## Conditional Jobs
 
-Run jobs based on conditions:
+Conceptual conditional example only: the run-job/outputs syntax below is not validated EAS schema. Use the live schema before deploying; `$GITHUB_OUTPUT` alone does not define an EAS job output.
 
 ```yaml
 name: Conditional Release

@@ -43,3 +43,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Execution boundaries
+
+Examples are scoped integration fragments, not a production certification. Sending messages, registering webhooks, moderating chats and charging users require authorization for the actual account and recipients. Preserve pending updates; dropping them is a separate destructive decision. Use disposable fixtures for tests and never print bot tokens or private webhook URLs. The Python webhook boilerplate uses the library-managed lifecycle behind an HTTPS reverse proxy; no Flask health endpoint is provided.

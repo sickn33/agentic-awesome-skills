@@ -74,6 +74,8 @@ the matching tool group:
 
 ### Step 3: Explain matches with white-box data
 
+Use only job-relevant skills and experience in comparisons; do not infer protected characteristics or rank people using sensitive personal traits. Treat fit scores and interview claims as provider-supplied assessments, not independently proven facts. Surface supporting evidence and uncertainty for a human hiring decision, and limit transcript access to authorized recruiting scope.
+
 When presenting employer search results, keep the tier structure
 (best/good/weak) and surface each candidate's `matchExplanation`: fit score,
 interview-proven skills, gaps, and rationale. For deeper comparison, fetch

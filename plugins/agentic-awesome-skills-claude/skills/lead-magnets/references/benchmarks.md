@@ -1,6 +1,6 @@
 # Lead Magnet Benchmarks
 
-Reference data for planning and evaluating lead magnet performance.
+Illustrative planning assumptions only. No study, sample, date or methodology is supplied for these figures, so do not present them as observed industry benchmarks, expected results or statistical evidence. Replace them with sourced comparable data and the business’s own cohort baseline before forecasting.
 
 ---
 
@@ -21,7 +21,7 @@ Reference data for planning and evaluating lead magnet performance.
 
 ### By Traffic Source
 
-| Source | Expected Conversion | Why |
+| Source | Illustrative Conversion | Why |
 |--------|-------------------|-----|
 | Blog content upgrade | 3-8% of post readers | Contextually relevant |
 | Dedicated landing page (organic) | 20-40% | High intent |
@@ -32,7 +32,7 @@ Reference data for planning and evaluating lead magnet performance.
 
 ### By Industry (Landing Page)
 
-| Industry | Average Conversion |
+| Industry | Illustrative Conversion |
 |----------|-------------------|
 | SaaS/Tech | 15-25% |
 | Marketing/Agency | 20-35% |
@@ -77,10 +77,10 @@ Reference data for planning and evaluating lead magnet performance.
 
 ### Cost Per Lead by Channel
 
-| Channel | Typical CPL | Notes |
+| Channel | Illustrative CPL | Notes |
 |---------|-------------|-------|
 | Organic search | $0-5 | Lowest, but slow to build |
-| Blog content upgrade | $0-2 | Nearly free if you have traffic |
+| Blog content upgrade | $0-2 | Includes creation/distribution labor and other opportunity costs |
 | Facebook/Instagram Ads | $3-15 | B2C lower, B2B higher |
 | Google Ads | $10-50 | High intent, higher cost |
 | LinkedIn Ads | $25-75 | B2B, expensive but qualified |
@@ -88,14 +88,14 @@ Reference data for planning and evaluating lead magnet performance.
 
 ### Creation Cost by Format
 
-| Format | DIY Cost | With Designer/Freelancer |
+| Format | Illustrative DIY Cash Cost | With Designer/Freelancer |
 |--------|----------|-------------------------|
 | Checklist | Free | $100-300 |
 | Cheat sheet | Free | $200-500 |
 | Template | Free | $100-500 |
 | Ebook (10-25 pages) | Free | $500-2,000 |
 | Quiz | $0-100/mo (tool) | $500-2,000 |
-| Webinar | Free (Zoom) | $500-1,500 (production) |
+| Webinar | Verify current meeting/recording plan limits | $500-1,500 (production) |
 | Mini-course (email) | Free | $500-1,500 (copywriting) |
 | Video course | $0-200 (gear) | $2,000-5,000 |
 

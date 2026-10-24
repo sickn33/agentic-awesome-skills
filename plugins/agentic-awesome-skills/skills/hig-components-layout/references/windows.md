@@ -1,6 +1,7 @@
 ---
 title: "Windows | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/windows
+---
 
 # Windows
 
@@ -35,7 +36,7 @@ For guidance laying out content within a window on any platform, see [Layout](ht
 
 ## [Platform considerations](https://developer.apple.com/design/human-interface-guidelines/windows#Platform-considerations)
 
- _Not supported in iOS, tvOS, or watchOS._
+ _The user-managed multiwindow experience described here concerns iPadOS, macOS and visionOS. UIKit also uses UIWindow on iOS; do not interpret this design scope as absence of the window API._
 
 ### [iPadOS](https://developer.apple.com/design/human-interface-guidelines/windows#iPadOS)
 
@@ -43,7 +44,7 @@ Windows present in one of two ways depending on a person’s choice in Multitask
 
   * **Full screen.** App windows fill the entire screen, and people switch between them — or between multiple windows of the same app — using the app switcher.
 
-  * **Windowed.** People can freely resize app windows. Multiple windows can be onscreen at once, and people can reposition them and bring them to the front. The system remembers window size and placement even when an app is closed.
+  * **Windowed.** People can freely resize app windows. Multiple windows can be onscreen at once, and people can reposition them and bring them to the front. The system may restore supported window geometry; the app still needs appropriate scene/session and document-state restoration. Verify actual behavior on the target OS.
 
 
 
@@ -79,11 +80,11 @@ The _frame_ of a window appears above the body area and can include window contr
 
 #### [macOS window states](https://developer.apple.com/design/human-interface-guidelines/windows#macOS-window-states)
 
-A macOS window can have one of three states:
+Main and key are distinct properties and can apply to the same macOS window; they are not three mutually exclusive enum states:
 
   * **Main.** The frontmost window that people view is an app’s main window. There can be only one main window per app.
 
-  * **Key.** Also called the _active window_ , the key window accepts people’s input. There can be only one key window onscreen at a time. Although the front app’s main window is usually the key window, another window — such as a panel floating above the main window — might be key instead. People typically click a window to make it key; when people click an app’s Dock icon to bring all of that app’s windows forward, only the most recently accessed window becomes key.
+  * **Key.** Also called the _active window_ , the key window accepts people’s input. The active application normally has one key window receiving keyboard events. Although the front app’s main window is usually the key window, another window — such as a panel floating above the main window — might be key instead. People typically click a window to make it key; when people click an app’s Dock icon to bring all of that app’s windows forward, only the most recently accessed window becomes key.
 
   * **Inactive.** A window that’s not in the foreground is an inactive window.
 
@@ -126,7 +127,7 @@ The default window style consists of an upright plane that uses an unmodifiable 
 
 **Retain the window’s glass background.** The default glass background helps your content feel like part of people’s surroundings while adapting dynamically to lighting and using specular reflections and shadows to communicate the window’s scale and position. Removing the glass material tends to cause UI elements and text to become less legible and to no longer appear related to each other; using an opaque background obscures people’s surroundings and can make a window feel constricting and heavy.
 
-**Choose an initial window size that minimizes empty areas within it.** By default, a window measures 1280x720 pt. When a window first opens, the system places it about two meters in front of the wearer, giving it an apparent width of about three meters. Too much empty space inside a window can make it look unnecessarily large while also obscuring other content in people’s space.
+**Choose an initial window size that minimizes empty areas within it.** Initial size and placement depend on scene configuration, visionOS version and system/user choices. Treat the cited snapshot’s 1280×720 pt example as a starting point rather than a guaranteed default; points do not imply a fixed physical width or viewing distance. Too much empty space inside a window can make it look unnecessarily large while also obscuring other content in people’s space.
 
 **Aim for an initial shape that suits a window’s content.** For example, a default Keynote window is wide because slides are wide, whereas a default Safari window is tall because most webpages are much longer than they are wide. For games, a tower-building game is likely to open in a taller window than a driving game.
 

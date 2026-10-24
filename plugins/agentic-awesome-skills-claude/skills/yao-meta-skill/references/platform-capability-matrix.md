@@ -1,5 +1,13 @@
 # Platform Capability Matrix
 
+> Catalog scope: this is upstream design guidance. Referenced scripts, commands,
+> reports, fixtures and security policies are not bundled here. They describe
+> proposed/manual output contracts or a separately reviewed upstream toolchain,
+> not verified capabilities of this installation. Do not execute missing or
+> unreviewed code, or claim unrun gates passed. Current user scope and host policy
+> take precedence; metadata alone grants no runtime permission.
+
+
 This matrix describes the current packaging targets and their support level.
 
 | Target | Metadata Adapter | Compiler Contract | Native Behavior Contract | Output Contract | Snapshot Test | Portability Semantics | Notes |
@@ -47,3 +55,10 @@ If a target cannot support a source feature directly:
 1. preserve the neutral source package
 2. emit a minimal adapter
 3. document the fallback in the target output
+
+## Evidence status of this catalog copy
+
+The table records upstream design claims, not tested support here. Only neutral
+guidance/metadata is bundled. No compiler, adapters, snapshots, permission probes
+or installer were executed in this review. Mark client compatibility unverified
+until tested on the exact generated package and target client version.

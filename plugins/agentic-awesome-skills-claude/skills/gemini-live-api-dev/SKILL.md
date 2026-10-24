@@ -78,6 +78,10 @@ To streamline real-time audio/video app development, use a third-party integrati
 
 ---
 
+## Application boundaries
+
+Examples are independent fragments, not a microphone/playback application. Define chunks, bounded input/output queues, sample conversion, cancellation and session cleanup; close the JavaScript session and Python client when finished. Confirm model availability and supported options in current model-specific docs rather than relying on universal capability claims. Obtain consent for microphone/camera streaming, minimize transcript logging, and never send API keys to browsers. Tool-call arguments are untrusted: validate and authorize each server-side action, including retries and cancelled calls.
+
 ## Quick Start
 
 ### Authentication
@@ -96,7 +100,8 @@ client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 ```js
 import { GoogleGenAI } from '@google/genai';
 
-const ai = new GoogleGenAI({ apiKey: 'YOUR_API_KEY' });
+// Node/server only; browsers must receive short-lived ephemeral tokens.
+const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 ```
 
 ### Connecting to the Live API
@@ -126,8 +131,8 @@ const session = await ai.live.connect({
   },
   callbacks: {
     onopen: () => console.log('Connected'),
-    onmessage: (response) => console.log('Message:', response),
-    onerror: (error) => console.error('Error:', error),
+    onmessage: (response) => { /* Process parts using the receive example below. */ },
+    onerror: () => console.error('Live connection error'),
     onclose: () => console.log('Closed')
   }
 });
@@ -302,14 +307,14 @@ When migrating from `gemini-2.5-flash-native-audio-preview-12-2025` to `gemini-3
 
 ### When MCP is Installed (Preferred)
 
-If the **`search_docs`** tool (from the Google MCP server) is available, use it as your **only** documentation source:
+If the **`search_docs`** tool (from the Google MCP server) is available, prefer it as a documentation lookup source:
 
 1. Call `search_docs` with your query
 2. Read the returned documentation
-3. **Trust MCP results** as source of truth for API details — they are always up-to-date.
+3. Verify the source URL, model and SDK version of returned documentation; indexed MCP results can be stale. Cross-check current official documentation when a result is missing or contradictory.
 
 > [!IMPORTANT]
-> When MCP tools are present, **never** fetch URLs manually. MCP provides up-to-date, indexed documentation that is more accurate and token-efficient than URL fetching.
+> Use official documentation URLs as a fallback or cross-check when tool results do not establish current behavior.
 
 ### When MCP is NOT Installed (Fallback Only)
 

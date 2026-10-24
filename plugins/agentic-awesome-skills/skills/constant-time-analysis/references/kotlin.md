@@ -25,8 +25,8 @@ Bytecode (.class files)
 **Key implications for Android:**
 
 1. **Android Runtime (ART)** - Android uses ART instead of HotSpot JVM
-2. **AOT compilation** - ART compiles bytecode to native code at install time
-3. **Same bytecode vulnerabilities** - Division/branch timing issues persist regardless of runtime
+2. **AOT compilation** - ART uses a combination of interpretation, JIT and AOT compilation; details depend on Android/runtime version
+3. **Same bytecode vulnerabilities** - Bytecode flags require native-code review on the actual runtime; not every flagged instruction leaks on every CPU
 
 ## Running the Analyzer
 
@@ -61,15 +61,7 @@ Kotlin compiles to the same JVM bytecode as Java:
 
 ### Replace Division
 
-```kotlin
-// VULNERABLE: Division instruction emitted
-val q = secretValue / divisor
-
-// SAFE: Barrett reduction (for fixed divisor)
-// Precompute: mu = (1L shl 32) / divisor
-val mu = (1L shl 32) / divisor
-val q = ((secretValue.toLong() * mu) ushr 32).toInt()
-```
+A division involving secrets is a review candidate, not automatically an exploitable leak. Do not replace it with a truncated reciprocal-multiply sketch: signedness, overflow, operand bounds and correction steps determine arithmetic correctness. Use a reviewed cryptographic implementation with a documented input domain, then inspect generated native code on the deployment CPU. Python/Ruby integers and JavaScript arithmetic do not become constant-time merely by replacing division with multiplication or masking.
 
 ### Replace Branches
 
@@ -77,9 +69,7 @@ val q = ((secretValue.toLong() * mu) ushr 32).toInt()
 // VULNERABLE: Branch timing reveals secret
 val result = if (secret != 0) a else b
 
-// SAFE: Constant-time selection using bitwise ops
-val mask = -(if (secret != 0) 1 else 0)
-// Better: compute mask without branch
+// Candidate selection pattern: generated native code still requires review using bitwise ops
 val mask = (secret or -secret) shr 31  // -1 if secret != 0, else 0
 val result = (a and mask) or (b and mask.inv())
 ```
@@ -222,7 +212,7 @@ For Android projects, the Kotlin compiler is typically bundled with Android Stud
 
 ```kotlin
 plugins {
-    kotlin("jvm") version "1.9.0"
+    kotlin("jvm") version "<reviewed-project-version>"
 }
 ```
 

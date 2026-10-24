@@ -24,7 +24,7 @@ CONFIG_ITEMS=(
 # Check if any config items exist before creating backup directory
 HAS_ITEMS="false"
 for item in "${CONFIG_ITEMS[@]}"; do
-    if [ -e "${HOME}/${item}" ]; then
+    if [ -e "${HOME}/${item}" ] || [ -L "${HOME}/${item}" ]; then
         HAS_ITEMS="true"
         break
     fi
@@ -36,20 +36,23 @@ if [ "$HAS_ITEMS" = "false" ]; then
     exit 0
 fi
 
-mkdir -p "${BACKUP_DIR}"
+umask 077
+mkdir -p "${BACKUP_BASE}"
+BACKUP_DIR=$(mktemp -d "${BACKUP_BASE}/${TIMESTAMP}.XXXXXX")
 
 BACKED_UP_COUNT=0
 
 for item in "${CONFIG_ITEMS[@]}"; do
     SRC_PATH="${HOME}/${item}"
-    if [ -e "${SRC_PATH}" ]; then
+    if [ -e "${SRC_PATH}" ] || [ -L "${SRC_PATH}" ]; then
         DEST_PATH="${BACKUP_DIR}/${item}"
         mkdir -p "$(dirname "${DEST_PATH}")"
         if cp -a "${SRC_PATH}" "${DEST_PATH}"; then
             echo "[+] Backed up: ~/${item} -> ${DEST_PATH}"
             BACKED_UP_COUNT=$((BACKED_UP_COUNT + 1))
         else
-            echo "[!] Warning: Failed to back up ~/${item}"
+            echo "[!] Failed to back up ~/${item}; stop before mutation." >&2
+            exit 1
         fi
     fi
 done

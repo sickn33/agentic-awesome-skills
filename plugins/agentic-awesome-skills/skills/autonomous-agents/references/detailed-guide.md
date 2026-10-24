@@ -2,6 +2,10 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+## Implementation limits
+
+Examples are incomplete scaffolds. PostgresSaver.from_conn_string must be used according to the installed package's context-manager lifecycle, with schema setup when required; keep the connection open through graph use. Checkpoints do not undo external actions: reconciliation, idempotency and compensations are separate. Use authenticated per-tenant/thread access, not a user-supplied shared ID. Budget planning calls, failed requests and tools as well as successful actions; reserve funds before dispatch and count actual failure costs. Do not log raw private inputs, results or internal reasoning.
+
 ## Principles
 
 - Reliability over autonomy - every step compounds error probability
@@ -60,7 +64,7 @@ Alternating reasoning and action steps
 
 # REACT PATTERN:
 
-"""
+```
 The ReAct loop:
 1. Thought: Reason about what to do next
 2. Action: Choose and execute a tool
@@ -68,46 +72,23 @@ The ReAct loop:
 4. Repeat until goal achieved
 
 Key: Explicit reasoning traces make debugging possible
-"""
+```
 
 
-## Basic ReAct Implementation
-"""
-from langchain.agents import create_react_agent
-from langchain_openai import ChatOpenAI
+## Basic agent factory (version-check before use)
 
-# Define the ReAct prompt template
-react_prompt = '''
-Answer the question using the following format:
+```python
+from langchain.agents import create_agent
+# llm, tools and query must be supplied by the application.
+agent = create_agent(model=llm, tools=tools, system_prompt="Use only authorized tools and report evidence.")
+result = agent.invoke({"messages": [{"role": "user", "content": query}]}, {"recursion_limit": 20})
+```
 
-Question: the input question
-Thought: reason about what to do
-Action: tool_name
-Action Input: input to the tool
-Observation: result of the action
-... (repeat Thought/Action/Observation as needed)
-Thought: I now know the final answer
-Final Answer: the answer
-'''
-
-# Create the agent
-agent = create_react_agent(
-    llm=ChatOpenAI(model="gpt-4o"),
-    tools=tools,
-    prompt=react_prompt,
-)
-
-# Execute with step limit
-result = agent.invoke(
-    {"input": query},
-    config={"max_iterations": 10}  # Prevent runaway loops
-)
-"""
-
+A recursion limit bounds graph execution, not dollars or exact tool-call count. Enforce authorization and budgets outside the model. Historical examples below need migration against the installed SDK.
 
 ## LangGraph ReAct (Production)
-"""
-from langgraph.prebuilt import create_react_agent
+```
+from langchain.agents import create_agent
 from langgraph.checkpoint.postgres import PostgresSaver
 
 # Production checkpointer
@@ -115,7 +96,7 @@ checkpointer = PostgresSaver.from_conn_string(
     os.environ["POSTGRES_URL"]
 )
 
-agent = create_react_agent(
+agent = create_agent(
     model=llm,
     tools=tools,
     checkpointer=checkpointer,  # Durable state
@@ -124,7 +105,7 @@ agent = create_react_agent(
 # Invoke with thread for state persistence
 config = {"configurable": {"thread_id": "user-123"}}
 result = agent.invoke({"messages": [query]}, config)
-"""
+```
 
 ### Plan-Execute Pattern
 
@@ -134,7 +115,7 @@ Separate planning phase from execution
 
 # PLAN-EXECUTE PATTERN:
 
-"""
+```
 Two-phase approach:
 1. Planning: Decompose goal into subtasks
 2. Execution: Execute subtasks, potentially re-plan
@@ -147,12 +128,13 @@ Advantages:
 Disadvantages:
 - Less adaptive to mid-task discoveries
 - Plan may become stale
-"""
+```
 
 
 ## LangGraph Plan-Execute
-"""
-from langgraph.prebuilt import create_plan_and_execute_agent
+```
+# Pseudocode: create_plan_and_execute_agent is an application-defined factory,
+# not a supplied langgraph.prebuilt API. Implement planner/executor/replanner nodes.
 
 # Planner creates the task list
 planner_prompt = '''
@@ -190,11 +172,11 @@ plan = agent.invoke({"objective": goal}, config)
 # Review plan, then continue
 if human_approves(plan):
     result = agent.invoke(None, config)  # Continue from checkpoint
-"""
+```
 
 
 ## Decomposition Strategies
-"""
+```
 # Decomposition-First: Plan everything, then execute
 # Best for: Stable tasks, need full plan approval
 
@@ -219,7 +201,7 @@ def interleaved_execute(goal, max_steps=10):
         state["remaining"] = planner.reassess(state)
 
     return state
-"""
+```
 
 ### Reflection Pattern
 
@@ -229,7 +211,7 @@ Self-evaluation and iterative improvement
 
 # REFLECTION PATTERN:
 
-"""
+```
 Self-correction loop:
 1. Generate initial output
 2. Evaluate against criteria
@@ -238,11 +220,11 @@ Self-correction loop:
 5. Repeat until satisfactory
 
 Also called: Evaluator-Optimizer, Self-Critique
-"""
+```
 
 
 ## Basic Reflection
-"""
+```
 def reflect_and_improve(task, max_iterations=3):
     # Initial generation
     output = generator.generate(task)
@@ -270,11 +252,11 @@ def reflect_and_improve(task, max_iterations=3):
         )
 
     return output  # Best effort after max iterations
-"""
+```
 
 
 ## LangGraph Reflection
-"""
+```
 from langgraph.graph import StateGraph
 
 def build_reflection_graph():
@@ -304,11 +286,11 @@ def should_continue(state):
     if state["score"] >= 0.9:
         return "end"
     return "continue"
-"""
+```
 
 
 ## Separate Evaluator (More Robust)
-"""
+```
 # Use different model for evaluation to avoid self-bias
 generator = ChatOpenAI(model="gpt-4o")
 evaluator = ChatOpenAI(model="gpt-4o-mini")  # Different perspective
@@ -316,7 +298,7 @@ evaluator = ChatOpenAI(model="gpt-4o-mini")  # Different perspective
 # Or use specialized evaluators
 from langchain.evaluation import load_evaluator
 evaluator = load_evaluator("criteria", criteria="correctness")
-"""
+```
 
 ### Guardrailed Autonomy
 
@@ -326,7 +308,7 @@ Constrained agents with safety boundaries
 
 # GUARDRAILED AUTONOMY:
 
-"""
+```
 Production agents need multiple safety layers:
 1. Input validation
 2. Action constraints
@@ -334,11 +316,11 @@ Production agents need multiple safety layers:
 4. Cost limits
 5. Human escalation
 6. Rollback capability
-"""
+```
 
 
 ## Multi-Layer Guardrails
-"""
+```
 class GuardedAgent:
     def __init__(self, agent, config):
         self.agent = agent
@@ -350,6 +332,7 @@ class GuardedAgent:
     async def execute(self, goal):
         total_cost = 0
         steps = 0
+        completed = False
 
         while steps < self.max_steps:
             # Get next action
@@ -381,14 +364,15 @@ class GuardedAgent:
                 raise
 
             if result.is_complete:
+                completed = True
                 break
 
-        return {"status": "complete", "total_cost": total_cost}
-"""
+        return {"status": "complete" if completed else "exhausted", "total_cost": total_cost}
+```
 
 
 ## Least Privilege Principle
-"""
+```
 # Define minimal permissions per task type
 TASK_PERMISSIONS = {
     "research": ["web_search", "read_file"],
@@ -400,13 +384,13 @@ def create_scoped_agent(task_type):
     allowed = TASK_PERMISSIONS.get(task_type, [])
     tools = [t for t in ALL_TOOLS if t.name in allowed]
     return Agent(tools=tools)
-"""
+```
 
 
 ## Cost Control
-"""
+```
 # Context length grows quadratically in cost
-# Double context = 4x cost
+# Provider billing depends on token prices, caching and request count; no universal 4x bill rule.
 
 def trim_context(messages, max_tokens=4000):
     # Keep system message and recent messages
@@ -420,7 +404,7 @@ def trim_context(messages, max_tokens=4000):
         return [system, summary] + recent
 
     return messages
-"""
+```
 
 ### Durable Execution Pattern
 
@@ -430,7 +414,7 @@ Agents that survive failures and resume
 
 # DURABLE EXECUTION:
 
-"""
+```
 Production agents must:
 - Survive server restarts
 - Resume from exact point of failure
@@ -438,11 +422,11 @@ Production agents must:
 - Allow human intervention mid-process
 
 LangGraph 1.0 provides this natively.
-"""
+```
 
 
 ## LangGraph Checkpointing
-"""
+```
 from langgraph.checkpoint.postgres import PostgresSaver
 from langgraph.graph import StateGraph
 
@@ -465,13 +449,13 @@ agent.invoke({"goal": complex_goal}, config)
 
 # If server dies, resume later:
 state = agent.get_state(config)
-if not state.is_complete:
+if state.next:  # StateSnapshot pending nodes, not an is_complete property
     agent.invoke(None, config)  # Continues from checkpoint
-"""
+```
 
 
 ## Human-in-the-Loop Interrupts
-"""
+```
 # Pause at specific nodes
 agent = graph.compile(
     checkpointer=checkpointer,
@@ -489,13 +473,13 @@ if human_approves(state):
     agent.invoke(None, config)
 else:
     # Modify state and continue
-    agent.update_state(config, {"approved": False})
-    agent.invoke(None, config)
-"""
+    # Stop. A false approval field is not a control unless the graph routes on it.
+    raise PermissionError("Human rejected the action")
+```
 
 
 ## Time-Travel Debugging
-"""
+```
 # LangGraph stores full history
 history = list(agent.get_state_history(config))
 
@@ -505,7 +489,7 @@ agent.update_state(config, past_state.values)
 
 # Replay from that point with modifications
 agent.invoke(None, config)
-"""
+```
 
 
 ## Sharp Edges
@@ -522,14 +506,13 @@ complex tasks fail mysteriously. Success rate drops dramatically
 as task complexity increases. Users lose trust.
 
 Why this breaks:
-Each step has independent failure probability. A 95% success rate
+Under the simplifying assumption of independent, equally reliable steps: A 95% success rate
 per step sounds great until you realize:
 - 5 steps: 77% success (0.95^5)
 - 10 steps: 60% success (0.95^10)
 - 20 steps: 36% success (0.95^20)
 
-This is the fundamental limit of autonomous agents. Every additional
-step multiplies failure probability.
+Real steps are correlated and can recover; these numbers illustrate an assumption, not a measured fundamental limit.
 
 Recommended fix:
 
@@ -575,9 +558,7 @@ Agents getting slower as they run longer. Token counts exceeding
 model limits.
 
 Why this breaks:
-Transformer costs scale quadratically with context length. Double
-the context, quadruple the compute. A long-running agent that
-re-sends its full conversation each turn can burn money exponentially.
+Provider charges are generally token/usage based and depend on caching, output and tool costs. Re-sending growing history over many turns can grow cumulative input tokens quadratically in turn count; this is not a universal exponential bill or fixed compute rule.
 
 Most agents append to context without trimming. Context grows:
 - Turn 1: 500 tokens → $0.01
@@ -655,7 +636,7 @@ Recommended fix:
 
 ## Test at scale before production
 # Run 1000+ test cases, not 10
-# Measure P95/P99 success rate, not average
+# Measure task success/failure rates and confidence intervals; use p95/p99 for latency or other continuous distributions.
 # Include adversarial inputs
 
 
@@ -665,11 +646,11 @@ logger = structlog.get_logger()
 
 class ObservableAgent:
     def execute(self, task):
-        with logger.bind(task_id=task.id):
+        with structlog.contextvars.bound_contextvars(task_id=task.id):
             logger.info("task_started")
             try:
                 result = self._execute(task)
-                logger.info("task_completed", result=result)
+                logger.info("task_completed", result_status="completed")
                 return result
             except Exception as e:
                 logger.error("task_failed", error=str(e))
@@ -796,7 +777,7 @@ class TokenManager:
 
     def is_expired(self):
         buffer = timedelta(minutes=5)  # Refresh early
-        return datetime.now() > (self.expires_at - buffer)
+        return self.token is None or self.expires_at is None or datetime.now() > (self.expires_at - buffer)
 
 
 ## Use idempotency keys
@@ -929,20 +910,20 @@ logger = structlog.get_logger()
 
 class TracedAgent:
     def think(self, context):
-        with logger.bind(step="think"):
+        with structlog.contextvars.bound_contextvars(step="think"):
             thought = self.llm.generate(context)
             logger.info("thought_generated",
-                thought=thought,
+                summary="[redacted operational summary]",
                 tokens=count_tokens(thought)
             )
             return thought
 
     def act(self, action):
-        with logger.bind(step="act", action=action.name):
+        with structlog.contextvars.bound_contextvars(step="act", action=action.name):
             logger.info("action_started")
             try:
                 result = action.execute()
-                logger.info("action_completed", result=result)
+                logger.info("action_completed", result_status="completed")
                 return result
             except Exception as e:
                 logger.error("action_failed", error=str(e))

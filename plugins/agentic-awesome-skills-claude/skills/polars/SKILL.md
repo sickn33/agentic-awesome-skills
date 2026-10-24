@@ -1,6 +1,6 @@
 ---
 name: polars
-description: Fast in-memory DataFrame library for datasets that fit in RAM. Use when pandas is too slow but data still fits in memory. Lazy evaluation, parallel execution, Apache Arrow backend. Best for 1-100GB datasets, ETL pipelines, faster pandas replacement. For larger-than-RAM data use dask or vaex.
+description: Expression-based DataFrame library for Python and Rust. Use for eager or lazy tabular analytics, ETL, and pandas migration; streaming support and memory needs depend on the query.
 license: https://github.com/pola-rs/polars/blob/main/LICENSE
 metadata:
     skill-author: K-Dense Inc.
@@ -8,6 +8,8 @@ risk: critical
 source: community
 date_added: "2026-03-06"
 ---
+Use `import polars.selectors as cs` for selector examples.
+
 ## Bundled upstream support
 
 Supporting files are included at skill-relative paths. See [UPSTREAM-NOTICE.md](UPSTREAM-NOTICE.md) for their pinned sources, licenses, hashes, and import changes.
@@ -23,12 +25,23 @@ Supporting files are included at skill-relative paths. See [UPSTREAM-NOTICE.md](
 
 Polars is a lightning-fast DataFrame library for Python and Rust built on Apache Arrow. Work with Polars' expression-based API, lazy evaluation framework, and high-performance data manipulation capabilities for efficient data processing, pandas migration, and data pipeline optimization.
 
+## Correctness and execution boundaries
+
+Pin the Polars version and compare results on a small representative fixture
+before migration. Examples are not a benchmark or a fixed 1–100 GB guarantee.
+Streaming collect still materializes the result; use a sink when output cannot
+fit RAM. Source scans may read metadata/schema before collect. Cloud/database
+reads and writes require the authorized destination, data scope and budget.
+Treat exports as private, avoid overwriting existing files and use fail-if-exists
+for database tables. Strings in when/then are column references unless pl.lit is
+used. Sibling expressions cannot refer to aliases created in the same context.
+
 ## Quick Start
 
 ### Installation and Basic Usage
 
 Install Polars:
-```python
+```bash
 uv pip install polars
 ```
 
@@ -151,8 +164,8 @@ df.with_columns(
 
 # Parallel computation (all columns computed in parallel)
 df.with_columns(
-    pl.col("value") * 10,
-    pl.col("value") * 100,
+    (pl.col("value") * 10).alias("value_x10"),
+    (pl.col("value") * 100).alias("value_x100"),
 )
 ```
 
@@ -277,7 +290,7 @@ pl.concat([df1, df2], how="diagonal")
 Reshape data:
 ```python
 # Pivot (wide format)
-df.pivot(values="sales", index="date", columns="product")
+df.pivot(values="sales", index="date", on="product")
 
 # Unpivot (long format)
 df.unpivot(index="id", on=["col1", "col2"])
@@ -303,7 +316,7 @@ Polars offers significant performance improvements over pandas with a cleaner AP
 | Filter | `df[df["col"] > 10]` | `df.filter(pl.col("col") > 10)` |
 | Add column | `df.assign(x=...)` | `df.with_columns(x=...)` |
 | Group by | `df.groupby("col").agg(...)` | `df.group_by("col").agg(...)` |
-| Window | `df.groupby("col").transform(...)` | `df.with_columns(...).over("col")` |
+| Window | `df.groupby("col").transform(...)` | `df.with_columns(pl.col("x").mean().over("col"))` |
 
 ### Key Syntax Patterns
 
@@ -342,16 +355,14 @@ For comprehensive migration guide, load `references/pandas_migration.md`.
 
 3. **Use streaming for very large data:**
    ```python
-   lf.collect(streaming=True)
+   lf.collect(engine="streaming")
    ```
 
-4. **Select only needed columns early:**
+4. **Keep only needed columns without removing filter inputs:**
    ```python
-   # Good: Select columns early
-   lf.select("col1", "col2").filter(...)
-
-   # Bad: Filter on all columns first
-   lf.filter(...).select("col1", "col2")
+   # Equivalent lazy plans may receive the same pushdowns.
+   # Filter first when its input columns are absent from the final selection.
+   lf.filter(pl.col("age") > 25).select("name", "age")
    ```
 
 5. **Use appropriate data types:**

@@ -53,7 +53,7 @@ Minimum ledger coverage:
 - **Callee paths (L6):** local callees returning null/None/undefined, raising, mutating arguments, or returning a different shape.
 - **Control/resource paths (L5/L8):** every early return, throw/raise, catch/except, break/continue after acquisition or required post-condition. **L5 exhaustive enumeration:** when a required side-effect (audit log, metric, notification, state update) must run on every exit, verify EVERY exit path independently — `return`, explicit `raise`/`throw`, implicit raises from callees, `break`, `continue`. Name each skipped path separately in the finding; a finding that identifies only the first skipped path is incomplete. Example: "Two paths skip `audit_log.record`: (1) `return _unauthorized()` at line 3, (2) `raise BadRequest` at line 5." Note: if the skipped operation is a resource release or rollback, reclassify as L8 and apply the same exhaustive path logic there.
 - **State/concurrency paths (L4/L7):** mutation during iteration, shared mutable defaults, aliases, closures, await/callback/task boundaries. For L4 also check: does the function mutate its argument AND return it (aliased-return dual contract)? For L7: does the hazard require two concurrent execution contexts — if yes it is L7, not L4 (e.g. lock-order inversion between goroutines is L7 even though it involves mutation).
-  - **L4 aliased-return trap (high priority):** When a function BOTH mutates its input in-place AND returns the same object, this is an L4 finding — not a style issue. The caller may write `result = func(original)` and assume `original` is unchanged. Trace: (a) confirm mutation is in-place (e.g., `list.sort()`, `del arr[i]`, `arr[i], arr[j] = arr[j], arr[i]`); (b) confirm the function returns the SAME object (not a copy); (c) construct a Trigger showing `original` is unexpectedly modified. This is L4, not L3 or L7.
+  - **L4 aliased-return trap (high priority):** When a function BOTH mutates its input in-place AND returns the same object, investigate the documented/caller contract. This is an L4 finding only when mutation violates that contract; deliberate in-place APIs are valid. The caller may write `result = func(original)` and assume `original` is unchanged. Trace: (a) confirm mutation is in-place (e.g., `list.sort()`, `del arr[i]`, `arr[i], arr[j] = arr[j], arr[i]`); (b) confirm the function returns the SAME object (not a copy); (c) construct a Trigger showing `original` is unexpectedly modified. This is L4, not L3 or L7.
   - **L7 async interleaving (critical for asyncio/coroutines):** When shared mutable state is accessed across `await`/`yield` boundaries, the bug is L7 even if no threads are involved — asyncio coroutines interleave on a single thread via the event loop. Key indicator: a check-then-act pattern with an `await` between the check and the act. Do NOT classify asyncio interleaving as L4.
   - **L7 memory model hazards (Java/C++/Go):** For double-checked locking, volatile/atomic, happens-before: always check BOTH (a) the visibility hazard (missing volatile/atomic) AND (b) the initialization-before-publish ordering (is the object fully constructed before other threads can see it?). Two-step trace: step 1 = reordering/visibility, step 2 = consequence of observing partially-constructed object.
 - **Time/locale paths (L9):** naive/aware datetime, DST, locale-sensitive parse/sort/format, implicit encoding.
@@ -126,7 +126,7 @@ For Class A candidates: if the trace does not conclusively confirm consequence (
 - **Class B:** run a reachability probe first:
   1. Search for invariant enforcement — constructor, validator, schema definition, or call sites visible in current scope.
   2. Enforcement found and airtight (no code path bypasses it) → **drop the candidate; do not write a finding.** Optionally record in the report Summary: "Invariant enforced at [location] — no current bug; revisit if callers or schema change."
-  3. No enforcement found → report at the assigned severity.
+  3. No enforcement found → this does not prove reachability. Establish a concrete supported caller/input path, or mark the premise partial and cap at Warning.
   4. Enforcement partial or outside current scope → report at the assigned severity, capped at 🟡 Warning, with `manual verification recommended`.
 
 Record the probe result in the finding's Trace (not Premises) so the reader can verify the class assignment without violating the Premises checklist.
@@ -154,7 +154,7 @@ For each candidate finding that survived Step 5, attempt to **disprove it** from
 - Any question finds **partial evidence** (indirect defense, uncertain coverage) → **downgrade to Suggestion** with `manual verification recommended`.
 - All three questions find **no rebuttal evidence** → **retain at original severity**.
 
-**Async/concurrency protection clause:** For L7 findings involving async interleaving (asyncio, goroutines, coroutines) or memory model hazards (volatile, happens-before), apply stricter rebuttal thresholds — only withdraw if the defense is an **explicit synchronization primitive** (lock, semaphore, atomic, channel, volatile). Do NOT treat the GIL, event loop single-threading, or "unlikely timing" as a defense. The GIL does not prevent asyncio interleaving; single-threaded event loops DO interleave at await points.
+**Async/concurrency protection clause:** For L7 findings involving async interleaving (asyncio, goroutines, coroutines) or memory model hazards (volatile, happens-before), apply stricter rebuttal thresholds — withdraw when a concrete defense excludes the harmful interleaving: synchronization, immutable state, exclusive ownership, or no suspension between check and act. A primitive’s mere presence is not proof; trace its scope and memory-model guarantees. Do NOT treat the GIL, event loop single-threading, or "unlikely timing" as a defense. The GIL does not prevent asyncio interleaving; single-threaded event loops DO interleave at await points.
 
 **Recording:** Append the rebuttal conclusion to the Trace field:
 - `Rebuttal check: PASSED — no defense mechanism found in scope.`
@@ -227,7 +227,7 @@ Dry-run: ⚠️ Initial remedy [description] failed check (b) — [new issue]. R
 
 1. Start at 100. Deduct per confirmed finding (Critical −15, Warning −7, Suggestion −2).
 2. Fill in the Report Template from `report-template.md`.
-3. Summary: most critical finding, recommended next action, whether the logic is safe to ship.
+3. Summary: most critical finding, recommended next action, the scope and remaining uncertainty; a local score cannot certify shipping safety.
 
 ## Step 8: Execution Verification Gate (Optional — when runtime is available)
 
@@ -252,13 +252,13 @@ For each finding, generate a self-contained script based on the Trigger field:
 
 Execute the reproducer script against the original code.
 - **Script FAILS (assertion error or expected exception):** Bug confirmed. Proceed to 8c.
-- **Script PASSES:** Finding is a **false positive**. Withdraw it, remove from report, and adjust Logic Score.
+- **Script PASSES:** The proposed reproducer did not confirm the finding. Check fixture fidelity and reachability; withdraw only if the actual candidate is disproved, otherwise mark unverified.
 - **Script errors unexpectedly (syntax error, import failure):** Script needs fixing. Retry once with corrected script. If still broken, mark `unverified — reproducer generation failed`.
 
 ### 8c. Apply Remedy and Re-run (Confirm Fix Works)
 
 Apply the Remedy to the code in the reproducer script, then re-execute.
-- **Script PASSES:** Fix verified. Mark finding as `✅ Execution-verified`.
+- **Script PASSES:** The fix passed this reproducer; broader regression freedom is not established. Mark finding as `✅ Execution-verified`.
 - **Script still FAILS:** Remedy is ineffective. Revise and retry (up to 3 attempts). After 3 failures, mark `unverified — remedy needs manual review`.
 - **Script throws NEW exception:** Remedy introduces regression. Revert, mark `⚠️ Remedy caused regression — manual fix recommended`.
 

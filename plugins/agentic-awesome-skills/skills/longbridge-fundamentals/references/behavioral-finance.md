@@ -8,7 +8,7 @@ Apply behavioral finance theory to identify exploitable market inefficiencies �
 
 **Theory**: Investors overweight recent bad/good news, pushing prices beyond fundamental value. De Bondt & Thaler (1985).
 
-**Signal**: Long-term reversal. Stocks down 30–50% over 12M outperform over the next 12M; top performers underperform.
+**Signal**: Long-term reversal. Historical reversal findings depend on sample and horizon; a 30–50% fall does not establish subsequent outperformance.
 
 **Detect**:
 
@@ -22,7 +22,7 @@ Compare 12M return vs peer group. If a stock is in the bottom 10% of sector retu
 
 **Theory**: Investors are slow to update beliefs; price drifts gradually toward fair value after earnings surprises.
 
-**Signal**: Post-earnings announcement drift (PEAD). Buy after positive earnings surprise; price continues rising for 1–3 months.
+**Signal**: Post-earnings announcement drift (PEAD). A positive surprise may be followed by drift in some historical samples; this is not a buy rule or a forecast.
 
 **Detect**: Use `longbridge-earnings` to identify beats. Track price drift with `longbridge kline --period day --count 60`.
 
@@ -32,7 +32,7 @@ Compare 12M return vs peer group. If a stock is in the bottom 10% of sector retu
 
 **Market impact**: Selling pressure on recent winners creates resistance near recent highs; support near cost basis concentrations.
 
-**Detect**: High capital inflows after a price surge = retail profit-taking.
+**Detect**: Capital-flow aggregates do not identify retail profit-taking or investor motives; assess alternative explanations.
 
 ```bash
 longbridge capital <SYMBOL> --format json

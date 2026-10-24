@@ -19,7 +19,7 @@ The split matters in exactly one situation: **the body assumes it sees exactly o
 
 - **Per-run aggregation.** A node like "sum these line items" or "build one report from these rows" produces a single output from whatever items it sees. Under `mode: all` it sees all N inputs and produces *one* aggregate across everyone. Under `mode: each` it runs N times and produces one aggregate *per input* — which is almost always what a per-customer / per-order body means.
 - **"This is THE thing to act on" logic.** A body written around a single entity (`$json.customer_id`, "send this one email") silently operates on only the first item, or mis-aggregates, when handed N at once.
-- **A final write that should fire once per input.** An insert/update meant to run once per record fires once total under `all`.
+- **A final write that should fire once per input.** Check the node’s item behavior: a node may already write once per item under `all`; aggregation or execute-once settings change that.
 
 ### Worked contrast
 
@@ -102,7 +102,7 @@ The pattern generalizes: any time a capability has both a pull path (look up by 
 
 ## Fire-and-forget parallelization
 
-`mode: each` + `options.waitForSubWorkflow: false` is the only way to get genuinely concurrent sub-workflow execution in n8n. N input items dispatch N sub-workflow runs that execute in parallel (bounded by per-instance concurrency limits).
+`mode: each` + `options.waitForSubWorkflow: false` dispatches independent runs without waiting. Scheduling, worker configuration and concurrency limits determine actual overlap; this is not a guarantee of parallel execution.
 
 The catch: the caller doesn't know when — or whether — any of them finished. So this only works with a **separate completion-tracking mechanism**, typically a Data Table the sub-workflow writes to as it progresses (manage it with `n8n_manage_datatable` — see **n8n-mcp-tools-expert**).
 
@@ -128,6 +128,8 @@ The catch: the caller doesn't know when — or whether — any of them finished.
                  ├── Yes → [Wait N s] → loop back to the Get
                  └── No  → [update remaining rows → "timeout"] → continue
 ```
+
+Use conditional state transitions and idempotency keys per run/job. A polling timeout does not stop a dispatched job: fence or reconcile late completions before retrying side effects. Verify the full expected job count (including zero-job handling), not merely that all returned rows are terminal.
 
 If a sub-workflow crashes without updating its row, the poll sees `inProgress` past the runtime cap and times it out — so a dead job can't hang the loop forever.
 

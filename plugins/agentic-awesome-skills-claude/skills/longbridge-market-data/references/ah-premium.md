@@ -55,13 +55,13 @@ longbridge ah-premium intraday 939.HK                              --format json
 
 ## Output
 
-Each row carries a timestamp and a premium ratio (typically expressed as `(H_price * fx) / A_price - 1`, in %). Negative = HK trades at a discount to A-share. Surface latest value + recent range.
+Each row carries a timestamp and provider-defined premium ratio. Verify numerator/denominator, FX direction and percent-versus-ratio units from the returned schema before labeling discount/premium; A-over-H and H-over-A conventions have opposite signs. If unavailable, show the field unchanged and state that the convention is unresolved.
 
 ## Error handling
 
 | Situation                             | LLM response                                                                            |
 | ------------------------------------- | --------------------------------------------------------------------------------------- |
 | Shell `command not found: longbridge` | Fall back to MCP if configured; otherwise tell the user to install longbridge-terminal. |
-| Empty array                           | "No A/H premium data — `<SYMBOL>` is likely not dual-listed in A-shares."               |
+| Empty array                           | "No A/H premium data — verify the dual-listing, coverage, date and entitlements before inferring why data is absent."               |
 | stderr `param_error`                  | Verify the symbol is an HK ticker of a dual-listed pair.                                |
 | Other stderr                          | Surface verbatim.                                                                       |

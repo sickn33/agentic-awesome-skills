@@ -33,7 +33,7 @@ Everything else is judgement. These two are not.
 
 ### 1. Search before you build
 
-Before you write logic for a generic problem, check whether a sub-workflow already does it. The community MCP can't filter workflows by tag, so the **name is the discovery surface**:
+Before you write logic for a generic problem, check whether a sub-workflow already does it. The MCP tool names and tag limitations below describe the upstream integration, not a guaranteed installed tool schema; discover capabilities and pagination before use. The described community MCP can't filter workflows by tag, so the **name is the discovery surface**:
 
 ```
 n8n_list_workflows()                          # scan the library
@@ -132,7 +132,7 @@ Each declared input is a typed parameter the caller fills. Pick types deliberate
 }
 ```
 
-Inside the body, read them as `$json.list_of_ids`, or from anywhere downstream as `$('When Executed by Another Workflow').first().json.<field>` (see **n8n-expression-syntax**).
+Inside the body, read them as `$json.list_of_ids`, or, only for an intentionally single-item run, as `$('When Executed by Another Workflow').first().json.<field>` (see **n8n-expression-syntax**).
 
 ### The contract rules
 
@@ -166,9 +166,9 @@ So: when you need per-item iteration, prefer `mode: each` over dropping a Loop O
 
 `waitForSubWorkflow` defaults to `true` — the caller blocks until the sub-workflow returns, then continues with its output. Set `options.waitForSubWorkflow: false` to fire-and-forget: the call dispatches, the caller moves on immediately, the sub-workflow runs in the background, and downstream sees no return data.
 
-### The only true parallelization n8n offers
+### Non-blocking sub-workflow dispatch
 
-`mode: each` + `waitForSubWorkflow: false` is **the only way to get genuinely concurrent sub-workflow execution**: N items dispatch N runs that execute in parallel (still bounded by per-instance concurrency limits). The caller doesn't know when — or whether — any of them finished, so it's only useful with a separate completion-tracking mechanism, typically a Data Table the sub-workflow updates as it progresses. The full stage → dispatch → poll pattern is in **references/SUBWORKFLOW_PATTERNS.md** ("Fire-and-forget parallelization").
+`mode: each` + `waitForSubWorkflow: false` dispatches N independent runs without waiting; actual overlap depends on workers, scheduling and concurrency limits. The caller doesn't know when — or whether — any of them finished, so it's only useful with a separate completion-tracking mechanism, typically a Data Table the sub-workflow updates as it progresses. The full stage → dispatch → poll pattern is in **references/SUBWORKFLOW_PATTERNS.md** ("Fire-and-forget parallelization").
 
 ---
 

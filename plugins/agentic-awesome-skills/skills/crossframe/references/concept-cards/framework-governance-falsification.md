@@ -14,7 +14,7 @@
 
 ## 必须联读内容
 
-`v3-framework-governance-falsification-pack`；必要时联读 `framework-use-discipline-pack`。
+`v5-framework-self-diagnosis-falsification-pack`；必要时联读 `v5-use-boundary-governance-pack`。
 
 ## 证据要求
 

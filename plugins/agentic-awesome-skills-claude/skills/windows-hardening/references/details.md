@@ -25,9 +25,10 @@ Backup-BitLockerKeyProtector -MountPoint "C:" -KeyProtectorId (
 ).KeyProtectorId
 
 # Enable BitLocker on data drives
-Enable-BitLocker -MountPoint "D:" -RecoveryPasswordProtector -EncryptionMethod XtsAes256 -Password (
+Enable-BitLocker -MountPoint "D:" -PasswordProtector -EncryptionMethod XtsAes256 -Password (
     Read-Host -AsSecureString "Enter BitLocker password for D:"
 )
+# Add and securely escrow a separate recovery protector before relying on this drive.
 
 # Check BitLocker status
 Get-BitLockerVolume | Format-Table MountPoint, VolumeStatus, EncryptionMethod, ProtectionStatus
@@ -114,7 +115,7 @@ Start-Service AppIDSvc
 # windows-security-audit.ps1 - Comprehensive security audit
 
 Write-Host "=== Windows Security Audit Report ===" -ForegroundColor Cyan
-Write-Host "Date: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss UTC' -AsUTC)"
+Write-Host "Date: $((Get-Date).ToUniversalTime().ToString('yyyy-MM-dd HH:mm:ss'))"
 Write-Host "Host: $env:COMPUTERNAME"
 Write-Host ""
 
@@ -148,7 +149,7 @@ Get-NetTCPConnection -State Listen | Sort-Object LocalPort |
 
 # Local administrators
 Write-Host "--- Local Administrators ---" -ForegroundColor Yellow
-Get-LocalGroupMember -Group "Administrators" | Format-Table Name, ObjectClass, PrincipalSource
+Get-LocalGroupMember -SID "S-1-5-32-544" | Format-Table Name, ObjectClass, PrincipalSource
 
 # Pending updates
 Write-Host "--- Windows Update ---" -ForegroundColor Yellow
@@ -176,7 +177,7 @@ Write-Host "`n=== Audit Complete ===" -ForegroundColor Cyan
 | SMBv1 removal breaks legacy devices | Old devices require SMBv1 | Isolate legacy devices; plan migration; document risk acceptance |
 | Windows Defender exclusions too broad | Performance tuning added wide paths | Review and narrow exclusions; document business justification |
 | Audit logs filling disk | Too many audit events | Increase log size; configure log forwarding to SIEM; tune audit categories |
-| Firewall rules not persisting | Rules created without -PolicyStore | Use `-PolicyStore PersistentStore`; verify with `Get-NetFirewallRule` |
+| Firewall rules not persisting | GPO precedence, wrong store or management overwrite | Local rules normally persist by default; inspect effective PolicyStore and Group Policy. |
 
 
 ## Best Practices
@@ -202,3 +203,11 @@ Write-Host "`n=== Audit Complete ===" -ForegroundColor Cyan
 - windows-server (`windows-server`) - Server administration
 - linux-hardening (`linux-hardening`) - Linux security hardening
 
+
+### Recovery and audit limits
+
+The AppLocker XML is only assigned to a variable: no policy is applied by the snippet, and starting AppIDSvc does not enforce it. Validate XML and import a reviewed AuditOnly policy with recovery access; Program Files/Windows path rules need user-writable-path exceptions. Do not declare application control effective without logs and allow/deny tests.
+
+The BitLocker fragments can print recovery secrets and may return several recovery protectors. Protect output, choose a specific new protector, escrow it and verify a retrieval drill before enabling encryption/reboot. Do not expose keys in transcripts. Credential Guard hardware/OS support must be checked against the actual edition/build; systeminfo Hyper-V text is not proof. LsaCfgFlags=1 enables a UEFI lock whose rollback needs physical-presence procedures; use approved staged settings instead of blindly applying.
+
+The audit is a limited inventory, not comprehensive assurance. Cmdlet/query failures and unsupported features must be recorded as unknown, not passed; Windows Update queries can contact managed update services. Localized auditpol strings may omit results. Do not store identifying host/port/policy data in public reports.

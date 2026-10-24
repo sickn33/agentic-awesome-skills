@@ -203,7 +203,7 @@ IMAGE SEO SECTION
 Plan SEO for {User Requested Count} images.
 
 For each image, provide:
-- Alt Text (at least one must include the primary keyword)
+- Alt text that describes the actual image; include the keyword only when it naturally describes visible content
 - Title
 - Caption
 - Description
@@ -327,7 +327,7 @@ Use placeholder URLs where actual URLs are unavailable.
 ## Common Pitfalls
 
 **Primary keyword missing from alt text**
-Explicitly include the primary keyword in at least one alt text field in the Image SEO section.
+Describe the actual image. Use empty alt text for purely decorative images; do not force a keyword into unrelated images.
 
 **AI-sounding or repetitive tone**
 Revisit the Writing Rules. Shorten sentences, vary structure, and remove filler phrases.
@@ -339,3 +339,5 @@ Revisit the Writing Rules. Shorten sentences, vary structure, and remove filler 
 - `@seo-plan` — High-level SEO strategy before writing
 - `@seo-content` — Broader SEO content optimization across platforms
 - `@copywriting` — General professional writing and marketing copy
+
+A source quota does not establish accuracy: cite sources supporting each material claim and disclose unresolved conflicts. Placeholder URLs must be replaced before publication. FAQPage markup can describe visible FAQs but Google FAQ rich results are restricted to eligible authoritative government/health sites; schema validity does not promise search display. Content generation does not authorize WordPress publication.

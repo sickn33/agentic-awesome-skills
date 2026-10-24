@@ -35,8 +35,8 @@ date_added: "2026-03-06"
 
 #### HTML格式（新增）
 生成独立的HTML文件，包含：
-- Tailwind CSS样式（通过CDN）
-- Lucide图标（通过CDN）
+- 内嵌静态CSS，无外部CDN请求
+- 内嵌静态图标或纯文字，无外部脚本
 - 响应式设计
 - 打印优化
 - 多种尺寸变体（A4、钱包卡、大字版）
@@ -149,7 +149,7 @@ try {
     });
   }
 } catch (e) {
-  // 文件不存在或读取失败，跳过
+  // 将缺失/读取失败记录为未确认，不解释为无疾病
 }
 
 // 糖尿病
@@ -157,15 +157,15 @@ try {
   const diabetesData = readFile('data/diabetes-tracker.json');
   if (diabetesData.diabetes_management?.diagnosis_date) {
     chronicConditions.push({
-      condition: diabetesData.diabetes_management.type === 'type_1' ? '1型糖尿病' : '2型糖尿病',
+      condition: ({type_1: '1型糖尿病', type_2: '2型糖尿病'})[diabetesData.diabetes_management.type] || '糖尿病类型未确认',
       diagnosis_date: diabetesData.diabetes_management.diagnosis_date,
       duration_years: diabetesData.diabetes_management.duration_years,
       hba1c: diabetesData.diabetes_management.hba1c?.history?.[0]?.value,
-      control_status: diabetesData.diabetes_management.hba1c?.achievement ? '控制良好' : '需改善'
+      control_status: '仅列已记录的临床评估，不由单项布尔值判定控制状态'
     });
   }
 } catch (e) {
-  // 文件不存在或读取失败，跳过
+  // 将缺失/读取失败记录为未确认，不解释为无疾病
 }
 
 // COPD
@@ -181,7 +181,7 @@ try {
     });
   }
 } catch (e) {
-  // 文件不存在或读取失败，跳过
+  // 将缺失/读取失败记录为未确认，不解释为无疾病
 }
 ```
 
@@ -210,7 +210,7 @@ const medicalConditions = dischargeSummaries
   .map(d => ({
     condition: d.condition,
     diagnosis_date: d.date,
-    status: d.status || "随访中"
+    status: d.status || "未知"
   }));
 ```
 
@@ -298,7 +298,7 @@ const emergencyCard = {
 ║ ─────────────────────────────────────────────────────── ║
 ║ • 心脏起搏器（2022-06-10植入）                           ║
 ║   医院：XX医院                                           ║
-║   注意：定期复查，避免MRI检查                            ║
+║   注意：定期复查，携带植入物型号/设备卡；MRI由专业团队核对MR Safe/MR Conditional及条件后决定                            ║
 ╠═══════════════════════════════════════════════════════════╣
 ║ 📞 紧急联系人                                            ║
 ║ ─────────────────────────────────────────────────────── ║
@@ -405,7 +405,7 @@ saveFile('emergency-card-qr.png', emergencyCard.qr_code);
 ### 数据缺失
 - **过敏数据缺失**：输出"未记录过敏史"
 - **用药数据缺失**：输出"未记录当前用药"
-- **植入物数据缺失**：输出"无植入物"
+- **植入物数据缺失**：输出"未记录/未知植入物状态"
 
 ### 文件读取失败
 - **无法读取profile.json**：使用默认值（姓名：未设置）
@@ -436,3 +436,9 @@ Use this skill when tackling tasks related to its primary domain or functionalit
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## 可用性与信息核验
+
+本包没有 generate_emergency_card.py、健康数据库、二维码/PDF生成器或readFile等适配器；示例是伪代码，不可声称自动生成、记录或完成测试。先确定用户授权的数据路径与输出位置，仅读取所需信息。严重程度3/4级是源系统字段，非通用医学分级；未知/既往严重过敏不得因active或缺失评分被静默排除。每条用药保留原始单位、途径、最后核对日期与来源，不猜频率/剂量。显示未知与读取错误并让用户/临床人员核对后打印。样例患者及剂量是虚构，不能移入真实卡片。
+
+卡片是既有信息摘要，不提供急症分诊或治疗；若用户正在经历紧急症状，优先提示联系当地急救服务。血型不得据卡片直接决定输血。仅凭起搏器不能一律禁MRI，参见[FDA植入物MRI说明](https://www.fda.gov/radiation-emitting-products/mri-magnetic-resonance-imaging/benefits-and-risks)。二维码是可被任何扫描者读取的明文，不保证保密；先选择必要字段并检查容量/离线可读性。不要上传到公共二维码/CDN服务；云备份另行授权，不能同时保证所有数据仅本地。真实急救联系人号码需在用户同意的私有版本保留可拨打号码；示例掩码不能用于求助。HTML需转义所有健康文本并禁外部脚本。

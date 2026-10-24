@@ -31,7 +31,7 @@ generator. Counters drive a `most_common` ranking; results are truncated by
 ### Approach
 
 1. Open with `Presentation(path)`; read slide size in inches.
-2. Pull theme tokens (colors/fonts) directly from `ppt/theme/theme1.xml` via `zipfile`.
+2. Resolve theme relationships from the relevant master/presentation, then read those parts via `zipfile`; do not assume `theme1.xml`.
 3. Walk each slide's shapes (recursing into groups), tallying tokens into `Counter`s.
 4. Emit `styles`, `brands`, `template`, and `layout` sections from the top-N tallies.
 

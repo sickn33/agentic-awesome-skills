@@ -1,3 +1,5 @@
+> Historical upstream analysis dated January 2026. Pricing, stars, features, competitor results and superiority claims below are not current verified facts. Benchmark conditions differ; the retry-assisted result is not pass@1, and patch generation is not solved-task accuracy. The bundled harness has not established leaderboard or production certification.
+
 # Loki Mode Competitive Analysis
 
 *Last Updated: 2026-01-05*
@@ -8,7 +10,7 @@ Loki Mode has **unique differentiation** in business operations automation but f
 
 ---
 
-## Factual Comparison Table
+## Archived Comparison (unverified historical claims)
 
 | Feature | Loki Mode | Claude-Flow | MetaGPT | CrewAI | Cursor Agent | Devin |
 |---------|-----------|-------------|---------|--------|--------------|-------|
@@ -160,7 +162,7 @@ Loki Mode has **unique differentiation** in business operations automation but f
 
 | Metric | Value |
 |--------|-------|
-| **Pass@1** | **98.78%** |
+| **Retry-assisted pass fraction** | **98.78%** |
 | Passed | 162/164 problems |
 | Failed | 2 problems (HumanEval/32, HumanEval/50) |
 | RARV Recoveries | 2 (HumanEval/38, HumanEval/132) |
@@ -180,7 +182,7 @@ Loki Mode has **unique differentiation** in business operations automation but f
 
 **Three-Way Comparison:**
 
-| System | HumanEval Pass@1 | Agent Type |
+| System | Reported HumanEval pass fraction | Agent Type |
 |--------|------------------|------------|
 | **Loki Mode (multi-agent)** | **98.78%** | Architect->Engineer->QA->Reviewer |
 | Direct Claude | 98.17% | Single agent |

@@ -50,13 +50,12 @@ PUA-style skills address ONE of these (blind retry / giving up). YES.md addresse
 Every claim needs proof. Every diagnosis needs data. If you haven't verified it, you don't know it.
 
 - ❌ "This is probably a network issue"
-- ✅ `curl -v` → show the actual error → then diagnose
+- ✅ Inspect a redacted HTTP status/error with approved tools; verbose HTTP logs may expose authentication headers, cookies or private data.
 
 - ❌ "The config looks correct"
-- ✅ `cat config.yaml | grep key` → show the actual value → then confirm
+- ✅ Inspect only the relevant non-secret configuration and report presence/validity without exposing keys or tokens.
 
-Banned phrases until you have evidence:
-`probably` | `might be` | `should be` | `I think` | `seems like` | `likely`
+Label hypotheses and uncertainty explicitly; these phrases are appropriate when evidence is partial. Never replace uncertainty with false certainty merely to satisfy a wording rule.
 
 **Rule 2: Investigate Before Asking.**
 
@@ -72,7 +71,7 @@ The only valid questions are those requiring information you genuinely cannot ac
 You changed something? Prove it works. No exceptions.
 
 - API change → `curl` it, show the response
-- Config change → restart the service, check the logs
+- Config change → validate syntax/diff first; restart or reload only when authorized and safe, then inspect redacted logs
 - Code fix → run the test, show it passes
 - Deployment → check container health, verify the endpoint
 
@@ -86,7 +85,7 @@ Before touching anything, run through these gates. Skip one = risk breaking prod
 
 **Trigger:** Modifying any config file, environment file, docker-compose, package.json, or any file that affects system behavior.
 
-**Action:** Copy the file before editing. First line of your response must be: "Backing up first."
+**Action:** Preserve a recoverable original through existing version control or a private scoped backup. Never duplicate environment secrets into tracked or world-readable backup files; choose permissions and location deliberately.
 
 ```bash
 cp file.yaml file.yaml.bak-{description}
@@ -100,7 +99,7 @@ No backup = no edit. Non-negotiable.
 
 **Action:** Before editing, answer these three questions:
 1. **Who uses this?** → `grep` for imports/references
-2. **Is it locked?** → `lsof` to check file locks
+2. **Is it in active use?** → inspect relevant processes and ownership; `lsof` shows open files and is not proof of exclusive lock state
 3. **What depends on it?** → Check downstream services, routes, configs
 
 If you can't answer all three, investigate before changing.
@@ -181,7 +180,7 @@ A bug is not closed until all three steps are done. "It seems to work now" is no
 
 1. **Verify** — Trigger the original failure condition. Confirm it no longer fails. If possible: fix → verify → revert → verify it breaks again → re-apply fix.
 2. **Document** — Record: symptom, root cause, fix applied, time spent.
-3. **Learn** — What went wrong in your approach? What would you do differently? Store the lesson.
+3. **Learn** — What went wrong in your approach? What would you do differently? Store a lesson only when persistent storage is authorized and excludes secrets.
 
 Skipping any step = the bug is not closed.
 

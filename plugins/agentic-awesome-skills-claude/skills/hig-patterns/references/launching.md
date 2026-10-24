@@ -1,8 +1,11 @@
 ---
 title: "Launching | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/launching
+---
 
 # Launching
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 A streamlined launch experience helps people start using your app or game immediately.
 
@@ -79,3 +82,7 @@ Date| Changes
 June 10, 2024| Added guidance on displaying a splash screen.  
 June 21, 2023| Updated to include guidance for visionOS.  
   
+
+## Implementation checks
+
+Restore navigation and unsaved work only after revalidating account and permission state; do not restore sensitive content into an app-switcher snapshot or the wrong account. Launch-screen and splash guidance differ: keep the launch screen static and task-like, with optional nonblocking post-launch onboarding. Measure launch performance; do not promise instant network content.

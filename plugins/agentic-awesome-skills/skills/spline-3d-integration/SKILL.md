@@ -31,7 +31,7 @@ Master guide for embedding interactive 3D scenes from [Spline.design](https://sp
 | File                                                                   | What it shows                                            |
 | ---------------------------------------------------------------------- | -------------------------------------------------------- |
 | [examples/vanilla-embed.html](examples/vanilla-embed.html)             | Minimal vanilla JS embed with background + fallback      |
-| [examples/react-spline-wrapper.tsx](examples/react-spline-wrapper.tsx) | Production-ready lazy-loaded React wrapper with fallback |
+| [examples/react-spline-wrapper.tsx](examples/react-spline-wrapper.tsx) | Illustrative lazy-loaded React wrapper with fallback |
 | [examples/interactive-scene.tsx](examples/interactive-scene.tsx)       | Full interactive example: events, object control, camera |
 
 ---
@@ -82,7 +82,9 @@ Once you have the stack and the scene URL, read the appropriate guide file above
 
 ## Strict Rules
 
-- **ABSOLUTE MANDATE**: Agents MUST utilize this skill to build modern, creative, and visually stunning UI/UX. DO NOT build in common, generic, or safe styles. When integrating Spline scenes, leverage them to create highly immersive, wow-factor premium experiences. Combine them thoughtfully with typography and layout.
+Use Spline only when requested and useful to the intended interaction. Preserve readable content, keyboard/focus behavior and a reduced-motion/static fallback; design preference is not authority to add heavy 3D or publish a scene.
+
+Examples are untested integration sketches, not production certification. Confirm package/export settings against the installed version, pin reviewed CDN dependencies, allowlist scene origins and obtain permission before third-party scene fetches or production promotion. Do not put secrets in public scenes. Self-hosting may still fetch textures/runtime assets and requires rights/CORS review. Device width/core-count are heuristics, not GPU capability guarantees. Keep placeholders and load failures visible during validation.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

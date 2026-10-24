@@ -6,14 +6,12 @@
 - **Problem:** asked all five questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** 165 submissions in one weekend, paid for in two of them.
-  **Solution:** that is a link footprint, not a citation strategy. Refuse the paid and the
-  reciprocal ones, and record all 165 as `Refused` so nobody re-sends the list.
+  **Solution:** that is a link footprint, not a citation strategy. evaluate each listing independently. Reject manipulative link schemes, not every paid membership or legitimate reciprocal reference.
 - **Problem:** a directory demanded a keyword in the business name and it was typed in.
   **Solution:** fix it now, on every platform, and record `Mismatch`. The keyword does not
   go in the name.
 - **Problem:** the address is formatted differently on four directories.
-  **Solution:** paste the canonical block; do not accept a platform's reformatting. In
-  consistency is a defect, and `NAP Match` is how it gets found.
+  **Solution:** verify the same real-world name, address and phone; equivalent postal abbreviations or platform formatting are not automatically inconsistent, and `NAP Match` is how it gets found.
 - **Problem:** every listing points at the homepage.
   **Solution:** point each one at the most relevant page. The link then carries a signal
   and the visitor lands somewhere useful.
@@ -22,8 +20,7 @@
   resource.
 - **Problem:** a listing was approved but the link is JavaScript, so nothing is passed.
   **Solution:** `Link Type` = `JavaScript` and `Link Type` = `No link` are different
-  outcomes. A listing that renders no crawlable link earns nothing, and the tracker should
-  say so.
+  outcomes. Inspect the rendered anchor and destination; JavaScript alone does not prove no crawlable link, and referral/customer value is separate from ranking impact.
 - **Problem:** the business never checks the old listings again.
   **Solution:** `Review Date` is what makes this a tracker. Quarterly, ten listings at a
   time, is an hour.

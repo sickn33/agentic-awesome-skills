@@ -9,7 +9,7 @@
 import { readdirSync, readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 import { basename, dirname, join, relative, resolve } from 'path';
 import { fileURLToPath } from 'url';
-import sanitizeFilename from 'sanitize-filename';
+import { checkedPath, insidePath, publicURL } from './md_utils.mjs';
 import { parseFrontmatter, parseBody, parseSections } from './md_utils.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -18,38 +18,9 @@ const __dirname = dirname(__filename);
 const args = process.argv.slice(2);
 const SAFE_SLUG_RE = /^[A-Za-z0-9][A-Za-z0-9._-]*$/;
 
-function sanitizePathSegments(pathValue) {
-  return String(pathValue ?? '').split(/[\\/]+/).filter(Boolean).map((segment) => {
-    const sanitized = sanitizeFilename(segment);
-    if (sanitized !== segment || !sanitized) {
-      throw new Error(`Unsafe path segment: ${segment}`);
-    }
-    return sanitized;
-  });
-}
+function safeJoin(base, ...parts) { return insidePath(base, ...parts); }
 
-function safeJoin(base, ...parts) {
-  const root = resolve(base);
-  const target = resolve(root, ...parts.flatMap(sanitizePathSegments));
-  const rel = relative(root, target);
-  if (rel.startsWith('..') || rel.startsWith('/')) {
-    throw new Error(`Path escapes research directory: ${parts.join('/')}`);
-  }
-  return target;
-}
-
-function safeResearchDir(rawDir) {
-  if (typeof rawDir !== 'string' || !rawDir.trim() || rawDir.includes('\0')) {
-    throw new Error('Research directory is required');
-  }
-  const root = resolve(process.cwd());
-  const target = safeJoin(root, rawDir);
-  const rel = relative(root, target);
-  if ((rel.startsWith('..') || rel.startsWith('/')) && process.env.COMPETITOR_ANALYSIS_ALLOW_EXTERNAL_DIR !== '1') {
-    throw new Error('Research directory must stay under the current working directory');
-  }
-  return target;
-}
+function safeResearchDir(rawDir) { return checkedPath(rawDir); }
 
 function safeTemplatePath(researchDir, rawPath) {
   if (typeof rawPath !== 'string' || !rawPath.trim() || rawPath.includes('\0')) {
@@ -70,7 +41,7 @@ function safeSlug(slug) {
 }
 
 function selfTest() {
-  const root = resolve('/tmp/research');
+  const root = resolve(process.cwd(), 'research-self-test');
   if (safeJoin(root, 'competitors', 'acme.html') !== resolve(root, 'competitors', 'acme.html')) {
     throw new Error('safeJoin failed valid path');
   }
@@ -151,7 +122,7 @@ if (files.length === 0) {
 // guarantee styled rendering (catch-all). Also handles free-text leaking into the bracket
 // slot (e.g. "Browsaur Blog — ..." — sourceType becomes "Blog" if we can find that token).
 function normalizeSourceType(raw) {
-  if (!raw) return 'Blog';
+  if (!raw) return 'Unknown';
   const t = raw.trim();
   const canonical = new Set([
     'Benchmark','Comparison','News','Reddit','HN','LinkedIn','YouTube',
@@ -173,7 +144,7 @@ function normalizeSourceType(raw) {
   for (const c of canonical) {
     if (new RegExp(`\\b${c}\\b`, 'i').test(t)) return c;
   }
-  return 'Blog'; // catch-all for fully unknown types (styled via .src-Blog)
+  return 'Unknown'; // Preserve missing provenance as unknown.
 }
 
 // Parse Mentions section into structured entries.
@@ -318,6 +289,8 @@ for (const file of files) {
   const content = readFileSync(safeJoin(dir, file), 'utf-8');
   const fields = parseFrontmatter(content);
   if (!fields) continue;
+  if (!fields.competitor_name || !fields.website) throw new Error(`Missing competitor identity: ${file}`);
+  publicURL(fields.website);
   const body = parseBody(content);
   const sections = parseSections(body);
   const mentions = parseMentions(sections['Mentions']);
@@ -333,7 +306,8 @@ for (const file of files) {
 const seen = new Map();
 for (const c of competitors) {
   const name = (c.competitor_name || '').toLowerCase().replace(/\s*\b(inc|llc|ltd|corp|co)\b\s*\.?$/i, '').trim();
-  if (!seen.has(name)) seen.set(name, c);
+  const key = name + '|' + new URL(c.website).hostname;
+  if (!seen.has(key)) seen.set(key, c);
 }
 const deduped = [...seen.values()].sort((a, b) => (a.competitor_name || '').localeCompare(b.competitor_name || ''));
 
@@ -448,16 +422,19 @@ function buildStrategicSummary() {
     const losses = [];
     for (const entry of axis) {
       const label = entry.name;
-      const userHas = !!userFlags[label];
+      const userHas = userFlags[label];
+      let knownCount = 0;
       const whoElseHas = [];
       for (const c of competitorRows) {
         const compEntry = compMap[c.slug];
-        if (compEntry && compEntry[kind] && compEntry[kind][label]) whoElseHas.push(c.competitor_name);
+        const flag = compEntry?.[kind]?.[label];
+        if (typeof flag === 'boolean') knownCount++;
+        if (flag === true) whoElseHas.push(c.competitor_name);
       }
       const competitorCount = whoElseHas.length;
-      if (userHas && competitorCount <= 1) {
+      if (userHas === true && knownCount === competitorRows.length && knownCount > 0 && competitorCount <= 1) {
         wins.push({ label, whoElseHas });
-      } else if (!userHas && competitorCount >= 3) {
+      } else if (userHas === false && competitorCount >= 3) {
         losses.push({ label, whoElseHas });
       }
     }
@@ -671,7 +648,7 @@ for (const c of competitorRows) {
   ${c.benchmarks.length ? `<div class="research"><h2>Benchmarks</h2>${benchmarksHtml}</div>` : ''}
   ${findingsHtml ? `<div class="research">${findingsHtml}</div>` : ''}
 </div>
-<footer>Generated by <a href="https://github.com/anthropics/skills">competitor-analysis</a> · Powered by <a href="https://browserbase.com">Browserbase</a></footer>
+<footer>Generated by <a href="https://github.com/browserbase/skills">competitor-analysis</a> · Powered by <a href="https://browserbase.com">Browserbase</a></footer>
 </body>
 </html>`;
 
@@ -691,7 +668,7 @@ function buildMatrixAxisFromCurated(kind) {
     let count = 0;
     for (const c of competitorRows) {
       const compKey = compMap[c.slug];
-      if (compKey && compKey[kind] && compKey[kind][label]) count += 1;
+      if (compKey && compKey[kind] && compKey[kind][label] === true) count += 1;
     }
     return { label, count, description: entry.description || '' };
   });
@@ -721,11 +698,12 @@ function competitorHas(c, field, label) {
   if (curatedMatrix) {
     const compMap = curatedMatrix.competitors || {};
     const compEntry = compMap[c.slug];
-    return !!(compEntry && compEntry[field] && compEntry[field][label]);
+    const flag = compEntry?.[field]?.[label];
+    return typeof flag === 'boolean' ? flag : null;
   }
   // Fallback: raw pipe-split match.
   const rawField = field === 'features' ? 'key_features' : field;
-  return splitPipes(c[rawField]).some(x => x.toLowerCase() === label.toLowerCase());
+  return splitPipes(c[rawField]).some(x => x.toLowerCase() === label.toLowerCase()) ? true : null;
 }
 
 function matrixSection(heading, axis, field) {
@@ -737,7 +715,7 @@ function matrixSection(heading, axis, field) {
     ${competitorRows.map(c => `<th class="mx-comp-h"><a href="competitors/${escapeHtml(c.slug)}.html">${escapeHtml(c.competitor_name)}</a></th>`).join('')}
   </tr>`;
   const rows = axis.map(a => {
-    const cells = competitorRows.map(c => competitorHas(c, field, a.label)
+    const cells = competitorRows.map(c => competitorHas(c, field, a.label) === null ? '<td class="mx-cell" title="Not verified">?</td>' : competitorHas(c, field, a.label) === true
       ? `<td class="mx-cell mx-yes" title="${escapeHtml(c.competitor_name)} has ${escapeHtml(a.label)}">●</td>`
       : `<td class="mx-cell mx-no">·</td>`).join('');
     return `<tr>
@@ -824,7 +802,7 @@ const matrixHtml = `<!DOCTYPE html>
   ${matrixSection('Features', featureAxis, 'features')}
   ${matrixSection('Integrations', integrationAxis, 'integrations')}
 </div>
-<footer>Generated by <a href="https://github.com/anthropics/skills">competitor-analysis</a> · Powered by <a href="https://browserbase.com">Browserbase</a></footer>
+<footer>Generated by <a href="https://github.com/browserbase/skills">competitor-analysis</a> · Powered by <a href="https://browserbase.com">Browserbase</a></footer>
 </body>
 </html>`;
 
@@ -941,7 +919,7 @@ const mentionsHtml = `<!DOCTYPE html>
     ${mentionItems || '<div class="empty">No mentions collected — try running in deep or deeper mode.</div>'}
   </div>
 </div>
-<footer>Generated by <a href="https://github.com/anthropics/skills">competitor-analysis</a> · Powered by <a href="https://browserbase.com">Browserbase</a></footer>
+<footer>Generated by <a href="https://github.com/browserbase/skills">competitor-analysis</a> · Powered by <a href="https://browserbase.com">Browserbase</a></footer>
 <script>
   (function () {
     const buttons = document.querySelectorAll('.filter-btn');
@@ -982,7 +960,8 @@ const allCols = [...new Set(flatRows.flatMap(r => Object.keys(r)))];
 const cols = [...priority.filter(c => allCols.includes(c)), ...allCols.filter(c => !priority.includes(c)).sort()];
 
 function csvEscape(v) {
-  v = String(v || '');
+  v = String(v ?? '');
+  if (/^[\s]*[=+@-]|^[\t\r\n]/.test(v)) v = "'" + v;
   if (v.includes(',') || v.includes('"') || v.includes('\n')) return '"' + v.replace(/"/g, '""') + '"';
   return v;
 }

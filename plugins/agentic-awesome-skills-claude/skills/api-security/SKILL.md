@@ -192,7 +192,7 @@ GET 突变 → CSRF 风险
 
 ## 任务完成自检（声称完成前 MUST 通过）
 
-- [ ] 我是否执行了工作流中的每一步（而不是只阅读）？
+- [ ] 我是否只执行了获准且相关的测试，并明确标记未执行项？
 - [ ] 我是否基于 `tool-index` 使用了真实工具路径？
 - [ ] 我是否产出了可复现证据（命令/脚本/截图/报告）？
 - [ ] 我是否完成并回写了 RULES 要求的 Checklist 项？
@@ -203,3 +203,5 @@ GET 突变 → CSRF 风险
 - Some checks are intrusive; prefer non-production mirrors when available.
 
 > Adapted from [zhaoxuya520/reverse-skill](https://github.com/zhaoxuya520/reverse-skill) (MIT).
+
+Do not expand this checklist into every attack automatically. Agree request-rate/concurrency budgets and stop conditions; load/DoS, metadata access, credential cracking and persistent CI scanning require specific scope. Use controlled canary objects rather than deleting real users. Introspection or an exposed IDE alone is not proof of a vulnerability. Named tool capabilities and command flags are historical references, not verified installations; `tool-index` and `RULES` are not bundled. UUIDs are not feasibly brute-force enumerable; use known authorized object IDs.

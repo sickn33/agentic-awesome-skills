@@ -48,12 +48,12 @@ Keep a top-level index so engineers can find the right runbook quickly.
 
 | Service | Runbook | Severity | Owner | Last Tested |
 |---------|---------|----------|-------|-------------|
-| API Server | [Deploy] (api-server/deploy.md) | — | @platform | 2025-05-01 |
-| API Server | [Rollback] (api-server/rollback.md) | SEV1 | @platform | 2025-05-01 |
-| Database | [Failover] (database/failover.md) | SEV1 | @dba | 2025-04-15 |
-| Database | [Backup Restore] (database/backup-restore.md) | SEV2 | @dba | 2025-04-15 |
-| Infra | [DNS Update] (infrastructure/dns-update.md) | SEV2 | @sre | 2025-06-01 |
-| Infra | [Cert Renewal] (infrastructure/certificate-renewal.md) | SEV3 | @sre | 2025-06-01 |
+| API Server | [Deploy](api-server/deploy.md) | — | @platform | 2025-05-01 |
+| API Server | [Rollback](api-server/rollback.md) | SEV1 | @platform | 2025-05-01 |
+| Database | [Failover](database/failover.md) | SEV1 | @dba | 2025-04-15 |
+| Database | [Backup Restore](database/backup-restore.md) | SEV2 | @dba | 2025-04-15 |
+| Infra | [DNS Update](infrastructure/dns-update.md) | SEV2 | @sre | 2025-06-01 |
+| Infra | [Cert Renewal](infrastructure/certificate-renewal.md) | SEV3 | @sre | 2025-06-01 |
 ```
 
 
@@ -61,7 +61,7 @@ Keep a top-level index so engineers can find the right runbook quickly.
 
 - Write runbooks for the engineer at 3 AM — clear, sequential, copy-pasteable
 - Include expected output so the operator knows if a step succeeded
-- Always provide a rollback path; every action should be reversible
+- Document rollback where possible and explicit recovery/escalation for irreversible actions; never promise every action is reversible
 - Test runbooks in staging before they are needed in production
 - Keep runbooks in version control alongside the code they support
 - Assign an owner to every runbook; ownerless runbooks rot fast

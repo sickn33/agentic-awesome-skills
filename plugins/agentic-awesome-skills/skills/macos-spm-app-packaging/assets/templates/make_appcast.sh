@@ -64,7 +64,9 @@ fi
 
 WORK_DIR=$(mktemp -d /tmp/appcast.XXXXXX)
 
-cp "$ROOT/appcast.xml" "$WORK_DIR/appcast.xml"
+if [[ -f "$ROOT/appcast.xml" ]]; then
+  cp "$ROOT/appcast.xml" "$WORK_DIR/appcast.xml"
+fi
 cp "$ZIP" "$WORK_DIR/$ZIP_NAME"
 cp "$NOTES_HTML" "$WORK_DIR/$ZIP_BASE.html"
 

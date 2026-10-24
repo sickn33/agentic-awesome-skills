@@ -1,8 +1,14 @@
 ---
 title: "iCloud | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/icloud
+---
 
 # iCloud
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
+**Implementation boundary.** Automatic synchronization is not instantaneous or guaranteed. Preserve local edits, handle offline operation, quota and authentication errors, account changes, and conflicts; communicate pending or failed sync when it affects the task.
+
 
 iCloud is a service that lets people seamlessly access the content they care about — photos, videos, documents, and more — from any device, without performing explicit synchronization.
 

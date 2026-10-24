@@ -20,7 +20,7 @@ create table events (
 
 -- 500M rows, queries scan everything
 select * from events where created_at > '2024-01-01';  -- Slow
-vacuum events;  -- Takes hours, locks table
+vacuum events;  -- Ordinary VACUUM normally permits concurrent reads and writes.
 ```
 
 **Correct (partitioned by time range):**

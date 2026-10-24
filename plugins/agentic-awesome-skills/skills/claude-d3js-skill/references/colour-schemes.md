@@ -14,7 +14,7 @@ d3.schemeCategory10
 
 **Characteristics:**
 - 10 distinct colours
-- Good colour-blind accessibility
+- Accessibility varies by pair/background; test and add redundant labels
 - Default choice for most categorical data
 - Balanced saturation and brightness
 
@@ -57,7 +57,7 @@ d3.schemeDark2
 **Characteristics:**
 - Subdued palette
 - Professional appearance
-- Good for dark backgrounds
+- Dark colors may have poor contrast on dark backgrounds; test actual pairs
 
 **Use cases:** Dark mode visualisations, professional contexts
 
@@ -149,9 +149,9 @@ d3.interpolateViridis
 - `d3.interpolateMagma` - Black to white through purple
 - `d3.interpolateCividis` - Colour-blind optimised
 
-**Colour-blind accessible:**
+**Other interpolators (not accessibility guarantees):**
 ```javascript
-d3.interpolateTurbo // Rainbow-like but perceptually uniform
+d3.interpolateTurbo // Rainbow-like; not perceptually uniform or a universal accessible choice
 d3.interpolateCool  // Cyan to magenta
 d3.interpolateWarm  // Orange to yellow
 ```
@@ -327,7 +327,7 @@ const colourScale = d3.scaleOrdinal()
 
 ## Semantic colour associations
 
-### Universal colour meanings
+### Common associations (culture and context vary)
 
 **Red:**
 - Danger, error, negative
@@ -486,7 +486,7 @@ function selectColourScheme(data) {
   
   if (hasNegative && hasPositive) {
     // Diverging: data crosses zero
-    return d3.scaleSequentialSymlog(d3.interpolateRdBu)
+    return d3.scaleDivergingSymlog(d3.interpolateRdBu)
       .domain([extent[0], 0, extent[1]]);
   } else {
     // Sequential: all positive or all negative

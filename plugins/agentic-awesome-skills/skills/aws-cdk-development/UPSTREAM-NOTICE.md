@@ -12,3 +12,5 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `scripts/validate-stack.sh` | `plugins/aws-iac/skills/aws-cdk-development/scripts/validate-stack.sh` | `54f9e0512b1b8a3e5aa54b3dd76e3bc56f0814c1` | stored without executable bit; invoke via its interpreter; AAS correctness and scope adaptation: resolves and synthesizes only the caller-selected CDK project root instead of the installed skill catalog |
 
 `scripts/validate-stack.sh` runs the project's `cdk synth` and executes CDK application code; synthesis can write `cdk.out`, execute project dependencies, and contact AWS context providers if the project requires lookups. It now uses the caller's current directory or `CDK_PROJECT_ROOT` as the project root. Review the project and AWS context first. It does not deploy; deployment requires separate user authorization.
+
+Local review changes (2026-10-23): corrected construct/autoscaling examples; helper requires jq and a CDK project, checks isolated current synthesis output, propagates JSON errors and avoids a deployment-readiness certification. Original source/blob identifiers above remain provenance for imported bytes.

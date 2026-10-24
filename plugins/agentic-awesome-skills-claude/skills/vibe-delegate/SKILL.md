@@ -104,6 +104,10 @@ The implementer edits the working tree; **the orchestrator commits.** Commit onl
 and the diff holds. If rework is needed, send a delta brief with `--resume-last` or `--session <id>`,
 then review again.
 
+## Run boundaries
+
+Use an isolated task worktree and authorized provider/model/data scope. Cwd and prompt constraints are not filesystem confinement. Profiles, resumed sessions and fleet settings must be inspected; resume-last can select the wrong session, so verify identity before continuation. Run artifacts contain private briefs/output; use fresh private paths and redact before sharing. Completion status certifies child exit only, never task correctness. Commit/push/merge stay within the actual user and repository authorization.
+
 ## Autonomy and permissions
 
 In `--prompt` mode the relay always sets the agent profile explicitly:
@@ -148,4 +152,4 @@ mandate). See [references/review-and-land.md](references/review-and-land.md).
 - Runtime helper `scripts/relay.mjs` is bundled from the revision recorded in `UPSTREAM-NOTICE.md`. Requires the corresponding installed and authenticated CLI, Node 18+, and git.
 - Relay never commits — it only returns structured result JSON; you review and land the commit.
 
-> Adapted from [amElnagdy/delegate-skills](https://github.com/amElnagdy/delegate-skills) (MIT) — docs-only, runtime not bundled.
+> Adapted from [amElnagdy/delegate-skills](https://github.com/amElnagdy/delegate-skills) (MIT) — runtime and references pinned in UPSTREAM-NOTICE.md.

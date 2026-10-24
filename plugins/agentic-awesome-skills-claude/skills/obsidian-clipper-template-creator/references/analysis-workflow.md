@@ -33,9 +33,9 @@ Look for `<script type="application/ld+json">`. This contains structured data wh
 
 **Conclusion:**
 
-- `{{schema:Recipe:name}}` is valid.
-- `{{schema:Recipe:author.name}}` is valid.
-- **Tip:** You can use `schema:Recipe` in the `triggers` array to automatically select this template for any page with this schema.
+- `{{schema:@Recipe:name}}` is valid.
+- `{{schema:@Recipe:author.name}}` is valid.
+- **Tip:** You can use `schema:@Recipe` in the `triggers` array to automatically select this template for any page with this schema.
 
 ### Check for Meta Tags
 
@@ -50,8 +50,8 @@ Look for `<meta>` tags in the `<head>` section.
 
 **Conclusion:**
 
-- `{{meta:og:title}}` is valid.
-- `{{meta:description}}` is valid.
+- `{{meta:property:og:title}}` is valid.
+- `{{meta:name:description}}` is valid.
 
 ### Check for CSS Selectors (Verified)
 

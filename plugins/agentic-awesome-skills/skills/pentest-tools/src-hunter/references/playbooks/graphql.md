@@ -5,7 +5,7 @@
 ## 1. 一句话说清
 
 GraphQL = 一个端点（通常 `/graphql`），所有 query / mutation 走它。
-特有风险：Introspection 暴露 schema、字段级授权缺失、嵌套查询绕过权限、深度递归 DoS。
+Introspection 是标准发现能力，本身不等于漏洞；风险取决于敏感信息和项目策略。其他风险包括字段级授权缺失、嵌套查询绕过权限、深度递归 DoS。
 SRC 价值：嵌套 IDOR + 字段越权 = P1。
 
 ---
@@ -154,7 +154,7 @@ mutation {
 ```
 1. GraphQL 多数支持 GET（query 在 query string）
 2. 查 Content-Type: application/x-www-form-urlencoded 是否被接受
-3. 接受 → CSRF 可行（普通 form 即可触发）
+3. 接受仅表示候选；在真实浏览器中验证跨站可触发有影响的状态变更、凭据实际携带且没有有效 CSRF 防护后才确认。
 ```
 
 ---
@@ -229,7 +229,7 @@ grep -A 5 -E "(password|ssn|credit|secret|key|token)" schema.json
 ### 7.3 CVSS
 
 ```
-Introspection 暴露                 = 5.3 Medium
+Introspection 可用                = 需按实际敏感披露与项目策略判断，不能固定评分
 嵌套 IDOR PII                      = 6.5–8.1
 别名爆破                           = 7.5
 mutation Mass Assignment → admin   = 8.8–9.8
@@ -241,7 +241,7 @@ mutation Mass Assignment → admin   = 8.8–9.8
 ## 8. 不要做的事
 
 - **禁**：用别名爆破真实账号密码。在自己测试账号上演示。
-- **禁**：用深度递归 DoS 实际打瘫服务。10 层、几次请求即可证明。
+- **禁**：用深度递归 DoS 实际打瘫服务。深度和请求次数均须由隔离实验室与明确预算约束；任何固定层数都不能保证生产安全。
 - **禁**：嵌套 IDOR 拖出大量数据。3 个不同 ID 的样本足够。
 
 ## H1 真实案例

@@ -37,8 +37,8 @@ SCOPES=read_products,write_products
 
         result = EnvLoader.load_env_file(env_file)
 
-        assert result['SHOPIFY_API_KEY'] == 'test_key'
-        assert result['SHOPIFY_API_SECRET'] == 'test_secret'
+        assert result['SHOPIFY_API_KEY'] == DUMMY_API_KEY
+        assert result['SHOPIFY_API_SECRET'] == DUMMY_API_SECRET
         assert result['SHOP_DOMAIN'] == 'test.myshopify.com'
         assert result['SCOPES'] == 'read_products,write_products'
 
@@ -108,6 +108,7 @@ ANOTHER_VALID=test
         (skills_dir / ".env").write_text("SHOPIFY_API_KEY=skills_key\nSHOP_DOMAIN=skills.myshopify.com")
 
         monkeypatch.setenv("SHOPIFY_API_KEY", "process_key")
+        monkeypatch.setenv("SHOPIFY_LOAD_ENV_FILES", "1")
 
         config = EnvLoader.load_config(skill_dir)
 
@@ -192,7 +193,7 @@ class TestShopifyInitializer:
         content = config_file.read_text()
         assert 'name = "test-app"' in content
         assert 'scopes = "read_products"' in content
-        assert 'client_id = "test_key"' in content
+        assert f'client_id = "{DUMMY_API_KEY}"' in content
 
     def test_create_extension_config(self, initializer, tmp_path):
         """Test creating extension configuration file."""

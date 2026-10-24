@@ -195,7 +195,7 @@ table = ds.get_markers(marker=parent_markers, min_score=-1, min_frac_exp=-1)
 cd3e = table[table["feature_name"] == "CD3E"].set_index("group_id")["frac_exp"]
 lineage_ids = sorted(int(g) for g in cd3e.index[cd3e > 0.5])  # a T gate; confirm with markers
 sub_cells = ds.select_cells(parent, include=lineage_ids)  # frozen, over every store cell
-ds.cells.insert("t_lineage_v1", np.isin(on_cell_axis(parent), lineage_ids), overwrite=True)
+ds.cells.insert("t_lineage_v1", np.isin(on_cell_axis(parent), lineage_ids), overwrite=False)
 alt_cells = ds.snapshot_cell_selection("t_lineage_v1")  # same cells from any boolean column
 assert np.array_equal(*(ds.load_artifact(r)["values"][:] for r in (sub_cells, alt_cells)))
 
@@ -225,7 +225,7 @@ print("ARI vs 2000 HVGs", round(ds.metric_label_concordance(sub, sub_2k), 3))
 
 combined = np.where(in_sub, np.char.add("T.", sub_full.astype(str)), parent_full.astype(str))
 combined = np.where(parent_full < 0, "not analyzed", combined).astype(object)
-ds.cells.insert("clusters_tsub_v1", combined, overwrite=True)  # new suffix for each new version
+ds.cells.insert("clusters_tsub_v1", combined, overwrite=False)  # new suffix for each new version
 ```
 
 (10x 5K PBMC docs dataset) The T subgraph at 0.3 split naive and memory CD4, naive CD8,

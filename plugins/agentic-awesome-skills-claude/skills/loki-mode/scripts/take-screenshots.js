@@ -14,10 +14,10 @@ async function takeScreenshots() {
 
     console.log('Launching browser...');
     const browser = await puppeteer.launch({
-        headless: 'new',
-        args: ['--no-sandbox', '--disable-setuid-sandbox']
+        headless: 'new'
     });
 
+    try {
     const page = await browser.newPage();
 
     // Set viewport for consistent screenshots
@@ -48,8 +48,10 @@ async function takeScreenshots() {
     });
     console.log('Saved: dashboard-tasks.png');
 
-    await browser.close();
+    } finally {
+        await browser.close();
+    }
     console.log('Done! Screenshots saved to docs/screenshots/');
 }
 
-takeScreenshots().catch(console.error);
+takeScreenshots().catch(error => { console.error(error); process.exitCode = 1; });

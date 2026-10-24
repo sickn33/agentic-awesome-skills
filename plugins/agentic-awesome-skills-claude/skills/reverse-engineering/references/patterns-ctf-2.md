@@ -53,12 +53,12 @@ for (int candidate = 0; candidate < 65536; candidate++) {
 
 **Shared BSS optimization:** BSS (16MB+) stored in `/dev/shm` as `MAP_SHARED` in parent. Children remap as `MAP_PRIVATE` for COW. Reduces fork overhead from 16MB page-table setup to ~4KB.
 
-**Key insight:** Multi-layer decryption challenges are fundamentally about building fast brute-force engines. JIT execution (mapping binary memory into solver, running code directly as function calls) is orders of magnitude faster than ptrace. Fork-based COW provides free memory isolation per candidate.
+**Key insight:** Multi-layer decryption challenges are fundamentally about building fast brute-force engines. JIT execution (mapping binary memory into solver, running code directly as function calls) is orders of magnitude faster than ptrace. Fork-based COW only separates process memory; it is not isolation from host files, devices, credentials or networking.
 
 **Gotchas:**
 - Real binary may use `call` (0xe8) instead of `jmp` (0xe9) for layer transitions — adjust tail patching
 - BSS may extend beyond ELF MemSiz via kernel brk mapping — map extra space
-- SHA-NI instructions work even when not advertised in `/proc/cpuinfo`
+- Check actual CPU instruction support; unsupported SHA-NI can fault; do not assume hidden support
 
 ---
 
@@ -86,6 +86,8 @@ with open('binary', 'rb') as f:
     data = f.read()
 # Find PK\x03\x04 magic in .rodata
 zip_start = data.find(b'PK\x03\x04')
+if zip_start < 0 or zip_start + 384 > len(data):
+    raise ValueError("Embedded archive not found or truncated")
 # Extract ZIP (size from symbol table or until next symbol)
 open('embedded.zip', 'wb').write(data[zip_start:zip_start+384])
 ```
@@ -183,42 +185,9 @@ for pos in range(1, len(target_hashes)):
 3. Results compared against hardcoded 64-bit values
 4. Need integer solutions in a constrained range (printable ASCII)
 
-**SageMath CVP solver:**
-```python
-from sage.all import *
+**Constrained solver model:**
 
-def solve_constrained_matrix(coefficients, targets, char_range=(32, 126)):
-    """
-    coefficients: list of coefficient rows (e.g., 4 values per group)
-    targets: expected output values
-    char_range: valid character range (printable ASCII)
-    """
-    n = len(coefficients[0])  # characters per group
-    mid = (char_range[0] + char_range[1]) // 2
-
-    # Build lattice: [coeff_matrix | I*scale]
-    # The target vector includes adjusted targets
-    M = matrix(ZZ, n + len(targets), n + len(targets))
-    scale = 1000  # Weight to constrain character range
-
-    for i, row in enumerate(coefficients):
-        for j, c in enumerate(row):
-            M[j, i] = c
-        M[n + i, i] = 1  # padding
-
-    for j in range(n):
-        M[j, len(targets) + j] = scale
-
-    target_vec = vector(ZZ, [t - sum(c * mid for c in row)
-                              for row, t in zip(coefficients, targets)]
-                        + [0] * n)
-
-    # LLL + CVP
-    L = M.LLL()
-    closest = L * L.solve_left(target_vec)  # or use Babai
-    solution = [closest[len(targets) + j] // scale + mid for j in range(n)]
-    return bytes(solution)
-```
+LLL alone does not solve closest-vector search. The previous `L * L.solve_left(target)` computed a rational linear solution, not a nearest lattice point or bounded integer solution. For a small bounded fixture, model each input as an integer in the declared character interval and impose every matrix equation. For machine wrapping, use bit vectors of the exact width. Require `sat`, validate all recovered bytes against the original equations, and check uniqueness before calling a candidate recovered. A larger lattice method needs an explicit embedding, nearest-plane/CVP algorithm, residual checks and a stated search bound.
 
 **Two-phase validation pattern:**
 1. **Phase 1 (matrix math):** Solve via CVP/LLL → recovers first N characters
@@ -227,14 +196,19 @@ def solve_constrained_matrix(coefficients, targets, char_range=(32, 126)):
 
 **Modular linear system solving (Phase 2 — VM validation):**
 ```python
-import numpy as np
-from sympy import Matrix
-
-# M * x = v (mod 2^32)
-M_mod = Matrix(coefficients) % (2**32)
-v_mod = Matrix(targets) % (2**32)
-# Gaussian elimination in Z/(2^32)
-solution = M_mod.solve(v_mod)  # Returns flag characters
+from z3 import BitVec, Solver, sat
+width = 32
+xs = [BitVec(f'x{i}', width) for i in range(len(coefficients[0]))]
+solver = Solver()
+for x in xs:
+    solver.add(x >= 32, x <= 126)
+for row, target in zip(coefficients, targets):
+    solver.add(sum(c * x for c, x in zip(row, xs)) == target)  # wraps modulo 2**32
+if solver.check() != sat:
+    raise RuntimeError('No bounded modular solution')
+candidate = bytes(solver.model().eval(x, model_completion=True).as_long() for x in xs)
+assert all(sum(c * x for c, x in zip(row, candidate)) % (2**32) == target % (2**32)
+           for row, target in zip(coefficients, targets))
 ```
 
 **Key insight:** When a binary validates input through linear combinations with large coefficients and the solution must be in a small range (printable ASCII), this is a lattice problem in disguise. LLL reduction + CVP finds the nearest lattice point, recovering the constrained solution. Cross-reference: invoke `/ctf-crypto` for LLL/CVP fundamentals (advanced-math.md in ctf-crypto).
@@ -307,7 +281,7 @@ def gf_mul(a, b):
 
 def gf_inv(a):
     """Brute-force multiplicative inverse (fine for 256 elements)."""
-    if a == 0: return 0
+    if a == 0: raise ZeroDivisionError("Zero has no field inverse")
     for x in range(1, 256):
         if gf_mul(a, x) == 1:
             return x
@@ -323,6 +297,8 @@ N = 56  # Flag length
 for col in range(N):
     # Find non-zero pivot
     pivot = next((r for r in range(col, N) if aug[r][col] != 0), -1)
+    if pivot < 0:
+        raise ValueError("Singular system: no unique full-rank solution")
     if pivot != col:
         aug[col], aug[pivot] = aug[pivot], aug[col]
     # Scale pivot row by inverse
@@ -395,3 +371,7 @@ flag = bytes(v ^ md5_key[i % 16] for i, v in enumerate(embedded_values))
 **Key insight:** ROP chain obfuscation ("ROPfuscation") hides algorithms in chains of return-oriented gadgets. The chain looks incomprehensible as raw addresses but becomes analyzable when you: (a) dump each gadget's disassembly, (b) filter repetitions and skip regions, (c) annotate register effects. The chain is functionally equivalent to normal code — it just uses `ret` instead of sequential execution. Large chains (100K+ gadgets) often contain unrolled loops that compress to ~1000 lines of pseudocode.
 
 See also: [patterns-ctf.md](patterns-ctf.md) for Part 1 (hidden emulator opcodes, SPN static extraction, image XOR smoothness, byte-at-a-time cipher, mathematical convergence bitmap, Windows PE XOR bitmap OCR, two-stage RC4+VM loaders, kernel module maze solving, multi-threaded VM channels). [patterns-ctf-3.md](patterns-ctf-3.md) for Part 3 (Z3 single-line Python circuit, sliding window popcount, keyboard LED Morse code, C++ destructor-hidden validation, syscall side-effect memory corruption, MFC dialog event handlers, VM sequential key-chain brute-force, Burrows-Wheeler transform inversion, OpenType font ligature exploitation, GLSL shader VM with self-modifying code, instruction counter as cryptographic state).
+
+## Case and execution limits
+
+These named contests and timings are inherited case notes, not independently reproduced benchmarks. Prefix hash, valid-code and instruction-count signals may have multiple matches; retain alternatives and validate the final candidate. JIT/MAP_FIXED/fork examples execute unknown code and can overwrite mappings: they are incomplete historical sketches, not host-safe solvers. Use static extraction first and only a dedicated offline disposable VM for authorized dynamic analysis, with process/time/output budgets. The performance table lacks fixed hardware and search assumptions and must not be used as an execution estimate.

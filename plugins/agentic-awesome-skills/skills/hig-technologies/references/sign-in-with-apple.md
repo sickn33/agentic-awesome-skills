@@ -1,8 +1,12 @@
 ---
 title: "Sign in with Apple | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/sign-in-with-apple
+---
 
 # Sign in with Apple
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
 
 Sign in with Apple provides a fast, private way to sign into apps and websites, giving people a consistent experience they can trust and the convenience of not having to remember multiple accounts and passwords.
 
@@ -26,7 +30,7 @@ Follow these guidelines to offer Sign in with Apple when it’s most convenient 
 
 **Consider letting people link an existing account to Sign in with Apple.** When you support this type of linking, people can get the convenience of using Sign in with Apple while maintaining access to the information in an account they’ve already set up. You can offer account linking before or after people sign in to their existing account. For example:
 
-  * If people share an email address through Sign in with Apple and it matches the address in an existing account, you can suggest that they link Sign in with Apple to that account.
+  * If a shared email matches an existing account, you may suggest linking, but require proof of control of the existing account. Never automatically link accounts based on an email match alone; validate identity tokens and use the provider subject as the stable identifier.
 
   * If people used an existing user name and password to sign in, you can display an account-linking suggestion in their account’s settings view or another logical place.
 

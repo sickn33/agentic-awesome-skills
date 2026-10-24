@@ -127,7 +127,7 @@ We'll know this is true when [metrics].
 | Control | X% | [X%, Y%] | — |
 | Variant | X% | [X%, Y%] | +X% |
 
-**Statistical significance**: p = X.XX (95% = sig / not sig)
+**Inference**: [method, sidedness, alpha, multiplicity/stopping rule], p = [value if applicable]; report an interval for the between-arm effect, not only per-arm intervals.
 **Practical significance**: [Is this lift meaningful for the business?]
 
 ### Secondary Metrics
@@ -256,7 +256,7 @@ For deciding which tests to run:
 | Potential impact | 30% | | | |
 | Confidence in hypothesis | 25% | | | |
 | Ease of implementation | 20% | | | |
-| Risk if wrong | 15% | | | |
+| Low risk if wrong (5 = safest) | 15% | | | |
 | Strategic alignment | 10% | | | |
 | **Total** | | | | |
 

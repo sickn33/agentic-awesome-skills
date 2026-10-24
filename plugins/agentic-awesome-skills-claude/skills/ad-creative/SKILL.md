@@ -65,14 +65,14 @@ When the user provides performance data (CSV, paste, or API output), you analyze
 The core loop:
 
 ```
-Pull performance data → Identify winning patterns → Generate new variations → Validate specs → Deliver
+Pull scoped performance data → Identify hypotheses → Generate draft variations → Validate claims/specs → Deliver for approval
 ```
 
 ---
 
 ## Platform Specs
 
-Platforms reject or truncate creative that exceeds these limits, so verify every piece of copy fits before delivering.
+Select the exact ad type and placement first. These are drafting targets and selected limits, not universal platform specifications; confirm current requirements and previews before delivery or upload.
 
 ### Google Ads (Responsive Search Ads)
 
@@ -104,7 +104,7 @@ Platforms reject or truncate creative that exceeds these limits, so verify every
 |---------|-------|-------|
 | Intro text | 150 chars recommended (600 max) | Above the image |
 | Headline | 70 chars recommended (200 max) | Below the image |
-| Description | 100 chars recommended (300 max) | Appears in some placements |
+| Description | 70 chars recommended | LinkedIn Audience Network only; confirm placement requirements |
 
 ### TikTok Ads
 
@@ -185,6 +185,8 @@ Present creative in a structured format that maps to the ad platform's upload re
 
 When the user provides performance data, follow this process:
 
+Compare the same attribution window, audience, placement and spend basis. Request impression, click, conversion and revenue counts; rates alone do not establish significance. RSA asset labels are not independently randomized experiments. Separate descriptive rankings from causal claims.
+
 ### Step 1: Analyze Winners
 
 Look at the top-performing creative (by CTR, conversion rate, or ROAS — ask which metric matters most) and identify:
@@ -225,6 +227,10 @@ Track what was learned and what's being tested:
 ```
 
 ---
+
+## Evidence and publication boundaries
+
+Use only substantiated product claims, actual customer counts and authorized testimonials. Numerical examples below are fictional copy patterns, not evidence about the user’s product. Mark unverified claims as placeholders for review. Never invent urgency, endorsements or results. Drafting does not authorize campaign creation, spending, pausing, upload or publication; use explicit account/audience/budget scope for those actions. Obtain rights and consent for likenesses/voice cloning and music; synthetic actors must not be represented as genuine customers. Keep performance exports free of unnecessary identifiers.
 
 ## Writing Quality Standards
 
@@ -303,7 +309,7 @@ When iterating, include a summary:
 
 ## Batch Generation Workflow
 
-For large-scale creative production (Anthropic's growth team generates 100+ variations per cycle):
+For large-scale creative production, agree a bounded draft batch and test budget:
 
 ### 1. Break into sub-tasks
 - **Headline generation** — Focused on click-through
@@ -332,13 +338,13 @@ For large-scale creative production (Anthropic's growth team generates 100+ vari
 - **Generic descriptions** — "Learn more about our solution" wastes the slot
 - **Iterating without data** — Gut feelings are less reliable than metrics
 - **Testing too many things at once** — Change one variable per test cycle
-- **Retiring creative too early** — Allow 1,000+ impressions before judging
+- **Retiring creative too early** — Predefine outcome metric, minimum detectable effect, sample size and observation window; 1,000 impressions is not a universal evidence threshold
 
 ---
 
 ## Tool Integrations
 
-For pulling performance data and managing campaigns, use the relevant ads platform tools available in this environment.
+Discover configured ads tools and their actual schemas before use. The command names below are illustrative upstream interfaces, not bundled or guaranteed integrations. Start with read-only data retrieval.
 
 | Platform | Pull Performance Data | Manage Campaigns | Guide |
 |----------|:---------------------:|:----------------:|-------|
@@ -351,12 +357,13 @@ For pulling performance data and managing campaigns, use the relevant ads platfo
 
 ```bash
 # 1. Pull recent ad performance
-node tools/clis/google-ads.js reports get --type ad_performance --date-range last_30_days
+# Illustrative only: tools/clis/google-ads.js is not bundled.
+# Use the configured connector’s supported report operation and explicit account/date scope.
 
 # 2. Analyze output (identify top/bottom performers)
 # 3. Feed winning patterns into this skill
 # 4. Generate new variations
-# 5. Upload to platform
+# 5. Deliver drafts; upload only with explicit authorization and verified format
 ```
 
 ---

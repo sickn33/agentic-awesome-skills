@@ -8,6 +8,10 @@ January 2026
 
 ---
 
+## Scope and execution limits
+
+Examples are independent teaching snippets, not a migration to run as a whole. Performance multipliers and sample plans are illustrative and unmeasured here. Review schema, Postgres/pooler versions and workload first. Use staging/backups and explicit approval for DDL, grants, RLS, ALTER SYSTEM, deletes, retention and statistics resets. EXPLAIN ANALYZE executes statements; use plain EXPLAIN first and never assume rollback undoes external side effects.
+
 ## Abstract
 
 Comprehensive Postgres performance optimization guide for developers using Supabase and Postgres. Contains performance rules across 8 categories, prioritized by impact from critical (query performance, connection management) to incremental (advanced features). Each rule includes detailed explanations, incorrect vs. correct SQL examples, query plan analysis, and specific performance metrics to guide automated optimization and code generation.
@@ -74,7 +78,7 @@ Slow queries, missing indexes, inefficient query plans. The most common source o
 
 **Impact: CRITICAL (100-1000x faster queries on large tables)**
 
-Queries filtering or joining on unindexed columns cause full table scans, which become exponentially slower as tables grow.
+Queries filtering or joining on unindexed columns cause full table scans, whose scan work typically grows with table size.
 
 **Incorrect (sequential scan on large table):**
 
@@ -178,7 +182,7 @@ create index idx on orders (status, created_at);
 
 -- Works for: WHERE status = 'pending'
 -- Works for: WHERE status = 'pending' AND created_at > '2024-01-01'
--- Does NOT work for: WHERE created_at > '2024-01-01' (leftmost prefix rule)
+-- A created_at-only filter may scan much of this index; verify the plan.
 ```
 
 **Column order matters** - place equality columns first, range columns last:
@@ -208,7 +212,7 @@ select email, name, created_at from users where email = 'user@example.com';
 -- Include non-searchable columns in the index
 create index users_email_idx on users (email) include (name, created_at);
 
--- All columns served from index, no table access needed
+-- Index-only scans still need heap visibility checks unless pages are all-visible.
 select email, name, created_at from users where email = 'user@example.com';
 -- Searching by status, but also need customer_id and total
 create index orders_status_idx on orders (status) include (customer_id, total);
@@ -329,16 +333,16 @@ show max_connections;  -- 500 (way too high for 4GB RAM)
 **Correct (calculate based on resources):**
 
 ```sql
--- Formula: max_connections = (RAM in MB / 5MB per connection) - reserved
--- For 4GB RAM: (4096 / 5) - 10 = ~800 theoretical max
--- But practically, 100-200 is better for query performance
+-- No universal RAM-per-connection formula: benchmark peak query memory.
+-- Include shared buffers, maintenance, parallel workers and OS headroom.
+-- These numbers are illustrative, not capacity recommendations.
 
--- Recommended settings for 4GB RAM
+-- Example settings only; max_connections changes require a server restart.
 alter system set max_connections = 100;
 
 -- Also set work_mem appropriately
--- work_mem * max_connections should not exceed 25% of RAM
-alter system set work_mem = '8MB';  -- 8MB * 100 = 800MB max
+-- work_mem applies per sort/hash operation and parallel worker, not per connection.
+alter system set work_mem = '8MB';  -- Total memory can greatly exceed 8MB * connection count.
 select count(*), state from pg_stat_activity group by state;
 ```
 
@@ -407,17 +411,19 @@ execute get_user(123);
 
 ```sql
 -- Option 1: Use unnamed prepared statements (most ORMs do this automatically)
--- The query is prepared and executed in a single protocol message
+-- The driver controls Parse/Bind/Execute; verify pooler and driver compatibility.
 
--- Option 2: Deallocate after use in transaction mode
+-- Option 2: Keep this SQL PREPARE lifecycle inside one explicit transaction
+begin;
 prepare get_user as select * from users where id = $1;
 execute get_user(123);
 deallocate get_user;
+commit;
 
 -- Option 3: Use session mode pooling (port 5432 vs 6543)
 -- Connection is held for entire session, prepared statements persist
 -- Many drivers use prepared statements by default
--- Node.js pg: { prepare: false } to disable
+-- Node.js pg: omit the query configuration name to avoid named preparation.
 -- JDBC: prepareThreshold=0 to disable
 ```
 
@@ -469,7 +475,7 @@ grant usage on sequence orders_id_seq to app_writer;
 -- No DELETE permission
 
 -- Login role inherits from these
-create role app_user login password 'xxx';
+create role app_user login;  -- Provision credentials separately through a secure channel.
 grant app_writer to app_user;
 -- Revoke default public access
 revoke all on schema public from public;
@@ -513,8 +519,10 @@ create policy orders_user_policy on orders
 alter table orders force row level security;
 
 -- Set user context and query
-set app.current_user_id = '123';
-select * from orders;  -- Only returns orders for user 123
+begin;
+set local app.current_user_id = '123';
+select * from orders;  -- Application role is subject to RLS
+commit;
 create policy orders_user_policy on orders
   for all
   to authenticated
@@ -558,11 +566,11 @@ set search_path = ''
 as $$
   select exists (
     select 1 from public.team_members
-    where team_id = $1 and user_id = (select auth.uid())
+    where team_members.team_id = $1 and team_members.user_id = (select auth.uid())
   );
 $$;
 
--- Use in policy (indexed lookup, not per-row check)
+-- This correlated team_id check remains row-dependent; index and benchmark it.
 create policy team_orders_policy on orders
   using ((select is_team_member(team_id)));
 create index orders_user_id_idx on orders (user_id);
@@ -693,7 +701,7 @@ create table events (
 
 -- 500M rows, queries scan everything
 select * from events where created_at > '2024-01-01';  -- Slow
-vacuum events;  -- Takes hours, locks table
+vacuum events;  -- Ordinary VACUUM normally permits concurrent reads and writes.
 ```
 
 **Correct (partitioned by time range):**
@@ -760,7 +768,7 @@ create table users (
 -- For distributed systems needing UUIDs, use UUIDv7 (time-ordered)
 -- Requires pg_uuidv7 extension: create extension pg_uuidv7;
 create table orders (
-  id uuid default uuid_generate_v7() primary key  -- Time-ordered, no fragmentation
+  id uuid default uuid_generate_v7() primary key  -- Time ordering can improve locality; fragmentation is not eliminated.
 );
 
 -- Alternative: time-prefixed IDs for sortable, distributed IDs (no extension needed)
@@ -774,8 +782,8 @@ create table events (
 
 Guidelines:
 - Single database: `bigint identity` (sequential, 8 bytes, SQL-standard)
-- Distributed/exposed IDs: UUIDv7 (requires pg_uuidv7) or ULID (time-ordered, no
-  fragmentation)
+- Distributed/exposed IDs: UUIDv7 (requires pg_uuidv7) or ULID (time-ordered, improved
+  locality)
 - `serial` works but `identity` is SQL-standard and preferred for new
   applications
 - Avoid random UUIDs (v4) as primary keys on large tables (causes index
@@ -875,8 +883,11 @@ commit;  -- Lock held for milliseconds
 -- Abort queries running longer than 30 seconds
 set statement_timeout = '30s';
 
--- Or per-session
+-- Per-transaction setting must run inside BEGIN/COMMIT
+begin;
 set local statement_timeout = '5s';
+-- Run the bounded query here
+commit;
 ```
 
 Use `statement_timeout` to prevent runaway transactions:
@@ -919,7 +930,7 @@ select * from accounts where id in (1, 2) order by id for update;
 update accounts set balance = balance - 100 where id = 1;
 update accounts set balance = balance + 100 where id = 2;
 commit;
--- Single statement acquires all locks atomically
+-- This statement is atomic but row lock order is not guaranteed; deadlocks remain possible.
 begin;
 update accounts
 set balance = balance + case id
@@ -1147,9 +1158,9 @@ Reference: https://supabase.com/docs/guides/database/query-optimization
 
 ### 6.3 Use Cursor-Based Pagination Instead of OFFSET
 
-**Impact: MEDIUM-HIGH (Consistent O(1) performance regardless of page depth)**
+**Impact: MEDIUM-HIGH (Avoid scanning all skipped rows with indexed keyset pagination)**
 
-OFFSET-based pagination scans all skipped rows, getting slower on deeper pages. Cursor pagination is O(1).
+OFFSET-based pagination scans all skipped rows, getting slower on deeper pages. With a suitable index, keyset pagination avoids scanning all skipped rows; cost is not strictly O(1).
 
 **Incorrect (OFFSET pagination):**
 
@@ -1368,7 +1379,7 @@ select * from orders where customer_id = 123 and status = 'pending';
 --   Buffers: shared hit=5000 read=15000
 -- Planning Time: 0.150 ms
 -- Execution Time: 450.500 ms
--- Seq Scan on large tables = missing index
+-- A sequential scan may be optimal for low-selectivity queries; compare estimates and timings.
 -- Rows Removed by Filter = poor selectivity or missing index
 -- Buffers: read >> hit = data not cached, needs more memory
 -- Nested Loop with high loops = consider different join strategy
@@ -1421,7 +1432,7 @@ select * from products where attributes->>'brand' = 'Nike';
 -- jsonb_ops (default): supports all operators, larger index
 create index idx1 on products using gin (attributes);
 
--- jsonb_path_ops: only @> operator, but 2-3x smaller index
+-- jsonb_path_ops supports @>, @? and @@; benchmark size and selectivity.
 create index idx2 on products using gin (attributes jsonb_path_ops);
 ```
 
@@ -1488,3 +1499,7 @@ Reference: https://supabase.com/docs/guides/database/full-text-search
 - https://wiki.postgresql.org/wiki/Performance_Optimization
 - https://supabase.com/docs/guides/database/overview
 - https://supabase.com/docs/guides/auth/row-level-security
+
+RLS boundary: a caller able to execute arbitrary SQL can set a custom `app.*` setting; it is not authenticated identity. Only a trusted backend may set it from verified identity, inside each transaction. Test tenant isolation with a non-owner, non-superuser role without BYPASSRLS. The Supabase UUID/auth.uid example is an alternative schema, not a second policy to combine with the bigint example.
+
+Security-definer helpers require a controlled owner, schema-qualified objects and restricted EXECUTE privileges. Revoke PUBLIC execution and grant only the intended caller role; verify that each helper returns only authorized information.

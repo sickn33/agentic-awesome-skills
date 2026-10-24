@@ -70,7 +70,7 @@ body {
   border: 1px solid #ff0000;
   color: #ff0000;
   box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
-  animation: pulse-red 2s infinite;
+  /* Static alert by default; offer optional motion with a reduced-motion fallback. */
 }
 
 @keyframes pulse-red {
@@ -155,6 +155,12 @@ class _CommandCenterScreenState extends State<CommandCenterScreen> with SingleTi
   }
 
   @override
+  void dispose() {
+    _pulseController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFF030A16), // Dark NOC background
@@ -220,13 +226,15 @@ const CommandCenterScreen = () => {
   const pulseAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.loop(
+    const loop = Animated.loop(
       Animated.sequence([
         Animated.timing(pulseAnim, { toValue: 1, duration: 1000, useNativeDriver: false }),
         Animated.timing(pulseAnim, { toValue: 0, duration: 1000, useNativeDriver: false })
       ])
-    ).start();
-  }, []);
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [pulseAnim]);
 
   const shadowOpacity = pulseAnim.interpolate({ inputRange: [0, 1], outputRange: [0.2, 1] });
 

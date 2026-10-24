@@ -4,22 +4,24 @@
 
 [![Claude Code](https://img.shields.io/badge/Claude-Code-orange)](https://claude.ai)
 [![Agent Types](https://img.shields.io/badge/Agent%20Types-37-blue)]()
-[![Loki Mode](https://img.shields.io/badge/Loki%20Mode-98.78%25%20Pass%401-blueviolet)](benchmarks/results/)
-[![HumanEval](https://img.shields.io/badge/HumanEval-98.17%25%20Pass%401-brightgreen)](benchmarks/results/)
+[![Loki Mode](https://img.shields.io/badge/Loki%20Mode-98.78%25%20historical%20retry%20score-blueviolet)](benchmarks/results/)
+[![HumanEval](https://img.shields.io/badge/HumanEval-98.17%25%20historical%20score-brightgreen)](benchmarks/results/)
 [![SWE-bench](https://img.shields.io/badge/SWE--bench-99.67%25%20Patch%20Gen-brightgreen)](benchmarks/results/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-> **PRD → Deployed Product in Zero Human Intervention**
+> **Experimental PRD-to-project workflow**
 >
-> Loki Mode transforms a Product Requirements Document into a fully built, tested, deployed, and revenue-generating product while you sleep. No manual steps. No intervention. Just results.
+> Loki Mode provides experimental orchestration patterns and a local runner. Review generated changes and authorize deployments, spending, data access, and external actions explicitly. Product quality, deployment success, revenue, and unattended completion are not guaranteed.
 
 ---
+
+> Review limits: the bundled benchmark outputs are historical, self-reported artifacts, not independently reproduced scores. Retried solutions do not establish pass@1; generated SWE-bench patches do not establish resolved instances. Agent counts and speed claims below are design targets or upstream historical claims, not measured capacity. Use an isolated environment with explicit scope and budgets; the runner is not a security sandbox.
 
 ## Demo
 
 [![asciicast](https://asciinema.org/a/EqNo5IVTaPJfCjLmnYgZ9TC3E.svg)](https://asciinema.org/a/EqNo5IVTaPJfCjLmnYgZ9TC3E)
 
-*Click to watch Loki Mode build a complete Todo App from PRD - zero human intervention*
+*Click to watch Loki Mode build a complete Todo App from PRD - historical demonstration*
 
 ---
 
@@ -39,8 +41,8 @@
 
 | Benchmark | Score | Details |
 |-----------|-------|---------|
-| **Loki Mode HumanEval** | **98.78% Pass@1** | 162/164 (multi-agent with RARV) |
-| **Direct Claude HumanEval** | **98.17% Pass@1** | 161/164 (single agent baseline) |
+| **Loki Mode HumanEval** | **98.78% historical retry score** | 162/164 (multi-agent with RARV) |
+| **Direct Claude HumanEval** | **98.17% historical score** | 161/164 (single agent baseline) |
 | **Direct Claude SWE-bench** | **99.67% patch gen** | 299/300 problems |
 | **Loki Mode SWE-bench** | **99.67% patch gen** | 299/300 problems |
 | Model | Claude Opus 4.5 | |
@@ -53,7 +55,7 @@ See [benchmarks/results/](benchmarks/results/) for full methodology and solution
 
 ## What is Loki Mode?
 
-Loki Mode is a Claude Code skill that orchestrates **37 specialized AI agent types** across **6 swarms** to autonomously build, test, deploy, and scale complete startups. It dynamically spawns only the agents you need—**5-10 for simple projects, 100+ for complex startups**—working in parallel with continuous self-verification.
+Loki Mode is a Claude Code skill that orchestrates **37 specialized AI agent types** across **7 swarms** to autonomously build, test, deploy, and scale complete startups. It dynamically spawns only the agents you need—**5-10 for simple projects, 100+ for complex startups**—working in parallel with continuous self-verification.
 
 ```
 PRD → Research → Architecture → Development → Testing → Deployment → Marketing → Revenue
@@ -90,7 +92,7 @@ PRD → Research → Architecture → Development → Testing → Deployment →
 
 ## Dashboard & Real-Time Monitoring
 
-Monitor your autonomous startup being built in real-time through the Loki Mode dashboard:
+The following screenshots archive the former dashboard; the bundled unauthenticated HTTP server is disabled:
 
 ### **Agent Monitoring**
 
@@ -144,7 +146,7 @@ Last Updated: 2026-01-04 20:45:32
 
 **Dashboard status:**
 ```bash
-# Automatically opens when running autonomously
+# Historical dashboard command (disabled)
 bash autonomy/run.sh ./docs/requirements.md
 
 # Or open manually
@@ -271,7 +273,7 @@ claude
 
 ### **4. Monitor Progress**
 
-Open the dashboard in your browser (auto-opens) or check status:
+The legacy HTTP dashboard is disabled; check local status:
 
 ```bash
 watch -n 2 cat .loki/STATUS.txt
@@ -287,7 +289,7 @@ Seriously. Go get coffee. It'll be deployed when you get back.
 
 ## Agent Swarms (37 Types)
 
-Loki Mode has **37 predefined agent types** organized into **6 specialized swarms**. The orchestrator spawns only what you need—simple projects use 5-10 agents, complex startups spawn 100+.
+Loki Mode has **37 predefined agent types** organized into **7 specialized swarms**. The orchestrator spawns only what you need—simple projects use 5-10 agents, complex startups spawn 100+.
 
 <img width="5309" height="979" alt="Agent Swarms Visualization" src="https://github.com/user-attachments/assets/7d18635d-a606-401f-8d9f-430e6e4ee689" />
 

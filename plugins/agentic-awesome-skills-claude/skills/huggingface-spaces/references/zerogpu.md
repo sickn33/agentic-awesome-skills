@@ -11,7 +11,7 @@ A ZeroGPU Space runs as **two processes**:
 - **Main web process** — long-lived. Imports `app.py`, launches Gradio. Holds no VRAM and, after the startup "pack" step, no model weights in RAM either.
 - **GPU worker** — short-lived. Forked per `@spaces.GPU` request (or reused if warm). Eventually killed by the ZeroGPU scheduler when another Space needs the slot. Your code never kills its own worker.
 
-`import spaces` monkey-patches `torch.cuda.*` in the main process so that `.to("cuda")` and `torch.cuda.is_available()` work at module scope **without** a real GPU attached. Module-level `model.to("cuda")` is intercepted: the tensor data physically stays in main-process RAM at this point, with a CUDA-presenting "fake" tensor registered alongside. At a startup "pack" step, the backend writes those original CPU tensors to disk via `O_DIRECT` and frees the RAM. After pack, main holds no weights anywhere.
+`import spaces` monkey-patches `torch.cuda.*` in the main process so that `.to("cuda")` and `torch.cuda.is_available()` work at module scope **without** a real GPU attached. Module-level `model.to("cuda")` is intercepted: the tensor data physically stays in main-process RAM at this point, with a CUDA-presenting "fake" tensor registered alongside. At a startup "pack" step, the backend writes those original CPU tensors to disk via `O_DIRECT` and frees the RAM. After packing, the main process is expected to release weight RAM; disk artifacts and runtime metadata remain.
 
 When a `@spaces.GPU` call lands, the scheduler routes it to a worker:
 
@@ -200,7 +200,7 @@ def generate(prompt):
 
 `gr.Progress(track_tqdm=True)` and `yield` compete with each other — pick one.
 
-For streaming previews **inside** a diffusers `callback_on_step_end`, use a thread + queue inside the decorator (forks share threads):
+For streaming previews **inside** a diffusers `callback_on_step_end`, use a thread + queue created inside the worker (pre-existing threads are not shared across fork):
 
 ```python
 @spaces.GPU(duration=180)
@@ -214,10 +214,10 @@ def generate(prompt, num_steps):
         out = pipeline(prompt=prompt, num_inference_steps=num_steps,
                        callback_on_step_end=cb,
                        callback_on_step_end_tensor_inputs=["latents"])
-        q.put((DONE, out))
+        q.put((DONE, out))  # production code must also send errors in finally/except
     threading.Thread(target=run, daemon=True).start()
     while True:
-        idx, payload = q.get()
+        idx, payload = q.get(timeout=180)  # bound waits; propagate worker exceptions
         if idx is DONE: break
         yield gr.update(value=payload, label=f"Step {idx+1}/{num_steps}")
 ```
@@ -232,7 +232,7 @@ def generate(prompt, num_steps):
 
 **Do NOT** wrap `import spaces` in `try/except` with a no-op fallback. Off-ZeroGPU, the `spaces` package is *already* a true no-op — the heavyweight behavior is gated on `SPACES_ZERO_GPU=1`, set only on ZeroGPU. `@spaces.GPU` returns the undecorated function unchanged elsewhere. The Gradio base image installs `spaces` on every hardware tier, so a duplicate onto T4 / A10G / CPU works without code changes too.
 
-That said: **iterate ON the Space, not locally.** The Space environment (Python, torch, CUDA, drivers, env vars) differs from yours; passing local tests doesn't prove the Space works. Push early — even with the app not fully polished — and use the rung ladder ([`debugging.md`](debugging.md)) against the live URL.
+That said: **iterate ON the Space, not locally.** The Space environment (Python, torch, CUDA, drivers, env vars) differs from yours; passing local tests doesn't prove the Space works. Run useful local tests, then deploy a staging candidate within the agreed scope — and use the rung ladder ([`debugging.md`](debugging.md)) against the live URL.
 
 ## Allocator config for memory pressure
 

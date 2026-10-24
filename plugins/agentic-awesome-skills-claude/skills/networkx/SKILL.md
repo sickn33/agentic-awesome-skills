@@ -30,6 +30,10 @@ Invoke this skill when tasks involve:
 - **Visualization**: Drawing and customizing network visualizations with matplotlib or interactive libraries
 - **Network comparison**: Checking isomorphism, computing graph metrics, analyzing structural properties
 
+## Data and compatibility limits
+
+Examples are independent fragments: initialize the required graph type/nodes/imports, check connectivity/empty inputs and pin NetworkX plus optional dependencies. Never unpickle untrusted or externally supplied files: pickle can execute arbitrary code. GraphML/GEXF XML and compressed files need trusted inputs and size limits. Export only to new authorized paths; SQL examples must not replace existing tables. Graph attributes and interactive HTML can expose private labels/data; escape untrusted labels and review external assets before sharing. Bound expensive cycle/clique/isomorphism enumeration and dense matrices. Same seed requires matching versions and parameters for reproducibility. Legacy root license metadata says BSD while bundled K-Dense support is MIT; these scopes remain explicit pending provenance reconciliation.
+
 ## Core Capabilities
 
 ### 1. Graph Creation and Manipulation
@@ -67,8 +71,8 @@ NetworkX provides extensive algorithms for network analysis:
 **Shortest Paths**:
 ```python
 # Find shortest path
-path = nx.shortest_path(G, source=1, target=5)
-length = nx.shortest_path_length(G, source=1, target=5, weight='weight')
+path = nx.shortest_path(G, source=1, target=4)
+length = nx.shortest_path_length(G, source=1, target=4, weight='weight')
 ```
 
 **Centrality Measures**:
@@ -137,7 +141,7 @@ G = nx.watts_strogatz_graph(n=100, k=6, p=0.1, seed=42)
 G = nx.grid_2d_graph(m=5, n=7)
 
 # Random tree
-G = nx.random_tree(n=100, seed=42)
+G = nx.random_labeled_tree(n=100, seed=42)
 ```
 
 **Reference**: See `references/generators.md` for comprehensive coverage of all graph generators including classic, random, lattice, bipartite, and specialized network models with detailed parameters and use cases.

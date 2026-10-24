@@ -5,17 +5,17 @@ Create a new Weaviate collection with a custom schema, optional vectorizer, and 
 ## Usage
 
 ```bash
-uv run scripts/create_collection.py CollectionName --properties '[...]' [--description "..."] [--vectorizer "..."] [--replication-factor N] [--multi-tenancy] [--auto-tenant-creation] [--json]
+uv run scripts/create_collection.py --allow-write CollectionName --properties '[...]' [--description "..."] [--vectorizer "..."] [--replication-factor N] [--multi-tenancy] [--auto-tenant-creation] [--json]
 ```
 
 ## Parameters
 
 | Parameter | Flag | Required | Default | Description |
 |-----------|------|----------|---------|-------------|
-| `name` | — | Yes (positional) | — | Collection name (auto-capitalized per GraphQL convention) |
+| `name` | — | Yes (positional) | — | Collection name (must be the exact approved name beginning with uppercase) |
 | `--properties` | `-p` | Yes | — | JSON array of property definitions |
 | `--description` | `-d` | No | — | Collection description — **strongly recommended**. Weaviate agents (Query Agent, Personalization Agent) read this to understand what the collection contains and decide which collection to query |
-| `--vectorizer` | `-v` | No | `text2vec_weaviate` | Vectorizer module to use |
+| `--vectorizer` | `-v` | No | `none` | Vectorizer module to use |
 | `--replication-factor` | `-r` | No | — | Replication factor (defers to server default when not set) |
 | `--multi-tenancy` | `-m` | No | `false` | Enable multi-tenancy for data isolation |
 | `--auto-tenant-creation` | `-a` | No | `false` | Auto-create tenants on insert (requires `--multi-tenancy`) |
@@ -42,29 +42,33 @@ uv run scripts/create_collection.py CollectionName --properties '[...]' [--descr
 - `tokenization` (optional): For text types — `word`, `lowercase`, `whitespace`, or `field`
 - `index_filterable` (optional): Enable roaring-bitmap filter index for `where` clauses. Default `true` for all types except `blob`, `geoCoordinates`, `object`, `object[]`, `phoneNumber`
 - `index_searchable` (optional): Enable BM25/inverted index for keyword and hybrid search. Only applies to `text` and `text[]`. Default `true`
-- `index_range_filters` (optional): Enable range-comparison index (`>`, `<`, `>=`, `<=`, `between`) for `int`, `int[]`, `number`, `number[]`, `date`, `date[]`. Default `false` — **set to `true` for any numeric or date field you plan to range-filter**
+- `index_range_filters` (optional): Enable range-comparison index (`>`, `<`, `>=`, `<=`, `between`) for supported scalar numeric/date types (check the pinned server; array support is not implied). Default `false` — **set to `true` for any numeric or date field you plan to range-filter**
 - `nested_properties` (optional): For `object` / `object[]` types — array of nested property definitions
 
 ## Supported Data Types
 
-`text`, `text[]`, `boolean`, `boolean[]`, `int`, `int[]`, `number`, `number[]`, `date`, `date[]`, `uuid`, `uuid[]`, `geoCoordinates`, `phoneNumber`, `blob`, `object`, `object[]`
+`text`, `text[]`, `boolean`, `boolean[]`, supported scalar numeric/date types (check the pinned server; array support is not implied), `uuid`, `uuid[]`, `geoCoordinates`, `phoneNumber`, `blob`, `object`, `object[]`
 
 Aliases: `bool` → `boolean`, `bool[]` → `boolean[]`
 
 ## Supported Vectorizers
 
-`text2vec_weaviate`, `text2vec_openai`, `text2vec_cohere`, `text2vec_huggingface`, `text2vec_palm`, `text2vec_jinaai`, `text2vec_voyageai`, `text2vec_contextionary`, `text2vec_transformers`, `text2vec_gpt4all`, `text2vec_ollama`, `multi2vec_clip`, `multi2vec_bind`, `multi2vec_palm`, `img2vec_neural`, `ref2vec_centroid`, `none`
+The exact supported names are the keys of `scripts/create_collection.py`'s
+`VECTORIZER_MAP`. They depend on the pinned client and server modules; deprecated
+PaLM/contextionary/GPT4All names are not supported here. The default `none` uses
+self-provided vectors and does not enable automatic external inference. Select a
+provider only after approving its data handling and cost.
 
 ## Inferring Schema from Data Files
 
-Before creating a collection, inspect a few rows from the source file to understand field names and value types. Use the commands below — they read only the first 3 objects and are safe on large files.
+Before creating a collection, inspect a few rows from the source file to understand field names and value types. Use the commands below — CSV and JSONL examples below read only three records; JSON parses the entire file and must be bounded before loading.
 
 **CSV:**
 ```bash
 python3 -c "
-import csv, json
+import csv, json, itertools
 with open('data.csv') as f:
-    rows = list(csv.DictReader(f))[:3]
+    rows = list(itertools.islice(csv.DictReader(f), 3))
 print(json.dumps(rows, indent=2))
 "
 ```
@@ -95,8 +99,8 @@ From the sample, map each field to a Weaviate data type:
 | Value looks like | data_type |
 |---|---|
 | `"hello"`, any text | `text` |
-| `123`, `"123"` | `int` |
-| `1.5`, `"1.5"` | `number` |
+| `123` | `int` (numeric-looking strings/IDs may need `text`) |
+| `1.5` | `number` (do not coerce identifiers) |
 | `true`/`false` | `boolean` |
 | `"2024-01-15"`, `"2024-01-15T10:30:00Z"` | `date` |
 | UUID-shaped string | `uuid` |
@@ -111,7 +115,7 @@ From the sample, map each field to a Weaviate data type:
 Basic collection:
 
 ```bash
-uv run scripts/create_collection.py Article \
+uv run scripts/create_collection.py --allow-write Article \
   --description "News articles with title and full body text." \
   --properties '[
     {"name": "title", "data_type": "text", "description": "Title of the article"},
@@ -122,7 +126,7 @@ uv run scripts/create_collection.py Article \
 Collection with various data types, descriptions, and recommended index flags:
 
 ```bash
-uv run scripts/create_collection.py Product \
+uv run scripts/create_collection.py --allow-write Product \
   --description "E-commerce product catalog with pricing, brand, stock status, and tags." \
   --properties '[
     {"name": "name", "data_type": "text", "description": "Name or title of the product"},
@@ -137,7 +141,7 @@ uv run scripts/create_collection.py Product \
 With explicit vectorizer:
 
 ```bash
-uv run scripts/create_collection.py Article \
+uv run scripts/create_collection.py --allow-write Article \
   --description "News articles with title and full body text." \
   --properties '[{"name": "title", "data_type": "text", "description": "Title of the article"}]' \
   --vectorizer "text2vec_openai"
@@ -146,7 +150,7 @@ uv run scripts/create_collection.py Article \
 With multi-tenancy:
 
 ```bash
-uv run scripts/create_collection.py Workspace \
+uv run scripts/create_collection.py --allow-write Workspace \
   --properties '[{"name": "content", "data_type": "text"}]' \
   --multi-tenancy --auto-tenant-creation
 ```

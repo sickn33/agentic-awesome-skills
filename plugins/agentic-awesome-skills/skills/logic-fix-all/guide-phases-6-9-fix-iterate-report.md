@@ -19,7 +19,7 @@
 6d. Remedy target for cross-file contradictions:
 - **Code vs constraint file** (CLAUDE.md/AGENTS.md/GEMINI.md/README): edit the CODE. Exception: if the constraint text is obviously stale (references a removed function/module) and code is internally coherent, edit the CONSTRAINT FILE and note spec drift in the Fix Log.
 - **Code vs runtime config**: edit the CONFIG. Exception: if the config value is internally coherent for its key AND the code looks typo'd, edit the CODE. When both sides are plausible, record as "Unresolved — unclear whether spec or consumer is wrong".
-- **Doc vs doc**: (1) more recent git mtime wins; (2) deeper path beats root-level; (3) still tied → "Unresolved — ambiguous spec" with both citations.
+- **Doc vs doc**: establish explicit authority and intended behavior; timestamp/path depth alone do not settle specification conflicts; if still tied → "Unresolved — ambiguous spec" with both citations.
 - **Config internally inconsistent**: edit at the less-referenced key.
 
 ---
@@ -30,6 +30,7 @@
 
 ```bash
 PRE_FIX_REF=$(git rev-parse HEAD)
+# HEAD is not a snapshot of dirty work. Save complete index/worktree/untracked state externally first.
 ```
 
 If not a git repo, copy each file to `.logic-fix-all-backup/<path>` before its first edit.
@@ -61,7 +62,8 @@ Additionally verify that the specific Divergence field condition no longer trigg
 
 7d. On regression, revert and retry:
 ```bash
-git checkout "$PRE_FIX_REF" -- <file>
+# Restore only the current attempted patch from its immediate pre-edit snapshot;
+# do not restore the entire file from HEAD over prior fixes or preexisting dirty edits.
 # or: cp .logic-fix-all-backup/<path> <path>
 ```
 Never use `git reset --hard` or `git clean -f`. After 3 failed attempts, record as "Unresolved — conflicting constraints" and continue.
@@ -95,7 +97,7 @@ Run Phases 6–7 on the Post-Fix Queue.
 ### 8d. Round accounting
 
 - **Clean round** (no new findings outside `unresolvable_findings`) → proceed to Phase 9.
-- **Critical-only round** → do NOT increment `non_critical_round_counter`; return to 8b.
+- **Critical-only round** → increment a finite total-round budget; checkpoint and report when exhausted.
 - **Mixed or non-critical round** → increment `non_critical_round_counter`. If below cap, return to 8b. If at cap, go to 8e.
 
 ### 8e. User escalation
@@ -141,3 +143,5 @@ Do not output per-finding Premises/Trace/Divergence blocks in the final report �
 - **Logic Score (after):** start at 100, deduct only for findings still marked Unresolved after Phase 8.
 
 When before and after are numerically equal despite fixes (e.g., 3 L1 findings collapse to one −15 in both), the "Findings fixed" count is the authoritative improvement signal.
+
+LLM semantic-equivalence labels and Logic Scores are heuristic judgments, not proofs or calibrated probabilities. Match findings using stable symbols/content/context rather than line numbers alone. Re-run meaningful existing tests after changes, including affected consumers/dynamic routes; do not weaken tests, authority files or configs simply to force a score to100. Unread/truncated functions and unavailable tests stay explicitly unverified.

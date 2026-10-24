@@ -38,15 +38,15 @@ a champion program. We have about 5,000 active developers using our API.
 
 1. **Don't push everyone up the spectrum — meet them where they are**
 2. **No content quotas — advocates create because they want to**
-3. **Credits > cash for referrals (less MLM feeling)**
-4. **Recognition must be specific, public, and timely**
+3. **Choose affordable rewards participants value; disclose incentives**
+4. **Recognition should be specific, timely and public only with permission**
 5. **Start small (5-10 champions) and grow**
 
 ## Files
 
 | File | Description |
 |------|-------------|
-| `SKILL.md` | Full skill instructions |
+| `SKILL.md` | Activation/boundaries; procedure in references/detailed-guide.md |
 
 ## Program Templates Included
 

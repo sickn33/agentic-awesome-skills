@@ -26,11 +26,11 @@ A structured framework for selecting and applying valuation methods to listed co
 
 ### Relative valuation
 
-**PE-Band**: Plot trailing/forward PE against 1–3 year historical mean ± 1SD. Buy signal when PE < mean - 1SD, stretched when > mean + 1SD. Use `longbridge valuation <SYMBOL> --format json` for historical percentile.
+**PE-Band**: Plot trailing/forward PE against 1–3 year historical mean ± 1SD. An illustrative low-relative-multiple flag when PE < mean - 1SD, not a buy signal, stretched when > mean + 1SD. Use `longbridge valuation <SYMBOL> --format json` for historical percentile.
 
 **PB-ROE**: High ROE justifies high PB. Plot PB vs ROE scatter across peers. Companies above the regression line are expensive; below are cheap. Fetch ROE from `longbridge financial-report <SYMBOL> --kind IS --format json`.
 
-**EV/EBITDA**: Enterprise-value based; immune to capital structure. Use for cross-border comparisons. EV = market cap + net debt; EBITDA from IS + D&A line.
+**EV/EBITDA**: Enterprise-value based; less directly affected by financing than equity multiples, but sensitive to debt, leases and enterprise-value adjustments. Use for cross-border comparisons. EV = market cap + net debt; EBITDA from IS + D&A line.
 
 **PS**: Revenue multiple. Useful when earnings are negative. Compress to gross-profit multiple (EV/GP) for SaaS with different gross margins.
 
@@ -38,7 +38,7 @@ A structured framework for selecting and applying valuation methods to listed co
 
 **DCF**: Project free cash flows → discount at WACC → add terminal value. Full workflow in `longbridge-dcf`.
 
-**DDM**: `P = D₁ / (r - g)`. Best for high-dividend stocks (utilities, HK REITs). Inputs: next dividend (D₁), cost of equity (r), long-run dividend growth (g).
+**DDM**: `P = D₁ / (r - g)` with r > g and compatible currency/nominal assumptions. Best for high-dividend stocks (utilities, HK REITs). Inputs: next dividend (D₁), cost of equity (r), long-run dividend growth (g).
 
 **SOTP**: Segment A value + Segment B value + Net cash − Holding discount. Requires segment-level revenue/EBIT from financial reports.
 

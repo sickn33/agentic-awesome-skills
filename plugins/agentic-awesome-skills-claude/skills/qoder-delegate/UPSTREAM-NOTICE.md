@@ -8,6 +8,6 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 
 | Local file | Original upstream path | Original Git blob SHA | Import changes |
 | --- | --- | --- | --- |
-| `scripts/relay.mjs` | `skills/qoder-delegate/scripts/relay.mjs` | `9403ee2ce6a475fb6f41871a11dc71e0c8e42cff` | content unchanged |
+| `scripts/relay.mjs` | `skills/qoder-delegate/scripts/relay.mjs` | `9403ee2ce6a475fb6f41871a11dc71e0c8e42cff` | local review: private fresh artifact directories, no artifact deletion, lane timeout, additional-directory validation and accurate credential/child scope comments |
 
 The relay launches the user-installed, authenticated agent CLI. Write-capable modes can approve child tools automatically; they are not a host sandbox. Invoke only for explicitly authorized delegation, keep credentials out of task briefs, and review the child output and project changes before landing them. This import does not run the CLI.

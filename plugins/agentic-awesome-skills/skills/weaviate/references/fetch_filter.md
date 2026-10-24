@@ -1,6 +1,6 @@
 # Fetch and Filter
 
-Fetch objects from a collection by UUID, with filters, or as a random sample. Supports complex nested filter logic (AND, OR).
+Fetch objects from a collection by UUID, with filters, or as a unfiltered bounded results. Supports complex nested filter logic (AND, OR).
 
 ## Usage
 
@@ -23,7 +23,7 @@ uv run scripts/fetch_filter.py "CollectionName" [--id "UUID"] [--filters 'JSON']
 
 1. **Fetch by UUID**: Use `--id` to retrieve a specific object
 2. **Fetch with filters**: Use `--filters` to retrieve filtered subsets
-3. **Fetch random sample**: Omit both `--id` and `--filters` for unfiltered results
+3. **Fetch unfiltered bounded results**: Omit both `--id` and `--filters` for unfiltered results
 
 ## Filter Syntax
 
@@ -86,3 +86,7 @@ Select specific properties:
 uv run scripts/fetch_filter.py "Products" --properties "name,price" --limit 5
 ```
 
+
+Malformed/empty predicates and unknown operators fail before querying. --id and
+--filters cannot be combined. --properties also applies to UUID retrieval. A limit
+is 1..1000. Unfiltered results are not a statistical random sample.

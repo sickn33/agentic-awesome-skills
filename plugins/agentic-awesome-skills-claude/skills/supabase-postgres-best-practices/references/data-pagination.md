@@ -7,7 +7,7 @@ tags: pagination, cursor, keyset, offset, performance
 
 ## Use Cursor-Based Pagination Instead of OFFSET
 
-OFFSET-based pagination scans all skipped rows, getting slower on deeper pages. Cursor pagination is O(1).
+OFFSET-based pagination scans all skipped rows, getting slower on deeper pages. Indexed keyset pagination avoids scanning skipped rows; index seek, page size and filtering still affect cost.
 
 **Incorrect (OFFSET pagination):**
 

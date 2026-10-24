@@ -1,14 +1,15 @@
 # Current State Rubric — 17-Section Scoring Lens
 
+Planning contract: user-selected scope, length, language and one-shot/interactive cadence override template defaults. All tier amounts, channel rankings, growth bands and hiring patterns below are illustrative hypotheses, not validated benchmarks. Draft completion is distinct from user approval. Use only available verified skill/tool IDs; missing dependencies are optional. No external execution is authorized by this document.
 This 17-section rubric is the source of truth for Section 3 ("Current State") of every marketing plan. Score each section 0–5 from available materials, then write a 2–4 sentence "shape interpretation" that names where strengths and gaps cluster.
 
 ## How to score
 
 **From rich materials.** When the team has shared decks, prior content audits, a brand voice doc, kickoff transcript, app store and analytics snapshots — score each section from those artifacts. Mark "scored from materials" in the section heading so the team can push back where they have better data.
 
-**From a separately scored audit.** If the team has already run a scored current-state assessment (in any format), ingest those scores directly. Don't redo the work — note the date the rubric was scored and flag any sections where material has shifted since.
+**From a separately scored audit.** If the team has already run a scored current-state assessment (in any format), ingest those scores directly. Check rubric compatibility before reuse; do not silently translate incomparable scales — note the date the rubric was scored and flag any sections where material has shifted since.
 
-Either way, the output is the same: a 17-row scored table, a total out of 85, and a shape paragraph.
+Either way, the output is the same: a 17-row scored table, a total over the applicable scored denominator, and a shape paragraph.
 
 ## The 17 sections (scored 0–5 each)
 
@@ -112,7 +113,7 @@ Either way, the output is the same: a 17-row scored table, a total out of 85, an
 **Maps to AARRR:** Retention (+ Activation for onboarding emails).
 
 ### 10. Sales material
-**What's scored:** Sales decks, one-pagers, demos, case studies, pricing sheets. (For B2B / hybrid companies — for pure D2C, this can be marked N/A or scored low without implication.)
+**What's scored:** Sales decks, one-pagers, demos, case studies, pricing sheets. (For B2B / hybrid companies — for pure D2C, this can be marked N/A when not applicable.)
 
 **Score guide:**
 - 0 = No sales material
@@ -177,7 +178,7 @@ Either way, the output is the same: a 17-row scored table, a total out of 85, an
 
 **Maps to AARRR:** Acquisition.
 
-**Note:** For pre-seed clients with no paid budget, score this 0 *without* treating it as a weakness — it reflects the funding stage, not a marketing failure.
+**Note:** For pre-seed clients with no paid budget, mark N/A when paid acquisition is intentionally outside scope — it reflects the funding stage, not a marketing failure.
 
 ### 16. SEO
 **What's scored:** Organic search performance. Domain rating, ranking keywords, organic traffic, content cluster strategy.
@@ -205,7 +206,7 @@ Either way, the output is the same: a 17-row scored table, a total out of 85, an
 
 ## How to compute the total + read the shape
 
-**Total = sum of all 17 scores. Out of 85.**
+**Total = sum of evidenced, applicable scores / (5 × number of scored applicable sections).** Use85 only when all17 sections are applicable and evidenced. Mark `Unknown` for missing evidence and `N/A` for intentionally inapplicable tactics; exclude both from the denominator and report evidence coverage separately. Zero means observed absence against an applicable need, not lack of access. Scores are ordinal planning judgments, not statistical performance estimates.
 
 The total matters less than the *shape*. After the scoring table, write a 2–4 sentence "shape interpretation":
 
@@ -250,6 +251,6 @@ For subjective sections, write the rationale into the "Note" column so the team 
 
 ## When a prior scored audit exists
 
-If the team already has scored output from any current-state assessment, ingest those scores directly — don't redo the work. Treat that prior scoring as the ground truth for sections it covers.
+If the team already has scored output from any current-state assessment, ingest those scores directly — don't redo the work. Treat that prior scoring as dated evidence with its original rubric, scope and confidence for sections it covers.
 
 If the prior scoring was done weeks ago and material has shifted since (new shipped flows, new content live, repositioning, etc.), note "scored on YYYY-MM-DD; material has shifted since" and update any specific scores you have current evidence for.

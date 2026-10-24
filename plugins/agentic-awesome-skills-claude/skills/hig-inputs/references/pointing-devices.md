@@ -1,6 +1,7 @@
 ---
 title: "Pointing devices | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/pointing-devices
+---
 
 # Pointing devices
 

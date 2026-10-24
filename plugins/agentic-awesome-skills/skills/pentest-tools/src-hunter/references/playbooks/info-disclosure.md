@@ -326,9 +326,9 @@ strings heap.bin | grep -iE "(password|secret|jdbc|jwt|redis|aws)" | sort -u
 
 通用指纹：
 
-- **`/static/.git/HEAD` 200** + 内容 `ref: refs/heads/main` → 立即 dump
+- **`/static/.git/HEAD` 200** + 内容 `ref: refs/heads/main` → 记录最小脱敏证据；未经额外范围批准不恢复完整仓库
 - **`/.env` 返回 200 + Content-Type: text/plain** + 含 `=` → 配置泄露
-- **`/wwwroot.rar` Content-Length > 1MB** → 整站源码
+- **`/wwwroot.rar` Content-Length > 1MB** → 仅大小线索，不能推断一定是源码
 - **`/server-status` 含 `Apache Status` + IP 列表** → mod_status 暴露
 - **`/actuator/health` 200 + `{"status":"UP"}`** → 进一步探 actuator/env / heapdump
 - **`/swagger-ui.html` + 渲染出 API 列表** → 全量端点
@@ -380,7 +380,7 @@ public S3 bucket 含 PII       = 7.5+
 2. JWT 签名密钥，可伪造任意用户身份；
 3. AWS S3 Access Key，可读取存储桶中所有用户上传文件。
 
-我已停止于"读到 application-prod.yml 文件名"步骤，未尝试连接任何凭据。
+仅报告实际读取并验证的内容；若只看到文件名，不能声称已看到密码、有效密钥或具备所有用户表访问。未验证的链路列为假设。
 ```
 
 ---

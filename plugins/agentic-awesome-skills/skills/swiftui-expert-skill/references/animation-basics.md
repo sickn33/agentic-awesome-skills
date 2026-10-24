@@ -22,12 +22,12 @@ State changes trigger view updates. SwiftUI provides mechanisms to animate these
 **Animation Process:**
 1. State change triggers view tree re-evaluation
 2. SwiftUI compares new tree to current render tree
-3. Animatable properties are identified and interpolated (~60 fps)
+3. Animatable properties are identified and interpolated at the system/display-dependent cadence
 
 **Key Characteristics:**
 - Animations are additive and cancelable
-- Always start from current render tree state
-- Blend smoothly when interrupted
+- Retargeting depends on animation type, transaction and identity; interruption is not universally additive
+- Test interruption, Reduce Motion and visibility/lifetime behavior
 
 ---
 
@@ -124,7 +124,7 @@ Rectangle()
 | `.spring` | Interactive elements, most UI |
 | `.easeInOut` | Appearance changes |
 | `.bouncy` | Playful feedback (iOS 17+) |
-| `.linear` | Progress indicators only |
+| `.linear` | Constant-speed motion where appropriate (including progress) |
 
 ### Modifiers
 
@@ -164,7 +164,7 @@ Rectangle()
 ### Prefer Transforms Over Layout
 
 ```swift
-// GOOD - GPU accelerated transforms
+// Transforms can avoid layout work; profile actual rendering cost
 Rectangle()
     .frame(width: 100, height: 100)
     .scaleEffect(isActive ? 1.5 : 1.0)  // Fast

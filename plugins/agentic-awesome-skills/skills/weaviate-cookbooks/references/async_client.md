@@ -204,12 +204,11 @@ async def lifespan(app: FastAPI):
         cluster_url="your-cluster.weaviate.cloud",
         auth_credentials=Auth.api_key("your-key"),
     )
-    await app.state.weaviate.connect()
-
-    yield
-
-    # Shutdown: close connection
-    await app.state.weaviate.close()
+    try:
+        await app.state.weaviate.connect()
+        yield
+    finally:
+        await app.state.weaviate.close()
 
 app = FastAPI(lifespan=lifespan)
 
@@ -286,7 +285,7 @@ client = weaviate.use_async_with_weaviate_cloud(
 )
 ```
 
-**Rule:** For Weaviate Cloud, always use `use_async_with_weaviate_cloud()` — it handles HTTP (443) and gRPC (50051) ports correctly.
+**Rule:** For Weaviate Cloud, always use `use_async_with_weaviate_cloud()` — it selects the supported Cloud transport configuration; do not assume self-hosted port 50051 for Cloud.
 
 ## Multi-Cluster Example
 
@@ -311,8 +310,8 @@ async def get_multi_cluster_clients(
                 cluster_url=config["url"],
                 auth_credentials=Auth.api_key(config["api_key"]),
             )
-            await client.connect()
             clients[cluster_id] = client
+            await client.connect()
 
         yield clients
 

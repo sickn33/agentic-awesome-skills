@@ -1,5 +1,7 @@
 """Shared helpers for user-thoughts scripts."""
 import re
+import os
+import tempfile
 from pathlib import Path
 
 
@@ -33,19 +35,27 @@ def read_define_ini(ustht: Path) -> dict:
     """Read define.ini and return key/value pairs."""
     ini = ustht / "define.ini"
     if not ini.exists():
-        return {}
+        raise UsthtSafetyError("Missing define.ini; no write authority established")
     result = {}
     for line in safe_read_text(ustht, ini).splitlines():
         line = line.strip()
         if "=" in line and not line.startswith("#"):
             k, v = line.split("=", 1)
             result[k.strip()] = v.strip()
+    if result.get("SKILL_STATUS") not in {"on", "off"} or result.get("INSTANT_STATUS") not in {"on", "off"}:
+        raise UsthtSafetyError("Invalid or incomplete runtime status; writes are disabled")
     return result
 
 
 def write_define_ini(ustht: Path, cfg: dict):
     """Replace define.ini with the provided key/value pairs."""
     ini = ustht / "define.ini"
+    if set(cfg) - {'SKILL_STATUS', 'INSTANT_STATUS', 'LAST_SORTIN'}:
+        raise UsthtSafetyError('Unknown runtime status key')
+    if cfg.get('SKILL_STATUS') not in {'on', 'off'} or cfg.get('INSTANT_STATUS') not in {'on', 'off'}:
+        raise UsthtSafetyError('Invalid runtime status')
+    if not re.fullmatch(r'(?:\d{4}-\d{2}-\d{2} \d{2}:\d{2})?', cfg.get('LAST_SORTIN', '')):
+        raise UsthtSafetyError('Invalid LAST_SORTIN value')
     lines = [f"{k}={v}" for k, v in cfg.items()]
     safe_write_text(ustht, ini, "\n".join(lines) + "\n")
 
@@ -67,7 +77,7 @@ def ensure_runtime_path(ustht: Path, path: Path, *, must_exist: bool = False) ->
     if not target.is_absolute():
         target = base_real / target
 
-    if target.exists() and target.is_symlink():
+    if target.is_symlink():
         raise UsthtSafetyError(f"Refusing symlinked runtime path: {target}")
     if must_exist and not target.exists():
         raise UsthtSafetyError(f"Runtime path does not exist: {target}")
@@ -82,7 +92,7 @@ def ensure_runtime_path(ustht: Path, path: Path, *, must_exist: bool = False) ->
     current = base_real
     for part in rel.parts:
         current = current / part
-        if current.exists() and current.is_symlink():
+        if current.is_symlink():
             raise UsthtSafetyError(f"Refusing symlinked runtime path: {current}")
     return target
 
@@ -91,7 +101,7 @@ def ensure_runtime_dir(ustht: Path, path: Path, *, create: bool = False) -> Path
     """Return a safe runtime directory, creating it when requested."""
     directory = ensure_runtime_path(ustht, path, must_exist=False)
     if create:
-        directory.mkdir(parents=True, exist_ok=True)
+        directory.mkdir(parents=True, mode=0o700, exist_ok=True)
     if directory.exists() and not directory.is_dir():
         raise UsthtSafetyError(f"Runtime path is not a directory: {directory}")
     return directory
@@ -107,7 +117,16 @@ def safe_write_text(ustht: Path, path: Path, content: str):
     """Write a runtime file after symlink and containment checks."""
     safe_path = ensure_runtime_path(ustht, path, must_exist=False)
     ensure_runtime_dir(ustht, safe_path.parent, create=True)
-    safe_path.write_text(content, encoding="utf-8")
+    fd, temp_name = tempfile.mkstemp(prefix='.ustht-write-', dir=safe_path.parent)
+    try:
+        with os.fdopen(fd, 'w', encoding='utf-8') as stream:
+            stream.write(content)
+            stream.flush()
+            os.fsync(stream.fileno())
+        ensure_runtime_path(ustht, safe_path, must_exist=False)
+        os.replace(temp_name, safe_path)
+    finally:
+        if os.path.exists(temp_name): os.unlink(temp_name)
 
 
 def safe_markdown_files(ustht: Path, directory: Path, *, reverse: bool = False) -> list[Path]:

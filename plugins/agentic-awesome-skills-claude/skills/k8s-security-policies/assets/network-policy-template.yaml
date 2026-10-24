@@ -28,9 +28,11 @@ spec:
   - to:
     - namespaceSelector:
         matchLabels:
-          name: kube-system
+          kubernetes.io/metadata.name: kube-system
     ports:
     - protocol: UDP
+      port: 53
+    - protocol: TCP
       port: 53
 
 ---
@@ -76,7 +78,7 @@ spec:
   - from:
     - namespaceSelector:
         matchLabels:
-          name: ingress-nginx
+          kubernetes.io/metadata.name: ingress-nginx
     ports:
     - protocol: TCP
       port: 80
@@ -100,13 +102,14 @@ spec:
   - from:
     - namespaceSelector:
         matchLabels:
-          name: monitoring
+          kubernetes.io/metadata.name: monitoring
     ports:
     - protocol: TCP
       port: 9090
 
 ---
-# Template 6: Allow External HTTPS
+# Template 6: Broad IPv4 HTTPS egress example, NOT a general private-network/SSRF boundary.
+# Replace with approved destination ranges; metadata may have other addresses or bypass CNI.
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:

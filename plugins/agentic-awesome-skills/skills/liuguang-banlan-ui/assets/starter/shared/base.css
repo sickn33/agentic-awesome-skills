@@ -53,7 +53,8 @@
       "sidebar main";
     grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
     grid-template-rows: var(--header-height) minmax(0, 1fr);
-    min-height: 100vh;
+    height: 100dvh;
+    min-height: 0;
     background: var(--app-wash);
   }
 
@@ -421,3 +422,6 @@
   :root { --line-subtle: var(--line-strong); --line-default: var(--line-strong); }
   .topbar, .sidebar, .observation-band, .parameter-panel { backdrop-filter: none; }
 }
+
+/* Preserve primary scrolling within the viewport at desktop sizes. */
+@media (max-width: 760px) { .app-shell { height: auto; min-height: 100dvh; } }

@@ -13,3 +13,5 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `references/topic.md` | `skills/longbridge-content/references/topic.md` | `387d5fa97a4b4cdeaa79eb1e4f29ad958999c24e` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/sec-filings.md` | `skills/longbridge-content/references/sec-filings.md` | `2ee84b941b993e396bcadfdc46ba1a4280f3f786` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/regulatory-kb.md` | `skills/longbridge-content/references/regulatory-kb.md` | `57ba99b15b9b55a5dfb133a0fc65d983d9ad83d2` | text-only trailing whitespace and EOF blank lines normalized |
+
+AAS review 2026-10-23: regulatory-kb corrected initial IPO price-limit and HK stamp-duty date errors, removed unsupported delisting/listing summaries and missing local-reference claims, and requires current official verification.

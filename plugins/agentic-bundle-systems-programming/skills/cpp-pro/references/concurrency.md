@@ -43,51 +43,33 @@ int increment_counter(std::atomic<int>& counter) {
 #include <atomic>
 #include <memory>
 
-// Lock-free stack
+// A naive CAS linked stack cannot safely delete popped nodes: other
+// threads may still dereference them (use-after-free), beyond ABA alone.
+// Use a proven reclamation implementation or this mutex-owned stack.
+#include <mutex>
+#include <vector>
 template<typename T>
-class LockFreeStack {
-    struct Node {
-        T data;
-        Node* next;
-        Node(const T& value) : data(value), next(nullptr) {}
-    };
-
-    std::atomic<Node*> head_{nullptr};
-
+class SafeStack {
+    std::mutex mutex_;
+    std::vector<T> values_;
 public:
     void push(const T& value) {
-        Node* new_node = new Node(value);
-        new_node->next = head_.load(std::memory_order_relaxed);
-
-        while (!head_.compare_exchange_weak(new_node->next, new_node,
-                                           std::memory_order_release,
-                                           std::memory_order_relaxed)) {
-            // Retry with updated head
-        }
+        std::lock_guard lock(mutex_);
+        values_.push_back(value);
     }
-
     bool pop(T& result) {
-        Node* old_head = head_.load(std::memory_order_relaxed);
-
-        while (old_head &&
-               !head_.compare_exchange_weak(old_head, old_head->next,
-                                           std::memory_order_acquire,
-                                           std::memory_order_relaxed)) {
-            // Retry
-        }
-
-        if (old_head) {
-            result = old_head->data;
-            delete old_head;  // Note: ABA problem exists
-            return true;
-        }
-        return false;
+        std::lock_guard lock(mutex_);
+        if (values_.empty()) return false;
+        result = values_.back();
+        values_.pop_back();
+        return true;
     }
 };
 
 // Lock-free queue (single producer, single consumer)
 template<typename T, size_t Size>
 class SPSCQueue {
+    static_assert(Size >= 2, "One sentinel slot is required");
     std::array<T, Size> buffer_;
     alignas(64) std::atomic<size_t> head_{0};
     alignas(64) std::atomic<size_t> tail_{0};
@@ -138,7 +120,10 @@ class ThreadPool {
     bool stop_ = false;
 
 public:
+    // Sketch: queue is unbounded; add admission/backpressure and
+    // exception-safe cleanup if creating a later worker throws.
     ThreadPool(size_t num_threads) {
+        if (num_threads == 0) throw std::invalid_argument("No workers");
         for (size_t i = 0; i < num_threads; ++i) {
             workers_.emplace_back([this] {
                 while (true) {
@@ -221,20 +206,20 @@ void parallel_algorithms_demo() {
                   [](int& x) { x *= 2; });
 
     // Parallel transform
-    std::vector<int> result(vec.size());
+    std::vector<long long> result(vec.size());
     std::transform(std::execution::par, vec.begin(), vec.end(),
-                   result.begin(), [](int x) { return x * x; });
+                   result.begin(), [](int x) { return 1LL * x * x; });
 
     // Parallel reduce
-    int sum = std::reduce(std::execution::par, vec.begin(), vec.end());
+    long long sum = std::reduce(std::execution::par, vec.begin(), vec.end(), 0LL);
 
     // Parallel transform_reduce (map-reduce)
-    int sum_of_squares = std::transform_reduce(
+    long long sum_of_squares = std::transform_reduce(
         std::execution::par,
         vec.begin(), vec.end(),
-        0,
+        0LL,
         std::plus<>(),
-        [](int x) { return x * x; }
+        [](int x) { return 1LL * x * x; }
     );
 }
 ```
@@ -311,6 +296,8 @@ public:
 std::mutex mtx1, mtx2;
 
 void transfer(Account& from, Account& to, int amount) {
+    if (&from == &to) return; // Never lock the same nonrecursive mutex twice.
+    // Validate positive amount, available balance and arithmetic bounds first.
     std::scoped_lock lock(from.mutex, to.mutex);  // Deadlock-free
     from.balance -= amount;
     to.balance += amount;
@@ -345,6 +332,9 @@ std::future<int> future = promise.get_future();
 
 std::thread producer_thread(producer, std::move(promise));
 std::thread consumer_thread(consumer, std::move(future));
+
+producer_thread.join();
+consumer_thread.join();
 
 // Packaged task
 std::packaged_task<int(int, int)> task([](int a, int b) {
@@ -392,13 +382,19 @@ struct AsyncTask {
     std::coroutine_handle<promise_type> handle;
 
     AsyncTask(std::coroutine_handle<promise_type> h) : handle(h) {}
+    AsyncTask(const AsyncTask&) = delete;
+    AsyncTask& operator=(const AsyncTask&) = delete;
+    AsyncTask(AsyncTask&& other) noexcept : handle(std::exchange(other.handle, {})) {}
     ~AsyncTask() { if (handle) handle.destroy(); }
 
     T get() {
+        if (!handle) throw std::logic_error("Empty task");
         if (!handle.done()) {
             handle.resume();
         }
 
+        if (!handle || !handle.done())
+            throw std::logic_error("Task is not complete; scheduler required");
         if (handle.promise().exception) {
             std::rethrow_exception(handle.promise().exception);
         }
@@ -417,13 +413,13 @@ AsyncTask<int> async_compute() {
 
 | Primitive | Use Case | Performance |
 |-----------|----------|-------------|
-| std::atomic | Simple shared state | Lock-free |
+| std::atomic | Simple shared state | Check is_lock_free; type/platform dependent |
 | std::mutex | Exclusive access | Kernel call |
-| std::shared_mutex | Read-heavy workload | Better than mutex |
-| Lock-free structures | High contention | Best throughput |
+| std::shared_mutex | Read-heavy workload | Benchmark contention and fairness |
+| Lock-free structures | Specialized shared state | Reclamation required; benchmark |
 | Thread pool | Task parallelism | Avoid thread overhead |
 | Parallel STL | Data parallelism | Automatic scaling |
-| std::async | Simple async tasks | Thread pool |
+| std::async | Simple async tasks | Policy-dependent; no portable pool guarantee |
 | Coroutines | Async I/O | Minimal overhead |
 
 ## Memory Ordering Guide

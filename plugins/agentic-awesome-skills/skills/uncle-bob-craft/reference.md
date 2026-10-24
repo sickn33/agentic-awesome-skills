@@ -77,7 +77,7 @@ For grouping classes into components: **REP** (reuse/release equivalence), **CCP
 - Customer collaboration over contract negotiation.
 - Responding to change over following a plan.
 
-### Iron Cross (four values that support the above)
+### Supporting XP values (not the Iron Cross)
 
 | Value | Meaning |
 |-------|--------|

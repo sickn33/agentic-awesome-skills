@@ -1,7 +1,7 @@
 ---
 name: senior-frontend
 description: Frontend development skill for React, Next.js, TypeScript, and Tailwind CSS applications. Use when building React components, optimizing Next.js performance, analyzing bundle sizes, scaffolding frontend projects, implementing accessibility, or reviewing frontend code quality.
-risk: safe
+risk: critical
 source: https://github.com/alirezarezvani/claude-skills
 date_added: "2026-03-07"
 ---
@@ -25,13 +25,9 @@ Frontend development patterns, performance optimization, and automation tools fo
 - [React Patterns](#react-patterns)
 - [Next.js Optimization](#nextjs-optimization)
 - [Accessibility and Testing](#accessibility-and-testing)
-
 ---
-
 ## Project Scaffolding
-
 Generate a new Next.js or React project with TypeScript, Tailwind CSS, and best practice configurations.
-
 ### Workflow: Create New Frontend Project
 
 1. Run the scaffolder with your project name and template:
@@ -317,7 +313,7 @@ async function ProductPage({ params }) {
 }
 
 // Client Component
-("use client");
+"use client";
 function AddToCartButton({ productId }) {
   const [adding, setAdding] = useState(false);
   return <button onClick={() => addToCart(productId)}>Add</button>;
@@ -493,3 +489,9 @@ function List<T>({ items, renderItem }: ListProps<T>) {
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Snapshot limitations
+
+Examples are excerpts, not production certification. Scaffolder dependencies target historical Next14/React18/Tailwind3 and require a supported, patched dependency plan before installation. Optional scaffold feature templates are incomplete and now reject generation. Generated React/Vite config needs matching aliases, TS JSX and lint setup; auth requires server enforcement, not a frontend HOC. Components/tests assume application imports/styles and fixtures. Bundle scores and KB tables are advisory heuristics, not measured output or grounds to replace packages automatically.
+
+Client components can be server-prerendered: localStorage initializers may cause hydration mismatch; read after mount with a loading boundary and handle errors/key changes. useAsync/DataFetcher examples need cancellation, stale-response and error handling. Custom select/dialog examples omit full keyboard/focus restoration/inert-background behavior; prefer tested primitives. Persist no bearer tokens in localStorage, clear session data on logout, and enforce authorization in API routes. Never share personalized cached data without user/tenant-scoped keys. Match params, fetch caching, revalidateTag, Image preload and dynamic SSR APIs to the installed Next version.

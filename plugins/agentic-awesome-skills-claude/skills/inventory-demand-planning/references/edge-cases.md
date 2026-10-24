@@ -2,7 +2,7 @@
 
 > Tier 3 reference. Load on demand when handling complex or ambiguous demand planning situations that don't resolve through standard forecasting and replenishment workflows.
 
-These edge cases represent the scenarios that separate experienced demand planners from everyone else. Each one involves competing signals, imperfect data, time pressure, and real financial exposure. They are structured to guide decision-making when standard models break down.
+These are synthetic planning scenarios, not observed company outcomes. These edge cases represent the scenarios that separate experienced demand planners from everyone else. Each one involves competing signals, imperfect data, time pressure, and real financial exposure. They are structured to guide decision-making when standard models break down.
 
 ---
 
@@ -15,7 +15,7 @@ When a planning situation doesn't fit a clean pattern — when demand signals co
 ### Edge Case 1: New Product Launch with Zero History and No Close Analog
 
 **Situation:**
-A retailer's private-label team is launching a plant-based protein bar in a new flavor profile (mango turmeric) that has no direct precedent in their assortment or their competitors'. The product will launch in 120 stores across the Southeast region. Retail price is $3.49 per bar, case pack of 12, with a vendor cost of $1.85. The vendor requires a minimum initial order of 10,000 units (833 cases) with a 6-week lead time for reorder. The merchandising team is projecting "strong performance" based on consumer trend data showing plant-based snacking growing 22% YoY, but has no quantitative forecast. The product has a 9-month shelf life.
+A retailer's private-label team is launching a plant-based protein bar in a new flavor profile (mango turmeric) that has no direct precedent in their assortment or their competitors'. The product will launch in 120 stores across the Southeast region. Retail price is $3.49 per bar, case pack of 12, with a vendor cost of $1.85. The vendor requires a minimum initial order of 10,008 units (834 cases of12; a10,000-unit minimum rounds up) with a 6-week lead time for reorder. The merchandising team is projecting "strong performance" based on consumer trend data showing plant-based snacking growing 22% YoY, but has no quantitative forecast. The product has a 9-month shelf life.
 
 **Why It's Tricky:**
 There is no demand history for this exact item, and the nearest analogs (existing protein bars, existing plant-based snacks) are imperfect matches. The mango turmeric flavor is novel — it could be a breakout trend or a niche product. The 6-week reorder lead time means you cannot react quickly if the product takes off, but the 9-month shelf life means overstock is not immediately catastrophic. The merchandising team's qualitative confidence is not a substitute for a quantitative forecast.
@@ -28,8 +28,8 @@ Accepting the merchandising team's optimistic "gut feel" as the forecast and ord
 2. Compute the median weekly velocity of the analogs at the same lifecycle stage (launch weeks 1–13). Weight by analog similarity score. Typical private-label snack bar launch velocity is 2–4 units/store/week after the trial bump.
 3. Build three scenarios: conservative (2 units/store/week), base (3.5 units/store/week), optimistic (6 units/store/week). For 120 stores, this yields weekly demand of 240, 420, or 720 units.
 4. Initial buy: commit to the base scenario for weeks 1–8 (420 × 8 = 3,360 units), plus safety stock at the conservative rate for the 6-week reorder lead time (240 × 6 × 1.3 buffer = 1,872 units). Total initial order: ~5,232 units. This is below the vendor's 10,000 MOQ.
-5. Negotiate with the vendor: either accept the 10,000 MOQ (accepting ~10 weeks of forward stock at base rate, which is fine given 9-month shelf life), or negotiate a 5,000-unit initial order with a committed reorder at week 4 based on early sell-through.
-6. Set weekly POS monitoring triggers: if week-1 velocity > 5 units/store/day, escalate to the optimistic scenario and place reorder immediately. If week-2 velocity < 1.5 units/store, flag for review — the product may be underperforming.
+5. Negotiate with the vendor: either accept the 10,000 MOQ (accepting ~23.8 weeks of stock at420units/week, which is fine given 9-month shelf life), or negotiate a 5,000-unit initial order with a committed reorder at week 4 based on early sell-through.
+6. Set weekly POS monitoring triggers: if week-1 velocity > 5 units/store/week, escalate to the optimistic scenario and place reorder immediately. If week-2 velocity < 1.5 units/store, flag for review — the product may be underperforming.
 7. Plan a week-3 evaluation checkpoint with merchandising. If sell-through is < 40% of base scenario, begin discussing promotional support. If > 150%, ensure reorder is en route.
 
 **Documentation Required:**
@@ -63,8 +63,8 @@ Ordering 10,000+ units from the vendor based on the spike's peak demand. When th
 
 **Expert Approach:**
 1. Do NOT place a large emergency order based on peak demand. Viral spikes typically follow this decay pattern: peak in days 1–5, 50% decay by day 10, 80% decay by day 21, new baseline establishes by day 30–45 (usually 1.5–3× the pre-viral level).
-2. With 2,400 units in DC and ~180 units/day demand, you have ~13 days of supply. Implement allocation rules immediately: cap store-level fulfillment at 3× historical daily average (6 units/store/day max). This stretches DC supply to ~20 days and prevents a single high-traffic store from claiming all the inventory.
-3. Contact the vendor. Determine: (a) do they have any finished goods inventory in Portland? (b) can they expedite a partial shipment by air from Shenzhen? (c) what is the minimum order for an air shipment? Air freight at ~$5/unit on a $4.50 cost item is expensive but justified if you can capture $8.99 retail during the spike.
+2. With 2,400 units in DC and ~180 units/day demand, you have ~13 days of supply. Implement allocation rules immediately: choose explicit store allocations totaling no more than available supply. A cap alone does not extend total days of supply unless actual aggregate demand/fulfillment declines and prevents a single high-traffic store from claiming all the inventory.
+3. Contact the vendor. Determine: (a) do they have any finished goods inventory in Portland? (b) can they expedite a partial shipment by air from Shenzhen? (c) what is the minimum order for an air shipment? Air freight of$5 plus$4.50 product cost totals$9.50, above$8.99 retail before other costs; reject unless a separately approved quantified strategic benefit justifies the loss.
 4. Place a modest reorder: 2,000–3,000 units (not 10,000). If the vendor can air-ship 500 units in 7–10 days, do that for immediate demand. The remaining 2,000 by ocean in 8 weeks will arrive when the new baseline is establishing.
 5. Monitor the TikTok video and social conversation daily. Track engagement rate decay. When the video drops off the "For You" page algorithm (typically day 7–14), demand will fall sharply.
 6. After the spike subsides (day 30+), assess the new baseline. If it's 2–3× the pre-viral level, adjust the forecast model upward. If it's back to pre-viral levels, return to the standard model. Do not permanently inflate the forecast based on a one-time event.
@@ -252,7 +252,7 @@ in responding to a downward regime change adds ~1 week of excess inventory.
 Your highest-velocity SKU in the beverage category (a 24-pack water case, A-item, ~1,200 units/week across 80 stores) has been showing 95%+ in-stock rate in the system, but customer complaints about out-of-stocks have tripled in the past month. The WMS shows 3,400 units at the DC and the stores collectively show 2,100 units on hand. However, three separate stores have reported that they can't find the product despite the system showing 50–80 units each. A partial cycle count at the DC reveals an actual count of 2,100 units — the WMS is overstating by 1,300 units (38% phantom inventory).
 
 **Why It's Tricky:**
-Every replenishment decision for the past several weeks has been based on a position that was 1,300 units higher than reality. The system thinks the DC has 4.7 weeks of supply when it actually has 2.9 weeks. Stores are running out because store-level inventory is also likely overstated (if receiving errors or shrinkage are the cause). The problem is almost certainly not limited to this one SKU — whatever process caused the phantom inventory (receiving errors, system timing, shrinkage) is likely affecting other items.
+Every replenishment decision for the past several weeks has been based on a position that was 1,300 units higher than reality. The DC record implies3400/1200=2.83weeks; physical DC stock implies2100/1200=1.75weeks. Do not mix store and DC levels or units. Stores are running out because store-level inventory is also likely overstated (if receiving errors or shrinkage are the cause). The problem is almost certainly not limited to this one SKU — whatever process caused the phantom inventory (receiving errors, system timing, shrinkage) is likely affecting other items.
 
 **Common Mistake:**
 Correcting the inventory in the WMS and moving on. The correction fixes the symptom but not the cause. Next month, phantom inventory will reappear.
@@ -292,7 +292,7 @@ Phantom inventory has a dual cost: (1) the lost sales from stockouts that the sy
 predict (in this case, ~300 units/week × $sell_price = significant revenue), and (2) the
 upstream effects — overstated inventory means the replenishment system didn't trigger orders
 when it should have, creating a cascading supply gap. For an A-item at 1,200 units/week,
-even a 20% phantom inventory rate translates to ~240 lost sales per week, which at $5 retail
+a hypothetical240units/week unmet demand would imply240lost sales; a20% count discrepancy alone does not establish this, which, if demonstrated, at$5retail
 is $1,200/week in lost revenue, or ~$62,400/year for a single SKU.
 
 ---
@@ -303,7 +303,7 @@ is $1,200/week in lost revenue, or ~$62,400/year for a single SKU.
 You carry a specialty imported Italian pasta brand (5 SKUs, each averaging 30–50 units/week across 60 stores). The vendor's minimum order quantity is 500 units per SKU per order, and they only accept orders on a monthly basis (once per month, delivery in 3 weeks). For a SKU averaging 40 units/week, the MOQ of 500 units represents 12.5 weeks of supply. With a 7-week order cycle (4-week review + 3-week lead time), your target order-up-to level should be about 360 units (7 weeks × 40 + safety stock). The MOQ forces you to order 39% more than you need.
 
 **Why It's Tricky:**
-You can't order less than the MOQ, but ordering 500 units every month means you're always carrying ~5 weeks of excess inventory. Across 5 SKUs, that's 2,500 excess units at ~$3.50 cost each = ~$8,750 in excess inventory investment. The holding cost (25% annually = ~$0.07/unit/week) seems small per unit but adds up to ~$9,100/year in excess carrying cost across the 5 SKUs. This isn't a one-time problem — it recurs every month.
+You can't order less than the MOQ, but ordering 500 units every month means you're always carrying ~5 weeks of excess inventory. Across 5 SKUs, that's 2,500 excess units at ~$3.50 cost each = ~$8,750 in excess inventory investment. The holding cost (25% annually on$3.50 = ~$0.0168/unit/week) seems small per unit but adds up to ~$9,100/year in excess carrying cost across the 5 SKUs. This isn't a one-time problem — it recurs every month.
 
 **Common Mistake:**
 Accepting the MOQ without quantifying the cost. Or, alternatively, fighting the vendor on MOQ without considering the alternatives.
@@ -338,17 +338,8 @@ Accepting the MOQ without quantifying the cost. Or, alternatively, fighting the 
 - Month 2: Implement the agreed terms on a 6-month trial basis
 - Month 8: Review trial results; formalize in the annual vendor agreement
 
-**MOQ Impact Calculator (per SKU):**
-```
-Excess Units per Order = MOQ − EOQ (or optimal order quantity)
-Annual Orders = 52 / (MOQ / Weekly Demand)
-Annual Excess Units = Excess per Order × Annual Orders
-Annual Excess Holding Cost = Annual Excess Units × Unit Cost × Holding Cost %
-```
-
-For the pasta example: Excess = 500 − 280 = 220 units per order. Annual orders = 52 / (500/40) = ~4.2.
-Annual excess units = 220 × 4.2 = ~924. Holding cost at 25% on $3.50 cost = 924 × $0.875 = ~$809/year.
-Across 5 SKUs with similar profiles, that's ~$4,000/year — worth negotiating but not worth losing the brand.
+**MOQ economics (per SKU):**
+Use time-weighted average inventory, not “annual excess units” multiplied by an annual rate. For deterministic continuous review with no shortages, cycle stock is approximately Q/2. Comparing Q=500 with Q=280 gives110 extra average units; at$3.50 and25% annual holding cost, incremental cycle holding cost is$96.25/year perSKU ($481.25 for5). Review timing, safety stock, expiry, variable demand and ordering costs can change this and need simulation. Do not order500 every month when demand is only~160/month; skip order opportunities based on inventory position.
 
 ---
 
@@ -470,9 +461,9 @@ Buying V2 aggressively to capture the introductory discount while ignoring the V
    - Weeks 5–6: V1 at 30%, V2 at 70%
    - Weeks 7+: V1 at 10%, V2 at 90%
    These ratios are estimates — adjust based on brand's historical transition data and customer research.
-2. Run down V1 inventory intentionally. Stop reordering V1 immediately — you have 12.8 weeks at current rate, but demand will decline per the split model. Compute V1 sales under the declining split: ~250 × (0.7 + 0.7 + 0.5 + 0.5 + 0.3 + 0.3 + 0.1 + 0.1) = ~800 units over 8 weeks. You have 3,200 in the system — you'll have ~2,400 excess.
+2. Run down V1 inventory intentionally. Stop reordering V1 immediately — you have 12.8 weeks at current rate, but demand will decline per the split model. Compute V1 sales under the declining split:250 × (0.7 + 0.7 + 0.5 + 0.5 + 0.3 + 0.3 + 0.1 + 0.1) =800units over 8 weeks. At current pre-launch timing, first subtract forecast sales during the4weeks before launch (1000if250/week) and all firm receipts/returns;2200atlaunch minus800afterlaunch leaves1400, before markdown/substitution effects.
 3. Initiate V1 markdowns early — don't wait for the product to become unsellable. Week 1 post-V2 launch: take 20% off V1 to accelerate sell-through. Week 4: 40% off. Week 6: liquidate or donate any remainder.
-4. Size the V2 introductory buy conservatively: 4 weeks of supply at the V2 split rate, not at the full brand rate. That's ~250 × (0.3 + 0.5 + 0.7 + 0.9) = ~600 units for the first 4 weeks. Take the introductory discount on 600–800 units, not the 2,000+ the manufacturer will suggest.
+4. Size the V2 introductory buy conservatively: 4 weeks of supply at the V2 split rate, not at the full brand rate. The stated first4weekly shares are0.3,0.3,0.5,0.5, giving250×1.6=400units before safety/receipts;600used one share from each2week phase and is inconsistent. Take the introductory discount on 600–800 units, not the 2,000+ the manufacturer will suggest.
 5. Negotiate with the manufacturer: request unsold V1 return credit or a markdown fund contribution. Most CPG brands transitioning formulas will contribute 25–50% of the V1 markdown cost if asked, because they want V1 off shelf to drive V2 trial.
 6. Track the actual V1/V2 split weekly and adjust. If V2 takes off faster than modeled, accelerate V1 markdowns. If V2 is slow, hold V1 price and defer V2 reorder.
 
@@ -517,8 +508,8 @@ Pro-rata allocation across all stores. Every store gets 40% of normal, every sto
 1. Calculate the allocation by store tier to maximize total units sold (minimize lost sales):
    - Top 20 stores: allocate at 70% of their normal rate (252 units/week). These stores have the highest traffic; even partial stock generates more sales per unit than full stock at a low-traffic store.
    - Middle 40 stores: allocate at 35% of their normal rate (~110 units/week). Enough to maintain some presence.
-   - Bottom 60 stores: allocate at 15% of their normal rate (~54 units/week). Maintain minimum presentation stock only.
-   - Total: 252 + 110 + 54 = ~416 units/week. This exceeds the 360 available, so scale proportionally.
+   - Bottom60stores:15%×225=33.75units/week. Maintain minimum presentation stock only.
+   - Total:252+110.25+33.75=396units/week. Scale by360/396 and reconcile integer allocations:229top+100middle+31bottom=360. This is a proposed policy, not proof of optimality.
 2. Implement a maximum per-customer purchase limit at the store level (2 units per transaction) to prevent stockpiling.
 3. Communicate transparently to store managers: "Protein powder is on constrained allocation for the next 6 weeks due to supplier shortage. Your allocation is [X] units/week. We'll resume normal replenishment in [date]."
 4. Monitor sell-through rates at each tier. If the top-20 stores are selling out in 3 days, they're effectively under-allocated. If bottom-60 stores are carrying inventory into the next week, they're over-allocated. Adjust weekly.
@@ -542,10 +533,7 @@ Pro-rata allocation across all stores. Every store gets 40% of normal, every sto
 
 **Financial Impact:**
 Lost sales during a 60% supply constraint on a 900 units/week A-item at $34.99 retail:
-(900 − 360) × $34.99 × 6 weeks = ~$113,367 in lost revenue. With tiered allocation
-optimizing sell-through, you can recapture 15–25% of the otherwise lost sales compared
-to naive pro-rata allocation, worth $17K–$28K in recovered revenue. The allocation
-optimization effort pays for itself many times over.
+(900 − 360) × $34.99 × 6 weeks = ~$113,367 in lost revenue. With fixed supply and all allocated units sold, changing allocation alone cannot create extra unit sales. Any recovery claim needs evidence of avoided waste, idle inventory, substitution or customer retention; do not assume15–25% recovery.
 
 ---
 
@@ -566,7 +554,7 @@ Either accepting the sales team's number at face value (leading to chronic over-
    - If it closes, when will volume start? 4 weeks (sales team) — add 4 weeks for historical optimism = 8 weeks realistic
    - If it closes, what's the ramp rate? Rarely 100% from day 1. Model 50% in month 1, 75% in month 2, 100% in month 3.
 2. Compute the expected value override: $30K × 50% probability × ramp rate = $7.5K in month 1, $11.25K in month 2, $15K in month 3.
-3. Apply this as a staged override, not a flat $30K increase. Month 1: $107.5K. Month 2: $111.25K. Month 3: $115K.
+3. Apply this as a staged override, not a flat $30K increase. If demand starts only after8weeks, months1–2remain$100K; the first post-start month is$107.5K under these assumptions. Date each scenario explicitly rather than shifting the ramp into months before the deal begins.
 4. Set a kill trigger: if the deal hasn't closed by month 2, remove the override entirely and return to the statistical forecast. Do not carry speculative overrides indefinitely.
 5. Track the outcome: did the deal close? When? At what volume? Use this to calibrate the sales team's future override accuracy and adjust the probability discount accordingly.
 6. Distribute the override unevenly across SKUs: the new account likely won't carry all 15 SKUs. Ask the sales team which 5–8 SKUs the new account will stock, and concentrate the override there.
@@ -600,3 +588,24 @@ Track the accuracy of sales team overrides over time. Maintain a simple table:
 This calibration table allows you to apply evidence-based probability discounts to future
 overrides. A sales team with a 48% realization rate on new account overrides should have
 their stated volume multiplied by 0.48, not accepted at face value.
+
+## Scenario corrections and safeguards
+
+All implied viral decay, competitor recovery, model adaptation time, service levels
+and savings are hypotheses. No guaranteed stockout probability follows from one
+mean/std or tracking threshold. Count physical usable stock before purchasing;
+phantom count differences are not automatically order quantities. Time-phase
+inventory/firm receipts against forecast and usable shelf life. In the olive-oil
+example,24daysconsume800×24/7≈2742.86units, leaving≈57.14, not80; the arriving2400units
+then changes the position. Compute any expedite before its actual arrival, not
+simply newSS−oldSS plus an arbitrary buffer.
+
+Maintain consistent units perstore/perchain, day/week, units/cases, cost/revenue.
+The V2 starting inventory/buy must include prelaunch rundown and both weekly
+shares of each2week phase. Recompute every downstream cost after changing them.
+Probability of account close, conditional start date and conditional demand volume
+are separate; aggregate realization ratio is not necessarily close probability.
+Use calibrated scenario distributions and a cost/quantile policy, not a mean-only
+PO rule. Forecast bands require calibrated coverage; WAPE is not a confidence
+interval. No PO, cancellation, allocation rule, price or destruction is executed
+without responsible owner approval. Preserve source data and event flags.

@@ -128,8 +128,7 @@ curl -s -X POST https://api.voygr.tech/calls/$ID/answer \
 curl -s -H "X-API-Key: $PLACECALL_API_KEY" https://api.voygr.tech/calls/$ID
 ```
 
-Keep polling every few seconds until `outcome_type` is non-null; it is the last field to be
-written. Then read two separate fields:
+Poll at a bounded interval and deadline for a terminal status with the available result, summary and transcript. Do not use deprecated `outcome_type` as the completion gate. If final fields remain unavailable, report the pending/unknown state and retain the call ID for a later authorized check. Read two separate fields:
 
 - `result`: `goal_met`, `goal_partial`, `refused`, `goal_not_met`, `wrong_party`, `not_reached`,
   `aborted`.
@@ -164,7 +163,7 @@ needed) and its `suggestion_id`. The phone must equal the card's number, or the 
 User: Book a table for 4 tonight at 7:30 at +1 415 555 0142 under Alex Thompson.
 Agent: Shows the number and this brief and asks for a yes:
        "Call this restaurant and book a table for 4 tonight at 7:30 PM under the name Alex
-       Thompson. If they ask for a callback number, give 415 555 0199. Get an explicit
+       Thompson. If they ask for a callback number, give only the callback number supplied and authorized by the user. Get an explicit
        confirmation of the reservation before ending."
        Places the call, polls events, then reports result goal_met, the confirmed time and
        the relevant lines of the transcript.
@@ -228,7 +227,7 @@ Agent: Asks the user, posts "Yes, 8:15 is fine" to /calls/{id}/answer within the
   **Solution:** On the `brief` path it is nested at `call.call_id`; on the `intent` path it is
   top-level `call_id`.
 - **Problem:** `status` is `completed` but the outcome and transcript are `null`.
-  **Solution:** Keep polling `GET /calls/{id}` until `outcome_type` is non-null.
+  **Solution:** Poll `GET /calls/{id}` within a bounded deadline for result/transcript fields; report incomplete finalization without redialing.
 - **Problem:** The poll loop never sees a mid-call question.
   **Solution:** Create calls with `"ask_user_mode": "stream"`.
 - **Problem:** `409` on `POST /calls`.

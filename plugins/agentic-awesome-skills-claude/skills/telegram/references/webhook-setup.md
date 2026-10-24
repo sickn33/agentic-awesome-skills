@@ -41,7 +41,7 @@ GET https://api.telegram.org/bot<TOKEN>/getWebhookInfo
 **Remover webhook:**
 ```
 POST https://api.telegram.org/bot<TOKEN>/deleteWebhook
-{"drop_pending_updates": true}
+{"drop_pending_updates": false}
 ```
 
 ---
@@ -91,9 +91,7 @@ async function start() {
 }
 
 // Handlers
-bot.onText(/\/start/, (msg) => {
-  bot.sendMessage(msg.chat.id, 'Bot ativo via webhook!');
-});
+bot.start((ctx) => ctx.reply('Bot ativo via webhook!'));
 
 start();
 ```
@@ -102,53 +100,13 @@ start();
 
 ## Flask
 
-```python
-import os
-from flask import Flask, request, jsonify
-from telegram import Update, Bot
-from telegram.ext import Application, CommandHandler, MessageHandler, filters
-
-TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
-WEBHOOK_URL = os.getenv('WEBHOOK_URL')
-SECRET_TOKEN = os.environ['WEBHOOK_SECRET']
-
-flask_app = Flask(__name__)
-
-# Criar application do telegram
-application = Application.builder().token(TOKEN).build()
-
-async def start(update: Update, context):
-    await update.message.reply_text('Bot ativo via webhook!')
-
-application.add_handler(CommandHandler('start', start))
-
-@flask_app.route('/webhook', methods=['POST'])
-async def webhook():
-    # Validar secret token
-    secret = request.headers.get('X-Telegram-Bot-Api-Secret-Token')
-    if secret != SECRET_TOKEN:
-        return 'Forbidden', 403
-
-    update = Update.de_json(request.get_json(), application.bot)
-    await application.process_update(update)
-    return 'OK', 200
-
-@flask_app.route('/health')
-def health():
-    return jsonify(status='ok')
-
-# Registrar webhook
-import requests
-requests.post(
-    f'https://api.telegram.org/bot{TOKEN}/setWebhook',
-    json={
-        'url': f'{WEBHOOK_URL}/webhook',
-        'allowed_updates': ['message', 'callback_query'],
-        'secret_token': SECRET_TOKEN,
-        'max_connections': 40
-    }
-)
-```
+Nao crie um event loop por requisicao nem chame `process_update` antes de
+`Application.initialize()`. Para o projeto Python distribuido, use
+`assets/boilerplate/python/webhook_server.py`: `run_webhook` gerencia o ciclo de
+vida e valida o secret token. Instale as dependencias revisadas e configure um
+proxy HTTPS para `127.0.0.1:5000`; o servidor local nao oferece TLS nem `/health`.
+Uma integracao Flask personalizada precisa de um loop persistente, inicializacao,
+shutdown e encaminhamento thread-safe, testados separadamente.
 
 ---
 
@@ -176,7 +134,7 @@ application.add_handler(CommandHandler('start', start))
 async def on_startup():
     await application.initialize()
     await application.bot.set_webhook(
-        url=f'{WEBHOOK_URL}/webhook/{TOKEN}',
+        url=f"{WEBHOOK_URL.rstrip('/')}/webhook",
         allowed_updates=['message', 'callback_query'],
         secret_token=SECRET_TOKEN
     )
@@ -263,7 +221,7 @@ const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN!);
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method === 'POST') {
     const secretHeader = req.headers['x-telegram-bot-api-secret-token'];
-    if (secretHeader !== process.env.WEBHOOK_SECRET) {
+    if (!process.env.WEBHOOK_SECRET || secretHeader !== process.env.WEBHOOK_SECRET) {
       return res.status(403).send('Forbidden');
     }
 

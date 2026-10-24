@@ -13,3 +13,5 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `scripts/setup_consumer.py` | `.github/plugins/azure-sdk-python/skills/azure-eventhub-py/scripts/setup_consumer.py` | `73b925deb18c3b6da0760b3225cc8e3ea69db1e7` | text-only trailing whitespace normalized |
 
 `scripts/setup_consumer.py` authenticates to the configured Event Hub. `send` publishes event data; `receive` prints event bodies and properties and, when configured, writes/advances a Blob checkpoint. Confirm the exact namespace, hub, payload/count, starting position, data handling, and checkpoint destination before live use. No cloud calls were made during restoration.
+
+Catalog review modifications: corrected sync/async imports, checkpoint failure semantics, partition/property guidance and helper receive termination/credential cleanup. Original source blob identifiers above describe the import, not the modified local bytes. No Azure operation was performed.

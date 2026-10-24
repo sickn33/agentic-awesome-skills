@@ -4,6 +4,8 @@
 
 ## Before Starting
 
+Draft strategy first unless account actions were explicitly authorized. Verify actual connector access, account/currency/time zone, objective, total/daily budget, spend limits, schedule and exact preview before creating/activating/scaling campaigns. Existing authorization can cover specified changes; do not assume expertise grants account access. Upload audience lists or install tracking only with approved data rights/consent and target. Hashing emails does not make personal data anonymous. Verify current platform features/policies/eligibility in official documentation and the account UI; names and capabilities below are historical examples, not guaranteed current options.
+
 Gather this context (ask if not provided):
 
 ### 1. Campaign Goals
@@ -127,6 +129,8 @@ GOOG_Search_Brand_Demo_Ongoing
 LI_LeadGen_CMOs-SaaS_Whitepaper_Mar24
 ```
 
+The percentages, CPCs, conversion counts, time windows and demographic examples below are planning hypotheses, not measured benchmarks or universal platform requirements. Use account-specific evidence and business economics. Verify testimonial/metric claims and permissions; the Sarah K. quote is synthetic and must not be published as a real endorsement.
+
 ### Budget Allocation Framework
 
 **Testing phase (first 2-4 weeks):**
@@ -234,7 +238,7 @@ Example:
 - In-market audiences
 - Affinity audiences
 - Customer match (upload email lists)
-- Similar/lookalike audiences
+- Available audience expansion products vary by campaign/platform; do not assume legacy Google Similar Audiences still exist
 
 ### Meta Audiences
 
@@ -284,7 +288,7 @@ Example:
 - Before/after comparisons
 - Stats and numbers as focal point
 - Human faces (real, not stock)
-- Bold, readable text overlay (keep under 20%)
+- Bold, readable text overlay; verify actual placement/policy requirements rather than treating20% as a universal rule
 
 **What doesn't:**
 - Generic stock photos
@@ -309,7 +313,7 @@ Example:
 6. CTA with offer (55-60 sec)
 
 **Production tips:**
-- Captions always (85% watch without sound)
+- Provide accurate captions for accessibility and sound-off viewing; no universal85% statistic is established here
 - Vertical for Stories/Reels, square for feed
 - Native feel outperforms polished
 - First 3 seconds determine if they watch
@@ -325,8 +329,8 @@ Example:
 
 **Testing approach:**
 - Test one variable at a time for clean data
-- Need 100+ conversions per variant for significance
-- Kill losers fast (3-5 days with sufficient spend)
+- Predefine baseline rate, minimum detectable effect, confidence/power and stopping rule; 100 conversions is not a universal significance threshold
+- Wait for the predefined evidence/stopping rule and conversion lag; repeated early peeking can select false winners
 - Iterate on winners
 
 ---
@@ -455,7 +459,7 @@ Always exclude:
 
 ### Attribution Considerations
 
-- Platform attribution is inflated (they want credit)
+- Platform attribution windows, view-through rules, consent loss and deduplication can produce differences; reconcile definitions before comparing or summing
 - Use UTM parameters consistently
 - Compare platform data to GA4/analytics
 - Consider incrementality testing for mature accounts

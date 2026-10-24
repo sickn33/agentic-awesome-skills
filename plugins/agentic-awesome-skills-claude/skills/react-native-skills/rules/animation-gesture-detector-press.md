@@ -15,7 +15,7 @@ JS thread round-trip for press animations.
 **Incorrect (Pressable with JS thread callbacks):**
 
 ```tsx
-import { Pressable } from 'react-native'
+import { Pressable, Text } from 'react-native'
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -46,6 +46,7 @@ function AnimatedButton({ onPress }: { onPress: () => void }) {
 **Correct (GestureDetector with UI thread worklets):**
 
 ```tsx
+import { Text } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import Animated, {
   useSharedValue,
@@ -66,14 +67,14 @@ function AnimatedButton({ onPress }: { onPress: () => void }) {
     .onFinalize(() => {
       pressed.set(withTiming(0))
     })
-    .onEnd(() => {
-      runOnJS(onPress)()
+    .onEnd((_event, success) => {
+      if (success) runOnJS(onPress)()
     })
 
   // Derive visual values from the state
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
-      { scale: interpolate(withTiming(pressed.get()), [0, 1], [1, 0.95]) },
+      { scale: interpolate(pressed.get(), [0, 1], [1, 0.95]) },
     ],
   }))
 
@@ -93,3 +94,5 @@ from worklets. Use `.set()` and `.get()` for React Compiler compatibility.
 
 Reference:
 [Gesture Handler Tap Gesture](https://docs.swmansion.com/react-native-gesture-handler/docs/gestures/tap-gesture)
+
+A raw GestureDetector does not supply full button semantics. Provide an accessibility role/label and an accessibility activation handler, keyboard support on web, and disabled-state handling; retain Pressable if those requirements are not implemented.

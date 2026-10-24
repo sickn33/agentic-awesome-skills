@@ -33,6 +33,8 @@ Guide to selecting and optimizing embedding models for vector search application
 
 ## Core Concepts
 
+Model table is a historical candidate list, not a current leaderboard. Verify exact model-card token limits, dimensions, license, revision and query/document prefixes before use; count tokens with that model’s tokenizer. Approve private-document transfer/provider cost. Preserve original text and source offsets; stripping symbols can destroy code, monetary signs, equations and identifiers.
+
 ### 1. Embedding Model Comparison
 
 | Model | Dimensions | Max Tokens | Best For |
@@ -199,7 +201,12 @@ def chunk_by_sentences(
     max_chunk_size: int = 1000,
     min_chunk_size: int = 100
 ) -> List[str]:
-    """Chunk text by sentences, respecting size limits."""
+    """Group sentences by approximate character length, not tokenizer length.
+
+    min_chunk_size is not enforced; oversized individual sentences require a
+    second token-bounded splitting pass before embedding. NLTK resources must
+    already be installed; no implicit network download is supplied here.
+    """
     import nltk
     sentences = nltk.sent_tokenize(text)
 
@@ -301,11 +308,9 @@ class DomainEmbeddingPipeline:
         """Default preprocessing."""
         # Remove excessive whitespace
         text = re.sub(r'\s+', ' ', text)
-        # Remove special characters
-        text = re.sub(r'[^\w\s.,!?-]', '', text)
         return text.strip()
 
-    async def process_documents(
+    def process_documents(
         self,
         documents: List[dict],
         id_field: str = "id",
@@ -413,6 +418,10 @@ def evaluate_retrieval_quality(
         ideal_dcg = sum(1 / np.log2(i + 2) for i in range(min(len(relevant), k)))
         return dcg / ideal_dcg if ideal_dcg > 0 else 0
 
+    if k <= 0 or not queries or len(queries) != len(relevant_docs) or len(queries) != len(retrieved_docs):
+        raise ValueError("Require positive k and equal nonempty query/relevance/result lists")
+    if any(len(ids) != len(set(ids)) for ids in retrieved_docs):
+        raise ValueError("Deduplicate retrieved IDs before ranking metrics")
     metrics = {
         f"precision@{k}": [],
         f"recall@{k}": [],
@@ -438,14 +447,19 @@ def compute_embedding_similarity(
     """Compute similarity matrix between embedding sets."""
     if metric == "cosine":
         # Normalize
-        norm1 = embeddings1 / np.linalg.norm(embeddings1, axis=1, keepdims=True)
-        norm2 = embeddings2 / np.linalg.norm(embeddings2, axis=1, keepdims=True)
+        lengths1 = np.linalg.norm(embeddings1, axis=1, keepdims=True)
+        lengths2 = np.linalg.norm(embeddings2, axis=1, keepdims=True)
+        if np.any(lengths1 == 0) or np.any(lengths2 == 0):
+            raise ValueError("Cosine similarity is undefined for zero vectors")
+        norm1 = embeddings1 / lengths1
+        norm2 = embeddings2 / lengths2
         return norm1 @ norm2.T
     elif metric == "euclidean":
         from scipy.spatial.distance import cdist
         return -cdist(embeddings1, embeddings2, metric='euclidean')
     elif metric == "dot":
         return embeddings1 @ embeddings2.T
+    raise ValueError(f"Unsupported metric: {metric}")
 ```
 
 ## Best Practices

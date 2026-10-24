@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import ast
 from pathlib import Path
+from source_io import read_text
 from typing import Any, Dict, List, Tuple
 
 from config import (
@@ -26,7 +27,13 @@ from config import (
 def _cyclomatic_complexity(node: ast.AST) -> int:
     """Calcula complexidade ciclomatica de uma funcao/metodo."""
     complexity = 1  # base
-    for child in ast.walk(node):
+    def local_walk(current):
+        yield current
+        for child in ast.iter_child_nodes(current):
+            if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef, ast.Lambda)):
+                continue
+            yield from local_walk(child)
+    for child in local_walk(node):
         if isinstance(child, (ast.If, ast.IfExp)):
             complexity += 1
         elif isinstance(child, (ast.For, ast.AsyncFor, ast.While)):
@@ -96,15 +103,15 @@ def analyze(skill_data: Dict[str, Any]) -> Tuple[float, List[Dict[str, Any]]]:
             continue
 
         try:
-            source = filepath.read_text(encoding="utf-8", errors="replace")
+            source = read_text(filepath, root=skill_path)
             tree = ast.parse(source, filename=str(filepath))
-        except SyntaxError as e:
+        except (SyntaxError, OSError) as e:
             findings.append({
                 "skill_name": skill_name,
                 "dimension": "code_quality",
                 "severity": "high",
-                "category": "syntax_error",
-                "title": f"Erro de sintaxe em {rel_path}",
+                "category": "syntax_error" if isinstance(e, SyntaxError) else "source_unreadable",
+                "title": f"Fonte invalida ou inacessivel em {rel_path}",
                 "description": str(e),
                 "file_path": rel_path,
                 "line_number": getattr(e, "lineno", None),
@@ -143,11 +150,7 @@ def analyze(skill_data: Dict[str, Any]) -> Tuple[float, List[Dict[str, Any]]]:
                 func_lines = end_line - node.lineno + 1
 
                 # Docstring
-                has_doc = (
-                    node.body
-                    and isinstance(node.body[0], ast.Expr)
-                    and isinstance(node.body[0].value, (ast.Constant, ast.Str))
-                )
+                has_doc = ast.get_docstring(node) is not None
                 if has_doc:
                     functions_with_docs += 1
                 else:
@@ -189,11 +192,7 @@ def analyze(skill_data: Dict[str, Any]) -> Tuple[float, List[Dict[str, Any]]]:
 
             elif isinstance(node, ast.ClassDef):
                 total_functions += 1
-                has_doc = (
-                    node.body
-                    and isinstance(node.body[0], ast.Expr)
-                    and isinstance(node.body[0].value, (ast.Constant, ast.Str))
-                )
+                has_doc = ast.get_docstring(node) is not None
                 if has_doc:
                     functions_with_docs += 1
 

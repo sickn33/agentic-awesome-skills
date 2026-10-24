@@ -10,8 +10,8 @@ Severity is shown on the PR as a level, computed by the script from the contract
 
 | Level | Meaning | Alert |
 | --- | --- | --- |
-| P0 | blocking on the security axis | `[!CAUTION]` (red) |
-| P1 | any other blocking finding | `[!WARNING]` (yellow) |
+| P0 | urgent critical impact requiring immediate remediation, independently justified | `[!CAUTION]` (red) |
+| P1 | other blocking findings, including security issues without P0 urgency | `[!WARNING]` (yellow) |
 | P2 | non-blocking | `[!NOTE]` (blue) |
 
 GitHub and GitLab (17.10+) render those alert blockquotes with colour; anything else, Azure DevOps

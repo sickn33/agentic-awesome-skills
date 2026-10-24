@@ -14,7 +14,7 @@ Webhook (responseMode: "responseNode")
   │                └─invalid─→ Respond (400, validation_error body)
   └── (any fallible node's error output, sourceIndex 1)
             → Respond (5xx, structured error body)
-            → optional: Log full error privately / notify
+            → optional: Log redacted diagnostics privately / notify
 ```
 
 The non-negotiable: **every path ends at a Respond node.** Success, validation failure, execution failure — all of them. A path that doesn't reach a Respond is a hanging branch, and a hanging branch is a caller timeout.
@@ -98,7 +98,7 @@ That's not over-engineering — it's the difference between the caller getting a
 
 ## Input validation: the Set-node schema validator
 
-For structured input validation, don't hand-roll an IF chain per field. Run the whole check as an **IIFE inside a single Set node**, branch on its result with one IF, and respond. One node does the work, and it's far faster than a recursive validator running in a Code node + sub-workflow (the sub-workflow invocation dominates that cost).
+For structured input validation, don't hand-roll an IF chain per field. Run the whole check as an **IIFE inside a single Set node**, branch on its result with one IF, and respond. One node does the work, and validate the actual constraints; no performance advantage is established here.
 
 The validator node assigns one object field, `result`, computed by the expression below. The expression is **schema-specific** — edit the `REQUIRED_SCHEMA` constant and the per-field checks for your endpoint. The *output keys* are a contract the Respond node consumes — don't rename them.
 
@@ -114,7 +114,7 @@ The validator node assigns one object field, `result`, computed by the expressio
           "id": "a1",
           "name": "result",
           "type": "object",
-          "value": "={{ (() => { const body = $json.body || {}; const errors = []; const REQUIRED_SCHEMA = { type: 'object', properties: { name: { type: 'string', minLength: 1, description: 'Customer full name' }, email: { type: 'string', pattern: '^\\\\S+@\\\\S+\\\\.\\\\S+$', description: 'Contact email address' }, plan: { type: 'string', enum: ['starter','pro','enterprise'], description: 'Subscription plan' }, seat_count: { type: 'integer', minimum: 1, maximum: 500, description: 'Number of licensed seats' } }, required: ['name','email','plan','seat_count'], additionalProperties: false }; if (!('name' in body)) errors.push({ p: 'name', m: 'Missing required field \"name\"', d: 'Customer full name' }); else if (typeof body.name !== 'string') errors.push({ p: 'name', m: 'Expected type \"string\"', d: 'Customer full name' }); if (!('email' in body)) errors.push({ p: 'email', m: 'Missing required field \"email\"', d: 'Contact email address' }); else if (!/^\\S+@\\S+\\.\\S+$/.test(body.email)) errors.push({ p: 'email', m: '\"' + body.email + '\" is not valid', d: 'Contact email address' }); if (!('plan' in body)) errors.push({ p: 'plan', m: 'Missing required field \"plan\"', d: 'Subscription plan' }); else if (['starter','pro','enterprise'].indexOf(body.plan) === -1) errors.push({ p: 'plan', m: '\"' + body.plan + '\" is not allowed. Must be one of: starter, pro, enterprise', d: 'Subscription plan' }); if (!('seat_count' in body)) errors.push({ p: 'seat_count', m: 'Missing required field \"seat_count\"', d: 'Number of licensed seats' }); else { const v = body.seat_count; if (typeof v !== 'number' || !Number.isFinite(v) || Math.floor(v) !== v) errors.push({ p: 'seat_count', m: 'Expected type \"integer\"', d: 'Number of licensed seats' }); else if (v < 1 || v > 500) errors.push({ p: 'seat_count', m: 'Must be between 1 and 500', d: 'Number of licensed seats' }); } if (errors.length === 0) return { valid: true, validationError: null }; const lines = errors.map(e => '• ' + e.p + ': ' + e.m + (e.d ? ' - ' + e.d : '')); const details = {}; errors.forEach(e => { if (!(e.p in details)) details[e.p] = e.m; }); return { valid: false, validationError: 'Validation failed (' + errors.length + ' issue' + (errors.length > 1 ? 's' : '') + '):\\n' + lines.join('\\n'), details: details, requiredSchema: REQUIRED_SCHEMA }; })() }}"
+          "value": "={{ (() => { const body = $json.body; const errors = []; if (!body || typeof body !== 'object' || Array.isArray(body)) return { valid: false, validationError: 'Body must be an object', details: {} }; const allowed = ['name','email','plan','seat_count']; for (const key of Object.keys(body)) if (!allowed.includes(key)) errors.push({ p: key, m: 'Unexpected field' }); const REQUIRED_SCHEMA = { type: 'object', properties: { name: { type: 'string', minLength: 1, description: 'Customer full name' }, email: { type: 'string', pattern: '^\\\\S+@\\\\S+\\\\.\\\\S+$', description: 'Contact email address' }, plan: { type: 'string', enum: ['starter','pro','enterprise'], description: 'Subscription plan' }, seat_count: { type: 'integer', minimum: 1, maximum: 500, description: 'Number of licensed seats' } }, required: ['name','email','plan','seat_count'], additionalProperties: false }; if (!('name' in body)) errors.push({ p: 'name', m: 'Missing required field \"name\"', d: 'Customer full name' }); else if (typeof body.name !== 'string' || body.name.trim().length < 1) errors.push({ p: 'name', m: 'Expected type \"string\"', d: 'Customer full name' }); if (!('email' in body)) errors.push({ p: 'email', m: 'Missing required field \"email\"', d: 'Contact email address' }); else if (typeof body.email !== 'string' || !/^\\S+@\\S+\\.\\S+$/.test(body.email)) errors.push({ p: 'email', m: 'Invalid email format', d: 'Contact email address' }); if (!('plan' in body)) errors.push({ p: 'plan', m: 'Missing required field \"plan\"', d: 'Subscription plan' }); else if (['starter','pro','enterprise'].indexOf(body.plan) === -1) errors.push({ p: 'plan', m: 'Plan must be starter, pro or enterprise', d: 'Subscription plan' }); if (!('seat_count' in body)) errors.push({ p: 'seat_count', m: 'Missing required field \"seat_count\"', d: 'Number of licensed seats' }); else { const v = body.seat_count; if (typeof v !== 'number' || !Number.isFinite(v) || Math.floor(v) !== v) errors.push({ p: 'seat_count', m: 'Expected type \"integer\"', d: 'Number of licensed seats' }); else if (v < 1 || v > 500) errors.push({ p: 'seat_count', m: 'Must be between 1 and 500', d: 'Number of licensed seats' }); } if (errors.length === 0) return { valid: true, validationError: null }; const lines = errors.map(e => '• ' + e.p + ': ' + e.m + (e.d ? ' - ' + e.d : '')); const details = {}; errors.forEach(e => { if (!(e.p in details)) details[e.p] = e.m; }); return { valid: false, validationError: 'Validation failed (' + errors.length + ' issue' + (errors.length > 1 ? 's' : '') + '):\\n' + lines.join('\\n'), details: details, requiredSchema: REQUIRED_SCHEMA }; })() }}"
         }
       ]
     },
@@ -202,7 +202,7 @@ responseBody: "={{ JSON.stringify({ error: 'internal_error', details: $json.erro
 
 `$json.error` can carry stack traces, internal node names, connection strings, and upstream response bodies with embedded tokens. Surfacing it hands attackers a map and gives callers nothing useful.
 
-Instead: log the full error privately, return a sanitized message.
+Instead: log only necessary redacted error detail in approved private storage, return a sanitized message.
 
 ```javascript
 // Error output → Log node (sends full $json.error to Sentry/Slack/your logger)
@@ -233,10 +233,10 @@ Don't conflate this with the `job_id` an async (202) endpoint returns — that's
 
 ## Async / 202 pattern
 
-If the work takes longer than the caller wants to wait, respond 202 immediately and continue async:
+If the work takes longer than the caller wants to wait, persist or enqueue the work durably before responding 202, then process asynchronously:
 
 ```
-Webhook → validate → Respond (202, { job_id }) → continue processing → callback / queue / email on completion
+Webhook → validate → durable enqueue → Respond (202, { job_id }); worker → process → callback / queue / email on completion
 ```
 
 It has its own gotchas (idempotency, callback retries, status tracking) — build it deliberately. The `job_id` is intrinsic (it's how the work is found later), distinct from the optional `request_id`.

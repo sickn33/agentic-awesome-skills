@@ -122,7 +122,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Expense Claim,Amount,Tax Amount,Approver,Approval Level,Category,Currency,Date of Expense,Department,Employee Name,Expense ID,Notes,Project/Cost Centre,Budget Line,Receipt Attached,Reimbursement Date,Status,Submission Date
-EXP-2026-014,45000.00,8100.00,Sneha Iyer,Manager,General,INR,2026-01-15,Delivery,Aarav Sharma,,February claims reconciled against the bank feed; two receipts were missing.,CC-200 Website Redesign,BL-114 Travel,FALSE,2026-01-15,Approved,2026-01-15
+EXP-2026-014,45000.00,8100.00,Sneha Iyer,Manager,General,INR,2026-01-15,Delivery,Aarav Sharma,,Synthetic approved claim awaiting reimbursement.,CC-200 Website Redesign,BL-114 Travel,TRUE,,Approved,2026-01-15
 ```
 
 ```sql
@@ -142,7 +142,7 @@ CREATE TABLE expense_management (
   project_cost_centre VARCHAR(255),
   budget_line VARCHAR(255),
   receipt_attached BOOLEAN NOT NULL,
-  reimbursement_date DATE NOT NULL,
+  reimbursement_date DATE,
   status VARCHAR(100) NOT NULL,
   submission_date DATE NOT NULL,
   created_at TIMESTAMP DEFAULT NOW(),
@@ -184,7 +184,7 @@ CREATE INDEX idx_expense_management_status ON expense_management (status);
       "Approval Level",
       "Category",
       "Date of Expense",
-      "Reimbursement Date",
+      "Receipt Attached",
       "Status",
       "Submission Date"
   ]
@@ -232,11 +232,11 @@ and anything pointing at another table stays `relation`.
 | 9 | Department | `text` | `VARCHAR(255)` | `string` | Text | `Delivery` |
 | 10 | Employee Name | `text` | `VARCHAR(255)` | `string` | Text | `Aarav Sharma` |
 | 11 | Expense ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
-| 12 | Notes | `long_text` | `TEXT` | `string` | Text | `February claims reconciled against the bank feed; two receipts were missing.` |
+| 12 | Notes | `long_text` | `TEXT` | `string` | Text | `Synthetic approved claim awaiting reimbursement.` |
 | 13 | Project/Cost Centre | `text` | `VARCHAR(255)` | `string` | Text | `CC-200 Website Redesign` |
 | 14 | Budget Line | `text` | `VARCHAR(255)` | `string` | Text | `BL-114 Travel` |
-| 15 | Receipt Attached | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `FALSE` |
-| 16 | Reimbursement Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
+| 15 | Receipt Attached | `checkbox` | `BOOLEAN` | `boolean` | Checkbox | `TRUE` |
+| 16 | Reimbursement Date | `date` | `DATE` | `string, format: date` | Date | `(blank until paid)` |
 | 17 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Approved` |
 | 18 | Submission Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
 
@@ -304,7 +304,7 @@ Claims come on paper and nobody knows what was reimbursed.
 - Notion relations need both databases imported before the link column resolves.
 - Select options are a starting set. Rename them to match how the business talks.
 - No automation, reminders or sync. Those need the integration layer.
-- Does not pay anything or connect to a bank or accounting system.
+- Does not pay anything or connect to a bank or accounting system. Reimbursement Date stays absent until payment is confirmed. Define whether Amount includes Tax Amount, the currency, receipt exceptions and approval limits before calculating totals; this schema does not enforce routing, tax recoverability or prevent duplicate claims. A receipt checkbox is not a retained receipt or an approval audit trail.
 - Legal, tax and HR review is still required before this drives real decisions.
 
 ## Security & Safety Notes
@@ -336,7 +336,7 @@ Claims come on paper and nobody knows what was reimbursed.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Module Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 

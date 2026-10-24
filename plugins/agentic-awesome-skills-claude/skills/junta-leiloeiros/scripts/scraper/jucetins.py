@@ -44,7 +44,7 @@ class JucetinsScraper(AbstractJuntaScraper):
                 nome_raw = m_start.group(1).strip()
                 is_cancelado = bool(RE_CANCELADO.search(nome_raw))
                 nome = RE_CANCELADO.sub("", nome_raw).strip(" -")
-                current = {"nome": nome, "municipio": "Palmas", "situacao": "CANCELADO" if is_cancelado else None}
+                current = {"nome": nome, "municipio": None, "situacao": "CANCELADO" if is_cancelado else None}
                 continue
             if current is None:
                 continue
@@ -122,7 +122,7 @@ class JucetinsScraper(AbstractJuntaScraper):
                     nome=nome,
                     matricula=gcol(cells, ["matr", "registro"]),
                     situacao=gcol(cells, ["situ", "status"]),
-                    municipio=gcol(cells, ["munic", "cidade"]) or "Palmas",
+                    municipio=gcol(cells, ["munic", "cidade"]),
                     telefone=gcol(cells, ["tel", "fone"]),
                     email=gcol(cells, ["email"]),
                     endereco=gcol(cells, ["ender", "logr"]),

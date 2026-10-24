@@ -154,9 +154,12 @@ One record per decision, in the blueprint's section 4 for cross-cutting decision
   [VERIFIED — S-12, 2026-09-06]. Duplicate processing would double-credit an order.
 **Options** (a) dedupe on gateway transaction ID at the DB level; (b) application-level lock;
   (c) accept duplicates and reconcile nightly.
-**Decision** (a). A unique constraint on `payment.gateway_txn_id` plus an upsert; the handler is
-  a pure function of the callback payload.
-**Consequences** Callback handling becomes safe to retry, and replays are free. Cost: the gateway
+**Decision** (a), scoped by provider, merchant and event type/ID. Authenticate the raw callback,
+  verify amount/currency/order ownership and permitted state transitions, then atomically dedupe
+  the event and write the ledger. Separate refund/status events must not be collapsed by transaction ID.
+  Use an outbox for external effects and reconciliation after ambiguous failures.
+**Consequences** Authenticated duplicate events do not repeat committed ledger effects; retries
+  still require state checks and reconciliation. Cost: the gateway
   transaction ID becomes part of our schema and a gateway change would require a migration.
   Rejected (c) because reconciliation needs a human and this product has none.
 **Compliance** Integration test `payments/callback_replay_test` sends the same callback 3x and

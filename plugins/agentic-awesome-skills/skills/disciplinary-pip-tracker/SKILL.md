@@ -94,7 +94,7 @@ If an artifact was requested, build it after resolving essential missing facts. 
 
 **Recommended approach:** Run this as a documented case with a start, review dates and an outcome, whatever stage the process is at.
 
-**Why this one:** Disciplinary cases fail on missing dates and missing review points, not on the decision. Store the timeline, not opinions.
+**Why this one:** A dated timeline supports review, but fair evidence assessment and the decision process remain essential. Distinguish allegations, observed facts, employee response and authorized findings.
 
 **Workflow:** Case opened → Goals and review date → Review → Outcome → Closure and appeal
 
@@ -122,7 +122,7 @@ that need a number, date or currency format applied.
 
 ```csv
 Case Title,Employee Name,Department,Manager,HR Owner,Case Type,Linked Performance Review,Linked Issue,Issue Summary,Improvement Goals,Start Date,Review Date,End Date,Outcome,Confidential,Status,Case ID
-Missed handover on Northwind account,Aarav Sharma,Delivery,Sneha Iyer,Ananya Rao,Misconduct,REV-2026-Q1,ISS-2026-021,Client escalation raised after a missed handover milestone.,Close 5 tickets per week,2026-08-03,2026-09-14,2026-10-30,"Confirmed after the 90-day review, with a development plan attached.",Internal,Investigation,
+Missed handover on Northwind account,Aarav Sharma,Delivery,Sneha Iyer,Ananya Rao,Misconduct,REV-2026-Q1,ISS-2026-021,Client escalation raised after a missed handover milestone.,Close 5 tickets per week,2026-08-03,2026-09-14,2026-10-30,"Pending investigation; no outcome determined.",Restricted,Investigation,
 ```
 
 ```sql
@@ -139,7 +139,7 @@ CREATE TABLE disciplinary_pip_tracker (
   improvement_goals VARCHAR(255),
   start_date DATE NOT NULL,
   review_date DATE NOT NULL,
-  end_date DATE NOT NULL,
+  end_date DATE,
   outcome VARCHAR(255),
   confidential VARCHAR(100) NOT NULL,
   status VARCHAR(100) NOT NULL,
@@ -180,7 +180,6 @@ CREATE INDEX idx_disciplinary_pip_tracker_status ON disciplinary_pip_tracker (st
       "Case Type",
       "Start Date",
       "Review Date",
-      "End Date",
       "Confidential",
       "Status"
   ]
@@ -204,7 +203,7 @@ CREATE INDEX idx_disciplinary_pip_tracker_status ON disciplinary_pip_tracker (st
 | Review Date | Date | Convert to Date |
 | End Date | Date | Convert to Date |
 | Outcome | Text | Leave as Text |
-| Confidential | Select (add options after import) | Convert to Select, add options: "Public", "Internal", "Restricted", "Highly Restricted" |
+| Confidential | Select (add options after import) | Convert to Select, add options: "Restricted", "Highly Restricted" |
 | Status | Select (add options after import) | Convert to Select, add options: "Opened", "Investigation", "Hearings", "Decision", "Appeals", "Closed" |
 | Case ID | Text (preserve source ID) | Keep imported IDs as Text; optionally add a separate Unique ID property |
 ```
@@ -229,8 +228,8 @@ and anything pointing at another table stays `relation`.
 | 11 | Start Date | `date` | `DATE` | `string, format: date` | Date | `2026-08-03` |
 | 12 | Review Date | `date` | `DATE` | `string, format: date` | Date | `2026-09-14` |
 | 13 | End Date | `date` | `DATE` | `string, format: date` | Date | `2026-10-30` |
-| 14 | Outcome | `text` | `VARCHAR(255)` | `string` | Text | `Confirmed after the 90-day review, with a development plan attached.` |
-| 15 | Confidential | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Internal` |
+| 14 | Outcome | `text` | `VARCHAR(255)` | `string` | Text | `Pending investigation; no outcome determined.` |
+| 15 | Confidential | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Restricted` |
 | 16 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Investigation` |
 | 17 | Case ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
 
@@ -244,7 +243,7 @@ Misconduct | Performance | Attendance | Policy Breach | Grievance
 **Confidential**
 
 ```
-Public | Internal | Restricted | Highly Restricted
+Restricted | Highly Restricted
 ```
 **Status**
 
@@ -298,7 +297,7 @@ We need to run a performance improvement plan and keep it clean.
 - Notion relations need both databases imported before the link column resolves.
 - Select options are a starting set. Rename them to match how the business talks.
 - No automation, reminders or sync. Those need the integration layer.
-- Does not give legal advice. Employment law varies and needs a qualified reviewer.
+- Does not give legal advice. Employment law varies and needs a qualified reviewer. End Date is optional while open; label a planned end date separately from actual closure. Confidentiality labels do not enforce permissions: restrict case access, attachments, export and retention to authorized roles, with an audit trail. Never default disciplinary records to public. Do not infer misconduct from a missed target or let scores automatically decide sanctions; preserve response and appeal evidence.
 - Legal, tax and HR review is still required before this drives real decisions.
 
 ## Security & Safety Notes
@@ -330,7 +329,7 @@ We need to run a performance improvement plan and keep it clean.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [Module Catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
 - @notification-reminder-hub - turns due dates in this module into reminders.
 

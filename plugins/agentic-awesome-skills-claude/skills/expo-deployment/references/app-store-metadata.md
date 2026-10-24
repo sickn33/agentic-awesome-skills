@@ -89,7 +89,7 @@ Create `store.config.json` at your project root:
       "seventeenPlus": false
     },
     "release": {
-      "automaticRelease": true,
+      "automaticRelease": false,
       "phasedRelease": true
     },
     "review": {
@@ -97,11 +97,13 @@ Create `store.config.json` at your project root:
       "lastName": "Doe",
       "email": "review@example.com",
       "phone": "+1 555-123-4567",
-      "notes": "Demo account: test@example.com / password123"
+      "notes": "Provide a restricted review account through the approved private credential channel"
     }
   }
 }
 ```
+
+The descriptions, reviews, encryption claims, user counts and savings below are fictional copy examples. Publish only claims substantiated for the real app; keep review credentials out of tracked configuration. The advisory schema is historical: validate current age-rating questions and EAS metadata schema rather than copying all NONE answers.
 
 ## App Store Optimization (ASO)
 
@@ -120,7 +122,7 @@ The title is the most important ranking factor. Include your brand name and 1-2 
 - Brand name first for recognition
 - Include highest-volume keyword
 - Avoid generic words like "app" or "the"
-- Title keywords boost rankings by ~10%
+- Measure effects in your own app; no fixed ranking lift is established here.
 
 ### Subtitle Optimization (30 characters max)
 
@@ -158,7 +160,7 @@ Hidden from users but crucial for discoverability. Use comma-separated keywords 
 - No duplicates from title/subtitle
 - Include singular forms (Apple handles plurals)
 - Add synonyms and alternate spellings
-- Include competitor brand names (carefully)
+- Do not include competing app names or unauthorized trademark terms
 - Use digits instead of spelled numbers ("5" not "five")
 - Skip articles and prepositions
 
@@ -377,7 +379,7 @@ Control how your app rolls out to users.
 ```json
 {
   "release": {
-    "automaticRelease": true,
+    "automaticRelease": false,
     "phasedRelease": true
   }
 }
@@ -402,7 +404,7 @@ Provide contact info and test credentials for the App Review team.
     "email": "app-review@company.com",
     "phone": "+1 (555) 123-4567",
     "demoUsername": "demo@example.com",
-    "demoPassword": "ReviewDemo2025!",
+    "demoPassword": "<restricted-review-account-secret-injected-privately>",
     "notes": "To test premium features:\n1. Log in with demo credentials\n2. Navigate to Settings > Subscription\n3. Tap 'Restore Purchase' - sandbox purchase will be restored\n\nFor location features, allow location access when prompted."
   }
 }
@@ -489,9 +491,6 @@ jobs:
 
 ## Tips
 
-- Update metadata every 4-6 weeks for optimal ASO
-- 70% of App Store visitors use search to find apps
-- Apps with 4+ star ratings get featured more often
-- Localized apps see 128% more downloads per country
-- First 3 lines of description are most critical (shown before "more")
-- Use all 100 keyword characters—every character counts
+- Review metadata when the app or evidence changes.
+- Historical percentages and ranking claims are not established by this bundle.
+- Use accurate, relevant keywords within current store limits; do not fill space with irrelevant terms.

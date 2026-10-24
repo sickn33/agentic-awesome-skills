@@ -33,6 +33,8 @@ Connect threats to controls for effective security planning.
 
 ## Resources
 
+The bundled playbook’s scores are prioritization aids, not validated risk reduction or compliance certification. Base findings on concrete threats, actual control evidence and remaining residual risk.
+
 - `resources/implementation-playbook.md` for detailed patterns and examples.
 
 ## Limitations

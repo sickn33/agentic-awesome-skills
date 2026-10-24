@@ -1,5 +1,7 @@
 # Changelog
 
+> Review note: Historical upstream release notes. Dates, performance figures and product claims below are retained as provenance, not independently reproduced validation of this catalog copy.
+
 All notable changes to Loki Mode will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),

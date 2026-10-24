@@ -42,7 +42,8 @@ license_source: "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
 ```text
 □ 拆解授权设备；拍照标注测试点
 □ 万用表找 GND/VCC/TX/RX；逻辑电平 1.8/3.3/5V
-□ USB-TTL 只读日志；记录波特率
+□ 断电确认接线与电平；不要将 USB-TTL VCC 直接接到已供电目标，避免反向供电
+□ USB-TTL 先仅连接 GND 与适配器 RX 读取目标 TX；记录波特率
 □ JTAG：枚举 IDCODE；评估是否锁定
 □ 提取镜像 → 交接 firmware-pentest / ghidra
 ```

@@ -32,8 +32,8 @@ interface Recommendation {
   // Impact (computed from impact-magnitude.mjs in Step 4)
   impactLabel: {
     performance?: string;    // PRECISE: "Reduce /api/products p95 from 850ms toward ~250-400ms"
-    costMagnitude?: 'negligible' | 'small' | 'medium' | 'large' | 'very-large';
-    costPhrase?: string;     // "hundreds of dollars per month at current traffic"
+    costMagnitude?: 'unmeasured' | 'negligible' | 'small' | 'medium' | 'large' | 'very-large';
+    costPhrase?: string;     // "cost savings require before-and-after measurement"
     billingDimension?: string;
     fractionReduced?: number;
   };
@@ -55,7 +55,7 @@ interface Recommendation {
   // Verifier output (computed in Step 3.6)
   verification?: {
     passRate: number;
-    failed: Array<{ type: string; text: string; reason: string }>;
+    failed: number;          // Detailed results are in verifyResults.
   };
 
   // Sanitizer audit trail (computed in Step 3.4)
@@ -92,15 +92,15 @@ The `what` field opens with the verb + the change, not the framing. Compare:
 The `why` must reference a verified finding from `verifiedFindings.json`:
 
 - ❌ "The route is uncached" (could apply anywhere)
-- ✅ "src/app/api/products/route.ts:22 returns Response without Cache-Control; observability shows 0% cache hit on 1.2M invocations/mo"
+- ✅ "src/app/api/products/route.ts:22 returns Response without Cache-Control; observability shows 0% cache hit on 1.2M requests in this window"
 
 ### No $ literals in customer fields
 
 The user-mandated rule. `what`/`why`/`fix`/`impact`/`currentBehavior`/`desiredBehavior` must not contain `$N` money literals. Use magnitude framing from `impact-magnitude.mjs`.
 
 - ❌ "Save $340/mo by adding s-maxage"
-- ✅ "Hundreds of dollars per month at current traffic"
-- ✅ (precise performance) "Move 1.2M monthly invocations to the CDN; expect p95 to drop from 850ms toward ~50ms on cache hits"
+- ✅ "Cost savings require before-and-after measurement"
+- ✅ (precise performance) "The route served 1.2M requests in this window at p95 850ms; measure cache-hit latency after the change"
 
 The `$-strip` sanitizer enforces this at output time, but the prompt should also instruct the LLM not to emit dollar literals in the first place.
 
@@ -114,7 +114,7 @@ The `$-strip` sanitizer enforces this at output time, but the prompt should also
 
 ### Match the user's framework version
 
-Don't recommend `'use cache'` (Next 15+) to a Next 13 user. The recommender prompt receives only the citation subset valid for the user's stack — but the LLM can still hallucinate. The `version-mismatch` sanitizer catches stragglers.
+Stable `'use cache'`, cacheLife and cacheTag require Next 16+ with Cache Components; Next 15 variants were experimental. The recommender prompt receives only the citation subset valid for the user's stack — but the LLM can still hallucinate. The `version-mismatch` sanitizer catches stragglers.
 
 ## The 12 sanitizers
 
@@ -124,7 +124,7 @@ Each sanitizer records its action in `rec.sanitizerTrail` when it mutates a fiel
 |---|---|---|---|---|
 | 1 | `$-strip` | Money-literal regex in customer field | Replace with "the billed cost" | `$-strip:N` |
 | 2 | `vercel-directive-strip` | `stale-if-error` / `proxy-revalidate` in cache-control | Strip directive (Vercel CDN doesn't honor) | `vercel-directive-strip:directive` |
-| 3 | `rate-limit` | Concurrency × delay > known provider rate limit | Prepend caveat, set needsReview | `rate-limit:provider:prescribed/limit` |
+| 3 | `rate-limit` | Named provider plus proposed concurrency | Prepend caveat, set needsReview | `rate-limit:provider:concurrency:quota-check` |
 | 4 | `pre-release` | Fix enables `-rc`/`-beta`/`-canary` feature | Append "requires pre-release version" caveat | `pre-release:pkg@version` |
 | 5 | `middleware-conflict` | Rec targets route covered by middleware matcher | Append "Middleware {matcher} may intercept" caveat | `middleware-conflict:matcher` |
 | 6 | `undeclared-dep` | Fix imports a package not in package.json | Prepend "Add dependency first: npm i {pkg}" | `undeclared-dep:pkg` |
@@ -141,16 +141,9 @@ The `recordSanitizer(rec, tag)` helper is the single entry point — sanitizers 
 
 ### Provider rate limits
 
-Used by sanitizer #3. These provider limits are public contract values:
-
-| Provider | Limit | Doc URL |
-|---|---|---|
-| Notion | 3 rps | https://developers.notion.com/reference/request-limits |
-| OpenAI | 30 rps | https://platform.openai.com/docs/guides/rate-limits |
-| Stripe | 100 rps | https://docs.stripe.com/rate-limits |
-| Anthropic | 10 rps | https://docs.anthropic.com/en/api/rate-limits |
-
-Tiers/plans differ; these are first-tier defaults. The sanitizer prepends a caveat if the rec prescribes higher concurrency.
+Provider quotas vary by account, model, endpoint and tier. Concurrency is not requests per second;
+the sanitizer asks for current quota/header checks without assigning universal numeric defaults.
+Bound both throughput and concurrency, and respect Retry-After with bounded retries.
 
 ## Envelope-unwrap recovery
 
@@ -193,10 +186,10 @@ The recommender's citation library is filtered by `signals.json.stack.framework@
 | `generateStaticParams` | Next ≥ 13.0 | Replaces getStaticPaths for App Router |
 | Fetch `next: { revalidate }` | Next ≥ 13.0 | Note: default fetch caching flipped in Next 15 |
 | `unstable_cache` | Next 14-15 | Replaced by 'use cache' in 16 |
-| `'use cache'` directive | Next ≥ 15.0 | Persistent cache primitive |
-| `cacheLife()`, `cacheTag()` | Next ≥ 15.0 | Pairs with 'use cache' |
-| `after()` | Next ≥ 15.0 | Non-blocking post-response work |
-| Partial Prerendering | Next ≥ 15.0 | Stable target later — verify per release |
+| `'use cache'` directive | Next ≥ 16.0 stable | Enable Cache Components; experimental in 15 |
+| `cacheLife()`, `cacheTag()` | Next ≥ 16.0 stable | Pairs with 'use cache'; experimental in 15 |
+| `after()` | Next ≥ 15.1 stable | Non-blocking post-response work |
+| Partial Prerendering | Next ≥ 16.0 stable | Via Cache Components; verify the active configuration |
 | `revalidateTag` / `revalidatePath` | Next ≥ 13.4 | Tag-based on-demand invalidation |
 | `cookies()` / `headers()` async | Next ≥ 15.0 | Async pattern in 15+ |
 

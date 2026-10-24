@@ -239,7 +239,7 @@ keys = client.channels.list_with_keys(
 if hasattr(keys.properties, 'properties'):
     for site in keys.properties.properties.sites:
         print(f"Site: {site.site_name}")
-        print(f"Key: {site.key}")
+        # Do not print Direct Line keys; store only in approved secret storage.
 ```
 
 ## Bot Connections (OAuth)
@@ -328,3 +328,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Management examples create/change real resources and channels: confirm subscription, resource group, bot/channel IDs and intended diff. Verify current supported identity/app types and channel/API versions before registering a new bot; a historical `MultiTenant` example does not establish current registration eligibility. F0 is a tier name, not a promise that every integration/channel is cost-free. Do not log channel keys or full management responses.

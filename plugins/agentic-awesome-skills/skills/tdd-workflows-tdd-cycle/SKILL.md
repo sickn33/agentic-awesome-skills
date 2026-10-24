@@ -21,11 +21,15 @@ date_added: "2026-02-27"
 - Clarify goals, constraints, and required inputs.
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
-- If detailed examples are required, open `resources/implementation-playbook.md`.
+- `resources/implementation-playbook.md` is not bundled; report that dependency unavailable instead of inventing its contents.
 
 Execute a comprehensive Test-Driven Development (TDD) workflow with strict red-green-refactor discipline:
 
 [Extended thinking: This workflow enforces test-first development through coordinated agent orchestration. Each phase of the TDD cycle is strictly enforced with fail-first verification, incremental implementation, and continuous refactoring. The workflow supports both single test and test suite approaches with configurable coverage thresholds.]
+
+## Host and evidence scope
+
+Named Task/subagent types below are integration examples, not guaranteed installed tools. Use the host’s supported workflow within user/repository constraints. Coverage/complexity thresholds are starting rubric values, not universal correctness gates. Existing tests need not fail in RED: verify each newly added test fails for the intended missing behavior while preserving existing green tests. Never roll back unrelated/user changes to restore a TDD phase.
 
 ## Configuration
 
@@ -132,7 +136,7 @@ For test-by-test development:
 3. Refactor if needed
 4. Repeat for next test
 
-Use this approach by adding `--incremental` flag to focus on one test at a time.
+Request incremental mode in plain language; no executable CLI or `--incremental` parser is bundled.
 
 ## Test Suite Mode
 
@@ -142,7 +146,7 @@ For comprehensive test suite development:
 3. Refactor entire module
 4. Add integration tests
 
-Use this approach by adding `--suite` flag for batch test development.
+Request suite mode in plain language; no executable CLI or `--suite` parser is bundled.
 
 ## Validation Checkpoints
 
@@ -207,7 +211,7 @@ Track and report:
 - All tests pass continuously
 - Coverage exceeds thresholds
 - Code complexity within limits
-- Zero defects in covered code
+- Report defects/gaps observed; coverage and passing tests do not prove zero defects
 - Clear test documentation
 - Fast test execution (< 5 seconds for unit tests)
 

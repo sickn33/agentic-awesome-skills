@@ -251,10 +251,15 @@ class ImageContext(
 
 ### Exposing via Class DSL
 
+Sketch: supply the missing rotation extension and width property; validate allowed paths, file size and decoded image dimensions before loading. Shared objects still need explicit release of scarce resources and thread-safe access.
+
 ```swift
 Class("Context", ImageContext.self) {
-  Constructor { (path: String) -> ImageContext in
-    return ImageContext(image: UIImage(contentsOfFile: path)!)
+  Constructor { (path: String) throws -> ImageContext in
+    guard let image = UIImage(contentsOfFile: path) else {
+      throw NSError(domain: "ImageContext", code: 1, userInfo: [NSLocalizedDescriptionKey: "Invalid image"])
+    }
+    return ImageContext(image: image)
   }
 
   Function("rotate") { (ctx: ImageContext, degrees: Double) -> ImageContext in
@@ -280,7 +285,8 @@ final class ImageRef: SharedRef<UIImage> {}
 ### JS Usage
 
 ```typescript
-const ctx = await ImageModule.create("/path/to/image.png");
+// Match the exposed Class name; no create() factory is defined above.
+const ctx = new ImageModule.Context("/path/to/image.png");
 ctx.rotate(90);
 console.log(ctx.width);
 ```

@@ -43,7 +43,7 @@ Prefer targeted assertions: `expect(screen.getByRole('button')).toHaveTextConten
 ## UI component tests
 
 - Test what the user sees and does (Testing Library queries by role/label), not component internals or state hooks (Rule 1).
-- Don't test that React renders, routes resolve, or props propagate — framework guarantees (Rule 7).
+- Test project routing/authorization/rendering behavior where it is the contract; avoid retesting framework defaults in isolation.
 
 ## Rule 9: Real persistence
 

@@ -38,7 +38,7 @@ For one-shot ingestion, fetch `data.json` directly instead of paging `/results`.
 ## End-to-end (Python)
 
 ```python
-import os, time, requests
+import os, time, requests, hmac
 
 API_KEY = os.environ["HASDATA_API_KEY"]
 H = {"x-api-key": API_KEY, "Content-Type": "application/json"}
@@ -50,9 +50,11 @@ def submit(slug, body):
     return r.json()["id"]                            # numeric job id — not "jobId"
 
 def wait(job_id, poll=10, cap=60, timeout=3600):
-    deadline = time.time() + timeout
-    while time.time() < deadline:
-        s = requests.get(f"{BASE}/scrapers/jobs/{job_id}", headers=H, timeout=60).json()
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        response = requests.get(f"{BASE}/scrapers/jobs/{job_id}", headers=H, timeout=60)
+        response.raise_for_status()
+        s = response.json()
         if s["status"] in ("finished", "stopped"):
             return s
         time.sleep(poll)
@@ -75,7 +77,7 @@ def results(job_id):
 
 ### Response shapes
 
-Submit (live):
+Submit (illustrative snapshot):
 ```json
 {
   "id": 416349,                        // ← the job handle, integer
@@ -155,9 +157,11 @@ app = Flask(__name__)
 
 @app.post("/hasdata-hook")
 def hook():
-    if request.headers.get("x-shared-secret") != SHARED_SECRET:
+    if not SHARED_SECRET or not hmac.compare_digest(request.headers.get("x-shared-secret", ""), SHARED_SECRET):
         abort(401)
-    e = request.json
+    e = request.get_json(silent=True)
+    if not isinstance(e, dict) or "event" not in e:
+        abort(400)
     if e["event"] == "scraper.data.scraped":
         save_row(e["jobId"], e["data"])
     elif e["event"] == "scraper.job.finished":
@@ -165,6 +169,7 @@ def hook():
     return "", 200                  # 2xx prevents retry
 ```
 
+- Validate the event/job relationship against durable submitted job IDs, deduplicate delivery IDs, and retrieve authoritative results with your own API credentials. A shared secret alone does not prevent replay.
 - Async with **3 retries** on non-2xx. **Order not guaranteed** — payload is the source of truth.
 - **No documented HMAC.** Pin a shared secret via `webhook.headers`, or just fetch results via the API on `scraper.job.finished` and ignore per-row deliveries.
 - **Always pair webhooks with polling.** A long quiet period probably means missed callbacks.
@@ -199,7 +204,7 @@ job = submit("crawler", {
 submit("contacts", {"urls": ["https://example.com/about", "https://example.com/team"]})
 ```
 
-Verified row schema (one row per input URL):
+Illustrative row schema (one row per input URL):
 
 ```json
 {

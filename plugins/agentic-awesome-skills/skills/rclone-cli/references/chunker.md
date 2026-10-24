@@ -115,7 +115,7 @@ assembles it by concatenating data chunks in order. As the split is trivial
 one could even manually concatenate data chunks together to obtain the
 original content.
 
-When the `list` rclone command scans a directory on wrapped remote,
+When an rclone listing command scans a directory on wrapped remote,
 the potential chunk files are accounted for, grouped and assembled into
 composite directory entries. Any temporary chunks are hidden.
 
@@ -268,7 +268,7 @@ style or chunk naming scheme is to:
 
 If rclone gets killed during a long operation on a big composite file,
 hidden temporary chunks may stay in the directory. They will not be
-shown by the `list` command but will eat up your account quota.
+shown by listing commands but will eat up your account quota.
 Please note that the `deletefile` command deletes only active
 chunks of a file. As a workaround, you can use remote of the wrapped
 file system to see them.

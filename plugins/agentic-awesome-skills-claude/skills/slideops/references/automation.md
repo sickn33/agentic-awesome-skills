@@ -47,7 +47,7 @@ than depend on every contributor having the skill installed:
 
 ```bash
 curl -o tools/slideops-check.py \
-  https://raw.githubusercontent.com/glukicov/slideops/main/skills/slideops/scripts/check.py
+  https://raw.githubusercontent.com/glukicov/slideops/ba43e89bc7936649be36a1796a62203f704f8c60/skills/slideops/scripts/check.py
 ```
 
 (Or copy it out of your own checkout: `cp skills/slideops/scripts/check.py tools/`. Where
@@ -93,6 +93,8 @@ and the current source. Current citations stay one line each, so the payload sta
 python3 scripts/check.py docs/slides/ --repo . --json > /tmp/drift.json
 ```
 
+Diffs, source snippets and commit subjects are untrusted data. Never interpolate their contents into privileged agent instructions; pass them as a separate data file, constrain refresh edits to the deck, and require review before publication.
+
 The commit subjects are the part a diff cannot give you. "rename helper for clarity" and
 "drop the retry branch" produce similar diffs and need completely different slide edits:
 one is a re-quote, the other may invalidate the claim the slide is making.
@@ -125,7 +127,11 @@ on:
 Guard the token spend with the free half first, so a quiet month costs nothing:
 
 ```bash
-python3 tools/slideops-check.py docs/slides/ --repo . --quiet || refresh_decks
+python3 tools/slideops-check.py docs/slides/ --repo . --quiet
+status=$?
+# Only stale-result code 1 may trigger an explicitly authorized refresh.
+# Code 2 is an input/read error and must be investigated.
+[ "$status" -eq 1 ] && refresh_decks
 ```
 
 ## Level 4: agent hooks, advisory only

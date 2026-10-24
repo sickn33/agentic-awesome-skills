@@ -223,7 +223,7 @@ them into regular expressions.
 |             |         | `/dir/file.345` | `/dir/file.def` |
 | Regexp      | `*.{{jpe?g}}` | `/file.jpeg`     | `/file.png`    |
 |             |         | `/dir/file.jpg` | `/dir/file.jpeeg` |
-| Rooted Regexp | `/{{.*\.jpe?g}}` | `/file.jpeg`  | `/file.png`    |
+| Rooted Regexp | `/{{[^/]*\.jpe?g}}` | `/file.jpeg`  | `/file.png`    |
 |             |                  | `/file.jpg`   | `/dir/file.jpg` |
 
 ## How filter rules are applied to files {#how-filter-rules-work}
@@ -382,7 +382,7 @@ not the result. One exception to this is sync operations with option
 be created. With the pattern list example `{dir1/**,dir2/**}` above,
 this would create an empty directory `dir3` on destination (when it exists
 on source). Changing the filter to `{dir1,dir2}/**`, or splitting it into
-two include rules `--include dir1/** --include dir2/**`, will match the
+two include rules `--include "dir1/**" --include "dir2/**"`, will match the
 same files while also filtering directories, with the result that an empty
 directory `dir3` will no longer be created.
 
@@ -400,7 +400,7 @@ processed in.
 `--exclude` has no effect when combined with `--files-from` or
 `--files-from-raw` flags.
 
-E.g. `rclone ls remote: --exclude *.bak` excludes all .bak files
+E.g. `rclone ls remote: --exclude "*.bak"` excludes all .bak files
 from listing.
 
 E.g. `rclone size remote: --exclude "/dir/**"` returns the total size of
@@ -685,9 +685,9 @@ rclone copy --files-from files-from.txt /home remote:backup
 The three files are transferred as follows:
 
 ```text
-/home/user1/42       → remote:backup/user1/important
-/home/user1/dir/ford → remote:backup/user1/dir/file
-/home/user2/prefect  → remote:backup/user2/stuff
+/home/user1/42       → remote:backup/user1/42
+/home/user1/dir/ford → remote:backup/user1/dir/ford
+/home/user2/prefect  → remote:backup/user2/prefect
 ```
 
 Alternatively if `/` is chosen as root `files-from.txt` will be:

@@ -1,5 +1,6 @@
 # Base Model Selection
 
+AAS adaptation: follow the root execution/data contract. Examples are version-sensitive sketches; verify APIs in a reviewed lockfile and cached revisions. Local-only/no publication/no remote telemetry defaults override older Hub/tracker recipes below. Numerical hardware, speed, quality, data-volume and loss-ranking claims are illustrative hypotheses, not guaranteed thresholds.
 Leaderboards rotate every few months; don't trust any hardcoded "best" pick. Discover current options live — run **both** sort orders since most-downloaded surfaces proven options and trending surfaces recent SOTA that may not have download volume yet.
 
 ## Discovery commands
@@ -44,7 +45,7 @@ Continue from an existing retriever beats fresh-start + 100k–500k pairs. Commo
 
 Architecture variants (encoder / decoder / static / Router), pooling rules, and decoder-vs-encoder setup paths: `model_architectures.md`.
 
-**ModernBERT-family bases default to `max_seq_length=8192`.** That allocates activation memory for 8192-token sequences regardless of your data length and silently drives Windows VRAM into "shared memory" spillover. After loading any ModernBERT / mmBERT / Ettin / gte-modernbert / nomic-modernbert base, **explicitly set `model.max_seq_length = 256` (or 512 for documents)** unless you actually need long context.
+**ModernBERT-family bases default to `max_seq_length=8192`.** Actual padded batch lengths, truncation, kernels and collator determine activation memory; the large permitted maximum can admit unexpectedly long batches and silently drives Windows VRAM into "shared memory" spillover. After loading any ModernBERT / mmBERT / Ettin / gte-modernbert / nomic-modernbert base, **explicitly set `model.max_seq_length = 256` (or 512 for documents)** unless you actually need long context.
 
 ## [CE] Cross-Encoder
 

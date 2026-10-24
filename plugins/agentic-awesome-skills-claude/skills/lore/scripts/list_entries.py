@@ -27,10 +27,12 @@ Used by:
     - find_stale.py
 """
 import json
+import hashlib
 import os
 import re
 import sys
 from pathlib import Path
+from safe_read import read_text
 
 
 # Schema version this skill understands. Bumped only on breaking
@@ -50,10 +52,12 @@ def check_schema_version(lore_root: Path) -> None:
     if not cfg_path.exists():
         return
     try:
-        cfg = json.loads(cfg_path.read_text(encoding="utf-8"))
+        cfg = json.loads(read_text(cfg_path, max_bytes=65536))
     except (json.JSONDecodeError, OSError):
         return
 
+    if not isinstance(cfg, dict):
+        raise ValueError("Memory config must be a JSON object")
     version = cfg.get("schema_version")
     if version is None:
         print(
@@ -75,8 +79,12 @@ def find_lore_root(start: Path) -> Path:
     """Walk up from start to find the project root containing .lore/."""
     p = start.resolve()
     while p != p.parent:
+        if (p / ".lore").is_symlink():
+            raise OSError("Symlinked .lore directory refused")
         if (p / ".lore").is_dir():
             return p / ".lore"
+        if (p / ".git").exists():
+            return None
         p = p.parent
     return None
 
@@ -138,25 +146,36 @@ def parse_entry(line: str):
         "tags": tags,
         "last_verified": tags.get("verified"),
         "replaced_by": replaced_by,
+        "content_hash": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+        "hash_matches": hashlib.sha256(text.encode("utf-8")).hexdigest()[:4] == h,
     }
 
 
 def collect_entries(root: Path):
     entries = []
+    total_bytes = 0
+    file_count = 0
     layers_dirs = [("_global", root / "_global"), ("scopes", root / "scopes")]
 
     for section_name, section_path in layers_dirs:
         if not section_path.exists():
             continue
-        for md_file in sorted(section_path.rglob("*.md")):
+        if section_path.is_symlink(): raise OSError("Symlinked memory section refused")
+        candidates = section_path.glob("*.md") if section_name == "_global" else section_path.glob("*/*.md")
+        for md_file in sorted(candidates):
+            if md_file.stem not in {"ARCHITECTURE", "DECISIONS", "CONVENTIONS"}: continue
             if section_name == "_global":
                 scope = "_global"
             else:
                 scope = md_file.parent.name
             layer_file = md_file.stem
             try:
-                with open(md_file, encoding="utf-8") as f:
-                    lines = f.readlines()
+                raw = read_text(md_file)
+                total_bytes += len(raw.encode("utf-8"))
+                file_count += 1
+                if total_bytes > 16 * 1024 * 1024 or file_count > 5000:
+                    raise ValueError("Memory inventory exceeds total file/byte limit")
+                lines = raw.splitlines(keepends=True)
                 if lines:
                     # Strip a UTF-8 BOM (Windows editors / PowerShell
                     # Set-Content add one); otherwise the first entry of
@@ -192,9 +211,16 @@ def collect_entries(root: Path):
                         os.sep, "/"
                     )
                     entries.append(e)
+                    if len(entries) > 10000:
+                        raise ValueError("Memory entry limit exceeded; narrow the project scope")
                     i = j
-            except OSError as exc:
-                print(f"warning: cannot read {md_file}: {exc}", file=sys.stderr)
+            except (OSError, UnicodeError):
+                raise OSError("Memory enumeration incomplete: unreadable or unsafe source") from None
+    seen = {}
+    for entry in entries:
+        if entry["id"] in seen:
+            raise ValueError("Ambiguous duplicate entry ID; disambiguate IDs before history/chain lookup")
+        seen[entry["id"]] = entry["file"]
     return entries
 
 

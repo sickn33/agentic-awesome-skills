@@ -94,12 +94,17 @@ The recommended pattern for an LLM agent running ML experiments:
 Add diagnostic `trackio.alert()` calls for conditions the agent should react to:
 
 ```python
+import math
 import trackio
+from collections import deque
+loss_history = deque(maxlen=101)
 
 trackio.init(project="hyperparam-sweep", config={"lr": lr, "batch_size": bs})
 
 for step in range(num_steps):
-    loss = train_step()
+    loss = float(train_step())
+    loss_history.append(loss)
+    loss_delta = abs(loss_history[0] - loss_history[-1]) if len(loss_history) == 101 else float("inf")
     trackio.log({"loss": loss, "step": step})
 
     if step > 200 and loss > 5.0:
@@ -116,10 +121,10 @@ for step in range(num_steps):
             level=trackio.AlertLevel.WARN,
         )
 
-    if math.isnan(loss):
+    if not math.isfinite(loss):
         trackio.alert(
             title="NaN loss",
-            text="Loss became NaN — training is broken",
+            text="Nonfinite loss — preserve checkpoint and diagnose numeric/data errors",
             level=trackio.AlertLevel.ERROR,
         )
         break
@@ -153,7 +158,7 @@ trackio get metric --project hyperparam-sweep --run run-1 --metric loss --around
 ### 4. React and Iterate
 
 Based on alerts:
-- **ERROR alerts** → stop the run, adjust hyperparameters, relaunch
+- **ERROR alerts** → inspect evidence, preserve checkpoints, and stop/relaunch only within the authorized experiment budget
 - **WARN alerts** → inspect metrics with `trackio get snapshot ...`, decide whether to intervene
 - **INFO alerts** → note progress, continue monitoring
 
@@ -173,7 +178,9 @@ python train.py --lr 5e-5
 When using `report_to="trackio"`, you don't control the training loop directly. Use a `TrainerCallback` to fire alerts:
 
 ```python
+import trackio
 from transformers import TrainerCallback
+from trl import SFTTrainer, SFTConfig
 
 class AlertCallback(TrainerCallback):
     def on_log(self, args, state, control, logs=None, **kwargs):
@@ -191,6 +198,8 @@ trainer = SFTTrainer(
     model=model,
     args=SFTConfig(output_dir="./out", report_to="trackio"),
     callbacks=[AlertCallback()],
-    ...
+    train_dataset=train_dataset,  # application-supplied
 )
 ```
+
+Alerts are diagnostic signals, not sufficient evidence for automatic hyperparameter changes. Add cooldown/one-shot state so a persistent condition does not send a webhook every step. All webhook URLs are bearer-like secrets and messages can disclose experiment data; keep URLs in protected configuration and send only to authorized channels. Parse timezone-aware timestamps from actual returned data and retain a cursor/overlap deduplication strategy; the old fixed dates in examples are placeholders, not current polling checkpoints.

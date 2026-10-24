@@ -70,7 +70,7 @@ export const MyComponent: React.FC = () => {
 
 - Shows loading indicator while lazy components load
 - Smooth fade-in animation
-- Prevents layout shift
+- Can reduce layout shift when fallback and content reserve matching space
 - Consistent loading experience across app
 
 ### Import
@@ -231,29 +231,9 @@ export const MyComponent: React.FC = () => {
 - `showWarning(message)` - Orange warning message
 - `showInfo(message)` - Blue info message
 
-### TanStack Query Error Callbacks
+### TanStack Query v5 errors
 
-```typescript
-import { useSuspenseQuery } from '@tanstack/react-query';
-import { useMuiSnackbar } from '@/hooks/useMuiSnackbar';
-
-export const MyComponent: React.FC = () => {
-    const { showError } = useMuiSnackbar();
-
-    const { data } = useSuspenseQuery({
-        queryKey: ['data'],
-        queryFn: () => api.getData(),
-
-        // Handle errors
-        onError: (error) => {
-            showError('Failed to load data');
-            console.error('Query error:', error);
-        },
-    });
-
-    return <Content data={data} />;
-};
-```
+Per-query onError was removed. Handle query failures through error boundaries and QueryCache callbacks; mutation onError remains valid. Pair a retry button with QueryErrorResetBoundary and the boundary reset callback.
 
 ### Error Boundaries
 
@@ -371,9 +351,6 @@ export const EntityEditor: React.FC<{ id: number }> = ({ id }) => {
     const { data } = useSuspenseQuery({
         queryKey: ['entity', id],
         queryFn: () => myFeatureApi.getEntity(id),
-        onError: () => {
-            showError('Failed to load entity');
-        },
     });
 
     const updateMutation = useMutation({
@@ -499,3 +476,6 @@ export const MyComponent: React.FC = () => {
 **See Also:**
 - [component-patterns.md](component-patterns.md) - Suspense integration
 - [data-fetching.md](data-fetching.md) - useSuspenseQuery details
+## Adaptation limits
+
+These snippets assume application-specific imports, aliases, schema and providers. Match MUI/TanStack major versions. TanStack Query v5 useSuspenseQuery does not support enabled or per-query onError; conditional queries use useQuery or conditional child mounting. Cache keys must include user/tenant scope; clear sensitive caches on logout. Do not return list-cache objects unconditionally from queryFn: that can perpetually refresh stale data and summary rows may omit detail fields. Use initialData with the source cache timestamp and a real network queryFn. API prefixes depend on the actual proxy/backend, not this snapshot.

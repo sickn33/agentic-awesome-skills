@@ -14,3 +14,5 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `scripts/check.py` | `skills/slideops/scripts/check.py` | `9157e4535c5733a7ab6aa4e443c4387ed58ef5d2` | content unchanged |
 | `assets/template.html` | `skills/slideops/assets/template.html` | `77a3c0a86d370ad29bd57dfb679807aa73fa17a6` | content unchanged |
 | `references/diagrams.md` | `skills/slideops/references/diagrams.md` | `118c72e8fc363955121f0ba73b9ed80811865dba` | text-only trailing whitespace and EOF blank lines normalized |
+
+2026-10-23 adaptations: citation HTML parsing/strict gate, source path/attribute escaping, full commit stamps, missing bundled-reference/install claims and unsafe tooling/render/automation recipes corrected. MIT license preserved; scripts AST-parsed only, no deck/browser runtime executed.

@@ -30,8 +30,12 @@ Ask for the original supporting material or an existing installation before usin
 >
 > Without that confirmation, remain read-only and provide defensive guidance only. Prefer a sandbox, disposable VM, or controlled lab.
 
-# Download from vendor
-wget http://vendor.com/firmware/update.bin
+## Firmware acquisition (illustrative)
+
+```bash
+# Download only from the verified vendor HTTPS source; preserve its hash/signature.
+# Substitute the actual approved URL, not this placeholder.
+wget https://vendor.example.invalid/firmware/update.bin
 
 # Extract from device via debug interface
 # UART console access
@@ -56,8 +60,8 @@ Logic analyzer     - Protocol capture and analysis
 
 ## Use this skill when
 
-- Working on download from vendor tasks or workflows
-- Needing guidance, best practices, or checklists for download from vendor
+- Reviewing authorized embedded firmware images, extracted filesystems or binary security properties
+- Planning controlled acquisition, emulation and remediation-oriented reporting
 
 ## Do not use this skill when
 
@@ -69,6 +73,10 @@ Logic analyzer     - Protocol capture and analysis
 - Clarify goals, constraints, and required inputs.
 - Apply relevant best practices and validate outcomes.
 - Provide actionable steps and verification.
+
+## Extraction and emulation isolation
+
+Keep original firmware immutable and record hash/source/version. Extract untrusted images as an unprivileged user in a disposable VM, with output/resource limits and no host secrets or external network access. `chroot` is not a security sandbox: the rootful emulation examples must run only inside that isolated VM. Review extraction symlinks/device nodes and tool versions before access. Do not print or reuse discovered credentials; redact reports and keep findings within the authorized disclosure scope.
 
 ## Firmware Analysis Workflow
 

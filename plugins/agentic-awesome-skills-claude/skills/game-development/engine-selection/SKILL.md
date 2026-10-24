@@ -38,6 +38,8 @@ date_added: "2026-07-17"
 
 ---
 
+Version names are examples. Verify current official stable releases, target exports, plugin compatibility and license terms before pinning a stack; prototype the critical mechanic and delivery size rather than treating subjective fit labels as benchmarks. Phaser installation reference: https://docs.phaser.io/phaser/getting-started/installation .
+
 ## Web — decision tree
 
 ```

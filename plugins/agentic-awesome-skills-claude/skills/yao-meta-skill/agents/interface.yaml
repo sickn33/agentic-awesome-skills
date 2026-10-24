@@ -16,7 +16,7 @@ compatibility:
     context: "inline"
     shell: "bash"
   trust:
-    source_tier: "local"
+    source_tier: "community-source"
     remote_inline_execution: "forbid"
     remote_metadata_policy: "allow-metadata-only"
   degradation:
@@ -24,3 +24,5 @@ compatibility:
     claude: "neutral-source-plus-adapter"
     generic: "neutral-source"
     vscode: "agent-skills-source-with-vscode-notes"
+
+# Descriptive neutral metadata only; no runtime permission enforcement or native adapter is bundled.

@@ -2,6 +2,19 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+## Integration boundaries
+
+Examples are independent fragments: supply domain types, component imports,
+services, providers and compatible Angular/NgRx versions. `ProductService.getAll`
+in the async SignalStore example must return `Promise<Product[]>`; if it returns
+an Observable, use `firstValueFrom` or an RxJS effect instead of awaiting it.
+User presence in UI state is not authentication: the server must authorize each
+request. Logout must invalidate the server session and cancel in-flight loads;
+otherwise an earlier response can restore stale user state. Never store tokens
+or sensitive personal data in devtools/persisted state. The optimistic rollback
+example assumes one mutation at a time: serialize mutations or use versioned
+per-item rollback/refetch to avoid overwriting a later successful update.
+
 ## Core Concepts
 
 ### State Categories
@@ -11,7 +24,7 @@
 | **Local State**  | Component-specific, UI state | Signals, `signal()`   |
 | **Shared State** | Between related components   | Signal services       |
 | **Global State** | App-wide, complex            | NgRx, Akita, Elf      |
-| **Server State** | Remote data, caching         | NgRx Query, RxAngular |
+| **Server State** | Remote data, caching         | a verified server-cache library, RxAngular |
 | **URL State**    | Route parameters             | ActivatedRoute        |
 | **Form State**   | Input values, validation     | Reactive Forms        |
 
@@ -21,7 +34,7 @@
 Small app, simple state → Signal Services
 Medium app, moderate state → Component Stores
 Large app, complex state → NgRx Store
-Heavy server interaction → NgRx Query + Signal Services
+Heavy server interaction → a verified server-cache library + Signal Services
 Real-time updates → RxAngular + Signals
 ```
 
@@ -34,7 +47,7 @@ Real-time updates → RxAngular + Signals
 
 ```typescript
 // services/counter.service.ts
-import { Injectable, signal, computed } from "@angular/core";
+import { Injectable, signal, computed, Component, inject } from "@angular/core";
 
 @Injectable({ providedIn: "root" })
 export class CounterService {
@@ -114,7 +127,9 @@ export class UserStore {
     this._error.set(null);
 
     try {
-      const user = await fetch(`/api/users/${id}`).then((r) => r.json());
+      const response = await fetch(`/api/users/${encodeURIComponent(id)}`);
+      if (!response.ok) throw new Error("User request failed");
+      const user: User = await response.json();
       this._user.set(user);
     } catch (e) {
       this._error.set("Failed to load user");
@@ -145,7 +160,7 @@ import {
   withComputed,
   patchState,
 } from "@ngrx/signals";
-import { inject } from "@angular/core";
+import { inject, computed, Component } from "@angular/core";
 import { ProductService } from "./product.service";
 
 interface ProductState {
@@ -202,7 +217,7 @@ export const ProductStore = signalStore(
 // Usage
 @Component({
   template: `
-    <input (input)="store.setFilter($event.target.value)" />
+    <input #filterInput (input)="store.setFilter(filterInput.value)" />
     @if (store.loading()) {
       <app-spinner />
     } @else {
@@ -459,7 +474,8 @@ export class TodoStore extends ComponentStore<TodoState> {
 
 ```typescript
 // services/api.service.ts
-import { Injectable, signal, inject } from "@angular/core";
+import { Injectable, signal, computed, inject } from "@angular/core";
+import { firstValueFrom } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { toSignal } from "@angular/core/rxjs-interop";
 
@@ -594,7 +610,9 @@ export class ExampleComponent {
 }
 
 // Signal → Observable
+@Injectable({ providedIn: "root" })
 export class DataService {
+  private http = inject(HttpClient);
   private filter = signal('');
 
   // Convert Signal to Observable
@@ -602,7 +620,7 @@ export class DataService {
 
   filteredData$ = this.filter$.pipe(
     debounceTime(300),
-    switchMap(filter => this.http.get(`/api/data?q=${filter}`))
+    switchMap(filter => this.http.get(`/api/data?q=${encodeURIComponent(filter)}`))
   );
 }
 ```

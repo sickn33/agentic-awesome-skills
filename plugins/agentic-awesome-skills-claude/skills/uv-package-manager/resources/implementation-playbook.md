@@ -22,7 +22,7 @@ Comprehensive guide to using uv, an extremely fast Python package installer and 
 ## Core Concepts
 
 ### 1. What is uv?
-- **Ultra-fast package installer**: 10-100x faster than pip
+- **Package installer/resolver**: performance depends on workload and cache
 - **Written in Rust**: Leverages Rust's performance
 - **Drop-in pip replacement**: Compatible with pip workflows
 - **Virtual environment manager**: Create and manage venvs
@@ -40,35 +40,19 @@ Comprehensive guide to using uv, an extremely fast Python package installer and 
 - Built-in virtual environment support
 
 ### 3. UV vs Traditional Tools
-- **vs pip**: 10-100x faster, better resolver
+- **vs pip**: integrated resolution/environment workflows; benchmark locally
 - **vs pip-tools**: Faster, simpler, better UX
 - **vs poetry**: Faster, less opinionated, lighter
 - **vs conda**: Faster, Python-focused
+
+Pin uv, Python, dependency sources and CI actions/images; `latest` image references below are placeholders to replace with reviewed digests. A lock/hash binds package bytes, not trust or cross-platform identity. Project `uv run`/sync may install/build code; inspect build backends, index credentials and hook configuration, protect caches and avoid credential-bearing URLs. Exclude host .venv, secrets and caches via .dockerignore; use matching builder/runtime Python paths and non-root execution.
 
 ## Installation
 
 ### Quick Install
 
-```bash
-# macOS/Linux
-tmpdir="$(mktemp -d)"
-trap 'rm -rf "$tmpdir"' EXIT
-curl -LsSf https://astral.sh/uv/install.sh -o "$tmpdir/uv-install.sh"
-cat "$tmpdir/uv-install.sh"  # review the full installer before executing
-sh "$tmpdir/uv-install.sh"
+Use an organization-approved installer/package for a reviewed uv release. Download installers to a private temporary directory, verify origin/version and inspect the **entire** file before a separately authorized execution. Do not use a command that downloads, displays only120 lines and immediately executes it; do not bypass PowerShell execution policy as a default. Source builds must pin a full reviewed commit, not a moving Git branch. Installation changes PATH/tooling and can download executables.
 
-# Windows (PowerShell)
-powershell -NoProfile -Command "Invoke-WebRequest https://astral.sh/uv/install.ps1 -OutFile $env:TEMP\\uv-install.ps1; Get-Content $env:TEMP\\uv-install.ps1 -TotalCount 120; powershell -ExecutionPolicy Bypass -File $env:TEMP\\uv-install.ps1"
-
-# Using pip (if you already have Python)
-pip install uv
-
-# Using Homebrew (macOS)
-brew install uv
-
-# Using cargo (if you have Rust)
-cargo install --git https://github.com/astral-sh/uv uv
-```
 
 ### Verify Installation
 
@@ -187,11 +171,11 @@ uv add --dev pytest pytest-cov
 # Add optional dependency group
 uv add --optional docs sphinx
 
-# Add from git
-uv add git+https://github.com/user/repo.git
+# Add from reviewed immutable git commit
+uv add "git+https://github.com/user/repo.git@<reviewed-full-commit>"
 
 # Add from git with specific ref
-uv add git+https://github.com/user/repo.git@v1.0.0
+uv add "git+https://github.com/user/repo.git@<reviewed-full-commit>"
 
 # Add from local path
 uv add ./local-package
@@ -225,8 +209,8 @@ uv sync --upgrade
 # Upgrade package to latest
 uv add --upgrade requests
 
-# Show what would be upgraded
-uv tree --outdated
+# Inspect dependencies before intentionally updating
+uv tree
 ```
 
 ### Pattern 7: Locking Dependencies
@@ -239,7 +223,7 @@ uv lock
 uv lock --upgrade
 
 # Lock without installing
-uv lock --no-install
+uv lock
 
 # Lock specific package
 uv lock --upgrade-package requests
@@ -275,7 +259,7 @@ uv python pin 3.12
 # This creates/updates .python-version file
 
 # Use specific Python version for command
-uv --python 3.11 run python script.py
+uv run --python 3.11 python script.py
 
 # Create venv with specific version
 uv venv --python 3.12
@@ -339,7 +323,7 @@ uv sync
 uv pip freeze > requirements.txt
 
 # Export with hashes
-uv pip freeze --require-hashes > requirements.txt
+uv export --locked --format requirements-txt --output-file requirements.txt
 ```
 
 ## Advanced Workflows
@@ -364,7 +348,7 @@ members = ["packages/*"]
 uv sync
 
 # Add workspace dependency
-uv add --path ./packages/package-a
+uv add ./packages/package-a
 ```
 
 ### Pattern 13: CI/CD Integration
@@ -418,13 +402,14 @@ WORKDIR /app
 COPY pyproject.toml uv.lock ./
 
 # Install dependencies
-RUN uv sync --frozen --no-dev
+RUN uv sync --locked --no-dev --no-install-project
 
 # Copy application code
 COPY . .
+RUN uv sync --locked --no-dev --no-editable
 
 # Run application
-CMD ["uv", "run", "python", "app.py"]
+CMD ["uv", "run", "--no-sync", "python", "app.py"]
 ```
 
 **Optimized multi-stage build:**
@@ -440,7 +425,11 @@ WORKDIR /app
 
 # Install dependencies to venv
 COPY pyproject.toml uv.lock ./
-RUN uv sync --frozen --no-dev --no-editable
+RUN uv sync --locked --no-dev --no-install-project
+
+# Install the non-editable project only after its source is copied.
+COPY . .
+RUN uv sync --locked --no-dev --no-editable
 
 # Runtime stage
 FROM python:3.12-slim
@@ -467,7 +456,7 @@ uv lock
 uv sync --frozen
 
 # Update lockfile without installing
-uv lock --no-install
+uv lock
 
 # Upgrade specific package in lock
 uv lock --upgrade-package requests
@@ -479,7 +468,7 @@ uv lock --check
 uv export --format requirements-txt > requirements.txt
 
 # Export with hashes for security
-uv export --format requirements-txt --hash > requirements.txt
+uv export --locked --format requirements-txt --output-file requirements.txt  # hashes included by default
 ```
 
 ## Performance Optimization
@@ -505,10 +494,10 @@ uv cache dir
 # UV installs packages in parallel by default
 
 # Control parallelism
-uv pip install --jobs 4 package1 package2
+UV_CONCURRENT_INSTALLS=4 uv pip install package1 package2
 
 # No parallel (sequential)
-uv pip install --jobs 1 package
+UV_CONCURRENT_INSTALLS=1 uv pip install package
 ```
 
 ### Pattern 18: Offline Mode
@@ -520,6 +509,8 @@ uv pip install --offline package
 # Sync from lockfile offline
 uv sync --frozen --offline
 ```
+
+The timing numbers below are hypothetical, not measurements of the reader's workload. Benchmark equivalent cache/network/interpreter/platform conditions; uv is not a complete conda/Poetry/pip CLI replacement.
 
 ## Comparison with Other Tools
 
@@ -658,14 +649,11 @@ repos:
 ### Pattern 22: VS Code Integration
 
 ```json
-// .vscode/settings.json
 {
   "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
   "python.terminal.activateEnvironment": true,
   "python.testing.pytestEnabled": true,
   "python.testing.pytestArgs": ["-v"],
-  "python.linting.enabled": true,
-  "python.formatting.provider": "black",
   "[python]": {
     "editor.defaultFormatter": "ms-python.black-formatter",
     "editor.formatOnSave": true
@@ -696,8 +684,8 @@ uv lock --verbose
 uv cache clean
 
 # Issue: Lockfile out of sync
-# Solution: Regenerate
-uv lock --upgrade
+# Solution: inspect manifest changes, then update without blanket upgrades
+uv lock
 ```
 
 ## Best Practices
@@ -709,7 +697,7 @@ uv lock --upgrade
 3. **Separate dev dependencies** from production
 4. **Use uv run** instead of activating venv
 5. **Commit uv.lock** to version control
-6. **Use --frozen in CI** for consistent builds
+6. **Use --locked in CI** to check lock consistency; --frozen skips that freshness check
 7. **Leverage global cache** for speed
 8. **Use workspace** for monorepos
 9. **Export requirements.txt** for compatibility
@@ -764,7 +752,8 @@ uv sync
 uv add requests
 
 # Keep existing pyproject.toml
-# uv reads [project] and [tool.poetry] sections
+# Migrate Poetry-specific metadata/dependency groups to supported [project]
+# and dependency-group tables; do not assume automatic semantic conversion.
 ```
 
 ### From pip-tools
@@ -827,7 +816,7 @@ uv --version                # Show version
 3. **Pin Python versions** - Use .python-version
 4. **Use uv run** - Avoid manual venv activation
 5. **Leverage caching** - Let uv manage global cache
-6. **Use --frozen in CI** - Exact reproduction
+6. **Use --locked in CI** - Check lock consistency
 7. **Keep uv updated** - Fast-moving project
 8. **Use workspaces** - For monorepo projects
 9. **Export for compatibility** - Generate requirements.txt when needed

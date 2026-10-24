@@ -21,7 +21,8 @@ Period aliases: `minute=1m`, `hour=1h`, `d/1d=day`, `w=week`, `m/1mo=month`, `y=
    - Explicit start/end dates → `kline history`.
    - "Today" / "intraday" → `intraday`.
    - Otherwise → `kline` with sensible defaults (`--period day --count 100`).
-3. Map natural-language windows to (`period`, `count`). Examples: "最近一周" → `day,7`, "最近一年" → `day,252`, "月 K" → `month,100`.
+3. Map natural-language windows to (`period`, `count`). Examples: "last 7 trading bars" → `day,7`, "approximately one trading year" → `day,252`, "月 K" → `month,100`.
+Use explicit dates for calendar weeks/years; trading-bar counts do not equal calendar duration. Record adjustment mode and incomplete current bars.
 4. Call the Longbridge CLI directly (preferred) or fall back to MCP.
 5. Translate datasets into prose (range high / low, net move, volume note); use ▲ / ▼ for direction. Cite **Longbridge Securities** / **数据来源:长桥证券** / **數據來源:長橋證券**.
 

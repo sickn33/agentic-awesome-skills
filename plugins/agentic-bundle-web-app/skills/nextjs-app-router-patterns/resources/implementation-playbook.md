@@ -22,7 +22,7 @@ Comprehensive patterns for Next.js 14+ App Router architecture, Server Component
 | Mode | Where | When to Use |
 |------|-------|-------------|
 | **Server Components** | Server only | Data fetching, heavy computation, secrets |
-| **Client Components** | Browser | Interactivity, hooks, browser APIs |
+| **Client Components** | Browser interactivity; may be server-prerendered | Interactivity, hooks, browser APIs |
 | **Static** | Build time | Content that rarely changes |
 | **Dynamic** | Request time | Personalized or real-time data |
 | **Streaming** | Progressive | Large pages, slow data sources |
@@ -41,6 +41,10 @@ app/
 ├── default.tsx      # Parallel route fallback
 └── opengraph-image.tsx  # OG image generation
 ```
+
+## Version and security prerequisites
+
+These are independent Next.js 16+/React 19 fragments (Promise request props and updateTag); older releases require version-specific APIs. Application db/components/types, requireUser, owned-cart/product authorization, idempotent order processing and runtime schemas are required adapters, not implemented here. Never accept raw card data or calculate prices from client input. Scope caches and cache tags by authenticated tenant/user for private data; public product cache examples assume truly public shared content. Server Actions and route handlers are public entry points requiring authentication, authorization, runtime validation and request limits. Add default.tsx fallbacks for parallel slots and a null/catch-all modal route for closing intercepted routes.
 
 ## Quick Start
 
@@ -75,6 +79,7 @@ async function getProducts() {
   const res = await fetch('https://api.example.com/products', {
     next: { revalidate: 3600 }, // ISR: revalidate every hour
   })
+  if (!res.ok) throw new Error('Product request failed')
   return res.json()
 }
 
@@ -133,8 +138,8 @@ export default async function ProductsPage({
 // components/products/ProductList.tsx - Server Component
 async function getProducts(filters: ProductFilters) {
   const res = await fetch(
-    `${process.env.API_URL}/products?${new URLSearchParams(filters)}`,
-    { next: { tags: ['products'] } }
+    `${process.env.API_URL}/products?${new URLSearchParams(Object.entries(filters).filter(([, value]) => value !== undefined).map(([key, value]) => [key, String(value)]))}`,
+    { cache: 'force-cache', next: { tags: ['products'] } }
   )
   if (!res.ok) throw new Error('Failed to fetch products')
   return res.json()
@@ -200,17 +205,14 @@ export function AddToCartButton({ productId }: { productId: string }) {
 // app/actions/cart.ts
 'use server'
 
-import { revalidateTag } from 'next/cache'
+import { updateTag } from 'next/cache'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 export async function addToCart(productId: string) {
-  const cookieStore = await cookies()
-  const sessionId = cookieStore.get('session')?.value
-
-  if (!sessionId) {
-    redirect('/login')
-  }
+  const user = await requireUser() // Server-side session verification; never trust cookie presence.
+  const sessionId = await getOwnedCartSession(user.id)
+  await validatePurchasableProduct(productId)
 
   try {
     await db.cart.upsert({
@@ -219,7 +221,7 @@ export async function addToCart(productId: string) {
       create: { sessionId, productId, quantity: 1 },
     })
 
-    revalidateTag('cart')
+    updateTag(`cart:${user.id}`)
     return { success: true }
   } catch (error) {
     return { error: 'Failed to add item to cart' }
@@ -227,16 +229,17 @@ export async function addToCart(productId: string) {
 }
 
 export async function checkout(formData: FormData) {
-  const address = formData.get('address') as string
-  const payment = formData.get('payment') as string
+  const user = await requireUser()
+  const address = formData.get('address')
+  const payment = formData.get('payment')
 
   // Validate
-  if (!address || !payment) {
+  if (typeof address !== 'string' || typeof payment !== 'string' || !address.trim() || !payment.trim()) {
     return { error: 'Missing required fields' }
   }
 
   // Process order
-  const order = await processOrder({ address, payment })
+  const order = await processOwnedCartOrderIdempotently({ userId: user.id, address, paymentToken: payment })
 
   // Redirect to confirmation
   redirect(`/orders/${order.id}/confirmation`)
@@ -415,10 +418,12 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const body = await request.json()
+  const user = await requireUser()
+  await requireProductAdmin(user.id)
+  const body = ProductCreateSchema.parse(await request.json()) // Allowlisted fields only.
 
   const product = await db.product.create({
-    data: body,
+    data: { name: body.name, price: body.price },
   })
 
   return NextResponse.json(product, { status: 201 })
@@ -500,22 +505,25 @@ export default async function ProductPage({ params }: Props) {
 // No cache (always fresh)
 fetch(url, { cache: 'no-store' })
 
-// Cache forever (static)
+// Cache until invalidation/eviction; not a durability guarantee
 fetch(url, { cache: 'force-cache' })
 
 // ISR - revalidate after 60 seconds
 fetch(url, { next: { revalidate: 60 } })
 
 // Tag-based invalidation
-fetch(url, { next: { tags: ['products'] } })
+fetch(url, { cache: 'force-cache', next: { tags: ['products'] } })
 
 // Invalidate via Server Action
 'use server'
-import { revalidateTag, revalidatePath } from 'next/cache'
+import { updateTag, revalidatePath } from 'next/cache'
 
 export async function updateProduct(id: string, data: ProductData) {
-  await db.product.update({ where: { id }, data })
-  revalidateTag('products')
+  const user = await requireUser()
+  await requireProductAdmin(user.id)
+  const validated = ProductUpdateSchema.parse(data)
+  await db.product.update({ where: { id }, data: validated })
+  updateTag('products')
   revalidatePath('/products')
 }
 ```
@@ -530,7 +538,7 @@ export async function updateProduct(id: string, data: ProductData) {
 - **Use Server Actions** - For mutations with progressive enhancement
 
 ### Don'ts
-- **Don't pass serializable data** - Server → Client boundary limitations
+- **Don't pass non-serializable data** - Server → Client boundary limitations
 - **Don't use hooks in Server Components** - No useState, useEffect
 - **Don't fetch in Client Components** - Use Server Components or React Query
 - **Don't over-nest layouts** - Each layout adds to the component tree

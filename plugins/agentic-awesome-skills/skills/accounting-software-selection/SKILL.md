@@ -81,12 +81,11 @@ packages before one is chosen, or the same process happening in a spreadsheet, a
 or someone inboxes.
 
 Do not use it for: day-to-day bookkeeping once a package is live, tax filing, vendor
-contracting or legal advice. This skill produces empty templates only - it never holds or
-processes real employee, customer, supplier or vendor data.
+contracting or legal advice. This distribution produces templates and illustrative examples. It can review user-supplied evaluation summaries within the requested scope, but must not request unnecessary personal or confidential business records.
 
 ## How It Works
 
-Follow the shared execution contract. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+Use the authorization and evidence rules in this file; no separate shared contract is bundled. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -179,7 +178,7 @@ its scores say.
 
 ### Step 4 - Recommend the smallest workflow
 
-Give a short recommendation, then ask whether to build it. Do not build unprompted, and
+Give a short workflow recommendation. If the user already requested an artifact, build it without asking again; otherwise offer the build. Do not build unprompted, and
 do not name a preferred package in it.
 
 **Recommended approach:** One evaluation record per shortlisted package, scored on the same
@@ -261,7 +260,7 @@ deliberately to all four artifacts. Never fold an unquoted cost into `Licence Co
 make a total work.
 
 - `First-Year Cost` = `Licence Cost` + `Implementation Cost` + `Customization Cost` + `Training Cost`, plus any other first-year line the vendor quoted.
-- `Three-Year TCO` = `First-Year Cost` + (2 x `Annual Renewal`), on a three-year horizon. Change the horizon and the formula if the business sets a different one, and say which horizon was used.
+- `Three-Year TCO` = `First-Year Cost` + (2 x `Annual Renewal`) only when renewal is the complete recurring annual cost, unchanged in years two and three. Otherwise sum the dated recurring components explicitly. Record taxes, currency, user counts, FX assumptions and omitted costs; avoid double-counting a first-year subscription/renewal. Change the horizon and the formula if the business sets a different one, and say which horizon was used.
 
 Calculate a total only when every line in it is a number the business actually holds. If
 one line is missing, the total is `Unknown` and stays empty - a total built on a guessed
@@ -291,7 +290,7 @@ It is a list the business carries out with the vendor; nothing on it is done her
 - `Selection Decision` and `Rejection Reason` are the business's to write. Summarise the evidence and state the deal-breaker; leave the decision open.
 - The score is not the verdict. A high total with a failed Must-have is still a failed Must-have.
 
-Then ask: "Want me to build the CSV, SQL DDL, JSON Schema, Notion mapping, or an Excel
+If no artifact has already been requested, ask: "Want me to build the CSV, SQL DDL, JSON Schema, Notion mapping, or an Excel
 workbook from these confirmed rules?"
 
 ### Step 5 - Build only on request
@@ -369,14 +368,14 @@ We are replacing our accounting package and cannot tell which one actually cover
 
 ## Limitations
 
-- Empty template only. It does not score for you, run the demos, verify a vendor's claims or turn a quotation into a TCO.
+- Template and evidence-summary support only. It does not run demos or independently verify vendor capability. Arithmetic TCO is possible only from explicitly supplied, complete and comparable cost assumptions.
 - It never selects the package. It records the decision the business makes in `Selection Decision`, with `Rejection Reason` and `Deal-breaker` beside it; it does not make the decision and it names no preferred package.
 - Not a bookkeeping, tax-filing, legal or procurement system. Quotations, contracts and purchase orders stay in the vendor's own process.
 - It cannot verify Nepal IRD, VAT, TDS, e-billing, CBMS or SSF handling for you. Those stay `Untested` until the business holds current evidence from the vendor or the authority.
 - It does not confirm that a product does what a vendor page says. That needs a named human verifier and a dated source.
 - A go-live checklist is a list the business carries out with the vendor. Chart of accounts, tax configuration, users, inventory, opening balances and the test entry are not done by this skill.
 - `Software`, `Vendor` and `Evaluated By` are free text, so a duplicated package or evaluator is a data-entry problem this table cannot catch.
-- No relation fields. There is no link to a quotation, demo or product register.
+- No relation fields are bundled. Evidence/source text may reference real records; any relation extension must be deliberate and aligned across requested formats.
 - Select options are a starting set. Rename them to match how the business talks.
 - No automation, reminders or sync. Those need the integration layer.
 - Procurement, tax and legal review is still required before this drives a real purchase.

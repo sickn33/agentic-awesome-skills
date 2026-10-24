@@ -372,7 +372,8 @@ ax.text(x, y, r'$\alpha, \beta, \gamma, \delta, \epsilon$')
 ### Using Full LaTeX
 
 ```python
-# Enable full LaTeX rendering (requires LaTeX installation)
+# Enable external LaTeX only for trusted author-controlled text/preamble;
+# use mathtext for untrusted labels (requires a reviewed LaTeX installation)
 plt.rcParams['text.usetex'] = True
 plt.rcParams['text.latex.preamble'] = r'\usepackage{amsmath}'
 

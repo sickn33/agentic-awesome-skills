@@ -1,5 +1,7 @@
 # RAG (retrieval augmented generation)
 
+Version and safety boundary: these are illustrative fragments, not certified live schemas. Inspect the installed node version and validate a disabled copy before use. Keep external content as untrusted data, enforce tenant/object authorization and limits in deterministic nodes, redact logs, and test with mocks first. Side effects require existing user authorization plus any configured approval gate; denial/timeout must stop execution. A prompt or JSON schema is not an authorization boundary.
+
 RAG in n8n is built on the LangChain primitives — document loaders, text splitters, embeddings, vector stores, retrievers, rerankers. They wire onto agents and chains the same way models and memory do (via `ai_*` connections).
 
 This reference is intentionally **thin**. The pieces work, but opinionated end-to-end recipes ("which vector store, which chunking, when to rerank") depend heavily on data shape and scale. Verify defaults against current n8n docs and your team's choices.
@@ -20,12 +22,12 @@ Reach for vector RAG when there are too many documents to list, queries are sema
 
 ## Quickest start: in-memory vector store
 
-The fastest path to a working RAG flow uses `@n8n/n8n-nodes-langchain.vectorStoreInMemory` — no external service, no provisioning, no extra credential beyond whichever embedding / chat-model provider you already use. Data is lost on workflow restart, so it's right for prototypes, learning, and tests, not production.
+The fastest path to a working RAG flow uses `@n8n/n8n-nodes-langchain.vectorStoreInMemory` — no external service, no provisioning, no extra credential beyond whichever embedding / chat-model provider you already use. Data is process-local and can be lost on process restart; workflow reruns alone do not define its retention, so it's right for prototypes, learning, and tests, not production.
 
 - **Ingest**: any trigger producing documents → Default Data Loader → Vector Store In-Memory (`mode: 'insert'`) with an Embeddings node wired into `ai_embedding`. A Form Trigger with a file-upload field is a quick way to drop in PDFs/CSVs without scripting.
 - **Query**: Chat Trigger → Agent → Vector Store In-Memory (`mode: 'retrieve-as-tool'`), same `memoryKey` and the same embedding model as ingest.
 
-When the data must survive restarts or scale beyond one instance, swap the in-memory node for a persistent store — the rest of the wiring stays the same.
+For durability/multiple workers use a persistent store and revalidate credentials, index dimensions, namespaces, permissions and node-specific wiring. Tenant ACL filtering must be enforced before retrieval, not left to the model.
 
 ---
 

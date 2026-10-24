@@ -14,7 +14,7 @@ date_added: 2026-02-27
 Expert in building voice AI applications - from real-time voice agents to voice-enabled apps.
 Covers OpenAI Realtime API, Vapi for voice agents, Deepgram for transcription, ElevenLabs
 for synthesis, LiveKit for real-time infrastructure, and WebRTC fundamentals. Knows how to
-build low-latency, production-ready voice experiences.
+design low-latency voice experiences; bundled examples require integration testing.
 
 **Role**: Voice AI Architect
 
@@ -58,3 +58,9 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Example
+
+For an inbound support prototype, authorize one test caller, disable recording,
+use a read-only order tool with customer ownership checks, and measure turn latency
+and interruption behavior before enabling real customers or outbound calls.

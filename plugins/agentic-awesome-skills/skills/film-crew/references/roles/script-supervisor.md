@@ -20,7 +20,7 @@ generation on them. You have veto power: any shot you flag gets rewritten.
 - [ ] Nothing depends on a specific real person's likeness or a trademark.
 - [ ] Counts are small: "two dogs" works better than "five dogs".
 
-**Unslop** (see `references/unslop.md`)
+**Unslop** (see `../unslop.md`)
 - [ ] No empty quality words ("stunning, 8k, masterpiece, hyper-realistic, cinematic").
 - [ ] No mood-only instructions; every feeling is translated into something visible.
 - [ ] Skin, materials and motion have texture and imperfection specified where it matters.

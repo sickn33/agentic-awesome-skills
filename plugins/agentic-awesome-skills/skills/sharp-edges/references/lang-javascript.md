@@ -1,5 +1,8 @@
 # JavaScript / TypeScript Sharp Edges
 
+> Catalog correction (CC-BY-SA-4.0 adaptation; original attribution/license in UPSTREAM-NOTICE.md): snippets are isolated teaching fragments, not production implementations or an assertion of exploitability. Confirm the installed language/library version, trust boundary, reachable input and impact. Use inert local fixtures only; do not execute the intentionally unsafe snippets, untrusted audited code or destructive payloads. No network attack or configuration change is authorized by this guide.
+
+
 ## Loose Equality Coercion
 
 ```javascript
@@ -34,10 +37,10 @@ function merge(target, source) {
 // Attacker sends: {"__proto__": {"isAdmin": true}}
 merge({}, JSON.parse(userInput));
 
-// Now ALL objects have isAdmin
-({}).isAdmin  // true
-const user = {};
-user.isAdmin  // true - authentication bypassed!
+// This shallow merge changes the prototype of its returned target, not every object.
+const changed = {};
+merge(changed, JSON.parse('{"__proto__":{"isAdmin":true}}'));
+changed.isAdmin  // true through the target prototype; ({ }).isAdmin remains undefined.
 
 // Also via constructor.prototype
 // {"constructor": {"prototype": {"isAdmin": true}}}
@@ -69,9 +72,9 @@ regex.test("aaaaaaaaaaaaaaaaaaaaaaaaaaaa!");
 // - Overlapping alternatives: (a|a)+
 // - Greedy quantifiers with overlap: .*.*
 
-// Real example from ua-parser-js CVE:
+// Illustrative regex shapes, not an attributed CVE reproduction:
 /\s*(;|\s)\s*/  // Fine
-/(a|aa)+/       // ReDoS!
+/^(a|aa)+$/    // Potential catastrophic backtracking on a sufficiently long nonmatching suffix
 ```
 
 **Detection**: Look for nested quantifiers or overlapping alternatives in regex.
@@ -82,7 +85,7 @@ regex.test("aaaaaaaaaaaaaaaaaaaaaaaaaaaa!");
 // DANGEROUS: Behavior varies
 parseInt("08");      // 8 (modern JS), was 0 in ES3 (octal)
 parseInt("0x10");    // 16 - hex prefix always recognized
-parseInt("10", 0);   // 10 or error depending on engine
+parseInt("10", 0);   // 10: radix 0 requests standard prefix inference
 parseInt("10", 1);   // NaN - radix 1 invalid
 
 // DANGEROUS: Unexpected results
@@ -103,7 +106,7 @@ const obj = {
 
 obj.getValue();           // 42
 const fn = obj.getValue;
-fn();                     // undefined - 'this' is global/undefined
+fn();                     // Strict mode: accessing this.value throws because this is undefined; non-strict behavior differs.
 
 // DANGEROUS: In callbacks
 setTimeout(obj.getValue, 100);  // 'this' is global/undefined
@@ -175,7 +178,7 @@ eval(`\`${template}\``);
 // DANGEROUS: Bracket notation with user input
 const obj = { admin: false };
 const key = userInput;  // Could be "__proto__", "constructor", etc.
-obj[key] = true;  // Prototype pollution!
+obj[key] = true;  // Attacker-controlled property write; assigning primitive true to __proto__ does not itself pollute a prototype.
 
 // DANGEROUS: in operator checks prototype chain
 "toString" in {}  // true - inherited from Object.prototype

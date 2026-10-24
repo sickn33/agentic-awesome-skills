@@ -25,6 +25,8 @@ By pitting these two perspectives against each other, it surfaces the strongest 
 - Use when evaluating potential features for a product to decide on priorities.
 - Use when you want to rigorously stress-test an assumption before committing code.
 
+Use simulated personas by default; actual agent spawning/messaging requires authorization and available tools. Debate is not validation: label observed evidence, assumptions and unresolved questions separately, cite primary sources for volatile market/technical claims and never invent customer demand or economics. A provisional verdict may be “insufficient evidence”; finish with the cheapest falsifiable test and decision threshold rather than forced certainty. Read both bundled persona files before using their roles.
+
 ## How It Works
 
 When triggered with an idea, you (the AI) will act as the Orchestrator and facilitate the following workflow:

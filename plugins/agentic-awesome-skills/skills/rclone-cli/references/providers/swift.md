@@ -101,7 +101,8 @@ Choose a number from below, or type in your own value
 endpoint_type>
 Remote config
 --------------------
-[test]
+[remote]
+type = swift
 env_auth = true
 user =
 key =
@@ -162,7 +163,8 @@ export OS_TENANT_NAME="1234567890123456"
 export OS_USERNAME="123abc567xy"
 echo "Please enter your OpenStack Password: "
 read -sr OS_PASSWORD_INPUT
-export OS_PASSWORD=$OS_PASSWORD_INPUT
+export OS_PASSWORD="$OS_PASSWORD_INPUT"
+unset OS_PASSWORD_INPUT
 export OS_REGION_NAME="SBG1"
 if [ -z "$OS_REGION_NAME" ]; then unset OS_REGION_NAME; fi
 ```
@@ -710,7 +712,8 @@ Request" error rather than a more sensible error when the
 authentication fails for Swift.
 
 So this most likely means your username / password is wrong.  You can
-investigate further with the `--dump-bodies` flag.
+inspect redacted logs first. `--dump-bodies` can expose authentication
+passwords and tokens; avoid it on live credentials and do not share raw dumps.
 
 This may also be caused by specifying the region when you shouldn't
 have (e.g. OVH).

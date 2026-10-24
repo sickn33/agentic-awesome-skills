@@ -21,7 +21,7 @@ Use this sub-style when the user's request matches the aesthetic described above
 3. **Muted Backgrounds**: A soft grey or off-white background so the white data cards stand out clearly.
 
 ## Visual DNA
-- **Colors**: **Minimalist Slate** or **Earth-Grounded Elegance**. Avoid too many colors. Use red/green strictly for positive/negative trends.
+- **Colors**: **Minimalist Slate** or **Earth-Grounded Elegance**. Avoid too many colors. Pair trend color with text, signs or icons. Define whether a rise or fall is favorable for each metric; lower churn may be favorable.
 - **Typography**: Clean, tabular sans-serifs (`Inter`, `Roboto Mono` for numbers).
 - **Styling**: Very subtle shadows or 1px borders to separate cards.
 
@@ -97,7 +97,7 @@ struct DashboardView: View {
                 LazyVGrid(columns: columns, spacing: 16) {
                     KPICard(title: "Revenue", value: "$45,231", trend: "+12.5%", isPositive: true)
                     KPICard(title: "Active Users", value: "2,405", trend: "+4.1%", isPositive: true)
-                    KPICard(title: "Churn Rate", value: "1.2%", trend: "-0.4%", isPositive: false)
+                    KPICard(title: "Churn Rate", value: "1.2%", trend: "-0.4%", isPositive: true)
                     KPICard(title: "Avg. Session", value: "4m 12s", trend: "+0.1%", isPositive: true)
                 }
                 .padding()
@@ -167,7 +167,7 @@ class DashboardScreen extends StatelessWidget {
               children: [
                 _buildKPI('Revenue', '\$45,231', '+12.5%', true),
                 _buildKPI('Active Users', '2,405', '+4.1%', true),
-                _buildKPI('Churn Rate', '1.2%', '-0.4%', false),
+                _buildKPI('Churn Rate', '1.2%', '-0.4%', true),
                 _buildKPI('Avg. Session', '4m 12s', '+0.1%', true),
               ],
             ),
@@ -209,8 +209,8 @@ class DashboardScreen extends StatelessWidget {
   }
 }
 ```
-- `SliverGrid.extent` with a `maxCrossAxisExtent` is the responsive magic bullet for Flutter dashboards. It handles varying screen widths flawlessly.
-- For charts, the `fl_chart` package is the gold standard in Flutter.
+- `SliverGrid.extent` adapts column count, but fixed aspect ratios can clip long labels or enlarged text. Test width and text scale and choose content-based heights where needed.
+- `fl_chart` is one chart option; assess accessibility, maintenance and the required chart types.
 
 ### React Native
 ```jsx
@@ -220,7 +220,7 @@ const DashboardScreen = () => {
       <View style={{ padding: 16, flexDirection: 'row', flexWrap: 'wrap', gap: 16 }}>
         <KPICard title="Revenue" value="$45,231" trend="+12.5%" isPositive={true} />
         <KPICard title="Users" value="2,405" trend="+4.1%" isPositive={true} />
-        <KPICard title="Churn" value="1.2%" trend="-0.4%" isPositive={false} />
+        <KPICard title="Churn" value="1.2%" trend="-0.4%" isPositive={true} />
         <KPICard title="Session" value="4m 12s" trend="+0.1%" isPositive={true} />
       </View>
       
@@ -280,7 +280,7 @@ fun DashboardScreen() {
         ) {
             item { KPICard("Revenue", "$45,231", "+12.5%", true) }
             item { KPICard("Active Users", "2,405", "+4.1%", true) }
-            item { KPICard("Churn Rate", "1.2%", "-0.4%", false) }
+            item { KPICard("Churn Rate", "1.2%", "-0.4%", true) }
             item { KPICard("Avg. Session", "4m 12s", "+0.1%", true) }
         }
 

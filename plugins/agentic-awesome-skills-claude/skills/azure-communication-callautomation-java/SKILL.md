@@ -10,6 +10,10 @@ date_added: "2026-02-27"
 
 Build server-side call automation workflows including IVR systems, call routing, recording, and AI-powered interactions.
 
+## Integration boundaries
+
+Examples are fragments targeting the stated SDK version, not a complete IVR. Verify constructors/types against that version before compiling. Outbound calls/transfers incur charges and require approved recipients; recording requires appropriate notice/consent and protected retention. Authenticate webhook delivery, validate event schema, deduplicate event/operation IDs, and avoid logging DTMF/account data. An accepted asynchronous request is not proof playback/recognition succeeded: handle failure and disconnect events.
+
 ## Installation
 
 ```xml
@@ -199,6 +203,10 @@ public void handleCallback(String requestBody) {
         } else if (event instanceof RecognizeCompleted) {
             RecognizeCompleted recognized = (RecognizeCompleted) event;
             // Handle DTMF or speech recognition result
+            if (!(recognized.getRecognizeResult() instanceof DtmfResult)) {
+                // Handle speech results in a separate branch.
+                continue;
+            }
             DtmfResult dtmfResult = (DtmfResult) recognized.getRecognizeResult();
             String tones = dtmfResult.getTones().stream()
                 .map(DtmfTone::toString)

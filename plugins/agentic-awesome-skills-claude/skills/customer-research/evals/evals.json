@@ -52,7 +52,7 @@
         "Warns against creating personas without data",
         "Includes jobs to be done, pains, triggers, and desired outcomes in persona structure",
         "Mentions the need to capture actual customer vocabulary",
-        "Notes minimum data threshold (5-10 data points)"
+        "Explains that 5-10 observations support only a provisional persona; no universal sufficiency threshold"
       ],
       "files": []
     },

@@ -136,6 +136,25 @@
       "runtime_files": []
     },
     {
+      "id": "a4a",
+      "path": "skills/a4a",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "aas-compose-stack",
       "path": "skills/aas-compose-stack",
       "targets": {
@@ -10632,7 +10651,7 @@
       "path": "skills/claude-code-expert",
       "targets": {
         "codex": "blocked",
-        "claude": "blocked"
+        "claude": "supported"
       },
       "setup": {
         "type": "none",
@@ -10640,17 +10659,13 @@
         "docs": null
       },
       "reasons": [
-        "absolute_host_path",
         "target_specific_home_path"
       ],
       "blocked_reasons": {
         "codex": [
-          "absolute_host_path",
           "target_specific_home_path"
         ],
-        "claude": [
-          "absolute_host_path"
-        ]
+        "claude": []
       },
       "runtime_files": []
     },
@@ -12204,7 +12219,7 @@
       "id": "competitor-analysis",
       "path": "skills/competitor-analysis",
       "targets": {
-        "codex": "blocked",
+        "codex": "supported",
         "claude": "supported"
       },
       "setup": {
@@ -12212,13 +12227,9 @@
         "summary": "",
         "docs": null
       },
-      "reasons": [
-        "target_specific_home_path"
-      ],
+      "reasons": [],
       "blocked_reasons": {
-        "codex": [
-          "target_specific_home_path"
-        ],
+        "codex": [],
         "claude": []
       },
       "runtime_files": []
@@ -13104,6 +13115,25 @@
     {
       "id": "convex-backend",
       "path": "skills/convex-backend",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "cooper-email",
+      "path": "skills/cooper-email",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -14579,6 +14609,25 @@
     {
       "id": "datadog-automation",
       "path": "skills/datadog-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "datawebot",
+      "path": "skills/datawebot",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -17545,25 +17594,6 @@
       "runtime_files": []
     },
     {
-      "id": "docx-official",
-      "path": "skills/docx-official",
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": [],
-      "blocked_reasons": {
-        "codex": [],
-        "claude": []
-      },
-      "runtime_files": []
-    },
-    {
       "id": "domain-driven-design",
       "path": "skills/domain-driven-design",
       "targets": {
@@ -17585,6 +17615,25 @@
     {
       "id": "domain-modeling",
       "path": "skills/domain-modeling",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "doomsday-escrow",
+      "path": "skills/doomsday-escrow",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -19431,6 +19480,25 @@
       "runtime_files": []
     },
     {
+      "id": "faber-language",
+      "path": "skills/faber-language",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "fable-safe-prompt",
       "path": "skills/fable-safe-prompt",
       "targets": {
@@ -20457,6 +20525,82 @@
       "runtime_files": []
     },
     {
+      "id": "footval-follow-matches-and-tables",
+      "path": "skills/footval-follow-matches-and-tables",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "footval-scout-and-rank-players",
+      "path": "skills/footval-scout-and-rank-players",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "footval-stats-and-transfer-news",
+      "path": "skills/footval-stats-and-transfer-news",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "footval-value-and-compare-players",
+      "path": "skills/footval-value-and-compare-players",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "form-cro",
       "path": "skills/form-cro",
       "targets": {
@@ -20517,18 +20661,24 @@
       "id": "fp-backend",
       "path": "skills/fp-backend",
       "targets": {
-        "codex": "supported",
-        "claude": "supported"
+        "codex": "blocked",
+        "claude": "blocked"
       },
       "setup": {
         "type": "none",
         "summary": "",
         "docs": null
       },
-      "reasons": [],
+      "reasons": [
+        "broken_local_reference"
+      ],
       "blocked_reasons": {
-        "codex": [],
-        "claude": []
+        "codex": [
+          "broken_local_reference"
+        ],
+        "claude": [
+          "broken_local_reference"
+        ]
       },
       "runtime_files": []
     },
@@ -22222,7 +22372,7 @@
       "id": "geo-schema",
       "path": "skills/geo-schema",
       "targets": {
-        "codex": "blocked",
+        "codex": "supported",
         "claude": "supported"
       },
       "setup": {
@@ -22230,13 +22380,9 @@
         "summary": "",
         "docs": null
       },
-      "reasons": [
-        "target_specific_home_path"
-      ],
+      "reasons": [],
       "blocked_reasons": {
-        "codex": [
-          "target_specific_home_path"
-        ],
+        "codex": [],
         "claude": []
       },
       "runtime_files": []
@@ -28201,7 +28347,7 @@
       "id": "last30days",
       "path": "skills/last30days",
       "targets": {
-        "codex": "blocked",
+        "codex": "supported",
         "claude": "supported"
       },
       "setup": {
@@ -28209,13 +28355,9 @@
         "summary": "",
         "docs": null
       },
-      "reasons": [
-        "target_specific_home_path"
-      ],
+      "reasons": [],
       "blocked_reasons": {
-        "codex": [
-          "target_specific_home_path"
-        ],
+        "codex": [],
         "claude": []
       },
       "runtime_files": []
@@ -35227,24 +35369,18 @@
       "id": "openclaw-local-mac-mini",
       "path": "skills/openclaw-local-mac-mini",
       "targets": {
-        "codex": "blocked",
-        "claude": "blocked"
+        "codex": "supported",
+        "claude": "supported"
       },
       "setup": {
         "type": "none",
         "summary": "",
         "docs": null
       },
-      "reasons": [
-        "absolute_host_path"
-      ],
+      "reasons": [],
       "blocked_reasons": {
-        "codex": [
-          "absolute_host_path"
-        ],
-        "claude": [
-          "absolute_host_path"
-        ]
+        "codex": [],
+        "claude": []
       },
       "runtime_files": []
     },
@@ -36068,25 +36204,6 @@
     {
       "id": "pdf-conversion-router",
       "path": "skills/pdf-conversion-router",
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": [],
-      "blocked_reasons": {
-        "codex": [],
-        "claude": []
-      },
-      "runtime_files": []
-    },
-    {
-      "id": "pdf-official",
-      "path": "skills/pdf-official",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -37412,25 +37529,6 @@
       "runtime_files": []
     },
     {
-      "id": "pptx-official",
-      "path": "skills/pptx-official",
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": [],
-      "blocked_reasons": {
-        "codex": [],
-        "claude": []
-      },
-      "runtime_files": []
-    },
-    {
       "id": "pr-merge-champion",
       "path": "skills/pr-merge-champion",
       "targets": {
@@ -37737,6 +37835,25 @@
     {
       "id": "product-design",
       "path": "skills/product-design",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "product-design-harness",
+      "path": "skills/product-design-harness",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -43234,6 +43351,25 @@
       "runtime_files": []
     },
     {
+      "id": "shopify-firebase-app",
+      "path": "skills/shopify-firebase-app",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "shopify-review-triage",
       "path": "skills/shopify-review-triage",
       "targets": {
@@ -43892,7 +44028,7 @@
       "id": "slideops",
       "path": "skills/slideops",
       "targets": {
-        "codex": "blocked",
+        "codex": "supported",
         "claude": "supported"
       },
       "setup": {
@@ -43900,13 +44036,9 @@
         "summary": "",
         "docs": null
       },
-      "reasons": [
-        "target_specific_home_path"
-      ],
+      "reasons": [],
       "blocked_reasons": {
-        "codex": [
-          "target_specific_home_path"
-        ],
+        "codex": [],
         "claude": []
       },
       "runtime_files": []
@@ -52047,25 +52179,6 @@
       "runtime_files": []
     },
     {
-      "id": "xlsx-official",
-      "path": "skills/xlsx-official",
-      "targets": {
-        "codex": "supported",
-        "claude": "supported"
-      },
-      "setup": {
-        "type": "none",
-        "summary": "",
-        "docs": null
-      },
-      "reasons": [],
-      "blocked_reasons": {
-        "codex": [],
-        "claude": []
-      },
-      "runtime_files": []
-    },
-    {
       "id": "xss-html-injection",
       "path": "skills/xss-html-injection",
       "targets": {
@@ -52618,14 +52731,14 @@
     }
   ],
   "summary": {
-    "total_skills": 2743,
+    "total_skills": 2750,
     "supported": {
-      "codex": 2657,
-      "claude": 2679
+      "codex": 2668,
+      "claude": 2687
     },
     "blocked": {
-      "codex": 86,
-      "claude": 64
+      "codex": 82,
+      "claude": 63
     },
     "manual_setup": 22
   }

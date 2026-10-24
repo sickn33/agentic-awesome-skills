@@ -1,5 +1,8 @@
 # Routing and Controllers - Best Practices
 
+> Scope: independent illustrative fragments, not a supplied runnable application. Private project paths, helpers, DTOs and Prisma models must be implemented/adapted in the target repository. Pin and check installed Express/Sentry/Zod/Prisma versions. Authentication does not grant object/tenant access; authorize before reads/writes, enforce CSRF for cookie authentication, allowlist DTOs and project public response fields. Capture unexpected errors once at an approved, redacted boundary; never send raw request bodies, credentials or personal data to telemetry.
+
+
 Complete guide to clean route definitions and controller patterns.
 
 ## Table of Contents
@@ -117,10 +120,11 @@ export abstract class BaseController {
             Sentry.captureException(error);
         });
 
+        if (res.headersSent) return; // outer boundary must delegate errors after headers
         res.status(statusCode).json({
             success: false,
             error: {
-                message: error instanceof Error ? error.message : 'An error occurred',
+                message: statusCode >= 500 ? 'Internal server error' : 'Request could not be completed',
                 code: statusCode,
             },
         });
@@ -135,6 +139,7 @@ export abstract class BaseController {
         message?: string,
         statusCode = 200
     ): void {
+        if (statusCode === 204) { res.status(204).end(); return; }
         res.status(statusCode).json({
             success: true,
             message,
@@ -145,7 +150,7 @@ export abstract class BaseController {
     /**
      * Performance tracking wrapper
      */
-    protected async withTransaction<T>(
+    protected async withSpan<T>(
         name: string,
         operation: string,
         callback: () => Promise<T>
@@ -164,7 +169,7 @@ export abstract class BaseController {
         actual: Record<string, any>,
         res: Response
     ): boolean {
-        const missing = required.filter((field) => !actual[field]);
+        const missing = required.filter((field) => actual[field] === undefined || actual[field] === null);
 
         if (missing.length > 0) {
             Sentry.captureMessage(
@@ -220,7 +225,8 @@ export abstract class BaseController {
      * Capture custom metric
      */
     protected captureMetric(name: string, value: number, unit: string): void {
-        Sentry.metrics.gauge(name, value, { unit });
+        // Connect a version-supported metrics adapter with bounded, non-sensitive labels.
+        // No metrics adapter is supplied in this documentation.
     }
 }
 ```
@@ -269,7 +275,7 @@ export class UserController extends BaseController {
             const validated = createUserSchema.parse(req.body);
 
             // Track performance
-            const user = await this.withTransaction(
+            const user = await this.withSpan(
                 'user.create',
                 'db.query',
                 () => this.userService.create(validated)
@@ -385,7 +391,7 @@ router.post('/',
 
 ### Anti-Pattern 1: Business Logic in Routes (Bad ❌)
 
-**File:** `/form/src/routes/responseRoutes.ts` (actual production code)
+**File:** `/form/src/routes/responseRoutes.ts` (illustrative legacy fragment, not verified current production code)
 
 ```typescript
 // ❌ ANTI-PATTERN: 200+ lines of business logic in route
@@ -395,7 +401,7 @@ router.post('/:formID/submit', async (req: Request, res: Response) => {
         const responses = req.body.responses;
         const stepInstanceId = req.body.stepInstanceId;
 
-        // ❌ Permission checking in route
+        // Authorization must remain enforced; relocate it without removing the check
         const userId = await userProfileService.getProfileByEmail(username).then(p => p.id);
         const canComplete = await permissionService.canCompleteStep(userId, stepInstanceId);
         if (!canComplete) {
@@ -427,7 +433,7 @@ router.post('/:formID/submit', async (req: Request, res: Response) => {
             include: { comments: true },
         });
 
-        // ❌ Permission check in route
+        // Preserve this authorization check when extracting code
         await checkPostPermissions(post, userId);
 
         // ... 100+ more lines of business logic
@@ -469,7 +475,8 @@ export class PostController extends BaseController {
 
             const result = await this.postService.createPost(
                 validated,
-                res.locals.userId
+                res.locals.effectiveUserId,
+                res.locals.trustedContext
             );
 
             this.handleSuccess(res, result, 'Post created successfully');
@@ -487,7 +494,8 @@ export class PostController extends BaseController {
 export class PostService {
     async createPost(
         data: CreatePostDTO,
-        userId: string
+        userId: string,
+        context: TrustedRequestContext // supplied by authenticated request scope, not req.body
     ): Promise<PostResult> {
         // Permission check
         const canCreate = await permissionService.canCreatePost(userId);
@@ -567,6 +575,8 @@ async createUser(req: Request, res: Response): Promise<void> {
     }
 }
 ```
+
+`withSpan` creates telemetry only; it does not start a database transaction. Translate Zod and known application errors at the owning boundary; never infer authorization from validation. Do not expose raw ORM records: select a public DTO before handleSuccess.
 
 ### Custom Error Status Codes
 

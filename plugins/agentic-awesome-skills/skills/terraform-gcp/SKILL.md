@@ -11,7 +11,8 @@ date_added: '2026-09-20'
 license: MIT
 license_source: https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE
 compatibility: Requires the relevant OS/platform tooling and privileged access where
-  noted. Docs-only; helper scripts and templates not bundled.
+  noted. Docs-only
+ helper scripts and templates not bundled.
 metadata:
   author: devops-skills
   version: '1.0'
@@ -27,6 +28,8 @@ Provision and manage Google Cloud Platform infrastructure using Terraform with t
 - Managing multi-environment setups (dev, staging, production) from a single codebase
 - Provisioning complex resource graphs (VPC + GKE + Cloud SQL + IAM) in one plan
 - Integrating infrastructure changes into CI/CD pipelines with plan/apply stages
+
+Examples are partial modules and require complete variable declarations, subnet CIDRs, API enablement dependencies, private service networking connection/outputs and provider-compatible schemas before planning. HCL attributes use newlines, not semicolon separators. Confirm project/backend/workspace, cost and saved-plan changes before apply; protect state and plan files because generated passwords remain in state despite sensitive flags. Prefer workload identity/short-lived CI credentials over service account key files. Private GKE nodes do not imply a private control-plane endpoint; explicitly configure endpoint access. A force-new property cannot generally be fixed with state mv; use moved/state operations only for a true address refactor of the same resource.
 
 ## Prerequisites
 
@@ -47,20 +50,26 @@ terraform version
 terraform {
   required_version = ">= 1.5"
   required_providers {
-    google      = { source = "hashicorp/google";      version = "~> 5.0" }
-    google-beta = { source = "hashicorp/google-beta"; version = "~> 5.0" }
+    google      = { source = "hashicorp/google"
+      version = "~> 5.0" }
+    google-beta = { source = "hashicorp/google-beta"
+ version = "~> 5.0" }
   }
-  backend "gcs" { bucket = "my-project-tf-state"; prefix = "terraform/state" }
+  backend "gcs" { bucket = "my-project-tf-state"
+ prefix = "terraform/state" }
 }
 
-provider "google"      { project = var.project_id; region = var.region }
-provider "google-beta" { project = var.project_id; region = var.region }
+provider "google"      { project = var.project_id
+ region = var.region }
+provider "google-beta" { project = var.project_id
+ region = var.region }
 ```
 
 ```hcl
 # variables.tf
 variable "project_id"  { type = string }
-variable "region"      { type = string; default = "us-central1" }
+variable "region"      { type = string
+ default = "us-central1" }
 variable "environment" {
   type = string
   validation {
@@ -113,7 +122,8 @@ resource "google_compute_subnetwork" "main" {
   region                   = var.region
   network                  = google_compute_network.vpc.id
   private_ip_google_access = true
-  log_config { aggregation_interval = "INTERVAL_5_SEC"; flow_sampling = 0.5 }
+  log_config { aggregation_interval = "INTERVAL_5_SEC"
+ flow_sampling = 0.5 }
 }
 
 resource "google_compute_subnetwork" "gke" {
@@ -122,14 +132,17 @@ resource "google_compute_subnetwork" "gke" {
   region                   = var.region
   network                  = google_compute_network.vpc.id
   private_ip_google_access = true
-  secondary_ip_range { range_name = "pods";     ip_cidr_range = var.pods_cidr }
-  secondary_ip_range { range_name = "services"; ip_cidr_range = var.services_cidr }
+  secondary_ip_range { range_name = "pods"
+     ip_cidr_range = var.pods_cidr }
+  secondary_ip_range { range_name = "services"
+ ip_cidr_range = var.services_cidr }
 }
 
 resource "google_compute_firewall" "allow_iap" {
   name    = "${var.environment}-allow-iap"
   network = google_compute_network.vpc.name
-  allow { protocol = "tcp"; ports = ["22", "3389"] }
+  allow { protocol = "tcp"
+ ports = ["22", "3389"] }
   source_ranges = ["35.235.240.0/20"]
 }
 
@@ -145,7 +158,8 @@ resource "google_compute_router_nat" "nat" {
   region                             = var.region
   nat_ip_allocate_option             = "AUTO_ONLY"
   source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
-  log_config { enable = true; filter = "ERRORS_ONLY" }
+  log_config { enable = true
+ filter = "ERRORS_ONLY" }
 }
 
 output "vpc_id"         { value = google_compute_network.vpc.id }
@@ -190,20 +204,25 @@ resource "google_container_node_pool" "primary" {
   location = var.region
 
   initial_node_count = var.initial_node_count
-  autoscaling { min_node_count = var.min_nodes; max_node_count = var.max_nodes }
-  management  { auto_repair = true; auto_upgrade = true }
+  autoscaling { min_node_count = var.min_nodes
+ max_node_count = var.max_nodes }
+  management  { auto_repair = true
+ auto_upgrade = true }
 
   node_config {
+    service_account = var.node_sa_email
     machine_type = var.machine_type
     disk_size_gb = 100
     oauth_scopes = ["https://www.googleapis.com/auth/cloud-platform"]
-    shielded_instance_config { enable_secure_boot = true; enable_integrity_monitoring = true }
+    shielded_instance_config { enable_secure_boot = true
+ enable_integrity_monitoring = true }
     metadata = { disable-legacy-endpoints = "true" }
   }
 }
 
 output "cluster_name"     { value = google_container_cluster.primary.name }
-output "cluster_endpoint" { value = google_container_cluster.primary.endpoint; sensitive = true }
+output "cluster_endpoint" { value = google_container_cluster.primary.endpoint
+ sensitive = true }
 ```
 
 ## Cloud SQL Module
@@ -233,16 +252,21 @@ resource "google_sql_database_instance" "main" {
       private_network = var.vpc_id
       require_ssl     = true
     }
-    database_flags { name = "max_connections"; value = var.max_connections }
+    database_flags { name = "max_connections"
+ value = var.max_connections }
   }
 
   deletion_protection = var.environment == "production"
-  depends_on          = [var.private_vpc_connection]
+  # In this module, depend on a real private service networking connection resource.
 }
 
-resource "google_sql_database" "app" { name = var.database_name; instance = google_sql_database_instance.main.name }
-resource "google_sql_user" "app"     { name = var.db_user; instance = google_sql_database_instance.main.name; password = random_password.db.result }
-resource "random_password" "db"      { length = 32; special = true }
+resource "google_sql_database" "app" { name = var.database_name
+ instance = google_sql_database_instance.main.name }
+resource "google_sql_user" "app"     { name = var.db_user
+ instance = google_sql_database_instance.main.name
+ password = random_password.db.result }
+resource "random_password" "db"      { length = 32
+ special = true }
 
 output "connection_name" { value = google_sql_database_instance.main.connection_name }
 output "private_ip"      { value = google_sql_database_instance.main.private_ip_address }
@@ -352,7 +376,8 @@ terraform state mv google_compute_instance.old google_compute_instance.new
 | `Quota exceeded` | Project quota too low | Request increase in Cloud Console > Quotas |
 | Plan shows destroy/recreate | Changed force-new attribute | Use `moved` blocks or `terraform state mv` |
 | `Backend initialization required` | Changed backend config | Run `terraform init -migrate-state` |
-| Cycle in resource graph | Circular references | Refactor with data sources; split applies |
+| Cycle in resource graph | Circular references | Refactor with data sources
+ split applies |
 
 ## Related Skills
 

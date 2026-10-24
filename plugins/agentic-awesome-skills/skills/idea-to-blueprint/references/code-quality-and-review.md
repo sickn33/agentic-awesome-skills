@@ -69,7 +69,7 @@ In this order. The order is the point: it is roughly the cost of being wrong, an
 
 **D10. Readability.** Naming that a stranger reads correctly; comments that explain *why*, not *what*; complexity that could be reduced without loss. Last on the list on purpose — it is real, but it is where review attention gets spent when the reviewer has no better checklist.
 
-**D11. Size and shape of the change.** Reviews of 200–400 changed lines are where defect detection is strongest; past roughly 400 lines detection falls off, and past 60–90 minutes of continuous reviewing it falls off again. This is a claim about the reader, not the author, so it survives the fact that an agent can produce 2,000 lines in a minute. If a story routinely produces more than that, the story is too big — split it in the blueprint.
+**D11. Size and shape of the change.** Use 200–400 changed lines as a planning heuristic, not a universal evidence-backed threshold; split by cohesive behavior and reviewer capacity. This is a claim about the reader, not the author, so it survives the fact that an agent can produce 2,000 lines in a minute. If a story routinely produces more than that, the story is too big — split it in the blueprint.
 
 **The standard for approval** is not perfection: approve when the change definitively improves the system and carries no unacceptable risk, and file the rest as follow-ups. A review that blocks on preference is as expensive as a review that catches nothing.
 
@@ -80,7 +80,7 @@ Coverage tells you a line executed. It does not tell you a test would notice if 
 Specify in the blueprint:
 
 - **Behaviour over implementation.** Tests assert observable outcomes (returned value, stored row, emitted event, rendered state, HTTP response), never internal call sequences or private structure. Heavy mocking of the unit's own collaborators is the usual tell.
-- **Real assertions.** A test that only asserts a type, a length, or "no exception thrown" is not a test. Enumerate the specific expected values.
+- **Real assertions.** Type, length and no-throw assertions are useful when they express the actual contract; otherwise assert specific expected outcomes rather than merely exercising code.
 - **Red before green.** The story's tests are written to fail against the unimplemented behaviour and pass after; the session records that they were seen red. This is the cheapest possible mutation test.
 - **Mutation testing on the critical modules** where the stack has a maintained tool: pricing, permissions, validation, money, state machines. Mutation score on those modules is a far better signal than global coverage, and unlike coverage it does not reward padding. Verify tool availability for the chosen stack; if none exists, say so and rely on red-before-green plus targeted boundary tests.
 - **Determinism.** No wall-clock, no real network, no shared mutable fixtures, no ordering dependence, seeded randomness. Time and randomness are injected.
@@ -91,7 +91,7 @@ Coverage still appears — as a floor in `check` that prevents silent regression
 
 ## 6. Reviewing code the agent wrote
 
-This blueprint's whole premise is that most code is machine-authored, which changes the defect profile rather than removing it. The published evidence is consistent enough to design around: security performance of generated code has stayed roughly flat while volume exploded — Veracode's 2026 report puts the security pass rate near 56% across 100+ models even as syntax correctness sits near 100%; GitClear's longitudinal analysis of hundreds of millions of changed lines shows duplication and short-term churn climbing while refactoring/code-reuse ("moved" code) collapses; and DORA's 2025 research finds AI raising throughput while delivery stability still degrades, with review capacity becoming the bottleneck. Verify the current figures each run (§9) — the shape of the finding matters more than the exact number, and the numbers move.
+This blueprint's whole premise is that most code is machine-authored, which changes the defect profile rather than removing it. Security and maintainability claims about generated code must be checked against a dated primary study, its sample and limitations before being included. Do not reuse unverified report years, model counts or pass-rate figures from memory.
 
 Practical consequences to encode in the blueprint:
 
@@ -174,8 +174,8 @@ Design
     identified and recorded as a DR
 
 Tests
-[ ] Each AC maps to a named test; each was seen failing before implementation
-[ ] Tests assert concrete expected values, not types/lengths/no-throw
+[ ] Each AC maps to test/manual evidence; new tests saw the intended failure where practical; exceptions stated
+[ ] Tests assert the behavior required by the contract, with concrete expectations
 [ ] Tests assert behaviour, not internal calls; they would survive a refactor
 [ ] Deterministic: no wall clock, no network, no order dependence, seeded randomness
 [ ] [Mutation score on <critical modules> not reduced]

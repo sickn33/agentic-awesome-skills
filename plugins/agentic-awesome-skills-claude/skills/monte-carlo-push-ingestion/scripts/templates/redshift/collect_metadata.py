@@ -129,6 +129,8 @@ def _dictfetch(cursor: Any, sql: str, params: tuple | None = None) -> list[dict[
         if not chunk:
             break
         rows.extend(dict(zip(cols, row)) for row in chunk)
+        if len(rows) > 100000:
+            raise ValueError("Collection exceeds 100000 rows; narrow scope instead of returning partial success")
     return rows
 
 
@@ -197,7 +199,7 @@ def collect(
         dbname=db,          # ← SUBSTITUTE
         user=user,          # ← SUBSTITUTE
         password=password,  # ← SUBSTITUTE
-        connect_timeout=30,
+        connect_timeout=30, sslmode="verify-full", options="-c statement_timeout=60000",
     )
     try:
         with conn.cursor() as cursor:
@@ -231,6 +233,8 @@ def collect(
                         "row_count": t.get("row_count"),
                         "byte_count": t.get("byte_count"),
                     }
+                    if len(assets) >= 10000:
+                        raise ValueError("Collection exceeds 10000 assets; narrow scope")
                     assets.append(asset)
                     log.info("Collected %s.%s.%s", database, schema, table_name)
     finally:
@@ -252,7 +256,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Collect Redshift metadata to a manifest file")
     parser.add_argument("--db", default=os.getenv("REDSHIFT_DB"))             # ← SUBSTITUTE
     parser.add_argument("--user", default=os.getenv("REDSHIFT_USER"))         # ← SUBSTITUTE
-    parser.add_argument("--password", default=os.getenv("REDSHIFT_PASSWORD")) # ← SUBSTITUTE
+    parser.add_argument("--password", choices=[], default=os.getenv("REDSHIFT_PASSWORD")) # ← SUBSTITUTE
     parser.add_argument("--port", type=int, default=int(os.getenv("REDSHIFT_PORT", "5439")))
     parser.add_argument("--manifest", default="manifest_metadata.json")
     args = parser.parse_args()

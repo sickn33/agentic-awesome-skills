@@ -2,6 +2,8 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+Pin the same Three.js version for core and addons. Snippets assume an existing renderer/camera/scene and are independent alternatives. Use canvas-relative coordinates for embedded scenes, update camera/projection and world matrices as needed, guard zero-sized canvases, and clean up all listeners/controls on teardown. Provide keyboard/focus and non-pointer alternatives; pointer lock needs an explicit user gesture and an exit path.
+
 ## Quick Start
 
 ```javascript
@@ -17,8 +19,10 @@ const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
 function onClick(event) {
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  const rect = renderer.domElement.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+  mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(scene.children);
@@ -28,7 +32,7 @@ function onClick(event) {
   }
 }
 
-window.addEventListener("click", onClick);
+renderer.domElement.addEventListener("click", onClick);
 ```
 
 
@@ -69,8 +73,10 @@ const mouse = new THREE.Vector2();
 
 function updateMouse(event) {
   // For full window
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  const rect = renderer.domElement.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+  mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 }
 
 // For specific canvas element
@@ -195,7 +201,7 @@ controls.pan(deltaX, deltaY); // Pan the camera
 controls.rotate(deltaAzimuth, deltaPolar); // Rotate around target
 
 // Cursor style (r183)
-controls.cursorStyle = { orbit: "grab", pan: "move", dolly: "zoom-in" };
+controls.cursorStyle = "grab"; // verify the pinned revision's documented type
 ```
 
 ### FlyControls
@@ -256,8 +262,8 @@ controls.addEventListener("unlock", () => {
 // Movement
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
-const moveForward = false;
-const moveBackward = false;
+let moveForward = false;
+let moveBackward = false;
 
 document.addEventListener("keydown", (event) => {
   switch (event.code) {
@@ -269,6 +275,12 @@ document.addEventListener("keydown", (event) => {
       break;
   }
 });
+
+document.addEventListener("keyup", (event) => {
+  if (event.code === "KeyW") moveForward = false;
+  if (event.code === "KeyS") moveBackward = false;
+});
+window.addEventListener("blur", () => { moveForward = moveBackward = false; });
 
 function animate() {
   if (controls.isLocked) {
@@ -320,7 +332,7 @@ Gizmo for moving/rotating/scaling objects.
 import { TransformControls } from "three/addons/controls/TransformControls.js";
 
 const transformControls = new TransformControls(camera, renderer.domElement);
-scene.add(transformControls);
+scene.add(transformControls.getHelper());
 
 // Attach to object
 transformControls.attach(selectedMesh);
@@ -405,8 +417,10 @@ const mouse = new THREE.Vector2();
 let selectedObject = null;
 
 function onMouseDown(event) {
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  const rect = renderer.domElement.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+  mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(selectableObjects);
@@ -473,8 +487,10 @@ const mouse = new THREE.Vector2();
 let hoveredObject = null;
 
 function onMouseMove(event) {
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  const rect = renderer.domElement.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+  mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+  mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
   raycaster.setFromCamera(mouse, camera);
   const intersects = raycaster.intersectObjects(hoverableObjects);
@@ -488,7 +504,7 @@ function onMouseMove(event) {
   // Apply new hover
   if (intersects.length > 0) {
     hoveredObject = intersects[0].object;
-    if (!hoveredObject.userData.originalColor) {
+    if (hoveredObject.userData.originalColor === undefined) {
       hoveredObject.userData.originalColor =
         hoveredObject.material.color.getHex();
     }
@@ -545,7 +561,7 @@ function worldToScreen(position, camera) {
 }
 
 // Position HTML element over 3D object
-const screenPos = worldToScreen(mesh.position, camera);
+const screenPos = worldToScreen(mesh.getWorldPosition(new THREE.Vector3()), camera);
 element.style.left = screenPos.x + "px";
 element.style.top = screenPos.y + "px";
 ```
@@ -577,9 +593,7 @@ function getRayPlaneIntersection(mouse, camera, plane) {
   raycaster.setFromCamera(mouse, camera);
 
   const intersection = new THREE.Vector3();
-  raycaster.ray.intersectPlane(plane, intersection);
-
-  return intersection;
+  return raycaster.ray.intersectPlane(plane, intersection); // null for no intersection
 }
 
 // Ground plane
@@ -587,6 +601,8 @@ const groundPlane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
 const worldPos = getRayPlaneIntersection(mouse, camera, groundPlane);
 ```
 
+
+Material examples assume a single compatible material with color/emissive. Clone shared materials before per-object highlights and restore the actual original values; arrays and non-emissive materials need explicit handling. Use frame delta for movement/friction; the simple per-frame keyboard sample is not speed-independent. `screenToWorld` below assumes an unparented perspective camera and a nonparallel ray: prefer the Raycaster plane helper and handle null for general cameras. Touch cancellation requires an intentional passive:false policy; Pointer Events usually simplify mouse/touch and avoid duplicate clicks.
 
 ## Event Handling Best Practices
 
@@ -606,9 +622,10 @@ class InteractionManager {
   bindEvents() {
     const canvas = this.renderer.domElement;
 
-    canvas.addEventListener("click", (e) => this.onClick(e));
-    canvas.addEventListener("mousemove", (e) => this.onMouseMove(e));
-    canvas.addEventListener("touchstart", (e) => this.onTouchStart(e));
+    this._click = (e) => this.onClick(e);
+    canvas.addEventListener("click", this._click);
+    // Add hover/touch handlers only when their implementations are supplied.
+
   }
 
   updateMouse(event) {
@@ -640,7 +657,8 @@ class InteractionManager {
   }
 
   dispose() {
-    // Remove event listeners
+    this.renderer.domElement.removeEventListener("click", this._click);
+    this.clickables.length = 0;
   }
 }
 

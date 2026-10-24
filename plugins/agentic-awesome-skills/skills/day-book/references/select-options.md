@@ -35,4 +35,4 @@ Not started | In progress | Blocked | Done | Cancelled
 ```
 
 
-See the [Relations](references/relations.md) reference for the full guidance.
+See the [Relations](relations.md) reference for the full guidance.

@@ -25,10 +25,9 @@ four cannot drift apart.
 
 Layer: Layer 3: Acquire. Fits: Starter stage. Table code: n/a.
 
-**The rule this table exists to enforce:** a link hub exists because a social bio allows
-one link and a business needs six. That means the hub is the only page where the order and
+**The rule this table exists to enforce:** a link hub exists because some placements constrain the number of links and a business needs six. That means the hub is the only page where the order and
 the destination are a business decision, which makes it the one place to be deliberate. It
-is also the cheapest tracked landing page the business will ever own, because the click
+is also a potentially simple owned-domain landing page, with hosting/domain/analytics costs to confirm, because the click
 lands on its own domain rather than a third party's.
 
 ## When to Use This Skill
@@ -46,7 +45,7 @@ form and tracking - that is a website page.
 
 ## How It Works
 
-Follow the shared execution contract. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+Follow these local instructions; the shared execution runtime is not bundled. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -108,12 +107,10 @@ Build an already requested artifact without asking again. For advice-only reques
 **Recommended approach:** One page on the business's own domain, six links maximum, with
 one clear primary action at the top and every other link below it. Each link carries a UTM
 source so the channel is visible in analytics, each link has an owner and a review date,
-and any seasonal link gets a start and end date so it comes down on its own. Print gets a
+and any seasonal link gets a start and end date so the owner can remove it under a confirmed scheduling process. Print gets a
 QR code to the same URL, not a different one.
 
-**Why this one:** Six links is the ceiling for a link hub - below that, the page works; above
-it, the primary action stops being obvious. Owning the domain means the page cannot be
-switched off by a third party, the QR code cannot break, and the clicks land somewhere the
+**Why this one:** Six links is a starting design hypothesis, not a proven ceiling; prioritize the actual user tasks and test the result. Owning the domain means the domain affords more control, but hosting, DNS, renewals and redirects can still fail, and the clicks land somewhere the
 business controls.
 
 **Workflow:** Primary action chosen → Destination list agreed → Hosted on own domain with a
@@ -153,7 +150,7 @@ CREATE TABLE link_hub_link (
   audience VARCHAR(100) NOT NULL,
   track_clicks BOOLEAN NOT NULL,
   utm_source VARCHAR(255),
-  enabled_on VARCHAR(255) NOT NULL,
+  enabled_on TEXT NOT NULL,
   thumbnail VARCHAR(255),
   opens_in VARCHAR(20) NOT NULL,
   schedule VARCHAR(50) NOT NULL,
@@ -183,16 +180,16 @@ CREATE INDEX idx_link_hub_priority ON link_hub_link (priority_order);
       "Link Label": { "type": "string" },
       "Destination URL": { "type": "string", "format": "uri" },
       "Link Type": { "type": "string" },
-      "Priority Order": { "type": "integer" },
+      "Priority Order": { "type": "integer", "minimum": 1 },
       "Audience": { "type": "string" },
       "Track Clicks": { "type": "boolean" },
       "UTM Source": { "type": "string" },
       "Enabled On": { "type": "string" },
       "Thumbnail": { "type": "string" },
-      "Opens In": { "type": "string" },
+      "Opens In": { "type": "string", "enum": ["Same tab", "New tab", "App", "Direct action"] },
       "Schedule": { "type": "string" },
       "Review Date": { "type": "string", "format": "date" },
-      "Click Count": { "type": "integer" },
+      "Click Count": { "type": "integer", "minimum": 0 },
       "Status": { "type": "string" },
       "Notes": { "type": "string" }
   },
@@ -215,12 +212,12 @@ CREATE INDEX idx_link_hub_priority ON link_hub_link (priority_order);
 | CSV column | Notion property | Set after import |
 |---|---|---|
 | Link ID | Text (preserve source ID) | Keep imported IDs as Text; optionally add a separate Unique ID property |
-| Link Label | Text | Leave as Text. What the person sees. A verb phrase beats a noun |
+| Link Label | Title | Use as the database title; the visible link label |
 | Destination URL | URL | Convert to URL. No tracking parameters - they live in the UTM columns |
 | Link Type | Select (add options after import) | Convert to Select, add options: "Conversion action", "Contact", "WhatsApp", "Phone", "Menu or price list", "Document", "Social profile", "Review request", "Booking", "Map", "Newsletter signup", "Seasonal offer" |
 | Priority Order | Number | Convert to Number, digits only. 1 is the top link and must be the primary action |
 | Audience | Select (add options after import) | Convert to Select, add options: "Prospective customer", "Existing customer", "Partner", "Job candidate", "Press", "Public" |
-| Track Clicks | Checkbox | Convert to Checkbox. Off only where the platform cannot support UTM parameters |
+| Track Clicks | Checkbox | Convert to Checkbox. Enable only when needed and legally approved; UTM support does not require tracking |
 | UTM Source | Text | Leave as Text. The channel name, not the whole URL |
 | Enabled On | Text | Leave as Text. Which bios, cards and leaflets carry this link |
 | Thumbnail | Text | Leave as Text. Filename or asset reference, not a pasted image |
@@ -229,7 +226,7 @@ CREATE INDEX idx_link_hub_priority ON link_hub_link (priority_order);
 | Review Date | Date | Convert to Date. The next date this link is checked |
 | Click Count | Number | Convert to Number, digits only. Leave blank until measured - never seed it with a guess |
 | Status | Select (add options after import) | Convert to Select, add options: "Draft", "Live", "Paused", "Retired" |
-| Notes | Title | Use as the database title |
+| Notes | Text | Leave as optional Text |
 ```
 
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. `Click Count` is `0` in the example and blank in
@@ -328,7 +325,7 @@ bio points to it and our visiting cards point to the website homepage.
 
 > One page on your own domain with six links, not eleven. Book a table at the top, WhatsApp
 > second, then the menu, the location, and two social profiles. The October offer gets a
-> start and end date so it comes down by itself. Each link carries a UTM source so the cards
+> start and end date so it can be removed by an implemented scheduler or the owner. Each link carries a UTM source so the cards
 > and the Instagram bio are visible separately in analytics, and the same URL goes on the
 > cards as a QR code.
 >
@@ -342,7 +339,7 @@ bio points to it and our visiting cards point to the website homepage.
 
 - Build when requested; recommend and offer a build for advice-only requests.
 - One question per message. A batched intake reads as a form and gets guessed at.
-- Six links, maximum. The failure mode of a link hub is that everything is equally
+- Start with a short prioritized list; six is illustrative. The failure mode of a link hub is that everything is equally
   important, so nothing is.
 - Put the primary action first and make it visually the primary action. A customer booking
   should not have to choose between three equal buttons.
@@ -419,7 +416,7 @@ bio points to it and our visiting cards point to the website homepage.
   someone's head.
 - **Problem:** the same business has four different destination URLs - one in the bio, one
   on the card, one in the email signature, one in the leaflet.
-  **Solution:** one URL everywhere. Then the click data is worth having.
+  **Solution:** one stable hub path with distinct authorized channel parameters or redirects when source attribution is needed.
 - **Problem:** analytics is installed and the page became slow.
   **Solution:** a script-heavy hub page costs more in lost clicks than the tracking is
   worth. Keep it a fast page on the same domain.
@@ -451,3 +448,7 @@ Never invent a URL, a phone number or a click count. Then recommend the smallest
 set that fits on our own domain, and wait for me to ask before you build it.
 When I ask, output CSV, SQL DDL, JSON Schema and a Notion property mapping. Data only.
 ```
+
+## Tracking and schedule limits
+
+This is a manually validated register, not a page builder, analytics collector or scheduler. `Schedule` is only a label: the illustrated schema lacks start/end timestamps, timezone and execution status. Use Manual toggle until an explicit scheduling schema/runtime is implemented consistently in every format; do not claim automatic expiry. Identical untagged inbound URLs/QR codes cannot identify whether a visit came from print or a specific bio. Use one stable hub path with source-specific inbound parameters/redirects, and distinguish incoming attribution from outgoing destination UTMs; do not expose personal data in query strings. UTM parameters alone do not count clicks. Define event, date window, bot filtering and duplicate handling before comparing counts, and keep unknown counts blank rather than zero. Validate URL scheme/host and redirect chains against approved destinations; JSON URI format alone permits unsafe schemes and needs validator support. SQL IDs are supplied explicitly here (no automatic identity), timestamp defaults do not update automatically, and status/date/priority uniqueness need confirmed enforcement. QR scanning depends on data density, printing, quiet zone, contrast and device distance, not a universal 2cm cutoff. Own-domain hosting does not remove privacy/consent obligations or availability risk; assess actual data processing rather than assuming the absence of a banner is sufficient.

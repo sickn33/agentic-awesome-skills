@@ -40,6 +40,8 @@ def cn2int(text):
         return None
     if text.isdigit():
         return int(text)
+    if text.startswith("零") and len(text) > 1:
+        return cn2int(text.lstrip("零"))
     if "百" in text:
         head, _, tail = text.partition("百")
         hundreds = CN_DIGITS.get(head, 1 if head == "" else None)
@@ -57,8 +59,8 @@ def cn2int(text):
         tens = CN_DIGITS.get(head, 1 if head == "" else None)
         if tens is None:
             return None
-        ones = CN_DIGITS.get(tail, 0) if tail else 0
-        return tens * 10 + ones
+        ones = CN_DIGITS.get(tail) if tail else 0
+        return None if ones is None else tens * 10 + ones
     if text.startswith("零"):
         text = text.lstrip("零") or "零"
     if len(text) == 1:
@@ -98,7 +100,10 @@ def chapter_files(manuscript_dir):
                 num = int(m.group(1))
         if num is None:
             continue
-        found.append((num, name, os.path.join(manuscript_dir, name)))
+        path = os.path.join(manuscript_dir, name)
+        if num <= 0 or not os.path.isfile(path) or os.path.islink(path):
+            continue
+        found.append((num, name, path))
     found.sort(key=lambda x: (x[0], x[1]))
     return found
 
@@ -148,11 +153,11 @@ def check_name_drift(bible, chapter_texts):
     """Two honest signals, both with low false-positive rates.
 
     1. watch_spellings: variants the author already knows are risky, declared
-       in the bible. Deterministic, zero false positives, catches the typo the
+       in the bible. Deterministic string matching, requiring context review, catches the typo the
        model keeps repeating.
     2. Speaker labels: a 2-4 character token directly in front of a speech verb
        ("陈俊说道") occupies name position, so an undeclared token there that is
-       one character off a canonical name is drift, not prose.
+       one character off a canonical name is a candidate for review, not a certain typo.
     """
     issues = []
     characters = bible.get("characters") or []
@@ -225,17 +230,20 @@ def check_ages(bible, chapter_texts):
 
 def check_foreshadowing(bible, chapter_count, chapter_texts):
     issues = []
+    chapter_numbers = {n for n, _, _ in chapter_texts}
+    latest = max(chapter_numbers, default=0)
     for item in bible.get("foreshadowing") or []:
         fid = item.get("id", "?")
         summary = item.get("summary", "")
         payoff = item.get("payoff_chapter")
         if payoff is None:
-            if chapter_count >= int(item.get("deadline_chapter", 0) or 0):
+            deadline = item.get("deadline_chapter")
+            if deadline is not None and latest >= int(deadline):
                 issues.append(issue("warn", "foreshadowing", fid,
                                     'planted in ch%s but never paid off: "%s"'
                                     % (item.get("planted_chapter", "?"), summary)))
             continue
-        if int(payoff) > chapter_count:
+        if int(payoff) not in chapter_numbers:
             issues.append(issue("error", "foreshadowing", fid,
                                 "payoff_chapter %s does not exist (manuscript has %d chapters)"
                                 % (payoff, chapter_count)))
@@ -322,7 +330,7 @@ def init(path, title, period):
              "payoff_chapter": None, "payoff_keyword": "", "deadline_chapter": None}
         ],
     }
-    with open(path, "w", encoding="utf-8") as fh:
+    with open(path, "x", encoding="utf-8") as fh:
         json.dump(template, fh, ensure_ascii=False, indent=2)
         fh.write("\n")
     print("wrote %s" % path)
@@ -351,6 +359,9 @@ def main(argv=None):
         # structured mode reuses run()'s logic but prints one JSON document
         bible = json.load(open(args.bible, encoding="utf-8"))
         chapters = chapter_files(args.manuscript)
+        if not chapters:
+            print("no chapter files found", file=sys.stderr)
+            return 2
         texts = [(n, name, open(path, encoding="utf-8").read()) for n, name, path in chapters]
         issues = (check_sequence(chapters) + check_anachronism(bible, texts)
                   + check_name_drift(bible, texts) + check_ages(bible, texts)
@@ -358,7 +369,7 @@ def main(argv=None):
                   + check_pov(bible, texts))
         print(json.dumps({"chapters": len(chapters), "issues": issues},
                          ensure_ascii=False, indent=2))
-        return 1 if any(i["level"] == "error" for i in issues) else 0
+        return 1 if any(i["level"] == "error" or args.fail_on == "warn" for i in issues) else 0
     return run(args.bible, args.manuscript, args.fail_on)
 
 

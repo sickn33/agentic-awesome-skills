@@ -42,7 +42,7 @@ Options:
 
 ```bash
 # Run with JSON output for AI agents
-longbridge financial-statement --format json
+longbridge financial-statement AAPL.US --format json
 
 # See all options
 longbridge financial-statement --help

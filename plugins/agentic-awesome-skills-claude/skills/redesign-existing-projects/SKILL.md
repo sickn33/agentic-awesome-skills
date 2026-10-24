@@ -37,7 +37,7 @@ tools: [claude, cursor, codex, antigravity]
 When applied to an existing project, follow this sequence:
 
 1. **Scan** — Read the codebase. Identify the framework, styling method (Tailwind, vanilla CSS, styled-components, etc.), and current design patterns.
-2. **Diagnose** — Run through the audit below. List every generic pattern, weak point, and missing state you find.
+2. **Diagnose** — Use the audit as design options, not universal defects. Prioritize evidenced usability/accessibility issues and the user’s brand goals; a familiar font, sidebar or symmetric grid can be appropriate.
 3. **Fix** — Apply targeted upgrades working with the existing stack. Do not rewrite from scratch. Improve what's there.
 
 ## Design Audit
@@ -104,13 +104,13 @@ Check for these problems and fix them:
 ### Content
 
 - **Generic names like "John Doe" or "Jane Smith".** Use diverse, realistic-sounding names.
-- **Fake round numbers like `99.99%`, `50%`, `$100.00`.** Use organic, messy data: `47.2%`, `$99.00`, `+1 (312) 847-1928`.
+- **Placeholder metrics/contact details.** Use verified values in production. Keep synthetic demo data clearly labeled, with reserved example contact details; do not fabricate precise claims to look authentic.
 - **Placeholder company names like "Acme Corp", "Nexus", "SmartFlow".** Invent contextual, believable brand names.
 - **AI copywriting cliches.** Never use "Elevate", "Seamless", "Unleash", "Next-Gen", "Game-changer", "Delve", "Tapestry", or "In the world of...". Write plain, specific language.
 - **Exclamation marks in success messages.** Remove them. Be confident, not loud.
 - **"Oops!" error messages.** Be direct: "Connection failed. Please try again."
 - **Passive voice.** Use active voice: "We couldn't save your changes" instead of "Mistakes were made."
-- **All blog post dates identical.** Randomize dates to appear real.
+- **All blog post dates identical.** Preserve verified publication/update dates. Clearly label synthetic demo dates; never randomize history to make content appear real.
 - **Same avatar image for multiple users.** Use unique assets for every distinct person.
 - **Lorem Ipsum.** Never use placeholder latin text. Write real draft copy.
 - **Title Case On Every Header.** Use sentence case instead.
@@ -171,8 +171,10 @@ When upgrading a project, pull from these high-impact techniques to replace gene
 - **Parallax card stacks.** Sections that stick and physically stack over each other during scroll.
 - **Split-screen scroll.** Two halves of the screen sliding in opposite directions.
 
+Honor reduced-motion and user scroll preferences, keyboard/focus order, zoom/reflow and actual contrast. Preserve semantic status colors and sufficient text contrast even when aesthetic rules suggest one accent or reduced saturation. Decorative imagery needs empty alt; meaningful images need useful alt. Do not invent testimonials, people or legal-policy text. Remote fonts/images need rights, privacy/performance review and a stable production source; placeholder photos are demo-only.
+
 ### Motion Upgrades
-- **Smooth scroll with inertia.** Decouple scrolling from browser defaults for a heavier, cinematic feel.
+- **Optional scroll effects.** Prefer native scrolling; inertia/parallax must preserve keyboard, touch, anchors and reduced-motion behavior and be validated before use.
 - **Staggered entry.** Elements cascade in with slight delays, combining Y-axis translation with opacity fade. Never mount everything at once.
 - **Spring physics.** Replace linear easing with spring-based motion for a natural, weighty feel on all interactive elements.
 - **Scroll-driven reveals.** Content entering through expanding masks, wipes, or draw-on SVG paths tied to scroll progress.

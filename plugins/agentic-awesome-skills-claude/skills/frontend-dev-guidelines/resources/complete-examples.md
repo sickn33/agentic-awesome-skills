@@ -1,6 +1,6 @@
 # Complete Examples
 
-Full working examples combining all modern patterns: React.FC, lazy loading, Suspense, useSuspenseQuery, styling, routing, and error handling.
+Illustrative application excerpts combining all modern patterns: React.FC, lazy loading, Suspense, useSuspenseQuery, styling, routing, and error handling.
 
 ---
 
@@ -261,7 +261,7 @@ export interface CreateUserPayload {
     password: string;
 }
 
-export type UpdateUserPayload = Partial<Omit<User, 'id' | 'createdAt' | 'updatedAt'>>;
+export type UpdateUserPayload = Partial<Pick<User, 'username' | 'email' | 'firstName' | 'lastName'>>;
 ```
 
 ### Public Exports (index.ts)
@@ -351,7 +351,7 @@ export const UserList: React.FC = () => {
         if (!debouncedSearch) return users;
 
         return users.filter(user =>
-            user.name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+            `${user.firstName} ${user.lastName}`.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
             user.email.toLowerCase().includes(debouncedSearch.toLowerCase())
         );
     }, [users, debouncedSearch]);
@@ -369,7 +369,7 @@ export const UserList: React.FC = () => {
             <List>
                 {filteredUsers.map(user => (
                     <ListItem key={user.id}>
-                        {user.name} - {user.email}
+                        {user.firstName} {user.lastName} - {user.email}
                     </ListItem>
                 ))}
             </List>
@@ -385,8 +385,8 @@ export const UserList: React.FC = () => {
 ```typescript
 import React from 'react';
 import { Box, TextField, Button, Paper } from '@mui/material';
-import { useBlog } from 'react-hook-blog';
-import { zodResolver } from '@hookblog/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { userApi } from '../api/userApi';
@@ -397,6 +397,7 @@ const userSchema = z.object({
     email: z.string().email(),
     firstName: z.string().min(1),
     lastName: z.string().min(1),
+    password: z.string().min(12),
 });
 
 type UserBlogData = z.infer<typeof userSchema>;
@@ -409,13 +410,14 @@ export const CreateUserBlog: React.FC<CreateUserBlogProps> = ({ onSuccess }) => 
     const queryClient = useQueryClient();
     const { showSuccess, showError } = useMuiSnackbar();
 
-    const { register, handleSubmit, blogState: { errors }, reset } = useBlog<UserBlogData>({
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<UserBlogData>({
         resolver: zodResolver(userSchema),
         defaultValues: {
             username: '',
             email: '',
             firstName: '',
             lastName: '',
+            password: '',
         },
     });
 
@@ -440,7 +442,7 @@ export const CreateUserBlog: React.FC<CreateUserBlogProps> = ({ onSuccess }) => 
 
     return (
         <Paper sx={{ p: 3, maxWidth: 500 }}>
-            <blog onSubmit={handleSubmit(onSubmit)}>
+            <form onSubmit={handleSubmit(onSubmit)}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                     <TextField
                         {...register('username')}
@@ -475,6 +477,8 @@ export const CreateUserBlog: React.FC<CreateUserBlogProps> = ({ onSuccess }) => 
                         fullWidth
                     />
 
+                    <TextField {...register('password')} label='Password' type='password' autoComplete='new-password' error={!!errors.password} helperText={errors.password?.message} />
+
                     <Button
                         type='submit'
                         variant='contained'
@@ -483,7 +487,7 @@ export const CreateUserBlog: React.FC<CreateUserBlogProps> = ({ onSuccess }) => 
                         {createMutation.isPending ? 'Creating...' : 'Create User'}
                     </Button>
                 </Box>
-            </blog>
+            </form>
         </Paper>
     );
 };
@@ -535,7 +539,7 @@ export default UserDashboard;
 **Benefits:**
 - Each section loads independently
 - User sees partial content sooner
-- Better perceived perblogance
+- Better perceived performance
 
 ---
 
@@ -657,8 +661,8 @@ import {
     IconButton,
 } from '@mui/material';
 import { Close, PersonAdd } from '@mui/icons-material';
-import { useBlog } from 'react-hook-blog';
-import { zodResolver } from '@hookblog/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 
 const blogSchema = z.object({
@@ -679,7 +683,7 @@ export const AddUserDialog: React.FC<AddUserDialogProps> = ({
     onClose,
     onSubmit,
 }) => {
-    const { register, handleSubmit, blogState: { errors }, reset } = useBlog<BlogData>({
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<BlogData>({
         resolver: zodResolver(blogSchema),
     });
 
@@ -701,13 +705,13 @@ export const AddUserDialog: React.FC<AddUserDialogProps> = ({
                         <PersonAdd color='primary' />
                         Add User
                     </Box>
-                    <IconButton onClick={handleClose} size='small'>
+                    <IconButton aria-label='Close dialog' onClick={handleClose} size='small'>
                         <Close />
                     </IconButton>
                 </Box>
             </DialogTitle>
 
-            <blog onSubmit={handleSubmit(handleBlogSubmit)}>
+            <form onSubmit={handleSubmit(handleBlogSubmit)}>
                 <DialogContent>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                         <TextField
@@ -736,7 +740,7 @@ export const AddUserDialog: React.FC<AddUserDialogProps> = ({
                         Add User
                     </Button>
                 </DialogActions>
-            </blog>
+            </form>
         </Dialog>
     );
 };
@@ -864,9 +868,12 @@ export const useToggleUserStatus = () => {
 2. **Feature Structure**: Organized subdirectories (api/, components/, hooks/, etc.)
 3. **Routing**: Folder-based with lazy loading
 4. **Data Fetching**: useSuspenseQuery with cache-first strategy
-5. **Blogs**: React Hook Blog + Zod validation
+5. **Blogs**: React Hook Form + Zod validation
 6. **Error Handling**: useMuiSnackbar + onError callbacks
-7. **Perblogance**: useMemo, useCallback, React.memo, debouncing
+7. **Performance**: useMemo, useCallback, React.memo, debouncing
 8. **Styling**: Inline <100 lines, sx prop, MUI v7 syntax
 
 **See other resources for detailed explanations of each pattern.**
+## Adaptation limits
+
+These snippets assume application-specific imports, aliases, schema and providers. Match MUI/TanStack major versions. TanStack Query v5 useSuspenseQuery does not support enabled or per-query onError; conditional queries use useQuery or conditional child mounting. Cache keys must include user/tenant scope; clear sensitive caches on logout. Do not return list-cache objects unconditionally from queryFn: that can perpetually refresh stale data and summary rows may omit detail fields. Use initialData with the source cache timestamp and a real network queryFn. API prefixes depend on the actual proxy/backend, not this snapshot.

@@ -40,7 +40,7 @@ empty templates only - it never holds or processes real employee or customer dat
 
 ## How It Works
 
-Follow the shared execution contract. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+No shared execution-contract file is bundled here; use the explicit local rules below and report any missing dependency. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -94,7 +94,7 @@ If an artifact was requested, build it after resolving essential missing facts. 
 
 **Recommended approach:** Build a checklist with an owner and a due offset from the joining date, so the same plan applies to every new joiner.
 
-**Why this one:** Onboarding plans fail when they are per-person documents. One plan with day offsets is reusable and keeps a 30 percent no-show from being missed.
+**Why this one:** Onboarding plans fail when they are per-person documents. One plan with day offsets is reusable and makes missed steps visible without an unsupported no-show estimate.
 
 **Workflow:** Offer accepted → Pre-boarding → Day one → Week one → 30, 60, 90 day
 
@@ -106,7 +106,7 @@ provide a usable link. Report material validation failures or limitations separa
 
 **A selected Notion output is rendered by `notion-manual-import`, so route the
 Notion step there.** When the user selects Notion, hand that step to
-](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notion-manual-import/SKILL.md): it holds the CSV, the property
+[notion-manual-import](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notion-manual-import/SKILL.md): it holds the CSV, the property
 mapping, the import steps and the verification checklist, and it renders the Field
 Reference below instead of defining a table of its own. Do not restate the mapping
 here and do not improvise the import steps. Manual CSV and mapping outputs need no
@@ -159,7 +159,8 @@ CREATE TABLE onboarding_playbook (
       "Step ID": { "type": "integer" }
   },
   "required": [
-      "Order"
+      "Order",
+      "Required"
   ]
 }
 ```
@@ -277,9 +278,9 @@ New joiners ask the same setup questions every time and answers differ.
 
 ## Related Skills
 
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
+- [catalog](https://github.com/sickn33/agentic-awesome-skills/blob/main/CATALOG.md) - find the relevant module, then read its skill.
 - @people-directory - the employee master record most modules link to.
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notification-reminder-hub/SKILL.md) - turns due dates in this module into reminders.
+- [notification-reminder-hub](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notification-reminder-hub/SKILL.md) - turns due dates in this module into reminders.
 
 ## Reusable Prompt
 

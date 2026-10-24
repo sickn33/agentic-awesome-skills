@@ -37,6 +37,8 @@ If this skill adapts material from an external GitHub repository, declare both:
 - Use when architecting supervisor, planner, research, coding, or validation agent roles
 - Use when integrating DeepAgents with hierarchical planning and delegation
 
+Inline code is a partial architecture sketch, not a production-ready or currently verified API integration. `bind_tools` only produces tool-call requests: a connected messages state, ToolNode route and return edge are required to execute them. The shown ToolNode is disconnected and must not be claimed to have researched or written anything. Redis history is not wired to the graph; use an authenticated tenant/session namespace and actual checkpoint/history integration. Protect the optional FastAPI endpoint with authentication, authorization, input/rate/time/token budgets and isolation. Increment and enforce a step budget before model calls; textual critique containing “bug” is not a test or reliable routing criterion.
+
 ## How It Works
 
 ### Step 1: Understand the Goal
@@ -106,7 +108,7 @@ def build_graph() -> StateGraph:
     graph.add_conditional_edges(
         "supervisor",
         route_next,
-        {"research": "research", "coder": "coder", "end": END}
+        {"research": "research", "coder": "coder", "validator": "validator", "end": END}
     )
 
     graph.add_edge("research",  "supervisor")
@@ -148,7 +150,7 @@ async def run(user_goal: str, session_id: str):
         step_count=0,
         error=None,
     )
-    return await graph.ainvoke(initial_state)
+    return await graph.ainvoke(initial_state, config={"recursion_limit": 100})
 ```
 
 ### Step 7: Expose via FastAPI (optional)

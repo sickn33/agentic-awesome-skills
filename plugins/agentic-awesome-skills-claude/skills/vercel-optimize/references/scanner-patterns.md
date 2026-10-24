@@ -16,7 +16,7 @@ Total scanners: 15.
 - **Billing dimension**: function-duration
 - **Traffic-independent**: no (cold-path findings get dropped)
 
-**Description.** Default `'use cache'` does not dedupe identical calls across separate `<Suspense>` boundaries on the same render. Each boundary re-invokes the cached function, multiplying function-duration cost and inflating ISR write churn when the output is large.
+**Description.** Default `'use cache'` does not dedupe identical calls across separate `<Suspense>` boundaries on the same render. Repeated source calls are an investigation prompt; trace actual origin execution and ISR writes before attributing cost.
 
 **Fix.** Hoist the promise to the page level (`const dataPromise = fetchData()` at the top, passed down to each Suspense child) OR move the shared fetch into a `'use cache: remote'` data-access layer so cross-request and cross-boundary dedupe applies.
 
@@ -64,9 +64,9 @@ Total scanners: 15.
 - **Billing dimension**: function-duration
 - **Traffic-independent**: no (cold-path findings get dropped)
 
-**Description.** headers(), cookies(), and draftMode() are dynamic APIs. Reading them in a page/layout makes the entire segment dynamic — no ISR, no static generation, and a function invocation on every request.
+**Description.** headers(), cookies(), and draftMode() are dynamic APIs. Their rendering effect depends on Next.js version and Cache Components/PPR configuration; determine the active mode before changing boundaries.
 
-**Fix.** Move the dynamic API call into a child Server Component that lives inside a Suspense boundary. The parent can stay static; only the leaf re-renders dynamically.
+**Fix.** Move the dynamic API call into a child Server Component that lives inside a Suspense boundary. A static shell requires compatible PPR/Cache Components configuration; Suspense alone does not establish static rendering on older configurations.
 
 **Citations:**
 - `https://nextjs.org/docs/app/api-reference/file-conventions/route-segment-config`
@@ -96,9 +96,9 @@ Total scanners: 15.
 - **Billing dimension**: edge-requests
 - **Traffic-independent**: no (cold-path findings get dropped)
 
-**Description.** max-age caches in the browser; s-maxage caches at the CDN. Without s-maxage, every uncached visitor request invokes the function. Adding s-maxage often cuts function invocations by 80%+ on read-heavy routes.
+**Description.** max-age caches in the browser; s-maxage caches at the CDN. Without s-maxage, every uncached visitor request invokes the function. Only measured public, shared GET responses can justify adding s-maxage; savings require measurement.
 
-**Fix.** Add s-maxage to the Cache-Control header. Example: Cache-Control: public, max-age=60, s-maxage=600, stale-while-revalidate=86400. Pair with explicit cache-bust strategy if content can change.
+**Fix.** After proving the response is public and shared, consider s-maxage in the Cache-Control header. Example: Cache-Control: public, max-age=60, s-maxage=600, stale-while-revalidate=86400. Pair with explicit cache-bust strategy if content can change.
 
 **Citations:**
 - `https://vercel.com/docs/caching/cdn-cache`
@@ -129,7 +129,7 @@ Total scanners: 15.
 
 **Description.** Two antipatterns: (a) GET handlers without explicit Cache-Control headers serve uncached; (b) fetch() calls with cache:"no-store" or next:{revalidate:0} opt out of caching even on cacheable upstream data. For non-auth routes / fetches, both are leaving cache hits on the floor.
 
-**Fix.** For GET handlers: return a Response with Cache-Control: public, s-maxage=<seconds>, stale-while-revalidate=<window>. For fetch(): drop cache:"no-store" (use { next: { revalidate: <seconds> } } in Next.js) so the response is cached by the framework + CDN.
+**Fix.** Only after proving public, shared, freshness-safe output, for GET handlers return a Response with Cache-Control: public, s-maxage=<seconds>, stale-while-revalidate=<window>. For fetch(): drop cache:"no-store" (use { next: { revalidate: <seconds> } } in Next.js) to cache reusable server data; this does not itself make the HTTP response CDN-cacheable.
 
 **Citations:**
 - `https://vercel.com/docs/caching/cdn-cache`
@@ -144,9 +144,9 @@ Total scanners: 15.
 - **Billing dimension**: function-duration
 - **Traffic-independent**: no (cold-path findings get dropped)
 
-**Description.** Nested .include({ x: { include: { y: { include: { z: ... } } } } }) makes Prisma issue a single huge join that scales O(N*M*K). Function duration explodes, memory spikes, often causes timeouts.
+**Description.** Nested .include({ x: { include: { y: { include: { z: ... } } } } }) can fetch excess related data. Prisma query strategy, cardinality and selected fields determine actual SQL and cost; inspect query logs and payloads before claiming a join explosion.
 
-**Fix.** Replace with explicit .findMany() calls or scoped .include() of only what the consumer reads. Consider Prisma.select() to project specific fields. For lists, batch with DataLoader patterns.
+**Fix.** Replace with explicit .findMany() calls or scoped .include() of only what the consumer reads. Consider the query select option to project specific fields. For lists, batch with DataLoader patterns.
 
 **Citations:**
 - `vercel-react-best-practices:server-parallel-fetching`
@@ -175,7 +175,7 @@ Total scanners: 15.
 - **Billing dimension**: edge-requests
 - **Traffic-independent**: yes (cold-path findings survive the doctrine drop)
 
-**Description.** productionBrowserSourceMaps: true ships .map files in the production bundle, increasing transfer size 30-100% per visitor. Useful for error reporting via Sentry; not useful for users.
+**Description.** productionBrowserSourceMaps: true exposes source maps in production. Browsers normally fetch them for debugging, so availability alone does not prove added transfer per visitor. Review source disclosure, download logs, and error-tracking needs.
 
 **Fix.** Keep source maps generation but exclude them from the public bundle. Upload to your error tracker via build-time CI step; do not serve them with the deployment.
 
@@ -224,9 +224,9 @@ Total scanners: 15.
 - **Billing dimension**: image-optimization
 - **Traffic-independent**: no (cold-path findings get dropped)
 
-**Description.** Four shapes of image-cost waste: raw <img> tags bypass the framework Image component; `images.unoptimized: true` disables Vercel image optimization globally; <Image fill> without `sizes` forces serving the largest source variant; <Image src=".svg"> without `unoptimized` routes vector data through the raster pipeline.
+**Description.** Four shapes of image-cost waste: raw <img> tags bypass the framework Image component; `images.unoptimized: true` disables Vercel image optimization globally; <Image fill> without `sizes` forces serving the largest source variant; SVG behavior depends on the loader/config and is not inferred from an omitted prop.
 
-**Fix.** For raw <img>: switch to next/image, enhanced-img (SvelteKit), <Image /> (Astro), or NuxtImg. For global unoptimized:true: remove the flag unless the project is hosted outside Vercel. For fill without sizes: add `sizes="(max-width: 768px) 100vw, 50vw"` or whatever matches your layout. For SVG: add `unoptimized` so the raw SVG ships instead of rastering it.
+**Fix.** For raw <img>: switch to next/image, enhanced-img (SvelteKit), <Image /> (Astro), or NuxtImg. For global unoptimized:true: remove the flag unless the project is hosted outside Vercel. For fill without sizes: add `sizes="(max-width: 768px) 100vw, 50vw"` or whatever matches your layout. Ordinary SVG sources are automatically served without raster optimization; inspect custom loader behavior separately.
 
 **Citations:**
 - `https://nextjs.org/docs/app/api-reference/components/image`
@@ -240,9 +240,9 @@ Total scanners: 15.
 - **Billing dimension**: isr
 - **Traffic-independent**: no (cold-path findings get dropped)
 
-**Description.** `'use cache'` memoizes by argument identity AND prerender output. A timestamp baked into the cached output (`new Date().getFullYear()` in a footer, `Date.now()` in a payload field) forces a fresh ISR write on every regeneration even when the underlying data is unchanged. Random values have the same failure mode.
+**Description.** Cache keys include function/build identity and serialized inputs, not returned output. A changing date/random input can fragment keys; a changing returned value alone does not establish repeated cache misses or ISR amplification. Prove the actual regeneration mechanism and writes.
 
-**Fix.** Replace module-scope `new Date()` with a build-time constant (`const buildYear = new Date().getFullYear()`) or move per-request timestamps into a client component inside `useEffect`. Do not pass dates as arguments to `'use cache'` functions — they invalidate the cache every call.
+**Fix.** Verify the timestamp purpose and invalidation path. Preserve freshness and hydration semantics; module-level new Date() is evaluated at module initialization, not guaranteed build time. Change keys or UI placement only when measured duplicate work is avoidable.
 
 **Citations:**
 - `https://nextjs.org/docs/app/api-reference/directives/use-cache`

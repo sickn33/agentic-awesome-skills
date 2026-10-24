@@ -51,7 +51,7 @@ For each candidate journalist:
 
 ## Scoring Journalist Fit
 
-Score each journalist 1–10 across four dimensions. Sum and rank. Focus on top 20.
+Score each journalist 1–10 across four dimensions. Weighted score = (3×beat +2×reach +2×engagement +recency)/8, on a1–10 scale. Rank using that normalized score.
 
 | Dimension | What it measures | Weight |
 |-----------|------------------|--------|
@@ -272,7 +272,7 @@ Revolutionary, disruptive, game-changing, paradigm shift, leverage, synergy, rob
 An embargo is "you can write this story, but don't publish until [time]."
 
 - **Only offer embargoes to journalists you've worked with** or have strong reputations for honoring them
-- State the embargo time clearly: day, time, timezone
+- Agree the embargo before disclosing restricted material; state day, time and timezone clearly
 - If they break embargo, your relationship with them is over
 
 ### Exclusives
@@ -321,12 +321,12 @@ Things that instantly disqualify your pitch:
 # firstname@outlet.com
 # firstname.lastname@outlet.com
 # flastname@outlet.com
-# Use Hunter.io, RocketReach, or just guess and bounce-check
+# Use only confirmed published professional contacts; do not guess or bounce-test addresses.
 ```
 
 ### Researching their recent work (browser-driven)
 
-Use `dev-browser` (persistent session, no rate limits) to:
+Use an available authorized browser/research tool, honoring site limits, to:
 - Open the journalist's outlet author page → scrape last 5 article headlines + dates
 - Open their X/Twitter profile → note recent topics
 - Open their LinkedIn → confirm current role
@@ -339,7 +339,7 @@ Outlet: [name]
 Beat: [topics from last 5 articles]
 Recent angle: [pattern you noticed]
 Recent X activity: [what they're posting]
-Score: [X/40 from rubric]
+Score: [X/10 normalized weighted score]
 Best pitch angle: [from template library]
 Email: [confirmed]
 ```

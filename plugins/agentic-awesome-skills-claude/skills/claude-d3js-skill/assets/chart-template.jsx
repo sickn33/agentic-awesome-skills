@@ -5,12 +5,13 @@ function BasicChart({ data }) {
   const svgRef = useRef();
   
   useEffect(() => {
-    if (!data || data.length === 0) return;
-    
     // Select SVG element
     const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove(); // Clear previous content
+    svg.selectAll("*").interrupt().remove();
+    if (!Array.isArray(data) || data.length === 0) return; // Clear previous content
     
+    if (data.some(d => !Number.isFinite(d.value)) || new Set(data.map(d => d.label)).size !== data.length)
+      throw new Error("Finite values and unique labels are required");
     // Define dimensions and margins
     const width = 800;
     const height = 400;
@@ -29,7 +30,7 @@ function BasicChart({ data }) {
       .padding(0.1);
     
     const yScale = d3.scaleLinear()
-      .domain([0, d3.max(data, d => d.value)])
+      .domain([Math.min(0, d3.min(data, d => d.value)), Math.max(1, d3.max(data, d => d.value))])
       .range([innerHeight, 0])
       .nice();
     
@@ -51,9 +52,9 @@ function BasicChart({ data }) {
       .data(data)
       .join("rect")
       .attr("x", d => xScale(d.label))
-      .attr("y", d => yScale(d.value))
+      .attr("y", d => yScale(Math.max(0, d.value)))
       .attr("width", xScale.bandwidth())
-      .attr("height", d => innerHeight - yScale(d.value))
+      .attr("height", d => Math.abs(yScale(0) - yScale(d.value)))
       .attr("fill", "steelblue");
     
     // Optional: Add axis labels
@@ -78,24 +79,28 @@ function BasicChart({ data }) {
     <div className="chart-container">
       <svg 
         ref={svgRef} 
+        role="img"
+        aria-label="Example chart; underlying values follow below"
+        viewBox="0 0 800 400"
         width="800" 
         height="400"
-        style={{ border: '1px solid #ddd' }}
+        style={{ maxWidth: '100%', height: 'auto', border: '1px solid #ddd' }}
       />
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
 }
 
 // Example usage
 export default function App() {
-  const sampleData = [
+  const [sampleData] = useState(() => [
     { label: 'A', value: 30 },
     { label: 'B', value: 80 },
     { label: 'C', value: 45 },
     { label: 'D', value: 60 },
     { label: 'E', value: 20 },
     { label: 'F', value: 90 }
-  ];
+  ]);
   
   return (
     <div className="p-8">

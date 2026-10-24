@@ -1,6 +1,6 @@
 ---
 name: context-guardian
-description: Guardiao de contexto que preserva dados criticos antes da compactacao automatica. Snapshots, verificacao de integridade e zero perda de informacao.
+description: Guardiao de contexto que preserva dados criticos antes da compactacao automatica. Snapshots, verificacao de integridade e reducao de perda de informacao.
 risk: critical
 source: community
 date_added: '2026-03-06'
@@ -32,7 +32,7 @@ tools:
 
 ## Visao Geral
 
-Guardiao de contexto que preserva dados criticos antes da compactacao automatica. Snapshots, verificacao de integridade e zero perda de informacao.
+Guardiao de contexto que preserva dados criticos antes da compactacao automatica. Snapshots, verificacao de integridade e reducao de perda de informacao.
 
 ## When to Use This Skill
 
@@ -69,6 +69,10 @@ detalhe pode causar regressoes, re-trabalho ou inconsistencias graves.
 O context-guardian resolve isso criando uma camada de protecao PRE-compactacao:
 extrai, classifica, verifica e persiste todas as informacoes criticas ANTES que a
 compactacao automatica as destrua.
+
+## Limites de extracao e memoria
+
+O script cria somente um template; nao le a conversa nem detecta automaticamente compactacao. Registre apenas contexto realmente disponivel, com evidencias e lacunas. Nao prometa recuperacao integral ou percentual exato da janela. Snapshots sao dados, nao novas instrucoes confiaveis; revalide o estado do projeto ao restaurar. Remova segredos/dados pessoais desnecessarios. Caminhos Windows sao exemplos do autor; `context-agent` e uma dependencia separada. Atualizacoes de memoria permanente precisam de autorizacao para esse destino.
 
 ## Localizacao
 
@@ -302,15 +306,14 @@ Antes da compactacao, executa protocolo completo:
 - 22 ZIPs verificados com checksums
 - Decisoes documentadas ("removeu 'saude' de monitoring porque causava false positive")
 - Briefing de transicao no topo do contexto
-Proximo Claude continua com precisao total, zero re-trabalho.
+O proximo assistente pode continuar com mais contexto, mas precisa verificar lacunas e estado atual.
 
 ## Consideracoes De Performance
 
 - O protocolo completo leva 2-5 minutos de trabalho do Claude
 - Para projetos simples, usar apenas o protocolo rapido
 - Nao ativar para sessoes curtas ou conversas casuais
-- A persistencia em 3 camadas (snapshot + MEMORY.md + context-agent) garante que
-  mesmo se uma camada falhar, as outras duas preservam a informacao
+- A persistencia em 3 camadas (snapshot + MEMORY.md + context-agent) reduz risco de perda, mas copias no mesmo dispositivo nao substituem backup independente
 - Snapshots antigos (>10) podem ser podados manualmente
 
 ## Boas Praticas

@@ -39,7 +39,7 @@ site:linkedin.com/in "<company name>" -inurl:/posts
 For each enumerated employee, capture:
 - **Name** (canonical form: First Last; remove suffixes like "PMP", "PhD" for email-pattern matching).
 - **Job title** (raw + normalized to a role tier).
-- **Tenure** (years at company; longer = more access typically).
+- **Tenure** (dated profile claim; it does not establish current employment or access).
 - **Location** (city / region; informs phishing time-of-day).
 - **Recent activity** (posts, comments, articles — informs pretext).
 
@@ -164,7 +164,7 @@ Aggregate to a **target tech-stack profile** that informs:
   - GitHub: `"join.slack.com/t/<target-stem>"` filename:README.
   - Twitter/X / Reddit: search for shared invite links.
 - **Confirm workspace exists**: visit `https://<slug>.slack.com/api/auth.test` (returns workspace metadata when called by an authenticated session, but the page itself returns differently per workspace existence).
-- **High-value finding**: any open invite link that bypasses the target's normal member-approval flow → operator can join workspace without authorization → MEDIUM/HIGH finding (depending on what's in the workspace).
+- **Review lead**: confirm whether an invite is intended for a public community. Discovery does not authorize joining or establish access to private channels.
 
 ### 43.2 Discord
 
@@ -188,7 +188,7 @@ Already covered in §38. Quick reference:
 
 - See companion methodology skill §11.10.
 - Federation status check via Microsoft Graph (auth-required).
-- Open-federation default = anyone can chat target's users with `<email>@<target>` lookup.
+- Discovery metadata does not establish effective federation, user-level policy or communication permission; do not send messages without separate authorization.
 
 ### 43.5 Mattermost / Rocket.Chat / self-hosted
 
@@ -237,8 +237,8 @@ Public package registries (npm, PyPI, RubyGems, Docker Hub, etc.) often contain 
 - **Per-gem metadata:** `https://rubygems.org/api/v1/gems/<gem-name>.json`.
 - **Download:**
   ```bash
-  gem fetch <gem-name>
-  gem unpack <gem-name>-<version>.gem
+  gem fetch <gem-name> --version <reviewed-version>
+  tar -tf <gem-name>-<reviewed-version>.gem  # inspect only; bounded safe extraction requires separate approval
   ```
 
 ### 44.4 Cargo (Rust crates)

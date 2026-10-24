@@ -7,6 +7,8 @@ date_added: "2026-06-16"
 ---
 # Elixir / Erlang: Idiomatic Efficiency Reference
 
+Apply only within the requested scope and current project conventions. Preserve behavior, ownership, error handling, accessibility and security; examples are independent fragments, not equivalent rewrites in every context. Verify language/library versions and run relevant checks. Required tests and user-facing progress/results take precedence over brevity rules. Do not install dependencies or delete files merely to follow these examples.
+
 ## When to Use
 - Use this skill when the task matches this description: Language-specific super-code guidelines for elixir.
 
@@ -32,7 +34,7 @@ end
 
 # ✅ — pattern match directly
 case map do
-  %{key: value} -> process(value)
+  %{key: value} when not is_nil(value) -> process(value)
   _ -> :noop
 end
 # or with if:
@@ -151,7 +153,7 @@ end
 spawn(fn -> do_work() end)
 
 # ✅ — Task for fire-and-forget with supervision
-Task.start(fn -> do_work() end)
+Task.Supervisor.start_child(MyTaskSupervisor, fn -> do_work() end) # supervisor must already be started
 # or for awaitable result:
 task = Task.async(fn -> do_work() end)
 result = Task.await(task)
@@ -184,7 +186,7 @@ def handle_call(:work, _from, state) do
 end
 ```
 
-**"Let it crash" — supervisors handle recovery. Don't defensively catch inside GenServers.**
+**Use supervisors for unexpected failures; handle expected domain failures explicitly. Restarts do not roll back external effects, so require idempotency and recovery planning.**
 
 ---
 

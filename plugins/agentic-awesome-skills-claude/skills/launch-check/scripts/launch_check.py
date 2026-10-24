@@ -18,9 +18,9 @@ Checks 4 areas and prints a 0-100 score with a traffic light per area, plain-Eng
   4. SPEED & BASICS: page weight, requests, load time, JavaScript errors, broken homepage links, title,
      description, favicon, link preview image.
 
-Passive only: it downloads what any visitor's browser downloads (the page, its same-site scripts, the links on
+Static GET checks by default; optional --browser-check executes site JavaScript with scoped routing. It downloads bounded public resources (the page, its same-site scripts, the links on
 the home page, /favicon.ico, plus robots.txt / sitemap.xml / llms.txt for the search check). It never probes
-hidden paths such as /.env, never sends a found secret anywhere and prints only the first 4 characters of it.
+hidden paths such as /.env. Owner backend checks require exact approved origins; report redaction covers known patterns.
 Only http(s); redirects and assets are followed only on the same site.
 
 Exit codes: 0 = ready (score >= --fail-under and nothing HIGH), 1 = findings to fix, 2 = usage error or the
@@ -164,8 +164,51 @@ def redact(value):
     return f"{value[:4]}…({len(value)} chars)"
 
 
+def sanitize_report(value):
+    """Remove known credential shapes and URL credentials/query values from output data."""
+    if isinstance(value, dict):
+        return {clean(k, 200): sanitize_report(v) for k, v in value.items()}
+    if isinstance(value, list):
+        return [sanitize_report(v) for v in value]
+    if not isinstance(value, str):
+        return value
+    text = CTRL.sub("", value)
+    text = re.sub(r"-----BEGIN (?:[A-Z0-9]+ )*PRIVATE KEY-----[\s\S]*?(?:-----END (?:[A-Z0-9]+ )*PRIVATE KEY-----|\Z)", "[REDACTED PRIVATE KEY]", text)
+    for rx in COMPILED.values():
+        text = rx.sub("[REDACTED]", text)
+    text = JWT.sub("[REDACTED JWT]", text)
+    def url_without_secrets(match):
+        try:
+            parts = urlparse.urlsplit(match.group())
+            host = parts.hostname or ""
+            if ":" in host: host = "[" + host + "]"
+            if parts.port is not None: host += ":" + str(parts.port)
+            return urlparse.urlunsplit((parts.scheme, host, parts.path,
+                urlparse.urlencode([(k, "[REDACTED]") for k, _ in urlparse.parse_qsl(parts.query, keep_blank_values=True)]), ""))
+        except ValueError:
+            return "[OMITTED URL]"
+    return re.sub(r"https?://[^\s<>\"'`]+", url_without_secrets, text)
+
+
+def guard_browser_context(context, target):
+    """Restrict optional active rendering to same-origin GET/HEAD and block sockets."""
+    if not hasattr(context, "route_web_socket"):
+        raise RuntimeError("Browser audit requires Playwright with WebSocket routing support")
+    context.route_web_socket("**/*", lambda socket: socket.close())
+    def route_request(route):
+        request = route.request
+        try:
+            allowed = request.method in ("GET", "HEAD") and origin(request.url) == origin(target) and urlparse.urlsplit(request.url).scheme in ("http", "https")
+        except ValueError:
+            allowed = False
+        route.continue_() if allowed else route.abort()
+    context.route("**/*", route_request)
+
+
 def origin(url):
     parts = urlparse.urlsplit(url)
+    if parts.username or parts.password or "\\" in url:
+        raise ValueError("URL credentials/backslashes are not allowed")
     port = parts.port or (443 if parts.scheme == "https" else 80)
     return parts.scheme.lower(), (parts.hostname or "").lower(), port
 
@@ -173,7 +216,8 @@ def origin(url):
 def same_site(a, b):
     """Same host, ignoring a leading www. and the scheme (redirect http -> https is fine)."""
     ha, hb = origin(a)[1], origin(b)[1]
-    return ha.removeprefix("www.") == hb.removeprefix("www.") and ha != ""
+    oa, ob = origin(a), origin(b)
+    return oa == ob or (oa[0] == "https" and ob[0] == "http" and oa[1] == ob[1] and oa[2] == 443 and ob[2] == 80)
 
 
 def normalise_target(raw):
@@ -237,8 +281,9 @@ class Fetcher:
             body = resp.read(cap + 1) if method == "GET" else b""
         except Exception:  # truncated or reset connection: keep what arrived
             body = b""
-        return Resp(url, resp.status if hasattr(resp, "status") else resp.code, headers, body[:cap],
-                    time.time() - t0)
+        status = resp.status if hasattr(resp, "status") else resp.code
+        resp.close()
+        return Resp(url, status, headers, body[:cap], time.time() - t0)
 
     def get(self, url, cap=MAX_HTML, start=None, max_redirects=5):
         start = start or url
@@ -530,10 +575,14 @@ def scan_repo(repo):
     tracked = git_files(repo)
     out, hits, files = [], [], 0
     for root, dirs, names in os.walk(repo):
-        dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
+        dirs[:] = [d for d in dirs if d not in SKIP_DIRS and not Path(root, d).is_symlink()]
         for name in names:
             path = Path(root, name)
             rel = str(path.relative_to(repo))
+            if path.is_symlink() or not path.is_file():
+                continue
+            if tracked is not None and rel not in tracked:
+                continue
             is_env = name == ".env" or (name.startswith(".env.") and not ENV_OK.search(name))
             if is_env:
                 if tracked is not None and rel in tracked:
@@ -600,7 +649,7 @@ def check_phone(url, timeout):
         return None, [], ("skipped: Playwright is not installed. Install it for the phone check: "
                           "python -m pip install playwright && python -m playwright install chromium")
     report, err = run_vendored("polish_audit.py", [url, "--viewports", "375", "--json", "--no-shots",
-                                                    "--timeout", str(int(timeout * 2))], timeout * 6)
+                                                    "--timeout", str(int(timeout * 2)), "--browser-check"], timeout * 6)
     if report is None:
         return None, [], f"skipped: {err}"
     if report.get("engine") != "playwright":
@@ -668,7 +717,8 @@ def browser_metrics(url, timeout, shot_path=None):
             return None
         try:
             ctx = browser.new_context(viewport={"width": 390, "height": 844}, device_scale_factor=2,
-                                      is_mobile=True, has_touch=True)
+                                      is_mobile=True, has_touch=True, service_workers="block")
+            guard_browser_context(ctx, url)
             page = ctx.new_page()
 
             def on_response(resp):
@@ -847,15 +897,17 @@ def json_get(fetcher, url, headers, cap=65_536):
         data = json.loads(body.decode("utf-8", "replace")) if len(body) <= cap else "too-big"
     except (ValueError, OSError):
         data = None
-    return resp.status, data
+    status = resp.status
+    resp.close()
+    return status, data
 
 
-def owner_check(fetcher, site, backend, max_tables=20):
+def owner_check(fetcher, site, backend, max_tables=20, approved_origins=()):
     """Read-only test: can the public key in the page read the app's tables? GET only, never writes."""
     out, info = [], {"supabase": [], "firebase": []}
     keys = backend.get("anon_keys", [])
     for api in backend.get("supabase_urls", []):
-        if not owner_target_ok(api, site, "supabase"):
+        if origin(api) not in approved_origins or not owner_target_ok(api, site, "supabase"):
             info["supabase"].append({"url": clean(api, 80), "result": "refused: not this app's Supabase host"})
             continue
         if not keys:
@@ -864,7 +916,7 @@ def owner_check(fetcher, site, backend, max_tables=20):
         headers = {"apikey": keys[0], "Authorization": "Bearer " + keys[0]}
         status, spec = json_get(fetcher, api + "/rest/v1/", headers, cap=2_000_000)
         if status != 200 or not isinstance(spec, dict):
-            info["supabase"].append({"url": clean(api, 80), "result": f"table list closed (HTTP {status})"})
+            info["supabase"].append({"url": clean(api, 80), "result": f"table list not observed (HTTP {status}); policy not proven"})
             continue
         defs = spec.get("definitions") or {}
         tables = [p.strip("/") for p in (spec.get("paths") or {}) if p.strip("/") and not p.startswith("/rpc/")]
@@ -880,8 +932,8 @@ def owner_check(fetcher, site, backend, max_tables=20):
                                  "closed_or_empty": closed})
         for table, cols in readable:
             name = clean(table, 40)
-            out.append(finding("security", "db-table-open", "HIGH",
-                               f"Anyone can read your '{name}' table with the public key in your page ({cols} columns)",
+            out.append(finding("security", "db-table-open", "MEDIUM",
+                               f"Anonymous access returned data from '{name}' ({cols} columns): verify whether public access is intended",
                                f"Enable Row Level Security on the Supabase table '{name}' and add policies so each "
                                "user reads only their own rows and anonymous visitors cannot read the table.",
                                where=f"table {name}", detail=f"{cols} columns readable"))
@@ -890,19 +942,19 @@ def owner_check(fetcher, site, backend, max_tables=20):
                                f"Your {len(tables)} Supabase tables returned no data to an anonymous visitor",
                                "Keep Row Level Security on for every new table.", where=clean(api, 80)))
     for api in backend.get("firebase_urls", []):
-        if not owner_target_ok(api, site, "firebase"):
+        if origin(api) not in approved_origins or not owner_target_ok(api, site, "firebase"):
             info["firebase"].append({"url": clean(api, 80), "result": "refused: not this app's Firebase host"})
             continue
         status, data = json_get(fetcher, api + "/.json?shallow=true", {})
         if status == 200 and data not in (None, "too-big", {}):
             n = len(data) if isinstance(data, dict) else 1
-            out.append(finding("security", "firebase-open", "HIGH",
-                               f"Anyone can read your Firebase database ({n} top-level collections)",
+            out.append(finding("security", "firebase-open", "MEDIUM",
+                               f"An anonymous request returned Firebase top-level keys ({n}): verify intended access",
                                "Change the Firebase Realtime Database rules so .read and .write require sign-in and "
                                "each user can only reach their own data.", where=clean(api, 80)))
             info["firebase"].append({"url": clean(api, 80), "result": f"readable ({n} keys)"})
         else:
-            info["firebase"].append({"url": clean(api, 80), "result": f"closed (HTTP {status})"})
+            info["firebase"].append({"url": clean(api, 80), "result": f"no data observed (HTTP {status}); policy not proven"})
     return out, info
 
 
@@ -996,7 +1048,7 @@ def run(args):
     owner_info = None
     has_db = backend.get("supabase_urls") or backend.get("firebase_urls")
     if args.owner_check and has_db:
-        owner_f, owner_info = owner_check(fetcher, final, backend)
+        owner_f, owner_info = owner_check(fetcher, final, backend, approved_origins={origin(normalise_target(u)) for u in args.backend_origin})
         findings += owner_f
     elif has_db:
         which = "Supabase" if backend.get("supabase_urls") else "Firebase"
@@ -1016,8 +1068,8 @@ def run(args):
         scores["security"] = min(scores["security"], 30)
 
     shot = None
-    if "phone" in skip:
-        scores["phone"], skipped["phone"] = None, "skipped (--skip phone)"
+    if "phone" in skip or not args.browser_check or args.no_browser:
+        scores["phone"], skipped["phone"] = None, "skipped: active rendering not enabled"
     else:
         scores["phone"], phone_f, why = check_phone(final, args.timeout)
         findings += phone_f
@@ -1032,9 +1084,9 @@ def run(args):
         if why:
             skipped["search"] = why
     metrics = None
-    if "speed" not in skip and have_playwright() and not args.no_browser:
+    if "speed" not in skip and args.browser_check and have_playwright() and not args.no_browser:
         shot = Path(tempfile.gettempdir()) / f"launch-check-{hashlib.sha1(final.encode()).hexdigest()[:10]}.jpg"
-        metrics = browser_metrics(final, args.timeout, shot if args.report else None)
+        metrics = browser_metrics(final, args.timeout, None)  # screenshots can reveal unredacted page secrets
     if "speed" in skip:
         scores["speed"], skipped["speed"], basics_info = None, "skipped (--skip speed)", {}
     else:
@@ -1048,11 +1100,16 @@ def run(args):
     fix_first = [f for f in findings if f["severity"] in ("HIGH", "MEDIUM")][:5]
     sec_high = sum(1 for f in findings if f["severity"] == "HIGH" and f["area"] == "security")
     word, sub = verdict(overall, highs, len(fix_first), sec_high)
+    complete = not skipped and metrics is not None and assets["scanned"] == assets["same_origin"] and not assets["skipped_offsite"]
+    if not complete:
+        word, sub = "PARTIAL ASSESSMENT", "uninspected areas remain; score covers inspected evidence only"
+    elif word == "READY TO LAUNCH":
+        word, sub = "NO BLOCKERS DETECTED", "bounded checks only; launch approval requires application-specific review"
     report = {
         "tool": "launch-check", "version": VERSION, "url": clean(url, 300), "final_url": clean(final, 300),
-        "seconds": round(time.time() - t0, 1), "mode": "passive + owner check" if args.owner_check else "passive",
+        "seconds": round(time.time() - t0, 1), "mode": "restricted browser (active)" if args.browser_check else "static GET checks",
         "score": overall, "verdict": word, "verdict_detail": sub,
-        "pass": overall >= args.fail_under and highs == 0, "fail_under": args.fail_under,
+        "assessment_complete": complete, "pass": complete and overall >= args.fail_under and highs == 0, "fail_under": args.fail_under,
         "areas": {k: {"label": label, "score": scores.get(k), "grade": grade(scores.get(k)),
                       "note": area_note(k, findings, scores.get(k), skipped.get(k))} for k, label in AREAS},
         "counts": {s.lower(): sum(1 for f in findings if f["severity"] == s) for s in SEV_ORDER},
@@ -1062,7 +1119,7 @@ def run(args):
         "notes": notes, "skipped": skipped,
         "screenshot": (metrics or {}).get("screenshot"),
     }
-    return report
+    return sanitize_report(report)
 
 
 # ------------------------------------------------------------------------------------------- output
@@ -1120,7 +1177,7 @@ def headline(report):
     n = len(report["fix_first"])
     if n:
         return f"{n} thing{'s' if n != 1 else ''} to fix before you launch"
-    return "Ready to launch" if report["verdict"] == "READY TO LAUNCH" else "Almost ready to launch"
+    return report["verdict"].capitalize()
 
 
 def render_html(report, shot_b64=None):
@@ -1221,7 +1278,7 @@ stroke-dasharray="{dash:.1f} {circ:.1f}" transform="rotate(-90 60 60)"/></svg><b
 {"<h2>Fix this first</h2><ol class='fix'>" + "".join(fixes) + "</ol>" if fixes else "<h2>Nothing urgent to fix</h2>"}
 {f'<div class="ask"><div class="h">Paste to your AI</div><button onclick="navigator.clipboard.writeText(document.getElementById(&quot;p&quot;).innerText);this.textContent=&quot;Copied&quot;">Copy</button><pre id="p">{e(prompt)}</pre></div>' if prompt else ""}
 <h2>All findings</h2>{"".join(details) or "<p>None.</p>"}
-<div class="foot">Passive check by launch-check {VERSION}: it read only what any visitor's browser downloads. Secret values are cut to their first 4 characters. A good score is not a security audit.</div>
+<div class="foot">Bounded check by launch-check {VERSION}. Missing coverage is not a pass. Known credential shapes and URL query values are redacted; no security or launch approval is implied.</div>
 </div></body></html>"""
 
 
@@ -1237,12 +1294,14 @@ def main(argv=None):
     ap.add_argument("--owner-check", action="store_true",
                     help="I own this site: test, read-only, whether the public Supabase/Firebase key in the page can "
                          "read my tables (GET only, max 20 tables, row contents never shown)")
+    ap.add_argument("--backend-origin", action="append", default=[], help="exact owner-approved backend origin; repeat for each database host")
+    ap.add_argument("--browser-check", action="store_true", help="opt into executing site JavaScript in a fresh restricted browser context")
     ap.add_argument("--repo", metavar="DIR", help="also scan this local project for committed .env files and secrets")
     ap.add_argument("--report", metavar="HTML", help="write the one-page report card (self-contained HTML) here")
     ap.add_argument("--json", action="store_true", help="machine-readable output")
     ap.add_argument("--prompt", action="store_true", help="print only the 'fix this first' prompt for your AI")
     ap.add_argument("--skip", metavar="AREAS", help="comma list of areas to skip: phone,search,speed")
-    ap.add_argument("--no-browser", action="store_true", help="no page-load metrics or screenshot (phone check still runs)")
+    ap.add_argument("--no-browser", action="store_true", help="disable all browser execution, including phone design")
     ap.add_argument("--max-assets", type=int, default=MAX_ASSETS, help=f"same-site scripts to scan (default {MAX_ASSETS})")
     ap.add_argument("--timeout", type=float, default=15.0, help="seconds per request (default 15)")
     ap.add_argument("--fail-under", type=int, default=80, help="exit 1 below this score (default 80)")
@@ -1251,8 +1310,8 @@ def main(argv=None):
         args = ap.parse_args(argv)
     except SystemExit as exc:
         return 0 if exc.code in (0, None) else 2
-    if args.timeout <= 0 or args.max_assets < 0:
-        print("error: --timeout > 0 and --max-assets >= 0", file=sys.stderr)
+    if not 0 < args.timeout <= 120 or not 0 <= args.max_assets <= MAX_ASSETS or not 0 <= args.fail_under <= 100:
+        print("error: timeout must be1..120s, assets0..20, score0..100", file=sys.stderr)
         return 2
     try:
         report = run(args)

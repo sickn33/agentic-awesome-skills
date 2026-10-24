@@ -4,11 +4,8 @@ import express from 'express';
 export class TelegramBotClient {
   public bot: Telegraf;
 
-  constructor(token: string, webhookMode: boolean = false) {
+  constructor(token: string) {
     this.bot = new Telegraf(token);
-    if (webhookMode) {
-      this.bot.telegram.deleteWebhook({ drop_pending_updates: true }).catch(() => undefined);
-    }
   }
 
   async startPolling(): Promise<void> {
@@ -25,15 +22,17 @@ export class TelegramBotClient {
     app.disable('x-powered-by');
     app.use(express.json());
 
-    app.post('/webhook', async (req, res) => {
+    app.post('/webhook', async (req, res, next) => {
       const headerSecret = req.headers['x-telegram-bot-api-secret-token'];
       if (headerSecret !== secret) {
         return res.sendStatus(403);
       }
 
-      await this.bot.handleUpdate(req.body, res);
-      if (!res.headersSent) {
-        res.sendStatus(200);
+      try {
+        await this.bot.handleUpdate(req.body, res);
+        if (!res.headersSent) res.sendStatus(200);
+      } catch (error) {
+        next(error);
       }
     });
 

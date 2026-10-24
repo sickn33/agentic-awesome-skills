@@ -1,7 +1,11 @@
 // Repository Implementation Template for .NET 8+
-// Demonstrates both Dapper (performance) and EF Core (convenience) patterns
+// Partial single-tenant sketch: supply request types and IOrderRepository.
+// Repository methods save immediately; the UnitOfWork below coordinates transactions,
+// not deferred persistence. Do not dispose an injected DbContext owned by DI.
 
 using System.Data;
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore.Storage;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -98,7 +102,9 @@ public class DapperProductRepository : IProductRepository
         var whereClause = string.Join(" AND ", whereClauses);
         var page = request.Page ?? 1;
         var pageSize = request.PageSize ?? 50;
-        var offset = (page - 1) * pageSize;
+        if (page < 1 || pageSize < 1 || pageSize > 200)
+            throw new ArgumentOutOfRangeException(nameof(request));
+        var offset = checked((page - 1) * pageSize);
 
         parameters.Add("Offset", offset);
         parameters.Add("PageSize", pageSize);
@@ -112,7 +118,7 @@ public class DapperProductRepository : IProductRepository
             SELECT Id, Name, Sku, Price, CategoryId, Stock, CreatedAt, UpdatedAt
             FROM Products
             WHERE {whereClause}
-            ORDER BY Name
+            ORDER BY Name, Id
             OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
             """;
 
@@ -132,7 +138,7 @@ public class DapperProductRepository : IProductRepository
             VALUES (@Id, @Name, @Sku, @Price, @CategoryId, @Stock, @CreatedAt, 0);
             
             SELECT Id, Name, Sku, Price, CategoryId, Stock, CreatedAt, UpdatedAt
-            FROM Products WHERE Id = @Id;
+            FROM Products WHERE Id = @Id AND IsDeleted = 0;
             """;
 
         return await _connection.QuerySingleAsync<Product>(
@@ -152,9 +158,10 @@ public class DapperProductRepository : IProductRepository
             WHERE Id = @Id AND IsDeleted = 0;
             
             SELECT Id, Name, Sku, Price, CategoryId, Stock, CreatedAt, UpdatedAt
-            FROM Products WHERE Id = @Id;
+            FROM Products WHERE Id = @Id AND IsDeleted = 0;
             """;
 
+        product.UpdatedAt = DateTime.UtcNow;
         return await _connection.QuerySingleAsync<Product>(
             new CommandDefinition(sql, product, cancellationToken: ct));
     }
@@ -254,9 +261,12 @@ public class EfCoreProductRepository : IProductRepository
         var page = request.Page ?? 1;
         var pageSize = request.PageSize ?? 50;
 
+        if (page < 1 || pageSize < 1 || pageSize > 200)
+            throw new ArgumentOutOfRangeException(nameof(request));
+        var offset = checked((page - 1) * pageSize);
         var items = await query
-            .OrderBy(p => p.Name)
-            .Skip((page - 1) * pageSize)
+            .OrderBy(p => p.Name).ThenBy(p => p.Id)
+            .Skip(offset)
             .Take(pageSize)
             .ToListAsync(ct);
 
@@ -272,6 +282,9 @@ public class EfCoreProductRepository : IProductRepository
 
     public async Task<Product> UpdateAsync(Product product, CancellationToken ct = default)
     {
+        // Use a detached update context or reconcile the existing tracked entity.
+        // Set a concurrency token from the caller to detect lost updates.
+        product.UpdatedAt = DateTime.UtcNow;
         _context.Products.Update(product);
         await _context.SaveChangesAsync(ct);
         return product;
@@ -398,6 +411,7 @@ public class UnitOfWork : IUnitOfWork
 
     public async Task BeginTransactionAsync(CancellationToken ct = default)
     {
+        if (_transaction != null) throw new InvalidOperationException("Transaction already active");
         _transaction = await _context.Database.BeginTransactionAsync(ct);
     }
 
@@ -424,7 +438,7 @@ public class UnitOfWork : IUnitOfWork
     public void Dispose()
     {
         _transaction?.Dispose();
-        _context.Dispose();
+        // DI owns the injected context lifetime.
     }
 }
 

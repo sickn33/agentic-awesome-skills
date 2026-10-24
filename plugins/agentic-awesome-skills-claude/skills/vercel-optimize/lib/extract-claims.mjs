@@ -42,11 +42,11 @@ export function extractClaims(rec, ctx = {}) {
     claims.push({ type: 'file_exists', file: f, repoRoot, projectRootDirectory, sourceField: 'affectedFiles' });
   }
 
-  // findingRefs lack a pattern, so we only check file existence.
+  // A cited line must exist; existence alone cannot ground an invented line number.
   for (const ref of asArray(rec.findingRefs)) {
-    const m = String(ref).match(/^(.+?):\d+$/);
-    if (m && !claims.some((c) => c.type === 'file_exists' && c.file === m[1])) {
-      claims.push({ type: 'file_exists', file: m[1], repoRoot, projectRootDirectory, sourceField: 'findingRefs' });
+    const m = String(ref).match(/^(.+?):(\d+)$/);
+    if (m) {
+      claims.push({ type: 'file_exists', file: m[1], line: Number(m[2]), repoRoot, projectRootDirectory, sourceField: 'findingRefs' });
     }
   }
 
@@ -310,8 +310,8 @@ export function extractClaims(rec, ctx = {}) {
     if (c && typeof c === 'object' && typeof c.type === 'string') {
       claims.push({
         ...c,
-        repoRoot: c.repoRoot ?? repoRoot,
-        projectRootDirectory: c.projectRootDirectory ?? projectRootDirectory,
+        repoRoot,
+        projectRootDirectory,
         sourceField: 'verifiableClaims',
       });
     }

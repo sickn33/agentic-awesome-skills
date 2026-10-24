@@ -1,6 +1,6 @@
 ---
 name: skill-developer
-description: "Comprehensive guide for creating and managing skills in Claude Code with auto-activation system, following Anthropic's official best practices including the 500-line rule and progressive disclosure pattern."
+description: "Comprehensive guide for creating and managing skills in Claude Code with auto-activation system, using an illustrative custom hook architecture and concise progressive disclosure and progressive disclosure pattern."
 risk: critical
 source: community
 date_added: "2026-02-27"
@@ -10,7 +10,7 @@ date_added: "2026-02-27"
 
 ## Purpose
 
-Comprehensive guide for creating and managing skills in Claude Code with auto-activation system, following Anthropic's official best practices including the 500-line rule and progressive disclosure pattern.
+Comprehensive guide for creating and managing skills in Claude Code with auto-activation system, using an illustrative custom hook architecture and concise progressive disclosure and progressive disclosure pattern.
 
 ## When to Use This Skill
 
@@ -27,6 +27,10 @@ Automatically activates when you mention:
 - 500-line rule
 
 ---
+
+## Scope and availability
+
+The hooks, wrappers and skill-rules.json described here are a custom example system, not built-in Claude Code features and not bundled in this tree. Confirm their presence and audit their implementation before running examples. Use pinned local dependencies, preserve existing configuration and obtain authorization before registering arbitrary-code hooks. Hook suggestions and once-per-session reminders are not security enforcement or proof of skill invocation.
 
 ## System Overview
 
@@ -239,7 +243,7 @@ Based on testing:
 
 ### 2. File Markers
 
-**Purpose:** Permanent skip for verified files
+**Purpose:** Example convenience skip; a file marker is not verification evidence
 
 **Marker:** `// @skip-validation`
 
@@ -250,7 +254,7 @@ import { PrismaService } from './prisma';
 // This file has been manually verified
 ```
 
-**NOTE:** Use sparingly - defeats the purpose if overused
+**NOTE:** Do not use editable markers or environment overrides to bypass real security/policy gates. Require owner-controlled policy and explicit authorization for overrides.
 
 ### 3. Environment Variables
 

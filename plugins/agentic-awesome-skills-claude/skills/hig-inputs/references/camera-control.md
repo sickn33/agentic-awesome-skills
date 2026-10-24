@@ -1,6 +1,7 @@
 ---
 title: "Camera Control | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/camera-control
+---
 
 # Camera Control
 
@@ -8,7 +9,7 @@ The Camera Control provides direct access to your app’s camera experience.
 
 ![A stylized representation of the Camera Control.](https://docs-assets.developer.apple.com/published/73774a69a0e7738c02ffdaeccfe03830/inputs-camera-control-intro%402x.png)
 
-On iPhone 16 and iPhone 16 Pro models, the Camera Control quickly opens your app’s camera experience to capture moments as they happen. When a person lightly presses the Camera Control, the system displays an overlay that extends from the device bezel.
+On supported iPhone models (the cited snapshot introduces iPhone 16 and iPhone 16 Pro), the Camera Control quickly opens your app’s camera experience to capture moments as they happen. When a person lightly presses the Camera Control, the system displays an overlay that extends from the device bezel.
 
 ![A screenshot showing callouts to the Camera Control and overlay on iPhone in landscape orientation.](https://docs-assets.developer.apple.com/published/3d9efd41aaf5eb91e9d51fdf57a26472/camera-control-button-callout%402x.png)
 
@@ -73,11 +74,11 @@ In addition to custom controls that you create, the system provides a set of sta
 
 ![An X in a circle to indicate incorrect usage.](https://docs-assets.developer.apple.com/published/209f6f0fc8ad99d9bf59e12d82d06584/crossout%402x.png)Avoid showing controls in the viewfinder that people access in the overlay.
 
-**Enable or disable controls depending on the camera mode.** For example, disable video controls when taking photos. The overlay supports multiple controls, but you can’t remove or add controls at runtime.
+**Enable or disable controls depending on the camera mode.** For example, disable video controls when taking photos. Configure controls using the supported AVCaptureSession control APIs and their current preconditions; verify capacity and add/remove support for the target SDK rather than assuming a universal runtime prohibition.
 
 **Consider how to arrange your controls.** Order commonly used controls toward the middle to allow quick access, and include lesser used controls on either side. When a person lightly presses the Camera Control to open the overlay again, the system remembers the last control they used in your app.
 
-**Allow people to use the Camera Control to launch your experience from anywhere.** Create a locked camera capture extension that lets people configure the Camera Control to launch your app’s camera experience from their locked device, the Home Screen, or from within other apps. For guidance, see [Camera experiences on a locked device](https://developer.apple.com/design/human-interface-guidelines/controls#Camera-experiences-on-a-locked-device).
+**Offer a supported locked capture experience where appropriate.** A locked capture extension is constrained; it does not authorize access to private app content, the entire photo library or other protected data while locked. Supply the required camera/microphone declarations, handle denial and interruption, and require unlock for protected navigation. Create a locked camera capture extension that lets people configure the Camera Control to launch your app’s camera experience from their locked device, the Home Screen, or from within other apps. For guidance, see [Camera experiences on a locked device](https://developer.apple.com/design/human-interface-guidelines/controls#Camera-experiences-on-a-locked-device).
 
 ## [Platform considerations](https://developer.apple.com/design/human-interface-guidelines/camera-control#Platform-considerations)
 

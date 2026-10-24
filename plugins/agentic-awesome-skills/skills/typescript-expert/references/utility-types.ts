@@ -103,7 +103,7 @@ export type DeepMutable<T> = T extends object
  * Get keys of object where value matches type.
  */
 export type KeysOfType<T, V> = {
-    [K in keyof T]: T[K] extends V ? K : never
+    [K in keyof T]-?: T[K] extends V ? K : never
 }[keyof T]
 
 /**
@@ -143,7 +143,7 @@ export type Merge<T, U> = Omit<T, keyof U> & U
 /**
  * Get element type from array.
  */
-export type ElementOf<T> = T extends (infer E)[] ? E : never
+export type ElementOf<T> = T extends readonly (infer E)[] ? E : never
 
 /**
  * Tuple of specific length.

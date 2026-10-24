@@ -56,7 +56,7 @@ class JucapScraper(AbstractJuntaScraper):
                     nome=nome,
                     matricula=gcol(cells, ["matr", "registro"]),
                     situacao=gcol(cells, ["situ", "status"]),
-                    municipio=gcol(cells, ["munic", "cidade"]) or "Macapa",
+                    municipio=gcol(cells, ["munic", "cidade"]),
                     telefone=gcol(cells, ["tel", "fone"]),
                     email=gcol(cells, ["email"]),
                     endereco=gcol(cells, ["ender", "logr"]),
@@ -81,7 +81,7 @@ class JucapScraper(AbstractJuntaScraper):
                 if tag in ("h3", "h4", "h5"):
                     if current.get("nome"):
                         results.append(self.make_leiloeiro(**current))
-                    current = {"nome": text, "municipio": "Macapa"}
+                    current = {"nome": text, "municipio": None}
                 elif current.get("nome"):
                     text_lower = text.lower()
                     if "matrícula" in text_lower or "matricula" in text_lower:
@@ -105,6 +105,6 @@ class JucapScraper(AbstractJuntaScraper):
             for line in soup.get_text("\n").split("\n"):
                 line = self.clean(line)
                 if line and len(line) > 5 and re.match(r"^[A-ZÁÉÍÓÚÀÃÕÇ][A-ZÁÉÍÓÚÀÃÕÇ\s]{4,}$", line):
-                    results.append(self.make_leiloeiro(nome=line, municipio="Macapa"))
+                    results.append(self.make_leiloeiro(nome=line, municipio=None))
 
         return results

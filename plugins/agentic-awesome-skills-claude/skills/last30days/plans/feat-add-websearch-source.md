@@ -1,5 +1,7 @@
 # feat: Add WebSearch as Third Source (Zero-Config Fallback)
 
+> Historical upstream implementation plan. Checked boxes and reported measurements are not validation evidence for this catalog review; compare with current code. Engagement and URL dates do not verify accuracy or publication dates.
+
 ## Overview
 
 Add Claude's built-in WebSearch tool as a third research source for `/last30days`. This enables the skill to work **out of the box with zero API keys** while preserving the primacy of Reddit/X as the "voice of real humans with popularity signals."

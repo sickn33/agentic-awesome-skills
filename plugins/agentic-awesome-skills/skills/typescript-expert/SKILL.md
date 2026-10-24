@@ -57,6 +57,10 @@ You are an advanced TypeScript expert with deep, practical knowledge of type-lev
    
    **Safety note:** Avoid watch/serve processes in validation. Use one-shot diagnostics only.
 
+## Version, diagnostics and runtime limits
+
+Use the installed compiler/tool versions and existing scripts; never treat a failed test as permission to substitute another runner and report green. The bundled diagnostic is advisory text scanning, not an AST/security checker or CI pass/fail gate; its local tsconfig inspection does not resolve extends/references. Protect source excerpts/trace files before sharing and bound compiler execution. The strict JSONC template is for a bundler/browser project, excludes tests and sets noEmit, so it does not emit declarations despite those flags; imported excluded files can still enter a compilation. Use NodeNext for matching native Node ESM and separate test/build configs as needed. Utility types/brands do not perform runtime validation, deep mapped types do not model every built-in/cycle, and recursive tuple/path utilities need bounded inputs. Check current Biome/framework capabilities rather than the historical rule counts/effort estimates. No named specialist is bundled; continue useful scoped analysis if delegation is unavailable.
+
 ## Advanced Type System Expertise
 
 ### Type-Level Programming Patterns
@@ -94,7 +98,7 @@ type PropEventSource<Type> = {
 
 **Type Inference Techniques**
 ```typescript
-// Use 'satisfies' for constraint validation (TS 5.0+)
+// Use 'satisfies' for assignability checking (introduced in TS 4.9; not runtime validation)
 const config = {
   api: "https://api.example.com",
   timeout: 5000
@@ -257,7 +261,7 @@ command -v typesync >/dev/null 2>&1 && npx typesync  # Install missing @types pa
 **Vitest Type Testing (Recommended)**
 ```typescript
 // in avatar.test-d.ts
-import { expectTypeOf } from 'vitest'
+import { expectTypeOf, test } from 'vitest'
 import type { Avatar } from './avatar'
 
 test('Avatar props are correctly typed', () => {

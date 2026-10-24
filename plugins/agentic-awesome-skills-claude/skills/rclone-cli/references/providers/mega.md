@@ -9,9 +9,8 @@ versionIntroduced: "v1.41"
 
 [Mega](https://mega.nz/) is a cloud storage and file hosting service
 known for its security feature where all files are encrypted locally
-before they are uploaded. This prevents anyone (including employees of
-Mega) from accessing the files without knowledge of the key used for
-encryption.
+before they are uploaded. Access to plaintext depends on possession and protection of the encryption
+keys; this does not protect a compromised client, account session or shared key.
 
 This is an rclone backend for Mega which supports the file transfer
 features of Mega using the same client side encryption.
@@ -153,10 +152,9 @@ Login complete as me@example.com
 me@example.com:/$
 ```
 
-Note that some have found issues with passwords containing special
-characters. If you can not log on with rclone, but MEGAcmd logs on
-just fine, then consider changing your password temporarily to
-pure alphanumeric characters, in case that helps.
+If MEGAcmd can log in but rclone cannot, check the installed rclone version
+and report a redacted diagnostic. Do not weaken the account password as a
+routine compatibility workaround.
 
 #### Repeated commands blocks access
 
@@ -178,8 +176,8 @@ the commands over the API to avoid logging in each time.
 Rclone does not currently close mega sessions (you can see them in the
 web interface), however closing the sessions does not solve the issue.
 
-If you space rclone commands by 3 seconds it will avoid blocking the
-remote. We haven't identified the exact blocking rules, so perhaps one
+Spacing rclone commands by 3 seconds has been reported to reduce blocking,
+but does not guarantee that the remote will avoid rate limits. We haven't identified the exact blocking rules, so perhaps one
 could execute the command 80 times without waiting and avoid blocking
 by waiting 3 seconds, then continuing...
 
@@ -306,8 +304,9 @@ Use HTTPS for transfers.
 MEGA uses plain text HTTP connections by default.
 Some ISPs throttle HTTP connections, this causes transfers to become very slow.
 Enabling this will force MEGA to use HTTPS for all transfers.
-HTTPS is normally not necessary since all data is already encrypted anyway.
-Enabling it will increase CPU usage and add network overhead.
+Client-side content encryption does not replace transport protection. Enable
+HTTPS when transport confidentiality and server authentication are required;
+it can add CPU and network overhead.
 
 Properties:
 

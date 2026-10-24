@@ -10,7 +10,7 @@ Radix UI provides unstyled, accessible components (primitives) that you can cust
 - **Headless by design**: Full styling control without fighting defaults
 - **Accessibility built-in**: WAI-ARIA compliant, keyboard navigation, screen reader support
 - **Composable primitives**: Build complex components from simple building blocks
-- **Framework agnostic**: Works with React, but styles work anywhere
+- **React primitives**: Styles can be portable; these components require React
 
 
 ## Core Principles
@@ -158,7 +158,7 @@ import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
   // Base styles
-  "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50",
+  "inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current disabled:pointer-events-none disabled:opacity-50",
   {
     variants: {
       variant: {
@@ -194,7 +194,9 @@ export function Button({ variant, size, children }: ButtonProps) {
 }
 ```
 
-### Strategy 3: Stitches (CSS-in-JS)
+### Strategy 3: Stitches (legacy project example)
+
+Check maintenance and compatibility before adopting Stitches in a new project.
 
 **Best for**: Runtime theming, scoped styles
 
@@ -291,14 +293,16 @@ export function CustomSelect({ items, placeholder, onValueChange }) {
 ```tsx
 // Uncontrolled (Radix manages state)
 <Tabs.Root defaultValue="tab1">
-  <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
+  <Tabs.List aria-label="Sections"><Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger></Tabs.List>
+  <Tabs.Content value="tab1">Content</Tabs.Content>
 </Tabs.Root>
 
 // Controlled (You manage state)
 const [activeTab, setActiveTab] = useState('tab1');
 
 <Tabs.Root value={activeTab} onValueChange={setActiveTab}>
-  <Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger>
+  <Tabs.List aria-label="Sections"><Tabs.Trigger value="tab1">Tab 1</Tabs.Trigger></Tabs.List>
+  <Tabs.Content value="tab1">Content</Tabs.Content>
 </Tabs.Root>
 ```
 
@@ -333,7 +337,8 @@ export function AnimatedDialog({ open, onOpenChange }) {
                   exit={{ opacity: 0, scale: 0.95 }}
                   className="dialog-content"
                 >
-                  {/* Content */}
+                  <Dialog.Title>Details</Dialog.Title>
+                  <Dialog.Description>Review details before continuing.</Dialog.Description>
                 </motion.div>
               </Dialog.Content>
             </>
@@ -466,7 +471,7 @@ export function AnimatedDialog({ open, onOpenChange }) {
 
 ### ✅ Do This
 
-1. **Always use `asChild` to avoid wrapper divs**
+1. **Use `asChild` when composing with a compatible element that forwards props and refs**
    ```tsx
    <Dialog.Trigger asChild>
      <button>Open</button>
@@ -496,7 +501,7 @@ export function AnimatedDialog({ open, onOpenChange }) {
      return (
        <Dialog.Root>
          <Dialog.Content>
-           <Combobox /> {/* Radix Combobox inside Dialog */}
+           <Combobox /> {/* Application combobox inside Dialog */}
          </Dialog.Content>
        </Dialog.Root>
      );
@@ -594,8 +599,9 @@ export function AnimatedDialog({ open, onOpenChange }) {
 
 ```tsx
 // Lazy load heavy primitives
-const Dialog = lazy(() => import('@radix-ui/react-dialog'));
-const DropdownMenu = lazy(() => import('@radix-ui/react-dropdown-menu'));
+// Lazy-load your complete component, which must have a default export.
+const SettingsDialog = lazy(() => import('./SettingsDialog'));
+// Render inside Suspense; a Radix namespace is not a React component.
 ```
 
 ### 2. Portal Container Reuse
@@ -603,7 +609,7 @@ const DropdownMenu = lazy(() => import('@radix-ui/react-dropdown-menu'));
 ```tsx
 // Create portal container once
 <Tooltip.Provider>
-  {/* All tooltips share portal container */}
+  {/* Provider shares tooltip timing/context; portal containers are configured separately */}
   <Tooltip.Root>...</Tooltip.Root>
   <Tooltip.Root>...</Tooltip.Root>
 </Tooltip.Provider>
@@ -708,4 +714,4 @@ npm install @radix-ui/react-{primitive-name}
 
 ---
 
-**Remember**: Radix gives you **behavior**, you give it **beauty**. Accessibility is built-in, customization is unlimited.
+**Remember**: Radix gives you **behavior**, you give it **beauty**. Accessible behavior is provided by primitives, but labels, contrast, composition and application testing remain your responsibility.

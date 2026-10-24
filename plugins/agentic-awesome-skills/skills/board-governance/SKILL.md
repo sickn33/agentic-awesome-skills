@@ -94,7 +94,7 @@ If an artifact was requested, build it after resolving essential missing facts. 
 
 **Recommended approach:** Keep meetings, papers and decisions as separate records joined by the meeting, and track actions to a due date and an owner.
 
-**Why this one:** Governance records fail on lost actions rather than missing minutes. The action log is what the board actually needs.
+**Why this one:** Both approved minutes and tracked actions matter. Keep the action log linked to the authoritative decision record rather than treating it as a substitute for minutes.
 
 **Workflow:** Meeting scheduled → Papers circulated → Meeting held → Minutes recorded → Actions tracked
 
@@ -129,15 +129,15 @@ Approve FY27 budget,Resolution,2026-01-15,1. Q1 budget 2. Audit scope 3. Hiring 
 CREATE TABLE board_governance (
   board_item VARCHAR(255),
   item_type VARCHAR(100) NOT NULL,
-  meeting_date DATE NOT NULL,
+  meeting_date DATE,
   agenda VARCHAR(255),
   presented_by VARCHAR(255),
   decision VARCHAR(255),
   resolution_number VARCHAR(255),
   vote_result VARCHAR(255),
   action_owner VARCHAR(255),
-  due_date DATE NOT NULL,
-  risk_level VARCHAR(100) NOT NULL,
+  due_date DATE,
+  risk_level VARCHAR(100),
   linked_report VARCHAR(255),  -- relation -> target record
   documents VARCHAR(255),
   confidential VARCHAR(100) NOT NULL,
@@ -176,9 +176,6 @@ CREATE INDEX idx_board_governance_status ON board_governance (status);
   },
   "required": [
       "Item Type",
-      "Meeting Date",
-      "Due Date",
-      "Risk Level",
       "Confidential",
       "Status"
   ]
@@ -229,6 +226,8 @@ and anything pointing at another table stays `relation`.
 | 14 | Confidential | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Internal` |
 | 15 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Actioned` |
 | 16 | Board Item ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
+
+A proposed item may have no meeting date, due date or risk assessment; leave unknown/not-applicable values blank. The compact table is an item register, not the separate linked meeting/paper/decision schema recommended above. For a multi-meeting system add verified Meeting ID and resolution/action links before claiming relational tracking. Keep confidential board packs restricted by actual workspace permissions; a label such as Internal does not enforce access. Never infer legal validity, quorum or approval from a filled row.
 
 ## Select Options
 

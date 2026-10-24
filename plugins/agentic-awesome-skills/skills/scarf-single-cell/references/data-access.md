@@ -91,6 +91,8 @@ scarf.CrToZarr(scarf.CrDirReader("filtered_feature_bc_matrix"), zarr_loc="dir.za
 
 # Matrix Market: inspect, then pick one candidate explicitly
 candidates = scarf.inspect_mtx("mtx_dir")
+if len(candidates) != 1:
+    raise ValueError("Inspect candidates and explicitly select the intended matrix before conversion")
 reader = scarf.MtxReader(candidates[0])
 print(reader.assayFeats)
 scarf.MtxToZarr(reader, zarr_loc="mtx.zarr").dump()
@@ -155,7 +157,10 @@ small = catalog.query(
     "WHERE status = ? AND cell_count < ? ORDER BY cell_count LIMIT 3",
     parameters=["ready", 5000],
 )
-entry = catalog.dataset(ids[0])
+selected_id = "REPLACE_WITH_REVIEWED_CYTEBASE_ID"
+if selected_id not in ids:
+    raise ValueError("Select an authorized dataset from inspected catalog rows")
+entry = catalog.dataset(selected_id)
 print(entry.describe())                   # Markdown summary; does not open the store
 print(entry.cell_count, entry.source_embeddings())    # source obsm keys, imported or not
 ```
@@ -236,7 +241,8 @@ raw = repo.download_dataset("xin_1K_pancreas_rnaseq", destination="scarf_dataset
 
 - A writable open with `min_features_per_cell=k` silently removes cells with at most `k` features
   from `I` and persists it. Reopening with a lower value does not restore cells;
-  `ds.cells.reset_key("I")` does.
+  `reset_key("I")` sets every cell active, including intentionally excluded cells. Restore a
+  saved prior mask instead; without that mask the previous selection cannot be reconstructed.
 - Stores just written by a writer or `SubsetZarr` raise `Assay 'RNA' is not prepared. Rebuild ...`
   when opened with `zarr_mode="r"`. Open once with `"r+"`; no rebuild is needed.
 - Percent patterns are fixed at first preparation; a different pattern later raises `ValueError`.

@@ -51,6 +51,8 @@ Read the post looking for one of these, and name which you found:
 
 The gap is the comment. If there is no gap, go back to step 1.
 
+Use only the user's actual experience or verified evidence. A requested counterexample/number is not permission to invent one or speak as if the user personally tested something. If evidence is absent, use a clearly hypothetical example or a real question.
+
 ## Step 3: pick the shape
 
 - **The counterexample.** Where it did not work, and what was different.

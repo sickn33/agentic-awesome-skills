@@ -1,8 +1,11 @@
 ---
 title: "Managing accounts | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/managing-accounts
+---
 
 # Managing accounts
+
+> Attributed Apple HIG snapshot with local review corrections. Confirm current target OS/SDK and device capabilities in the linked documentation. Historical examples are design guidance, not guaranteed behavior, endorsement or a complete implementation. No native app/device tests were performed.
 
 When it doesn’t create an unnecessary barrier to your experience, an account can be a convenient way for people to access their content and track personal details.
 
@@ -22,7 +25,7 @@ Ask people to create an account only if your core functionality requires it; oth
 
 **Refer only to authentication methods that are available in the current context.** For example, don’t reference Face ID on a device that doesn’t offer it. Check the device’s capabilities and use the appropriate terminology. For developer guidance, see [`LABiometryType`](https://developer.apple.com/documentation/LocalAuthentication/LABiometryType).
 
-**In general, avoid offering an app-specific setting for opting in to biometric authentication.** People turn on biometric authentication at the system level, so presenting an in-app setting is redundant and could be confusing.
+**Distinguish system biometric enrollment from an app-specific choice to protect sensitive app access. An app-lock preference can be appropriate, but it must not imply control over system enrollment.** People turn on biometric authentication at the system level, so presenting an in-app setting is redundant and could be confusing.
 
 **Avoid using the term _passcode_ to refer to account authentication.** People create a passcode to unlock their device or authenticate for Apple services. If you use the term in your interface, people might think you’re asking them to reuse their passcode in your app or game.
 
@@ -34,7 +37,7 @@ Important
 
 If legal requirements compel your app to maintain accounts or information — such as digital health records — or to follow a specific account-deletion process, clearly describe the situation so people can understand the information or accounts you must maintain and the process you must follow.
 
-**Provide a clear way to initiate account deletion within your app or game.** If people can’t perform account deletion within your app, you must provide a direct link to the webpage on which people can do so. Make the link easy to discover — for example, don’t bury it in your Privacy Policy or Terms of Service pages.
+**Provide a clear way to initiate account deletion within your app or game.** Allow people to initiate deletion within the app. If completion requires your website, link directly to the deletion page rather than requiring a support search. Make the link easy to discover — for example, don’t bury it in your Privacy Policy or Terms of Service pages.
 
 Developer note
 
@@ -42,7 +45,7 @@ If people used [Sign in with Apple](https://developer.apple.com/design/human-int
 
 **Provide a consistent account-deletion experience whether people perform it within your app or game or on the website.** For example, avoid making one version of the deletion flow longer or more complicated than the other.
 
-**Consider letting people schedule account deletion to occur in the future.** People can appreciate the opportunity to use their remaining services or wait until their subscription auto-renews before deleting their account. If you offer a way to schedule account deletion, offer an option for immediate deletion as well.
+**Consider letting people schedule account deletion to occur in the future.** People can appreciate the opportunity to use their remaining services or wait until the paid subscription period expires before deleting their account. If you offer a way to schedule account deletion, offer an option for immediate deletion as well.
 
 **Tell people when account deletion will complete, and notify them when it’s finished.** Because it can sometimes take a while to fully delete an account, it’s essential to keep people informed about the status of the deletion process so they know what to expect.
 
@@ -105,3 +108,7 @@ Use iCloud synchronization to provide access to the Keychain, letting people aut
 
 [![](https://devimages-cdn.apple.com/wwdc-services/images/C03E6E6D-A32A-41D0-9E50-C3C6059820AA/9D0EBBBA-766E-4306-A14C-39339DD76D58/9271_wide_250x141_1x.jpg) What’s new in device management ](https://developer.apple.com/videos/play/wwdc2024/10143)
 
+
+## Implementation checks
+
+Device biometrics authenticate local device access; they do not automatically establish a remote account session or authorize every account mutation. Verify server sessions, bind passkeys to the correct relying party and preserve a secure recovery path. Explain billing separately from deletion, allow immediate deletion where required, revoke sessions/tokens and truthfully disclose lawful retention. See [current account deletion guidance](https://developer.apple.com/help/app-review/guideline-reference/5-1-1-account-deletion).

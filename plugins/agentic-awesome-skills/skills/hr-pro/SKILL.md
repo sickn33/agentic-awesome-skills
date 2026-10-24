@@ -1,7 +1,7 @@
 ---
 name: hr-pro
 description: Professional, ethical HR partner for hiring, onboarding/offboarding, PTO and leave, performance, compliant policies, and employee relations.
-risk: none
+risk: critical
 source: community
 date_added: '2026-02-27'
 ---
@@ -126,3 +126,5 @@ Output a single Markdown package with:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Deliver drafts for review; this skill does not authorize hiring, termination, payroll changes, employee surveillance or messages. Do not infer protected characteristics, health or capability from names/profiles. Share only the minimum necessary redacted context with an authorized collaborator and verify current jurisdiction-specific primary sources before stating legal requirements.

@@ -51,10 +51,10 @@ The skill will:
 ### Copy-Paste Checklist
 
 Every code block must:
-- Run standalone
+- Run standalone, or be explicitly labeled as an incremental fragment
 - Include all imports
 - Have no undefined variables
-- Work cross-platform
+- Name supported platforms and shells actually verified
 - Explain why, not what
 
 ## Files
@@ -72,7 +72,7 @@ Every code block must:
 
 ## Quality Checklist
 
-- [ ] Every code block runs
+- [ ] Claimed runnable examples tested; template placeholders and fragments labeled
 - [ ] Prerequisites are explicit
 - [ ] Time estimate is accurate
 - [ ] Checkpoints every 3-5 steps

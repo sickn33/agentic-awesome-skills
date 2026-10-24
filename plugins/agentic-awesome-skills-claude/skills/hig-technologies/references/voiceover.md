@@ -1,8 +1,12 @@
 ---
 title: "VoiceOver | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/voiceover
+---
 
 # VoiceOver
+
+> Reference snapshot adapted from the Apple source above; local corrections are editorial additions, not Apple endorsements. Verify current SDK availability, entitlements, regional eligibility, and App Review rules before implementation. Platform lists, dimensions, and screenshots describe the captured version, not an exhaustive current compatibility guarantee. Remote illustrations are links, not bundled assets or verified renders.
+
 
 VoiceOver is a screen reader that lets people experience your app’s interface without needing to see the screen.
 

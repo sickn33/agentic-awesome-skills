@@ -7,6 +7,7 @@ Usage:
     python setup_project.py --language python --path ./my-whatsapp-project
 """
 
+import json
 import argparse
 import os
 import shutil
@@ -20,8 +21,11 @@ def get_skill_dir() -> str:
 
 
 def _safe_target_path(path: str, skill_dir: str) -> str:
-    target_path = os.path.abspath(path)
-    skill_root = os.path.abspath(skill_dir)
+    raw_target = Path(path).expanduser().absolute()
+    if raw_target.is_symlink():
+        raise ValueError("Refusing symlink project target")
+    target_path = str(raw_target.resolve())
+    skill_root = str(Path(skill_dir).resolve())
     if os.path.commonpath([target_path, skill_root]) == skill_root:
         raise ValueError("Refusing to create a project inside the skill source directory")
     return target_path
@@ -44,11 +48,14 @@ def copy_tree_contents(source_dir: str, target_dir: str) -> None:
     for source_path in source_root.rglob("*"):
         relative_path = source_path.relative_to(source_root)
         target_path = target_root / relative_path
+        if source_path.is_symlink() or target_path.is_symlink():
+            raise ValueError("Refusing symlink scaffold path")
         if source_path.is_dir():
             target_path.mkdir(parents=True, exist_ok=True)
         elif source_path.is_file():
             target_path.parent.mkdir(parents=True, exist_ok=True)
-            target_path.write_bytes(source_path.read_bytes())
+            with target_path.open("xb") as target_file:
+                target_file.write(source_path.read_bytes())
 
 
 def setup_project(language: str, path: str, name: str | None = None) -> None:
@@ -63,12 +70,8 @@ def setup_project(language: str, path: str, name: str | None = None) -> None:
 
     target_path = _safe_target_path(path, skill_dir)
 
-    if os.path.exists(target_path) and os.listdir(target_path):
-        print(f"Warning: Directory '{target_path}' already exists and is not empty.")
-        response = input("Continue and overwrite? (y/N): ").strip().lower()
-        if response != "y":
-            print("Aborted.")
-            sys.exit(0)
+    if os.path.exists(target_path):
+        raise ValueError("Project target must be new; existing directories are preserved")
 
     # Copy boilerplate
     print(f"Creating {language} project at: {target_path}")
@@ -81,15 +84,15 @@ def setup_project(language: str, path: str, name: str | None = None) -> None:
         shutil.copy2(env_example, env_file)
         print("Created .env from .env.example")
 
-    # Update project name if provided
+    Path(target_path, ".gitignore").write_text(".env\n.env.*\n!.env.example\nnode_modules/\ndist/\n.venv/\n__pycache__/\n", encoding="utf-8")
     if name and language == "nodejs":
-        package_json = os.path.join(target_path, "package.json")
-        if os.path.exists(package_json):
-            with open(package_json, "r") as f:
-                content = f.read()
-            content = content.replace('"whatsapp-cloud-api"', f'"{name}"')
-            with open(package_json, "w") as f:
-                f.write(content)
+        for filename in ("package.json", "package-lock.json"):
+            package_file = Path(target_path, filename)
+            data = json.loads(package_file.read_text())
+            data["name"] = name
+            if "packages" in data:
+                data["packages"][""]["name"] = name
+            package_file.write_text(json.dumps(data, indent=2) + "\n")
 
     print()
     print("=" * 50)

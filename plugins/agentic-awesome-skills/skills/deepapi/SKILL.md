@@ -19,6 +19,8 @@ version: b17ad5148ab7
 
 ## Detailed Guide
 
+The bundled endpoint guide describes a versioned external service, not a local runtime. Validate the authorized service origin and current schema before attaching credentials or spending credits; setup must never request secrets in chat.
+
 Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.
 
 ## When to Use

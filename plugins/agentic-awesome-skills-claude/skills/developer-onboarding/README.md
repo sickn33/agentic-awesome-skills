@@ -13,16 +13,16 @@ Get developers to "Hello World" fast with optimized quickstarts, tutorials, and 
 
 ## Key Principle
 
-You have about 10 minutes of developer attention. Every second of confusion, every error without guidance, every unexpected requirement costs you users. Great onboarding feels like pair programming with someone who anticipated every question.
+Use a short, task-specific first-value goal rather than assuming a universal attention limit. Every second of confusion, every error without guidance, every unexpected requirement costs you users. Great onboarding feels like pair programming with someone who anticipated every question.
 
 ## Quick Reference
 
-**Time to first value targets:**
+**Illustrative internal time-to-first-value targets (not industry benchmarks):**
 - Simple APIs: <5 minutes
 - SDKs with installation: <10 minutes
 - Complex infrastructure: <30 minutes
 
-**Activation rate benchmark:**
+**Illustrative activation target, to calibrate against your cohorts:**
 - 20-40% for self-serve developer products
 
 ## When to Use This Skill

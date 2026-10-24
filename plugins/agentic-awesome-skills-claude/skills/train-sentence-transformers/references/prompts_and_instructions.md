@@ -1,5 +1,6 @@
 # Prompts and Instructions
 
+AAS adaptation: follow the root execution/data contract. Examples are version-sensitive sketches; verify APIs in a reviewed lockfile and cached revisions. Local-only/no publication/no remote telemetry defaults override older Hub/tracker recipes below. Numerical hardware, speed, quality, data-volume and loss-ranking claims are illustrative hypotheses, not guaranteed thresholds.
 Modern embedding models (E5, BGE, GTE, Qwen3-Embedding, Nomic, Instructor, etc.) use **prompts** / **instructions** at encode time — short prefixes like `"query: "`, `"passage: "`, or `"Represent this sentence for retrieval:"` — to signal task intent.
 
 In sentence-transformers, prompts work during both **training** and **inference**, and the library keeps them aligned automatically.

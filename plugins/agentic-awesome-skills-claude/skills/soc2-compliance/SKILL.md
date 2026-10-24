@@ -1,7 +1,7 @@
 ---
 name: soc2-compliance
 description: Implement SOC 2 Trust Services Criteria. Configure security, availability,
-  and processing integrity controls. Use when achieving SOC 2 certification.
+  and processing integrity controls. Use when preparing for a SOC 2 examination.
 category: security
 risk: safe
 source: https://github.com/BagelHole/DevOps-Security-Agent-Skills
@@ -28,6 +28,8 @@ Implement SOC 2 Trust Services Criteria controls, evidence collection, and conti
 - Automating evidence collection for auditor requests
 - Building continuous compliance monitoring into CI/CD
 - Onboarding new services and ensuring SOC 2 control coverage
+
+SOC 2 is an independent CPA examination/report, not a product certification. Type I addresses design at a specified date; Type II also addresses operation over a period. Agree system boundaries, applicable categories, criteria and evidence period with the auditor. This abbreviated mapping omits criteria and is not a complete authoritative checklist.
 
 ## Trust Services Criteria Detailed Checklist
 
@@ -218,7 +220,9 @@ control_to_tool_mapping:
 ```bash
 #!/usr/bin/env bash
 # collect-soc2-evidence.sh - Automated SOC 2 evidence collection
-# Run monthly or before audit requests
+# Run monthly or before audit requests in the approved accounts/regions only.
+set -euo pipefail
+umask 077
 
 EVIDENCE_DIR="./soc2-evidence/$(date +%Y-%m)"
 mkdir -p "$EVIDENCE_DIR"
@@ -244,14 +248,15 @@ aws iam list-users --query 'Users[*].UserName' --output text | \
     echo "$user,$mfa"
   done > "$EVIDENCE_DIR/mfa-status.csv"
 
-# GitHub organization members and roles
-gh api orgs/YOUR_ORG/members --paginate --jq '.[] | [.login, .role_name // "member"] | @csv' \
+# GitHub organization membership only; this endpoint does not establish member/admin roles.
+# Collect authorized per-member membership-role evidence separately; never default unknown roles to member.
+gh api orgs/YOUR_ORG/members --paginate --jq '.[] | [.login] | @csv' \
   > "$EVIDENCE_DIR/github-org-members.csv"
 
 # GitHub branch protection rules
 for repo in $(gh repo list YOUR_ORG --json name -q '.[].name'); do
   gh api repos/YOUR_ORG/$repo/branches/main/protection \
-    > "$EVIDENCE_DIR/branch-protection-$repo.json" 2>/dev/null
+    > "$EVIDENCE_DIR/branch-protection-$repo.json"
 done
 
 echo "=== CC7.2 - Monitoring Evidence ==="
@@ -295,6 +300,8 @@ echo "Evidence collected in $EVIDENCE_DIR"
 tar -czf "$EVIDENCE_DIR.tar.gz" "$EVIDENCE_DIR"
 echo "Archive: $EVIDENCE_DIR.tar.gz"
 ```
+
+The examples collect partial evidence, not proof of compliance. Preserve command failures as gaps, use bounded readiness retries for IAM credential-report generation instead of assuming a fixed sleep succeeds, and record collection time/account/region/tool version. API limits and audit-period filters must be expanded for the full population; `--limit 100` and the latest five backups are samples. Do not infer IAM Identity Center MFA, access-key usage, root security, GuardDuty coverage or actual backup restorability from these snippets. Evidence contains sensitive identity/security data: encrypt storage and transfer, restrict auditor access, and follow agreed retention.
 
 ## Audit Preparation Timeline
 
@@ -355,21 +362,33 @@ jobs:
   access-review:
     runs-on: ubuntu-latest
     steps:
-      - name: Check MFA enforcement
+      # Configure approved AWS OIDC credentials and read-only IAM permissions first.
+      # Install a pinned boto3 in the reviewed runner environment first.
+      - name: Review credential report without printing identities
         run: |
-          USERS_WITHOUT_MFA=$(aws iam generate-credential-report && sleep 5 && \
-            aws iam get-credential-report --output text --query Content | \
-            base64 -d | awk -F, '$4=="true" && $8=="false" {print $1}') <!-- security-allowlist: documented payload decoding technique reference, do not execute outside authorized scope -->
-          if [ -n "$USERS_WITHOUT_MFA" ]; then
-            echo "::error::Users without MFA: $USERS_WITHOUT_MFA"
-            exit 1
-          fi
-
-      - name: Check for unused credentials
-        run: |
-          THRESHOLD=$(date -d '90 days ago' +%Y-%m-%dT%H:%M:%S)
-          aws iam get-credential-report --output text --query Content | \
-            base64 -d | awk -F, -v t="$THRESHOLD" '$5!="N/A" && $5<t {print $1" last used "$5}' <!-- security-allowlist: documented payload decoding technique reference, do not execute outside authorized scope -->
+          python - <<'PYTHON'
+          import boto3, csv, io, time
+          from datetime import datetime, timedelta, timezone
+          iam = boto3.client('iam')
+          for attempt in range(15):
+              if iam.generate_credential_report()['State'] == 'COMPLETE':
+                  break
+              time.sleep(2)
+          else:
+              raise RuntimeError('Credential report not ready')
+          report = iam.get_credential_report()['Content'].decode('utf-8')
+          rows = list(csv.DictReader(io.StringIO(report)))
+          missing_mfa = sum(r['password_enabled'] == 'true' and r['mfa_active'] == 'false' for r in rows)
+          threshold = datetime.now(timezone.utc) - timedelta(days=90)
+          stale = 0
+          for row in rows:
+              value = row['password_last_used']
+              if row['password_enabled'] == 'true' and value not in ('N/A', 'no_information', 'not_supported'):
+                  stale += datetime.fromisoformat(value.replace('Z', '+00:00')) < threshold
+          print(f'Console accounts missing MFA: {missing_mfa}; stale recorded password use: {stale}')
+          if missing_mfa:
+              raise SystemExit(1)
+          PYTHON
 
       - name: Verify CloudTrail is logging
         run: |
@@ -407,3 +426,5 @@ Map this skill's control checklist to our current evidence and list gaps.
 ```
 
 > Adapted from [BagelHole/DevOps-Security-Agent-Skills](https://github.com/BagelHole/DevOps-Security-Agent-Skills) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: helper scripts and templates not bundled.
+
+Credential report dates/sentinels and aggregate counts need account-level review; federated identities and access keys require separate controls. Credentials configure through approved OIDC, and only aggregate output belongs in public CI logs. The snippet uses boto3-decoded report bytes with a bounded readiness wait and a real CSV parser; it does not execute decoded content.

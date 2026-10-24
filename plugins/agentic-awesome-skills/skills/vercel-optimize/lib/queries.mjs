@@ -231,7 +231,7 @@ export const QUERIES = [
     aggregation: 'p75',
     groupBy: ['route'],
     limit: ROUTE_LIMIT,
-    description: 'p75 Largest Contentful Paint per route. > 2500ms = poor.',
+    description: 'p75 Largest Contentful Paint per route. > 2500ms exceeds good threshold.',
   },
   {
     id: 'cwvInpByRoute',
@@ -239,7 +239,7 @@ export const QUERIES = [
     aggregation: 'p75',
     groupBy: ['route'],
     limit: ROUTE_LIMIT,
-    description: 'p75 Interaction to Next Paint per route. > 200ms = poor.',
+    description: 'p75 Interaction to Next Paint per route. > 200ms exceeds good threshold.',
   },
   {
     id: 'cwvClsByRoute',
@@ -247,7 +247,7 @@ export const QUERIES = [
     aggregation: 'p75',
     groupBy: ['route'],
     limit: ROUTE_LIMIT,
-    description: 'p75 Cumulative Layout Shift per route. > 0.1 = poor.',
+    description: 'p75 Cumulative Layout Shift per route. > 0.1 exceeds good threshold.',
   },
   {
     id: 'cwvTtfbByRoute',
@@ -288,7 +288,7 @@ export const QUERIES = [
     aggregation: 'sum',
     groupBy: [],
     limit: 1,
-    description: 'Total BotID checks. > 0 confirms BotID is wired up; = 0 confirms it is not.',
+    description: 'Total BotID checks. > 0 is evidence of BotID checks; zero does not prove it is disabled.',
   },
 
   {

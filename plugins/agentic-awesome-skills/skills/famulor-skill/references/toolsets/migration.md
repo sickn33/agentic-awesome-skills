@@ -1,5 +1,8 @@
 # Migration toolset
 
+**Operation boundary.** Reading a legacy account still requires authorization for that source and the destination mapping. Supply a source API key only through a secure non-model-visible client flow; otherwise use the platform’s manual migration interface.
+
+
 Preview and import of supported Famulor 1.0 resources. Connect only this group with `https://app.famulor.io/mcp?toolsets=migration`.
 
 This 2026-08-23 snapshot covers all 2 tools assigned to `migration` in the canonical 282-tool registry. The live MCP `tools/list` response is authoritative for arguments, current availability, annotations, and plan or role gating. Never invent fields from this catalog.

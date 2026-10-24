@@ -1,7 +1,7 @@
 ---
 name: dotnet-reverse
 description: ".NET/C# binary reverse engineering: managed PE analysis, dnSpyEx debugging, de4dot deobfuscation (ConfuserEx/SmartAssembly/Babel), IL patching, NativeAOT targets, and analysis of red-team Sharp* tooling."
-risk: safe
+risk: offensive
 source: "https://github.com/zhaoxuya520/reverse-skill"
 source_repo: "zhaoxuya520/reverse-skill"
 source_type: community
@@ -9,6 +9,20 @@ date_added: "2026-08-25"
 license: "MIT"
 license_source: "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
 ---
+> **⚠️ AUTHORIZED USE ONLY**
+> This skill is for educational purposes or authorized security assessments only.
+> You must have explicit, written permission from the system owner before using this tool.
+> Misuse of this tool is illegal and strictly prohibited.
+
+> **Mandatory confirmation gate**
+> Before running any command that probes, exploits, changes, persists on, extracts data from, or attempts credential access against a target:
+> 1. Ask the user to state the exact target URL, IP, account, or resource.
+> 2. Ask the user to confirm written authorization and the permitted scope.
+> 3. Show the exact command(s) and explain their expected effect.
+> 4. Wait for explicit confirmation in the current conversation.
+>
+> Without that confirmation, remain read-only and provide defensive guidance only. Prefer a sandbox, disposable VM, or controlled lab.
+
 # .NET / C# 逆向作业规范
 ## When to Use
 
@@ -28,6 +42,12 @@ license_source: "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
 - 分析 IL2CPP 之前的 Mono/Unity 托管层（注意：IL2CPP 编译后是 native，走 `reverse-engineering/` + seed-014）
 
 如果目标是纯 native 二进制（C/C++/Go/Rust 编译、无 CLR），请改用 `reverse-engineering/`、`ida-reverse/` 或 `radare2/`。
+
+## 授权与隔离
+
+仅分析有授权的样本。未知程序集、依赖与脱混淆器可能执行代码；使用无真实凭据、无共享目录的可回滚隔离虚拟机，默认阻断外联。静态元数据优先；动态执行必须单独确认范围。提取的密钥/C2按敏感证据保存，不连接或复用。patch另存副本并验证栈、分支、异常处理及签名，不覆盖原样本。
+
+原版 de4dot 已归档且未列出 ConfuserEx 支持；下方旧版表格是候选线索，须核对所用 fork 的实际参数与支持范围。上游路由与 MCP 名称不表示本包已提供这些能力。
 
 ## 核心原则
 
@@ -101,7 +121,7 @@ diec target.exe                        # Detect It Easy CLI
 de4dot target.exe -o target-clean.exe
 
 # 指定类型（自动识别失败时）
-de4dot --type cfze target.exe          # ConfuserEx
+# ConfuserEx: 核实专用 fork 的支持和参数后再使用
 de4dot --type sa target.exe            # SmartAssembly
 
 # 多层混淆 / de4dot 报 unknown
@@ -140,10 +160,10 @@ dnSpyEx → 右键方法 → Edit Method (C#) 或 Edit IL
   - 改判断：ldc.i4.0 → ldc.i4.1（false→true）
   - 改常量：直接编辑字符串/数字
   - 删除校验：nop 掉整段
-File → Save Module → 替换原文件
+File → Save Module → 另存 target-patched.exe，保留原始样本
 ```
 
-**IL patch 可靠性 > C# patch**：C# 重编译可能失败（缺引用、语法不对），IL 编辑几乎不会失真。详见 `references/common-workflow.md`。
+**IL patch 可靠性 > C# patch**：C# 重编译可能失败（缺引用、语法不对），IL 编辑仍可能破坏栈、分支或异常处理，必须验证。详见 `references/common-workflow.md`。
 
 ## 触发场景路由
 

@@ -15,6 +15,7 @@ npx expo install react-native-reanimated react-native-worklets react-native-gest
 `GestureHandlerRootView` wraps the app once — in Expo Router, the root `_layout`:
 
 ```jsx
+import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function RootLayout() {
@@ -43,6 +44,8 @@ const EASE_OUT = Easing.bezier(0.23, 1, 0.32, 1);      // strong ease-out for UI
 const EASE_IN_OUT = Easing.bezier(0.77, 0, 0.175, 1);  // on-screen movement
 const EASE_SHEET = Easing.bezier(0.32, 0.72, 0, 1);    // iOS sheet curve
 ```
+
+These excerpts require surrounding components, imports and app-specific constants. Apply `ReduceMotion.System` to springs/timings and layout builders, and disable transform CSS transitions/animations when reduced motion is enabled; the snippets below do not each show the complete accessibility wiring.
 
 Three conventions, explained once here instead of in every recipe:
 
@@ -312,7 +315,7 @@ Configure the native stack. Never rebuild a screen transition in JS: the native 
 
 ```jsx
 <Stack screenOptions={{ animation: reduced ? 'fade' : 'default' }}>
-  <Stack.Screen name="settings" options={{ animation: 'slide_from_right', animationMatchesGesture: true }} />
+  <Stack.Screen name="settings" options={{ animation: reduced ? 'fade' : 'slide_from_right', animationMatchesGesture: !reduced }} />
   <Stack.Screen name="compose" options={{ presentation: 'modal' }} />
   <Stack.Screen name="filter" options={{
     presentation: 'formSheet',
@@ -374,7 +377,7 @@ const armed = useSharedValue(false);
 useAnimatedReaction(
   () => pullDistance.get() > REFRESH_THRESHOLD,
   (isArmed, wasArmed) => {
-    if (isArmed !== wasArmed) {
+    if (wasArmed !== null && isArmed !== wasArmed) {
       armed.set(isArmed);
       scheduleOnRN(Haptics.impactAsync, Haptics.ImpactFeedbackStyle.Light);
     }

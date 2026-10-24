@@ -3,7 +3,7 @@ name: gdpr-compliance
 description: Implement GDPR data protection requirements. Configure consent management,
   data subject rights, and privacy by design. Use when processing EU personal data.
 category: security
-risk: safe
+risk: critical
 source: https://github.com/BagelHole/DevOps-Security-Agent-Skills
 source_repo: BagelHole/DevOps-Security-Agent-Skills
 source_type: community
@@ -19,7 +19,7 @@ metadata:
 
 # GDPR Compliance
 
-Implement General Data Protection Regulation requirements for organizations that process personal data of EU/EEA residents, covering lawful processing, data subject rights, and technical safeguards.
+Implement General Data Protection Regulation requirements for processing within GDPR’s territorial/material scope, which depends on establishment, offering goods/services or monitoring and is not determined solely by residence, covering lawful processing, data subject rights, and technical safeguards.
 
 ## Key Principles and Legal Bases
 
@@ -112,14 +112,14 @@ processing_activity:
   international_transfers:
     - Destination: United States
       Safeguard: "Standard Contractual Clauses (SCCs)"
-      TIA_completed: true
-  retention_period: "Account data retained for duration of contract + 7 years for legal obligations"
+      TIA_completed: null # require documented evidence
+  retention_period: "Account data retained for duration of contract plus category-specific legally justified retention; seven years is not a universal GDPR rule"
   security_measures:
     - AES-256 encryption at rest
     - TLS 1.3 in transit
     - Role-based access control
     - Audit logging of all access
-  dpia_required: false
+  dpia_required: null # assess explicitly; not a default negative
   last_reviewed: "2024-06-01"
 
 # Template for each processing activity
@@ -139,7 +139,7 @@ processing_activity_template:
   international_transfers: []
   retention_period: ""
   security_measures: []
-  dpia_required: false
+  dpia_required: null # assess explicitly; not a default negative
   date_added: ""
   last_reviewed: ""
 ```
@@ -183,7 +183,7 @@ class ConsentManager:
             "ip_address": ip_address,
             "withdrawal_timestamp": None,
         }
-        # Store with immutable audit trail
+        # Store a checksum; this unkeyed hash does not make storage immutable or prove consent
         consent_record["record_hash"] = hashlib.sha256(
             json.dumps(consent_record, sort_keys=True).encode()
         ).hexdigest()
@@ -200,8 +200,8 @@ class ConsentManager:
             privacy_policy_version="N/A",
         )
         # Trigger downstream actions
-        self._notify_processors(user_id, purpose, "withdrawn")
         self._stop_processing(user_id, purpose)
+        self._notify_processors(user_id, purpose, "withdrawn")
         return record
 
     def get_consent_status(self, user_id, purpose):
@@ -220,7 +220,7 @@ class ConsentManager:
         ))
 
     def export_consent_proof(self, user_id, purpose):
-        """Export verifiable consent proof for accountability."""
+        """Export consent records for review; records alone do not establish valid consent."""
         records = list(self.db.consent_records.find(
             {"user_id": user_id, "purpose": purpose.value},
             sort=[("timestamp", 1)]
@@ -235,11 +235,11 @@ class ConsentManager:
 
     def _notify_processors(self, user_id, purpose, action):
         """Notify downstream processors of consent change."""
-        pass  # Implement webhook/API calls to processors
+        raise NotImplementedError("Implement durable processor notification and failure handling")
 
     def _stop_processing(self, user_id, purpose):
         """Immediately stop processing for withdrawn consent."""
-        pass  # Implement processing halt logic
+        raise NotImplementedError("Implement verified consent-dependent processing halt")
 ```
 
 ## Data Subject Access Request (DSAR) Procedures
@@ -250,12 +250,12 @@ dsar_workflow:
     actions:
       - Log the request with timestamp and channel received
       - Assign unique tracking ID
-      - Acknowledge receipt within 3 business days
+      - Acknowledge promptly under the organization’s chosen service target (3 business days is illustrative, not a GDPR deadline)
     identity_verification:
       - Verify identity before providing any data
       - Use existing authentication where possible
       - Request additional proof if necessary (but not excessive)
-    sla: "Must respond within 30 days (extendable to 90 days for complex requests)"
+    sla: "Respond without undue delay and within one calendar month; where justified by complexity/number, extend by up to two further months and notify reasons within the initial month"
 
   step_2_assess:
     actions:
@@ -309,11 +309,13 @@ from datetime import datetime, timezone
 
 
 class DSARProcessor:
-    def __init__(self, data_sources):
+    def __init__(self, data_sources, authorize_request):
+        self.authorize_request = authorize_request # required server-side verification/scope hook
         self.data_sources = data_sources  # Dict of system_name: DataSource
 
     def process_access_request(self, user_identifier):
         """Collect all personal data across registered systems."""
+        self.authorize_request(user_identifier, "access")
         collected_data = {
             "request_id": f"DSAR-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}",
             "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -332,13 +334,15 @@ class DSARProcessor:
             except Exception as e:
                 collected_data["systems"][system_name] = {
                     "status": "error",
-                    "error": str(e),
+                    "error": "Source operation failed; restricted diagnostics retained separately",
                 }
 
+        collected_data["complete"] = all(v["status"] == "collected" for v in collected_data["systems"].values())
         return collected_data
 
     def process_erasure_request(self, user_identifier):
         """Delete personal data across all systems (right to erasure)."""
+        self.authorize_request(user_identifier, "erasure")
         results = {
             "request_id": f"ERASE-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}",
             "data_subject": user_identifier,
@@ -358,19 +362,19 @@ class DSARProcessor:
             except Exception as e:
                 results["systems"][system_name] = {
                     "status": "error",
-                    "error": str(e),
+                    "error": "Source operation failed; restricted diagnostics retained separately",
                 }
 
+        results["complete"] = all(v["status"] == "deleted" for v in results["systems"].values())
         return results
 
     def export_portable_data(self, user_identifier, format="json"):
         """Export data in machine-readable format for portability."""
-        data = self.process_access_request(user_identifier)
-        if format == "json":
-            return json.dumps(data, indent=2, default=str)
-        elif format == "csv":
-            return self._convert_to_csv(data)
-        raise ValueError(f"Unsupported format: {format}")
+        self.authorize_request(user_identifier, "portability")
+        raise NotImplementedError(
+            "Implement Article 20 eligibility and a separate portable-data projection; "
+            "an access-response dump is not a portability export. Add tested JSON/CSV serializers."
+        )
 ```
 
 ## Data Processing Agreement (DPA) Requirements
@@ -393,7 +397,7 @@ dpa_requirements:
 
   sub_processor_management:
     - [ ] List of current sub-processors provided by processor
-    - [ ] Notification mechanism for new sub-processors (30-day notice)
+    - [ ] Notification mechanism for new sub-processors (contractually agreed notice; no universal 30-day GDPR period)
     - [ ] Right to object to new sub-processors
     - [ ] Sub-processors bound by same data protection obligations
     - [ ] Processor remains liable for sub-processor compliance
@@ -430,7 +434,7 @@ dpa_requirements:
 
 ## When to Use
 
-- Processing personal data of EU/EEA residents in any capacity
+- Assessing processing that may fall within GDPR’s material/territorial scope
 - Building consent management and preference centers
 - Implementing Data Subject Access Request (DSAR) workflows
 - Conducting Data Protection Impact Assessments (DPIAs)
@@ -449,3 +453,7 @@ Map this skill's control checklist to our current evidence and list gaps.
 ```
 
 > Adapted from [BagelHole/DevOps-Security-Agent-Skills](https://github.com/BagelHole/DevOps-Security-Agent-Skills) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: helper scripts and templates not bundled.
+
+## Implementation and legal boundaries
+
+This is a partial scaffold, not a compliant consent/DSAR service. Authentication, authorized subject/tenant resolution, request eligibility, retention holds, recipient rights and secure delivery must be implemented server-side; a supplied identifier is not proof of identity. Consent storage needs deterministic event ordering, protected evidence, purpose/notice versions and durable withdrawal propagation; an unkeyed hash proves neither immutability nor consent validity. Partial source errors are incomplete results and must not close a request or silently certify deletion. Access and portability have different scope: Article20 generally concerns data provided by the subject, consent/contract basis and automated processing; protect others’ rights. Erasure is conditional, and backups require an approved restoration/deletion policy. Special-category processing needs an applicable Article9 condition in addition to Article6 where applicable; pseudonymization is not anonymization. Recipient role, SCC/TIA, ROPA exceptions, DPIA/DPO and breach duties need factual legal assessment, not default booleans. No user request authorizes automatic deletion, disclosure, notices or processor API calls beyond the confirmed action and scope.

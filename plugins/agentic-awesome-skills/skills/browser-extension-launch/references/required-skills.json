@@ -149,5 +149,6 @@
       "portable_fallback": "product-loop.md",
       "missing_policy": "prefer verified host skill; otherwise execute and record the bundled product-loop portable fallback, never invent a repository"
     }
-  ]
+  ],
+  "review_note": "2026-10-23: all eight pinned upstream SKILL.md entry hashes matched via GitHub; this does not certify their complete trees, transitive dependencies, runtime compatibility, or ongoing availability. Review full installed trees before execution."
 }

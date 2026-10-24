@@ -65,6 +65,8 @@ retention deliberately; retention metadata does not itself authorize deletion.
 
 ## Operational-document boundary
 
+This storage convention applies only when the user/project has adopted YYLO Ledger. Repository instructions and the requested deliverable location take precedence; a generic artifact request does not authorize moving existing plans/docs into Ledger. Secret detection is defense in depth, not a guarantee: inspect and redact payloads before capture, including externally referenced bytes.
+
 Store new PDRs, architecture and migration contracts, plans, reports, receipts,
 and execution evidence as Artifact Records. Draft through a fresh external file,
 capture it with an intentional profile and immutable payload mode, read it back,

@@ -24,10 +24,8 @@ from pathlib import Path
 # Garante que psutil está disponível
 try:
     import psutil
-except ImportError:
-    print("Instalando psutil...")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "psutil", "--quiet"])
-    import psutil
+except ImportError as exc:
+    raise SystemExit("Missing psutil: install a reviewed pinned version in an isolated environment before running") from exc
 
 # Importa config do mesmo diretório
 sys.path.insert(0, str(Path(__file__).parent))
@@ -75,7 +73,7 @@ def check_browsers(detail=False):
     for proc in psutil.process_iter(["pid", "name", "memory_info"]):
         try:
             info = proc.info
-            name_lower = info["name"].lower()
+            name_lower = (info["name"] or "").lower()
             ram_mb = info["memory_info"].rss / 1024**2
 
             for bname in BROWSER_NAMES:
@@ -117,7 +115,7 @@ def check_claude_processes():
     for proc in psutil.process_iter(["pid", "name", "memory_info", "cpu_percent"]):
         try:
             info = proc.info
-            name_lower = info["name"].lower()
+            name_lower = (info["name"] or "").lower()
 
             for cname in CLAUDE_NAMES:
                 if cname in name_lower:
@@ -143,7 +141,7 @@ def check_claude_processes():
 
 def check_disk():
     """Verifica espaço em disco."""
-    disk = psutil.disk_usage("C:/")
+    disk = psutil.disk_usage(Path.cwd().anchor)
     free_percent = 100 - disk.percent
 
     return {
@@ -235,6 +233,8 @@ def diagnose(results):
             severity = "critical"
     elif ram["status"] == "warning":
         issues.append(f"RAM a {ram['percent']}% (monitorar)")
+        if severity == "ok":
+            severity, bottleneck = "warning", "ram"
 
     # Browsers
     if browsers["ram_status"] == "critical":
@@ -265,7 +265,7 @@ def diagnose(results):
     # Rede
     if network.get("status") == "critical":
         if not network.get("reachable"):
-            issues.append("API do Claude INACESSIVEL")
+            issues.append("Conexao TCP ao endpoint falhou; saude da API nao determinada")
             suggestions.append("Verificar conexao com internet")
             suggestions.append("Verificar se VPN ou proxy esta bloqueando")
             bottleneck = "network"
@@ -312,7 +312,7 @@ def diagnose(results):
     summary_lines.append(f"- CPU: {cpu['percent']}% | RAM: {ram['percent']}% ({ram['used_gb']}/{ram['total_gb']} GB)")
     summary_lines.append(f"- Browsers: {browsers['total_processes']} processos, {browsers['total_ram_gb']} GB")
     summary_lines.append(f"- Claude Code: {claude['count']} processos, {claude['total_ram_gb']} GB")
-    summary_lines.append(f"- Disco C: {disk['free_gb']:.0f} GB livres ({disk['free_percent']}%)")
+    summary_lines.append(f"- Disco do diretorio atual: {disk['free_gb']:.0f} GB livres ({disk['free_percent']}%)")
     if network.get("latency_ms"):
         summary_lines.append(f"- Latencia API: {network['latency_ms']}ms")
 

@@ -41,7 +41,8 @@ Getting started with Telegram Mini Apps
 
     // User data
     const user = tg.initDataUnsafe.user;
-    console.log(user.first_name, user.id);
+    // Untrusted display data only; never authenticate with initDataUnsafe.
+    document.body.textContent = user?.first_name ? `Hello, ${user.first_name}` : "Open in Telegram";
   </script>
 </body>
 </html>
@@ -64,6 +65,7 @@ export function useTelegram() {
 }
 
 // App.jsx
+import { useEffect } from 'react';
 function App() {
   const { tg, user, expand, ready } = useTelegram();
 
@@ -138,26 +140,30 @@ function WalletSection() {
 ```jsx
 import { useTonConnectUI } from '@tonconnect/ui-react';
 
-function PaymentButton({ amount, to }) {
+function PaymentButton({ amountNano, to }) {
   const [tonConnectUI] = useTonConnectUI();
 
   const handlePay = async () => {
+    if (!/^[1-9][0-9]*$/.test(amountNano)) throw new Error("Invalid nanoton amount");
+    // Validate destination/network and approved amount server-side before wallet confirmation.
     const transaction = {
       validUntil: Math.floor(Date.now() / 1000) + 60,
       messages: [{
         address: to,
-        amount: (amount * 1e9).toString(), // TON to nanoton
+        amount: amountNano, // Validated integer decimal string; never float TON × 1e9
       }]
     };
 
     await tonConnectUI.sendTransaction(transaction);
   };
 
-  return <button onClick={handlePay}>Pay {amount} TON</button>;
+  return <button onClick={handlePay}>Review TON payment</button>;
 }
 ```
 
 ### Mini App Monetization
+
+Digital goods/services sold inside Telegram apps must use Telegram Stars (XTR), not TON or another currency to bypass that rule. The TON transfer fragment applies only to separately permitted use cases, with explicit recipient/network/amount review. A wallet connection is not authenticated ownership: use the documented server-side TON proof flow when required. Wallet approval/broadcast does not establish final settlement; verify the chain transaction and order before fulfillment. Revenue potential labels below are illustrative, not a forecast.
 
 Making money from Mini Apps
 
@@ -165,6 +171,8 @@ Making money from Mini Apps
 
 
 ## Mini App Monetization
+
+Digital goods/services sold inside Telegram apps must use Telegram Stars (XTR), not TON or another currency to bypass that rule. The TON transfer fragment applies only to separately permitted use cases, with explicit recipient/network/amount review. A wallet connection is not authenticated ownership: use the documented server-side TON proof flow when required. Wallet approval/broadcast does not establish final settlement; verify the chain transaction and order before fulfillment. Revenue potential labels below are illustrative, not a forecast.
 
 ### Revenue Streams
 | Model | Example | Potential |
@@ -201,14 +209,14 @@ Fullscreen ads work the same way with `type="fullscreen"` and `onShowReward`; sh
 - Keep ad display optional and user-initiated where the format calls for it. Never show a fullscreen ad automatically on app load or make an ad interaction the only way to use a core feature.
 - SDK APIs and publisher terms can change. Check the current TADS documentation and package version before copying examples into production.
 
-### Telegram Stars (New!)
+### Telegram Stars
 ```javascript
 // In your bot
 bot.command('premium', (ctx) => {
   ctx.replyWithInvoice({
     title: 'Premium Access',
     description: 'Unlock all features',
-    payload: 'premium',
+    payload: 'server-generated-order-id', // Bind to expected user, price and currency
     provider_token: '', // Empty for Stars
     currency: 'XTR', // Telegram Stars
     prices: [{ label: 'Premium', amount: 100 }], // 100 Stars
@@ -216,11 +224,14 @@ bot.command('premium', (ctx) => {
 });
 ```
 
+Handle pre_checkout_query within the documented deadline and grant access only after a verified successful_payment update with matching order/user/currency/amount. Deduplicate telegram_payment_charge_id and retain refund/support references; an invoice or client callback is not proof of payment.
+
 ### Viral Mechanics
 ```jsx
 // Referral system
 function ReferralShare() {
   const { tg, user } = useTelegram();
+  if (!user?.id || !tg) return null;
   const referralLink = `https://t.me/your_bot?start=ref_${user.id}`;
 
   const share = () => {
@@ -229,9 +240,11 @@ function ReferralShare() {
     );
   };
 
-  return <button onClick={share}>Invite Friends (+10 coins)</button>;
+  return <button onClick={share}>Invite Friends</button>;
 }
 ```
+
+Referral rewards must be verified server-side with anti-self-referral and idempotency checks; clicking Share does not prove a new participant joined.
 
 ### Gamification for Retention
 - Daily rewards
@@ -278,14 +291,14 @@ tg.MainButton.hideProgress();
 ### Theme Adaptation
 ```css
 :root {
-  --tg-theme-bg-color: var(--tg-theme-bg-color, #ffffff);
-  --tg-theme-text-color: var(--tg-theme-text-color, #000000);
-  --tg-theme-button-color: var(--tg-theme-button-color, #3390ec);
+  --app-bg: var(--tg-theme-bg-color, #ffffff);
+  --app-text: var(--tg-theme-text-color, #000000);
+  --app-button: var(--tg-theme-button-color, #3390ec);
 }
 
 body {
-  background: var(--tg-theme-bg-color);
-  color: var(--tg-theme-text-color);
+  background: var(--app-bg);
+  color: var(--app-text);
 }
 ```
 
@@ -337,13 +350,19 @@ Recommended fix:
 import crypto from 'crypto';
 
 function validateInitData(initData, botToken) {
+  if (typeof initData !== 'string' || initData.length > 16384 || !botToken) return false;
   const params = new URLSearchParams(initData);
+  if (new Set(params.keys()).size !== [...params.keys()].length) return false;
+  const authDate = Number(params.get('auth_date'));
+  const now = Math.floor(Date.now() / 1000);
+  if (!Number.isSafeInteger(authDate) || authDate > now + 30 || now - authDate > 300) return false;
   const hash = params.get('hash');
+  if (!/^[a-fA-F0-9]{64}$/.test(hash || '')) return false;
   params.delete('hash');
 
   // Sort and join
   const dataCheckString = Array.from(params.entries())
-    .sort(([a], [b]) => a.localeCompare(b))
+    .sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0)
     .map(([k, v]) => `${k}=${v}`)
     .join('\n');
 
@@ -359,9 +378,11 @@ function validateInitData(initData, botToken) {
     .update(dataCheckString)
     .digest('hex');
 
-  return calculatedHash === hash;
+  return crypto.timingSafeEqual(Buffer.from(calculatedHash, "hex"), Buffer.from(hash, "hex"));
 }
 ```
+
+The five-minute freshness window above is an application policy example, not Telegram’s mandated duration. After verified initData, create a bounded server session; enforce operation-level authorization and replay/idempotency protection for sensitive actions. Keep the bot token server-side; raw initData is a bearer credential and must not be logged.
 
 ### Using in API
 ```javascript
@@ -374,7 +395,10 @@ app.post('/api/action', (req, res) => {
 
   // Safe to use data
   const params = new URLSearchParams(initData);
-  const user = JSON.parse(params.get('user'));
+  let user;
+  try { user = JSON.parse(params.get('user') || 'null'); }
+  catch { return res.status(400).json({ error: 'Invalid user data' }); }
+  if (!user || !Number.isSafeInteger(user.id)) return res.status(401).end();
   // ...
 });
 ```
@@ -557,9 +581,9 @@ function showMainButton(text, onClick) {
 }
 
 // Hide when not needed
-function hideMainButton() {
+function hideMainButton(onClick) {
   tg.MainButton.hide();
-  tg.MainButton.offClick();
+  tg.MainButton.offClick(onClick); // Remove the exact registered callback
 }
 
 // Loading state
@@ -678,9 +702,16 @@ Workflow:
 3. Build transaction UI
 4. Add wallet management
 5. Implement security measures
-6. Deploy and audit
+6. Audit and test on an authorized test network before separately authorized deployment
 ```
 
+
+## Primary Sources and Limits
+
+- [Telegram initData validation and client API](https://core.telegram.org/bots/webapps)
+- [Digital goods and Stars](https://core.telegram.org/bots/payments-stars)
+
+React/bot/TON examples need the chosen SDK/version and imports; no complete backend or payment reconciliation service is bundled. TADS behavior is unverified here and its callbacks remain UI-only signals.
 
 ## Related Skills
 

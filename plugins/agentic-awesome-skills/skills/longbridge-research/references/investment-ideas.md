@@ -1,5 +1,7 @@
 # longbridge-investment-ideas
 
+Scope: read-only research template; verify current CLI flags/entitlements, cite actual sources and timestamps, and distinguish estimates from observations. Never expose account credentials or raw sensitive error output. Examples and thresholds are illustrative, not current quotes or validated trading signals. Account-specific data is optional and requires user-authorized minimum read access.
+
 Surfaces actionable investment ideas through a multi-lens screening process: value, momentum, fundamental improvement, and thematic catalysts — outputting a prioritised candidate list with brief rationale for each idea.
 
 ## Workflow
@@ -66,4 +68,4 @@ For each top idea, add a one-paragraph 分析摘要 / Analysis summary covering:
 | `command not found: longbridge`  | 回退到 MCP；否则提示安装 longbridge-terminal | 回退到 MCP；否則提示安裝 / Fall back to MCP; prompt to install    |
 | `not logged in` / `unauthorized` | 请运行 `longbridge auth login`               | 請運行 `longbridge auth login` / Run `longbridge auth login`      |
 | No market or theme specified     | 请告知目标市场和投资风格                     | 請告知目標市場和投資風格 / Please specify target market and style |
-| Other stderr                     | 原样展示错误，不重试                         | 原樣展示，不重試 / Surface verbatim, no silent retry              |
+| Other stderr                     | 原样展示错误，不重试                         | 原樣展示，不重試 / Surface a redacted error summary, no silent retry              |

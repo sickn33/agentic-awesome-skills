@@ -43,10 +43,12 @@ def best_times() -> None:
         AVG(i.metric_value) as avg_engagement,
         MAX(i.metric_value) as max_engagement
     FROM posts p
-    JOIN insights i ON i.ig_media_id = p.ig_media_id
+    JOIN insights i ON i.ig_media_id = p.ig_media_id AND i.account_id = p.account_id
+      AND i.id = (SELECT MAX(i2.id) FROM insights i2 WHERE i2.account_id = i.account_id
+                  AND i2.ig_media_id = i.ig_media_id AND i2.metric_name = i.metric_name AND i2.period = i.period)
     WHERE p.status = 'published'
       AND p.published_at IS NOT NULL
-      AND i.metric_name IN ('engagement', 'reach', 'impressions')
+      AND i.metric_name = 'engagement'
     GROUP BY hour, weekday
     HAVING post_count >= 1
     ORDER BY avg_engagement DESC
@@ -93,7 +95,9 @@ def top_posts(limit: int = 10) -> None:
         SUM(CASE WHEN i.metric_name = 'reach' THEN i.metric_value ELSE 0 END) as reach,
         SUM(CASE WHEN i.metric_name = 'saved' THEN i.metric_value ELSE 0 END) as saves
     FROM posts p
-    LEFT JOIN insights i ON i.ig_media_id = p.ig_media_id
+    LEFT JOIN insights i ON i.ig_media_id = p.ig_media_id AND i.account_id = p.account_id
+      AND i.id = (SELECT MAX(i2.id) FROM insights i2 WHERE i2.account_id = i.account_id
+                  AND i2.ig_media_id = i.ig_media_id AND i2.metric_name = i.metric_name AND i2.period = i.period)
     WHERE p.status = 'published'
     GROUP BY p.id
     ORDER BY engagement DESC

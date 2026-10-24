@@ -664,3 +664,16 @@ if (reduceMotion) {
 ---
 
 > **Remember:** Android users expect Material Design. Custom designs that ignore Material patterns feel foreign and broken. Use Material components as your foundation, customize thoughtfully.
+
+## Version and semantics boundaries
+
+The exact palette/elevation tables above include legacy Material examples; use the
+installed Material 3 semantic roles rather than assuming #121212 or a universal
+surface overlay. UI shape, rail width, bars and spacing are adaptable, not OS-wide
+mandates. Predictive-back and edge-to-edge behavior depends on OS, target SDK and
+navigation library. Test current requirements for the actual build.
+Use platform nonlinear font conversion APIs at large scales; sp is not generally a
+fixed multiplier of dp. Native text often supplies its accessible label: adding a
+redundant contentDescription can duplicate speech. An icon-only control needs a
+localized meaningful label and state; test with TalkBack. Ripple is one valid
+feedback pattern, not mandatory for every custom control.

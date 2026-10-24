@@ -5,78 +5,27 @@ impactDescription: avoids visual flicker and hydration errors
 tags: rendering, ssr, hydration, localStorage, flicker
 ---
 
-## Prevent Hydration Mismatch Without Flickering
+## Render Consistent Theme State
 
-When rendering content that depends on client-side storage (localStorage, cookies), avoid both SSR breakage and post-hydration flickering by injecting a synchronous script that updates the DOM before React hydrates.
+Render the same authorized theme on server and first client render. When a validated non-sensitive theme cookie is available, select it on the server. Otherwise start with the same default on both sides, read storage in an Effect with try/catch, allow only known theme values and accept a possible theme flash.
 
-**Incorrect (breaks SSR):**
+A framework-supported pre-hydration theme script can reduce flicker, but requires CSP nonce/hash handling and intentional hydration configuration. Mutating an arbitrary div before hydration does not by itself prevent a hydration mismatch. Never interpolate untrusted storage into executable code, enable unsafe-inline globally, or derive authentication from client storage.
 
-```tsx
-function ThemeWrapper({ children }: { children: ReactNode }) {
-  // localStorage is not available on server - throws error
-  const theme = localStorage.getItem('theme') || 'light'
-  
-  return (
-    <div className={theme}>
-      {children}
-    </div>
-  )
-}
-```
-
-Server-side rendering will fail because `localStorage` is undefined.
-
-**Incorrect (visual flickering):**
+**Example (deterministic initial render):**
 
 ```tsx
-function ThemeWrapper({ children }: { children: ReactNode }) {
+'use client'
+import { useEffect, useState } from 'react'
+export function ThemeWrapper({ children }: { children: React.ReactNode }) {
   const [theme, setTheme] = useState('light')
-  
   useEffect(() => {
-    // Runs after hydration - causes visible flash
-    const stored = localStorage.getItem('theme')
-    if (stored) {
-      setTheme(stored)
-    }
+    try {
+      const value = localStorage.getItem('theme')
+      if (value === 'light' || value === 'dark') setTheme(value)
+    } catch { /* denied storage: retain the default */ }
   }, [])
-  
-  return (
-    <div className={theme}>
-      {children}
-    </div>
-  )
+  return <div className={theme}>{children}</div>
 }
 ```
 
-Component first renders with default value (`light`), then updates after hydration, causing a visible flash of incorrect content.
-
-**Correct (no flicker, no hydration mismatch):**
-
-```tsx
-function ThemeWrapper({ children }: { children: ReactNode }) {
-  return (
-    <>
-      <div id="theme-wrapper">
-        {children}
-      </div>
-      <script
-        dangerouslySetInnerHTML={{
-          __html: `
-            (function() {
-              try {
-                var theme = localStorage.getItem('theme') || 'light';
-                var el = document.getElementById('theme-wrapper');
-                if (el) el.className = theme;
-              } catch (e) {}
-            })();
-          `,
-        }}
-      />
-    </>
-  )
-}
-```
-
-The inline script executes synchronously before showing the element, ensuring the DOM already has the correct value. No flickering, no hydration mismatch.
-
-This pattern is especially useful for theme toggles, user preferences, authentication states, and any client-only data that should render immediately without flashing default values.
+**Limitation:** This fallback can flash the default theme. Test hydration, CSP, preference changes and accessibility in the actual framework.

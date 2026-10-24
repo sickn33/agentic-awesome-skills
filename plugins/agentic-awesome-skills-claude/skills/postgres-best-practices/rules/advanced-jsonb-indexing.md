@@ -42,7 +42,7 @@ Choose the right operator class:
 -- jsonb_ops (default): supports all operators, larger index
 create index idx1 on products using gin (attributes);
 
--- jsonb_path_ops: only @> operator, but 2-3x smaller index
+-- jsonb_path_ops supports @>, @? and @@; benchmark size and selectivity.
 create index idx2 on products using gin (attributes jsonb_path_ops);
 ```
 

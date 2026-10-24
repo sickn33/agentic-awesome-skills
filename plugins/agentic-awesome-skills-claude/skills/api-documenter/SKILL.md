@@ -185,3 +185,5 @@ Expert API documentation specialist focusing on creating world-class developer e
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+For each endpoint, trace the implemented route, authorization and serializer, then record request/response/error examples and the tested API revision. Generate examples with synthetic data and verify them against a mock or authorized test environment. Try-it-now requests can mutate live state: default to a sandbox and never embed real tokens or private payloads in public docs. Mark unexecuted examples and contract gaps explicitly.

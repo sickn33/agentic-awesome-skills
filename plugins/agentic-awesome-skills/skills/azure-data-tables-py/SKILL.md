@@ -49,6 +49,8 @@ table_client = TableClient(endpoint=endpoint, table_name="mytable", credential=c
 | `TableServiceClient` | Create/delete tables, list tables |
 | `TableClient` | Entity CRUD, queries |
 
+These are independent fragments. Confirm account/table/partition/row and exact write/delete scope; protect existing entities, use ETags/match conditions for concurrent changes and reconcile timeouts before retries. Storage Table and Cosmos Table authentication/feature/transaction limits differ; verify the selected endpoint rather than assuming one identity configuration fits both. Bound queries/pages/bytes and do not log entity contents. Close async credentials as well as clients on failure. Currency double examples are illustrative; choose exact asset units for money.
+
 ## Table Operations
 
 ```python
@@ -88,8 +90,9 @@ entity = {
 # Create (fails if exists)
 table_client.create_entity(entity=entity)
 
-# Upsert (create or replace)
-table_client.upsert_entity(entity=entity)
+# Upsert explicitly replaces; omitted mode defaults can merge instead.
+from azure.data.tables import UpdateMode
+table_client.upsert_entity(entity=entity, mode=UpdateMode.REPLACE)
 ```
 
 ### Get Entity
@@ -138,7 +141,7 @@ entities = table_client.query_entities(
     query_filter="PartitionKey eq 'sales'"
 )
 for entity in entities:
-    print(entity)
+    print(entity["RowKey"])  # Do not dump property payloads
 ```
 
 ### Query with Filters
@@ -170,7 +173,7 @@ entities = table_client.query_entities(
 ```python
 # List all (cross-partition - use sparingly)
 for entity in table_client.list_entities():
-    print(entity)
+    print(entity["RowKey"])  # Do not dump property payloads
 ```
 
 ## Batch Operations
@@ -214,7 +217,7 @@ async def table_operations():
         
         # Query
         async for entity in client.query_entities("PartitionKey eq 'async'"):
-            print(entity)
+            print(entity["RowKey"])  # Do not dump property payloads
 
 import asyncio
 asyncio.run(table_operations())
@@ -237,7 +240,7 @@ asyncio.run(table_operations())
 1. **Design partition keys** for query patterns and even distribution
 2. **Query within partitions** whenever possible (cross-partition is expensive)
 3. **Use batch operations** for multiple entities in same partition
-4. **Use `upsert_entity`** for idempotent writes
+4. **Choose upsert mode deliberately**; idempotence also depends on business effects and concurrency
 5. **Use parameterized queries** to prevent injection
 6. **Keep entities small** — max 1MB per entity
 7. **Use async client** for high-throughput scenarios

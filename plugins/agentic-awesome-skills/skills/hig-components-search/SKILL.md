@@ -12,17 +12,17 @@ Check for `.claude/apple-design-context.md` before asking questions. Use existin
 
 ## Key Principles
 
-1. **Search: discoverable with instant feedback.** Place search fields where users expect them (top of list, toolbar/navigation bar). Show results as the user types.
+1. **Search: discoverable with instant feedback.** Choose placement per platform and context, including bottom search/tab affordances on iOS. Show results as the user types when feasible, with debounce/cancellation for remote searches.
 
 2. **Page controls: position in a flat page sequence.** For discrete, equally weighted pages (onboarding, photo gallery). Show current page and total count.
 
 3. **Path controls: file hierarchy navigation.** macOS path controls display location within a directory structure and allow jumping to any ancestor.
 
-4. **Search scopes narrow large result sets.** Provide scope buttons so users can filter without complex queries.
+4. **Search scopes narrow large result sets.** Consider scope controls when categories are clear; default to a broad scope and avoid unnecessary controls.
 
 5. **Clear empty states for search.** Helpful message suggesting corrections or alternatives, not a blank screen.
 
-6. **Page controls are not for hierarchical navigation.** Flat, linear sequences only. Use navigation controllers, tab bars, or sidebars for hierarchy.
+6. **Page controls are not for hierarchical navigation.** Flat, linear sequences only. Use a navigation stack, sidebar or split view for hierarchy; tab bars also represent peer destinations.
 
 7. **Keep path controls concise.** Show meaningful segments only. Users can click any segment to navigate directly.
 

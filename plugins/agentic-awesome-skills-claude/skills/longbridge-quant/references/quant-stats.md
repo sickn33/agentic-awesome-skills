@@ -33,8 +33,8 @@ result = adfuller(series, autolag='AIC')
 
 **Interpretation**:
 
-- p < 0.05 → reject unit root → series is stationary.
-- p ≥ 0.05 → fail to reject → series has unit root → difference the series.
+- p < 0.05 → reject the unit-root null under the selected trend/lag specification; assess other stationarity assumptions.
+- p ≥ 0.05 → fail to reject the unit-root null; this does not prove a unit root. Check power, trend, breaks and sample size before transformation.
 - Log prices: usually non-stationary. Log returns: usually stationary.
 
 ### Step 3 — Cointegration Test
@@ -46,7 +46,7 @@ result = adfuller(series, autolag='AIC')
 ```python
 from statsmodels.tsa.stattools import coint
 t_stat, p_value, critical_values = coint(series_A, series_B)
-# p < 0.05 → cointegrated
+# p < 0.05 rejects no cointegration under test assumptions
 ```
 
 **Johansen (multivariate)**:
@@ -96,7 +96,7 @@ Interpret Durbin-Watson: ~2.0 = no autocorrelation; < 1.5 = positive autocorrela
 
 ### Step 6 — Bootstrap Confidence Intervals
 
-**When to use**: Non-normal distributions; small samples; estimating CI for Sharpe ratio, IC, or any statistic.
+**When to use**: Estimating uncertainty when the sampling assumptions are justified. IID resampling below is illustrative for independent observations; financial time series generally need a block/stationary bootstrap that preserves dependence. Small samples do not become reliable merely by bootstrapping.
 
 ```python
 import numpy as np
@@ -117,11 +117,11 @@ sharpe_lo, sharpe_hi = bootstrap_ci(returns, lambda x: x.mean() / x.std() * np.s
 | Test                | Use case                                    | Function                                     |
 | ------------------- | ------------------------------------------- | -------------------------------------------- |
 | t-test (one sample) | Is mean IC > 0?                             | `scipy.stats.ttest_1samp(ic_series, 0)`      |
-| t-test (two sample) | Is long portfolio return > short portfolio? | `scipy.stats.ttest_ind(long_ret, short_ret)` |
+| t-test (two sample) | Is long portfolio return > short portfolio? | `scipy.stats.ttest_1samp(long_ret - short_ret, 0)` (paired dates; adjust for serial dependence) |
 | F-test / ANOVA      | Are returns different across deciles?       | `scipy.stats.f_oneway(*decile_returns)`      |
 | Mann-Whitney U      | Non-parametric alternative to t-test        | `scipy.stats.mannwhitneyu(a, b)`             |
 
-Always report: test statistic, p-value, degrees of freedom, and conclusion at 5% significance level.
+Report the null, sample/lag/trend choices, statistic, p-value, degrees of freedom where defined and confidence interval. Predeclare the significance threshold, account for multiple testing and serial dependence, and distinguish statistical significance from profitability.
 
 ## CLI
 

@@ -16,6 +16,10 @@ license_source: https://github.com/ChrisWiles/claude-code-showcase/blob/main/LIC
 Use this skill when you need graphQL queries, mutations, and code generation patterns. Use when creating GraphQL operations, working with Apollo Client, or generating types.
 
 
+## Project prerequisites
+
+The .gql/generated-hook conventions and npm scripts are upstream project choices, not Apollo requirements. Confirm the real schema, codegen configuration and installed client version. Fragments reference unbundled UI/helpers; do not claim they compile as-is. In cache.modify, normalize newly returned entities using the installed Apollo cache API rather than appending raw objects blindly.
+
 ## Core Rules
 
 1. **NEVER inline `gql` literals** - Create `.gql` files
@@ -176,7 +180,7 @@ const [submit, { loading }] = useSubmitMutation({
 | Policy | Use When |
 |--------|----------|
 | `cache-first` | Data rarely changes |
-| `cache-and-network` | Want fast + fresh (default) |
+| `cache-and-network` | Want fast + fresh; select explicitly |
 | `network-only` | Always need latest |
 | `no-cache` | Never cache (rare) |
 

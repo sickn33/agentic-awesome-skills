@@ -2,7 +2,7 @@
 name: videodb
 description: Video and audio perception, indexing, and editing. Ingest files/URLs/live streams, build visual/spoken indexes, search with timestamps, edit timelines, add overlays/subtitles, generate media, and create real-time alerts.
 category: media
-risk: safe
+risk: critical
 source: community
 tags: "[video, editing, transcription, subtitles, search, streaming, ai-generation, media, live-streams, desktop-capture]"
 date_added: "2026-02-27"
@@ -20,6 +20,14 @@ Use this skill when you need to:
 - You need video or audio perception, indexing, search, or timeline editing from files, URLs, desktop sessions, or live streams.
 - The task involves timestamps, searchable evidence, subtitles, clips, overlays, or real-time monitoring alerts.
 - You want one workflow that combines ingestion, understanding, retrieval, and media actions.
+
+## Authorization, privacy and SDK version
+
+Confirm the exact collection, media sources, processing scope and cost limit before cloud ingestion/indexing/generation. Desktop or meeting recording requires explicit authorization for each screen/microphone/system-audio source and participant consent as applicable. Select the minimum channels; never enable recording storage by default, capture passwords, or start hidden/background monitoring. Stop on request immediately. Treat stream URLs, client tokens, event files and transcripts as sensitive; do not publish them or log credentials. Webhook destinations need authorization and verified authentication/signatures, replay protection and idempotency. Generated text or confidence scores are not verified evidence.
+
+The bundled references describe legacy SDK patterns. Check the installed version before using them: newer VideoDB SDKs provide v2 understand/index/retrieve; v1 search is exposed as legacy_search. Do not automatically migrate existing projects or install latest to make an old example work. Use an isolated environment with reviewed compatible versions.
+
+The listener does not start or stop recording. Give it a dedicated private directory (mode 0700), explicit time/byte limits, and keep its PID tied to the process you launched. Do not blindly kill a reused PID. Reconnection can change the WebSocket ID; reconnect pipelines through the documented API or stop rather than silently losing events. Export waits need a timeout and failure state. Deletion and making collections public require the user’s specific authorization.
 
 ## 1) Desktop Perception
 - Start/stop a **desktop session** capturing **screen, mic, and system audio**
@@ -111,13 +119,13 @@ When the user asks to "setup videodb" or similar:
 ### 1. Install SDK
 
 ```bash
-pip install "videodb[capture]" python-dotenv
+python -m pip install "videodb[capture]==<reviewed-compatible-version>" python-dotenv
 ```
 
 If `videodb[capture]` fails on Linux, install without the capture extra:
 
 ```bash
-pip install videodb python-dotenv
+python -m pip install "videodb==<reviewed-compatible-version>" python-dotenv
 ```
 
 ### 2. Configure API key
@@ -127,7 +135,7 @@ The user must set `VIDEO_DB_API_KEY` using **either** method:
 - **Export in terminal** (before starting Claude): `export VIDEO_DB_API_KEY=your-key`
 - **Project `.env` file**: Save `VIDEO_DB_API_KEY=your-key` in the project's `.env` file
 
-Get a free API key at https://console.videodb.io (50 free uploads, no credit card).
+Configure a key at https://console.videodb.io; verify current account limits and pricing before any paid operation.
 
 **Do NOT** read, write, or handle the API key yourself. Always let the user set it.
 
@@ -183,18 +191,15 @@ from videodb import SearchType, IndexType, SceneExtractionType
 from videodb.exceptions import InvalidRequestError
 
 # index_scenes() has no force parameter — it raises an error if a scene
-# index already exists. Extract the existing index ID from the error.
+# index already exists. Inspect a documented index listing; do not parse arbitrary errors.
 try:
     scene_index_id = video.index_scenes(
         extraction_type=SceneExtractionType.shot_based,
         prompt="Describe the visual content in this scene.",
     )
-except Exception as e:
-    match = re.search(r"id\s+([a-f0-9]+)", str(e))
-    if match:
-        scene_index_id = match.group(1)
-    else:
-        raise
+except Exception:
+    # Inspect documented index listings; never infer an index ID from arbitrary errors.
+    raise
 
 # Use score_threshold to filter low-relevance noise (recommended: 0.3+)
 try:
@@ -300,7 +305,7 @@ except InvalidRequestError as e:
 | Scenario | Error message | Solution |
 |----------|--------------|----------|
 | Indexing an already-indexed video | `Spoken word index for video already exists` | Use `video.index_spoken_words(force=True)` to skip if already indexed |
-| Scene index already exists | `Scene index with id XXXX already exists` | Extract the existing `scene_index_id` from the error with `re.search(r"id\s+([a-f0-9]+)", str(e))` |
+| Scene index already exists | Existing index conflict | Inspect documented index listings and verify ownership; never infer IDs from arbitrary errors |
 | Search finds no matches | `InvalidRequestError: No results found` | Catch the exception and treat as empty results (`shots = []`) |
 | Reframe times out | Blocks indefinitely on long videos | Use `start`/`end` to limit segment, or pass `callback_url` for async |
 | Negative timestamps on Timeline | Silently produces broken stream | Always validate `start >= 0` before creating `VideoAsset` |
@@ -327,16 +332,17 @@ Use `ws_listener.py` to capture WebSocket events during recording sessions. Desk
 
 ### Quick Start
 
-1. **Start listener**: `python scripts/ws_listener.py &`
-2. **Get WebSocket ID**: `cat /tmp/videodb_ws_id`
-3. **Run capture code** (see reference/capture.md for full workflow)
-4. **Events written to**: `/tmp/videodb_events.jsonl`
+1. **Set a private output directory**: set `VIDEODB_EVENTS_DIR` to an absolute mode-0700 directory owned by the current user.
+2. **Start listener**: `python scripts/ws_listener.py --max-seconds 1800 --max-bytes 52428800 "$VIDEODB_EVENTS_DIR" &`
+2. **Get WebSocket ID**: `cat $VIDEODB_EVENTS_DIR/videodb_ws_id`
+4. **Run explicitly authorized capture code** (see reference/capture.md for full workflow)
+5. **Events written to**: `$VIDEODB_EVENTS_DIR/videodb_events.jsonl`
 
 ### Query Events
 
 ```python
 import json
-events = [json.loads(l) for l in open("/tmp/videodb_events.jsonl")]
+events = [json.loads(l) for l in open(__import__("os").path.join(__import__("os").environ["VIDEODB_EVENTS_DIR"], "videodb_events.jsonl"))]
 
 # Get all transcripts
 transcripts = [e["data"]["text"] for e in events if e.get("channel") == "transcript"]
@@ -354,7 +360,7 @@ recent_visual = [e for e in events
 
 For complete capture workflow, see [reference/capture.md](reference/capture.md).
 
-**Do not use ffmpeg, moviepy, or local encoding tools** when VideoDB supports the operation. The following are all handled server-side by VideoDB — trimming, combining clips, overlaying audio or music, adding subtitles, text/image overlays, transcoding, resolution changes, aspect-ratio conversion, resizing for platform requirements, transcription, and media generation. Only fall back to local tools for operations listed under Limitations in reference/editor.md (transitions, speed changes, crop/zoom, colour grading, volume mixing).
+Choose VideoDB when the user has authorized cloud processing and its costs; honor a local-processing preference. The following are all handled server-side by VideoDB — trimming, combining clips, overlaying audio or music, adding subtitles, text/image overlays, transcoding, resolution changes, aspect-ratio conversion, resizing for platform requirements, transcription, and media generation. Only fall back to local tools for operations listed under Limitations in reference/editor.md (transitions, speed changes, crop/zoom, colour grading, volume mixing).
 
 ### When to use what
 
@@ -372,7 +378,7 @@ For complete capture workflow, see [reference/capture.md](reference/capture.md).
 
 https://github.com/video-db/skills
 
-**Maintained By:** [VideoDB](https://github.com/video-db)
+**Upstream attribution:** [VideoDB](https://github.com/video-db)
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

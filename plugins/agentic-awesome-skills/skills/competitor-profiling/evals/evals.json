@@ -71,11 +71,11 @@
     {
       "id": 6,
       "prompt": "Should I trust the customer logo wall on the competitor's homepage as evidence of who their customers are?",
-      "expected_output": "Should apply the 'Facts Over Opinions' and 'Honest Assessment' principles. Should explain that customer logos are a positioning claim, not necessarily an accurate customer breakdown — companies often show their best-known logos regardless of share of revenue. Should recommend cross-referencing: check case studies for actual usage details, search for press releases naming customers, look at customer reviews on G2/Capterra/TrustRadius for company name signals, check their LinkedIn for posts about customers. Should note: if they claim '10,000 customers' but have weak traffic/backlink profile, the claim should be flagged in the profile. Should distinguish between named customers (verifiable claims) and 'industries served' (positioning statement). Always include the date the data was pulled.",
+      "expected_output": "Should apply the 'Facts Over Opinions' and 'Honest Assessment' principles. Should explain that customer logos are a positioning claim, not necessarily an accurate customer breakdown — companies often show their best-known logos regardless of share of revenue. Should recommend cross-referencing: check case studies for actual usage details, search for press releases naming customers, look at customer reviews on G2/Capterra/TrustRadius for company name signals, check their LinkedIn for posts about customers. Should note: a weak traffic/backlink estimate cannot verify or refute customer counts; label those claims unverified until corroborated. Should distinguish between named customers (verifiable claims) and 'industries served' (positioning statement). Always include the date the data was pulled.",
       "assertions": [
         "Treats logos as positioning claim, not customer breakdown",
         "Recommends cross-referencing case studies and reviews",
-        "Mentions checking traffic/backlink profile against claim scale",
+        "Does not treat SEO estimates as proof or disproof of customer counts",
         "Distinguishes verifiable named customers from claims",
         "Notes including date pulled"
       ],

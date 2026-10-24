@@ -99,7 +99,8 @@ class JucerjaScraper(AbstractJuntaScraper):
             async with httpx.AsyncClient(
                 headers=headers,
                 verify=True,
-                follow_redirects=True,
+                follow_redirects=False,
+                event_hooks=self.request_hooks(),
                 timeout=60.0,
             ) as client:
                 # Primeiro GET na pagina principal para obter cookies
@@ -130,11 +131,11 @@ class JucerjaScraper(AbstractJuntaScraper):
                     # Evita duplicatas (mesmo nome ja visto)
                     novos = 0
                     for r in page_records:
-                        key = r["nome"].upper()
+                        key = (r.get("matricula"), r["nome"].upper())
                         if key not in seen_names:
                             seen_names.add(key)
                             if not r.get("municipio"):
-                                r["municipio"] = "Rio de Janeiro"
+                                r["municipio"] = None
                             results.append(self.make_leiloeiro(**r))
                             novos += 1
 
@@ -145,10 +146,11 @@ class JucerjaScraper(AbstractJuntaScraper):
 
                     pagina += 1
                     if pagina > 100:  # Limite de seguranca
-                        logger.warning("[RJ] Limite de paginas atingido")
+                        self._had_request_failure = True
+                        logger.warning("[RJ] Limite de paginas atingido; partial result")
                         break
 
-                    await asyncio.sleep(0.3)  # Evita sobrecarga
+                    await asyncio.sleep(self.rate_limit)  # Evita sobrecarga
 
         except Exception as exc:
             logger.error("[RJ] Erro geral na coleta: %s", exc)
@@ -164,7 +166,7 @@ class JucerjaScraper(AbstractJuntaScraper):
             if soup:
                 for r in self._parse_lista(soup):
                     if not r.get("municipio"):
-                        r["municipio"] = "Rio de Janeiro"
+                        r["municipio"] = None
                     results.append(self.make_leiloeiro(**r))
 
         return results

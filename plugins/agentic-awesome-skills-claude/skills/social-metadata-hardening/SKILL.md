@@ -57,11 +57,15 @@ export function buildSocialMetadata({
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://www.yourdomain.com';
   
   // Always produce an absolute URL
-  const imageUrl = image?.startsWith('http') ? image : `${baseUrl}${image}`;
-  const pageUrl  = `${baseUrl}${path}`;
+  if (!image) throw new Error("An approved preview image is required");
+  const imageUrl = new URL(image, baseUrl).href;
+  const pageUrl = new URL(path, baseUrl).href;
+  if (new URL(imageUrl).protocol !== "https:" || new URL(pageUrl).protocol !== "https:") {
+    throw new Error("Public metadata URLs must use HTTPS");
+  }
   
   // Detect MIME type from extension
-  const ext = imageUrl.split('.').pop().toLowerCase();
+  const ext = new URL(imageUrl).pathname.split('.').pop().toLowerCase();
   const mimeMap = { jpg: 'image/jpeg', jpeg: 'image/jpeg', png: 'image/png', webp: 'image/webp' };
   const imageType = mimeMap[ext] || 'image/jpeg';
 
@@ -117,11 +121,12 @@ export const metadata = buildSocialMetadata({
 import { buildSocialMetadata } from '@/lib/socialMetadata';
 
 export async function generateMetadata({ params }) {
-  const post = await getPost(params.slug);
+  const { slug } = await params; // Compatible with async params in newer Next.js.
+  const post = await getPost(slug);
   return buildSocialMetadata({
     title: `${post.title} | My Blog`,
     description: post.excerpt,
-    path: `/blog/${params.slug}`,
+    path: `/blog/${slug}`,
     image: post.ogImage || '/images/og/default.jpg',
     imageAlt: post.title,
   });
@@ -148,7 +153,7 @@ export const metadata = {
 ## OG Image Checklist
 
 Good OG images:
-- **1200 × 630px** (2:1 ratio — works on all platforms)
+- **1200 × 630px** (approximately 1.91:1; verify crop/requirements on each target platform)
 - **Under 8MB** (Facebook limit)
 - Served over **HTTPS**
 - File name has **no spaces** (use hyphens)

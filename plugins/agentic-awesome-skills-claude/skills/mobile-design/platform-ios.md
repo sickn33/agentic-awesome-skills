@@ -83,7 +83,7 @@ Text("Hello")
     .font(.body) // Scales with user settings
 
 // React Native equivalent
-<Text style={{ fontSize: 17 }}> // ❌ Fixed
+<Text style={{ fontSize: 17 }}> // RN allowFontScaling is true by default; test layout at large sizes
 <Text style={styles.body}> // Use a dynamic scale system
 ```
 
@@ -282,7 +282,7 @@ Rules:
 Button Styles (UIKit/SwiftUI):
 
 ┌──────────────────────────────┐
-│         Tinted               │ ← Primary action (filled)
+│     Bordered prominent       │ ← Prominent SwiftUI action (style depends on OS)
 ├──────────────────────────────┤
 │         Bordered             │ ← Secondary action (outline)
 ├──────────────────────────────┤
@@ -301,7 +301,7 @@ Sizes:
 ```
 List Styles:
 
-.plain         → No separators, edge-to-edge
+.plain         → Plain list; separators are configurable
 .insetGrouped  → Rounded cards (default iOS 14+)
 .grouped       → Full-width sections
 .sidebar       → iPad sidebar navigation
@@ -559,3 +559,14 @@ AccessibilityInfo.isReduceMotionEnabled()
 ---
 
 > **Remember:** iOS users have strong expectations from other iOS apps. Deviating from HIG patterns feels "broken" to them. When in doubt, use the native component.
+
+## Version and adaptive-layout boundaries
+
+Bar heights, icon counts, margins and font tables are illustrative legacy defaults,
+not fixed HIG dimensions for every OS, Dynamic Type setting or device. Query safe
+areas and use system/adaptive controls. SwiftUI presentationDetents needs iOS 16+;
+UIKit sheet detents arrived earlier. Custom SF font/Symbol use has Apple licensing
+and platform limits; do not redistribute those assets to other platforms blindly.
+Two-finger scrolling is a screen-reader interaction, not a universal nested-scroll
+gesture. Standard back behavior should be preserved without obstructing legitimate
+unsaved-work protection and accessibility alternatives.

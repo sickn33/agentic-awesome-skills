@@ -13,16 +13,16 @@ If the native team must not need Node, Yarn, or React Native tooling, use [./bro
 
 ## Prerequisites
 
-- **Expo SDK 54 or later** — the `ExpoReactHostFactory`, `ExpoReactNativeFactory`, and `ApplicationLifecycleDispatcher` entry points used below require SDK 54+. Earlier SDKs do not support this setup.
+- **Compatible Expo SDK and React Native versions** — verify every factory/lifecycle API against the selected SDK’s template. These imported examples mix historical versions; neither SDK 54 nor 55 alone proves compatibility.
 - **Node.js (LTS)** — runs JavaScript and the Expo CLI.
 - **Yarn** — manages JavaScript dependencies.
-- **CocoaPods** (iOS) — `sudo gem install cocoapods`.
+- **CocoaPods** (iOS) — use the project’s supported Ruby/Bundler environment.
 
 ---
 
 ## 1) Create an Expo project
 
-Create the Expo project inside (or alongside) the existing native project. **Pin to SDK 55 or later — earlier SDKs do not support brownfield integration:**
+Create the Expo project inside (or alongside) the existing native project. Historical SDK 55 example; choose and reconcile a currently supported SDK before integration:
 
 ```sh
 npx create-expo-app@latest my-project --template default@sdk-55
@@ -32,12 +32,12 @@ The new project ships a TypeScript example app. The JS entry point registers a r
 
 ## 2) Place native projects under the Expo project
 
-A standard React Native project keeps native code under `android/` and `ios/`. Move the existing native projects in:
+A standard React Native project keeps native code under `android/` and `ios/`. Preserve the native project’s structure and custom build logic. If a relocation is actually required, copy into a new branch/workspace and adapt paths explicitly; do not introduce an extra android-project nesting level:
 
 ```sh
-mkdir my-project/android
-mv /path/to/your/android-project my-project/android/
-# repeat for ios/
+# After confirming my-project/android does not already exist:
+cp -R /path/to/your/android-project my-project/android
+# Adapt ios only after checking Xcode project-relative paths.
 ```
 
 ### Monorepo alternative
@@ -52,7 +52,7 @@ If the native projects cannot be moved, set up a monorepo with the Expo project 
 }
 ```
 
-Run `yarn install` at the root. This installs `node_modules` at the workspace root so Gradle and CocoaPods scripts can resolve React Native and Expo dependencies.
+Use the repository’s pinned package manager and linker/hoisting configuration. A workspace does not guarantee a root node_modules directory (for example, Yarn PnP differs); verify native scripts can resolve the actual packages.
 
 > **Monorepo callout:** with a monorepo, the Expo project is not at `../../` from the native projects. You must set `projectRoot` explicitly in Gradle and pass the project root to CocoaPods so autolinking can find the Expo project.
 
@@ -159,7 +159,7 @@ newArchEnabled=true
 hermesEnabled=true
 ```
 
-`newArchEnabled` and `hermesEnabled` must match across all sub-modules in your build.
+Confirm architecture/Hermes support in the selected SDK/RN release and keep native modules compatible. These properties can be obsolete or forced in newer versions.
 
 ### `AndroidManifest.xml`
 
@@ -349,13 +349,16 @@ Three Xcode-side adjustments are required before the app can build and run a Rea
 
 #### 1. Disable user script sandboxing
 
-In Xcode, select your project → app target → **Build Settings**, search for `ENABLE_USER_SCRIPT_SANDBOXING`, and set it to **No**. CocoaPods' Hermes scripts need to switch between debug and release engine binaries at build time, which sandboxing blocks.
+First use the matching SDK template’s build phases and declared input/output paths. If a verified dependency script requires disabling ENABLE_USER_SCRIPT_SANDBOXING, limit that change to the affected target/configuration and review the build scripts it permits; do not blanket-disable a project’s sandbox as an unexplained troubleshooting step.
 
 #### 2. Add a Run Script phase to embed the JS bundle
 
 On the app target's **Build Phases** tab, add a new **Run Script** phase **before** `[CP] Embed Pods Frameworks`. This phase bundles JS for release builds and is skipped automatically in debug (Metro serves the bundle then).
 
+Configure this phase with a shell supporting the syntax below (for example /bin/bash). Source only trusted project-owned environment files, ensure NODE_BINARY resolves to the intended Node executable, and fail on missing inputs.
+
 ```sh
+set -euo pipefail
 if [[ -f "$PODS_ROOT/../.xcode.env" ]]; then
   source "$PODS_ROOT/../.xcode.env"
 fi
@@ -368,13 +371,13 @@ export PROJECT_ROOT="$PROJECT_DIR"/..
 if [[ "$CONFIGURATION" = *Debug* ]]; then
   export SKIP_BUNDLING=1
 fi
-if [[ -z "$ENTRY_FILE" ]]; then
+if [[ -z "${ENTRY_FILE:-}" ]]; then
   export ENTRY_FILE="$("$NODE_BINARY" -e "require('expo/scripts/resolveAppEntry')" "$PROJECT_ROOT" ios absolute | tail -n 1)"
 fi
-if [[ -z "$CLI_PATH" ]]; then
+if [[ -z "${CLI_PATH:-}" ]]; then
   export CLI_PATH="$("$NODE_BINARY" --print "require.resolve('@expo/cli', { paths: [require.resolve('expo/package.json')] })")"
 fi
-if [[ -z "$BUNDLE_COMMAND" ]]; then
+if [[ -z "${BUNDLE_COMMAND:-}" ]]; then
   export BUNDLE_COMMAND="export:embed"
 fi
 
@@ -385,7 +388,8 @@ if [[ -f "$PODS_ROOT/../.xcode.env.local" ]]; then
   source "$PODS_ROOT/../.xcode.env.local"
 fi
 
-`"$NODE_BINARY" --print "require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'"`
+RN_XCODE_SCRIPT="$("$NODE_BINARY" --print "require('path').dirname(require.resolve('react-native/package.json')) + '/scripts/react-native-xcode.sh'")"
+"$RN_XCODE_SCRIPT"
 ```
 
 > **Monorepo:** override `PROJECT_ROOT` to point at the Expo project (e.g. `export PROJECT_ROOT="$PROJECT_DIR"/../../my-project`). Without this, bundling looks for `node_modules` in the wrong directory.
@@ -394,7 +398,7 @@ This script writes `main.jsbundle` into the app's resources directory in release
 
 #### 3. Update `Info.plist`
 
-Set `UIViewControllerBasedStatusBarAppearance` to `NO` so React Native can manage the status bar:
+Reconcile status-bar ownership with the existing host. Only set UIViewControllerBasedStatusBarAppearance to NO if the chosen RN integration requires app-level ownership and native screens still behave correctly; this changes the host globally:
 
 ```xml
 <key>UIViewControllerBasedStatusBarAppearance</key>
@@ -464,6 +468,7 @@ If you do not want React Native to take over the whole window, instantiate the f
 import UIKit
 import React
 import Expo
+import ReactAppDependencyProvider
 
 class ReactNativeScreenViewController: UIViewController {
   private var reactNativeDelegate: ExpoReactNativeFactoryDelegate?

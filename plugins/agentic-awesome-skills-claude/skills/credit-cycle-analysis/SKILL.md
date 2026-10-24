@@ -67,7 +67,7 @@ side. `Settlement` is what closed it - customer collections, supplier payments. 
 **The balance identity, and what happens when it fails.**
 
 ```
-Closing Balance = Opening Balance + Credit Movement - Settlement +/- Adjustments
+Closing Balance = Opening Balance + Credit Movement - Settlement + Signed Adjustments
 ```
 
 Check it on every row. If it does not hold, the difference is **recorded and marked**, never
@@ -117,8 +117,7 @@ because terms are an agreement and the due date is a fact about one invoice.
 convention is never mixed inside the table. Money is a bare number with no currency symbol in the
 cell, and the currency itself is `Unknown` until the user states it. Amounts are the gross ledger
 amounts as posted to the party's account, tax-inclusive; this module does not split tax out of a
-balance. Every figure is rounded once, at the end, to two decimal places, so the components can be
-re-derived from the row.
+balance. Use exact decimal arithmetic and the currency’s minor-unit convention (two decimal places is this template’s example, not universal). Round derived outputs for display; retain source precision and report any rounding difference rather than forcing reconciliation.
 
 ## When to Use This Skill
 
@@ -137,11 +136,15 @@ spreadsheet, a document or someone inboxes.
 Do not use it for: collections chasing, credit-control action plans, payment execution, banking
 operations, employee analysis, disciplinary decisions, or legal advice. This skill designs
 templates and analysis structures. It does not execute financial transactions, and it produces
-empty templates only - it never holds or processes real customer or supplier data.
+empty or explicitly synthetic templates only. Do not request real customer/supplier data for this template-design workflow; data already supplied remains subject to the host’s actual processing and retention policies.
 
 ## How It Works
 
-Follow the shared execution contract and the detailed domain workflow in [the bundled how-it-works reference](references/how-it-works.md). Keep unknown values explicit and derive every output from confirmed fields.
+The upstream shared execution contract is not bundled; use the explicit workflow and safety rules here and in the detailed domain workflow in [the bundled how-it-works reference](references/how-it-works.md). Keep unknown values explicit and derive every output from confirmed fields.
+
+## Measurement limits
+
+Do not aggregate currencies without an explicit conversion policy. Store currency in the canonical dictionary (a confirmed single-currency dataset setting or per-row field across every format). Settlement-weighted completed-invoice delay excludes unpaid exposure and is not balance-based DSO/DPO. Keep the cohort, weighting, partial/unpaid treatment and period fixed. A gap multiplied by one daily movement is only a scenario proxy; it is not the cash conversion cycle (which also includes inventory), actual funding need, or interest cost. Different sales/purchase bases may require separate receivable/payable amounts instead.
 
 ## Field Reference
 
@@ -269,13 +272,13 @@ Working-Capital Funding, Calculation Basis, Data Quality Status, Cycle Trend, Re
 Notes.
 
 Use these calculations:
-  Closing Balance = Opening Balance + Credit Movement - Settlement +/- Adjustments
+  Closing Balance = Opening Balance + Credit Movement - Settlement + Signed Adjustments
   Cycle Gap Days = Debtor Collection Days - Creditor Payment Days
   Gap vs Benchmark = Actual Collection/Payment Days - Benchmark Days
   Days Overdue = Period End - Due Date
   Customer Credit Utilisation % = Outstanding Customer Balance / Customer Credit Limit x 100
   Estimated Working-Capital Funding = Cycle Gap Days x Relevant Daily Credit Movement
-  Weighted Settlement Date = SUM (Settled Amount x Settlement Date) / SUM (Settled Amount)
+  Weighted Days = SUM(Settled Amount_i x (Settlement Date_i - Invoice/Bill Date)) / SUM(Settled Amount_i)
 
 Calculate actual collection and payment days from documented invoice/bill and settlement dates.
 Support partial payments with the weighted settlement calculation and record that it was used. Do
@@ -294,7 +297,7 @@ financial impact. Unknown is a correct answer and is never turned into zero.
 
 When I explicitly ask for artifacts, build one canonical field dictionary first and derive every
 requested artifact from it. If I ask for all four, produce CSV, SQL DDL, JSON Schema and the
-Notion property mapping, with identical field names, types, order and required status across all
+Notion property mapping, with an explicit mapping of logical fields to each format’s names, types and required status across all
 four. Use obviously fake example data only.
 
 If I ask for a review, review the existing design instead of rebuilding it. If I ask for a fix,

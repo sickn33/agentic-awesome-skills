@@ -21,7 +21,7 @@ Quick decision guide for choosing the right container base image — balancing s
 
 ## Size & CVE Comparison
 
-> Approximate values as of mid-2025. Run `trivy image <name>` for current counts.
+> Historical illustrative estimates only, not measured security evidence. CVE counts cannot be compared reliably without matching digest, architecture, scanner and database date. A zero result does not mean zero vulnerabilities. Tags and runtime versions below are examples; select currently supported versions before use.
 
 | Image | Compressed Size | Typical CVE Count | Shell | Package Manager | libc |
 |---|---|---|---|---|---|
@@ -48,7 +48,7 @@ Quick decision guide for choosing the right container base image — balancing s
 ### `scratch`
 **Best for:** Go, Rust, or any fully static binary with `CGO_ENABLED=0`
 
-- ✅ Zero attack surface — literally empty
+- ✅ No base userspace packages; application and kernel attack surfaces remain
 - ✅ Smallest possible image
 - ✅ No package manager to exploit
 - ❌ No libc, no shell, no CA certs, no timezone data — must `COPY` them in
@@ -58,6 +58,7 @@ Quick decision guide for choosing the right container base image — balancing s
 FROM golang:1.22-alpine AS builder
 WORKDIR /build
 COPY go.* ./
+RUN apk add --no-cache ca-certificates tzdata
 RUN go mod download
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux go build \
@@ -119,7 +120,7 @@ kubectl debug -it deploy/myapp \
 - ✅ Has shell (ash) and package manager (apk) — great for debugging
 - ✅ Regularly patched, active community
 - ⚠️ Uses **musl libc** — some Python C extensions, Node.js native modules, or glibc-dependent binaries may fail
-- ❌ More CVEs than distroless (more packages)
+- ⚠️ CVE counts depend on image digest, packages, scanner coverage and database date.
 
 **musl compatibility check:**
 ```bash
@@ -140,7 +141,7 @@ docker run -it --rm -v $(pwd):/app node:20-alpine sh -c "cd /app && npm ci && np
 - ✅ glibc compatibility — no musl issues
 - ✅ Familiar `apt` ecosystem
 - ✅ Smaller than full image (~60–90 MB vs 300–400 MB)
-- ❌ More CVEs than distroless (has apt, shell, more system libraries)
+- ⚠️ Scan the actual digest; package count alone does not establish exploitable risk.
 - ❌ Larger than alpine
 
 ```dockerfile
@@ -155,7 +156,7 @@ RUN apt-get update && \
 ---
 
 ### Full Images (`node:20`, `ubuntu:24.04`, `python:3.12`)
-**Only for:** Development, CI build stages, or debugging — NEVER as production runtime
+**Usually prefer smaller runtime images:** full images can be justified by tested runtime requirements; assess their actual contents.
 
 - ❌ Massive attack surface (50–200+ CVEs)
 - ❌ Includes compilers, build tools, package managers — not needed at runtime
@@ -196,7 +197,7 @@ trivy image node:20-slim --severity HIGH,CRITICAL
     {
       "matchDatasources": ["docker"],
       "matchPackagePatterns": ["^gcr.io/distroless"],
-      "automerge": true,
+      "automerge": false,
       "automergeType": "branch"
     }
   ]
@@ -231,7 +232,7 @@ When an image is too large:
 
 - [ ] Switched to distroless or alpine runtime stage?
 - [ ] Multi-stage build separating build from runtime?
-- [ ] `npm ci --only=production` / `pip install --no-dev`?
+- [ ] `npm ci --omit=dev` / install only production Python requirements?
 - [ ] Build cache cleaned in same `RUN` layer (`rm -rf /var/lib/apt/lists/*`, `npm cache clean --force`)?
 - [ ] `.dockerignore` excludes `node_modules`, `.git`, `tests/`, `docs/`?
 - [ ] Using `--mount=type=cache` for package manager cache (BuildKit)?

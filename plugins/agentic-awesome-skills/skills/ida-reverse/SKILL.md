@@ -1,7 +1,7 @@
 ---
 name: ida-reverse
 description: "Reverse engineer binaries with IDA Pro: decompilation, disassembly, data-flow tracking, cross-references, and IDA MCP automation for deep static analysis of PE/ELF/Mach-O targets."
-risk: safe
+risk: critical
 source: "https://github.com/zhaoxuya520/reverse-skill"
 source_repo: "zhaoxuya520/reverse-skill"
 source_type: community
@@ -28,6 +28,10 @@ Do not invoke a step that requires one of these files. Obtain the original mater
 - Deep static analysis of a compiled target where IDA is available.
 - Tracking data flow or cross-references through large binaries.
 
+
+## Catalog safety boundary
+
+Use only licensed IDA and authorized samples. This tree does not bundle start.ps1, watchdog.ps1, bootstrap or autostart installer; all related claims below are upstream descriptions, not current-host guarantees. Inspect configured tool schemas and never bypass a permission/policy rejection by switching to direct HTTP. Opening an untrusted binary can execute analysis plugins; use an isolated environment. py_eval, debugger, patch, save and rename capabilities can execute code or mutate files and need the appropriate authorization. Avoid --unsafe/global registration/autostart by default; pin and review external dependencies before installation. Do not upload proprietary binaries or symbols to external services without authorization.
 
 ## 已知问题与反思（必读）
 
@@ -124,7 +128,7 @@ powershell -File "<skill-root>\ida-reverse\scripts\start.ps1"
 
 - 通过 HTTP API 直调 `idb_open`，绕过 MCP schema 校验
 - 自动检测 System32 路径并复制到临时目录
-- 自动清理同名旧数据库文件（`.id0`/`.id1`/`.nam`/`.til`/`.i64`）
+- 检测已有 sidecar 后优先临时副本；不删除 `.i64`/`.idb` 数据库
 - 旧库被锁时自动降级：复制到 Temp 加 GUID 前缀后打开，不报错
 - 将打开请求放到后台执行，避免长时间同步等待导致脚本无响应
 - 支持 `-TimeoutSeconds`，超时后返回 `ERR:open_timeout_xxs`，不会无限卡住
@@ -265,7 +269,7 @@ powershell -File "scripts/start-gui.ps1" -Path "C:\目标.exe"
 
 确认 Output 窗口出现 `[MCP] ... port=13337` 后，MCP 工具即可用。
 
-通用对接步骤见 `LOCAL-SETUP.md`。
+通用对接步骤见 `references/LOCAL-SETUP.md`。
 
 ### Step 2: 打开文件
 
@@ -399,7 +403,7 @@ ida-pro-mcp --config
 
 ## 任务完成自检（声称完成前 MUST 通过）
 
-- [ ] 我是否执行了工作流中的每一步（而不是只阅读）？
+- [ ] 我是否准确区分静态阅读、已执行、失败和未验证步骤，只完成授权范围内的必要操作？
 - [ ] survey/imports 是否已写入 Evidence（E-imports 或等价）？DLL/SYS 是否含 E-exports？IAT 失败是否记 E-iat-repair-fail？
 - [ ] 用户若要求重做导入表/IAT，是否重做了同一步？
 - [ ] 我是否基于 `tool-index` 使用了真实工具路径？

@@ -40,7 +40,7 @@ Issues are organized by impact. Focus on CRITICAL and HIGH - these cause real pr
 
 ## Priority 1: N+1 Queries (CRITICAL)
 
-**Impact:** Each N+1 adds `O(n)` database round trips. 100 rows = 100 extra queries. 10,000 rows = timeout.
+**Impact:** N+1 adds database round trips proportional to evaluated rows; latency and severity require actual workload/query measurements, not a universal timeout threshold.
 
 ### Rule: Prefetch related data accessed in loops
 
@@ -188,7 +188,7 @@ class Order(models.Model):
 
 ```python
 class Order(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     status = models.CharField(max_length=20)
     created = models.DateTimeField()
 
@@ -208,6 +208,8 @@ class Order(models.Model):
 ---
 
 ## Priority 4: Write Loops (HIGH)
+
+Bulk operations change semantics: verify custom save/delete methods, signals, validation, generated IDs, cascades, transaction boundaries and database limits before replacing loops. QuerySet.delete may run multiple SQL statements and cascade/signals; it is not guaranteed to be a single DELETE. Index decisions require the actual execution plan and workload/selectivity, not field-name matching alone.
 
 **Impact:** N database writes instead of 1. Lock contention. Slow requests.
 
@@ -275,7 +277,7 @@ if queryset.exists():
     do_thing()
 ```
 
-**Usually skip** - difference is <1ms in most cases.
+**Measure first** — runtime depends on database, query shape, cache state and whether the queryset is already evaluated.
 
 ### Pattern: len(queryset) vs count()
 
@@ -359,6 +361,10 @@ If no issues found: "No performance issues identified after reviewing [files] an
 If the answer to any is "no" - remove the finding.
 
 ---
+
+## Scope exclusions by default
+
+These exclusions apply only when outside the requested review. Admin paths, background jobs and migrations can cause severe resource impact; report a verified significant issue there when it is in scope.
 
 ## What NOT to Report
 

@@ -1,0 +1,183 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://cis2042.github.io/ux3-product-design-harness/schemas/ontology.schema.json",
+  "title": "UX3 Ontology",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "canonical_language",
+    "name",
+    "description",
+    "flows",
+    "intersections",
+    "actor_roles",
+    "stakeholder_roles",
+    "evidence_terms",
+    "human_judgment_terms",
+    "learning_loop"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "canonical_language": {
+      "const": "en"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "flows": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "$ref": "#/$defs/flow"
+      }
+    },
+    "intersections": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "$ref": "#/$defs/intersection"
+      }
+    },
+    "actor_roles": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "$ref": "#/$defs/term"
+      }
+    },
+    "stakeholder_roles": {
+      "type": "array",
+      "minItems": 11,
+      "items": {
+        "$ref": "#/$defs/term"
+      }
+    },
+    "evidence_terms": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "$ref": "#/$defs/term"
+      }
+    },
+    "human_judgment_terms": {
+      "type": "array",
+      "minItems": 3,
+      "items": {
+        "$ref": "#/$defs/term"
+      }
+    },
+    "learning_loop": {
+      "type": "array",
+      "minItems": 8,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "$defs": {
+    "flow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "definition",
+        "must_answer"
+      ],
+      "properties": {
+        "id": {
+          "enum": [
+            "user_flow",
+            "evidence_flow",
+            "business_flow"
+          ]
+        },
+        "name": {
+          "enum": [
+            "User Flow",
+            "Evidence Flow",
+            "Business Flow"
+          ]
+        },
+        "definition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "must_answer": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "intersection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "name",
+        "label",
+        "required_question"
+      ],
+      "properties": {
+        "id": {
+          "enum": [
+            "user_evidence",
+            "evidence_business",
+            "user_business",
+            "ux3_decision_kernel"
+          ]
+        },
+        "name": {
+          "enum": [
+            "User + Evidence",
+            "Evidence + Business",
+            "User + Business",
+            "User + Evidence + Business"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "required_question": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "term": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "definition"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_]+$"
+        },
+        "definition": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

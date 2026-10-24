@@ -15,13 +15,12 @@ Substitution points
 
 Prerequisites
 -------------
-    pip install pycarlo pyhive python-dotenv
+    python -m pip install pycarlo==0.15.491 pyhive python-dotenv
 
 Usage
 -----
     python collect_and_push_metadata.py \\
         --key-id  <MCD_INGEST_ID> \\
-        --key-token <MCD_INGEST_TOKEN> \\
         --resource-uuid <MCD_RESOURCE_UUID> \\
         --hive-host <HIVESERVER2_HOSTNAME>
 """
@@ -31,7 +30,7 @@ import json
 import os
 
 from collect_metadata import _bounded_int, collect
-from push_metadata import DEFAULT_BATCH_SIZE, DEFAULT_TIMEOUT_SECONDS, push
+from push_metadata import DEFAULT_BATCH_SIZE, push
 from _safe_paths import safe_existing_directory, safe_input_json_path, safe_output_json_path, write_json_file
 
 
@@ -58,7 +57,7 @@ def main() -> None:
         help="Monte Carlo ingestion key ID (env: MCD_INGEST_ID)",  # ← SUBSTITUTE env var name if different
     )
     parser.add_argument(
-        "--key-token",
+        "--key-token", choices=[],
         default=os.environ.get("MCD_INGEST_TOKEN"),
         help="Monte Carlo ingestion key token (env: MCD_INGEST_TOKEN)",  # ← SUBSTITUTE env var name if different
     )
@@ -79,13 +78,6 @@ def main() -> None:
         default=DEFAULT_BATCH_SIZE,
         metavar="N",
         help=f"Max assets per POST (default: {DEFAULT_BATCH_SIZE})",
-    )
-    parser.add_argument(
-        "--timeout",
-        type=int,
-        default=DEFAULT_TIMEOUT_SECONDS,
-        metavar="SEC",
-        help=f"HTTP timeout per request in seconds (default: {DEFAULT_TIMEOUT_SECONDS})",
     )
     args = parser.parse_args()
 
@@ -109,7 +101,6 @@ def main() -> None:
         key_id=args.key_id,
         key_token=args.key_token,
         batch_size=args.batch_size,
-        timeout_seconds=args.timeout,
     )
 
     write_json_file(args.output_file, manifest)

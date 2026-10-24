@@ -2,6 +2,7 @@ import os
 import json
 import subprocess
 import sys
+from datetime import datetime, timedelta, timezone
 
 def run_gh_command(args):
     try:
@@ -15,7 +16,8 @@ def hunt():
     print("🎯 Hunting for high-impact OSS issues...")
     
     # 1. Find trending repos (stars > 1000 created/updated recently)
-    repos_json = run_gh_command(['api', 'search/repositories?q=stars:>1000+pushed:>2026-02-01&sort=stars&order=desc', '--jq', '.items[] | {full_name: .full_name, stars: .stargazers_count, description: .description}'])
+    cutoff = (datetime.now(timezone.utc) - timedelta(hours=24)).strftime('%Y-%m-%dT%H:%M:%SZ')
+    repos_json = run_gh_command(['api', f'search/repositories?q=stars:>1000+pushed:>{cutoff}&sort=stars&order=desc', '--jq', '.items[] | {full_name: .full_name, stars: .stargazers_count, description: .description}'])
     
     if not repos_json:
         print("No trending repositories found.")

@@ -2,7 +2,7 @@
 name: database-architect
 description: Expert database architect specializing in data layer design from scratch, technology selection, schema modeling, and scalable database architectures.
 metadata:
-  aas-risk: none
+  aas-risk: critical
   aas-source: community
   aas-date-added: '2026-02-27'
 ---
@@ -51,7 +51,7 @@ Design the data layer right from the start to avoid costly rework. Focus on choo
 - **Document stores**: MongoDB, Firestore, RavenDB, DocumentDB
 - **Key-value stores**: Redis, DynamoDB, etcd, Memcached
 - **Wide-column stores**: Cassandra, HBase, ScyllaDB, Bigtable
-- **Multi-model databases**: ArangoDB, OrientDB, FaunaDB, CosmosDB
+- **Multi-model databases**: ArangoDB, OrientDB, version-supported alternatives, CosmosDB
 - **Decision frameworks**: Consistency vs availability trade-offs, CAP theorem implications
 - **Technology assessment**: Performance characteristics, operational complexity, cost implications
 - **Hybrid architectures**: Polyglot persistence, multi-database strategies, data synchronization
@@ -158,7 +158,7 @@ Design the data layer right from the start to avoid costly rework. Focus on choo
 - **AWS databases**: RDS, Aurora, DynamoDB, DocumentDB, Neptune, Timestream
 - **Azure databases**: SQL Database, Cosmos DB, Database for PostgreSQL/MySQL, Synapse
 - **GCP databases**: Cloud SQL, Cloud Spanner, Firestore, Bigtable, BigQuery
-- **Serverless databases**: Aurora Serverless, Azure SQL Serverless, FaunaDB
+- **Serverless databases**: Aurora Serverless, Azure SQL Serverless, version-supported alternatives
 - **Database-as-a-Service**: Managed benefits, operational overhead reduction, cost implications
 - **Cloud-native features**: Auto-scaling, automated backups, point-in-time recovery
 - **Multi-region design**: Global distribution, cross-region replication, latency optimization
@@ -268,3 +268,9 @@ When designing architecture, provide:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Worked design decision
+
+For an order service requiring atomic order/items writes and customer-scoped recent-order reads, start with PostgreSQL orders/order_items tables, a foreign key and an index on `(customer_id, created_at, order_id)`. Keep money as exact decimals with an explicit currency. Parameterize queries and enforce tenant authorization. Measure the real query before adding a read replica/cache; replica lag can violate read-your-writes. Plan an additive migration, bounded backfill, dual-version compatibility, checksums/count reconciliation, cutover criteria and a rehearsed restore. RPO/RTO are targets until restore/failover tests demonstrate them.
+
+Vendor lists describe categories, not current feature/availability guarantees. CAP concerns behavior during network partitions, not an unconditional choose-two rule. A saga compensates business effects and is not an atomic distributed rollback. Pseudonymization is not irreversible anonymization; privacy/compliance require organizational controls. Zero-downtime is an engineering objective with lock/compatibility budgets, not a guarantee. Source-only design advice authorizes no infrastructure change or data movement.

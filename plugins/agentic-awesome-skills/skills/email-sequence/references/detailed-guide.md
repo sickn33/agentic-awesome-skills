@@ -388,7 +388,7 @@ A comprehensive guide to lifecycle and campaign emails. Use this as an audit che
 - After positive support interaction
 - After achieving measurable result
 - After renewal
-- NOT after billing issues or bugs
+- Avoid interrupting unresolved support issues; apply a neutral, consistent review-invitation policy rather than soliciting only favorable ratings
 
 **Copy approach**:
 - Thank them for being a customer
@@ -452,7 +452,7 @@ A comprehensive guide to lifecycle and campaign emails. Use this as an audit che
 - Tell them how you'll use feedback
 
 **Follow-up based on score**:
-- Promoters (9-10): Thank + ask for review/referral
+- Promoters (9-10): Thank; do not gate public review invitations on positive sentiment
 - Passives (7-8): Ask what would make it a 10
 - Detractors (0-6): Personal outreach to understand issues
 
@@ -551,7 +551,7 @@ A comprehensive guide to lifecycle and campaign emails. Use this as an audit che
 - Changes to pricing/features (if any)
 - Optional: Upsell opportunity
 
-**Required for**: Annual subscriptions, high-value contracts
+**Review requirements for**: applicable jurisdiction, contract, renewal terms and notice obligations
 
 ---
 
@@ -859,7 +859,7 @@ Use this to audit your current email program:
 ## Testing and Optimization
 
 ### What to Test
-- Subject lines (highest impact)
+- Subject lines (effect to measure)
 - Send times
 - Email length
 - CTA placement and copy
@@ -873,9 +873,9 @@ Use this to audit your current email program:
 - Document learnings
 
 ### Metrics to Track
-- Open rate (benchmark: 20-40%)
-- Click rate (benchmark: 2-5%)
-- Unsubscribe rate (keep under 0.5%)
+- Open rate (directional only; privacy prefetching and blocked pixels distort it)
+- Click rate (define unique clicks/delivered; filter security-scanner clicks)
+- Unsubscribe rate (monitor against the actual audience baseline and provider policy)
 - Conversion rate (specific to sequence goal)
 - Revenue per email (if applicable)
 

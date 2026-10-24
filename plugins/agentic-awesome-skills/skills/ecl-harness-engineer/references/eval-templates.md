@@ -1,5 +1,7 @@
 # Eval Templates
 
+> Review boundary: The Go code is a scaffold, not an integrated execution engine. Run tests in a bounded isolated temporary workspace with no ambient credentials/network; reject absolute, traversal and symlink-escaping fixture/expectation paths before file access. Validate schemas, positive budgets, durations and regular expressions first. Text matches are weak evidence and cannot replace behavioral tests; an absent executor must return an error, never a passing result.
+
 Templates for evaluation/benchmark infrastructure.
 
 Advanced profile only. Load this reference only when the user explicitly requests agent
@@ -169,7 +171,7 @@ evaluation, regression benchmarks, skill scoring, or an eval framework. Do not c
   "description": "Extract duplicated validation logic",
   "prompt": "Extract the duplicated validation in handler.go into a validate function",
   "init_files": {
-    "handler.go": "package main\n\nfunc handleA(s string) error {\n\tif s == \"\" { return fmt.Errorf(\"empty\") }\n\tif len(s) > 100 { return fmt.Errorf(\"too long\") }\n\treturn nil\n}\n\nfunc handleB(s string) error {\n\tif s == \"\" { return fmt.Errorf(\"empty\") }\n\tif len(s) > 100 { return fmt.Errorf(\"too long\") }\n\treturn nil\n}"
+    "handler.go": "package main\n\nimport \"fmt\"\n\nfunc handleA(s string) error {\n\tif s == \"\" { return fmt.Errorf(\"empty\") }\n\tif len(s) > 100 { return fmt.Errorf(\"too long\") }\n\treturn nil\n}\n\nfunc handleB(s string) error {\n\tif s == \"\" { return fmt.Errorf(\"empty\") }\n\tif len(s) > 100 { return fmt.Errorf(\"too long\") }\n\treturn nil\n}"
   },
   "expected_files": {
     "handler.go": {
@@ -191,6 +193,7 @@ package eval
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -208,7 +211,7 @@ type EvalTask struct {
 	ExpectedCommands []string                    `json:"expected_commands,omitempty"`
 	MaxTurns         int                         `json:"max_turns,omitempty"`
 	MaxTokens        int                         `json:"max_tokens,omitempty"`
-	Timeout          time.Duration               `json:"timeout,omitempty"`
+	Timeout          string                      `json:"timeout,omitempty"`
 	Tags             []string                    `json:"tags,omitempty"`
 }
 
@@ -244,23 +247,27 @@ func LoadTask(path string) (*EvalTask, error) {
 		return nil, err
 	}
 	var task EvalTask
-	return &task, json.Unmarshal(data, &task)
+	if err := json.Unmarshal(data, &task); err != nil { return nil, err }
+	if task.Timeout != "" {
+		d, err := time.ParseDuration(task.Timeout)
+		if err != nil || d <= 0 { return nil, fmt.Errorf("invalid positive timeout %q", task.Timeout) }
+	}
+	return &task, nil
 }
 
 // LoadTasksFromDir loads all tasks from a directory
 func LoadTasksFromDir(dir string) ([]EvalTask, error) {
 	var tasks []EvalTask
-	filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-		if err != nil || info.IsDir() || filepath.Ext(path) != ".json" {
-			return nil
-		}
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+		if err != nil { return err }
+		if info.Mode() & os.ModeSymlink != 0 { return fmt.Errorf("symlink not allowed: %s", path) }
+		if info.IsDir() || filepath.Ext(path) != ".json" { return nil }
 		task, err := LoadTask(path)
-		if err == nil {
-			tasks = append(tasks, *task)
-		}
+		if err != nil { return fmt.Errorf("%s: %w", path, err) }
+		tasks = append(tasks, *task)
 		return nil
 	})
-	return tasks, nil
+	return tasks, err
 }
 
 // ValidateFile checks if a file meets expectations
@@ -268,6 +275,7 @@ func ValidateFile(path string, exp FileExpectation) (bool, []string) {
 	var issues []string
 
 	_, err := os.Stat(path)
+	if err != nil && !os.IsNotExist(err) { return false, []string{err.Error()} }
 	exists := err == nil
 
 	if exp.MustExist && !exists {
@@ -287,12 +295,16 @@ func ValidateFile(path string, exp FileExpectation) (bool, []string) {
 	}
 
 	for _, pattern := range exp.MustContain {
-		if matched, _ := regexp.Match(pattern, content); !matched {
+		if matched, err := regexp.Match(pattern, content); err != nil {
+			issues = append(issues, "invalid regex: "+pattern)
+		} else if !matched {
 			issues = append(issues, "missing: "+pattern)
 		}
 	}
 	for _, pattern := range exp.MustNotContain {
-		if matched, _ := regexp.Match(pattern, content); matched {
+		if matched, err := regexp.Match(pattern, content); err != nil {
+			issues = append(issues, "invalid regex: "+pattern)
+		} else if matched {
 			issues = append(issues, "forbidden: "+pattern)
 		}
 	}
@@ -329,10 +341,11 @@ func newRunCmd() *cobra.Command {
 		Use:   "run",
 		Short: "Run eval tasks",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			tasks, _ := evalfw.LoadTasksFromDir("harness/eval/datasets")
+			tasks, err := evalfw.LoadTasksFromDir("harness/eval/datasets")
+			if err != nil { return err }
 			fmt.Printf("Running %d tasks...\n", len(tasks))
-			// Execute tasks and report
-			return nil
+			// A real isolated executor/scorer is not included.
+			return fmt.Errorf("eval executor not integrated; no tasks executed")
 		},
 	}
 	cmd.Flags().StringVar(&category, "category", "", "Filter by category")
@@ -346,7 +359,8 @@ func newListCmd() *cobra.Command {
 		Use:   "list",
 		Short: "List available eval tasks",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			tasks, _ := evalfw.LoadTasksFromDir("harness/eval/datasets")
+			tasks, err := evalfw.LoadTasksFromDir("harness/eval/datasets")
+			if err != nil { return err }
 			fmt.Printf("%-20s %-15s %-10s\n", "ID", "Category", "Difficulty")
 			for _, t := range tasks {
 				fmt.Printf("%-20s %-15s %-10s\n", t.ID, t.Category, t.Difficulty)

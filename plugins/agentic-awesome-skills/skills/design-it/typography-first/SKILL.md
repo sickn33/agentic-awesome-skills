@@ -17,7 +17,7 @@ Use this sub-style when the user's request matches the aesthetic described above
 
 ## Core Principles
 1. **Hyper-Sized Typography**: The main headline is so large it becomes an abstract graphic element.
-2. **Minimal UI Chroming**: Buttons are just text. Navigation is just text. No boxes, no backgrounds.
+2. **Minimal UI Chroming**: Buttons and navigation may be visually text-only, but retain semantic controls, usable targets and visible focus.
 3. **Kinetic Typography**: Text that moves, scrolls, or reacts to the user's cursor.
 
 ## Visual DNA
@@ -50,7 +50,7 @@ body {
 }
 
 .hero-type:hover {
-  color: var(--cta-highlight);
+  color: var(--cta-highlight, #F5F5F0);
   -webkit-text-stroke: 0;
 }
 
@@ -158,9 +158,8 @@ class TypographyFirstScreen extends StatelessWidget {
 
 ### React Native
 ```jsx
-const { width } = Dimensions.get('window');
-
 const TypographyFirstScreen = () => {
+  const { width } = useWindowDimensions(); // Update on resize/orientation changes.
   return (
     <View style={{ flex: 1, backgroundColor: '#0A0A0A', justifyContent: 'center' }}>
       
@@ -194,7 +193,7 @@ const TypographyFirstScreen = () => {
   );
 };
 ```
-- Rely on `Dimensions.get('window').width` to calculate extreme font sizes dynamically (e.g., `fontSize: width * 0.4`).
+- Use `useWindowDimensions().width` to calculate extreme font sizes dynamically (e.g., `fontSize: width * 0.4`).
 - Use `numberOfLines={1}` and negative margins to allow the text to act as a graphic element bleeding off the screen.
 
 ### Jetpack Compose
@@ -245,3 +244,5 @@ fun TypographyFirstScreen() {
 ## Limitations
 - This is a styling reference and does not replace environment-specific validation, accessibility testing, or expert review.
 - Ensure appropriate contrast ratios and responsive behaviors are verified separately.
+
+Oversized clipped headlines are decorative studies. Keep essential copy complete, wrappable and scalable; provide an uncut accessible text equivalent. Thin shadow halos approximate an outline and are not true glyph strokes.

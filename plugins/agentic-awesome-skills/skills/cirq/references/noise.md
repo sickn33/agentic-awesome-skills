@@ -82,8 +82,8 @@ circuit = cirq.Circuit(
 
 ```python
 # Generalized amplitude damping
-p = 0.1  # Damping probability
-gamma = 0.2  # Excitation probability
+p = 0.1  # Environment ground-state population parameter
+gamma = 0.2  # Damping strength
 gen_amp_damp = cirq.generalized_amplitude_damp(p=p, gamma=gamma)
 ```
 
@@ -122,6 +122,8 @@ class CustomNoiseModel(cirq.NoiseModel):
     """Apply different noise to different gate types."""
 
     def noisy_operation(self, op):
+        if cirq.is_measurement(op):
+            return op
         # Single-qubit gates: depolarizing noise
         if len(op.qubits) == 1:
             return [op, cirq.depolarize(0.001)(op.qubits[0])]
@@ -151,6 +153,8 @@ class QubitSpecificNoise(cirq.NoiseModel):
         self.qubit_noise_map = qubit_noise_map
 
     def noisy_operation(self, op):
+        if cirq.is_measurement(op):
+            return op
         noise_ops = [op]
         for qubit in op.qubits:
             if qubit in self.qubit_noise_map:
@@ -181,9 +185,15 @@ class ThermalNoise(cirq.NoiseModel):
         self.gate_time = gate_time
 
     def noisy_operation(self, op):
+        if cirq.is_measurement(op):
+            return op
         # Calculate probabilities
         p_amp = 1 - np.exp(-self.gate_time / self.T1)
-        p_phase = 1 - np.exp(-self.gate_time / self.T2)
+        if not (0 < self.T2 <= 2 * self.T1) or self.gate_time < 0:
+            raise ValueError("Require positive T1/T2, T2 <= 2*T1 and nonnegative time")
+        # Phase damping coherence is sqrt(1-gamma); avoid double counting T1.
+        pure_dephasing_rate = 1 / self.T2 - 1 / (2 * self.T1)
+        p_phase = 1 - np.exp(-2 * self.gate_time * pure_dephasing_rate)
 
         noise_ops = [op]
         for qubit in op.qubits:
@@ -213,19 +223,11 @@ simulator = cirq.DensityMatrixSimulator()
 result = simulator.run(noisy_circuit, repetitions=1000)
 ```
 
-### insert_into_circuit Method
+### Noise insertion
 
-```python
-# Manual noise insertion
-def add_noise_to_circuit(circuit, noise_model):
-    noisy_moments = []
-    for moment in circuit:
-        ops = []
-        for op in moment:
-            ops.extend(noise_model.noisy_operation(op))
-        noisy_moments.append(cirq.Moment(ops))
-    return cirq.Circuit(noisy_moments)
-```
+Use `circuit.with_noise(noise_model)`. A gate and its following noise overlap on
+the same qubit and cannot be packed into one `cirq.Moment`. For custom models,
+skip measurement operations unless intentionally modeling readout noise.
 
 ## Readout Noise
 
@@ -275,8 +277,8 @@ def generate_rb_circuit(qubits, depth):
             gate = np.random.choice(clifford_gates)
             circuit.append(gate(qubit))
 
-    # Add inverse to return to initial state (ideally)
-    # (simplified - proper RB requires tracking full sequence)
+    # Invert the complete sampled sequence before measuring.
+    circuit += cirq.Circuit(cirq.inverse(circuit))
 
     circuit.append(cirq.measure(*qubits, key='result'))
     return circuit
@@ -320,22 +322,18 @@ def xeb_fidelity(circuit, simulator, ideal_probs, repetitions=10000):
     result = simulator.run(circuit, repetitions=repetitions)
     measured_probs = result.histogram(key='result')
 
-    # Normalize
-    for key in measured_probs:
-        measured_probs[key] /= repetitions
-
-    # Calculate cross-entropy
-    cross_entropy = 0
-    for bitstring, prob in measured_probs.items():
-        if bitstring in ideal_probs:
-            cross_entropy += prob * np.log2(ideal_probs[bitstring])
-
-    # Convert to fidelity
+    total = sum(measured_probs.values())
+    if total <= 0:
+        raise ValueError("No samples")
     n_qubits = len(circuit.all_qubits())
-    fidelity = (2**n_qubits * cross_entropy + 1) / (2**n_qubits - 1)
-
-    return fidelity
+    # Linear XEB estimator, not logarithmic cross entropy.
+    return 2**n_qubits * sum(count * ideal_probs.get(state, 0.0)
+                            for state, count in measured_probs.items()) / total - 1
 ```
+
+This estimator can fluctuate outside [0,1]. Interpreting it as circuit fidelity
+requires the XEB experimental assumptions; random gate sampling above is only a
+toy RB-like sequence, not a calibrated uniform Clifford benchmarking protocol.
 
 ## Noise Visualization
 
@@ -434,7 +432,7 @@ def zero_noise_extrapolation(circuit, noise_levels, simulator):
         return a * np.exp(-b * x) + c
 
     popt, _ = curve_fit(exponential_fit, noise_levels, expectation_values)
-    zero_noise_value = popt[2]
+    zero_noise_value = exponential_fit(0, *popt)
 
     return zero_noise_value
 ```
@@ -461,6 +459,8 @@ def quasi_probability_decomposition(noisy_gate, ideal_gate, noise_model):
 def mitigate_readout_errors(results, confusion_matrix):
     """Apply readout error mitigation using confusion matrix."""
 
+    # Illustrative unconstrained correction, not a physical probability estimator.
+    # Preserve signed quasiprobabilities and uncertainty; do not clip/round to counts.
     # Invert confusion matrix
     inv_confusion = np.linalg.inv(confusion_matrix)
 
@@ -476,33 +476,22 @@ def mitigate_readout_errors(results, confusion_matrix):
     corrected_probs = inv_confusion @ measured_probs
 
     # Convert back to counts
-    corrected_counts = {i: int(p * total_counts)
-                       for i, p in enumerate(corrected_probs) if p > 0}
+    corrected_counts = {i: float(p) * total_counts
+                       for i, p in enumerate(corrected_probs)}
 
     return corrected_counts
 ```
 
-## Hardware-Based Noise Models
+## Hardware-based noise models
 
-### From Google Calibration
-
-```python
-import os
-import cirq_google as cg
-
-engine = cg.Engine(project_id=os.environ['GOOGLE_CLOUD_PROJECT'])
-processor = engine.get_processor('weber')
-noise_props = processor.get_device_specification()
-
-noise_model = cg.NoiseModelFromGoogleNoiseProperties(noise_props)
-
-simulator = cirq.DensityMatrixSimulator(noise=noise_model)
-result = simulator.run(circuit, repetitions=1000)
-```
+A device-specification protobuf is not a `GoogleNoiseProperties` object. Follow
+the pinned `cirq-google` calibration conversion API, verify metric units and
+calibration timestamp, and obtain account approval before remote reads. This
+reference does not implement that conversion.
 
 ## Best Practices
 
-1. **Use density matrix simulator for noisy simulations**: State vector simulators cannot model mixed states
+1. **Use density matrix simulator for noisy simulations**: density matrices represent mixed states directly; state-vector noise uses sampled trajectories
 2. **Match noise model to hardware**: Use calibration data when available
 3. **Include all error sources**: Gate errors, decoherence, readout errors
 4. **Characterize before mitigating**: Understand noise before applying mitigation

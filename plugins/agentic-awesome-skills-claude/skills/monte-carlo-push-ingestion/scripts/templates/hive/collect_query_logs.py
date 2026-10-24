@@ -37,7 +37,7 @@ from pathlib import Path
 
 from dateutil.parser import isoparse
 
-from _safe_paths import safe_existing_directory, write_json_file
+from _safe_paths import read_text_file, safe_existing_directory, write_json_file
 
 # NOTE: the normalizer requires "hive-s3" — do not change to "hive" or "data-lake"
 LOG_TYPE = "hive-s3"
@@ -88,7 +88,7 @@ def _parse_log_entries(log_text: str) -> list[dict]:
                     {
                         "query_id": query_id,
                         "start_time": start_time,
-                        "end_time": timestamp,
+                        "end_time": None,
                         "query": query,
                     }
                 )
@@ -101,7 +101,7 @@ def _parse_log_entries(log_text: str) -> list[dict]:
                 {
                     "query_id": query_id,
                     "start_time": start_time,
-                    "end_time": timestamp,
+                    "end_time": None,
                     "query": query,
                 }
             )
@@ -118,7 +118,7 @@ def _parse_log_entries(log_text: str) -> list[dict]:
             {
                 "query_id": query_id,
                 "start_time": start_time,
-                "end_time": end_time,
+                "end_time": None,
                 "query": query,
             }
         )
@@ -139,7 +139,7 @@ def _load_returned_rows(op_logs_dir: str) -> dict[str, int]:
         query_id = log_file.stem
         last_count: int | None = None
         try:
-            text = log_file.read_text(errors="replace")
+            text = read_text_file(str(log_file))
         except OSError:
             continue
         for m in _RECORDS_OUT_RE.finditer(text):
@@ -174,9 +174,9 @@ def _build_query_log_entries(
             {
                 "query_id": qid or None,
                 "start_time": r["start_time"].isoformat(),
-                "end_time": r["end_time"].isoformat(),
+                "end_time": None,
                 "query_text": r["query"],
-                "user": "hadoop",  # ← SUBSTITUTE: set the user appropriate for your cluster
+                "user": None,  # ← SUBSTITUTE: set the user appropriate for your cluster
                 "returned_rows": returned_rows,
             }
         )
@@ -201,8 +201,7 @@ def collect(
         window_start, window_end, queries.
     """
     print(f"Reading Hive log file: {log_file} ...")
-    with open(log_file, errors="replace") as fh:
-        log_text = fh.read()
+    log_text = read_text_file(log_file)
 
     raw_entries = _parse_log_entries(log_text)
     print(f"  Parsed {len(raw_entries)} query log entry/entries.")
@@ -211,6 +210,7 @@ def collect(
         print("No query log entries found.")
         return {
             "log_type": LOG_TYPE,
+            "requires_verified_completion": True,
             "collected_at": datetime.now(tz=timezone.utc).isoformat(),
             "entry_count": 0,
             "window_start": None,
@@ -226,10 +226,11 @@ def collect(
     queries = _build_query_log_entries(raw_entries, rows_by_id)
 
     start_times = [r["start_time"] for r in raw_entries]
-    end_times = [r["end_time"] for r in raw_entries]
+    end_times = []  # Completion must come from an authoritative completion record.
 
     manifest = {
         "log_type": LOG_TYPE,
+            "requires_verified_completion": True,
         "collected_at": datetime.now(tz=timezone.utc).isoformat(),
         "entry_count": len(queries),
         "window_start": min(start_times).isoformat() if start_times else None,

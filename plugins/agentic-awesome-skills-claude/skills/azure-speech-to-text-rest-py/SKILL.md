@@ -61,14 +61,17 @@ def transcribe_audio(audio_file_path: str, language: str = "en-US") -> dict:
     }
     
     with open(audio_file_path, "rb") as audio_file:
-        response = requests.post(url, headers=headers, params=params, data=audio_file)
+        response = requests.post(url, headers=headers, params=params, data=audio_file, timeout=(10, 90))
     
     response.raise_for_status()
     return response.json()
 
 # Usage
 result = transcribe_audio("audio.wav", "en-US")
-print(result["DisplayText"])
+if result.get("RecognitionStatus") == "Success" and result.get("NBest"):
+    print(result["NBest"][0].get("Display", ""))
+else:
+    print("No successful detailed recognition result")
 ```
 
 ## Audio Requirements
@@ -167,7 +170,8 @@ def transcribe_chunked(audio_file_path: str, language: str = "en-US") -> dict:
         url, 
         headers=headers, 
         params=params, 
-        data=generate_chunks(audio_file_path)
+        data=generate_chunks(audio_file_path),
+        timeout=(10, 90)
     )
     
     response.raise_for_status()
@@ -203,7 +207,8 @@ def get_access_token() -> str:
             "Ocp-Apim-Subscription-Key": api_key,
             "Content-Type": "application/x-www-form-urlencoded",
             "Content-Length": "0"
-        }
+        },
+        timeout=(10, 30)
     )
     response.raise_for_status()
     return response.text
@@ -270,7 +275,8 @@ def transcribe_with_error_handling(audio_path: str, language: str = "en-US") -> 
                     "Accept": "application/json"
                 },
                 params={"language": language, "format": "detailed"},
-                data=audio_file
+                data=audio_file,
+                timeout=(10, 90)
             )
         
         if response.status_code == 200:
@@ -285,9 +291,9 @@ def transcribe_with_error_handling(audio_path: str, language: str = "en-US") -> 
         elif response.status_code == 401:
             print(f"Unauthorized: Check API key or token")
         elif response.status_code == 403:
-            print(f"Forbidden: Missing authorization header")
+            print("Forbidden: Check resource permissions, endpoint and service policy")
         else:
-            print(f"Error {response.status_code}: {response.text}")
+            print(f"Error {response.status_code}; response body withheld")
         
         return None
         
@@ -318,7 +324,7 @@ async def transcribe_async(audio_file_path: str, language: str = "en-US") -> dic
     
     params = {"language": language, "format": "detailed"}
     
-    async with aiohttp.ClientSession() as session:
+    async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=90)) as session:
         with open(audio_file_path, "rb") as f:
             audio_data = f.read()
         
@@ -328,7 +334,10 @@ async def transcribe_async(audio_file_path: str, language: str = "en-US") -> dic
 
 # Usage
 result = asyncio.run(transcribe_async("audio.wav", "en-US"))
-print(result["DisplayText"])
+if result.get("RecognitionStatus") == "Success" and result.get("NBest"):
+    print(result["NBest"][0].get("Display", ""))
+else:
+    print("No successful detailed recognition result")
 ```
 
 ## Supported Languages
@@ -381,3 +390,5 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Examples send audio and reference text to Azure; obtain the exact data-transfer/retention scope and use synthetic recordings by default. Resolve/validate the configured region or resource endpoint against the actual approved Azure resource before attaching credentials; do not accept an arbitrary hostname from untrusted input. Check duration/format/size locally, bound requests and keep keys/transcripts out of logs. Detailed recognition uses `NBest[].Display`, and `Success`/nonempty results must be checked before indexing. Pronunciation/prosody scores are model estimates, not clinical or objective speaker-quality judgments; locale/API support varies. See [official short-audio API](https://learn.microsoft.com/en-us/azure/ai-services/speech-service/rest-speech-to-text-short).

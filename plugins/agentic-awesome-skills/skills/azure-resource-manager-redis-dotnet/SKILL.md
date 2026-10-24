@@ -68,6 +68,8 @@ ArmClient
 
 ## Core Workflows
 
+Verify current service lifecycle, supported SKU/network features and the exact account/subscription before provisioning; static version/SKU tables are not current availability guarantees. Creation/scaling costs money; eviction-policy changes, import, reboot, rotation and deletion affect consumers/data. Require scoped authorization, backups and rollout/rollback. Rotate one key at a time only after moving and testing consumers on the other; keep connection strings, access keys and SAS URLs out of logs.
+
 ### 1. Create Redis Cache
 
 ```csharp
@@ -146,8 +148,7 @@ await cache.Value.DeleteAsync(WaitUntil.Completed);
 
 ```csharp
 var keys = await cache.Value.GetKeysAsync();
-Console.WriteLine($"Primary Key: {keys.Value.PrimaryKey}");
-Console.WriteLine($"Secondary Key: {keys.Value.SecondaryKey}");
+// Use keys only in approved secret storage or a scoped connection; never log them.
 ```
 
 ### 6. Regenerate Access Keys
@@ -155,7 +156,7 @@ Console.WriteLine($"Secondary Key: {keys.Value.SecondaryKey}");
 ```csharp
 var regenerateContent = new RedisRegenerateKeyContent(RedisRegenerateKeyType.Primary);
 var newKeys = await cache.Value.RegenerateKeyAsync(regenerateContent);
-Console.WriteLine($"New Primary Key: {newKeys.Value.PrimaryKey}");
+// Update authorized consumers through a secret store; never print the regenerated key.
 ```
 
 ### 7. Manage Firewall Rules

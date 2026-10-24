@@ -8,6 +8,6 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 
 | Local file | Original upstream path | Original Git blob SHA | Import changes |
 | --- | --- | --- | --- |
-| `scripts/relay.mjs` | `skills/opencode-delegate/scripts/relay.mjs` | `9189387da98011311a33a4d493a9f441738ca7d8` | content unchanged |
+| `scripts/relay.mjs` | `skills/opencode-delegate/scripts/relay.mjs` | `9189387da98011311a33a4d493a9f441738ca7d8` | AAS: validate agent/session tokens, private run-directory creation and refuse existing artifacts |
 
 The relay launches the user-installed, authenticated agent CLI. Write-capable modes can approve child tools automatically; they are not a host sandbox. Invoke only for explicitly authorized delegation, keep credentials out of task briefs, and review the child output and project changes before landing them. This import does not run the CLI.

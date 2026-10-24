@@ -33,8 +33,7 @@ different rows and neither reading looks wrong on its own. So before emitting an
   output formats. Where the design, the examples or the business's existing sheet disagree with
   each other, do not reproduce them as they stand.
 - Name the conflict out loud, then resolve it with the simplest accounting-safe interpretation.
-  The simplest safe reading of a disputed field is the one that keeps cash equal to the bank
-  position and never invents a movement to make a total look right.
+  The simplest safe reading preserves separate book balances and distinguishes them from observed cash counts and statement balances and never invents a movement to make a total look right.
 - Derive CSV, SQL DDL, JSON Schema and the Notion mapping from **one** field model afterwards, so
   that no field exists in one artifact and is missing or differently defined in another.
 
@@ -43,8 +42,7 @@ the software's day-book format.** It is not a universal rule that all receipts a
 payments are credit - some books present receipts on the payment side, some carry both columns,
 some carry neither. So this table does not hardcode a Debit/Credit pair. `Debit/Credit
 Presentation` is a text field that records the presentation **as configured in the business's own
-software**, and the six in/out amount columns plus the six balance columns are the part that is
-universal. Where a book labels its columns `Dr` and `Cr`, that label is what goes into
+software**, and the in/out and balance columns are this template's chosen model. Where a book labels its columns `Dr` and `Cr`, that label is what goes into
 `Debit/Credit Presentation`; nothing in this table decides which side a receipt sits on.
 
 **Two row types, and they are not the same kind of thing.** `Row Type` says which one a row is, and
@@ -83,14 +81,13 @@ previous day's closing balance + today's movement = today's closing balance
 ```
 
 Where it does not hold, the difference goes in `Balance Difference` - signed, and not spread
-across the books - and `Reconciliation Status` is set to `Needs Review` or `Unreconciled`. The
-component is never edited to make the row tie. A day book whose balances are adjusted until they
+across the books - and `Reconciliation Status` is set to `Needs Review` or `Unreconciled`. Keep the calculated/book closing balance unchanged; record the independently observed figure and signed difference separately in Notes. An unexplained difference does not replace the book closing balance. A day book whose balances are adjusted until they
 agree records nothing about the business.
 
 **`Balance Difference` and `Reconciliation Status`.** `Balance Difference` is the total
 unexplained difference across the three books on that row: negative where the book is above the
 counted or agreed figure, positive where it is below. Where a difference is confined to one book,
-write which one in `Notes` with both figures, because one column cannot hold three breaks.
+write per-book book balance, observed balance and difference in `Notes`. Always retain all per-book differences: equal and opposite breaks can net to zero and must not be called reconciled.
 `Reconciliation Status` is the **worst** of the three books, never the best. A bank balance that
 agrees does not make a cash count that does not agree reconciled.
 
@@ -104,8 +101,7 @@ control row for that day is clean, or when a human has reviewed and accepted a r
 recorded in the business's books, tax-inclusive where the entry was tax-inclusive. This module
 does not split tax out of a movement. Money is a bare number with no currency symbol in the cell,
 and the currency itself is `Unknown` until the user states it. Dates are ISO `YYYY-MM-DD` in real
-date fields. Round once, at the end, to two decimal places, so the day's components re-derive the
-day's totals.
+date fields. Use exact decimal arithmetic and the confirmed currency's minor-unit/rounding policy. The displayed NUMERIC(14,2) is an illustrative two-decimal assumption, not a rule for every currency; do not sum different currencies or represent missing values as zero.
 
 ## When to Use This Skill
 
@@ -121,7 +117,11 @@ day-end control row that reconciles the day before it is closed", or describes t
 happening in a spreadsheet, a document or someone inboxes.
 
 Do not use it for: making payments, recording receipts in detail, tax filing, or legal advice. This
-skill produces empty templates only - it never holds or processes real transaction data.
+skill produces empty templates only - its build output is an empty template. If a requested review includes supplied transaction data, use only the needed facts and do not reproduce identifiers.
+
+## Model limits and validation
+
+The SQL/JSON examples enforce only some structural constraints. Application validation must distinguish row types, selected books, one direction per movement, date/book/currency scope, duplicate references, per-book balance identities and close authorization. Derive Day Summary totals solely from Movement rows; never sum both together. Internal cash/bank/wallet transfers require linked equal-and-opposite movements in the two books, not a new business receipt/expense. Decimal precision, overdrafts, settlement timing and reconciliation cadence require the business's accountant and local rules.
 
 ## How It Works
 
@@ -234,8 +234,7 @@ before the day is closed.
 **Why this one:** The day book is where a missing or duplicated entry becomes visible, and
 everything else in the cash cycle is downstream of the balance agreeing at day end. Keeping the
 movement rows and the day-end control row in one model - separated by `Row Type` rather than by
-guesswork - is what lets the day be proved from itself. Splitting them into two tables loses the
-link, and merging them without a discriminator makes a summary row look like one more movement.
+guesswork - is what lets the day be proved from itself. Separate linked movement and summary tables are also valid; in this single-table model the row discriminator prevents treating a summary as another movement.
 
 **Workflow:** Receipt or payment recorded from voucher → Booked to cash, bank or digital as a
 `Movement` row → Running balance updated → Duplicate and missing entries checked → `Day Summary`
@@ -258,165 +257,9 @@ connection. For requested workspace changes, follow the shared contract: verify 
 tool access and the target before writing. A user saying "connected" is not tool evidence.
 Never ask for a Notion password or token.
 
-```csv
-Entry Number,Entry Date,Row Type,Book Section,Transaction Reference,Voucher Number,Party,Narration,Mode,Cash In,Cash Out,Opening Cash Balance,Cash Closing Balance,Bank In,Bank Out,Opening Bank Balance,Bank Closing Balance,Digital In,Digital Out,Opening Digital Balance,Digital Closing Balance,Debit/Credit Presentation,Source Documents,Duplicate Check,Balance Difference,Reconciliation Status,Prepared By,Reviewed By,Entry Verified,Notes,Day Book ID
-DB-EXAMPLE-001,2026-01-15,Day Summary,All Books,DAY-EXAMPLE-001,VCH-EXAMPLE-001 to VCH-EXAMPLE-014,Several parties,Day total across the three books; each movement line carries its own reference,Mixed,15000.00,11800.00,25000.00,28050.00,140000.00,95485.00,1250000.00,1294515.00,24600.00,4300.00,5000.00,25300.00,As per software day-book format,DOC-EXAMPLE-001,Checked - Clear,-150.00,Needs Review,Example Preparer,Example Reviewer,In progress,"Cash counted 28050.00 against a book closing of 28200.00, so 150.00 is unexplained and is recorded rather than adjusted. Bank agrees to the statement and the wallet balance agrees to the app.",
-```
+See [artifact examples](references/how-it-works.md#artifact-examples) for CSV, PostgreSQL DDL, JSON Schema and Notion mapping generated from the same field model.
 
-```sql
--- Engine assumption: PostgreSQL. If the target database is not PostgreSQL, replace
--- SERIAL PRIMARY KEY with that engine's auto-increment form; nothing else here is
--- engine-specific.
-CREATE TABLE day_book (
-  entry_number VARCHAR(255),
-  entry_date DATE NOT NULL,
-  row_type VARCHAR(100) NOT NULL,
-  book_section VARCHAR(100) NOT NULL,
-  transaction_reference VARCHAR(255),
-  voucher_number VARCHAR(255),
-  party VARCHAR(255),
-  narration VARCHAR(255),
-  mode VARCHAR(100),
-  cash_in NUMERIC(14,2),
-  cash_out NUMERIC(14,2),
-  opening_cash_balance NUMERIC(14,2) NOT NULL,
-  cash_closing_balance NUMERIC(14,2) NOT NULL,
-  bank_in NUMERIC(14,2),
-  bank_out NUMERIC(14,2),
-  opening_bank_balance NUMERIC(14,2) NOT NULL,
-  bank_closing_balance NUMERIC(14,2) NOT NULL,
-  digital_in NUMERIC(14,2),
-  digital_out NUMERIC(14,2),
-  opening_digital_balance NUMERIC(14,2) NOT NULL,
-  digital_closing_balance NUMERIC(14,2) NOT NULL,
-  debit_credit_presentation VARCHAR(255),
-  source_documents VARCHAR(255),  -- relation -> target record
-  duplicate_check VARCHAR(100) NOT NULL,
-  balance_difference NUMERIC(14,2),
-  reconciliation_status VARCHAR(100) NOT NULL,
-  prepared_by VARCHAR(255),
-  reviewed_by VARCHAR(255),
-  entry_verified VARCHAR(100) NOT NULL,
-  notes TEXT,
-  day_book_id SERIAL PRIMARY KEY,
-  created_at TIMESTAMP DEFAULT NOW(),
-  updated_at TIMESTAMP DEFAULT NOW(),
-  CONSTRAINT day_book_amounts_non_negative CHECK (
-    cash_in >= 0
-    AND cash_out >= 0
-    AND bank_in >= 0
-    AND bank_out >= 0
-    AND digital_in >= 0
-    AND digital_out >= 0),
-  CONSTRAINT day_book_row_type_values CHECK (row_type IN ('Movement', 'Day Summary')),
-  CONSTRAINT day_book_reconciliation_values CHECK (reconciliation_status IN (
-    'Reconciled', 'Needs Review', 'Unreconciled', 'Unknown'))
-);
-```
-
-```json
-{
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Day Book",
-  "type": "object",
-  "additionalProperties": false,
-  "properties": {
-      "Entry Number": { "type": "string" },
-      "Entry Date": { "type": "string", "format": "date" },
-      "Row Type": { "type": "string" },
-      "Book Section": { "type": "string" },
-      "Transaction Reference": { "type": "string" },
-      "Voucher Number": { "type": "string" },
-      "Party": { "type": "string" },
-      "Narration": { "type": "string" },
-      "Mode": { "type": "string" },
-      "Cash In": { "type": "number" },
-      "Cash Out": { "type": "number" },
-      "Opening Cash Balance": { "type": "number" },
-      "Cash Closing Balance": { "type": "number" },
-      "Bank In": { "type": "number" },
-      "Bank Out": { "type": "number" },
-      "Opening Bank Balance": { "type": "number" },
-      "Bank Closing Balance": { "type": "number" },
-      "Digital In": { "type": "number" },
-      "Digital Out": { "type": "number" },
-      "Opening Digital Balance": { "type": "number" },
-      "Digital Closing Balance": { "type": "number" },
-      "Debit/Credit Presentation": { "type": "string" },
-      "Source Documents": { "type": "string" },
-      "Duplicate Check": { "type": "string" },
-      "Balance Difference": { "type": "number" },
-      "Reconciliation Status": { "type": "string" },
-      "Prepared By": { "type": "string" },
-      "Reviewed By": { "type": "string" },
-      "Entry Verified": { "type": "string" },
-      "Notes": { "type": "string" },
-      "Day Book ID": { "type": "integer" }
-  },
-  "required": [
-      "Entry Date",
-      "Row Type",
-      "Book Section",
-      "Opening Cash Balance",
-      "Cash Closing Balance",
-      "Opening Bank Balance",
-      "Bank Closing Balance",
-      "Opening Digital Balance",
-      "Digital Closing Balance",
-      "Duplicate Check",
-      "Reconciliation Status",
-      "Entry Verified"
-  ]
-}
-```
-
-`required` is a business-necessity list, not an availability list. `Entry Date`, `Row Type` and
-`Book Section` are required because without them the row cannot be read at all - a row with no
-`Row Type` cannot be told apart from a summary, and a row with no `Book Section` touches all three
-books by accident. The six balance columns are required because a balance that is not recorded is
-not a balance; the six In/Out columns are deliberately **not** required, because on a
-`Movement` row the two books it did not touch are not applicable rather than zero, and a required
-column invites exactly that substitution. `Duplicate Check`, `Reconciliation Status` and
-`Entry Verified` are required so that no day can be closed without the control having been given
-an answer. `Balance Difference` is optional, because an uncounted day legitimately has none.
-
-```markdown
-| CSV column | Notion property | Set after import |
-|---|---|---|
-| Entry Number | Title | Use as the database title |
-| Entry Date | Date | Convert to Date |
-| Row Type | Select (add options after import) | Convert to Select, add options: "Movement", "Day Summary" |
-| Book Section | Select (add options after import) | Convert to Select, add options: "Cash Book", "Bank Book", "Digital Payments Book", "All Books" |
-| Transaction Reference | Text | Leave as Text |
-| Voucher Number | Text | Leave as Text |
-| Party | Text | Leave as Text |
-| Narration | Text | Leave as Text |
-| Mode | Select (add options after import) | Convert to Select, add options: "Cash", "Bank", "Cheque", "Fonepay/QR", "Other Digital Payment", "Mixed" |
-| Cash In | Number (format: currency) | Convert to Number, set format to Currency |
-| Cash Out | Number (format: currency) | Convert to Number, set format to Currency |
-| Opening Cash Balance | Number (format: currency) | Convert to Number, set format to Currency |
-| Cash Closing Balance | Number (format: currency) | Convert to Number, set format to Currency |
-| Bank In | Number (format: currency) | Convert to Number, set format to Currency |
-| Bank Out | Number (format: currency) | Convert to Number, set format to Currency |
-| Opening Bank Balance | Number (format: currency) | Convert to Number, set format to Currency |
-| Bank Closing Balance | Number (format: currency) | Convert to Number, set format to Currency |
-| Digital In | Number (format: currency) | Convert to Number, set format to Currency |
-| Digital Out | Number (format: currency) | Convert to Number, set format to Currency |
-| Opening Digital Balance | Number (format: currency) | Convert to Number, set format to Currency |
-| Digital Closing Balance | Number (format: currency) | Convert to Number, set format to Currency |
-| Debit/Credit Presentation | Text | Leave as Text |
-| Source Documents | Relation (link to the target database) | Convert to Relation, link to the target database |
-| Duplicate Check | Select (add options after import) | Convert to Select, add options: "Checked - Clear", "Checked - Duplicate Found", "Not Checked" |
-| Balance Difference | Number (format: currency) | Convert to Number, set format to Currency |
-| Reconciliation Status | Select (add options after import) | Convert to Select, add options: "Reconciled", "Needs Review", "Unreconciled", "Unknown" |
-| Prepared By | Text | Leave as Text |
-| Reviewed By | Text | Leave as Text |
-| Entry Verified | Select (add options after import) | Convert to Select, add options: "Not started", "In progress", "Blocked", "Done", "Cancelled" |
-| Notes | Text | Leave as Text |
-| Day Book ID | Text (preserve source ID) | Keep imported IDs as Text; optionally add a separate Unique ID property |
-```
-
-The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`, and
+The linked rows are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`, and
 anything pointing at another table stays `relation`. Every option list below is a starting set -
 add options after import, and use the values the business already uses.
 
@@ -489,7 +332,7 @@ See the [Best Practices](references/best-practices.md) reference for the full gu
   done, not what it found.
 - It records a duplicate; it does not delete one, and it does not decide which of two identical
   entries is the mistaken one.
-- Notion relations need both databases imported before the link column resolves.
+- Notion CSV imports do not automatically resolve relation IDs. Import both databases, create the relation property and explicitly map each source reference to the correct target page; verify links after conversion.
 - Select options are a starting set. Rename them to match how the business talks.
 - No automation, reminders or sync. Those need the integration layer.
 - Legal, tax and HR review is still required before this drives real decisions.

@@ -35,11 +35,11 @@ The `SKILL.md` file includes:
 ```html
 <!-- Angular template pattern for data states -->
 @if (error()) {
-<app-error-state [error]="error()" (retry)="load()" />
+<app-error-state message="Unable to load items" [showRetry]="true" (retry)="load()" />
 } @else if (loading() && !data()) {
 <app-skeleton-state />
 } @else if (!data()?.length) {
-<app-empty-state message="No items found" />
+<app-empty-state title="No items found" />
 } @else {
 <app-data-display [data]="data()" />
 }

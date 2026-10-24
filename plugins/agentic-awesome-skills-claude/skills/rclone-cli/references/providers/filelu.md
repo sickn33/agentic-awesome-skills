@@ -80,7 +80,7 @@ Create a new folder named `foldername` in the `Rclone` directory:
 rclone mkdir filelu:foldername
 ```
 
-Delete a folder on FileLu:
+Delete an empty folder on FileLu:
 
 ```console
 rclone rmdir filelu:/folder/path/
@@ -89,7 +89,7 @@ rclone rmdir filelu:/folder/path/
 Delete a file on FileLu:
 
 ```console
-rclone delete filelu:/hello.txt
+rclone deletefile filelu:/hello.txt
 ```
 
 List files from your FileLu account:
@@ -107,7 +107,7 @@ rclone lsd filelu:
 Copy a specific file to the FileLu root:
 
 ```console
-rclone copy D:\hello.txt filelu:
+rclone copy "D:/hello.txt" filelu:/
 ```
 
 Copy files from a local directory to a FileLu directory:
@@ -152,7 +152,8 @@ Get storage info about the FileLu account:
 rclone about filelu:
 ```
 
-All the other rclone commands are supported by this backend.
+Command availability depends on backend capabilities; inspect
+`rclone backend features filelu:` and the command documentation.
 
 ### FolderID instead of folder path
 

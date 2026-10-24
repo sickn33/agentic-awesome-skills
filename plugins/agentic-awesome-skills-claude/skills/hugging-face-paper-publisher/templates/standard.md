@@ -6,6 +6,11 @@ arxiv:
 tags: [machine-learning, deep-learning]
 ---
 
+> Draft template: all sample numbers, benchmark claims, citations and submission
+> dates below are illustrative. Replace them with verified research evidence
+> before sharing or publishing; generation does not submit to arXiv.
+
+
 # {{TITLE}}
 
 **{{AUTHORS}}**

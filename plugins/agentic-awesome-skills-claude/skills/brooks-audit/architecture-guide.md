@@ -99,7 +99,7 @@ Rules:
 3. **Edges** — Solid arrows (`-->`) point FROM the depending module TO the dependency; use dotted arrows with label (`-.->|circular|`) for circular dependencies. If no circular dependencies exist, use only solid arrows
 4. **Node limit** — Keep the graph to ~50 nodes maximum; collapse low-risk leaf modules into their parent if needed
 5. **Fan-out** — For any node with fan-out > 5, use a descriptive label: `HighFanOutModule["ModuleName (fan-out: 7)"]`
-6. **Colors** — Apply `classDef` colors AFTER completing Steps 2-4: `critical` (red `#ff6b6b`) for nodes with Critical findings, `warning` (yellow `#ffd43b`) for Warning findings, `clean` (green `#51cf66`) for nodes with no findings or only Suggestions. If no findings at all, classify all nodes as `clean`
+6. **Colors** — Apply `classDef` colors AFTER completing Steps 2-4: `critical` (red `#ff6b6b`) for nodes with Critical findings, `warning` (yellow `#ffd43b`) for Warning findings, `clean` (green `#51cf66`) for nodes with no findings or only Suggestions. If no findings were observed in a reviewed node, label it no findings observed; sampled/unread nodes remain unknown, not clean
 7. **Direction** — Default to `graph TD` (top-down); use `graph LR` only if the architecture is clearly a left-to-right pipeline
 
 ### Step 2: Scan for Dependency Disorder
@@ -174,7 +174,7 @@ After the six-risk scan, assess the relationship between architecture and team s
 - If yes: is this intentional design or accidental coupling?
 - A mismatch that causes cross-team coordination overhead for every feature is 🔴 Critical.
 - A mismatch that is theoretical but not yet causing pain is 🟡 Warning.
-- If team structure is unknown, note this as context missing and skip the check.
+- If team structure is unknown, note this as context missing and skip the check. A mismatch alone does not establish Critical severity; use concrete observed impact, confidence and project priorities.
 
 **Calibration examples:**
 - 🔴 Critical: the Payments module is owned by Team A but contains auth logic owned by Team B —

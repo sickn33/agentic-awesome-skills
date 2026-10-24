@@ -3,7 +3,7 @@ name: disaster-recovery
 description: Implement disaster recovery strategies and runbooks. Configure RPO/RTO
   targets and failover procedures. Use when planning for business continuity.
 category: security
-risk: safe
+risk: critical
 source: https://github.com/BagelHole/DevOps-Security-Agent-Skills
 source_repo: BagelHole/DevOps-Security-Agent-Skills
 source_type: community
@@ -27,7 +27,7 @@ Implement disaster recovery strategies including RTO/RPO planning, AWS cross-reg
 recovery_metrics:
   RTO:
     definition: "Recovery Time Objective - maximum acceptable downtime"
-    measurement: "From incident declaration to service restoration"
+    measurement: "From the agreed service disruption point to verified recovery; record detection/declaration separately"
     factors:
       - Failover automation maturity
       - Data replication lag
@@ -37,7 +37,7 @@ recovery_metrics:
 
   RPO:
     definition: "Recovery Point Objective - maximum acceptable data loss"
-    measurement: "Time gap between last good backup and the incident"
+    measurement: "Gap between latest recoverable consistent data and disruption; backups/replication may be stale or corrupted"
     factors:
       - Backup frequency
       - Replication method (sync vs. async)
@@ -127,7 +127,7 @@ strategies:
     cost: "$$$$"
     description: "Active-active across regions. Traffic served from both regions simultaneously."
     aws_services:
-      - "DynamoDB Global Tables or Aurora Global Database"
+      - "DynamoDB Global Tables where appropriate; Aurora Global Database normally has one writer region, not multi-region active-active writes"
       - "Route53 latency/weighted routing"
       - "CloudFront with multi-origin"
       - "Global Accelerator"
@@ -135,6 +135,20 @@ strategies:
     pros: "Minimal downtime and data loss"
     cons: "Highest cost, most complex to operate"
 ```
+
+## AWS Cross-Region DR Implementation
+
+Fragments below provision or replace paid production configuration: confirm exact
+account, engine/version support, target region, KMS/IAM grants, backups and approved
+change window first. The listed tier timings/frequencies are planning examples,
+not platform guarantees or universal compliance rules. Aurora secondary-cluster
+creation also needs supported regional engine/version, subnet/security settings
+and instances; a cluster object alone is not a working DR application.
+S3 requires versioning on both buckets, replication-role/KMS permissions and
+explicit handling of existing objects; put-bucket-replication replaces existing
+rules, so merge a reviewed snapshot rather than overwriting it. Replication is not
+an immutable backup and can replicate corruption/deletion. Use a private unique
+temporary file instead of shared `/tmp/replication-config.json` when implementing.
 
 ## AWS Cross-Region DR Implementation
 
@@ -183,7 +197,9 @@ cat > /tmp/replication-config.json << 'EOF'
           "ReplicaKmsKeyID": "arn:aws:kms:us-west-2:123456789012:alias/s3-dr-key"
         }
       },
-      "DeleteMarkerReplication": {"Status": "Enabled"}
+      "DeleteMarkerReplication": {"Status": "Disabled"},
+      "Priority": 1,
+      "SourceSelectionCriteria": {"SseKmsEncryptedObjects": {"Status": "Enabled"}}
     }
   ]
 }
@@ -199,7 +215,7 @@ aws s3api put-bucket-replication \
 aws route53 create-health-check --caller-reference "prod-health-$(date +%s)" \
   --health-check-config '{
     "Type": "HTTPS",
-    "FullyQualifiedDomainName": "api.example.com",
+    "FullyQualifiedDomainName": "primary-health.example.com",
     "Port": 443,
     "ResourcePath": "/health",
     "RequestInterval": 10,
@@ -244,106 +260,38 @@ aws route53 change-resource-record-sets --hosted-zone-id Z123456 \
   }'
 ```
 
-## Failover Script
+## Failover runbook and worked drill
 
-```bash
-#!/usr/bin/env bash
-# dr-failover.sh - Execute disaster recovery failover to DR region
-set -euo pipefail
+The former executable script promoted a replica and declared success after a
+health URL without fencing the primary, updating app DB credentials or verifying
+routing/data. Do not automate that sequence unchanged. Use an owner-approved,
+service-specific runbook with explicit incident authority and rollback limits:
 
-DR_REGION="us-west-2"
-PRIMARY_REGION="us-east-1"
-SLACK_WEBHOOK="${DR_SLACK_WEBHOOK}"
-LOG_FILE="/var/log/dr-failover-$(date +%Y%m%d-%H%M%S).log"
+1. Record disruption/declaration times, intended account/regions and last verified
+   recoverable transaction/replication lag. Obtain the loss acceptance decision.
+2. Fence the old writer and producers, including jobs/webhooks, and verify fencing;
+   a network partition can leave a healthy writer reachable from some clients.
+3. Promote the selected replica with service-specific prerequisites; record the
+   returned status and wait under bounded operator supervision. A promotion breaks
+   the old replication relationship and may not be automatically reversible.
+4. Update DR app database endpoint/secret references, migration compatibility,
+   queues, session stores and allowlists. Scale approved capacity; verify readiness
+   and a synthetic write/read transaction against the intended new writer.
+5. Change the approved traffic records only after readiness. Primary health checks
+   must identify the primary independently, not follow the failover service name.
+   DNS resolution alone is not proof traffic reached DR; inspect region markers,
+   TLS/SNI, caches, errors, replication consistency and external dependencies.
+6. Mark restoration only after end-to-end checks pass. Notifications require an
+   authorized recipient/channel and redact secrets. Report unknowns, not an
+   unconditional “Operational” result. Keep the old writer fenced.
+7. Fail back only after explicit resynchronization/consistency and write-fencing
+   review; never bring both independent databases online as writers.
 
-log() {
-  echo "[$(date -u +%Y-%m-%dT%H:%M:%SZ)] $1" | tee -a "$LOG_FILE"
-}
-
-notify() {
-  curl -s -X POST "$SLACK_WEBHOOK" \
-    -H "Content-Type: application/json" \
-    -d "{\"text\":\"DR FAILOVER: $1\"}" > /dev/null
-}
-
-log "=== DR Failover Initiated ==="
-notify "DR failover initiated to $DR_REGION"
-
-# Step 1: Promote RDS read replica
-log "Step 1: Promoting RDS read replica in $DR_REGION"
-aws rds promote-read-replica \
-  --db-instance-identifier prod-db-dr-replica \
-  --region "$DR_REGION"
-log "Waiting for RDS promotion to complete..."
-aws rds wait db-instance-available \
-  --db-instance-identifier prod-db-dr-replica \
-  --region "$DR_REGION"
-log "RDS promotion complete"
-notify "RDS read replica promoted to primary in $DR_REGION"
-
-# Step 2: Scale up application in DR region
-log "Step 2: Scaling up application in $DR_REGION"
-aws ecs update-service \
-  --cluster prod-cluster-dr \
-  --service api-service \
-  --desired-count 4 \
-  --region "$DR_REGION"
-log "Waiting for ECS service to stabilize..."
-aws ecs wait services-stable \
-  --cluster prod-cluster-dr \
-  --services api-service \
-  --region "$DR_REGION"
-log "ECS service scaled up and stable"
-notify "Application scaled up in $DR_REGION"
-
-# Step 3: Verify health
-log "Step 3: Verifying health in $DR_REGION"
-for i in $(seq 1 10); do
-  STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://dr-alb.us-west-2.elb.amazonaws.com/health")
-  if [ "$STATUS" = "200" ]; then
-    log "Health check passed (attempt $i)"
-    break
-  fi
-  log "Health check failed (attempt $i, status $STATUS), retrying..."
-  sleep 10
-done
-
-if [ "$STATUS" != "200" ]; then
-  log "ERROR: Health check failed after 10 attempts"
-  notify "ALERT: DR health check failing - manual intervention required"
-  exit 1
-fi
-
-# Step 4: Update DNS (if not using automatic Route53 failover)
-log "Step 4: DNS failover (Route53 automatic failover should handle this)"
-log "Verifying DNS resolution..."
-DR_IP=$(dig +short api.example.com)
-log "api.example.com resolves to: $DR_IP"
-
-# Step 5: Verify end-to-end
-log "Step 5: End-to-end verification"
-RESPONSE=$(curl -s "https://api.example.com/health")
-log "Health response: $RESPONSE"
-
-log "=== DR Failover Complete ==="
-notify "DR failover to $DR_REGION complete. Service restored."
-
-# Generate failover report
-cat > "/var/log/dr-failover-report-$(date +%Y%m%d).md" << EOF
-# DR Failover Report
-- **Date:** $(date -u +%Y-%m-%dT%H:%M:%SZ)
-- **Primary Region:** $PRIMARY_REGION
-- **DR Region:** $DR_REGION
-- **RTO Actual:** Calculate from incident declaration
-- **RPO Actual:** Check replication lag at time of incident
-- **Status:** Operational in DR region
-- **Actions Required:**
-  - [ ] Monitor error rates and latency
-  - [ ] Plan failback when primary region is restored
-  - [ ] Conduct post-incident review
-EOF
-```
-
+Worked tabletop: disruption 10:00 UTC, declared 10:04, DR write/read verified
+10:18, latest recovered committed transaction 09:58. Measured recovery elapsed
+from disruption is 18 minutes and data-age gap is 2 minutes; the 14 minutes from
+declaration is a separate interval. These invented times illustrate measurement,
+not a successful drill or proof of the example tier targets.
 
 ## Contents
 

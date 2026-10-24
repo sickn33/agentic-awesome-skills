@@ -16,6 +16,10 @@ or [use HTTP directly](#api-http).
 If you just want to run a remote control then see the [rcd](/commands/rclone_rcd/)
 command.
 
+## Deployment boundary
+
+Keep RC on loopback or a protected Unix socket. Remote exposure requires authenticated access, TLS and network controls; do not set --rc-no-auth on a remotely reachable service. This API can read secrets, delete files and start listeners. Web-GUI downloads/plugins execute or serve third-party content and require a separate reviewed, pinned deployment. CORS is not authentication, and debug/profile output can disclose paths or process data. Do not put passwords or config dumps in URLs/logs. Historical API examples below may omit auth and contain schematic output; check rc/list and installed-version help before use.
+
 ## Supported parameters
 
 ### --rc
@@ -36,7 +40,7 @@ Client certificate authority to verify clients with.
 
 ### --rc-htpasswd=PATH
 
-htpasswd file - if not provided no authentication is done.
+htpasswd file for authentication. Authentication may alternatively be configured with --rc-user/--rc-pass; absence of this particular file does not describe the entire authentication policy.
 
 ### --rc-key=PATH
 
@@ -863,7 +867,7 @@ Eg
     {
         "bytesPerSecond": 1048576,
         "bytesPerSecondTx": 1048576,
-        "bytesPerSecondRx": 131072,
+        "bytesPerSecondRx": 102400,
         "rate": "1M"
     }
 
@@ -1198,7 +1202,7 @@ memory allocated by C code, and memory mapped by syscall.Mmap (because it is not
 A zero limit or a limit that's lower than the amount of memory used by the Go runtime may cause
 the garbage collector to run nearly continuously. However, the application may still make progress.
 
-The memory limit is always respected by the Go runtime, so to effectively disable this behavior,
+This is a soft limit, not a hard process memory cap; the runtime may exceed it to maintain progress. To effectively disable this behavior,
 set the limit very high. math.MaxInt64 is the canonical value for disabling the limit, but values
 much greater than the available memory on the underlying system work just as well.
 
@@ -1243,7 +1247,7 @@ This takes the following parameters:
 {
     "_path": "rc/path",
     "param1": "parameter for the path as documented",
-    "param2": "parameter for the path as documented, etc",
+    "param2": "parameter for the path as documented, etc"
 }
 ```
 
@@ -1746,8 +1750,8 @@ This takes the following parameters:
 - remote - a path within that remote e.g. "dir"
 - opt - a dictionary of options to control the listing (optional)
     - recurse - If set recurse directories
-    - noModTime - If set return modification time
-    - showEncrypted -  If set show decrypted names
+    - noModTime - If set do not return modification time
+    - showEncrypted - If set include underlying encrypted names when using crypt
     - showOrigIDs - If set show the IDs for each item if known
     - showHash - If set return a dictionary of hashes
     - noMimeType - If set don't show mime types
@@ -2220,8 +2224,7 @@ This takes no parameters and returns
 
 - types: list of serve types, eg "nfs", "sftp", etc
 
-The serve types are strings like "serve", "serve2", "cserve" and can
-be passed to serve/start as the serveType parameter.
+The serve types are strings such as "http", "sftp" and "nfs"; pass one to serve/start as its type parameter.
 
 Eg
 
@@ -2630,8 +2633,8 @@ response
 
 ```json
 {
-    "password": "xyz",
-    "username": "xyz"
+    "potato": 2,
+    "sausage": 1
 }
 ```
 

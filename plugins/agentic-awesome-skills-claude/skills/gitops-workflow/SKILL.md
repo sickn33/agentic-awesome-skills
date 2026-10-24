@@ -32,7 +32,7 @@ Implement declarative, Git-based continuous delivery for Kubernetes using ArgoCD
 ## Instructions
 
 1. Define repo layout and desired-state conventions.
-2. Install ArgoCD or Flux and connect clusters.
+2. Review an immutable, version-pinned ArgoCD or Flux installation and connect only authorized clusters.
 3. Configure sync policies, environments, and promotion flow.
 4. Validate rollbacks and secret handling.
 
@@ -40,6 +40,7 @@ Implement declarative, Git-based continuous delivery for Kubernetes using ArgoCD
 
 - Avoid auto-sync to production without approvals.
 - Keep secrets out of Git and use sealed or external secret managers.
+- Confirm kube context, namespace, affected resources and rollback before writes. Review downloaded manifests inertly and pin the reviewed commit/digest; never apply mutable remote YAML directly. Auto-sync, prune and force can delete/recreate resources. The snippets are separate illustrations, not a command sequence to execute in production.
 
 ## OpenGitOps Principles
 
@@ -57,7 +58,9 @@ Implement declarative, Git-based continuous delivery for Kubernetes using ArgoCD
 kubectl create namespace argocd
 
 # Install ArgoCD
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+# Obtain the selected release manifest, review its complete content, then apply
+# the reviewed local file to the authorized context:
+kubectl apply -n argocd -f ./reviewed-argocd-install.yaml
 
 # Get admin password
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
@@ -86,6 +89,8 @@ gitops-repo/
 ```
 
 ### 3. Create Application
+
+The following auto-sync/prune configuration is for an authorized non-production example. For production, omit automated sync until approval and promotion controls are established.
 
 ```yaml
 # argocd/applications/my-app.yaml
@@ -298,13 +303,13 @@ kubeseal --format yaml < secret.yaml > sealed-secret.yaml
 **Sync failures:**
 ```bash
 argocd app get my-app
-argocd app sync my-app --prune
+# Inspect diff/health first; pruning is a separately authorized deletion action.
 ```
 
 **Out of sync status:**
 ```bash
 argocd app diff my-app
-argocd app sync my-app --force
+# Force/replacement sync is not a routine fix; inspect the cause and disruption first.
 ```
 
 ## Related Skills

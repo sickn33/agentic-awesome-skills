@@ -28,6 +28,8 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 
 ## Limitations
 
+- Keep decorative animation separate from action authorization. Provide keyboard alternatives for gestures, honor reduced motion and test final visible states; duplicated visual controls must not create duplicate accessible controls.
+
 - This skill provides design engineering judgment; it does not replace project-specific product requirements, accessibility testing, or real-device motion review.
 - Verify framework versions, installed dependencies, and rendered behavior before treating animation or UI recommendations as production-ready.
 - Do not apply these rules mechanically when an existing brand system, platform convention, or user requirement calls for a different interaction language.

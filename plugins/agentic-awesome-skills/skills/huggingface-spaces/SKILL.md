@@ -13,17 +13,19 @@ license_source: https://github.com/huggingface/skills/blob/main/LICENSE
 # Hugging Face Spaces
 ## When to Use
 
-Use this skill when you need build, deploy, and maintain applications on Hugging Face Spaces — Gradio / Docker / Static SDKs, ZeroGPU and dedicated hardware, model loading, debugging, buckets, inference providers, community grants. Use whenever the user asks to create or host an app on Hugging Face, port code onto...
+Use this skill when you need build, deploy, and maintain applications on Hugging Face Spaces — Gradio / Docker / Static SDKs, ZeroGPU and dedicated hardware, model loading, debugging, buckets, inference providers, community grants. Use whenever the user asks to create or host an app on Hugging Face, port existing code to a Space, diagnose build/runtime errors, or choose storage and inference hardware.
 
 
-Hugging Face Spaces host machine-learning applications. There are 1M+ today; each Space is a git repo. This skill covers creating, building, debugging, and maintaining them.
+Hugging Face Spaces host machine-learning applications. Each Space has a git repository; live catalog totals change. This skill covers creating, building, debugging, and maintaining them.
+
+Modified 2026-10-23: corrected eligibility/version assumptions, deployment/testing boundaries, storage/privacy and dependency recipes. Apache-2.0 upstream attribution is retained.
 
 ## 0. Getting ready
 
 Before anything else:
 
 1. Check the `hf` CLI is installed: `which hf`. If not, `pip install -U huggingface_hub`.
-2. Check the user is logged in: `hf auth whoami`. If not, ask them to run `! hf auth login` in this session — they'll need a write-scoped token from https://huggingface.co/settings/tokens.
+2. Check the user is logged in: `hf auth whoami`. If not, ask them to authenticate locally with `hf auth login`; never paste the token into chat or logs — they'll need a write-scoped token from https://huggingface.co/settings/tokens.
 3. Note `whoami`'s `canPay` and `isPro` flags — they gate hardware choices below.
 
 The `hf-cli` skill teaches an agent every `hf` command and is the recommended companion to this one. Install it with `hf skills add hf-cli` (add `--claude --global` to install for Claude Code as well, user-level).
@@ -42,11 +44,11 @@ Free, no creator cost: **`cpu-basic`** and **`zero-a10g`** (ZeroGPU). Static Spa
 
 **`cpu-basic`** — 2 vCPU / 16 GB. For data viz, API-proxy Spaces, small CPU-bound models.
 
-**ZeroGPU (`zero-a10g`)** — dynamic, per-request GPU allocation on NVIDIA RTX PRO 6000 Blackwell (sm_120). Two sizes: `large` (half MIG, 48 GB, 1× quota) and `xlarge` (full, 96 GB, 2× quota). Free for the Space creator; Space visitors consume their own daily quota (~5 min free / 40 min Pro / 60 min Enterprise). **Gradio-only**, **PyTorch-first**. Requires the creator to be on a PRO / Team / Enterprise plan.
+**ZeroGPU (`zero-a10g`)** — dynamic, per-request GPU allocation on NVIDIA RTX PRO 6000 Blackwell (sm_120). Two sizes: `large` (half MIG, 48 GB, 1× quota) and `xlarge` (full, 96 GB, 2× quota). Free for the Space creator; Space visitors consume their own daily quota (~5 min free / 40 min Pro / 60 min Enterprise). **Gradio-only**, **PyTorch-first**. Hosting eligibility depends on account age/standing and plan; check current ZeroGPU hosting limits before choosing hardware.
 
 **Dedicated GPU** (T4, L4, A10G, L40S, A100, H200) — billed to the Space creator by the hour. List + pricing: `hf spaces hardware`. Only the creator can attach these, and only if `canPay=True`. Use when ZeroGPU genuinely doesn't fit — non-PyTorch main model with heavy init, very-large-model long-context inference, etc.
 
-If a non-PRO user has a use case that wants ZeroGPU, you can still build it: create a `cpu-basic` Space, code the app for ZeroGPU, push, then request a community grant. See [`references/grants.md`](references/grants.md).
+If a non-PRO user has a use case that wants ZeroGPU, you first check whether their account qualifies for free ZeroGPU hosting. If it does not, prepare a CPU-safe skeleton and discuss a grant request. See [`references/grants.md`](references/grants.md).
 
 For the authoritative reference: https://huggingface.co/docs/hub/spaces-overview
 
@@ -73,7 +75,7 @@ Follow the user's explicit request first. If they were vague:
 
 ### Sourcing the model
 
-- **GitHub repo** — clone locally to read structure. If it already has a Gradio demo, the minimal viable path is to adapt it onto ZeroGPU (see [`references/zerogpu.md`](references/zerogpu.md)). Otherwise: read the README + inference code, prefer the PyTorch path, estimate VRAM (bf16 ≈ `params_B × 2` GB; 48 GB fits ≤24B params at bf16, or much larger with quantization — see [`references/zerogpu.md`](references/zerogpu.md) for quantization on ZeroGPU).
+- **GitHub repo** — clone locally to read structure. If it already has a Gradio demo, the minimal viable path is to adapt it onto ZeroGPU (see [`references/zerogpu.md`](references/zerogpu.md)). Otherwise: read the README + inference code, prefer the PyTorch path, estimate VRAM (bf16 ≈ `params_B × 2` GB; 48 GB holds at most 24B bf16 parameters in theory, with no room left for activations, KV cache or runtime overhead, or much larger with quantization — see [`references/zerogpu.md`](references/zerogpu.md) for quantization on ZeroGPU).
 - **HF model repo** — read its README, follow any linked GitHub.
 - **Paper / blog post** — look for an official or unofficial implementation. Don't reimplement unless trivial or the user explicitly asks.
 - **Vague request** — search Spaces first; surface results.
@@ -113,7 +115,7 @@ emoji: 🚀                # pick something representative
 colorFrom: blue          # red|yellow|green|blue|indigo|purple|pink|gray (only these)
 colorTo: indigo
 sdk: gradio              # gradio | docker | static
-sdk_version: 6.15.1      # latest stable unless you have a reason*
+sdk_version: <reviewed-gradio-version>  # replace with a tested compatible release
 app_file: app.py         # gradio only (docker / static use Dockerfile / index.html)
 short_description: ...   # ≤ 60 chars (server rejects longer)
 python_version: "3.12"   # ZeroGPU officially supports 3.10.13 and 3.12.12
@@ -121,7 +123,7 @@ startup_duration_timeout: 30m   # default; bump to 1h for big LLMs / heavy downl
 ---
 ```
 
-\* Reasons to use an older Gradio: a custom component pins it, or you're adapting an existing demo and don't want to rewrite for 5.x→6.x breaking changes. If you need a 5.x, pick `5.50.0` (latest of the series; still supports custom components).
+\* Reasons to use an older Gradio: a custom component pins it, or you're adapting an existing demo and don't want to rewrite for 5.x→6.x breaking changes. Check the current supported/security status before retaining an older release; do not assume a historical pin remains suitable.
 
 All frontmatter options: https://huggingface.co/docs/hub/spaces-config-reference
 
@@ -154,7 +156,7 @@ Short version:
 
 - **Do NOT list**: `gradio`, `spaces`, `huggingface_hub` (preinstalled and platform-managed; pinning them causes resolution failures or silently breaks the ZeroGPU runtime).
 - **Do list if you use them**: `torchvision`, `torchaudio` (not preinstalled), plus everything else (`diffusers`, `transformers`, `accelerate`, `sentencepiece`, …).
-- ZeroGPU only accepts torch `2.8.0`, `2.9.1`, `2.10.0`, `2.11.0`. Default to leaving torch unpinned (the runtime preinstalls the latest). Only pin when a dep forces it.
+- Consult the current supported PyTorch list in the ZeroGPU docs; the four-version list in earlier snapshots is incomplete. Default to leaving torch unpinned (the runtime preinstalls the latest). Only pin when a dep forces it.
 - For prebuilt CUDA-extension wheels (`flash_attn`, `xformers`, `pytorch3d`, `nvdiffrast`, `diff_gaussian_rasterization`, `torchmcubes`): use the prebuilt Blackwell wheels at `https://huggingface.co/datasets/multimodalart/zerogpu-blackwell-wheels/tree/main/wheels`. Full mapping + caveats in [`references/requirements.md`](references/requirements.md).
 
 ### Per-SDK depth
@@ -167,7 +169,7 @@ Short version:
 
 ## 6. Iterate on the Space, not locally
 
-Try to build a release candidate from the user quest locally and push it — then use the live URL as your test loop. The Space environment is the only one that matters; do not try to test locally. `python3 -m py_compile app.py` is the maximum local check worth doing before pushing.
+Build a release candidate from the user request and deploy within the agreed visibility and cost scope — then use the live URL as your test loop. Run useful local parsing, unit and input-validation checks first. Then test an authorized private/staging Space: local success cannot establish ZeroGPU/runtime compatibility, and publication is a separate effect.
 
 Once pushed, pick the cheapest update mechanism for each change — hot-reload for pure Python edits, `hf upload` for code-only files hot-reload can't touch, full rebuild only when `requirements.txt` / `Dockerfile` / README frontmatter actually changed. Full ladder + footguns (hot-reload poisoning factory reboot, runtime.sha lag, etc.) in [`references/debugging.md`](references/debugging.md).
 

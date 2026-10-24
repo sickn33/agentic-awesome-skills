@@ -1,7 +1,7 @@
 ---
 name: remote-gpu-trainer
 description: "Deploy, monitor, and debug long GPU jobs on RENTED/remote instances (AutoDL, RunPod, vast.ai, Lambda, Slurm, K8s): teardown/billing safety, spot resilience, resumable checkpointing, OOM/NaN triage."
-risk: safe
+risk: critical
 source: community
 source_type: community
 source_repo: Hanyuyuan6/remote-gpu-trainer
@@ -76,7 +76,7 @@ form with cross-platform nuance is in **`references/principles.md`** (read it be
 9. **Cost and destructive actions are the user's call.** Never auto-release/terminate, never delete durable files without confirmation; if cleanup can't free space, **ask to expand the disk** rather than silently shrink the experiment.
 10. **Teach the user the platform, don't just drive it.** Most users don't know a platform's non-obvious **conveniences** (one-click SSH-key registration, GPU-availability notifications, built-in panels) or its **danger clocks** (auto-release/auto-delete timers on a *stopped* box — AutoDL releases a 关机 instance after 15 days → data disk gone; a stop that keeps billing; low-balance purge). Surface them on first contact — #9 stops the agent *doing* the dangerous thing, #10 *warns the human* before the clock fires. Per-platform list → each profile's **Surface to the user** block.
 
-> **Monitoring physics (substrate for #3):** foreground Bash hard-caps at 600 s; `run_in_background` has no cap and notifies on exit; a never-exiting watcher never notifies; an unquoted `|` in a poll regex reads stdin and hangs forever. The four-layer monitoring architecture is built on these facts → `references/monitoring_patterns.md`.
+> **Monitoring constraints (substrate for #3):** tool timeouts and exit notifications depend on the host. Check its documented limits; a never-exiting watcher may never notify. An unquoted `|` can create an unintended shell pipeline. The four-layer monitoring architecture is built on these facts → `references/monitoring_patterns.md`.
 
 ## Code discipline (the wrapper & training scripts you write)
 
@@ -218,8 +218,8 @@ lacks, **only sediment a root-caused, reproduced, generalizable one** (a one-off
 not a gotcha — principle #3); **route it** — user/project-specific → the host's memory system,
 generalizable → propose adding to `references/gotchas_universal.md` / the profile §7 /
 `references/training/` (and offer an upstream PR); **never silently rewrite a skill file — draft the
-`symptom → root cause → fix` and let the user approve.** On first use, capture the user's platforms +
-paths + tracker entity into memory so later runs are pre-parameterized. Platform facts carry a `verified
+`symptom → root cause → fix` and let the user approve.** Only when the user explicitly asks to save preferences, capture their platforms +
+paths + tracker entity using the host's memory policy. Platform facts carry a `verified
 <month>` stamp — re-verify any teardown/billing fact against current docs before betting money or data.
 
 ## Limitations

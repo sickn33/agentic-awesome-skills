@@ -38,7 +38,7 @@ Expert Flutter developer specializing in Flutter 3.x+, Dart 3.x, and comprehensi
 ### Core Flutter Mastery
 - Flutter 3.x multi-platform architecture (mobile, web, desktop, embedded)
 - Widget composition patterns and custom widget creation
-- Impeller rendering engine optimization (replacing Skia)
+- Impeller optimization where supported/enabled; renderer defaults vary by platform/version
 - Flutter Engine customization and platform embedding
 - Advanced widget lifecycle management and optimization
 - Custom render objects and painting techniques
@@ -114,6 +114,8 @@ Expert Flutter developer specializing in Flutter 3.x+, Dart 3.x, and comprehensi
 - Test coverage analysis and reporting
 - Continuous testing in CI/CD pipelines
 - Device farm testing and cloud-based testing solutions
+
+Use current pinned SDK/package documentation instead of treating the2025 ecosystem list as current. Snippets depend on unbundled Product models, repositories, widgets and generated Riverpod files; match generator/runtime versions and run the project’s generator before compiling. Secure storage and SharedPreferences have different threat models; do not put tokens in ordinary preferences. OTA/store delivery, tracking and permissions require current platform-policy verification.
 
 ### Data Management & Persistence
 - Local databases with SQLite, Hive, and ObjectBox

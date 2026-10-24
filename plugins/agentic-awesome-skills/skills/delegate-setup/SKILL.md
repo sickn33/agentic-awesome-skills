@@ -57,7 +57,10 @@ Example lane: **feature** → implementer `opencode`, model `opencode/grok`, var
 
 `discover → load → grounding menu → propose (with Basis) → scope → approve → write`
 
-### 1. Discover
+### 1. Verify runtime availability, then discover
+
+This is a docs-only tree: scripts/discover.mjs, config.mjs and lane.mjs are absent. Do not run the example commands against nonexistent paths or fabricate discovery/trust results. If a separately installed runtime exists, inspect its verified revision, license and behavior before using it. Otherwise produce the proposed table/JSON only, clearly marked unvalidated, and stop before config writes that depend on the missing validator/approval-hash mechanism.
+
 
 ```bash
 node "<skill-dir>/scripts/discover.mjs"
@@ -213,3 +216,7 @@ Reinstalling the skills package must not rewrite these files — they live outsi
 - Docs-only import — executable helpers (`scripts/`) not included; see upstream for full runtime. Requires Node 18+.
 
 > Adapted from [amElnagdy/delegate-skills](https://github.com/amElnagdy/delegate-skills) (MIT) — docs-only, runtime not bundled.
+
+## Configuration trust limits
+
+The schema reference describes upstream behavior, not an implementation supplied here. Installed/authenticated does not establish supported model IDs, quota, safe defaults or enforced read-only behavior. A missing runtime means no project trust hash can be claimed. Before an approved write, inspect symlink destinations, preserve unrelated lanes/settings, use private temporary files and avoid exposing session filenames/account metadata. A usage scan remains opt-in and requires verifying its actual implementation reads only the promised metadata. No discovery, session scan, config write or delegation occurred during this review.

@@ -69,7 +69,10 @@ if (userToken === storedToken) { ... }
 
 // SAFE: Constant-time comparison (Node.js)
 const crypto = require('crypto');
-if (crypto.timingSafeEqual(Buffer.from(userToken), Buffer.from(storedToken))) { ... }
+const supplied = Buffer.from(userToken, "utf8");
+const expected = Buffer.from(storedToken, "utf8");
+// Length is public in this protocol; reject mismatches before the equal-length API.
+if (supplied.length === expected.length && crypto.timingSafeEqual(supplied, expected)) { ... }
 ```
 
 ### Random Number Generation
@@ -89,14 +92,7 @@ crypto.getRandomValues(array);
 
 ### Division Operations
 
-```javascript
-// VULNERABLE: Division has variable timing
-const quotient = secret / divisor;
-
-// SAFE: Use multiplication by inverse (if divisor is constant)
-// Precompute: inverse = 1/divisor as fixed-point
-const quotient = Math.floor(secret * inverse);
-```
+A division involving secrets is a review candidate, not automatically an exploitable leak. Do not replace it with a truncated reciprocal-multiply sketch: signedness, overflow, operand bounds and correction steps determine arithmetic correctness. Use a reviewed cryptographic implementation with a documented input domain, then inspect generated native code on the deployment CPU. Python/Ruby integers and JavaScript arithmetic do not become constant-time merely by replacing division with multiplication or masking.
 
 ## TypeScript Notes
 
@@ -125,6 +121,8 @@ The analyzer also performs source-level pattern matching to detect:
 - Dangerous function calls (`Math.random()`, etc.)
 
 This catches issues that bytecode analysis might miss due to parsing limitations.
+
+`timingSafeEqual` throws for unequal byte lengths and does not make surrounding parsing/control flow constant-time. Fixed-length input or padding does not make JSON parsing or base64 conversion constant-time.
 
 ## Browser Considerations
 

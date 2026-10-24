@@ -307,7 +307,7 @@
     {
       "id": "10",
       "title": "Open Problems and Future Directions",
-      "guidance": "Discuss long-horizon reliability, cost and latency in orchestrator-worker systems, portability of harnesses across base models, standardization of tool interfaces, security implications surfaced by offensive capability studies, the challenge of measuring process-level behavior rather than aggregate accuracy, and the role of community-curated resources in tracking a fast-moving field. Close by motivating continued integration across the seven pillars and the importance of open inference infrastructure for reproducible agent research."
+      "guidance": "Discuss long-horizon reliability, cost and latency in orchestrator-worker systems, portability of harnesses across base models, standardization of tool interfaces, security implications surfaced by offensive capability studies, the challenge of measuring process-level behavior rather than aggregate accuracy, and the role of community-curated resources in tracking a fast-moving field. Close by motivating continued integration across the eight pillars and the importance of open inference infrastructure for reproducible agent research."
     }
   ],
   "table": {
@@ -1192,5 +1192,7 @@
       "venue": "arXiv:2507.13334",
       "summary": "Defines Context Engineering as a formal discipline, covering retrieval, processing, and management of information supplied to LLMs and their integration into production agent pipelines."
     }
-  ]
+  ],
+  "verification_status": "unverified-example",
+  "review_note": "Historical generated example, not a verified literature review. Numerous author labels are placeholders; bibliographic metadata, identifiers, duplication and performance claims require independent primary-source checks before reuse."
 }

@@ -105,7 +105,7 @@ if (navigator.hardwareConcurrency <= 2 || window.innerWidth < 768) {
 ```
 
 ### Option C — Export as video for mobile
-For decorative/non-interactive scenes: record the animation in Spline as MP4, serve that on mobile instead. Users get the visual, no GPU cost.
+For decorative/non-interactive scenes: record the animation in Spline as MP4, serve that on mobile instead. Video still has decode/render/network costs; provide controls or respect reduced motion.
 
 ```js
 const isMobile = window.innerWidth < 768;
@@ -123,7 +123,7 @@ if (isMobile) {
 
 ## Core Web Vitals (LCP / CLS)
 
-Spline scenes are almost always the **Largest Contentful Paint** element, which means they directly affect your Google score.
+Canvas itself is not an LCP candidate; scene loading can still delay eligible images/text/video through CPU/network contention. Measure the actual LCP element using browser tooling.
 
 ### Preventing Layout Shift (CLS)
 The canvas loads after HTML, causing the page to jump. Fix it by pre-allocating space:
@@ -146,7 +146,7 @@ Or for the web component:
 ```
 
 ### Lighthouse note
-Lighthouse often cannot calculate a performance score at all when a Spline scene is the dominant above-the-fold element. This is a known Lighthouse limitation, not necessarily a site problem. Use WebPageTest or Chrome DevTools instead for real profiling.
+Investigate the actual Lighthouse error, eligible content and trace rather than dismissing a missing score as a known Spline limitation. Combine lab and field measurement.
 
 ---
 

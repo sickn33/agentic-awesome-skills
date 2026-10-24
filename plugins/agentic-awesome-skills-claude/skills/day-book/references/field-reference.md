@@ -14,7 +14,7 @@
 | 10 | Cash In | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `15000.00` |
 | 11 | Cash Out | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `11800.00` |
 | 12 | Opening Cash Balance | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `25000.00` |
-| 13 | Cash Closing Balance | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `28050.00` |
+| 13 | Cash Closing Balance | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `28200.00` |
 | 14 | Bank In | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `140000.00` |
 | 15 | Bank Out | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `95485.00` |
 | 16 | Opening Bank Balance | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `1250000.00` |
@@ -42,4 +42,4 @@ position could have marked `Yes`. `Reconciliation Status` carries the value set
 `Reconciled | Needs Review | Unreconciled | Unknown`, and it takes the worst of the three books.
 
 
-See the [Select Options](references/select-options.md) reference for the full guidance.
+See the [Select Options](select-options.md) reference for the full guidance.

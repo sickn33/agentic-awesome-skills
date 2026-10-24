@@ -1,5 +1,7 @@
 # Observability Templates
 
+> Review boundary: Illustrative Go fragments only: hook registration depends on the actual host API; there is no bundled agent integration. Capture only authorized redacted fields, exclude raw prompts/system prompts/credentials/tool payloads by default, use private files and bounded retention, and do not use traces as training data without explicit authorization. A trace is not a full replay or proof that an action succeeded.
+
 Templates for agent observability infrastructure.
 
 Advanced profile only. Load this reference only when the user explicitly requests agent execution
@@ -104,7 +106,11 @@ func (t *AgentTrace) Export(path string) error {
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(path, data, 0644)
+	// Use a trusted private output directory; reject symlinks and refuse overwrites.
+	f, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0600)
+	if err != nil { return err }
+	if _, err := f.Write(data); err != nil { f.Close(); return err }
+	return f.Close()
 }
 
 func Load(path string) (*AgentTrace, error) {
@@ -296,20 +302,4 @@ type TraceSummary struct {
 
 To wire the observability hook into an existing agent:
 
-```go
-// In agent initialization:
-recorder := observability.NewTraceRecorder(sessionId)
-hook := observability.NewObservabilityHook(recorder)
-
-// Register as PostToolUse hook
-agent.AddPostToolUseHook(hook)
-
-// After agent completes:
-traces := recorder.GetTraces()
-summary := recorder.Summary()
-summary.Print()
-
-// Export for analysis
-data, _ := recorder.ExportJSON()
-os.WriteFile("trace.json", data, 0644)
-```
+The example recorder provides `Record`, `GetTraces`, `Summary` and `ExportJSON`; it does not provide `NewObservabilityHook`, host `AddPostToolUseHook`, or `Summary.Print`. Implement and test an adapter to the actual host interface rather than inventing these calls. Bound record count/bytes and duration; redact before recording, deep-copy mutable payloads and return checked export errors. The self-test runner above deliberately returns an integration error and must never be reported as a successful test run.

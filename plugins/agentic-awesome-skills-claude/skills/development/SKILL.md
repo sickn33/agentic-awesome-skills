@@ -23,6 +23,10 @@ Use this workflow when:
 - Full-stack feature development
 - Cross-platform application development
 
+## Scope and completion
+
+Select only phases needed for the user’s request. Skill names are references, not installed tools or delegation authority; read selected current skills before use. This workflow does not authorize paid services, production deployment, external messaging or destructive changes. Tie completion to observed checks and preserve existing project version constraints rather than adopting historical stack examples.
+
 ## Workflow Phases
 
 ### Phase 1: Project Setup and Scaffolding
