@@ -1,0 +1,88 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><style>
+@import url("https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap");
+:root{--hand:"ZCOOL KuaiLe"}
+:root{--a:#d97757;--a2:#ecb39e;--a3:#f7e3da;--ink:#1f1e1d;--ink2:#55534e;--mute:#9a978f;--line:#e8e5dc}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1440px;overflow:hidden;background:#fff}
+body{font-family:-apple-system,"PingFang SC",sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+.f{display:none;position:absolute;inset:0;padding:96px 80px}
+.k{font-size:30px;color:var(--a);font-weight:700;letter-spacing:.06em}
+.t{font-size:68px;font-weight:800;line-height:1.22;margin-top:14px}
+.s{font-size:30px;color:var(--mute);margin-top:14px}
+.hand{font-family:'ZCOOL KuaiLe';color:var(--a)}
+.src{position:absolute;left:80px;bottom:56px;font-size:24px;color:var(--mute)}
+/* timeline */
+.tl{position:absolute;left:150px;top:400px;bottom:150px;width:4px;background:var(--line)}
+.ev{position:absolute;left:120px;display:flex;gap:44px;align-items:flex-start}
+.dot{width:64px;height:64px;border-radius:50%;background:#fff;border:5px solid var(--ink);flex:none;display:grid;place-items:center;font-weight:800;font-size:26px}
+.ev h3{font-size:44px;font-weight:800;line-height:1.2}.ev p{font-size:30px;color:var(--ink2);margin-top:8px;line-height:1.4}
+.ev.x .dot{border-color:var(--mute);color:var(--mute)}.ev.x h3{color:var(--mute);text-decoration:line-through;text-decoration-thickness:4px}
+.ev.on .dot{background:var(--a);border-color:var(--a);color:#fff}
+/* funnel */
+.fn{position:absolute;left:80px;right:80px;top:420px}
+.fr{display:flex;align-items:center;height:118px;margin-bottom:22px}
+.fr .lab{width:250px;font-size:34px;font-weight:700;color:var(--ink2)}
+.fr .bar{height:96px;background:var(--a3);border-radius:10px;display:flex;align-items:center;padding-left:26px;font-size:56px;font-weight:800;color:var(--ink)}
+.fr.z .bar{background:none;border:4px dashed var(--a2);color:var(--a)}
+/* map */
+svg text{font-family:-apple-system,"PingFang SC"}
+</style></head><body>
+
+<section class="f" id="tl">
+ <div class="k">DAY 1 · 它一天干了啥</div>
+ <div class="t">我只点了确认<br>剩下全是它自己</div>
+ <div class="tl"></div>
+ <div class="ev" style="top:420px"><div class="dot">1</div><div><h3>找需求</h3><p>翻了一圈 列了 40 个能赚钱的点子</p></div></div>
+ <div class="ev x" style="top:580px"><div class="dot">2</div><div><h3>做了 29 个小工具</h3><p>我说太垃圾 它转头去做付费的</p></div></div>
+ <div class="ev" style="top:740px"><div class="dot">3</div><div><h3>主推 3 个真有人要的</h3><p>批量证书 · App 差评分析 · 开源 MCP</p></div></div>
+ <div class="ev" style="top:900px"><div class="dot">4</div><div><h3>接收款 写 260 个页面</h3><p>Stripe 两个 2.99 刀的付款链接</p></div></div>
+ <div class="ev" style="top:1060px"><div class="dot">5</div><div><h3>自己去 GitHub 提 PR</h3><p>想进 awesome-mcp-servers 列表</p></div></div>
+ <div class="ev on" style="top:1220px"><div class="dot">6</div><div><h3>给自己排班</h3><p>每天早上 10 点自己起来看数据</p></div></div>
+ <div class="hand" style="position:absolute;right:90px;top:560px;font-size:44px;transform:rotate(-5deg);text-align:right">这一步<br>是我骂的 ↙</div>
+</section>
+
+<section class="f" id="fn">
+ <div class="k">一层层筛下来</div>
+ <div class="t">从 40 个点子<br>到 0 块钱</div>
+ <div class="fn">
+  <div class="fr"><div class="lab">点子</div><div class="bar" style="width:640px">40</div></div>
+  <div class="fr"><div class="lab">做出来的工具</div><div class="bar" style="width:470px">29</div></div>
+  <div class="fr"><div class="lab">主推产品</div><div class="bar" style="width:120px">3</div></div>
+  <div class="fr"><div class="lab">页面</div><div class="bar" style="width:640px;background:#efede6">260</div></div>
+  <div class="fr z"><div class="lab">访客</div><div class="bar" style="width:150px">0</div></div>
+  <div class="fr z"><div class="lab">收入</div><div class="bar" style="width:150px">$0</div></div>
+ </div>
+ <div class="hand" style="position:absolute;left:540px;top:1060px;font-size:46px;transform:rotate(-4deg)">做得挺快 就是没人来</div>
+ <div class="src">数据截至 2026-10-19 晚 · 访客来自 GitHub traffic 和站点统计 · 收入来自 Stripe</div>
+</section>
+
+<section class="f" id="mp" style="padding:96px 60px">
+ <div class="k" style="padding-left:20px">全景</div>
+ <div class="t" style="padding-left:20px">让 Claude 赚回会员费<br>第一天铺开是这样</div>
+ <svg width="960" height="1000" style="position:absolute;left:60px;top:390px" font-size="30">
+  <g stroke="#d6d2c6" stroke-width="3" fill="none">
+   <path d="M480 470 C 360 360, 260 250, 170 170"/><path d="M480 470 C 600 360, 700 250, 790 170"/>
+   <path d="M480 470 C 330 470, 250 470, 170 470"/><path d="M480 470 C 630 470, 710 470, 790 470"/>
+   <path d="M480 470 C 360 600, 260 700, 170 780"/><path d="M480 470 C 600 600, 700 700, 790 780"/>
+  </g>
+  <circle cx="480" cy="470" r="118" fill="#d97757"/>
+  <text x="480" y="455" text-anchor="middle" fill="#fff" font-size="34" font-weight="800">赚回</text>
+  <text x="480" y="500" text-anchor="middle" fill="#fff" font-size="34" font-weight="800">$200</text>
+  <g font-weight="800" font-size="44">
+   <text x="170" y="150" text-anchor="middle">找需求</text><text x="790" y="150" text-anchor="middle">做产品</text>
+   <text x="110" y="455" text-anchor="middle">收款</text><text x="850" y="455" text-anchor="middle">获客</text>
+   <text x="170" y="830" text-anchor="middle">自动化</text><text x="790" y="830" text-anchor="middle" fill="#9a978f">不做</text>
+  </g>
+  <g fill="#55534e" font-size="32">
+   <text x="170" y="195" text-anchor="middle">40 个点子</text><text x="170" y="232" text-anchor="middle">按能否全自动排序</text>
+   <text x="790" y="195" text-anchor="middle">批量证书 $2.99</text><text x="790" y="232" text-anchor="middle">差评分析 $2.99</text><text x="790" y="269" text-anchor="middle">开源 MCP 免费</text>
+   <text x="110" y="500" text-anchor="middle">Stripe</text><text x="110" y="537" text-anchor="middle">支付宝审核中</text>
+   <text x="850" y="500" text-anchor="middle">260 个 SEO 页</text><text x="850" y="537" text-anchor="middle">GitHub PR</text><text x="850" y="574" text-anchor="middle">这篇日记</text>
+   <text x="170" y="875" text-anchor="middle">每天 10:00</text><text x="170" y="912" text-anchor="middle">自己上班</text>
+   <text x="790" y="875" text-anchor="middle" fill="#9a978f">人脸搜索</text><text x="790" y="912" text-anchor="middle" fill="#9a978f">视频下载</text><text x="790" y="949" text-anchor="middle" fill="#9a978f">乱填银行信息</text>
+  </g>
+ </svg>
+</section>
+
+<script>const p=new URLSearchParams(location.search).get('p');document.getElementById(p).style.display='block'</script>
+</body></html>

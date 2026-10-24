@@ -1,0 +1,122 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><style>
+@import url("https://fonts.googleapis.com/css2?family=ZCOOL+KuaiLe&display=swap");
+:root{--hand:"ZCOOL KuaiLe"}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1440px;overflow:hidden;background:#0b0b0b}
+body{font-family:-apple-system,"PingFang SC",sans-serif;color:#fff;-webkit-font-smoothing:antialiased}
+:root{--y:#f5d90a;--a:#d97757;--m:#8b8880}
+.f{display:none;position:absolute;inset:0;overflow:hidden;background:radial-gradient(ellipse 80% 55% at 50% 105%,#2a2620,#0b0b0b 72%)}
+/* series lockup */
+.lock{position:absolute;top:44px;left:56px;right:56px;display:flex;align-items:center;gap:14px;font-size:26px;font-weight:600;color:#cfccc3;z-index:5}
+.lock .av{width:44px;height:44px;border-radius:50%;background:#c6e86b;color:#111;display:grid;place-items:center;font-weight:800;font-size:22px}
+.lock .day{margin-left:auto;font-family:"SF Mono",Menlo,monospace;font-size:24px;color:#111;background:var(--y);padding:6px 14px;border-radius:8px;font-weight:700}
+/* progress strip (IP asset) */
+.fade{position:absolute;left:0;right:0;bottom:0;height:150px;background:linear-gradient(transparent,#0b0b0b 70%);z-index:4}
+.prog{position:absolute;left:56px;right:56px;bottom:40px;display:flex;align-items:center;gap:18px;font-size:24px;color:var(--m);z-index:5}
+.prog .bar{flex:1;height:10px;border-radius:5px;background:#2b2925;position:relative}
+.prog .bar i{position:absolute;left:0;top:0;bottom:0;width:0.8%;background:var(--y);border-radius:5px}
+.prog b{color:#fff;font-weight:700}
+.ic{display:none;position:absolute;top:150px;left:50%;transform:translateX(-50%);width:76px;height:76px;border-radius:22px;background:#1d1c19;border:1.5px solid #34322d;display:grid;place-items:center;font-size:40px;color:var(--y)}
+h1{position:absolute;top:170px;left:0;right:0;text-align:center;font-size:88px;line-height:1.15;font-weight:900;letter-spacing:-.015em}
+.hl{color:#111;background:var(--y);padding:0 12px;border-radius:6px;-webkit-box-decoration-break:clone;display:inline-block;transform:rotate(-1.5deg)}
+.aside{position:absolute;font-family:'ZCOOL KuaiLe';color:var(--y);z-index:6;white-space:nowrap}
+.sub{position:absolute;left:90px;right:90px;text-align:center;font-size:34px;line-height:1.5;color:#b9b6ad;font-weight:500}
+.ph{position:absolute;left:180px;width:720px;border-radius:84px;background:#000;padding:16px;box-shadow:0 0 0 3px #3b3a37,0 70px 140px rgba(0,0,0,.7)}
+.ph .sc{border-radius:68px;overflow:hidden;height:100%;background:#fff;position:relative}
+.ph .sc img{display:block;width:100%}
+.ph .di{position:absolute;top:34px;left:50%;transform:translateX(-50%);width:170px;height:48px;border-radius:24px;background:#000;z-index:3}
+.pop{position:absolute;background:#fff;color:#111;border-radius:32px;box-shadow:0 50px 100px rgba(0,0,0,.6),0 6px 16px rgba(0,0,0,.35);overflow:hidden;z-index:4}
+.mag{position:absolute;border-radius:50%;border:8px solid #fff;box-shadow:0 30px 70px rgba(0,0,0,.6);background-repeat:no-repeat;z-index:4}
+.tag{display:inline-block;background:var(--y);color:#111;font-weight:800;border-radius:999px;padding:8px 22px}
+.hand{font-family:'ZCOOL KuaiLe';color:var(--y)}
+.laurel{display:flex;align-items:center;justify-content:center;gap:16px;color:#cfccc3;font-size:28px;font-weight:600}
+.laurel span{font-size:52px;color:var(--y);font-family:Georgia}
+</style></head><body>
+<template id="chrome">
+ <div class="lock"><div class="av">做</div>做了个 · AI 打工日记<span class="day">DAY 001</span></div>
+ <div class="prog">回本进度<div class="bar"><i></i></div><b>$0</b> / $200</div>
+</template>
+
+<section class="f" id="p1">
+ <h1 style="top:150px;font-size:92px">花 200 刀请了个<br>AI 员工<br><span class="hl">现在它得自己还</span></h1>
+ <div class="laurel" style="position:absolute;top:530px;left:0;right:0"><i style="width:60px;height:2px;background:#f5d90a"></i>真实数据 每天更新 还清为止<i style="width:60px;height:2px;background:#f5d90a"></i></div>
+ <div class="ph" style="top:640px;height:1000px"><div class="di"></div><div class="sc"><img src="screens/u-xd.png"></div></div>
+ <div class="pop" style="left:600px;top:930px;width:400px;padding:30px 34px;transform:rotate(-4deg)">
+  <div style="font-size:26px;color:#777">第一天进账</div><div style="font-size:130px;font-weight:900;letter-spacing:-.05em;line-height:1">$0</div><div style="font-size:26px;color:#777;margin-top:6px">比较稳定</div></div>
+</section>
+
+<section class="f" id="p2"><div class="aside" style="left:640px;top:470px;font-size:40px;transform:rotate(4deg)">老板是我 吧？</div>
+  <h1>新型劳动关系<br><span class="hl">它干活 我点确认</span></h1>
+ <div class="ph" style="top:560px;height:1000px"><div class="di"></div><div class="sc"><img src="screens/u-cc.png"></div></div>
+ <div class="pop" style="left:70px;top:1040px;width:620px;padding:30px 36px;transform:rotate(-2.5deg)">
+  <div style="font-size:24px;color:var(--a);font-weight:800;letter-spacing:.12em">分工</div>
+  <div style="font-size:40px;font-weight:800;line-height:1.45;margin-top:8px">Claude 找需求 写代码 上线 收款<br><span style="color:#999">我 点确认（也挺累的）</span></div></div>
+</section>
+
+<section class="f" id="p3"><div class="aside" style="left:700px;top:420px;font-size:38px;transform:rotate(5deg)">没有加班费</div>
+  <h1>AI 打工人的第一天<br>卷了<span class="hl">6 件事</span></h1>
+ <div class="ph" style="top:560px;height:1000px"><div class="di"></div><div class="sc"><img src="screens/f-tl.png" style="margin-top:-225px"></div></div>
+</section>
+
+<section class="f" id="p4">
+  <h1>丢一张 Excel<br><span class="hl">几百张证书当场下班</span></h1>
+ <div class="sub" style="top:410px">发证书的老师和 HR 可以早点走了 一行名单一张 PDF</div>
+ <div class="pop" style="left:150px;top:700px;width:780px;height:560px;transform:rotate(-6deg);opacity:.55"><img src="screens/raw/cert-crop.png" style="width:100%"></div>
+ <div class="pop" style="left:150px;top:720px;width:780px;height:560px;transform:rotate(-3deg);opacity:.8"><img src="screens/raw/cert-crop.png" style="width:100%"></div>
+ <div class="pop" style="left:150px;top:740px;width:780px;height:560px"><img src="screens/raw/cert-crop.png" style="width:100%"></div>
+ <div style="position:absolute;left:0;right:0;top:1250px;text-align:center;z-index:6"><span class="tag" style="font-size:34px">US$2.99 一批 · 不用订阅</span></div>
+</section>
+
+<section class="f" id="p5">
+  <h1>一个 App 被骂啥<br><span class="hl">10 秒吃完瓜</span></h1>
+ <div class="sub" style="top:410px">拿绿鸟 Duolingo 开刀 总评 4.7<br>最近 500 条只剩 3.7 大家在骂涨价</div>
+ <div class="pop" style="left:60px;top:700px;width:960px;padding:0"><img src="screens/raw/rev-crop.png" style="width:100%;display:block"></div>
+ <div class="mag" style="left:300px;top:930px;width:330px;height:330px;background-image:url(screens/raw/rev-crop.png);background-size:2300px auto;background-position:-560px -470px"></div>
+ <div class="hand" style="position:absolute;left:640px;top:1180px;font-size:44px;transform:rotate(-4deg);z-index:6">↖ 一个月掉了 1 分</div>
+ <div style="position:absolute;left:0;right:0;top:1270px;text-align:center;z-index:6"><span class="tag" style="font-size:34px">免费预览 · 完整报告 US$2.99</span></div>
+</section>
+
+<section class="f" id="p6"><div class="aside" style="left:70px;top:560px;font-size:38px;transform:rotate(-5deg)">开源免费 ↓</div>
+  <h1>给 Claude 装个外挂<br><span class="hl">视频网页秒变文字</span></h1>
+ <div class="sub" style="top:410px">开源免费 YouTube 整个播放列表 网页 App 评论都能转</div>
+ <div class="ph" style="top:640px;height:1000px"><div class="di"></div><div class="sc"><img src="screens/raw/mcp.png"></div></div>
+ <div class="pop" style="left:90px;top:1110px;width:900px;padding:26px 34px;transform:rotate(1.5deg)">
+  <div style="font-size:24px;color:#57606a">PR 是它自己提的 我连 GitHub 都没打开</div>
+  <div style="font-size:34px;font-weight:700;margin-top:6px">Add toolkb-mcp <span style="color:#57606a;font-weight:400">#16953</span> <span style="background:#1f883d;color:#fff;font-size:24px;padding:4px 14px;border-radius:99px;vertical-align:middle">Open</span></div>
+  <div style="font-size:26px;color:#0969da;margin-top:8px">🤖 Generated with Claude Code</div></div>
+</section>
+
+<section class="f" id="p7"><div class="aside" style="left:690px;top:430px;font-size:40px;transform:rotate(5deg)">法务部附体</div>
+  <h1>我想赚快钱<br><span class="hl">它比我有原则</span></h1>
+ <div class="ph" style="top:560px;height:1000px"><div class="di"></div><div class="sc"><img src="screens/u-cc.png" style="margin-top:-300px"></div></div>
+ <div class="pop" style="left:100px;top:1060px;width:880px;padding:30px 44px;transform:rotate(-1.5deg)">
+  <div style="display:flex;justify-content:space-between;font-size:42px;font-weight:800;line-height:1.75"><span>人脸全网搜索</span><span style="color:var(--a)">不做</span></div>
+  <div style="display:flex;justify-content:space-between;font-size:42px;font-weight:800;line-height:1.75"><span>视频下载</span><span style="color:var(--a)">不做</span></div>
+  <div style="display:flex;justify-content:space-between;font-size:42px;font-weight:800;line-height:1.75"><span>银行信息随便填</span><span style="color:var(--a)">不填</span></div></div>
+</section>
+
+<section class="f" id="p8" style="background:var(--y);color:#111">
+ <div style="position:absolute;left:0;right:0;top:170px;text-align:center;font-size:40px;font-weight:800">第一天结果</div>
+ <div style="position:absolute;left:0;right:0;top:230px;text-align:center;font-size:440px;font-weight:900;letter-spacing:-.05em;line-height:1">$0</div>
+ <div style="position:absolute;left:80px;right:80px;top:820px;display:flex;justify-content:space-between;border-top:3px solid #111;padding-top:36px">
+  <div><b style="font-size:80px;font-weight:900">40</b><div style="font-size:28px">个点子</div></div><div><b style="font-size:80px;font-weight:900">29</b><div style="font-size:28px">个工具</div></div><div><b style="font-size:80px;font-weight:900">3</b><div style="font-size:28px">个主推</div></div><div><b style="font-size:80px;font-weight:900">260</b><div style="font-size:28px">个页面</div></div><div><b style="font-size:80px;font-weight:900">0</b><div style="font-size:28px">个访客</div></div></div>
+ <div style="position:absolute;left:0;right:0;top:1110px;text-align:center;font-family:'ZCOOL KuaiLe';font-size:60px;transform:rotate(-2deg)">260 个页面 0 个访客<br>页面比人多</div>
+</section>
+
+<section class="f" id="p9">
+  <h1 style="top:150px">赌一下<br>它第几天<span class="hl">赚到第一块钱</span></h1>
+ <div id="cal" style="position:absolute;left:110px;right:110px;top:560px;display:grid;grid-template-columns:repeat(7,1fr);gap:16px"></div>
+ <div class="hand" style="position:absolute;left:140px;top:500px;font-size:40px;transform:rotate(-3deg)">今天 ↓</div>
+ <div class="pop" style="left:110px;top:1080px;width:860px;padding:26px 30px;background:rgba(245,245,245,.97);display:flex;gap:24px;align-items:center">
+  <div style="width:92px;height:92px;border-radius:22px;background:var(--a);flex:none;display:grid;place-items:center;color:#fff;font-size:56px">✳</div>
+  <div style="flex:1"><div style="font-size:30px;font-weight:700;display:flex;justify-content:space-between">Claude<span style="font-weight:400;color:#777;font-size:26px">明天 10:00</span></div><div style="font-size:31px;margin-top:6px">开工 先把网站交给 Google 收录</div></div></div>
+ <div class="sub" style="top:1250px;color:#fff;font-weight:700">评论区报个数 关注看开奖</div>
+</section>
+
+<script>
+const p=new URLSearchParams(location.search).get('p');const el=document.getElementById(p);el.style.display='block';
+if(!el.style.background||p!=='p8'){const fd=document.createElement('div');fd.className='fade';el.appendChild(fd);el.appendChild(document.getElementById('chrome').content.cloneNode(true))}
+if(p==='p8'){const t=document.getElementById('chrome').content.cloneNode(true);t.querySelector('.lock').style.color='#111';t.querySelector('.day').style.cssText+='background:#111;color:#f5d90a';const pr=t.querySelector('.prog');pr.style.color='#5c5100';pr.querySelector('b').style.color='#111';pr.querySelector('.bar').style.background='rgba(0,0,0,.15)';pr.querySelector('i').style.background='#111';el.appendChild(t)}
+const cal=document.getElementById('cal');if(cal){for(let i=1;i<=28;i++){const d=document.createElement('div');d.textContent=i;d.style.cssText='aspect-ratio:1;border-radius:18px;display:grid;place-items:center;font-size:34px;font-weight:700;'+(i===1?'background:#f5d90a;color:#111':'background:#1d1c19;color:#55534d;border:1.5px solid #2e2c28');cal.appendChild(d)}}
+</script>
+</body></html>

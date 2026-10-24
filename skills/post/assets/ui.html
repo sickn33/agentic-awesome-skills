@@ -1,0 +1,164 @@
+<!doctype html><html lang="zh"><head><meta charset="utf-8"><style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1080px;height:1440px;overflow:hidden;background:#000}
+.p{display:none;width:390px;height:520px;zoom:2.7693;position:relative;overflow:hidden;font-family:-apple-system,"PingFang SC",sans-serif;-webkit-font-smoothing:antialiased}
+.sb{height:47px;display:flex;justify-content:space-between;align-items:center;padding:0 30px 0 38px;font-weight:600;font-size:16px}
+.sb .r{display:flex;gap:6px;align-items:center}
+.sb svg{height:12px}
+/* X */
+.x{background:#fff;color:#0f1419}
+.x.dk{background:#000;color:#e7e9ea}
+.xnav{height:44px;display:flex;align-items:center;padding:0 16px;font-size:17px;font-weight:700;gap:28px}
+.x .post{padding:12px 16px 0}
+.xh{display:flex;align-items:center;gap:10px}
+.xav{width:40px;height:40px;border-radius:50%;background:#c6e86b;display:grid;place-items:center;font-weight:700;font-size:17px;color:#111}
+.xn{font-weight:700;font-size:15px;line-height:19px}.xu{color:#536471;font-size:15px;line-height:19px}
+.dk .xu,.dk .xm{color:#71767b}
+.xt{font-size:17px;line-height:24px;margin-top:12px;white-space:pre-line;letter-spacing:-.1px}
+.xm{color:#536471;font-size:15px;margin:16px 0 0;padding-bottom:14px;border-bottom:.5px solid #eff3f4}
+.dk .xm{border-color:#2f3336}
+.xa{display:flex;justify-content:space-between;padding:12px 6px;border-bottom:.5px solid #eff3f4}
+.dk .xa{border-color:#2f3336}
+.xa svg{width:20px;height:20px;fill:#536471}
+.dk .xa svg{fill:#71767b}
+.xr{position:absolute;bottom:0;left:0;right:0;border-top:.5px solid #eff3f4;padding:10px 16px 26px;display:flex;align-items:center;gap:10px;color:#536471;font-size:15px}
+.dk .xr{border-color:#2f3336;color:#71767b}
+.xr .xav{width:32px;height:32px;font-size:13px}
+.xr .pill{margin-left:auto;background:#0f1419;color:#fff;opacity:.5;border-radius:99px;padding:6px 16px;font-weight:700;font-size:14px}
+.dk .xr .pill{background:#eff3f4;color:#0f1419}
+.media{margin-top:12px;border-radius:16px;overflow:hidden;border:.5px solid #2f3336;height:118px;position:relative;background:#f7f8fa}
+.media img{position:absolute;width:620px;left:-12px;top:-185px}
+/* lock */
+.lock{background:radial-gradient(ellipse at 30% 20%,#5a6b8c,#1d2433 60%,#0b0d14);color:#fff;text-align:center}
+.lock .d{font-size:19px;font-weight:600;margin-top:18px;opacity:.9}
+.lock .t{font-size:92px;font-weight:700;line-height:1;margin-top:2px;letter-spacing:-2px;font-family:"SF Pro Rounded",-apple-system}
+.nt{margin:10px 10px 0;background:rgba(245,245,245,.72);backdrop-filter:blur(20px);border-radius:20px;padding:11px 13px;color:#000;text-align:left;display:flex;gap:10px}
+.ic{width:38px;height:38px;border-radius:9px;flex:none;display:grid;place-items:center}
+.nt b{font-size:15px;font-weight:600}.nt .tm{float:right;color:#555;font-size:13px}
+.nt p{font-size:15px;line-height:19px;margin-top:1px}
+/* google */
+.g{background:#fff;color:#202124}
+.gbar{margin:6px 14px;border-radius:24px;box-shadow:0 1px 6px rgba(32,33,36,.28);height:46px;display:flex;align-items:center;padding:0 16px;gap:12px;font-size:16px}
+.gtabs{display:flex;gap:22px;padding:10px 18px 8px;font-size:14px;color:#5f6368;border-bottom:1px solid #ebebeb}
+.gtabs .on{color:#1a73e8;border-bottom:3px solid #1a73e8;padding-bottom:7px}
+.g .msg{padding:22px 18px;font-size:16px;line-height:24px}
+.g .msg ul{margin:12px 0 0 22px;font-size:15px;line-height:26px}
+/* stripe */
+.st{background:#f6f8fa;color:#30313d}
+.st .hd{padding:6px 18px;display:flex;justify-content:space-between;align-items:center}
+.st h2{font-size:28px;font-weight:700;padding:6px 18px}
+.card{background:#fff;margin:12px 14px;border-radius:12px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.card .l{font-size:14px;color:#6a7383}.card .v{font-size:30px;font-weight:600;margin-top:4px}
+.card .k{font-size:13px;color:#6a7383;margin-top:6px}
+/* claude */
+.cl{background:#faf9f5;color:#141413}
+.cl .top{display:flex;justify-content:space-between;align-items:center;padding:4px 18px 10px;font-size:15px}
+.ub{margin:10px 16px 0 70px;background:#f0eee6;border-radius:18px;padding:11px 15px;font-size:16px;line-height:23px}
+.ca{margin:18px 20px 0;font-family:"Songti SC",Georgia,serif;font-size:17px;line-height:27px}
+.cin{position:absolute;bottom:22px;left:12px;right:12px;background:#fff;border:1px solid #e5e2d9;border-radius:22px;padding:14px 16px 46px;color:#9a978e;font-size:16px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.cl{background:#f5f4ee;color:#1f1e1d}
+.top2{display:flex;justify-content:space-between;align-items:center;padding:2px 14px 6px}
+.rb{width:38px;height:38px;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.pl{height:38px;border-radius:19px;background:#fff;display:flex;align-items:center;gap:14px;padding:0 12px 0 8px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.nc{width:24px;height:24px;border-radius:50%;background:#1f1e1d;color:#fff;display:grid;place-items:center;font-size:18px;line-height:1}
+.ub{margin:12px 16px 0 auto;max-width:280px;width:fit-content;background:#e8e6dc;border-radius:16px;padding:9px 13px;font-size:15px;line-height:21px;color:#1f1e1d}
+.ca{margin:14px 20px 0 18px;font-family:"Tiempos Text","Songti SC",Georgia,serif;font-size:16px;line-height:25px;color:#1f1e1d}
+.cin2{position:absolute;bottom:14px;left:10px;right:10px;background:#fff;border-radius:22px;padding:13px 14px 10px;font-size:15px;box-shadow:0 2px 12px rgba(0,0,0,.07);border:.5px solid #e6e3da}
+.row2{display:flex;align-items:center;gap:8px;margin-top:14px}
+.cb{width:30px;height:30px;border-radius:50%;border:1px solid #e3e0d7;display:grid;place-items:center;color:#3d3d3a;font-size:18px}
+.chip2{height:30px;border-radius:15px;border:1px solid #e3e0d7;padding:0 11px;display:flex;align-items:center;font-size:13px;color:#3d3d3a}
+.send{width:32px;height:32px;border-radius:50%;background:#d97757;color:#fff;display:grid;place-items:center;font-size:17px;font-weight:700;margin-left:10px}
+</style></head><body>
+<svg width="0" height="0" style="position:absolute"><defs>
+<symbol id="sig" viewBox="0 0 18 12"><rect x="0" y="8" width="3" height="4" rx="1"/><rect x="5" y="5.5" width="3" height="6.5" rx="1"/><rect x="10" y="3" width="3" height="9" rx="1"/><rect x="15" y="0" width="3" height="12" rx="1"/></symbol>
+<symbol id="wifi" viewBox="0 0 16 12"><path d="M8 11.5l2.4-2.6a3.4 3.4 0 00-4.8 0zM3.6 7a6.2 6.2 0 018.8 0l1.6-1.7a8.6 8.6 0 00-12 0zM.6 3.8a10.6 10.6 0 0114.8 0L17 2.1a13 13 0 00-18 0z"/></symbol>
+<symbol id="bat" viewBox="0 0 27 13"><rect x=".5" y=".5" width="23" height="12" rx="3.5" fill="none" stroke="currentColor" opacity=".4"/><rect x="2" y="2" width="16" height="9" rx="2"/><path d="M25 4.5v4a2 2 0 000-4z" opacity=".4"/></symbol>
+<symbol id="rep" viewBox="0 0 24 24"><path d="M1.75 10c0-4.42 3.584-8 8.005-8h4.366a8.13 8.13 0 018.129 8.13c0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01zm8.005-6a6.005 6.005 0 00-.157 12.01l.351-.01h1.761v2.3l5.087-2.81A6.122 6.122 0 0014.12 4z"/></symbol>
+<symbol id="rt" viewBox="0 0 24 24"><path d="M4.5 3.88l4.432 4.14-1.364 1.46L5.5 7.55V16c0 1.1.896 2 2 2H13v2H7.5c-2.209 0-4-1.79-4-4V7.55L1.432 9.48.068 8.02zM16.5 6H11V4h5.5c2.209 0 4 1.79 4 4v8.45l2.068-1.93 1.364 1.46-4.432 4.14-4.432-4.14 1.364-1.46 2.068 1.93V8c0-1.1-.896-2-2-2z"/></symbol>
+<symbol id="lk" viewBox="0 0 24 24"><path d="M16.697 5.5c-1.222-.06-2.679.51-3.89 2.16l-.805 1.09-.806-1.09C9.984 6.01 8.526 5.44 7.304 5.5c-1.243.07-2.349.78-2.91 1.91-.552 1.12-.633 2.78.479 4.82 1.074 1.97 3.257 4.27 7.129 6.61 3.87-2.34 6.052-4.64 7.126-6.61 1.111-2.04 1.03-3.7.477-4.82-.561-1.13-1.666-1.84-2.908-1.91zm4.187 7.69c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"/></symbol>
+<symbol id="bm" viewBox="0 0 24 24"><path d="M4 4.5C4 3.12 5.119 2 6.5 2h11C18.881 2 20 3.12 20 4.5v18.44l-8-5.71-8 5.71zM6.5 4c-.276 0-.5.22-.5.5v14.56l6-4.29 6 4.29V4.5c0-.28-.224-.5-.5-.5z"/></symbol>
+<symbol id="sh" viewBox="0 0 24 24"><path d="M12 2.59l5.7 5.7-1.41 1.42L13 6.41V16h-2V6.41l-3.3 3.3-1.41-1.42zM21 15l-.02 3.51c0 1.38-1.12 2.49-2.5 2.49H5.5C4.11 21 3 19.88 3 18.5V15h2v3.5c0 .28.22.5.5.5h12.98c.28 0 .5-.22.5-.5L19 15z"/></symbol>
+<symbol id="back" viewBox="0 0 24 24"><path d="M7.414 13l5.043 5.04-1.414 1.42L3.586 12l7.457-7.46 1.414 1.42L7.414 11H21v2z"/></symbol>
+<symbol id="star" viewBox="0 0 24 24"><path d="M12 1.5l1.6 7.1 6.2-3.9-3.9 6.2 7.1 1.6-7.1 1.6 3.9 6.2-6.2-3.9L12 23.5l-1.6-7.1-6.2 3.9 3.9-6.2L1 12.5l7.1-1.6-3.9-6.2 6.2 3.9z"/></symbol>
+</defs></svg>
+
+<!-- X light -->
+<div class="p x" id="xl">
+ <div class="sb"><span>23:52</span><span class="r"><svg width="18"><use href="#sig"/></svg><svg width="16"><use href="#wifi"/></svg><svg width="27" style="color:#000"><use href="#bat"/></svg></span></div>
+ <div class="xnav"><svg width="20" height="20"><use href="#back"/></svg>帖子</div>
+ <div class="post">
+  <div class="xh"><div class="xav">做</div><div><div class="xn">做了个</div><div class="xu">@zuolege</div></div></div>
+  <div class="xt">开了 200 刀的 Claude Max 有点肉疼
+那就让它自己把会员费赚回来
+
+第一天 它做了 20 多个工具 我说太垃圾 它转头做付费的
+主推 3 个 自己接了收款 自己去 GitHub 提了 PR
+
+收入 0</div>
+  <div class="xm">下午11:48 · 2026/10/19</div>
+  <div class="xa"><svg><use href="#rep"/></svg><svg><use href="#rt"/></svg><svg><use href="#lk"/></svg><svg><use href="#bm"/></svg><svg><use href="#sh"/></svg></div>
+ </div>
+ <div class="xr"><div class="xav">做</div>发布你的回复<span class="pill">回复</span></div>
+</div>
+
+<!-- X dark w/ media -->
+<div class="p x dk" id="xd">
+ <div class="sb"><span>23:52</span><span class="r" style="fill:#fff"><svg width="18" fill="#fff"><use href="#sig"/></svg><svg width="16" fill="#fff"><use href="#wifi"/></svg><svg width="27" fill="#fff" style="color:#fff"><use href="#bat"/></svg></span></div>
+ <div class="xnav"><svg width="20" height="20" fill="#e7e9ea"><use href="#back"/></svg>帖子</div>
+ <div class="post">
+  <div class="xh"><div class="xav">做</div><div><div class="xn">做了个</div><div class="xu">@zuolege</div></div></div>
+  <div class="xt">让 Claude 自己赚回会员费 第一天
+它忙了一整天 我只负责点确认
+后台长这样</div>
+  <div class="media"><img src="screens/shot-dash.png"></div>
+  <div class="xm">下午11:48 · 2026/10/19</div>
+  <div class="xa"><svg><use href="#rep"/></svg><svg><use href="#rt"/></svg><svg><use href="#lk"/></svg><svg><use href="#bm"/></svg><svg><use href="#sh"/></svg></div>
+ </div>
+ <div class="xr"><div class="xav">做</div>发布你的回复<span class="pill">回复</span></div>
+</div>
+
+<!-- lock screen -->
+<div class="p lock" id="ls">
+ <div class="sb"><span></span><span class="r"><svg width="18" fill="#fff"><use href="#sig"/></svg><svg width="16" fill="#fff"><use href="#wifi"/></svg><svg width="27" fill="#fff" style="color:#fff"><use href="#bat"/></svg></span></div>
+ <div class="d">10月20日 星期一</div>
+ <div class="t">10:00</div>
+ <div style="height:120px"></div>
+ <div class="nt"><div class="ic" style="background:#d97757"><svg width="24" height="24" fill="#fff"><use href="#star"/></svg></div><div style="flex:1"><b>Claude</b><span class="tm">现在</span><p>定时任务 toolkb-daily-growth 开始上班了</p></div></div>
+ <div class="nt"><div class="ic" style="background:#d97757"><svg width="24" height="24" fill="#fff"><use href="#star"/></svg></div><div style="flex:1"><b>Claude</b><span class="tm">9 小时前</span><p>今日汇总 访客 0 · 收入 $0.00 · 页面 260 个全部正常</p></div></div>
+</div>
+
+<!-- google -->
+<div class="p g" id="gg">
+ <div class="sb"><span>23:55</span><span class="r"><svg width="18"><use href="#sig"/></svg><svg width="16"><use href="#wifi"/></svg><svg width="27" style="color:#000"><use href="#bat"/></svg></span></div>
+ <div style="text-align:center;font-size:26px;font-weight:500;letter-spacing:-1px;margin:4px 0 8px"><span style="color:#4285f4">G</span><span style="color:#ea4335">o</span><span style="color:#fbbc05">o</span><span style="color:#4285f4">g</span><span style="color:#34a853">l</span><span style="color:#ea4335">e</span></div>
+ <div class="gbar"><svg width="18" height="18" viewBox="0 0 24 24" fill="#9aa0a6"><path d="M15.5 14h-.8l-.3-.3A6.5 6.5 0 109.5 16a6.5 6.5 0 004.2-1.6l.3.3v.8l5 5 1.5-1.5zm-6 0a4.5 4.5 0 110-9 4.5 4.5 0 010 9z"/></svg>site:jack-reson8.github.io</div>
+ <div class="gtabs"><span class="on">全部</span><span>图片</span><span>新闻</span><span>视频</span><span>购物</span></div>
+ <div class="msg">找不到和您查询的“<b>site:jack-reson8.github.io</b>”相符的内容或信息。
+  <ul><li>请检查输入字词有无错误。</li><li>请换用另外的查询字词。</li><li>请改用较常见的字词。</li></ul></div>
+</div>
+
+<!-- stripe -->
+<div class="p st" id="sp">
+ <div class="sb"><span>23:58</span><span class="r"><svg width="18"><use href="#sig"/></svg><svg width="16"><use href="#wifi"/></svg><svg width="27" style="color:#000"><use href="#bat"/></svg></span></div>
+ <div class="hd"><span style="color:#635bff;font-weight:700;font-size:20px">stripe</span><span style="color:#6a7383;font-size:14px">ToolKB</span></div>
+ <h2>今天</h2>
+ <div class="card"><div class="l">总交易额</div><div class="v">US$0.00</div><div class="k">昨天 US$0.00</div>
+  <svg viewBox="0 0 330 70" style="width:100%;margin-top:12px"><line x1="0" y1="62" x2="330" y2="62" stroke="#635bff" stroke-width="2"/><line x1="0" y1="68" x2="330" y2="68" stroke="#ebeef1"/></svg></div>
+ <div class="card" style="display:flex;justify-content:space-between"><div><div class="l">付款</div><div class="v" style="font-size:22px">0</div></div><div><div class="l">新客户</div><div class="v" style="font-size:22px">0</div></div><div><div class="l">付款链接</div><div class="v" style="font-size:22px">3</div></div></div>
+</div>
+
+<!-- claude chat -->
+<div class="p cl" id="cc">
+ <div class="sb"><span>00:12</span><span class="r"><svg width="18"><use href="#sig"/></svg><svg width="16"><use href="#wifi"/></svg><svg width="27" style="color:#000"><use href="#bat"/></svg></span></div>
+ <div class="top2"><span class="rb"><svg width="18" height="18" viewBox="0 0 24 24" stroke="#3d3d3a" stroke-width="2" stroke-linecap="round"><path d="M5 8h14M5 12h14M5 16h9"/></svg></span>
+  <span class="pl"><span class="nc">+</span><span style="font-size:18px;letter-spacing:1px;color:#3d3d3a">···</span></span></div>
+ <div class="ub">开 Max 花了 200 刀 你自己赚回来吧 我只管点确认</div>
+ <div class="ca">行。我先去找真有人愿意付钱的需求，做出来接上收款。</div>
+ <div class="ub">那先做个人脸全网搜索 肯定赚钱</div>
+ <div class="ca">这个我不做。它最常见的用法是找陌生人、跟踪别人，出了事是你担着。<br><br>换个差评分析吧，真有人要。</div>
+ <div class="cin2"><div style="color:#8f8d86">回复 Claude</div>
+  <div class="row2"><span class="cb">+</span><span class="chip2">Opus 5.5</span><span style="margin-left:auto"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6b6a65" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></span><span class="send">↑</span></div></div>
+</div>
+
+<script>const p=new URLSearchParams(location.search).get('p');document.getElementById(p).style.display='block'</script>
+</body></html>
