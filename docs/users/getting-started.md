@@ -21,7 +21,7 @@ Keep the runtime integrity returned during configuration. Stop at any failed che
 
 For a complete setup through your first skill selection and installation preview, follow [Codex setup](codex-cli-skills.md) or [Claude Code setup](claude-code-skills.md).
 
-In release 19.15.0, `aas stack install-preview --manifest <file> --destination <skill-directory>` prepares a direct-installer dry run from the agent-selected IDs. It does not execute installation or choose skills; destination names must satisfy the installer's filename restrictions. See [the manifest handoff](aas-core.md#use-the-reviewed-selection).
+In release 20.0.0, `aas stack install-preview --manifest <file> --destination <skill-directory>` prepares a direct-installer dry run from the agent-selected IDs. It does not execute installation or choose skills; destination names must satisfy the installer's filename restrictions. See [the manifest handoff](aas-core.md#use-the-reviewed-selection).
 
 AAS Core is the primary product path. Codex or Claude inspects your project, searches and reads the complete catalog through the local read-only AAS MCP, chooses the exact skill IDs, and uses `compose_stack` to propose an `aas-stack.json`. You review those IDs before using the `aas` CLI to validate the manifest and preview a plan.
 
@@ -68,7 +68,7 @@ the bare command and `--antigravity` now require `--skills`, a metadata filter,
 or the explicit `--all` override. Use `--cursor`, `--claude`, `--gemini`,
 `--codex`, `--kiro`, or `--agy` for other tool paths, or `--path <dir>` for a
 custom location. Run `npx agentic-awesome-skills --help` for details.
-The 19.15.0 installer requires Git 2.25+ and retrieves a shallow, sparse canonical skill tree after matching the release commit to npm metadata. Complete skill bundles remain available; plugin mirrors and app assets are omitted. The release-pinned commands below use this installer.
+The 20.0.0 installer requires Git 2.25+ and retrieves a shallow, sparse canonical skill tree after matching the release commit to npm metadata. Complete skill bundles remain available; plugin mirrors and app assets are omitted. The release-pinned commands below use this installer.
 
 For Antigravity, ask a Codex or Claude agent with the read-only AAS Core MCP
 configured to inspect the project, search the complete catalog, and choose exact
@@ -97,18 +97,18 @@ If npm returns 404, check the package name, exact version and registry access. K
 
 ```bash
 # Review outside any active agent skill directory.
-git clone --depth 1 --branch v19.15.0 https://github.com/sickn33/agentic-awesome-skills.git ./aas-review-19.15.0
-git -C ./aas-review-19.15.0 rev-parse HEAD
+git clone --depth 1 --branch v20.0.0 https://github.com/sickn33/agentic-awesome-skills.git ./aas-review-v20.0.0
+git -C ./aas-review-v20.0.0 rev-parse HEAD
 ```
 
-For this published release, the commit is `eb48286810fecf33147076e0201c2397b51dd8ff`. Inspect the selected trees before activation; use the direct installer for its destination and update checks.
+For this published release, the commit is `6d4ea18320984083107f07ff69587fa355ee94c0`. Inspect the selected trees before activation; use the direct installer for its destination and update checks.
 
 **Option C — one exact skill with GitHub CLI (preview):**
 
 ```bash
 gh skill preview sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md
 gh skill install sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md \
-  --agent github-copilot --scope user --pin v19.15.0
+  --agent github-copilot --scope user --pin v20.0.0
 ```
 
 GitHub CLI skill support is currently in preview. In this large repository, use an exact `SKILL.md` path to avoid ambiguous canonical/plugin mirrors and unnecessary full-tree discovery. Avoid `--all` unless you intentionally want every discovered skill.
@@ -230,7 +230,7 @@ A: Use the activation flow in [agent-overload-recovery.md](agent-overload-recove
 A: The Antigravity CLI reads skill directories from `~/.gemini/antigravity-cli/skills/<skill>/SKILL.md`. Run `npx agentic-awesome-skills --agy`, restart `agy`, then open `/skills` or type a specific slash command such as `/brainstorming`.
 
 **Q: What if OpenCode or another `.agents/skills` host becomes unstable with a full install?**
-A: Start with a reduced install instead of copying the whole library. For example: `npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none`. You can narrow further with `--tags` and use a trailing `-` to exclude values such as `typescript-`. To manage a reproducible exact set, first preview it with `npx agentic-awesome-skills@19.15.0 --path .agents/skills --release 19.15.0 --skills frontend-design,backend-dev-guidelines --dry-run`, then remove `--dry-run` only after reviewing the plan. Default and `--release` installs verify the cloned commit against the exact npm release's immutable `gitHead`; `--tag` is an explicit mutable-ref escape hatch and is not release-identity verified.
+A: Start with a reduced install instead of copying the whole library. For example: `npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none`. You can narrow further with `--tags` and use a trailing `-` to exclude values such as `typescript-`. To manage a reproducible exact set, first preview it with `npx agentic-awesome-skills@20.0.0 --path .agents/skills --release 20.0.0 --skills frontend-design,backend-dev-guidelines --dry-run`, then remove `--dry-run` only after reviewing the plan. Default and `--release` installs verify the cloned commit against the exact npm release's immutable `gitHead`; `--tag` is an explicit mutable-ref escape hatch and is not release-identity verified.
 
 **Q: Is this free?**
 A: Yes. Original code and tooling are MIT-licensed, and original documentation/non-code written content is CC BY 4.0. See [../../LICENSE](../../LICENSE) and [../../LICENSE-CONTENT](../../LICENSE-CONTENT).
