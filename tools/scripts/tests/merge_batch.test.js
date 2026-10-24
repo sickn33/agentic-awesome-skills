@@ -694,6 +694,23 @@ function approvalDependencies(overrides = {}) {
     ),
     /duplicate Git records/,
   );
+  const deleted = { ...record, status: "D", new_path: null, new_mode: "000000", new_oid: "0".repeat(40) };
+  const target = "example";
+  const alias = { ...deleted, old_path: "skills/alias", old_mode: "120000",
+    old_oid: require("node:crypto").createHash("sha1").update(`blob ${target.length}\0${target}`).digest("hex") };
+  const deletionReport = { ...report, changes: [{ change_type: "deleted", old_skill_id: target,
+    new_skill_id: null, before: evidenceSnapshot(), after: null, records: [deleted] }],
+    deleted_aliases: [{ target_skill_id: target, record: alias }] };
+  const deletionExpected = { mergeBaseOid: BASE_SHA, headOid: HEAD_SHA, rawRecords: [deleted, alias] };
+  assert.strictEqual(mergeBatch.validateChangedSkillEvidence(deletionReport, deletionExpected), deletionReport);
+  for (const patch of [{ old_oid: BLOB_SHA }, { old_mode: "100644" }, { status: "M" }, { new_path: "skills/alias" }]) {
+    assert.throws(() => mergeBatch.validateChangedSkillEvidence({ ...deletionReport,
+      deleted_aliases: [{ target_skill_id: target, record: { ...alias, ...patch } }] }, deletionExpected));
+  }
+  assert.throws(() => mergeBatch.validateChangedSkillEvidence({ ...deletionReport,
+    deleted_aliases: [{ target_skill_id: "retained", record: alias }] }, deletionExpected));
+  assert.throws(() => mergeBatch.validateChangedSkillEvidence({ ...deletionReport,
+    deleted_aliases: [...deletionReport.deleted_aliases, ...deletionReport.deleted_aliases] }, deletionExpected), /duplicate Git records/);
   const orphan = { ...record, old_path: "skills/orphan/assets/note.md", new_path: "skills/orphan/assets/note.md" };
   assert.throws(
     () => mergeBatch.validateChangedSkillEvidence(

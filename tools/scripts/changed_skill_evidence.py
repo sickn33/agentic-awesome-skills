@@ -567,6 +567,18 @@ def build_report(
                 }
             )
 
+    # Account only for top-level aliases removed together with their canonical
+    # target. Other orphan content remains uncovered and the merge gate rejects it.
+    deleted_ids = {item["old_skill_id"] for item in changes if item["change_type"] == "deleted"}
+    deleted_aliases = []
+    for record in records:
+        if (record.status != "D" or record.old_mode != "120000"
+                or not re.fullmatch(r"skills/[a-z0-9-]+", record.old_path or "")):
+            continue
+        target = read_blob(root, record.old_oid).decode("ascii", "replace")
+        if re.fullmatch(r"[a-z0-9-]+", target) and target in deleted_ids:
+            deleted_aliases.append({"target_skill_id": target, "record": record.to_dict()})
+
     changes.sort(key=lambda item: (str(item["new_skill_id"] or item["old_skill_id"]), item["change_type"]))
     reasons = sorted(set(all_reasons))
     return {
@@ -577,6 +589,7 @@ def build_report(
         "head_oid": head_oid,
         "policy_oid": policy_oid,
         "changes": changes,
+        "deleted_aliases": deleted_aliases,
         "blocking": bool(reasons),
         "reasons": reasons,
         "provenance_exceptions_applied": sorted(set(all_applied_exceptions)),
