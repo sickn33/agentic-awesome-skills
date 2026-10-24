@@ -6,7 +6,7 @@ risk: safe
 source: https://github.com/Keviniscool-boy/onboard
 source_repo: Keviniscool-boy/onboard
 source_type: community
-date_added: "2026-10-25"
+date_added: "2026-10-24"
 author: Keviniscool-boy
 tags:
 - onboarding
@@ -33,6 +33,12 @@ license_source: "https://github.com/Keviniscool-boy/onboard/blob/main/LICENSE"
 - Use when the user takes over a large project, onboards into a new company, or needs to quickly understand a pile of mixed materials (code repo, docs, PDFs, PPTs, spreadsheets) dumped in a local folder.
 - Use for requests such as 接手项目 / 快速理解这个项目 / 梳理业务 / 带我学 / onboarding / ramp up / walk me through this project / teach me this codebase.
 - Do NOT use for quick single-file lookups, writing new code, or repo-wide refactoring.
+
+## Runtime prerequisite
+
+Pinned upstream reference: [Keviniscool-boy/onboard at f83cd84724535354fbc36093bfa9cd4eac03b438](https://github.com/Keviniscool-boy/onboard/tree/f83cd84724535354fbc36093bfa9cd4eac03b438).
+
+This catalog entry bundles documentation only; `scripts/inventory.mjs` is not bundled. Use built-in read-only file listing and search tools for Step 1 inventory, or obtain user consent before fetching and inspecting `scripts/inventory.mjs` at the pinned commit above.
 
 ## 七条产品边界（地基，先于一切流程）
 
