@@ -265,7 +265,7 @@
       }
     }
   ],
-  "status": "Canonical fixes prepared; replica repair pending protected policy adoption. No alerts dismissed.",
+  "status": "All 23 alert paths patched; seven canonical audits zero. Protected exact-head checks and actual post-merge GitHub resolution pending.",
   "noRelease": true,
   "canonicalLocks": [
     {
@@ -303,5 +303,33 @@
       "beforeSha256": "b1d0a678fea0f4e2573bd185c3a4ef792ad109c16ec60b474bd10a0ce3cc16c2",
       "afterSha256": "19a1207962d5518dc08d2975ac6d707bb09d1733a57490a63114638af96965fe"
     }
-  ]
+  ],
+  "replicas": [
+    {
+      "path": "plugins/agentic-awesome-skills-claude/skills/loki-mode/examples/todo-app-generated/backend/package-lock.json",
+      "canonical": "skills/loki-mode/examples/todo-app-generated/backend/package-lock.json",
+      "sha256": "dfa758f1b49ae255fcddf5a1ecbae95b6b1651d8f5ef4cd6545ecbc631ab725e"
+    },
+    {
+      "path": "plugins/agentic-awesome-skills-claude/skills/telegram/assets/boilerplate/nodejs/package-lock.json",
+      "canonical": "skills/telegram/assets/boilerplate/nodejs/package-lock.json",
+      "sha256": "00db84d5625acbc70bd379a108c05499db4a16fd151428d905c43c59128bf890"
+    },
+    {
+      "path": "plugins/agentic-awesome-skills-claude/skills/whatsapp-cloud-api/assets/boilerplate/nodejs/package-lock.json",
+      "canonical": "skills/whatsapp-cloud-api/assets/boilerplate/nodejs/package-lock.json",
+      "sha256": "19a1207962d5518dc08d2975ac6d707bb09d1733a57490a63114638af96965fe"
+    },
+    {
+      "path": "plugins/agentic-awesome-skills/skills/telegram/assets/boilerplate/nodejs/package-lock.json",
+      "canonical": "skills/telegram/assets/boilerplate/nodejs/package-lock.json",
+      "sha256": "00db84d5625acbc70bd379a108c05499db4a16fd151428d905c43c59128bf890"
+    },
+    {
+      "path": "plugins/agentic-awesome-skills/skills/whatsapp-cloud-api/assets/boilerplate/nodejs/package-lock.json",
+      "canonical": "skills/whatsapp-cloud-api/assets/boilerplate/nodejs/package-lock.json",
+      "sha256": "19a1207962d5518dc08d2975ac6d707bb09d1733a57490a63114638af96965fe"
+    }
+  ],
+  "replicaPolicyBase": "11681e64343ef4771e9678ea204dd70a8c049ea2"
 }
