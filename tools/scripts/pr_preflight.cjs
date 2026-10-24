@@ -10,6 +10,7 @@ const sanitizeFilename = require("sanitize-filename");
 const { resolveCommandInvocation } = require("./release_workflow.js");
 
 const { resolveBlobSizes } = require("../lib/git-blob-sizes");
+const { resolveMirrorLockfileRepairs } = require("../lib/mirror-lockfile-repair");
 const { findProjectRoot } = require("../lib/project-root");
 const { parseRawDiff } = require("../lib/git-raw-diff");
 const {
@@ -324,6 +325,7 @@ function appendStepSummary(result) {
     `- Categories: ${result.categories.length > 0 ? result.categories.map((category) => `\`${category}\``).join(", ") : "\`none\`"}`,
     `- Changed files: ${result.changedFiles.length}`,
     `- Direct derived-file edits: ${derivedSummary}`,
+    `- Owner lockfile replicas verified: ${(result.mirrorLockfileRepairs || []).map(item => `\`${item.path}\``).join(", ") || "none"}`,
     `- \`validate:references\` required: ${result.requiresReferencesValidation ? "yes" : "no"}`,
     `- PR template checklist: ${result.prBody.hasQualityChecklist ? "present" : "missing"}`,
     `- Issue auto-close link: ${result.prBody.hasIssueLink ? "detected" : "not detected"}`,
@@ -515,8 +517,13 @@ function main() {
   const changeRecords = getChangeRecords(projectRoot, baseOid, headOid);
   const changedFiles = changedFilesFromRecords(changeRecords);
   const classification = classifyChangedFiles(changedFiles, contract);
-  const directDerivedChanges = getDirectDerivedChanges(changedFiles, contract);
   const pullRequest = loadPullRequestEvent(args.eventPath);
+  const mirrorLockfileRepairs = resolveMirrorLockfileRepairs(
+    projectRoot, baseOid, headOid, changeRecords, pullRequest,
+  );
+  const repairedPaths = new Set(mirrorLockfileRepairs.map(item => item.path));
+  const directDerivedChanges = getDirectDerivedChanges(changedFiles, contract)
+    .filter(file => !repairedPaths.has(file));
   const pullRequestBody = pullRequest?.body ?? null;
   const forkSafety = evaluateForkSafety(
     projectRoot,
@@ -535,6 +542,7 @@ function main() {
     categories: classification.categories,
     primaryCategory: classification.primaryCategory,
     directDerivedChanges,
+    mirrorLockfileRepairs,
     requiresReferencesValidation: requiresReferencesValidation(
       changedFiles,
       contract,
