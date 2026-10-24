@@ -31,15 +31,14 @@ report_count: 10
 
 ## Firing a race — two primitives (tooling-agnostic)
 
-Winning a race needs requests that arrive in the *same* narrow window — sequential sends never
-work. Use a single-packet / synchronized-send tool: **Burp Repeater** "Send group in parallel"
+Winning a race needs requests that arrive in the *same* narrow window — sequential sends may miss a narrow window. Use a single-packet / synchronized-send tool: **Burp Repeater** "Send group in parallel"
 (HTTP/2 single-packet attack), **Turbo Intruder** (`engine=Engine.BURP2`, `gate` sync), or any
 client that can flush N requests simultaneously. Two shapes:
 
 - **Identical-copies race** — fire N IDENTICAL copies of one request at once (limit-overrun:
-  double-spend a coupon/gift-card, exceed a one-per-user quota). Success = ≥2 of the N return 2xx.
+  double-spend a coupon/gift-card, exceed a one-per-user quota). Multiple 2xx responses are a lead only; verify duplicate committed state or side effects.
 - **Different-requests race (partial construction)** — fire a LIST of DIFFERENT requests in one
-  synchronized window, repeated over several rounds. For register-then-confirm / TOCTOU races
+  synchronized window, repeated only within agreed request and reset limits. For register-then-confirm / TOCTOU races
   where the object exists in a usable state mid-creation. Example (email-verification bypass —
   register an arbitrary email, then confirm it through the construction window with a blank token):
   ```
@@ -47,14 +46,13 @@ client that can flush N requests simultaneously. Two shapes:
   Request B:  GET  /confirm    params: token=   (empty)
   Fire A and B together, repeat ~20 rounds.
   ```
-  Get a fresh CSRF from `GET /register` first, then fire the batch. After it succeeds, log in as the
-  new account and perform the objective (e.g. a state-changing admin action such as deleting a user).
+  Get a fresh CSRF from `GET /register` first, then fire the batch. After a lab reproduction, verify access with a harmless read on a tester-owned account; do not delete users or perform unrelated privileged actions.
   The blank-token confirm wins during the window where the user row exists but its verification
   token isn't set yet.
 
 ## Crown Jewel Targets
 
-Race conditions are high-severity findings because they break financial, access control, and integrity assumptions that defenders rarely stress-test. Highest payouts come from:
+Race conditions can vary in severity depending on whether they break financial, access control, and integrity assumptions that defenders rarely stress-test. Highest payouts come from:
 
 - **Monetary/credit systems** — double-spending gift cards, coupons, referral bonuses, promotional credits, wallet balances
 - **Vote/reputation manipulation** — upvoting the same content multiple times, gaming leaderboards or trending algorithms
@@ -84,8 +82,8 @@ Race conditions are high-severity findings because they break financial, access 
 ### Response Headers That Signal Race-Prone Backends
 ```
 X-RateLimit-*        # rate limiting exists, but may not be atomic
-X-Request-Id         # each request independently tracked
-No Cache-Control     # stateful ops not idempotent
+X-Request-Id         # tracing metadata, not evidence of a race
+No Cache-Control     # not evidence of atomicity or idempotency
 ```
 
 ### JavaScript Patterns to Grep
@@ -123,7 +121,7 @@ await useVoucher(); await deductBalance();
    - `curl` with `&` backgrounding
    - Python `threading` or `asyncio` with pre-built connections
 
-5. **Execute the race** — Send 10–50 identical requests simultaneously. Key technique: **pre-connect and buffer all requests, release the final byte of all simultaneously** (single-packet attack when HTTP/2 is available).
+5. **Execute the race** — Start with two requests in a controlled lab, increasing only within explicitly approved limits. Key technique: **pre-connect and buffer all requests, release the final byte of all simultaneously** (single-packet attack when HTTP/2 is available).
 
 6. **Analyze responses** — Look for:
    - Multiple `200 OK` where only one should succeed
@@ -155,7 +153,7 @@ def queueRequests(target, wordlists):
     engine.openGate('race1')
 
 def handleResponse(req, interesting):
-    if '200' in req.status:
+    if req.status == 200:
         table.add(req)
 ```
 
@@ -220,7 +218,7 @@ curl -sI --http2 https://target.com | grep -i "HTTP/2\|h2"
 
 1. **Check-Then-Act without atomic operations** — Developer reads state (`if voucher.used == false`), then writes state (`voucher.update(used: true)`) in two separate database operations. Any thread can read the same "unused" state before either writes.
 
-2. **Missing database-level locking** — Using ORM methods like `find` or `filter` instead of `SELECT ... FOR UPDATE`. The fix is one line but developers don't think about concurrency.
+2. **Missing database-level locking** — Using ORM methods like `find` or `filter` instead of `SELECT ... FOR UPDATE`. Correct locking requires a transaction, appropriate isolation and coverage of side effects.
 
 3. **Optimistic concurrency without version checking** — Systems increment counters or mark records without checking if the record changed since it was read.
 
@@ -247,19 +245,19 @@ curl -sI --http2 https://target.com | grep -i "HTTP/2\|h2"
 - Bypass: If the server generates or reuses the token, try sending parallel requests without the token. Or check if the uniqueness check itself has a race window.
 
 **Defense: Database unique constraints**
-- Bypass: The constraint catches duplicates *after* the race. The first two may both succeed before DB enforces. Look for partial fulfillment — sometimes one succeeds and one errors but both are honored.
+- Bypass: The constraint catches duplicates *after* the race. A valid unique constraint rejects conflicting committed writes; external side effects performed before commit can still need transactional coordination. Look for partial fulfillment — sometimes one succeeds and one errors but both are honored.
 
 **Defense: Short time windows / expiring tokens**
 - Bypass: Pre-stage all requests with valid tokens. Use single-packet HTTP/2 to release all in one TCP frame — server processes them in the same scheduler slot.
 
 **Defense: Queue-based serialization**
-- Bypass: Multiple queues (or multiple workers consuming the same queue) can pick up duplicate messages. Test by overwhelming the queue during the window.
+- Bypass: Multiple queues (or multiple workers consuming the same queue) can pick up duplicate messages. Assess only within agreed concurrency/load limits; do not overwhelm the queue.
 
 **Defense: Application-layer mutex / locks**
 - Bypass: Distributed systems running multiple app servers don't share in-process locks. Send requests to the same endpoint via different CDN nodes or load-balanced servers.
 
 **Defense: "Already used" checks in application code**
-- Bypass: The check and the update are separate. The check passes for both racing requests before either update completes. Only an atomic `UPDATE ... WHERE used=false RETURNING id` truly prevents this.
+- Bypass: The check and the update are separate. The check passes for both racing requests before either update completes. Atomic conditional updates, correctly scoped transactions/locks, and suitable uniqueness constraints can prevent this.
 
 ---
 
@@ -293,7 +291,7 @@ A cloud hosting provider enforced limits on the number of resources (e.g., dropl
 
 ## Disclosed Report Citations (Backfill +9 — 2016-2024)
 
-The following real, verified bug-bounty / coordinated-disclosure cases extend this skill. Four cases (#4, #11, #12, plus the bonus reference) use the modern **HTTP/2 single-packet attack** technique (Kettle DEF CON 31, 2023; Flatt Security expansion 2024) — the technique that makes most modern race exploits viable today.
+The following imported report summaries are unverified leads: independently read each linked disclosure before repeating payload, root-cause, severity, patch-version or payout claims. Four cases (#4, #11, #12, plus the bonus reference) use the modern **HTTP/2 single-packet attack** technique (Kettle DEF CON 31, 2023; Flatt Security expansion 2024) — the technique that makes most modern race exploits viable today.
 
 4. **GitLab — CVE-2022-4037 email-verification race (Kettle DEF CON 31 case study)** ([NVD](https://nvd.nist.gov/vuln/detail/CVE-2022-4037) · [PortSwigger Research](https://portswigger.net/research/smashing-the-state-machine))
     - Subclass: password-reset / email-change token race (TOCTOU on email verification)

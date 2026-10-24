@@ -7,7 +7,7 @@ tags: idempotency, workflow-id, deduplication, exactly-once
 
 ## Use Workflow IDs for Idempotency
 
-Set workflow IDs to make operations idempotent. A workflow with the same ID executes only once.
+Workflow IDs deduplicate logical workflow starts, not arbitrary external effects. Put external calls in steps, pass a tenant/order-scoped idempotency key to the payment provider, and reconcile uncertain outcomes.
 
 **Incorrect (duplicate payments possible):**
 
@@ -33,8 +33,8 @@ def process_payment(order_id: str):
 
 @DBOS.workflow()
 def payment_workflow(order_id: str):
-    charge_customer(order_id)
-    send_confirmation(order_id)
+    charge_customer(order_id)  # Must be an idempotent DBOS step using provider key
+    send_confirmation(order_id)  # Must be a deduplicated DBOS step
     return "success"
 ```
 

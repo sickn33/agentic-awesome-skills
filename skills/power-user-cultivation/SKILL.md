@@ -18,7 +18,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 
 ## When to Use
 
-Use this skill when you need to identify and nurture developer advocates, build champion programs, or turn active users into contributors and evangelists. Trigger phrases include "power users," "developer advocates," "ambassador program," "champion program," "community contributors," "referral...
+Use this skill when you need to identify and nurture developer advocates, build champion programs, or turn active users into contributors and evangelists. Trigger phrases include "power users," "developer advocates," "ambassador program," "champion program," "community contributors," or "referral program."
 
 
 This skill helps you identify your most engaged developers and turn them into advocates, contributors, and champions. No forced evangelism — just creating genuine value for developers who already love what you're building.

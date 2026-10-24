@@ -20,7 +20,7 @@ Enterprise messaging for reliable cloud communication with queues and pub/sub to
 ## Installation
 
 ```bash
-pip install azure-servicebus azure-identity
+pip install azure-servicebus azure-identity aiohttp
 ```
 
 ## Environment Variables
@@ -31,6 +31,10 @@ SERVICEBUS_QUEUE_NAME=myqueue
 SERVICEBUS_TOPIC_NAME=mytopic
 SERVICEBUS_SUBSCRIPTION_NAME=mysubscription
 ```
+
+## Example boundaries
+
+Receiving/settling messages changes broker state; completing a DLQ message deletes it. Use peek for inspection, authorize replay/discard separately, redact payloads, close credentials as well as clients, and make consumers idempotent. Examples omit application handlers, imports and production lock renewal; they are sketches, not standalone programs.
 
 ## Authentication
 

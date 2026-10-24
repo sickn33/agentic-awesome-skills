@@ -36,21 +36,21 @@ We've had 15% churn last month and I need to figure out the causes.
 
 ## Key Principles
 
-1. **Developers don't leave because of price — they leave because of friction**
+1. **Developers may leave because of price, friction, changing needs or better alternatives**
 2. **Support tickets are warning signs, not engagement**
 3. **Don't try to win back project-death churners**
 4. **Lead with value in win-back, not discounts**
-5. **Fix involuntary churn first — it's often 20-40% of total**
+5. **Fix involuntary churn first — measure its share in your cohort**
 
 ## Files
 
 | File | Description |
 |------|-------------|
-| `SKILL.md` | Full skill instructions |
+| `SKILL.md` | Activation and boundaries; procedure in references/detailed-guide.md |
 
 ## At-Risk Detection
 
-Build a health score from:
+Illustrative unvalidated weights, requiring normalized 0–100 component scores and cohort calibration:
 - API call trends (30%)
 - Login frequency (20%)
 - Feature adoption (20%)

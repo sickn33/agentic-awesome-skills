@@ -32,7 +32,7 @@ if (arg === "--help") {
 }
 
 const limit = arg ?? "3";
-if (!/^\d+$/.test(limit)) {
+if (!/^\d+$/.test(limit) || Number(limit) < 1 || Number(limit) > 100) {
   console.error("Error: limit must be a number");
   process.exit(1);
 }
@@ -45,7 +45,7 @@ const headers: Record<string, string> = token
 const url = `https://huggingface.co/api/models?limit=${limit}`;
 
 (async () => {
-  const res = await fetch(url, { headers });
+  const res = await fetch(url, { headers, signal: AbortSignal.timeout(30_000) });
 
   if (!res.ok) {
     console.error(`Error: ${res.status} ${res.statusText}`);
@@ -54,4 +54,4 @@ const url = `https://huggingface.co/api/models?limit=${limit}`;
 
   const text = await res.text();
   process.stdout.write(text);
-})();
+})().catch(() => { console.error("Request failed"); process.exitCode = 1; });

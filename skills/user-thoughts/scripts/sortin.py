@@ -1,5 +1,7 @@
 """Soft-maintain raw user-thought entries into mdbase."""
 import re
+import json
+import hashlib
 import sys
 from collections import defaultdict
 from datetime import datetime
@@ -38,7 +40,7 @@ def parse_raw_file(ustht: Path, filepath: Path):
     else:
         date = datetime.now().strftime("%Y-%m-%d")
 
-    for line in safe_read_text(ustht, filepath).splitlines():
+    for line_number, line in enumerate(safe_read_text(ustht, filepath).splitlines(), 1):
         line = line.strip()
         match = re.match(r"^- \[(\d{2}:\d{2})\] (.*)$", line)
         if not match:
@@ -46,12 +48,26 @@ def parse_raw_file(ustht: Path, filepath: Path):
         time, content = match.groups()
         dim = "general"
         text = content
-        if " | suggested-dim:" in content:
+        source_id = hashlib.sha256((filepath.name + ':' + str(line_number) + ':' + content).encode()).hexdigest()
+        if content.startswith('{"text":'):
+            try:
+                payload, end = json.JSONDecoder().raw_decode(content)
+                if set(payload) != {'text'} or not isinstance(payload['text'], str):
+                    raise ValueError('invalid raw envelope')
+                text = payload['text']
+                suffix = content[end:]
+                if suffix:
+                    if not suffix.startswith(' | suggested-dim:'):
+                        raise ValueError('invalid raw metadata')
+                    dim = suffix[len(' | suggested-dim:'):].strip()
+            except (ValueError, TypeError) as exc:
+                raise ValueError(f'Invalid raw JSON at {filepath.name}:{line_number}') from exc
+        elif " | suggested-dim:" in content:
             text, dim = content.rsplit(" | suggested-dim:", 1)
             dim = dim.strip()
-            if not validate_dim_name(dim):
-                dim = "general"
-        entries.append({"time": time, "text": text.strip(), "dimension": dim, "date": date})
+        if not validate_dim_name(dim):
+            dim = 'general'
+        entries.append({"time": time, "text": text, "dimension": dim, "date": date, "source_id": source_id})
     return entries
 
 
@@ -81,7 +97,14 @@ def append_entries(ustht: Path, path: Path, entries):
 
     content = safe_read_text(ustht, path).rstrip()
     for date, date_entries in sorted(by_date.items()):
-        lines = [f"- {entry['text']}" for entry in date_entries]
+        lines = []
+        for entry in date_entries:
+            marker = f"<!-- ustht-source:{entry['source_id']} -->"
+            if marker in content:
+                continue
+            # JSON quotes preserve literal newlines/Markdown without turning user data into structure.
+            lines.append(f"- {json.dumps(entry['text'], ensure_ascii=False)} {marker}")
+        if not lines: continue
         block = "\n".join(lines)
         heading = f"## {date}"
         content_lines = content.splitlines()
@@ -212,9 +235,9 @@ def main():
             mark_processed(ustht, f)
 
     now = datetime.now().strftime("%Y-%m-%d %H:%M")
+    update_index(ustht, mdbase)
     cfg["LAST_SORTIN"] = now
     write_define_ini(ustht, cfg)
-    update_index(ustht, mdbase)
     print(f"  LAST_SORTIN updated to {now}")
 
 

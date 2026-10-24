@@ -107,12 +107,17 @@ class RuntimeWrites(unittest.TestCase):
         adapter = types.ModuleType('playwright.sync_api')
         adapter.sync_playwright = lambda: self.fail('Browser must not launch')
         with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp); page = root / 'page.html'; page.write_text('<html></html>')
+            root = Path(temp).resolve(); page = root / 'page.html'; page.write_text('<html></html>')
             outside = root / 'private'; outside.write_text('CANARY')
             output = root / '.tastegate'; output.mkdir(); (output / 'report.json').symlink_to(outside)
             with patch.dict(sys.modules, {'playwright': types.ModuleType('playwright'), 'playwright.sync_api': adapter}):
                 with self.assertRaises(FileExistsError): helper.run(str(page), output)
             self.assertEqual(outside.read_text(), 'CANARY')
+            alias = root / 'alias'; alias.symlink_to(root, target_is_directory=True)
+            with patch.dict(sys.modules, {'playwright': types.ModuleType('playwright'), 'playwright.sync_api': adapter}):
+                with self.assertRaisesRegex(ValueError, 'symlink'):
+                    helper.run(str(page), alias / 'new-output')
+            self.assertFalse((root / 'new-output').exists())
 
 
 def fixture_definitions(relative, names, namespace):
@@ -257,6 +262,23 @@ class PublishedSecurityExamples(unittest.TestCase):
         safe = SimpleNamespace(to_json=lambda: '{"name":"ordinary"}')
         processor.on_end(safe)
         self.assertEqual(exported, [safe])
+
+    def test_log_redaction_preserves_numeric_interpolation_and_drops_exception(self):
+        import logging
+        scope = fixture_definitions('skills/agent-observability/references/details.md', {'PIIRedactingFilter'},
+                                    {'logging': logging,
+                                     'redact_string': lambda value: value.replace('PRIVATE_CANARY', '[redacted]')})
+        record = logging.LogRecord('agent', logging.INFO, __file__, 1,
+                                   'request PRIVATE_CANARY took %.2f seconds', (1.25,),
+                                   (ValueError, ValueError('PRIVATE_CANARY'), None))
+        record.exc_text = 'PRIVATE_CANARY'
+        record.stack_info = 'PRIVATE_CANARY'
+        self.assertTrue(scope['PIIRedactingFilter']().filter(record))
+        self.assertEqual(record.getMessage(), 'request [redacted] took 1.25 seconds')
+        self.assertIsNone(record.args)
+        self.assertIsNone(record.exc_info)
+        self.assertIsNone(record.exc_text)
+        self.assertIsNone(record.stack_info)
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,5 +1,6 @@
 """Append one thought to today's raw file."""
 import sys
+import json
 from datetime import datetime
 from pathlib import Path
 
@@ -96,7 +97,7 @@ def main():
                 seq += 1
             raw_file = raw_dir / f"{today}-{seq}.md"
 
-    thought_clean = thought.replace("\n", " ").replace("\r", "")
+    thought_clean = json.dumps({"text": thought}, ensure_ascii=False)
     suffix = f" | suggested-dim:{dim}" if dim else ""
     entry = f"- [{now}] {thought_clean}{suffix}"
 

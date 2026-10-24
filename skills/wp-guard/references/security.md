@@ -43,17 +43,19 @@ Trust nothing at output time — not even your own stored options; another plugi
 
 ## The unslash-then-sanitize order
 
-WordPress adds slashes to superglobals. The correct pipeline is always:
+For WordPress-slashed request strings, validate the expected scalar/array shape first, then unslash and sanitize. REST JSON values are not automatically the same pipeline; do not blindly unslash them. Example for an expected string:
 
 ```php
-$status = sanitize_key( wp_unslash( $_POST['ncs_status'] ?? '' ) );
+$raw = $_POST['ncs_status'] ?? '';
+if ( ! is_string( $raw ) ) { wp_die( 'Invalid status', '', array( 'response' => 400 ) ); }
+$status = sanitize_key( wp_unslash( $raw ) );
 ```
 
 `wp_unslash()` first, sanitizer second. Sanitizing slashed data corrupts legitimate input and hides bugs.
 
 ## Nonce + capability lifecycle
 
-Both checks, always, for any state change. They answer different questions:
+For cookie-authenticated privileged browser actions, both checks apply. Application Passwords or other validated non-cookie REST authentication have different CSRF requirements; always enforce authorization. They answer different questions:
 
 - `current_user_can( 'manage_options' )` — is this user *allowed* to do this? (authorization)
 - `check_admin_referer( 'ncs_save_settings' )` / `check_ajax_referer( 'ncs_action', 'nonce' )` — did this request *intend* this action? (CSRF protection)
@@ -88,7 +90,7 @@ $row = $wpdb->get_row(
 
 ## File uploads
 
-Use `wp_handle_upload()` / media APIs — never move `$_FILES` manually. Validate type with `wp_check_filetype_and_ext()` against an allowlist; never trust the client MIME. Store outside executable paths; WordPress handles this when you use its APIs.
+Use `wp_handle_upload()` / media APIs — never move `$_FILES` manually. Validate type with `wp_check_filetype_and_ext()` against an allowlist; never trust the client MIME. The API alone does not guarantee private storage or a server execution ban. Enforce upload authorization, size/type restrictions, web-server non-execution and private access controls where needed.
 
 ## Common AI-generated violations
 

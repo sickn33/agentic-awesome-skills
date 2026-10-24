@@ -25,8 +25,7 @@ quit via app.quit()
 
 The app runs under Playwright in a background daemon, so each command is a
 separate, fast shell call. Every launch uses a scratch profile
-(`--user-data-dir` under your temp directory), so the agent never touches your
-real app data.
+(`--user-data-dir` under your temp directory), which redirects Electron userData. Other files, production accounts and network services remain accessible unless the app is configured to isolate them.
 
 ## Requirements
 
@@ -163,7 +162,7 @@ JavaScript passed to `eval` and `main`.
   Every other command is one HTTP request to it.
 - `scripts/daemon.mjs`: launches Electron through Playwright's `_electron`
   API and serves commands on `127.0.0.1` with a random token. Its state file
-  and log are in `$TMPDIR/electron-drive/<project>-<hash>/`.
+  and log are in a private per-project directory under the user profile.
 - `scripts/lib.mjs`: config, argument parsing and paths, with no side
   effects. Tests: `node --test scripts/`.
 

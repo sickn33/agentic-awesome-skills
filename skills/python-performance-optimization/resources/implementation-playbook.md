@@ -48,12 +48,12 @@ import time
 
 def measure_time():
     """Simple timing measurement."""
-    start = time.time()
+    start = time.perf_counter()
 
     # Your code here
     result = sum(range(1000000))
 
-    elapsed = time.time() - start
+    elapsed = time.perf_counter() - start
     print(f"Execution time: {elapsed:.4f} seconds")
     return result
 
@@ -242,7 +242,7 @@ print(f"Loop: {slow_time:.4f}s")
 print(f"Comprehension: {fast_time:.4f}s")
 print(f"Speedup: {slow_time/fast_time:.2f}x")
 
-# Even faster for simple operations: map
+# Alternative to benchmark: map (lambda overhead can outweigh any benefit)
 def faster_squares(n):
     """Use map for even better performance."""
     return list(map(lambda x: x**2, range(n)))
@@ -270,7 +270,7 @@ gen_data = (i for i in range(1000000))
 print(f"List size: {sys.getsizeof(list_data)} bytes")
 print(f"Generator size: {sys.getsizeof(gen_data)} bytes")
 
-# Generators use constant memory regardless of size
+# Generator object size excludes retained inputs and yielded values; this example does not materialize output.
 ```
 
 ### Pattern 7: String Concatenation
@@ -290,7 +290,7 @@ def fast_concat(items):
     return "".join(str(item) for item in items)
 
 def faster_concat(items):
-    """Even faster with list."""
+    """List-based join alternative; benchmark before choosing."""
     parts = [str(item) for item in items]
     return "".join(parts)
 
@@ -364,7 +364,7 @@ def use_local():
         total += local_value
     return total
 
-# Local is faster
+# Compare measured timings on the target interpreter; no universal speed guarantee.
 global_time = timeit.timeit(use_global, number=1000)
 local_time = timeit.timeit(use_local, number=1000)
 
@@ -396,7 +396,7 @@ def calculate_with_function():
         total += helper_function(i)
     return total
 
-# Inline is faster due to no call overhead
+# Inlining removes calls here; measure whether the gain justifies duplication.
 inline_time = timeit.timeit(calculate_inline, number=1000)
 function_time = timeit.timeit(calculate_with_function, number=1000)
 
@@ -530,17 +530,17 @@ def cpu_intensive_task(n):
 
 def sequential_processing():
     """Process tasks sequentially."""
-    start = time.time()
+    start = time.perf_counter()
     results = [cpu_intensive_task(1000000) for _ in range(4)]
-    elapsed = time.time() - start
+    elapsed = time.perf_counter() - start
     return elapsed, results
 
 def parallel_processing():
     """Process tasks in parallel."""
-    start = time.time()
+    start = time.perf_counter()
     with mp.Pool(processes=4) as pool:
         results = pool.map(cpu_intensive_task, [1000000] * 4)
-    elapsed = time.time() - start
+    elapsed = time.perf_counter() - start
     return elapsed, results
 
 if __name__ == "__main__":
@@ -569,29 +569,32 @@ urls = [
 
 def synchronous_requests():
     """Synchronous HTTP requests."""
-    start = time.time()
+    start = time.perf_counter()
     results = []
     for url in urls:
-        response = requests.get(url)
+        response = requests.get(url, timeout=10)
+        response.raise_for_status()
         results.append(response.status_code)
-    elapsed = time.time() - start
+    elapsed = time.perf_counter() - start
     return elapsed, results
 
 async def async_fetch(session, url):
     """Async HTTP request."""
     async with session.get(url) as response:
+        response.raise_for_status()
         return response.status
 
 async def asynchronous_requests():
     """Asynchronous HTTP requests."""
-    start = time.time()
-    async with aiohttp.ClientSession() as session:
+    start = time.perf_counter()
+    async with aiohttp.ClientSession(timeout=aiohttp.ClientTimeout(total=10),
+                               connector=aiohttp.TCPConnector(limit=4)) as session:
         tasks = [async_fetch(session, url) for url in urls]
         results = await asyncio.gather(*tasks)
-    elapsed = time.time() - start
+    elapsed = time.perf_counter() - start
     return elapsed, results
 
-# Async is much faster for I/O-bound work
+# Compare bounded concurrent I/O with sequential I/O; latency and service limits affect results.
 sync_time, sync_results = synchronous_requests()
 async_time, async_results = asyncio.run(asynchronous_requests())
 
@@ -616,22 +619,22 @@ def create_db():
 
 def slow_inserts(conn, count):
     """Insert records one at a time."""
-    start = time.time()
+    start = time.perf_counter()
     cursor = conn.cursor()
     for i in range(count):
         cursor.execute("INSERT INTO users (name) VALUES (?)", (f"User {i}",))
         conn.commit()  # Commit each insert
-    elapsed = time.time() - start
+    elapsed = time.perf_counter() - start
     return elapsed
 
 def fast_inserts(conn, count):
     """Batch insert with single commit."""
-    start = time.time()
+    start = time.perf_counter()
     cursor = conn.cursor()
     data = [(f"User {i}",) for i in range(count)]
     cursor.executemany("INSERT INTO users (name) VALUES (?)", data)
     conn.commit()  # Single commit
-    elapsed = time.time() - start
+    elapsed = time.perf_counter() - start
     return elapsed
 
 # Benchmark
@@ -662,7 +665,7 @@ SELECT * FROM users WHERE email = 'user@example.com';
 # Use query planning
 import sqlite3
 
-conn = sqlite3.connect("example.db")
+conn = sqlite3.connect("file:example.db?mode=ro", uri=True)
 cursor = conn.cursor()
 
 # Analyze query performance
@@ -683,14 +686,14 @@ import tracemalloc
 import gc
 
 def memory_leak_example():
-    """Example that leaks memory."""
+    """Bounded demonstration of retained allocations, released by the caller."""
     leaked_objects = []
 
     for i in range(100000):
         # Objects added but never removed
         leaked_objects.append([i] * 100)
 
-    # In real code, this would be an unintended reference
+    return leaked_objects  # Retain until the second snapshot, then release.
 
 def track_memory_usage():
     """Track memory allocations."""
@@ -700,7 +703,7 @@ def track_memory_usage():
     snapshot1 = tracemalloc.take_snapshot()
 
     # Run code
-    memory_leak_example()
+    retained = memory_leak_example()
 
     # Take snapshot after
     snapshot2 = tracemalloc.take_snapshot()
@@ -712,12 +715,13 @@ def track_memory_usage():
     for stat in top_stats[:10]:
         print(stat)
 
+    del retained
     tracemalloc.stop()
 
 # Monitor memory
 track_memory_usage()
 
-# Force garbage collection
+# Collect cycles only; collection cannot free objects still strongly referenced.
 gc.collect()
 ```
 
@@ -737,7 +741,7 @@ def process_file_iterator(filename):
     with open(filename) as f:
         return sum(1 for line in f if line.strip())
 
-# Iterator uses constant memory
+# Line iteration avoids retaining the whole file; memory still depends on maximum line length.
 # List loads entire file into memory
 ```
 

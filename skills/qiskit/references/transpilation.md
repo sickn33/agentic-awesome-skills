@@ -46,7 +46,7 @@ qc_2 = transpile(qc, backend=backend, optimization_level=2)
 qc_3 = transpile(qc, backend=backend, optimization_level=3)
 ```
 
-**Qiskit SDK v2.2** provides **83x faster transpilation** compared to competitors.
+Benchmark transpilation on your workload; no universal speedup follows from a version number.
 
 ## Transpilation Stages
 
@@ -125,7 +125,7 @@ qc_transpiled = transpile(qc, backend=backend, initial_layout=initial_layout)
 Trade accuracy for fewer gates (0.0 = max approximation, 1.0 = no approximation):
 
 ```python
-# Allow 5% approximation error for fewer gates
+# Tune approximation heuristic; 0.95 is not a guaranteed 5% error bound
 qc_transpiled = transpile(qc, backend=backend, approximation_degree=0.95)
 ```
 
@@ -187,7 +187,7 @@ two_qubit_gates = qc_transpiled.count_ops().get('cx', 0)
 print(f"Two-qubit gates: {two_qubit_gates}")
 ```
 
-**Qiskit produces circuits with 29% fewer two-qubit gates** than leading alternatives, significantly reducing errors.
+Compare native two-qubit operation counts on the same backend and workload; CX count alone can miss ECR/CZ and other native entanglers.
 
 ## Multiple Circuit Transpilation
 
@@ -221,7 +221,7 @@ Some backends support gates beyond {CX, RZ, SX, X}:
 
 ```python
 # Check available basis gates
-print(backend.configuration().basis_gates)
+print(backend.operation_names)
 ```
 
 ### 3. Minimize Two-Qubit Gates
@@ -248,7 +248,7 @@ qc_test = transpile(qc, backend=sim_backend, optimization_level=3)
 from qiskit_ibm_runtime import QiskitRuntimeService
 
 service = QiskitRuntimeService()
-backend = service.backend("ibm_brisbane")
+backend = service.least_busy(operational=True, simulator=False)
 qc_transpiled = transpile(qc, backend=backend)
 ```
 
@@ -268,7 +268,7 @@ Transpilation depends on specific device (Rigetti, IonQ, etc.)
 
 1. **Cache transpiled circuits** - Transpilation is expensive, reuse when possible
 2. **Use appropriate optimization level** - Level 3 is slow but best for production
-3. **Leverage v2.2 speed improvements** - Update to latest Qiskit for 83x speedup
+3. **Benchmark supported versions** - Compare performance before adopting a version change
 4. **Parallelize transpilation** - Qiskit automatically parallelizes when transpiling multiple circuits
 
 ## Common Issues and Solutions

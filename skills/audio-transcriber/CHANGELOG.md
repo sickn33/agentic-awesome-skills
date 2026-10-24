@@ -1,5 +1,7 @@
 # Changelog - audio-transcriber
 
+Historical upstream narrative below is not verified release evidence for this distribution. Current fixes remove auto-install/import side effects, auto remote/prompt-engineer calls, unsupported CLI fallback and overwrite hazards. Supported capabilities and limits are documented in README; diarization, subtitles and cleanup flags claimed historically are not implemented.
+
 All notable changes to the audio-transcriber skill will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),

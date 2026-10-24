@@ -1,5 +1,7 @@
 # Dispatch and poll
 
+**Availability:** The relay is not bundled in this catalog tree. All behavior/test descriptions below are upstream documentation claims, not verified evidence for this import. Inspect a pinned external helper and the current CLI before use. Pass finite `--timeout` and turn limits for write-capable runs; monitor artifact size and provider cost.
+
 `scripts/relay.mjs` is the dispatch layer. It wraps `cmd -p`, feeds it the brief on stdin, captures the
 NDJSON event stream, and writes a structured `result.json`. Your job collapses to: run one command,
 then read one file. Everything Command Code-specific lives in the helper, which is what keeps the loop
@@ -133,14 +135,14 @@ read speed (the relay batches its event-log writes precisely so it drains as fas
 What the relay does about it, and what it means for you:
 
 - Nothing load-bearing is read from the tail. `sessionId` comes from `run_start`, the **first** line of
-  the stream, so resume always works. The report is taken from the last `message_end`, falling back to
+  the stream, so resume can work if that event was captured and the session remains valid. The report is taken from the last `message_end`, falling back to
   the streamed `text_delta`s of a message whose `message_end` was lost.
 - `resultLine` tells you which case you got. Under `truncated` or `absent`, `resultSubtype`,
   `stopReason`, `usage`, and `durationMs` are `null` because the CLI never delivered them — not because
   the run lacked them. The summary prints a note saying so.
 - `finalMessage` can still come back short or empty when the report itself was in the discarded
   region. **The diff is the deliverable, not the report** — review `touchedFiles` and `git diff`, and
-  treat a thin report as missing information rather than as a failed run.
+  treat a thin report as missing information rather than as an incomplete report requiring independent completion checks.
 - Read-only runs are small and usually keep a `complete` result line, so the second-opinion use is
   unaffected.
 
@@ -206,7 +208,7 @@ process has exited and `result.json` is written — not when a status line says 
 
 ## Recovering lost work
 
-`events.jsonl` records every NDJSON line Command Code streamed, and its `run_end` event embeds the
+`events.jsonl` records the bytes the selected helper actually captured; interruption/truncation can omit events. Upstream describes a full stream when available, and its `run_end` event embeds the
 whole conversation — every tool call, its arguments, and its result. That makes the log both the map of
 what a lost run did and, for file writes, often a literal copy of the content it wrote. If finished work
 is lost — the run killed late, or the tree damaged afterward — read the event log before re-dispatching.

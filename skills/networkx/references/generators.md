@@ -117,7 +117,7 @@ G = nx.random_powerlaw_tree(n=100, gamma=3, seed=42, tries=1000)
 ### Configuration Model
 ```python
 # Graph with specified degree sequence
-degree_sequence = [3, 3, 3, 3, 2, 2, 2, 1, 1, 1]
+degree_sequence = [3, 3, 3, 3, 2, 2, 2, 1, 1, 2]
 G = nx.configuration_model(degree_sequence, seed=42)
 
 # Remove self-loops and parallel edges
@@ -178,7 +178,7 @@ G = nx.hypercube_graph(n=4)
 ### Random Trees
 ```python
 # Random tree with n nodes
-G = nx.random_tree(n=100, seed=42)
+G = nx.random_labeled_tree(n=100, seed=42)
 
 # Prefix tree (tries)
 G = nx.prefix_tree([[0, 1, 2], [0, 1, 3], [0, 4]])
@@ -243,7 +243,7 @@ G = nx.scale_free_graph(n=100, seed=42)
 ```python
 # Random DAG
 G = nx.gnp_random_graph(n=20, p=0.2, directed=True, seed=42)
-G = nx.DiGraph([(u, v) for (u, v) in G.edges() if u < v])  # Remove backward edges
+G.remove_edges_from([(u, v) for (u, v) in G.edges() if u >= v])  # preserves isolated nodes  # Remove backward edges
 ```
 
 ### Tournament Graphs

@@ -1,7 +1,7 @@
 ---
 name: stability-ai
 description: Geracao de imagens via Stability AI (SD3.5, Ultra, Core). Text-to-image, img2img, inpainting, upscale, remove-bg, search-replace. 15 estilos artisticos.
-risk: safe
+risk: critical
 source: community
 date_added: '2026-03-06'
 author: renat
@@ -42,7 +42,7 @@ Geracao de imagens via Stability AI (SD3.5, Ultra, Core). Text-to-image, img2img
 ## How It Works
 
 Skill para gerar imagens artisticas e fotorrealistas usando a Stability AI API.
-**Gratuito** com Community License (sem limite para uso pessoal/pequenas empresas).
+A API hospedada pode cobrar creditos. Licencas de pesos/modelos nao tornam a API gratuita; confirme precos e direitos atuais antes de enviar prompts/imagens.
 
 ## Quando Usar Esta Skill Vs Ai-Studio-Image
 
@@ -78,7 +78,7 @@ Detalhes completos em `references/setup-guide.md`.
 | `--mode core` | Texto para imagem rapido | `/generate/core` |
 | `--mode img2img` | Imagem + texto para nova imagem | `/generate/sd3` |
 | `--mode upscale` | Aumentar resolucao (conservativo) | `/upscale/conservative` |
-| `--mode upscale-creative` | Aumentar resolucao com detalhes | `/upscale/creative` |
+| `--mode upscale-creative` | Nao implementado neste helper (requer polling assincrono) | `/upscale/creative` |
 | `--mode remove-bg` | Remover fundo (PNG transparente) | `/edit/remove-background` |
 | `--mode inpaint` | Editar parte da imagem (mascara) | `/edit/inpaint` |
 | `--mode search-replace` | Trocar objeto por descricao | `/edit/search-and-replace` |
@@ -186,9 +186,9 @@ Metadados salvos em `.meta.json` com: prompt original, prompt final, modelo, asp
 
 ## Rate Limits & Seguranca
 
-- **Community License**: 150 requests/10 segundos
-- **Limite diario**: 100 imagens/dia (configuravel via `SAFETY_MAX_IMAGES_PER_DAY`)
-- **Retry automatico** com backoff exponencial em caso de 429
+- Quotas e precos sao definidos pelo servico e pela conta; nao deduza da Community License.
+- Contador local de imagens (padrao 100/dia): informativo, sem atomicidade entre processos e sem garantia de teto financeiro. Execute uma geracao por vez.
+- Retry limitado somente em 429; falhas ambiguas de POST nao sao reenviadas automaticamente.
 - **Fallback de API keys** (primaria + backups)
 
 ## Referencia De Arquivos
@@ -218,6 +218,9 @@ Metadados salvos em `.meta.json` com: prompt original, prompt final, modelo, asp
 - `image-studio` - Complementary skill for enhanced analysis
 
 ## Limitations
+- Prompts, imagens e mascaras sao enviados a Stability AI e podem gerar custos. Confirme selecao de arquivos e processamento externo dentro do pedido; criacao nao autoriza publicacao ou envio a redes sociais.
+- `--list-models` mostra uma tabela local; nao autentica a chave nem verifica disponibilidade. Metadados salvos incluem prompts e caminhos privados: trate outputs como dados sensiveis.
+- Modos inpaint/erase exigem mascara explicita no helper; creative upscale nao foi implementado.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

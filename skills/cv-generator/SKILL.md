@@ -43,8 +43,8 @@ missing-info checklist.
 - **Respect source truth.** "Junior Developer" stays "Junior Developer" — suggest a reframe if needed; never silently change it.
 - **No silent changes.** If something is materially reworded, note the change.
 - **One version at a time.** Complete the CV before offering variants.
-- **Privacy.** Do not expose full home address, national ID, DOB, marital status, or religion unless the user's target market requires it.
+- **Privacy.** Omit unnecessary home address, IDs, DOB, marital status and religion. A country convention alone is not a requirement; include sensitive details only with the user's informed choice and verified need.
 - **No keyword stuffing.** Adding skills the user does not have is fraud. Flag gaps; never fabricate.
-- **OCR warning.** Always display before continuing: "OCR was used — please verify the extracted text for accuracy."
+- **OCR warning.** Only when OCR was actually used, disclose it and flag uncertain extraction for verification.
 
 ---

@@ -31,9 +31,13 @@ sources: community, public_research
 
 # Bug Bounty Methodology: Workflow + Mindset
 
-Master orchestrator for hunting sessions. Combines the 5-phase non-linear workflow with the critical thinking framework that separates top 1% hunters from the rest.
+A planning framework for authorized assessment sessions. It provides no measured top-percentile performance guarantee.
 
 ---
+
+## Scope and evidence boundary
+
+Follow the actual written program/SoW, scoped assets, testing methods, request/concurrency limits and stop conditions. Newly discovered assets, origin IPs and third-party integrations are not automatically in scope. Slash commands and linked skills are external dependencies, not bundled functions. Do not automatically install or execute them. Imported anecdotes/test counts are not independently verified by this bundle.
 
 ## PART 0: MODE CONFIRMATION (Before Anything Else)
 
@@ -41,8 +45,8 @@ Master orchestrator for hunting sessions. Combines the 5-phase non-linear workfl
 
 | Engagement type | What counts as a finding | What gets rejected |
 |---|---|---|
-| **Bug bounty** (H1 / Bugcrowd / Intigriti / private VDP) | Impact-demonstrated bugs ONLY. Full chain to attacker-attainable harm. | Hygiene (EoL software alone, permissive CSP alone, stack traces, info disclosure without concrete impact, "best practice" violations) |
-| **Red team** (external client engagement) | Hygiene findings + recon + IoCs + defensive-state observations are ALL deliverables | Nothing — even "no finding here" is reportable as a positive defensive observation |
+| **Bug bounty** (H1 / Bugcrowd / Intigriti / private VDP) | Impact-demonstrated bugs ONLY. Full chain to attacker-attainable harm. | Eligibility depends on the actual program; hygiene or disclosure may be accepted when its policy allows it |
+| **Red team** (external client engagement) | Hygiene findings + recon + IoCs + defensive-state observations are ALL deliverables | Deliverables depend on the rules of engagement; a negative test is an observation under stated conditions, not security certification |
 | **Pentest** (signed SoW / WAPT) | Depends on SoW. Read scope explicitly. Usually accepts hygiene + impact + recon | Out-of-scope assets, unsigned testing |
 | **Internal audit** | Compliance-mapped findings (PCI / ISO / NIST / DPDPA / GDPR) | Findings without a control-mapping |
 
@@ -70,7 +74,7 @@ Before touching any tool:
 
 1. **Confidentiality** -- steal data the attacker shouldn't see
 2. **Integrity** -- modify data the attacker shouldn't change
-3. **Availability** -- disrupt service (app-level DoS only)
+3. **Availability** -- evaluate resilience only if explicitly permitted; app-level DoS is still disruptive
 4. **Account Takeover** -- control another user's account
 5. **RCE** -- execute commands on the server
 
@@ -278,35 +282,7 @@ What input are you testing?
 
 ### Phase 4: PROVE & ESCALATE
 
-**Goal**: Prove maximum business impact. Turn Low into Critical.
-
-**Escalation decision:**
-```
-What did you find?
-+-- XSS
-|   +-- Can steal cookie/token? -> Session hijack -> ATO
-|   +-- Cookie is HttpOnly? -> Force email change via XHR -> ATO
-|   +-- Self-XSS only? -> Find CSRF to trigger it
-+-- IDOR
-|   +-- Can read PII? -> Automate scraping, show scale
-|   +-- Can change password/email? -> Direct ATO
-|   +-- UUID only? -> Find UUID leak source, then retry
-+-- SSRF
-|   +-- DNS only? -> DON'T REPORT. Try cloud metadata
-|   +-- Can reach 169.254.169.254? -> Extract keys -> RCE
-|   +-- Internal port scan? -> Find Redis/K8s -> RCE
-+-- SQLi
-|   +-- Error-based? -> Extract data (passwords, tokens)
-|   +-- Can INTO OUTFILE? -> Web shell -> RCE
-|   +-- Blind? -> Boolean/Time extraction
-+-- Open Redirect
-|   +-- OAuth flow? -> Token theft -> ATO
-|   +-- javascript: scheme? -> XSS
-+-- Blocked by defense
-|   -> Bypass (WAF/CSP/proxy/sanitizer/2FA)
-+-- Low-impact, can't escalate alone
-    -> Find connector gadget for chain
-```
+**Goal**: Demonstrate the minimum sufficient authorized impact using owned accounts and synthetic data. A chain is a hypothesis until every prerequisite is supported. Do not scrape PII, extract live cloud keys, deploy web shells, disrupt service or change real accounts to increase severity. Use a reversible canary and stop when evidence is sufficient; request separate scope for any additional action. DNS callbacks establish resolution only, not HTTP response access or RCE. HttpOnly blocks cookie reads but does not establish an email-change/ATO path without its additional controls.
 
 **After proving impact, check:**
 - [ ] Can attack work with 0-1 clicks? (minimize prerequisites)
@@ -321,13 +297,13 @@ What did you find?
 ```
 Run /validate (7-Question Gate)
 +-- All 7 pass? -> Write report
-+-- Any fail? -> KILL the finding. Don't waste time.
++-- Any unsupported point? -> record candidate evidence/limitations and apply the program rubric; do not invent a stronger finding
 +-- Borderline? -> Run /triage for quick go/no-go
 ```
 
 **Multi-Tool Reproduction Bar (Critical / High only):**
 
-Before labeling a finding **Critical** or **High**, reproduce it via at least **two independent tools** (different stacks, different HTTP libraries). Cross-tool consistency rules out tool-artefact findings (e.g., a curl-only timing differential that disappears under Python `requests` was an artefact, not a bug).
+Before labeling a finding **Critical** or **High**, reproduce it via at least **two independent tools** (different stacks, different HTTP libraries). Cross-tool consistency reduces some tool artifacts but does not rule them all out (e.g., a curl-only timing differential that disappears under Python `requests` was an artefact, not a bug).
 
 Examples of independent reproductions:
 - `curl` + Burp `send_http1_request` (different TLS stacks, different header normalisation)
@@ -336,7 +312,7 @@ Examples of independent reproductions:
 
 The reproduction commands MUST be paste-into-shell ready in the report — a triager copies them verbatim. If the curl version requires special flags or breaks on certain systems, include a Python alternative.
 
-**Lesson from an authorized engagement:** All three Critical findings (Authentication.asmx brute-force, TE.CL smuggling, NTLM Type-2 disclosure) were each independently reproduced via curl + Python raw sockets + Burp tooling. The cross-tool consistency was what convinced the triage write-up that the findings were not artefacts.
+**Unverified imported anecdote, not a severity precedent:** All three purported Critical findings (Authentication.asmx brute-force, TE.CL smuggling, NTLM Type-2 disclosure) were each independently reproduced via curl + Python raw sockets + Burp tooling. The cross-tool consistency was what convinced the triage write-up that the findings were not artefacts.
 
 **Report:**
 ```
@@ -350,7 +326,7 @@ Run /report
 ```
 
 **After submission:**
-- [ ] While waiting for triage: try to escalate further (A->B signal method)
+- [ ] While waiting, preserve evidence and continue only other authorized bounded tests; no automatic escalation
 - [ ] If fix deployed: re-test for bypass (incomplete patch = new bug)
 - [ ] Record finding with `/remember` for hunt memory
 
@@ -382,21 +358,13 @@ Every 20 minutes ask yourself: **"Am I making progress?"**
 
 When the user disagrees with your stopping point — e.g., "I've found 10+ bugs, you should find the same," or "look harder," or "you're missing things":
 
-**Default assumption: they are correct. You stopped early.**
-
-Before pushing back with "I think we're done because X," do this:
-1. **Re-read 3 more `hunt-*` skills** beyond what you have loaded. Pick ones that match observed surface (e.g., custom login → `hunt-auth-bypass`; SOAP endpoints → look for protocol-specific skills; URL parameters → `hunt-ssrf`).
-2. **Re-attack the same surface** with the new skill checklists. Walk every step in the new skills, even if it feels redundant.
-3. **Document negatives** as you go — a confirmed "no bug here" is itself a finding for the user to see (it proves coverage).
-4. **Only after exhausting 3 new skills' checklists** do you push back, and only with a concrete list of what was tested.
-
-**Lesson from an authorized engagement:** After a first-pass of 5 weak findings the user said "I have 10+, find them." Loading `hunt-auth-bypass` (which had been loaded but not walked through end-to-end) immediately surfaced the `/_vti_bin/Authentication.asmx` legacy SOAP login — the highest-impact bug in the engagement. The user was right; pushback would have been wrong.
+Reassess the tested surface and any specific missed evidence against the scope, remaining budget and stop conditions. A requested finding count is not evidence that those bugs exist. Report attempted tests, failures, uncertainty and untested coverage honestly; propose a bounded next pass only if authorized. Never label a negative probe exhaustive coverage or invent a required number of findings.
 
 ### Tool Routing by Phase
 
 | Phase | Tools | Why this order |
 |-------|-------|----------------|
-| Recon: Subdomains | `subfinder` -> `amass` -> `puredns` -> `httpx` | Passive first (no detection) -> resolve DNS -> probe HTTP + tech stack |
+| Recon: Subdomains | `subfinder` -> `amass` -> `puredns` -> `httpx` | Passive sources first (provider logging and account limits may still apply) -> resolve DNS -> probe HTTP + tech stack |
 | Recon: URLs | `gau` + `waymore` -> `katana` -> `uro` | Archive (forgotten endpoints) -> active crawl (JS-rendered) -> deduplicate |
 | Recon: JS | `jsluice` + `mantra` + `trufflehog --only-verified` | Extract URLs/secrets -> find API keys -> verify keys actually work |
 | Recon: Ports | `naabu` (wide) -> `rustscan` (deep) | Fast top-1000 sweep -> full 65535 on interesting targets |
@@ -412,7 +380,7 @@ Before pushing back with "I think we're done because X," do this:
 | Exploit: 403 | `byp4xx` or `nomore403` | 20+ bypass techniques automated |
 | Exploit: Takeover | `subzy` | Checks CNAME against 70+ vulnerable services |
 | Exploit: Cloud | `s3scanner` + `aws` CLI | Scan bucket permissions -> extract metadata credentials |
-| Exploit: Secrets | `trufflehog --only-verified` | Only verified working keys (no false positives) |
+| Exploit: Secrets | `trufflehog --only-verified` | Verification can contact providers, incur effects and still need interpretation; only run if credential validation is authorized |
 
 ### Session End Checklist
 

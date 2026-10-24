@@ -1,6 +1,6 @@
 # Cold Email Copywriting Frameworks
 
-Frameworks beat templates — they teach thinking patterns, not copy-paste shortcuts.
+Frameworks illustrate structure. All named-customer relationships, results and stories below are fictional examples, not verified testimonials; replace with substantiated, approved evidence before use. Do not claim to have watched/read something you have not.
 
 ## PAS — Problem, Agitate, Solution (default)
 

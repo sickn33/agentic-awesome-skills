@@ -1,3 +1,4 @@
+<!-- Locally modified 2026-10-23: timestamp semantics clarified. -->
 # MCP Parameter Notes
 
 Parameter details for the MCP tools used by the asset-health skill. Only covers
@@ -55,7 +56,7 @@ The `properties` field contains tags (key-value pairs) associated with the asset
 Pass the MCON as: `mcon="<mcon>"` (single string, not an array).
 
 Key response fields used by this skill:
-- `last_updated_on` — timestamp of the most recent data update (for Last Updated metric)
+- Inspect the live schema: `last_activity` and `last_updated_on` have different meanings. Display the actual returned field and label; do not substitute one for the other or infer freshness without an expected update schedule.
 - `importance_score` — float 0-1 (for Importance in header)
 - `is_important` — boolean, true if key asset (for ⭐️ indicator)
 - `table_stats.avg_reads_per_active_day` — average reads per active day

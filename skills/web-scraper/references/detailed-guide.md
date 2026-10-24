@@ -28,8 +28,7 @@ fetch, classify, and extract in one WebFetch call. Still validate and format.
 
 - Auto-escalation from WebFetch to Browser automation is allowed only for URLs
   the user explicitly provided.
-- For URLs found via Discovery Mode (WebSearch) or links discovered inside
-  scraped pages, ask the user before driving a browser on them.
+- Discovery and ordinary pagination within an authorized research/extraction request can proceed after destination validation. Clarify only materially new scope or consequential actions.
 
 ---
 
@@ -41,7 +40,7 @@ fetch, classify, and extract in one WebFetch call. Still validate and format.
 - **Output formats**: Markdown tables (default), JSON, CSV
 - **Pagination**: auto-detect and follow (page numbers, infinite scroll, load-more)
 - **Multi-URL**: extract same structure across sources with comparison and diff
-- **Validation**: confidence ratings (HIGH/MEDIUM/LOW) on every extraction
+- **Validation**: descriptive coverage ratings (HIGH/MEDIUM/LOW), not calibrated probabilities
 - **Auto-escalation**: WebFetch fails silently -> automatic Browser fallback
   (user-provided URLs only; see Escalation Consent)
 - **Data transforms**: cleaning, normalization, deduplication, enrichment
@@ -74,7 +73,7 @@ Establish extraction parameters before touching any URL.
 | Parameter     | Resolve                                | Default      |
 |:--------------|:---------------------------------------|:-------------|
 | Pagination    | Follow pagination? Max pages?          | No, 1 page   |
-| Max Items     | Maximum number of items to collect?    | Unlimited    |
+| Max Items     | Maximum number of items to collect?    | 500 per run; narrow or extend explicitly |
 | Filters       | Data to exclude or include?            | None         |
 | Sort Order    | How to sort results?                   | Source order  |
 | Save Path     | Save to file? Which path?              | Display only |
@@ -99,12 +98,12 @@ Establish extraction parameters before touching any URL.
 When user has a topic but no specific URL:
 1. Use WebSearch to find the most relevant pages
 2. Present top 3-5 URLs with descriptions
-3. Let user choose which to scrape, or scrape all
+3. Select relevant sources within the requested research scope; clarify only a material ambiguity
 4. Proceed to Phase 2 with selected URL(s)
 
 Example: "find and extract pricing data for CRM tools"
 -> WebSearch("CRM tools pricing comparison 2026")
--> Present top results -> User selects -> Extract
+-> Select relevant public results within scope -> Extract
 
 ---
 
@@ -228,7 +227,7 @@ WebFetch(
 **Auto-escalation**: If WebFetch returns suspiciously few items (less than
 50% of expected from recon), or mostly empty fields, escalate to Strategy B.
 Escalate automatically only for URLs the user explicitly provided; for
-discovered URLs, ask first (see Escalation Consent). Log the escalation in notes.
+discovered URLs within scope, validate destinations and proceed (see Escalation Consent). Log the escalation in notes.
 
 
 ## Strategy B: Browser Automation
@@ -236,6 +235,8 @@ discovered URLs, ask first (see Escalation Consent). Log the escalation in notes
 **Best for**: JS-rendered pages, SPAs, interactive content, lazy-loaded data.
 
 Sequence:
+These tool names are host-specific examples, not portable installed APIs. Discover the available connector/browser interface first and follow its documented restrictions.
+
 1. Get tab context: `tabs_context_mcp(createIfEmpty=true)` -> get tabId
 2. Navigate to URL: `navigate(url=TARGET_URL, tabId=TAB)`
 3. Wait for content to load: `computer(action="wait", duration=3, tabId=TAB)`
@@ -273,26 +274,29 @@ JSON.stringify(data);
 
 ## Strategy C: Bash (Curl + Jq)
 
+These are sketches. Bound response bytes and validate status/content type before parsing. Review redirects as new destinations; never forward credentials across origins. Use a new output path and refuse overwrites. Only fetch public HTTP(S) endpoints within scope; block loopback, private/link-local addresses, cloud metadata and DNS rebinding at every redirect. Do not interpolate page-derived URLs into shell commands; pass a validated URL as an argument. XML parsing requires a bounded parser configuration with entity/DTD expansion disabled.
+
 **Best for**: REST APIs, JSON endpoints, XML feeds, CSV/Excel downloads.
 
 ```bash
 
 ## Json Api
 
-curl -s "API_URL" | jq '[.items[] | {field1: .key1, field2: .key2}]'
+curl --fail --silent --show-error --max-time 30 --proto "=https" "API_URL" | jq '[.items[] | {field1: .key1, field2: .key2}]'
 
 ## Csv Download
 
 ## Confirm The Exact Output Path With The User Before Downloading
 
 curl --fail --silent --show-error --location \
+  --max-time 30 --max-filesize 10485760 --proto "=https" --proto-redir "=https" \
   --output "<CONFIRMED_OUTPUT_PATH>/scraped_data.csv" -- "CSV_URL"
 
 ## Xml Parsing
 
-curl -s "XML_URL" | python3 -c "
+curl --fail --silent --show-error --max-time 30 --proto "=https" "XML_URL" | python3 -c "
 import xml.etree.ElementTree as ET, json, sys
-tree = ET.parse(sys.stdin)
+tree = ET.fromstring(sys.stdin.read(10485761))  # Enforce a byte limit before parsing; reject oversize responses.
 
 ## ... Parse And Output Json
 
@@ -475,14 +479,14 @@ Return as JSON. Use null for missing fields."
 When user provides specific selectors or field descriptions:
 - Use Browser automation with `javascript_tool` and user's CSS selectors
 - Or use WebFetch with a prompt built from user's field descriptions
-- Always confirm extracted schema with user before proceeding to multi-URL
+- Use the already specified schema; clarify only if different sources require a material unresolved choice
 
 
 ## Multi-Url Extraction
 
 When extracting from multiple URLs:
 1. Extract from the **first URL** to establish the data schema
-2. Show user the first results and confirm the schema is correct
+2. Validate the first results against the requested schema before continuing
 3. Extract from remaining URLs using the same schema
 4. Add a `source` column/field to every record with the origin URL
 5. Combine all results into a single output
@@ -497,13 +501,13 @@ Clean, normalize, and enrich extracted data before validation.
 See [references/data-transforms.md](../references/data-transforms.md) for patterns.
 
 
-## Automatic Transforms (Always Apply)
+## Optional transforms (preserve raw values)
 
 | Transform              | Action                                               |
 |:-----------------------|:-----------------------------------------------------|
 | Whitespace cleanup     | Trim, collapse multiple spaces, remove `\n` in cells |
 | HTML entity decode     | `&amp;` -> `&`, `&lt;` -> `<`, `&#39;` -> `'`       |
-| Unicode normalization  | NFKC normalization for consistent characters          |
+| Unicode normalization  | NFKC only if safe for this field; retain raw text          |
 | Empty string to null   | `""` -> `null` (for JSON), `""` -> `N/A` (for tables)|
 
 
@@ -534,7 +538,7 @@ See [references/data-transforms.md](../references/data-transforms.md) for patter
 When combining data from multiple pages or URLs:
 1. Exact match: rows with identical values in all fields -> keep first
 2. Near match: rows with same key fields (name+source) but different details
-   -> keep most complete (fewer nulls), flag in notes
+   -> preserve conflicting versions; merge only under a verified identity/precedence rule
 3. Report: "Removed N duplicate rows" in delivery notes
 
 ---
@@ -561,7 +565,7 @@ Verify extraction quality before delivering results.
 
 ## Confidence Rating
 
-Assign to every extraction:
+These labels describe internal capture coverage only, not source truth. Report unknown expected totals as unknown; matching a page estimate cannot prove completeness.
 
 | Rating     | Criteria                                                        |
 |:-----------|:----------------------------------------------------------------|
@@ -600,7 +604,7 @@ for complete formatting templates.
 
 ## Delivery Envelope
 
-ALWAYS wrap results with this metadata header:
+Include the relevant metadata in the requested format (a sidecar for CSV); do not prepend Markdown to machine-readable JSON/CSV:
 
 ```markdown
 
@@ -670,7 +674,7 @@ ALWAYS wrap results with this metadata header:
 - Quote any field containing commas, quotes, or newlines
 - UTF-8 encoding with BOM for Excel compatibility
 - Use `,` as delimiter (standard)
-- Include metadata as comments: `# Source: URL`
+- Save metadata in a sidecar JSON/Markdown file; comment lines are not standard CSV.
 
 
 ## File Output
@@ -679,7 +683,7 @@ When user requests file save:
 - Markdown: `.md` extension
 - JSON: `.json` extension
 - CSV: `.csv` extension
-- Confirm path before writing
+- Use the user-specified path or a suitable new local output; clarify only destructive overwrites or ambiguous destinations.
 - Report full file path and item count after saving
 
 
@@ -733,7 +737,7 @@ When user requests change detection (diff mode):
 - Extract ONLY what the user explicitly requested
 - Warn user before collecting potentially sensitive data at scale
   (emails, phone numbers, personal information)
-- Do not store or transmit extracted data beyond what the user sees
+- Store/export only within the authorized scope. The selected fetch/browser/AI provider may process page data; do not claim the workflow has no third-party processing.
 
 
 ## Failure Protocol

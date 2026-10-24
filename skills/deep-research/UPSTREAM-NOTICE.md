@@ -4,7 +4,7 @@ Recovered from [sanjay3290/ai-skills](https://github.com/sanjay3290/ai-skills), 
 
 | Local file | Original path | Original Git blob SHA | AAS changes |
 | --- | --- | --- | --- |
-| scripts/research.py | skills/deep-research/scripts/research.py | d5bdebe3afaae60fc7733a0fcd8dc2b9973c6be2 | Current documented agent/step/SSE schema, ID/input/wait boundaries, private atomic history without raw queries, no silent dotenv, truthful terminal/empty/drop states, generic provider errors |
+| scripts/research.py | skills/deep-research/scripts/research.py | d5bdebe3afaae60fc7733a0fcd8dc2b9973c6be2 | Current documented agent/step/SSE schema, ID/input/wait boundaries, private atomic history without raw queries, no silent dotenv, truthful terminal/empty/drop states, generic provider errors; local individual review fixes split-CRLF/multiline SSE parsing, validates stream IDs, rejects unsupported flag combinations and routes polling progress to stderr |
 | requirements.txt | skills/deep-research/requirements.txt | a177644d9707c5a149916739e83be0eb1cb45ddc | Remove unused automatic dotenv loading dependency; constrain major HTTP API compatibility and require caller lockfile review |
 | UPSTREAM-LICENSE.txt | LICENSE | 32a397eb2a4d05cd614535713bb933f0b8befaca | License wording/copyright unchanged; trailing whitespace and EOF normalized |
 

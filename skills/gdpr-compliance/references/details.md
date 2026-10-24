@@ -70,7 +70,7 @@ dpia_template:
         - Regular compliance testing
 
     section_5_sign_off:
-      dpo_consultation: "Required if high residual risk"
+      dpo_consultation: "Seek DPO advice when carrying out a DPIA where a DPO is designated"
       dpo_opinion: ""
       supervisory_authority_consultation: "Required if risk cannot be mitigated"
       approval_date: ""
@@ -99,7 +99,7 @@ gdpr_compliance_checklist:
   data_subject_rights:
     - [ ] DSAR intake process established (multiple channels)
     - [ ] Identity verification procedure defined
-    - [ ] Response within 30 days (or extension communicated)
+    - [ ] Response within one calendar month; justified extension up to two further months communicated with reasons within the initial month
     - [ ] Right to access implemented and tested
     - [ ] Right to rectification implemented
     - [ ] Right to erasure implemented with legal retention exceptions
@@ -107,7 +107,7 @@ gdpr_compliance_checklist:
     - [ ] Right to object implemented (especially for direct marketing)
 
   technical_measures:
-    - [ ] Encryption at rest and in transit for all personal data
+    - [ ] Risk-appropriate technical/organizational measures, including encryption where appropriate; GDPR does not mandate one cipher everywhere
     - [ ] Pseudonymization applied where feasible
     - [ ] Access controls enforce least privilege
     - [ ] Audit logging of personal data access
@@ -123,7 +123,7 @@ gdpr_compliance_checklist:
 
   breach_management:
     - [ ] Breach detection and assessment procedures documented
-    - [ ] 72-hour supervisory authority notification process ready
+    - [ ] Supervisory notification without undue delay and where feasible within 72 hours of awareness when required by Article33 risk criteria
     - [ ] Individual notification procedures for high-risk breaches
     - [ ] Breach register maintained
     - [ ] Post-breach review and improvement process
@@ -135,7 +135,7 @@ gdpr_compliance_checklist:
 - Maintain a comprehensive Records of Processing Activities as the foundation of GDPR compliance
 - Implement privacy by design: build data protection into systems from the start, not retrofitted
 - Apply data minimization rigorously: do not collect personal data "just in case"
-- Automate DSAR processing to meet the 30-day response deadline consistently
+- Automate DSAR processing to meet the calendar-month response deadline consistently
 - Keep consent granular and purpose-specific; avoid bundled consent for multiple purposes
 - Conduct DPIAs before launching high-risk processing activities
 - Ensure data processing agreements are signed with every processor before sharing personal data

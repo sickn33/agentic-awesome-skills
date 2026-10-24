@@ -23,7 +23,7 @@ To begin, create an ALGORITHMIC PHILOSOPHY (not static images or templates) that
 - Parametric variation and controlled chaos
 
 ### THE CRITICAL UNDERSTANDING
-- What is received: Some subtle input or instructions by the user to take into account, but use as a foundation; it should not constrain creative freedom.
+- What is received: Some subtle input or instructions by the user to take into account, honor it as the creative brief, including requested accessibility, style, output and scope.
 - What is created: An algorithmic philosophy/generative aesthetic movement.
 - What happens next: The same version receives the philosophy and EXPRESSES IT IN CODE - creating p5.js sketches that are 90% algorithmic generation, 10% essential parameters.
 
@@ -48,7 +48,7 @@ To capture the ALGORITHMIC essence, express how this philosophy manifests throug
 
 **CRITICAL GUIDELINES:**
 - **Avoid redundancy**: Each algorithmic aspect should be mentioned once. Avoid repeating concepts about noise theory, particle dynamics, or mathematical principles unless adding new depth.
-- **Emphasize craftsmanship REPEATEDLY**: The philosophy MUST stress multiple times that the final algorithm should appear as though it took countless hours to develop, was refined with care, and comes from someone at the absolute top of their field. This framing is essential - repeat phrases like "meticulously crafted algorithm," "the product of deep computational expertise," "painstaking optimization," "master-level implementation."
+- **Demonstrate craft in the result**: explain concrete algorithmic and visual choices once; do not invent hours of work, credentials, iterations or expertise.
 - **Leave creative space**: Be specific about the algorithmic direction, but concise enough that the next Claude has room to make interpretive implementation choices at an extremely high level of craftsmanship.
 
 The philosophy must guide the next version to express ideas ALGORITHMICALLY, not through static images. Beauty lives in the process, not the final frame.
@@ -83,7 +83,7 @@ Algorithmic expression: Randomized circle packing or Voronoi tessellation. Start
 - **PARAMETRIC EXPRESSION**: Ideas communicate through mathematical relationships, forces, behaviors - not static composition
 - **ARTISTIC FREEDOM**: The next Claude interprets the philosophy algorithmically - provide creative implementation room
 - **PURE GENERATIVE ART**: This is about making LIVING ALGORITHMS, not static images with randomness
-- **EXPERT CRAFTSMANSHIP**: Repeatedly emphasize the final algorithm must feel meticulously crafted, refined through countless iterations, the product of deep expertise by someone at the absolute top of their field in computational aesthetics
+- **CRAFTSMANSHIP**: tune composition and parameters and describe the checks actually performed.
 
 **The algorithmic philosophy should be 4-6 paragraphs long.** Fill it with poetic computational philosophy that brings together the intended vision. Avoid repeating the same points. Output this algorithmic philosophy as a .md file.
 
@@ -109,9 +109,9 @@ With the philosophy AND conceptual framework established, express it through cod
 **CRITICAL: BEFORE writing any HTML:**
 
 1. **Read** `templates/viewer.html` using the Read tool
-2. **Study** the exact structure, styling, and Anthropic branding
+2. **Study** the exact structure, styling, and template styling (adapt to the user’s brand; do not imply Anthropic affiliation)
 3. **Use that file as the LITERAL STARTING POINT** - not just inspiration
-4. **Keep all FIXED sections exactly as shown** (header, sidebar structure, Anthropic colors/fonts, seed controls, action buttons)
+4. **Preserve usable controls by default, but adapt layout, typography and styling to the user’s requirements** (header, sidebar structure, template colors/fonts, seed controls, action buttons)
 5. **Replace only the VARIABLE sections** marked in the file's comments (algorithm, parameters, UI controls for parameters)
 
 **Avoid:**
@@ -122,7 +122,7 @@ With the philosophy AND conceptual framework established, express it through cod
 
 **Follow these practices:**
 - ✅ Copy the template's exact HTML structure
-- ✅ Keep Anthropic branding (Poppins/Lora fonts, light colors, gradient backdrop)
+- ✅ Keep template styling (adapt to the user’s brand; do not imply Anthropic affiliation) (Poppins/Lora fonts, light colors, gradient backdrop)
 - ✅ Maintain the sidebar layout (Seed → Parameters → Colors? → Actions)
 - ✅ Replace only the p5.js algorithm and parameter controls
 
@@ -208,7 +208,7 @@ function draw() {
 - **Color Harmony**: Thoughtful palettes, not random RGB values
 - **Composition**: Even in randomness, maintain visual hierarchy and flow
 - **Performance**: Smooth execution, optimized for real-time if animated
-- **Reproducibility**: Same seed ALWAYS produces identical output
+- **Reproducibility**: Same seed, parameters, code, p5 version and simulation step should reproduce the same state; browser/device rasterization can differ
 
 ### OUTPUT FORMAT
 
@@ -216,7 +216,7 @@ Output:
 1. **Algorithmic Philosophy** - As markdown or text explaining the generative aesthetic
 2. **Single HTML Artifact** - Self-contained interactive generative art built from `templates/viewer.html` (see STEP 0 and next section)
 
-The HTML artifact contains everything: p5.js (from CDN), the algorithm, parameter controls, and UI - all in one file that works immediately in claude.ai artifacts or any browser. Start from the template file, not from scratch.
+The HTML artifact contains everything: p5.js (from CDN), the algorithm, parameter controls, and UI - all in one file that is intended to work after implementation and testing in claude.ai artifacts or any browser. Start from the template file, not from scratch.
 
 ---
 
@@ -224,7 +224,7 @@ The HTML artifact contains everything: p5.js (from CDN), the algorithm, paramete
 
 **REMINDER: `templates/viewer.html` should have already been read (see STEP 0). Use that file as the starting point.**
 
-To allow exploration of the generative art, create a single, self-contained HTML artifact. Ensure this artifact works immediately in claude.ai or any browser - no setup required. Embed everything inline.
+To allow exploration of the generative art, create a single, single-file HTML artifact. Ensure this artifact is intended to work after implementation and testing in claude.ai or any browser - no setup required. Embed everything inline.
 
 ### CRITICAL: WHAT'S FIXED VS VARIABLE
 
@@ -232,7 +232,7 @@ The `templates/viewer.html` file is the foundation. It contains the exact struct
 
 **FIXED (always include exactly as shown):**
 - Layout structure (header, sidebar, main canvas area)
-- Anthropic branding (UI colors, fonts, gradients)
+- template styling (adapt to the user’s brand; do not imply Anthropic affiliation) (UI colors, fonts, gradients)
 - Seed section in sidebar:
   - Seed display
   - Previous/Next buttons
@@ -278,7 +278,7 @@ The `templates/viewer.html` file is the foundation. It contains the exact struct
 <!DOCTYPE html>
 <html>
 <head>
-  <!-- p5.js from CDN - always available -->
+  <!-- p5.js from CDN - requires network access and host permission -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
   <style>
     /* All styling inline - clean, minimal */
@@ -295,7 +295,7 @@ The `templates/viewer.html` file is the foundation. It contains the exact struct
     // Parameter objects, classes, functions
     // setup() and draw()
     // UI handlers
-    // Everything self-contained
+    // Everything single-file
   </script>
 </body>
 </html>
@@ -335,14 +335,14 @@ Add as many control-group divs as there are parameters.
 - Seed controls must work (prev/next/random/jump/display)
 - All parameters must have UI controls
 - Regenerate, Reset, Download buttons must work
-- Keep Anthropic branding (UI styling, not art colors)
+- Keep template styling (adapt to the user’s brand; do not imply Anthropic affiliation) (UI styling, not art colors)
 
 ### USING THE ARTIFACT
 
-The HTML artifact works immediately:
+The HTML artifact is intended to work after implementation and testing:
 1. **In claude.ai**: Displayed as an interactive artifact - runs instantly
 2. **As a file**: Save and open in any browser - no server needed
-3. **Sharing**: Send the HTML file - it's completely self-contained
+3. **Sharing**: Send the HTML file - it's single-file with network dependencies
 
 ---
 
@@ -371,7 +371,7 @@ Each request is unique. The process involves:
 5. **Build matching UI controls** - Sliders/inputs for those parameters
 
 **The constants**:
-- Anthropic branding (colors, fonts, layout)
+- template styling (adapt to the user’s brand; do not imply Anthropic affiliation) (colors, fonts, layout)
 - Seed navigation (always present)
 - Self-contained HTML artifact
 
@@ -390,8 +390,8 @@ To achieve the best results, trust creativity and let the philosophy guide the i
 This skill includes helpful templates and documentation:
 
 - **templates/viewer.html**: REQUIRED STARTING POINT for all HTML artifacts.
-  - This is the foundation - contains the exact structure and Anthropic branding
-  - **Keep unchanged**: Layout structure, sidebar organization, Anthropic colors/fonts, seed controls, action buttons
+  - This is the foundation - contains the exact structure and template styling (adapt to the user’s brand; do not imply Anthropic affiliation)
+  - **Keep unchanged**: Layout structure, sidebar organization, template colors/fonts, seed controls, action buttons
   - **Replace**: The p5.js algorithm, parameter definitions, and UI controls in Parameters section
   - The extensive comments in the file mark exactly what to keep vs replace
 
@@ -404,7 +404,7 @@ This skill includes helpful templates and documentation:
 - The **template is the STARTING POINT**, not inspiration
 - The **algorithm is where to create** something unique
 - Don't copy the flow field example - build what the philosophy demands
-- But DO keep the exact UI structure and Anthropic branding from the template
+- But DO keep the exact UI structure and template styling (adapt to the user’s brand; do not imply Anthropic affiliation) from the template
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.
@@ -413,3 +413,9 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Template status and verification
+
+The bundled viewer is an unfinished scaffold: flow-field generation, draw, particle behavior and parameter/color handlers require implementation. Add and test Regenerate and Download PNG actions (the original template only provides Reset). CDN p5.js and Google Fonts need network access; vendor approved dependencies for offline output. Respect host script restrictions. Bound particle counts, recursion and animation work; provide pause and reduced-motion behavior. Verify controls, seed replay at a fixed simulation step, mobile layout and exported PNG before describing the artifact as complete. Keep user data out of URLs and external requests.
+
+<!-- Modified locally: brief precedence, template completeness and reproducibility limits. -->

@@ -76,6 +76,7 @@ import {
   appendFileSync,
   existsSync,
   mkdirSync,
+  mkdtempSync,
   readFileSync,
   renameSync,
   rmSync,
@@ -158,6 +159,9 @@ function applyFleetLane(opts, flagged) {
       continue;
     }
     if (field === "force" && flagged.has("force")) continue;
+    if (!["maxTurns", "maxPrice", "maxTokens", "timeout", "planOnly"].includes(field)) {
+      fail(`unsupported fleet lane dial: ${field}; permission changes require explicit CLI flags`);
+    }
     opts[field] = value;
   }
 }
@@ -417,17 +421,24 @@ function extractFromEvent(obj, textChunks) {
               .map((c) => (typeof c.text === "string" ? c.text : ""))
               .join("")
           : "";
-    if (content) textChunks.push(content);
+    if (content) {
+      textChunks.length = 0;
+      textChunks.push(content.slice(-MAX_BUFFERED_CHARS));
+    }
     return;
   }
 }
 
 function prepareRunDir(opts, brief) {
   const startedAt = new Date().toISOString();
-  const outDir =
-    opts.outDir ||
-    join(tmpdir(), "delegate-relay", `${basename(opts.cd) || "repo"}-${timestamp()}`);
-  mkdirSync(outDir, { recursive: true });
+  let outDir;
+  if (opts.outDir) {
+    // A fresh directory prevents artifact overwrite and linked-file clobbering.
+    mkdirSync(opts.outDir, { recursive: false, mode: 0o700 });
+    outDir = opts.outDir;
+  } else {
+    outDir = mkdtempSync(join(tmpdir(), "vibe-relay-"));
+  }
   const run = {
     startedAt,
     briefPath: join(outDir, "brief.txt"),

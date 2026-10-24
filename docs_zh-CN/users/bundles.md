@@ -460,8 +460,6 @@ _用于技术 SEO、内容结构和搜索增长。_
 _用于重度文档工作流、电子表格、PDF 和演示。_
 
 - [`office-productivity`](../../skills/office-productivity/)：协调文档、电子表格和演示工作流。
-- [`xlsx-official`](../../skills/xlsx-official/)：使用公式和格式创建和分析电子表格文件。
-- [`pdf-official`](../../skills/pdf-official/)：以编程方式提取、生成和操作 PDF。
 - [`google-slides-automation`](../../skills/google-slides-automation/)：自动化 Google Slides 中的演示更新。
 - [`google-sheets-automation`](../../skills/google-sheets-automation/)：自动化 Google Sheets 中的读写操作。
 

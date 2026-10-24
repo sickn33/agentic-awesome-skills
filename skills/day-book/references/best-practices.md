@@ -27,6 +27,5 @@
   what it was for.
 - Keep every field name, type and position identical across CSV, SQL, JSON Schema and the Notion
   mapping. A field that is in one and missing or retyped in another is the defect, not a detail.
-- Money fields are `currency`, never `text`. Dates are `date`, never free text. Round once, at the
-  end, so the day re-derives from its movements.
+- Money fields are `currency`, never `text`. Dates are `date`, never free text. Use exact decimals and the confirmed currency's rounding policy; the two-decimal sample is an assumption.
 - If the user requests an example row, keep it obviously fake so nobody imports it as real data.

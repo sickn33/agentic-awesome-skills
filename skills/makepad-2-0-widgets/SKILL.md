@@ -8,8 +8,8 @@ date_added: '2026-09-21'
 risk: unknown
 ---
 ## When to Use
-- Use when this upstream workflow matches the user's stated goal.
-- Use when the task requires the procedures documented in this skill.
+- Choose Makepad widgets or diagnose widget properties, list virtualization, dialogs or custom drawing in an existing Makepad project.
+- Establish the exact dependency revision and DSL first; these imported dev-branch notes are not a stable 2.0 API contract or a compiled example suite. Check the matching [official Makepad source](https://github.com/makepad/makepad) before changing a working project.
 
 # Makepad 2.0 Widget Catalog Skill
 
@@ -17,7 +17,7 @@ risk: unknown
 
 ## Overview
 
-Makepad 2.0 provides a rich set of built-in widgets for building UIs. All widgets are defined in Splash syntax and registered via `script_mod!`.
+Makepad 2.0 provides a rich set of built-in widgets for building UIs. These notes describe a Splash/script_mod-style project; do not assume they apply to every released or older Live DSL project.
 
 ## Documentation
 
@@ -42,7 +42,7 @@ Refer to the local files for detailed documentation:
 | `View` | Basic container (transparent) | width, height, flow, spacing, padding, align |
 | `SolidView` | View with solid background | + show_bg: true, draw_bg.color |
 | `RoundedView` | View with rounded corners | + draw_bg.border_radius |
-| `RoundedAllView` | All corners same radius | + border_radius shorthand |
+| `RoundedAllView` | Per-corner radii | Check the vec4 draw_bg.border_radius API in the installed revision |
 | `GradientXView` | Horizontal gradient bg | + draw_bg colors |
 | `GradientYView` | Vertical gradient bg | + draw_bg colors |
 | `ScrollXView` | Horizontal scrolling | scroll property |
@@ -56,7 +56,7 @@ Refer to the local files for detailed documentation:
 | `Label` | Single/multi-line text | text, draw_text.color, draw_text.text_style.font_size |
 | `H1` - `H4` | Heading levels | text (pre-styled) |
 | `P` | Paragraph text | text |
-| `TextInput` | Editable text field | text, empty_text, password, read_only, numeric_only |
+| `TextInput` | Editable text field | text, empty_text, is_password, is_read_only, is_numeric_only |
 | `Markdown` | Markdown renderer | body |
 | `Html` | HTML renderer | body |
 | `LinkLabel` | Clickable link text | text, url |
@@ -88,7 +88,7 @@ Refer to the local files for detailed documentation:
 
 | Widget | Description | Key Properties |
 |--------|-------------|----------------|
-| `Image` | Image display | source, fit (Stretch/Horizontal/Vertical/Smallest/Biggest/Size) |
+| `Image` | Image display | src, fit (Stretch/Horizontal/Vertical/Smallest/Biggest/Size) |
 | `Svg` | External SVG file renderer | draw_svg.svg (crate_resource/http_resource), animating, draw_svg.color |
 | `Icon` | SVG icon (tinted) | draw_icon.svg, draw_icon.color, icon_walk |
 | `Vector` | Inline vector graphics | viewbox, Path{d: "..."} |
@@ -119,7 +119,7 @@ Refer to the local files for detailed documentation:
 | `Modal` | Modal dialog | .open(cx) / .close(cx) from Rust |
 | `Tooltip` | Tooltip popup | Hover-triggered |
 | `PopupNotification` | Toast notification | Timed display |
-| `SlidePanel` | Sliding panel | slide_from |
+| `SlidePanel` | Sliding panel | side (verify installed API) |
 | `ExpandablePanel` | Expandable area | open/close |
 | `PageFlip` | Page switcher | active_page: page_name |
 | `StackNavigation` | Stack nav | push/pop pages |
@@ -135,11 +135,13 @@ Refer to the local files for detailed documentation:
 
 ---
 
+The snippets are illustrative and omit app registration/event wiring. Numeric input and password masking are presentation controls, not validation, encryption or authorization. Treat external Markdown/HTML, SVG, image URLs and map tiles as untrusted resources; restrict allowed schemes/hosts, bound decoding, honor asset licenses/attribution and verify privacy before enabling network fetches. Do not log text-input contents. Test keyboard navigation, focus return/trapping for modals, readable contrast and touch behavior.
+
 ## Critical Rules
 
 ### 1. height: Fit on Containers
 ```
-// WRONG - View defaults to 0px height
+// Possible Fill/Fit constraint mismatch; inspect the parent chain
 View{ flow: Down Label{text: "Invisible"} }
 
 // CORRECT

@@ -33,6 +33,8 @@ Gather this context (ask if not provided):
 
 ## Platform Strategy Guide
 
+Frequencies, times, demographics and ranking tips below are unsourced starting hypotheses, not current platform policy, causal evidence or universal benchmarks. Choose a sustainable test for the actual audience/timezone; verify current format/account limits before scheduling.
+
 ### LinkedIn
 
 **Best for:** B2B, thought leadership, professional networking, recruiting
@@ -51,14 +53,14 @@ Gather this context (ask if not provided):
 **What doesn't:**
 - Overly promotional content
 - Generic motivational quotes
-- Links in the main post (kills reach)
+- External links: test their effect against the actual conversion goal
 - Corporate speak without personality
 
 **Format tips:**
 - First line is everything (hook before "see more")
 - Use line breaks for readability
 - 1,200-1,500 characters performs well
-- Put links in comments, not post body
+- Choose accessible link placement based on account-specific results
 - Tag people sparingly and genuinely
 
 ### Twitter/X
@@ -83,7 +85,7 @@ Gather this context (ask if not provided):
 - Scheduling everything (no real-time presence)
 
 **Format tips:**
-- Tweets under 100 characters get more engagement
+- Test concise posts without treating a fixed character count as a performance guarantee
 - Threads: Hook in tweet 1, promise value, deliver
 - Quote tweets with added insight beat plain retweets
 - Use visuals to stop the scroll
@@ -110,7 +112,7 @@ Gather this context (ask if not provided):
 - Only promotional content
 
 **Format tips:**
-- Reels get 2x reach of static posts
+- Compare Reel and static-post reach with current account data; no fixed uplift is established here
 - First frame of Reels must hook
 - Carousels: 10 slides with educational content
 - Use all Story features (polls, links, etc.)
@@ -141,7 +143,7 @@ Gather this context (ask if not provided):
 - Keep it under 30 seconds to start
 - Vertical only (9:16)
 - Use trending sounds
-- Post consistently to train algorithm
+- Post at a sustainable cadence and evaluate audience response
 
 ### Facebook
 
@@ -158,7 +160,7 @@ Gather this context (ask if not provided):
 - Discussion-prompting questions
 
 **What doesn't:**
-- Links to external sites (reach killer)
+- External links: assess traffic and conversion alongside reach
 - Pure promotional content
 - Ignoring comments
 - Cross-posting from other platforms without adaptation
@@ -442,7 +444,7 @@ Engagement isn't just responding—it's actively participating:
 1. Respond to all comments on your posts (5 min)
 2. Comment on 5-10 posts from target accounts (15 min)
 3. Share/repost with added insight (5 min)
-4. Send 2-3 DMs to new connections (5 min)
+4. Draft relevant replies; send direct messages only when explicitly authorized for those recipients
 
 **Quality comments:**
 - Add new insight, not just "Great post!"
@@ -508,7 +510,7 @@ Engagement isn't just responding—it's actively participating:
 - Check if content matches audience interest
 
 **If reach is declining:**
-- Avoid external links in post body
+- Test link placement while preserving usability and conversion measurement
 - Increase posting frequency slightly
 - Engage more in comments
 - Test video/visual content
@@ -524,7 +526,7 @@ Engagement isn't just responding—it's actively participating:
 - First hour engagement matters most
 - Comments > reactions > clicks
 - Dwell time (people reading) signals quality
-- No external links in post body
+- Link-placement effects are hypotheses to test, not universal ranking rules
 - Document posts (carousels) get strong reach
 - Polls drive engagement but don't build authority
 
@@ -538,7 +540,7 @@ Engagement isn't just responding—it's actively participating:
 
 ### Instagram Algorithm Tips
 
-- Reels heavily prioritized over static posts
+- Evaluate formats using current account-specific reach and conversion data
 - Saves and shares > likes
 - Stories keep you top of feed
 - Consistency matters more than perfection
@@ -604,7 +606,7 @@ Engagement isn't just responding—it's actively participating:
 
 ## Reverse Engineering Viral Content
 
-Instead of guessing what works, systematically analyze top-performing content in your niche and extract proven patterns.
+Instead of guessing what works, systematically analyze top-performing content in your niche and form testable pattern hypotheses.
 
 ### The 6-Step Framework
 
@@ -626,7 +628,7 @@ Identify 10-20 creators in your space who consistently get high engagement:
 
 #### 2. SCRAPE — Collect Posts at Scale
 
-Gather 500-1000+ posts from your identified creators for analysis:
+Collect a justified, authorized sample using permitted exports/APIs or manual review; do not bypass access controls or platform restrictions:
 
 **Tools:**
 - **Apify** — LinkedIn scraper, Twitter scraper actors
@@ -770,7 +772,7 @@ Bridge from engagement to business results:
 - Case study posts that naturally showcase your work
 - "If you want help with this, DM me" (sparingly)
 
-### Output: Proven Patterns + Right Voice = Performance
+### Output: Candidate Patterns to Test
 
 The formula:
 ```

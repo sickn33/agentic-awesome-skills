@@ -1,5 +1,7 @@
 # Hosted Tools Reference
 
+**Compatibility note:** This is preserved legacy-generation reference material, not a verified current SDK recipe. Apply the SDK-generation, authorization, privacy, cost and cleanup gate in the root skill before adapting any snippet.
+
 Detailed patterns for all hosted tools available in the Agent Framework.
 
 ## HostedCodeInterpreterTool
@@ -28,6 +30,8 @@ async with (
 ```
 
 ### With File Inputs
+
+Select only authorized files/vector stores for the authenticated project/user. Track IDs created in this run and explicitly remove them through the version-matched service API when retention expires; do not delete pre-existing resources on context-manager exit.
 
 ```python
 from agent_framework import HostedCodeInterpreterTool, HostedFileContent

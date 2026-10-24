@@ -9,13 +9,13 @@ tags: advanced, versioning, blue-green, deployment
 
 Set `applicationVersion` in configuration to tag workflows with a version. DBOS only recovers workflows matching the current application version, preventing code mismatches during recovery.
 
-**Incorrect (deploying new code that breaks in-progress workflows):**
+**Default automatic versioning (use deliberately):**
 
 ```typescript
 DBOS.setConfig({
   name: "my-app",
   systemDatabaseUrl: process.env.DBOS_SYSTEM_DATABASE_URL,
-  // No version set - all workflows recovered regardless of code version
+  // Auto-derived version may be unsuitable for your intended deployment control
 });
 ```
 

@@ -6,7 +6,7 @@
 - **Methods:** Scraper APIs are `GET`; Web Scraping is `POST`; Scraper Jobs use `POST` (submit) + `GET` (status/results) + `DELETE` (stop).
 - **Key handling:** read from env (`HASDATA_API_KEY`). Never hardcode, never log.
 - **Timeouts:** **client timeout ≥ 300 s.** HasData's deadline is 300 s; shorter clients get phantom failures while still being billed.
-- **Retries:** `429` and `5xx` only with exponential backoff + jitter. Never retry `4xx`.
+- **Retries:** `429` and `5xx` only with exponential backoff + jitter. Never retry other `4xx`.
 - **Concurrency:** cap at plan limit. Free tier = 1.
 - **Success signal:** sync APIs require `body.requestMetadata.status === "ok"`. HTTP 200 alone isn't enough.
 
@@ -44,11 +44,14 @@ class HasData:
     def post(self, path, body):
         r = self.s.post(f"{self.BASE}{path}", json=body, timeout=self.timeout)
         r.raise_for_status()
-        return r.json()
+        result = r.json()
+        if path.startswith("/scrape/") and result.get("requestMetadata", {}).get("status") != "ok":
+            raise RuntimeError("HasData synchronous extraction did not succeed")
+        return result
 
 hd = HasData()
 serp = hd.get("/scrape/google/serp", q="coffee", num=20)["organicResults"]
-md   = hd.post("/scrape/web", {"url": "https://example.com", "outputFormat": ["markdown"]})["markdown"]
+md   = hd.post("/scrape/web", {"url": "https://example.com", "outputFormat": ["markdown", "json"]})["markdown"]
 ```
 
 ## Python — retry + bounded concurrency
@@ -70,10 +73,10 @@ def with_retry(fn, attempts=5, base=1.0, cap=60.0):
             raise
     raise RuntimeError("retry exhausted")
 
-def scrape_many(urls, workers=5):
+def scrape_many(urls, workers=1):
     out = {}
     with ThreadPoolExecutor(max_workers=workers) as ex:
-        futs = {ex.submit(lambda u=u: hd.post("/scrape/web", {"url": u, "outputFormat": ["markdown"]})): u
+        futs = {ex.submit(lambda u=u: with_retry(lambda: HasData().post("/scrape/web", {"url": u, "outputFormat": ["markdown", "json"]}))): u
                 for u in urls}
         for f in as_completed(futs):
             try:
@@ -83,13 +86,14 @@ def scrape_many(urls, workers=5):
     return out
 ```
 
-Cap `workers` at your plan's concurrency — anything higher just generates `429`s.
+The retry example is for idempotent synchronous extraction, not async job submission. It creates a client per worker rather than sharing a mutable Requests Session. Cap `workers` at your plan's concurrency — anything higher just generates `429`s.
 
 ## TypeScript — minimal client
 
 ```typescript
 const BASE = "https://api.hasdata.com";
-const KEY  = process.env.HASDATA_API_KEY!;
+const KEY = process.env.HASDATA_API_KEY;
+if (!KEY) throw new Error("HASDATA_API_KEY is required");
 
 async function get<T = any>(path: string, params: Record<string, string | number> = {}): Promise<T> {
   const qs = new URLSearchParams(Object.entries(params).map(([k, v]) => [k, String(v)]));
@@ -99,7 +103,7 @@ async function get<T = any>(path: string, params: Record<string, string | number
   });
   if (!r.ok) throw new Error(`HasData ${r.status} ${await r.text()}`);
   const body = await r.json() as any;
-  if (body?.requestMetadata?.status && body.requestMetadata.status !== "ok") {
+  if (body?.requestMetadata?.status !== "ok") {
     throw new Error(`HasData not-ok: ${JSON.stringify(body.requestMetadata)}`);
   }
   return body as T;
@@ -113,11 +117,16 @@ async function post<T = any>(path: string, body: unknown): Promise<T> {
     signal:  AbortSignal.timeout(300_000),
   });
   if (!r.ok) throw new Error(`HasData ${r.status} ${await r.text()}`);
-  return r.json() as Promise<T>;
+  const result = await r.json() as any;
+  if (path.startsWith("/scrape/") && result?.requestMetadata?.status !== "ok") {
+    throw new Error("HasData synchronous extraction did not succeed");
+  }
+  return result as T;
 }
 
 // Bounded concurrency, no deps
 async function pool<T, R>(items: T[], n: number, fn: (x: T) => Promise<R>) {
+  if (!Number.isInteger(n) || n < 1) throw new Error("Concurrency must be a positive integer");
   const out: R[] = []; let i = 0;
   await Promise.all(Array.from({ length: n }, async () => {
     while (i < items.length) { const k = i++; out[k] = await fn(items[k]); }
@@ -143,7 +152,7 @@ async function pool<T, R>(items: T[], n: number, fn: (x: T) => Promise<R>) {
 - [ ] Key from env, never logged.
 - [ ] All HTTP timeouts ≥ 300 s.
 - [ ] `requestMetadata.status === "ok"` checked on every sync response.
-- [ ] Backoff on 429 + 5xx; never on 4xx.
+- [ ] Backoff on 429 + 5xx; never on other 4xx.
 - [ ] Concurrency capped at plan limit.
 - [ ] Job `id` (from submit response) persisted to durable storage immediately.
 - [ ] Webhooks paired with polling fallback.

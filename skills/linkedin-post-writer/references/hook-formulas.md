@@ -8,7 +8,7 @@ Each formula has a skeleton, why it works, and a reference engagement number fro
 
 F1-F10 are the original long-form thought-leadership set. F11-F16 were validated in 2026 against a large corpus of above-average performers across 10 verticals; they skew shorter and more emotional, and each is tagged with its primary engagement goal (comments / reposts / likes / saves). Pick by goal first (see "Engagement-goal split" below), then by topic.
 
-**Reading the reference numbers:** F1-F10 cite engagement with a baseline multiplier (a real format effect, e.g. "19.64x baseline"). F11-F16 cite absolute reach from the 2026 corpus, which can be inflated by reshares or a famous author. Treat F11-F16 numbers as a reach ceiling, not a like-for-like comparison against F1-F10. Where the reach was source-driven rather than format-driven, the formula says so.
+**Reading the reference numbers:** F1-F10 cite engagement with a baseline multiplier (an unverified observational association, not a causal format effect, e.g. "19.64x baseline"). F11-F16 cite absolute reach from the 2026 corpus, which can be inflated by reshares or a famous author. Treat F11-F16 numbers as historical source claims, not a reach ceiling, not a like-for-like comparison against F1-F10. Where the reach was source-driven rather than format-driven, the formula says so.
 
 ## Contents
 
@@ -169,7 +169,7 @@ If the thesis is right, {outcome}.
 If it's wrong, I owe you a post admitting it.
 ```
 
-**Why:** Claim is validated by reader action. Every comment is evidence. Public accountability hook.
+**Why:** Claim is validated by reader action. Comments alone do not prove the causal thesis. Public accountability hook.
 
 ---
 
@@ -195,7 +195,7 @@ Free. No email wall. [Light scarcity: "48 hours only, I'll DM the link personall
 Comment "{keyword}" below + connect with me and I'll send the bundle.
 ```
 
-**Why:** Capped reach but huge DM conversion. Named bundle + real authority = 300-800 comments if the bundle is genuine.
+**Why:** Capped reach but huge DM conversion. Named bundle + real authority = a hypothesis requiring audience-specific validation.
 
 **Warning:** This is engagement bait. Ship only when the weekly goal is list-building, not thought leadership. LinkedIn suppresses pure "comment X" posts.
 
@@ -250,7 +250,7 @@ That's the {framework}. Run it today. Most {audience} find 3 fixes in the first 
 [Soft scarcity close: "Want me to run {framework} on your profile personally? Connect + send me yours, I'll pick 5 this week."]
 ```
 
-**Why:** Reversal hook (price to free) creates pattern interrupt. Named framework signals proprietary thinking. Checklist drives saves (5x likes under 360Brew).
+**Why:** Reversal hook (price to free) creates pattern interrupt. Named framework signals proprietary thinking. Checklist may be useful; no universal saves/likes multiplier is established.
 
 ---
 
@@ -454,7 +454,7 @@ Pick the formula by what you want the post to earn. This split held across all 1
 | Topic type | Best formula | Why |
 |---|---|---|
 | Platform/category argument | F1 Anaphora | Loss aversion stacks cleanly |
-| Industry era ending | F2 R.I.P. / F10 Contrarian | Force side-picking |
+| Industry era ending | F2 R.I.P. / F10 Contrarian | Invite substantive disagreement |
 | Personal year recap | F3 Year-over-Year / F4 Confession | Identity shift reads as earned |
 | Product demo in public | F5 Self-Proving Meta | Structural self-proof |
 | Big authority giveaway | F6 Comment-Gate / F8 Paid-vs-Free | List-building tier |
@@ -469,9 +469,9 @@ Pick the formula by what you want the post to earn. This split held across all 1
 
 ## Hook micro-rules
 
-- **"How I" beats "How to".** First-person experience ("How I cut CAC by 62%") outperforms generic instruction ("How to cut CAC") by 2-3x. Swap every "How to" hook to "How I" unless the post is a pure framework with no narrator.
-- **Specific number in the first sentence** raises expand-rate by ~35%. $873.47 beats $900. 40,000 beats "a lot of".
-- **Real failure in the first 3 lines** outperforms polished framing by **8.5x**. Lead with what broke.
+- **"How I" beats "How to".** First-person experience ("How I cut CAC by 62%") cannot be assigned a universal multiplier over generic instruction ("How to cut CAC"). Never convert instructions into autobiographical claims unless the user supplied that experience.
+- **Specific number in the first sentence** can clarify a supported claim; no verified universal expand-rate gain is provided. $873.47 beats $900. 40,000 beats "a lot of".
+- **Real failure in the first 3 lines** has no established universal multiplier over polished framing. Lead with what broke.
 
 ## Never do
 
@@ -479,4 +479,8 @@ Pick the formula by what you want the post to earn. This split held across all 1
 - Use F5 Self-Proving Meta if you won't actually keep the promise
 - Use F6 Comment-Gate more than once per month
 - Pair F7 Money Ledger with made-up numbers; readers know
-- Use F1 Anaphora to frame LinkedIn as inferior (algo penalty on LinkedIn)
+- Use F1 Anaphora to frame LinkedIn as inferior (editorial preference only; no algorithm penalty established)
+
+## Evidence and publication boundaries
+
+The corpus, baselines, dates and metrics are not bundled or independently auditable. Treat all reference counts, multipliers, algorithm claims and formula-to-goal mappings as upstream anecdotes, not predictions or causal evidence. Saves cannot be inferred from public repost counts. Do not fabricate precise costs, failures, quotations, named endorsements, personal stories or scarcity to satisfy a skeleton. Avoid deceptive bait-and-switch and comment gates; offer useful direct access and an honest CTA. Respect confidentiality/consent when naming people and source factual claims. Drafting never authorizes publishing, tagging people, commenting or DMs. No post was published and no analytics were measured in this review.

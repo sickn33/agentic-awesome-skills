@@ -23,7 +23,7 @@ from pathlib import Path
 DESKTOP = Path(os.environ.get("DESKTOP_PATH", str(Path(os.environ.get("USERPROFILE", "")) / "OneDrive" / "Desktop")))
 DESKTOP_FALLBACK = Path(os.environ.get("USERPROFILE", "")) / "Desktop"
 GLOBAL_DIARY_ROOT = Path(os.environ.get("GLOBAL_DIARY_ROOT", str(Path(__file__).resolve().parent.parent / "diary")))
-OBSIDIAN_DAILY_NOTES = Path(os.environ.get("OBSIDIAN_DAILY_NOTES", ""))
+OBSIDIAN_DAILY_NOTES = Path(os.environ["OBSIDIAN_DAILY_NOTES"]) if os.environ.get("OBSIDIAN_DAILY_NOTES", "").strip() else None
 NOTION_SYNC_SCRIPT = Path(__file__).resolve().parent / "sync_to_notion.py"
 
 
@@ -175,7 +175,7 @@ def sync_to_notion(global_path):
     try:
         result = subprocess.run(
             [sys.executable, str(NOTION_SYNC_SCRIPT), str(global_path)],
-            env=env, capture_output=True, text=True, check=True
+            env=env, cwd=global_path.parent, capture_output=True, text=True, check=True, timeout=120
         )
         print(result.stdout)
         return True
@@ -189,7 +189,7 @@ def backup_to_obsidian(global_path):
     print("📂 Backing up to Obsidian...")
     
     # Safety Check: If path is empty, it shouldn't backup
-    if not str(OBSIDIAN_DAILY_NOTES).strip():
+    if OBSIDIAN_DAILY_NOTES is None:
         print("ℹ️  Obsidian path is not set (empty). Skipping backup.")
         return False
         
@@ -198,7 +198,8 @@ def backup_to_obsidian(global_path):
         return False
     try:
         dest = OBSIDIAN_DAILY_NOTES / global_path.name
-        shutil.copy2(global_path, dest)
+        with global_path.open("rb") as source, dest.open("xb") as target:
+            shutil.copyfileobj(source, target)
         print(f"✅ Backed up to: {dest}")
         return True
     except Exception as e:
@@ -233,20 +234,25 @@ def run_sync(date_str):
         sys.exit(1)
 
     # 4a. Notion
-    sync_to_notion(global_path)
+    notion_ok = sync_to_notion(global_path)
 
     # 4b. Obsidian
-    backup_to_obsidian(global_path)
+    obsidian_ok = backup_to_obsidian(global_path)
 
     # 5. Semantic Update
-    run_qmd_embed()
+    if os.environ.get("DIARY_EMBED_AUTHORIZED") == "1":
+        run_qmd_embed()
 
-    print("=== SYNC COMPLETED ===")
+    print(f"Sync results: Notion={notion_ok}, Obsidian={obsidian_ok}")
+    if not notion_ok or (OBSIDIAN_DAILY_NOTES is not None and not obsidian_ok):
+        sys.exit(1)
 
 
 # ── MAIN ──────────────────────────────────────────────────────
 
 def main():
+    if not os.environ.get("GLOBAL_DIARY_ROOT", "").strip():
+        sys.exit("Set GLOBAL_DIARY_ROOT explicitly to an authorized private directory")
     date_str = get_today()
 
     if len(sys.argv) > 1:
@@ -260,10 +266,7 @@ def main():
             print("Usage: python master_diary_sync.py [--inject-only | --sync-only]")
             sys.exit(1)
     else:
-        # Legacy: run both (no AI rewrite in between)
-        print("⚠️  Running full pipeline (legacy mode). Consider using --inject-only and --sync-only separately.")
-        run_inject(date_str)
-        run_sync(date_str)
+        sys.exit("Choose --inject-only or --sync-only explicitly; no default cloud sync")
 
 
 if __name__ == "__main__":

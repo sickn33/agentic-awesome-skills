@@ -2,45 +2,34 @@
 name: playwright-java
 description: "Scaffold, write, debug, and enhance enterprise-grade Playwright E2E tests in Java using Page Object Model, JUnit 5, Allure reporting, and parallel execution."
 category: test-automation
-risk: safe
+risk: critical
 source: community
 date_added: "2025-03-08"
 author: amalsam18
 tags: [playwright, java, e2e-testing, junit5, page-object-model, allure, selenium-alternative]
 tools: [claude, cursor,antigravity]
 ---
-## Supporting material availability
+## Supporting material
 
-This catalog copy contains the inline guidance below, but does not include the following supporting paths. They are external prerequisites, not bundled files:
-
-- `<support-root>/references/config.md`
-- `<support-root>/references/page-objects.md`
-- `<support-root>/references/assertions.md`
-- `<support-root>/references/fixtures.md`
-- `<support-root>/templates/BaseTest.java`
-- `<support-root>/templates/BasePage.java`
-- `src/test/resources/junit-platform.properties`
-
-Ask for the original supporting material or an existing installation before using a step that depends on these paths; this catalog does not identify a verified download source for them. Resolve each path relative to that installation, inspect its contents, and verify any applicable license and execution prerequisites. Do not run a command or claim a referenced procedure was followed until its required file exists. Do not fabricate the missing scripts or treat an unrelated file with the same name as equivalent. Independent steps fully documented here can proceed within the user’s authorized scope; report any dependent step as unavailable.
-
+The bundled files are [configuration](config.md), [page objects](page-objects.md), [assertions](assertions.md), [fixtures](fixtures.md), [BaseTest.java](BaseTest.java) and [BasePage.java](BasePage.java). Copy/adapt them into the target project with their dependencies; `src/test/resources/junit-platform.properties` below is a project file to create, not a bundled file.
 
 # Playwright Java – Advanced Test Automation
 
 ## Overview
 
-This skill produces production-quality, enterprise-grade Playwright Java test code.
-It enforces the Page Object Model (POM), strict locator strategies, thread-safe parallel
+This skill supplies Playwright Java test patterns requiring project-specific compilation and execution.
+It enforces the Page Object Model (POM), strict locator strategies, per-thread Playwright ownership for parallel
 execution, and full Allure reporting integration. Targets Java 17+ and Playwright 1.44+.
 
 Supporting reference files are available for deeper topics:
 
 | Topic | File |
 |-------|------|
-| Maven POM, ConfigReader, Docker/CI setup | `references/config.md` |
-| Component pattern, dropdowns, uploads, waits | `references/page-objects.md` |
-| Full assertion API, soft assertions, visual testing | `references/assertions.md` |
-| Fixtures, test data factory, auth state, retry | `references/fixtures.md` |
-| Drop-in base class templates | `templates/BaseTest.java`, `templates/BasePage.java` |
+| Maven POM, ConfigReader, Docker/CI setup | `config.md` |
+| Component pattern, dropdowns, uploads, waits | `page-objects.md` |
+| Full assertion API, soft assertions, visual testing | `assertions.md` |
+| Fixtures, test data factory, auth state, retry | `fixtures.md` |
+| Drop-in base class templates | `BaseTest.java`, `BasePage.java` |
 
 ---
 
@@ -64,7 +53,7 @@ Use this matrix to pick the right pattern before writing any code:
 
 | User Request | Approach |
 |---|---|
-| New project from scratch | Full scaffold — see `references/config.md` |
+| New project from scratch | Full scaffold — see `config.md` |
 | Single feature test | POM page class + JUnit5 test class |
 | API + UI hybrid | `APIRequestContext` alongside `Page` |
 | Cross-browser | `@MethodSource` parameterized over browser names |
@@ -84,8 +73,8 @@ src/
 ├── test/
 │   ├── java/com/company/tests/
 │   │   ├── base/
-│   │   │   ├── BaseTest.java        ← templates/BaseTest.java
-│   │   │   └── BasePage.java        ← templates/BasePage.java
+│   │   │   ├── BaseTest.java        ← BaseTest.java
+│   │   │   └── BasePage.java        ← BasePage.java
 │   │   ├── pages/
 │   │   │   └── LoginPage.java
 │   │   ├── tests/
@@ -106,55 +95,7 @@ pom.xml
 
 ### Step 3: Set Up Thread-Safe BaseTest
 
-```java
-public class BaseTest {
-    protected static ThreadLocal<Playwright>     playwrightTL = new ThreadLocal<>();
-    protected static ThreadLocal<Browser>        browserTL    = new ThreadLocal<>();
-    protected static ThreadLocal<BrowserContext> contextTL    = new ThreadLocal<>();
-    protected static ThreadLocal<Page>           pageTL       = new ThreadLocal<>();
-
-    protected Page page() { return pageTL.get(); }
-
-    @BeforeEach
-    void setUp() {
-        Playwright playwright = Playwright.create();
-        playwrightTL.set(playwright);
-
-        Browser browser = resolveBrowser(playwright).launch(
-            new BrowserType.LaunchOptions()
-                .setHeadless(ConfigReader.isHeadless()));
-        browserTL.set(browser);
-
-        BrowserContext context = browser.newContext(new Browser.NewContextOptions()
-            .setViewportSize(1920, 1080)
-            .setRecordVideoDir(Paths.get("target/videos/"))
-            .setLocale("en-US"));
-        context.tracing().start(new Tracing.StartOptions()
-            .setScreenshots(true).setSnapshots(true));
-        contextTL.set(context);
-        pageTL.set(context.newPage());
-    }
-
-    @AfterEach
-    void tearDown(TestInfo testInfo) {
-        String name = testInfo.getDisplayName().replaceAll("[^a-zA-Z0-9]", "_");
-        contextTL.get().tracing().stop(new Tracing.StopOptions()
-            .setPath(Paths.get("target/traces/" + name + ".zip")));
-        pageTL.get().close();
-        contextTL.get().close();
-        browserTL.get().close();
-        playwrightTL.get().close();
-    }
-
-    private BrowserType resolveBrowser(Playwright pw) {
-        return switch (System.getProperty("browser", "chromium").toLowerCase()) {
-            case "firefox" -> pw.firefox();
-            case "webkit"  -> pw.webkit();
-            default        -> pw.chromium();
-        };
-    }
-}
-```
+Use the bundled `BaseTest.java`, with the matching `ConfigReader` from `config.md`; it registers resources before fallible tracing/page creation and removes thread-local values during teardown.
 
 ---
 
@@ -184,7 +125,7 @@ public class LoginPage extends BasePage {
     public DashboardPage loginAs(String email, String password) {
         fill(emailInput, email);
         fill(passwordInput, password);
-        clickAndWaitForNav(loginButton);
+        clickAndWaitForNav(loginButton, "**/dashboard");
         return new DashboardPage(page);
     }
 
@@ -205,7 +146,6 @@ public class LoginPage extends BasePage {
 ### Step 5: Write Tests with Allure Annotations
 
 ```java
-@ExtendWith(AllureJunit5.class)
 class LoginTest extends BaseTest {
 
     private LoginPage loginPage;
@@ -233,7 +173,7 @@ class LoginTest extends BaseTest {
 
         SoftAssertions softly = new SoftAssertions();
         softly.assertThat(loginPage.getErrorMessage()).contains("Invalid email or password");
-        softly.assertThat(page()).hasURL(Pattern.compile(".*/login"));
+        assertThat(page()).hasURL(Pattern.compile(".*/login"));
         softly.assertAll();
     }
 
@@ -241,7 +181,7 @@ class LoginTest extends BaseTest {
     @MethodSource("provideInvalidCredentials")
     void shouldRejectInvalidCredentials(String email, String password, String expectedError) {
         loginPage.loginExpectingError(email, password);
-        assertThat(loginPage.getErrorMessage()).containsText(expectedError);
+        org.assertj.core.api.Assertions.assertThat(loginPage.getErrorMessage()).contains(expectedError);
     }
 
     static Stream<Arguments> provideInvalidCredentials() {
@@ -299,21 +239,9 @@ void shouldHandleApiFailureGracefully() {
 }
 ```
 
-### Example 3: Parallel Cross-Browser Test
+### Example 3: Cross-Browser Execution
 
-```java
-@ParameterizedTest
-@MethodSource("browsers")
-void shouldRenderCheckoutOnAllBrowsers(String browserName) {
-    System.setProperty("browser", browserName);
-    new CheckoutPage(page()).navigate();
-    assertThat(page().locator(".checkout-form")).isVisible();
-}
-
-static Stream<String> browsers() {
-    return Stream.of("chromium", "firefox", "webkit");
-}
-```
+Run separate Maven processes/jobs with `-Dbrowser=chromium`, `firefox` and `webkit`. Do not set a process-global system property inside a parameterized test: setup already launched the browser and parallel tests race on that property. Give each job a unique artifact name.
 
 ### Example 4: Parallel Execution Config
 
@@ -338,18 +266,20 @@ junit.jupiter.execution.parallel.config.fixed.parallelism=4
   uses: actions/upload-artifact@v4
   if: failure()
   with:
-    name: playwright-traces
+    name: playwright-traces-${{ matrix.browser }}
     path: target/traces/
 
 - name: Upload Allure results
   uses: actions/upload-artifact@v4
   if: always()
   with:
-    name: allure-results
+    name: allure-results-${{ matrix.browser }}
     path: target/allure-results/
 ```
 
 ---
+
+Use an authorized test origin and disposable test data/accounts. Order/API/UI actions can charge, send messages or delete records; block production integrations and clean up created records. Storage-state files contain credentials, and traces/screenshots/videos can contain secrets or personal data: restrict access, ignore in git, redact and bound retention before uploading. Pinned versions in the configuration are historical examples, not current recommendations; match Java dependency and browser/Docker versions.
 
 ## Best Practices
 
@@ -374,7 +304,7 @@ junit.jupiter.execution.parallel.config.fixed.parallelism=4
   **Solution:** Ensure every test creates its own `Playwright → Browser → BrowserContext → Page` chain via `ThreadLocal`. Never share a `Page` across threads.
 
 - **Problem:** `assertThat(locator).isVisible()` times out even when the element appears
-  **Solution:** Increase timeout with `.setTimeout(10_000)` or raise `context.setDefaultTimeout()` in `BaseTest`.
+  **Solution:** Inspect readiness/locator first; set the assertion-specific options timeout if justified. Assertions have a separate default (5 seconds); context action timeout does not change it.
 
 - **Problem:** `Thread.sleep(2000)` was added but tests are still flaky
   **Solution:** Replace with `page.waitForResponse("**/api/endpoint", () -> action())` or `assertThat(locator).hasText("Done")` which polls automatically.
@@ -383,7 +313,7 @@ junit.jupiter.execution.parallel.config.fixed.parallelism=4
   **Solution:** Ensure `tracing().start()` is called before test actions and `tracing().stop()` is in `@AfterEach` — not `@AfterAll`.
 
 - **Problem:** Allure report is blank or missing steps
-  **Solution:** Add the AspectJ agent to `maven-surefire-plugin` `<argLine>` in `pom.xml` — see `references/config.md` for the exact snippet.
+  **Solution:** Add the AspectJ agent to `maven-surefire-plugin` `<argLine>` in `pom.xml` — see `config.md` for the exact snippet.
 
 - **Problem:** `storageState` auth file is stale and tests redirect to login
   **Solution:** Re-run `AuthSetup` to regenerate `target/auth/user-state.json` before the suite, or add a `@BeforeAll` that conditionally refreshes it.

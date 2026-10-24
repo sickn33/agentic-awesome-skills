@@ -2,6 +2,7 @@
 # telegram.sh — send/receive Telegram messages via the Bot API.
 # Deps: bash, curl, jq. Config: env vars or ~/.config/telegram/config.
 set -euo pipefail
+umask 077
 
 API_BASE="https://api.telegram.org"
 CONFIG_DIR="${TELEGRAM_CONFIG_DIR:-$HOME/.config/telegram}"
@@ -44,10 +45,12 @@ load_config() {
   local key val
   while IFS='=' read -r key val; do
     case "$key" in ''|\#*) continue ;; esac
-    [[ "$key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]] || continue
+    [[ "$key" =~ ^(TELEGRAM_BOT_TOKEN|TELEGRAM_CHAT_ID|TELEGRAM_APPROVER_IDS|BOT_[A-Z0-9_]+_TOKEN|TARGET_[A-Z0-9_]+|APPROVERS_[A-Z0-9_]+)$ ]] || continue
     if [ -z "${!key:-}" ]; then export "$key=$val"; fi
   done < "$CONFIG_FILE"
 }
+
+validate_name() { [[ "$1" =~ ^[A-Za-z0-9_][A-Za-z0-9_-]*$ ]] || die "invalid bot or target name"; }
 
 upper_key() { printf '%s' "$1" | tr '[:lower:]-' '[:upper:]_'; }
 
@@ -59,6 +62,7 @@ resolve_bot() {
     [ -n "$BOT_TOKEN" ] || die "no bot token — run 'telegram.sh setup' or set TELEGRAM_BOT_TOKEN"
   else
     local var
+    validate_name "$name"
     var="BOT_$(upper_key "$name")_TOKEN"
     BOT_TOKEN="${!var:-}"
     BOT_KEY="$name"
@@ -78,12 +82,14 @@ resolve_target() {
     CHAT_ID="$t"
   else
     local var approver_var
+    validate_name "$t"
     var="TARGET_$(upper_key "$t")"
     CHAT_ID="${!var:-}"
     [ -n "$CHAT_ID" ] || die "unknown target '$t' — add $var=<chat_id> to $CONFIG_FILE"
     approver_var="APPROVERS_$(upper_key "$t")"
     APPROVER_IDS_RAW="${!approver_var:-${TELEGRAM_APPROVER_IDS:-}}"
   fi
+  [[ "$CHAT_ID" =~ ^-?[0-9]+$ ]] || die "chat ID must be numeric"
 }
 
 # Private chat IDs identify the sender, so existing private-chat approval flows
@@ -170,6 +176,7 @@ send_chunk() {
       -d "disable_notification=$silent" -d "parse_mode=$parse_mode") \
       || die "network error calling sendMessage"
     if [ "$(jq -r '.ok' <<<"$resp")" = "true" ]; then return 0; fi
+    jq -e '.error_code == 400 and (.description | test("parse entities|entity|parse_mode"; "i"))' <<<"$resp" >/dev/null || die "sendMessage rejected; no automatic retry"
   fi
   api sendMessage -d "chat_id=$CHAT_ID" --data-urlencode "text=$text" \
     -d "disable_notification=$silent" >/dev/null
@@ -191,7 +198,7 @@ cmd_file() {
     esac
   done
   [ -n "$path" ] || die "file needs a path (telegram.sh help)"
-  [ -f "$path" ] || die "file not found: $path"
+  [ -f "$path" ] && [ ! -L "$path" ] || die "file must be a regular non-symlink file: $path"
   resolve_bot "$bot"
   resolve_target "$to"
 
@@ -201,7 +208,7 @@ cmd_file() {
     png|jpg|jpeg|gif|webp) method="sendPhoto" field="photo" ;;
   esac
   api "$method" -F "chat_id=$CHAT_ID" -F "$field=@$path" \
-    -F "caption=$caption" -F "disable_notification=$silent" >/dev/null
+    --form-string "caption=$caption" -F "disable_notification=$silent" >/dev/null
 }
 
 offset_file() { printf '%s/offset.%s' "$CONFIG_DIR" "$BOT_KEY"; }
@@ -235,7 +242,7 @@ cmd_read() {
       *) die "unknown flag for read: $1" ;;
     esac
   done
-  [[ "$limit" =~ ^[0-9]+$ ]] || die "--limit must be a whole number"
+  [[ "$limit" =~ ^[0-9]+$ ]] && [ "$limit" -ge 1 ] && [ "$limit" -le 100 ] || die "--limit must be 1..100"
   resolve_bot "$bot"
 
   local offset=0 resp
@@ -321,10 +328,11 @@ cmd_ask() {
     fi
 
     # Free-text reply from the asked chat?
-    answer=$(jq -r --argjson chat "$CHAT_ID" --arg allowed "$APPROVER_IDS" '
+    answer=$(jq -r --argjson chat "$CHAT_ID" --argjson mid "$msg_id" --arg allowed "$APPROVER_IDS" '
       ($allowed | split("\n")) as $ok
       | [.result[]
        | select(.message.chat.id == $chat)
+       | select(.message.reply_to_message.message_id == $mid)
        | select((.message.from.id | tostring) as $u | $ok | index($u) != null)
        | select(.message.text != null)
        | .message.text]
@@ -346,6 +354,8 @@ cmd_ask() {
 
 set_config_key() {
   local key="$1" val="$2" tmp
+  [[ "$val" != *$'\n'* && "$val" != *$'\r'* ]] || die "config value contains newline"
+  [ ! -L "$CONFIG_DIR" ] && [ ! -L "$CONFIG_FILE" ] || die "config path must not be a symlink"
   ( umask 077; mkdir -p "$CONFIG_DIR"; touch "$CONFIG_FILE" )
   tmp=$(mktemp "$CONFIG_DIR/.config.XXXXXX")
   grep -v "^$key=" "$CONFIG_FILE" > "$tmp" || true
@@ -369,9 +379,12 @@ cmd_setup() {
   printf '  3. BotFather replies with an HTTP API token\n\n' >&2
   printf 'Paste the token here: ' >&2
   local token
-  read -r token
+  read -rs token
+  printf '\n' >&2
   [ -n "$token" ] || die "no token entered"
 
+  [[ "$token" =~ ^[0-9]+:[A-Za-z0-9_-]+$ ]] || die "invalid bot token format"
+  [ -z "$bot" ] || validate_name "$bot"
   BOT_TOKEN="$token"
   local username
   username=$(api getMe | jq -r '.result.username')

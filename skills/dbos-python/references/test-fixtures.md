@@ -32,15 +32,22 @@ from dbos import DBOS, DBOSConfig
 @pytest.fixture()
 def reset_dbos():
     DBOS.destroy()
+    # Before this fixture, provision and verify a dedicated disposable system DB.
+    # Never point this reset at shared/dev/prod state. Fail if no explicit target.
+    test_url = os.environ["TESTING_DATABASE_URL"]
+    if os.environ.get("DBOS_ALLOW_DISPOSABLE_RESET") != "yes":
+        raise RuntimeError("Disposable DB reset must be explicitly authorized")
     config: DBOSConfig = {
         "name": "test-app",
-        "database_url": os.environ.get("TESTING_DATABASE_URL"),
+        "system_database_url": test_url,
     }
     DBOS(config=config)
     DBOS.reset_system_database()
     DBOS.launch()
-    yield
-    DBOS.destroy()
+    try:
+        yield
+    finally:
+        DBOS.destroy()
 
 def test_workflow_one(reset_dbos):
     result = my_workflow()

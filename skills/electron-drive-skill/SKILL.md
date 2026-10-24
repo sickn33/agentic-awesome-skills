@@ -22,7 +22,7 @@ license_source: "https://github.com/Search-3D/electron-drive-skill/blob/main/LIC
 background daemon and keeps it running between commands, so each action
 (click, type, snapshot, screenshot, eval) is one fast shell call. Every launch
 uses a scratch profile, so the agent can check a UI change or reproduce a bug
-in the real app, not only in unit tests, without touching the user's data.
+in the real app, not only in unit tests. A scratch profile redirects Electron userData; it is not a filesystem or network sandbox. Confirm other data paths and use test accounts before launch.
 
 ## When to Use This Skill
 
@@ -194,10 +194,10 @@ $DR main "electron.BrowserWindow.getAllWindows().length"
 ## Security & Safety Notes
 
 - **Local-only.** The daemon listens on `127.0.0.1` with a random per-session
-  token. Nothing is sent to third-party services.
+  token. The launched app and evaluated code retain network access and can send data to their configured services; inspect integrations and disable production side effects for the test.
 - **Never point it at the user's real data.** Every launch gets
   `--user-data-dir` set to a scratch profile under
-  `$TMPDIR/electron-drive/<project>/profiles/<name>`, which moves
+  the private per-project driver directory under the user profile, which moves
   `app.getPath('userData')`. Data the app keeps elsewhere (a documents
   folder, a path from an env var) is only redirected if `drive.config.json`
   sets it through `env`. Check that before doing anything that writes data.
@@ -209,8 +209,7 @@ $DR main "electron.BrowserWindow.getAllWindows().length"
 - **`start --build` runs the `build` command from `drive.config.json` in a
   shell.** Read the config before the first `--build` in a project you did
   not set up.
-- **`--fresh` deletes the scratch profile directory** only, never the app's
-  real `userData`.
+- **`--fresh` deletes the selected scratch profile directory.** Inspect the path and app configuration first; app code can override data locations. Concurrent starts and hostile filesystem races are not protected.
 
 ## Common Pitfalls
 

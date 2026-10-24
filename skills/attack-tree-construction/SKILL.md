@@ -60,3 +60,9 @@ Systematic attack path visualization and analysis.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Model validity and metric limits
+
+Validate a finite acyclic tree with unique IDs, nonempty AND/OR nodes and no children on leaves before recursion/export. The builder does not supply full validation, cycle detection or an enumeration cap; path products can grow exponentially. “Easiest” now uses the same max-difficulty convention as node aggregation, and detection uses a stated worst-step ordinal index, not a probability. The cost enum is an ordinal score; summing it does not produce dollars. Shared prerequisites, correlated detection, parallel time and resource reuse require a richer model.
+
+Coverage means the fraction of enumerated modeled paths intersecting a supplied blocked-leaf set. A mitigation label is not evidence it fully blocks a leaf or that paths have equal likelihood; do not call the percentage real security coverage. Escape user-supplied diagram labels in the target grammar before rendering; the exporter sketches still assume reviewed safe labels. CVE references need actual affected-version/configuration evidence. No exploit, renderer or attack-tree implementation was executed during review.

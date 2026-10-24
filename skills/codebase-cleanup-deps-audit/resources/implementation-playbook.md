@@ -109,7 +109,7 @@ def build_dependency_tree(dependencies):
                 }
                 continue
                 
-            visited.add(dep_name)
+            branch_visited = visited | {dep_name}
             
             node['dependencies'][dep_name] = {
                 'version': dep_info['version'],
@@ -122,7 +122,7 @@ def build_dependency_tree(dependencies):
                 add_dependencies(
                     node['dependencies'][dep_name],
                     dep_info['dependencies'],
-                    visited.copy()
+                    branch_visited
                 )
     
     add_dependencies(tree['root'], dependencies)
@@ -183,8 +183,9 @@ class VulnerabilityScanner:
         # Using npm audit API
         response = requests.post(
             'https://registry.npmjs.org/-/npm/v1/security/advisories/bulk',
-            json={name: [version]}
+            json={name: [version]}, timeout=15
         )
+        response.raise_for_status()
         
         vulnerabilities = []
         if response.status_code == 200:
@@ -197,10 +198,10 @@ class VulnerabilityScanner:
                         'severity': advisory['severity'],
                         'title': advisory['title'],
                         'cve': advisory.get('cves', []),
-                        'description': advisory['overview'],
-                        'recommendation': advisory['recommendation'],
-                        'patched_versions': advisory['patched_versions'],
-                        'published': advisory['created']
+                        'description': advisory.get('overview', ''),
+                        'recommendation': advisory.get('recommendation', ''),
+                        'patched_versions': advisory.get('patched_versions', 'unknown - inspect affected ranges'),
+                        'published': advisory.get('created')
                     })
                     
         return vulnerabilities
@@ -233,7 +234,7 @@ def analyze_vulnerability_severity(vulnerabilities):
     
     for vuln in vulnerabilities:
         severity = vuln['severity'].lower()
-        analysis['by_severity'][severity].append(vuln)
+        analysis['by_severity'].setdefault(severity, []).append(vuln)
         
         # Calculate risk score
         base_score = severity_scores.get(severity, 0)
@@ -278,7 +279,7 @@ class LicenseAnalyzer:
         self.license_compatibility = {
             'MIT': ['MIT', 'BSD', 'Apache-2.0', 'ISC'],
             'Apache-2.0': ['Apache-2.0', 'MIT', 'BSD'],
-            'GPL-3.0': ['GPL-3.0', 'GPL-2.0'],
+            'GPL-3.0': ['GPL-3.0']  # illustrative only; GPL-2.0-only differs from -or-later,
             'BSD-3-Clause': ['BSD-3-Clause', 'MIT', 'Apache-2.0'],
             'proprietary': []
         }
@@ -359,8 +360,8 @@ class LicenseAnalyzer:
 #### High Severity
 1. **GPL-3.0 Dependencies**
    - Packages: package1, package2, package3
-   - Issue: GPL-3.0 is incompatible with MIT license
-   - Risk: May require open-sourcing your entire project
+   - Issue: Combination/distribution obligations require review of exact SPDX expressions, linkage and licensing grants
+   - Risk: May create source/notice obligations for covered distributed or network-served combinations; determine actual scope with qualified review
    - Recommendation: 
      - Replace with MIT/Apache licensed alternatives
      - Or change project license to GPL-3.0
@@ -465,9 +466,11 @@ const analyzeBundleSize = async (dependencies) => {
         try {
             // Fetch package stats
             const response = await fetch(
-                `https://bundlephobia.com/api/size?package=${packageName}@${info.version}`
+                `https://bundlephobia.com/api/size?package=${encodeURIComponent(`${packageName}@${info.version}`)}`
             );
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
             const data = await response.json();
+            if (!Number.isFinite(data.size) || !Number.isFinite(data.gzip)) throw new Error("Invalid size response");
             
             const packageSize = {
                 name: packageName,
@@ -579,56 +582,9 @@ def check_typosquatting(package_name):
 
 Generate automated fixes:
 
-**Update Scripts**
-```bash
-#!/bin/bash
-# Auto-update dependencies with security fixes
+**Reviewed update process**
 
-echo "🔒 Security Update Script"
-echo "========================"
-
-# NPM/Yarn updates
-if [ -f "package.json" ]; then
-    echo "📦 Updating NPM dependencies..."
-    
-    # Audit and auto-fix
-    npm audit fix --force
-    
-    # Update specific vulnerable packages
-    npm update package1@^2.0.0 package2@~3.1.0
-    
-    # Run tests
-    npm test
-    
-    if [ $? -eq 0 ]; then
-        echo "✅ NPM updates successful"
-    else
-        echo "❌ Tests failed, reverting..."
-        git checkout package-lock.json
-    fi
-fi
-
-# Python updates
-if [ -f "requirements.txt" ]; then
-    echo "🐍 Updating Python dependencies..."
-    
-    # Create backup
-    cp requirements.txt requirements.txt.backup
-    
-    # Update vulnerable packages
-    pip-compile --upgrade-package package1 --upgrade-package package2
-    
-    # Test installation
-    pip install -r requirements.txt --dry-run
-    
-    if [ $? -eq 0 ]; then
-        echo "✅ Python updates successful"
-    else
-        echo "❌ Update failed, reverting..."
-        mv requirements.txt.backup requirements.txt
-    fi
-fi
-```
+Do not run force auto-fixes or restore tracked files over unrelated edits. Snapshot all manifests/locks and use a clean disposable topic checkout. Identify exact affected resolved versions and a reviewed compatible target, update only the approved dependency set with lifecycle scripts disabled, inspect manifest/lock changes, then run meaningful runtime/integration tests in an isolated trusted environment. A pip dry-run can resolve/build metadata and is not an application test. Preserve failed attempts for inspection; rollback only task-owned changes. Report unresolved compatibility rather than silently raising versions.
 
 **Pull Request Generation**
 ```python
@@ -676,7 +632,7 @@ This PR updates {len(updates)} dependencies to address security vulnerabilities 
 - [ ] No unexpected dependencies added
 - [ ] Performance impact assessed
 
-cc @security-team
+Notify only explicitly authorized recipients.
 """
     
     return {
@@ -717,8 +673,8 @@ jobs:
       if: hashFiles('package.json')
       run: |
         npm audit --json > npm-audit.json
-        if [ $(jq '.vulnerabilities.total' npm-audit.json) -gt 0 ]; then
-          echo "::error::Found $(jq '.vulnerabilities.total' npm-audit.json) vulnerabilities"
+        if [ $(jq '.metadata.vulnerabilities.total' npm-audit.json) -gt 0 ]; then
+          echo "::error::Found $(jq '.metadata.vulnerabilities.total' npm-audit.json) vulnerabilities"
           exit 1
         fi
     
@@ -739,7 +695,7 @@ jobs:
       with:
         script: |
           const audit = require('./npm-audit.json');
-          const critical = audit.vulnerabilities.critical;
+          const critical = audit.metadata?.vulnerabilities?.critical ?? 0;
           
           if (critical > 0) {
             github.rest.issues.create({
@@ -764,3 +720,11 @@ jobs:
 8. **Monitoring Setup**: CI/CD integration for continuous scanning
 
 Focus on actionable insights that help maintain secure, compliant, and efficient dependency management.
+
+## Implementation and evidence limits
+
+These classes omit parsers/helpers and are sketches, not a complete scanner. Root-only discovery misses workspaces, nested/bundled manifests and optional/extras; package-name-only keys collapse multiple installed versions/paths. Model identity as ecosystem/name/resolved-version/location and distinguish an ancestor cycle from shared siblings. npm bulk advisories need affected-range matching for each exact version; error/unsupported ecosystem or missing data means unknown, never clean. PyPI metadata is not a general vulnerability scanner.
+
+Risk-score weights, major-version priority and typo similarity are heuristics, not CVSS/legal verdicts or exploit proof. A missing package advisory cannot establish safety. Read license texts, NOTICE, SPDX AND/OR/exception and distribution context; broad name compatibility matrices cannot certify compliance. Size sums double-count shared dependencies and do not measure a real application bundle. Do not send private package inventories to external services without authorized data scope.
+
+The monitoring YAML omits reviewed pinned tooling, the local compliance script, dependency installation and error-safe JSON/report handling. Preserve npm nonzero audit exit status while validating actual schema; distinguish advisory findings from tool failure. Do not post public issues for private vulnerabilities or repeatedly create duplicate alerts; require explicit publication scope and least-privilege tokens. No dependency/tool installation, scanner execution or PR creation was performed.

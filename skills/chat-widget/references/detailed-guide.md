@@ -31,6 +31,10 @@
 ```
 
 
+## Required security and delivery contract
+
+These fragments are incomplete and use different endpoint/protocol names; choose one coherent contract. Authenticate every HTTP route and socket connection, authorize the chat and tenant on every subscription/action, validate Origin/CSRF for cookie auth, and apply message length/rate bounds. The global admin channel must be tenant/role scoped. Pusher/Ably need private-channel authorization, not merely an opaque chat ID. Escape message text; do not render raw HTML. Separate read-only GET from chat creation (use an authenticated POST/upsert with the unique constraint) and paginate history. Persist messages transactionally with stable client IDs, server acknowledgements and reconnect catch-up; a connected socket is not a delivery receipt. Email requires the configured notification policy/user consent, verified recipient, deduplication and minimal content; five-minute delay alone does not prevent spam.
+
 ## Implementation Guide
 
 ### Step 1: Data Models
@@ -83,7 +87,7 @@ function touch_last_message()
 
 function unread_for_admin?()
   return exists message where sender_type = 'user'
-    and created_at > admin_viewed_at
+    and (admin_viewed_at is null OR created_at > admin_viewed_at)
 
 function mark_viewed_by_admin()
   update admin_viewed_at = now()
@@ -425,7 +429,7 @@ interface AdminNotificationMessage {
 1. **One chat per user** - Simplifies UX, user always has same conversation history
 2. **Soft-delete via archiving** - Preserves history, allows restore
 3. **Auto-unarchive** - When user sends message to archived chat, reactivate it
-4. **Delayed email notifications** - 5 min delay prevents spam for rapid replies
+4. **Delayed email notifications** - Batch/deduplicate unread-message notifications; a delay alone does not prevent duplicates
 5. **Message deduplication** - Track seen IDs to prevent duplicates from send + broadcast echo
 6. **Separate admin channel** - Allows future features like global unread count, desktop notifications
 
@@ -524,11 +528,12 @@ end
 class SupportChatChannel < ApplicationCable::Channel
   def subscribed
     @chat = SupportChat.find(params[:chat_id])
-    reject unless @chat.user_id == current_user.id || current_user.admin?
+    return reject unless current_user && (@chat.user_id == current_user.id || current_user.admin?)
     stream_from "support_chat:#{@chat.id}"
   end
 
   def send_message(data)
+    return reject unless current_user && (@chat.user_id == current_user.id || current_user.admin?)
     @chat.support_messages.create!(
       content: data["content"],
       sender_type: current_user.admin? ? :admin : :user
@@ -595,7 +600,8 @@ export function useSupportChat(websocketUrl: string) {
   }, [chat?.id])
 
   const sendMessage = useCallback((content: string) => {
-    wsRef.current?.send(JSON.stringify({ action: 'send_message', content }))
+    if (wsRef.current?.readyState !== WebSocket.OPEN) return
+    wsRef.current.send(JSON.stringify({ action: 'send_message', content }))
   }, [])
 
   return { chat, connected, sendMessage }
@@ -622,7 +628,7 @@ export function ChatWidget() {
   const handleSend = () => {
     if (!input.trim()) return
     sendMessage(input.trim())
-    setInput('')
+    // Clear only after a server acknowledgement; preserve text on disconnect/failure.
   }
 
   return (
@@ -698,10 +704,10 @@ import Pusher from 'pusher'
 const pusher = new Pusher({ appId, key, secret, cluster })
 
 // When message is created:
-await pusher.trigger(`support-chat-${chatId}`, 'new-message', messageData)
+await pusher.trigger(`private-support-chat-${chatId}`, 'new-message', messageData)
 
 // Client-side with pusher-js:
-const channel = pusher.subscribe(`support-chat-${chatId}`)
+const channel = pusher.subscribe(`private-support-chat-${chatId}`)
 channel.bind('new-message', (data) => { /* update state */ })
 ```
 
@@ -792,7 +798,7 @@ export function useSupportChat() {
   onUnmounted(() => ws?.close())
 
   const sendMessage = (content: string) => {
-    ws?.send(JSON.stringify({ action: 'send_message', content }))
+    if (ws?.readyState === WebSocket.OPEN) ws.send(JSON.stringify({ action: 'send_message', content }))
   }
 
   return { chat, connected, sendMessage }
@@ -805,7 +811,7 @@ export function useSupportChat() {
 ## Database Recommendations
 
 ### PostgreSQL (Recommended)
-- Use UUID primary keys for security (non-guessable IDs)
+- Use UUIDs to reduce predictable enumeration; enforce authorization independently
 - Use `timestamptz` for all datetime columns
 - Add GIN index on content for full-text search (optional)
 

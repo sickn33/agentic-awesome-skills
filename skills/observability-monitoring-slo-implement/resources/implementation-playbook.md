@@ -1,6 +1,6 @@
 # SLO Implementation Guide Implementation Playbook
 
-This file contains detailed patterns, checklists, and code samples referenced by the skill.
+This file contains design sketches, not an executable monitoring package: helper methods, metric clients, Grafana variables and deployment integration must be supplied and tested. Example tier targets are hypothetical, not safety-critical standards. Define good/eligible events, zero-traffic and missing-telemetry behavior explicitly; do not treat missing series as success.
 
 # SLO Implementation Guide
 
@@ -321,16 +321,18 @@ class ErrorBudgetManager:
         
         # Calculate consumed budget
         total_time = (end_date - start_date).total_seconds() / 60
-        expected_uptime = total_time * (self.slo_target / 100)
-        consumed_minutes = expected_uptime - actual_uptime
+        if not 0 < self.slo_target < 100 or total_time <= 0:
+            raise ValueError("Requires positive interval and target between 0 and 100")
+        # actual_uptime is measured in minutes in this time-based example.
+        consumed_minutes = total_time - actual_uptime
         
         # Calculate remaining budget
         remaining_budget = self.error_budget_minutes - consumed_minutes
-        burn_rate = consumed_minutes / self.error_budget_minutes
+        burn_rate = (consumed_minutes / total_time) / (1 - self.slo_target / 100)
         
         # Project exhaustion
         if burn_rate > 0:
-            days_until_exhaustion = (self.window_days * (1 - burn_rate)) / burn_rate
+            days_until_exhaustion = max(0, remaining_budget) / (consumed_minutes / total_time) / (24 * 60)
         else:
             days_until_exhaustion = float('inf')
         
@@ -370,7 +372,7 @@ class ErrorBudgetManager:
                 'description': '3x burn rate over 6 hours',
                 'condition': 'burn_rate >= 3 AND window = 6h',
                 'action': 'ticket',
-                'budget_consumed': '10% in 6 hours'
+                'budget_consumed': '2.5% of a 30-day budget in 6 hours'
             }
         }
 ```
@@ -436,6 +438,26 @@ groups:
             sum(rate(http_request_duration_seconds_bucket[5m])) by (service, le)
           )
       
+      - record: service:error_budget_burn_rate_5m
+        expr: |
+          (sum(rate(http_requests_total{status=~"5.."}[5m])) by (service)
+          / sum(rate(http_requests_total[5m])) by (service)) / (1 - 0.999)
+      - record: service:error_budget_burn_rate_30m
+        expr: |
+          (sum(rate(http_requests_total{status=~"5.."}[30m])) by (service)
+          / sum(rate(http_requests_total[30m])) by (service)) / (1 - 0.999)
+      - record: service:error_budget_burn_rate_6h
+        expr: |
+          (sum(rate(http_requests_total{status=~"5.."}[6h])) by (service)
+          / sum(rate(http_requests_total[6h])) by (service)) / (1 - 0.999)
+      - record: service:error_budget_burn_rate_24h
+        expr: |
+          (sum(rate(http_requests_total{status=~"5.."}[24h])) by (service)
+          / sum(rate(http_requests_total[24h])) by (service)) / (1 - 0.999)
+      - record: service:success_rate_30d
+        expr: |
+          100 * sum(increase(http_requests_total{status!~"5.."}[30d])) by (service)
+          / sum(increase(http_requests_total[30d])) by (service)
       # Error budget burn rate
       - record: service:error_budget_burn_rate_1h
         expr: |
@@ -459,7 +481,7 @@ groups:
         expr: |
           (
             service:error_budget_burn_rate_5m{service="api"} > 14.4
-            AND
+            and
             service:error_budget_burn_rate_1h{service="api"} > 14.4
           )
         for: 2m
@@ -473,12 +495,12 @@ groups:
             Current burn rate: {{ $value }}x
             This will exhaust 2% of monthly budget in 1 hour.
           
-      # Slow burn alert (10% budget in 6 hours)
+      # Slow burn alert (2.5% of a 30-day budget in 6 hours)
       - alert: ErrorBudgetSlowBurn
         expr: |
           (
             service:error_budget_burn_rate_30m{service="api"} > 3
-            AND
+            and
             service:error_budget_burn_rate_6h{service="api"} > 3
           )
         for: 15m
@@ -490,7 +512,7 @@ groups:
           description: |
             Service {{ $labels.service }} is burning error budget at 3x rate.
             Current burn rate: {{ $value }}x
-            This will exhaust 10% of monthly budget in 6 hours.
+            This will consume 2.5% of a 30-day budget in 6 hours.
 ```
 
 ### 5. SLO Dashboard
@@ -626,9 +648,8 @@ class SLOReporter:
         
         # Availability SLO
         availability_query = f"""
-        avg_over_time(
-            service:success_rate_5m{{service="{service}"}}[{month}]
-        )
+        100 * sum(increase(http_requests_total{{service="{service}",status!~"5.."}}[{month}]))
+        / sum(increase(http_requests_total{{service="{service}"}}[{month}]))
         """
         slos['availability'] = {
             'target': 99.9,
@@ -638,8 +659,8 @@ class SLOReporter:
         
         # Latency SLO
         latency_query = f"""
-        quantile_over_time(0.95,
-            service:latency_p95_5m{{service="{service}"}}[{month}]
+        histogram_quantile(0.95,
+            sum(increase(http_request_duration_seconds_bucket{{service="{service}"}}[{month}])) by (le)
         )
         """
         slos['latency_p95'] = {
@@ -651,7 +672,9 @@ class SLOReporter:
         return slos
     
     def _format_report(self, data):
-        """Format report as HTML"""
+        """Format report as HTML; helper fragments also require HTML escaping."""
+        from html import escape
+        data = {**data, "service": escape(str(data["service"])), "period": escape(str(data["period"]))}
         return f"""
 <!DOCTYPE html>
 <html>
@@ -780,11 +803,12 @@ class SLODecisionFramework:
         # If meeting SLOs, can afford more toil
         # If not meeting SLOs, need to reduce toil
         
-        base_toil_percentage = 50  # Google SRE recommendation
+        # Local illustrative cap; SLO attainment does not justify increasing toil.
+        base_toil_percentage = 50
         
         if slo_performance >= 100:
             # Exceeding SLO, can take on more toil
-            toil_budget = base_toil_percentage + 10
+            toil_budget = base_toil_percentage
         elif slo_performance >= 99:
             # Meeting SLO
             toil_budget = base_toil_percentage
@@ -930,6 +954,7 @@ class SLOAutomation:
     def create_slo_as_code(self):
         """Define SLOs as code"""
         return '''
+# Illustrative schema; not an installable OpenSLO CRD. Validate against the chosen tool.
 # slo_definitions.yaml
 apiVersion: slo.dev/v1
 kind: ServiceLevelObjective
@@ -957,12 +982,12 @@ spec:
   alerting:
     burnRates:
       - severity: critical
-        shortWindow: 1h
-        longWindow: 5m
+        shortWindow: 5m
+        longWindow: 1h
         burnRate: 14.4
       - severity: warning
-        shortWindow: 6h
-        longWindow: 30m
+        shortWindow: 30m
+        longWindow: 6h
         burnRate: 3
         
   annotations:

@@ -25,7 +25,7 @@ This skill covers where binary lives, how to read and write it, how to keep it f
 
 ---
 
-## The three rules that prevent 90% of binary bugs
+## Three common binary-data rules
 
 1. **File contents are in `$binary`, not `$json`.** After an HTTP download, a "Read Files", or an email-attachment trigger, the bytes sit in `$binary.<key>`. `$json` holds metadata at most. Reading `$json.data` for file contents gives you nothing.
 
@@ -86,7 +86,7 @@ Most workflows never need to crack open the bytes — they just pass binary thro
 **Read** with `getBinaryDataBuffer` — do not try to base64-decode `$binary.<key>.data` by hand:
 
 ```javascript
-// Code node, "Run Once for Each Item"
+// Code node, "Run Once for All Items"; single-item example only
 const buffer = await this.helpers.getBinaryDataBuffer(0, 'data'); // (itemIndex, propertyName)
 const text = buffer.toString('utf-8');
 const length = buffer.length;
@@ -168,7 +168,7 @@ When a workflow generates an image and the user wants it shown inside a chat mes
 - **The bytes have to live somewhere a URL can fetch over HTTPS.** Upload to an object store or drive first, then embed the returned URL.
 - **n8n has no built-in CDN.** The user provides the storage.
 
-Ask which storage they already use rather than defaulting to S3 — object storage (S3, R2, GCS, Azure Blob, Backblaze B2, Supabase Storage) and drive-style services (Dropbox, Google Drive, OneDrive, Box) all work and all change the URL shape. Cloudflare R2 is the lowest-friction starting point if they have nothing. For sensitive content, use a signed URL with an expiry rather than a permanently public one. See `references/CDN_REQUIREMENT.md`.
+Ask which storage they already use rather than defaulting to S3 — object storage (S3, R2, GCS, Azure Blob, Backblaze B2, Supabase Storage) and drive-style services (Dropbox, Google Drive, OneDrive, Box) all work and all change the URL shape. Choose a backend only after checking requirements and current capabilities. For sensitive content, use a signed URL with an expiry rather than a permanently public one. See `references/CDN_REQUIREMENT.md`.
 
 ---
 

@@ -6,8 +6,7 @@
   verified-address document into this table. A review with a name and photo is personal
   data, and the address of the premises is sensitive in some jurisdictions.
 - The profile login must not be a personal account that one person controls and nobody
-  else can reach. A shared account with named managers and named access is the
-  recommendation; losing the owner account is how businesses lose their profile.
+  else can reach. Use separate Google Accounts with named owner/manager roles; never share a password; losing the owner account is how businesses lose their profile.
 - Two-factor authentication on the profile account, and a record of who has manager access.
 - Never fabricate or incentivise a review. A review gate - asking only happy customers -
   breaches Google's policy and is detectable.
@@ -24,4 +23,4 @@
   action and target; existing explicit authorization does not need to be repeated.
 
 
-See the [Common Pitfalls](references/common-pitfalls.md) reference for the full guidance.
+See the [Common Pitfalls](common-pitfalls.md) reference for the full guidance.

@@ -70,6 +70,13 @@ CrossFrame Org 是 `crossframe` 的平行组织修复 skill，不替代 canonica
 9. 如果判断使用高风险 CrossFrame 概念，按 `../crossframe/references/read-routing-map.md` 读取对应概念卡，并用 `../crossframe/worksheets/concept-fidelity-check.md` 做概念保真检查。
 10. 先形成内部组织 intake，再按模板输出；不要展示完整内部工作表，除非用户要求审计或完整工作表。
 
+## 事实与行动边界
+
+- 所有组织解释均为可证伪的机制候选，不能仅凭单方叙述确认动机、人格或病理。
+- 组织材料可能包含员工个人信息、申诉和商业秘密；最小化引用，匿名化并明确存储/共享授权。
+- 输出方案不等于执行授权；不得自行联系员工、公开诊断、修改绩效/权限/流程或实施人事处置。
+- 依赖的 sibling skill 不可用时，明确缺失并降档，不得宣称已完成联读或源锚点检查。
+
 ## 内部组织 intake
 
 每次输出前，至少在内部写清：

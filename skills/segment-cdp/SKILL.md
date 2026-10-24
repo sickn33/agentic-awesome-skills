@@ -3,7 +3,7 @@ name: segment-cdp
 description: Expert patterns for Segment Customer Data Platform including
   Analytics.js, server-side tracking, tracking plans with Protocols, identity
   resolution, destinations configuration, and data governance best practices.
-risk: safe
+risk: critical
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
 ---

@@ -1,6 +1,6 @@
 # 短答复协议
 
-本协议把 CrossFrame 后台判断压缩成面向读者的短答复。它只规定流程，不替代 `../crossframe/SKILL.md` 与 `../crossframe/references/read-routing-map.md`。
+本协议把 CrossFrame 后台判断压缩成面向读者的短答复。它只规定流程，不替代 `../../crossframe/SKILL.md` 与 `../../crossframe/references/read-routing-map.md`。
 
 ## 适用场景
 
@@ -22,7 +22,7 @@
 
 ## 路由
 
-先读 `../crossframe/references/read-routing-map.md`，按用户请求选择后台协议。常见路由：
+先读 `../../crossframe/references/read-routing-map.md`，按用户请求选择后台协议。常见路由：
 
 - 关系/照护/解释劳动：亲密关系轻量入口、修复副产品、责任链、爱不等于忍耐义务。
 - 团队/组织反复失真：诊断协议、机制候选、证据成本、反馈写回、修复副产品。

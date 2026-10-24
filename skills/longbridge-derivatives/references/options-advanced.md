@@ -48,7 +48,7 @@ longbridge quote <SYMBOL> --format json
 
 ### Skew trade (偏斜交易 / 偏斜交易)
 
-- OTM put IV > OTM call IV = positive skew (norm for equities, fear-driven).
+- OTM put IV > matched OTM call IV is a positive put-minus-call spread; the smile typically slopes down with strike and is commonly called negative equity skew. State the convention explicitly.
 - **Fade skew**: sell OTM puts, buy OTM calls (risk-reversal) when skew excessive.
 - **Follow skew**: buy OTM puts when tail risk underpriced.
 - Measure: compare 25-delta put IV vs 25-delta call IV from the chain.

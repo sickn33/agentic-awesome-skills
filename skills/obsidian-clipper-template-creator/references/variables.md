@@ -46,15 +46,15 @@ Extract data from meta tags.
 Syntax: `{{meta:name}}` or `{{meta:property}}`
 
 Examples:
-- `{{meta:description}}`
-- `{{meta:og:title}}`
+- `{{meta:name:description}}`
+- `{{meta:property:og:title}}`
 
 ## Schema.org Variables
 Extract structured data.
 Syntax: `{{schema:Property}}` or `{{schema:@Type:Property}}`
 
 Examples:
-- `{{schema:Recipe:recipeIngredient}}`
+- `{{schema:@Recipe:recipeIngredient}}`
 - `{{schema:author.name}}`
 - `{{schema:Article:headline}}`
 

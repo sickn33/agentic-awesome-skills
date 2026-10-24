@@ -36,7 +36,7 @@ http://evil.com\.127.0.0.1/   (backslash)
 # Protocol confusion
 file:///etc/passwd
 dict://127.0.0.1:6379/
-gopher://127.0.0.1:6379/_FLUSHALL  (Redis via gopher)
+# Destructive Redis FLUSHALL payload omitted; use an isolated synthetic service.
 sftp://attacker.com:11111/
 ldap://127.0.0.1/
 
@@ -84,7 +84,7 @@ http://169.254.169.254:80@evil.com/
 ### When Response is Not Returned (Blind SSRF)
 - Use DNS-only callbacks (data encoded in subdomain labels)
 - Use timing differences for port scanning
-- Use different HTTP methods (PUT/DELETE) to trigger distinct behaviors on internal services
+- Use only harmless read-only requests to explicitly approved internal canaries; PUT/DELETE can mutate production state
 - Chain with other bugs that leak response data (e.g., error messages, logs)
 
 ---
@@ -95,7 +95,7 @@ http://169.254.169.254:80@evil.com/
 Before writing the report, confirm all three:
 
 1. **What can the attacker DO right now?**
-   - Can you retrieve a response proving internal network access? (Show the metadata token, internal API response, or confirmed DNS callback)
+   - Can you retrieve a response proving internal network access? (Use a redacted harmless internal canary; never print a metadata token)
    - If blind: can you demonstrate port differentiation or confirmed OOB callback tied to a specific internal address?
    - "The server makes a request" alone is insufficient — show *where* it goes and *what comes back*.
 
@@ -117,7 +117,7 @@ Before writing the report, confirm all three:
 ## Real Impact Examples
 
 ### Scenario A: Cloud Credential Exfiltration via Link Preview (Snapchat/GCP Pattern)
-A public-facing "link preview" API accepted a `url` parameter and fetched the target server-side to generate thumbnail content. The feature ran on GCP Compute Engine with IMDSv1 enabled and no `Metadata-Flavor` header enforcement on the server side. By supplying `url=http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token`, the attacker received a valid OAuth2 access token for the instance's service account. The token granted access to internal GCP project resources including storage buckets containing user data. The attacker used JavaScript execution within a headless rendering context to exfiltrate the token via DNS-encoded subdomains, bypassing response body restrictions.
+A public-facing "link preview" API accepted a `url` parameter and fetched the target server-side to generate thumbnail content. The feature ran on GCP Compute Engine metadata access; IMDSv1 is AWS terminology, while GCP metadata normally requires `Metadata-Flavor: Google`. The precise historical bypass must be checked against the primary disclosure. By supplying `url=http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token`, the attacker received a valid OAuth2 access token for the instance's service account. The token granted access to internal GCP project resources including storage buckets containing user data. The attacker used JavaScript execution within a headless rendering context to exfiltrate the token via DNS-encoded subdomains, bypassing response body restrictions.
 
 ### Scenario B: Kubernetes API Compromise via Hijacked Aggregated Server (Kubernetes Pattern)
 An attacker who could register a Kubernetes API extension server (metrics-server equivalent) returned `302 Location: http://127.0.0.1:6443/api/v1/secrets` responses to the aggregation layer. Because the aggregation proxy followed redirects automatically without re-validating the destination against the internal network blocklist, the redirect caused the aggregation layer itself (running with elevated cluster credentials) to fetch internal Kubernetes API secrets and return them in the response. This effectively allowed an attacker with limited API registration privileges to escalate to full cluster secret read access — a critical privilege escalation via SSRF chained through trusted infrastructure components.
@@ -127,7 +127,7 @@ An attacker who could register a Kubernetes API extension server (metrics-server
 
 ## Disclosed Report Citations (Backfill +6 — 2018-2024)
 
-The following real, verified bug-bounty / coordinated-disclosure cases extend this skill. Cloud-metadata SSRFs across all three providers, DNS rebinding, gopher-to-Redis-RCE, link-preview SSRF, and headless-browser/PDF-generator chains are all represented.
+The following historical upstream case descriptions and payout claims are not independently verified here; read the primary disclosures before citing them. Cloud-metadata SSRFs across all three providers, DNS rebinding, gopher-to-Redis-RCE, link-preview SSRF, and headless-browser/PDF-generator chains are all represented.
 
 3. **HackerOne — SSRF in Analytics Reports (PDF generator → AWS metadata)** ([H1 #2262382](https://hackerone.com/reports/2262382) · [Writeup](https://osintteam.blog/25-000-ssrf-in-hackerones-analytics-reports-b9a5b3aa3d6e))
     - Subclass: headless-browser SSRF (PDF generator) → AWS metadata SSRF (IMDSv1)
@@ -172,7 +172,7 @@ The following real, verified bug-bounty / coordinated-disclosure cases extend th
 
 - **`cloud-iam-deep`** — SSRF is the canonical entry to cloud metadata service. Chain primitive: SSRF → IMDSv1 token theft → `cloud-iam-deep` privilege escalation reaches `iam:CreateUser` / `sts:AssumeRole` on cross-account roles.
 - **`hunt-llm-ai`** — LLMs with fetch_url tools become SSRF proxies bypassing network egress controls. Chain primitive: LLM tool-use (fetch_url) + SSRF → attacker URL exfils chat history and IMDS token from the LLM container.
-- **`hunt-rce`** — Internal Redis/Memcached are unauthenticated by default and reachable via gopher://. Chain primitive: SSRF + Gopher → internal Redis `CONFIG SET dir` + RCE via cron / SSH authorized_keys write.
+- **`hunt-rce`** — Internal Redis/Memcached authentication, protected-mode, network reachability and supported URL schemes depend on configuration. Chain primitive: SSRF + Gopher → internal Redis `CONFIG SET dir` + RCE via cron / SSH authorized_keys write.
 - **`hunt-cloud-misconfig`** — Internal-only buckets/APIs become reachable through SSRF egress. Chain primitive: SSRF + DNS rebinding → SSRF-protected-endpoint bypass → internal /admin or private S3 bucket read.
 - **`security-arsenal`** — Load the SSRF IP Bypass Table (11 techniques: decimal IP, IPv6 mapped, octal, suffix dot, DNS rebinding, redirect chain, etc.) before testing filters.
 - **`triage-validation`** — Apply the OOB-Or-It-Didn't-Happen gate: every blind SSRF claim requires a Burp Collaborator hit with a unique marker before report submission.

@@ -40,7 +40,7 @@ lipo TargetBinary -thin arm64 -output TargetBinary_arm64
 # 符号分析
 nm -g TargetBinary                    # 导出符号
 nm -a TargetBinary                    # 全部符号
-swift-demangle <mangled_name>         # Swift 符号还原
+printf '%s\n' 'ACTUAL_MANGLED_SYMBOL' | swift-demangle         # Swift 符号还原
 
 # class-dump
 class-dump -H TargetBinary -o headers/
@@ -139,8 +139,9 @@ $s10ModuleName5ClassC6method3argSi_tF
 var NSFileManager = ObjC.classes.NSFileManager;
 var defaultManager = NSFileManager.defaultManager();
 Interceptor.attach(defaultManager["- fileExistsAtPath:"].implementation, {
+    onEnter: function(args) { this.path = new ObjC.Object(args[2]).toString(); },
     onLeave: function(retval) {
-        var path = ObjC.Object(args[2]).toString();
+        var path = this.path;
         if (path.includes("Cydia") || path.includes("apt") || 
             path.includes("sshd") || path.includes("bash")) {
             retval.replace(0); // false

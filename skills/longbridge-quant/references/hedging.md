@@ -53,7 +53,7 @@ Present: number of contracts, hedge cost, and residual Beta after hedge.
 
 - 原理：持有正股的同时持有看跌期权；当标的价格下跌时，期权价值上升，可对冲下行风险。常见做法是选择平值（ATM）或略虚值（OTM）的看跌期权。
 - Cost = put premium; protection kicks in below strike.
-- Effective floor = Strike − Premium paid.
+- Expiry position proceeds net of put premium are at least strike minus premium per covered share (excluding fees); profit/loss floor must also subtract the stock entry price.
 - 具体期权合约是否适用，请根据自身持仓情况和风险偏好独立判断。
 - Fetch available strikes: `longbridge option chain <SYMBOL> --format json`.
 
@@ -74,9 +74,9 @@ Present: number of contracts, hedge cost, and residual Beta after hedge.
 
 | Tool                     | Instrument            | Mechanism                          |
 | ------------------------ | --------------------- | ---------------------------------- |
-| VIX calls                | UVXY.US / VIX options | Profit from volatility spike       |
+| VIX-linked exposure      | VIX options / UVXY options | Distinct derivatives; UVXY is a leveraged VIX-futures ETF, not spot VIX       |
 | Gold                     | GLD.US / 518880.SH    | Safe-haven in risk-off             |
-| Long-dated US Treasuries | TLT.US                | Negative correlation with equities |
+| Long-dated US Treasuries | TLT.US                | Correlation varies by inflation/rate regime |
 | Put on index             | SPY puts / HSI puts   | Direct market hedge                |
 
 Note: fetch current price and recent kline for any hedge instrument before recommending.
@@ -85,7 +85,7 @@ Note: fetch current price and recent kline for any hedge instrument before recom
 
 For HK/US cross-currency portfolios:
 
-- USD/HKD is pegged — minimal FX risk.
+- USD/HKD operates in a managed currency band; basis, financing and tail/depeg risks remain.
 - CNY exposure: use offshore RMB (CNH) forwards or futures.
 - Non-HKD Asian exposure: fetch FX rate via `longbridge fx --format json` (verify flag with `--help`).
 
@@ -122,7 +122,7 @@ Present:
 5. Scenarios: portfolio value if market falls 10% / 20% with and without hedge.
 6. Caveats (basis risk, early exercise for American options, liquidity).
 
-Always note: hedging reduces risk but also limits upside.
+Explain the actual payoff: protective puts retain upside before premium/fees, while collars cap it. Hedges may introduce basis, liquidity, rollover and counterparty risks.
 
 > 以上内容仅供参考，不构成投资建议。投资决策请结合自身风险承受能力独立判断。/ The above is for reference only and does not constitute investment advice. Please make investment decisions independently based on your own risk tolerance.
 
@@ -133,4 +133,4 @@ Always note: hedging reduces risk but also limits upside.
 | `command not found: longbridge` | 请安装 longbridge-terminal 或检查 MCP 配置。              | 請安裝 longbridge-terminal 或檢查 MCP 配置。              | Install longbridge-terminal or check MCP config.                   |
 | stderr: `not logged in`         | 请运行 `longbridge auth login`（需 Trade 权限查看持仓）。 | 請執行 `longbridge auth login`（需 Trade 權限查看持倉）。 | Run `longbridge auth login` (Trade scope needed for positions).    |
 | No option chain data            | 该标的无期权数据，请尝试对应指数期权或 ETF 期权。         | 該標的無期權數據，請嘗試指數或 ETF 期權。                 | No option chain for this symbol; try index or ETF options instead. |
-| Negative or missing Beta        | Beta 数据不足，将使用市值加权 Beta=1 作为默认值。         | Beta 數據不足，使用 Beta=1 作為默認值。                   | Insufficient Beta data; defaulting to Beta = 1.                    |
+| Negative or missing Beta        | 不得用默认值替代；核实估计或报告未知。 | 不得用默認值替代；核實估計或報告未知。 | Negative beta may be valid; missing beta is unknown, never silently replace it with 1.                    |

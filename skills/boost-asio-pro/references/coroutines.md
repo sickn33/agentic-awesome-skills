@@ -14,6 +14,8 @@ Program → I/O Object → Execution Context → OS → (completion) → Handler
 
 **I/O objects:** `tcp::socket`, `tcp::acceptor`, `udp::socket`, `steady_timer`, `ssl::stream<>`
 
+Examples that omit completion tokens require a release/executor with a suitable default. For the older releases in the matrix, pass `asio::use_awaitable` explicitly.
+
 **Completion tokens:** Control how async results are delivered — `use_awaitable`, `deferred` (default), `detached`, callbacks, futures.
 
 ## C++20 Coroutines (Preferred Style)
@@ -130,9 +132,11 @@ public:
     // From another thread/strand: asio::dispatch(socket_.get_executor(), ...).
     void send(std::string frame) {
         outbox_.push_back(std::move(frame));
-        if (!writing_)
+        if (!writing_) {
+            writing_ = true; // reserve the writer before spawning (spawn may defer)
             co_spawn(socket_.get_executor(),
                      [self = shared_from_this()] { return self->write_loop(); }, asio::detached);
+        }
     }
 private:
     asio::awaitable<void> write_loop() {
@@ -340,7 +344,7 @@ For newline-delimited protocols, prefer `async_read_until` over manual `async_re
 
 ```cpp
 asio::awaitable<void> line_echo(tcp::socket socket) {
-    asio::streambuf buf;
+    asio::streambuf buf(1024 * 1024); // cap delimiter search storage
     for (;;) {
         std::size_t n = co_await asio::async_read_until(socket, buf, '\n');
         std::string line(asio::buffers_begin(buf.data()),
@@ -354,7 +358,7 @@ asio::awaitable<void> line_echo(tcp::socket socket) {
 Or with `dynamic_buffer` over a `std::string`:
 ```cpp
 std::string buf;
-std::size_t n = co_await asio::async_read_until(socket, asio::dynamic_buffer(buf), '\n');
+std::size_t n = co_await asio::async_read_until(socket, asio::dynamic_buffer(buf, 1024 * 1024), '\n');
 std::string line = buf.substr(0, n);
 buf.erase(0, n);
 ```
@@ -379,11 +383,13 @@ asio::awaitable<std::string> read_frame(tcp::socket& sock) {
 }
 
 asio::awaitable<void> write_frame(tcp::socket& sock, std::string_view body) {
+    if (body.size() > 16 * 1024 * 1024) throw std::length_error("frame too large");
     uint32_t len_be = htonl(static_cast<uint32_t>(body.size()));
     std::array<asio::const_buffer, 2> bufs{
         asio::buffer(&len_be, sizeof len_be), asio::buffer(body)};
-    co_await async_write(sock, bufs);              // gather-write header + body atomically
-    // len_be and body must outlive the write — they do here (co_await suspends in-frame).
+    co_await async_write(sock, bufs);              // gather-write header + body; do not overlap another write
+    // len_be survives in the coroutine frame. body is a view: its owner must
+    // independently keep the underlying bytes alive until this coroutine completes.
 }
 ```
 

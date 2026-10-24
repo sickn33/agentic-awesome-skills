@@ -1,6 +1,6 @@
 # Gradio End-to-End Examples
 
-Complete working Gradio apps for reference.
+Illustrative apps for adaptation to a pinned Gradio version; external files/dependencies are not bundled. Use synthetic data. Examples do not establish production, medical or tax validity.
 
 ## Blocks Essay Simple
 
@@ -35,7 +35,7 @@ def flip_text(x):
     return x[::-1]
 
 def flip_image(x):
-    return np.fliplr(x)
+    return None if x is None else np.fliplr(x)
 
 with gr.Blocks() as demo:
     gr.Markdown("Flip text or image files using this demo.")
@@ -77,14 +77,14 @@ with gr.Blocks() as demo:
     submit_btn = gr.Button("Submit")
 
     with gr.Column(visible=False) as output_col:
-        diagnosis_box = gr.Textbox(label="Diagnosis")
+        diagnosis_box = gr.Textbox(label="Demo symptom summary (not a diagnosis)")
         patient_summary_box = gr.Textbox(label="Patient Summary")
 
     def submit(name, age, symptoms):
         return {
             submit_btn: gr.Button(visible=False),
             output_col: gr.Column(visible=True),
-            diagnosis_box: "covid" if "Cough" in symptoms else "flu",
+            diagnosis_box: "Reported symptoms: " + ", ".join(symptoms or []),
             patient_summary_box: f"{name}, {age} y/o",
         }
 
@@ -279,7 +279,7 @@ import time
 
 def fake_diffusion(steps):
     rng = np.random.default_rng()
-    for i in range(steps):
+    for i in range(int(steps)):
         time.sleep(1)
         image = rng.random(size=(600, 600, 3))
         yield image
@@ -323,7 +323,7 @@ def sleep(im):
 
 
 def predict(im):
-    return im["composite"]
+    return None if im is None else im["composite"]
 
 
 with gr.Blocks() as demo:
@@ -373,6 +373,7 @@ with gr.Blocks() as demo:
     @gr.render(inputs=text_count)
     def render_count(count):
         boxes = []
+        count = int(count)
         for i in range(count):
             box = gr.Textbox(label=f"Box {i}")
             boxes.append(box)
@@ -412,6 +413,8 @@ import gradio as gr
 import numpy as np
 
 def reverse_audio(audio):
+    if audio is None:
+        return None
     sr, data = audio
     return (sr, np.flipud(data))
 
@@ -435,7 +438,7 @@ def sepia(input_img):
         [0.272, 0.534, 0.131]
     ])
     sepia_img = input_img.dot(sepia_filter.T)
-    sepia_img /= sepia_img.max()
+    sepia_img = np.clip(sepia_img, 0, 255).astype(np.uint8)
     return sepia_img
 
 demo = gr.Interface(sepia, gr.Image(), "image", api_name="predict")
@@ -499,7 +502,9 @@ demo = gr.TabbedInterface([hello_world, bye_world, chat], ["Hello World", "Bye W
 demo.launch()
 ```
 
-## Tax Calculator
+## Fictional Tax UI Demonstration
+
+The rates, deductions and marital adjustments below are invented UI data. They do not represent any jurisdiction and must never be used to estimate real tax. Each bracket is applied marginally.
 
 ```python
 import gradio as gr
@@ -507,12 +512,12 @@ import gradio as gr
 def tax_calculator(income, marital_status, assets):
     tax_brackets = [(10, 0), (25, 8), (60, 12), (120, 20), (250, 30)]
     total_deductible = sum(cost for cost, deductible in zip(assets["Cost"], assets["Deductible"]) if deductible)
-    taxable_income = income - total_deductible
+    taxable_income = max(0, income - total_deductible)
 
     total_tax = 0
-    for bracket, rate in tax_brackets:
-        if taxable_income > bracket:
-            total_tax += (taxable_income - bracket) * rate / 100
+    for index, (bracket, rate) in enumerate(tax_brackets):
+        upper = tax_brackets[index + 1][0] if index + 1 < len(tax_brackets) else float("inf")
+        total_tax += max(0, min(taxable_income, upper) - bracket) * rate / 100
 
     if marital_status == "Married":
         total_tax *= 0.75
@@ -574,7 +579,7 @@ import gradio as gr
 max_textboxes = 10
 
 def variable_outputs(k):
-    k = int(k)
+    k = max(0, min(int(k), max_textboxes))
     return [gr.Textbox(visible=True)]*k + [gr.Textbox(visible=False)]*(max_textboxes-k)
 
 with gr.Blocks() as demo:

@@ -507,14 +507,6 @@
           "summary": "Coordinate document, spreadsheet, and slide workflows."
         },
         {
-          "id": "xlsx-official",
-          "summary": "Create and analyze formula-backed spreadsheets."
-        },
-        {
-          "id": "pdf-official",
-          "summary": "Extract, generate, and manipulate PDFs."
-        },
-        {
           "id": "pdf-conversion-router",
           "summary": "Choose high-fidelity PDF conversion routes."
         },
@@ -2558,8 +2550,6 @@
       "to": "aas-documents-presentations",
       "preservedSkills": [
         "office-productivity",
-        "xlsx-official",
-        "pdf-official",
         "google-docs-automation",
         "google-slides-automation",
         "google-sheets-automation"

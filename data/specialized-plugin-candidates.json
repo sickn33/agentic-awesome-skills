@@ -118,8 +118,6 @@
       "why": "Coauthor and edit content, produce editable office files and PDFs, and review both source content and rendered output.",
       "skills": [
         "office-productivity",
-        "xlsx-official",
-        "pdf-official",
         "pdf-conversion-router",
         "google-docs-automation",
         "google-sheets-automation",

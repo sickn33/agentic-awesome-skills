@@ -1,7 +1,6 @@
 ---
 name: hunt-misc
-description: Hunting skill for misc vulnerabilities. Built from 225 public bug bounty
-  reports. Use when hunting misc on any target.
+description: Hunting skill for misc vulnerabilities. Reference for authorized role, token and workflow-boundary reviews. Historical source count is not independently verified.
 category: security
 risk: offensive
 source: https://github.com/elementalsouls/Claude-BugHunter
@@ -96,9 +95,9 @@ graphql { installations(
 
 1. **Map all role/permission boundaries** — enumerate every role level (owner → admin → staff → guest → removed) and document what each role *should* see
 
-   **Marker Discipline:** when probing role boundaries by injecting unique tokens / identifiers into per-role test data, markers MUST be unique random alphanumeric strings (8+ chars, no English words, no protocol keywords). Bad markers: `test`, `marker`, `attacker`, `evil`, `admin`, `AAAA`. Good markers: `cpmark987abc`, `x4hd2k9pq`. Before claiming any reflection, search the baseline (no-marker) response for the marker — if it appears naturally, change your marker.
+   **Marker Discipline:** when probing role boundaries by injecting unique tokens / identifiers into per-role test data, markers should be unique per bounded test, and safe for the receiving parser; no universal eight-character/random-word rule establishes proof. Bad markers: `test`, `marker`, `attacker`, `evil`, `admin`, `AAAA`. Good markers: `cpmark987abc`, `x4hd2k9pq`. Before claiming any reflection, search the baseline (no-marker) response for the marker — if it appears naturally, change your marker.
 
-   **Body-Diff Rule:** a privilege-bypass claim requires response BODY differential, not status-code-only. 200 OK with byte-identical body to baseline is NOT a bypass. Always diff bodies side-by-side before claiming bypass. Status-code-only claims are the most common rejected-as-N/A category on bug-bounty platforms.
+   **Body-Diff Rule:** a privilege-bypass claim requires unauthorized data or state evidence; response body/status differences alone are insufficient. Identical bodies may still accompany a state-changing write; inspect controlled before/after state without assuming success. Always diff bodies side-by-side before claiming bypass. Status-code-only claims are the most common rejected-as-N/A category on bug-bounty platforms.
 
 2. **Test invitation flows end-to-end** — accept invitations without completing verification steps; modify invitation tokens; test whether accepting an invitation as a different user grants access
 
@@ -147,8 +146,8 @@ curl -X POST "https://target.com/invitations/INVITE_TOKEN/accept" \
   -d '{"role":"admin"}'
 
 # Test invitation token for another user
-curl -X GET "https://target.com/partners/PARTNER_ID/invitation/accept?token=LEAKED_TOKEN" \
-  -H "Cookie: session=VICTIM_SESSION"
+curl -X GET "https://target.com/partners/PARTNER_ID/invitation/accept?token=CONTROLLED_TEST_TOKEN" \
+  -H "Cookie: session=CONTROLLED_TEST_SESSION"
 ```
 
 **Token scope bypass (GitHub/GitLab PAT):**
@@ -201,13 +200,13 @@ grep -r "internal_api\|/_internal/\|/internal/" --include="*.rb" --include="*.js
 **Dangling subdomain / DNS check:**
 ```bash
 # Check for obsolete DNS records
-dig CNAME handbook.gitlab.com
-curl -sI https://handbook.gitlab.com | head -5
+dig CNAME authorized-host.example
+curl -sS --max-time 10 -I https://authorized-host.example | head -5
 # Look for NXDOMAIN or 404 on hosting provider = takeover candidate
 
 # SPF check
-dig TXT rubylang.org | grep spf
-# Missing or ~all = email spoofing risk
+dig TXT authorized-domain.example | grep spf
+# SPF alone, including ~all, does not prove spoofing; evaluate authorized sending, DKIM and DMARC alignment.
 ```
 
 ---
@@ -234,7 +233,7 @@ dig TXT rubylang.org | grep spf
 
 10. **Multi-device session design conflated with session fixation** — engineers implement "remember me across devices" by issuing non-expiring tokens, treating it as a feature while creating persistent access risk
 
-11. **Server-policy responses mistaken for state-based oracles** — when many different path types return the SAME response shape, suspect a server-side blocklist/policy filter, NOT a real file-existence / user-existence / resource-existence oracle. Engineers add blanket filters (e.g., "block any path ending in `.config`/`.ashx`/`.asmx`/`.svc`") that return the same error regardless of whether the underlying file exists. Don't infer "file exists" from "blocked"; verify with an independent signal (Collaborator callback, response-time differential at scale, or out-of-band confirmation). Lesson: SharePoint's `download.aspx?SourceUrl=` returned `"blocked from this Web site by the server administrators"` for `.ashx`/`.asmx`/`.svc`/`.config` extensions regardless of whether the underlying file existed — looked like a file-existence oracle, was actually the extension blocklist. Treating it as the former produced a list of "discovered custom customer-branded endpoints" that didn't actually exist.
+11. **Server-policy responses mistaken for state-based oracles** — when many different path types return the SAME response shape, suspect a server-side blocklist/policy filter, NOT a real file-existence / user-existence / resource-existence oracle. Engineers add blanket filters (e.g., "block any path ending in `.config`/`.ashx`/`.asmx`/`.svc`") that return the same error regardless of whether the underlying file exists. Don't infer "file exists" from "blocked"; verify with an independent scoped evidence; timing alone and scaling probes do not establish existence. Lesson: SharePoint's `download.aspx?SourceUrl=` returned `"blocked from this Web site by the server administrators"` for `.ashx`/`.asmx`/`.svc`/`.config` extensions regardless of whether the underlying file existed — looked like a file-existence oracle, was actually the extension blocklist. Treating it as the former produced a list of "discovered custom customer-branded endpoints" that didn't actually exist.
 
 ---
 
@@ -287,7 +286,7 @@ An attacker targeting a GitHub Enterprise instance with SAML SSO enabled crafts 
 
 ## Chains & Compositions (Senior Hunting)
 
-A checklist tells you what to look for one bug at a time. Senior work composes primitives into multi-step engagements that reach impact. Each chain below is built from existing primitives in this skill's methodology and root causes — paired with a secondary primitive from a neighbouring skill. The pattern across them all: **the secondary primitive is what produces impact**. A standalone soft-delete IDOR is N/A; pair it with a session-store that doesn't invalidate, and it's High.
+A checklist tells you what to look for one bug at a time. Senior work composes primitives into multi-step engagements that reach impact. Each chain below is built from existing primitives in this skill's methodology and root causes — paired with a secondary primitive from a neighbouring skill. The pattern across them all: **the secondary primitive is what produces impact**. A demonstrated access-control failure can be independently reportable; chains and severity depend on actual impact and program rules.
 
 ### Chain 1 — Soft-Delete + Post-Removal Session Persistence → Cross-Tenant PII
 
@@ -333,7 +332,7 @@ A checklist tells you what to look for one bug at a time. Senior work composes p
 
 - **A.** Enumerate OAuth `redirect_uri` allowlist via the `/oauth/authorize` flow; note any wildcard `*.target.com` or takeover-candidate hostname in the static list.
 - **B.** Find a takeover-able subdomain (`legacy.target.com` CNAME'd to deleted Vercel project / Heroku app / S3 bucket — `hunt-subdomain` step 1).
-- **C.** Claim the subdomain. Host an OAuth callback receiver. Send victim to `/oauth/authorize?redirect_uri=https://legacy.target.com/cb&response_type=code&...`. Auth code lands on attacker host. Exchange via token endpoint. ATO.
+- **C.** Do not claim a third-party resource or involve real users. In a separately authorized controlled lab, host a callback and send a test account to `/oauth/authorize?redirect_uri=https://legacy.target.com/cb&response_type=code&...`. Auth code lands on attacker host. Exchange via token endpoint. ATO.
 - **Impact:** Persistent 1-click ATO every time the OAuth flow runs against the affected client.
 - **Real shape:** Microsoft Azure DevOps `cloudapp.azure.com` + wildcard `*.visualstudio.com` reply_to chain (Binary Security, Nov 2022). Cross-refs `hunt-subdomain` Disclosed Report Citation #12.
 
@@ -365,7 +364,7 @@ When you confirm a misc primitive at A, **immediately** ask: what state-machine,
 ## Limitations
 
 - Authorized scope only: the confirmation gate above is mandatory before any probing, exploitation, or credential-access command.
-- Docs-only import: upstream helper scripts, commands, engine, and research assets are not bundled; reinstall tooling from the source repo when needed.
+- Docs-only import: upstream helper scripts, commands, engine, and research assets are not bundled; review current provenance/dependencies before any separately authorized installation.
 - Validate every finding (see `triage-validation`) before reporting; report via `report-writing`. Prefer a sandbox, disposable VM, or controlled lab.
 
 ### Example
@@ -376,3 +375,9 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+### Evidence, scope and impact limits
+
+Use only owner-provided test tenants/accounts, disposable data and canaries; record authorized endpoint/method/rate and restoration before writes. Do not use leaked tokens, extract PII, publish lookalike packages, trigger real victim flows, poison shared caches or run resource-exhaustion probes. Stop after minimal proof instead of escalating by default. A chain requires each permission and precondition independently demonstrated; token scope does not imply cross-tenant rights, OAuth code theft may be blocked by PKCE/client authentication, and one SAML SP issue does not compromise every federated app.
+
+The outbound request-header curl example only sends a header and cannot itself prove response-header injection. A 404/NXDOMAIN does not prove a hostname is claimable. ReDoS examples are isolated harness sketches only; one slow request is not proof. Historical named examples, report counts, CVEs/payout and highest-N/A claims above are unverified leads rather than current-target evidence or universal bounty policy. Do not reject a bounded honest report merely because a chain or arbitrary ten-minute reproduction window is absent. No target activity was executed.

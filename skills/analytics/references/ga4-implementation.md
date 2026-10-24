@@ -27,9 +27,9 @@ Detailed implementation guide for Google Analytics 4.
 |-------|-------------|---------------|
 | page_view | Page loads | Automatic |
 | scroll | 90% scroll depth | Toggle on/off |
-| outbound_click | Click to external domain | Automatic |
-| site_search | Search query used | Configure parameter |
-| video_engagement | YouTube video plays | Toggle on/off |
+| click | Click to external domain | Automatic |
+| view_search_results | Search query used | Configure parameter |
+| video_start, video_progress, video_complete | Supported embedded YouTube videos | Toggle on/off |
 | file_download | PDF, docs, etc. | Configurable extensions |
 
 ### Recommended Events
@@ -140,20 +140,17 @@ dataLayer.push({
 ### Creating Conversions
 
 1. **Collect the event** - Ensure event is firing in GA4
-2. **Mark as conversion** - Admin > Events > Mark as conversion
+2. **Mark as key event** - Admin > Events > Mark as key event
 3. **Set counting method**:
-   - Once per session (leads, signups)
-   - Every event (purchases)
+   - Once per session or once per event, selected to match the business question
+   - Once per event (purchases)
 4. **Import to Google Ads** - For conversion-optimized bidding
 
 ### Conversion Values
 
 ```javascript
-// Event with conversion value
-gtag('event', 'purchase', {
-  'value': 99.99,
-  'currency': 'USD'
-});
+// Reuse the complete purchase payload above, including unique transaction_id
+// and items; do not send a second purchase event merely to attach a value.
 ```
 
 Or set default value in GA4 Admin when marking conversion.
@@ -226,7 +223,7 @@ Admin > Data display > Audiences
 ### DebugView
 
 Enable with:
-- URL parameter: `?debug_mode=true`
+- Send `debug_mode: true` with the Google tag/event or use the supported debugger; a URL parameter alone does not enable it unless the site maps it.
 - Chrome extension: GA Debugger
 - gtag: `'debug_mode': true` in config
 
@@ -296,5 +293,4 @@ Admin > Data streams > [Stream] > Configure tag settings
 
 Audiences created in GA4 can be used in Google Ads for:
 - Remarketing campaigns
-- Customer match
-- Similar audiences
+- Eligible advertising audiences, subject to current product support, consent and policy; linking does not itself create Customer Match lists.

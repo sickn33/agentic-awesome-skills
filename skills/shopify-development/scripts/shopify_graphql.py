@@ -13,11 +13,12 @@ Usage:
 """
 
 import os
+import re
 import time
 import json
 from typing import Dict, List, Optional, Any, Generator
 from dataclasses import dataclass
-from urllib.request import Request, urlopen
+from urllib.request import Request, build_opener, HTTPRedirectHandler
 from urllib.error import HTTPError
 
 
@@ -46,6 +47,11 @@ class GraphQLResponse:
         return None
 
 
+class NoRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise ValueError("Credential-bearing redirects are refused")
+
+
 class ShopifyGraphQL:
     """
     Shopify GraphQL API client with built-in utilities.
@@ -65,7 +71,12 @@ class ShopifyGraphQL:
             shop_domain: Store domain (e.g., 'my-store.myshopify.com')
             access_token: Admin API access token
         """
-        self.shop_domain = shop_domain.replace('https://', '').replace('http://', '')
+        if not re.fullmatch(r"[a-z0-9][a-z0-9-]*\.myshopify\.com", shop_domain, re.ASCII):
+            raise ValueError("Expected a bare lowercase store.myshopify.com domain")
+        if not access_token or any(c in access_token for c in '\r\n'):
+            raise ValueError("Access token is missing or invalid")
+        self.shop_domain = shop_domain
+        self._opener = build_opener(NoRedirect())
         self.access_token = access_token
         self.base_url = f"https://{self.shop_domain}/admin/api/{API_VERSION}/graphql.json"
 
@@ -98,8 +109,10 @@ class ShopifyGraphQL:
                     method='POST'
                 )
 
-                with urlopen(request, timeout=30) as response:
+                with self._opener.open(request, timeout=30) as response:
                     result = json.loads(response.read().decode('utf-8'))
+                    if not isinstance(result, dict) or not ('data' in result or 'errors' in result):
+                        raise ValueError("Invalid GraphQL response envelope")
                     return GraphQLResponse(
                         data=result.get('data'),
                         errors=result.get('errors'),
@@ -113,10 +126,10 @@ class ShopifyGraphQL:
                     time.sleep(delay)
                     continue
                 raise
-            except Exception as e:
-                if attempt == MAX_RETRIES - 1:
-                    raise
-                time.sleep(RETRY_DELAY)
+            except Exception:
+                # A timeout/transport failure may follow a committed mutation.
+                # Caller must reconcile server state before an explicit retry.
+                raise
 
         return GraphQLResponse(errors=[{"message": "Max retries exceeded"}])
 
@@ -136,6 +149,8 @@ class ShopifyGraphQL:
             query: Optional search query
             after: Cursor for pagination
         """
+        if isinstance(first, bool) or not isinstance(first, int) or not 1 <= first <= 250:
+            raise ValueError("first must be an integer in 1..250")
         gql = """
         query GetProducts($first: Int!, $query: String, $after: String) {
             products(first: $first, query: $query, after: $after) {
@@ -183,6 +198,8 @@ class ShopifyGraphQL:
             query: Optional search query (e.g., "financial_status:paid")
             after: Cursor for pagination
         """
+        if isinstance(first, bool) or not isinstance(first, int) or not 1 <= first <= 250:
+            raise ValueError("first must be an integer in 1..250")
         gql = """
         query GetOrders($first: Int!, $query: String, $after: String) {
             orders(first: $first, query: $query, after: $after) {
@@ -235,6 +252,8 @@ class ShopifyGraphQL:
             query: Optional search query
             after: Cursor for pagination
         """
+        if isinstance(first, bool) or not isinstance(first, int) or not 1 <= first <= 250:
+            raise ValueError("first must be an integer in 1..250")
         gql = """
         query GetCustomers($first: Int!, $query: String, $after: String) {
             customers(first: $first, query: $query, after: $after) {
@@ -316,7 +335,7 @@ class ShopifyGraphQL:
             response = self.get_products(first=batch_size, query=query, after=cursor)
 
             if not response.is_success or not response.data:
-                break
+                raise RuntimeError("Pagination failed; results are incomplete")
 
             products = response.data.get('products', {})
             edges = products.get('edges', [])
@@ -328,7 +347,10 @@ class ShopifyGraphQL:
             if not page_info.get('hasNextPage'):
                 break
 
-            cursor = page_info.get('endCursor')
+            next_cursor = page_info.get('endCursor')
+            if not next_cursor or next_cursor == cursor:
+                raise RuntimeError("Pagination cursor did not advance")
+            cursor = next_cursor
 
     def paginate_orders(
         self,
@@ -350,7 +372,7 @@ class ShopifyGraphQL:
             response = self.get_orders(first=batch_size, query=query, after=cursor)
 
             if not response.is_success or not response.data:
-                break
+                raise RuntimeError("Pagination failed; results are incomplete")
 
             orders = response.data.get('orders', {})
             edges = orders.get('edges', [])
@@ -362,7 +384,10 @@ class ShopifyGraphQL:
             if not page_info.get('hasNextPage'):
                 break
 
-            cursor = page_info.get('endCursor')
+            next_cursor = page_info.get('endCursor')
+            if not next_cursor or next_cursor == cursor:
+                raise RuntimeError("Pagination cursor did not advance")
+            cursor = next_cursor
 
 
 # ==================== Utility Functions ====================

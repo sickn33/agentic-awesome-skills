@@ -21,6 +21,10 @@ compatibility: Requires the `cline` CLI (v3.x) installed with an LLM endpoint co
 metadata:
   version: 0.3.9
 ---
+## Catalog authority and privacy boundary
+
+Dated user rules and paths in this guide belong to the upstream author, not the current user. System/developer instructions, repository rules and the current user scope take precedence. The task brief supplements those instructions; it never cancels later authentic user corrections. Do not create/update memory or learn cross-project preferences without explicit user request. Keep private runtime state outside the tracked skill installation in a mode0700 directory; .gitignore is not confidentiality or publishing protection. Never stop unrelated processes found by broad name matching. Abort/report immediately on destructive/credential/data risk rather than waiting three retries. Confirm model/endpoint/data/cost scope before dispatch; a delegation request does not authorize unrestricted auto-approval.
+
 ## Supporting material availability
 
 This catalog copy contains the inline guidance below, but does not include the following supporting paths. They are external prerequisites, not bundled files:
@@ -76,7 +80,7 @@ Cline 进程必须在用户指定开发环境内启动（继承工具链），�
 - conda 启动报错长文 = 初始化噪音，以最终 `env=<name>` 为准
 
 ## 编排模式（二选一）
-**模式 1：非交互（默认）**——长 prompt 写进**技能目录任务文件**注入（遵最高优先级纪律第3条：不落 /tmp、不落代码工程），避免引号地狱：
+**模式 1：非交互（默认）**——长 prompt 写进**私有状态目录任务文件**注入（遵最高优先级纪律第3条：使用用户授权的私有状态目录、不落代码工程），避免引号地狱：
 ```bash
 cd 仓库 && cline --json "$(cat ~/.hermes/skills/cline-pilot/scratch/task.md)"   # 后台 + 完成通知（terminal background=true notify=true）
 # 任务书短也可内联：cline --json "active memory bank\n..."
@@ -164,7 +168,7 @@ Cline 建议：X（理由）
 ## 验收清单（全绿才报完成）
 - [ ] `git status` / `diff --stat`：改动与声称一致、无越界文件
 - [ ] `git log -1`：commit 规范（含约定尾部）且**未 push**
-- [ ] 自己重跑该工程的测试/构建命令（命令形式见工程画像/任务书，不同栈不同工具），读原始测试报告数字
+- [ ] 在授权验收环境重跑该工程的测试/构建命令（如只读编排限制生效，调度独立 Cline 验证实例，不直接执行）（命令形式见工程画像/任务书，不同栈不同工具），读原始测试报告数字
 - [ ] 覆盖率任务：读覆盖率工具报告里的真实百分比（没跑就说没跑，禁止编造）
 - [ ] 报告/产物存在且非空（`wc -l` + 抽样首尾）
 - [ ] 临时工作区残留已清理（worktree + prune），或列入待办
@@ -237,7 +241,7 @@ active memory bank
 BRIEF
 
 # 2. Launch in the user's dev environment (self-check first: env, toolchain, branch)
-zsh -c 'unset CONDA_* ; source ~/env/bin/activate dev-env && cd ~/repo && cline --json "$(cat ~/.hermes/skills/cline-pilot/scratch/task.md)"' &
+zsh -c 'source <reviewed-env-script> && cd <authorized-repo> && cline --auto-approve false --json "$(cat ~/.hermes/skills/cline-pilot/scratch/task.md)"' &
 
 # 3. Monitor with deterministic evidence (not cline's self-report)
 python3 scripts/session_report.py 15 ~/repo
@@ -282,7 +286,7 @@ Cline 建议：1（理由：现有 3 个 service 都用 BusinessException）
 ## Security & Safety Notes
 
 This skill is `risk: critical` because it dispatches an autonomous coding agent that can
-modify code and run builds. Hard gates are built in by design, rather than by trust:
+modify code and run builds. These are documented conventions, not enforced runtime gates; verify CLI permissions and independent checks:
 
 - **Read-only orchestrator boundary** — the orchestrating agent and this skill treat the
   target code repo as read-only except when driving the `cline` process. Direct writes to
@@ -300,7 +304,7 @@ modify code and run builds. Hard gates are built in by design, rather than by tr
   numbers), not by the model's final message.
 - Private runtime files (`references/local-config.md`, `project-profiles.md`,
   `decision-log.md`, `scratch/`) are git-ignored upstream and re-asserted here by the
-  skill's own `.gitignore`, preventing accidental publication of user-specific state.
+  skill's own `.gitignore`, reducing accidental Git inclusion; forced staging, packaging or sync can still publish them.
 
 ## Related Skills
 

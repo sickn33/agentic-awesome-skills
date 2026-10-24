@@ -54,6 +54,8 @@ def split_frontmatter(text):
     if not m:
         return {}, text
     meta = yaml.safe_load(m.group(1)) or {}
+    if not isinstance(meta, dict):
+        raise ValueError("frontmatter must be an object")
     return meta, m.group(2)
 
 
@@ -212,12 +214,18 @@ class Handler(BaseHTTPRequestHandler):
         fp, meta, body = loaded
         try:
             n = int(self.headers.get("Content-Length", 0))
+            if n < 1 or n > 1048576:
+                return self._send(413, {"error": "payload must be 1..1048576 bytes"})
             payload = json.loads(self.rfile.read(n) or b"{}")
         except (ValueError, json.JSONDecodeError):
             return self._send(400, {"error": "bad json"})
+        if not isinstance(payload, dict):
+            return self._send(400, {"error": "payload must be an object"})
         fields = payload.get("fields", payload)  # accept {fields:{...}} or a bare dict
         if not isinstance(fields, dict):
             return self._send(400, {"error": "fields must be an object"})
+        if set(fields) != {"slides"} or not isinstance(fields["slides"], list):
+            return self._send(400, {"error": "only a slides array may be updated"})
         meta.update(fields)
         fp.write_text(dump_file(meta, body), encoding="utf-8")
         return self._send(200, {"ok": True, "slug": slug, "updated": list(fields.keys())})
@@ -265,6 +273,8 @@ def main():
         self_test()
         return
 
+    if a.host not in {"127.0.0.1", "localhost", "::1"}:
+        ap.error("this private development server must bind to loopback")
     lib = os.path.abspath(os.path.expanduser(a.dir))
     os.makedirs(lib, exist_ok=True)
     Handler.lib = lib

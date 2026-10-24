@@ -60,6 +60,6 @@ const results = await Promise.allSettled([
 ]);
 ```
 
-Use `Promise.allSettled` instead of `Promise.all` to safely handle errors without crashing the Node.js process.
+`Promise.allSettled` waits for all operations and exposes each rejection; inspect every result and propagate failures as appropriate. An awaited/caught `Promise.all` does not inherently crash Node.js, but rejects as soon as one input rejects.
 
 Reference: [Workflow Guarantees](https://docs.dbos.dev/typescript/tutorials/workflow-tutorial#workflow-guarantees)

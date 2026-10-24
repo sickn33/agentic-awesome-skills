@@ -38,7 +38,7 @@ def load_registry() -> list[ProjectInfo]:
                     path=cells[1] if len(cells) > 4 else "",
                     status=cells[2] if len(cells) > 4 else cells[1],
                     last_touched=cells[3] if len(cells) > 4 else cells[2],
-                    last_session=_extract_session_number(cells[-1]) if cells[-1] else 0,
+                    last_session=_extract_session_number(cells[3] if len(cells) > 4 else cells[2]) if cells[-1] else 0,
                     next_actions=[a.strip() for a in (cells[4] if len(cells) > 4 else cells[3]).split(";") if a.strip()],
                 ))
         elif in_table and not line.strip():

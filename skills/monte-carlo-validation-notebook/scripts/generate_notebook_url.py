@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Encode a notebook YAML file into a base64 import URL and open it in the browser.
+Encode a notebook YAML file into a base64 import URL; opening is explicit. Modified for Unicode preservation, HTTPS validation and non-clobbering output.
 
 Usage:
     python3 generate_notebook_url.py <notebook_yaml_path> [--mc-base-url URL]
@@ -12,6 +12,8 @@ import os
 import re
 import subprocess
 import sys
+import webbrowser
+from urllib.parse import urlsplit
 
 import yaml
 
@@ -108,22 +110,26 @@ def main() -> None:
         default="https://getmontecarlo.com",
         help="MC Bridge base URL",
     )
+    parser.add_argument("--open", action="store_true", help="Open the reviewed import URL (may disclose notebook content to the chosen app)")
     args = parser.parse_args()
+    parsed_base = urlsplit(args.mc_base_url)
+    if parsed_base.scheme != "https" or not parsed_base.hostname or parsed_base.username or parsed_base.password or parsed_base.query or parsed_base.fragment:
+        parser.error("MC base URL must be an HTTPS origin/path without credentials, query or fragment")
 
     with open(args.yaml_path) as f:
         notebook_yaml = f.read()
 
-    yaml_content = sanitize_yaml(notebook_yaml.strip())
+    yaml_content = notebook_yaml.strip()  # Preserve SQL literals and non-ASCII identifiers.
     validate_yaml(yaml_content)
 
     encoded = base64.b64encode(yaml_content.encode()).decode()
-    url = f"{args.mc_base_url}/notebooks/import#{encoded}"
+    url = f"{args.mc_base_url.rstrip('/')}/notebooks/import#{encoded}"
 
     print(f"URL length: {len(url)} chars")
 
     # Save URL to file alongside the YAML
     url_file = os.path.join(os.path.dirname(os.path.abspath(args.yaml_path)), "notebook_url.txt")
-    with open(url_file, "w") as f:
+    with open(url_file, "x", encoding="utf-8") as f:
         f.write(url)
     print(f"URL saved to: {url_file}")
 
@@ -133,8 +139,10 @@ def main() -> None:
     print(url)
     print("=" * 60 + "\n")
 
-    print("Opening notebook in browser...")
-    subprocess.run(["open", url])
+    if args.open:
+        if not webbrowser.open(url):
+            print("Browser did not confirm opening; use the saved URL", file=sys.stderr)
+            sys.exit(1)
 
 
 if __name__ == "__main__":

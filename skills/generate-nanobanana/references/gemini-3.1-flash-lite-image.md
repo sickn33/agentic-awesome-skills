@@ -5,10 +5,10 @@ Nano Banana 2 Lite is Google's fastest and cheapest Gemini image model — the d
 
 ## Model Specification
 - **Model ID**: `gemini-3.1-flash-lite-image`
-- **API**: Interactions API (`client.interactions.create`) — this model does not use the older `generate_content` method.
+- **API**: Interactions API (`client.interactions.create`) — this example uses Interactions; verify other endpoint support rather than assuming generateContent is unavailable.
 - **Primary Use**: Image drafts, rapid prototyping, thumbnail concepts.
 - **Cost**: Billable per call. Quote the current price from the live [pricing page](https://ai.google.dev/gemini-api/docs/pricing) and get explicit user approval before every generation — see the skill's cost-approval rule.
-- **Reference images**: Up to 14 supported as additional `image` input parts.
+- **Reference images**: Model/version-specific input limits; check the current model documentation before selecting multiple references.
 - **Reproducibility**: No `seed` parameter is documented for this model. Treat every generation as non-deterministic; for "same image but change X" requests, reuse the exact original prompt and reference images rather than promising an identical re-roll.
 
 ## Request Shape
@@ -72,7 +72,7 @@ cat > generations/lite_image_request.json << 'EOF'
 }
 EOF
 
-curl -s -X POST \
+curl --fail-with-body -sS --max-time 120 -X POST \
   "https://generativelanguage.googleapis.com/v1beta/interactions" \
   -H "x-goog-api-key: $GEMINI_API_KEY" \
   -H "Content-Type: application/json" \
@@ -80,3 +80,5 @@ curl -s -X POST \
 ```
 
 The response's `output_image.data` field holds the base64-encoded image bytes; decode and write them to the target file.
+
+These snippets omit robust output existence/MIME/schema checks and protected no-overwrite writes; they are not ready-made production helpers. Raw REST resource shape can differ from SDK convenience properties, so inspect actual response steps/metadata and the pinned reference. Use secure header/config input rather than exposing API keys in process arguments. A polling deadline is not remote cancellation.

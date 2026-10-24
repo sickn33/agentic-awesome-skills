@@ -15,7 +15,7 @@ Seções preservadas (informação durável):
 - **Descobertas**: sempre mantidas
 - **Erros resolvidos**: sempre mantidos (evita re-trabalho)
 
-Seções removidas (informação efêmera):
+Seções omitidas da visão resumida (os arquivos completos são preservados):
 - **Métricas**: tokens, contadores (dados transitórios)
 - **Arquivos modificados**: detalhes granulares desnecessários a longo prazo
 - **Dívida técnica**: frequentemente já resolvida
@@ -36,7 +36,8 @@ em um único `ARCHIVE_YYYY.md` com formato ultra-compacto:
   - Decisão sobre API
 ```
 
-Apenas cabeçalhos e decisões são mantidos na consolidação.
+A consolidação é um índice de cabeçalhos e decisões; os arquivos de sessão
+completos continuam no arquivo e consolidações anteriores são preservadas.
 
 ## Manutenção do ACTIVE_CONTEXT.md
 

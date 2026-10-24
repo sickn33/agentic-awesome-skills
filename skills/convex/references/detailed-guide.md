@@ -156,7 +156,7 @@ defineTable({ embedding: v.array(v.float64()), text: v.string() }).vectorIndex(
 
 Queries are reactive — clients automatically get updates when data changes.
 
-````typescript
+```typescript
 import { query } from "./_generated/server";
 import { v } from "convex/values";
 
@@ -261,6 +261,8 @@ export const transferCredits = mutation({
     amount: v.number(),
   },
   handler: async (ctx, args) => {
+    // Application-supplied authorization must bind fromUserId to the authenticated account.
+    if (!Number.isSafeInteger(args.amount) || args.amount <= 0 || args.fromUserId === args.toUserId) throw new Error("Invalid transfer");
     const fromUser = await ctx.db.get(args.fromUserId);
     const toUser = await ctx.db.get(args.toUserId);
     if (!fromUser || !toUser) throw new Error("User not found");
@@ -274,7 +276,7 @@ export const transferCredits = mutation({
     });
   },
 });
-````
+```
 
 ### Actions (External APIs & Side Effects)
 
@@ -288,6 +290,8 @@ import { api } from "./_generated/api";
 export const sendEmail = action({
   args: { to: v.string(), subject: v.string(), body: v.string() },
   handler: async (ctx, args) => {
+    // Required: authenticate and authorize a fixed recipient/business operation before calling this API.
+    // This public action must not be deployed as an arbitrary email relay.
     // Call external API
     const response = await fetch("https://api.sendgrid.com/v3/mail/send", {
       method: "POST",
@@ -330,7 +334,9 @@ export const generateEmbedding = action({
       }),
     });
 
+    if (!response.ok) throw new Error("Embedding request failed");
     const { data } = await response.json();
+    if (!Array.isArray(data?.[0]?.embedding) || !data[0].embedding.every(Number.isFinite)) throw new Error("Invalid embedding response");
     await ctx.runMutation(api.documents.saveEmbedding, {
       documentId: args.documentId,
       embedding: data[0].embedding,
@@ -355,12 +361,14 @@ http.route({
     const body = await request.text();
     const signature = request.headers.get("stripe-signature");
 
-    // Verify webhook signature here...
-
-    const event = JSON.parse(body);
+    if (!signature) return new Response("Missing signature", { status: 400 });
+    // Required implementation: verify raw bytes using the provider SDK, bounded tolerance and endpoint secret.
+    // Fail closed until the real verifier and event schema/atomic idempotency are implemented.
+    return new Response("Webhook not configured", { status: 503 });
+    /* const event = JSON.parse(body);
     await ctx.runMutation(api.payments.handleWebhook, { event });
 
-    return new Response("OK", { status: 200 });
+    return new Response("OK", { status: 200 }); */
   }),
 });
 
@@ -526,7 +534,7 @@ Convex also has a community component (`@convex-dev/better-auth`) that integrate
 
 ```bash
 npm install better-auth @convex-dev/better-auth
-npx convex env set BETTER_AUTH_SECRET your-secret-here
+npx convex env set BETTER_AUTH_SECRET  # secure interactive input
 npx convex env set SITE_URL http://localhost:3000
 ```
 
@@ -671,20 +679,20 @@ export const getFileUrl = query({
 
 ```bash
 # Set environment variables for your deployment
-npx convex env set OPENAI_API_KEY sk-...
-npx convex env set SENDGRID_API_KEY SG...
+npx convex env set OPENAI_API_KEY  # secure interactive input; do not place secrets in argv/history
+npx convex env set SENDGRID_API_KEY
 
 # List current env vars
-npx convex env list
+npx convex env list --names-only
 
 # Remove an env var
-npx convex env unset OPENAI_API_KEY
+npx convex env remove OPENAI_API_KEY
 ```
 
-Access in actions (NOT in queries or mutations):
+Access inside app functions (queries, mutations and actions):
 
 ```typescript
-// Only available in actions
+// Available in app functions; never return this secret.
 const apiKey = process.env.OPENAI_API_KEY;
 ```
 
@@ -718,7 +726,7 @@ npx convex logs
 - ✅ Define schemas — adds type safety across your entire stack
 - ✅ Use indexes for queries — avoids full table scans
 - ✅ Use compound indexes with equality filters first, range filter last
-- ✅ Rely on native determinism — `Date.now()` and `Math.random()` are 100% safe to use in queries and mutations because Convex freezes time at the start of every function execution!
+- ✅ Rely on native determinism — `Date.now()` and `Math.random()` are handled deterministically by the runtime, but query time does not itself create a timer subscription; do not use Math.random for secrets!
 - ✅ Use `v.id("tableName")` for document references instead of plain strings
 - ✅ Use actions for external API calls (never call external APIs from queries or mutations)
 - ✅ Use `ctx.runQuery` / `ctx.runMutation` from actions — never access `ctx.db` directly in actions
@@ -745,7 +753,7 @@ npx convex logs
   **Solution:** Documents may have been deleted between your read and write due to optimistic concurrency. Re-read inside the mutation.
 
 - **Problem:** "`process.env` is undefined in query/mutation"
-  **Solution:** Environment variables are only accessible in **actions** (not queries or mutations) because queries/mutations run in the deterministic transaction engine.
+  **Solution:** App environment variables can be read in queries, mutations and actions. Check deployment values and component bindings; never expose a secret in results.
 
 - **Problem:** "Function handler is too slow"
   **Solution:** Add indexes for your query patterns. Use `withIndex()` instead of `.filter()`. For complex operations, break into smaller mutations.
@@ -770,3 +778,9 @@ npx convex logs
 - [GitHub](https://github.com/get-convex/convex-backend)
 - [Discord Community](https://convex.dev/community)
 - [Convex Chef (AI Starter)](https://chef.convex.dev)
+
+### Incomplete application/security contract
+
+Schemas omit tasks/files/documents/credits/ownership and all later helper functions. Every public query/mutation/action needs authenticated object/tenant authorization, not just v.id type validation. isPrivate does not enforce channel membership. Public file URLs can disclose content: require ownership before generating/saving/serving/deleting storage objects and validate file size/type/content. transferCredits requires a credits schema, safe integer minor units, authorization, limits and overflow checks; the shown validation alone is not a payment system.
+
+Authentication providers/components need current server setup and trusted token configuration; client wrappers alone do not secure functions. API availability/status limits are version-specific. Scheduling and import/export/deploy commands are writes, not harmless previews. Validate nonnegative bounded delays and internal-function scope; use internal mutations for provider result writes. Actions and provider effects are not one database transaction: use durable business-operation keys, provider idempotency and ambiguous-result reconciliation. Bound fetch timeouts/body sizes and validate response dimensions/schema; minimize private data sent externally. Query retry/transaction conflicts do not imply clients can see half-written transactions. No deployment or runtime test was executed.

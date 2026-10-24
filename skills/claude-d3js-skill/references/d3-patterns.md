@@ -169,7 +169,7 @@ function drawChordDiagram(data) {
     const i = nodes.indexOf(d.source);
     const j = nodes.indexOf(d.target);
     matrix[i][j] += d.value;
-    matrix[j][i] += d.value;
+    if (i !== j) matrix[j][i] += d.value; // This example assumes undirected flows
   });
 
   // Create chord layout
@@ -183,7 +183,8 @@ function drawChordDiagram(data) {
 
   const ribbon = d3.ribbon()
     .source(d => d.source)
-    .target(d => d.target);
+    .target(d => d.target)
+    .radius(innerRadius);
 
   const colourScale = d3.scaleOrdinal(d3.schemeCategory10)
     .domain(nodes);
@@ -249,7 +250,7 @@ function drawHeatmap(data) {
 
   const width = 800;
   const height = 600;
-  const margin = { top: 100, right: 30, bottom: 30, left: 100 };
+  const margin = { top: 100, right: 100, bottom: 30, left: 100 };
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
@@ -662,7 +663,7 @@ useEffect(() => {
     .attr("d", pathGenerator)
     .attr("fill", d => {
       const value = valueLookup.get(d.id);
-      return value ? colourScale(value) : "#e0e0e0";
+      return Number.isFinite(value) ? colourScale(value) : "#e0e0e0";
     })
     .attr("stroke", "#999")
     .attr("stroke-width", 0.5);
@@ -671,6 +672,11 @@ useEffect(() => {
 ```
 
 ## Advanced interactions
+
+The linked-brushing sketch omits scale/geometry setup and is not runnable as-is.
+Create the brush once per geometry update; update highlights separately so
+selection state does not recreate the brush on every pointer event. Clear
+highlights on a null selection. The following brush-only example does not zoom.
 
 ### Brush and zoom
 
@@ -840,6 +846,8 @@ useEffect(() => {
 
 ### Path morphing
 
+Import `interpolatePath` from the separate `d3-interpolate-path` dependency; it is not part of D3 core.
+
 ```javascript
 useEffect(() => {
   if (!data1 || !data2) return;
@@ -862,7 +870,7 @@ useEffect(() => {
     .attrTween("d", function() {
       const previous = d3.select(this).attr("d");
       const current = line(data2);
-      return d3.interpolatePath(previous, current);
+      return interpolatePath(previous, current);
     });
     
 }, [data1, data2]);

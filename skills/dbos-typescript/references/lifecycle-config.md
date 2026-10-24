@@ -41,7 +41,7 @@ async function main() {
   await myWorkflow();
 }
 
-main().catch(console.log);
+main().catch(error => { console.error(error); process.exitCode = 1; });
 ```
 
 Reference: [DBOS Lifecycle](https://docs.dbos.dev/typescript/reference/dbos-class)

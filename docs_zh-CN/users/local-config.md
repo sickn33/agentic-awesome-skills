@@ -29,8 +29,6 @@
 
 为您的特定项目积极使用的技能：
 
-- `pdf-official` (+ 符号链接 `pdf`) - 官方 Anthropic PDF 操作
-- `xlsx-official` (+ 符号链接 `xlsx`) - 官方 Anthropic Excel 操作
 - `react-best-practices` - Vercel 的 40+ 性能优化规则
 - `web-design-guidelines` - Vercel 的 100+ UI/UX 审计规则
 - `frontend-dev-guidelines` - 现代 React/TS 开发模式

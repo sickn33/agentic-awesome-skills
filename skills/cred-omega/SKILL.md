@@ -21,6 +21,10 @@ tools:
 
 # CRED-OMEGA: Security Engine for All API Keys (Enterprise)
 
+## Execution boundaries
+
+Scan only explicitly in-scope repositories/hosts. Never print matching secret values, raw diffs, environment values or complete logs into chat; report paths and redacted fingerprints. Regex matches are candidates, not proof of validity, and no matches do not prove coverage. The referenced scripts are not bundled. Revocation, rotation, firewall changes and history rewriting need an authorized target and recovery plan; this document does not grant that authority.
+
 ## Detailed Guide
 
 Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.

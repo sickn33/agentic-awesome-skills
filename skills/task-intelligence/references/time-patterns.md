@@ -1,6 +1,6 @@
 # Padrões Históricos de Tempo por Tipo de Tarefa
 
-Baseado em execuções reais do ecossistema.
+Faixas e multiplicadores ilustrativos herdados do upstream; este pacote não inclui registros, amostra ou metodologia que comprovem medições reais. Não apresentá-los como histórico verificado ou previsão garantida. Meça o fluxo atual, inclua espera/retries/revisão e atualize com evidência comparável.
 
 ## Criação de Skills
 

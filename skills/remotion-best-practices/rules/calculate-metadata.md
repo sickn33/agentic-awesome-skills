@@ -15,7 +15,19 @@ Use `calculateMetadata` on a `<Composition>` to dynamically set duration, dimens
 
 ## Setting duration based on a video
 
-Use the `getMediaMetadata()` function from the mediabunny/metadata skill to get the video duration:
+Create this local helper as `get-media-metadata.ts` (requires installed Mediabunny) before using the examples:
+
+```ts
+import {Input, ALL_FORMATS, UrlSource} from "mediabunny";
+export const getMediaMetadata = async (src: string) => {
+  using input = new Input({formats: ALL_FORMATS, source: new UrlSource(src)});
+  const durationInSeconds = await input.computeDuration();
+  const track = await input.getPrimaryVideoTrack();
+  return {durationInSeconds, dimensions: track ? {width: track.displayWidth, height: track.displayHeight} : undefined};
+};
+```
+
+Define `Props` for your component and use the same fps as its Composition:
 
 ```tsx
 import {CalculateMetadataFunction} from 'remotion';

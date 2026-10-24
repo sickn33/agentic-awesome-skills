@@ -21,6 +21,21 @@ metadata:
 
 Automate policy enforcement through code using OPA/Rego, Kyverno, Checkov, and CI/CD integration to prevent compliance violations before they reach production.
 
+## Enforcement contract
+
+Examples cover selected controls, not full compliance. Terraform plan JSON can
+contain secrets: restrict artifact permissions/retention and never upload it as a
+public artifact. Planning runs providers/data sources and needs approved account
+scope; do not run untrusted PR configuration with production credentials.
+`opa eval` normally exits successfully even when deny contains findings; use a
+reviewed aggregate decision or Conftest with all namespaces and fail on parse,
+missing input, unknown values and missing required policy bundles. Resolve the
+provider version/schema first: ACLs, encryption and tags use different resources.
+The S3 versioning resource check cannot detect a bucket with no versioning resource;
+add a graph relationship check. Kyverno examples require compatible CRDs, audit
+rollout, full container/init/ephemeral coverage and separate digest/signature
+verification: banning `latest` does not make another mutable tag trustworthy.
+
 ## Open Policy Agent (OPA) Rego Policies
 
 ```rego
@@ -31,7 +46,7 @@ import rego.v1
 
 deny contains msg if {
     resource := input.resource_changes[_]
-    resource.type == "aws_s3_bucket"
+    resource.type in {"aws_s3_bucket", "aws_s3_bucket_acl"}
     resource.change.after.acl == "public-read"
     msg := sprintf(
         "S3 bucket '%s' has public-read ACL. All buckets must be private. [Policy: no-public-s3]",
@@ -41,7 +56,7 @@ deny contains msg if {
 
 deny contains msg if {
     resource := input.resource_changes[_]
-    resource.type == "aws_s3_bucket"
+    resource.type in {"aws_s3_bucket", "aws_s3_bucket_acl"}
     resource.change.after.acl == "public-read-write"
     msg := sprintf(
         "S3 bucket '%s' has public-read-write ACL. This is strictly prohibited. [Policy: no-public-s3]",
@@ -59,7 +74,8 @@ import rego.v1
 deny contains msg if {
     resource := input.resource_changes[_]
     resource.type == "aws_db_instance"
-    not resource.change.after.storage_encrypted
+    resource.change.after != null
+    resource.change.after.storage_encrypted != true
     msg := sprintf(
         "RDS instance '%s' does not have storage encryption enabled. [Policy: require-rds-encryption]",
         [resource.address]
@@ -69,26 +85,18 @@ deny contains msg if {
 deny contains msg if {
     resource := input.resource_changes[_]
     resource.type == "aws_ebs_volume"
-    not resource.change.after.encrypted
+    resource.change.after != null
+    resource.change.after.encrypted != true
     msg := sprintf(
         "EBS volume '%s' is not encrypted. [Policy: require-ebs-encryption]",
         [resource.address]
     )
 }
 
-deny contains msg if {
-    resource := input.resource_changes[_]
-    resource.type == "aws_s3_bucket"
-    not has_encryption(resource)
-    msg := sprintf(
-        "S3 bucket '%s' does not have default encryption configured. [Policy: require-s3-encryption]",
-        [resource.address]
-    )
-}
+# S3 encryption is modeled by a separate Terraform resource in current providers.
+# Join aws_s3_bucket_server_side_encryption_configuration to its bucket and inspect
+# key/SSE settings; this snippet intentionally makes no S3 coverage claim.
 
-has_encryption(resource) if {
-    resource.change.after.server_side_encryption_configuration[_]
-}
 ```
 
 ```rego
@@ -101,8 +109,11 @@ required_tags := {"Environment", "Owner", "CostCenter", "DataClassification"}
 
 deny contains msg if {
     resource := input.resource_changes[_]
-    tags := object.get(resource.change.after, "tags", {})
-    missing := required_tags - {key | tags[key]}
+    resource.mode == "managed"
+    resource.type in {"aws_instance", "aws_db_instance", "aws_ebs_volume", "aws_s3_bucket"}
+    resource.change.after != null
+    tags := object.get(resource.change.after, "tags_all", {})
+    missing := required_tags - {key | value := tags[key]; is_string(value); trim_space(value) != ""}
     count(missing) > 0
     msg := sprintf(
         "Resource '%s' is missing required tags: %v. [Policy: required-tags]",
@@ -111,25 +122,11 @@ deny contains msg if {
 }
 ```
 
-```rego
-# restrict_regions.rego - Limit resource deployment to approved regions
-package terraform.aws.regions
+Region enforcement must resolve each resource's provider alias/module mapping and
+unknown expressions. Reading only `provider_config.aws` silently misses aliased or
+variable-driven regions. Require a normalized resolved region per resource from a
+reviewed adapter, and deny unknown mappings; no generic region policy is supplied.
 
-import rego.v1
-
-approved_regions := {"us-east-1", "us-west-2", "eu-west-1"}
-
-deny contains msg if {
-    resource := input.resource_changes[_]
-    provider_config := input.configuration.provider_config.aws
-    region := provider_config.expressions.region.constant_value
-    not region in approved_regions
-    msg := sprintf(
-        "Resource '%s' is in region '%s'. Approved regions: %v. [Policy: approved-regions]",
-        [resource.address, region, approved_regions]
-    )
-}
-```
 
 ```bash
 # Evaluate OPA policies against Terraform plan
@@ -144,7 +141,7 @@ opa eval \
   --format pretty
 
 # Use conftest for easier CI integration
-conftest test tfplan.json --policy policies/ --output table
+conftest test tfplan.json --policy policies/ --all-namespaces --output table
 ```
 
 ## Kyverno Kubernetes Policies
@@ -204,11 +201,14 @@ spec:
       pattern:
         spec:
           containers:
-          - securityContext:
-              privileged: "false"
+          - =(securityContext):
+              =(privileged): false
           =(initContainers):
-          - securityContext:
-              privileged: "false"
+          - =(securityContext):
+              =(privileged): false
+          =(ephemeralContainers):
+          - =(securityContext):
+              =(privileged): false
 ---
 # require-resource-limits.yaml - Enforce resource limits
 apiVersion: kyverno.io/v1
@@ -290,37 +290,11 @@ spec:
           containers:
           - image: "123456789012.dkr.ecr.*.amazonaws.com/* | ghcr.io/your-org/*"
 ---
-# require-networkpolicy.yaml - Ensure namespaces have NetworkPolicies
-apiVersion: kyverno.io/v1
-kind: ClusterPolicy
-metadata:
-  name: require-networkpolicy
-  annotations:
-    policies.kyverno.io/title: Require Network Policy
-    policies.kyverno.io/severity: high
-spec:
-  validationFailureAction: Audit
-  background: true
-  rules:
-  - name: check-networkpolicy
-    match:
-      any:
-      - resources:
-          kinds:
-          - Deployment
-    preconditions:
-      all:
-      - key: "{{request.object.metadata.namespace}}"
-        operator: NotIn
-        value: ["kube-system", "kube-public"]
-    validate:
-      message: "A NetworkPolicy must exist in namespace '{{request.object.metadata.namespace}}' before deploying workloads."
-      deny:
-        conditions:
-          all:
-          - key: "{{request.object.metadata.namespace}}"
-            operator: AnyNotIn
-            value: "{{request.object.metadata.namespace}}"
+# NetworkPolicy presence cannot be checked by comparing a namespace string to itself.
+# Use a reviewed apiCall context with scoped RBAC to list policies, then verify an
+# applicable default-deny policy and CNI enforcement. This requires integration tests;
+# absence of a real policy query must never be represented as a passing control.
+
 ```
 
 ## Checkov Custom Checks
@@ -374,7 +348,10 @@ class RDSBackupRetention(BaseResourceCheck):
         retention = conf.get("backup_retention_period", [0])
         if isinstance(retention, list):
             retention = retention[0]
-        return CheckResult.PASSED if int(retention) >= 7 else CheckResult.FAILED
+        try:
+            return CheckResult.PASSED if int(retention) >= 7 else CheckResult.FAILED
+        except (ValueError, TypeError):
+            return CheckResult.UNKNOWN  # Resolve plan values before enforcing.
 
 
 check = RDSBackupRetention()

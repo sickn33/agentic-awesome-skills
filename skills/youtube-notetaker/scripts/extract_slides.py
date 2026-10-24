@@ -12,7 +12,7 @@ in title + note for each. idx here is just the sequence number; ordering is by t
 
 The img URL is served by serve.py at /api/video-deepdives/_media/<file>.
 """
-import subprocess, sys, os, json, re, tempfile
+import subprocess, sys, os, json, re, tempfile, math
 from pathlib import Path
 
 LIB = os.path.expanduser(os.environ.get("VIDEO_LIBRARY_DIR", "~/video-deepdives"))
@@ -29,6 +29,7 @@ def main():
     if not YTID_RE.fullmatch(ytid): sys.exit("YTID must be an exact 11-character YouTube video id")
     times=sorted({float(l.strip()) for l in open(keep) if l.strip()})
     if not times: sys.exit("keep.txt is empty")
+    if len(times) > 1000 or any(not math.isfinite(t) or t < 0 for t in times): sys.exit("timestamps must be finite, nonnegative, at most 1000 entries")
     media = Path(MEDIA).expanduser()
     if media.is_symlink(): sys.exit("library media directory must not be a symbolic link")
     media.mkdir(parents=True,exist_ok=True)
@@ -43,7 +44,7 @@ def main():
             subprocess.run(["ffmpeg","-hide_banner","-loglevel","error","-ss",f"{t}",
                             "-i",video,"-frames:v","1","-vf","scale=1280:-1","-q:v","3","-y",str(temporary)],check=True)
             os.chmod(temporary, 0o600)
-            os.replace(temporary, out)
+            os.link(temporary, out)  # atomic refusal if an existing slide would be overwritten
         finally:
             temporary.unlink(missing_ok=True)
         scaffold.append({"idx":i,"t":round(t,1),"mmss":mmss(t),"title":"","note":"",

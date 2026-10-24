@@ -191,7 +191,7 @@ Desktop (> 1024px):
 
 ## Accessibility Considerations
 
-### WCAG Compliance Prompts
+### Accessibility Requirements for Prompts (verify the result)
 
 Include accessibility requirements directly in prompts.
 
@@ -207,7 +207,7 @@ Ensure all text meets WCAG AA standards:
 
 2. **Touch Targets**
 ```
-All interactive elements minimum 44x44px touch target size
+Project target: interactive elements at least 44x44 CSS pixels where practical; this is not a blanket statement of WCAG AA criteria
 Adequate spacing between clickable elements (8px minimum)
 ```
 
@@ -241,7 +241,7 @@ Accessibility features:
 - Required fields marked with asterisk and aria-required
 - Error messages with role="alert"
 - Submit button with descriptive text
-- Focus indicators with 3px blue outline
+- Focus indicators with visible outline verified against adjacent colors
 - Color contrast meets WCAG AA
 - Touch targets 44x44px minimum
 

@@ -185,8 +185,6 @@ _Users creating, editing, converting, and automating office documents._
 **Plugin status:** Codex plugin-safe · Claude plugin-safe · Agent Plugins 1.0 portable
 
 - [`office-productivity`](../../skills/office-productivity/): Coordinate document, spreadsheet, and slide workflows.
-- [`xlsx-official`](../../skills/xlsx-official/): Create and analyze formula-backed spreadsheets.
-- [`pdf-official`](../../skills/pdf-official/): Extract, generate, and manipulate PDFs.
 - [`pdf-conversion-router`](../../skills/pdf-conversion-router/): Choose high-fidelity PDF conversion routes.
 - [`google-docs-automation`](../../skills/google-docs-automation/): Automate Google Docs creation and updates.
 - [`google-sheets-automation`](../../skills/google-sheets-automation/): Automate Google Sheets reads and writes.

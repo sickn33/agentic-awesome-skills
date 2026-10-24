@@ -3,7 +3,7 @@
 ## Principio Fundamental
 
 Em projetos tecnicos complexos, a perda de um unico detalhe pode causar horas de
-re-trabalho. Este checklist garante que a extracao pre-compactacao esta completa
+re-trabalho. Este checklist ajuda a revisar se a extracao pre-compactacao esta completa
 e consistente. Execute CADA item — nao pule nenhum.
 
 ## Verificacao de Completude
@@ -98,7 +98,7 @@ Se detectar QUALQUER um destes, a extracao esta incompleta:
 Apos todas as verificacoes passarem:
 
 1. Gerar snapshot com timestamp
-2. Atualizar MEMORY.md com P0s ultra-compactos
+2. Atualizar memoria persistente apenas quando o usuario autorizou esse destino; remover segredos e dados desnecessarios
 3. Executar context-agent save
 4. Escrever briefing de transicao como ultima mensagem
 

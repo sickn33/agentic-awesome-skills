@@ -38,6 +38,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 ### Example 1: Command Palette (Combo Dialog)
 
 ```tsx
+import { useState, useEffect } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Command } from 'cmdk';
 
@@ -60,6 +61,8 @@ export function CommandPalette() {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50" />
         <Dialog.Content className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <Dialog.Title>Commands</Dialog.Title>
+          <Dialog.Description>Search available actions.</Dialog.Description>
           <Command>
             <Command.Input placeholder="Type a command..." />
             <Command.List>
@@ -131,7 +134,7 @@ export function CountryForm() {
         control={control}
         render={({ field }) => (
           <Select.Root onValueChange={field.onChange} value={field.value}>
-            <Select.Trigger className="select-trigger">
+            <Select.Trigger ref={field.ref} onBlur={field.onBlur} aria-label="Country" className="select-trigger">
               <Select.Value placeholder="Select a country" />
               <Select.Icon />
             </Select.Trigger>
@@ -139,9 +142,9 @@ export function CountryForm() {
             <Select.Portal>
               <Select.Content className="select-content">
                 <Select.Viewport>
-                  <Select.Item value="us">United States</Select.Item>
-                  <Select.Item value="ca">Canada</Select.Item>
-                  <Select.Item value="uk">United Kingdom</Select.Item>
+                  <Select.Item value="us"><Select.ItemText>United States</Select.ItemText></Select.Item>
+                  <Select.Item value="ca"><Select.ItemText>Canada</Select.ItemText></Select.Item>
+                  <Select.Item value="uk"><Select.ItemText>United Kingdom</Select.ItemText></Select.Item>
                 </Select.Viewport>
               </Select.Content>
             </Select.Portal>

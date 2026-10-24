@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 """
+Modified in catalog review: validate GIF format, sum frame delays and check emoji targets.
+
 Validators - Check if GIFs meet Slack's requirements.
 
 These validators help ensure your GIFs meet Slack's size and dimension constraints.
@@ -37,25 +39,21 @@ def validate_gif(
     # Get dimensions and frame info
     try:
         with Image.open(gif_path) as img:
+            if img.format != "GIF":
+                return False, {"error": "Input is not GIF format"}
             width, height = img.size
 
-            # Count frames
             frame_count = 0
+            total_ms = 0
             try:
                 while True:
                     img.seek(frame_count)
+                    total_ms += max(0, img.info.get("duration", 0))
                     frame_count += 1
             except EOFError:
                 pass
-
-            # Get duration
-            try:
-                duration_ms = img.info.get("duration", 100)
-                total_duration = (duration_ms * frame_count) / 1000
-                fps = frame_count / total_duration if total_duration > 0 else 0
-            except:
-                total_duration = None
-                fps = None
+            total_duration = total_ms / 1000
+            fps = frame_count / total_duration if total_duration else None
 
     except Exception as e:
         return False, {"error": f"Failed to read GIF: {e}"}
@@ -64,7 +62,7 @@ def validate_gif(
     if is_emoji:
         optimal = width == height == 128
         acceptable = width == height and 64 <= width <= 128
-        dim_pass = acceptable
+        dim_pass = acceptable and size_bytes < 128 * 1024 and frame_count <= 50
     else:
         aspect_ratio = (
             max(width, height) / min(width, height)
@@ -76,6 +74,7 @@ def validate_gif(
     results = {
         "file": str(gif_path),
         "passes": dim_pass,
+        "check_scope": "local design targets; not Slack upload acceptance",
         "width": width,
         "height": height,
         "size_kb": size_kb,

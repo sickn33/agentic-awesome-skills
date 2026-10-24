@@ -49,7 +49,7 @@ choice to the human. Run relevant guard skills if installed.
 
 ## The commit boundary
 
-When the gates pass and the diff holds, **the orchestrator commits**, never the implementer.
+When the gates pass and the diff holds, **only an authorized orchestrator commits**, never the implementer. If the user requested review or uncommitted edits, preserve that boundary.
 Write a clear message describing what landed.
 
 From dispatch until that commit, the uncommitted working tree is the authoritative copy of the
@@ -84,7 +84,7 @@ user's host permissions, so inspect `touchedFiles` and the tree after every run.
 
 ## Surface, do not absorb
 
-The human opted into delegation, so committing verified, gate-passing work is the contract. Keep
+The human opted into delegation, but committing verified work still requires that action to be within the user request. Keep
 them in the loop when the work changes shape:
 
 - Report design decisions and defensible-but-unrequested turns.

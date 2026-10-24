@@ -1,4 +1,6 @@
-<!-- Updated: 2026-02-07 -->
+<!-- Imported template dated 2026-02-07; locally reviewed 2026-10-23. -->
+
+All word-count, page-count, timing, character-range and publishing targets are editorial starting points, not Google requirements or guaranteed ranking effects. Use verified credentials, original evidence and real business facts only. Schema examples contain placeholders/fictional ratings that must not be published unchanged. Vocabulary validity differs from Google rich-result eligibility; check current feature documentation.
 # Generic Business SEO Strategy Template
 
 ## Overview
@@ -50,7 +52,7 @@ This template applies to businesses that don't fit neatly into SaaS, local servi
 | About | Organization, AboutPage |
 | Contact | ContactPage |
 | Blog | Article, BlogPosting |
-| FAQ | (FAQPage only for gov/health) |
+| FAQ | (Google FAQ rich results limited to eligible authoritative gov/health sites; Schema.org type has broader vocabulary use) |
 | Product/Service | Product or Service |
 
 ## Content Quality Standards

@@ -51,14 +51,14 @@ jobs:
     type: submit
     needs: [build-ios]
     params:
-      platform: ios
+      build_id: ${{ needs.build-ios.outputs.build_id }}
       profile: production
 
   submit-android:
     type: submit
     needs: [build-android]
     params:
-      platform: android
+      build_id: ${{ needs.build-android.outputs.build_id }}
       profile: production
 ```
 
@@ -84,6 +84,8 @@ jobs:
 ```
 
 ## Conditional Jobs
+
+The sketch below mixes GitHub-specific output/runner assumptions with EAS workflow syntax. Do not copy it as a validated EAS workflow; use the current EAS schema and supported custom-job outputs, and handle shallow history/first commits. Never expose release credentials to untrusted PR code.
 
 Run jobs based on conditions:
 

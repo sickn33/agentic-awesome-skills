@@ -148,13 +148,13 @@ Never ask for a Notion password or token.
 
 ```csv
 Analysis Number,Period Start,Period End,Party Type,Party Name,Opening Balance,Credit Movement,Settlement,Adjustments,Closing Balance,Average Balance,Measurement Basis,Contractual Terms Days,Actual Collection/Payment Days,Weighted Days,Overdue Amount,Current Amount,Aging 0-30 Amount,Aging 31-60 Amount,Aging 61-90 Amount,Aging 91-180 Amount,Aging Over 180 Amount,Customer Credit Limit,Customer Credit Utilisation %,Benchmark Days,Gap vs Benchmark,Cycle Trend,Reconciliation Status,Data Quality Status,Reviewed By,Status,Notes,Cycle Analysis ID
-CCA-EXAMPLE-001,2026-01-01,2026-01-31,Customer/Debtor,Example Customer,420000.00,114000.00,47800.00,150.00,486500.00,453175.00,Invoice date to settlement date,30,42,38,254869.60,231630.40,92340.00,61100.00,30000.00,41429.60,30000.00,500000.00,97.27,35,7,Deteriorating,Needs Review,Incomplete,Example Reviewer,In progress,"The 150.00 difference against the balance identity is left open, not adjusted. Benchmark of 35 days is a proposed default, not an agreed target. Two invoices carry no due date, so their bucket and the utilisation figure stay Unknown.",
+CCA-EXAMPLE-001,2026-01-01,2026-01-31,Customer/Debtor,Example Customer,420000.00,114000.00,47800.00,150.00,486500.00,453250.00,Invoice date to settlement date,30,42,38,254869.60,231630.40,92340.00,61100.00,30000.00,41429.60,30000.00,500000.00,97.30,35,7,Deteriorating,Needs Review,Incomplete,Example Reviewer,In progress,"The 150.00 difference against the balance identity is left open, not adjusted. Benchmark of 35 days is a proposed default, not an agreed target. All displayed aging amounts assume documented due dates; utilisation is a provisional 97.30% from the unreconciled closing balance and limit.",
 ```
 
 ```sql
 -- Engine assumption: PostgreSQL. If the target database is not PostgreSQL, replace
--- SERIAL PRIMARY KEY with that engine's auto-increment form; nothing else here is
--- engine-specific.
+-- SERIAL, timestamp defaults, indexes, constraints and numeric/date behavior
+-- must all be adapted and validated for another database engine.
 CREATE TABLE credit_cycle_analysis (
   analysis_number VARCHAR(255),
   period_start DATE NOT NULL,
@@ -196,7 +196,7 @@ CREATE TABLE credit_cycle_analysis (
     opening_balance >= 0
     AND credit_movement >= 0
     AND settlement >= 0
-    AND closing_balance >= 0)
+    AND closing_balance >= 0) -- Credit balances require a separately agreed signed-balance model
 );
 
 CREATE INDEX idx_credit_cycle_analysis_status ON credit_cycle_analysis (status);
@@ -308,6 +308,12 @@ because each of them has a legitimate `Unknown`.
 
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`, and
 anything pointing at another table stays `relation`.
+
+### Representation and validation
+
+Logical field labels map to snake_case SQL columns; SQL timestamps/identity columns are technical additions, not shared business columns. CSV order is meaningful, but JSON object and Notion property order is not a semantic guarantee. Unknown numeric/date fields are empty CSV cells, SQL NULL or omitted optional JSON properties; never the string "Unknown" in a numeric/date field. Required missing values identify incomplete drafts that cannot pass the complete-record schema. Validate date formats with a format-enabled validator and validate cross-field totals/periods outside basic JSON types. `updated_at DEFAULT NOW()` is insertion-only; updates need an application/trigger policy.
+
+Use RFC-compliant CSV quoting and guard spreadsheet formula injection for untrusted text; preserve source values separately. SQL identifiers/defaults below target PostgreSQL. NUMERIC(14,2) and non-negative constraints are limited example policies: credit balances, overpayments, credit notes and other currency precision need an explicit model before import.
 
 ### Dataset 2 - Invoice/Bill Aging Detail
 
@@ -451,14 +457,14 @@ Actual Days = Settlement Date - Invoice/Bill Date
 settlement calculation and record that this is what was used:
 
 ```
-Weighted Settlement Date =
-  SUM (Settled Amount_i x Settlement Date_i) / SUM (Settled Amount_i)
+Weighted Days =
+  SUM (Settled Amount_i x (Settlement Date_i - Invoice/Bill Date)) / SUM (Settled Amount_i)
 
-Weighted Days = Weighted Settlement Date - Invoice/Bill Date
+Weighted Settlement Date = Invoice/Bill Date + Weighted Days
+  (derive from a declared day-number convention; round for display only)
 ```
 
-`Weighted Days` on the party-period row is the average of the invoice-level weighted day counts
-for that party in that period, and `Measurement Basis` says so. The plain
+`Weighted Days` on the party-period row must state its aggregation: use SUM(settled amount × elapsed days) / SUM(settled amount) across the declared cohort for an amount-weighted measure. An equal-weight average of invoice metrics is different and must be labeled as such. With zero settled amount it is Unknown; outstanding portions remain in aging and do not acquire a fictional settlement date. The plain
 `Actual Collection/Payment Days` on the same row is the unweighted mean, and it is left `Unknown`
 where the weighted figure is the one that was calculated. Both figures on one row, with the basis
 named, is the honest answer; a single number that is quietly one or the other is not.

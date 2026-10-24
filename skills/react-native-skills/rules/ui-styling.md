@@ -7,9 +7,9 @@ tags: styling, css, layout, shadows, gradients
 
 ## Modern React Native Styling Patterns
 
-Follow these styling patterns for cleaner, more consistent React Native code.
+Follow project design tokens and installed platform support. `borderCurve` is iOS-specific; `boxShadow` and experimental gradients depend on RN version/architecture/platform. Retain compatible fallbacks.
 
-**Always use `borderCurve: 'continuous'` with `borderRadius`:**
+**When supported, consider `borderCurve: 'continuous'` with `borderRadius`:**
 
 ```tsx
 // Incorrect
@@ -69,7 +69,7 @@ Follow these styling patterns for cleaner, more consistent React Native code.
 { boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)' }
 ```
 
-**Avoid multiple font sizes – use weight and color for emphasis:**
+**Use a deliberate, accessible typography scale:**
 
 ```tsx
 // Incorrect – varying font sizes for hierarchy
@@ -83,5 +83,4 @@ Follow these styling patterns for cleaner, more consistent React Native code.
 <Text style={{ color: '#999' }}>Caption</Text>
 ```
 
-Limiting font sizes creates visual consistency. Use `fontWeight` (bold/semibold)
-and grayscale colors for hierarchy instead.
+Multiple font sizes are valid for hierarchy. Preserve dynamic text scaling and adequate contrast; weight or color alone may not convey structure accessibly.

@@ -2,9 +2,14 @@
 set -euo pipefail
 
 APP_NAME=${APP_NAME:-MyApp}
+# AAS review: constrain names before constructing removal paths, process patterns or XML.
+[[ "$APP_NAME" =~ ^[A-Za-z0-9][A-Za-z0-9_-]*$ ]] || { echo "Invalid APP_NAME" >&2; exit 1; }
+
 APP_IDENTITY=${APP_IDENTITY:-"Developer ID Application: Example (TEAMID)"}
 APP_BUNDLE="${APP_NAME}.app"
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
+cd "$ROOT"
+export APP_NAME APP_IDENTITY
 
 read_version_env() {
   local file=$1 line key value

@@ -16,7 +16,7 @@ This skill covers modern Angular patterns including:
 
 ## Structure
 
-This skill is a single, comprehensive `SKILL.md` file containing:
+This skill has a short `SKILL.md` entry point and a bundled `references/detailed-guide.md` containing:
 
 1. Modern component patterns with Signal inputs/outputs
 2. State management with Signals and computed values

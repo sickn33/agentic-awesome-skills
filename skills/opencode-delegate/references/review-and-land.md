@@ -62,7 +62,7 @@ a diff whose tests are all green. Walk them against every diff before you commit
 - **A second way to do what the file already does** — a new HTTP client, error idiom, or logging style
   introduced beside the existing one instead of reusing it.
 - **New tests that assert internals** — asserting that an internal helper was called, or mocking the
-  project's own functions to isolate a "unit." Green, brittle, and worthless as regression cover.
+  project's own functions to isolate a "unit." Assess whether the test protects an observable contract; internal mocks can be appropriate for external boundaries but should not replace behavior checks.
 - **Near-duplicate test bodies** differing by one value — fold into one data-driven test or drop the
   copies; bloat reads as coverage but isn't.
 - **Speculative surface** — optional parameters, config flags, or abstractions with no caller in this

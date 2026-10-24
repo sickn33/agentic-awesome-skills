@@ -27,4 +27,4 @@
   action and target; existing explicit authorization does not need to be repeated.
 
 
-See the [Common Pitfalls](references/common-pitfalls.md) reference for the full guidance.
+See the [Common Pitfalls](common-pitfalls.md) reference for the full guidance.

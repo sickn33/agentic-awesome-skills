@@ -1,4 +1,6 @@
-<!-- Updated: 2026-02-07 -->
+<!-- Imported template dated 2026-02-07; locally reviewed 2026-10-23. -->
+
+All word-count, page-count, timing, character-range and publishing targets are editorial starting points, not Google requirements or guaranteed ranking effects. Use verified credentials, original evidence and real business facts only. Schema examples contain placeholders/fictional ratings that must not be published unchanged. Vocabulary validity differs from Google rich-result eligibility; check current feature documentation.
 # E-commerce SEO Strategy Template
 
 ## Industry Characteristics
@@ -54,7 +56,7 @@
 
 ### Additional E-commerce Schema (2025)
 
-- **ProductGroup**: Use for products with variants (size, color). Wraps individual Product entries with `variesBy` and `hasVariant` properties. See `schema/templates.json`.
+- **ProductGroup**: Use for products with variants (size, color). Wraps individual Product entries with `variesBy` and `hasVariant` properties. The referenced `schema/templates.json` is not bundled; consult current official examples.
 - **Certification**: For product certifications (Energy Star, safety, organic). Replaced EnergyConsumptionDetails (April 2025). Use `hasCertification` on Product.
 - **OfferShippingDetails**: Include shipping rate, handling time, and transit time. Critical for Merchant Center eligibility.
 
@@ -111,9 +113,9 @@
 ## Technical Considerations
 
 ### Pagination
-- Use rel="next"/rel="prev" or load-more
+- Provide crawlable links to unique page URLs; Google no longer uses rel="next"/rel="prev" for pagination
 - Ensure all products are crawlable
-- Canonical to main category page
+- Use a self-canonical URL on each distinct paginated page; do not canonicalize the whole sequence to page one
 
 ### Faceted Navigation
 - Noindex filter combinations that create duplicate content

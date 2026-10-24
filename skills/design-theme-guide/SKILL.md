@@ -46,7 +46,7 @@ typeface's licence (`logo-image-design` covers rights), or a specific component'
 
 ## How It Works
 
-Follow the shared execution contract. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+Follow these local instructions; the shared execution runtime is not bundled. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -137,7 +137,7 @@ Never ask for a Notion password or token.
 
 ```csv
 Token ID,Token Name,Token Group,Token Type,Value,Unit,Light Mode Value,Dark Mode Value,Contrast Ratio,Contrast Against,WCAG Level,Font Family,Font Size,Font Weight,Line Height,Letter Spacing,Usage Rule,Do Not Use For,Source Reference,Version,Status,Approved By,Last Reviewed,Notes
-TOK-EXAMPLE-001,color.brand.primary,Brand,Color,#1F4FD8,hex,#1F4FD8,#8FB4FF,7.02,color.surface.page,AA,,,,,,Primary action and brand accent,Body text on white surface,WCAG 2.2 SC 1.4.3,1.0,Draft,Unknown,2026-09-27,Example row - replace every value before use.
+TOK-EXAMPLE-001,color.brand.primary,Brand,Color,#1F4FD8,hex,#1F4FD8,#8FB4FF,Unknown,color.surface.page,Unknown,,,,,,Primary action and brand accent,Body text on white surface,WCAG 2.2 SC 1.4.3,1.0,Draft,Unknown,2026-09-27,Example row - replace every value before use.
 ```
 
 ```sql
@@ -171,7 +171,7 @@ CREATE TABLE design_token (
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW(),
   CONSTRAINT token_ratio_range CHECK (contrast_ratio IS NULL OR (contrast_ratio >= 1 AND contrast_ratio <= 21)),
-  CONSTRAINT token_wcag_level CHECK (wcag_level IN ('AA','AAA','Fail - do not ship','Not applicable'))
+  CONSTRAINT token_wcag_level CHECK (wcag_level IN ('AA','AAA','Fail - do not ship','Not applicable','Unknown'))
 );
 
 CREATE INDEX idx_design_token_status ON design_token (status);
@@ -193,9 +193,9 @@ CREATE INDEX idx_design_token_type ON design_token (token_type);
       "Unit": { "type": "string" },
       "Light Mode Value": { "type": "string" },
       "Dark Mode Value": { "type": "string" },
-      "Contrast Ratio": { "type": "number" },
+      "Contrast Ratio": { "type": "number", "minimum": 1, "maximum": 21 },
       "Contrast Against": { "type": "string" },
-      "WCAG Level": { "type": "string" },
+      "WCAG Level": { "type": "string", "enum": ["AA", "AAA", "Fail - do not ship", "Not applicable", "Unknown"] },
       "Font Family": { "type": "string" },
       "Font Size": { "type": "string" },
       "Font Weight": { "type": "string" },
@@ -225,11 +225,11 @@ CREATE INDEX idx_design_token_type ON design_token (token_type);
 | CSV column | Notion property | Set after import |
 |---|---|---|
 | Token ID | Text (preserve source ID) | Keep imported IDs as Text; optionally add a separate Unique ID property |
-| Token Name | Text | Leave as Text. This is the join key - keep it identical everywhere |
+| Token Name | Title | Use as the database title/join key; keep it identical everywhere |
 | Token Group | Select (add options after import) | Convert to Select, add options: "Brand", "Semantic", "Neutral", "Typography", "Layout", "Component" |
 | Token Type | Select (add options after import) | Convert to Select, add options: "Color", "Typography", "Spacing", "Radius", "Shadow", "Border", "Motion", "Breakpoint", "Z-Index" |
 | Value | Text | Leave as Text. Hex, px, rem, ms, unitless - it goes in the next column too |
-| Unit | Title | Use as the database title |
+| Unit | Text | Leave as the token unit |
 | Light Mode Value | Text | Leave as Text |
 | Dark Mode Value | Text | Leave as Text |
 | Contrast Ratio | Number | Convert to Number, 2 decimal places, no unit |
@@ -250,8 +250,7 @@ CREATE INDEX idx_design_token_type ON design_token (token_type);
 | Notes | Text | Leave as Text |
 ```
 
-The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Anything measured gets a ratio; anything not
-measured is `Not applicable`, never a guess.
+The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Anything measured gets a ratio; anything applicable but unmeasured is `Unknown` with an unset ratio; reserve `Not applicable` for genuinely inapplicable tokens.
 
 ## Field Reference
 
@@ -265,9 +264,9 @@ measured is `Not applicable`, never a guess.
 | 6 | Unit | `select` | `VARCHAR(50)` | `string` | Text | `hex` |
 | 7 | Light Mode Value | `text` | `VARCHAR(255)` | `string` | Text | `#1F4FD8` |
 | 8 | Dark Mode Value | `text` | `VARCHAR(255)` | `string` | Text | `#8FB4FF` |
-| 9 | Contrast Ratio | `number` | `NUMERIC(5,2)` | `number` | Number | `7.02` |
+| 9 | Contrast Ratio | `number` | `NUMERIC(5,2)` | `number` | Number | `Unknown` |
 | 10 | Contrast Against | `text` | `VARCHAR(255)` | `string` | Text | `color.surface.page` |
-| 11 | WCAG Level | `select` | `VARCHAR(50)` | `string` | Select | `AA` |
+| 11 | WCAG Level | `select` | `VARCHAR(50)` | `string` | Select | `Unknown` |
 | 12 | Font Family | `text` | `VARCHAR(255)` | `string` | Text | *(blank)* |
 | 13 | Font Size | `text` | `VARCHAR(50)` | `string` | Text | *(blank)* |
 | 14 | Font Weight | `text` | `VARCHAR(50)` | `string` | Text | *(blank)* |
@@ -306,7 +305,7 @@ hex | px | rem | em | ms | s | unitless | count
 recorded and visible, not quietly deleted.
 
 ```
-AA | AAA | Fail - do not ship | Not applicable
+AA | AAA | Fail - do not ship | Not applicable | Unknown
 ```
 
 **Status**
@@ -381,7 +380,7 @@ fine on the laptop but the founder says people struggle on the website.
 - One spacing unit, 4px or 8px. Every margin and padding is a multiple of it.
 - Keep `Do Not Use For` filled in. It is the column that prevents the theme from drifting
   back into randomness.
-- Export the approved rows to a real token file - JSON in the W3C Design Tokens format, via
+- Export the approved rows to a real token file - JSON in the applicable Design Tokens Community Group format; this is not itself a W3C Recommendation, via
   Style Dictionary - so the website, the Figma file and the deck read the same source.
 - Derive all four artifacts from the field list in this file, never by hand.
 - Use `relation` for anything that points at another table, `text` only for free text.
@@ -403,7 +402,7 @@ fine on the laptop but the founder says people struggle on the website.
 - Dark mode is a second set of values, not an inversion. Every token needs a real
   dark-mode value, tested for its own contrast.
 - A theme cannot be audited for accessibility as a whole by a table. Automated tools catch
-  roughly a third of issues; keyboard and screen-reader testing is still manual.
+  a limited and context-dependent subset of issues; keyboard and screen-reader testing is still manual.
 - No token pipeline, Figma variable sync or build step is generated. The register is the
   source of truth; wiring it up is a developer task.
 - Accessibility conformance is a legal question in some markets. This table records
@@ -470,3 +469,7 @@ Never invent a hex code, a font or a ratio. Then recommend the smallest token se
 fits, and wait for me to ask before you build it.
 When I ask, output CSV, SQL DDL, JSON Schema and a Notion property mapping. Data only.
 ```
+
+## Pair measurements and schema limits
+
+A single contrast value cannot represent both light/dark variants, multiple surfaces, states and text sizes. Record a separate measured pair/context table with exact foreground/background values, mode, size/weight, opacity/compositing and criterion; leave this row’s ratio unknown until that context is defined. Normal text AA needs 4.5:1; large text AA needs 3:1 under WCAG’s defined large-text criteria, and non-text UI contrast has separate applicability/exceptions. These checks alone do not certify WCAG. Do not replace unmeasured with Not applicable or round a failing ratio up. The former 7.02 example lacked a concrete background value and has been removed as unsupported evidence. SQL BIGINT IDs need a supplied generator/value, and token-name/version uniqueness and joins need enforced keys; timestamp defaults do not update themselves. Human IDs like TOK-EXAMPLE-001 are display references, not integer keys. JSON date format needs a validator configured for assertion; document null/blank/absent conversions consistently. No code generator or Figma/token pipeline is bundled, and invented drift timelines/neutral-step/typeface counts are design heuristics rather than guarantees.

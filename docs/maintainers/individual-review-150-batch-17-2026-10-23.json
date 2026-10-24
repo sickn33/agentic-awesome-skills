@@ -34899,5 +34899,25 @@
     "docx-official and pptx-official removed after restrictive license review; 113 other original files removed without semantic review.",
     "last30days MP3 hashed/container inspected, not listened or transcribed; this is not audio-content certification.",
     "No merge or release is authorized; generated snapshots and plugin mirrors remain for protected release workflow."
+  ],
+  "integrationFollowUps": [
+    {
+      "path": "skills/office-productivity/SKILL.md",
+      "beforeSha256": "a109dc0603d5fc9608b0ab0eb70b81c31058d2b379b73cf9bc2b148abfddda45",
+      "afterSha256": "dbac253886d184a66e2127c904af41f00a7467264b9fbd740c3a2189f4472848",
+      "reviewNote": "Narrow post-integration routing repair on an already covered root: remove deleted Office recommendations and use actual retained LibreOffice skill names. No additional root claimed."
+    },
+    {
+      "path": "skills/skill-router/SKILL.md",
+      "beforeSha256": "ae4f72171f5d39817715741618af1cd2e5bdae8fd09e2d68e7ed6567521078ec",
+      "afterSha256": "1c7999864d36a4bb1a8425372255958e9f639af01a3554755be710eaa864facd",
+      "reviewNote": "Narrow post-integration routing repair on an already covered root: remove deleted Office recommendations and use actual retained LibreOffice skill names. No additional root claimed."
+    },
+    {
+      "path": "skills/libreoffice/writer/SKILL.md",
+      "beforeSha256": "7ca36a1ef37d185ef1371210d2989489869e8ae5642dddc364d3c7fa477f8389",
+      "afterSha256": "33671d674dc6ed202cb0edf9c2cd62b0f16279a73d032cc8a81859e79cfd3744",
+      "reviewNote": "Narrow post-integration routing repair on an already covered root: remove deleted Office recommendations and use actual retained LibreOffice skill names. No additional root claimed."
+    }
   ]
 }

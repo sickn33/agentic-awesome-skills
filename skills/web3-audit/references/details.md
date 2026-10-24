@@ -8,9 +8,9 @@
 ```solidity
 // Attack flow:
 // 1. Borrow $100M from Aave flash loan
-// 2. Dump token in Uniswap pool → crash spot price
-// 3. Protocol reads Uniswap spot → undercollateralized loans accepted
-// 4. Borrow max against cheap collateral
+// 2. Manipulate the relevant quoted collateral/debt price in a controlled fork.
+// 3. Demonstrate that the protocol overvalues collateral or undervalues debt.
+// 4. Model executable liquidity, borrowing constraints and fees.
 // 5. Repay flash loan, keep profits
 ```
 
@@ -204,7 +204,7 @@ Oracle manipulation: still paid heavily but harder. Most projects use Chainlink 
 
 ### Tool stack for 2026
 
-Foundry remains the test framework. `forge test --gas-report --debug` for invariant testing; `forge fuzz` for property-based testing; `forge inspect` for storage-layout audits. Slither + Echidna for static + fuzz. Mythril for symbolic execution on smaller contracts. tenderly.co for forking + simulation (best UX for replicating attacks against mainnet state).
+Foundry remains the test framework. `forge test` with invariant_* harnesses for invariant testing and testFuzz_* parameterized tests for fuzzing; gas reports/debuggers do not create invariants; `forge inspect` for storage-layout audits. Slither + Echidna for static + fuzz. Mythril for symbolic execution on smaller contracts. tenderly.co for forking + simulation (best UX for replicating attacks against mainnet state).
 
 For Solana: anchor framework, sealevel-attacks corpus (curated PoCs by anchor maintainers), soteria-sec / sec3 scanner. For Move (Aptos, Sui): move-prover, aptos-cli `aptos move test`.
 
@@ -214,11 +214,13 @@ For cross-chain: hyperlane and LayerZero each have audit-tooling repos; bridge b
 
 TVL under $500K isn't worth the audit time unless the bounty floor is high. Audit firm already covered it = low ROI unless you find what they missed — look at the audit-report scope-exclusion section for what they EXPLICITLY didn't audit (oracles, governance, off-chain components, frontend, the admin path).
 
-Multisig signers > 5 + timelock > 48h = low rug-pull risk; if your finding requires team-malicious assumptions, it's low-impact and likely out of scope per Immunefi's "centralization risk" exclusion. Read the program brief — most Immunefi programs explicitly downgrade or reject findings that assume admin malice.
+Signer count/timelock alone cannot quantify rug-pull or governance risk; if your finding requires team-malicious assumptions, it's low-impact and likely out of scope per Immunefi's "centralization risk" exclusion. Read the program brief — most Immunefi programs explicitly downgrade or reject findings that assume admin malice.
 
 ### Reporting discipline
 
-Immunefi requires Foundry PoC. Submission without PoC is auto-rejected. Submission with a PoC that requires manual setup ("first deploy this, then call that") usually gets downgraded — the PoC should be a single `forge test` invocation that proves the impact, with explicit `assertEq` on the drained balance / minted token / corrupted state.
+Consult the specific program's accepted PoC format; Foundry is not a universal submission requirement. Submission with a PoC that requires manual setup ("first deploy this, then call that") usually gets downgraded — the PoC should be a single `forge test` invocation that proves the impact, with explicit `assertEq` on the drained balance / minted token / corrupted state.
 
 Severity claims must use Immunefi's severity matrix exactly; don't invent severities. The matrix gates on direct economic loss percentage of TVL — a critical against a $500K protocol pays differently than a critical against a $500M one. Read the program's specific severity assignment before claiming Critical.
 
+
+The Foundry template omits token types, constants and VulnerableContract; it is not compile-ready. No fork test or phase2 verification receipt is bundled. Signatures need a domain/nonce/expiry, zero-address rejection and supported signer validation (including contract wallets where required). Implementation ownership does not by itself imply proxy takeover; prove the actual upgrade authorization/delegatecall path. Modern version/fork specifics and historical incident claims require current primary-source checks before applying.

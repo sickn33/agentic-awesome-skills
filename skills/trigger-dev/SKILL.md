@@ -30,3 +30,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Version and operational limits
+
+The guide was modified from the attributed Apache-2.0 source to remove mixed-version integrations and invalid idempotency examples. Confirm SDK/CLI compatibility, config fields and deployment environment against the installed version before adapting fragments; database and business helpers are not supplied. Verify webhook signatures from raw request bytes before enqueueing. Authorize schedules, deletion retention and outbound reports explicitly; preview the target records and preserve recoverability. Do not log payloads or credentials. Queue concurrency is not a global rate or cost limiter, and retries can repeat external calls. Local registration is not proof of production behavior.

@@ -20,11 +20,11 @@ class CodeAnalyzer:
         Analyze code complexity and structure
         """
         analysis = {
-            'complexity_score': 0,
+            'complexity_score': None,
             'concepts': [],
             'patterns': [],
             'dependencies': [],
-            'difficulty_level': 'beginner'
+            'difficulty_level': 'unknown'
         }
         
         # Parse code structure
@@ -36,7 +36,7 @@ class CodeAnalyzer:
                 'lines_of_code': len(code.splitlines()),
                 'cyclomatic_complexity': self._calculate_cyclomatic_complexity(tree),
                 'nesting_depth': self._calculate_max_nesting(tree),
-                'function_count': len([n for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)]),
+                'function_count': len([n for n in ast.walk(tree) if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]),
                 'class_count': len([n for n in ast.walk(tree) if isinstance(n, ast.ClassDef)])
             }
             
@@ -69,15 +69,15 @@ class CodeAnalyzer:
                 concepts.append('asynchronous programming')
             
             # Decorators
-            elif isinstance(node, ast.FunctionDef) and node.decorator_list:
+            if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)) and node.decorator_list:
                 concepts.append('decorators')
             
             # Context managers
-            elif isinstance(node, ast.With):
+            if isinstance(node, (ast.With, ast.AsyncWith)):
                 concepts.append('context managers')
             
             # Generators
-            elif isinstance(node, ast.Yield):
+            if isinstance(node, (ast.Yield, ast.YieldFrom, ast.GeneratorExp)):
                 concepts.append('generators')
             
             # List/Dict/Set comprehensions
@@ -92,7 +92,7 @@ class CodeAnalyzer:
             elif isinstance(node, ast.Try):
                 concepts.append('exception handling')
                 
-        return list(set(concepts))
+        return sorted(set(concepts))
 ```
 
 ### 2. Visual Explanation Generation
@@ -295,10 +295,10 @@ class AlgorithmVisualizer:
         steps = []
         
         if algorithm_name == 'bubble_sort':
-            steps.append("""
+            steps.append(f"""
 ## Bubble Sort Visualization
 
-**Initial Array**: [5, 2, 8, 1, 9]
+**Initial Array**: {array}
 
 ### How Bubble Sort Works:
 1. Compare adjacent elements
@@ -339,6 +339,8 @@ class AlgorithmVisualizer:
         """
         Visualize recursive function calls
         """
+        if func_name != "factorial" or example_input != 3:
+            raise ValueError("This fixed illustration only covers factorial(3)")
         viz = f"""
 ## Recursion Visualization: {func_name}
 
@@ -412,6 +414,8 @@ class ValidationError(Exception):
     pass
 
 def validate_age(age):
+    if isinstance(age, bool) or not isinstance(age, (int, str)):
+        raise ValidationError("Age must be an integer or integer string")
     try:
         age = int(age)
         if age < 0:
@@ -455,18 +459,18 @@ async def slow_operation(name, duration):
 
 async def main():
     # Sequential execution (slow)
-    start = time.time()
+    start = time.perf_counter()
     await slow_operation("Task 1", 2)
     await slow_operation("Task 2", 2)
-    print(f"Sequential time: {time.time() - start:.2f}s")
+    print(f"Sequential time: {time.perf_counter() - start:.2f}s")
     
     # Concurrent execution (fast)
-    start = time.time()
+    start = time.perf_counter()
     results = await asyncio.gather(
         slow_operation("Task 3", 2),
         slow_operation("Task 4", 2)
     )
-    print(f"Concurrent time: {time.time() - start:.2f}s")
+    print(f"Concurrent time: {time.perf_counter() - start:.2f}s")
     print(f"Results: {results}")
 
 # Run it:
@@ -515,7 +519,7 @@ class DesignPatternExplainer:
 The Singleton pattern ensures a class has only one instance and provides global access to it.
 
 ### When to use it?
-- Database connections
+- Process-local configuration where a shared instance is appropriate; use connection pools for database access
 - Configuration managers
 - Logging services
 - Cache managers
@@ -541,7 +545,7 @@ classDiagram
 
 ### Drawbacks:
 ❌ Can make unit testing difficult
-❌ Violates Single Responsibility Principle
+❌ May combine lifecycle management with unrelated responsibilities
 ❌ Can hide dependencies
 
 ### Alternative Approaches:
@@ -732,7 +736,7 @@ def generate_learning_path(self, analysis):
     }
     
     # Identify knowledge gaps
-    if 'async' in analysis['concepts'] and analysis['difficulty_level'] == 'beginner':
+    if 'asynchronous programming' in analysis['concepts'] and analysis['difficulty_level'] == 'beginner':
         learning_path['identified_gaps'].append('Asynchronous programming fundamentals')
         learning_path['recommended_topics'].extend([
             'Event loops',

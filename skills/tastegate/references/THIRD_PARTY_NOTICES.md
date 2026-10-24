@@ -23,3 +23,5 @@ merged for tastegate; the originals are much larger and worth reading in full.
   rules). Changes: rewritten and cut down to about a tenth of the original.
 
 tastegate is not affiliated with or endorsed by either project.
+
+Local catalog review modified SKILL.md, references/craft-floor.md and scripts/gate.py to distinguish style warnings from mechanical failures, document heuristic limits, and constrain output paths and scrolling. Existing upstream attribution and license texts are preserved.

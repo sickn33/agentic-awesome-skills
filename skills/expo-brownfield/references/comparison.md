@@ -22,7 +22,7 @@ When in doubt — and especially when the question is "can the native team avoid
 | ---------------------------------------------------- | ----------------------------------------------------------------------- | --------------------------------------------------------------------- |
 | What ships to the native app                         | Prebuilt AAR + XCFramework                                              | React Native + Expo sources, autolinked into the existing build       |
 | Native team needs Node / Yarn / RN CLI               | **No**                                                                  | **Yes**                                                               |
-| Build-system footprint                               | Minimal — one Maven dependency, two embedded XCFrameworks               | Pervasive — React Native Gradle plugin, Podfile, autolinking, codegen |
+| Build-system footprint                               | Minimal — one Maven dependency, a version-dependent set of XCFrameworks               | Pervasive — React Native Gradle plugin, Podfile, autolinking, codegen |
 | Iteration speed for RN devs                          | Fast in isolation; native rebuild needed to pick up new artifact        | Fast end-to-end; one combined build                                   |
 | Dev-time hot reload                                  | Yes (via Metro, when running the consumer app in debug)                 | Yes (native build embeds Metro detection)                             |
 | Production JS bundle location                        | Embedded in the AAR/XCFramework                                         | Embedded in the APK/IPA by the RN Gradle plugin / Xcode build phase   |
@@ -44,10 +44,10 @@ When in doubt — and especially when the question is "can the native team avoid
 → **Isolated.** Removing the dependency removes the framework; the native build is barely touched.
 
 **"Our iOS team uses Tuist and refuses to add Node to the iOS build."**
-→ **Isolated.** Ship an XCFramework. The iOS team adds two `.xcframework` files and one call to `ReactNativeHostManager.shared.initialize()` in `AppDelegate`. No Node, no CocoaPods changes to Expo.
+→ **Isolated.** Ship an XCFramework. The iOS team adds the version-dependent required artifacts and one call to `ReactNativeHostManager.shared.initialize()` in `AppDelegate`. No Node, no CocoaPods changes to Expo.
 
 **"We have one repo, one team, and we want to deeply integrate React Native with the onboarding flow to an existing Android app."**
-→ **Integrated.** Move the existing `android-project` into `my-project/android/`, add the React Native Gradle plugin to `settings.gradle`, register `MainApplication`, and host the flow in a `ReactActivity`. One build pipeline.
+→ **Integrated.** Preserve or carefully adapt the existing native project layout under the correct android root, add the React Native Gradle plugin to `settings.gradle`, register `MainApplication`, and host the flow in a `ReactActivity`. One build pipeline.
 
 **"We want to use CNG on the RN code and not worry about manual RN upgrades."**
 → **Isolated.** The AAR/XCFramework approach decouples the Expo RN version from the native app's build, so you can upgrade Expo and React Native independently of the native app's release cycle. The integrated approach requires more coordination between the RN version and the native app's build.

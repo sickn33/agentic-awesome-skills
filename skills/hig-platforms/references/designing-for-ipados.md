@@ -1,6 +1,7 @@
 ---
 title: "Designing for iPadOS | Apple Developer Documentation"
 source: https://developer.apple.com/design/human-interface-guidelines/designing-for-ipados
+---
 
 # Designing for iPadOS
 

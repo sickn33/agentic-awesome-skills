@@ -60,7 +60,7 @@ python3 skills/hugo-to-markdown/scripts/inventory_hugo_rules.py \
   --site-root /path/to/your-hugo-site
 ```
 
-This inventory step is mandatory for batch work. It identifies:
+This inventory step is mandatory for batch work. Run scripts with Python 3.11+ from a workspace containing the site; the optional inventory output must be a new file under the current workspace. It is a static aid, not an effective Hugo configuration resolver. YAML is not parsed, environment/config precedence and mounted content outside `content/` are not resolved, and shortcode counts can include literal examples. Review these manually. It inventories:
 
 - active config files
 - module mounts and content roots
@@ -124,7 +124,7 @@ Read `references/shortcodes-and-render-hooks.md` before converting any file that
 
 ### 5. Validate the output
 
-After conversion, scan the generated Markdown for leftover Hugo-only syntax.
+After conversion, scan the generated Markdown for leftover Hugo-only syntax. This regex-based checker is not a Markdown parser or HTML sanitizer and does not validate links, front matter, secrets or rendering safety. Review literal examples and unsupported fence/container cases manually; sanitize HTML with the destination renderer before publishing.
 
 ```bash
 python3 skills/hugo-to-markdown/scripts/check_standard_markdown.py \
@@ -151,7 +151,7 @@ Do not leave empty links, broken table cells, or stripped content with no explan
 
 ## Common Hugo Docs Site Patterns
 
-Use these facts when converting a Hugo documentation site that exhibits similar patterns:
+The following are examples from one docs-site configuration, not facts about arbitrary Hugo sites. Apply each only after confirming it in the supplied snapshot:
 
 - `hugo.toml` mounts `content/en` to `content`, so English docs are the active content tree.
 - Goldmark passthrough delimiters are configured for math, so `$$...$$`, `\\(...\\)`, and `\\[...\\]` can be meaningful content, not junk.
@@ -170,7 +170,7 @@ Use these facts when converting a Hugo documentation site that exhibits similar 
 - Never run `hugo`, `npm install`, `go install`, downloaded shell installers, or any network install step unless the user explicitly asks for it.
 - Keep all conversion scripts offline and deterministic.
 - Restrict reads to the declared site root and writes to the declared output root.
-- Reject path traversal, symlink escape, or attempts to write outside the requested output directory.
+- Reject path traversal, symlink escape, or attempts to write outside the requested output directory. Use a stable local snapshot; scripts do not protect against concurrent hostile filesystem changes. Bound recursive includes with cycle detection and depth/size limits, and record omissions instead of silently truncating.
 - Do not leak local absolute paths, secrets, environment variables, or git credentials into generated Markdown.
 - When exact rendering cannot be reproduced safely, degrade to explicit Markdown text instead of live Hugo syntax.
 

@@ -162,7 +162,7 @@ open_questions: []      # the unanswered ones, in the order worth asking
 
 Build an already requested artifact without asking again. For advice-only requests, give a short recommendation and offer the relevant artifact.
 
-**Recommended approach:** One reconciliation record per item counted, carrying the book quantity, the physical quantity, the variance, the variance reason, the investigation notes and the authorised adjustment, with the count sheet filed against the same reconciliation.
+**Recommended approach:** One reconciliation record per count session, item, location and relevant lot/serial/UOM (rather than overwriting an earlier count). Freeze or reconcile movements to one stated cutoff, separate owned/consigned goods and avoid double-counting damage/expiry. One record per item counted, carrying the book quantity, the physical quantity, the variance, the variance reason, the investigation notes and the authorised adjustment, with the count sheet filed against the same reconciliation.
 
 **Why this one:** The minimum defensible record connects the physical count to the book balance, documents why a difference exists, and records who authorised any adjustment. A count that is not reconciled back to the books proves nothing, and an adjustment passed without a named approver is a correction dressed up as control.
 
@@ -196,8 +196,10 @@ The blocks below are the documented *shape*, so the Field Reference and the four
 can be read together. The row in the CSV block is an illustrative placeholder that shows how
 the columns line up; it is not a record, and it is not what ships. Delete it before use.
 
+`updated_at DEFAULT NOW()` only initializes the column; application logic or a trigger must update it. Source IDs must be preserved separately when importing into an auto-generated primary key.
+
 Money basis: `Unit Rate` is the rate as the business records it, and `Variance Value` is the
-variance valued at that rate on the same row. State whether the figures are as recorded or
+variance valued at that rate on the same row. State the currency and the precision required for unit costs (two decimal places may lose costing precision); keep one currency per table or add an explicit currency field. State whether the figures are as recorded or
 rounded to a cost layer, and round once, at the end. The arithmetic ties out as
 `Variance Quantity = Physical Quantity - Book Quantity` and
 `Variance Value = Variance Quantity x Unit Rate`; a row that does not tie is left as it is
@@ -230,11 +232,11 @@ REC-EXAMPLE-001,2026-01-15,ITEM-EXAMPLE-001,Example Item A,Raw Material,Nos,Exam
 -- auto-increment column on MySQL, SQL Server or SQLite.
 CREATE TABLE inventory_stock_reconciliation (
   reconciliation_number VARCHAR(255),
-  count_date DATE NOT NULL,
+  count_date DATE,
   item_code VARCHAR(255),
   item_name VARCHAR(255),
   category VARCHAR(100),
-  uom VARCHAR(100) NOT NULL,
+  uom VARCHAR(100),
   location_warehouse VARCHAR(255),
   book_quantity NUMERIC,
   physical_quantity NUMERIC,
@@ -307,11 +309,11 @@ no sample records and no invented default values in the DDL.
     "Notes": { "type": "string" },
     "Inventory Reconciliation ID": { "type": "integer" }
   },
-  "required": ["Count Date", "UOM", "Book Quantity", "Physical Quantity", "Status"]
+  "required": ["Status"]
 }
 ```
 
-`required` is justified field by field. `Count Date` is needed or the row is not a count.
+Drafts may omit unknown count date, unit and quantities; omit unknown numeric/date JSON properties and leave CSV cells blank, never write the string Unknown into them. Completion requires Count Date, item/location identity, UOM and both quantities plus applicable investigation/approval checks. The schema and DDL alone do not enforce these workflow conditions. For completed records, field requirements are justified as follows. `Count Date` is needed or the row is not a count.
 `UOM` is needed or the quantities on the row are unreadable. `Book Quantity` and
 `Physical Quantity` are the two halves of the comparison, so the record is meaningless
 without both. `Status` is the state of the record, so it must always be explicit.
@@ -358,7 +360,7 @@ conditional: record it once the business has established one. `Adjustment Date` 
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Reconciliation Number | `text` | `VARCHAR(255)` | `string` | Text | `REC-EXAMPLE-001` |
+| 1 | Reconciliation Number | `text` | `VARCHAR(255)` | `string` | Title | `REC-EXAMPLE-001` |
 | 2 | Count Date | `date` | `DATE` | `string, format: date` | Date | `2026-01-15` |
 | 3 | Item Code | `text` | `VARCHAR(255)` | `string` | Text | `ITEM-EXAMPLE-001` |
 | 4 | Item Name | `text` | `VARCHAR(255)` | `string` | Text | `Example Item A` |

@@ -24,6 +24,8 @@ Extract the `stocks` array. Common indices: `000300.SH` (CSI 300), `HSI.HK`, `SP
 
 ### Step 3 — Fetch factor values and returns
 
+The current `calc-index` snapshot and current constituent list are not historical point-in-time data. If dated factor releases and historical membership are unavailable, stop the historical backtest and offer a current descriptive screen. Respect reporting lags, delistings, survivorship and corporate-action adjustments.
+
 For each symbol in the universe:
 
 ```bash
@@ -41,7 +43,7 @@ Where `h` = holding period. Use Spearman rank correlation (robust to outliers). 
 
 ### Step 5 — Summary statistics
 
-| Metric                 | Formula                   | Good signal threshold |
+| Metric                 | Formula                   | Illustrative heuristic (not a validity test) |
 | ---------------------- | ------------------------- | --------------------- |
 | Mean IC                | Average of IC time series | > 0.03 (positive)     |
 | IC Std Dev             | Standard deviation of IC  | Lower is better       |
@@ -60,7 +62,7 @@ Where `h` = holding period. Use Spearman rank correlation (robust to outliers). 
 
 Compute IC for multiple forward horizons (1M, 2M, 3M, 6M, 12M). Plot IC vs horizon. Fast decay = short-term factor; slow decay = longer-term signal.
 
-Serial autocorrelation of IC series: `autocorr(IC, lag=1)`. High autocorrelation → smoother signal, lower trading cost.
+Serial autocorrelation of IC series: `autocorr(IC, lag=1)`. IC autocorrelation affects effective sample size; it does not establish lower portfolio turnover or trading cost. Annualization by square-root time requires assumptions and may overstate dependent-sample significance.
 
 ## CLI
 

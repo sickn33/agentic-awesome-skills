@@ -13,7 +13,7 @@ Real-time quote, static info, and valuation indices for Longbridge-supported sec
 | 6-digit, starts `60`           | `.SH`         | `600519.SH`                                                 |
 | 6-digit, starts `00`/`30`      | `.SZ`         | `300750.SZ`                                                 |
 | Singapore ticker               | `.SG`         | `D05.SG`                                                    |
-| Chinese / English company name | use knowledge | 腾讯 → `700.HK`, 特斯拉 → `TSLA.US`, 贵州茅台 → `600519.SH` |
+| Chinese / English company name | verify instrument mapping | 腾讯 → `700.HK`, 特斯拉 → `TSLA.US`, 贵州茅台 → `600519.SH` |
 
 If the market is ambiguous, **ask the user** rather than guessing.
 
@@ -53,13 +53,13 @@ longbridge <static-subcommand>     600519.SH --format json
 longbridge <calc-index-subcommand> NVDA.US --format json   # valuation indices; use --help for index field names
 ```
 
-Run `longbridge <calc-index-subcommand> --help` to see all supported index field names. A reference cheat-sheet (with multilingual labels) lives in [references/calc-index-fields.md](references/calc-index-fields.md).
+Run `longbridge <calc-index-subcommand> --help` to see all supported index field names. The upstream field cheat-sheet is not bundled; use the installed CLI help and returned field names, preserving missing values.
 
 ## Output
 
 Each subcommand returns a JSON array, one object per requested symbol. Missing per-symbol values appear as `"-"` or `null` (not an error). When merging, key by `symbol` and emit a structure like:
 
-```json
+```jsonc
 {
   "symbol": "NVDA.US",
   "quote":      { "last": "...", "prev_close": "...", "volume": "...", ... },

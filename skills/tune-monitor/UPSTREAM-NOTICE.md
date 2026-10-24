@@ -8,7 +8,7 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 
 | Local file | Original upstream path | Original Git blob SHA | Import changes |
 | --- | --- | --- | --- |
-| `references/metric-monitor.md` | `skills/tune-monitor/references/metric-monitor.md` | `057523088dba3359b4908cce65f621b30ad4ce7f` | text-only trailing whitespace and EOF blank lines normalized |
-| `references/custom-sql-monitor.md` | `skills/tune-monitor/references/custom-sql-monitor.md` | `4c8fc4ab3119bbfb9fb2bd0898910a12a3c7f7c4` | text-only trailing whitespace and EOF blank lines normalized |
-| `references/validation-monitor.md` | `skills/tune-monitor/references/validation-monitor.md` | `7babe93690acec64fcc2468ccc25406f750fc029` | text-only trailing whitespace and EOF blank lines normalized |
-| `references/table-monitor.md` | `skills/tune-monitor/references/table-monitor.md` | `7e016e96a7319c77807ec423ae9838ba98c986a1` | text-only trailing whitespace and EOF blank lines normalized |
+| `references/metric-monitor.md` | `skills/tune-monitor/references/metric-monitor.md` | `057523088dba3359b4908cce65f621b30ad4ce7f` | text normalized; local review clarifies evidence, SQL NULL/detection and deployment constraints |
+| `references/custom-sql-monitor.md` | `skills/tune-monitor/references/custom-sql-monitor.md` | `4c8fc4ab3119bbfb9fb2bd0898910a12a3c7f7c4` | text normalized; local review clarifies evidence, SQL NULL/detection and deployment constraints |
+| `references/validation-monitor.md` | `skills/tune-monitor/references/validation-monitor.md` | `7babe93690acec64fcc2468ccc25406f750fc029` | text normalized; local review clarifies evidence, SQL NULL/detection and deployment constraints |
+| `references/table-monitor.md` | `skills/tune-monitor/references/table-monitor.md` | `7e016e96a7319c77807ec423ae9838ba98c986a1` | text normalized; local review clarifies evidence, SQL NULL/detection and deployment constraints |

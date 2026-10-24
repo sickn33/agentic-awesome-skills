@@ -30,7 +30,7 @@ python -m venv .venv
 
 ## Supported Python Versions
 
-Check the [Qiskit PyPI page](https://pypi.org/project/qiskit/) for currently supported Python versions. As of 2025, Qiskit typically supports Python 3.8+.
+Check the [Qiskit PyPI page](https://pypi.org/project/qiskit/) for currently supported Python versions. Use the installed release's Requires-Python metadata; do not assume older Python versions remain supported.
 
 ## IBM Quantum Account Setup
 
@@ -48,11 +48,12 @@ Save your IBM Quantum credentials:
 
 ```python
 from qiskit_ibm_runtime import QiskitRuntimeService
+from getpass import getpass
 
 # Save credentials (first time only)
 QiskitRuntimeService.save_account(
-    channel="ibm_quantum",
-    token="YOUR_IBM_QUANTUM_TOKEN"
+    token=getpass("IBM Cloud API key: "),
+    name="research-account"
 )
 
 # Later sessions - load saved credentials
@@ -64,7 +65,7 @@ service = QiskitRuntimeService()
 Alternatively, set the API token as an environment variable:
 
 ```bash
-export QISKIT_IBM_TOKEN="YOUR_IBM_QUANTUM_TOKEN"
+# Inject credentials from a protected secret store; avoid real tokens in shell history.
 ```
 
 ## Local Development (No Account Required)

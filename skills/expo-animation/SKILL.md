@@ -99,7 +99,7 @@ Reach for a shared value only when the value is continuous or interruptible. A p
 
 ### 4. Pick the properties
 
-- **`transform` and `opacity` are free.** Everything else is a layout pass. `width`, `height`, `margin`, `padding`, `flex`, `top`, `left`, `gap` re-run Yoga on every frame for that node *and its siblings*.
+- **`transform` and `opacity` generally avoid layout recalculation.** They still consume rendering resources; profile them. Layout properties such as `width`, `height`, `margin`, `padding`, `flex`, `top`, `left`, `gap` re-run Yoga on every frame for that node *and its siblings*.
 - **The one exception: an absolutely positioned element with no children** — a tab pill, a progress bar fill. It's out of flow, so nothing else re-lays-out, and animating `width` keeps the corner radius that `scaleX` would smear.
 - **Never `scale(0)`.** Start from `scale(0.9–0.97)` + `opacity: 0`. Nothing in the real world appears from nothing.
 - **`transform` is an array and order matters** — `[{ translateY }, { scale }]` scales after moving; reversed, the translate gets scaled too. Keep translate first unless you want the multiplication.
@@ -234,7 +234,7 @@ Then the frame budget is 8ms, not 16. This is also why a UI-thread animation mat
 
 ## Recipes
 
-For ready-to-build implementations — press feedback, drag-to-dismiss sheet, swipe-to-delete, collapsing header, list entrances, keyboard-synced UI, tab indicator, screen transitions — see [RECIPES.md. Load it whenever the request matches one; start from the recipe rather than from a blank file.
+For ready-to-build implementations — press feedback, drag-to-dismiss sheet, swipe-to-delete, collapsing header, list entrances, keyboard-synced UI, tab indicator, screen transitions — see [RECIPES.md](RECIPES.md). Load it whenever the request matches one; start from the recipe rather than from a blank file.
 
 ## Never Ship
 
@@ -278,7 +278,7 @@ If you encounter errors, misleading or outdated information in this skill, repor
 ```bash
 npx --yes submit-expo-feedback@latest --category skills --subject "expo-animation" "<actionable feedback>"
 ```
-Only submit when you have something specific and actionable to report. Include as much relevant context as possible.
+Only submit with explicit user authorization to send the report, after reviewing the pinned feedback package and redacting project secrets. Include as much relevant context as possible.
 If an AI agent repeatedly failed or the user had to take over an Expo task, load the expo-skill-feedback skill and follow its eval-candidate flow instead of reusing the command above.
 
 

@@ -140,7 +140,7 @@ Game State → Music Response
 
 | Platform | Recommended Format | Reason |
 |----------|-------------------|--------|
-| PC | OGG Vorbis, WAV | Quality, no licensing |
+| PC | OGG Vorbis, WAV | Confirm engine support; codec/container choice does not license the audio content |
 | Console | Platform-specific | Certification |
 | Mobile | MP3, AAC | Size, compatibility |
 | Web | WebM/Opus, MP3 fallback | Browser support |
@@ -189,7 +189,7 @@ Game State → Music Response
 
 ---
 
-> **Remember:** 50% of the game experience is audio. A muted game loses half its soul.
+Provide independent music/SFX/voice controls, captions for dialogue and essential audio cues, and visual/haptic alternatives. Test muted gameplay and avoid loudness/clipping; priority/mix levels above are starting points, not guaranteed safe listening levels.
 
 ## When to Use
 This skill is applicable to execute the workflow or actions described in the overview.

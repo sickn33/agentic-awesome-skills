@@ -40,6 +40,14 @@ plugin:
 - Claude Code installed and authenticated on the host (`npm install -g @anthropic-ai/claude-code`).
 - Optional: an OpenAI API key for Whisper voice-note transcription.
 
+## Operational boundaries
+
+These are imported documentation examples; no CLI, daemon, server or hook runtime
+is bundled. Verify the pinned upstream version, account, billing, current limits and
+actual command/API schema before use. Never print credentials (`whoami`/`show-keys`
+may expose them) to agent output or logs. Authorization for drafting is not sending.
+Do not circumvent provider anti-abuse limits by distributing sends across lines.
+
 ## How It Works
 
 ### Step 1: Install the daemon
@@ -69,7 +77,7 @@ Create `~/.config/claude-imessage/config.json`:
 }
 ```
 
-The `whitelist` is the **only** authorization gate between an inbound iMessage and code execution on the host. Treat it as a security boundary, not a UX preference. Add only phone numbers the user controls; never add a shared, work, or family number "just in case".
+The imported daemon describes the `whitelist` as its only sender gate; this is not strong authentication. It is the only described gate between an inbound iMessage and code execution on the host. Treat it as a security boundary, not a UX preference. Add only phone numbers the user controls; never add a shared, work, or family number "just in case".
 
 For voice transcription, optionally add to `.env` in the daemon directory:
 
@@ -183,9 +191,9 @@ This gives Claude outbound Sendblue tools inside a session but does **not** open
 
 ## Best Practices
 
-- ✅ **Whitelist exactly one phone number to start.** The whitelist is the security boundary; expand it slowly and only to numbers the user controls.
+- ✅ **Whitelist exactly one phone number to start.** A whitelist is a weak sender filter; use an isolated host and stronger authentication before enabling remote execution. expand it slowly and only to numbers the user controls.
 - ✅ **Run the daemon as a regular user**, never as root or via `sudo`.
-- ✅ **Start in a sandbox directory** for first tests (`cd ~/textme-sandbox`), not in `~` or a real repo.
+- ✅ **Start in an OS-isolated sandbox or VM** for first tests (`cd ~/textme-sandbox`), not in `~` or a real repo.
 - ✅ **Verify the non-whitelist ignore path** before enabling auto-start. A daemon that processes any sender is an open shell on the host.
 - ✅ **Keep `pollIntervalMs` ≥ 5000** unless the user understands the Sendblue rate limits and cost implications.
 - ❌ **Don't share the Sendblue number publicly.** Even with a whitelist, the host is doing per-message work; a flood from an unknown sender still costs polling cycles.
@@ -206,8 +214,8 @@ textme is a **remote code execution surface gated only by a phone-number whiteli
 
 - **Whitelist is the security boundary.** Anyone who can spoof or hijack a whitelisted number can drive Claude on the host. Be deliberate about which numbers go on the list and remove them when they no longer need access. <!-- security-allowlist: documented remote-control daemon; required disclosure per quality-bar.md -->
 - **Sendblue API credentials are sensitive.** `config.json` contains an API key, API secret, and the user's phone number. Mode it `600`, keep it out of dotfile repos, and never paste it into shared logs, gists, or screenshots.
-- **The daemon inherits the user's privileges.** It can read, write, and execute anything the running user can. Do not run as root, do not run from a directory with secrets the user does not want exposed to inbound SMS, and prefer a dedicated host or VM if available.
-- **Claude Code's permission model still applies inside the daemon-driven session** — destructive actions still surface confirmation prompts. textme exposes the `yes`/`no` reply path for those prompts, which means the *phone number* is making the approval. Make sure the whitelist matches the trust level of approving destructive operations remotely.
+- **The daemon inherits the user's privileges.** It can read, write, and execute anything the running user can. Do not run as root, a starting directory does not restrict filesystem access, and prefer a dedicated host or VM if available.
+- **Verify the actual child permission profile in the pinned daemon**; do not assume destructive actions surface confirmation prompts. textme exposes the `yes`/`no` reply path for those prompts, which means the *phone number* is making the approval. Make sure the whitelist matches the trust level of approving destructive operations remotely.
 - **Inbound messages are untrusted input.** Treat textme prompts as user input from the open internet (with phone-number authentication). Do not pipe their contents into `eval`, shell substitution, or scripts that bypass Claude Code's review.
 - **Lock-screen previews of replies leak.** When Claude responds to a message, the reply lands on the user's lock screen unredacted. Don't ask Claude over textme to surface secrets, tokens, or customer data via SMS — link to a local log or PR instead.
 - **Daemon liveness is a footgun.** If pm2/launchd is auto-restarting the daemon, the user must remember to stop it before changing whitelist entries, rotating credentials, or rebooting into an untrusted state.
@@ -218,7 +226,7 @@ textme is a **remote code execution surface gated only by a phone-number whiteli
 - **`apiKey` / `apiSecret` confusion.** Sendblue's API credentials (from `sendblue show-keys`) are distinct from the CLI's local bearer token in `~/.sendblue/credentials.json`. textme needs the *API* credentials, not the CLI auth file.
 - **Free-plan silent send failures.** If the user's phone never texted the Sendblue number first, outbound replies from Claude silently fail. Verify with `sendblue contacts` before relying on the loop.
 - **Auto-start before verification.** Installing the launchd plist or `pm2 save`-ing the daemon before testing the non-whitelist ignore path will baseline a potentially open daemon at boot. Verify first, persist second.
-- **Running the daemon in `~` or a repo with secrets.** The working directory at startup is exposed to anything textme is told to do (`ls`, `cat`, etc.). Start in a sandbox directory and `cd` deliberately.
+- **Running the daemon in `~` or a repo with secrets.** The working directory at startup is exposed to anything textme is told to do (`ls`, `cat`, etc.). Start in an OS-isolated sandbox or VM and `cd` deliberately.
 - **Confusing textme with the Sendblue MCP.** They look similar but the MCP variant only gives Claude *outbound* Sendblue tools — it does not open an inbound channel. If the user wants "text Claude from my phone", they need textme; if they want "Claude can send a text mid-session", the MCP is lighter.
 
 ## Related Skills

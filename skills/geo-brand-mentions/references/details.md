@@ -4,13 +4,13 @@
 
 ## Platform Importance Ranking for AI Citations
 
-Based on the Ahrefs December 2025 study and corroborating research from Profound (2025) and Terakeet (2025):
+Platform checklist and weights below are editorial heuristics. The linked Ahrefs study supports a YouTube association; it does not validate this entire platform ranking or score.
 
 ### 1. YouTube Mentions -- Correlation ~0.737 (STRONGEST)
 
 **Why YouTube matters most:**
 - YouTube is the second-largest search engine and the largest video platform globally (2.5B+ monthly users).
-- AI training datasets heavily incorporate YouTube transcripts, descriptions, and metadata.
+- YouTube content may be retrieved or cited; this does not disclose model training composition.
 - Google's Gemini and AI Overviews directly reference YouTube content.
 - Perplexity and ChatGPT both index and cite YouTube video content.
 - YouTube transcripts are particularly valuable because they contain natural language mentions in conversational context, which aligns with how AI models process and generate text.
@@ -39,9 +39,9 @@ Based on the Ahrefs December 2025 study and corroborating research from Profound
 ### 2. Reddit Mentions -- High Correlation
 
 **Why Reddit matters:**
-- Reddit is one of the most heavily indexed platforms in AI training data (confirmed in Google's $60M/year Reddit licensing deal, 2024).
+- A licensing arrangement does not establish Reddit representation or weighting in every model.
 - AI systems heavily weight Reddit for product recommendations, comparisons, and user sentiment.
-- "Reddit" is now appended to an estimated 10-15% of Google searches by users seeking authentic opinions.
+- Do not assume a universal share of searches includes Reddit; use a cited measurement for the target audience.
 - Perplexity frequently cites Reddit threads as sources.
 - ChatGPT and Claude both reference Reddit discussions when answering product/service questions.
 
@@ -69,7 +69,7 @@ Based on the Ahrefs December 2025 study and corroborating research from Profound
 ### 3. Wikipedia Presence -- High Correlation
 
 **Why Wikipedia matters:**
-- Wikipedia is one of the highest-authority sources in AI training data. All major AI models have been trained on Wikipedia dumps.
+- Wikipedia is one of the highest-authority sources in AI training data. Do not assume a particular model training corpus without provider evidence.
 - AI systems use Wikipedia as a primary source for entity recognition -- determining whether a brand is a "real" entity worth knowing about.
 - Wikidata (Wikipedia's structured data sibling) provides machine-readable facts that AI models use for knowledge graph construction.
 - Having a Wikipedia page is a strong signal of notability, which correlates with AI systems treating the brand as an authoritative entity.
@@ -182,11 +182,11 @@ Brand_Authority_Score = (YouTube * 0.25) + (Reddit * 0.25) + (Wikipedia * 0.20) 
 
 | Score Range | Rating | Interpretation |
 |---|---|---|
-| 85-100 | Dominant | Brand is a well-recognized entity across AI platforms. Highly likely to be cited and recommended by AI systems. |
-| 70-84 | Strong | Brand has solid cross-platform presence. AI systems likely recognize and cite it for relevant queries. |
-| 50-69 | Moderate | Brand has presence on some platforms but gaps exist. AI citation is inconsistent. |
-| 30-49 | Weak | Brand has limited platform presence. AI systems may not recognize it as a distinct entity. |
-| 0-29 | Minimal | Brand has negligible platform presence. AI systems are unlikely to cite or recommend it. |
+| 85-100 | Dominant | Brand is a well-recognized entity across AI platforms. High presence under this custom rubric; citation likelihood is uncalibrated. |
+| 70-84 | Strong | Brand has solid cross-platform presence. Broad presence under this rubric; measure answer visibility independently. |
+| 50-69 | Moderate | Brand has presence on some platforms but gaps exist. Observed citation coverage must be reported separately. |
+| 30-49 | Weak | Brand has limited platform presence. Sparse evidence in the sampled platforms. |
+| 0-29 | Minimal | Brand has negligible platform presence. No citation-probability inference follows from this score. |
 
 ---
 
@@ -235,6 +235,7 @@ if not isinstance(brand, str) or len(brand) > 200:
 # Check Wikipedia API directly
 api_url = f'https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch={quote_plus(brand)}&format=json'
 r = requests.get(api_url, headers={'User-Agent': 'GEO-Audit/1.0'}, timeout=15)
+r.raise_for_status()
 data = r.json()
 results = data.get('query', {}).get('search', [])
 if results and brand.lower() in results[0].get('title', '').lower():
@@ -245,6 +246,7 @@ else:
 # Check Wikidata
 wd_url = f'https://www.wikidata.org/w/api.php?action=wbsearchentities&search={quote_plus(brand)}&language=en&format=json'
 r2 = requests.get(wd_url, headers={'User-Agent': 'GEO-Audit/1.0'}, timeout=15)
+r2.raise_for_status()
 wd = r2.json()
 entities = wd.get('search', [])
 if entities:
@@ -259,7 +261,7 @@ if entities:
 1. Search: `[brand name] site:wikipedia.org`
 2. Search: `[brand name] site:wikidata.org`
 
-**CRITICAL:** Web search alone is NOT reliable for determining Wikipedia presence. ALWAYS run the Python API check first. If the API says a page exists, it exists — do not override this with a search result that fails to find it.
+**Candidate verification:** API search and web search are discovery tools, not entity proof. Inspect returned article/item identity, redirects, disambiguation and official-site links; the first result or substring title can be another brand. A failed/blocked API request is unknown, not absent. Use an available approved read-only tool rather than requiring this exact Python adapter.
 
 5. Note: Article existence, quality, edit history, Wikidata completeness
 
@@ -439,10 +441,10 @@ Generate a file called `GEO-BRAND-MENTIONS.md`:
 | Wikipedia presence | High | Moderate (trust signal) |
 | LinkedIn presence | Moderate | Low |
 | Domain Rating | ~0.266 | Very High |
-| Backlink count | ~0.266 | Very High |
+| Backlink count | Not established by the cited DR coefficient | Context dependent |
 | Organic traffic | Moderate | Very High |
 
-**Key insight:** The signals that matter most for AI visibility (YouTube, Reddit) are almost irrelevant in traditional SEO, and the signals that matter most for traditional SEO (backlinks, DR) are weak predictors of AI visibility. This requires a fundamentally different optimization strategy.
+**Interpretation limit:** DR is a third-party metric, not a Google ranking factor, and its coefficient is not interchangeable with backlink count. Correlations vary by platform and do not reveal causal ranking weights. Keep technical search eligibility, audience relevance and measured outcomes in the plan.
 
 ### Platform-Specific Tips for Building Presence
 
@@ -460,10 +462,10 @@ Generate a file called `GEO-BRAND-MENTIONS.md`:
 - Create genuinely helpful posts that naturally mention your brand's expertise.
 
 **Wikipedia Strategy:**
-- Hire a Wikipedia-knowledgeable consultant -- do NOT edit your own article (conflict of interest).
+- Follow Wikipedia conflict-of-interest and paid-contribution disclosure rules; an intermediary does not remove the conflict. Prefer disclosed edit requests and independent reliable sourcing.
 - Build notability through press coverage, academic citations, and industry recognition first.
 - Ensure your Wikidata entry is complete even if you do not have a Wikipedia article.
-- Contribute to industry-relevant articles where your brand can be naturally cited as a source.
+- Do not add promotional brand citations. Any edit must satisfy relevance, independent sourcing and platform policies.
 
 **LinkedIn Quick Wins:**
 - Optimize your company page with complete information and regular posting.

@@ -1,6 +1,6 @@
 # longbridge-seasonality
 
-Identifies calendar-driven return anomalies for a stock by analysing multi-year historical OHLCV data. Computes average returns grouped by month, day-of-week, and proximity to known events (holidays, earnings seasons) to surface statistically significant seasonal patterns.
+Identifies calendar-driven return anomalies for a stock by analysing multi-year historical OHLCV data. Computes average returns grouped by month, day-of-week, and proximity to known events (holidays, earnings seasons) to explore descriptive seasonal patterns; group averages alone do not establish statistical significance.
 
 ## Workflow
 
@@ -13,7 +13,7 @@ Identifies calendar-driven return anomalies for a stock by analysing multi-year 
    - **Holiday drift**: identify the 3 trading days before/after major holidays (Christmas, Chinese New Year, Golden Week for HK/CN); compute average drift window.
    - **Earnings season**: roughly Q1 (Jan–Feb), Q2 (Apr–May), Q3 (Jul–Aug), Q4 (Oct–Nov) for US stocks; compute average return in those windows vs non-earnings months.
 4. Summarise each effect as: (a) average return, (b) win rate (% positive days), (c) signal direction (Bullish/Bearish/Neutral).
-5. Output a summary table + top-3 actionable patterns.
+5. Report counts, uncertainty, multiple-comparison correction and out-of-sample stability. Use actual exchange holidays and issuer earnings dates; generic seasonal windows are not company event data. Output exploratory patterns, not automatic trading rules.
 
 Run `longbridge kline --help` to confirm flag names before calling.
 

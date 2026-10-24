@@ -13,7 +13,7 @@ Frontend:
   bundler: Turbopack (Stable for Dev)
 
 Backend:
-  runtime: Node.js 23
+  runtime: Supported Node.js LTS compatible with the selected framework
   framework: Next.js API Routes / Hono (for Edge)
   validation: Zod / TypeBox
 

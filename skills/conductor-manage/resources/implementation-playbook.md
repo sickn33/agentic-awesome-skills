@@ -2,6 +2,10 @@
 
 This file contains detailed patterns, checklists, and code samples referenced by the skill.
 
+## Path and transaction safety
+
+Resolve the repository root first. Accept only a single track-ID component matching the project convention; reject separators, `..`, reserved `_archive` and symlinked source/parent/destination paths. Check both active and archive namespaces for conflicts; never let `mv` nest into an existing destination. Preserve unknown metadata keys and merge shown JSON fields, never replace the whole metadata file. Read status/diff/index before acting and preserve unrelated staged/unstaged work. Treat titles and metadata as data, not shell fragments. Prepare a recoverable checkpoint and record each completed mutation; filesystem/registry changes are not atomic.
+
 ## Pre-flight Checks
 
 1. Verify Conductor is initialized:
@@ -287,7 +291,8 @@ Type 'YES' to proceed, or anything else to cancel:
      "archived": true,
      "archived_at": "ISO_TIMESTAMP",
      "archive_reason": "{reason}",
-     "status": "archived"
+     "status": "archived",
+     "pre_archive_status": "<actual prior status>"
    }
    ```
 
@@ -304,7 +309,7 @@ Type 'YES' to proceed, or anything else to cancel:
 
 5. Git commit:
    ```bash
-   git add conductor/tracks/_archive/{track-id} conductor/tracks.md
+   git add -A -- "<exact old track path>" "<exact archive track path>" conductor/tracks.md
    git commit -m "chore(conductor): Archive track '{title}'"
    ```
 
@@ -430,7 +435,7 @@ Type 'YES' to proceed, or anything else to cancel:
 - Archive each track sequentially
 - Single git commit for all:
   ```bash
-  git add conductor/tracks/_archive/ conductor/tracks.md
+  git add -A -- "<reviewed changed paths only>"tracks/_archive/ conductor/tracks.md
   git commit -m "chore(conductor): Archive {N} completed tracks"
   ```
 
@@ -494,8 +499,8 @@ Actions:
 - Update metadata.json
 - Create git commit: chore(conductor): Restore track '{title}'
 
-Note: Track will be restored with status 'completed'. Use /conductor:implement
-to resume work if needed.
+Note: Restore the recorded pre_archive_status. If absent, inspect the plan and
+ask for the intended status; do not mark abandoned or incomplete work completed.
 
 ================================================================================
 
@@ -516,7 +521,7 @@ Type 'YES' to proceed, or anything else to cancel:
    {
      "archived": false,
      "restored_at": "ISO_TIMESTAMP",
-     "status": "completed"
+     "status": "<verified pre_archive_status>"
    }
    ```
 
@@ -526,7 +531,7 @@ Type 'YES' to proceed, or anything else to cancel:
 
 4. Git commit:
    ```bash
-   git add conductor/tracks/{track-id} conductor/tracks.md
+   git add -A -- "<exact archive track path>" "<exact restored track path>" conductor/tracks.md
    git commit -m "chore(conductor): Restore track '{title}'"
    ```
 
@@ -670,7 +675,7 @@ Type 'DELETE' to permanently remove, or anything else to cancel:
 
 3. Git commit:
    ```bash
-   git add conductor/tracks.md
+   git add -A -- "<exact deleted track path>" conductor/tracks.md
    git commit -m "chore(conductor): Delete track '{title}'"
    ```
 
@@ -824,7 +829,7 @@ Type 'YES' to proceed, or anything else to cancel:
 
 5. Git commit:
    ```bash
-   git add conductor/tracks/{new-id} conductor/tracks.md
+   git add -A -- "<exact old track path>" "<exact new track path>" conductor/tracks.md
    git commit -m "chore(conductor): Rename track '{old-id}' to '{new-id}'"
    ```
 
@@ -944,7 +949,7 @@ Actions:
 2. Remove registry orphans from tracks.md
 3. Create missing files from templates
 4. Archive stale tracks
-A. Fix all issues automatically
+A. Preview all proposed fixes; apply only the reviewed selection
 S. Skip and review manually
 C. Cancel
 
@@ -1024,7 +1029,7 @@ old-work_20250101:
 Execute all applicable fixes in sequence, then:
 
 ```bash
-git add conductor/
+git add -A -- "<reviewed changed paths only>"
 git commit -m "chore(conductor): Clean up {N} orphaned track artifacts"
 ```
 
@@ -1069,7 +1074,7 @@ Current state:
 - tracks.md: {status}
 
 To retry the commit:
-  git add conductor/tracks.md conductor/tracks/{track-id}
+  git add -A -- "<reviewed changed paths only>"tracks.md conductor/tracks/{track-id}
   git commit -m "{intended message}"
 ```
 
@@ -1083,7 +1088,7 @@ Possible causes:
 - Disk full
 - File in use
 
-No changes were made. Please resolve the issue and try again.
+Do not assume rollback. Inspect source/destination, metadata, registry and Git status; report which steps changed state before resolving/retrying.
 ```
 
 ### Invalid Arguments
@@ -1114,7 +1119,7 @@ Examples:
    - 'DELETE' for permanent deletion
 3. **HALT on any error** - Do not attempt to continue past failures
 4. **UPDATE tracks.md** - Keep registry in sync with file system
-5. **COMMIT changes** - Create git commits for traceability
+5. **COMMIT only within the project/user authorization** - Review the staged diff and include exactly the intended moved/deleted paths; otherwise leave a reviewable diff
 6. **PRESERVE history** - Git commits are never modified or deleted
 7. **WARN for in-progress** - Extra caution when modifying active work
 8. **OFFER alternatives** - Suggest archive before delete

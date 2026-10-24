@@ -6,19 +6,19 @@ Comprehensive guide for setting up local Temporal development environment with p
 
 ### Basic Docker Compose Configuration
 
+Development-only template with public fixture credentials. Pin compatible server/UI/database images to reviewed versions or digests before use; auto-setup environment variables and dynamic-config paths depend on that version. Bind locally and use a fresh isolated project/volume. This is not a production security configuration.
+
 ```yaml
-# docker-compose.yml
-version: "3.8"
+# docker compose.yml
 
 services:
   temporal:
     image: temporalio/auto-setup:latest
     container_name: temporal-dev
     ports:
-      - "7233:7233" # Temporal server
-      - "8233:8233" # Web UI
+      - "127.0.0.1:7233:7233" # Temporal server
     environment:
-      - DB=postgresql
+      - DB=postgres12
       - POSTGRES_USER=temporal
       - POSTGRES_PWD=temporal
       - POSTGRES_SEEDS=postgresql
@@ -34,7 +34,7 @@ services:
       - POSTGRES_PASSWORD=temporal
       - POSTGRES_DB=temporal
     ports:
-      - "5432:5432"
+      - "127.0.0.1:5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -47,7 +47,7 @@ services:
       - TEMPORAL_ADDRESS=temporal:7233
       - TEMPORAL_CORS_ORIGINS=http://localhost:3000
     ports:
-      - "8080:8080"
+      - "127.0.0.1:8080:8080"
 
 volumes:
   postgres_data:
@@ -57,22 +57,22 @@ volumes:
 
 ```bash
 # Start Temporal server
-docker-compose up -d
+docker compose up -d
 
 # Verify server is running
-docker-compose ps
+docker compose ps
 
 # View logs
-docker-compose logs -f temporal
+docker compose logs -f temporal
 
 # Access Temporal Web UI
 open http://localhost:8080
 
 # Stop server
-docker-compose down
+docker compose down
 
-# Reset data (clean slate)
-docker-compose down -v
+# Explicitly approved reset only: deletes this Compose project’s database volumes
+docker compose down -v
 ```
 
 ### Health Check Script
@@ -83,40 +83,13 @@ import asyncio
 from temporalio.client import Client
 
 async def check_temporal_health():
-    """Verify Temporal server is accessible"""
-    try:
-        client = await Client.connect("localhost:7233")
-        print("✓ Connected to Temporal server")
-
-        # Test workflow execution
-        from temporalio.worker import Worker
-
-        @workflow.defn
-        class HealthCheckWorkflow:
-            @workflow.run
-            async def run(self) -> str:
-                return "healthy"
-
-        async with Worker(
-            client,
-            task_queue="health-check",
-            workflows=[HealthCheckWorkflow],
-        ):
-            result = await client.execute_workflow(
-                HealthCheckWorkflow.run,
-                id="health-check",
-                task_queue="health-check",
-            )
-            print(f"✓ Workflow execution successful: {result}")
-
-        return True
-
-    except Exception as e:
-        print(f"✗ Health check failed: {e}")
-        return False
+    # Readiness only; does not start a workflow or prove Worker health.
+    client = await Client.connect("localhost:7233")
+    return await client.service_client.check_health()
 
 if __name__ == "__main__":
-    asyncio.run(check_temporal_health())
+    healthy = asyncio.run(asyncio.wait_for(check_temporal_health(), timeout=10))
+    raise SystemExit(0 if healthy else 1)
 ```
 
 ## pytest Configuration
@@ -125,7 +98,7 @@ if __name__ == "__main__":
 
 ```
 temporal-project/
-├── docker-compose.yml
+├── docker compose.yml
 ├── pyproject.toml
 ├── pytest.ini
 ├── requirements.txt
@@ -191,27 +164,21 @@ import pytest
 from temporalio.testing import WorkflowEnvironment
 from temporalio.client import Client
 
-@pytest.fixture(scope="session")
-def event_loop():
-    """Provide event loop for async fixtures"""
-    import asyncio
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
-
-@pytest.fixture(scope="session")
+@pytest.fixture
 async def temporal_client():
     """Provide Temporal client connected to local server"""
     client = await Client.connect("localhost:7233")
     yield client
-    await client.close()
+    # Client has no close() API; use the owning environment/runtime lifecycle.
 
-@pytest.fixture(scope="module")
+@pytest.fixture
 async def workflow_env():
     """Module-scoped time-skipping environment"""
     env = await WorkflowEnvironment.start_time_skipping()
-    yield env
-    await env.shutdown()
+    try:
+        yield env
+    finally:
+        await env.shutdown()
 
 @pytest.fixture
 def activity_env():
@@ -220,7 +187,7 @@ def activity_env():
     return ActivityEnvironment()
 
 @pytest.fixture
-async def test_worker(temporal_client, workflow_env):
+async def test_worker(workflow_env):
     """Pre-configured test worker"""
     from temporalio.worker import Worker
     from src.workflows import OrderWorkflow, PaymentWorkflow
@@ -293,8 +260,6 @@ exclude_lines =
     def __repr__
     # Exclude abstract methods
     @abstractmethod
-    # Exclude pass statements
-    pass
 
 [html]
 directory = htmlcov
@@ -347,7 +312,7 @@ TOTAL                                 206      8    96%
 
 ```bash
 # 1. Start Temporal server
-docker-compose up -d
+docker compose up -d
 
 # 2. Verify server health
 python scripts/health_check.py
@@ -362,7 +327,7 @@ pytest --cov=src --cov-report=term-missing
 open htmlcov/index.html
 
 # 6. Stop server
-docker-compose down
+docker compose down
 ```
 
 ### Pre-Commit Hook
@@ -389,7 +354,7 @@ echo "All tests passed!"
 .PHONY: setup test test-unit test-integration coverage clean
 
 setup:
-	docker-compose up -d
+	docker compose up -d
 	pip install -r requirements.txt
 	python scripts/health_check.py
 
@@ -413,14 +378,14 @@ coverage:
 	open htmlcov/index.html
 
 clean:
-	docker-compose down -v
+	docker compose down # Volume deletion is a separate explicit reset
 	rm -rf .pytest_cache htmlcov .coverage
 
 ci:
-	docker-compose up -d
-	sleep 10  # Wait for Temporal to start
+	docker compose up -d
+	python scripts/health_check.py # Use bounded retries in CI until ready
 	pytest --cov=src --cov-fail-under=80
-	docker-compose down
+	docker compose down
 ```
 
 ### CI/CD Example
@@ -440,35 +405,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
       - name: Start Temporal server
-        run: docker-compose up -d
-
-      - name: Wait for Temporal
-        run: sleep 10
+        run: docker compose up -d
 
       - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Wait for Temporal
         run: |
-          pip install -r requirements.txt
+          for attempt in $(seq 1 30); do
+            python scripts/health_check.py && exit 0
+            sleep 2
+          done
+          exit 1
 
       - name: Run tests with coverage
         run: |
           pytest --cov=src --cov-report=xml --cov-fail-under=80
 
       - name: Upload coverage
-        uses: codecov/codecov-action@v3
+        uses: codecov/codecov-action@v5
         with:
-          file: ./coverage.xml
+          files: ./coverage.xml
 
       - name: Cleanup
         if: always()
-        run: docker-compose down
+        run: docker compose down
 ```
 
 ## Debugging Tips
@@ -511,7 +480,7 @@ async def test_workflow_with_breakpoint(workflow_env):
 1. **Isolated Environment**: Use Docker Compose for reproducible local setup
 2. **Health Checks**: Always verify Temporal server before running tests
 3. **Fast Feedback**: Use pytest markers to run unit tests quickly
-4. **Coverage Targets**: Maintain ≥80% code coverage
+4. **Coverage Targets**: Maintain a project-defined threshold (80% here is illustrative) code coverage
 5. **Parallel Testing**: Use pytest-xdist for faster test runs
 6. **CI/CD Integration**: Automated testing on every commit
 7. **Cleanup**: Clear Docker volumes between test runs if needed
@@ -522,18 +491,20 @@ async def test_workflow_with_breakpoint(workflow_env):
 
 ```bash
 # Check logs
-docker-compose logs temporal
+docker compose logs temporal
 
-# Reset database
-docker-compose down -v
-docker-compose up -d
+# Destructive reset only after confirming the isolated development project/volume
+docker compose down -v
+docker compose up -d
 ```
 
 **Issue: Tests timing out**
 
 ```python
-# Increase timeout in pytest.ini
-asyncio_default_timeout = 30
+# Bound the actual async operation; this is Python test code, not a pytest.ini option
+@pytest.mark.asyncio
+async def test_bounded_operation():
+    await asyncio.wait_for(operation(), timeout=30) # import asyncio; define operation
 ```
 
 **Issue: Port already in use**
@@ -542,7 +513,7 @@ asyncio_default_timeout = 30
 # Find process using port 7233
 lsof -i :7233
 
-# Kill process or change port in docker-compose.yml
+# Kill process or change port in docker compose.yml
 ```
 
 ## Additional Resources

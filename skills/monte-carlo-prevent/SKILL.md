@@ -2,7 +2,7 @@
 name: monte-carlo-prevent
 description: "Surfaces Monte Carlo data observability context (table health, alerts, lineage, blast radius) before SQL/dbt edits."
 category: data
-risk: safe
+risk: critical
 source: community
 source_repo: monte-carlo-data/mc-agent-toolkit
 source_type: community
@@ -21,6 +21,8 @@ Reference files live next to this skill file. **Use the Read tool** (not MCP res
 - Full workflow step-by-step instructions: `references/workflows.md` (relative to this file)
 - MCP parameter details: `references/parameters.md` (relative to this file)
 - Troubleshooting: `references/TROUBLESHOOTING.md` (relative to this file)
+
+This is a documentation-only import: no Monte Carlo MCP server, hooks, credentials or runtime are bundled. Discover installed tool schemas and confirm the intended tenant before calls; tool names and parameters below are upstream examples. Local SQL work may proceed with clearly stated impact-assessment limits when MC is unavailable and the user has authorized the edit.
 
 ## When to activate this skill
 
@@ -49,8 +51,7 @@ Do not invoke Monte Carlo tools for:
 - Configuration files (dbt_project.yml, profiles.yml, packages.yml)
 - Test files unless the user is specifically asking about data quality
 
-If uncertain whether a file is a dbt model, check for {{ ref() }} or {{ source() }}
-Jinja references — if absent, do not activate.
+Determine whether a file is a dbt model from project paths/configuration; valid models need not contain ref() or source().
 
 ### Macros and snapshots — gate edits, skip auto-context
 
@@ -60,7 +61,7 @@ macros are inlined into every model that calls them at compile time — a one-li
 macro change can silently alter dozens of models. Snapshots control historical
 tracking and are similarly sensitive.
 
-**The pre-edit hook gates these files.** If the hook fires for a macro or snapshot,
+**If separately installed and enabled, the upstream pre-edit hook may gate these files.** If the hook fires for a macro or snapshot,
 identify which models are affected and run the change impact assessment (Workflow 4)
 for those models before proceeding with the edit.
 
@@ -138,7 +139,7 @@ the change") — proceed but note the skipped assessment.
 
 ## Available MCP tools
 
-All tools are available via the `monte-carlo` MCP server.
+The upstream workflow expects these tools from a separately configured `monte-carlo` MCP server; availability must be discovered.
 
 | Tool                         | Purpose                                                              |
 | ---------------------------- | -------------------------------------------------------------------- |
@@ -213,7 +214,7 @@ proceed. If anything is surprising or worth flagging, ask before editing.
 
 ## Session markers
 
-These markers coordinate between the skill and the plugin's hooks. Output each
+These markers are advisory output for separately installed plugin hooks; text markers do not enforce approval or validate assessment completeness. Output each
 on its own line when the condition is met.
 
 ### Impact check complete
@@ -235,8 +236,7 @@ assessed, emit only one marker. The pre-edit hook will gate the other tables and
 prompt for their own Workflow 4 runs.
 
 **Voluntarily invoked** (the engineer proactively asked for an impact assessment):
-Be looser — emit markers for all tables the assessment meaningfully covered, even
-if some were assessed via lineage context rather than direct MC tool calls. The
+Emit completion markers only for tables with sufficient directly verified lineage and monitor context; label indirect coverage as partial. The
 engineer is already safety-conscious; don't force redundant assessments for tables
 they clearly considered.
 

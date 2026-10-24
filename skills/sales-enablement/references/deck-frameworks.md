@@ -206,7 +206,7 @@ The goal is not to present features. The goal is to make the buyer feel understo
 - Technical implementation requirements
 
 **Remove or minimize:**
-- ROI calculations (they care about capability, not cost)
+- Detailed ROI calculations only when irrelevant to this technical evaluator; technical buyers can also own budgets
 - High-level market trends (they want specifics)
 
 **Adjust tone:** Precise, no fluff, respect their expertise. Avoid marketing superlatives.

@@ -117,7 +117,7 @@ gau $TARGET --subs | anew /tmp/urls.txt
 echo "[+] Total URLs: $(wc -l < /tmp/urls.txt)"
 
 # Step 6: Nuclei scan
-nuclei -l /tmp/live.txt -t ~/nuclei-templates/ -severity critical,high,medium -o /tmp/nuclei.txt
+nuclei -l /tmp/scoped-live-urls.txt -t ~/nuclei-templates/ -severity critical,high,medium -o /tmp/nuclei.txt
 ```
 
 ### Output to Organized Directory
@@ -142,7 +142,7 @@ mkdir -p $RECON_DIR
 
 ```bash
 # Parameters worth testing
-cat /tmp/urls.txt | grep -E "[?&] (id|user|file|path|url|redirect|next|src|token|key|api_key)=" | tee /tmp/interesting-params.txt
+cat /tmp/urls.txt | grep -E "([?]|&)(id|user|file|path|url|redirect|next|src|token|key|api_key)=" | tee /tmp/interesting-params.txt
 
 # API endpoints
 cat /tmp/urls.txt | grep -E "/api/|/v1/|/v2/|/v3/|/graphql|/rest/|/gql" | tee /tmp/api-endpoints.txt
@@ -374,8 +374,8 @@ cat /tmp/live.txt | awk '{print $1}' | naabu -port 80,443,8080,8443,3000,4000,50
 ```bash
 # trufflehog — high-signal secret detection with entropy analysis
 # Scans JS files and git repos
-pip install trufflehog3 2>/dev/null || true
-trufflehog filesystem --only-verified recon/$TARGET/ 2>/dev/null
+# Install a separately reviewed official TruffleHog version if authorized; trufflehog3 is a different package.
+# Disable credential verification/network use for a static inventory; never test discovered secrets without separate scope.
 
 # SecretFinder — manual JS bundle scan (already in tools/)
 source ~/tools/SecretFinder/.venv/bin/activate
@@ -427,7 +427,7 @@ python3 ~/tools/GitDorker/GitDorker.py -t GITHUB_TOKEN -d ~/tools/GitDorker/Dork
 ## Limitations
 
 - Authorized scope only: the confirmation gate above is mandatory before any probing, exploitation, or credential-access command.
-- Docs-only import: upstream helper scripts, commands, engine, and research assets are not bundled; reinstall tooling from the source repo when needed.
+- Docs-only import: upstream helper scripts, commands, engine, and research assets are not bundled; review provenance/dependencies before separately authorized installation.
 - Validate every finding (see `triage-validation`) before reporting; report via `report-writing`. Prefer a sandbox, disposable VM, or controlled lab.
 
 ### Example
@@ -438,3 +438,11 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+## Operational corrections
+
+This is an illustrative pipeline, not permission for all-domain scanning. Separate passive third-party queries from target-active DNS/HTTP/crawl/fuzz/templates, and apply explicit exact host/scheme/path/port/redirect scope filters between stages, including archives, certificates, JS and resolved CNAME/IP candidates. Shared hosting/CDN addresses, sister TLDs and historical URLs never expand scope. Inspect/choose safe current Nuclei templates, rate/concurrency/request/time budgets and stop conditions before executing; scan0 means no detected matches, not no bugs. Use controlled IDs/canaries rather than sequential real-user enumeration.
+
+Use a private mktemp run directory and quoted validated domains, not shared fixed /tmp files susceptible to collisions/symlinks. Preserve errors instead of2>/dev/null/||true clean claims; verify API HTTP/JSON schema and cursor/page coverage. crt.sh name_value can contain newlines; split and exact-suffix-filter names before probing. Live output with status/title columns is not a URL-only scanner list. curl header_server is not a portable write-out variable; use captured headers and no out-of-scope redirect following. resolve relative JS URLs against the page origin and scope-check.
+
+Secret scanners can disclose raw matches or verify credentials; redact findings and never validate/use live discovered keys without separate authorization. The subfinder config path/schema and every CLI flag need installed-version checks. Recurring cron/hooks/notifications require explicit cadence/target/data scope. Safe hash-keyed state, first-run initialization, authenticated API limits and complete commit comparisons are omitted from the watcher sketches. Time/payout/employee-count heuristics, source frequency/performance figures, framework-to-bug mapping and generic error fingerprints do not establish vulnerability, company ability to pay or takeover. No reconnaissance or monitoring was executed.

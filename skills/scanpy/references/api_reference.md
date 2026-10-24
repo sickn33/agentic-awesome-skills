@@ -112,6 +112,7 @@ sc.get.rank_genes_groups_df(adata, group='0')
 
 ```python
 sc.tl.paga(adata, groups='leiden')               # PAGA trajectory
+sc.tl.diffmap(adata)
 sc.tl.dpt(adata)                                  # Diffusion pseudotime
 ```
 
@@ -216,7 +217,7 @@ adata.uns                  # Unstructured annotations (dict)
 adata.obsm                 # Multi-dimensional cell annotations (e.g., PCA, UMAP)
 adata.varm                 # Multi-dimensional gene annotations
 adata.layers               # Additional data layers
-adata.raw                  # Raw data backup
+adata.raw                  # Snapshot of X/var at assignment time
 
 # Access
 adata.obs_names            # Cell barcodes

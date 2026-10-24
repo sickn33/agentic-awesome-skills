@@ -257,9 +257,7 @@ public class ApiClient {
                 .readTimeout(10, TimeUnit.SECONDS)
                 .addInterceptor(new AuthInterceptor())
                 .addInterceptor(new HttpLoggingInterceptor()
-                    .setLevel(BuildConfig.DEBUG
-                        ? HttpLoggingInterceptor.Level.BODY
-                        : HttpLoggingInterceptor.Level.NONE))
+                    .setLevel(HttpLoggingInterceptor.Level.NONE))
                 .build();
 
             Retrofit retrofit = new Retrofit.Builder()
@@ -296,9 +294,11 @@ public class AuthInterceptor implements Interceptor {
 public class ItemRepository {
     private final ItemDao itemDao;
     private final ApiService apiService;
+    private final Context context;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public ItemRepository(Context context) {
+        this.context = context.getApplicationContext();
         AppDatabase db = AppDatabase.getInstance(context);
         this.itemDao = db.itemDao();
         this.apiService = ApiClient.getInstance();
@@ -332,8 +332,11 @@ public class ItemRepository {
                     List<ItemEntity> entities = response.body().stream()
                         .map(ItemMapper::toEntity)
                         .collect(Collectors.toList());
-                    itemDao.deleteAll();
-                    itemDao.insertAll(entities);
+                    // Replace cached rows atomically in an AppDatabase transaction.
+                    AppDatabase.getInstance(context).runInTransaction(() -> {
+                        itemDao.deleteAll();
+                        itemDao.insertAll(entities);
+                    });
                     callback.onSuccess(null);
                 } else {
                     callback.onError(new IOException("HTTP " + response.code()));
@@ -516,6 +519,10 @@ public class DatabaseModule {
 
 ## Unit Testing (Java)
 
+The sketch below requires an injected deterministic executor, lifecycle test
+setup and awaited emissions before it is executable. Stub the repository before
+constructing a ViewModel that starts loading in its constructor.
+
 ```java
 @ExtendWith(MockitoExtension.class)
 class HomeViewModelTest {
@@ -537,7 +544,9 @@ class HomeViewModelTest {
 
         viewModel.loadItems();
 
-        // Wait for executor — use CountDownLatch or InstantExecutorRule
+        // Illustrative only: await a SUCCESS/ERROR LiveData emission using a bounded
+        // latch/test observer and InstantTaskExecutorRule before asserting.
+        // The rule alone does not wait for this background ExecutorService.
         UiState<List<Item>> state = viewModel.uiState.getValue();
         assertNotNull(state);
         assertTrue(state.isSuccess());

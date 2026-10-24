@@ -126,11 +126,9 @@ Debug.isDebuggerConnected.implementation = function() { return false; };
 ```javascript
 // 1. PT_DENY_ATTACH
 // ptrace(PT_DENY_ATTACH, 0, NULL, 0) → 防止调试器附加
-var ptrace = Module.findExportByName(null, "ptrace");
-Interceptor.replace(ptrace, new NativeCallback(function(request, pid, addr, data) {
-    if (request == 31) return 0; // PT_DENY_ATTACH → 忽略
-    return ptrace(request, pid, addr, data);
-}, 'int', ['int', 'int', 'pointer', 'int']));
+// Pseudocode only: resolve the exact export and ABI, wrap its original pointer as a
+// NativeFunction, and call that wrapper for non-PT_DENY_ATTACH requests. A NativePointer
+// is not callable JavaScript, and replacement must not recursively call itself.
 
 // 2. sysctl 检测
 var sysctl = Module.findExportByName(null, "sysctl");
@@ -162,7 +160,7 @@ Interceptor.attach(sysctl, {
 层 1 — NSURLSession: Hook SecTrustEvaluate → kSecTrustResultProceed
 层 2 — Alamofire: Hook ServerTrustManager
 层 3 — AFNetworking: Hook AFSecurityPolicy
-层 4 — libcurl: LD_PRELOAD 替换 SSL 验证回调
+层 4 — libcurl: 根据实际 iOS/dyld 与签名限制选择已审核的进程内测试 hook；Linux LD_PRELOAD 不适用于 iOS
 ```
 
 ### 通用 Objection 命令
@@ -171,12 +169,12 @@ Interceptor.attach(sysctl, {
 # Android
 objection -g "com.app" explore
 android sslpinning disable
-# 等价于: 自动 Hook 上述 5 层
+# 仅覆盖该版本脚本支持的 hook，不能保证覆盖全部 TLS 栈
 
 # iOS
 objection -g "com.app" explore
 ios sslpinning disable
-# 等价于: 自动 Hook 上述 4 层
+# 仅覆盖该版本脚本支持的 hook，不能保证覆盖全部 TLS 栈
 ```
 
 Source: OWASP MSTG, Frida CodeShare, objection wiki

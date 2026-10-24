@@ -16,7 +16,6 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 SCRIPTS_DIR = ROOT_DIR / "scripts"
 DATA_DIR = ROOT_DIR / "data"
 OUTPUT_DIR = DATA_DIR / "outputs"
-OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 # ── API ──────────────────────────────────────────────────────────────────────
 
@@ -44,35 +43,35 @@ MODELS = {
         "name": "Stable Diffusion 3.5 Large",
         "endpoint": "generate_sd3",
         "description": "Melhor qualidade geral. Recomendado para a maioria dos usos.",
-        "cost": "free",
+        "cost": "API credits; verify current pricing",
     },
     "sd3.5-large-turbo": {
         "id": "sd3.5-large-turbo",
         "name": "SD 3.5 Large Turbo",
         "endpoint": "generate_sd3",
         "description": "Versao rapida do SD 3.5. Menos passos, resultado bom.",
-        "cost": "free",
+        "cost": "API credits; verify current pricing",
     },
     "sd3.5-medium": {
         "id": "sd3.5-medium",
         "name": "SD 3.5 Medium",
         "endpoint": "generate_sd3",
         "description": "Balanco entre velocidade e qualidade.",
-        "cost": "free",
+        "cost": "API credits; verify current pricing",
     },
     "ultra": {
         "id": "ultra",
         "name": "Stable Image Ultra",
         "endpoint": "generate_ultra",
         "description": "Maxima qualidade. Fotorrealismo e detalhes extremos.",
-        "cost": "free",
+        "cost": "API credits; verify current pricing",
     },
     "core": {
         "id": "core",
         "name": "Stable Image Core",
         "endpoint": "generate_core",
         "description": "Rapido e eficiente. Bom para iteracao.",
-        "cost": "free",
+        "cost": "API credits; verify current pricing",
     },
 }
 
@@ -191,9 +190,7 @@ def resolve_aspect_ratio(name: str) -> str:
         return ASPECT_RATIOS[name_lower]
     if name_lower in ASPECT_ALIASES:
         return ASPECT_ALIASES[name_lower]
-    if ":" in name and all(p.isdigit() for p in name.split(":")):
-        return name
-    return DEFAULT_ASPECT_RATIO
+    raise ValueError(f"Unsupported aspect ratio: {name}")
 
 
 def get_mime_type(filepath: Path) -> str:
@@ -212,8 +209,8 @@ def safety_check_daily_limit(num_images: int = 1) -> tuple[bool, str]:
             data = json.loads(counter_file.read_text(encoding="utf-8"))
             if data.get("date") == today:
                 count = data.get("count", 0)
-        except (json.JSONDecodeError, KeyError, OSError):
-            pass
+        except (json.JSONDecodeError, KeyError, OSError) as exc:
+            raise ValueError("Cannot verify daily counter; inspect it before generation") from exc
 
     if count + num_images > SAFETY_MAX_IMAGES_PER_DAY:
         return False, (
@@ -236,8 +233,8 @@ def increment_daily_counter(num_images: int = 1) -> None:
             data = json.loads(counter_file.read_text(encoding="utf-8"))
             if data.get("date") == today:
                 count = data.get("count", 0)
-        except (json.JSONDecodeError, KeyError, OSError):
-            pass
+        except (json.JSONDecodeError, KeyError, OSError) as exc:
+            raise ValueError("Cannot verify daily counter; inspect it before generation") from exc
 
     try:
         counter_file.parent.mkdir(parents=True, exist_ok=True)
@@ -246,7 +243,7 @@ def increment_daily_counter(num_images: int = 1) -> None:
             encoding="utf-8",
         )
     except OSError:
-        pass  # Falha silenciosa no contador nao deve bloquear geracao
+        raise RuntimeError("Image saved but daily counter could not be updated")
 
 
 def validate_image_file(filepath: str | Path) -> Path:
@@ -263,4 +260,7 @@ def validate_image_file(filepath: str | Path) -> Path:
         raise ValueError(f"Arquivo vazio: {path}")
     if path.stat().st_size > 50 * 1024 * 1024:  # 50MB
         raise ValueError(f"Arquivo muito grande ({path.stat().st_size / 1024 / 1024:.1f}MB). Max: 50MB")
+    from PIL import Image
+    with Image.open(path) as image:
+        image.verify()
     return path

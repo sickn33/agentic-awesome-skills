@@ -7,6 +7,19 @@
 This skill provides guidance for creating sophisticated, interactive data visualisations using d3.js. D3.js (Data-Driven Documents) excels at binding data to DOM elements and applying data-driven transformations to create custom, publication-quality visualisations with precise control over every visual element. The techniques work across any JavaScript environment, including vanilla JavaScript, React, Vue, Svelte, and other frameworks.
 
 
+## Input and lifecycle contract
+
+Treat sample-data.json as fictional demonstration data, including city values;
+it is not a sourced population dataset. Validate finite numeric values, unique
+keys and parsed dates. Sort time-series by date before lines/areas; reject empty
+or degenerate domains and define missing-value treatment. Nonnegative bar/stack
+snippets need adaptation for signed values. Use text nodes for untrusted labels,
+never interpolate them into HTML. Cleanup zoom listeners, tooltips, transitions,
+ResizeObservers and force simulations; clone nodes/links before force mutation.
+Honor reduced-motion settings, provide keyboard controls and underlying data.
+Responsive examples need a draw function accepting the supplied SVG/dimensions;
+the earlier one-argument drawChart sketch does not implement that contract.
+
 ## Core workflow
 
 ### 1. Set up d3.js
@@ -290,7 +303,7 @@ function drawChordDiagram(data) {
     const i = nodes.indexOf(d.source);
     const j = nodes.indexOf(d.target);
     matrix[i][j] += d.value;
-    matrix[j][i] += d.value;
+    if (i !== j) matrix[j][i] += d.value; // This example assumes undirected flows
   });
 
   // Create chord layout
@@ -304,7 +317,8 @@ function drawChordDiagram(data) {
 
   const ribbon = d3.ribbon()
     .source(d => d.source)
-    .target(d => d.target);
+    .target(d => d.target)
+    .radius(innerRadius);
 
   const colourScale = d3.scaleOrdinal(d3.schemeCategory10)
     .domain(nodes);
@@ -362,7 +376,7 @@ function drawHeatmap(data) {
 
   const width = 800;
   const height = 600;
-  const margin = { top: 100, right: 30, bottom: 30, left: 100 };
+  const margin = { top: 100, right: 100, bottom: 30, left: 100 };
   const innerWidth = width - margin.left - margin.right;
   const innerHeight = height - margin.top - margin.bottom;
 
@@ -553,7 +567,7 @@ circles
     d3.select(this).attr("opacity", 1);
     tooltip
       .style("visibility", "visible")
-      .html(`<strong>${d.label}</strong><br/>Value: ${d.value}`);
+      .text(`${d.label}: ${d.value}`);
   })
   .on("mousemove", function(event) {
     tooltip
@@ -587,7 +601,7 @@ circles
     console.log("Clicked:", d);
 
     // Visual feedback
-    d3.selectAll("circle").attr("fill", "steelblue");
+    circles.attr("fill", "steelblue");
     d3.select(this).attr("fill", "orange");
 
     // Optional: dispatch custom event for your framework/app to listen to
@@ -698,7 +712,7 @@ Always validate and prepare data before visualisation:
 
 ```javascript
 // Filter invalid values
-const cleanData = data.filter(d => d.value != null && !isNaN(d.value));
+const cleanData = data.filter(d => Number.isFinite(d.value));
 
 // Sort data if order matters
 const sortedData = [...data].sort((a, b) => b.value - a.value);
@@ -717,7 +731,7 @@ For large datasets (>1000 elements):
 ```javascript
 // Use canvas instead of SVG for many elements
 // Use quadtree for collision detection
-// Simplify paths with d3.line().curve(d3.curveStep)
+// Downsample with an explicit error budget; curveStep changes interpolation, not point count
 // Implement virtual scrolling for large lists
 // Use requestAnimationFrame for custom animations
 ```
@@ -802,10 +816,10 @@ Contains detailed reference materials:
 
 Contains boilerplate templates:
 
-- `chart-template.js` - Starter template for basic chart
-- `interactive-template.js` - Template with tooltips, zoom, and interactions
+- `chart-template.jsx` - Starter template for basic chart
+- `interactive-template.jsx` - Template with tooltips, zoom, and interactions
 - `sample-data.json` - Example datasets for testing
 
-These templates work with vanilla JavaScript, React, Vue, Svelte, or any other JavaScript environment. Adapt them as needed for your specific framework.
+The assets are React JSX components requiring React, D3 and a JSX build pipeline; they do not run unchanged as vanilla JS or Vue/Svelte components.
 
 To use these resources, read the relevant files when detailed guidance is needed for specific visualisation types or patterns.

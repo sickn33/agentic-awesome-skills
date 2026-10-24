@@ -7,7 +7,7 @@ tags: full-text-search, tsvector, gin, search
 
 ## Use tsvector for Full-Text Search
 
-LIKE with wildcards can't use indexes. Full-text search with tsvector is orders of magnitude faster.
+Leading-wildcard LIKE generally cannot use a normal B-tree; trigram indexes can support substring searches. Full-text search tokenizes/stems text and changes matching semantics, so it is not a drop-in equivalent.
 
 **Incorrect (LIKE pattern matching):**
 

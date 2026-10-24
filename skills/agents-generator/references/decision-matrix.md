@@ -6,7 +6,7 @@ Run detections in this order. Each step reads files and sets flags used by later
 
 ### 1. Package manager
 
-Check for lockfile: `bun.lock` → bun, `pnpm-lock.yaml` → pnpm, `package-lock.json` → npm, `yarn.lock` → yarn.
+Read `packageManager` and documented CI commands first. If conflicting lockfiles exist, resolve the actual active tool rather than selecting the first match. Check for lockfile: `bun.lock` → bun, `pnpm-lock.yaml` → pnpm, `package-lock.json` → npm, `yarn.lock` → yarn.
 
 ### 2. Project type
 
@@ -80,7 +80,7 @@ Check for lockfile: `bun.lock` → bun, `pnpm-lock.yaml` → pnpm, `package-lock
 | `typeorm`     | TypeORM          | Check config for `type`                                            |
 | `mongoose`    | MongoDB/Mongoose | N/A                                                                |
 
-Provider affects ID type conventions (UUID for PostgreSQL, autoincrement for SQLite/MySQL, ObjectId for MongoDB).
+Inspect actual schema ID definitions; provider choice alone does not determine UUID, autoincrement or ObjectId conventions.
 
 ### 10. State management
 
@@ -237,7 +237,7 @@ Becomes:
 
 Add extra rows for: `test:run` (single-run), `test:coverage`, `doctor`, `format`, `typecheck`.
 
-Where `{pm}` = `bun` for bun (scripts without `run`), `pnpm` for pnpm, `npm run` for npm, `yarn` for yarn.
+Use one consistent runner: `{pm} run <script>` with `{pm}` equal to `bun`, `pnpm`, `npm`, or `yarn`. Do not emit `npm run run`. Prefer existing script keys over ad hoc package downloads.
 
 ### Monorepo command generation
 
@@ -256,7 +256,7 @@ Assemble from detected tools:
 - `{typecheck}`: `tsc --noEmit` if TypeScript, `bunx tsc --noEmit` if bun, skip if no TS.
 - `{lint}`: `{pm} run lint` or detected lint command.
 - `{test}`: `{pm} run test:run` or `{pm} run test` (whichever is single-run).
-- `{doctor}`: `{pm} doctor` or `{pm}x react-doctor@latest` if react-doctor detected. Skip if not.
+- `{doctor}`: `{pm} doctor` or an existing validated local doctor script if react-doctor detected. Skip if not.
 
 ### Monorepo rebuild note
 
@@ -302,7 +302,7 @@ Si se modificaron packages compartidos ({shared_pkg_list}), ejecutar su rebuild 
 | No config files at all           | Minimal defaults, note that project needs setup                        |
 | Multiple frameworks              | Pick primary based on root package.json, note secondary                |
 | Both App Router and Pages Router | Treat as App Router primary, note Pages Router legacy routes           |
-| No package.json scripts          | Generate commands from direct tool invocations (`npx next dev`)        |
+| No package.json scripts          | Omit commands unless independently documented and verified; do not fetch a tool to invent a command |
 | Bun without `bun run` scripts    | Use `bunx` prefix for npx equivalents                                  |
 | Monorepo without workspaces      | Treat each `apps/*` or `packages/*` as independent                     |
 | CSS: multiple approaches         | Pick primary (Tailwind wins over CSS Modules over plain CSS)           |

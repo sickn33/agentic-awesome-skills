@@ -31,6 +31,14 @@ plugin:
 - Prefer this skill over [[sendblue-api]] when the work happens in a shell context, one-shot script, cron job, or agent hook.
 - Reach for [[sendblue-api]] instead when writing application code that integrates Sendblue, receiving inbound webhooks, or needing features the CLI does not expose (send styles, reactions, group messages, status callbacks, media uploads).
 
+## Operational boundaries
+
+These are imported documentation examples; no CLI, daemon, server or hook runtime
+is bundled. Verify the pinned upstream version, account, billing, current limits and
+actual command/API schema before use. Never print credentials (`whoami`/`show-keys`
+may expose them) to agent output or logs. Authorization for drafting is not sending.
+Do not circumvent provider anti-abuse limits by distributing sends across lines.
+
 ## How It Works
 
 ### Step 1: Install

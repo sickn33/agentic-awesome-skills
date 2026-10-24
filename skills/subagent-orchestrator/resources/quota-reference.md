@@ -1,4 +1,4 @@
-# Quota Reference Card
+# Historical Quota Illustration — Not Provider Billing
 
 Quick reference for estimating and managing quota in every mission.
 
@@ -59,15 +59,10 @@ The 5-hour refresh only refills the sprint — NOT the weekly baseline.
 3. **Spec-first parallelism** → agents run at same time instead of waiting in sequence.
 4. **Flash for repairs** → never use Sonnet to fix a small bug.
 5. **Skip browser agent** → unless the task literally requires a live webpage.
-6. **Sideload AI Studio key** → free Gemini quota when weekly limit hits.
+6. Use only a supported account/provider configuration within its terms and the user’s budget.
 
 ---
 
-## Sideload Free Quota (when you hit the wall)
+## Verify actual usage
 
-1. Go to https://aistudio.google.com
-2. Create a free API key (Gemini Flash, free tier)
-3. In Antigravity → Settings → Models → Paste API key
-4. Now running on your own separate quota pool
-
-Works great for continuation after weekly baseline runs out.
+The numeric units, reset windows, multipliers and “safe” mission percentages above are unsupported teaching assumptions, not actual limits. Read the provider/account usage surface, record what is unavailable, and never claim an estimated percentage as measured. Separate paid API keys are not guaranteed free or compatible with a host’s model settings; do not create accounts, paste keys, change billing or bypass limits without explicit authorization. Store secrets only in the host’s supported secret store, never in briefs, logs or tracked files.

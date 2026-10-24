@@ -2,6 +2,16 @@
 
 This file contains detailed patterns, checklists, and code samples referenced by the skill.
 
+## Scope and validation
+
+Snippets omit constructors, application types, schema and some interface members;
+they are not one compilable program. Validate paging bounds/overflow and add a
+unique Id tiebreaker to every paged order. Multi-result count/data queries need
+appropriate isolation if snapshot consistency matters. Use a real relational test
+provider for SQL, constraints and transaction behavior: EF InMemory does not verify
+those properties. Product writes require concurrency tokens and DB uniqueness;
+a pre-insert duplicate query does not prevent races. Reserve stock atomically.
+
 ## Core Concepts
 
 ### 1. Project Structure (Clean Architecture)
@@ -109,8 +119,9 @@ public async Task<(Stock, Price)> GetStockAndPriceAsync(
 // ✅ CORRECT: ConfigureAwait in libraries
 public async Task<T> LibraryMethodAsync<T>(CancellationToken ct = default)
 {
-    var result = await _httpClient.GetAsync(url, ct).ConfigureAwait(false);
-    return await result.Content.ReadFromJsonAsync<T>(ct).ConfigureAwait(false);
+    using var result = await _httpClient.GetAsync(url, ct).ConfigureAwait(false);
+    result.EnsureSuccessStatusCode();
+    return await result.Content.ReadFromJsonAsync<T>(cancellationToken: ct).ConfigureAwait(false);
 }
 
 // ✅ CORRECT: ValueTask for hot paths with caching
@@ -534,51 +545,14 @@ public class CachedProductService : IProductService
     }
 }
 
-// Stale-while-revalidate pattern
-public class StaleWhileRevalidateCache<T>
-{
-    private readonly IDistributedCache _cache;
-    private readonly TimeSpan _freshDuration;
-    private readonly TimeSpan _staleDuration;
-    
-    public async Task<T?> GetOrCreateAsync(
-        string key,
-        Func<CancellationToken, Task<T>> factory,
-        CancellationToken ct = default)
-    {
-        var cached = await _cache.GetStringAsync(key, ct);
-        
-        if (cached != null)
-        {
-            var entry = JsonSerializer.Deserialize<CacheEntry<T>>(cached)!;
-            
-            if (entry.IsStale && !entry.IsExpired)
-            {
-                // Return stale data immediately, refresh in background
-                _ = Task.Run(async () =>
-                {
-                    var fresh = await factory(CancellationToken.None);
-                    await SetAsync(key, fresh, CancellationToken.None);
-                });
-            }
-            
-            if (!entry.IsExpired)
-                return entry.Value;
-        }
-        
-        // Cache miss or expired
-        var value = await factory(ct);
-        await SetAsync(key, value, ct);
-        return value;
-    }
-    
-    private record CacheEntry<TValue>(TValue Value, DateTime CreatedAt)
-    {
-        public bool IsStale => DateTime.UtcNow - CreatedAt > _freshDuration;
-        public bool IsExpired => DateTime.UtcNow - CreatedAt > _staleDuration;
-    }
-}
 ```
+
+Stale-while-revalidate requires a hosted/background queue with bounded concurrency,
+fresh DI scope, observed exceptions and per-key deduplication. Do not launch
+request-scoped database work via discarded `Task.Run`. Cache entry timestamps must
+receive duration settings explicitly; nested C# records cannot capture enclosing
+instance fields. Cross-node invalidation of L1 needs messaging or short expiration,
+and cache keys must include the authorized tenant and relevant permission scope.
 
 ## Testing Patterns
 
@@ -793,7 +767,7 @@ public class ProductsApiTests : IClassFixture<WebApplicationFactory<Program>>
 
 ## Resources
 
-- **assets/service-template.cs.template**: Complete service implementation template
+- **assets/service-template.cs.template**: Partial service implementation sketch
 - **assets/repository-template.cs.template**: Repository pattern implementation
 - **references/ef-core-best-practices.md**: EF Core optimization guide
 - **references/dapper-patterns.md**: Advanced Dapper usage patterns

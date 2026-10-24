@@ -91,6 +91,11 @@ mkdir -p "$OUTPUT_DIR"
 OUTPUT_DIR=$(cd "$OUTPUT_DIR" && pwd)
 OUTPUT_PDF="$OUTPUT_DIR/$(basename "$OUTPUT_PDF")"
 
+if [[ -e "$OUTPUT_PDF" || -L "$OUTPUT_PDF" ]]; then
+    err "Refusing to overwrite existing output; choose a fresh PDF path."
+    exit 1
+fi
+
 echo ""
 echo -e "${BOLD}╔══════════════════════════════════════╗${NC}"
 echo -e "${BOLD}║       Export Slides to PDF            ║${NC}"

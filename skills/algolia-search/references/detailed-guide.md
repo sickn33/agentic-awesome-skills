@@ -8,7 +8,7 @@
 
 Modern React InstantSearch setup using hooks for type-ahead search.
 
-Uses react-instantsearch-hooks-web package with algoliasearch client.
+Uses React InstantSearch v7 (`react-instantsearch`). The older hooks package and the v4 client snippets below require migration before use with the v5 client.
 Widgets are components that can be customized with classnames.
 
 Key hooks:
@@ -167,8 +167,8 @@ import { simple } from 'instantsearch.js/es/lib/stateMappings';
 
 ### Anti_patterns
 
-- Pattern: Using InstantSearch component for Next.js SSR | Why: Regular component doesn't support server-side rendering | Fix: Use InstantSearchNext from react-instantsearch-nextjs
-- Pattern: Static rendering for search pages | Why: Search results must be fresh for each request | Fix: Set export const dynamic = 'force-dynamic'
+- Pattern: Using InstantSearch component for Next.js SSR | Why: SSR requires the matching router/provider integration | Fix: Use InstantSearchNext from react-instantsearch-nextjs
+- Pattern: Static rendering for search pages | Why: Choose caching and rendering policy for the application | Fix: Set export const dynamic = 'force-dynamic'
 
 ### References
 
@@ -248,26 +248,11 @@ export async function deleteProducts(productIds: string[]) {
   await index.deleteObjects(productIds);
 }
 
-// Full reindex with zero-downtime (atomic swap)
-export async function fullReindex(products: Product[]) {
-  const tempIndex = adminClient.initIndex('products_temp');
-
-  // Index to temp index
-  await tempIndex.saveObjects(
-    products.map((p) => ({
-      objectID: p.id,
-      ...p,
-    }))
-  );
-
-  // Copy settings from main index
-  await adminClient.copyIndex('products', 'products_temp', {
-    scope: ['settings', 'synonyms', 'rules'],
-  });
-
-  // Atomic swap
-  await adminClient.moveIndex('products_temp', 'products');
-}
+// Full rebuild deliberately omitted: the previous fixed products_temp workflow
+// raced asynchronous tasks and concurrent jobs, and could retain stale records.
+// Use the pinned client's replaceAllObjects helper after reviewing its task waits,
+// settings/rules/synonyms preservation, temporary-record cost and recovery behavior.
+// Serialize rebuilds; verify the final task and record set before reporting success.
 
 ### Anti_patterns
 
@@ -318,11 +303,13 @@ const adminClient = algoliasearch(
 
 // Generate user-specific secured key
 export function generateSecuredKey(userId: string) {
+  // Derive this identifier from the authenticated session, never a request filter.
+  if (!/^[A-Za-z0-9_-]+$/.test(userId)) throw new Error("Invalid user identifier");
   const searchKey = process.env.ALGOLIA_SEARCH_KEY!;
 
   return adminClient.generateSecuredApiKey(searchKey, {
     // User can only see their own data
-    filters: `userId:${userId}`,
+    filters: `userId:"${userId}"`,
     // Key expires in 1 hour
     validUntil: Math.floor(Date.now() / 1000) + 3600,
     // Restrict to specific index
@@ -410,7 +397,7 @@ async function configureIndex() {
     attributesForFaceting: [
       'category',
       'brand',
-      'filterOnly(inStock)',  // Filter only, not displayed
+      'filterOnly(inStock)',  // Filter only; does not hide returned attributes
       'searchable(tags)',     // Searchable facet
     ],
 
@@ -755,7 +742,7 @@ export function SearchWithAutocomplete() {
 
 ### Anti_patterns
 
-- Pattern: Creating autocomplete without debouncing | Why: Every keystroke triggers search, wastes operations | Fix: Algolia autocomplete handles debouncing automatically
+- Pattern: Creating autocomplete without debouncing | Why: Every keystroke triggers search, wastes operations | Fix: Implement and test explicit debouncing/cancellation for the pinned autocomplete integration
 - Pattern: Not using Query Suggestions index | Why: Missing search analytics for popular queries | Fix: Enable Query Suggestions in Algolia dashboard
 
 ### References
@@ -829,9 +816,9 @@ Message: Hardcoded Algolia credentials. Use environment variables.
 
 Severity: ERROR
 
-Indexing operations require admin key, not search key
+Indexing requires a server-side key with the necessary write ACL, not a search-only key
 
-Message: Search key used for indexing. Use admin key for write operations.
+Message: Search key used for indexing. Use an index-restricted write key with the necessary ACL.
 
 ### Single Record Indexing in Loop
 
@@ -899,3 +886,13 @@ Message: No customRanking configured. Add business metrics (popularity, rating).
 - user needs user authentication -> clerk-auth (Secured API keys per user)
 - user needs database setup -> postgres-wizard (Source data for indexing)
 - user needs serverless deployment -> aws-serverless (Lambda for indexing jobs)
+
+## Integration boundaries and validation
+
+This guide combines older client examples with React/Next sketches; it is not a runnable application. Pin the client and UI package versions, migrate `initIndex`/default imports to the matching API, supply missing components/types and validate routing and hydration. In Next.js keep interactive widgets in a client module and server secrets in server-only modules; `force-dynamic` is an application choice. Ordinary InstantSearch also has SSR integrations; `InstantSearchNext` targets the App Router. Do not assume an `Autocomplete` export exists in the selected React package.
+
+Use a least-privilege write key for indexing. A public search key exposes every record/attribute its ACL and restrictions permit. Generate secured keys on the authenticated server using a restricted search parent key; signing does not require exposing an admin key. Validate/escape filter values, return private key responses with `Cache-Control: private, no-store`, and never share a user's cached response with another user. Referrer restrictions and per-IP limits are not user authorization.
+
+Before running the facet examples, declare the actual record schema and facet attributes (including brand, price, rating and hierarchical categories). `filterOnly` does not make an attribute confidential. Strict price sorting needs the documented replica ranking policy; adding `customRanking` alone does not guarantee price order. Create/synchronize replicas and wait for indexing/settings tasks before testing. Bound and validate displayed numeric data and generated URLs.
+
+Index writes, deletes and rebuilds mutate remote data and can incur costs. Work within the authorized index/data scope, retain a recoverable source snapshot, serialize rebuilds and reconcile uncertain task outcomes before retrying. Validate search relevance, access isolation, task completion, empty/error states and request budgets against a test index; no live operation was validated by this document.

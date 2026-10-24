@@ -1,7 +1,7 @@
 ---
 name: claude-monitor
 description: Monitor de performance do Claude Code e sistema local. Diagnostica lentidao, mede CPU/RAM/disco, verifica API latency e gera relatorios de saude do sistema.
-risk: safe
+risk: critical
 source: community
 date_added: '2026-03-06'
 author: renat
@@ -54,10 +54,10 @@ Determina se o gargalo é local (PC) ou remoto (API Claude) e sugere ações cor
 
 ## 1. Diagnóstico Rápido (Health_Check.Py)
 
-Rode SEMPRE como primeiro passo:
+Diagnostico local inicial (substitua <skill-dir> pelo diretorio instalado; use --quick para nao acessar rede):
 
 ```bash
-python C:\Users\renat\skills\claude-monitor\scripts\health_check.py
+python3 "<skill-dir>/scripts/health_check.py"
 ```
 
 O script analisa em ~3 segundos:
@@ -91,7 +91,7 @@ Baseado no diagnóstico, ofereça ao usuário:
 
 #### Se browsers pesados (>5GB RAM ou >40 processos):
 ```bash
-python C:\Users\renat\skills\claude-monitor\scripts\health_check.py --browsers-detail
+python3 "<skill-dir>/scripts/health_check.py" --browsers-detail
 ```
 Mostra RAM por browser e sugere quais fechar. **Nunca fechar processos sem permissão explícita do usuário.**
 
@@ -108,7 +108,7 @@ Mostra RAM por browser e sugere quais fechar. **Nunca fechar processos sem permi
 Se o usuário quiser monitoramento em background:
 
 ```bash
-python C:\Users\renat\skills\claude-monitor\scripts\monitor.py --interval 30 --duration 300
+python3 "<skill-dir>/scripts/monitor.py" --interval 30 --duration 300
 ```
 
 Parâmetros:
@@ -129,10 +129,10 @@ O monitor salva snapshots periódicos e gera um relatório ao final com:
 Para testar se a lentidão é da API:
 
 ```bash
-python C:\Users\renat\skills\claude-monitor\scripts\api_bench.py
+python3 "<skill-dir>/scripts/api_bench.py"
 ```
 
-Mede o tempo de resposta do processo Claude Code local (não faz chamadas à API).
+Mede DNS, TCP e handshake TLS para endpoints externos; nao mede o processo local, resposta HTTP ou tempo de inferencia da API. Use --quick no health check para evitar rede.
 Compara com tempos típicos e indica se está dentro do esperado.
 
 ## Thresholds De Referência
@@ -151,8 +151,8 @@ Compara com tempos típicos e indica se está dentro do esperado.
 Quando apresentar o diagnóstico, inclua estas dicas contextuais:
 
 - **Muitas abas = muito CPU/RAM**: Cada aba de browser é um processo separado.
-  50 abas = 50 processos competindo por recursos.
-- **Claude Code é pesado**: Ele roda vários processos Electron. É normal consumir 3-5 GB.
+  A relacao entre abas e processos varia por navegador e isolamento de sites.
+- **Claude Code é pesado**: O CLI Claude Code e o aplicativo desktop sao diferentes; nomes de processos e RSS nao demonstram a arquitetura nem uma faixa normal universal.
   Mas se estiver usando >6 GB com várias sessões, considere fechar sessões antigas.
 - **Troca de sessão lenta**: Geralmente causada por CPU alta ou muitos processos competindo.
   A sessão precisa carregar o histórico da conversa, e se o CPU está ocupado, demora.
@@ -162,7 +162,7 @@ Quando apresentar o diagnóstico, inclua estas dicas contextuais:
 ## Dependências
 
 - Python 3.10+
-- psutil (instalado automaticamente pelo script se não disponível)
+- psutil, instalado explicitamente em ambiente isolado com versao revisada
 - Nenhuma API key necessária
 
 ## Best Practices

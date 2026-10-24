@@ -46,9 +46,7 @@ from azure.identity.aio import DefaultAzureCredential
 
 async def get_eventhub_info(namespace: str, eventhub: str):
     """Display Event Hub information."""
-    credential = DefaultAzureCredential()
-
-    async with EventHubProducerClient(
+    async with DefaultAzureCredential() as credential, EventHubProducerClient(
         fully_qualified_namespace=namespace,
         eventhub_name=eventhub,
         credential=credential,
@@ -64,9 +62,7 @@ async def get_eventhub_info(namespace: str, eventhub: str):
 
 async def get_partition_info(namespace: str, eventhub: str):
     """Display detailed partition information."""
-    credential = DefaultAzureCredential()
-
-    async with EventHubProducerClient(
+    async with DefaultAzureCredential() as credential, EventHubProducerClient(
         fully_qualified_namespace=namespace,
         eventhub_name=eventhub,
         credential=credential,
@@ -83,7 +79,7 @@ async def get_partition_info(namespace: str, eventhub: str):
 
             begin_seq = p_props["beginning_sequence_number"]
             last_seq = p_props["last_enqueued_sequence_number"]
-            event_count = last_seq - begin_seq if not p_props["is_empty"] else 0
+            event_count = last_seq - begin_seq + 1 if not p_props["is_empty"] else 0
             total_events += event_count
 
             print(f"\nPartition {partition_id}:")
@@ -134,11 +130,16 @@ async def receive_events(
     else:
         start_pos = starting_position
 
+    if max_events <= 0 or not 0 < max_wait_time <= 3600:
+        raise ValueError("max_events must be positive and max_wait_time must be in (0, 3600]")
     event_count = 0
+    stop = asyncio.Event()
 
     async def on_event(partition_context, event):
         nonlocal event_count
 
+        if stop.is_set():
+            return
         if event:
             event_count += 1
             print(
@@ -161,7 +162,7 @@ async def receive_events(
                 await partition_context.update_checkpoint(event)
 
         if event_count >= max_events:
-            raise StopIteration("Max events reached")
+            stop.set()
 
     async def on_error(partition_context, error):
         if partition_context:
@@ -187,25 +188,27 @@ async def receive_events(
 
     try:
         async with consumer:
+            receive_args = dict(on_event=on_event, on_error=on_error,
+                                starting_position=start_pos, max_wait_time=max_wait_time)
             if partition_id:
-                await consumer.receive(
-                    on_event=on_event,
-                    on_error=on_error,
-                    partition_id=partition_id,
-                    starting_position=start_pos,
-                    max_wait_time=max_wait_time,
-                )
-            else:
-                await consumer.receive(
-                    on_event=on_event,
-                    on_error=on_error,
-                    starting_position=start_pos,
-                    max_wait_time=max_wait_time,
-                )
-    except StopIteration:
-        pass
-    except KeyboardInterrupt:
-        print("\nStopped by user")
+                receive_args["partition_id"] = partition_id
+            receiver = asyncio.create_task(consumer.receive(**receive_args))
+            stopper = asyncio.create_task(stop.wait())
+            try:
+                done, _ = await asyncio.wait({receiver, stopper}, timeout=max_wait_time,
+                                             return_when=asyncio.FIRST_COMPLETED)
+                if receiver in done:
+                    await receiver # surface receive errors
+                elif not done:
+                    print("Bounded receive window ended")
+            finally:
+                receiver.cancel()
+                stopper.cancel()
+                await asyncio.gather(receiver, stopper, return_exceptions=True)
+    finally:
+        if checkpoint_store:
+            await checkpoint_store.close()
+        await credential.close()
 
     print(f"\n-" * 60)
     print(f"Total events received: {event_count}")
@@ -220,9 +223,7 @@ async def send_events(
     partition_id: Optional[str] = None,
 ):
     """Send test events to Event Hub."""
-    credential = DefaultAzureCredential()
-
-    async with EventHubProducerClient(
+    async with DefaultAzureCredential() as credential, EventHubProducerClient(
         fully_qualified_namespace=namespace,
         eventhub_name=eventhub,
         credential=credential,
@@ -238,7 +239,6 @@ async def send_events(
 
         batch = await producer.create_batch(**batch_kwargs)
 
-        sent = 0
         for i in range(count):
             event_body = f"{message} #{i + 1}" if count > 1 else message
             event = EventData(event_body)
@@ -252,7 +252,6 @@ async def send_events(
             except ValueError:
                 # Batch full, send and create new
                 await producer.send_batch(batch)
-                sent += batch.size_in_bytes
                 batch = await producer.create_batch(**batch_kwargs)
                 batch.add(event)
 
@@ -338,7 +337,7 @@ def main():
         "--max-wait-time",
         type=float,
         default=30.0,
-        help="Max wait time in seconds (default: 30)",
+        help="Total bounded receive window in seconds (default: 30)",
     )
 
     # Send command

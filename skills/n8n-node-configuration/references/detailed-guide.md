@@ -2,14 +2,18 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+## Version and tooling boundary
+
+`get_node`, validators and update helpers belong to an external n8n-mcp installation; they are not bundled or guaranteed to exist. Confirm its live schema and the target n8n/node typeVersion. Several fragments below illustrate dependencies with historical parameter shapes; they are not import-ready workflows. POST may legitimately omit a body, and UI displayOptions are visibility rules, not sufficient runtime validation. Structural validation does not authorize deployment or prove credentials, side effects or business behavior.
+
 ## Configuration Philosophy
 
 **Progressive disclosure**: Start minimal, add complexity as needed
 
 Configuration best practices:
 - `get_node` with `detail: "standard"` is the most used discovery pattern
-- 56 seconds average between configuration edits
-- Covers 95% of use cases with 1-2K tokens response
+- Response sizes and edit timing vary; no benchmark is established here
+- Standard detail is a useful starting point, not a measured coverage guarantee
 
 **Key insight**: Most configurations need only standard detail, not full schema!
 
@@ -38,7 +42,7 @@ Configuration best practices:
   "operation": "update",
   "messageId": "123",     // Required for update (different!)
   "text": "Updated!"      // Required for update
-  // channel NOT required for update
+  // Verify channel and message identifier fields for this node version
 }
 ```
 
@@ -476,7 +480,7 @@ get_node({
   "operation": "update",
   "messageId": "1234567890",  // Required (different from post!)
   "text": "Updated!",         // Required
-  "channel": "#general"       // Optional (can be inferred)
+  "channel": "#general"       // Verify required channel identifier; do not assume inference
 }
 ```
 
@@ -519,13 +523,9 @@ get_node({
   "url": "https://api.example.com/users",
   "authentication": "none",
   "sendBody": true,                     // Required for POST
-  "body": {                             // Required when sendBody=true
-    "contentType": "json",
-    "content": {
-      "name": "John Doe",
-      "email": "john@example.com"
-    }
-  }
+  "contentType": "json",
+  "specifyBody": "json",
+  "jsonBody": "={{ { name: $json.name, email: $json.email } }}"
 }
 ```
 
@@ -606,7 +606,7 @@ singleValue should be true when:
   - operation IN (isEmpty, isNotEmpty, true, false)
 ```
 
-**Good news**: Auto-sanitization fixes this!
+Some n8n-mcp implementations sanitize operator structures; inspect the saved result rather than assuming this happens.
 
 **Manual check**:
 ```javascript
@@ -685,7 +685,7 @@ if (result.valid) {
 {
   "resource": "message",
   "operation": "update",  // Changed
-  "channel": "#general",  // Wrong field for update!
+  "channel": "#general",  // Channel may still be required; message identifier is also needed
   "text": "..."
 }
 ```
@@ -696,7 +696,7 @@ if (result.valid) {
 get_node({
   nodeType: "nodes-base.slack"
 });
-// See what update operation needs (messageId, not channel)
+// See all required update fields, including channel and message identifier
 ```
 
 ---
@@ -726,7 +726,7 @@ get_node({
    - Always check get_node when changing operation
    - Don't assume configs are transferable
 
-5. **Trust auto-sanitization**
+5. **Inspect sanitization behavior**
    - Operator structure fixed automatically
    - Don't manually add/remove singleValue
    - IF/Switch metadata added on save
@@ -760,8 +760,8 @@ get_node({
 
 For comprehensive guides on specific topics:
 
-- **DEPENDENCIES.md** - Deep dive into property dependencies and displayOptions
-- **OPERATION_PATTERNS.md** - Common configuration patterns by node type
+- **DEPENDENCIES.md** (not bundled) - Deep dive into property dependencies and displayOptions
+- **OPERATION_PATTERNS.md** (not bundled) - Common configuration patterns by node type
 
 ---
 

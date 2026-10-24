@@ -56,8 +56,7 @@ assume the chapter is wrong).
 
 Any single line containing both a four-digit year (`1999年`) and an age
 (`十八岁`, `23岁`) and a character name whose `birth_year` is set gets checked.
-Tolerance is one year, because colloquial narration rounds. Split the sentence
-if a line legitimately mentions two different years.
+Tolerance is one year, because colloquial narration rounds. The checker selects the first year and age on a line; adjudicate multi-person or multi-date lines manually rather than rewriting correct prose merely to satisfy it.
 
 ## Example
 

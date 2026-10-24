@@ -22,25 +22,9 @@ func TestTwo(t *testing.T) {
 }
 ```
 
-**Correct (unit testing with mocks):**
+**Unit-test application logic separately:**
 
-The `DBOSContext` interface is fully mockable. Use a mocking library like `testify/mock` or `mockery`:
-
-```go
-func TestWorkflow(t *testing.T) {
-	mockCtx := mocks.NewMockDBOSContext(t)
-
-	// Mock RunAsStep to return a canned value
-	mockCtx.On("RunAsStep", mockCtx, mock.Anything, mock.Anything).
-		Return("mock-result", nil)
-
-	result, err := myWorkflow(mockCtx, "input")
-	assert.NoError(t, err)
-	assert.Equal(t, "expected", result)
-
-	mockCtx.AssertExpectations(t)
-}
-```
+Inject an application-owned interface around external effects and test that pure logic. The mocked DBOSContext method names below depend on generated SDK-specific mocks and are not supplied by this tree; do not assume a generic RunAsStep function is an interface method.
 
 **Correct (integration testing with Postgres):**
 
@@ -83,7 +67,7 @@ func TestWorkflowIntegration(t *testing.T) {
 
 Key points:
 - Use `t.Cleanup` to ensure `Shutdown` is called after each test
-- Use unique `AppName` per test to avoid collisions
+- Use a dedicated disposable test database/schema and unique workflow IDs per test/run; AppName alone is not database isolation
 - Mock `DBOSContext` for fast unit tests without Postgres
 - Use real Postgres for integration tests that verify durable behavior
 

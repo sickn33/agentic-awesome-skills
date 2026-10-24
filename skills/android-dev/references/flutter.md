@@ -134,7 +134,7 @@ class _HomeView extends StatelessWidget {
 ## go_router Setup
 
 ```dart
-final router = GoRouter(
+final routerProvider = Provider<GoRouter>((ref) => GoRouter(
   initialLocation: '/home',
   redirect: (context, state) {
     final isLoggedIn = ref.read(authStateProvider).isLoggedIn;
@@ -157,8 +157,12 @@ final router = GoRouter(
       ],
     ),
   ],
-);
+));
 ```
+
+The redirect must be refreshed when auth changes (for example through a
+GoRouter refresh listenable or a router provider that watches auth state).
+A one-time `ref.read` does not make redirects reactive.
 
 ## Drift Database
 
@@ -186,6 +190,7 @@ dependencies:
   freezed_annotation: ^2.4.1
   riverpod: ^2.5.1                # alternative to bloc
   flutter_riverpod: ^2.5.1
+  riverpod_annotation: ^2.3.5
   go_router: ^14.1.0
   dio: ^5.4.3
   drift: ^2.18.0
@@ -197,6 +202,7 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.4.9
+  riverpod_generator: ^2.4.0
   freezed: ^2.5.2
   json_serializable: ^6.8.0
   drift_dev: ^2.18.0

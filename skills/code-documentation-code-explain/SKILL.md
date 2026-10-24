@@ -52,3 +52,9 @@ $ARGUMENTS
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Implementation limits
+
+The playbook is a teaching scaffold: complexity, nesting, pattern, dependency and difficulty helpers are omitted, and template fields such as `{specific_use_in_code}` and `{code_analysis}` require evidence-based substitution. Unknown metrics must remain unknown. AST and regex matches suggest syntax or possible patterns; they do not establish behavior, runtime call targets, security, or a learner's knowledge gaps. Explain code statically unless separate execution is authorized in an isolated environment.
+
+The recursion diagram covers factorial(3) only; the asynchronous fetch example simulates sleep and performs no HTTP request. Bound task counts and concurrency when adapting it. Timings are examples, not measured results. Mermaid identifiers and labels require escaping and stable generated IDs; call diagrams must handle external callees absent from the local function map. Do not render untrusted labels as active markup or claim complete call graphs from name matching.

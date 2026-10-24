@@ -172,7 +172,7 @@ Before saving a Code Tool:
 - **Use the Execution view**, not just the test output. The agent's tool invocation and raw input/output are visible there — you can see exactly what `query` the LLM sent.
 - **Log inside the tool** by including fields in the returned JSON:
   ```javascript
-  return JSON.stringify({ received_query: query, result: /* ... */ });
+  return JSON.stringify({ input_validated: true, result: /* ... */ }); // omit raw sensitive query
   ```
   The LLM sees the echo, and you can spot malformed input.
-- **Test the tool without the LLM** by temporarily turning the tool node into a standalone Code node with hard-coded `query`, running it manually, then swapping back.
+- **Test the tool without the LLM** by testing extracted pure computation in isolation, then separately verifying the actual Code Tool contract; a standalone Code node cannot prove Code Tool runtime behavior.

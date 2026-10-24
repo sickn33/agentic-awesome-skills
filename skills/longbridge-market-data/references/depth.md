@@ -16,9 +16,9 @@ Orderbook depth, broker queue (HK-only), and tick-by-tick trades.
 
 1. Resolve the symbol to `<CODE>.<MARKET>`.
 2. Pick the subcommand by user intent (table above). For an "overview" intent, run `depth` + `brokers` (HK-only) + `trades` and merge.
-3. **Off-hours warning**: outside trading hours, `depth` is the closing snapshot and `trades` are the last N of the previous session — call this out explicitly when responding.
+3. **Off-hours warning**: outside trading hours, inspect timestamps and session labels rather than assuming the payload is the closing snapshot or previous-session trades — call this out explicitly when responding.
 4. Call the Longbridge CLI directly (preferred) or fall back to MCP.
-5. Render `depth` as a bid / ask table; describe `trades` as a direction summary (buy-dominant / sell-dominant) plus the latest few rows. Cite Longbridge Securities.
+5. Render `depth` as a bid / ask table; describe `trades` as a reported tick-direction summary (not proof of buyer/seller intent or institutional flows) plus the latest few rows. Cite Longbridge Securities.
 
 ## CLI
 

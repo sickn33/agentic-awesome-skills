@@ -25,6 +25,10 @@ date_added: "2026-02-27"
 
 ---
 
+## Scope and template prerequisites
+
+These13 Markdown templates describe layouts, not complete generated projects. Preserve an existing application's framework, package manager and lockfile; keywords alone do not justify replacing its stack. Template versions are historical baselines and scaffold @latest can produce incompatible layouts/APIs. Check current primary framework docs and host constraints before selecting exact versions. Named agents/tools are optional environment-specific roles, not bundled capabilities or authority to delegate. Honor existing plans rather than requiring a new conflicting filename or three redundant questions. Confirm data/tenant authorization and acceptance examples; keep secrets server-side, review migration effects and use local previews before authorized deployment/publication/payments/messages. Report actual tests, not production-ready guarantees.
+
 ## 📦 Templates (13)
 
 Quick-start scaffolding for new projects. **Read the matching template only!**

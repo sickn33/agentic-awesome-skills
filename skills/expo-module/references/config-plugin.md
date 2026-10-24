@@ -52,10 +52,12 @@ export default withMyConfig;
 
 ## Using in app.json
 
+Values written to Info.plist, AndroidManifest or JavaScript-accessible APIs are extractable from the distributed app. Use only intentionally public client identifiers here, restrict them by application/platform where supported, and keep server credentials on a trusted backend. Environment-variable substitution does not make bundled values secret.
+
 ```json
 {
   "expo": {
-    "plugins": [["my-module", { "apiKey": "secret_key" }]]
+    "plugins": [["my-module", { "apiKey": "publishable_client_key" }]]
   }
 }
 ```
@@ -87,4 +89,4 @@ Function("getApiKey") {
 - Plugins must be synchronous; return values must be serializable (except `mods`)
 - `Mods` are async functions invoked during the prebuild "syncing" phase
 - Use `npm run build plugin` to compile TypeScript plugins
-- Test with `npx expo prebuild --clean`
+- Test in a disposable checkout or after preserving native changes: `npx expo prebuild --clean` deletes and regenerates native projects. Review the diff before adopting it.

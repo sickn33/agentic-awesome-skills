@@ -1,6 +1,6 @@
 # Offer Anatomy
 
-A complete offer has six components. Skip any one and conversion suffers — usually noticeably.
+Use these six dimensions as an audit checklist; bonuses, guarantees and scarcity are optional, and their absence does not establish a conversion defect.
 
 ## The six components
 
@@ -71,7 +71,7 @@ For each major objection your buyer has, add a bonus that closes it:
 | "I'm not sure my team will buy in" | Stakeholder pitch deck for your team |
 | "I've tried something like this before and it didn't work" | Case study of someone in your exact situation |
 
-A 4-bonus stack that closes 4 specific objections converts massively better than a 4-bonus stack of generic "extras."
+Relevant bonuses may address specific objections; test their effect on conversion, delivery cost and satisfaction rather than assuming a lift.
 
 ### Don't inflate
 
@@ -79,7 +79,7 @@ A 4-bonus stack that closes 4 specific objections converts massively better than
 
 Bonuses should:
 - Have a stated value the buyer can verify (compare to a comparable product)
-- Total to less than 2x the price (e.g., a $1K offer can have ~$1.5K in bonuses comfortably)
+- Use defensible comparable values rather than a fixed multiple of the price (e.g., a $1K offer can have ~$1.5K in bonuses comfortably)
 - Be things you'd actually sell separately if you wanted
 
 For the full bonus-stacking framework, see [bonus-stacking.md](bonus-stacking.md).
@@ -95,7 +95,7 @@ A guarantee directly raises perceived likelihood of achievement (the buyer think
 The wrong guarantee can hurt:
 - Over-promising guarantees attract refund-seekers
 - Generic "100% guaranteed" with no conditions reads as legally unenforceable
-- No guarantee at all signals you're not confident
+- Absence of a voluntary guarantee does not establish lack of confidence
 
 The right type depends on your business model, refund risk tolerance, and buyer sophistication. For the full taxonomy, see [guarantee-design.md](guarantee-design.md).
 

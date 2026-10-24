@@ -1,6 +1,6 @@
 # Workflow Automation Implementation Playbook
 
-This file contains detailed patterns, checklists, and code samples referenced by the skill.
+This file contains historical illustrative scaffolds, not ready-to-install pipelines. Define project-specific scripts/helpers, pin reviewed dependencies/actions to immutable commits, select supported language versions and validate workflows before use. Deploy/publish/notify only within explicit authorization and protected environments. Never expose secrets to PR-controlled code, including same-repository branches without a trust decision.
 
 ## Instructions
 
@@ -160,6 +160,8 @@ class WorkflowAnalyzer:
 
 ### 2. GitHub Actions Workflows
 
+Before deployment, replace this historical matrix with separate staging and production jobs: verify staging before production and require protected environment approval. The ECS sketch must preserve the full task definition, use the exact returned revision, wait for service stability and deploy an immutable image digest. No production verification should run until its corresponding deployment succeeded. OIDC must replace long-lived AWS secrets in an adopted workflow.
+
 Create comprehensive GitHub Actions workflows:
 
 **Multi-Environment CI/CD Pipeline**
@@ -176,7 +178,7 @@ on:
     types: [created]
 
 env:
-  NODE_VERSION: '18'
+  NODE_VERSION: '22'
   PYTHON_VERSION: '3.11'
   GO_VERSION: '1.21'
 
@@ -197,12 +199,10 @@ jobs:
           cache: 'npm'
 
       - name: Cache dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.npm
-            ~/.cache
-            node_modules
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
@@ -233,7 +233,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node: [16, 18, 20]
+        node: [22, 24]
     steps:
       - uses: actions/checkout@v4
 
@@ -255,7 +255,7 @@ jobs:
           TEST_DATABASE_URL: ${{ secrets.TEST_DATABASE_URL }}
 
       - name: Upload coverage
-        if: matrix.os == 'ubuntu-latest' && matrix.node == 18
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 22
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
@@ -307,19 +307,22 @@ jobs:
           output: 'trivy-results.sarif'
 
       - name: Upload scan results
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy-results.sarif'
 
       - name: Push to registry
-        if: github.event_name != 'pull_request'
+        env:
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          printf '%s' "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
           docker push ${{ github.repository }}:${{ matrix.environment }}-${{ github.sha }}
           docker push ${{ github.repository }}:${{ matrix.environment }}-latest
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-${{ matrix.environment }}
           path: |
@@ -333,13 +336,10 @@ jobs:
     name: Deploy to ${{ matrix.environment }}
     needs: build
     runs-on: ubuntu-latest
-    if: github.event_name != 'pull_request'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     strategy:
       matrix:
         environment: [staging, production]
-        exclude:
-          - environment: production
-            branches: [develop]
     environment:
       name: ${{ matrix.environment }}
       url: ${{ steps.deploy.outputs.url }}
@@ -423,6 +423,8 @@ jobs:
 
 ### 3. Release Automation
 
+Use the repository release contract first. The CLI does not populate `steps.semantic-release.outputs`; remove dependent steps or implement explicit reviewed output capture. `generateChangelog` below is an absent application helper. The git plugin must not bypass protected branches.
+
 Automate release processes:
 
 **Semantic Release Workflow**
@@ -448,7 +450,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
 
       - name: Install dependencies
         run: npm ci
@@ -654,8 +656,8 @@ setup_environment() {
 main() {
     check_prerequisites
     install_dependencies
-    setup_services
     setup_environment
+    setup_services
     initialize_database
     
     echo "✅ Development environment setup complete!"
@@ -670,6 +672,8 @@ main
 ```
 
 ### 5. Infrastructure Automation
+
+Separate untrusted PR validation from trusted cloud planning/apply. Do not provide AWS/state credentials to PR code. Use read-only/OIDC roles, protect sensitive plan artifacts and review an exact saved plan before apply. Shell steps piping plan through tee require `shell: bash` and `set -o pipefail`. PR comments require explicit issues/pull-requests write permissions, bounded sanitized output and an authorized commenting policy.
 
 Automate infrastructure provisioning:
 
@@ -795,9 +799,13 @@ jobs:
           version: '3.12.0'
       
       - name: Configure Kubernetes
+        env:
+          KUBE_CONFIG_B64: ${{ secrets.KUBE_CONFIG }}
         run: |
-          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > kubeconfig
-          export KUBECONFIG=kubeconfig
+          umask 077
+          printf '%s' "$KUBE_CONFIG_B64" | base64 -d > kubeconfig
+          chmod 600 kubeconfig
+          echo "KUBECONFIG=$PWD/kubeconfig" >> "$GITHUB_ENV"
       
       - name: Add Helm repositories
         run: |
@@ -884,6 +892,8 @@ Automate dependency updates:
 
 ### 8. Documentation Automation
 
+The generator is a sketch with missing local helpers. Use the installed TypeDoc version's async bootstrap/convert API and import node:fs/promises before writing files. Pages publishing requires current repo permissions and deployment policy.
+
 Automate documentation generation:
 
 **Documentation Workflow**
@@ -910,7 +920,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 22
       
       - name: Install dependencies
         run: npm ci
@@ -1004,6 +1014,8 @@ async function generateArchitectureDocs() {
 
 ### 9. Security Automation
 
+These historical scanner actions/tags require current primary-documentation review, immutable pins and minimal permissions before adoption. SARIF upload needs security-events: write in a trusted job. Run secret-bearing vendor scans only for trusted source; no pull_request_target checkout of untrusted code. ZAP baseline is a separate GitHub action/container, not the npm package shown in the earlier deployment sketch.
+
 Automate security scanning and compliance:
 
 **Security Scanning Workflow**
@@ -1036,7 +1048,7 @@ jobs:
           severity: 'CRITICAL,HIGH'
       
       - name: Upload Trivy results
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: 'trivy-results.sarif'
       
@@ -1078,6 +1090,8 @@ jobs:
 ```
 
 ### 10. Workflow Orchestration
+
+The excerpt omits type definitions and integrations. Promise.race does not cancel a running action; before allowing retries, implement AbortSignal cancellation and verify prior side effects. A timeout on a deployment is an unknown outcome, never implicit permission to retry it. Prefer an established orchestrator for production.
 
 Create complex workflow orchestration:
 
@@ -1176,7 +1190,8 @@ export class WorkflowOrchestrator extends EventEmitter {
       
       this.emit('step:failed', { step: stepPath, error });
       
-      if (step.onError === 'fail') {
+      result.success = false;
+      if (step.onError !== 'continue') {
         throw error;
       }
     }
@@ -1186,18 +1201,20 @@ export class WorkflowOrchestrator extends EventEmitter {
     step: WorkflowStep,
     stepResult: StepResult
   ): Promise<void> {
-    const timeout = step.timeout || this.config.defaultTimeout;
+    const timeout = step.timeout ?? this.config.defaultTimeout;
     const retries = step.retries || 0;
     
     let lastError: Error;
     
     for (let attempt = 0; attempt <= retries; attempt++) {
       try {
+        let timer: ReturnType<typeof setTimeout> | undefined;
         const result = await Promise.race([
           step.action!(),
-          this.createTimeout(timeout)
+          new Promise<never>((_, reject) => { timer = setTimeout(() => reject(new Error("Timeout")), timeout); })
         ]);
         
+        if (timer) clearTimeout(timer);
         stepResult.output = result;
         return;
       } catch (error) {

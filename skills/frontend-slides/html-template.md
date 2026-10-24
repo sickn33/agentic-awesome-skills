@@ -1,6 +1,6 @@
 # HTML Presentation Template
 
-Reference architecture for generating slide presentations. Every presentation follows this structure.
+Reference architecture, with controller methods and editor implementation intentionally omitted. Implement and verify navigation, focus, storage/export and a no-JavaScript fallback before delivery. Keep navigation shortcuts inactive inside inputs, textareas and contenteditable descendants. Handle localStorage failures and use a deck-specific key; never treat stored HTML as trusted.
 
 ## Base HTML Structure
 
@@ -12,7 +12,7 @@ Reference architecture for generating slide presentations. Every presentation fo
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Presentation Title</title>
 
-    <!-- Fonts: use Fontshare or Google Fonts — never system fonts -->
+    <!-- Optional hosted font: omit for private/offline decks; provide fallbacks -->
     <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=...">
 
     <style>
@@ -246,7 +246,7 @@ hotzone.addEventListener('click', () => {
 
 // 4. Keyboard shortcut (E key, skip when editing text)
 document.addEventListener('keydown', (e) => {
-    if ((e.key === 'e' || e.key === 'E') && !e.target.getAttribute('contenteditable')) {
+    if ((e.key === 'e' || e.key === 'E') && !e.target.closest('input, textarea, select, [contenteditable]')) {
         editor.toggleEditMode();
     }
 });
@@ -292,7 +292,7 @@ Save processed images with `_processed` suffix. Never overwrite originals.
 
 ### Image Placement
 
-**Use direct file paths** (not base64) — presentations are viewed locally:
+For an asset-folder deliverable, use relative paths and ship the folder alongside the HTML. For a genuinely self-contained single file, embed authorized images as data URLs. Do not claim an asset-folder deck is a standalone HTML file:
 
 ```html
 <img src="assets/logo_round.png" alt="Logo" class="slide-image logo">

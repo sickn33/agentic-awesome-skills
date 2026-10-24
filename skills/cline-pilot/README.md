@@ -37,6 +37,10 @@ npx skills add https://github.com/gongdear/cline-pilot
 mkdir -p ~/.hermes/skills && cp -r cline-pilot ~/.hermes/skills/
 ```
 
+## Privacy and limits
+
+This catalog ships templates, not the upstream author's private config or current-user preferences. Store runtime state in an authorized private directory outside this tracked installation; never persist memory without explicit user request. Monitoring prints session content/tool inputs and may expose secrets: inspect locally, redact before sharing and bind the exact session to the repository/head/run. Nonempty reports may be stale; they do not prove a current successful test. Prompt rules alone do not enforce permissions.
+
 ## Quick start
 
 1. **First use**: the agent will ask for your dev environment (conda/python env name,
@@ -55,7 +59,7 @@ mkdir -p ~/.hermes/skills && cp -r cline-pilot ~/.hermes/skills/
 
 ```
 cline-pilot/
-├── SKILL.md                          # core workflow (<150 lines, loaded on activation)
+├── SKILL.md                          # core workflow (loaded on activation)
 ├── README.md / README.zh.md
 ├── LICENSE                           # MIT
 ├── scripts/

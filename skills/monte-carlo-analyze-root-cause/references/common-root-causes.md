@@ -10,7 +10,7 @@ After gathering evidence, match your findings against these known root cause pat
 
 ### Upstream cascade
 **Signature:** Table is stale AND at least one upstream table is also stale. The upstream staleness started first.
-**Fix:** Fix the upstream table first — this table will refresh automatically once its input is fresh.
+**Fix:** Fix the upstream table first — verify whether this pipeline retries automatically or requires an authorized replay.
 
 ### Resource contention / timeout
 **Signature:** Queries are running but taking much longer than usual. Pipeline timeouts. Warehouse queue depth is high.
@@ -77,3 +77,5 @@ After gathering evidence, match your findings against these known root cause pat
 3. Present the root cause with the specific evidence that matched.
 4. Suggest the fix from the catalog, adapted to the user's specific situation.
 5. If no pattern matches, say so — novel root causes do exist. Present the evidence and let the user draw conclusions.
+
+<!-- Modified locally: evidence, SQL safety or paid-run corrections. -->

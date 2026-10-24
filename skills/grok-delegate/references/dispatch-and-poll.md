@@ -1,3 +1,5 @@
+> Documentation-only import: no relay runtime is bundled. Behavior and flags below describe upstream and require verification against a pinned, separately reviewed version. Artifact logs can contain secrets; keep them private and redact before sharing.
+
 # Dispatch and poll
 
 `scripts/relay.mjs` is the dispatch layer. It wraps `grok -p` (headless mode), runs the brief under

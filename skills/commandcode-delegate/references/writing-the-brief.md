@@ -69,8 +69,8 @@ outside the repository.
 Sibling delegates can rely on a sandbox refusing to write `.git`. This one cannot: under `--yolo`,
 Command Code can commit, so the brief has to tell it not to. Record `HEAD` before dispatch and keep the
 "do NOT run git add or git commit" line. If `HEAD` changed, inspect status, staged and unstaged diffs,
-and the intervening log first. Only after confirming the whole commit range belongs to the run, use
-`git reset --soft <recorded-baseline>` so you can review that range as a diff.
+and the intervening log first. Preserve a recovery ref/bundle first; inspect the baseline-to-HEAD range directly. Use
+`git reset --soft <recorded-baseline>` only on an isolated unshared branch when preserving all unrelated work is established; review does not require rewriting history.
 
 ## Discover the real gates — don't hardcode
 
@@ -120,7 +120,7 @@ find the real output regardless of what wraps it.
 <task>
 In the payments service at services/billing/, the refund path double-charges when a refund is retried
 after a network timeout (the idempotency key isn't checked before re-submitting). Make the refund
-submission idempotent: check for an existing refund by idempotency key before creating a new one.
+submission idempotent using an atomic unique-key reservation and the provider idempotency contract; a separate check-then-create alone races under concurrent retries.
 Touch only services/billing/refund.py and its tests. Leave the charge path, the API routes, and the
 data models untouched, and do not write outside services/billing/.
 </task>

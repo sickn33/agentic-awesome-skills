@@ -35,7 +35,7 @@ node "<skill-dir>/scripts/relay.mjs" --brief brief.txt --cd /path/to/repo
 | `--out-dir <dir>` | Artifact directory (default: a fresh directory under the system temp dir). |
 | `-h`, `--help` | Print the relay's header help. |
 
-The child cwd pins the workspace; the relay does not pass Cline's `--cwd`. `-v` (verbose) exposes
+The child cwd selects the initial workspace, not an OS confinement boundary; the relay does not pass Cline's `--cwd`. `-v` (verbose) exposes
 provider and model in `run_start`. Fresh JSON runs may omit `sessionId`, and the verified headless
 JSON path does not support resume, so the relay has no resume flag.
 
@@ -75,7 +75,7 @@ Artifacts live outside the repo by default, so they do not appear in `touchedFil
 
 The relay blocks. Use the orchestrator's background-command facility, or background it in a shell
 and poll for `result.json`. The run is done only when the process exits and the file contains a
-`status`. The result file is written atomically, so a partial read is impossible.
+`status`. The upstream relay claims atomic writes; still validate version/schema, run identity and process completion, and treat missing or corrupt output as unknown.
 
 A pre-run usage error exits 2 and writes no result. A missing `cline` exits 127 and writes
 `status: "cline_unavailable"`.
@@ -126,8 +126,8 @@ cline --json -v [--provider <name>] [--model <id>] \
 ```
 
 Current Cline JSON mode checks for a positional prompt before reading piped input, so the relay
-passes the fixed instruction and streams the real brief on stdin. The child process cwd pins the
-workspace. Only token-validated provider/model values and fixed text reach the `shell:true` launch
+passes the fixed instruction and streams the real brief on stdin. The child process cwd selects the
+initial workspace, not an OS confinement boundary. Only token-validated provider/model values and fixed text reach the `shell:true` launch
 on native Windows; the brief and cwd do not. `-v` (verbose) exposes the requested provider/model.
 Before dispatch the relay runs a
 bounded `cline --version` preflight (10s cap) so a hung or crashing CLI fails fast and explicitly

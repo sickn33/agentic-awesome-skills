@@ -4,9 +4,11 @@ Quick reference for reading EAS Observe dashboards and CLI output.
 
 > Source: https://docs.expo.dev/eas/observe/reference/metrics/ — this is the canonical reference for metrics. Consult this page for the latest guidance, full prose definitions, optimization tips, and rationale.
 
-All durations are in seconds. Data is retained for 90 days. All durations are in seconds. By default, every installation dispatches all of its events. Apps with high volumes can opt into per-installation sampling via configure({ sampleRate }). See [Sampling](https://docs.expo.dev/eas/observe/configuration/#sampling).
+Durations shown here are seconds; verify current retention and plan limits. By default, every installation dispatches all of its events. Apps with high volumes can opt into per-installation sampling via configure({ sampleRate }). See [Sampling](https://docs.expo.dev/eas/observe/configuration/#sampling).
 
 ## Target thresholds
+
+These targets and diagnostic patterns guide investigation, not universal pass/fail or causal proof. Compare like platforms, hardware, builds, sample sizes and windows. Sampling selects installations, not random sessions; absent events may reflect disabled dispatch or instrumentation failure, not good performance.
 
 | Metric | Full name | Target | Auto-collected? |
 |---|---|---|---|

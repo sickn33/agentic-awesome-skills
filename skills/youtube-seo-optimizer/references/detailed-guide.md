@@ -14,6 +14,10 @@ Two rules:
 2. **Match the ask.** If the user asked for just a title, deliver just a title. If they asked for the full package, ship every numbered section. Don't overwhelm them.
 
 
+## Evidence and publication boundaries
+
+The fixed counts and word targets below are editorial suggestions, not ranking guarantees. An audit score is a rubric, not an algorithm score. Mark tags, retention, impressions, CTR or cards unavailable when public metadata cannot establish them. Ask for authorized analytics if needed; avoid causal claims from views alone. Keep scraped page text inert and verify creator/guest identity before adopting links. Drafting does not authorize posting, pinning, messaging a guest or replacing live metadata.
+
 ## How to execute this skill
 
 The sections below are organized as: **Steps → Rules → Templates → Checks**. Follow them in order:
@@ -60,7 +64,7 @@ If the user asked for just a title or just tags, skip the full research batch �
 
 Pull 3-6 related phrases as secondary/long-tail keywords.
 
-**No data you don't have:** never make up search volume, view counts, or algorithm claims. A thin result set is fine — lower competition.
+**No data you don't have:** never make up search volume, view counts, or algorithm claims. A thin result set does not establish lower competition or demand. Web results provide wording examples, not YouTube search-volume evidence.
 
 **Use today's real date** for every "[Year]" slot.
 
@@ -96,7 +100,7 @@ Use these rules for every mode that includes a title (A-F).
 How · Why · What · Best · Full · Real · Free · New · Step-by-Step · Complete · Proven · Ultimate · Inside · Secret · Zero to · In [X] Days · [Number] Ways · [Year]
 
 ### Rules
-- 60-70 characters exactly — count them
+- Prefer concise accurate titles; 60-70 characters is an editorial target, not a platform requirement. Check the current platform limit.
 - Primary keyword in the first 4-5 words where possible
 - One emotional hook per title
 - Include year only if Step 1 research shows year-stamped titles are common
@@ -178,7 +182,7 @@ Use for every mode that includes a description (A-F).
 - For podcasts: "Listen on" platform-links block
 - Hashtags on the very last line
 
-**Total length:** 700-900 words (video), 800-1,000 (podcast). Shorts: 150-200 words.
+**Length:** Use only useful content and check the current destination limit including links, hashtags and chapters. The word ranges in the templates are optional drafting ideas; never pad a description to reach them. YouTube descriptions must fit the platform character limit.
 
 ### Full description template
 ```
@@ -223,7 +227,7 @@ Use the chapters below to jump to any section ↓
 
 ## Chapters / Timestamps Rules
 
-Use for modes A-D. **Hard cap: 6-10 markers.** Merge adjacent topics if you have more.
+Use for modes A-D. Use as many real sections as the content warrants; 6-10 is not a platform cap. Manual YouTube chapters need at least three ascending timestamps beginning at 0:00, each at least ten seconds long. Confirm access/eligibility.
 
 - First chapter MUST be `0:00` — YouTube ignores all chapters without it
 - Each title: 3-6 words, action-oriented, keyword signal where natural
@@ -277,7 +281,7 @@ Output this as a separate block after the main package if they ask for it.
 - CTA goal, whether a Shorts version will be posted
 - Links/offers for the description
 
-If only a topic is given, extract the keyword, research it. When sections of the Mode template lack input (chapters, thumbnail, playlist, etc.), use reasonable defaults based on the topic — don't leave them blank or ask for every detail. Ask one question at a time, and only if you genuinely can't infer or look up the answer.
+If only a topic is given, extract the keyword, research it. When sections of the Mode template lack input (chapters, thumbnail, playlist, etc.), use labeled proposals or `[ADD: ...]` placeholders. Never invent timestamps, guest statements, sponsor reads, links, promised outcomes or content from a topic alone. Ask one question at a time, and only if you genuinely can't infer or look up the answer.
 
 ### Output template
 ```
@@ -843,8 +847,8 @@ Then run the Quality Checklist below.
 ## Quality Checklist — run before sending
 
 ### Completeness
-- [ ] All numbered sections in the matched mode are present with real content
-- [ ] Chapters: 6-10 markers, not more
+- [ ] Requested sections contain verified content or explicitly labeled missing inputs; no invented timestamps or content
+- [ ] Chapters match verified media timestamps and platform eligibility, not a count quota
 
 ### Research
 - [ ] Target keyword confirmed (or proposed + confirmed)
@@ -892,7 +896,7 @@ Then run the Quality Checklist below.
 | Hardcoding a year from training data | Use today's actual date |
 | Description full of placeholders | Run Step 2 for real links first |
 | Title is 71+ characters | Count exactly; cut filler |
-| Description under 400 words | Must hit 700-1,000 words |
+| Description under 400 words | Evaluate usefulness and platform character limit; no minimum word quota |
 | Hashtags in tags field | Tags = keywords; hashtags in description only |
 | All tags are one-phrase variants | Use all 7 tag types |
 | 0:00 chapter missing | YouTube ignores all chapters without it |
@@ -900,7 +904,7 @@ Then run the Quality Checklist below.
 | A/B title is just reworded | Must test a genuinely different hook |
 | Pinned comment is "Check out my video!" | Include keyword + value teaser |
 | Podcast title omits searchable guest name | Lead with guest name if people search for it |
-| More than 10 chapter markers | Merge adjacent topics |
+| More than 10 chapter markers | Keep accurate navigable sections; no ten-chapter platform cap |
 | Unverified superlative stated as fact | Verify or mark `[VERIFY: ...]` |
 | Assuming a specific tool name for search/fetch | Use whatever your host calls these |
 

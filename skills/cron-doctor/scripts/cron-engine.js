@@ -45,6 +45,7 @@ function parseField(raw, fieldDef, fieldIndex) {
     const m = trimmed.match(/^([0-7A-Za-z]+)#([1-5])$/);
     if (!m) throw new CronError(`Invalid "#" syntax in day-of-week: "${trimmed}"`, fieldIndex);
     let dowNum = parseSingleNum(m[1], fieldDef, fieldIndex);
+    if (dowNum < 0 || dowNum > 7) throw new CronError("Day-of-week out of range", fieldIndex);
     if (dowNum === 7) dowNum = 0;
     out.special = { kind: 'hash', dow: dowNum, nth: parseInt(m[2], 10) };
     return out;
@@ -55,6 +56,7 @@ function parseField(raw, fieldDef, fieldIndex) {
     const m = trimmed.match(/^([0-7A-Za-z]+)L$/i);
     if (!m) throw new CronError(`Invalid "L" syntax in day-of-week: "${trimmed}"`, fieldIndex);
     let dowNum = parseSingleNum(m[1], fieldDef, fieldIndex);
+    if (dowNum < 0 || dowNum > 7) throw new CronError("Day-of-week out of range", fieldIndex);
     if (dowNum === 7) dowNum = 0;
     out.special = { kind: 'dowLast', dow: dowNum };
     return out;
@@ -64,7 +66,9 @@ function parseField(raw, fieldDef, fieldIndex) {
   if (fieldDef.key === 'dom' && /^L/i.test(trimmed)) {
     const m = trimmed.match(/^L(?:-(\d+))?$/i);
     if (!m) throw new CronError(`Invalid "L" syntax in day-of-month: "${trimmed}"`, fieldIndex);
-    out.special = { kind: 'domLast', offset: m[1] ? parseInt(m[1], 10) : 0 };
+    const offset = m[1] ? Number(m[1]) : 0;
+    if (!Number.isSafeInteger(offset) || offset > 30) throw new CronError('Invalid last-day offset', fieldIndex);
+    out.special = { kind: 'domLast', offset };
     return out;
   }
 
@@ -115,19 +119,21 @@ function parseItem(item, fieldDef, fieldIndex, values) {
     const [base, stepStr] = stepParts;
     if (!/^\d+$/.test(stepStr)) throw new CronError(`Invalid step "${stepStr}" in ${fieldDef.name}`, fieldIndex);
     const step = Number(stepStr);
-    if (step < 1) throw new CronError(`Invalid step "${stepStr}" in ${fieldDef.name}`, fieldIndex);
+    if (!Number.isSafeInteger(step) || step < 1) throw new CronError(`Invalid step "${stepStr}" in ${fieldDef.name}`, fieldIndex);
     let lo, hi;
-    if (base === '*' || base === '') {
+    if (base === '*') {
       lo = fieldDef.min; hi = fieldDef.max;
     } else if (base.includes('-')) {
-      const [a, b] = base.split('-');
+      const rangeParts = base.split('-');
+      if (rangeParts.length !== 2) throw new CronError('Invalid range', fieldIndex);
+      const [a, b] = rangeParts;
       lo = parseSingleNum(a.trim(), fieldDef, fieldIndex);
       hi = parseSingleNum(b.trim(), fieldDef, fieldIndex);
     } else {
       lo = parseSingleNum(base.trim(), fieldDef, fieldIndex);
       hi = fieldDef.max;
     }
-    if (lo > hi) [lo, hi] = [hi, lo];
+    if (lo > hi || lo < fieldDef.min || hi > fieldDef.max) throw new CronError("Invalid step range", fieldIndex);
     for (let v = lo; v <= hi; v += step) addOne(values, v, fieldDef, fieldIndex);
     return;
   }
@@ -147,14 +153,14 @@ function parseItem(item, fieldDef, fieldIndex, values) {
 
 function addOne(values, v, fieldDef, fieldIndex) {
   if (fieldDef.key === 'dow' && v === 7) { values.add(0); return; }
-  if (v < fieldDef.min || v > fieldDef.max) {
+  if (!Number.isSafeInteger(v) || v < fieldDef.min || v > fieldDef.max) {
     throw new CronError(`Value ${v} out of range for ${fieldDef.name} (${fieldDef.min}-${fieldDef.max})`, fieldIndex);
   }
   values.add(v);
 }
 
 function addRange(values, lo, hi, fieldDef) {
-  if (lo > hi) [lo, hi] = [hi, lo];
+  if (lo > hi) throw new CronError("Descending range is unsupported", -1);
   if (lo < fieldDef.min || hi > fieldDef.max) {
     throw new CronError(`Range ${lo}-${hi} out of bounds for ${fieldDef.name} (${fieldDef.min}-${fieldDef.max})`, -1);
   }
@@ -174,8 +180,8 @@ function parseCron(expr) {
   for (let i = 0; i < 5; i++) {
     parsed[FIELDS[i].key] = parseField(parts[i], FIELDS[i], i);
   }
-  parsed.domRestricted = !/^\s*\*\s*$/.test(parts[2]);
-  parsed.dowRestricted = !/^\s*\*\s*$/.test(parts[4]);
+  parsed.domRestricted = !parts[2].startsWith('*');
+  parsed.dowRestricted = !parts[4].startsWith('*');
   parsed.parts = parts;
   return parsed;
 }
@@ -221,13 +227,13 @@ function describeParsed(p) {
     }
   } else if (!domAny && dowAny) {
     dayPart = ', on ' + domDesc.text;
-    if (monthDesc.restricted) dayPart += ' in ' + monthDesc.text;
+    if (monthDesc.restricted) dayPart += ' ' + monthDesc.text;
   } else if (domAny && !dowAny) {
     dayPart = ', on ' + dowDesc.text;
-    if (monthDesc.restricted) dayPart += ' in ' + monthDesc.text;
+    if (monthDesc.restricted) dayPart += ' ' + monthDesc.text;
   } else {
-    dayPart = ', on ' + domDesc.text + ' and on ' + dowDesc.text;
-    if (monthDesc.restricted) dayPart += ' in ' + monthDesc.text;
+    dayPart = ', on ' + domDesc.text + ' OR on ' + dowDesc.text;
+    if (monthDesc.restricted) dayPart += ' ' + monthDesc.text;
   }
 
   return capitalize(timePart + dayPart);
@@ -294,7 +300,9 @@ function pIsWildcard(field) { return field.raw === '*'; }
 
 // ---- Next run calculator ----
 function nextRuns(expr, fromDate, count) {
-  count = count || 10;
+  count = count === undefined ? 10 : count;
+  if (!Number.isSafeInteger(count) || count < 1 || count > 100) throw new CronError("Count must be 1..100", -1);
+  if (!(fromDate instanceof Date) || !Number.isFinite(fromDate.getTime())) throw new CronError("Invalid start date", -1);
   const p = parseCron(expr);
   const runs = [];
   let d = new Date(fromDate.getTime());
@@ -453,6 +461,14 @@ function validate(expr) {
     }
   }
 
+  if (parsed.domRestricted && !parsed.dom.special && parsed.dow.raw === '*') {
+    const months = [...parsed.month.values];
+    const maxDays = m => m === 2 ? 29 : ([4,6,9,11].includes(m) ? 30 : 31);
+    if (months.every(m => [...parsed.dom.values].every(day => day > maxDays(m)))) {
+      warnings.push({level: 'high', message: 'No specified day exists in any selected month; this schedule never fires.'});
+    }
+  }
+
   // Check: high-frequency schedules
   if (parsed.parts[0] === '*' && parsed.parts[1] === '*') {
     observations.push({
@@ -483,7 +499,7 @@ function validate(expr) {
     if (domVals.includes(29) && monthVals.length === 1 && monthVals[0] === 2) {
       warnings.push({
         level: 'medium',
-        message: 'February 29th only occurs in leap years. This job will not run at all in non-leap years (3 out of every 4 years).',
+        message: 'Day 29 in February matches only in leap years; other listed days or restricted day-of-week OR matches may still run in other years.',
       });
     }
   }
@@ -497,7 +513,7 @@ function validate(expr) {
   }
 
   // Check: weekend vs weekday
-  if (parsed.parts[4] === '1-5') {
+  if (parsed.parts[4] === '1-5' && !parsed.domRestricted) {
     observations.push({
       level: 'info',
       message: 'Weekdays only (Mon-Fri). This job will not run on weekends.',
@@ -544,7 +560,7 @@ function estimateFrequency(parsed) {
     else if (count >= 40) description = 'weekly or more';
     else if (count >= 8) description = 'monthly or more';
     else if (count >= 1) description = 'yearly or less';
-    else description = 'never (impossible schedule)';
+    else description = 'no occurrences in the non-leap sample year (not proof of impossibility)';
 
     return { description, runsPerYear: count };
   } catch (e) {

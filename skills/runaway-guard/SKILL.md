@@ -15,11 +15,13 @@ license_source: "https://github.com/morsechimwai/lemmaly/blob/main/LICENSE"
 
 # runaway-guard — $-Cost is the Third Complexity Dimension
 
+> Catalog review modification (2026-10-23): corrected cost arithmetic, retry/idempotency claims and unsupported provider-cap guarantees. Upstream authorship and Apache-2.0 attribution are retained.
+
 Every loop has time complexity and space complexity. A loop that calls a paid API has a third: **dollars per execution**. The model tracks the first two automatically. It does not track the third, so it ships code where a single bug — a retry without bound, a stream reconnect storm, an agent that re-queues itself, a webhook that fires the same job twice — silently spends real money.
 
-The canonical incident: developer writes a Fal.ai image-generation loop. Loop "obviously terminates" because it iterates over a fixed list. The list comes from a callback that fires on every Inngest retry. Each retry doubles the list. By morning, the bill is **$200**. Tests pass. Code review passed. The bug is not in the loop body. The bug is that **no one stated the wallet invariant**.
+Illustrative, unverified incident narrative: developer writes a Fal.ai image-generation loop. Loop "obviously terminates" because it iterates over a fixed list. The list comes from a callback that fires on every Inngest retry. Each retry doubles the list. By morning, the bill is **$200**. Tests pass. Code review passed. The bug is not in the loop body. The bug is that **no one stated the wallet invariant**.
 
-runaway-guard fixes this. State the max calls. State the max dollars per run. State the max dollars per day. Set the same caps in the provider dashboard so a code bug cannot bypass them. Then write the code.
+runaway-guard helps identify this design risk. State the max calls. State the max dollars per run. State the max dollars per day. Set the same caps in the provider dashboard so a code bug cannot bypass them. Then write the code.
 
 **Violating the letter of these rules is violating the spirit of the skill.** "I'm only testing locally" is the exact rationalization that ships the $200 bill — local code hits the same paid API as production.
 
@@ -71,9 +73,9 @@ A cap only in code can be bypassed by a bug in that code. A cap only at the prov
    ```
 
 3. **Every retry path is bounded by attempts AND total elapsed cost, not by time alone.** Exponential backoff with no attempt cap is a wallet attack on yourself.
-   - Max attempts: a small integer (3–5 for transient errors, 1 for 4xx).
+   - Max attempts: an explicit small integer chosen for the provider and error class.
    - Cap counts across the whole pipeline, not just one library — Inngest retries × SDK retries × your own retry wrapper multiply.
-   - 4xx errors do not retry. Period. They will not become 2xx; they will just bill again.
+   - Do not retry permanent invalid requests. Some 4xx errors, including 429 and provider-defined transient statuses, can be retryable under a bounded policy; respect Retry-After and the shared spend reservation.
 
 4. **Every fan-out path declares a concurrency limit.** Parallel calls multiply cost per wall-clock second. State the limit in code, at the queue (Inngest `concurrency`), and at the provider where supported:
    - Inngest: `concurrency: { limit: N }` on the function.
@@ -82,16 +84,7 @@ A cap only in code can be bypassed by a bug in that code. A cap only at the prov
 
 5. **Every paid API has a matching provider-side hard cap, configured out of band.** Defense in depth: if the code is wrong, the provider stops the bleeding. Document the cap in the same file as the call site so future readers know it exists.
 
-   | Provider | Where to set the hard cap |
-   |---|---|
-   | **Fal.ai** | Dashboard → Billing → **Spend Limit** (e.g. $50/day). Hard stop on exceed. |
-   | **Anthropic** | Console → Workspaces → **Workspace Budget** with hard limit. Per-workspace, per-month. |
-   | **OpenAI** | Org → Settings → **Usage limits** (org-level hard limit blocks requests). ⚠️ Per-*project* monthly budgets are **soft thresholds only** — they alert but do not block. For a real hard cap use the org-level Usage limit, a billing gateway, or your own fail-closed budget check. |
-   | **Replicate** | Account → Billing → **Spend limit**. Per account. |
-   | **ElevenLabs** | Workspace → **Usage limits** per workspace / API key. |
-   | **Together / Groq / Cohere / Mistral** | Each has a billing dashboard with a monthly spend cap — set it before first deploy, not after. |
-
-   No hard cap, no call site. Set the cap before the first request, not after the first incident.
+   Inspect the account's current provider documentation and dashboard. Record enforcement scope, period, delay, override behavior and which keys/workspaces it covers. An alert or prepaid balance is not proof of an instantaneous hard stop. If no enforceable cap exists, keep calls disabled until an approved fail-closed gateway/atomic reservation ledger and bounded in-flight exposure are in place. Historical provider menu names and prices below are illustrative, not verified settings.
 
 6. **Idempotency keys on every mutating or charging call.** A webhook that fires twice should bill once. Without an idempotency key, retry policies you cannot see (load balancer, framework, gateway) silently double-charge.
 
@@ -138,7 +131,7 @@ export const generateCampaign = inngest.createFunction(
 );
 ```
 
-**What went wrong.** `fetchPrompts` had a bug: on a transient DB error it returned the partial list *plus the previous run's list appended*. Inngest retried the function at its default retry count (multiple attempts in addition to the initial one). Each retry re-ran `fetchPrompts`, each retry doubled the list (40 → 80 → 160 → 320 prompts). `Promise.all` fanned all 320 out concurrently. At $0.05/image: **$16/retry × triangular growth across overnight retries on the schedule = ~$200 by morning.**
+**What went wrong.** `fetchPrompts` had a bug: on a transient DB error it returned the partial list *plus the previous run's list appended*. Inngest retried the function at its default retry count (multiple attempts in addition to the initial one). This account is inconsistent with the shown code: a successfully completed fetch step is memoized, so ordinary later-step retries do not re-run it. A growth bug would need an additional path not shown. `Promise.all` fanned all 320 out concurrently. At $0.05/image: the listed 40 + 80 + 160 + 320 requests would total $30, not $200; a $200 total would require additional documented invocations.
 
 **Why each rule would have caught it.**
 
@@ -151,7 +144,7 @@ export const generateCampaign = inngest.createFunction(
 | 5. Provider hard cap | Fal Spend Limit $50/day would have stopped the bleeding at $50 instead of $200. |
 | 7. Amplifier audit | "Self-rescheduling jobs" — Inngest's retry IS self-rescheduling. The audit forces you to consider it. |
 
-**The fix that survives the protocol:**
+**Partial mitigation sketch (not a proven spend cap):**
 
 ```ts
 // cost contract:
@@ -160,7 +153,7 @@ export const generateCampaign = inngest.createFunction(
 //   max $ per run: $2.50
 //   provider hard cap: $50/day (set in Fal dashboard 2026-05-22)
 //   concurrency: 3 (Inngest + p-limit, matching)
-//   idempotency: key = `${campaignId}:${sha1(prompt)}` — provider-side dedup window 24h
+//   step ID only: NOT a provider-side idempotency key; no provider dedup window verified
 const MAX_IMAGES_PER_RUN = 50;
 const limit = pLimit(3);
 
@@ -186,7 +179,7 @@ export const generateCampaign = inngest.createFunction(
 );
 ```
 
-Note: the bug in `fetchPrompts` is still there. The protocol does not fix that bug — it makes the bug **cost $2.50 instead of $200** while you find it. That is the entire point of defense in depth.
+Note: the bug in `fetchPrompts` is still there. The protocol does not fix that bug — it bounds a single batch to 50 items, but retries, duplicate events and ambiguous failures can still recharge work. No $2.50 run cap is established without a shared spend reservation and verified provider deduplication. That is the entire point of defense in depth.
 
 ## Common runaway patterns and their wallet invariants
 
@@ -202,42 +195,9 @@ Note: the bug in `fetchPrompts` is still there. The protocol does not fix that b
 | Self-scheduling job | recursion depth bounded by ledger row, not by code | scheduler-level dedup + max runs/day |
 | Multi-provider fallback | sum across providers ≤ MAX_$_PER_RUN | hard cap on each provider separately |
 
-## Provider-specific cheat sheet
+## Provider verification checklist
 
-Set these **before** the first deploy. None of them require code changes.
-
-### Fal.ai
-- Dashboard → **Billing → Spend Limit**. Daily and monthly hard caps. Hard stop on exceed.
-- Use **per-API-key** keys per environment (dev / staging / prod) and set a low limit on dev.
-- Webhooks: deliveries are paid; cap retries on your side.
-
-### Anthropic
-- Console → **Workspaces** → create a Workspace per environment.
-- Each Workspace gets a **Budget** with a **hard limit** (request blocking) and **soft limit** (email alert).
-- Use a per-Workspace API key — a leaked dev key cannot exceed the dev Workspace budget.
-- Prompt caching reduces cost ~90% for repeated context; cap is on unblended cost so caching extends the budget.
-
-### OpenAI
-- ⚠️ **Per-project monthly budgets are soft only.** OpenAI's Help Center documents project budgets as "soft spending thresholds" that send alerts but do **not** enforce a hard cap. A runaway can continue past the documented project budget.
-- For a real hard cap, use one of:
-  - **Org-level Usage limits** (Org → Settings → Limits) — block requests on exceed.
-  - A billing gateway / proxy in front of the API that enforces fail-closed budgets.
-  - Your own fail-closed budget check in code that refuses calls past a ledgered $-cap.
-- Use separate projects per environment (dev/staging/prod) for attribution and alerting, but do not rely on the project budget as the hard stop.
-
-### Replicate
-- Account → **Billing → Spend limit**. Account-wide hard cap.
-- Use separate tokens per environment; rotate on leak.
-
-### ElevenLabs
-- Workspace → **Usage limits**. Set per API key.
-- Voice cloning is billed per character; cap the character count in code AND per key.
-
-### Inngest (queue layer — not paid AI but the multiplier)
-- `concurrency: { limit: N }` on every function that calls a paid API.
-- `retries: 2` (Inngest default is **4 retries**, i.e. up to 5 attempts including the initial — confirm against current Inngest docs) for paid call functions; fewer attempts on idempotent failures. Worst-case wallet math: `attempts = 1 + retries`, so a default `step.run()` can bill **5×**, not 4×.
-- `NonRetriableError` for 4xx — never retry a 4xx into a paid API.
-- `idempotency: ...` on events you cannot deduplicate at the call site.
+Before enabling billing, verify provider-specific caps from current official documentation and actual account settings; never claim a cap was configured merely because code comments say so. OpenAI prepaid credits can go negative during cutoff delay. Inngest currently documents four retries after the initial attempt, independently per step; completed named steps are memoized, but an external operation may have succeeded before its result was recorded. Queue concurrency counts function runs, while each run can fan out multiple calls; an in-process limiter is not a distributed limit. Record the aggregate maximum.
 
 ## Edge cases to enumerate before shipping
 
@@ -263,7 +223,7 @@ Code you emit must:
 - Wrap fan-out in `p-limit` or equivalent — never raw `Promise.all` over a paid API.
 - Pass an idempotency key for every mutating / charging call.
 - Set queue-level concurrency and retries in the same file or document it.
-- Reject `4xx` retries via `NonRetriableError` or equivalent.
+- Reject permanent failures via `NonRetriableError` or equivalent; classify transient 4xx separately.
 - Reference the provider hard-cap setting by name ("Fal Spend Limit $50/day, set 2026-05-22") so a future reader knows it exists.
 
 ## Related Skills
@@ -308,7 +268,7 @@ Before shipping any code that calls a paid API:
 - [ ] Cost contract comment exists above each call site with unit cost, max calls/run, max $/run, provider cap.
 - [ ] The iteration / fan-out bound is a named integer constant, not implicit in list length.
 - [ ] Concurrency limit is set in code (`p-limit`) AND at the queue (`Inngest concurrency`).
-- [ ] Retry policy is explicit: max attempts, 4xx → no retry, idempotency key per call.
+- [ ] Retry policy is explicit: max attempts, permanent errors → no retry, idempotency key per call.
 - [ ] Provider dashboard hard cap is set and the value is documented in the file.
 - [ ] Per-environment API keys; dev keys have lower caps than prod.
 - [ ] Amplifier audit (rule 7) has been performed and either "none apply" or each addressed.
@@ -320,12 +280,18 @@ Cannot check every box? The code is example-correct, not bill-correct. Either fi
 ## Limitations
 
 - **Not a billing system.** runaway-guard enforces *intent* (caps, contracts, audits) at code-write time. It does not meter spend in production — pair it with the provider's hard cap and observability (LLM-cost dashboards, log alerts) for runtime enforcement.
-- **Provider-side caps may take minutes to enforce.** Anthropic Workspace Budgets, OpenAI usage limits, and Fal Spend Limits are reconciled on a delay measured in minutes, not milliseconds. A pathological burst within a single window can still exceed the cap modestly.
+- **Provider enforcement varies.** Verify timing and scope; do not assume overshoot is modest. Reserve worst-case concurrent exposure and retain budget for uncertain outcomes.
 - **No automated cost estimation for novel models.** The cost-contract numbers (unit cost, $/run) are inputs the author must look up; the skill does not maintain a per-model price table.
-- **Streaming and per-token pricing.** For per-token APIs (Anthropic, OpenAI), `max calls` is a proxy — the real cap is `max input tokens × max output tokens × per-token rate`. Adapt the protocol: replace `max calls per run` with `max tokens per run`.
+- **Streaming and per-token pricing.** For per-token APIs (Anthropic, OpenAI), `max calls` is a proxy — the real cap is `(max input tokens × input-token rate) + (max output tokens × output-token rate), summed across all attempts and including billable tools, cache tiers and other charges`. Adapt the protocol: replace `max calls per run` with `max tokens per run`.
 - **Compute-billed providers.** For long-running GPU jobs (training, video encoding) billed in seconds, replace "calls" with "GPU-seconds" in the contract; the discipline transfers but the units differ.
 - **Does not replace incident response.** When a bill has already arrived, escalate to `complexity-cuts` for the corrective rewrite — runaway-guard prevents the next one, not the current one.
 
 ## The thesis, in one line
 
 > **Time bounds prevent stalls. Space bounds prevent OOMs. Dollar bounds prevent $200 mornings. AI assistants enforce the first two by default and ignore the third. runaway-guard makes them reason about the wallet first.**
+
+## Enforcement and idempotency limits
+
+A name passed to `step.run` is not a provider idempotency header. The example does not pass one to `fal.run`, implement a budget ledger, or establish the claimed 24-hour deduplication window. Use an actually supported provider key with its documented scope/retention; otherwise hold uncertain outcomes for reconciliation rather than blindly retrying a charging operation. Duplicate prompts and duplicate event IDs also need an explicit operation identity policy.
+
+Treat historical price/cap examples and the incident story as unverified illustrations. Compute variable-token bounds from additive input/output charges, not their product. Reserve budget atomically before dispatch across workers/retries/providers, bound outstanding calls, reconcile actual usage and fail closed when pricing or outcome is unknown. A time deadline does not cancel already-billed work. Assertions of zero duplicate cost or an exact dashboard cutoff in the tables are conditional on proven enforcement, not guarantees from this skill. No billing-enabled call was made or cap verified during this review.

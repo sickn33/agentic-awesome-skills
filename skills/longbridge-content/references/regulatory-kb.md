@@ -1,6 +1,6 @@
 # longbridge-regulatory-kb
 
-A structured regulatory knowledge base covering the rules, restrictions, and mechanisms investors face across A-shares, Hong Kong, US equity markets, and cryptocurrency — answers regulatory questions without needing live data lookups.
+A structured regulatory knowledge base covering the rules, restrictions, and mechanisms investors face across A-shares, Hong Kong, US equity markets, and cryptocurrency — provides a historical checklist. Verify every applicable rule with the governing exchange/regulator and effective date before answering; this is not a current legal or tax reference.
 
 ## A-Share Rules (A股规则)
 
@@ -9,17 +9,17 @@ A structured regulatory knowledge base covering the rules, restrictions, and mec
 | Board                          | Normal stocks             | ST / \*ST stocks |
 | ------------------------------ | ------------------------- | ---------------- |
 | Shanghai / Shenzhen Main Board | ±10%                      | ±5%              |
-| STAR Market (科创板)           | ±20% (first 5 days: ±30%) | N/A              |
-| ChiNext (创业板)               | ±20% (first 5 days: ±30%) | N/A              |
+| STAR Market (科创板)           | ±20% after the first 5 trading days; no daily price limit during the first 5 | N/A              |
+| ChiNext (创业板)               | ±20% after the first 5 trading days; no daily price limit during the first 5 | N/A              |
 | Beijing Stock Exchange         | ±30%                      | ±30%             |
 
-New listings: first day no limit; days 2–5 follow the limits above.
+Main-board/STAR/ChiNext IPO exceptions must be checked by board and effective rules; do not apply the ordinary daily band during the initial five-day no-limit period. Beijing and relisting cases need separate rules.
 
 ### Settlement (交收)
 
 - **T+1**: Sell a stock on the day after purchase. Funds from sales available next day.
 - **T+0**: Not permitted for equities (day trading is prohibited for ordinary investors).
-- ETFs and convertible bonds: T+0 selling is allowed.
+- Some ETF/bond products permit same-day trading; eligibility varies by product/exchange.
 
 ### Short selling (融券做空)
 
@@ -33,16 +33,13 @@ New listings: first day no limit; days 2–5 follow the limits above.
 - Triggered when CSI 300 falls ≥5% (15-min halt) or ≥7% (market close for the day).
 - Note: implemented 2016-01-04, suspended 2016-01-08 due to market disruption.
 
-### Delisting rules (退市新规, 2024)
+### Delisting rules
 
-- **Financial**: Net profit < 0 AND revenue < 100M RMB for 2 consecutive years → risk warning; 3 years → delisting.
-- **Market cap**: < 300M RMB for 20 consecutive trading days → delisting warning.
-- **Turnover**: < 2M RMB for 20 consecutive days → delisting warning.
-- ST / *ST designation: 1 year of losses → ST; 2 consecutive → *ST; further violations → delisting review.
+The original numeric summary mixed board-specific and historical thresholds. Do not infer ST/*ST or delisting from a generic years-of-losses rule. Verify the current board listing rules, financial definitions, market-cap/price triggers and transition provisions for the exact issuer.
 
 ### Stamp duty (印花税)
 
-- 0.1% on sell side only (halved from 0.1% on both sides effective Aug 2023).
+- Check the current Ministry of Finance/State Taxation Administration notice; do not use the historical 0.1% statement here as a current rate.
 
 ## HK Stock Rules (港股规则)
 
@@ -75,12 +72,12 @@ New listings: first day no limit; days 2–5 follow the limits above.
 
 ### Listing criteria / delisting (上市/退市)
 
-- **Profit test**: Aggregate profit ≥ HK$50M over 3 years (main board). Alternative: market cap test or revenue test.
+- **Listing tests**: Verify current HKEX Main Board Rule 8.05 and the applicable profit/market-cap/revenue/cash-flow test; the historical HK$50M summary is not a current requirement.
 - **Delisting**: Prolonged trading suspension (typically > 18 months) triggers delisting review.
 
 ### Stamp duty (印花税)
 
-- 0.1% on both buyer and seller (total 0.2% per round trip), effective from 2021.
+- 0.1% on both buyer and seller (total 0.2% per round trip), effective from 17 November 2023 (reduced from 0.13%).
 
 ### Insider dealing (内幕交易条例)
 
@@ -91,8 +88,8 @@ New listings: first day no limit; days 2–5 follow the limits above.
 
 Key rules: PDT ($25k minimum, 4 day-trades in 5-day window), Reg T 50% initial margin, T+1 settlement (since May 2024), S&P 500 circuit breakers at -7%/-13%/-20%, Reg SHO short-locate requirement, LULD per-stock bands ±5%.
 
-For full detail see [`references/us-rules.md`](references/us-rules.md).
-For cryptocurrency regulation and cross-border tax basics see [`references/crypto-and-tax.md`](references/crypto-and-tax.md).
+The upstream us-rules.md file is not bundled; consult current SEC/FINRA/exchange rules, including account-specific day-trading requirements.
+The upstream crypto-and-tax.md file is not bundled. Tax/residency questions require current jurisdiction-specific official sources.
 
 ## CLI (supplementary)
 
@@ -117,7 +114,7 @@ For each regulatory question:
 2. Numeric thresholds (%, days, amounts).
 3. Consequences of violation / breach.
 4. Practical tip for the user.
-5. Caveat: rules evolve; link to official source when possible (CSRC / SFC / SEC / FINRA).
+5. Rules evolve: cite the exact official source and effective date, or mark unverified (CSRC / SFC / SEC / FINRA).
 
 ## Error handling
 

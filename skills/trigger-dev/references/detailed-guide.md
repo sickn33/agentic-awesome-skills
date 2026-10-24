@@ -74,11 +74,12 @@ Setting up Trigger.dev in a Next.js project
 **When to use**: Starting with Trigger.dev in any project
 
 // trigger.config.ts
-import { defineConfig } from '@trigger.dev/sdk/v3';
+import { defineConfig } from '@trigger.dev/sdk';
 
 export default defineConfig({
   project: 'my-project',
   runtime: 'node',
+  maxDuration: 300,
   logLevel: 'log',
   retries: {
     enabledInDev: true,
@@ -92,12 +93,12 @@ export default defineConfig({
 });
 
 // src/trigger/tasks.ts
-import { task, logger } from '@trigger.dev/sdk/v3';
+import { task, logger } from '@trigger.dev/sdk';
 
 export const helloWorld = task({
   id: 'hello-world',
   run: async (payload: { name: string }) => {
-    logger.log('Processing hello world', { payload });
+    logger.log('Processing hello world'); // Avoid logging personal payload data
 
     // Simulate work
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -112,54 +113,18 @@ import { helloWorld } from '@/trigger/tasks';
 // Fire and forget
 await helloWorld.trigger({ name: 'World' });
 
-// Wait for result
-const handle = await helloWorld.trigger({ name: 'World' });
-const result = await handle.wait();
+// Inside another task's run(), wait for the child and check its outcome:
+const result = await helloWorld.triggerAndWait({ name: 'World' });
+if (!result.ok) throw result.error;
+// Backend callers use trigger() and the documented run retrieval APIs.
 
-### AI Task with OpenAI Integration
+### AI Task with the provider SDK
 
-Using built-in OpenAI integration with automatic retries
-
-**When to use**: Building AI-powered background tasks
-
-import { task, logger } from '@trigger.dev/sdk/v3';
-import { openai } from '@trigger.dev/openai';
-
-// Configure OpenAI with Trigger.dev
-const openaiClient = openai.configure({
-  id: 'openai',
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-export const generateContent = task({
-  id: 'generate-content',
-  retry: {
-    maxAttempts: 3,
-  },
-  run: async (payload: { topic: string; style: string }) => {
-    logger.log('Generating content', { topic: payload.topic });
-
-    // Uses Trigger.dev's OpenAI integration - handles retries automatically
-    const completion = await openaiClient.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
-      messages: [
-        {
-          role: 'system',
-          content: `You are a ${payload.style} writer.`,
-        },
-        {
-          role: 'user',
-          content: `Write about: ${payload.topic}`,
-        },
-      ],
-    });
-
-    const content = completion.choices[0].message.content;
-    logger.log('Generated content', { length: content?.length });
-
-    return { content, tokens: completion.usage?.total_tokens };
-  },
-});
+Use the provider's supported SDK inside a task. Configure the model through a
+server-side allowlist and environment, set request and task timeouts, bound tokens,
+and account for both SDK and task retry attempts. Do not copy v2 integration
+packages into current SDK tasks. The provider call can be repeated on retry;
+Trigger.dev does not make that external operation exactly-once.
 
 ### Scheduled Task with Cron
 
@@ -167,7 +132,7 @@ Tasks that run on a schedule
 
 **When to use**: Periodic jobs like reports, cleanup, or syncs
 
-import { schedules, task, logger } from '@trigger.dev/sdk/v3';
+import { schedules, task, logger } from '@trigger.dev/sdk';
 
 export const dailyCleanup = schedules.task({
   id: 'daily-cleanup',
@@ -205,7 +170,7 @@ Processing large datasets in batches
 
 **When to use**: Need to process many items with rate limiting
 
-import { task, logger, wait } from '@trigger.dev/sdk/v3';
+import { task, logger, wait } from '@trigger.dev/sdk';
 
 export const processBatch = task({
   id: 'process-batch',
@@ -258,7 +223,7 @@ Processing webhooks reliably with deduplication
 
 **When to use**: Handling webhooks from Stripe, GitHub, etc.
 
-import { task, logger, idempotencyKeys } from '@trigger.dev/sdk/v3';
+import { task, logger, idempotencyKeys } from '@trigger.dev/sdk';
 
 export const handleStripeEvent = task({
   id: 'handle-stripe-event',
@@ -267,13 +232,9 @@ export const handleStripeEvent = task({
     type: string;
     data: any;
   }) => {
-    // Idempotency based on Stripe event ID
-    const idempotencyKey = await idempotencyKeys.create(payload.eventId);
-
-    if (idempotencyKey.isNew === false) {
-      logger.log('Duplicate event, skipping', { eventId: payload.eventId });
-      return { skipped: true };
-    }
+    // Authenticate the raw webhook and deduplicate before triggering this task.
+    // idempotencyKeys.create() returns a key, not an object with isNew.
+    // The business handlers below also require durable/provider idempotency.
 
     logger.log('Processing Stripe event', {
       type: payload.type,
@@ -310,8 +271,8 @@ Symptoms:
 - "Task timed out" in dashboard
 
 Why this breaks:
-Trigger.dev has execution timeouts (defaults vary by plan). When exceeded, the
-task is killed mid-execution. If you're not logging progress, you won't know
+Configure an explicit maxDuration compute budget. Exceeding it stops the attempt;
+waitpoint time is excluded, and lifecycle cleanup may not run. If you're not logging progress, you won't know
 where it stopped. This is especially common with AI tasks that can take minutes.
 
 Recommended fix:
@@ -320,9 +281,7 @@ Recommended fix:
 ```typescript
 export const processDocument = task({
   id: 'process-document',
-  machine: {
-    preset: 'large-2x',  // More resources = longer allowed time
-  },
+  maxDuration: 300, // Compute-time budget in seconds, independent of machine size
   run: async (payload) => {
     logger.log('Starting document processing', { docId: payload.id });
 
@@ -420,16 +379,9 @@ Recommended fix:
 2. Project Settings > Environment Variables
 3. Add ALL required env vars
 
-# Or use CLI:
-```bash
-# Create .env.trigger file
-DATABASE_URL=postgres://...
-OPENAI_API_KEY=sk-...
-STRIPE_SECRET_KEY=sk_live_...
-
-# Push to Trigger.dev
-npx trigger.dev@latest env push
-```
+Use the documented environment-variable dashboard or the installed CLI's
+verified help. Do not place live secret examples in shell history or a tracked
+.env file; store only the least-privilege secrets needed by the target environment.
 
 # Common missing vars:
 - DATABASE_URL
@@ -504,41 +456,18 @@ you create duplicates.
 
 Recommended fix:
 
-# Use idempotency keys:
-```typescript
-import { task, idempotencyKeys } from '@trigger.dev/sdk/v3';
+# Bind idempotency when triggering a task
 
-export const sendOrderEmail = task({
-  id: 'send-order-email',
-  run: async (payload: { orderId: string }) => {
-    // Check if already sent
-    const key = await idempotencyKeys.create(`email-${payload.orderId}`);
+Create a key and pass it as the trigger option; it has no `isNew` property.
+Use global scope when deduplicating separate deliveries of the same verified
+provider event, and choose an explicit retention window suitable for redelivery.
+Run-scoped keys primarily cover retries within the same parent run. Key expiry
+allows a later run; it is not permanent business deduplication.
 
-    if (!key.isNew) {
-      logger.log('Email already sent, skipping');
-      return { skipped: true };
-    }
-
-    await sendEmail(payload.orderId);
-    return { sent: true };
-  },
-});
-```
-
-# Alternative: Track in database
-```typescript
-const existing = await db.emailLogs.findUnique({
-  where: { orderId_type: { orderId, type: 'order_confirmation' } }
-});
-
-if (existing) {
-  logger.log('Already sent');
-  return;
-}
-
-await sendEmail(orderId);
-await db.emailLogs.create({ data: { orderId, type: 'order_confirmation' } });
-```
+For an external email, charge or write, also use the provider's idempotency key
+and a durable unique business-operation record/outbox. A check-then-send-then-log
+sequence races and can duplicate after a crash. An ambiguous send must be
+reconciled with the provider before retrying.
 
 ### High concurrency overwhelms downstream services
 
@@ -661,9 +590,8 @@ Symptoms:
 - Works for small batches, fails for large
 
 Why this breaks:
-Each wait.for creates checkpoint state. In a loop with thousands of
-iterations, this accumulates. The task's state blob grows until it
-hits memory limits.
+Many waits can add overhead; checkpoint and memory behavior depend on the engine
+and wait duration. Profile the actual run rather than assuming each wait leaks state.
 
 Recommended fix:
 
@@ -672,7 +600,7 @@ Recommended fix:
 // WRONG - Wait per item
 for (const item of items) {
   await processItem(item);
-  await wait.for({ milliseconds: 100 });  // 1000 waits = bloated state
+  await wait.for({ milliseconds: 100 });  // profile checkpoint overhead
 }
 
 // RIGHT - Batch processing
@@ -691,68 +619,20 @@ export const processAll = task({
     const chunks = chunkArray(payload.items, 100);
 
     // Each chunk is a separate task
-    await Promise.all(
-      chunks.map(chunk =>
-        processChunk.triggerAndWait({ items: chunk })
-      )
-    );
+    for (const chunk of chunks) {
+      const result = await processChunk.triggerAndWait({ items: chunk });
+      if (!result.ok) throw result.error;
+    }
   },
 });
 ```
 
-### Using raw SDK instead of Trigger.dev integrations
+### Provider SDK retry interaction
 
-Severity: MEDIUM
-
-Situation: Using OpenAI SDK directly. API call fails. No automatic retry.
-Rate limits not handled. Have to implement all resilience manually.
-
-Symptoms:
-- Manual retry logic in tasks
-- Rate limit errors not handled
-- No automatic logging of API calls
-- Inconsistent error handling
-
-Why this breaks:
-Trigger.dev integrations wrap SDKs with automatic retries, rate limit
-handling, and proper logging. Using raw SDKs means you lose these
-features and have to implement them yourself.
-
-Recommended fix:
-
-# Use integrations when available:
-```typescript
-// WRONG - Raw SDK
-import OpenAI from 'openai';
-const openai = new OpenAI();
-
-// RIGHT - Trigger.dev integration
-import { openai } from '@trigger.dev/openai';
-
-const openaiClient = openai.configure({
-  id: 'openai',
-  apiKey: process.env.OPENAI_API_KEY,
-});
-
-// Now has automatic retries and rate limiting
-export const generateContent = task({
-  id: 'generate-content',
-  run: async (payload) => {
-    const response = await openaiClient.chat.completions.create({
-      model: 'gpt-4-turbo-preview',
-      messages: [{ role: 'user', content: payload.prompt }],
-    });
-    return response;
-  },
-});
-```
-
-# Available integrations:
-- @trigger.dev/openai
-- @trigger.dev/anthropic
-- @trigger.dev/resend
-- @trigger.dev/slack
-- @trigger.dev/stripe
+Current tasks can use provider SDKs directly. Confirm the installed SDK's retry,
+timeout and error behavior rather than assuming no retries or guaranteed rate
+limiting. Task retries restart code, so budget repeated AI requests and protect
+external effects. Legacy integration package names are not migration instructions.
 
 ### Triggering tasks without dev server running
 
@@ -808,7 +688,7 @@ Severity: WARNING
 
 Message: Task has no logging. Add logger.log() calls for debugging in production.
 
-Fix action: Import { logger } from '@trigger.dev/sdk/v3' and add log statements
+Fix action: Import { logger } from '@trigger.dev/sdk' and add log statements
 
 ### Task without error handling
 
@@ -816,7 +696,7 @@ Severity: ERROR
 
 Message: Task lacks explicit error handling. Unhandled errors may cause unclear failures.
 
-Fix action: Wrap task logic in try/catch and log errors with context
+Fix action: Let failures propagate for retries; catch only to classify/rethrow sanitized context
 
 ### Task without concurrency limit
 
@@ -858,21 +738,21 @@ Message: Trigger.dev API key should not be hardcoded - use TRIGGER_SECRET_KEY en
 
 Fix action: Remove hardcoded key and use process.env.TRIGGER_SECRET_KEY
 
-### Using raw OpenAI SDK instead of integration
+### Provider SDK configuration
 
 Severity: WARNING
 
-Message: Consider using @trigger.dev/openai for automatic retries and rate limiting
+Message: Verify the provider SDK retry policy and combined task-attempt budget
 
-Fix action: Replace with: import { openai } from '@trigger.dev/openai'
+Fix action: Configure bounded retries, timeout and token/cost limits
 
-### Using raw Anthropic SDK instead of integration
+### Provider rate limiting
 
 Severity: WARNING
 
-Message: Consider using @trigger.dev/anthropic for automatic retries and rate limiting
+Message: Concurrency limits alone do not enforce requests or tokens per minute
 
-Fix action: Replace with: import { anthropic } from '@trigger.dev/anthropic'
+Fix action: Use a shared rate limiter and bounded retry backoff
 
 ### wait.for inside loop
 

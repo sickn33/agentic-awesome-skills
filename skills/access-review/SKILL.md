@@ -3,7 +3,7 @@ name: access-review
 description: Conduct periodic access reviews and certifications. Implement access
   governance and recertification workflows. Use when managing access compliance.
 category: security
-risk: safe
+risk: critical
 source: https://github.com/BagelHole/DevOps-Security-Agent-Skills
 source_repo: BagelHole/DevOps-Security-Agent-Skills
 source_type: community
@@ -74,80 +74,48 @@ access_review_workflow:
       - Identify process improvements for next cycle
 ```
 
+## Review boundaries
+
+Confirm exact tenant/accounts, read-only credentials, review period and authorized
+reviewers. Store reports privately with defined retention; proposed cadence/SLA
+numbers are examples, not compliance certification. Identity joins need verified
+immutable IDs, not matching display names. Owner approval and a recovery/break-glass
+plan are required before modifying access; inactivity heuristics never authorize
+revoking production service accounts automatically.
+
 ## AWS IAM Access Review Scripts
 
-```bash
-#!/usr/bin/env bash
-# aws-iam-review.sh - Comprehensive IAM access review report
+Obtain the IAM credential report through a read-only scoped client, poll boundedly
+until complete, and decode it once into a private file. Failure/unsupported values
+are unknown, never zero/inactive. Use named CSV columns, not positional awk fields:
 
-OUTPUT_DIR="./access-review/$(date +%Y-%m)"
-mkdir -p "$OUTPUT_DIR"
+```python
+import csv
 
-echo "=== AWS IAM Access Review ==="
-
-# Generate credential report
-aws iam generate-credential-report > /dev/null
-sleep 10
-aws iam get-credential-report --output text --query Content | \
-  base64 -d > "$OUTPUT_DIR/credential-report.csv"
-
-echo "--- Users Without MFA ---"
-aws iam get-credential-report --output text --query Content | base64 -d | \ <!-- security-allowlist: documented payload decoding technique reference, do not execute outside authorized scope -->
-  awk -F, 'NR>1 && $4=="true" && $8=="false" {print $1}' | \
-  tee "$OUTPUT_DIR/users-without-mfa.txt"
-
-echo "--- Inactive Users (90+ days) ---"
-THRESHOLD=$(date -d '90 days ago' +%Y-%m-%dT%H:%M:%S 2>/dev/null || date -v-90d +%Y-%m-%dT%H:%M:%S)
-aws iam get-credential-report --output text --query Content | base64 -d | \ <!-- security-allowlist: documented payload decoding technique reference, do not execute outside authorized scope -->
-  awk -F, -v t="$THRESHOLD" 'NR>1 && $5!="N/A" && $5!="no_information" && $5<t {
-    print $1","$5
-  }' | tee "$OUTPUT_DIR/inactive-users.csv"
-
-echo "--- Stale Access Keys (90+ days unused) ---"
-for user in $(aws iam list-users --query 'Users[*].UserName' --output text); do
-  for key_id in $(aws iam list-access-keys --user-name "$user" \
-    --query 'AccessKeyMetadata[?Status==`Active`].AccessKeyId' --output text); do
-    last_used=$(aws iam get-access-key-last-used --access-key-id "$key_id" \
-      --query 'AccessKeyLastUsed.LastUsedDate' --output text)
-    if [ "$last_used" = "None" ] || [ "$last_used" \< "$THRESHOLD" ]; then
-      echo "$user,$key_id,$last_used"
-    fi
-  done
-done | tee "$OUTPUT_DIR/stale-access-keys.csv"
-
-echo "--- Users With Admin Policies ---"
-for user in $(aws iam list-users --query 'Users[*].UserName' --output text); do
-  policies=$(aws iam list-attached-user-policies --user-name "$user" \
-    --query 'AttachedPolicies[*].PolicyName' --output text)
-  if echo "$policies" | grep -qi "admin\|fullaccess"; then
-    groups=$(aws iam list-groups-for-user --user-name "$user" \
-      --query 'Groups[*].GroupName' --output text)
-    echo "$user|policies:$policies|groups:$groups"
-  fi
-done | tee "$OUTPUT_DIR/admin-users.txt"
-
-echo "--- IAM Roles With Cross-Account Trust ---"
-for role in $(aws iam list-roles --query 'Roles[*].RoleName' --output text); do
-  trust=$(aws iam get-role --role-name "$role" \
-    --query 'Role.AssumeRolePolicyDocument' --output json 2>/dev/null)
-  if echo "$trust" | grep -q '"AWS"' && echo "$trust" | grep -qv "$(aws sts get-caller-identity --query Account --output text)"; then
-    echo "$role: $trust" | jq -c '.Statement[].Principal'
-  fi
-done | tee "$OUTPUT_DIR/cross-account-roles.txt"
-
-echo "--- Service Accounts (Programmatic Only) ---"
-aws iam get-credential-report --output text --query Content | base64 -d | \ <!-- security-allowlist: documented payload decoding technique reference, do not execute outside authorized scope -->
-  awk -F, 'NR>1 && $4=="false" && $9!="N/A" {print $1","$11","$16}' | \
-  tee "$OUTPUT_DIR/service-accounts.csv"
-
-echo "Report generated in $OUTPUT_DIR"
+def review_console_mfa(report_path):
+    candidates = []
+    with open(report_path, newline="", encoding="utf-8") as source:
+        for row in csv.DictReader(source):
+            if row.get("password_enabled") == "true" and row.get("mfa_active") == "false":
+                candidates.append({"user": row["user"], "finding": "review_console_mfa"})
+    return candidates  # Private review data, not automatic disable actions.
 ```
+
+Compare timezone-aware last-use/creation times and both access-key slots with an
+agreed threshold; missing history may mean never-used, unsupported or unavailable.
+Password last-use alone is not overall account inactivity. Effective privilege
+requires user/group/role/inline policies, boundaries, SCPs and resource policies;
+policy-name matching is only a hint. Cross-account trust needs structured principal
+and condition analysis, not grep or an AWS-account substring. No key or access is
+revoked solely because a report marks it stale.
 
 ## GitHub Access Review
 
 ```bash
 #!/usr/bin/env bash
-# github-access-review.sh - GitHub organization access audit
+# github-access-review.sh - Partial organization inventory
+set -euo pipefail
+umask 077
 
 ORG="your-org"
 OUTPUT_DIR="./access-review/github/$(date +%Y-%m)"
@@ -171,11 +139,11 @@ gh api orgs/$ORG/outside_collaborators --paginate \
   > "$OUTPUT_DIR/outside-collaborators.txt"
 
 echo "--- Repository Access Per Repo ---"
-for repo in $(gh repo list $ORG --json name -q '.[].name' --limit 500); do
+for repo in $(gh api "orgs/$ORG/repos" --paginate --jq '.[].name'); do
   echo "Repo: $repo"
   gh api "repos/$ORG/$repo/collaborators" --paginate \
     --jq '.[] | [.login, .role_name] | @csv' \
-    > "$OUTPUT_DIR/repo-$repo-access.csv" 2>/dev/null
+    > "$OUTPUT_DIR/repo-$repo-access.csv"
 done
 
 echo "--- Team Memberships ---"
@@ -192,91 +160,32 @@ gh api orgs/$ORG/invitations --paginate \
   > "$OUTPUT_DIR/pending-invitations.csv"
 
 echo "--- Deploy Keys ---"
-for repo in $(gh repo list $ORG --json name -q '.[].name' --limit 500); do
+for repo in $(gh api "orgs/$ORG/repos" --paginate --jq '.[].name'); do
   keys=$(gh api "repos/$ORG/$repo/keys" --jq '.[].title' 2>/dev/null)
   if [ -n "$keys" ]; then
     echo "$repo: $keys"
   fi
 done > "$OUTPUT_DIR/deploy-keys.txt"
 
-echo "--- Branch Protection Rules ---"
-for repo in $(gh repo list $ORG --json name -q '.[].name' --limit 500); do
-  protection=$(gh api "repos/$ORG/$repo/branches/main/protection" 2>/dev/null)
-  if [ $? -eq 0 ]; then
-    echo "$repo: protected"
-    echo "$protection" | jq '{required_reviews: .required_pull_request_reviews.required_approving_review_count, dismiss_stale: .required_pull_request_reviews.dismiss_stale_reviews}' \
-      > "$OUTPUT_DIR/branch-protection-$repo.json"
-  else
-    echo "$repo: NOT protected" >> "$OUTPUT_DIR/unprotected-repos.txt"
-  fi
-done
+# Branch/ruleset enforcement needs a separate authorized read of each repository's
+# actual default/protected branches, classic protection and repository/org rulesets.
+# A 403/404 is unknown or absent for that API, not proof the branch is unprotected.
+# site_admin is GitHub site administration, NOT an organization-owner indicator.
 
 echo "Report generated in $OUTPUT_DIR"
 ```
 
 ## Okta Access Review
 
-```bash
-#!/usr/bin/env bash
-# okta-access-review.sh - Okta user and application access audit
-# Requires OKTA_DOMAIN and OKTA_API_TOKEN environment variables
-
-OUTPUT_DIR="./access-review/okta/$(date +%Y-%m)"
-mkdir -p "$OUTPUT_DIR"
-BASE_URL="https://${OKTA_DOMAIN}/api/v1"
-
-echo "=== Okta Access Review ==="
-
-echo "--- Active Users ---"
-curl -s -H "Authorization: SSWS $OKTA_API_TOKEN" \
-  "$BASE_URL/users?filter=status+eq+%22ACTIVE%22&limit=200" | \
-  jq -r '.[] | [.profile.email, .profile.firstName, .profile.lastName, .lastLogin, .created] | @csv' \
-  > "$OUTPUT_DIR/active-users.csv"
-
-echo "--- Suspended/Deprovisioned Users ---"
-for status in SUSPENDED DEPROVISIONED; do
-  curl -s -H "Authorization: SSWS $OKTA_API_TOKEN" \
-    "$BASE_URL/users?filter=status+eq+%22$status%22&limit=200" | \
-    jq -r '.[] | [.profile.email, .status, .statusChanged] | @csv'
-done > "$OUTPUT_DIR/inactive-users.csv"
-
-echo "--- Users Without MFA Enrolled ---"
-curl -s -H "Authorization: SSWS $OKTA_API_TOKEN" \
-  "$BASE_URL/users?limit=200" | \
-  jq -r '.[] | .id' | while read -r uid; do
-    factors=$(curl -s -H "Authorization: SSWS $OKTA_API_TOKEN" \
-      "$BASE_URL/users/$uid/factors" | jq 'length')
-    if [ "$factors" -eq 0 ]; then
-      curl -s -H "Authorization: SSWS $OKTA_API_TOKEN" \
-        "$BASE_URL/users/$uid" | jq -r '.profile.email'
-    fi
-  done > "$OUTPUT_DIR/users-without-mfa.txt"
-
-echo "--- Application Assignments ---"
-curl -s -H "Authorization: SSWS $OKTA_API_TOKEN" \
-  "$BASE_URL/apps?limit=200" | \
-  jq -r '.[] | [.id, .label, .status] | @csv' | while IFS=, read -r app_id app_name status; do
-    echo "App: $app_name"
-    curl -s -H "Authorization: SSWS $OKTA_API_TOKEN" \
-      "$BASE_URL/apps/$app_id/users?limit=200" | \
-      jq -r '.[] | [.credentials.userName // .profile.email, .status] | @csv'
-  done > "$OUTPUT_DIR/app-assignments.csv"
-
-echo "--- Admin Role Assignments ---"
-curl -s -H "Authorization: SSWS $OKTA_API_TOKEN" \
-  "$BASE_URL/users?limit=200" | \
-  jq -r '.[] | .id' | while read -r uid; do
-    roles=$(curl -s -H "Authorization: SSWS $OKTA_API_TOKEN" \
-      "$BASE_URL/users/$uid/roles" | jq -r '.[].type' 2>/dev/null)
-    if [ -n "$roles" ]; then
-      email=$(curl -s -H "Authorization: SSWS $OKTA_API_TOKEN" \
-        "$BASE_URL/users/$uid" | jq -r '.profile.email')
-      echo "$email: $roles"
-    fi
-  done > "$OUTPUT_DIR/admin-roles.txt"
-
-echo "Report generated in $OUTPUT_DIR"
-```
+Use a secret-aware SDK/client against the approved Okta HTTPS domain; do not put
+SSWS tokens in curl arguments. Disable unexpected redirects, set deadlines and
+bounded page/retry budgets, and follow only same-origin API `Link: rel=next` URLs.
+Enumerate users, factors, apps/assignments and admin roles with pagination; a
+single `limit=200` response is incomplete. Iterate structured app IDs, not CSV
+rows containing quoted commas. Record permissions/errors/coverage explicitly.
+Factor enrollment is not proof that the current sign-on policy requires MFA or
+that a user's enrollment is usable. Compare current authenticators, policy and
+assignment data before recommendations. Keep names/email inventories restricted.
 
 ## Unused Permission Detection
 
@@ -301,7 +210,7 @@ def analyze_iam_usage(days_lookback=90):
         "findings": [],
     }
 
-    users = iam.list_users()["Users"]
+    users = (user for page in iam.get_paginator("list_users").paginate() for user in page["Users"])
     for user in users:
         username = user["UserName"]
 
@@ -310,21 +219,29 @@ def analyze_iam_usage(days_lookback=90):
             Arn=user["Arn"]
         )["JobId"]
 
-        while True:
+        for attempt in range(60):
             result = iam.get_service_last_accessed_details(JobId=job_id)
             if result["JobStatus"] == "COMPLETED":
                 break
+            if result["JobStatus"] == "FAILED":
+                raise RuntimeError("IAM last-access job failed")
             time.sleep(2)
+        else:
+            raise TimeoutError("IAM last-access job exceeded polling budget")
+        services = list(result["ServicesLastAccessed"])
+        while result.get("IsTruncated"):
+            result = iam.get_service_last_accessed_details(JobId=job_id, Marker=result["Marker"])
+            services.extend(result["ServicesLastAccessed"])
 
         threshold = datetime.now(timezone.utc) - timedelta(days=days_lookback)
         unused_services = []
 
-        for service in result["ServicesLastAccessed"]:
+        for service in services:
             last_accessed = service.get("LastAuthenticated")
             if last_accessed is None or last_accessed < threshold:
                 unused_services.append({
                     "service": service["ServiceNamespace"],
-                    "last_accessed": str(last_accessed) if last_accessed else "Never",
+                    "last_accessed": str(last_accessed) if last_accessed else "Unknown/no recorded activity",
                 })
 
         if unused_services:
@@ -340,8 +257,8 @@ def analyze_iam_usage(days_lookback=90):
     return report
 
 
-def detect_overprivileged_roles():
-    """Use IAM Access Analyzer to find overprivileged roles."""
+def list_external_access_candidates():
+    """External-access findings are not a full effective-privilege/unused-access analysis."""
     analyzer = boto3.client("accessanalyzer")
 
     findings = analyzer.list_findings(

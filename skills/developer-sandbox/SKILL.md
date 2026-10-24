@@ -18,7 +18,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 
 ## When to Use
 
-Use this skill when you need design and build interactive playgrounds that let developers experience your product without commitment. This skill covers playground architecture, pre-populated examples, embedding strategies, gating decisions, and converting playground users to signups. Trigger phrases: "developer...
+Use when designing a developer API playground, its sandbox architecture, sharing, gating or evaluation flow.
 
 
 Let developers experience your product before they commit. A great playground removes the biggest barrier to adoption: uncertainty about whether your product solves their problem.
@@ -54,7 +54,7 @@ const result = await api.analyze("Hello, world!");
 ```javascript
 // Example: Shows AI doing something impressive
 const result = await api.summarize(longArticle);
-// Output: A perfect 3-sentence summary
+// Illustrative output shape only; summarize may be inaccurate and needs evaluation.
 ```
 
 **"Real Use Case" Examples**
@@ -82,7 +82,7 @@ app.post('/analyze', async (req, res) => {
 
 ### Example Quality Checklist
 
-- [ ] Example runs without modification
+- [ ] Example actually runs in the stated pinned environment, or is clearly labeled pseudocode with missing adapters
 - [ ] Output is interesting/impressive
 - [ ] Code follows language best practices
 - [ ] Comments explain what's happening
@@ -94,3 +94,5 @@ app.post('/analyze', async (req, res) => {
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+`api`, `longArticle`, Express setup and service adapters are not bundled. Never expose a privileged API key to editable code or auto-run billable/destructive examples on page load. Use explicit Run, synthetic data, short-lived scoped capabilities and server-enforced budgets.

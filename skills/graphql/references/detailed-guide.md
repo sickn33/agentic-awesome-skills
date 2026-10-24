@@ -134,7 +134,7 @@ enum Role {
 # Types with relationships
 type User {
   id: ID!
-  email: String!
+  email: String
   name: String!
   role: Role!
   posts(limit: Int = 10): [Post!]!
@@ -264,7 +264,7 @@ const cache = new InMemoryCache({
     Query: {
       fields: {
         // Paginated field
-        users: {
+        searchUsers: {
           keyArgs: ['query'],  // Cache separately per query
           merge(existing = { edges: [] }, incoming, { args }) {
             // Append for infinite scroll
@@ -304,7 +304,7 @@ const client = new ApolloClient({
 });
 
 // Queries with hooks
-import { useQuery, useMutation } from '@apollo/client';
+import { useQuery, useMutation, gql } from '@apollo/client';
 
 const GET_USER = gql`
   query GetUser($id: ID!) {
@@ -346,9 +346,10 @@ const CREATE_USER = gql`
 
 function CreateUserForm() {
   const [createUser, { loading }] = useMutation(CREATE_USER, {
-    update(cache, { data: { createUser } }) {
+    update(cache, result) {
+      const createUser = result.data?.createUser;
       // Update cache after mutation
-      if (createUser.user) {
+      if (createUser?.user) {
         cache.modify({
           fields: {
             users(existing = []) {
@@ -438,7 +439,7 @@ Expected errors as data, not exceptions
 
 """
 Use union types for expected failure cases.
-GraphQL errors are for unexpected failures.
+GraphQL errors can represent expected or unexpected failures; union payloads are one deliberate contract choice.
 """
 
 # Schema
@@ -566,7 +567,7 @@ const userLoader = new DataLoader(async (ids) => {
   });
   // IMPORTANT: Return in same order as input ids
   const userMap = new Map(users.map(u => [u.id, u]));
-  return ids.map(id => userMap.get(id));
+  return ids.map(id => userMap.get(id) ?? null);
 });
 
 // Use in resolver
@@ -661,8 +662,8 @@ const server = new ApolloServer({
   ]
 });
 
-# Better: Use persisted queries
-# Only allow pre-registered queries in production
+# Automatic persisted queries cache is a bandwidth optimization, NOT an allowlist.
+# Enforcing registered-only operations requires separate safelist validation.
 const server = new ApolloServer({
   typeDefs,
   resolvers,
@@ -879,7 +880,7 @@ const costPlugin = {
           throw new Error(`Query too expensive: ${cost}`);
         }
         // Track cost for rate limiting
-        rateLimiter.consume(request.userId, cost);
+        return rateLimiter.consume(verifiedUserId, cost); // await this from an async hook; do not trust request fields
       }
     };
   }
@@ -923,9 +924,9 @@ const wsServer = new WebSocketServer({
 
 useServer({
   schema,
-  context: (ctx) => ({
+  context: async (ctx) => ({
     pubsub,
-    userId: ctx.connectionParams?.userId
+    userId: await verifySessionAndGetUserId(ctx.connectionParams) // application-supplied authenticated token verification; never trust a client userId
   }),
   onConnect: (ctx) => {
     console.log('Client connected');
@@ -943,6 +944,7 @@ Subscription: {
     subscribe: withFilter(
       (_, { roomId }, { pubsub, userId }) => {
         // Track subscription
+        // Required: authorize the verified user for roomId before allocating an iterator.
         activeSubscriptions.set(userId, roomId);
         return pubsub.asyncIterator(`ROOM_${roomId}`);
       },
@@ -1042,3 +1044,13 @@ Fix action: Use update function to modify cache directly
 ## Related Skills
 
 Works well with: `backend`, `postgres-wizard`, `nextjs-app-router`, `react-patterns`
+
+## Correctness and security limits
+
+Examples omit schema definitions (DateTime/Error/Comment/Message/DeleteUserPayload), imports, resolvers and server startup. Define resolvers before passing the const to ApolloServer, await server.start before Express middleware, configure body/CORS/error handling and pin compatible Apollo/graphql-ws client/server imports. The fullName policy reads fields not in the shown schema; it needs actual stored/query fields. UpdateUser role/email changes require explicit privilege and tenant checks, not type validation alone.
+
+Use request-scoped authenticated/tenant-scoped loaders with policy checks and mutation cache invalidation; DataLoader does not always reduce arbitrary workloads to two queries and unbounded per-author findMany ignores pagination. Include limit/cursor/order and permission scope in batching/caches. Clear client caches across account/tenant changes, deduplicate paginated edges and handle missing/partial data. Defaults do not enforce upper limits; validate list bounds, aliases/batches/fragments, depth/complexity, resolver deadlines, rate and response-byte budgets.
+
+Introspection/Playground is not itself a vulnerability; choose exposure based on the API contract, while maintaining field/object authorization. Directive implementations can enforce complex policies when properly wired; their mere syntax is not security. Missing try/catch alone is not a bug. Automated persisted-query caches are not safelists. Cost APIs/configuration above are illustrative and need installed-library checks with negative tests; no unused plugin can claim enforcement.
+
+Subscriptions require verified connection identity, per-room/event authorization and revocation/revalidation, iterator return/dispose on complete/disconnect, server cleanup and per-connection subscription keys. Deleting one map entry does not unsubscribe or clean multiple tabs; in-memory PubSub is single-process and not a production broker. The email field must be nullable when access returns null. No GraphQL server, codegen, DB, socket or contract test was executed.

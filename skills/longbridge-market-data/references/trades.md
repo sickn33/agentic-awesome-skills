@@ -37,7 +37,7 @@ Options:
 
 ```bash
 # Run with JSON output for AI agents
-longbridge trades --format json
+longbridge trades TSLA.US --format json
 
 # See all options
 longbridge trades --help

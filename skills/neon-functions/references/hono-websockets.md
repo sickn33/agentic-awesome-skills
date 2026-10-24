@@ -89,7 +89,9 @@ export function createNeonWebSocket(app: Hono, baseUrl = "http://localhost") {
       }
       // The env object identity links this request back to the route handler above.
       const env = { incoming: req, outgoing: undefined };
-      const response = await app.request(url, { headers }, env);
+      let response: Response;
+      try { response = await app.request(url, { headers }, env); }
+      catch { pending.delete(env); socket.destroy(); return; }
       const wire = pending.get(env);
       pending.delete(env);
       if (!wire) {
@@ -143,3 +145,5 @@ export default handler; // Neon's { fetch, upgrade } contract
 - **Send a heartbeat.** A socket is dropped once it goes silent — Neon's window is 15 minutes ([Timeouts](../SKILL.md#timeouts-and-runtime-limits)), but intermediary proxies are usually far stricter (tens of seconds). Send a keepalive every ~25–30s so the connection never goes quiet. With the raw `ws` socket use `ws.ping()` (the browser auto-replies with a pong); through this helper you don't hold the raw socket, so send an app-level `ws.send("ping")` the client ignores instead. See [Heartbeat](../SKILL.md#heartbeat-keep-the-socket-alive).
 - **Fan-out and reconnect still apply.** This adapter only covers the per-isolate handshake. For a genuinely shared chat across isolates, broadcast with Postgres `LISTEN`/`NOTIFY`, and have clients reconnect with backoff — see [Fan-out across isolates](../SKILL.md#fan-out-across-isolates-do-not-skip-this) and [Client must reconnect](../SKILL.md#client-must-reconnect).
 - **Node-only globals.** Relies on `Event`, `MessageEvent`, and `CloseEvent` (all present on Neon's Node 24 runtime). `ErrorEvent` is intentionally avoided since it isn't a Node global.
+
+Authenticate the WebSocket Origin and tenant scope as well as the token. Enforce payload/connection limits and handle rejected async callbacks; this adapter is a version-dependent sketch, not a maintained Hono runtime adapter.

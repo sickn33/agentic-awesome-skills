@@ -17,4 +17,4 @@
   is down, since a monitoring alert and a listing are the same promise.
 
 
-See the [Reusable Prompt](references/reusable-prompt.md) reference for the full guidance.
+See the [Reusable Prompt](reusable-prompt.md) reference for the full guidance.

@@ -6,7 +6,7 @@ Framework for evaluating tool permissions granted to agent skills.
 
 | Tier | Tools | Risk Level | Notes |
 |------|-------|------------|-------|
-| **Tier 1 — Read-Only** | `Read`, `Grep`, `Glob` | Low | Cannot modify anything; safe for analysis skills |
+| **Tier 1 — Read-Only** | `Read`, `Grep`, `Glob` | Low | No direct write tools; reads can still expose private data and untrusted instructions |
 | **Tier 2 — Execution** | `Bash` | Medium | Can run arbitrary commands; should have clear justification |
 | **Tier 3 — Modification** | `Write`, `Edit`, `NotebookEdit` | High | Can modify files; verify the skill needs to create/edit files |
 | **Tier 4 — Network** | `WebFetch`, `WebSearch` | High | Can access external URLs; verify domains are necessary |

@@ -40,7 +40,7 @@ from openai import AsyncOpenAI
 import base64
 
 # Convert HTTPS endpoint to WebSocket URL
-ws_url = endpoint.replace("https://", "wss://") + "/openai/v1"
+ws_url = endpoint.rstrip("/").replace("https://", "wss://", 1) + "/openai/v1"
 
 client = AsyncOpenAI(
     websocket_base_url=ws_url,
@@ -50,9 +50,11 @@ client = AsyncOpenAI(
 audio_chunks = []
 transcript_parts = []
 
-async with client.realtime.connect(model="gpt-realtime-mini") as conn:
+async with client.realtime.connect(model=deployment_name) as conn:
     # Configure for audio-only output
     await conn.session.update(session={
+        "type": "realtime",
+        "audio": {"output": {"voice": voice_name, "format": {"type": "audio/pcm", "rate": 24000}}},
         "output_modalities": ["audio"],
         "instructions": "You are a narrator. Speak naturally."
     })
@@ -72,7 +74,11 @@ async with client.realtime.connect(model="gpt-realtime-mini") as conn:
             audio_chunks.append(base64.b64decode(event.delta))
         elif event.type == "response.output_audio_transcript.delta":
             transcript_parts.append(event.delta)
+        elif event.type == "error":
+            raise RuntimeError("Realtime service error; inspect redacted private diagnostics")
         elif event.type == "response.done":
+            if event.response.status != "completed":
+                raise RuntimeError("Incomplete audio response")
             break
 
 # Convert PCM to WAV (see scripts/pcm_to_wav.py)
@@ -93,10 +99,14 @@ const base64ToBlob = (base64, mimeType) => {
 
 const audioBlob = base64ToBlob(response.audio_data, 'audio/wav');
 const audioUrl = URL.createObjectURL(audioBlob);
-new Audio(audioUrl).play();
+const player = new Audio(audioUrl);
+player.onended = () => URL.revokeObjectURL(audioUrl);
+player.onerror = () => URL.revokeObjectURL(audioUrl);
+// Invoke from a user gesture and handle autoplay rejection/teardown.
+player.play().catch(() => URL.revokeObjectURL(audioUrl));
 ```
 
-## Voice Options
+## Historical voice examples (verify deployment support)
 
 | Voice | Character |
 |-------|-----------|
@@ -123,7 +133,7 @@ new Audio(audioUrl).play();
 ## References
 
 - **Full architecture**: See references/architecture.md for complete stack design
-- **Code examples**: See references/code-examples.md for production patterns
+- **Code examples**: See references/code-examples.md for integration sketches
 - **PCM conversion**: Use scripts/pcm_to_wav.py for audio format conversion
 
 ## When to Use
@@ -133,3 +143,26 @@ This skill is applicable to execute the workflow or actions described in the ove
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Generation boundaries
+
+Unexecuted SDK/service sketches: deployment name, available voices, GA versus preview
+session/auth format and SDK versions must match the actual Azure resource. The voice
+table is not a current Realtime support list. Configure explicit PCM output before
+interpreting bytes as 24kHz signed 16-bit mono; reject incomplete/empty output.
+The examples omit a mandatory total generation timeout (e.g. 60 seconds), per-event
+and accumulated audio/text limits (e.g. 32 MiB), cancel/close paths and spend quotas;
+implement them before serving requests. A response.done event alone does not mean
+success. Do not store partial output as a complete narrative.
+
+Authorize source objects AND audio generation/list/stream ownership per tenant; IDs
+are not access control. The DB methods/models/routes, settings and frontend API are
+application adapters, not bundled implementations. Treat source text as data, preserve
+source attribution, verify narration accuracy and obtain rights/consent before sending
+private text to Azure or publishing synthetic speech. Never impersonate a real person
+without permission; disclose generated speech where required. Store keys backend-only
+and audio/transcripts privately with retention limits. Model-generated text is not
+HTML. Frontend play/pause requires actual pause handling, promise errors, finally
+loading reset, URL revocation and teardown; the React sketch omits those controls.
+
+PCM helper usage: `python3 <skill-dir>/scripts/pcm_to_wav.py input.pcm output.wav` refuses overwrites and incomplete frames; it does not detect whether arbitrary bytes really are the declared PCM format.

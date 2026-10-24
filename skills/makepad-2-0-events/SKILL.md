@@ -7,17 +7,18 @@ source: community
 date_added: '2026-09-21'
 risk: unknown
 ---
-
 ## Limitations
-
-- Verify against current Makepad 2.0 docs; upstream APIs change frequently.
+- Pin the Makepad Git revision from Cargo.lock and use that revision’s source/examples for every macro, event and widget method. “2.0” alone is not an API compatibility guarantee; these imported snippets span a changing development branch.
 - Do not run bundled scripts without explicit user approval.
-
 ## When to Use
-- Use when this upstream workflow matches the user's stated goal.
-- Use when the task requires the procedures documented in this skill.
+- Use when building or debugging Makepad UI event routing, widget actions, timer-driven updates, or Rust/Splash communication.
+- First identify whether the target uses script_mod/Splash or older live_design APIs; use matching examples.
 
 # Makepad 2.0 Event & Action System
+
+## Example and verification
+
+For “debounce this search field”, identify the pinned event API, preserve pending input, cancel superseded timers, tag responses to prevent stale updates, and test typing, empty input, cancellation, focus changes and teardown. Repeated Enter/click events must not duplicate a mutation; UI validation is separate from server authorization. Do not log sensitive input or response bodies.
 
 ## Overview
 
@@ -222,7 +223,7 @@ pub trait MatchEvent {
 
 ### Standard App boilerplate (required)
 
-Every Makepad 2.0 app needs this Rust structure:
+This is an illustrative script-era app structure. Confirm bootstrap and event dispatch against the pinned example; it is not required boilerplate for every Makepad generation:
 
 ```rust
 use makepad_widgets::*;

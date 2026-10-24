@@ -4,7 +4,7 @@ description: Secure AI coding agents (Claude Code, Cursor, Codex, Copilot) with 
   boundaries, secret protection, code review gates, and safe sandbox configurations
   for team environments.
 category: security
-risk: safe
+risk: critical
 source: https://github.com/BagelHole/DevOps-Security-Agent-Skills
 source_repo: BagelHole/DevOps-Security-Agent-Skills
 source_type: community
@@ -29,7 +29,7 @@ Secure the use of AI coding agents across engineering teams. This skill covers p
 
 ### CLAUDE.md Configuration
 
-Create a `CLAUDE.md` at the repository root to restrict Claude Code behavior:
+A `CLAUDE.md` supplies behavioral guidance, not an OS sandbox. Merge compatible rules into existing instructions without overwriting them; tool permissions and isolation enforce boundaries independently.
 
 ```markdown
 # CLAUDE.md
@@ -64,7 +64,7 @@ Create a `CLAUDE.md` at the repository root to restrict Claude Code behavior:
 For agents that execute shell commands, define an explicit allowlist:
 
 ```yaml
-# .agent-permissions.yaml
+# .agent-permissions.yaml — conceptual schema, not consumed automatically by these clients
 agent_permissions:
   allowed_commands:
     - "npm test"
@@ -116,6 +116,8 @@ agent_permissions:
 ```
 
 ### File System Access Controls
+
+Linux-only administrator sketch for a disposable checkout; do not recursively change ownership/modes on a live developer repository. The script below grants named ACL entries but does not grant traversal on the repository/parent directories or default ACLs for new files. Design and verify both explicitly; prevent symlink escapes and keep credentials outside the sandbox. Recursive chmod 750 also marks source files executable.
 
 Use filesystem permissions to enforce boundaries at the OS level:
 
@@ -219,7 +221,7 @@ def scan_file(filepath: str) -> list[dict]:
                     "file": filepath,
                     "line": line_num,
                     "type": label,
-                    "content": line.strip()[:120],
+                    "content": "[REDACTED]",
                 })
     return findings
 
@@ -241,7 +243,7 @@ def main():
             print(f"    {finding['content']}\n")
         sys.exit(1)
 
-    print("OK: No secrets detected in agent output.")
+    print("No matches in this bounded regex scan; this is not proof of absence.")
     sys.exit(0)
 
 
@@ -256,28 +258,11 @@ if __name__ == "__main__":
 # .git/hooks/pre-commit
 # Block commits containing secrets from AI agents
 
-STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACM)
-
-if [ -z "$STAGED_FILES" ]; then
-  exit 0
-fi
-
-echo "Scanning staged files for secrets..."
-
-# Run git-secrets
+# Use a maintained scanner that reads staged Git blobs, not working-tree paths.
+# A working-tree scan can miss a secret staged before a later local edit.
+# Require NUL-safe filename handling, bounded inputs and nonzero error status.
 git secrets --pre_commit_hook -- "$@"
-GIT_SECRETS_EXIT=$?
-
-# Run custom scanner on staged files
-python3 .tools/scan_agent_output.py $STAGED_FILES
-SCANNER_EXIT=$?
-
-if [ $GIT_SECRETS_EXIT -ne 0 ] || [ $SCANNER_EXIT -ne 0 ]; then
-  echo ""
-  echo "COMMIT BLOCKED: Secrets detected in staged files."
-  echo "If this is a false positive, use: git commit"
-  exit 1
-fi
+# Integrate any additional scanner against the index through its documented API.
 ```
 
 ---
@@ -333,7 +318,6 @@ docker run \
   --security-opt no-new-privileges:true \
   --security-opt seccomp=seccomp-agent.json \
   --cap-drop ALL \
-  --cap-add DAC_OVERRIDE \
   -v "${REPO_DIR}/src:/workspace/src" \
   -v "${REPO_DIR}/tests:/workspace/tests:rw" \
   -v "${REPO_DIR}/docs:/workspace/docs:rw" \
@@ -344,6 +328,8 @@ docker run \
 ```
 
 ### Seccomp Profile for Agent Containers
+
+Untested illustrative syscall policy: architecture/runtime requirements differ and common calls may be missing. Prefer the runtime default until a tested custom profile is available. seccomp restricts syscalls, not paths; bind mounts, capabilities and user identity remain separate controls. USER alone does not drop capabilities; the runtime flags do. No-network containers also cannot reach cloud model APIs without a separately reviewed proxy design.
 
 ```json
 {
@@ -436,7 +422,7 @@ Signs you need tighter guardrails:
 
 ```bash
 # Read-only first: inventory before any active step.
-which <tool> && <tool> --help | head -n 20
+command -v YOUR_REVIEWED_TOOL
 ```
 
 > Adapted from [BagelHole/DevOps-Security-Agent-Skills](https://github.com/BagelHole/DevOps-Security-Agent-Skills) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: helper scripts and templates not bundled.

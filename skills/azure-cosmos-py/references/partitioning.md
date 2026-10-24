@@ -69,8 +69,8 @@ partition_key=PartitionKey(path="/status")  # "active" or "inactive"
 # Creates write-only partitions, recent partition is always hot
 partition_key=PartitionKey(path="/created_date")
 
-# BAD: Monotonically increasing ID
-# All recent writes go to the same partition
+# Workload-dependent: monotonically increasing ID
+# Cosmos hashes keys: monotonic unique values do not by themselves concentrate writes; evaluate actual cardinality and access skew.
 partition_key=PartitionKey(path="/auto_increment_id")
 ```
 
@@ -153,6 +153,7 @@ from datetime import datetime
 def create_event_with_time_bucket(container, event: dict):
     """Partition by device with hourly buckets."""
     timestamp = event.get("timestamp", datetime.utcnow())
+    event["timestamp"] = timestamp.isoformat() + "Z"  # JSON serializable UTC text
     hour_bucket = timestamp.strftime("%Y%m%d%H")
 
     event["pk"] = f"{event['device_id']}_{hour_bucket}"
@@ -188,7 +189,7 @@ def check_partition_metrics(container):
         offer = container.read_offer()
         print(f"Provisioned throughput: {offer.offer_throughput} RU/s")
     except Exception:
-        print("Using serverless or database-level throughput")
+        raise  # auth/network/API failures do not prove serverless throughput
 
     # Query to check partition key distribution
     query = """
@@ -209,7 +210,7 @@ def check_partition_metrics(container):
             pct = (p['count'] / total) * 100
             print(f"  {p['pk']}: {p['count']} items ({pct:.1f}%)")
             if pct > 20:
-                print(f"    ⚠️  Hot partition detected!")
+                print(f"    ⚠️  High item-count share; measure RU/latency before calling it hot")
 ```
 
 ### Identifying Hot Partitions via Azure Portal
@@ -233,7 +234,10 @@ def add_random_suffix(pk: str, num_suffixes: int = 5) -> str:
 def add_time_bucket(pk: str, bucket_minutes: int = 60) -> str:
     """Create time-based sub-partitions."""
     from datetime import datetime
-    bucket = datetime.utcnow().hour
+    if bucket_minutes <= 0:
+        raise ValueError("bucket_minutes must be positive")
+    import time
+    bucket = int(time.time()) // (bucket_minutes * 60)
     return f"{pk}_{bucket}"
 
 # Strategy 3: Hash-based distribution
@@ -320,7 +324,8 @@ container = database.create_container_if_not_exists(
 # Store activity in both author and follower partitions
 async def post_activity(container, author_id: str, follower_ids: list[str], activity: dict):
     """Fan-out activity to author and all followers."""
-    tasks = []
+    import asyncio
+    tasks = []  # illustration: bound concurrency and add retry/idempotency in real fan-out
 
     # Author's partition
     author_activity = {**activity, "user_id": author_id, "id": f"{activity['id']}_author"}

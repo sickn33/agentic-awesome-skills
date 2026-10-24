@@ -65,7 +65,7 @@ Chrome / Browser Use cloud -> CDP WS -> browser_harness.daemon -> IPC -> browser
 
 ## Browser connection reference
 
-This section is the source of truth for how browser-harness connects to a browser. It is the canonical reference for every agent and user of this repo. Every statement here is intended to be verifiable against either an official Chrome source or this repo's own code, and is held to that standard deliberately. If anything below is incorrect, incomplete, or misleading, open an issue on the browser-harness repository immediately with clear evidence and explanation so it can be corrected. Do not silently work around an error in this document; the cost of one user being misled is much higher than the cost of one issue.
+This section is the source of truth for how browser-harness connects to a browser. It is the canonical reference for every agent and user of this repo. Every statement here is intended to be verifiable against either an official Chrome source or this repo's own code, and is held to that standard deliberately. If anything below is incorrect, incomplete, or misleading, report the discrepancy locally with evidence; post an issue only with explicit user authorization so it can be corrected. Do not silently work around an error in this document; the cost of one user being misled is much higher than the cost of one issue.
 
 Browser-harness can connect to any Chrome or Chromium-based browser on your computer, or to a Browser Use cloud browser.
 
@@ -125,10 +125,10 @@ If the user hasn't said which connection method to use, default to Way 1 if Chro
      browser-harness -c 'restart_daemon()'
      ```
 
-     If that hangs, escalate: kill all Chrome and daemon processes, then reopen Chrome and retry. On macOS/Linux, also remove `/tmp/bu-default.sock` and `/tmp/bu-default.pid` if they linger.
+     If that hangs, inspect ownership and identify only the harness session process. Do not kill all Chrome/daemon processes or delete shared socket/PID files; preserve user tabs and ask before a restart that affects their browser.
 
 4. After any fix, retry step 1.
 
-If Way 1 fails repeatedly or the user's task is unattended, move to Way 2 or a cloud browser per the Browser connection reference (these have no popups).
+If Way 1 fails repeatedly, propose the isolated local option; move to a cloud browser only after explicit authorization for cost and session-data transfer per the Browser connection reference (these have no popups).
 
 If you are testing browser connection for the first time, run this demo: open `https://github.com/browser-use/browser-harness` in a new tab and activate it (`switch_tab`) so the user sees the harness has attached. Then ask what they want to do next.

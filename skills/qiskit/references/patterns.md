@@ -81,7 +81,7 @@ problem = driver.run()
 
 # Map to qubit Hamiltonian
 mapper = JordanWignerMapper()
-hamiltonian = mapper.map(problem.hamiltonian)
+hamiltonian = mapper.map(problem.hamiltonian.second_q_op())
 ```
 
 **Optimization: QAOA Circuit**
@@ -171,13 +171,13 @@ Run ISA circuits on quantum hardware using primitives.
 from qiskit_ibm_runtime import QiskitRuntimeService, SamplerV2 as Sampler
 
 service = QiskitRuntimeService()
-backend = service.backend("ibm_brisbane")
+backend = service.least_busy(operational=True, simulator=False)
 
 # Transpile first
 qc_isa = transpile(qc, backend=backend, optimization_level=3)
 
 # Execute
-sampler = Sampler(backend)
+sampler = Sampler(mode=backend)
 job = sampler.run([qc_isa], shots=10000)
 result = job.result()
 counts = result[0].data.meas.get_counts()
@@ -190,7 +190,7 @@ from qiskit_ibm_runtime import EstimatorV2 as Estimator
 from qiskit.quantum_info import SparsePauliOp
 
 service = QiskitRuntimeService()
-backend = service.backend("ibm_brisbane")
+backend = service.least_busy(operational=True, simulator=False)
 
 # Transpile
 qc_isa = transpile(qc, backend=backend, optimization_level=3)
@@ -199,8 +199,8 @@ qc_isa = transpile(qc, backend=backend, optimization_level=3)
 observable = SparsePauliOp(["ZZZZ", "XXXX"])
 
 # Execute
-estimator = Estimator(backend)
-job = estimator.run([(qc_isa, observable)])
+estimator = Estimator(mode=backend)
+job = estimator.run([(qc_isa, observable.apply_layout(qc_isa.layout))])
 result = job.result()
 expectation_value = result[0].data.evs
 ```
@@ -212,7 +212,7 @@ expectation_value = result[0].data.evs
 from qiskit_ibm_runtime import Session
 
 with Session(backend=backend) as session:
-    sampler = Sampler(session=session)
+    sampler = Sampler(mode=session)
 
     # Multiple iterations
     for iteration in range(max_iterations):
@@ -231,7 +231,7 @@ with Session(backend=backend) as session:
 from qiskit_ibm_runtime import Batch
 
 with Batch(backend=backend) as batch:
-    sampler = Sampler(session=batch)
+    sampler = Sampler(mode=batch)
 
     # Submit all jobs at once
     jobs = []
@@ -246,15 +246,9 @@ with Batch(backend=backend) as batch:
 
 ### Error Mitigation
 
-```python
-from qiskit_ibm_runtime import Options
-
-options = Options()
-options.resilience_level = 2  # 0=none, 1=light, 2=moderate, 3=heavy
-options.optimization_level = 3
-
-sampler = Sampler(backend, options=options)
-```
+Select the options supported by the installed Runtime primitive. Legacy Sampler
+resilience/optimization options are not interchangeable with V2 Estimator options.
+Transpile explicitly and account for extra shots/cost before submission.
 
 ## Step 4: Post-process
 
@@ -302,12 +296,12 @@ def post_process_maxcut(counts, graph):
     def compute_cut_value(bitstring, graph):
         cut_value = 0
         for edge in graph.edges():
-            if bitstring[edge[0]] != bitstring[edge[1]]:
+            if bitstring[-1-edge[0]] != bitstring[-1-edge[1]]:
                 cut_value += 1
         return cut_value
 
     # Find bitstring with maximum cut
-    best_cut = 0
+    best_cut = -1
     best_string = None
 
     for bitstring, count in counts.items():
@@ -365,6 +359,7 @@ plt.show()
 
 ```python
 from qiskit import QuantumCircuit, transpile
+from qiskit.circuit import Parameter
 from qiskit_ibm_runtime import QiskitRuntimeService, EstimatorV2 as Estimator, Session
 from qiskit.quantum_info import SparsePauliOp
 from scipy.optimize import minimize
@@ -376,7 +371,7 @@ def create_ansatz(num_qubits):
     params = []
 
     for i in range(num_qubits):
-        theta = f'θ_{i}'
+        theta = Parameter(f'θ_{i}')
         params.append(theta)
         qc.ry(theta, i)
 
@@ -385,12 +380,12 @@ def create_ansatz(num_qubits):
 
     return qc, params
 
-# Define Hamiltonian (example: H2 molecule)
+# Define a toy Hamiltonian (not a validated H2 molecular model)
 hamiltonian = SparsePauliOp(["IIZZ", "ZZII", "XXII", "IIXX"], coeffs=[0.3, 0.3, 0.1, 0.1])
 
 # 2. OPTIMIZE: Connect and prepare
 service = QiskitRuntimeService()
-backend = service.backend("ibm_brisbane")
+backend = service.least_busy(operational=True, simulator=False)
 
 ansatz, param_names = create_ansatz(num_qubits=4)
 
@@ -403,14 +398,14 @@ def cost_function(params):
     qc_isa = transpile(bound_circuit, backend=backend, optimization_level=3)
 
     # Execute
-    job = estimator.run([(qc_isa, hamiltonian)])
+    job = estimator.run([(qc_isa, hamiltonian.apply_layout(qc_isa.layout))])
     result = job.result()
     energy = result[0].data.evs
 
     return energy
 
 with Session(backend=backend) as session:
-    estimator = Estimator(session=session)
+    estimator = Estimator(mode=session)
 
     # Classical optimization loop
     initial_params = np.random.random(len(param_names)) * 2 * np.pi
@@ -496,7 +491,7 @@ result = job.result()
 qc_isa = transpile(parameterized_circuit, backend=backend)
 
 with Batch(backend=backend) as batch:
-    sampler = Sampler(session=batch)
+    sampler = Sampler(mode=batch)
     results = []
 
     for param_set in parameter_sweep:
@@ -509,13 +504,13 @@ with Batch(backend=backend) as batch:
 ```python
 # Map → (Optimize → Execute → Post-process) repeated
 with Session(backend=backend) as session:
-    estimator = Estimator(session=session)
+    estimator = Estimator(mode=session)
 
     for iteration in range(max_iter):
         qc = update_circuit(params)
         qc_isa = transpile(qc, backend=backend)
 
-        result = estimator.run([(qc_isa, observable)]).result()
+        result = estimator.run([(qc_isa, observable.apply_layout(qc_isa.layout))]).result()
         params = update_params(result)
 ```
 
@@ -524,10 +519,10 @@ with Session(backend=backend) as session:
 # Map → Optimize → Execute many observables → Post-process
 qc_isa = transpile(qc, backend=backend)
 
-observables = [obs1, obs2, obs3, obs4]
+observables = [obs.apply_layout(qc_isa.layout) for obs in [obs1, obs2, obs3, obs4]]
 jobs = [(qc_isa, obs) for obs in observables]
 
-estimator = Estimator(backend)
+estimator = Estimator(mode=backend)
 result = estimator.run(jobs).result()
 expectation_values = [r.data.evs for r in result]
 ```

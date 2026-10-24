@@ -36,8 +36,7 @@ ephemeral `pr-<n>` stages back PR previews and must work from a cold start.
 ## Before every deploy
 
 1. **Confirm the target account.** `aws sts get-caller-identity` — a deploy goes
-   wherever your credentials point. The skill's PreToolUse hook surfaces the
-   account once per session; still eyeball it for prod.
+   wherever your credentials point. No PreToolUse hook is bundled with this skill; verify the selected role/profile, region and stage directly.
 2. **Run `npx sst diff`** and read the plan. Look for unexpected **replacements**
    (Pulumi printing `+-` / "replace") — a replacement on a stateful resource
    (bucket, table) means data loss or a name rotation. If you see one you didn't
@@ -49,57 +48,11 @@ ephemeral `pr-<n>` stages back PR previews and must work from a cold start.
 4. **Flag irreversibility to the user** for prod deploys, `sst remove`, and any
    migration. State the account and stage.
 
-## Resource-type migrations: never single-PR
+## Resource-type and physical-name migrations
 
-**Rule: when an existing AWS resource changes Pulumi *type* — e.g.
-`aws.cloudcontrol.Resource` → typed `aws.bedrock.AgentcoreGateway`, or any change
-of the type token at the same logical name — never put the destroy of the old
-resource and the create of the new one in the same PR/deploy.** Split into two
-sequential deploys:
+Do not default to teardown/recreate for a type or name change, especially databases, buckets and queues. First inventory the deployed physical resource, URN, data, policies, references, protection and retention settings; inspect the actual preview. Evaluate the installed provider's import/alias/state-adoption support and validate identity preservation in an isolated stage. An alias is not guaranteed to bridge incompatible types.
 
-1. **PR-A (teardown):** remove *only* the old resource declaration. Deploy
-   destroys the AWS resource cleanly, freeing the AWS-side name.
-2. **PR-B (recreate):** introduce the new typed resource. Deploy creates into a
-   clean namespace — no conflict.
-
-### Why
-
-Pulumi treats a type change as **create-new + destroy-old, and creates first**.
-If the AWS-side name (anything that must be unique per account — an AgentCore
-Gateway, an IAM role, an S3 bucket, an ECR repo) is still owned by the old
-resource at create time, the deploy fails with `ConflictException` /
-`ValidationException` / 409 / 400 and leaves the stack half-deployed.
-
-- `replaceOnChanges: [...]` + `deleteBeforeReplace: true` **only work within one
-  resource type.** For a type-token change Pulumi sees two unrelated resources, so
-  they do nothing.
-- `dependsOn` doesn't help either — there's no source-side handle on the
-  not-yet-deleted old resource.
-
-### The cost, and how to plan it
-
-The price is a **gap window** between PR-A's deploy finishing and PR-B's deploy
-finishing, during which the AWS resource doesn't exist. For a public surface
-(e.g. a gateway URL) that's downtime.
-
-- Open PR-B back-to-back and have it ready to merge the instant PR-A's deploy
-  completes.
-- Notify external consumers if the resource is user-facing.
-- Internal tooling that resolves the resource via SSM self-heals on next call.
-
-This pattern turns a non-deterministic outage into a planned ~minutes window.
-
-## Renaming a physical name within the same type
-
-Even when the type is unchanged and Pulumi *would* support `deleteBeforeReplace`,
-prefer two reversible steps over a single delete-before-replace:
-
-1. PR-A: rename to a temporary distinct physical name.
-2. PR-B: rename back to the desired physical name.
-
-Single-step renames that depend on `deleteBeforeReplace` work in theory but are
-sensitive to AWS-side delete latency that can outlast Pulumi's update timeout,
-leaving you stuck mid-replace.
+If adoption is unsupported, choose a parallel resource/data-copy/cutover plan with integrity checks and rollback, or explicitly approved destructive recreate with backups/restoration and downtime. Splitting a destructive operation into two PRs does not make it reversible or preserve data. Retain/protect settings and deletion latency may also prevent name reuse. Record consumer updates and verify them after cutover; SSM consumers do not necessarily self-heal automatically.
 
 ## Pulumi state hygiene after a failed deploy
 
@@ -107,14 +60,15 @@ When a deploy fails mid-flight, inspect state before re-running:
 
 ```bash
 # (use the repo's package manager; -C infra if the app is in a subdir)
-npx sst state export --stage <stage> > /tmp/state.json
-jq '.latest.resources | map(.urn)' /tmp/state.json | grep <relevant-name>
+umask 077
+STATE_DIR=$(mktemp -d)
+npx sst state export --stage <stage> > "$STATE_DIR/state.json"
+jq '.latest.resources | map(.urn)' "$STATE_DIR/state.json" | grep <relevant-name>
 ```
 
-- A failed **Create** usually leaves *no* partial entry — Pulumi's rollback is
-  clean; just fix the cause and re-deploy.
+- A failed **Create** may leave partial cloud resources or pending state. Reconcile both service inventory and state before retrying; do not assume rollback completed.
 - A failed **Delete** may leave the entry in state while the AWS resource is
-  already gone. Recovery is `sst state remove <urn>` (not hand-editing the JSON).
+  already gone. Verify physical absence and exact URN first, save a private recovery checkpoint, then use the installed version's supported state repair with explicit approval. Removing state does not delete or restore a cloud resource.
 - **Do not** edit the exported state file and re-import. Use `sst state remove` /
   `pulumi import` for state surgery — manual edits corrupt the checkpoint.
 
@@ -122,33 +76,16 @@ jq '.latest.resources | map(.urn)' /tmp/state.json | grep <relevant-name>
 identifiers that must not linger:
 
 ```bash
-rm -f /tmp/state.json
+rm -f "$STATE_DIR/state.json"
 ```
 
 ## Durable Lambda alias contract
 
 (Applies only to projects using durable/long-running Lambdas — `durable: true`.)
 
-**Invoke durable Lambdas through a published alias (`live`), never `$LATEST`.**
-Every `UpdateFunctionConfiguration` advances `$LATEST` and silently orphans
-in-flight durable executions started against the prior code — no `Errors` metric,
-no `FunctionError`, they just vanish. When adding a `durable: true` Lambda:
+**Version the execution target deliberately.** Use the current durable-Lambda service contract and inspect actual execution/version behavior; this reference does not establish that every configuration update silently orphans executions. Publish a numbered version, record the returned version, and point the alias to that version. Check the current alias/version constraints for the selected function configuration; do not assume a fresh version is always `1` or that a placeholder version identifies the intended published code.
 
-1. Provision an `aws.lambda.Alias` named `live` next to the function (raw Pulumi —
-   SST has no first-class alias), with `{ ignoreChanges: ["functionVersion"] }`
-   so deploys don't reconcile the rotation script's writes back. The bootstrap
-   target is the sharp part: a fresh stage has no numbered version yet, so you
-   either (a) point the alias at `"$LATEST"` as a placeholder and let the
-   post-deploy rotation move it to a numbered version (verify your AWS region
-   accepts `$LATEST` on `CreateAlias` — some setups reject it), or (b) publish a
-   numbered version first (`aws.lambda.FunctionVersion`, or a CLI
-   `publish-version`) and point the alias at `"1"`. Either way, `ignoreChanges`
-   keeps subsequent deploys from clobbering the rotated value.
-2. Have the deploy pipeline run `aws lambda publish-version` +
-   `update-alias --name live` *after* every deploy (prod and preview, so previews
-   exercise the same contract).
-3. Source any build identity (commit SHA, feature flag) at *runtime*, not in the
-   Lambda env — otherwise every deploy advances `$LATEST` even with no code change.
+Choose one owner for alias rotation (IaC or a reviewed deploy step). If external rotation uses ignoreChanges, document drift/rollback and verify the alias revision before updates. Exercise in-flight executions, retries, compatibility and rollback in a safe stage; do not derive correctness from an alias existing alone.
 
 ## Observability as a merge gate
 
@@ -165,18 +102,15 @@ Whether you enforce it is per-project, but the checklist is sound:
   `stage: "prod"`. Without this, a `pr-<n>` preview Lambda writes into the same
   metric slot as prod and trips a prod alarm on preview traffic. Set the `stage`
   dimension as a Powertools *default dimension* (read once from `process.env.STAGE`)
-  so "forgot to tag stage" is structurally impossible; hard-code `"prod"` in the
-  alarm (not `${stage}`) so preview alarms don't page.
+  so "forgot to tag stage" is structurally impossible; bind each alarm to the intended stage and separately gate notification actions. A preview alarm hardcoded to prod reads production metrics and can duplicate pages.
 - **DLQs / Step Functions / schedules** each get a failure alarm, ideally rolled
   into a composite pipeline-health alarm.
-- **Set `treatMissingData: "notBreaching"`** on alarms so a quiet metric doesn't
-  alarm on absence.
+- **Choose missing-data behavior per metric.** notBreaching may suit sparse error counts but can hide failed telemetry/heartbeat streams; test alarm transitions and notification delivery.
 
 ## CI trigger gotcha
 
 A common GitHub Actions deploy workflow declares
 `on: pull_request: types: [opened, synchronize, reopened, closed]` — note there's
 no `edited`. So `gh pr edit <num> --base main` (re-basing a stacked PR onto main)
-does **not** re-trigger the deploy workflow. Force it with a rebase + force-push
-(fires `synchronize`) or an empty commit (`git commit --allow-empty`). This bites
+does **not** re-trigger the deploy workflow. Prefer an authorized workflow_dispatch/rerun or add a reviewed relevant trigger; do not rewrite a branch or create meaningless commits solely to trigger deployment. This bites
 when you stack infra PRs for a two-PR migration.

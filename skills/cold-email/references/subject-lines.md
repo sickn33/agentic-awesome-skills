@@ -1,5 +1,8 @@
 # Subject Line Optimization
 
+The percentages and vendor-attributed findings below are imported historical claims without linked study methods, denominators or controlled comparisons. They are unverified hypotheses for testing, not forecasts or universal causal effects. Open tracking is distorted by privacy protections, image blocking and scanners; compare delivered-mail positive replies/meetings and complaints, with cohort and time window.
+
+
 The subject line determines whether the email gets read. The data is counterintuitive: **short, boring, internal-looking subject lines win decisively.**
 
 ## Length: 2–4 words
@@ -9,9 +12,9 @@ The subject line determines whether the email gets read. The data is counterintu
 - 2–4 words yield **46% open rates** vs 34% for 10 words (Belkins, 5.5M emails).
 - Mobile truncates at 30–35 characters — brevity is practical necessity.
 
-## Internal Camouflage Principle
+## Plain, Honest Subject Lines
 
-Subject lines that look like they came from a colleague, not a vendor, double open rates (Gong). Buyers mentally categorize before opening — if it looks like sales, it's filtered.
+Use concise subjects that truthfully describe the message. Do not imply an internal relationship, an existing conversation or an operational alert; brevity does not guarantee inbox placement.
 
 **High-performing examples:** "reply rates" · "trial delays" · "hiring ops" · "employee turnover" · "Q2 forecast" · "new patients" · "personalization issue" · "second page"
 

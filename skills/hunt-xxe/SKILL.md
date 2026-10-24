@@ -31,14 +31,14 @@ report_count: 10
 
 ## Crown Jewel Targets
 
-XXE is a critical-severity vulnerability that consistently pays at the top of bug bounty scales ($5,000–$30,000+) due to its direct path to sensitive data exfiltration and SSRF. Highest-value targets:
+XXE impact depends on parser capabilities, exposed resources and program scope; severity and payouts are not universal. Review authorized XML-processing surfaces:
 
 - **Large enterprise platforms** with XML-heavy backend integrations (finance, logistics, ride-sharing APIs)
 - **Domains with file-read capability** — `/etc/passwd`, `/etc/shadow`, internal config files, AWS metadata endpoints
 - **Subdomains sharing backend infrastructure** — one XXE endpoint can pivot to internal services across dozens of domains (as demonstrated by 26+ Uber domains via a single entry point)
 - **API gateways** accepting XML content types — especially REST APIs that silently accept `Content-Type: application/xml`
 - **File upload features** — SVG, DOCX, XLSX, PDF, PPTX parsers on the server side
-- **SAML/SSO endpoints** — SAML assertions are XML-based and frequently vulnerable
+- **SAML/SSO endpoints** — SAML assertions are XML-based; actual parser and signature configuration determines exposure
 - **Office/document processing services** — any feature that converts or processes user-supplied documents
 
 ---
@@ -72,7 +72,7 @@ Content-Type: text/xml
 Content-Type: application/soap+xml
 Content-Type: multipart/form-data  ← check file upload fields
 Accept: application/xml
-X-Content-Type-Options: (absent — good sign of loose parsing)
+X-Content-Type-Options: absence does not reveal server XML parser behavior
 ```
 
 ### JavaScript Patterns (source recon)
@@ -109,13 +109,13 @@ lxml
 
 4. **If no reflection, pivot to Blind OOB** — Set up an OOB listener (Burp Collaborator, interactsh, or a self-hosted netcat server). Inject an external entity pointing to your callback URL. Confirm DNS/HTTP hit to validate the parser is making outbound connections.
 
-5. **Escalate Blind OOB to file exfiltration** — Use a two-stage payload: first entity loads local file, second entity sends it OOB via HTTP parameter or DNS exfiltration.
+5. **Bound proof** — use an owner-created nonsensitive canary file or unique callback; stop before real data exfiltration.
 
-6. **Test SSRF pivot** — Point the external entity at internal network addresses (`http://169.254.169.254/latest/meta-data/`, `http://10.0.0.1/`, `http://localhost:8080/admin`). Look for differences in response timing or error messages.
+6. **Assess potential SSRF separately** — only a scope-approved controlled endpoint; timing/error differences alone are inconclusive. Do not request metadata credentials or internal admin resources.
 
-7. **Test all subdomains sharing the same backend** — If one subdomain is vulnerable, enumerate and test all others systematically. Shared backend infrastructure means shared vulnerability.
+7. **Test all subdomains sharing the same backend** — If one subdomain is vulnerable, enumerate and test all others systematically. Shared infrastructure is a hypothesis, not proof; do not expand target scope.
 
-8. **Test parameter-level injection** — Some endpoints parse only specific XML nodes. Inject entities into every element value, attribute value, and even element names.
+8. **Review schema-valid XML text locations** — entity references cannot replace element names, and external entities are not permitted in attribute values. Use a controlled lab document with text-node substitution.
 
 9. **Test for error-based exfiltration** — If OOB is blocked, trigger XML parsing errors that include file content in the error message returned to the client.
 
@@ -239,7 +239,7 @@ grep -rn "FEATURE_EXTERNAL_GENERAL_ENTITIES\|setExpandEntityReferences\|setFeatu
 
 ## Common Root Causes
 
-1. **Default parser configurations** — Java's `DocumentBuilderFactory`, PHP's `DOMDocument`, and Python's `lxml` all support external entities by default. Developers use them without reading the security docs.
+1. **Parser/configuration/version combinations** — defaults differ substantially; inspect the exact library, resolver, entity flags and runtime version instead of inferring XXE from a language name.
 
 2. **Framework upgrades without security re-review** — Older versions of Spring, Struts, and similar frameworks enabled XXE by default; developers didn't re-audit XML handling when libraries changed.
 
@@ -259,8 +259,7 @@ grep -rn "FEATURE_EXTERNAL_GENERAL_ENTITIES\|setExpandEntityReferences\|setFeatu
 
 ### Defense: Keyword blacklist (`ENTITY`, `DOCTYPE`, `SYSTEM`)
 ```xml
-<!-- Case variation -->
-<!DoCtYpE foo [<!EnTiTy xxe SyStEm "file:///etc/passwd">]>
+<!-- XML markup keywords are case-sensitive: mixed-case DOCTYPE/ENTITY is invalid, not a bypass. -->
 
 <!-- Encoding bypass -->
 <?xml version="1.0" encoding="UTF-16"?>
@@ -322,7 +321,7 @@ Content-Type: application/xml+json
   <!ENTITY lol "lol">
   <!ENTITY lol2 "&lol;&lol;">
 ]>
-<!-- Escalate to demonstrate DoS if XXE file-read is patched -->
+<!-- Do not escalate to resource exhaustion. Test parser limits only in a controlled isolated harness. -->
 ```
 
 ---
@@ -356,7 +355,7 @@ XXE classic payloads (`<!ENTITY xxe SYSTEM "file://...">`) are not universally e
 - `Server: Microsoft-IIS` with `.aspx` and XML SOAP → **likely YES** on legacy code
 - Server says nothing identifiable + endpoint accepts XML → **probe with `&hello;` first**; if the inline entity expands, escalate to SYSTEM. If the inline entity also fails to expand, the parser may be hardened — pivot.
 
-**Pre-Severity Gate:** before claiming XXE on a candidate endpoint, run the inline-entity probe (`<!ENTITY hello "world!">` then `&hello;` in a node). If `hello!` does NOT echo back, parser-level entity expansion is disabled and SYSTEM file:// won't work either. Don't waste cycles on a hardened parser.
+**Pre-Severity Gate:** before claiming XXE on a candidate endpoint, run the inline-entity probe (`<!ENTITY hello "world!">` then `&hello;` in a node). The declared value here is world!, not hello!. Lack of reflection cannot prove expansion is disabled; blind processing and application output transformations remain possible.
 
 ---
 
@@ -368,10 +367,10 @@ Before writing the report, answer all three:
    - Can you show the contents of `/etc/passwd` or `win.ini` in the response? OR can you demonstrate a confirmed OOB callback with a file's contents transmitted to your server? OR can you reach an internal SSRF endpoint (metadata, internal admin)?
 
 2. **What does the victim LOSE?**
-   - Specific sensitive data must be identified: internal credentials, AWS IAM keys, application config files with DB passwords, PII, or internal network topology. "Parser made a DNS request" alone is insufficient — escalate to demonstrate actual data exposure or internal access.
+   - Describe demonstrated capability and possible impact separately. A correlated callback can establish external resolution without proving file access. Use a nonsensitive owner-created canary where permitted; do not demand secrets/PII or escalation for report acceptance.
 
 3. **Can it be reproduced in 10 minutes from scratch?**
-   - You must have a single `curl` command or Burp repeater request that a triage engineer can run against the live target and see the impact within 10 minutes, with zero ambiguity about the vulnerable parameter and endpoint.
+   - You must have a single `curl` command or Burp repeater request that a triage engineer can run against the live target and see the impact within 10 minutes, with recorded prerequisites and uncertainty about any unproven impact.
 
 ---
 
@@ -453,7 +452,7 @@ The following real, verified bug-bounty / coordinated-disclosure cases extend th
 ## Limitations
 
 - Authorized scope only: the confirmation gate above is mandatory before any probing, exploitation, or credential-access command.
-- Docs-only import: upstream helper scripts, commands, engine, and research assets are not bundled; reinstall tooling from the source repo when needed.
+- Docs-only import: upstream helper scripts, commands, engine, and research assets are not bundled; review provenance and dependencies before separately authorized installation.
 - Validate every finding (see `triage-validation`) before reporting; report via `report-writing`. Prefer a sandbox, disposable VM, or controlled lab.
 
 ### Example
@@ -464,3 +463,11 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+### Corrections to legacy payload and ecosystem claims
+
+Payloads are historical lab illustrations, not instructions to retrieve production files. Substitute owner-created canaries; never run credential-metadata, sensitive file, recursive-entity or cross-protocol probes against live targets. XML comments/mixed-case keywords cannot split a DOCTYPE into valid grammar; character references in SYSTEM literals and parameter-entity placement have XML grammar restrictions. Chunking is HTTP transport framing, not XML, and is not permission to evade a WAF. The OOXML attribute example is not a valid external-entity proof.
+
+The matrix above is not a verified version compatibility table: lxml resolve_entities=True can enable external file reads, DTDLOAD alone does not imply expansion, and defusedxml.lxml is deprecated. Server headers cannot determine parser flags. Absence of inline reflection cannot rule out blind XXE; inline entity expansion alone does not prove external resolution. Missing local verification documents do not establish tests were run.
+
+Local-DTD repurposing still requires local-file resolver access; it cannot bypass a resolver that truly forbids all file reads. A basic XXE GET cannot obtain IMDSv2 credentials without its token/header flow. XXE, SSRF, XSLT extension execution and application/cloud privilege are separate capabilities. The Uber-scale and social-platform scenarios are illustrative, and cited historical report summaries/payouts require direct source verification. Severity is program/context-specific; neither file-read nor internal HTTP automatically means Critical. No target activity or payload execution was performed.

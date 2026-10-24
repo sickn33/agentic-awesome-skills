@@ -6,7 +6,7 @@ Advanced patterns for high-performance data access with Dapper in .NET.
 
 | Aspect | Dapper | EF Core |
 |--------|--------|---------|
-| Performance | ~10x faster for simple queries | Good with optimization |
+| Performance | Workload-dependent; benchmark equivalent queries | Good with optimization |
 | Control | Full SQL control | Abstracted |
 | Learning curve | Low (just SQL) | Higher |
 | Complex mappings | Manual | Automatic |
@@ -41,7 +41,7 @@ services.AddScoped<IDbConnection>(sp =>
 // Or use a factory for more control
 public interface IDbConnectionFactory
 {
-    IDbConnection CreateConnection();
+    System.Data.Common.DbConnection CreateConnection();
 }
 
 public class SqlConnectionFactory : IDbConnectionFactory
@@ -54,7 +54,7 @@ public class SqlConnectionFactory : IDbConnectionFactory
             ?? throw new InvalidOperationException("Connection string not found");
     }
 
-    public IDbConnection CreateConnection() => new SqlConnection(_connectionString);
+    public System.Data.Common.DbConnection CreateConnection() => new SqlConnection(_connectionString);
 }
 ```
 
@@ -138,6 +138,8 @@ await connection.ExecuteAsync(
 public async Task<IReadOnlyList<Product>> SearchAsync(ProductSearchCriteria criteria)
 {
     var sql = new StringBuilder("SELECT * FROM Products WHERE 1=1");
+    if (criteria.Page < 1 || criteria.PageSize < 1 || criteria.PageSize > 200)
+        throw new ArgumentOutOfRangeException(nameof(criteria));
     var parameters = new DynamicParameters();
 
     if (!string.IsNullOrWhiteSpace(criteria.SearchTerm))
@@ -165,9 +167,9 @@ public async Task<IReadOnlyList<Product>> SearchAsync(ProductSearchCriteria crit
     }
 
     // Pagination
-    sql.Append(" ORDER BY Name");
+    sql.Append(" ORDER BY Name, Id");
     sql.Append(" OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY");
-    parameters.Add("Offset", (criteria.Page - 1) * criteria.PageSize);
+    parameters.Add("Offset", checked((criteria.Page - 1) * criteria.PageSize));
     parameters.Add("PageSize", criteria.PageSize);
 
     using var connection = _factory.CreateConnection();
@@ -258,7 +260,7 @@ public async Task<(IReadOnlyList<Product> Products, int TotalCount)> SearchWithC
         -- Second result set: data
         SELECT * FROM Products 
         WHERE CategoryId = @CategoryId
-        ORDER BY Name
+        ORDER BY Name, Id
         OFFSET @Offset ROWS FETCH NEXT @PageSize ROWS ONLY;
         """;
 
@@ -266,7 +268,7 @@ public async Task<(IReadOnlyList<Product> Products, int TotalCount)> SearchWithC
     using var multi = await connection.QueryMultipleAsync(sql, new
     {
         CategoryId = criteria.CategoryId,
-        Offset = (criteria.Page - 1) * criteria.PageSize,
+        Offset = checked((criteria.Page - 1) * criteria.PageSize),
         PageSize = criteria.PageSize
     });
 
@@ -462,7 +464,7 @@ await foreach (var product in products)
 ```json
 {
   "ConnectionStrings": {
-    "Default": "Server=localhost;Database=MyDb;User Id=sa;Password=xxx;TrustServerCertificate=True;Min Pool Size=5;Max Pool Size=100;Connection Timeout=30;"
+    "Default": "Server=localhost;Database=MyDb;Integrated Security=True;Encrypt=True;TrustServerCertificate=False;Min Pool Size=5;Max Pool Size=100;Connection Timeout=30;"
   }
 }
 ```
@@ -476,7 +478,7 @@ public abstract class DapperRepositoryBase<T> where T : class
 {
     protected readonly IDbConnectionFactory ConnectionFactory;
     protected readonly ILogger Logger;
-    protected abstract string TableName { get; }
+    protected abstract string TableName { get; } // Trusted, fixed identifier; never request input
 
     protected DapperRepositoryBase(IDbConnectionFactory factory, ILogger logger)
     {
@@ -536,7 +538,7 @@ using var connection = new SqlConnection(connectionString);
 var result = await connection.QueryAsync<Product>(sql);
 
 // ❌ Bad - Opening connection manually when not needed
-await connection.OpenAsync();  // Dapper does this automatically
+await connection.OpenAsync();  // Optional for one query; necessary for explicit transactions
 var result = await connection.QueryAsync<Product>(sql);
 
 // ✅ Good - Let Dapper manage connection

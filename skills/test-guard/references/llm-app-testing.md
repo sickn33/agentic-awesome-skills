@@ -14,14 +14,14 @@ Do test:
 
 ## Rule 11: Observability is infrastructure
 
-Don't unit-test telemetry wiring. The violation pattern is asserting a tracing/analytics mock's call arguments:
+Test required telemetry/redaction behavior at its meaningful boundary. Avoid incidental implementation wiring assertions. The violation pattern is asserting a tracing/analytics mock's call arguments:
 
 ```python
 # Violation — tests wiring, not behavior
 mock_tracer.assert_called_once_with(session_id=..., tags=[...])
 ```
 
-Mocking observability calls to *prevent side effects* during tests is fine and often necessary. Just don't assert on the mock's call args. If telemetry breaks, dashboards show it; a unit test asserting wiring only breaks refactors.
+Mocking observability calls to *prevent side effects* during tests is fine and often necessary. Assert emitted fields/redaction, correlation and required event contracts when these matter; broken telemetry may remain invisible or leak secrets. A mock call assertion is appropriate when it checks that boundary contract.
 
 ## Rule 12: Agent and flow tests test transitions
 
@@ -29,12 +29,12 @@ For agent frameworks and state machines: test that given a state plus an event, 
 
 Test: state in → state out.
 
-Don't test: the exact prompt string passed to the LLM, the number of LLM calls made, or internal retry logic — those are implementation details (Rule 1) that change with every model upgrade.
+Avoid incidental prompt wording/call counts. Test required prompt constraints, maximum calls/retries/cost, cancellation and idempotency when these are explicit contracts; a model upgrade must not silently remove those protections.
 
 A useful pattern is a table of transition cases (data-driven, Rule 3): starting state, mocked LLM response, expected resulting state.
 
 ## Severity
 
-- **Must fix:** Rule 12 violations that assert prompt strings or call counts — they break on every model/prompt change
+- **Must fix:** tests that merely mirror incidental implementation; retain exact strings/call limits when they are meaningful protocol or safety contracts
 - **Should fix:** Rule 10 wording assertions
 - **Worth noting:** Rule 11 — flag it, but don't block a small change on it

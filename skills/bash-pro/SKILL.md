@@ -63,7 +63,7 @@ date_added: '2026-02-27'
 - Employ `IFS=$'\n\t'` to prevent unwanted word splitting on spaces
 - Validate inputs with `: "${VAR:?message}"` for required environment variables
 - End option parsing with `--` and use `rm -rf -- "$dir"` for safe operations
-- Support `--trace` mode with `set -x` opt-in for detailed debugging
+- Allow `set -x` only on redacted non-secret paths; tracing expands credentials and arguments
 - Use `xargs -0` with NUL boundaries for safe subprocess orchestration
 - Employ `readarray`/`mapfile` for safe array population from command output
 - Implement robust script directory detection: `SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"`
@@ -72,7 +72,7 @@ date_added: '2026-02-27'
 ## Compatibility & Portability
 
 - Use `#!/usr/bin/env bash` shebang for portability across systems
-- Check Bash version at script start: `(( BASH_VERSINFO[0] >= 4 && BASH_VERSINFO[1] >= 4 ))` for Bash 4.4+ features
+- Check Bash version at script start: `(( BASH_VERSINFO[0] > 4 || (BASH_VERSINFO[0] == 4 && BASH_VERSINFO[1] >= 4) ))` for Bash 4.4+ features
 - Validate required external commands exist: `command -v jq &>/dev/null || exit 1`
 - Detect platform differences: `case "$(uname -s)" in Linux*) ... ;; Darwin*) ... ;; esac`
 - Handle GNU vs BSD tool differences (e.g., `sed -i` vs `sed -i ''`)
@@ -101,9 +101,9 @@ date_added: '2026-02-27'
 
 - Declare constants with `readonly` to prevent accidental modification
 - Use `local` keyword for all function variables to avoid polluting global scope
-- Implement `timeout` for external commands: `timeout 30s curl ...` prevents hangs
+- Implement `timeout` for external commands: `curl --connect-timeout 5 --max-time 30 ...` bounds a network call; GNU timeout is not bundled on macOS
 - Validate file permissions before operations: `[[ -r "$file" ]] || exit 1`
-- Use process substitution `<(command)` instead of temporary files when possible
+- Process substitution can hide producer failure from pipefail; explicitly wait/check it for critical inputs
 - Sanitize user input before using in commands or file operations
 - Validate numeric input with pattern matching: `[[ $num =~ ^[0-9]+$ ]]`
 - Never use `eval` on user input; use arrays for dynamic command construction
@@ -145,10 +145,11 @@ date_added: '2026-02-27'
 
 ## Modern Bash Features (5.x)
 
-- **Bash 5.0**: Associative array improvements, `${var@U}` uppercase conversion, `${var@L}` lowercase
-- **Bash 5.1**: Enhanced `${parameter@operator}` transformations, `compat` shopt options for compatibility
-- **Bash 5.2**: `varredir_close` option, improved `exec` error handling, `EPOCHREALTIME` microsecond precision
-- Check version before using modern features: `[[ ${BASH_VERSINFO[0]} -ge 5 && ${BASH_VERSINFO[1]} -ge 2 ]]`
+- Verify each needed feature against the target Bash manual instead of assuming all
+  Bash 5.x versions share transformations, shopt options and redirection behavior.
+- `EPOCHREALTIME` reports epoch seconds with microsecond granularity; it is a
+  wall clock, not a monotonic benchmark timer.
+- Check version before using modern features: `(( BASH_VERSINFO[0] > 5 || (BASH_VERSINFO[0] == 5 && BASH_VERSINFO[1] >= 2) ))`
 - Use `${parameter@Q}` for shell-quoted output (Bash 4.4+)
 - Use `${parameter@E}` for escape sequence expansion (Bash 4.4+)
 - Use `${parameter@P}` for prompt expansion (Bash 4.4+)
@@ -162,7 +163,7 @@ date_added: '2026-02-27'
 - **Pre-commit hooks**: Configure `.pre-commit-config.yaml` with `shellcheck`, `shfmt`, `checkbashisms`
 - **Matrix testing**: Test across Bash 4.4, 5.0, 5.1, 5.2 on Linux and macOS
 - **Container testing**: Use official bash:5.2 Docker images for reproducible tests
-- **CodeQL**: Enable shell script scanning for security vulnerabilities
+- **CodeQL**: Use supported-language analysis where applicable; it is not a general Bash analyzer
 - **Actionlint**: Validate GitHub Actions workflow files that use shell scripts
 - **Automated releases**: Tag versions and generate changelogs automatically
 - **Coverage reporting**: Track test coverage and fail on regressions
@@ -173,7 +174,7 @@ date_added: '2026-02-27'
 - **SAST**: Integrate Semgrep with custom rules for shell-specific vulnerabilities
 - **Secrets detection**: Use `gitleaks` or `trufflehog` to prevent credential leaks
 - **Supply chain**: Verify checksums of sourced external scripts
-- **Sandboxing**: Run untrusted scripts in containers with restricted privileges
+- **Sandboxing**: Inspect untrusted scripts as data first; a container alone does not authorize execution or isolate network/mounts/secrets
 - **SBOM**: Document dependencies and external tools for compliance
 - **Security linting**: Use ShellCheck with security-focused rules enabled
 - **Privilege analysis**: Audit scripts for unnecessary root/sudo requirements
@@ -188,7 +189,7 @@ date_added: '2026-02-27'
 - **Syslog integration**: Use `logger` command for system log integration
 - **Distributed tracing**: Add trace IDs for multi-script workflow correlation
 - **Metrics export**: Output Prometheus-format metrics for monitoring
-- **Error context**: Include stack traces, environment info in error logs
+- **Error context**: Include redacted locations/status; never dump environment variables or expanded secret commands
 - **Log rotation**: Configure log file rotation for long-running scripts
 - **Performance metrics**: Track execution time, resource usage, external call latency
 - Example: `log_info() { logger -t "$SCRIPT_NAME" -p user.info "$*"; echo "[INFO] $*" >&2; }`
@@ -228,7 +229,7 @@ date_added: '2026-02-27'
 - **shfmt**: Shell script formatter with standard config (`-i 2 -ci -bn -sr -kp`)
 - **checkbashisms**: Detect bash-specific constructs for portability analysis
 - **Semgrep**: SAST with custom rules for shell-specific security issues
-- **CodeQL**: GitHub's security scanning for shell scripts
+- **CodeQL**: Supported-language/Actions analysis; use ShellCheck for standalone Bash
 
 ### Testing Frameworks
 - **bats-core**: Maintained fork of Bats with modern features and active development
@@ -274,7 +275,7 @@ date_added: '2026-02-27'
 ## Advanced Techniques
 
 - **Error Context**: Use `trap 'echo "Error at line $LINENO: exit $?" >&2' ERR` for debugging
-- **Safe Temp Handling**: `trap 'rm -rf "$tmpdir"' EXIT; tmpdir=$(mktemp -d)`
+- **Safe Temp Handling**: `tmpdir=$(mktemp -d) || exit 1; trap 'rm -rf -- "$tmpdir"' EXIT`
 - **Version Checking**: `(( BASH_VERSINFO[0] >= 5 ))` before using modern features
 - **Binary-Safe Arrays**: `readarray -d '' files < <(find . -print0)`
 - **Function Returns**: Use `declare -g result` for returning complex data from functions
@@ -316,11 +317,24 @@ date_added: '2026-02-27'
 
 ## Example
 
-**User request:**
+```bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
+umask 077
+task_tmpdir=$(mktemp -d) || exit 1
+trap 'rm -rf -- "$task_tmpdir"' EXIT
+printf '%s\n' 'example' > "$task_tmpdir/input.txt"
+[[ -s "$task_tmpdir/input.txt" ]] || exit 1
+```
 
-> Write or reviewing Bash scripts for automation, CI/CD, or ops.
+The directory is created before installing cleanup. Quote/validate approved paths
+before deletion: `--` stops option parsing but does not prevent deleting a wrong
+absolute path. Strict mode and an ERR trap do not catch every failure context.
+
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Primary language support: [CodeQL supported languages](https://codeql.github.com/docs/codeql-overview/supported-languages-and-frameworks/).

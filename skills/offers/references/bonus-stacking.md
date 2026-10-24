@@ -33,7 +33,7 @@ For each major objection your buyer has, add a bonus that closes it.
 | "My situation is more complex than the average buyer" | 1:1 onboarding call to customize the plan |
 | "Will this work in [region/language]?" | Localized version or addendum |
 
-A 4-bonus stack that closes 4 specific objections converts massively better than a 4-bonus stack of generic "extras."
+Relevant bonuses may address specific objections; test their effect on conversion, delivery cost and satisfaction rather than assuming a lift.
 
 ### How to find your buyer's actual objections
 
@@ -51,7 +51,7 @@ Each bonus has a stated value (what it would cost if you bought it separately). 
 
 1. **Have a stated value the buyer can verify.** Compare to a comparable product or service. "$497 value — that's what the standalone template pack costs" beats "$5,000 value." (Standalone? Compared to what?)
 
-2. **Total to less than 2x the price** of the core offer. A $1K offer can comfortably have $1.5K in bonuses. A $1K offer with "$25K in bonuses" reads as a scam.
+2. **Use defensible comparable values rather than a fixed multiple of the price** of the core offer. A $1K offer can comfortably have $1.5K in bonuses. A $1K offer with "$25K in bonuses" reads as a scam.
 
 3. **Be things you'd actually sell separately.** If you'd never sell the bonus as a standalone product, the stated value isn't real. Sophisticated buyers can tell.
 
@@ -61,7 +61,7 @@ Each bonus has a stated value (what it would cost if you bought it separately). 
 
 ## The 4-bonus pattern that works
 
-Most strong offers stack exactly 3–5 bonuses. More starts to feel like padding; fewer leaves objections un-closed.
+A starting heuristic is 3–5 bonuses, only when each adds useful value. More starts to feel like padding; fewer leaves objections un-closed.
 
 A common structure:
 
@@ -133,7 +133,7 @@ Mix the timing intentionally:
 - Week 2–4: support bonuses (Slack, office hours, check-ins)
 - Completion: identity bonuses (certificate, alumni access)
 
-A buyer who gets all bonuses up-front is more likely to abandon (they got what they wanted, lost incentive to finish). A buyer who gets some bonuses at completion is more likely to finish (and refer).
+Treat delivery timing as a testable design choice. Do not withhold promised essentials to manufacture completion; measure completion and satisfaction under the disclosed delivery schedule.
 
 ---
 

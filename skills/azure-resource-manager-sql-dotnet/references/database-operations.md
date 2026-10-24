@@ -1,5 +1,7 @@
 # Database Operations
 
+Fragments require reviewed resource IDs, compatible pinned SDK versions and explicit change scope. Define `approvedDroppedDatabaseId`/`approvedRecoverableDatabaseId` from the requested restore selection; never restore an arbitrary first result. Copies/exports expose data and incur costs. Use an authorized storage destination and least-privilege credentials.
+
 Advanced database operations for Azure SQL.
 
 ## Create Database with vCore SKU
@@ -111,7 +113,8 @@ await foreach (var deleted in deletedDatabases)
 {
     Console.WriteLine($"Deleted: {deleted.Data.DatabaseName} at {deleted.Data.DeletionOn}");
 
-    // Restore the deleted database
+    if (deleted.Id.ToString() != approvedDroppedDatabaseId) continue; // exact reviewed resource ID
+    // Restore only the approved deleted database
     var restoreData = new SqlDatabaseData(AzureLocation.EastUS)
     {
         CreateMode = SqlDatabaseCreateMode.Restore,
@@ -136,6 +139,7 @@ var recoverableDatabases = server.GetRecoverableDatabases();
 
 await foreach (var recoverable in recoverableDatabases)
 {
+    if (recoverable.Id.ToString() != approvedRecoverableDatabaseId) continue;
     var restoreData = new SqlDatabaseData(AzureLocation.WestUS) // Different region
     {
         CreateMode = SqlDatabaseCreateMode.Recovery,
@@ -190,10 +194,10 @@ await strPolicyResource.CreateOrUpdateAsync(
 var exportRequest = new DatabaseExportDefinition
 {
     StorageKeyType = StorageKeyType.StorageAccessKey,
-    StorageKey = "<storage-account-key>",
+    StorageKey = Environment.GetEnvironmentVariable("SQL_EXPORT_STORAGE_KEY") ?? throw new InvalidOperationException("SQL_EXPORT_STORAGE_KEY is required"),
     StorageUri = new Uri("https://mystorageaccount.blob.core.windows.net/backups/mydb.bacpac"),
     AdministratorLogin = "sqladmin",
-    AdministratorLoginPassword = "YourPassword123!"
+    AdministratorLoginPassword = Environment.GetEnvironmentVariable("SQL_ADMIN_PASSWORD") ?? throw new InvalidOperationException("SQL_ADMIN_PASSWORD is required")
 };
 
 var exportOperation = await database.ExportAsync(WaitUntil.Completed, exportRequest);
@@ -205,10 +209,10 @@ var exportOperation = await database.ExportAsync(WaitUntil.Completed, exportRequ
 var importRequest = new ImportExistingDatabaseDefinition
 {
     StorageKeyType = StorageKeyType.StorageAccessKey,
-    StorageKey = "<storage-account-key>",
+    StorageKey = Environment.GetEnvironmentVariable("SQL_EXPORT_STORAGE_KEY") ?? throw new InvalidOperationException("SQL_EXPORT_STORAGE_KEY is required"),
     StorageUri = new Uri("https://mystorageaccount.blob.core.windows.net/backups/mydb.bacpac"),
     AdministratorLogin = "sqladmin",
-    AdministratorLoginPassword = "YourPassword123!"
+    AdministratorLoginPassword = Environment.GetEnvironmentVariable("SQL_ADMIN_PASSWORD") ?? throw new InvalidOperationException("SQL_ADMIN_PASSWORD is required")
 };
 
 // Import into existing database
@@ -241,10 +245,10 @@ var tde = await tdeResource.GetAsync();
 
 Console.WriteLine($"TDE State: {tde.Value.Data.State}");
 
-// Disable TDE (not recommended)
+// Keep TDE enabled; disabling encryption requires a separately approved change.
 var tdeData = new SqlDatabaseTransparentDataEncryptionData
 {
-    State = TransparentDataEncryptionState.Disabled
+    State = TransparentDataEncryptionState.Enabled
 };
 await tdeResource.CreateOrUpdateAsync(WaitUntil.Completed, tdeData);
 ```

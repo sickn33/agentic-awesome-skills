@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Extract all content from a PowerPoint file (.pptx).
+Extract supported text, pictures and notes from a PowerPoint file (.pptx).
 Returns a JSON structure with slides, text, and images.
 
 Usage:
@@ -12,6 +12,7 @@ Requires: pip install python-pptx
 import json
 import os
 import sys
+from zipfile import ZipFile
 from pptx import Presentation
 from pathlib import Path
 
@@ -29,11 +30,19 @@ def safe_user_path(path_value, base_dir="."):
     return resolved_path
 
 
-def extract_pptx(file_path, output_dir="."):
+def extract_pptx(file_path, output_dir="extracted-pptx"):
     """
-    Extract all content from a PowerPoint file.
+    Extract supported text, pictures and notes from a PowerPoint file.
     Returns a list of slide data dicts with text, images, and notes.
     """
+    file_path = safe_user_path(file_path)
+    output_dir = safe_user_path(output_dir)
+    # Bound advertised archive contents before parsing; this is not a hostile-file sandbox.
+    with ZipFile(file_path) as archive:
+        entries = archive.infolist()
+        if len(entries) > 10000 or sum(e.file_size for e in entries) > 100 * 1024 * 1024:
+            raise ValueError("PPTX exceeds extraction limits")
+    output_dir.mkdir(parents=True, exist_ok=False)  # never overwrite an existing extraction
     prs = Presentation(file_path)
     slides_data = []
 
@@ -95,7 +104,7 @@ if __name__ == "__main__":
         sys.exit(1)
 
     input_file = sys.argv[1]
-    output_dir = safe_user_path(sys.argv[2]) if len(sys.argv) > 2 else "."
+    output_dir = safe_user_path(sys.argv[2]) if len(sys.argv) > 2 else "extracted-pptx"
 
     slides = extract_pptx(input_file, output_dir)
 

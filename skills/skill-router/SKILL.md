@@ -216,7 +216,7 @@ Treat the names below as candidates. Check the live installed catalog and read t
 - UI: `@frontend-design`
 - Data viz: `@claude-d3js-skill`
 - Generative art: `@algorithmic-art`
-- Presentations: `@pptx-official`
+- Presentations: `@impress`
 
 ### Fully autonomous / parallel execution
 - Full startup mode: `@loki-mode`
@@ -224,10 +224,9 @@ Treat the names below as candidates. Check the live installed catalog and read t
 - Plan then execute: `@subagent-driven-development`
 
 ### Document creation
-- Word doc: `@docx-official`
-- PDF: `@pdf-official`
-- Spreadsheet: `@xlsx-official`
-- Presentation: `@pptx-official`
+- Word doc: `@writer`
+- Spreadsheet: `@calc` (verify XLSX export compatibility)
+- Presentation: `@impress`
 
 ---
 

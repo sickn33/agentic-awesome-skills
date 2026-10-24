@@ -1,6 +1,6 @@
 ---
 name: react-native-skills
-description: "Use when working with react-native-skills tasks or workflows"
+description: "Review React Native and Expo rendering, lists, animations, navigation and native UI against project versions and measured behavior."
 risk: safe
 source: "https://github.com/vercel-labs/agent-skills"
 date_added: "2026-06-02"
@@ -50,9 +50,9 @@ Reference these guidelines when:
 
 ### 2. Animation (HIGH)
 
-- `animation-gpu-properties` - Animate only transform and opacity
+- `animation-gpu-properties` - Prefer transform and opacity when layout need not change
 - `animation-derived-value` - Use useDerivedValue for computed animations
-- `animation-gesture-detector-press` - Use Gesture.Tap instead of Pressable
+- `animation-gesture-detector-press` - Consider Gesture.Tap for animated press feedback while preserving accessibility
 
 ### 3. Navigation (HIGH)
 
@@ -112,9 +112,11 @@ Each rule file contains:
 
 ## Full Compiled Document
 
-For the complete guide with all rules expanded: `AGENTS.md`
+The catalog bundles the individual `rules/` files; the upstream compiled `AGENTS.md` is not included.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+Examples are contextual snippets: supply project imports, types and components. Check installed RN/Expo/Reanimated/list versions before copying APIs; performance labels are qualitative priorities, not measured guarantees. Preserve existing stack choices, accessibility, focus, keyboard and platform behavior. Install compatible native dependencies only within the requested task; prebuild/rebuild can modify native projects.

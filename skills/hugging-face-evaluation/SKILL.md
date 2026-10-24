@@ -25,3 +25,9 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Evaluation provenance and publication limits
+
+Importing a number or extracting YAML is not running an evaluation, reproducing a benchmark or establishing leaderboard acceptance. Preserve model revision, task/dataset revision and split, prompt/chat template, shots, decoding parameters, metric definition/scale, date, evaluator version and original source. Never attach another hosted model’s scores to a different downloadable checkpoint merely because names resemble one another. Missing context remains unknown. Separate different benchmark datasets/results rather than putting unrelated scores under one dataset entry.
+
+Check only relevant existing evaluation PRs for duplication; an unrelated open PR does not by itself block legitimate work. Prepare a local diff and publish only to the explicitly authorized repo/branch, preserving unrelated model-card metadata. The helper example ignores readme_content and lacks the described duplicate-PR check; do not treat it as a complete integration. Hardware size tables are rough leads, not memory guarantees, and the shown 70B Llama-3.2 identifier must be resolved against an actual model repository rather than invented. Bound GPU/API cost, execution time, data transfer and code-evaluation sandbox permissions. No dependencies installed, model loaded, job submitted, evaluation run or model card published here.

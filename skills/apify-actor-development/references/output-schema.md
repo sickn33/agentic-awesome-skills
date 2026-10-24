@@ -9,7 +9,7 @@ The Actor output schema builds upon the schemas for the dataset and key-value st
     "actorOutputSchemaVersion": 1,
     "title": "<OUTPUT-SCHEMA-TITLE>",
     "properties": {
-        /* define your outputs here */
+
     }
 }
 ```

@@ -1,3 +1,4 @@
+<!-- Modified 2026-10-23: qualify binary dependency and historical compatibility claims. Apache-2.0 retained. -->
 # CUDA Dependencies on ZeroGPU
 
 Detailed guidance for installing CUDA-dependent packages on ZeroGPU. SKILL.md establishes the bottom line — wheels are the recommended path because the ZeroGPU build phase has no `nvcc`. This document covers wheel filename tag reading, the kernels-community fallback, and torch-family side-car drift.
@@ -8,7 +9,7 @@ Common workarounds, in preference order:
 
 1. **Pre-built wheel via direct URL.** For `flash-attn`, the upstream project ships a fairly complete matrix at https://github.com/Dao-AILab/flash-attention/releases — check there first and pin the matching wheel URL.
 2. **Build the wheel yourself and host it** (e.g. on a public HF Hub repo) when no upstream wheel matches the Space environment.
-3. **Use a kernels-community kernel** (see below) — handles ABI matching for you, no version pinning needed.
+3. **Use a kernels-community kernel** (see below) — handles ABI matching for you, still review and pin the supported kernel revision/runtime where available.
 
 ## Reading a CUDA wheel filename
 
@@ -33,17 +34,17 @@ If you hand pip a wheel URL without pinning the surrounding environment, pip may
 
 - Pin `torch==X.Y.Z` in `requirements.txt` to match the wheel's `torch2.X` tag.
 - Set `python_version:` in the Space frontmatter to match the `cp3XX` tag.
-- Check the runtime's cxx11-ABI choice against the wheel; if unsure, try the opposite ABI wheel.
+- Check the runtime's cxx11-ABI choice against the wheel; if uncertain, inspect the runtime and upstream compatibility matrix rather than guessing/installing alternate binaries.
 
 ## Prefer kernels-community when unsure
 
-If you are not sure about the ZeroGPU runtime's torch / Python / ABI combination, prefer a [kernels-community](https://huggingface.co/kernels-community) kernel (e.g. `kernels-community/flash-attn2`) instead of a raw wheel URL. The kernels runtime handles ABI matching on your behalf, so no version pinning is required in your Space.
+If you are not sure about the ZeroGPU runtime's torch / Python / ABI combination, prefer a [kernels-community](https://huggingface.co/kernels-community) kernel (e.g. `kernels-community/flash-attn2`) instead of a raw wheel URL. The kernels runtime handles ABI matching on your behalf, but that does not eliminate supply-chain review, supported-version checks or reproducibility controls.
 
 ## torch-family side-car drift
 
 `torchvision`, `torchaudio`, `torchcodec`, and similar side-car packages are built against a specific `torch` major.minor (and CUDA major). On ZeroGPU, the runtime's supported `torch` list lags behind PyPI, so projects often pin a non-latest `torch` — and a bare `uv add <side-car>` can silently resolve to a newer release that targets a different `torch` / CUDA, producing ABI/import failures even though `uv lock` succeeded without warnings.
 
-Concretely observed (2026-04) with `torch==2.9.1` pinned:
+Historical imported examples (2026-04), not independently reproduced here; verify release metadata rather than assuming these versions/constraints are current:
 
 - `torchaudio` resolves to `2.11.0`, which targets torch 2.11 / CUDA 13. The `2.11.0` release **dropped the `Requires-Dist: torch==X.Y.Z` line** that every earlier release had, so uv sees no constraint and picks it.
 - `torchcodec` resolves to a release targeting torch 2.11. No torchcodec release on PyPI declares a `torch` dependency at all; the compatibility table lives only in the project README.

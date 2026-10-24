@@ -66,7 +66,7 @@ cleaned = drop_negligible_operations(circuit_with_small_rotations, atol=1e-8)
 from cirq.transformers import transformer_api
 
 @transformer_api.transformer
-def remove_z_gates(circuit: cirq.Circuit) -> cirq.Circuit:
+def remove_z_gates(circuit: cirq.Circuit, *, context=None) -> cirq.Circuit:
     """Remove all Z gates from circuit."""
     new_moments = []
     for moment in circuit:
@@ -79,30 +79,12 @@ def remove_z_gates(circuit: cirq.Circuit) -> cirq.Circuit:
 transformed = remove_z_gates(circuit)
 ```
 
-### Transformer Class
+### Semantics-preserving replacements
 
-```python
-from cirq.transformers import transformer_primitives
-
-class HToRyTransformer(transformer_primitives.Transformer):
-    """Replace H gates with Ry(π/2)."""
-
-    def __call__(self, circuit: cirq.Circuit, *, context=None) -> cirq.Circuit:
-        def map_op(op: cirq.Operation, _) -> cirq.OP_TREE:
-            if isinstance(op.gate, cirq.HPowGate):
-                return cirq.ry(np.pi/2)(op.qubits[0])
-            return op
-
-        return transformer_primitives.map_operations(
-            circuit,
-            map_op,
-            deep=True
-        ).unfreeze(copy=False)
-
-# Apply transformer
-transformer = HToRyTransformer()
-result = transformer(circuit)
-```
+Do not replace H by Ry(π/2) alone: their action differs. Use supported transformer
+functions and compare the original and transformed unitaries up to global phase
+on small measurement-free circuits. Removing all Z gates is deliberately a
+semantics-changing filter, not an optimization.
 
 ## Gate Decomposition
 
@@ -188,14 +170,12 @@ from cirq.transformers import drop_empty_moments
 cleaned = drop_empty_moments(circuit)
 ```
 
-### Align Measurements
+### Measurement transformations
 
-```python
-from cirq.transformers import dephase_measurements
-
-# Move measurements to end and remove operations after
-aligned = dephase_measurements(circuit)
-```
+`dephase_measurements` replaces measurements with dephasing channels and loses
+classical measurement records; it does not move them to the end. Use
+`cirq.synchronize_terminal_measurements` only where terminal-measurement semantics
+are suitable, and validate records as well as states.
 
 ## Circuit Compilation
 
@@ -219,96 +199,25 @@ compiled = optimize_for_target_gateset(
 device.validate_circuit(compiled)
 ```
 
-### Two-Qubit Gate Compilation
+### Compilation and routing
 
-```python
-# Compile to specific two-qubit gate
-from cirq import two_qubit_to_cz
-
-# Convert all two-qubit gates to CZ
-cz_circuit = cirq.Circuit()
-for moment in circuit:
-    for op in moment:
-        if len(op.qubits) == 2:
-            cz_circuit.append(two_qubit_to_cz(op))
-        else:
-            cz_circuit.append(op)
-```
-
-## Qubit Routing
-
-### Route Circuit to Device Topology
-
-```python
-from cirq.transformers import route_circuit
-
-# Define device connectivity
-device_graph = cirq.NamedTopology(
-    {
-        (0, 0): [(0, 1), (1, 0)],
-        (0, 1): [(0, 0), (1, 1)],
-        (1, 0): [(0, 0), (1, 1)],
-        (1, 1): [(0, 1), (1, 0)]
-    }
-)
-
-# Route logical qubits to physical qubits
-routed_circuit = route_circuit(
-    circuit,
-    device_graph=device_graph,
-    routing_algo=cirq.RouteCQC(device_graph)
-)
-```
-
-### SWAP Network Insertion
-
-```python
-# Manually insert SWAPs for routing
-def insert_swaps(circuit, swap_locations):
-    """Insert SWAP gates at specified locations."""
-    new_circuit = cirq.Circuit()
-    moment_idx = 0
-
-    for i, moment in enumerate(circuit):
-        if i in swap_locations:
-            q0, q1 = swap_locations[i]
-            new_circuit.append(cirq.SWAP(q0, q1))
-        new_circuit.append(moment)
-
-    return new_circuit
-```
+Use `cirq.optimize_for_target_gateset(circuit, gateset=cirq.CZTargetGateset())`
+for CZ decomposition rather than a nonexistent `two_qubit_to_cz(op)` helper.
+For topology routing, supply an actual NetworkX connectivity graph to
+`cirq.RouteCQC(device_graph)` and use its documented call interface for the pinned
+Cirq version. `NamedTopology` is not constructed from an adjacency dictionary.
+Track the final logical-to-physical qubit mapping when comparing results; merely
+inserting SWAPs without remapping later operations changes the computation.
 
 ## Advanced Transformations
 
-### Unitary Compilation
+### Unitary compilation
 
-```python
-import scipy.linalg
-
-# Compile arbitrary unitary to gate sequence
-def compile_unitary(unitary, qubits):
-    """Compile 2x2 unitary using KAK decomposition."""
-    from cirq.linalg import kak_decomposition
-
-    decomp = kak_decomposition(unitary)
-    operations = []
-
-    # Add single-qubit gates before
-    operations.append(cirq.MatrixGate(decomp.single_qubit_operations_before[0])(qubits[0]))
-    operations.append(cirq.MatrixGate(decomp.single_qubit_operations_before[1])(qubits[1]))
-
-    # Add interaction (two-qubit) part
-    x, y, z = decomp.interaction_coefficients
-    operations.append(cirq.XXPowGate(exponent=x/np.pi)(qubits[0], qubits[1]))
-    operations.append(cirq.YYPowGate(exponent=y/np.pi)(qubits[0], qubits[1]))
-    operations.append(cirq.ZZPowGate(exponent=z/np.pi)(qubits[0], qubits[1]))
-
-    # Add single-qubit gates after
-    operations.append(cirq.MatrixGate(decomp.single_qubit_operations_after[0])(qubits[0]))
-    operations.append(cirq.MatrixGate(decomp.single_qubit_operations_after[1])(qubits[1]))
-
-    return operations
-```
+For a two-qubit 4×4 unitary use the supported
+`cirq.two_qubit_matrix_to_cz_operations(q0, q1, unitary, allow_partial_czs=True)`.
+KAK interaction coefficients cannot be copied directly into `XXPowGate` exponents:
+sign, factor of two and global phase matter. Verify the resulting unitary.
+A 2×2 matrix is a single-qubit unitary, not a KAK input.
 
 ### Circuit Simplification
 
@@ -340,7 +249,7 @@ def commute_z_through_cnot(circuit):
         cnot_ops = [op for op in ops if isinstance(op.gate, cirq.CXPowGate)]
 
         # Apply commutation rules
-        # Z on control commutes, Z on target anticommutes
+        # Z on control commutes; conjugating Z on target adds Z on control
         # (simplified logic here)
 
         new_moments.append(cirq.Moment(ops))
@@ -357,7 +266,7 @@ from cirq.transformers import transformer_api
 
 # Build transformation pipeline
 @transformer_api.transformer
-def optimization_pipeline(circuit: cirq.Circuit) -> cirq.Circuit:
+def optimization_pipeline(circuit: cirq.Circuit, *, context=None) -> cirq.Circuit:
     # Step 1: Merge single-qubit gates
     circuit = merge_single_qubit_gates_to_phxz(circuit)
 

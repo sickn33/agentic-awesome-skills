@@ -19,7 +19,7 @@ Detailed guide for implementing tracking via Google Tag Manager.
 Tags are code snippets that execute when triggered.
 
 **Common tag types:**
-- GA4 Configuration (base setup)
+- Google tag (base setup)
 - GA4 Event (custom events)
 - Google Ads Conversion
 - Facebook Pixel
@@ -122,10 +122,12 @@ dataLayer.push({
 
 ### Form Submission
 
+A DOM submit event is an attempt, not proof of backend success. Emit the completed form event only after confirmed application success.
+
 ```javascript
-document.querySelector('#contact-form').addEventListener('submit', function() {
+document.querySelector('#contact-form')?.addEventListener('submit', function() {
   dataLayer.push({
-    'event': 'form_submitted',
+    'event': 'form_submit_attempted',
     'formName': 'contact',
     'formLocation': 'footer'
   });
@@ -135,7 +137,7 @@ document.querySelector('#contact-form').addEventListener('submit', function() {
 ### Button Click
 
 ```javascript
-document.querySelector('.cta-button').addEventListener('click', function() {
+document.querySelector('.cta-button')?.addEventListener('click', function() {
   dataLayer.push({
     'event': 'cta_clicked',
     'ctaText': this.innerText,
@@ -200,9 +202,9 @@ dataLayer.push({
 
 ## Common Tag Configurations
 
-### GA4 Configuration Tag
+### Google Tag (replaces the legacy GA4 Configuration tag)
 
-**Tag Type:** Google Analytics: GA4 Configuration
+**Tag Type:** Google tag
 
 **Settings:**
 - Measurement ID: G-XXXXXXXX
@@ -245,6 +247,8 @@ dataLayer.push({
 
 ### Facebook Pixel - Event
 
+Use a reviewed template or safely encoded allowlisted values; never interpolate untrusted data-layer text directly into a Custom HTML script. The placeholder below assumes a controlled constant.
+
 **Tag Type:** Custom HTML
 
 ```html
@@ -265,7 +269,7 @@ dataLayer.push({
 
 1. Click "Preview" in GTM
 2. Enter site URL
-3. GTM debug panel opens at bottom
+3. Connect through Tag Assistant and inspect the preview session
 
 **What to check:**
 - Tags fired on this event
@@ -324,18 +328,24 @@ v15: Added purchase conversion tracking
 
 ### Consent Mode Integration
 
+The example below is for page-level gtag.js with an initialized dataLayer/gtag. In GTM use CMP consent templates and `setDefaultConsentState` / `updateConsentState`, before measurement tags. Grant each purpose only when selected; handle revocation and persisted preferences. See [Google consent documentation](https://developers.google.com/tag-platform/security/guides/consent).
+
 ```javascript
 // Default state (before consent)
 gtag('consent', 'default', {
   'analytics_storage': 'denied',
-  'ad_storage': 'denied'
+  'ad_storage': 'denied',
+  'ad_user_data': 'denied',
+  'ad_personalization': 'denied'
 });
 
 // Update on consent
 function grantConsent() {
   gtag('consent', 'update', {
     'analytics_storage': 'granted',
-    'ad_storage': 'granted'
+    'ad_storage': 'granted',
+    'ad_user_data': 'granted',
+    'ad_personalization': 'granted'
   });
 }
 ```
@@ -344,7 +354,7 @@ function grantConsent() {
 
 1. Enable Consent Overview in Admin
 2. Configure consent for each tag
-3. Tags respect consent state automatically
+3. Test each tag: built-in consent checks do not automatically block every custom HTML or third-party pixel; configure additional checks and consent-aware triggers.
 
 ---
 

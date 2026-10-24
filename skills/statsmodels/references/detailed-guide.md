@@ -7,6 +7,12 @@
 Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistical methods. Apply this skill for rigorous statistical analysis, from simple linear regression to complex time series models and econometric analyses.
 
 
+## Data and inference contract
+
+Fragments require user-supplied data, compatible installed libraries and an explicit analysis plan. Validate row alignment, finite/missing observations, rank, outcome support and sample size; missing treatment must be consistent across comparisons. Fit preprocessing and feature choices on training data only. Use time/group-aware splits for dependent observations; shuffled KFold below applies only to exchangeable independent samples. Keep raw sensitive data local unless authorized for an external service.
+
+Regression, Granger tests and statistical significance do not establish causality. Causal claims require an identification design and justified assumptions. Robust standard errors do not repair omitted variables, separation or a wrong mean model. Check convergence, uncertainty, calibration and multiplicity; odds ratios are not risk ratios. The code is illustrative and has not been run by this document.
+
 ## Quick Start Guide
 
 ### Linear Regression (OLS)
@@ -16,7 +22,8 @@ import statsmodels.api as sm
 import numpy as np
 import pandas as pd
 
-# Prepare data - ALWAYS add constant for intercept
+# Prepare data: array API needs a constant if an intercept is intended;
+# formula API normally supplies one. Keep the identical design columns at prediction.
 X = sm.add_constant(X_data)
 
 # Fit OLS model
@@ -32,7 +39,9 @@ print(f"Coefficients:\\n{results.params}")
 print(f"P-values:\\n{results.pvalues}")
 
 # Predictions with confidence intervals
-predictions = results.get_prediction(X_new)
+X_new_design = sm.add_constant(X_new, has_constant="add").reindex(columns=X.columns)
+# Reject missing/extra columns rather than silently accept incompatible features.
+predictions = results.get_prediction(X_new_design)
 pred_summary = predictions.summary_frame()
 print(pred_summary)  # includes mean, CI, prediction intervals
 
@@ -74,6 +83,7 @@ probs = results.predict(X)
 # Binary predictions (0.5 threshold)
 predictions = (probs > 0.5).astype(int)
 
+# In-sample diagnostics only; use untouched held-out data for performance claims.
 # Model evaluation
 from sklearn.metrics import classification_report, roc_auc_score
 
@@ -97,18 +107,23 @@ from statsmodels.tsa.stattools import adfuller
 adf_result = adfuller(y_series)
 print(f"ADF p-value: {adf_result[1]:.4f}")
 
-if adf_result[1] > 0.05:
-    # Series is non-stationary, difference it
-    y_diff = y_series.diff().dropna()
+# Failure to reject the unit-root null is not proof of nonstationarity.
+# Inspect trend/seasonality, test specification, sample size and diagnostics.
+d = 1  # illustrative candidate, chosen using training data only
+y_diff = y_series.diff(d).dropna() if d else y_series.dropna()
+# d is 0 or 1 here; for d>1 apply repeated first differences, not diff(d).
 
 # Plot ACF/PACF to identify p, q
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8))
-plot_acf(y_diff, lags=40, ax=ax1)
-plot_pacf(y_diff, lags=40, ax=ax2)
+lags = min(40, len(y_diff) // 2 - 1)
+if lags < 1:
+    raise ValueError("Too few observations for ACF/PACF")
+plot_acf(y_diff, lags=lags, ax=ax1)
+plot_pacf(y_diff, lags=lags, ax=ax2)
 plt.show()
 
 # Fit ARIMA(p,d,q)
-model = ARIMA(y_series, order=(1, 1, 1))
+model = ARIMA(y_series, order=(1, d, 1))
 results = model.fit()
 
 print(results.summary())
@@ -146,8 +161,9 @@ overdispersion = results.pearson_chi2 / results.df_resid
 print(f"Overdispersion: {overdispersion:.2f}")
 
 if overdispersion > 1.5:
-    # Use Negative Binomial instead
-    from statsmodels.discrete.count_model import NegativeBinomial
+    # Candidate model only; inspect exposure, omitted structure and diagnostics.
+    # This illustrative 1.5 threshold is not a universal decision rule.
+    from statsmodels.discrete.discrete_model import NegativeBinomial
     nb_model = NegativeBinomial(y_counts, X)
     nb_results = nb_model.fit()
     print(nb_results.summary())
@@ -161,11 +177,11 @@ if overdispersion > 1.5:
 Comprehensive suite of linear models for continuous outcomes with various error structures.
 
 **Available models:**
-- **OLS**: Standard linear regression with i.i.d. errors
+- **OLS**: Least-squares estimator; classical inference needs suitable assumptions, not necessarily i.i.d. data for every application
 - **WLS**: Weighted least squares for heteroskedastic errors
-- **GLS**: Generalized least squares for arbitrary covariance structure
+- **GLS**: Generalized least squares for a specified valid covariance structure
 - **GLSAR**: GLS with autoregressive errors for time series
-- **Quantile Regression**: Conditional quantiles (robust to outliers)
+- **Quantile Regression**: Conditional quantiles; not immune to leverage or misspecification
 - **Mixed Effects**: Hierarchical/multilevel models with random effects
 - **Recursive/Rolling**: Time-varying parameter estimation
 
@@ -179,7 +195,7 @@ Comprehensive suite of linear models for continuous outcomes with various error 
 
 **When to use:** Continuous outcome variable, want inference on coefficients, need diagnostics
 
-**Reference:** See `references/linear_models.md` for detailed guidance on model selection, diagnostics, and best practices.
+**Upstream reference (not bundled):** `references/linear_models.md` for detailed guidance on model selection, diagnostics, and best practices.
 
 ### 2. Generalized Linear Models (GLM)
 
@@ -207,7 +223,7 @@ Flexible framework extending linear models to non-normal distributions.
 
 **When to use:** Non-normal outcomes, need flexible variance and link specifications
 
-**Reference:** See `references/glm.md` for family selection, link functions, interpretation, and diagnostics.
+**Upstream reference (not bundled):** `references/glm.md` for family selection, link functions, interpretation, and diagnostics.
 
 ### 3. Discrete Choice Models
 
@@ -237,7 +253,7 @@ Models for categorical and count outcomes.
 
 **When to use:** Binary, categorical, or count outcomes
 
-**Reference:** See `references/discrete_choice.md` for model selection, interpretation, and evaluation.
+**Upstream reference (not bundled):** `references/discrete_choice.md` for model selection, interpretation, and evaluation.
 
 ### 4. Time Series Analysis
 
@@ -272,7 +288,7 @@ Comprehensive time series modeling and forecasting capabilities.
 
 **When to use:** Time-ordered data, forecasting, understanding temporal dynamics
 
-**Reference:** See `references/time_series.md` for model selection, diagnostics, and forecasting methods.
+**Upstream reference (not bundled):** `references/time_series.md` for model selection, diagnostics, and forecasting methods.
 
 ### 5. Statistical Tests and Diagnostics
 
@@ -315,7 +331,7 @@ Extensive testing and diagnostic capabilities for model validation.
 
 **When to use:** Validating assumptions, detecting problems, ensuring robust inference
 
-**Reference:** See `references/stats_diagnostics.md` for comprehensive testing and diagnostic procedures.
+**Upstream reference (not bundled):** `references/stats_diagnostics.md` for comprehensive testing and diagnostic procedures.
 
 
 ## Formula API (R-style)
@@ -366,7 +382,8 @@ comparison = pd.DataFrame({
 })
 
 print(comparison.sort_values('AIC'))
-# Lower AIC/BIC indicates better model
+# Lower information criterion is relative evidence only on comparable likelihoods,
+# outcomes and identical estimation observations; not a model-validity certificate.
 ```
 
 ### Likelihood Ratio Test (Nested Models)
@@ -377,7 +394,7 @@ from scipy import stats
 
 lr_stat = 2 * (full_model.llf - reduced_model.llf)
 df = full_model.df_model - reduced_model.df_model
-p_value = 1 - stats.chi2.cdf(lr_stat, df)
+p_value = stats.chi2.sf(lr_stat, df)
 
 print(f"LR statistic: {lr_stat:.4f}")
 print(f"p-value: {p_value:.4f}")
@@ -385,7 +402,7 @@ print(f"p-value: {p_value:.4f}")
 if p_value < 0.05:
     print("Full model significantly better")
 else:
-    print("Reduced model preferred (parsimony)")
+    print("Insufficient evidence to reject the reduced model under this test")
 ```
 
 ### Cross-Validation
@@ -503,7 +520,7 @@ print(f"CV RMSE: {np.mean(cv_scores):.4f} ± {np.std(cv_scores):.4f}")
 
 ## Reference Documentation
 
-This skill includes comprehensive reference files for detailed guidance:
+The following upstream reference files are NOT bundled in this import. Use the official model documentation below; do not claim these local files were read:
 
 ### references/linear_models.md
 Detailed coverage of linear regression models including:
@@ -559,18 +576,7 @@ Comprehensive statistical testing and diagnostics:
 - Understanding specific test statistics
 - Looking for code examples for advanced features
 
-**Search patterns:**
-```bash
-# Find information about specific models
-grep -r "Quantile Regression" references/
-
-# Find diagnostic tests
-grep -r "Breusch-Pagan" references/stats_diagnostics.md
-
-# Find time series guidance
-grep -r "SARIMAX" references/time_series.md
-```
-
+Use the actual [Statsmodels API reference](https://www.statsmodels.org/stable/api.html) for the installed release; no absent local reference search is necessary.
 
 ## Common Pitfalls to Avoid
 
@@ -587,7 +593,7 @@ grep -r "SARIMAX" references/time_series.md
 11. **Comparing non-nested models**: Use AIC/BIC, not LR test
 12. **Ignoring influential observations**: Check Cook's distance and leverage
 13. **Multiple testing**: Correct p-values when testing many hypotheses
-14. **Not differencing time series**: Fit ARIMA on non-stationary data
+14. **Over/under-differencing**: Choose integration using diagnostics and held-out forecasts; ARIMA applies its specified d internally
 15. **Confusing prediction vs confidence intervals**: Prediction intervals are wider
 
 

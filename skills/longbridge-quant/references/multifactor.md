@@ -10,14 +10,16 @@ Cross-sectional multi-factor quantitative stock selection. Scores a universe of 
 
 2. **Fetch valuation factors** for each symbol (batched, up to 20 stocks for manageable output):
    `longbridge calc-index <SYMBOL> --format json`
-   Extract PE, PB, ROE. Value factors: `f_value = 0.5 × (1/PE) + 0.5 × (1/PB)` (normalised).
+   Extract PE, PB, ROE. Value factors: `f_value = 0.5 × Z(1/PE) + 0.5 × Z(1/PB)` after standardizing the two components separately. Exclude or explicitly handle nonpositive/missing PE and PB; do not treat losses/negative equity as cheap.
+
+ROE is the quality factor; obtain it from supported dated financial-report fields rather than assuming calc-index supplies it.
 
 3. **Fetch price history** for momentum and low-vol:
-   `longbridge kline <SYMBOL> --period day --count 60 --format json`
+   `longbridge kline <SYMBOL> --period day --count 61 --format json`
    - Momentum: (close_today / close_60d_ago) − 1
    - Low-volatility: annualised std of last 60 daily returns × √252 (negate: lower HV → higher score)
 
-4. **Standardise** each factor across the universe to Z-scores (subtract mean, divide by std).
+4. **Standardise** each factor across the universe to Z-scores (subtract mean, divide by std). Handle zero variance/missing data explicitly; report the actual sampled universe.
 
 5. **Composite score**:
    - Equal-weight: `score = 0.25 × Z_value + 0.25 × Z_momentum + 0.25 × Z_quality + 0.25 × Z_lowvol`
@@ -39,7 +41,7 @@ longbridge kline --help
 
 longbridge constituent <INDEX>  --format json
 longbridge calc-index <SYMBOL>  --format json
-longbridge kline <SYMBOL> --period day --count 60 --format json
+longbridge kline <SYMBOL> --period day --count 61 --format json
 ```
 
 Supported index examples: `HSI.HK`, `SPX.US`, `IXIC.US`, `DJI.US`, `000300.SH`.

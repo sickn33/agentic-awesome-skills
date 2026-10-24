@@ -35,7 +35,7 @@ coordinate-explicit specification, task-specific PPTX generation, and final
 quality assurance. Do not redirect a net-new deck to another skill merely
 because the requested deliverable is a `.pptx` file.
 
-Use `@pptx-official` when work starts with an existing PPTX and requires
+Use an available, license-reviewed OOXML workflow when work starts with an existing PPTX and requires
 package-level operations: raw OOXML editing, template duplication and text
 replacement, speaker notes, comments, animations, or other structural changes
 to that file. It may support a build when those operations are necessary, but
@@ -54,9 +54,7 @@ it is not the default workflow for a net-new deck authored here.
 ### Step 1: Understand the requested deck
 
 Collect the audience, decision or purpose, language, slide count, source
-material, brand requirements, and delivery format. Ask the user to select a
-narrative framework if they have not already done so. Do not select one on the
-user's behalf.
+material, brand requirements, and delivery format. Use the user's framework when supplied; otherwise choose a suitable framework and state the assumption, asking only when the choice materially affects the result.
 
 Use one of these framework spines, or a user-defined alternative:
 
@@ -143,7 +141,7 @@ steps, and data values as editable objects.
 
 Use the following object constraints:
 
-* Keep content text at 9 pt or larger; prefer 10 to 12 pt for body copy
+* Size text for viewing distance and slide density; prefer roughly 18–24 pt for projected body copy. Treat 9 pt as an absolute floor for ancillary material, not a readability target.
 * Keep every child object inside its parent group bounding box
 * Keep table column widths equal to the table width and split dense tables across slides
 * Keep normal content objects within slide bounds; only decorative full-bleed elements may cross an edge
@@ -163,7 +161,7 @@ box.
 
 Save the authored specification, PPTX, build manifest, audit records, and
 source manifest together. Do not add a large shared renderer or copy source
-presentation content. Use `@pptx-official` only when the requested result also
+presentation content. Use an available, license-reviewed OOXML workflow only when the requested result also
 requires an existing-file or OOXML workflow.
 
 ### Step 6: Validate and repair
@@ -281,5 +279,5 @@ its own slide specification and native editable content.
 
 ## Related Skills
 
-* `@pptx-official` - Use for existing PPTX, OOXML, and template-mutation workflows, not default net-new deck creation
+* For existing PPTX/OOXML operations, select an available license-reviewed tool; no `pptx-official` dependency is bundled.
 * `@python-pptx-generator` - Use for focused Python PPTX generation patterns

@@ -124,9 +124,9 @@ IF ALLOWED:
 - **Exit code 2**: BLOCK (stderr → Claude)
 - **Exit code 0**: ALLOW
 - **Timing**: Runs BEFORE tool execution
-- **Session tracking**: Prevents repeated blocks in same session
+- **Session tracking**: Remembers a reminder, not verified use or approval
 - **Fail open**: On errors, allows operation (don't break workflow)
-- **Purpose**: Enforce critical guardrails
+- **Purpose**: Advisory reminder; fail-open and self-controlled skip conditions cannot enforce security
 
 ### Input Format
 
@@ -176,13 +176,13 @@ Claude receives this message and understands it needs to use the skill before re
 | 0 (UserPromptSubmit) | → Context | → User only | N/A | stdout content |
 | 0 (PreToolUse) | → User only | → User only | **Proceeds** | Nothing |
 | 2 (PreToolUse) | → User only | → **CLAUDE** | **BLOCKED** | stderr content |
-| Other | → User only | → User only | Blocked | Nothing |
+| Other (plain text/no JSON) | Diagnostic | Diagnostic | Normally proceeds with non-blocking error | Version/event dependent |
 
 ### Why Exit Code 2 Matters
 
 This is THE critical mechanism for enforcement:
 
-1. **Only way** to send message to Claude from PreToolUse
+1. **One way** to block PreToolUse and send a reason; supported structured JSON decisions also exist
 2. stderr content is "fed back to Claude automatically"
 3. Claude sees the block message and understands what to do
 4. Tool execution is prevented
