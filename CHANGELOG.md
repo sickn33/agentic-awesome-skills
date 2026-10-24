@@ -7,6 +7,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [20.0.0] - 2026-10-24 - "The Full-Catalog Review"
+
+> Our most significant catalog quality milestone yet: **2,750 skill entrypoints**, a completed individual-review inventory, and corrections across more than **2,000 skill bundles**. AAS 20 brings the entire catalog onto a documented review baseline.
+
+### A complete review baseline
+
+- Completed the catalog-wide individual review campaign: **2,368 root-bundle dispositions**, comprising **2,042 corrected**, **322 retained**, and **4 removed** bundles, alongside **284 preserved earlier review records**. The combined inventory covers all **2,652** root bundles present during integration; after the four removals, **2,648** remain, containing **2,750** top-level and nested `SKILL.md` entrypoints.
+- Reviewed skill instructions and bundled resources for correctness, safety, provenance, permissions, declared risk, examples and limitations. Corrected the problems identified in those reviews, including unsafe command guidance, credential handling, unbounded network/file operations, self-authorizing agent instructions, misleading technical examples and unsupported claims.
+- Published per-batch findings and before/after file hashes in `docs/maintainers/`. Previously reviewed bundles keep their earlier records; review coverage does not imply that every external service, paid workflow, GPU job or native client was exercised. Removed unread files and binary-inspection limits remain explicitly recorded.
+
+### New skills since 19.15.0
+
+- **product-design-harness** — review product decisions through user, evidence and business perspectives, with bounded handoffs and the two original UX3 diagrams restored.
+- **a4a** and **cooper-email** — guidance for encrypted agent messaging and agent email inboxes, with explicit credential, data-sharing and action boundaries.
+- **faber-language** — write and check Faber programs.
+- **shopify-firebase-app** — build Shopify applications using Firebase.
+- **doomsday-escrow** — inspect Proof-of-Escrow bounty submissions and verification evidence.
+- **datawebot** — work with ecommerce product data.
+- **Four FootVal skills** — follow matches and tables, scout and rank players, inspect statistics and transfer news, and value and compare players. Provider data and valuations retain their stated limits.
+
+### Security and reliability
+
+- Patched the dependency versions behind the **23 recorded Dependabot alerts**, including `body-parser`, `fast-uri`, `undici` and `ip-address`, across canonical projects and the affected existing plugin lockfile replicas. The full audit also identified and corrected affected Zod dependencies. The seven canonical npm projects passed audits including development dependencies at remediation time; dashboard dismissal is separate from those source fixes.
+- Preserved the catalog review's HTTPS, temporary-file, secret-handling and explicit authorization boundaries in the latest **Datacircle** pricing-definition update.
+- Strengthened protected review evidence, exact-head validation and release-cycle completion checks so publication consumes the reviewed source batch and an immutable tested distribution.
+
+### Upgrade notes
+
+- Removed **xlsx-official**, **pdf-official**, **docx-official** and **pptx-official** after restrictive-license review. Their old `docx` and `pptx` alias links were also removed. Update stacks that reference these IDs; use an appropriately licensed retained alternative after reviewing it for the task.
+- Reinstall or update to **20.0.0** to receive the reviewed catalog and refreshed plugin distributions. Existing pinned installs keep their previous version until updated. Independently pinned catalog revisions retain their runtime compatibility requirements.
+- Review findings improve this release's baseline; they are not a guarantee that all possible defects are absent. Cloud/provider workloads, model behavior and native-client operation still require task-specific validation.
+
+### Thanks
+
+Thanks to the contributors and upstream authors behind the catalog, including **@waynehamadi**, **@cis2042**, **@doomsday-network**, and the authors of the new messaging, email, language, Shopify/Firebase, ecommerce and FootVal skills. Original provenance and license notices remain with each retained bundle.
+
 ## [19.15.0] - 2026-10-22 - "Reviewed Community Skills And Reliable Fork Evidence"
 
 > Adds **6** catalog skills, ships **2,743 skills**, and removes the false SkillSpector timeout on legitimate fork pull requests.
