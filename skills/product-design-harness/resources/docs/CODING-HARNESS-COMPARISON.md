@@ -25,6 +25,8 @@ Product Design Harness should run first.
 
 ## Sequence
 
+![Harness operating sequence from framing through verified change and learning](../assets/harness-sequence.svg)
+
 1. Product idea
 2. Product Design Harness
 3. Context pack

@@ -128,6 +128,8 @@ It should be used when the decision requires external evidence, multiple reviewe
 
 ## 5. Verdicts
 
+![UX3 decision gate: Continue, Verify, and Stop/Reframe outcomes](../assets/decision-gate.svg)
+
 | Verdict | Meaning | Required behavior |
 |---|---|---|
 | Continue | Evidence and risk are sufficient for the next step. | Proceed with explicit scope, non-goals, and acceptance criteria. |
