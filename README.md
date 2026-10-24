@@ -77,7 +77,7 @@ Every contribution helps us keep the skills curated, the tooling tested, and the
 
 *This project is tested with BrowserStack.*
 
-[![Powered by Atlas Cloud](https://www.atlascloud.ai/oss-program/powered-by-atlas-cloud.svg)](https://www.atlascloud.ai/)
+[![Powered by Atlas Cloud](https://www.atlascloud.ai/oss-program/powered-by-atlas-cloud.svg)](https://www.atlascloud.ai?ref=M9PEA3)
 
 For a complete setup through your first skill selection and installation preview, follow [Codex setup](docs/users/codex-cli-skills.md) or [Claude Code setup](docs/users/claude-code-skills.md).
 
