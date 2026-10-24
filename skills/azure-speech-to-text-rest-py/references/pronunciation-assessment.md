@@ -52,7 +52,7 @@ def transcribe_with_pronunciation_assessment(
     params = {"language": language, "format": "detailed"}
 
     with open(audio_file_path, "rb") as audio_file:
-        response = requests.post(url, headers=headers, params=params, data=audio_file)
+        response = requests.post(url, headers=headers, params=params, data=audio_file, timeout=(10, 90))
 
     response.raise_for_status()
     return response.json()
@@ -65,7 +65,7 @@ result = transcribe_with_pronunciation_assessment(
 )
 
 # Access pronunciation scores
-if result["RecognitionStatus"] == "Success":
+if result.get("RecognitionStatus") == "Success" and result.get("NBest"):
     nbest = result["NBest"][0]
     print(f"Accuracy: {nbest['AccuracyScore']}")
     print(f"Fluency: {nbest['FluencyScore']}")
@@ -241,13 +241,14 @@ def full_pronunciation_assessment(
             url,
             headers=headers,
             params={"language": language, "format": "detailed"},
-            data=f
+            data=f,
+            timeout=(10, 90)
         )
 
     response.raise_for_status()
     result = response.json()
 
-    if result["RecognitionStatus"] != "Success":
+    if result.get("RecognitionStatus") != "Success" or not result.get("NBest"):
         print(f"Recognition failed: {result['RecognitionStatus']}")
         return
 

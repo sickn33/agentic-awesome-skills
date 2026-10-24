@@ -44,7 +44,7 @@ fi
 
 token_args=()
 if [[ -n "${HF_TOKEN:-}" ]]; then
-    token_args=(--token "$HF_TOKEN")
+    export HF_TOKEN # hf reads the environment; do not duplicate the token in argv.
 fi
 
 tmp_dir=$(mktemp -d)
@@ -55,6 +55,9 @@ trap cleanup EXIT
 
 emit_error() {
     local model_id="$1"
+    if [[ ! "$model_id" =~ ^[A-Za-z0-9][A-Za-z0-9_.-]*(/[A-Za-z0-9][A-Za-z0-9_.-]*)?$ || "$model_id" == *..* ]]; then
+        echo "Invalid model ID" >&2; return 1
+    fi
     local message="$2"
     python3 - << 'PY' "$model_id" "$message"
 import json
@@ -68,6 +71,9 @@ PY
 
 parse_readme() {
     local model_id="$1"
+    if [[ ! "$model_id" =~ ^[A-Za-z0-9][A-Za-z0-9_.-]*(/[A-Za-z0-9][A-Za-z0-9_.-]*)?$ || "$model_id" == *..* ]]; then
+        echo "Invalid model ID" >&2; return 1
+    fi
     local readme_path="$2"
 
     MODEL_ID="$model_id" README_PATH="$readme_path" python3 - << 'PY'
@@ -85,51 +91,22 @@ except OSError:
     print(json.dumps({"id": model_id, "error": "readme_missing"}))
     sys.exit(0)
 
-frontmatter = []
-in_block = False
-for line in lines:
-    if line.strip() == "---":
-        if in_block:
-            break
-        in_block = True
-        continue
-    if in_block:
-        frontmatter.append(line)
-
-if not frontmatter:
+try:
+    import yaml
+except ImportError:
+    print(json.dumps({"id": model_id, "error": "PyYAML_required"}))
+    sys.exit(1)
+if not lines or lines[0].strip() != "---":
     print(json.dumps({"id": model_id, "error": "frontmatter_missing"}))
     sys.exit(0)
-
-key = None
-out = {}
-
-for line in frontmatter:
-    stripped = line.strip()
-    if not stripped or line.lstrip().startswith("#"):
-        continue
-
-    if ":" in line and not line.lstrip().startswith("- "):
-        key_candidate, value = line.split(":", 1)
-        key_candidate = key_candidate.strip()
-        value = value.strip()
-        if key_candidate and all(c.isalnum() or c in "_-" for c in key_candidate):
-            key = key_candidate
-            if value in ("|", "|-", ">", ">-") or value == "":
-                out[key] = None
-                continue
-            if value.startswith("[") and value.endswith("]"):
-                items = [v.strip() for v in value.strip("[]").split(",") if v.strip()]
-                out[key] = items
-            else:
-                out[key] = value
-            continue
-
-    if line.lstrip().startswith("- ") and key:
-        item = line.strip()[2:]
-        if key not in out or out[key] is None:
-            out[key] = []
-        if isinstance(out[key], list):
-            out[key].append(item)
+try:
+    end = next(i for i in range(1, len(lines)) if lines[i].strip() == "---")
+    out = yaml.safe_load("\n".join(lines[1:end]))
+    if not isinstance(out, dict):
+        raise ValueError("Expected mapping")
+except (StopIteration, ValueError, yaml.YAMLError):
+    print(json.dumps({"id": model_id, "error": "invalid_frontmatter"}))
+    sys.exit(0)
 
 result = {
     "id": model_id,
@@ -148,6 +125,9 @@ PY
 
 process_id() {
     local model_id="$1"
+    if [[ ! "$model_id" =~ ^[A-Za-z0-9][A-Za-z0-9_.-]*(/[A-Za-z0-9][A-Za-z0-9_.-]*)?$ || "$model_id" == *..* ]]; then
+        echo "Invalid model ID" >&2; return 1
+    fi
 
     if [[ -z "$model_id" ]]; then
         return 0

@@ -8,7 +8,7 @@
 
 ## Dados de Risco
 - CEMADEN (cemaden.gov.br) — mapas de risco ambiental
-- IBGE — malha digital e zoneamento
+- IBGE — malha digital; prefeitura — zoneamento
 
 ## Jurisprudência
 - STJ — arrematação e leilões

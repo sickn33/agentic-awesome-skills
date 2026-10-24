@@ -25,7 +25,7 @@ Outbound, fire-and-forget notifications from a local Claude Code session, script
 
 - Use when the user says "text me when X is done", "ping my phone", "notify me on completion", "let me know when the build/deploy/migration finishes", or "send me an iMessage when…".
 - Use when the user asks to wire a hook that texts on agent stop, `/loop` iteration, or `/schedule` completion.
-- Use when an agent turn is genuinely long-running and the user has gone heads-down on something else.
+- Use for a long-running task only when the user has explicitly requested phone notification.
 - Do **not** use for short, interactive tasks where the user is watching the terminal — the notify is noise.
 
 ## Prerequisites
@@ -41,6 +41,14 @@ npx @sendblue/cli setup
 The user's phone number must be a verified contact on the account. On the free plan, the contact has to text the Sendblue number once before outbound sends work — confirm with `sendblue contacts` before relying on notify in an unattended workflow.
 
 Cache the destination number once per project rather than re-asking. A `NOTIFY_NUMBER` env var or a one-line `.notify-number` file is fine; defer storage strategy to whatever the surrounding project already does.
+
+## Operational boundaries
+
+These are imported documentation examples; no CLI, daemon, server or hook runtime
+is bundled. Verify the pinned upstream version, account, billing, current limits and
+actual command/API schema before use. Never print credentials (`whoami`/`show-keys`
+may expose them) to agent output or logs. Authorization for drafting is not sending.
+Do not circumvent provider anti-abuse limits by distributing sends across lines.
 
 ## How It Works
 
@@ -94,8 +102,11 @@ fi
 Or, when the result is interesting, include a one-line summary:
 
 ```bash
-RESULT=$(run-migration 2>&1 | tail -1)
-npx @sendblue/cli send +15551234567 "migration done — $RESULT"
+if run-migration >migration.log 2>&1; then
+  npx @sendblue/cli send +15551234567 "migration succeeded; review the local log"
+else
+  npx @sendblue/cli send +15551234567 "migration failed; review the local log"
+fi
 ```
 
 ### Example 2: Claude Code `Stop` hook (opt-in, scoped)

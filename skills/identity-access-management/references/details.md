@@ -2,6 +2,10 @@
 
 > Extended reference content for `identity-access-management`, kept under `references/` so the entrypoint stays within the audit budget.
 
+## Operational caveats
+
+Examples are fragments, not an executable offboarding runbook. Follow pagination, check HTTP status and returned IDs, fail closed on null/ambiguous identity, preserve legal holds/data ownership, and record each successful or failed action. Revoking IdP sessions does not instantly invalidate every downstream token/session. Protect exports in a private temporary directory, not predictable `/tmp` filenames. Obtain recovery and pilot-test evidence before enforcing tenant-wide policies.
+
 ## 5. SSO Integration Patterns
 
 ### SAML vs OIDC Decision Guide
@@ -21,7 +25,7 @@
 #### Slack Enterprise SSO
 
 ```bash
-# Okta OIDC integration for Slack
+# Configure the provider-supported Slack SAML integration and SCIM separately
 # 1. In Okta: Applications > Browse App Catalog > Slack
 # 2. Configure with your Slack workspace URL
 # 3. Enable SCIM provisioning
@@ -42,9 +46,8 @@ curl -s -H "Authorization: Bearer ${SLACK_SCIM_TOKEN}" \
 gh api orgs/company/credential-authorizations --paginate \
   | jq '.[] | {login: .login, credential_type: .credential_type, authorized_at: .authorized_credential_note}'
 
-# Require SAML SSO for all org members
-gh api -X PATCH orgs/company \
-  -f saml_enforced=true
+# Enforce SAML through the supported organization authentication settings after
+# validating recovery codes and IdP login; saml_enforced is not a documented org PATCH field.
 ```
 
 #### AWS SSO (IAM Identity Center)
@@ -172,7 +175,7 @@ curl -s -X PATCH \
 WebAuthn (FIDO2) hardware keys and passkeys are phishing-resistant and should be the primary MFA factor.
 
 ```bash
-# Okta: Enforce WebAuthn as primary factor
+# Okta: Factor activation alone does not enforce authentication; check effective app/sign-on policies
 curl -s -X PUT \
   -H "Authorization: SSWS ${OKTA_API_TOKEN}" \
   -H "Content-Type: application/json" \
@@ -207,7 +210,7 @@ curl -s -X POST \
 ### TOTP Backup Configuration
 
 ```bash
-# Generate backup codes for users (Okta)
+# Enroll a TOTP factor (not backup recovery codes; enrollment still needs activation)
 USER_ID="00u1abc123"
 curl -s -X POST \
   -H "Authorization: SSWS ${OKTA_API_TOKEN}" \
@@ -236,7 +239,7 @@ curl -s -X DELETE \
 # Google Workspace: Generate backup verification codes
 gam user alice@company.com update backupcodes
 
-# Azure AD: Require re-registration of MFA methods
+# Azure AD: Removing one phone method does not force re-registration of every MFA method
 az rest --method DELETE \
   --url "https://graph.microsoft.com/v1.0/users/${USER_OID}/authentication/phoneMethods/3179e48a-750b-4051-897c-87b9720928f7"
 ```
@@ -297,40 +300,15 @@ curl -s -X PUT \
   -H "Authorization: SSWS ${OKTA_API_TOKEN}" \
   "${OKTA_ORG_URL}/api/v1/groups/${ADMIN_GROUP_ID}/users/${USER_ID}"
 
-# Schedule removal after 4 hours (use a cron job or automation tool)
-echo "0 */4 * * * curl -s -X DELETE -H 'Authorization: SSWS ${OKTA_API_TOKEN}' \
-  '${OKTA_ORG_URL}/api/v1/groups/${ADMIN_GROUP_ID}/users/${USER_ID}'" | crontab -
+# Use a durable one-shot revocation job at an absolute expiry with independent
+# verification/reconciliation. Do not replace the user crontab or embed API tokens in it.
 ```
 
 ### Break-Glass Accounts
 
-```bash
-# Create break-glass accounts that bypass SSO/MFA for emergency access
-# These accounts must be:
-# 1. Excluded from conditional access / MFA policies
-# 2. Protected with extremely long passwords stored in a physical safe
-# 3. Monitored with alerts on any usage
-
-# Azure AD: Create break-glass account
-az ad user create \
-  --display-name "Break Glass 1" \
-  --user-principal-name "breakglass1@company.onmicrosoft.com" \
-  --password "$(openssl rand -base64 48)" \
-  --force-change-password-next-sign-in false
-
-# Assign Global Administrator role
-az ad group member add --group "SG-BreakGlass" --member-id "$BREAKGLASS_OID"
-
-# Set up alert on break-glass sign-in (Azure Monitor)
-az monitor activity-log alert create \
-  --name "BreakGlass-SignIn-Alert" \
-  --resource-group "security-rg" \
-  --condition category=Administrative and caller=breakglass1@company.onmicrosoft.com \
-  --action-group "/subscriptions/SUB_ID/resourceGroups/security-rg/providers/microsoft.insights/actionGroups/SecurityTeam"
-```
+Follow the provider's current emergency-access procedure. For Entra, use at least two cloud-only emergency accounts with strong phishing-resistant authentication, appropriate permanent directory-role assignments, secure custody and periodic validation. Avoid a blanket MFA bypass. Exclude only policies that could block recovery as documented. A normal security-group membership does not itself assign Global Administrator; Azure resource RBAC and Entra directory roles are different. Monitor Entra sign-in/audit logs, not Azure Resource Manager activity logs as a substitute.
 
 ---
-
 
 ## 9. Audit & Compliance
 
@@ -386,7 +364,8 @@ gam print users fields isEnrolledIn2Sv | grep -c True
 echo "Not enrolled:"
 gam print users fields isEnrolledIn2Sv | grep -c False
 
-# Okta: Users without any MFA factor
+# Okta: This query counts active non-social-provider users, NOT users without MFA factors.
+# Inspect enrolled authenticators/factors and effective sign-on policy per user.
 curl -s -H "Authorization: SSWS ${OKTA_API_TOKEN}" \
   "${OKTA_ORG_URL}/api/v1/users?filter=status+eq+\"ACTIVE\"&limit=200" \
   | jq '[.[] | select(.credentials.provider.type != "SOCIAL") | .id] | length'
@@ -409,6 +388,7 @@ Run this sequence when an employee departs. Order matters -- revoke sessions fir
 
 ```bash
 DEPARTING_USER="alice@company.com"
+# Map this identity separately to each provider immutable ID and GitHub login.
 
 # Step 1: Revoke all active sessions immediately
 # Okta
@@ -456,7 +436,7 @@ curl -s -H "Authorization: SSWS ${OKTA_API_TOKEN}" \
 
 # Step 5: Revoke app-specific tokens
 # GitHub: Remove from org
-gh api -X DELETE "orgs/company/members/${DEPARTING_USER}"
+gh api -X DELETE "orgs/company/members/${GITHUB_LOGIN}"
 
 # Slack: Deactivate via SCIM
 SLACK_USER_ID=$(curl -s -H "Authorization: Bearer ${SLACK_SCIM_TOKEN}" \
@@ -479,13 +459,14 @@ aws sso-admin delete-account-assignment \
   --principal-id "$AWS_SSO_USER_ID"
 
 # Step 6: Document and log
-echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) | OFFBOARD | ${DEPARTING_USER} | all sessions revoked, account suspended, data transferred to manager@company.com" >> /var/log/offboarding-audit.log
+echo "$(date -u +%Y-%m-%dT%H:%M:%SZ) | OFFBOARD | ${DEPARTING_USER} | offboarding attempted; record each verified provider result separately" >> /var/log/offboarding-audit.log
 ```
 
 ### Post-Offboarding Verification
 
 ```bash
 DEPARTING_USER="alice@company.com"
+# Map this identity separately to each provider immutable ID and GitHub login.
 
 # Verify account is suspended/deactivated
 echo "=== Offboarding Verification ==="
@@ -499,12 +480,12 @@ curl -s -H "Authorization: SSWS ${OKTA_API_TOKEN}" \
   | jq -r '.status' | grep -q "DEPROVISIONED" && echo "[OK] Okta deprovisioned" || echo "[FAIL] Okta still active"
 
 # GitHub
-gh api "orgs/company/members/${DEPARTING_USER}" 2>&1 | grep -q "404" && echo "[OK] GitHub removed" || echo "[FAIL] GitHub still member"
+gh api "orgs/company/members/${GITHUB_LOGIN}" 2>&1 | grep -q "404" && echo "[OK] GitHub removed" || echo "[FAIL] GitHub still member"
 
 # Check for any remaining active sessions in audit logs
 echo "=== Checking for post-offboard activity ==="
 curl -s -H "Authorization: SSWS ${OKTA_API_TOKEN}" \
-  "${OKTA_ORG_URL}/api/v1/logs?filter=actor.alternateId+eq+\"${DEPARTING_USER}\"&since=$(date -u +%Y-%m-%dT%H:%M:%SZ)&limit=10" \
+  "${OKTA_ORG_URL}/api/v1/logs?filter=actor.alternateId+eq+\"${DEPARTING_USER}\"&since=${OFFBOARD_STARTED_AT}&limit=10" \
   | jq '.[] | {time: .published, event: .eventType, outcome: .outcome.result}'
 ```
 

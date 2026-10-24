@@ -13,7 +13,7 @@ license_source: https://github.com/microsoft/skills/blob/main/LICENSE
 # Application Insights JavaScript SDK (Web) for TypeScript
 ## When to Use
 
-Use this skill when you need instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces correlated to backend...
+Use this skill when you need instrument browser/web apps with the Application Insights JavaScript SDK (@microsoft/applicationinsights-web). Use for Real User Monitoring (RUM) — page views, clicks, AJAX/fetch dependencies, exceptions, custom events, and browser-side GenAI agent traces with explicitly verified backend correlation.
 
 
 Real User Monitoring (RUM) for browser apps with `@microsoft/applicationinsights-web`. Auto-collects page views, AJAX/fetch dependencies, unhandled exceptions, and (with the Click Analytics plugin) clicks. Supports custom events, metrics, and **GenAI agent traces** that follow OpenTelemetry GenAI semantic conventions and correlate to backend spans via W3C Trace Context.
@@ -65,16 +65,16 @@ NEXT_PUBLIC_APPINSIGHTS_CONNECTION_STRING="InstrumentationKey=..."
 ## Quick Start (npm)
 
 ```typescript
-import { ApplicationInsights } from "@microsoft/applicationinsights-web";
+import { ApplicationInsights, DistributedTracingModes } from "@microsoft/applicationinsights-web";
 
 export const appInsights = new ApplicationInsights({
   config: {
     connectionString: import.meta.env.VITE_APPINSIGHTS_CONNECTION_STRING,
     enableAutoRouteTracking: true,        // SPA route changes -> page views
-    enableCorsCorrelation: true,          // propagate Request-Id / traceparent to cross-origin AJAX
-    enableRequestHeaderTracking: true,
-    enableResponseHeaderTracking: true,
-    distributedTracingMode: 2,            // DistributedTracingModes.AI_AND_W3C — emit traceparent for backend correlation
+    enableCorsCorrelation: false, // opt in only for approved backend origins          // propagate Request-Id / traceparent to cross-origin AJAX
+    enableRequestHeaderTracking: false, // avoid collecting credentials/PII
+    enableResponseHeaderTracking: false,
+    distributedTracingMode: DistributedTracingModes.W3C, // import the enum; do not infer names from numeric literals
     autoTrackPageVisitTime: true,
     disableFetchTracking: false,          // fetch() is auto-instrumented by default
     excludeRequestFromAutoTrackingPatterns: [/livemetrics\.azure\.com/i]
@@ -91,18 +91,9 @@ Call `loadAppInsights()` exactly once, as early as possible (before user interac
 
 Recommended when you want auto-updating SDK and zero build pipeline. Paste this as the **first** `<script>` in `<head>`:
 
-```html
-<script type="text/javascript" src="https://js.monitor.azure.com/scripts/b/ai.3.gbl.min.js" crossorigin="anonymous"></script>
-<script type="text/javascript">
-  var appInsights = window.appInsights || function (cfg) {
-    /* See: https://learn.microsoft.com/azure/azure-monitor/app/javascript-sdk
-       Use the latest snippet from the Microsoft Learn page above — it includes
-       backup-CDN failover (cr), SDK-load-failure reporting, and the queue shim
-       so calls before SDK ready are not lost. */
-  }({ src: "https://js.monitor.azure.com/scripts/b/ai.3.gbl.min.js",
-      crossOrigin: "anonymous",
-      cfg: { connectionString: "YOUR_CONNECTION_STRING" } });
-</script>
+```text
+Retrieve and review the complete loader snippet from the official SDK setup page.
+The prior queue-shim placeholder was not an implementation and must not be pasted as working code.
 ```
 
 Loader-only API (queued until SDK loads): `trackEvent`, `trackPageView`, `trackException`, `trackTrace`, `trackDependencyData`, `trackMetric`, `trackPageViewPerformance`, `startTrackPage`, `stopTrackPage`, `startTrackEvent`, `stopTrackEvent`, `addTelemetryInitializer`, `setAuthenticatedUserContext`, `clearAuthenticatedUserContext`, `flush`.
@@ -138,7 +129,7 @@ appInsights.trackDependencyData({
 });
 
 // User identity (set ONCE per authenticated session — values are PII; do not pass emails)
-appInsights.setAuthenticatedUserContext("user-id-123", "tenant-456", /*storeInCookie*/ true);
+appInsights.setAuthenticatedUserContext("user-id-123", "tenant-456", /*storeInCookie*/ false);
 appInsights.clearAuthenticatedUserContext(); // on logout
 
 // Force send before unload
@@ -165,7 +156,7 @@ appInsights.addTelemetryInitializer((item: ITelemetryItem) => {
 
   // Scrub query-string secrets
   if (item.baseData?.uri) {
-    item.baseData.uri = item.baseData.uri.replace(/([?&](https://github.com/microsoft/skills/tree/main/.github/plugins/azure-sdk-typescript/skills/applicationinsights-web-ts/token|sig|key)=)[^&]+/gi, "$1REDACTED");
+    item.baseData.uri = (() => { const u = new URL(item.baseData.uri, location.origin); u.search = ""; u.hash = ""; return u.toString(); })();
   }
 });
 ```
@@ -182,7 +173,7 @@ const appInsights = new ApplicationInsights({
     extensions: [clickPlugin],
     extensionConfig: {
       [clickPlugin.identifier]: {
-        autoCapture: true,
+        autoCapture: false, // enable only after approved data-tag allowlisting
         dataTags: { useDefaultContentNameOrId: true, customDataPrefix: "data-ai-" },
         urlCollectHash: false,
         behaviorValidator: (b: string) => /^[a-z0-9_]+$/.test(b) ? b : ""
@@ -203,9 +194,9 @@ Mark elements with `data-ai-*` attributes; clicks are emitted as Custom Events w
 
 ## Distributed Tracing (correlate to backend)
 
-Set `distributedTracingMode: 2` (`DistributedTracingModes.AI_AND_W3C`). The SDK adds `traceparent` (and legacy `Request-Id`) to outbound `fetch`/`XHR`. Backends instrumented with **OpenTelemetry** (e.g. `@azure/monitor-opentelemetry`) auto-link to the browser's operation_Id.
+Set the named `DistributedTracingModes.W3C` (or deliberately select `AI_AND_W3C`). The SDK adds `traceparent` (and legacy `Request-Id`) to outbound `fetch`/`XHR`. Backends instrumented with **OpenTelemetry** (e.g. `@azure/monitor-opentelemetry`) auto-link to the browser's operation_Id.
 
-For cross-origin calls, also set `enableCorsCorrelation: true` and add the calling origin to the **CORS exposed headers** on the API.
+For approved cross-origin calls, enable correlation with an origin/domain allowlist. The server allows the calling origin via Access-Control-Allow-Origin and permits the required trace request headers; exposed response headers are a separate configuration.
 
 ## GenAI Agent Traces (OTel semantic conventions)
 
@@ -248,7 +239,7 @@ function startGenAiSpan(name: string, attrs: GenAiAttrs) {
       appInsights.trackDependencyData({
         id, name, duration, success,
         responseCode: error ? 500 : 200,
-        type: "GenAI",
+        type: "GenAI", // illustrative dependency category, not an OTel Span implementation
         target: String(attrs["gen_ai.provider.name"] ?? "genai"),
         properties: properties as Record<string, string>
       });
@@ -309,7 +300,7 @@ try {
 }
 ```
 
-The browser's `traceparent` is automatically attached to outbound `fetch` (when `distributedTracingMode: 2`), so downstream Azure OpenAI / agent backend spans hang under the same operation_Id in App Insights.
+When correctly configured for an approved origin, the browser SDK can attach `traceparent` to outbound `fetch` (when `distributedTracingMode: DistributedTracingModes.W3C`), but these synthetic Dependency records do not themselves create a correctly nested W3C span context; verify trace and parent IDs end-to-end.
 
 For the full attribute reference, well-known values, and content-capture guidance, see [references/agent-traces.md](https://github.com/microsoft/skills/tree/main/.github/plugins/azure-sdk-typescript/skills/applicationinsights-web-ts/references/agent-traces.md).
 
@@ -332,7 +323,7 @@ dependencies
 See [references/framework-extensions.md](https://github.com/microsoft/skills/tree/main/.github/plugins/azure-sdk-typescript/skills/applicationinsights-web-ts/references/framework-extensions.md) for full React, React Native, Angular, Next.js, and Vite recipes.
 
 ```typescript
-import { ApplicationInsights } from "@microsoft/applicationinsights-web";
+import { ApplicationInsights, DistributedTracingModes } from "@microsoft/applicationinsights-web";
 import { ReactPlugin, withAITracking } from "@microsoft/applicationinsights-react-js";
 import { createBrowserHistory } from "history";
 
@@ -354,7 +345,7 @@ export const TrackedCheckout = withAITracking(reactPlugin, Checkout, "Checkout")
 ## React Native
 
 ```typescript
-import { ApplicationInsights } from "@microsoft/applicationinsights-web";
+import { ApplicationInsights, DistributedTracingModes } from "@microsoft/applicationinsights-web";
 import { ReactNativePlugin } from "@microsoft/applicationinsights-react-native";
 
 const rnPlugin = new ReactNativePlugin();
@@ -389,8 +380,8 @@ onCLS(send); onLCP(send); onINP(send);
 ```typescript
 new ApplicationInsights({ config: {
   connectionString,
-  isCookieUseDisabled: true,         // hard-disable all cookies
-  cookieCfg: { enabled: true, domain: ".example.com", path: "/", expiry: 365 }
+  disableCookiesUsage: true,
+  cookieCfg: { enabled: false } // explicit cookieCfg takes precedence; do not enable here
 }});
 ```
 
@@ -456,7 +447,7 @@ import {
 1. **One singleton instance** exported from a single module.
 2. **Initialize early** in the app entrypoint, before router setup.
 3. **Use telemetry initializers** to attach `app.version`, `tenantId`, and to scrub PII / query-string secrets.
-4. **Set `distributedTracingMode: 2`** and ensure your APIs accept/expose W3C trace context headers.
+4. **Set `distributedTracingMode: DistributedTracingModes.W3C`** and ensure your APIs accept/expose W3C trace context headers.
 5. **For GenAI**, follow OTel `gen_ai.*` attribute names verbatim — they are queryable across browser and backend telemetry uniformly.
 6. **Gate sensitive content capture** (`gen_ai.input.messages` / `gen_ai.output.messages`) behind a build-time or runtime opt-in.
 7. **Flush on logout / sensitive navigation** so in-flight telemetry isn't dropped.
@@ -475,3 +466,7 @@ import {
 - Use this skill only when the task clearly matches its upstream source and local project context.
 - Verify commands, generated code, dependencies, credentials, and external service behavior before applying changes.
 - Do not treat examples as a substitute for environment-specific tests, security review, or user approval for destructive or costly actions.
+
+## Privacy and implementation limits
+
+Delay initialization/collection until required consent or another approved basis is established; disabling cookies alone does not disable telemetry. Start with telemetry disabled and cookies off rather than briefly collecting before a later toggle. URL query removal is only one field: apply an explicit allowlist to page names, dependency URLs, headers, click metadata, exception messages and custom properties before capture, without assuming an initializer catches every sensitive field. Consent withdrawal must stop further transmission and handle queued data under policy; flushing is not guaranteed delivery or deletion. Browser connection strings are public ingestion configuration, not model/API secrets. Route model calls through an authorized backend; do not place provider credentials in public env variables. Synthetic GenAI Dependency records, random UUIDs and customDimensions do not implement OTel span parenting or guarantee backend correlation; examples need proper context propagation, failure-finalization and schema/version tests. The detailed reference links are upstream remote files, not bundled local guides. Verify actual enum/API/config support in the pinned SDK; byte-size estimates and model/provider tables are version dependent.

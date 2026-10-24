@@ -4,8 +4,7 @@ A helper has no field list of its own, so its input is a module: the Field Refer
 that module already confirmed. Read that section - field names, types, order,
 requiredness, options and calculations - and render exactly that. The list below is
 every module that owns a field list, grouped by the layer its catalog gives it, and it
-is generated from those catalogs and the module files, so it cannot name a module that
-does not exist. `references/catalog.md` is the index to show a user; the module's own
+is generated from those catalogs and the module files, but this static imported list can drift. `references/catalog.md` is not bundled; use the installed catalog to resolve actual modules; the module's own
 `SKILL.md` holds the field list.
 
 **Layer 1: Foundation** - 6 modules

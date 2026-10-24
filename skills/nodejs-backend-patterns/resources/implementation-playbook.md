@@ -72,7 +72,7 @@ const fastify = Fastify({
 
 // Plugins
 await fastify.register(helmet);
-await fastify.register(cors, { origin: true });
+await fastify.register(cors, { origin: (process.env.ALLOWED_ORIGINS ?? '').split(',').filter(Boolean) });
 await fastify.register(compress);
 
 // Type-safe routes with schema validation
@@ -95,7 +95,7 @@ fastify.post<{
   return { id: '123', name };
 });
 
-await fastify.listen({ port: 3000, host: '0.0.0.0' });
+await fastify.listen({ port: 3000, host: '127.0.0.1' }); // expose only behind an approved ingress
 ```
 
 ## Architectural Patterns
@@ -264,8 +264,10 @@ export class UserRepository {
   }
 
   async update(id: string, updates: UpdateUserDTO): Promise<UserEntity | null> {
+    const allowed = new Set(['name', 'email']);
     const fields = Object.keys(updates);
-    const values = Object.values(updates);
+    if (!fields.length || fields.some(field => !allowed.has(field))) throw new Error('Invalid update fields');
+    const values = fields.map(field => updates[field as keyof UpdateUserDTO]);
 
     const setClause = fields
       .map((field, idx) => `${field} = $${idx + 2}`)
@@ -285,7 +287,7 @@ export class UserRepository {
   async delete(id: string): Promise<boolean> {
     const query = 'DELETE FROM users WHERE id = $1';
     const { rowCount } = await this.db.query(query, [id]);
-    return rowCount > 0;
+    return (rowCount ?? 0) > 0;
   }
 }
 ```
@@ -371,6 +373,7 @@ import { UnauthorizedError } from '../utils/errors';
 interface JWTPayload {
   userId: string;
   email: string;
+  roles: string[];
 }
 
 declare global {
@@ -387,7 +390,7 @@ export const authenticate = async (
   next: NextFunction
 ) => {
   try {
-    const token = req.headers.authorization?.replace('Bearer ', '');
+    const token = req.headers.authorization?.match(/^Bearer ([^\s]+)$/i)?.[1];
 
     if (!token) {
       throw new UnauthorizedError('No token provided');
@@ -396,9 +399,9 @@ export const authenticate = async (
     const payload = jwt.verify(
       token,
       process.env.JWT_SECRET!
-    ) as JWTPayload;
-
-    req.user = payload;
+    , { algorithms: ['HS256'], issuer: process.env.JWT_ISSUER, audience: process.env.JWT_AUDIENCE });
+    if (typeof payload !== 'object' || typeof payload.userId !== 'string' || typeof payload.email !== 'string' || !Array.isArray(payload.roles) || !payload.roles.every((role: unknown) => typeof role === 'string')) throw new Error('Invalid claims');
+    req.user = payload as JWTPayload;
     next();
   } catch (error) {
     next(new UnauthorizedError('Invalid token'));
@@ -436,15 +439,17 @@ import { ValidationError } from '../utils/errors';
 export const validate = (schema: AnyZodObject) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await schema.parseAsync({
+      const parsed = await schema.parseAsync({
         body: req.body,
         query: req.query,
         params: req.params
       });
+      // Use parsed/transformed values through a typed res.locals contract, rather than trusting raw request objects.
+      res.locals.validated = parsed;
       next();
     } catch (error) {
       if (error instanceof ZodError) {
-        const errors = error.errors.map(err => ({
+        const errors = error.issues.map(err => ({
           field: err.path.join('.'),
           message: err.message
         }));
@@ -485,7 +490,7 @@ const redis = new Redis({
 
 export const apiLimiter = rateLimit({
   store: new RedisStore({
-    client: redis,
+    sendCommand: (...args: string[]) => redis.call(...args),
     prefix: 'rl:',
   }),
   windowMs: 15 * 60 * 1000, // 15 minutes
@@ -497,7 +502,7 @@ export const apiLimiter = rateLimit({
 
 export const authLimiter = rateLimit({
   store: new RedisStore({
-    client: redis,
+    sendCommand: (...args: string[]) => redis.call(...args),
     prefix: 'rl:auth:',
   }),
   windowMs: 15 * 60 * 1000,
@@ -533,7 +538,7 @@ export const requestLogger = (
     const duration = Date.now() - start;
     logger.info({
       method: req.method,
-      url: req.url,
+      route: req.route?.path, // avoid query tokens/identifiers
       status: res.statusCode,
       duration: `${duration}ms`,
       userAgent: req.headers['user-agent'],
@@ -560,7 +565,7 @@ export class AppError extends Error {
     public isOperational: boolean = true
   ) {
     super(message);
-    Object.setPrototypeOf(this, AppError.prototype);
+    Object.setPrototypeOf(this, new.target.prototype);
     Error.captureStackTrace(this, this.constructor);
   }
 }
@@ -601,7 +606,7 @@ export class ConflictError extends AppError {
 ```typescript
 // middleware/error-handler.ts
 import { Request, Response, NextFunction } from 'express';
-import { AppError } from '../utils/errors';
+import { AppError, ValidationError } from '../utils/errors';
 import { logger } from './logger.middleware';
 
 export const errorHandler = (
@@ -610,6 +615,7 @@ export const errorHandler = (
   res: Response,
   next: NextFunction
 ) => {
+  if (res.headersSent) return next(err);
   if (err instanceof AppError) {
     return res.status(err.statusCode).json({
       status: 'error',
@@ -909,10 +915,8 @@ export class CacheService {
   }
 
   async invalidatePattern(pattern: string): Promise<void> {
-    const keys = await redis.keys(pattern);
-    if (keys.length > 0) {
-      await redis.del(...keys);
-    }
+    // Do not run arbitrary KEYS patterns on production; implement bounded SCAN/UNLINK within an authorized namespace.
+    throw new Error("Pattern invalidation needs a scoped bounded implementation");
   }
 }
 
@@ -930,7 +934,7 @@ export function Cacheable(ttl: number = 300) {
       const cacheKey = `${propertyKey}:${JSON.stringify(args)}`;
 
       const cached = await cache.get(cacheKey);
-      if (cached) {
+      if (cached !== null) {
         return cached;
       }
 
@@ -991,14 +995,14 @@ export class ApiResponse {
 
 ## Best Practices
 
-1. **Use TypeScript**: Type safety prevents runtime errors
+1. **Use TypeScript**: Type safety catches some classes of errors; validate runtime inputs
 2. **Implement proper error handling**: Use custom error classes
 3. **Validate input**: Use libraries like Zod or Joi
 4. **Use environment variables**: Never hardcode secrets
 5. **Implement logging**: Use structured logging (Pino, Winston)
 6. **Add rate limiting**: Prevent abuse
 7. **Use HTTPS**: Always in production
-8. **Implement CORS properly**: Don't use `*` in production
+8. **Implement CORS properly**: Choose CORS for the API threat model; public anonymous resources may allow wildcard, while credentials require explicit trusted origins
 9. **Use dependency injection**: Easier testing and maintenance
 10. **Write tests**: Unit, integration, and E2E tests
 11. **Handle graceful shutdown**: Clean up resources
@@ -1017,3 +1021,11 @@ See `javascript-testing-patterns` skill for comprehensive testing guidance.
 - **Express.js Guide**: https://expressjs.com/en/guide/
 - **Fastify Documentation**: https://www.fastify.io/docs/
 - **TypeScript Node Starter**: https://github.com/microsoft/TypeScript-Node-Starter
+
+## Security and incomplete-example limits
+
+These fragments omit types/imports/migrations/router wiring/auth and are not a production app. The Fastify id123 response is a fixture, not account creation. Zod parsing does not affect raw req.body unless controllers consume parsed values; use explicit allowlisted DTOs, normalized email and a database unique constraint with race-safe conflict mapping. Type casts do not strip arbitrary keys. General updates must never accept password/role/tenant changes through this path. Controllers need object/tenant authorization and bound methods/async errors; CORS is not authentication or CSRF protection.
+
+JWT setup must validate configured secrets/issuer/audience/algorithm at startup and runtime claims/expiry/token purpose; token generation must include the matching server-owned role policy. Refresh tokens need durable rotation/reuse detection, revocation, user status and secure transport/storage. bcrypt has a byte limit and requires a measured cost; enforce a deliberate password policy and safe logs. Do not return raw database/adaptor errors.
+
+The order transaction trusts client price/quantity and can oversell: fetch authoritative prices, validate positive bounded integer units, atomically decrement stock with stock>=quantity and check each row, use decimal/minor units and unique business idempotency. Do not ship the sketch for purchases. Handle rollback failure without losing the original error and release connections. Cache keys need tenant/user/method namespace, bounded serialization/TTL and runtime decoding; cached genericT is not validated. Mask private logs, bound request/fetch/Redis/queue work and choose proxy/rate-limit trust intentionally. No backend runtime, DB, queue or API test was executed.

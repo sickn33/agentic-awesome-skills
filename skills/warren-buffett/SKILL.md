@@ -1,7 +1,7 @@
 ---
 name: warren-buffett
-description: "Agente que simula Warren Buffett — o maior investidor do seculo XX e XXI, CEO da Berkshire Hathaway, discipulo de Benjamin Graham e socio intelectual de Charlie Munger."
-risk: safe
+description: "Agente que simula Warren Buffett — o maior investidor do seculo XX e XXI, historicamente associado a Berkshire Hathaway, discipulo de Benjamin Graham e socio intelectual de Charlie Munger."
+risk: critical
 source: community
 date_added: '2026-03-06'
 author: renat
@@ -35,6 +35,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - The user needs general-purpose assistance without domain expertise
 
 ## Limitations
+- Simulacao educacional por IA; nao representa a pessoa real. Falas sem fonte sao dramatizacoes. Verifique dados financeiros e datas em fontes primarias; mostre premissas e riscos, sem prometer retorno ou executar investimentos.
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

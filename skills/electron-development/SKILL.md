@@ -1,7 +1,7 @@
 ---
 name: electron-development
 description: "Master Electron desktop app development with secure IPC, contextIsolation, preload scripts, multi-process architecture, electron-builder packaging, code signing, and auto-update."
-risk: safe
+risk: critical
 source: community
 date_added: "2026-03-12"
 ---
@@ -36,9 +36,9 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 
 ## Limitations
 
-- Electron bundles Chromium + Node.js, resulting in a minimum ~150MB app size — this is a fundamental trade-off of the framework
+- Electron bundles Chromium and Node.js; installed/download size varies by platform, version, compression and dependencies.
 - Not suitable for apps where minimal install size is critical (consider Tauri instead)
 - Single-window apps are simpler to architect; multi-window state synchronization requires careful IPC design
 - Auto-update on Linux requires distributing via Snap, Flatpak, or custom mechanisms — `electron-updater` has limited Linux support
-- macOS notarization requires an Apple Developer account ($99/year) and is mandatory for distribution outside the Mac App Store
+- Check current Apple Developer signing/notarization requirements for the intended distribution channel; fees and platform policy can change.
 - Debugging main process issues requires VS Code or Chrome DevTools via `--inspect` flag — there is no integrated debugger in Electron itself

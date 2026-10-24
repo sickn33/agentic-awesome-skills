@@ -6,8 +6,7 @@
 - **Problem:** asked all five questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** the profile is unverified and everything else is being optimised.
-  **Solution:** finish verification first. Nothing ranks on an unverified profile, so the
-  rest is wasted effort.
+  **Solution:** finish verification first. An unverified listing can appear; verification is needed for authorized management, not proof that all other work is wasted.
 - **Problem:** the business name is now "Example Retail - Best Cookware Shop in Example
   City".
   **Solution:** that is a policy violation. Revert to the real name and put the keyword in
@@ -20,7 +19,7 @@
   cheapest ongoing work on this list.
 - **Problem:** fifty reviews arrived in one week from the same device.
   **Solution:** that pattern is a policy violation risk, and the volume is worth less than
-  the appearance. Steady, one a week, is what the signal actually rewards.
+  the appearance. Solicit genuine reviews consistently without incentives or selectively targeting happy customers; no weekly ranking quota is established.
 - **Problem:** the profile, the website and three directories all describe the service
   differently.
   **Solution:** write the intent map once and use it everywhere. Inconsistency dilutes all
@@ -37,4 +36,4 @@
   **Solution:** that is expected. Apply the property mapping table once, after import.
 
 
-See the [Related Skills](references/related-skills.md) reference for the full guidance.
+See the [Related Skills](related-skills.md) reference for the full guidance.

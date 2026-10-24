@@ -65,12 +65,10 @@ brief. Full guidance and a template: [references/writing-the-brief.md](reference
 
 ### 2. Dispatch
 
-Send the brief to Grok with the bundled helper. It wraps `grok -p`, captures the run, and writes a
-structured `result.json` — so your only job is "run a command, read a file." (`<skill-dir>` below is
-this skill's installed directory — the folder containing this `SKILL.md`, i.e. the directory you loaded
-the skill from. Claude Code prints it as "Base directory for this skill" when the skill loads; on other
-orchestrators use that same directory — if unsure where it landed, run
-`find ~ -name relay.mjs -path '*grok-delegate*'` and substitute the directory above it.)
+This distribution contains documentation only; `scripts/relay.mjs` is absent. Obtain,
+pin and review the upstream runtime separately before using these example commands.
+Do not search the whole home directory for an arbitrary relay and assume it is trusted.
+Verify the actual CLI version and supported permission flags before dispatch.
 
 ```bash
 node "<skill-dir>/scripts/relay.mjs" --brief brief.txt --cd /path/to/repo
@@ -136,8 +134,7 @@ relay therefore always sets autonomy explicitly:
 | `--full-access` | `--always-approve --sandbox off` | Explicit opt-in when the task needs unrestricted tools |
 
 `--always-approve` alone would approve *all* tools (writes, shell, network) — closer to unrestricted
-than to a workspace-scoped write. Pairing it with `--sandbox workspace` is what keeps the default
-safe. Reach for `--full-access` only when the human asks for it.
+than to a workspace-scoped write. The effective filesystem/network boundary must be verified for the installed version; a workspace sandbox is not a universal host boundary. Reach for `--full-access` only when the human asks for it.
 
 **`--read-only` is best-effort, not a hard guarantee.** The read-only sandbox restricts out-of-workspace
 filesystem/network access, not grok's own edit tool, and headless `plan` mode is advisory — a run

@@ -71,8 +71,7 @@ Ask one short question per message, and only when the answer changes the schema:
 
 > **Q:** Should the schema reject unknown fields, or allow them?
 
-Nothing else is worth a question. Requiredness, options and formats come from the
-confirmed field list, not from a new round of asking.
+Reuse confirmed requiredness, options and formats. If missing information materially changes the contract (including source, null semantics, numeric precision or intended validator), clarify it rather than guessing.
 
 ### Step 3 - Hold the internal context
 
@@ -217,8 +216,7 @@ No schema drift against the other artifacts?
 
 This skill has no Field Reference of its own, and it must not grow one. The active
 module's Field Reference is the single source: its property names here, its CSV columns,
-its SQL columns and its Notion properties are the same field list, so a payload that
-validates is a payload the module can read.
+its SQL columns and its Notion properties are the same field list, but a passing schema does not prove the consuming importer, SQL or Notion mapping can read the payload.
 
 If the field list is not in front of you, read `skills/<slug>/SKILL.md` for the module in
 play. If it is missing or ambiguous, ask which table the contract is for and stop.
@@ -237,7 +235,7 @@ a rejection waiting for a real record.
 
 A relation is a reference key: `string` or `integer`, matching whatever the source uses
 as the key. The schema does not describe the target table, does not check that the target
-exists, and cannot express the link as a reference. Do not add a property for the target's
+exists, and cannot enforce database referential integrity. JSON Schema $ref refers to a schema, not a database record. Do not add a property for the target's
 fields; that is a second schema, and the user has not asked for one.
 
 ## Examples
@@ -300,10 +298,15 @@ See the [Best Practices](references/best-practices.md) reference for the full gu
   advisory, so a payload that validates may still be wrong.
 - No versioning, no publication, no registry, and no CI wiring. That is the consuming
   system's job.
-- Cross-field rules - a due date after an invoice date, a total equal to a sum - are not
-  expressible here and are not checked.
-- Nothing is verified until the user validates a real payload against it.
+- Standard JSON Schema can express conditional dependencies, but general arithmetic and date comparison between arbitrary fields require application validation; those calculations are not checked here.
+- Validate schema syntax/meta-schema and representative valid/invalid fixtures with the intended validator; report checks actually run.
 
 
 See the [Security & Safety Notes](references/security-safety-notes.md) reference for the full guidance.
 
+
+### Validation contract
+
+Specify validator version and draft support, and whether format assertions are enabled; date/time annotations alone do not reject invalid values in every implementation. required means property presence, not nonempty, nonnull or business-valid content. JSON object property order is not semantic. Numeric money can lose decimal precision in clients: confirm number, decimal-string or integer-minor-unit policy rather than changing it silently. A schema cannot authorize user/tenant access or sanitize stored/rendered content.
+
+Treat supplied schemas/regex and $ref URLs as untrusted: bound input size/depth/regex work, disable unsolicited remote resolution, and use a reviewed local reference registry. Do not fetch private/link-local URLs or evaluate code-bearing validator extensions. additionalProperties:false inside composed subschemas can reject properties defined elsewhere; use draft-compatible composition/unevaluatedProperties only when the contract calls for it.

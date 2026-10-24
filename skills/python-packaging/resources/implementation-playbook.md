@@ -73,7 +73,7 @@ version = "0.1.0"
 description = "A short description"
 authors = [{name = "Your Name", email = "you@example.com"}]
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 dependencies = [
     "requests>=2.28.0",
 ]
@@ -135,7 +135,7 @@ my-package/
 
 **Simpler but:**
 - Can import package without installing
-- Less professional for libraries
+- Requires testing built artifacts outside the source directory to avoid masking packaging mistakes
 
 ### Pattern 3: Multi-Package Project
 
@@ -158,7 +158,7 @@ project/
 
 ```toml
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=77.0.3"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -166,8 +166,9 @@ name = "my-awesome-package"
 version = "1.0.0"
 description = "An awesome Python package"
 readme = "README.md"
-requires-python = ">=3.8"
-license = {text = "MIT"}
+requires-python = ">=3.10"
+license = "MIT" # illustrative only; use the actual rights-holder-approved SPDX expression
+license-files = ["LICENSE*"]
 authors = [
     {name = "Your Name", email = "you@example.com"},
 ]
@@ -178,10 +179,7 @@ keywords = ["example", "package", "awesome"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -238,20 +236,20 @@ my_package = ["py.typed", "*.pyi", "data/*.json"]
 # Black configuration
 [tool.black]
 line-length = 100
-target-version = ["py38", "py39", "py310", "py311"]
+target-version = ["py310", "py311"]
 include = '\.pyi?$'
 
 # Ruff configuration
 [tool.ruff]
 line-length = 100
-target-version = "py38"
+target-version = "py310"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "W", "UP"]
 
 # MyPy configuration
 [tool.mypy]
-python_version = "3.8"
+python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
@@ -291,9 +289,9 @@ description = "Package with dynamic version"
 [tool.setuptools.dynamic]
 version = {attr = "my_package.__version__"}
 
-# Or use setuptools-scm for git-based versioning
-[tool.setuptools_scm]
-write_to = "src/my_package/_version.py"
+# Alternative: remove tool.setuptools.dynamic and use ONLY setuptools-scm
+# with its own [tool.setuptools_scm] table and version_file setting.
+# Do not configure two competing dynamic-version providers.
 ```
 
 **In __init__.py:**
@@ -449,11 +447,11 @@ index-servers =
 
 [pypi]
 username = __token__
-password = pypi-...your-token...
+# password omitted: use scoped secret/keyring or trusted publishing; do not commit tokens
 
 [testpypi]
 username = __token__
-password = pypi-...your-test-token...
+# password omitted: TestPyPI credentials are separate
 ```
 
 ### Pattern 10: Automated Publishing with GitHub Actions
@@ -576,7 +574,7 @@ from company.api import routes
 
 ```toml
 [build-system]
-requires = ["setuptools>=61.0", "wheel", "Cython>=0.29"]
+requires = ["setuptools>=74.1"] # verify ext-modules support in the pinned backend
 build-backend = "setuptools.build_meta"
 
 [tool.setuptools]
@@ -637,14 +635,14 @@ name = "my-package"
 dynamic = ["version"]
 
 [tool.setuptools_scm]
-write_to = "src/my_package/_version.py"
+version_file = "src/my_package/_version.py"
 version_scheme = "post-release"
 local_scheme = "dirty-tag"
 ```
 
 **Creates versions like:**
 - `1.0.0` (from git tag)
-- `1.0.1.dev3+g1234567` (3 commits after tag)
+- Development version depends on the configured version_scheme/local_scheme; inspect built metadata instead of assuming this suffix.
 
 ## Testing Installation
 
@@ -687,7 +685,7 @@ rm -rf test-env
 
 ### Pattern 18: README.md Template
 
-```markdown
+````markdown
 # My Package
 
 [![PyPI version](https://badge.fury.io/py/my-package.svg)](https://pypi.org/project/my-package/)
@@ -731,8 +729,8 @@ pytest
 
 ## License
 
-MIT
-```
+[Actual project license; do not invent permission]
+````
 
 ## Common Patterns
 
@@ -758,7 +756,7 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.16.2
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           path: ./wheelhouse/*.whl
 ```
@@ -772,7 +770,8 @@ pip install my-package --index-url https://private.pypi.org/simple/
 # Or add to pip.conf
 [global]
 index-url = https://private.pypi.org/simple/
-extra-index-url = https://pypi.org/simple/
+# Avoid mixing public and private indexes: pip does not prioritize private origins;
+# an approved single index/proxy and locked provenance prevent dependency confusion.
 
 # Upload to private index
 twine upload --repository-url https://private.pypi.org/ dist/*
@@ -867,3 +866,26 @@ recursive-exclude * *.py[co]
 8. **Document thoroughly** with README and docstrings
 9. **Include LICENSE** file
 10. **Automate publishing** with CI/CD
+
+## Publication and artifact boundaries
+
+Templates are illustrative, not a tested package. Select an actual available name,
+owned namespace and supported interpreter/backend matrix. License examples do not
+grant rights to third-party code. The C-extension TOML feature is backend-version
+dependent; compile/test wheels on the target ABI/platform. The multi-package layout
+needs a pyproject/build boundary per independently distributed package.
+
+Run builds in an isolated environment after reviewing source/build hooks: even
+metadata/build/install can execute code. Build isolation is dependency isolation,
+not a hostile-code sandbox. Inspect wheel AND sdist contents for secrets/license/data,
+install the exact wheel outside the checkout and run meaningful smoke/tests; twine
+check alone validates metadata/README, not package behavior. Avoid stale dist/* uploads:
+select the exact reviewed artifacts and record hashes. TestPyPI is public and cannot
+prove production-index dependency resolution; use distinct credentials/names and a
+controlled dependency source.
+
+Publishing/tagging is an external release action requiring explicit authorization;
+never publish just because build succeeded. The GitHub workflow is a historical
+sketch: use current approved actions pinned to reviewed SHAs, least permissions,
+protected release environment and preferably PyPI trusted publishing; do not run
+release secrets on untrusted PR code. No package build/install/upload/CI was run.

@@ -17,8 +17,7 @@ CLI tools, scripts that grow into products, and the art of dogfooding.
 
 **Role**: Personal Tool Architect
 
-You believe the best tools come from real problems. You've built dozens of
-personal tools - some stayed personal, others became products used by thousands.
+Start from a real recurring problem and measure whether the prototype helps.
 You know that building for yourself means you have perfect product-market fit
 with at least one user. You build fast, iterate constantly, and only polish
 what proves useful.
@@ -45,7 +44,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 | Tool exposed on network | Bind to localhost only |
 | No input validation | Validate even your own input |
 | Logs contain secrets | Sanitize logging |
-| Git commits with secrets | .gitignore config files |
+| Git commits with secrets | Ignore local config; rotate exposed credentials and review tracked history |
 
 ### Credential Management
 ```javascript
@@ -57,10 +56,12 @@ const API_KEY = process.env.MY_API_KEY;
 
 // Config file (gitignored)
 import { readFileSync } from 'fs';
+import { join } from 'path';
+import { homedir } from 'os';
 const config = JSON.parse(
   readFileSync(join(homedir(), '.mytool', 'config.json'))
 );
-const API_KEY = config.apiKey;
+const configuredApiKey = config.apiKey; // Alternative to MY_API_KEY, not a second declaration
 ```
 
 ### Localhost-Only Servers
@@ -69,7 +70,7 @@ const API_KEY = config.apiKey;
 import express from 'express';
 const app = express();
 
-// ALWAYS bind to localhost for personal tools
+// Bind locally; authenticate writes and validate Origin/Host to prevent browser-driven requests.
 app.listen(3000, '127.0.0.1', () => {
   console.log('Running on http://localhost:3000');
 });

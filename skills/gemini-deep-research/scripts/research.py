@@ -2,6 +2,7 @@
 """
 Gemini Deep Research Skill - Execute autonomous multi-step research tasks.
 
+Modified for current-preview polling, private cache and terminal-state handling.
 Uses Google's Deep Research Agent for comprehensive, cited research reports.
 Research tasks take 2-10 minutes but produce detailed analysis.
 """
@@ -12,6 +13,7 @@ import json
 import os
 import re
 import sys
+import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, AsyncIterator, Callable, Dict, List, Optional
@@ -24,7 +26,7 @@ except ImportError:
 
 try:
     from dotenv import load_dotenv
-    load_dotenv()
+    load_dotenv(Path(__file__).resolve().parents[1] / ".env", override=False)
 except ImportError:
     pass  # dotenv is optional
 
@@ -45,7 +47,7 @@ class HistoryManager:
 
     def _ensure_cache_dir(self):
         """Create cache directory if it doesn't exist."""
-        self.cache_dir.mkdir(parents=True, exist_ok=True)
+        self.cache_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
 
     def _load_history(self) -> Dict:
         """Load history from file."""
@@ -58,7 +60,15 @@ class HistoryManager:
 
     def _save_history(self, history: Dict):
         """Save history to file."""
-        self.history_file.write_text(json.dumps(history, indent=2))
+        # Private atomic replacement; concurrent writers still require external serialization.
+        fd, name = tempfile.mkstemp(dir=self.cache_dir, prefix=".history-")
+        try:
+            with os.fdopen(fd, "w") as handle:
+                json.dump(history, handle, indent=2)
+            os.replace(name, self.history_file)
+        finally:
+            if os.path.exists(name):
+                os.unlink(name)
 
     def add_interaction(self, interaction_id: str, query: str, status: str = "started"):
         """Add or update an interaction in history."""
@@ -75,7 +85,7 @@ class HistoryManager:
         # Add new interaction
         history["interactions"].insert(0, {
             "id": interaction_id,
-            "query": query[:200] + "..." if len(query) > 200 else query,
+            "query": "[query omitted from local history]",
             "started_at": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
             "status": status
         })
@@ -114,7 +124,7 @@ class DeepResearchClient:
     """Client for Gemini Deep Research API."""
 
     BASE_URL = "https://generativelanguage.googleapis.com/v1beta/interactions"
-    AGENT = "deep-research-pro-preview-12-2025"
+    AGENT = "deep-research-preview-04-2026"
 
     def __init__(self, api_key: Optional[str] = None):
         self.api_key = api_key or os.getenv("GEMINI_API_KEY")
@@ -125,6 +135,8 @@ class DeepResearchClient:
         self._client: Optional[httpx.AsyncClient] = None
         self.timeout = int(os.getenv("DEEP_RESEARCH_TIMEOUT", "600"))
         self.poll_interval = int(os.getenv("DEEP_RESEARCH_POLL_INTERVAL", "10"))
+        if not 1 <= self.timeout <= 3600 or not 1 <= self.poll_interval <= 60:
+            raise DeepResearchError("Timeout must be 1..3600 and poll interval 1..60 seconds")
         self.history = HistoryManager()
 
     async def _get_client(self) -> httpx.AsyncClient:
@@ -164,6 +176,8 @@ class DeepResearchClient:
         Returns:
             Interaction ID for polling results
         """
+        if not query.strip():
+            raise DeepResearchError("Query must not be empty")
         prompt = self._build_prompt(query, format_spec)
         client = await self._get_client()
 
@@ -174,6 +188,7 @@ class DeepResearchClient:
         }
 
         if previous_interaction_id:
+            self._validate_id(previous_interaction_id)
             payload["previous_interaction_id"] = previous_interaction_id
 
         try:
@@ -186,9 +201,8 @@ class DeepResearchClient:
                 json=payload
             )
 
-            if response.status_code != 200:
-                error_text = response.text
-                raise DeepResearchError(f"API error {response.status_code}: {error_text}")
+            if response.status_code not in (200, 201):
+                raise DeepResearchError(f"API error {response.status_code}; response body omitted")
 
             data = response.json()
             interaction_id = data.get("id") or data.get("name", "").split("/")[-1]
@@ -197,12 +211,20 @@ class DeepResearchClient:
                 raise DeepResearchError("No interaction ID returned from API")
 
             # Track in history
-            self.history.add_interaction(interaction_id, query, "started")
+            try:
+                self.history.add_interaction(interaction_id, query, "started")
+            except OSError:
+                print(f"History write failed; retain interaction ID: {interaction_id}", file=sys.stderr)
 
             return interaction_id
 
-        except httpx.HTTPError as e:
-            raise DeepResearchError(f"HTTP error: {e}")
+        except (httpx.HTTPError, ValueError) as e:
+            raise DeepResearchError("Request failed; check existing interaction before retrying a paid POST")
+
+    @staticmethod
+    def _validate_id(interaction_id):
+        if not re.fullmatch(r"[A-Za-z0-9_-]{1,512}", interaction_id):
+            raise DeepResearchError("Invalid interaction ID")
 
     async def get_status(self, interaction_id: str) -> Dict[str, Any]:
         """
@@ -211,6 +233,7 @@ class DeepResearchClient:
         Returns:
             Dict with 'status' and optionally 'result' or 'error'
         """
+        self._validate_id(interaction_id)
         client = await self._get_client()
 
         try:
@@ -227,18 +250,19 @@ class DeepResearchClient:
             status = data.get("status", "unknown")
 
             if status == "completed":
-                outputs = data.get("outputs", [])
-                if outputs:
-                    text = outputs[-1].get("text", "")
-                    return {"status": "completed", "result": text, "raw": data}
-                return {"status": "completed", "result": None, "raw": data}
-            elif status == "failed":
-                return {"status": "failed", "error": data.get("error", "Unknown error")}
+                texts = [part["text"] for step in data.get("steps", [])
+                         for part in step.get("content", [])
+                         if part.get("type") == "text" and isinstance(part.get("text"), str)]
+                if not texts:
+                    return {"status": "error", "error": "Completed response has no supported text parts", "raw": data}
+                return {"status": "completed", "result": "\n\n".join(texts), "raw": data}
+            elif status in ("failed", "cancelled", "incomplete"):
+                return {"status": status, "error": "Remote task did not complete"}
             else:
                 return {"status": status, "raw": data}
 
-        except httpx.HTTPError as e:
-            return {"status": "error", "error": str(e)}
+        except (httpx.HTTPError, ValueError) as e:
+            return {"status": "error", "error": type(e).__name__}
 
     async def wait_for_completion(
         self,
@@ -268,7 +292,7 @@ class DeepResearchClient:
             elapsed = asyncio.get_event_loop().time() - start_time
             if elapsed > timeout:
                 self.history.update_status(interaction_id, "timeout")
-                return {"status": "timeout", "error": f"Research timed out after {timeout}s"}
+                return {"status": "timeout", "error": f"Local wait timed out after {timeout}s; remote job may still run and incur charges"}
 
             result = await self.get_status(interaction_id)
             poll_count += 1
@@ -279,7 +303,7 @@ class DeepResearchClient:
             if result["status"] == "completed":
                 self.history.update_status(interaction_id, "completed")
                 return result
-            elif result["status"] in ["failed", "error"]:
+            elif result["status"] in ["failed", "error", "cancelled", "incomplete"]:
                 self.history.update_status(interaction_id, "failed")
                 return result
 
@@ -296,87 +320,10 @@ class DeepResearchClient:
         Yields:
             Dict with event type and content
         """
-        prompt = self._build_prompt(query, format_spec)
-        client = await self._get_client()
-
-        try:
-            async with client.stream(
-                "POST",
-                f"{self.BASE_URL}?alt=sse",
-                headers={
-                    "Content-Type": "application/json",
-                    "x-goog-api-key": str(self.api_key)
-                },
-                json={
-                    "input": prompt,
-                    "agent": self.AGENT,
-                    "background": True,
-                    "stream": True,
-                    "agent_config": {
-                        "type": "deep-research",
-                        "thinking_summaries": "auto"
-                    }
-                },
-                timeout=None  # No timeout for streaming
-            ) as response:
-                interaction_id = None
-                buffer = ""
-
-                async for chunk in response.aiter_text():
-                    buffer += chunk
-
-                    # Parse SSE events
-                    while "\n\n" in buffer:
-                        event_str, buffer = buffer.split("\n\n", 1)
-
-                        if not event_str.strip():
-                            continue
-
-                        # Parse SSE format
-                        data_line = None
-                        for line in event_str.split("\n"):
-                            if line.startswith("data: "):
-                                data_line = line[6:]
-                                break
-
-                        if not data_line:
-                            continue
-
-                        try:
-                            event = json.loads(data_line)
-                        except json.JSONDecodeError:
-                            continue
-
-                        event_type = event.get("event_type", "")
-
-                        if event_type == "interaction.start":
-                            interaction_id = event.get("interaction", {}).get("id")
-                            if interaction_id:
-                                self.history.add_interaction(interaction_id, query, "streaming")
-                            yield {"type": "start", "interaction_id": interaction_id}
-
-                        elif event_type == "content.delta":
-                            delta = event.get("delta", {})
-                            delta_type = delta.get("type")
-
-                            if delta_type == "text":
-                                yield {"type": "text", "content": delta.get("text", "")}
-                            elif delta_type == "thought_summary":
-                                content = delta.get("content", {})
-                                yield {"type": "thought", "content": content.get("text", "")}
-
-                        elif event_type == "interaction.complete":
-                            if interaction_id:
-                                self.history.update_status(interaction_id, "completed")
-                            yield {"type": "complete"}
-
-                        elif event_type == "error":
-                            if interaction_id:
-                                self.history.update_status(interaction_id, "failed")
-                            yield {"type": "error", "error": event.get("error", "Unknown error")}
-
-        except httpx.HTTPError as e:
-            yield {"type": "error", "error": str(e)}
+        if not query.strip():
+            raise DeepResearchError("Query must not be empty")
+        raise DeepResearchError("Streaming parser requires a version-specific update; use polling (--query without --stream)")
+        yield {}  # Preserve the async iterator interface without starting a remote job.
 
     def parse_result(self, text: str) -> Optional[Dict]:
         """
@@ -420,7 +367,7 @@ def print_progress(poll_count: int, elapsed: float, status: str):
     """Print progress update during polling."""
     mins = int(elapsed // 60)
     secs = int(elapsed % 60)
-    print(f"\r[{mins:02d}:{secs:02d}] Poll #{poll_count} - Status: {status}", end="", flush=True)
+    print(f"\r[{mins:02d}:{secs:02d}] Poll #{poll_count} - Status: {status}", end="", flush=True, file=sys.stderr)
 
 
 async def cmd_research(args):
@@ -439,7 +386,7 @@ async def cmd_research(args):
                 elif event["type"] == "thought":
                     print(f"\n[Thinking] {event['content']}\n", file=sys.stderr)
                 elif event["type"] == "text":
-                    print(event["content"], end="", flush=True)
+                    print(event["content"], end="", flush=True, file=sys.stderr)
                     full_text += event["content"]
                 elif event["type"] == "complete":
                     print("\n\n[Research Complete]")
@@ -457,25 +404,25 @@ async def cmd_research(args):
             # Polling mode
             previous_id = args.continue_from if hasattr(args, 'continue_from') else None
 
-            print(f"Starting research task...")
+            print(f"Starting research task...", file=sys.stderr)
             interaction_id = await client.start_research(
                 args.query,
                 args.format,
                 previous_id
             )
-            print(f"Interaction ID: {interaction_id}")
-            print(f"Estimated time: 2-10 minutes\n")
+            print(f"Interaction ID: {interaction_id}", file=sys.stderr)
+            print(f"Estimated time: 2-10 minutes\n", file=sys.stderr)
 
             if args.no_wait:
                 print(f"Research started. Check status with: --status {interaction_id}")
                 return 0
 
-            print("Waiting for completion (Ctrl+C to cancel)...")
+            print("Waiting for completion (Ctrl+C to stop local waiting; remote job may continue)...", file=sys.stderr)
             result = await client.wait_for_completion(
                 interaction_id,
                 progress_callback=print_progress
             )
-            print()  # New line after progress
+            print(file=sys.stderr)  # New line after progress
 
             if result["status"] == "completed":
                 text = result.get("result", "")
@@ -501,7 +448,7 @@ async def cmd_research(args):
         print(f"Error: {e}", file=sys.stderr)
         return 1
     except KeyboardInterrupt:
-        print("\n\nCancelled by user.")
+        print("\n\nLocal waiting stopped; this does not cancel the remote job.")
         return 130
     finally:
         await client.close()
@@ -523,10 +470,10 @@ async def cmd_status(args):
                 text = result.get("result", "")
                 if text:
                     print(f"\n--- Result Preview ---\n{text[:500]}...")
-            elif result["status"] in ["failed", "error"]:
+            elif result["status"] in ["failed", "error", "cancelled", "incomplete"]:
                 print(f"Error: {result.get('error', 'Unknown')}")
 
-        return 0 if result["status"] != "error" else 1
+        return 1 if result["status"] in ("failed", "error", "cancelled", "incomplete") else 0
 
     except DeepResearchError as e:
         print(f"Error: {e}", file=sys.stderr)
@@ -540,7 +487,7 @@ async def cmd_wait(args):
     client = DeepResearchClient()
 
     try:
-        print(f"Waiting for {args.interaction_id}...")
+        print(f"Waiting for {args.interaction_id}...", file=sys.stderr)
         result = await client.wait_for_completion(
             args.interaction_id,
             progress_callback=print_progress
@@ -556,6 +503,8 @@ async def cmd_wait(args):
                     print(json.dumps(parsed, indent=2))
                 else:
                     print(json.dumps({"text": text}, indent=2))
+            elif args.raw:
+                print(json.dumps(result.get("raw", {}), indent=2))
             else:
                 print("\n--- Research Result ---\n")
                 print(text)
@@ -569,7 +518,7 @@ async def cmd_wait(args):
         print(f"Error: {e}", file=sys.stderr)
         return 1
     except KeyboardInterrupt:
-        print("\n\nCancelled by user.")
+        print("\n\nLocal waiting stopped; this does not cancel the remote job.")
         return 130
     finally:
         await client.close()
@@ -581,7 +530,7 @@ async def cmd_list(args):
     interactions = history.get_recent(args.limit)
 
     if not interactions:
-        print("No research history found.")
+        print("[]" if args.json else "No research history found.")
         return 0
 
     if args.json:
@@ -635,7 +584,7 @@ Examples:
   # List recent research
   %(prog)s --list
 
-Note: Research tasks typically take 2-10 minutes and cost $2-5 per task.
+Note: Research tasks incur variable charges; local timeout does not cancel a remote job.
 """
     )
 
@@ -670,6 +619,12 @@ Note: Research tasks typically take 2-10 minutes and cost $2-5 per task.
                        help="Number of recent tasks to show (default: 10)")
 
     args = parser.parse_args()
+    if args.stream:
+        parser.error("--stream is unavailable for the current preview; use polling")
+    if args.json and args.raw:
+        parser.error("Choose --json or --raw")
+    if not 1 <= args.limit <= 50:
+        parser.error("--limit must be 1..50")
 
     # Route to appropriate command
     if args.query:

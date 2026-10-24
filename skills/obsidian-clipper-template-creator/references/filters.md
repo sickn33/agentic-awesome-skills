@@ -16,7 +16,7 @@ Use filters to format variables: `{{variable|filter}}`.
 - `kebab`: kebab-case.
 - `snake`: snake_case.
 - `pascal`: PascalCase.
-- `replace:"old","new"`: Replace text.
+- `replace:"old":"new"`: Replace text.
 - `safe_name`: Make safe for filenames.
 - `blockquote`: Format as blockquote.
 - `link`: Create markdown link.
@@ -36,12 +36,12 @@ Use filters to format variables: `{{variable|filter}}`.
 - `round`: Round numbers.
 
 ## HTML Processing
-- `remove_html`: Remove HTML tags.
+- `remove_html`: Remove selected elements and their contents; use `strip_tags` to retain text.
 - `remove_attr`: Remove attributes.
-- `strip_attr`: Strip specific attributes.
+- `strip_attr`: Remove all attributes, optionally preserving a specified allowlist; `remove_attr` removes named attributes.
 
 ## Arrays and Objects
-- `map`: Transform array items (e.g., `map:item =>> item.text`).
+- `map`: Transform array items (e.g., `map:item => item.text`).
 - `join:"separator"`: Join array items.
 - `split:"separator"`: Split string into array.
 - `first`: First item.

@@ -22,7 +22,7 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - Exposing Moodle functionality to external applications
 - Developing mobile app backends using Moodle
 
-## Examples from Real Implementation
+## Illustrative Implementation Fragments
 
 ### Simple Read API (Get Quiz Attempts)
 
@@ -49,10 +49,15 @@ class get_quiz_attempts extends external_api {
     public static function execute($userid, $courseid) {
         global $DB;
 
-        self::validate_parameters(self::execute_parameters(), [
+        $params = self::validate_parameters(self::execute_parameters(), [
             'userid' => $userid,
             'courseid' => $courseid
         ]);
+
+        $context = \context_course::instance($params['courseid']);
+        self::validate_context($context);
+        require_capability('mod/quiz:viewreports', $context);
+        // Instructor-report endpoint; add group/quiz-specific visibility restrictions as needed.
 
         $sql = "SELECT COUNT(*) AS quiz_attempts
                 FROM {quiz_attempts} qa
@@ -60,8 +65,8 @@ class get_quiz_attempts extends external_api {
                 WHERE qa.userid = :userid AND q.course = :courseid";
 
         $attempts = $DB->get_field_sql($sql, [
-            'userid' => $userid,
-            'courseid' => $courseid
+            'userid' => $params['userid'],
+            'courseid' => $params['courseid']
         ]);
 
         return ['quiz_attempts' => (int)$attempts];
@@ -77,14 +82,12 @@ class get_quiz_attempts extends external_api {
 
 ### Complex Write API (Create Quiz from Categories)
 
-See attached `create_quiz_from_categories.php` for a comprehensive example including:
-- Multiple database insertions
-- Course module creation
-- Quiz instance configuration
-- Random question selection with tags
-- Group-based access restrictions
-- Extensive error logging
-- Transaction management
+The referenced `create_quiz_from_categories.php` is not bundled. Do not claim it
+was read, executed or transaction-tested. Use the installed Moodle release's
+activity/question APIs with context/capability checks, group visibility, bounded
+input and rollback tests; direct insertion fragments in the guide are historical
+schema illustrations, not a complete quiz builder. Use least-privilege test roles
+and synthetic learner data, never production admin tokens in shell arguments.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

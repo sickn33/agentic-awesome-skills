@@ -56,8 +56,7 @@ should actually change. `--subtree-only` restricts Aider to the current subtree 
 what you pay for in tokens - they do not confine what the run can reach. Aider has no sandbox, the
 relay dispatches it with `--yes-always`, and a run that decides it needs another file is not stopped
 by their absence. Treat them as aim, not as a fence. When a change genuinely must not be able to touch
-something, the boundary has to come from outside Aider: a container, a VM, or a throwaway
-`git worktree` holding only what the task may see.
+something, the boundary has to come from outside Aider: a properly configured container or VM with restricted mounts, credentials and network. A worktree separates Git edits but shares host access and is not a security sandbox.
 
 Scoping the dispatch also does not replace a `DO NOT TOUCH` section - state the boundary in the brief
 too, because the brief is what Aider reasons about, and then verify it in the diff rather than

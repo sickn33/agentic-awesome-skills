@@ -18,6 +18,12 @@ Seaborn follows these core principles:
 5. **Matplotlib integration**: Full compatibility with matplotlib customization when needed
 
 
+## Data and inference contract
+
+Examples are independent sketches with schema-specific variables; only the first fixture is self-contained. Pin compatible seaborn/matplotlib/pandas versions (errorbar and objects require appropriate releases). No bundled dataset, reference toolkit or executed figure test is supplied. sns.load_dataset downloads/caches remote examples when absent, so use authorized local/synthetic data by default. Do not publish sensitive plotted records or overwrite existing exports without scope.
+
+Specify observation unit, missing-data handling, estimator and uncertainty. Default bootstrapped intervals assume appropriate sampling; repeated/time-correlated data needs a suitable design, not automatic i.i.d. confidence claims. SD is dispersion, not a CI, and a regression line does not establish causality. Fix seeds for stochastic estimates, disclose sample sizes and use distributions/individual observations when means hide structure. KDE can extend outside natural bounds and distort small/discrete samples; inspect bandwidth/support and prefer ECDF/histograms where justified. Bound pairplot/facet size and close figures in batch workflows. Palette names do not guarantee accessible contrast: inspect actual labels, colors, marker redundancy and exported dimensions.
+
 ## Quick Start
 
 ```python
@@ -25,8 +31,16 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 
-# Load example dataset
-df = sns.load_dataset('tips')
+# Local synthetic fixture; no download or real subject data.
+df = pd.DataFrame({
+    'total_bill': [12., 20., 18., 27., 15., 23.],
+    'tip': [2., 4., 3., 5., 2.5, 4.5],
+    'day': ['Thu', 'Fri', 'Sat', 'Sun', 'Sat', 'Sun'],
+    'time': ['Lunch', 'Dinner', 'Dinner', 'Dinner', 'Lunch', 'Dinner'],
+    'size': [1, 2, 2, 3, 1, 2],
+    'sex': ['A', 'B', 'A', 'B', 'A', 'B'],
+    'smoker': ['No', 'Yes', 'No', 'No', 'Yes', 'No'],
+})
 
 # Create a simple visualization
 sns.scatterplot(data=df, x='total_bill', y='tip', hue='day')
@@ -132,7 +146,7 @@ sns.jointplot(data=df, x='total_bill', y='tip',
               kind='scatter', hue='time')
 
 # Pairwise relationships
-sns.pairplot(data=df, hue='species', corner=True)
+sns.pairplot(data=df, vars=['total_bill', 'tip', 'size'], hue='day', corner=True)
 ```
 
 ### Categorical Plots (Comparisons Across Categories)
@@ -228,7 +242,7 @@ sns.residplot(data=df, x='total_bill', y='tip')
 
 ```python
 # Correlation heatmap
-corr = df.corr()
+corr = df.select_dtypes(include="number").corr()
 sns.heatmap(corr, annot=True, fmt='.2f',
             cmap='coolwarm', center=0, square=True)
 
@@ -257,7 +271,7 @@ g.add_legend()
 Show pairwise relationships between all variables in a dataset.
 
 ```python
-g = sns.PairGrid(df, hue='species')
+g = sns.PairGrid(df, vars=['total_bill', 'tip', 'size'], hue='day')
 g.map_upper(sns.scatterplot)
 g.map_lower(sns.kdeplot)
 g.map_diag(sns.histplot)
@@ -327,7 +341,7 @@ sns.relplot(data=df, x='x', y='y', col='category', row='group',
 
 Each variable is a column, each observation is a row. This "tidy" format provides maximum flexibility:
 
-```python
+```text
 # Long-form structure
    subject  condition  measurement
 0        1    control         10.5
@@ -346,7 +360,7 @@ Each variable is a column, each observation is a row. This "tidy" format provide
 
 Variables are spread across columns. Useful for simple rectangular data:
 
-```python
+```text
 # Wide-form structure
    control  treatment
 0     10.5       12.3
@@ -565,7 +579,7 @@ sns.displot(data=df, x='variable', hue='group',
             kind='kde', fill=True, col='category')
 
 # Correlation analysis
-corr = df.corr()
+corr = df.select_dtypes(include="number").corr()
 sns.heatmap(corr, annot=True, cmap='coolwarm', center=0)
 ```
 
@@ -598,10 +612,10 @@ sns.heatmap(df.pivot_table(values='y', index='x1', columns='x2'),
 plt.tight_layout()
 ```
 
-### Time Series with Confidence Bands
+### Time Series with Explicit Uncertainty
 
 ```python
-# Lineplot automatically aggregates and shows CI
+# This example shows SD dispersion, not a confidence band.
 sns.lineplot(data=timeseries, x='date', y='measurement',
              hue='sensor', style='location', errorbar='sd')
 
@@ -621,7 +635,7 @@ Figure-level functions place legends outside by default. To move inside:
 
 ```python
 g = sns.relplot(data=df, x='x', y='y', hue='category')
-g._legend.set_bbox_to_anchor((0.9, 0.5))  # Adjust position
+sns.move_legend(g, 'center right', bbox_to_anchor=(0.9, 0.5))
 ```
 
 ### Issue: Overlapping Labels
@@ -666,7 +680,7 @@ sns.kdeplot(data=df, x='x', bw_adjust=2)    # More smooth
 
 ## Resources
 
-This skill includes reference materials for deeper exploration:
+The upstream files listed below are NOT bundled in this import; do not claim to have loaded them. Use the actual official documentation for your installed version: https://seaborn.pydata.org/api.html .
 
 ### references/
 
@@ -674,4 +688,4 @@ This skill includes reference materials for deeper exploration:
 - `objects_interface.md` - Detailed guide to the modern seaborn.objects API
 - `examples.md` - Common use cases and code patterns for different analysis scenarios
 
-Load reference files as needed for detailed function signatures, advanced parameters, or specific examples.
+Use the official API/tutorial for detailed signatures. Verify saved rendering, font embedding, units and legibility; a PDF can contain rasterized layers and is not automatically publication-ready.

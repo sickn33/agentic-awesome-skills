@@ -2,9 +2,17 @@
 
 > This file contains the detailed procedure and reference material extracted from `SKILL.md` for focused loading. The root skill defines activation, examples, safety constraints, and limitations.
 
+## Boundaries
+
+Examples are separate sketches with missing app helpers. Pin library versions and
+verify APIs; Pycord and discord.py differ. Disable unsolicited mentions in user/LLM
+output, check permissions at each action and authorize bulk sends/command overwrites.
+Component custom IDs are not authorization. Rate limits are endpoint-dependent;
+use the library scheduler and response Retry-After rather than fixed guarantees.
+
 ## Principles
 
-- Slash commands over message parsing (Message Content Intent deprecated)
+- Slash commands over message parsing (Message Content is privileged, not deprecated)
 - Acknowledge interactions within 3 seconds, always
 - Request only required intents (minimize privileged intents)
 - Handle rate limits gracefully with exponential backoff
@@ -249,7 +257,7 @@ class General(commands.Cog):
             description="A helpful Discord bot",
             color=discord.Color.blue()
         )
-        embed.add_field(name="Servers", value=len(self.bot.guilds))
+        embed.add_field(name="Servers", value=str(len(self.bot.guilds)))
         embed.add_field(name="Latency", value=f"{round(self.bot.latency * 1000)}ms")
         await ctx.respond(embed=embed)
 
@@ -330,13 +338,14 @@ module.exports = {
           ])
       );
 
-    await interaction.reply({
+    const message = await interaction.reply({
+      fetchReply: true,
       content: 'Choose an option:',
       components: [buttonRow, selectRow]
     });
 
     // Collect responses
-    const collector = interaction.channel.createMessageComponentCollector({
+    const collector = message.createMessageComponentCollector({
       filter: i => i.user.id === interaction.user.id,
       time: 60_000  // 60 seconds timeout
     });
@@ -412,9 +421,16 @@ if (interaction.isModalSubmit()) {
 import discord
 
 class ConfirmView(discord.ui.View):
-    def __init__(self):
+    def __init__(self, owner_id):
         super().__init__(timeout=60)
+        self.owner_id = owner_id
         self.value = None
+
+    async def interaction_check(self, interaction):
+        if interaction.user.id != self.owner_id:
+            await interaction.response.send_message("Not your confirmation.", ephemeral=True)
+            return False
+        return True
 
     @discord.ui.button(label="Confirm", style=discord.ButtonStyle.green)
     async def confirm(self, button, interaction):
@@ -430,7 +446,7 @@ class ConfirmView(discord.ui.View):
 
 @bot.slash_command(name="confirm")
 async def confirm_cmd(ctx: discord.ApplicationContext):
-    view = ConfirmView()
+    view = ConfirmView(ctx.author.id)
     await ctx.respond("Are you sure?", view=view)
 
     await view.wait()  # Wait for user interaction
@@ -621,8 +637,8 @@ embed.set_author(
     name="Bot Name",
     icon_url=bot.user.display_avatar.url
 )
-embed.add_field(name="Servers", value=len(bot.guilds), inline=True)
-embed.add_field(name="Users", value=len(bot.users), inline=True)
+embed.add_field(name="Servers", value=str(len(bot.guilds)), inline=True)
+embed.add_field(name="Users", value=str(len(bot.users)), inline=True)
 embed.set_thumbnail(url=bot.user.display_avatar.url)
 embed.set_image(url="https://example.com/banner.png")
 embed.set_footer(text="Requested by User", icon_url=ctx.author.display_avatar.url)
@@ -699,7 +715,7 @@ class RateLimitQueue {
 
 const queue = new RateLimitQueue();
 
-// Usage: Send 200 messages without hitting rate limits
+// Authorized opt-in messages only; pacing does not guarantee per-route limits.
 for (const user of users) {
   await queue.add(() => user.send('Welcome!'));
 }
@@ -721,6 +737,7 @@ class RateLimitQueue:
         future = asyncio.Future()
         self.queue.append((coro, future))
         if not self.processing:
+            self.processing = True
             asyncio.create_task(self._process())
         return await future
 
@@ -799,9 +816,9 @@ async function getTotalGuilds() {
 // Broadcast to all shards
 async function broadcastMessage(channelId, message) {
   await client.shard.broadcastEval(
-    (c, { channelId, message }) => {
+    async (c, { channelId, message }) => {
       const channel = c.channels.cache.get(channelId);
-      if (channel) channel.send(message);
+      if (channel) await channel.send({ content: message, allowedMentions: { parse: [] } });
     },
     { context: { channelId, message } }
   );
@@ -929,7 +946,7 @@ Why this breaks:
 Discord has 3 privileged intents that require manual enablement:
 1. **GUILD_MEMBERS** - Member join/leave, member lists
 2. **GUILD_PRESENCES** - Online status, activities
-3. **MESSAGE_CONTENT** - Read message text (deprecated for commands)
+3. **MESSAGE_CONTENT** - Read message text (privileged; unnecessary for slash commands)
 
 These must be:
 1. Enabled in Discord Developer Portal > Bot > Privileged Gateway Intents
@@ -1122,7 +1139,7 @@ config.json
 2. Regenerate the token
 3. Update all deployments
 4. Review bot activity for unauthorized actions
-5. Check git history and force push to remove if needed
+5. Coordinate any history rewrite with repository owners; token rotation is essential and history rewriting cannot revoke existing copies.
 
 
 ## Use environment variables properly

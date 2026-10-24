@@ -6,6 +6,7 @@ Usage: ./extract-transcript.py VIDEO_ID_OR_URL [LANGUAGE_CODE]
 
 import re
 import sys
+from urllib.parse import urlparse, parse_qs
 from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled, NoTranscriptFound
 
 # Windows consoles default to a legacy codepage that cannot encode the emoji below,
@@ -20,19 +21,23 @@ _IS_LEGACY_API = hasattr(YouTubeTranscriptApi, 'get_transcript')
 
 def parse_video_id(value):
     """Accept a bare video ID or any common YouTube URL form"""
-    if not re.search(r'[/.]', value):
+    if re.fullmatch(r'[A-Za-z0-9_-]{11}', value):
         return value
-
-    patterns = [
-        r'(?:v=|/embed/|/shorts/|/live/|youtu\.be/)([A-Za-z0-9_-]{11})',
-        r'/v/([A-Za-z0-9_-]{11})',
-    ]
-    for pattern in patterns:
-        match = re.search(pattern, value)
-        if match:
-            return match.group(1)
-
-    print(f"❌ Could not find a video ID in: {value}", file=sys.stderr)
+    parsed = urlparse(value)
+    host = (parsed.hostname or '').lower()
+    candidate = ''
+    if parsed.scheme == 'https' and not parsed.username and not parsed.password:
+        parts = parsed.path.strip('/').split('/')
+        if host == 'youtu.be' and len(parts) == 1:
+            candidate = parts[0]
+        elif host in {'youtube.com', 'www.youtube.com', 'm.youtube.com'}:
+            if parsed.path == '/watch':
+                candidate = parse_qs(parsed.query).get('v', [''])[0]
+            elif len(parts) == 2 and parts[0] in {'embed', 'shorts', 'live', 'v'}:
+                candidate = parts[1]
+    if re.fullmatch(r'[A-Za-z0-9_-]{11}', candidate):
+        return candidate
+    print("❌ Invalid video ID or HTTPS YouTube URL", file=sys.stderr)
     sys.exit(1)
 
 def extract_transcript(video_id, language='en'):

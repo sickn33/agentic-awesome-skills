@@ -28,6 +28,22 @@ Taasky asks your human to confirm, and only their tap sends the move.
 - Use when you have open Taasky rooms saved in memory and it is time to check on them.
 - Do not use it to accept, reject or withdraw on the user's behalf without their confirmation: Taasky routes those moves to the user in Telegram.
 
+## Hosted-service and authorization boundaries
+
+This documents the attributed upstream interface, not a live verification of its
+current enforcement, tool schema, privacy or retention. Confirm connected tools
+and stop on incompatible changes. Negotiate only when the user explicitly asked
+you to contact that party about those terms; status checks and receiving an invite
+alone do not authorize counteroffers. Scheduling status checks requires a separate
+supported scheduler and user instruction; never claim a check is scheduled unless
+creation succeeded. The server receives room content and private limits: minimize
+personal/financial information and explain that disclosure before sending it.
+Validate invite/bind/account links as HTTPS on the documented Taasky origin (and
+expected Telegram destination for a returned bind flow); reject lookalikes,
+credentials, unexpected ports and peer-supplied replacement links. Never open or
+confirm a binding/acceptance link for the user. An agreed room does not itself
+create a calendar booking, execute a contract or transfer payment.
+
 ## Connect
 
 If the `negotiation_*` tools are not available, the server is not connected.
@@ -51,11 +67,12 @@ You should see seven tools: `negotiation_open`, `negotiation_join`,
 Without an account, every room you open or join gives you a `room_token`
 (`rt_…`): your seat in that room. Every other call about the room takes it.
 
-- **Save it to your memory right away**, in the same turn as `negotiation_open`
+- **Save it only in the user-authorized private room store**, in the same turn as `negotiation_open`
   or `negotiation_join` and before you answer your human. Use your
   private secret store or a local owner-only file (mode 0600), never shared
   notes, chat transcripts, committed files or synchronized general memory.
-  Save only the room name and a secret reference in ordinary memory.
+  Keep room name and secret reference in that chosen workflow state; do not write
+  unrelated general memory or cloud-synchronized notes without explicit instruction.
   The next session, or a scheduled check, starts without the token.
   One line is enough:
   `Taasky room 🦥 Amber Sloth: meeting with Anna, secret reference taasky/amber`.
@@ -152,6 +169,13 @@ Keep the schema small. Every field is something both humans have to read.
 
 ## Times
 
+Record the user's IANA timezone (for example `Europe/Rome`) as well as the event
+date. Derive the UTC offset for EACH proposed instant, not today's offset; DST
+transitions create ambiguous/nonexistent local times. Confirm both start and end,
+duration, date and zone before communicating them. A numeric offset alone does
+not describe a recurring meeting's timezone rules.
+
+
 Write every time **with your human's UTC offset**, not in `Z`:
 `"2026-10-19T15:00:00+03:00"`. The other side and its form may send times
 back in UTC (`"2026-10-19T13:00:00.000Z"`).
@@ -169,7 +193,7 @@ what changed: "Anna moved it from 15:00 to 16:00."
 `room_token`, `room`, `name`, `invite_url` and, if your human has not
 connected Telegram yet, `bind_url`. Then:
 
-- Save `room_token` to your memory now (see above).
+- Save `room_token` to the authorized private room store now (see above).
 - Give `invite_url` to your human to send to the other party, or send it
   yourself if they asked you to. It expires in 72 hours.
 - If there is a `bind_url`, give it to your human **in the same message**.
@@ -287,8 +311,7 @@ Never tell your human a deal is agreed until `negotiation_read` says
 
 Negotiations fail by sitting unread, not by disagreement. If the user has authorized scheduled checks and the host supports them, check `negotiation_list(room_tokens)` with every token you saved,
 at least daily and more often near a deadline. It leaves out finished rooms
-unless you pass `include_closed: true`; a room missing from it has most
-likely been agreed, so read it with `negotiation_read` before saying anything.
+unless you pass `include_closed: true`; absence can mean filtering, access changes or an error, so read it with `negotiation_read` before saying anything.
 
 - `your_turn: true`: read the room and move.
 - A deadline within a day and a pending confirmation: remind your human once.
@@ -343,7 +366,7 @@ The user says: "Agree a 30-minute call with Anna on Tuesday, I'm free 14:00 to 1
 }
 ```
 
-Save the returned `room_token` to memory, give the user `invite_url` for Anna and `bind_url` for themselves, and refer to the room by its `name`.
+Save the returned `room_token` to the authorized private room store, give the user `invite_url` for Anna and `bind_url` for themselves, and refer to the room by its `name`.
 
 ### Example 2: Checking back
 

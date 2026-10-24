@@ -1,5 +1,11 @@
 # Makepad 2.0 Animator Reference
 
+## Version and validation contract
+
+These historical dev-branch notes are not a pinned Makepad release or a complete API guarantee. Inspect Cargo.lock/the chosen Makepad commit, actual widget fields, Animator implementation and event handlers before using a snippet. Widget support, parser errors, shader declarations and timeline/ease syntax can change. Unsupported fields are not guaranteed to be silently ignored in every release. The example lists below are historical candidates to verify, not exhaustive current compatibility tables.
+
+A declared animator does not by itself prove that pointer/focus events transition it or that a shader reads the field. Show the actual event-to-state wiring or verify the base widget provides it. Animating a parent background does not animate a child label color. Respect reduced motion and keyboard/touch feedback; stop continuous animations when hidden/removed and verify redraw/CPU behavior. No code in this bundle has been compiled by this document.
+
 ## Overview
 
 The Animator system drives `instance()` variables on draw shaders over time, enabling hover effects, transitions, and looping animations. It operates on independent animation tracks called "groups" that run simultaneously without interfering.
@@ -47,7 +53,7 @@ Each group is an independent animation track. Common groups:
 - `disabled` -- disabled state
 - `time` -- continuous/looping time-based animation
 
-Multiple groups animate simultaneously without interfering with each other.
+Groups can run together, but writes to the same property may conflict; verify arbitration in the pinned implementation.
 
 ---
 
@@ -395,7 +401,7 @@ time: {
 ## Instance vs Uniform for Animation
 
 - `instance()` -- per-draw-call value, varies per widget instance, animatable by Animator. Use for: hover, down, focus, active, disabled, per-widget colors, scale/pan.
-- `uniform()` -- shared across all instances of the same shader variant. Cannot be animated. Use for: theme constants, border_size, border_radius, base theme colors.
+- `uniform()` -- shared draw state; do not use it as independently animated widget state. Use for: theme constants, border_size, border_radius, base theme colors.
 
 ```
 draw_bg +: {

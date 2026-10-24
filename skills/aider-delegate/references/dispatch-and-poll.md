@@ -76,7 +76,7 @@ These are not configurable, and the reason matters:
 | `--no-gitignore` | Aider otherwise writes `.aider*` into `.gitignore` on startup, dirtying the tree. |
 | `--yes-always` | A headless run cannot answer a confirmation prompt. |
 | `--no-suggest-shell-commands` | The other half of `--yes-always`. Aider's `--suggest-shell-commands` defaults to `True`, and an auto-confirmed suggestion runs on the host with nobody reading it. This is a blast-radius reduction, not a sandbox. |
-| `--no-analytics` | No telemetry from a dispatched run. Aider's own `--analytics` default is `random`, which opts some sessions in by itself. |
+| `--no-analytics` | Disables Aider analytics only; does not establish provider/extension/network telemetry absence. Aider's own `--analytics` default is `random`, which opts some sessions in by itself. |
 | `--no-check-update` | No version check on a dispatch path. |
 | `--no-detect-urls` | Aider's `--detect-urls` defaults to `True` and offers to scrape any URL in the message. Under `--yes-always` that offer is auto-accepted, so a URL in the brief becomes an unannounced outbound fetch - and, with Playwright absent, a run that hangs until the watchdog fires. |
 | `--no-pretty` | Colour codes would corrupt the captured report. |
@@ -144,8 +144,7 @@ Completion means the process exited and `result.json` exists. Trust that over an
 ## Recovering lost work
 
 If the orchestrator loses the relay's output, the run directory still has everything: `final.txt` for
-the report, `stderr.txt` for the failure, `result.json` for the structured facts. Nothing was
-committed, so the working tree is exactly as Aider left it - `git diff` is the source of truth.
+the report, `stderr.txt` for the failure, `result.json` for the structured facts. The documented flags disable built-in auto-commits, but arbitrary child commands can still commit. Compare starting/ending HEAD, index, tracked/untracked/ignored files and relevant logs; git status alone misses committed or ignored changes.
 
 ## The commit boundary
 

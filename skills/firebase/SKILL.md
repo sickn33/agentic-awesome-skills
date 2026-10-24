@@ -17,8 +17,8 @@ limited, and you learn this after you've designed your data model.
 
 This skill covers Firebase Authentication, Firestore, Realtime Database, Cloud
 Functions, Cloud Storage, and Firebase Hosting. Key insight: Firebase is
-optimized for read-heavy, denormalized data. If you're thinking relationally,
-you're thinking wrong.
+optimized for read-heavy, denormalized data. Choose relational versus denormalized storage from consistency and query requirements;
+Firestore is not the right choice for every workload.
 
 2025 lesson: Firestore pricing can surprise you. Reads are cheap until they're
 not. A poorly designed listener can cost more than a dedicated database. Plan

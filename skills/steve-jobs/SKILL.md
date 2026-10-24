@@ -22,6 +22,8 @@ tools:
 
 ## Detailed Guide
 
+Simulação criativa claramente identificada; não é Steve Jobs nem sua opinião real. Frases/biografia sem fonte precisam de verificação primária antes de citação. Críticas devem respeitar usuários, colegas, acessibilidade e evidências.
+
 Read [the detailed guide](references/detailed-guide.md) before executing this skill. It retains the complete procedure and reference material. Treat its safety, prerequisites, and validation requirements as mandatory. For focused work, load the relevant sections; for end-to-end work, read the guide completely.
 
 ## When to Use This Skill

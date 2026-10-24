@@ -8,6 +8,8 @@ Retrieval-Augmented Generation introduces a document supply chain. Every stage -
 
 ### Document Ingestion Scanning
 
+MIME/antivirus success does not prove document safety or remove prompt injection. Enforce size/decompression/parser limits, isolate parsers and bind scanned bytes to indexed bytes to avoid TOCTOU. Handle scanner errors as unknown/fail-closed, not clean. Scan-status handling depends on the actual clamd client.
+
 ```python
 import hashlib
 import magic  # python-magic
@@ -30,6 +32,9 @@ def scan_document(file_path: str, allowed_types: set = None) -> dict:
     scan_result = cd.scan(file_path)
     if scan_result and scan_result[file_path][0] == "FOUND":
         return {"safe": False, "reason": f"malware: {scan_result[file_path][1]}"}
+
+    if scan_result is not None and (file_path not in scan_result or scan_result[file_path][0] != "OK"):
+        return {"safe": False, "reason": "scanner_inconclusive"}
 
     # Compute content hash for provenance
     with open(file_path, "rb") as f:
@@ -59,7 +64,7 @@ def scan_for_secrets(text: str) -> list[dict]:
                 "type": label,
                 "start": match.start(),
                 "end": match.end(),
-                "snippet": text[max(0, match.start()-10):match.end()+10],
+                "snippet": "[REDACTED]",  # do not copy discovered secrets into findings/logs
             })
     return findings
 ```
@@ -122,6 +127,8 @@ def retrieve_weaviate(query: str, tenant_id: str, roles: list[str], limit: int =
 
 ### Provenance Tracking
 
+Retrieved-document lists are candidate provenance, not evidence that every cited source supports the answer. Bind citations to actual passages/claims, enforce their ACLs on display, and verify support. Similarity scores are not calibrated confidence.
+
 ```python
 def attach_provenance(response_text: str, source_docs: list[dict]) -> dict:
     """Wrap the LLM response with source attribution."""
@@ -170,6 +177,8 @@ def query_tenant(tenant_id: str, embedding: list[float], top_k: int = 5):
 
 ### Session Boundary Enforcement (Redis)
 
+Sketch only: authenticate identity server-side and compare both tenant and user, bound message history/roles and protect Redis with TLS/auth/network policy. Read-modify-write must use atomic transactions/Lua to avoid lost updates and expiry races.
+
 ```python
 import redis
 import json
@@ -190,12 +199,12 @@ def create_session(tenant_id: str, user_id: str) -> str:
     r.expire(key, SESSION_TTL)
     return session_id
 
-def append_message(session_id: str, tenant_id: str, role: str, content: str):
+def append_message(session_id: str, tenant_id: str, user_id: str, role: str, content: str):
     key = f"session:{session_id}"
     session = r.hgetall(key)
     if not session:
         raise ValueError("session_expired")
-    if session["tenant_id"] != tenant_id:
+    if session["tenant_id"] != tenant_id or session["user_id"] != user_id:
         raise PermissionError("tenant_mismatch")
 
     messages = json.loads(session["messages"])
@@ -203,12 +212,12 @@ def append_message(session_id: str, tenant_id: str, role: str, content: str):
     r.hset(key, "messages", json.dumps(messages))
     r.expire(key, SESSION_TTL)  # refresh TTL
 
-def get_history(session_id: str, tenant_id: str) -> list[dict]:
+def get_history(session_id: str, tenant_id: str, user_id: str) -> list[dict]:
     key = f"session:{session_id}"
     session = r.hgetall(key)
     if not session:
         return []
-    if session["tenant_id"] != tenant_id:
+    if session["tenant_id"] != tenant_id or session["user_id"] != user_id:
         raise PermissionError("tenant_mismatch")
     return json.loads(session["messages"])
 ```
@@ -216,13 +225,14 @@ def get_history(session_id: str, tenant_id: str) -> list[dict]:
 ### Conversation Memory Isolation (Node.js)
 
 ```javascript
+const { randomUUID } = require("node:crypto");
 const Redis = require("ioredis");
 const redis = new Redis();
 
 const SESSION_TTL = 3600;
 
 async function createSession(tenantId, userId) {
-  const sessionId = crypto.randomUUID();
+  const sessionId = randomUUID();
   const key = `session:${sessionId}`;
   await redis.hmset(key, {
     tenant_id: tenantId,
@@ -233,11 +243,11 @@ async function createSession(tenantId, userId) {
   return sessionId;
 }
 
-async function appendMessage(sessionId, tenantId, role, content) {
+async function appendMessage(sessionId, tenantId, userId, role, content) {
   const key = `session:${sessionId}`;
   const session = await redis.hgetall(key);
   if (!session || !session.tenant_id) throw new Error("session_expired");
-  if (session.tenant_id !== tenantId) throw new Error("tenant_mismatch");
+  if (session.tenant_id !== tenantId || session.user_id !== userId) throw new Error("tenant_mismatch");
 
   const messages = JSON.parse(session.messages);
   messages.push({ role, content });
@@ -255,6 +265,8 @@ LLM calls are expensive. Without rate limiting, a single abusive user can exhaus
 
 ### Per-User Token Budget (Python + Redis)
 
+Non-atomic accounting sketch, not production enforcement. Concurrent requests can bypass these checks. Reserve worst-case tokens/cost atomically before a model call, reconcile actual usage after, include tenant and verified user IDs, reject negative/non-integer input and fail closed on ledger errors. Prices below are fictional placeholders, not current pricing.
+
 ```python
 import time
 import redis
@@ -269,6 +281,8 @@ def check_and_deduct(user_id: str, tokens_used: int) -> dict:
     key = f"token_budget:{user_id}"
     now = int(time.time())
 
+    if type(tokens_used) is not int or tokens_used < 0 or tokens_used > TOKEN_BUDGET:
+        return {"allowed": False, "remaining": 0}
     current = r.hgetall(key)
     if not current or int(current.get("window_start", 0)) < now - WINDOW_SECONDS:
         # New window
@@ -314,7 +328,8 @@ def check_cost_cap(tenant_id: str, input_tokens: int, output_tokens: int) -> dic
 ```nginx
 # /etc/nginx/conf.d/llm-rate-limit.conf
 
-# Define a rate limit zone keyed on the API key header
+# Illustration only: authenticate first and use a trusted server-derived identity.
+# Raw API-key headers can be empty or rotated/spoofed to bypass this limit.
 limit_req_zone $http_x_api_key zone=llm_api:10m rate=10r/s;
 
 # Define a connection limit zone
@@ -360,7 +375,7 @@ plugins:
 
   - name: request-size-limiting
     config:
-      allowed_payload_size: 64   # KB - prevents huge prompt payloads
+      allowed_payload_size: 1   # MB; check the pinned Kong plugin schema - prevents huge prompt payloads
     route: llm-chat-route
 ```
 
@@ -425,7 +440,7 @@ groups:
       - alert: AnomalousCostSpike
         expr: |
           sum(increase(llm_cost_usd_total[1h])) by (tenant_id)
-          > 2 * sum(avg_over_time(llm_cost_usd_total[7d:1h])) by (tenant_id)
+          > 2 * sum(increase(llm_cost_usd_total[7d])) by (tenant_id) / 168
         for: 10m
         labels:
           severity: warning
@@ -527,7 +542,9 @@ def apply_retention_ttl(key: str, category: str):
 
 def purge_expired_logs(db_conn, category: str):
     """Delete logs older than the retention period."""
-    cutoff = datetime.datetime.utcnow() - datetime.timedelta(
+    if category not in RETENTION_POLICIES:
+        raise ValueError("unknown retention category")
+    cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(
         days=RETENTION_POLICIES[category]
     )
     db_conn.execute(
@@ -537,63 +554,22 @@ def purge_expired_logs(db_conn, category: str):
 
 ### GDPR Right-to-Forget for Embeddings
 
-When a user requests deletion, you must remove their data from the vector store, conversation logs, and any derived embeddings.
+Determine the applicable erasure request, exceptions, retention and legal holds with the responsible owner. These examples are not legal advice or proof of compliance; include vector stores, logs, derived data and backup lifecycle in the reviewed plan.
 
 ```python
 def delete_user_data(user_id: str, tenant_id: str, pc_index, redis_client):
-    """GDPR Article 17 - Right to erasure."""
-    results = []
-
-    # 1. Delete from vector store (Pinecone)
-    # Fetch all vector IDs belonging to this user
-    query_response = pc_index.query(
-        vector=[0.0] * 1536,  # dummy vector
-        top_k=10000,
-        namespace=tenant_id,
-        filter={"user_id": {"$eq": user_id}},
-        include_values=False,
-    )
-    vector_ids = [m["id"] for m in query_response["matches"]]
-    if vector_ids:
-        # Delete in batches of 1000
-        for i in range(0, len(vector_ids), 1000):
-            batch = vector_ids[i:i + 1000]
-            pc_index.delete(ids=batch, namespace=tenant_id)
-        results.append(f"deleted {len(vector_ids)} vectors")
-
-    # 2. Delete conversation history from Redis
-    pattern = f"session:*"
-    cursor = 0
-    deleted_sessions = 0
-    while True:
-        cursor, keys = redis_client.scan(cursor, match=pattern, count=100)
-        for key in keys:
-            session = redis_client.hgetall(key)
-            if (session.get("user_id") == user_id and
-                    session.get("tenant_id") == tenant_id):
-                redis_client.delete(key)
-                deleted_sessions += 1
-        if cursor == 0:
-            break
-    results.append(f"deleted {deleted_sessions} sessions")
-
-    # 3. Delete from relational DB
-    # db.execute("DELETE FROM llm_logs WHERE user_id = %s AND tenant_id = %s",
-    #            (user_id, tenant_id))
-
-    return {
-        "user_id": user_id,
-        "tenant_id": tenant_id,
-        "actions": results,
-        "status": "completed",
-    }
+    # Block until a reviewed deletion implementation is supplied. Similarity
+    # top_k queries (including dummy vectors) cannot enumerate every vector.
+    # Use an authoritative ID inventory/paginated listing or supported metadata
+    # deletion, cover all stores/backups under policy, and verify each result.
+    raise NotImplementedError("Supply authorized, complete and verified deletion workflow")
 ```
 
 ### Audit Trail Schema
 
 ```sql
 CREATE TABLE llm_audit_log (
-    id            BIGSERIAL PRIMARY KEY,
+    id            BIGSERIAL,
     timestamp     TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     tenant_id     VARCHAR(64) NOT NULL,
     user_id       VARCHAR(64) NOT NULL,
@@ -606,10 +582,11 @@ CREATE TABLE llm_audit_log (
     injection_detected BOOLEAN DEFAULT FALSE,
     pii_detected  BOOLEAN DEFAULT FALSE,
     metadata      JSONB,
-    INDEX idx_tenant_time (tenant_id, timestamp),
-    INDEX idx_user_time (user_id, timestamp),
-    INDEX idx_action (action)
-);
+    PRIMARY KEY (id, timestamp)
+) PARTITION BY RANGE (timestamp);
+CREATE INDEX idx_tenant_time ON llm_audit_log (tenant_id, timestamp);
+CREATE INDEX idx_user_time ON llm_audit_log (user_id, timestamp);
+CREATE INDEX idx_action ON llm_audit_log (action);
 
 -- Partition by month for efficient retention
 CREATE TABLE llm_audit_log_2026_03 PARTITION OF llm_audit_log

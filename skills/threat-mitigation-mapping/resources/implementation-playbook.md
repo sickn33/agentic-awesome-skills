@@ -15,6 +15,10 @@ Connect threats to controls for effective security planning.
 - Security architecture review
 - Risk treatment planning
 
+## Interpretation and execution limits
+
+The ordinal effectiveness/status weights, 50% threshold and budget greedy algorithm are illustrative planning heuristics, not calibrated risk reduction or compliance evidence. Include unmapped threats explicitly; duplicated/correlated controls and unmet dependencies can inflate scores. The greedy selector is not guaranteed optimal and excludes unknown/nonpositive costs for review. Copy library controls per assessment before mutating their status to avoid shared class-level objects leaking state between plans. Compliance references are historical examples; verify current standard versions and exact requirements. Control tests below are synchronous callbacks inside an async wrapper, not an async-capable executor; inspect and authorize their real network/mutation effects first. Passing a small test set does not establish percentage real-world effectiveness.
+
 ## Core Concepts
 
 ### 1. Control Categories
@@ -173,7 +177,7 @@ class MitigationPlan:
 
     def get_unmapped_threats(self) -> List[Threat]:
         """Find threats without mitigations."""
-        mapped_ids = {m.threat.id for m in self.mappings}
+        mapped_ids = {m.threat.id for m in self.mappings if any(c.status != ImplementationStatus.NOT_IMPLEMENTED for c in m.controls)}
         return [t for t in self.threats if t.id not in mapped_ids]
 
     def get_control_coverage(self) -> Dict[str, float]:
@@ -455,7 +459,7 @@ class MitigationAnalyzer:
         for control in all_controls:
             if control.status == ImplementationStatus.NOT_IMPLEMENTED:
                 cost = cost_map.get(control.id, float('inf'))
-                if cost <= remaining_budget:
+                if 0 < cost <= remaining_budget:
                     # Calculate value as threats covered * effectiveness / cost
                     threats_covered = len([
                         t for t in unmapped
@@ -550,7 +554,7 @@ class MitigationAnalyzer:
 # Threat Mitigation Report
 
 ## Executive Summary
-- **Overall Risk Reduction:** {risk_reduction:.1f}%
+- **Heuristic Weighted Coverage (not risk reduction):** {risk_reduction:.1f}%
 - **Total Threats:** {len(self.plan.threats)}
 - **Total Controls:** {len(self.plan.controls)}
 - **Identified Gaps:** {len(gaps)}
@@ -599,7 +603,7 @@ class MitigationAnalyzer:
         if any(g["issue"] == "No control diversity" for g in gaps):
             recommendations.append("- Add more detective and corrective controls")
 
-        return "\n".join(recommendations) if recommendations else "Current coverage is adequate."
+        return "\n".join(recommendations) if recommendations else "No gap was identified by this heuristic; effectiveness and residual risk remain to be validated."
 
     def _format_roadmap(self) -> str:
         roadmap = self.generate_roadmap()

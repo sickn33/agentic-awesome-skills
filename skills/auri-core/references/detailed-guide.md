@@ -4,7 +4,7 @@
 
 ## Overview
 
-Auri: assistente de voz inteligente (Alexa + Claude claude-opus-4-20250805). Visao do produto, persona Vitoria Neural, stack AWS, modelo Free/Pro/Business/Enterprise, roadmap 4 fases, GTM, north star WAC e analise competitiva.
+Auri: assistente de voz inteligente (Alexa + Claude MODELO_CLAUDE_VERIFICADO). Visao do produto, persona Vitoria Neural, stack AWS, modelo Free/Pro/Business/Enterprise, roadmap 4 fases, GTM, north star WAC e analise competitiva.
 
 
 ## How It Works
@@ -23,7 +23,7 @@ Auri: assistente de voz inteligente (Alexa + Claude claude-opus-4-20250805). Vis
 
 >  A voz que pensa com voce.
 
-Auri e um assistente de voz de nova geracao construido sobre Amazon Alexa + Claude claude-opus-4-20250805.
+Auri e um assistente de voz de nova geracao construido sobre Amazon Alexa + Claude MODELO_CLAUDE_VERIFICADO.
 Enquanto a Alexa tradicional executa comandos, a Auri conduz conversas reais e raciocina sobre contexto.
 
 ---
@@ -31,8 +31,8 @@ Enquanto a Alexa tradicional executa comandos, a Auri conduz conversas reais e r
 
 ## O Que E A Auri
 
-A Auri e uma Alexa Skill avancada que substitui o motor de respostas padrao pelo modelo
-Claude claude-opus-4-20250805 da Anthropic. O resultado: um assistente de voz capaz de:
+A Auri e uma Alexa Skill avancada que atende a invocação da skill; não substitui globalmente o motor de respostas padrão da Alexa pelo modelo
+Claude MODELO_CLAUDE_VERIFICADO da Anthropic. O resultado: um assistente de voz capaz de:
 
 - Conduzir conversas multi-turno com memoria contextual
 - Raciocinar sobre problemas complexos em linguagem natural
@@ -53,9 +53,9 @@ DEPOIS: Auri, devo levar guarda-chuva amanha?
 
 1. Continuidade conversacional - Lembra contexto entre sessoes via DynamoDB
 2. Personalidade consistente - Voz Vitoria Neural + persona calibrada
-3. Raciocinio profundo - Claude claude-opus-4-20250805 como motor principal
+3. Raciocinio profundo - Claude MODELO_CLAUDE_VERIFICADO como motor principal
 4. Ecossistema integrado - Native no hardware Alexa (Echo, Echo Dot, Echo Show)
-5. Privacidade by design - Dados na AWS, sem compartilhamento com terceiros
+5. Privacidade by design - Fluxo proposto inclui AWS/Amazon e, se API direta, Anthropic; documentar subprocessadores, regiões e transferências
 
 ---
 
@@ -102,7 +102,7 @@ Exemplo de marcacao SSML para Amazon Polly Vitoria Neural:
 
 ## Visao Geral Da Arquitetura
 
-Fluxo de dados: Echo -> ASK SDK (Python v2) -> Lambda Python 3.12 -> Claude claude-opus-4-20250805
+Fluxo de dados: Echo -> ASK SDK (Python v2) -> Lambda Python 3.12 -> Claude MODELO_CLAUDE_VERIFICADO
 Componentes AWS: DynamoDB (memoria), Polly Vitoria Neural (voz), CloudWatch (logs), Secrets Manager (keys)
 
 ### 3.1 Dependencias
@@ -125,7 +125,7 @@ Codigo Python - handlers/conversation.py:
       Recebe user_speech via slot query
       Carrega historico de conversas da sessao DynamoDB
       Chama anthropic.Anthropic().messages.create(
-          model=claude-opus-4-20250805, max_tokens=300,
+          model=configured_model_id, max_tokens=300,
           system=system_prompt, messages=history+[user_speech])
       Salva resposta no historico, retorna SSML com voz Vitoria
 
@@ -133,7 +133,7 @@ Codigo Python - handlers/conversation.py:
 
 Tabela: auri-user-memory | PK: user_id | SK: session_date | TTL: 90 dias
 Campos: profile (name, plan, preferences), long_term_memory[], usage_stats{}
-BillingMode: PAY_PER_REQUEST | TimeToLive: habilitado (auto-expira)
+BillingMode: PAY_PER_REQUEST | TimeToLive: habilitado (expiração assíncrona; filtrar itens vencidos e não prometer exclusão imediata)
 
 ### 3.5 Interaction Model
 
@@ -146,11 +146,11 @@ StopIntent: tchau, ate mais, encerrar
 
 FunctionName: auri-core-handler | Runtime: python3.12 | Timeout: 15s | Memory: 512MB
 Env vars: ANTHROPIC_API_KEY_SECRET, DYNAMODB_TABLE=auri-user-memory, POLLY_VOICE=Vitoria
-          CLAUDE_MODEL=claude-opus-4-20250805, MAX_TOKENS_VOICE=300
+          CLAUDE_MODEL=MODELO_CLAUDE_VERIFICADO, MAX_TOKENS_VOICE=300
 
 ---
 
-### 3.7 Exemplos De Codigo Completos
+### 3.7 Esboços — implementação não fornecida
 
 Handler de Conversa (handlers/conversation.py):
 
@@ -159,7 +159,7 @@ DynamoDB Schema:
 ---
 
 
-## Planos E Precos
+## Planos E Precos Propostos (não ofertas verificadas)
 
 | Plano | Preco | Limites | Target |
 |-------|-------|---------|--------|
@@ -179,14 +179,14 @@ Enterprise: Ilimitado, persona customizavel, integracao CRM/ERP, SLA 99.9%.
 
 ## Projecao De Receita (Ano 1)
 
-Meta conservadora: Pro 250 x R\9 = R$ 7.250/mes | Business 25 x R\9 = R$ 2.475/mes
+Meta conservadora: Pro 250 x R$ 29 (Pro) / R$ 99 (Business), conforme contexto = R$ 7.250/mes | Business 25 x R$ 29 (Pro) / R$ 99 (Business), conforme contexto = R$ 2.475/mes
 MRR Ano 1: R$ 9.725/mes (~R$ 117k ARR)
 
 Meta otimista: Pro 800 = R$ 23.200/mes | Business 80 = R$ 7.920/mes
 MRR Ano 1: R$ 31.120/mes (~R$ 373k ARR)
 
 
-## Unit Economics
+## Unit Economics (cenários hipotéticos, sem evidência de CAC/LTV/margem)
 
 | Metrica | Pro | Business |
 |---------|-----|----------|
@@ -312,7 +312,7 @@ Periodo: segunda-domingo, 00:00-23:59 BRT.
 - DAU banaliza engajamento com acessos de 10 segundos.
 - MAU e muito longa para feedback rapido de produto.
 - WAC captura habito real: voltou 3x e ficou 2min = genuinamente engajado.
-- Correlaciona com retencao 30 dias e conversao Free->Pro.
+- Hipótese a validar contra retenção de 30 dias e conversão Free->Pro.
 
 
 ## Hierarquia De Metricas
@@ -340,7 +340,7 @@ NORTH STAR: WAC
 
 1. Registrar session_start com user_id e timestamp no DynamoDB.
 2. Ao encerrar sessao, registrar duracao em segundos.
-3. Query semanal: users com session_count >= 3 AND avg_duration >= 120.
+3. Query semanal: contar por usuário apenas sessões individuais com duração >= 120 segundos; WAC exige pelo menos 3 dessas sessões na semana.
 4. Publicar metrica no CloudWatch namespace Auri/ProductMetrics.
 5. Alertar queda > 20% semana a semana.
 
@@ -357,7 +357,7 @@ Metricas customizadas publicadas:
 ---
 
 
-## Tabela Comparativa
+## Tabela Comparativa (hipóteses históricas, não verificadas)
 
 | Feature | Auri | Alexa Pura | Siri | Google Assistant | ChatGPT Voice |
 |---------|------|------------|------|------------------|---------------|
@@ -369,7 +369,7 @@ Metricas customizadas publicadas:
 | Hardware proprio | Usa Echo | Echo | HomePod | Nest | App only |
 | Modelo base | Claude Opus 4 | Alexa LLM | Apple LLM | Gemini | GPT-4o |
 | Privacidade | Alta | Media | Maxima | Baixa | Media |
-| Preco | R\/usr/bin/bash-99/mes | Gratis | Gratis | Gratis | R /mes |
+| Preco | Preço proposto a confirmar | Gratis | Gratis | Gratis | R[preço não confirmado]/mes |
 | Disponivel no Brasil | Sim | Sim | Sim | Sim | Sim |
 
 
@@ -378,7 +378,7 @@ Metricas customizadas publicadas:
 Eixo X: Integracao com Hardware | Eixo Y: Profundidade de Inteligencia
 
 Quadrante UNICO da Auri: Alta Inteligencia + Alta Integracao Hardware.
-Nenhum concorrente ocupa esse quadrante simultaneamente:
+Essa diferenciação é uma hipótese de posicionamento; a comparação precisa de pesquisa atual e critérios reproduzíveis:
 - Alexa pura: Alta integracao, baixa inteligencia.
 - ChatGPT Voice: Alta inteligencia, sem hardware proprio.
 - Google/Siri: Posicionamento intermediario em ambos os eixos.
@@ -390,9 +390,9 @@ Nenhum concorrente ocupa esse quadrante simultaneamente:
 |---------|---------------|
 | Por que nao ChatGPT? | ChatGPT e app, sem voz-first. Auri e native no Echo. |
 | Alexa ja resolve | Para comandos sim. Para conversas reais, nao. |
-| R\9 e caro | Menos que 1 cafe/dia por assistente pessoal 24/7. |
-| E a privacidade? | Dados na sua AWS, retencao configuravel, LGPD compliant. |
-| Amazon vai copiar? | Amazon incentiva ecossistema de skills. Somos parceiros. |
+| R$ 29 (Pro) / R$ 99 (Business), conforme contexto e caro | Menos que 1 cafe/dia por assistente pessoal 24/7. |
+| E a privacidade? | Tratamento de dados sujeito a avaliação de base legal, retenção, subprocessadores e direitos; conformidade LGPD não foi demonstrada. |
+| Amazon vai copiar? | A participação em um ecossistema de skills não comprova parceria comercial ou endosso da Amazon. |
 
 ---
 
@@ -545,21 +545,21 @@ Se a API da Anthropic estiver indisponivel, o sistema retorna respostas pre-conf
 
 ## Lgpd (Lei 13.709/2018)
 
-- Base legal: Execucao de contrato (Art. 7, V) para usuarios Pro/Business.
+- Base legal: avaliar cada finalidade e categoria de dados com responsável jurídico; plano pago não determina automaticamente a base legal.
 - Consentimento: Coletado no onboarding da skill via voz + confirmacao.
 - Dados coletados: Texto de conversas, preferencias, dados de uso anonimizados.
 - Retencao: Free = 0 dias | Pro = 90 dias | Business = 365 dias.
-- Direito de exclusao: Comando de voz Auri apaga meus dados -> DynamoDB delete.
+- Direito de exclusao: pedido autenticado, tratamento de exceções legais e exclusão verificada em históricos, backups, logs e demais processadores conforme política; um delete isolado não comprova exclusão completa.
 - DPO: Designar antes do lancamento publico.
 
 
-## Alexa Skills Store - Politicas
+## Alexa Skills Store - Itens a verificar na política atual
 
 - Skill deve seguir Alexa Skills Kit Policies integralmente.
-- Proibido coletar dados sensiveis (saude, financeiros, criancas < 13 anos).
+- Verificar as regras específicas para dados sensíveis, crianças e idade/consentimento; não resumir toda a política a uma proibição ou idade universal.
 - In-Skill Purchasing exige aprovacao previa da Amazon.
 - Privacy Policy URL obrigatoria na submissao da skill.
-- Monetizacao: Amazon retira 30% via In-Skill Purchasing.
+- Monetização: confirmar elegibilidade, país, tipo de produto e divisão de receita nas condições atuais da Amazon; não assumir taxa universal.
 
 ---
 
@@ -578,7 +578,7 @@ Se a API da Anthropic estiver indisponivel, o sistema retorna respostas pre-conf
 | Long-term Memory | Dados persistidos no DynamoDB entre sessoes |
 | In-Skill Purchasing | Sistema de cobranca nativo da Alexa Skills Store |
 | Vitoria Neural | Voz Amazon Polly pt-BR de alta qualidade usada pela Auri |
-| Claude claude-opus-4-20250805 | Modelo de linguagem Anthropic usado como motor da Auri |
+| Claude MODELO_CLAUDE_VERIFICADO | Modelo de linguagem Anthropic usado como motor da Auri |
 | DynamoDB | Banco NoSQL AWS usado para memoria persistente dos usuarios |
 | Lambda | Funcao AWS serverless que processa as requisicoes da Auri |
 | Anthropic | Empresa criadora do Claude, fornecedora da API de IA |
@@ -597,7 +597,7 @@ Se a API da Anthropic estiver indisponivel, o sistema retorna respostas pre-conf
 | ASK SDK Python | https://github.com/alexa/alexa-skills-kit-sdk-for-python |
 | Amazon Polly Vitoria Neural | https://docs.aws.amazon.com/polly/latest/dg/voicelist.html |
 | Anthropic Claude API | https://docs.anthropic.com/en/api/getting-started |
-| Claude claude-opus-4-20250805 Docs | https://docs.anthropic.com/en/docs/models-overview |
+| Claude MODELO_CLAUDE_VERIFICADO Docs | https://docs.anthropic.com/en/docs/models-overview |
 | Alexa Skills Store Brasil | https://www.amazon.com.br/alexa-skills |
 | DynamoDB Best Practices | https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/best-practices.html |
 | In-Skill Purchasing | https://developer.amazon.com/en-US/docs/alexa/in-skill-purchase/isp-overview.html |

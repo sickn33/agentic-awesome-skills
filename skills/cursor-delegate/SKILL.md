@@ -38,6 +38,10 @@ The loop needs only a shell command and file access, so any comparable orchestra
 - You want to write the code yourself, or you only need Cursor's opinion on code you wrote (a
   `--read-only` dispatch covers that — see below — but a plain review may not need delegation at all).
 
+## Runtime availability
+
+This docs-only bundle does not include `scripts/relay.mjs`. The commands below cannot run from this installed directory. Obtain and review an explicitly authorized upstream runtime separately, including its license and permission behavior; do not invent a replacement or automatically install it. In examples, `<skill-dir>` means that reviewed runtime directory.
+
 ## Prerequisites (check once)
 
 1. `cursor-agent --version` succeeds. If not, follow the installer for your platform at
@@ -68,9 +72,10 @@ brief. See [references/writing-the-brief.md](references/writing-the-brief.md).
 
 ### 2. Dispatch
 
-Use the bundled helper. It wraps `cursor-agent -p`, feeds the brief on stdin, captures the
-structured event stream, and writes `result.json`. (`<skill-dir>` is the installed folder containing
-this `SKILL.md`.)
+Confirm that the user authorized the selected approval mode, external provider/data sharing and writable scope. Default `--force` is broad automatic command approval; prefer `--no-force` unless that scope is authorized. Treat approval refusals as boundaries, not reasons to disable hooks or sandboxing. Logs and briefs may contain source code or secrets; restrict their permissions and retention.
+
+Use a separately obtained and reviewed upstream helper; no executable helper is bundled here. It wraps `cursor-agent -p`, feeds the brief on stdin, captures the
+structured event stream, and writes `result.json`. (`<skill-dir>` must be the reviewed upstream runtime folder, not this docs-only catalog directory.)
 
 ```bash
 node "<skill-dir>/scripts/relay.mjs" --brief brief.txt --cd /path/to/repo
@@ -138,7 +143,7 @@ run.
 
 ## Read-only second opinions
 
-`--read-only` doubles as a clean way to get an adversarial second opinion with no write risk:
+`--read-only` doubles as a clean way to get an adversarial second opinion for analysis; plan mode is not a proven isolation boundary. Use a disposable read-only filesystem or equivalent enforced containment for sensitive reviews:
 dispatch a brief that lists the agreed points, then each contested point with both positions, and ask
 Cursor to defend or concede each — deliverable in its final message, touching no files.
 
@@ -164,7 +169,7 @@ expanding the mandate). See [references/review-and-land.md](references/review-an
 
 ## Limitations
 
-- Docs-only import — executable `scripts/relay.mjs` not included; see upstream for full runtime. Requires `cursor` CLI, Node 18+, git.
+- Docs-only import — executable `scripts/relay.mjs` not included; see upstream for full runtime. Requires `cursor-agent` CLI, Node 18+, git.
 - Relay never commits — it only returns structured result JSON; you review and land the commit.
 
 > Adapted from [amElnagdy/delegate-skills](https://github.com/amElnagdy/delegate-skills) (MIT) — docs-only, runtime not bundled.

@@ -511,10 +511,6 @@
           "summary": "Create, edit, and inspect Word-compatible documents."
         },
         {
-          "id": "xlsx-official",
-          "summary": "Create and analyze formula-backed spreadsheets."
-        },
-        {
           "id": "pptx-official",
           "summary": "Create and edit PowerPoint-compatible presentations."
         },
@@ -2564,7 +2560,6 @@
         "office-productivity",
         "docx-official",
         "pptx-official",
-        "xlsx-official",
         "google-docs-automation",
         "google-slides-automation",
         "google-sheets-automation"

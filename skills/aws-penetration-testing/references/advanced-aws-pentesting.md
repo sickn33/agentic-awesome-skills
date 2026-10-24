@@ -82,11 +82,11 @@ git clone https://github.com/BishopFox/dufflebag
 | `ecr:getauthorizationtoken` | ECR auth token |
 | `gamelift:requestuploadcredentials` | GameLift upload creds |
 | `iam:createaccesskey` | Create access key |
-| `iam:createloginprofile` | Create login profile |
+| `iam:createloginprofile` | Creates a login profile using a supplied password; not a password-retrieval API |
 | `iam:createservicespecificcredential` | Service-specific creds |
 | `lightsail:getinstanceaccessdetails` | Instance access details |
 | `lightsail:getrelationaldatabasemasteruserpassword` | DB master password |
-| `rds-db:connect` | RDS connect |
+| `rds-db:connect` | IAM authorization action for database login; not an API that returns credentials |
 | `redshift:getclustercredentials` | Redshift credentials |
 | `sso:getrolecredentials` | SSO role credentials |
 | `sts:assumerole` | Assume role |
@@ -148,7 +148,7 @@ aws apigateway get-api-keys --include-values
 # Via RCE - get environment variables
 https://apigateway/prod/system?cmd=env
 
-# Via SSRF - access runtime API
+# Runtime invocation API access is not itself AWS credential retrieval; reaching it requires an applicable SSRF and can affect invocation processing.
 https://apigateway/prod/example?url=http://localhost:9001/2018-06-01/runtime/invocation/
 
 # Via file read
@@ -223,7 +223,7 @@ aws kms get-key-policy --policy-name NAME --key-id ID
 
 ```bash
 # Decrypt file (key info embedded in ciphertext)
-aws kms decrypt --ciphertext-blob fileb://EncryptedFile --output text --query plaintext
+aws kms decrypt --ciphertext-blob fileb://EncryptedFile --output text --query Plaintext
 ```
 
 ---
@@ -253,7 +253,7 @@ aws ecr describe-images --repository-name NAME --image-ids imageTag=TAG
 aws ecs list-clusters
 
 # Describe cluster
-aws ecs describe-clusters --cluster NAME
+aws ecs describe-clusters --clusters NAME
 
 # List services
 aws ecs list-services --cluster NAME
@@ -358,7 +358,8 @@ TOKEN=$(aws rds generate-db-auth-token \
 
 # Connect with token
 mysql -h HOSTNAME -u USERNAME -P PORT \
-  --enable-cleartext-plugin --password=$TOKEN
+  --enable-cleartext-plugin --ssl-ca=/path/to/approved-rds-ca-bundle.pem \
+  --ssl-mode=VERIFY_IDENTITY -p
 ```
 
 ---
@@ -434,11 +435,11 @@ aws ec2 describe-instances --filters "Name=subnet-id,Values=SUBNET_ID"
 - [ ] Avoid use of root account
 - [ ] MFA enabled for all IAM users with console access
 - [ ] Disable credentials unused for 90+ days
-- [ ] Rotate access keys every 90 days
+- [ ] Prefer temporary role credentials; define rotation for unavoidable long-lived keys under the applicable policy
 - [ ] Password policy: uppercase, lowercase, symbol, number, 14+ chars
 - [ ] No root access keys exist
 - [ ] MFA enabled for root account
-- [ ] IAM policies attached to groups/roles only
+- [ ] Review all identity/resource policies and effective permissions; group/role attachment alone is not proof of least privilege
 
 ### Logging
 - [ ] CloudTrail enabled in all regions
@@ -467,3 +468,7 @@ aws ec2 describe-instances --filters "Name=subnet-id,Values=SUBNET_ID"
 - [ ] Alarm for security group changes
 - [ ] Alarm for NACL changes
 - [ ] Alarm for VPC changes
+
+## Interpretation limits
+
+The credential table mixes token issuers, secret retrieval, credential creation and authorization actions; verify each service contract rather than expecting every row to return reusable credentials. KMS `Plaintext` is Base64-encoded in CLI output; preserve it privately and decode only when required by the approved test. For the MySQL example, paste the short-lived token at the password prompt, verify the intended hostname and approved CA bundle, then unset TOKEN. VPC peering does not itself authorize network or application access. Checklist values are policy inputs, not a universal AWS certification. See the parent guide for authorization, canary-only data collection, logging preservation and cleanup requirements.

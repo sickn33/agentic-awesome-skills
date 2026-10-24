@@ -9,7 +9,7 @@
   **Solution:** monitor from outside, ideally from a different provider or region. A
   self-hosted check cannot observe its own failure.
 - **Problem:** monitoring the server, not the booking.
-  **Solution:** add a synthetic check that completes a real transaction end to end. That is
+  **Solution:** add a synthetic check that uses an approved synthetic transaction/test account, suppresses real charges/messages and cleans up safely. That is
   the signal that matches the business loss.
 - **Problem:** twenty alerts, none read.
   **Solution:** three signals, `Critical` only for waking someone, and a quarterly review
@@ -36,4 +36,4 @@
   **Solution:** that is expected. Apply the property mapping table once, after import.
 
 
-See the [Related Skills](references/related-skills.md) reference for the full guidance.
+See the [Related Skills](related-skills.md) reference for the full guidance.

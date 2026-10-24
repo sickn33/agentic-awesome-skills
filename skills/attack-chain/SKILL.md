@@ -111,7 +111,7 @@ For detailed phase methodology, toolchains, and playbooks, refer to:
 
 1. **所有操作必须获得书面授权**
 2. **数据渗出需进行匿名化处理**
-3. **清理所有攻击痕迹（包括内存驻留）**
+3. **移除授权测试工件并恢复配置；保留安全日志、时间戳与审计证据**
 
 ### 行动纪律
 
@@ -126,7 +126,7 @@ For detailed phase methodology, toolchains, and playbooks, refer to:
 
 | 失败原因 | 后果 | 教训 |
 |---------|------|------|
-| 未清除 Mimikatz 内存 dump | 蓝队溯源完整攻击路径 | 操作后立即清理 |
+| 敏感转储未受保护 | 凭据二次泄露 | 加密保管、最小交付并按约定销毁 |
 | C2 域名被威胁情报标记 | 首次连接即被拦截 | 使用新注册域名 + 域前置 |
 | 钓鱼邮件触发 DLP 告警 | 蓝队提前预警 | 测试邮件网关规则 |
 | 横向移动触发蜜罐 | 暴露攻击意图 | 先识别蜜罐再行动 |
@@ -172,12 +172,14 @@ For detailed phase methodology, toolchains, and playbooks, refer to:
 
 ## 任务完成自检（声称完成前 MUST 通过）
 
-- [ ] 我是否执行了工作流中的每一步（而不是只阅读）？
+- [ ] 是否完成约定范围内必要步骤，标明未执行/不适用项，而非为了清单扩大利用？
 - [ ] 我是否基于 `tool-index` 使用了真实工具路径？
 - [ ] 我是否产出了可复现证据（命令/脚本/截图/报告）？
 - [ ] 我是否完成并回写了 RULES 要求的 Checklist 项？
 
 ## Limitations
+
+- Upstream ops/tool-index/bootstrap/routing references are not bundled capabilities. Verify their actual availability; no route grants extra scope. The phases are conditional hypotheses, not a requirement to reach domain admin or persist. Preserve evidence and stop after the authorized proof threshold.
 
 - Execution of attack stages requires written authorization per target.
 - Assumes supporting tooling (recon/exploit kits) is installed and licensed where applicable.

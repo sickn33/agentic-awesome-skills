@@ -1,6 +1,6 @@
 ---
 name: react-native-architecture
-description: "Production-ready patterns for React Native development with Expo, including navigation, state management, native modules, and offline-first architecture."
+description: "Architecture and integration patterns for React Native development with Expo, including navigation, state management, native modules, and offline-first architecture."
 risk: safe
 source: community
 date_added: "2026-02-27"
@@ -8,7 +8,7 @@ date_added: "2026-02-27"
 
 # React Native Architecture
 
-Production-ready patterns for React Native development with Expo, including navigation, state management, native modules, and offline-first architecture.
+Architecture and integration patterns for React Native development with Expo, including navigation, state management, native modules, and offline-first architecture.
 
 ## Use this skill when
 
@@ -39,3 +39,9 @@ Production-ready patterns for React Native development with Expo, including navi
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Example
+
+For a catalog app, cache public product reads offline, keep session tokens in
+platform secure storage, and block offline purchases until an idempotent order
+outbox and server reconciliation are implemented.

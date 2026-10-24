@@ -6,8 +6,7 @@ Use this layer only when the universal `@expo/ui` components don't cover what yo
 
 ### File placement with Expo Router
 
-**Do not put `.ios.tsx` files inside `app/` or `src/app/`.** Expo Router does not support platform-extension suffixes for route files and will throw a "no fallback sibling" Render Error.
-
+Expo Router supports .ios.tsx route variants when a non-platform fallback route exists. Keeping native implementation components outside the route tree is often simpler; provide an appropriate base/web/other-platform fallback.
 Place platform-specific component files in `components/` (or any directory outside the route tree), then import them from a regular route file:
 
 ```

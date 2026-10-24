@@ -21,12 +21,12 @@
 
 | 维度 | C# 编辑器 (Edit Method C#) | IL 编辑器 (Edit IL) |
 |------|---------------------------|---------------------|
-| 编译失败风险 | 高（缺引用、语法、lambda 重写失败）| 几乎为零 |
+| 编译失败风险 | 高（缺引用、语法、lambda 重写失败）| 仍需验证栈平衡、异常处理与签名 |
 | 信息保真 | 编译器重新生成 IL，可能与原 IL 不同 | 原样替换，逐指令改 |
 | 适用 | 改个字符串、改个常量、简单逻辑 | 改判断、删校验、改控制流 |
 | async/await/状态机 | 经常编译失败或扭曲 | 直接改状态机字段，可靠 |
 
-dnSpyEx 的 C# 反编译器是基于只读反编译 + 尝试重编译，对编译器生成的代码（状态机、闭包、`yield`）重编译极易失败。IL 编辑器是逐指令编辑，所见即所得。
+dnSpyEx 的 C# 反编译器是基于只读反编译 + 尝试重编译，对编译器生成的代码（状态机、闭包、`yield`）重编译极易失败。IL 编辑器仍可生成无效或行为不同的 IL；逐指令核对栈、分支、异常处理和输出签名。
 
 ### 典型 IL patch 模式
 
@@ -75,7 +75,7 @@ C# 编辑器改 async 几乎必失败 → 必须用 IL。
 
 ```csharp
 // dnlib 脚本：扫描所有字符串解密器调用，运行时还原后写回
-// 用法：dotnet script decrypt.csproj target.exe 0x06000012
+// 仅为未完成的伪代码；需要实际项目与依赖，当前循环不解密任何字符串。
 using System;
 using System.Reflection;
 using dnlib.DotNet;
@@ -83,7 +83,7 @@ using dnlib.DotNet.Writer;
 using dnlib.DotNet.Emit;
 
 var module = ModuleDefMD.Load(args[0]);
-var decryptorToken = uint.Parse(args[1], System.Globalization.NumberStyles.HexNumber);
+var decryptorToken = uint.Parse(args[1].Replace("0x", "", StringComparison.OrdinalIgnoreCase), System.Globalization.NumberStyles.HexNumber);
 
 // 找到解密方法，用反射调用它（需把 assembly 加载进 AppDomain）
 // 遍历所有方法，把 call Decryptor(token) 替换成 ldstr "解密结果"

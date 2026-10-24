@@ -48,13 +48,13 @@ Define output structure in `.actor/output_schema.json`. Validate against the JSO
 ### For Single Files or Blobs
 
 - Use key-value store: `Actor.setValue()` / `Actor.set_value()`
-- Get the public URL and include it in the dataset:
+- Generate/share a retrieval URL only after verifying actual store/record access policy and authorization; constructing a URL does not grant public access:
 
 ```javascript
-// Store file with public access
+// Store file; public accessibility depends on actual access policy.
 await Actor.setValue('report.pdf', pdfBuffer, { contentType: 'application/pdf' });
 
-// Get the public URL
+// Construct a retrieval URL; test intended access without exposing credentials.
 const storeInfo = await Actor.openKeyValueStore();
 const publicUrl = `https://api.apify.com/v2/key-value-stores/${storeInfo.id}/records/report.pdf`;
 
@@ -67,9 +67,9 @@ await Actor.pushData({ reportUrl: publicUrl });
 ```javascript
 // Store multiple files with a prefix
 for (const [name, data] of files) {
-    await Actor.setValue(`screenshots/${name}`, data, { contentType: 'image/png' });
+    await Actor.setValue(`screenshots-${name}`, data, { contentType: 'image/png' });
 }
-// Files are accessible at: .../records/screenshots%2F{name}
+// Files are accessible at: .../records/screenshots-{name} (validate key characters/length; no slash)
 ```
 
 ## Actor Configuration (actor.json)
@@ -82,10 +82,10 @@ Configure `.actor/actor.json`. Validate against the JSON Schema from the `@apify
     "name": "my-actor",
     "title": "My Actor",
     "description": "Brief description of what the actor does",
-    "version": "1.0.0",
+    "version": "0.1",
     "meta": {
         "templateId": "ts_empty",
-        "generatedBy": "Claude Code with Claude Opus 4.5"
+        "generatedBy": "REPLACE_WITH_ACTUAL_TOOL_AND_MODEL"
     },
     "input": "./input_schema.json",
     "dockerfile": "../Dockerfile"
@@ -124,8 +124,13 @@ await crawler.run();
 // Or manually consume without Crawlee:
 let request;
 while ((request = await requestQueue.fetchNextRequest())) {
-    await processTask(request.userData);
-    await requestQueue.markRequestHandled(request);
+    try {
+        await processTask(request.userData); // implement idempotency for replay
+        await requestQueue.markRequestHandled(request);
+    } catch (error) {
+        await requestQueue.reclaimRequest(request);
+        throw error; // bounded retry policy belongs to the caller
+    }
 }
 ```
 

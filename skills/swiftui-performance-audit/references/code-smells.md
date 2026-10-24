@@ -19,6 +19,7 @@ var body: some View {
 Prefer cached formatters in a model or dedicated helper:
 
 ```swift
+@MainActor
 final class DistanceFormatter {
     static let shared = DistanceFormatter()
     let number = NumberFormatter()
@@ -49,8 +50,11 @@ List {
 Prefer sorting before render work begins:
 
 ```swift
+// Model-owned derived value refreshed on items/sortRule changes, outside body.
 let sortedItems = items.sorted(by: sortRule)
 ```
+
+Moving this line to another computed property without caching does not reduce sorting work.
 
 ### Inline filtering inside `ForEach`
 
@@ -70,7 +74,7 @@ ForEach(items, id: \.self) { item in
 }
 ```
 
-Avoid `id: \.self` for non-stable values or collections that reorder. Use a stable domain identifier.
+Avoid `id: \.self` when values are mutable or duplicated; reordering stable unique value IDs alone is not a defect. Use a stable domain identifier.
 
 ### Top-level conditional view swapping
 

@@ -123,7 +123,9 @@ replicaCount: 3
 service:
   type: ClusterIP
   port: 80
-  targetPort: 8080
+  targetPort: http
+
+containerPort: 8080
 
 # Ingress configuration
 ingress:
@@ -204,7 +206,7 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - name: http
-          containerPort: {{ .Values.service.targetPort }}
+          containerPort: {{ .Values.containerPort }}
         resources:
           {{- toYaml .Values.resources | nindent 12 }}
         env:
@@ -212,6 +214,8 @@ spec:
 ```
 
 ### 5. Create Template Helpers
+
+The snippets must be integrated consistently: define my-app.chart (shown in the chart-structure reference), use a numeric containerPort and a named http service targetPort, and render all declared security contexts/probes/service accounts/resources. Values alone do not create Kubernetes controls.
 
 **templates/_helpers.tpl:**
 ```yaml
@@ -284,7 +288,7 @@ postgresql:
   auth:
     database: myapp
     username: myapp
-    password: changeme
+    existingSecret: ""  # supply an approved Secret using the pinned subchart schema
   primary:
     persistence:
       enabled: true
@@ -320,7 +324,7 @@ echo "Linting chart..."
 helm lint .
 
 echo "Testing template rendering..."
-helm template test-release . --dry-run
+helm template test-release .
 
 echo "Checking for required values..."
 helm template test-release . --validate
@@ -408,6 +412,8 @@ helm install my-app ./my-app -f values-prod.yaml --namespace production
 ```
 
 ### 10. Implement Hooks and Tests
+
+Migration hooks need reviewed DB credentials/host, retries, idempotency and backup/compatibility strategy. A pre-install hook cannot depend on a DB created later by the same chart; Helm rollback does not undo database effects or manage all hook resources. Test only against disposable data.
 
 **Pre-install hook:**
 ```yaml
@@ -500,7 +506,7 @@ image: {{ .Values.global.imageRegistry }}/{{ .Values.image.repository }}
 
 ## Best Practices
 
-1. **Use semantic versioning** for chart and app versions
+1. **Use semantic versioning** for chart versions; appVersion is an informational string
 2. **Document all values** in values.yaml with comments
 3. **Use template helpers** for repeated logic
 4. **Validate charts** before packaging

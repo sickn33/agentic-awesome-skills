@@ -22,9 +22,9 @@ Practical implementation guide for GDPR-compliant data processing, consent manag
 | Category | Examples | Protection Level |
 |----------|----------|------------------|
 | **Basic** | Name, email, phone | Standard |
-| **Sensitive (Art. 9)** | Health, religion, ethnicity | Explicit consent |
+| **Special categories (Art. 9)** | Health, religion, ethnicity | An applicable Article 9 exception plus Article 6 basis; explicit consent is not the only exception |
 | **Criminal (Art. 10)** | Convictions, offenses | Official authority |
-| **Children's** | Under 16 data | Parental consent |
+| **Children's** | Context/jurisdiction-dependent | Article 8 concerns consent-based online services offered directly to children; member-state thresholds vary from 13 to 16 |
 
 ### 2. Legal Bases for Processing
 
@@ -190,8 +190,7 @@ import json
 class DSARHandler:
     """Handle Data Subject Access Requests."""
 
-    RESPONSE_DEADLINE_DAYS = 30
-    EXTENSION_ALLOWED_DAYS = 60  # For complex requests
+    # Compute calendar-month deadlines under applicable rules; do not substitute 30/60 days.
 
     def __init__(self, data_sources: List['DataSource']):
         self.data_sources = data_sources
@@ -210,7 +209,7 @@ class DSARHandler:
             'user_id': user_id,
             'status': 'pending_verification' if not verified else 'processing',
             'submitted_at': datetime.utcnow(),
-            'deadline': datetime.utcnow() + timedelta(days=self.RESPONSE_DEADLINE_DAYS),
+            'deadline': self.compute_calendar_month_deadline(datetime.utcnow()),
             'details': details or {},
             'audit_log': [{
                 'action': 'submitted',
@@ -227,6 +226,8 @@ class DSARHandler:
     async def process_access_request(self, request_id: str) -> Dict:
         """Process a data access request."""
         request = await self.get_request(request_id)
+        # Application hook: verify server-side identity, actor authority and request ownership.
+        await self.require_verified_authorized_request(request)
 
         if request['type'] != 'access':
             raise ValueError("Not an access request")
@@ -252,13 +253,17 @@ class DSARHandler:
         }
 
         # Update request status
-        await self.update_request(request_id, 'completed', response)
+        await self.update_request(request_id,
+            'partial' if any(isinstance(v, dict) and 'error' in v for v in user_data.values()) else 'completed',
+            response)
 
         return response
 
     async def process_erasure_request(self, request_id: str) -> Dict:
         """Process a right to erasure request."""
         request = await self.get_request(request_id)
+        # Application hook: verify server-side identity, actor authority and request ownership.
+        await self.require_verified_authorized_request(request)
 
         if request['type'] != 'erasure':
             raise ValueError("Not an erasure request")
@@ -290,20 +295,28 @@ class DSARHandler:
             'exceptions': exceptions
         }
 
-        await self.update_request(request_id, 'completed', response)
+        await self.update_request(request_id,
+            'partial' if any(str(v).startswith('error:') for v in results.values()) else 'completed',
+            response)
 
         return response
 
     async def process_portability_request(self, request_id: str) -> bytes:
         """Generate portable data export."""
         request = await self.get_request(request_id)
-        user_data = await self.process_access_request(request_id)
+        # Application hook: verify server-side identity, actor authority and request ownership.
+        await self.require_verified_authorized_request(request)
+        if request['type'] != 'portability':
+            raise ValueError("Not a portability request")
+        # Required application hook: collect only data within Article 20 scope,
+        # with rights-of-others filtering and failures surfaced, not hidden.
+        user_data = await self.collect_portable_data(request)
 
         # Convert to machine-readable format (JSON)
         portable_data = {
             'export_date': datetime.utcnow().isoformat(),
             'format_version': '1.0',
-            'data': user_data['data']
+            'data': user_data
         }
 
         return json.dumps(portable_data, indent=2, default=str).encode()
@@ -336,7 +349,7 @@ class DataRetentionPolicy:
             'basis': RetentionBasis.LEGAL_OBLIGATION,
             'trigger': 'transaction_date',
             'archive_before_delete': True,
-            'legal_reference': 'Tax regulations require 7 year retention'
+            'legal_reference': 'ILLUSTRATIVE ONLY: supply the actual jurisdiction-specific authority'
         },
         'marketing_consent': {
             'retention_period_days': 365 * 2,  # 2 years
@@ -377,7 +390,7 @@ class DataRetentionPolicy:
 
     async def anonymize_old_data(self, data_type: str, before_date: datetime):
         """Anonymize data instead of deleting."""
-        # Example: Replace identifying fields with hashes
+        # Identifier removal is not proof of anonymisation; remaining attributes may identify people.
         if data_type == 'analytics_data':
             await self.db.analytics.update_many(
                 {'collection_date': {'$lt': before_date}},
@@ -385,7 +398,7 @@ class DataRetentionPolicy:
                     'user_id': None,
                     'ip_address': None,
                     'device_id': None,
-                    'anonymized': True,
+                    'identifiers_removed_pending_reidentification_assessment': True,
                     'anonymized_date': datetime.utcnow()
                 }}
             )
@@ -479,12 +492,16 @@ class BreachNotificationHandler:
         description: str,
         data_types: List[str],
         affected_count: int,
-        severity: BreachSeverity
+        severity: BreachSeverity,
+        aware_at: datetime,
+        risk_to_rights: bool,
+        high_risk_to_rights: bool
     ) -> dict:
         """Report and handle a data breach."""
         breach = {
             'id': self.generate_breach_id(),
             'reported_at': datetime.utcnow(),
+            'aware_at': aware_at,
             'description': description,
             'data_types_affected': data_types,
             'affected_individuals_count': affected_count,
@@ -504,31 +521,17 @@ class BreachNotificationHandler:
         await self.notify_security_team(breach)
 
         # Authority notification required within 72 hours
-        if self.requires_authority_notification(severity, data_types):
+        if risk_to_rights:
             breach['authority_notification_deadline'] = (
-                datetime.utcnow() + timedelta(hours=self.AUTHORITY_NOTIFICATION_HOURS)
+                aware_at + timedelta(hours=self.AUTHORITY_NOTIFICATION_HOURS)
             )
             await self.schedule_authority_notification(breach)
 
         # Affected individuals notification
-        if severity.value in [BreachSeverity.HIGH.value, BreachSeverity.CRITICAL.value]:
+        if high_risk_to_rights:
             await self.schedule_individual_notifications(breach)
 
         return breach
-
-    def requires_authority_notification(
-        self,
-        severity: BreachSeverity,
-        data_types: List[str]
-    ) -> bool:
-        """Determine if supervisory authority must be notified."""
-        # Always notify for sensitive data
-        sensitive_types = ['health', 'financial', 'credentials', 'biometric']
-        if any(t in sensitive_types for t in data_types):
-            return True
-
-        # Notify for medium+ severity
-        return severity in [BreachSeverity.MEDIUM, BreachSeverity.HIGH, BreachSeverity.CRITICAL]
 
     async def generate_authority_report(self, breach_id: str) -> dict:
         """Generate report for supervisory authority."""
@@ -573,7 +576,7 @@ class BreachNotificationHandler:
 - [ ] Erasure request process implemented
 - [ ] Portability export available
 - [ ] Rectification process available
-- [ ] Response within 30-day deadline
+- [ ] Response within one calendar month; any permitted extension communicated within that month
 
 ### Security
 - [ ] Encryption at rest implemented
@@ -605,7 +608,7 @@ class BreachNotificationHandler:
 - **Don't pre-check consent boxes** - Must be opt-in
 - **Don't bundle consent** - Separate purposes separately
 - **Don't retain indefinitely** - Define and enforce retention
-- **Don't ignore DSARs** - 30-day response required
+- **Don't ignore DSARs** - calendar-month response deadline and applicable extension rules required
 - **Don't transfer without safeguards** - SCCs or adequacy decisions
 
 ## Resources

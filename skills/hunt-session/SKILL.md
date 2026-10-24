@@ -31,25 +31,25 @@ report_count: 18
 
 ## Autonomous Testing Priority
 
-**Missing HttpOnly on cookies is auto-detected — focus your active testing on lifecycle invalidation (higher impact).**
+**Missing HttpOnly on cookies may be detected by separately configured tooling — focus your active testing on lifecycle invalidation (higher impact).**
 
 **Pattern 1 — Session survives logout (most common high-value finding):**
 1. Login and note the session token/cookie value
 2. Call the logout endpoint (`/logout`, `POST /api/logout`, etc.)
 3. Try to use the OLD session token to access a protected resource (`/api/me`, `/dashboard`, `/account`)
-4. If 200 with user data → session not invalidated on logout = ATO persistence
+4. If protected data remains accessible with the old token after confirmed logout, investigate the revocation boundary and expected policy
 
 **Pattern 2 — Session not regenerated on login (session fixation):**
 1. GET any page to receive a pre-authentication session token/cookie
 2. POST valid credentials to the login endpoint
 3. Compare the session token BEFORE and AFTER login
-4. If the token is unchanged → session fixation vulnerability
+4. If unchanged, verify an attacker can pre-establish/control the same authenticated session before claiming fixation
 
 **Pattern 3 — Session survives password change:**
 1. Login → record session A value
 2. Change the password via the account settings endpoint
 3. Replay session A on a protected endpoint
-4. If 200 → token not rotated on credential change = persistent ATO (critical chain when combined with XSS/cookie theft)
+4. If protected data remains accessible, compare the documented session-revocation policy and attack preconditions before assigning impact
 
 **Content-type:** Login and session endpoints vary — use `application/json` for REST APIs, `application/x-www-form-urlencoded` for traditional web forms. Try both if the first returns an unexpected response.
 
@@ -66,10 +66,10 @@ Session fixation leading to admin hijack = Critical. Session surviving a passwor
 **Highest-value chains:**
 - **Session fixation** — server accepts a session ID set by the client and does NOT regenerate it on login → attacker pre-plants an ID, victim authenticates, attacker rides the now-authenticated session → persistent ATO.
 - **No invalidation on logout** — old token still works after `/logout` → theft window never closes.
-- **No invalidation on password / email change** — a stolen session survives the victim's "I think I was hacked, let me reset" → persistent ATO. This is the single highest-paid session bug class.
-- **Refresh-token reuse without rotation-detection** — a leaked refresh token mints fresh access tokens forever; no reuse-detection means the legitimate user's later refresh does NOT revoke the attacker's branch.
+- **No invalidation on password / email change** — a stolen session survives the victim's "I think I was hacked, let me reset" → persistent ATO. Impact and bounty eligibility depend on the program and demonstrated threat model.
+- **Refresh-token reuse without rotation-detection** — a leaked refresh token may mint access tokens within its enforced lifetime; no reuse-detection means the legitimate user's later refresh does NOT revoke the attacker's branch.
 - **Predictable / low-entropy session ID** — sequential, timestamp- or userId-derived IDs → brute-force or compute other users' sessions.
-- **JWT-as-session with no `exp` / no revocation list** — stolen JWT = permanent access; logout is cosmetic.
+- **JWT-as-session with no `exp` / no revocation list** — inspect server-enforced lifetime and revocation; claims alone do not establish permanent access.
 
 ---
 
@@ -78,11 +78,11 @@ Session fixation leading to admin hijack = Critical. Session surviving a passwor
 No invented CVE/report IDs below. These are the *named, publicly-documented* patterns this skill encodes:
 
 - **Session fixation, login-CSRF, no-regeneration-on-auth** — OWASP WSTG-SESS-03 / WSTG-SESS-01; the classic ACROS / Mitja Kolšek session-fixation paper. Highest-impact variant: fixing the session of an SSO/admin user.
-- **SameSite=Lax sibling-subdomain CSRF reaching session state** — Argo CD **CVE-2024-22424** (Lax cookies sent on top-level cross-site navigations from a sibling subdomain). Use this when a session cookie relies on `SameSite=Lax` as its only CSRF defence.
-- **Refresh-token rotation & automatic reuse-detection** — the Auth0/IETF OAuth-Security-BCP model: a rotated refresh token, if replayed, must invalidate the *entire token family*. Absence = the core bug to prove.
+- **Same-parent-domain CSRF reaching session state** — Argo CD **CVE-2024-22424** (attacker-controlled HTML on the same parent domain; inspect the advisory’s content-type/CSRF preconditions). Use this when a session cookie relies on `SameSite=Lax` as its only CSRF defence.
+- **Refresh-token rotation & automatic reuse-detection** — the Auth0/IETF OAuth-Security-BCP model: public-client refresh tokens require rotation with replay detection or sender-constraining; test the implemented protection and replay policy.
 - **Device Bound Session Credentials (DBSC)** — the W3C/Chrome DBSC draft binds a session to a TPM/device key. Test the *downgrade*: does the server still accept a non-bound cookie when the DBSC challenge is stripped?
-- **Cookie attribute hardening** — OWASP WSTG-SESS-02; `__Host-`/`__Secure-` prefixes per RFC 6265bis. Missing `HttpOnly` is only a finding when a real XSS/DOM sink exists (chain with `hunt-xss`/`hunt-dom`).
-- **Entropy** — NIST SP 800-63B requires ≥64 bits of entropy in a session identifier. Treat anything decodable to a counter/timestamp/userId as a finding regardless of length.
+- **Cookie attribute hardening** — OWASP WSTG-SESS-02; `__Host-`/`__Secure-` prefixes per RFC 6265bis. Missing `HttpOnly` can be a hardening finding; high-impact theft claims require an actual applicable attack path (chain with `hunt-xss`/`hunt-dom`).
+- **Entropy** — NIST SP 800-63B-4 requires session-binding secrets from an approved random bit generator and at least 64 bits in length. Decodable claims alone are not a finding: signed/encrypted tokens can contain predictable claims while preserving integrity and sufficient unpredictable secrets.
 
 Cross-refs: ATO chaining → `hunt-ato`; JWT alg/kid tampering → `hunt-api-misconfig`; OAuth code/state flaws → `hunt-oauth`; CSRF mechanics → `hunt-csrf`; cookie-theft sinks → `hunt-xss` / `hunt-dom`.
 
@@ -173,7 +173,7 @@ echo "AFTER: $AFTER"
 ```
 **FP discipline (mandatory):**
 - Don't trust the status code. A cached/edge 200 or a generic SPA shell returns 200 for everyone. **Body-diff** `AFTER` against `BEFORE` — the finding is only real if `AFTER` still contains A's *unique identity marker* (email, user-id, CSRF token, account name).
-- Confirm with a **negative control**: a random/garbage cookie value must NOT return the same authenticated body. If garbage also yields 200 with user data, the endpoint isn't session-gated and there's no finding here.
+- Confirm with a **negative control**: a random/garbage cookie value must NOT return the same authenticated body. If garbage also yields user data, stop and investigate a possible separate unauthenticated disclosure/cache flaw; it does not prove session replay.
 - Re-test after a **short delay** and from a **different IP** — some servers lazily expire on next access or pin sessions to IP.
 
 ### Phase 3 — Invalidation on Password / Email Change (persistent-ATO core)
@@ -214,10 +214,10 @@ echo "AFTER pw-change: $AFTER"
 ```bash
 curl -sI -L "https://$TARGET/" | grep -i '^set-cookie'
 ```
-- **HttpOnly** missing → cookie reachable via `document.cookie`. Only a finding **chained to a real XSS/DOM sink** (`hunt-xss`/`hunt-dom`) — note it, don't report standalone as High.
+- **HttpOnly** missing → cookie reachable via `document.cookie`. A hardening observation whose severity requires context; a demonstrated XSS/DOM sink can establish a theft chain (`hunt-xss`/`hunt-dom`) — note it, don't report standalone as High.
 - **Secure** missing → cookie sent over cleartext HTTP; pair with `hunt-tls-network` (downgrade/HSTS-gap) for a network-attacker chain.
-- **SameSite** missing/`None` → CSRF reachability; `SameSite=Lax` is bypassable via sibling-subdomain top-level navigation (Argo CD **CVE-2024-22424** class) → hand to `hunt-csrf`.
-- **`__Host-` / `__Secure-` prefix absent** → the session can be overwritten/fixated from a subdomain or non-secure context; its presence largely kills cookie-fixation, so flag the *absence* as the precondition for Phase 1.
+- **SameSite** missing/`None` → CSRF reachability; sibling subdomains may be same-site, so Lax alone is not sufficient (Argo CD **CVE-2024-22424** class) → hand to `hunt-csrf`.
+- **`__Host-` / `__Secure-` prefix absent** → record cookie scope and transport hardening; absence alone does not prove overwrite or fixation, and presence does not replace lifecycle validation.
 
 ### Phase 5 — Session-ID Entropy
 ```bash
@@ -230,14 +230,14 @@ for i in $(seq 1 $N); do
   get_cookie "$J" | cut -d= -f2- >> "$SAMP"
   rm -f "$J"
 done
-sort "$SAMP" | uniq -d | head            # duplicates = catastrophic (re-use)
+sort "$SAMP" | uniq -d | head            # duplicates need investigation: stable sessions/rate limits/error responses can repeat without cross-user reuse
 awk '{print length($0)}' "$SAMP" | sort -n | uniq -c   # length distribution
 ```
 Then analyse, don't eyeball:
 - **Sequential / monotonic** — `sort -n` the decoded values; a steady +1/+N delta = predictable.
 - **Decodable structure** — `base64 -d` / hex-decode each ID and look for embedded `userId`, unix timestamps, or PIDs.
-- **Bit entropy** — feed the raw bytes to `ent` or `dieharder`; NIST SP 800-63B wants ≥64 bits. 10 samples is far too few to claim anything — gather hundreds.
-- **FP guard:** a long random-*looking* token is not proof of strength; only structural decode + a large-sample entropy estimate is. Conversely a short token with high per-char entropy may still be fine — measure, don't count characters.
+- **Bit entropy** — feed the raw bytes to `ent` or `dieharder`; Small samples cannot establish cryptographic entropy; review generation design and the applicable standard. 10 samples is far too few to claim anything — gather hundreds.
+- **FP guard:** a long random-*looking* token is not proof of strength; statistical samples cannot prove cryptographic unpredictability; inspect the generation design where possible. Conversely a short token with high per-char entropy may still be fine — measure, don't count characters.
 
 ### Phase 6 — JWT-as-Session
 ```bash
@@ -247,7 +247,7 @@ b64url(){ local s="${1//-/+}"; s="${s//_//}"; printf '%s' "$s===" | base64 -d 2>
 b64url "$(cut -d. -f1 <<<"$JWT")" | jq .   # header: alg, kid
 b64url "$(cut -d. -f2 <<<"$JWT")" | jq .   # claims: exp, iat, sub, jti
 ```
-- **`exp` missing or years out** → no expiry. **`jti` missing** → server cannot maintain a revocation list → logout can't truly revoke.
+- **`exp` missing or years out** → inspect enforced server-side lifetime; claims alone do not prove permanent access. **`jti` missing** does not prove absent revocation: servers can revoke by token hash, session, user version or other state.
 - **Revocation test:** logout, then replay the *same* JWT against `/api/me`. If it still returns the user → tokens are not server-revocable; this is the JWT-session persistence finding. Body-diff to avoid a cached 200.
 - **Tampering (alg/kid/key-confusion) is owned by `hunt-api-misconfig`** — hand off `jwt_tool $JWT -T` / `-X a` there rather than duplicating it.
 
@@ -258,7 +258,7 @@ RT1=$(curl -s -L -X POST "https://$TARGET/api/login" \
   -H 'Content-Type: application/json' \
   -d '{"email":"victim@example.com","password":"OldPass!1"}' | jq -r '.refresh_token')
 
-# 2) Use RT1 to mint a new access token — server SHOULD return a rotated RT2.
+# 2) Use RT1 to mint a new access token — check the configured protection: rotation or sender-constraining; this example tests rotation only.
 R2=$(curl -s -L -X POST "https://$TARGET/auth/refresh" \
   -H 'Content-Type: application/json' -d "{\"refresh_token\":\"$RT1\"}")
 RT2=$(jq -r '.refresh_token' <<<"$R2"); echo "rotated? RT1!=RT2 -> $([ "$RT1" != "$RT2" ] && echo yes || echo NO-ROTATION)"
@@ -273,7 +273,7 @@ echo "RT1 replay: $REPLAY"
 curl -s -L -X POST "https://$TARGET/auth/refresh" \
   -H 'Content-Type: application/json' -d "{\"refresh_token\":\"$RT2\"}" -w '\n[%{http_code}]'
 ```
-**Findings:** no rotation (RT1==RT2) = a long-lived stealable credential; rotation **without** reuse-detection (RT1 replay still mints tokens, or RT2 survives the replay) = the leaked-token-persistence bug per the OAuth Security BCP. **OOB note:** if you suspect a leaked RT via SSRF/log/JS-bundle, confirm the token's reach with `hunt-ssrf`/`hunt-source-leak`, not by guessing.
+**Interpretation:** no rotation requires checking sender-constraining and client type; rotation **without** reuse-detection (RT1 replay still mints tokens, or RT2 survives the replay) = the leaked-token-persistence bug per the OAuth Security BCP. **OOB note:** if you suspect a leaked RT via SSRF/log/JS-bundle, confirm the token's reach with `hunt-ssrf`/`hunt-source-leak`, not by guessing.
 
 ### Phase 8 — OAuth/SSO Session Linkage & DBSC Downgrade
 ```bash
@@ -284,7 +284,7 @@ curl -s -L -X POST "https://$TARGET/auth/refresh" \
 #  strip the device-bound proof header and replay the plain cookie:
 curl -s -L -H "Cookie: $A" "https://$TARGET/api/me" -w '\n[%{http_code}]'
 #  If the plain (non-bound) cookie is still accepted → device-binding is advisory,
-#  not enforced → a stolen cookie defeats DBSC entirely.
+#  inspect the refresh challenge and cookie lifetime; acceptance alone does not demonstrate a DBSC downgrade.
 ```
 Hand OAuth `state`/`redirect_uri`/code-injection to `hunt-oauth`; this phase only covers the *session-layer* binding.
 
@@ -296,9 +296,9 @@ Hand OAuth `state`/`redirect_uri`/code-injection to `hunt-oauth`; this phase onl
 |----------------|----------|--------|
 | Session fixation (forced `__Host-`-less cookie) | Trick admin/SSO user into authenticating on planted ID | Admin session takeover (Critical) |
 | No logout/password-change invalidation | `hunt-xss`/`hunt-dom` cookie theft → replay surviving session | Persistent ATO past victim's reset |
-| Refresh token, no reuse-detection | Leaked RT (SSRF/log/bundle) → infinite access-token minting | Persistent ATO, survives password change |
+| Refresh token, no reuse-detection | Leaked RT (SSRF/log/bundle) → access-token minting within the demonstrated lifetime | Persistent ATO, survives password change |
 | `SameSite=Lax` only | Sibling-subdomain top-level nav (CVE-2024-22424 class) → CSRF | State change / login-CSRF → fixation |
-| JWT no `exp`/`jti` | Stolen token, no server revocation | Permanent access |
+| JWT lifetime/revocation failure | Demonstrated replay after expected expiry/revocation | Demonstrated post-logout access within observed lifetime |
 | DBSC downgrade accepted | Steal plain cookie despite device-binding | Defeats the only theft mitigation |
 | Predictable ID | Compute/brute another user's session | Cross-user ATO |
 
@@ -309,7 +309,7 @@ Hand OAuth `state`/`redirect_uri`/code-injection to `hunt-oauth`; this phase onl
 Before claiming ANY session finding:
 - **Two real sessions, not placeholders** — every fixation/invalidation claim uses A and B captured by the `curl` flows above.
 - **Body-diff, never status-only** — a 200 means nothing without the account's unique identity marker present in the body, diffed against the authenticated baseline.
-- **Negative control** — a garbage/random cookie must FAIL where your "surviving" cookie succeeds; otherwise the endpoint isn't session-gated and it's a non-finding.
+- **Negative control** — a garbage/random cookie must FAIL where your "surviving" cookie succeeds; otherwise investigate a separate access-control/cache issue rather than asserting session replay.
 - **Cache/edge check** — re-request with a cache-buster and from a second IP; rule out an edge-cached or IP-pinned 200.
 - **OOB for theft chains** — when the impact depends on exfiltrating a cookie/token (XSS, SSRF, log leak), confirm receipt out-of-band (Collaborator) rather than asserting it.
 - **Static-vs-state** — `HttpOnly`/`Secure`/`SameSite` absence is a *policy* observation; only report as High once paired with a real exploit primitive (XSS, network-MITM, CSRF). Standalone attribute gaps are Low/Informational.
@@ -340,3 +340,7 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+## Interpretation and evidence limits
+
+These commands are endpoint-specific sketches, not an automatic detector. Use only controlled test accounts and pre-approved routes/rates; do not recruit or trick real users. Keep cookies, credentials and response bodies in private temporary artifacts rather than console/chat output; redact evidence and clean it up under the engagement retention rules. Do not follow redirects outside the authorized origin or send credential bodies across an unexpected redirect. The cookie extractor ignores domain/path and can select the wrong cookie; validate the exact cookie scope and include any companion cookies. A stable pre/post cookie, absent cookie prefix, surviving password-change session or absent `jti` is not independently proof of takeover; establish attacker controllability, expected revocation semantics and real protected data access. Sender-constrained refresh tokens can satisfy RFC 9700 without rotation; apply the appropriate client threat model. IdP and RP sessions can be independent unless single logout is promised. DBSC deliberately allows short-lived cookies: plain-cookie acceptance before expiry does not by itself defeat refresh-time device binding. SameSite is site-based, so sibling subdomains may be same-site; do not infer a general Lax bypass from a named CVE without reproducing its actual preconditions. Statistical tests on hundreds of tokens cannot certify entropy or the RNG. Severity is evidence/program dependent, not fixed by these tables.

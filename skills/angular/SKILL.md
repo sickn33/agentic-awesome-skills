@@ -42,3 +42,9 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Example boundaries
+
+Examples are fragments and omit project imports/types/components such as ItemComponent, HeaderDirective, User and Product; supply their actual definitions. `effect` and `toSignal` need an injection context or explicit injector. Route guards improve navigation UX but every server endpoint must enforce authorization; validate returnUrl as an allowed internal route. Do not log real form or account data.
+
+Use template imports and semantic labels/alt text in complete components. Replace the image placeholder with an actual supported data URL or configured loader. Product loading needs cancellation/stale-response handling, error state and lifecycle policy for repeated calls. Read-only signals do not deeply freeze objects. Constructor injection and @Input remain supported patterns; migrate for a concrete benefit. Configure SSR state/cache providers per request to avoid cross-user leakage. The guide has not been compiled or browser-tested.

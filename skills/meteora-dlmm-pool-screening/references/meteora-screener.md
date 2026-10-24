@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 import urllib.error
 import urllib.parse
@@ -74,7 +75,11 @@ def get_json(url: str) -> Any:
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json"})
     try:
         with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:
-            return json.loads(resp.read().decode())
+            data = resp.read(5_000_001)
+            if len(data) > 5_000_000: raise ValueError("API response exceeds size limit")
+            result = json.loads(data.decode())
+            if not isinstance(result, dict): raise ValueError("Expected API object")
+            return result
     except urllib.error.HTTPError as exc:
         body = exc.read().decode(errors="replace")[:200]
         raise SystemExit(f"HTTP {exc.code} {url}\n{body}") from exc
@@ -87,7 +92,7 @@ def num(value: Any) -> float | None:
         n = float(value)
     except (TypeError, ValueError):
         return None
-    return n if n == n else None  # NaN check
+    return n if math.isfinite(n) and n >= 0 else None
 
 
 def bucket(obj: Any, timeframe: str) -> float | None:
@@ -140,6 +145,8 @@ def reject_reason(row: dict[str, Any], p: dict[str, Any]) -> str | None:
         return "dead pool (zero volume and fee/TVL)"
     if row.get("critical"):
         return "critical token warning"
+    if p["hard_warnings"] and row.get("source") == "dlmm":
+        return "token warning/organic/ownership gates unavailable on query source; verify separately"
     bin_step = row.get("bin_step")
     tvl = row.get("tvl")
     organic = row.get("organic")
@@ -156,6 +163,10 @@ def reject_reason(row: dict[str, Any], p: dict[str, Any]) -> str | None:
         return f"fee/TVL {fee} < {p['min_fee_tvl']}"
     if vol is None or vol < p["min_volume"]:
         return f"volume {vol} < {p['min_volume']}"
+    if p["min_organic"] and organic is None:
+        return "organic score missing"
+    if p["min_holders"] and holders is None:
+        return "holder count missing"
     if organic is not None and organic < p["min_organic"]:
         return f"organic {organic} < {p['min_organic']}"
     if holders is not None and holders < p["min_holders"]:
@@ -184,7 +195,7 @@ def from_discovery(raw: dict[str, Any], timeframe: str) -> dict[str, Any]:
     bin_step = num((raw.get("dlmm_params") or {}).get("bin_step"))
     return {
         "name": display_text(raw.get("name")),
-        "pool": raw.get("pool_address"),
+        "pool": display_text(raw.get("pool_address")),
         "bin_step": bin_step,
         "fee_tvl": num(raw.get("fee_active_tvl_ratio")),
         "tvl": num(raw.get("tvl")),
@@ -207,11 +218,11 @@ def from_dlmm(raw: dict[str, Any], timeframe: str) -> dict[str, Any]:
     cfg = raw.get("pool_config") or {}
     return {
         "name": display_text(raw.get("name")),
-        "pool": raw.get("address"),
+        "pool": display_text(raw.get("address")),
         "bin_step": num(cfg.get("bin_step")),
         "fee_tvl": bucket(raw.get("fee_tvl_ratio"), timeframe),
         "tvl": num(raw.get("tvl")),
-        "active_tvl": num(raw.get("tvl")),
+        "active_tvl": None, # total TVL is not active-bin TVL
         "volume": bucket(raw.get("volume"), timeframe),
         "organic": None,
         "holders": num(token_x.get("holders")),
@@ -281,7 +292,7 @@ def print_table(rows: list[dict[str, Any]], rejects: list[tuple[str, str]], meta
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Screen Meteora DLMM pools (read-only).")
-    parser.add_argument("--preset", choices=sorted(PRESETS), default="volatile")
+    parser.add_argument("--preset", choices=sorted(PRESETS), default=None)
     parser.add_argument("--query", help="Token symbol or mint (pair search via DLMM datapi)")
     parser.add_argument("--timeframe", default="30m", choices=["5m", "30m", "1h", "2h", "4h", "12h", "24h"])
     parser.add_argument("--limit", type=int, default=10)
@@ -289,8 +300,9 @@ def main() -> None:
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
     # Pair search is "which pool for this token", not a trending meme screen.
-    if args.query and "--preset" not in sys.argv:
-        args.preset = "loose"
+    args.preset = args.preset or ("loose" if args.query else "volatile")
+    if not 1 <= args.limit <= 100 or not 1 <= args.page_size <= 100:
+        parser.error("limit and page-size must be between 1 and 100")
     preset = PRESETS[args.preset]
 
     protocol = get_json(f"{DLMM}/stats/protocol_metrics")
@@ -301,8 +313,8 @@ def main() -> None:
         raw_list = payload.get("data") or []
         rows = [from_dlmm(p, args.timeframe) for p in raw_list if isinstance(p, dict)]
         source = "dlmm"
-        universe = f"query={args.query}"
-        fetched = payload.get("total", len(rows))
+        universe = f"query={display_text(args.query)}"
+        fetched = len(rows)
     else:
         qs = urllib.parse.urlencode(
             {
@@ -317,7 +329,7 @@ def main() -> None:
         rows = [from_discovery(p, args.timeframe) for p in raw_list if isinstance(p, dict)]
         source = "discovery"
         universe = "trending"
-        fetched = payload.get("total", len(rows))
+        fetched = len(rows)
 
     rejects: list[tuple[str, str]] = []
     kept: list[dict[str, Any]] = []
@@ -335,7 +347,7 @@ def main() -> None:
         row["verdict"] = verdict(row, preset)
         kept.append(row)
 
-    kept.sort(key=lambda r: r.get("score") or 0, reverse=True)
+    kept.sort(key=lambda r: (r.get("fee_tvl") or 0, r.get("organic") or 0, r.get("volume") or 0, r.get("holders") or 0), reverse=True)
     kept = kept[: max(1, args.limit)]
 
     meta = {
@@ -344,6 +356,9 @@ def main() -> None:
         "preset": args.preset,
         "source": source,
         "fetched": fetched,
+        "reported_total": payload.get("total"),
+        "has_more": payload.get("has_more", "unknown"),
+        "coverage": "single returned page, not the full universe",
         "protocol": protocol if isinstance(protocol, dict) else {},
     }
     if args.json:

@@ -226,9 +226,9 @@ TypeORM repository testing:
 **Real Example**: SO 74763077
 JWT authentication debugging:
 1. Verify Authorization header format: "Bearer [token]"
-2. Check token expiration (use longer exp for testing)
+2. Check token expiration with a test token; do not lengthen production lifetimes to hide failures
 3. Test without nginx/proxy to isolate issue
-4. Use jwt.io to decode and verify token structure
+4. Decode locally without transmitting live tokens; validate signature, issuer, audience, algorithm and lifetime with the configured verifier
 
 ### 12. Memory Leaks in Production
 **Frequency**: LOW | **Complexity**: HIGH
@@ -243,7 +243,7 @@ Memory leak detection and fixes:
 **Frequency**: N/A | **Complexity**: N/A
 **Real Example**: GitHub #223 (Feature Request)
 Debugging dependency injection:
-1. NestJS errors are intentionally generic for security
+1. Inspect the actual error context without assuming every generic message is security design
 2. Use verbose logging during development
 3. Add custom error messages in your providers
 4. Consider using dependency injection debugging tools
@@ -264,7 +264,7 @@ SQLite-specific issues:
 1. Check database file path is absolute
 2. Ensure directory exists before connection
 3. Verify file permissions
-4. Use synchronize: true for development
+4. Use migrations; synchronize only for disposable local databases where data loss is acceptable
 
 ### 16. Misleading "Unable to connect" Errors
 **Frequency**: MEDIUM | **Complexity**: HIGH
@@ -280,7 +280,7 @@ True causes of connection errors:
 **Real Example**: typeorm#520
 Preventing app crash on DB failure:
 1. Wrap connection in try-catch in useFactory
-2. Allow app to start without database
+2. If a degraded mode is explicitly designed, keep dependent routes unavailable and readiness false; otherwise fail startup
 3. Implement health checks for DB status
 4. Use retryAttempts and retryDelay options
 
@@ -332,7 +332,8 @@ beforeEach(async () => {
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
   catch(exception: HttpException, host: ArgumentsHost) {
-    // Custom error handling
+    const response = host.switchToHttp().getResponse();
+    response.status(exception.getStatus()).json({ statusCode: exception.getStatus(), message: "Request failed" }); // Express adapter example; redact details
   }
 }
 ```
@@ -347,7 +348,7 @@ When reviewing Nest.js applications, focus on:
 - [ ] Providers are listed in module's providers array and exports when needed
 - [ ] No circular dependencies between modules (check for forwardRef usage)
 - [ ] Module boundaries follow domain/feature separation
-- [ ] Custom providers use proper injection tokens (avoid string tokens)
+- [ ] Custom providers use proper injection tokens (use centrally defined unique string or Symbol tokens consistently)
 
 ### Testing & Mocking
 - [ ] Test modules use minimal, focused provider mocks
@@ -358,7 +359,7 @@ When reviewing Nest.js applications, focus on:
 
 ### Database Integration (TypeORM Focus)
 - [ ] Entity decorators use correct syntax (@Column() not @Column('description'))
-- [ ] Connection errors don't crash the entire application
+- [ ] Connection failures follow an explicit fail-start or safe degraded-mode policy
 - [ ] Multiple database connections use named connections
 - [ ] Database connections have proper error handling and retry logic
 - [ ] Entities are properly registered in TypeOrmModule.forFeature()
@@ -423,14 +424,14 @@ Security Requirements:
 ├─ Stateless API → JWT with refresh tokens
 ├─ Session-based → Express sessions with Redis
 ├─ OAuth/Social → Passport with provider strategies
-├─ Multi-tenant → JWT with tenant claims
+├─ Multi-tenant → validated identity plus server-enforced tenant/resource authorization
 └─ Microservices → Service-to-service auth with mTLS
 ```
 
 ### Caching Strategy
 ```
 Data Characteristics:
-├─ User-specific → Redis with user key prefix
+├─ User-specific → authorized tenant+user scoped keys, TTL and invalidation
 ├─ Global data → In-memory cache with TTL
 ├─ Database results → Query result cache
 ├─ Static assets → CDN with cache headers

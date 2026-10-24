@@ -23,6 +23,10 @@ Centralized identity management is not optional once your team exceeds a handful
 
 ---
 
+## Change controls
+
+Verify provider edition, API version, privileged role, target tenant and current command help before writes. SSO, provisioning, MFA and emergency access are separate controls; enrollment is not enforcement. Pilot changes, keep tested recovery access, use report-only policy first, and check effective policy before enforcement. Never put real passwords/tokens in chat, CSV templates, shell history or logs. Docs-only examples are not validated configurations.
+
 ## 2. Google Workspace as Identity Provider
 
 Google Workspace is the most common starting IdP for startups. Combined with the GAM CLI tool, it provides powerful automation.
@@ -31,7 +35,8 @@ Google Workspace is the most common starting IdP for startups. Combined with the
 
 ```bash
 # Install GAM on Linux/macOS
-curl -s -S -L https://gam-shortn.appspot.com/gam-install -o /tmp/gam-install.sh && bash /tmp/gam-install.sh && rm /tmp/gam-install.sh
+# Obtain a pinned GAM release from its official project, inspect it, and install
+# into an approved environment; do not auto-execute a short-link installer.
 
 # Authorize GAM with your Workspace domain
 gam oauth create
@@ -130,7 +135,7 @@ gam print users query "isEnrolledIn2Sv=false" fields primaryEmail,name
 
 ## 3. Okta Setup
 
-Okta offers a free tier for startups (Okta for Startups program -- up to 100 users) making it an excellent choice for teams that need a dedicated IdP.
+Check current Okta plans and program eligibility; this guide does not establish free-tier availability or pricing.
 
 ### Initial Okta Configuration via API
 
@@ -263,7 +268,7 @@ Azure AD (now Microsoft Entra ID) is common at startups using Microsoft 365 or A
 # Install Azure CLI and sign in
 az login
 
-# Set the default tenant
+# Select a subscription (this does not independently select the login tenant; use az login --tenant for that)
 az account set --subscription "your-subscription-id"
 
 # Verify tenant
@@ -330,7 +335,7 @@ curl -s -X POST \
   "https://graph.microsoft.com/v1.0/identity/conditionalAccess/policies" \
   -d '{
     "displayName": "Block legacy authentication",
-    "state": "enabled",
+    "state": "enabledForReportingButNotEnforced",
     "conditions": {
       "users": { "includeUsers": ["All"] },
       "applications": { "includeApplications": ["All"] },
@@ -376,6 +381,7 @@ Signs you are overdue:
 ---
 
 ## Limitations
+- GAM SAML/provisioning/enforcement snippets are historical candidates: verify the exact installed variant. `gam print tokens` lists OAuth tokens, not provisioned applications, and does not prove SCIM sync. Use the Workspace Admin Console/app-specific provisioning documentation when commands are unsupported. SSO enforcement API fields and MFA policy schemas vary; a successful resource creation does not prove effective enforcement.
 
 - Infrastructure commands can disrupt services: confirm target host/scope and have backups/snapshots before mutating state.
 - Docs-only import: upstream scripts and templates not bundled.

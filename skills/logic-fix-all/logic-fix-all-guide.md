@@ -51,7 +51,7 @@ Phase 1 uses `git ls-files` as the default enumerator. If `.git` is absent, fall
 
 ## When to hand control back to the user
 
-1. **Phase 0** — always, before any scanning or editing.
+1. **Phase 0** — clarify only missing authorization/scope; reuse prior explicit consent.
 2. **Phase 8 iteration cap** — when `fix_all.max_iterations` Warning/Suggestion rounds have run with remaining non-Critical findings. Three consecutive "continue"s hit a hard ceiling.
 3. **Phase 6 constraint-vs-code tie** — when a finding could be fixed by editing either the code or a behavioral doc/config and neither side is clearly authoritative.
 

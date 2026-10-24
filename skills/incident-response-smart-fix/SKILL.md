@@ -20,6 +20,10 @@ date_added: "2026-02-27"
 - The task is unrelated to intelligent issue resolution with multi-agent orchestration
 - You need a different domain or tool outside this scope
 
+## Operational limits
+
+This is an orchestration playbook, not an installed multi-agent/debugging tool. Use actual available connectors/roles and current incident authorization. Initial triage is read-only; execution, production changes, replay/load/chaos tests and external communications require their own authorized scope. Preserve evidence, stabilize safely and separate service recovery from root-cause remediation. Report observed, inferred and unknown outcomes with exact build/time evidence.
+
 ## Instructions
 
 - Clarify goals, constraints, and required inputs.

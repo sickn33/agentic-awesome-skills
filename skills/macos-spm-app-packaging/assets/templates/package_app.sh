@@ -4,9 +4,14 @@ set -euo pipefail
 CONF=${1:-release}
 ROOT=$(cd "$(dirname "$0")/.." && pwd)
 cd "$ROOT"
+[[ "$CONF" == debug || "$CONF" == release ]] || { echo "Expected debug or release" >&2; exit 1; }
 
 APP_NAME=${APP_NAME:-MyApp}
+# AAS review: constrain names before constructing removal paths, process patterns or XML.
+[[ "$APP_NAME" =~ ^[A-Za-z0-9][A-Za-z0-9_-]*$ ]] || { echo "Invalid APP_NAME" >&2; exit 1; }
+
 BUNDLE_ID=${BUNDLE_ID:-com.example.myapp}
+[[ "$BUNDLE_ID" =~ ^[A-Za-z0-9][A-Za-z0-9.-]+$ ]] || { echo "Invalid BUNDLE_ID" >&2; exit 1; }
 MACOS_MIN_VERSION=${MACOS_MIN_VERSION:-14.0}
 MENU_BAR_APP=${MENU_BAR_APP:-0}
 SIGNING_MODE=${SIGNING_MODE:-}
@@ -69,8 +74,8 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources" "$APP/Contents/Framewor
 # Convert Icon.icon to Icon.icns if present (requires iconutil).
 ICON_SOURCE="$ROOT/Icon.icon"
 ICON_TARGET="$ROOT/Icon.icns"
-if [[ -f "$ICON_SOURCE" ]]; then
-  iconutil --convert icns --output "$ICON_TARGET" "$ICON_SOURCE"
+if [[ -e "$ICON_SOURCE" ]]; then
+  "$ROOT/Scripts/build_icon.sh" "$ICON_SOURCE"
 fi
 
 LSUI_VALUE="false"

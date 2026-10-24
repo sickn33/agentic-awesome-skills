@@ -1,6 +1,6 @@
 ---
 name: fp-ts-react
-description: "Practical patterns for using fp-ts with React - hooks, state, forms, data fetching. Use when building React apps with functional programming patterns. Works with React 18/19, Next.js 14/15."
+description: "Practical patterns for using fp-ts with React - hooks, state, forms, data fetching. Use when building React apps with functional programming patterns. Includes version-specific React patterns requiring project verification."
 risk: safe
 source: "https://github.com/whatiskadudoing/fp-ts-skills"
 date_added: "2026-02-27"
@@ -8,7 +8,7 @@ date_added: "2026-02-27"
 
 # Functional Programming in React
 
-Practical patterns for React apps. No jargon, just code that works.
+Practical patterns for React apps. Untested integration sketches; validate external JSON and request lifecycle behavior.
 
 ## Detailed Guide
 

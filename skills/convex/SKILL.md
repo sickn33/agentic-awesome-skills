@@ -28,8 +28,10 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 
 - Queries and mutations cannot call external HTTP APIs (use actions instead)
 - No raw SQL — you work with the Convex query builder API
-- Environment variables only available in actions, not in queries or mutations
+- Environment variables are available in app queries, mutations and actions; components have distinct binding/isolation rules. Never return secrets to clients.
 - Document size limit of 1MB
 - Maximum function execution time limits apply
 - No server-side rendering of Convex data without specific SSR patterns (use preloading)
 - Schemas are enforced at write-time; changing schemas requires data migration for existing documents
+
+- The bundled examples mutate/deploy cloud data and are incomplete; apply only to confirmed deployments with least privilege, backups and staged checks. No runtime/cloud validation is included.

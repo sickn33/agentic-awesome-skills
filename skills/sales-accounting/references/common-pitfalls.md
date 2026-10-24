@@ -16,7 +16,7 @@
 - **Problem:** credit terms and due date filled in on a cash sale.
   **Solution:** those fields are optional; a cash sale leaves them empty.
 - **Problem:** a single table silently truncating a two-item invoice.
-  **Solution:** settle the line question in Step 2 - repeated rows or a line table.
+  **Solution:** settle the line question in Step 2 - an invoice header table plus a separate line table; never duplicate invoice-level totals or receipts across lines.
 - **Problem:** built a full system when one table was asked for.
   **Solution:** build what was requested; mention the parent skill separately.
 - **Problem:** all four artifacts drift apart.

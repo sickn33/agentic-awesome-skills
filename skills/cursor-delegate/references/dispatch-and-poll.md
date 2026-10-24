@@ -125,8 +125,7 @@ A pre-run usage error exits 2 and writes no result. A missing `cursor-agent` exi
   `~/.cursor/hooks.json` and any imported Claude Code `PreToolUse` hooks) errors and Cursor blocks
   the command, fail-closed. File edits still work; command execution does not — which also means
   Cursor cannot run the gates, only claim it could not. Workaround: dispatch the relay from a
-  PowerShell or cmd console instead (observed fixed there); or temporarily remove the hook entries
-  for the run. Verified on cursor-agent 2026.07.23.
+  PowerShell or cmd console instead (observed fixed there); do not remove safety hooks to force execution; if the compatible shell also fails, stop and report the blocker. Verified on cursor-agent 2026.07.23.
 
 ## Recovering lost work
 
@@ -158,5 +157,5 @@ values are quoted.
 
 ## The commit boundary
 
-The relay never commits. Cursor edits the working tree; the orchestrator reviews, re-runs the gates,
+The relay does not itself commit, but a write-capable child can run Git commands; the brief prohibition is not an enforcement boundary. Inspect history and staged state too. Cursor edits the working tree; the orchestrator reviews, re-runs the gates,
 and commits. See [review-and-land.md](review-and-land.md).

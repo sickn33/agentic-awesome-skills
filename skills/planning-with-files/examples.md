@@ -5,7 +5,7 @@
 **User Request:** "Research the benefits of morning exercise and write a summary"
 
 ### Loop 1: Create Plan
-```bash
+```text
 Write task_plan.md
 ```
 
@@ -31,7 +31,7 @@ Create a research summary on the benefits of morning exercise.
 ```
 
 ### Loop 2: Research
-```bash
+```text
 Read task_plan.md           # Refresh goals
 WebSearch "morning exercise benefits"
 Write notes.md              # Store findings
@@ -39,7 +39,7 @@ Edit task_plan.md           # Mark Phase 2 complete
 ```
 
 ### Loop 3: Synthesize
-```bash
+```text
 Read task_plan.md           # Refresh goals
 Read notes.md               # Get findings
 Write morning_exercise_summary.md
@@ -47,7 +47,7 @@ Edit task_plan.md           # Mark Phase 3 complete
 ```
 
 ### Loop 4: Deliver
-```bash
+```text
 Read task_plan.md           # Verify complete
 Deliver morning_exercise_summary.md
 ```
@@ -177,9 +177,9 @@ Error: File not found
 
 # Update task_plan.md:
 ## Errors Encountered
-- config.json not found → Will create default config
+- config.json not found → Will inspect the required schema and approved defaults; ask if missing configuration changes behavior
 
-Action: Write config.json (default config)
+Action: Write config.json only after verifying authorized defaults
 Action: Read config.json
 Success!
 ```
@@ -199,4 +199,4 @@ Success!
 → Now make the decision       # Goals are fresh in context
 ```
 
-This is why Manus can handle ~50 tool calls without losing track. The plan file acts as a "goal refresh" mechanism.
+The Manus article describes roughly 50 calls as its task average, not a guarantee of error-free recall. The plan file acts as a "goal refresh" mechanism.

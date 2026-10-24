@@ -25,12 +25,15 @@ allowed-tools:
 
 ## Core Insight
 
-Brand mentions correlate approximately 3x more strongly with AI visibility than traditional backlinks. An Ahrefs study published in December 2025, analyzing 75,000 brands across AI search platforms, found that **unlinked brand mentions** -- references to a brand name without a hyperlink -- are a stronger predictor of whether AI systems cite and recommend a brand than Domain Rating or backlink count.
-
-The critical finding: **the platform where the mention appears matters enormously.** Not all mentions are equal. A mention on YouTube or Reddit carries far more weight for AI citation than a mention on a low-authority blog, because AI training data and retrieval systems disproportionately index high-engagement platforms.
-
-This inverts a core assumption of traditional SEO. In traditional SEO, a backlink from a high-DR site is the gold standard. In GEO, an unlinked mention on Reddit or a YouTube video description may be more valuable than a dofollow backlink from a DR 70 blog.
-
+[Ahrefs' December 2025 observational study](https://ahrefs.com/blog/ai-brand-visibility-correlations/)
+examined 75,000 brands across ChatGPT, AI Mode and AI Overviews. It reported a
+roughly 0.737 correlation for YouTube mentions and 0.66–0.71 for branded web
+mentions. These are associations with brand visibility, not evidence that
+buying mentions causes citations or that an unlinked mention is worth three
+backlinks. The study does not establish universal Reddit/Wikipedia/LinkedIn
+weights, undisclosed model training composition, or a site's probability of
+being recommended. Use the rubric as an explicit planning heuristic and measure
+actual answers separately.
 ---
 
 
@@ -66,3 +69,7 @@ curl -s https://example.com/llms.txt
 ```
 
 > Adapted from [zubair-trabzada/geo-seo-claude](https://github.com/zubair-trabzada/geo-seo-claude) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: upstream runtime helpers not bundled.
+
+## Sampling, scoring and publication boundaries
+
+Record query, platform, locale, date, result URLs and sampled denominator. Search snippets and result-count estimates cannot establish all mentions, absence or sentiment prevalence. Mark inaccessible or unmeasured channels unknown instead of zero; do not silently renormalize weights or compare scores produced under different coverage. The five platform weights and subscriber thresholds are custom and unvalidated. Separate observed brand mentions from source citations, positive recommendations and company-name collisions. Do not create reviews, undisclosed endorsements, spam, paid-link schemes or promotional Wikipedia edits to increase the score. A report-writing request does not authorize posts or outreach, and report output must not overwrite an existing file.

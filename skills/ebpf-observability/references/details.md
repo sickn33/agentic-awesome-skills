@@ -288,7 +288,7 @@ spec:
       syscall: true
       selectors:
         - matchActions:
-            - action: Sigkill
+            - action: Post  # detection only
 ```
 
 ### File Integrity Monitoring
@@ -382,8 +382,7 @@ helm install pyroscope grafana/pyroscope \
 
 ```bash
 # Sample kernel and user stacks at 99Hz for 30 seconds
-sudo bpftrace -e 'profile:hz:99 { @[kstack, ustack, comm] = count(); }' \
-  -d 30 > stacks.out
+sudo bpftrace -e 'profile:hz:99 { @[kstack, ustack, comm] = count(); } interval:s:30 { exit(); }' > stacks.out
 
 # Using perf with BPF for flame graphs
 sudo perf record -F 99 -a -g -- sleep 30
@@ -540,3 +539,11 @@ sudo bpftool feature probe kernel | grep map_type
 sudo bpftool feature probe kernel | grep helper
 ```
 
+
+### Unsupported sketch corrections
+
+The exporter YAML omits actual BPF programs/functions and current chart schema; it cannot create the stated metrics by itself. The L7 namespace annotation is not a verified current enablement mechanism, and declaring HTTP on443 does not decrypt TLS. Verify supported L7 policy/proxy integration and privacy scope instead. Prometheus metric names/labels and dashboards are version-specific; validate actual exposition and service selectors/namespace.
+
+The dns_resolve kernel symbol is not universal; inspect symbols or instrument the actual resolver. kmalloc/kfree aggregate counts and cumulative malloc sizes do not correlate pointers/frees or prove a leak, and malloc entry arg0 is only a requested size. A correct leak harness needs return-pointer/allocation/free/realloc correlation and bounded state; do not label the sketches leak detection. The security_inode_rename hook prototype varies and the listed path arguments are not generally valid. Raw infinite NDJSON piped to one curl request is not a bounded streaming SIEM exporter; use a reviewed batching/backpressure agent with authentication/redaction.
+
+Helm profiling chart flags and insecure transport defaults require current documented configuration; do not upload debug info or workload metadata without scope. Port forwards, connectivity tests, sampling, map dumps and detach operations have their own runtime effects/data risks. Snapshot and validate only the intended BPF attachment; generic bpftool prog detach is not a universal detach recipe. No telemetry or runtime tests were performed.

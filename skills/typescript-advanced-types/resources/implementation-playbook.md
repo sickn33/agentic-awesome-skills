@@ -17,6 +17,20 @@ Comprehensive guidance for mastering TypeScript's advanced type system including
 - Implementing type-safe state management
 - Migrating JavaScript codebases to TypeScript
 
+## Example boundaries
+
+Run each fragment in its own module; repeated `User`, `Config` and variable names
+illustrate alternatives and must not be concatenated into one scope. Utility-type
+examples need an explicit User shape with `email`/`password` where selected.
+Type assertions and branded types are erased at runtime: validate unknown JSON,
+authorization and server responses separately. `Omit<User,"password">` does not
+remove a property from a runtime object; construct an allowlisted output object.
+The merge helper assumes disjoint keys; conflicts use right-hand values, not a
+sound intersection. Recursive Path/Deep types target finite plain-object shapes;
+cycles, arrays, functions, Maps/Dates and compiler instantiation limits need
+special handling. The sample form rules demonstrate typing, not secure identity
+or password policy. Test signatures with the project's strict compiler version.
+
 ## Core Concepts
 
 ### 1. Generics
@@ -78,13 +92,13 @@ type B = IsString<number>;    // false
 
 **Extracting Return Types:**
 ```typescript
-type ReturnType<T> = T extends (...args: any[]) => infer R ? R : never;
+type InferredReturn<T> = T extends (...args: any[]) => infer R ? R : never;
 
 function getUser() {
   return { id: 1, name: "John" };
 }
 
-type User = ReturnType<typeof getUser>;
+type InferredUser = InferredReturn<typeof getUser>;
 // Type: { id: number; name: string; }
 ```
 
@@ -116,7 +130,7 @@ type T2 = TypeName<() => void>; // "function"
 
 **Basic Mapped Type:**
 ```typescript
-type Readonly<T> = {
+type ShallowReadonly<T> = {
   readonly [P in keyof T]: T[P];
 };
 
@@ -125,17 +139,17 @@ interface User {
   name: string;
 }
 
-type ReadonlyUser = Readonly<User>;
+type ReadonlyUser = ShallowReadonly<User>;
 // Type: { readonly id: number; readonly name: string; }
 ```
 
 **Optional Properties:**
 ```typescript
-type Partial<T> = {
+type ShallowPartial<T> = {
   [P in keyof T]?: T[P];
 };
 
-type PartialUser = Partial<User>;
+type PartialUser = ShallowPartial<User>;
 // Type: { id?: number; name?: string; }
 ```
 
@@ -308,7 +322,7 @@ type ExtractParams<T> = T extends { params: infer P } ? P : never;
 type ExtractBody<T> = T extends { body: infer B } ? B : never;
 type ExtractResponse<T> = T extends { response: infer R } ? R : never;
 
-class APIClient<Config extends Record<string, Record<HTTPMethod, any>>> {
+class APIClient<Config extends Record<string, Partial<Record<HTTPMethod, unknown>>>> {
   async request<
     Path extends keyof Config,
     Method extends keyof Config[Path]
@@ -319,13 +333,15 @@ class APIClient<Config extends Record<string, Record<HTTPMethod, any>>> {
       ? ExtractBody<Config[Path][Method]> extends never
         ? []
         : [{ body: ExtractBody<Config[Path][Method]> }]
-      : [{
-          params: ExtractParams<Config[Path][Method]>;
-          body?: ExtractBody<Config[Path][Method]>;
-        }]
+      : [
+          { params: ExtractParams<Config[Path][Method]> } &
+          (ExtractBody<Config[Path][Method]> extends never
+            ? { body?: never }
+            : { body: ExtractBody<Config[Path][Method]> })
+        ]
   ): Promise<ExtractResponse<Config[Path][Method]>> {
-    // Implementation here
-    return {} as any;
+    // Type signature only: no networking/validation implementation is supplied.
+    throw new Error("Implement transport, status checks and runtime response validation");
   }
 }
 
@@ -349,40 +365,22 @@ const user = await api.request("/users/:id", "GET", {
 ### Pattern 3: Builder Pattern with Type Safety
 
 ```typescript
-type BuilderState<T> = {
-  [K in keyof T]: T[K] | undefined;
-};
-
 type RequiredKeys<T> = {
   [K in keyof T]-?: {} extends Pick<T, K> ? never : K;
 }[keyof T];
 
-type OptionalKeys<T> = {
-  [K in keyof T]-?: {} extends Pick<T, K> ? K : never;
-}[keyof T];
+class Builder<T, K extends keyof T = never> {
+  // Retains K structurally, preventing an incomplete builder matching a complete one.
+  private readonly setKeys!: K;
+  constructor(private readonly state: Partial<T> = {}) {}
 
-type IsComplete<T, S> =
-  RequiredKeys<T> extends keyof S
-    ? S[RequiredKeys<T>] extends undefined
-      ? false
-      : true
-    : false;
-
-class Builder<T, S extends BuilderState<T> = {}> {
-  private state: S = {} as S;
-
-  set<K extends keyof T>(
-    key: K,
-    value: T[K]
-  ): Builder<T, S & Record<K, T[K]>> {
-    this.state[key] = value;
-    return this as any;
+  set<P extends keyof T>(key: P, value: T[P]): Builder<T, K | P> {
+    return new Builder<T, K | P>({ ...this.state, [key]: value });
   }
 
-  build(
-    this: IsComplete<T, S> extends true ? this : never
-  ): T {
-    return this.state as T;
+  build(this: RequiredKeys<T> extends K ? Builder<T, K> : never): T {
+    // Encapsulated assertion: only key presence is proven, not runtime validation.
+    return { ...this.state } as T;
   }
 }
 
@@ -536,7 +534,7 @@ type Success<T> = {
   data: T;
 };
 
-type Error = {
+type Failure = {
   status: "error";
   error: string;
 };
@@ -545,7 +543,7 @@ type Loading = {
   status: "loading";
 };
 
-type AsyncState<T> = Success<T> | Error | Loading;
+type AsyncState<T> = Success<T> | Failure | Loading;
 
 function handleState<T>(state: AsyncState<T>): void {
   switch (state.status) {
@@ -568,13 +566,13 @@ type State =
   | { type: "success"; data: any }
   | { type: "error"; error: Error };
 
-type Event =
+type MachineEvent =
   | { type: "FETCH"; requestId: string }
   | { type: "SUCCESS"; data: any }
   | { type: "ERROR"; error: Error }
   | { type: "RESET" };
 
-function reducer(state: State, event: Event): State {
+function reducer(state: State, event: MachineEvent): State {
   switch (state.type) {
     case "idle":
       return event.type === "FETCH"
@@ -612,10 +610,10 @@ type PromiseType<T> = T extends Promise<infer U> ? U : never;
 type AsyncNum = PromiseType<Promise<number>>;  // number
 
 // Extract function parameters
-type Parameters<T> = T extends (...args: infer P) => any ? P : never;
+type InferredParameters<T> = T extends (...args: infer P) => any ? P : never;
 
 function foo(a: string, b: number) {}
-type FooParams = Parameters<typeof foo>;  // [string, number]
+type FooParams = InferredParameters<typeof foo>;  // [string, number]
 ```
 
 ### 2. Type Guards
@@ -684,10 +682,12 @@ type Test2 = AssertEqual<string, number>;        // false
 type Test3 = AssertEqual<string | number, string>; // false
 
 // Expect error helper
-type ExpectError<T extends never> = T;
+type Expect<T extends true> = T;
 
 // Example usage
-type ShouldError = ExpectError<AssertEqual<string, number>>;
+// @ts-expect-error: false does not satisfy true
+type ShouldError = Expect<AssertEqual<string, number>>;
+type ShouldPass = Expect<AssertEqual<string, string>>;
 ```
 
 ## Common Pitfalls
@@ -706,7 +706,7 @@ type ShouldError = ExpectError<AssertEqual<string, number>>;
 - Use simple types when possible
 - Cache complex type computations
 - Limit recursion depth in recursive types
-- Use build tools to skip type checking in production
+- Separate transpilation from a required CI `tsc --noEmit` check; do not omit type checking before release
 
 ## Resources
 

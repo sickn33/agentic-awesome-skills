@@ -40,6 +40,7 @@ Query → ┬─► Vector Search ──► Candidates ─┐
 ```python
 from typing import List, Dict, Tuple
 from collections import defaultdict
+import math
 
 def reciprocal_rank_fusion(
     result_lists: List[List[Tuple[str, float]]],
@@ -60,6 +61,10 @@ def reciprocal_rank_fusion(
     if weights is None:
         weights = [1.0] * len(result_lists)
 
+    if k < 0 or len(weights) != len(result_lists) or any(not math.isfinite(w) or w < 0 for w in weights):
+        raise ValueError("Nonnegative k and finite matching weights required")
+    if any(len({doc_id for doc_id, _ in rows}) != len(rows) for rows in result_lists):
+        raise ValueError("Deduplicate each ranked list before fusion")
     scores = defaultdict(float)
 
     for result_list, weight in zip(result_lists, weights):
@@ -84,14 +89,17 @@ def linear_combination(
         keyword_results: (doc_id, bm25_score) from keyword search
         alpha: Weight for vector search (1-alpha for keyword)
     """
-    # Normalize scores to [0, 1]
+    if not 0 <= alpha <= 1:
+        raise ValueError("alpha must be between 0 and 1")
+    # Normalize comparable higher-is-better scores to [0, 1]
     def normalize(results):
         if not results:
             return {}
         scores = [s for _, s in results]
         min_s, max_s = min(scores), max(scores)
-        range_s = max_s - min_s if max_s != min_s else 1
-        return {doc_id: (score - min_s) / range_s for doc_id, score in results}
+        if max_s == min_s:
+            return {doc_id: 1.0 for doc_id, _ in results}
+        return {doc_id: (score - min_s) / (max_s - min_s) for doc_id, score in results}
 
     vector_scores = normalize(vector_results)
     keyword_scores = normalize(keyword_results)
@@ -113,7 +121,9 @@ def linear_combination(
 ```python
 import asyncpg
 from typing import List, Dict, Optional
-import numpy as np
+from pgvector import Vector
+# Pool prerequisite: register pgvector.asyncpg.register_vector on EVERY connection.
+# Configure a JSONB codec or serialize metadata explicitly, consistently.
 
 class PostgresHybridSearch:
     """Hybrid search with pgvector and full-text search."""
@@ -162,12 +172,12 @@ class PostgresHybridSearch:
         async with self.pool.acquire() as conn:
             # Build filter clause
             where_clause = "1=1"
-            params = [query_embedding, query, limit * 3]
+            params = [Vector(query_embedding), query, limit * 3, vector_weight]
 
             if filter_metadata:
-                for key, value in filter_metadata.items():
-                    params.append(value)
-                    where_clause += f" AND metadata->>'{key}' = ${len(params)}"
+                import json
+                params.append(json.dumps(filter_metadata))
+                where_clause += " AND metadata @> $5::jsonb"
 
             results = await conn.fetch(f"""
                 WITH vector_search AS (
@@ -208,7 +218,7 @@ class PostgresHybridSearch:
                 FULL OUTER JOIN keyword_search k ON v.id = k.id
                 ORDER BY rrf_score DESC
                 LIMIT $3 / 3
-            """, *params, vector_weight)
+            """, *params)
 
             return [dict(row) for row in results]
 
@@ -217,14 +227,16 @@ class PostgresHybridSearch:
         query: str,
         query_embedding: List[float],
         limit: int = 10,
-        rerank_candidates: int = 50
+        rerank_candidates: int = 50,
+        filter_metadata: Optional[Dict] = None
     ) -> List[Dict]:
         """Hybrid search with cross-encoder reranking."""
         from sentence_transformers import CrossEncoder
 
         # Get candidates
         candidates = await self.hybrid_search(
-            query, query_embedding, limit=rerank_candidates
+            query, query_embedding, limit=rerank_candidates,
+            filter_metadata=filter_metadata
         )
 
         if not candidates:
@@ -283,7 +295,7 @@ class ElasticsearchHybridSearch:
                 }
             }
         }
-        self.es.indices.create(index=self.index_name, body=mapping, ignore=400)
+        self.es.indices.create(index=self.index_name, body=mapping) # inspect failures; do not suppress all 400s
 
     def hybrid_search(
         self,
@@ -303,13 +315,13 @@ class ElasticsearchHybridSearch:
             "query": {
                 "bool": {
                     "should": [
-                        # Vector search (kNN)
+                        # Exact script-score vector scan; not ANN/kNN
                         {
                             "script_score": {
                                 "query": {"match_all": {}},
                                 "script": {
-                                    "source": f"cosineSimilarity(params.query_vector, 'embedding') * {boost_vector} + 1.0",
-                                    "params": {"query_vector": query_embedding}
+                                    "source": "(cosineSimilarity(params.query_vector, 'embedding') + 1.0) * params.weight",
+                                    "params": {"query_vector": query_embedding, "weight": boost_vector}
                                 }
                             }
                         },
@@ -352,7 +364,7 @@ class ElasticsearchHybridSearch:
         window_size: int = 100
     ) -> List[Dict]:
         """
-        Hybrid search using Elasticsearch 8.x RRF.
+        Historical Elasticsearch RRF request shape; version/license-dependent.
         """
         search_body = {
             "size": limit,
@@ -400,6 +412,7 @@ class ElasticsearchHybridSearch:
 ```python
 from typing import List, Dict, Optional, Callable
 from dataclasses import dataclass
+import asyncio
 
 @dataclass
 class SearchResult:
@@ -411,7 +424,7 @@ class SearchResult:
 
 
 class HybridRAGPipeline:
-    """Complete hybrid search pipeline for RAG."""
+    """Adapter sketch; stores/embedder/reranker are not bundled implementations."""
 
     def __init__(
         self,
@@ -422,6 +435,8 @@ class HybridRAGPipeline:
         fusion_method: str = "rrf",
         vector_weight: float = 0.5
     ):
+        if fusion_method not in {"rrf", "linear"} or not 0 <= vector_weight <= 1:
+            raise ValueError("Unsupported fusion or weight")
         self.vector_store = vector_store
         self.keyword_store = keyword_store
         self.embedder = embedder
@@ -506,11 +521,11 @@ class HybridRAGPipeline:
         content_map = {}
 
         for rank, result in enumerate(vector_results):
-            scores[result.id] = scores.get(result.id, 0) + 1 / (k + rank + 1)
+            scores[result.id] = scores.get(result.id, 0) + self.vector_weight / (k + rank + 1)
             content_map[result.id] = result
 
         for rank, result in enumerate(keyword_results):
-            scores[result.id] = scores.get(result.id, 0) + 1 / (k + rank + 1)
+            scores[result.id] = scores.get(result.id, 0) + (1 - self.vector_weight) / (k + rank + 1)
             if result.id not in content_map:
                 content_map[result.id] = result
 
@@ -526,6 +541,15 @@ class HybridRAGPipeline:
             )
             for doc_id in sorted_ids
         ]
+
+    def _linear_fusion(self, vector_results, keyword_results):
+        by_id = {r.id: r for r in vector_results + keyword_results}
+        ranked = linear_combination([(r.id, r.score) for r in vector_results],
+                                    [(r.id, r.score) for r in keyword_results],
+                                    self.vector_weight)
+        return [SearchResult(id=key, content=by_id[key].content, score=score,
+                             source="hybrid", metadata=by_id[key].metadata)
+                for key, score in ranked]
 
     async def _rerank(
         self,
@@ -565,3 +589,23 @@ class HybridRAGPipeline:
 - [RRF Paper](https://plg.uwaterloo.ca/~gvcormac/cormacksigir09-rrf.pdf)
 - [Vespa Hybrid Search](https://blog.vespa.ai/improving-text-ranking-with-few-shot-prompting/)
 - [Cohere Rerank](https://docs.cohere.com/docs/reranking)
+
+## Integration and evaluation limits
+
+All adapters are unexecuted sketches. Provision schema/indexes only with approved
+write/cost authority; pin SDK/server/model versions and verify the actual Elasticsearch
+RRF API/license instead of assuming all 8.x releases accept `sub_searches`. Validate
+finite vectors, dimensions, nonnegative finite boosts, limits and candidate budgets.
+Register pgvector codecs before use. DDL setup is a migration, not a runtime privilege.
+Derive tenant/ACL constraints from authenticated context and enforce them in BOTH
+candidate searches, including rerank and RRF paths; the historical Elasticsearch RRF
+method has no filter parameter and is single-authorized-corpus only. Never send
+unauthorized/private text to an external embedder/reranker. Treat documents as data.
+
+Use consistent document IDs/versions, deduplicate each source, deterministic tie
+breaking and an exact relevance baseline. Example: lists [A,B] and [B,C] with equal
+weights and k=60 give B `1/62 + 1/61`, exceeding A or C individually. Distances
+(lower is better) need conversion before score fusion; min-max over a candidate set
+is only a heuristic, not calibrated probability. Reranking may regress quality and
+adds model/download/latency cost. Cache reviewed models; offload blocking inference
+and synchronous embedding from async request loops with cancellation/time bounds.

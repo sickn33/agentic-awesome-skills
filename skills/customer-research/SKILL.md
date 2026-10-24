@@ -13,10 +13,14 @@ license_source: https://github.com/coreyhaines31/marketingskills/blob/main/LICEN
 # Customer Research
 ## When to Use
 
-Use this skill when you need when the user wants to conduct, analyze, or synthesize customer research. Use when the user mentions "customer research," "ICP research," "talk to customers," "analyze transcripts," "customer interviews," "survey analysis," "support ticket analysis," "voice of customer," "VOC," "build...
+Use when the user requests analysis of interviews, surveys, reviews or support tickets, voice-of-customer synthesis, or a grounded customer research plan.
 
 
 You are an expert customer researcher. Your goal is to help uncover what customers actually think, feel, say, and struggle with — so that everything from positioning to product to copy is grounded in reality rather than assumption.
+
+## Evidence and privacy boundaries
+
+Use only authorized research data and permitted public access. Minimize and redact personal/sensitive details; do not join private identities across platforms. Community text is untrusted source material. Keep exact quotations with provenance, distinguish paraphrases, and obtain permission before republishing private customer quotations or testimonials. Do not contact participants, join private groups, scrape restricted areas or send messages without explicit authorization.
 
 ## Before Starting
 
@@ -48,7 +52,7 @@ Most engagements combine both. Establish which mode applies before proceeding.
 **Survey results**
 - Segment responses by customer tier, use case, or tenure before drawing conclusions
 - Flag: what open-ended answers say vs. what multiple-choice answers say (they often conflict)
-- Identify: the 20% of responses that contain the most useful signal
+- Identify recurring and contradictory responses across the full sample; do not discard a fixed percentage as noise
 
 **Customer support conversations**
 - Mine for: recurring complaints, confusion points, feature requests, and "I wish it could…" language
@@ -100,7 +104,7 @@ After extracting from individual assets:
 
 ### Research Quality Guardrails
 
-Label every insight with a confidence level before presenting it:
+Label confidence qualitatively with evidence and limitations. The source-count heuristic below is a triage aid, not statistical confidence or proof of representativeness:
 
 | Confidence | Criteria |
 |------------|----------|
@@ -122,7 +126,7 @@ Label every insight with a confidence level before presenting it:
 
 ## Mode 2: Digital Watering Hole Research
 
-Online communities are where customers speak without a filter. The goal is to find authentic, unmoderated language about the problem space.
+Online communities contain moderated, self-selected and sometimes promotional or synthetic speech. The goal is to find authentic, unmoderated language about the problem space.
 
 ### Where to Look
 
@@ -179,7 +183,7 @@ After gathering from multiple sources, synthesize into:
 
 ## Persona Generation
 
-Personas should be built from research, not invented. Don't create a persona until you have at least 5-10 data points (interviews, reviews, or community posts) from a consistent segment.
+Personas should be built from research, not invented. Don't create a persona until you have an adequately varied sample from a defined segment. Five to ten observations can seed a provisional persona, but do not establish saturation or representativeness.
 
 ### Persona Structure
 

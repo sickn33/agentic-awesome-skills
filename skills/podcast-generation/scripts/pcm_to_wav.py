@@ -30,6 +30,14 @@ def pcm_to_wav(
     Returns:
         WAV-formatted audio bytes
     """
+    if not isinstance(pcm_data, bytes) or len(pcm_data) > 32 * 1024 * 1024:
+        raise ValueError("PCM must be bytes up to 32 MiB")
+    if not isinstance(sample_rate, int) or not 1 <= sample_rate <= 192000:
+        raise ValueError("Invalid sample rate")
+    if channels not in (1, 2) or sample_width != 2:
+        raise ValueError("This helper supports mono/stereo signed 16-bit PCM only")
+    if len(pcm_data) % (channels * sample_width):
+        raise ValueError("Incomplete PCM frame")
     wav_buffer = io.BytesIO()
 
     # RIFF header
@@ -55,19 +63,27 @@ def pcm_to_wav(
     return wav_buffer.getvalue()
 
 
-def calculate_duration(pcm_data: bytes, sample_rate: int = 24000, sample_width: int = 2) -> int:
+def calculate_duration(pcm_data: bytes, sample_rate: int = 24000, sample_width: int = 2, channels: int = 1) -> float:
     """Calculate audio duration in seconds from PCM data length."""
-    return len(pcm_data) // (sample_rate * sample_width)
+    if sample_rate <= 0 or sample_width != 2 or channels not in (1, 2):
+        raise ValueError("Invalid PCM format")
+    if len(pcm_data) % (sample_width * channels):
+        raise ValueError("Incomplete PCM frame")
+    return len(pcm_data) / (sample_rate * sample_width * channels)
 
 
 if __name__ == "__main__":
-    # Example usage
-    import sys
-    if len(sys.argv) > 1:
-        with open(sys.argv[1], 'rb') as f:
-            pcm_data = f.read()
-        wav_data = pcm_to_wav(pcm_data)
-        output_path = sys.argv[1].replace('.pcm', '.wav')
-        with open(output_path, 'wb') as f:
-            f.write(wav_data)
-        print(f"Converted to {output_path} ({calculate_duration(pcm_data)}s)")
+    import argparse
+    from pathlib import Path
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("input", type=Path)
+    parser.add_argument("output", type=Path)
+    args = parser.parse_args()
+    if args.input.resolve() == args.output.resolve():
+        parser.error("Input and output must differ")
+    with args.input.open('rb') as source:
+        pcm_data = source.read(32 * 1024 * 1024 + 1)
+    wav_data = pcm_to_wav(pcm_data)
+    with args.output.open('xb') as destination:
+        destination.write(wav_data)
+    print(f"Converted {calculate_duration(pcm_data):.3f}s")

@@ -73,7 +73,7 @@ dependencies:                     # Chart dependencies
     import-values:
       - child: database
         parent: database
-    alias: db
+    # If alias: db is used, condition and values must use db.enabled / db.*
 ```
 
 ## Chart Types
@@ -93,7 +93,7 @@ type: library
 - Shared template helpers
 - Cannot be installed directly
 - Used as dependency by other charts
-- No templates/ directory
+- May contain templates/ with named partial helpers; library charts do not render/install normal resources
 
 ## Values Files Organization
 
@@ -275,13 +275,13 @@ To learn more about the release, try:
 
 Application URL:
 {{- range .Values.ingress.hosts }}
-  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .host }}{{ .path }}
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .host }}{{ (index .paths 0).path }}
 {{- end }}
 {{- else }}
 
 Get the application URL by running:
   export POD_NAME=$(kubectl get pods --namespace {{ .Release.Namespace }} -l "app.kubernetes.io/name={{ include "my-app.name" . }}" -o jsonpath="{.items[0].metadata.name}")
-  kubectl port-forward $POD_NAME 8080:80
+  kubectl --namespace {{ .Release.Namespace }} port-forward service/{{ include "my-app.fullname" . }} 8080:{{ .Values.service.port }}
   echo "Visit http://127.0.0.1:8080"
 {{- end }}
 ```
@@ -302,7 +302,7 @@ dependencies:
     import-values:                 # Import values from subchart
       - child: database
         parent: database
-    alias: db                      # Reference as .Values.db
+    # If alias: db is used, condition and values must use db.enabled / db.*                      # Reference as .Values.db
 ```
 
 ### Managing Dependencies
@@ -339,7 +339,7 @@ Exclude files from chart package:
 # Development files
 .git/
 .gitignore
-*.md
+# Keep README/license/attribution documentation in distributable charts.
 docs/
 
 # Build artifacts
@@ -455,7 +455,7 @@ metadata:
 
 ### Hook Weight
 
-Controls hook execution order (-5 to 5, lower runs first)
+Controls hook execution order using integer weights (lower runs first; not limited to -5..5)
 
 ### Hook Deletion Policies
 

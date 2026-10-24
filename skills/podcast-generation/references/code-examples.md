@@ -1,6 +1,6 @@
 # Code Examples
 
-## Complete Backend Service Method
+## Backend service integration sketch (adapters omitted)
 
 ```python
 async def generate_audio_narrative(
@@ -26,9 +26,14 @@ async def generate_audio_narrative(
         bookmark = await db.get_bookmark(source_id)
         bookmarks = [bookmark]
         title = f"Deep Dive: {bookmark.title}"
-    else:  # custom
+    elif source_type == "custom" and custom_query:
         bookmarks = await db.get_recent_bookmarks(limit=10)
         title = f"Research Summary: {custom_query[:50]}"
+
+    else:
+        raise ValueError("Invalid source type/custom query")
+    if style not in STYLE_INSTRUCTIONS:
+        raise ValueError("Unsupported style")
 
     # 3. Build prompt with style
     content = "\n".join([f"**{b.title}**\n{b.summary}" for b in bookmarks[:10]])
@@ -39,14 +44,16 @@ async def generate_audio_narrative(
 Make it 1-2 minutes (150-250 words). Speak naturally."""
 
     # 4. Connect to Realtime API
-    ws_url = settings.azure_openai_audio_endpoint.replace("https://", "wss://") + "/openai/v1"
+    ws_url = settings.azure_openai_audio_endpoint.rstrip("/").replace("https://", "wss://", 1) + "/openai/v1"
     client = AsyncOpenAI(websocket_base_url=ws_url, api_key=settings.azure_openai_audio_api_key)
 
     audio_chunks, transcript_parts = [], []
 
     async with client.realtime.connect(model=settings.azure_openai_audio_deployment) as conn:
         await conn.session.update(session={
-            "output_modalities": ["audio"],
+            "type": "realtime",
+        "audio": {"output": {"voice": voice_name, "format": {"type": "audio/pcm", "rate": 24000}}},
+        "output_modalities": ["audio"],
             "instructions": f"Narrator creating {style}-style content. Speak naturally, don't ask questions."
         })
 
@@ -64,9 +71,11 @@ Make it 1-2 minutes (150-250 words). Speak naturally."""
             elif event.type == "response.output_audio_transcript.delta":
                 transcript_parts.append(event.delta)
             elif event.type == "response.done":
+                if event.response.status != "completed":
+                    raise RuntimeError("Incomplete audio response")
                 break
             elif event.type == "error":
-                raise ValueError(f"Realtime API error: {event.error.message}")
+                raise RuntimeError("Realtime service error; inspect redacted private diagnostics")
 
     # 5. Process audio
     pcm_audio = b''.join(audio_chunks)
@@ -187,3 +196,24 @@ export const aiAPI = {
   listAudioNarratives: (limit = 10) => api.get(`/ai/audio?limit=${limit}`),
 };
 ```
+
+## Generation boundaries
+
+Unexecuted SDK/service sketches: deployment name, available voices, GA versus preview
+session/auth format and SDK versions must match the actual Azure resource. The voice
+table is not a current Realtime support list. Configure explicit PCM output before
+interpreting bytes as 24kHz signed 16-bit mono; reject incomplete/empty output.
+The examples omit a mandatory total generation timeout (e.g. 60 seconds), per-event
+and accumulated audio/text limits (e.g. 32 MiB), cancel/close paths and spend quotas;
+implement them before serving requests. A response.done event alone does not mean
+success. Do not store partial output as a complete narrative.
+
+Authorize source objects AND audio generation/list/stream ownership per tenant; IDs
+are not access control. The DB methods/models/routes, settings and frontend API are
+application adapters, not bundled implementations. Treat source text as data, preserve
+source attribution, verify narration accuracy and obtain rights/consent before sending
+private text to Azure or publishing synthetic speech. Never impersonate a real person
+without permission; disclose generated speech where required. Store keys backend-only
+and audio/transcripts privately with retention limits. Model-generated text is not
+HTML. Frontend play/pause requires actual pause handling, promise errors, finally
+loading reset, URL revocation and teardown; the React sketch omits those controls.

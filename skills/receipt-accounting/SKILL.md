@@ -27,8 +27,7 @@ Layer: Layer 3: Record. Fits: Starter stage. Table code: n/a.
 
 **The rule this table exists to enforce:** a receipt is **not** sales income. Money can
 arrive as collection of an existing receivable, as an advance from a customer, as a loan
-received, or as capital contribution. Each of those lands in a different ledger, and only
-one of them is income. This is why `Receipt Type` and `Treats as Sale Income` are fields and
+received, or as capital contribution. Each of those lands in a different ledger, and none automatically creates income on receipt under accrual accounting; a sale receipt may settle revenue already recognized. This is why `Receipt Type` and `Treats as Sale Income` are fields and
 not conventions, and why `Amount Allocated` and `Unapplied Amount` are both captured - the
 difference between the gross received and the part that clears an invoice stays visible
 instead of quietly inflating revenue.
@@ -45,11 +44,11 @@ Also use it when the user says "money received, allocated to the right account, 
 spreadsheet, a document or someone inboxes.
 
 Do not use it for: raising sales invoices, making payments, tax filing, or legal advice. This skill produces
-empty templates only - it never holds or processes real employee or customer data.
+empty templates only - real employee or customer data is not required to generate templates.
 
 ## How It Works
 
-Follow the shared execution contract. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+Follow these local instructions; no shared execution runtime is bundled. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -103,7 +102,7 @@ open_questions: []      # the unanswered ones, in the order worth asking
 
 Build an already requested artifact without asking again. For advice-only requests, give a short recommendation and offer the relevant artifact.
 
-**Recommended approach:** One receipt record carrying the mode, the gross received, the receipt type, the invoice it clears and the unapplied balance, and post it to income only when the type says it is a sale.
+**Recommended approach:** One receipt record carrying the mode, the gross received, the receipt type, the invoice it clears and the unapplied balance, and determine income recognition from the confirmed accounting policy and underlying transaction, not the receipt label.
 
 **Why this one:** The trap on this table is that money in gets treated as revenue out. Forcing the type and the allocation before the entry closes is what keeps an advance or a loan out of the sales book.
 
@@ -126,8 +125,8 @@ tool access and the target before writing. A user saying "connected" is not tool
 Never ask for a Notion password or token.
 
 ```csv
-Receipt Number,Receipt Date,Received From,Receipt Mode,Cash/Bank Account,Reference (Cheque/UTR/ID),Gross Amount Received,Receipt Type,Treats as Sale Income,Sales Invoice Allocated,Amount Allocated,Unapplied Amount,Adjust Against,TDS Collected on Receipt,Voucher Number,Ledger Account,Source Document,Reconciliation Status,Prepared By,Verified By,Entry Verified,Notes,Receipt ID
-RCP-2026-0312,2026-08-19,Greyson Foods,Bank,HDFC Current ****0042,UTR-2026-0819,140000.00,Receivable Collection,No,SAL-2026-0033,130712.40,9287.60,Customer Advance - Greyson Foods,1307.12,VCH-2026-1027,Bank - HDFC Current,DOC-2026-0461,Unreconciled,Ananya Rao,Sneha Iyer,In progress,"Part collected against INV-2026-0733; TDS of 1307.12 remitted from this receipt; balance held as advance, not income.",
+Receipt Number,Receipt Date,Received From,Receipt Mode,Cash/Bank Account,Reference (Cheque/UTR/ID),Gross Amount Received,Receipt Type,Treats as Sale Income,Sales Invoice Allocated,Amount Allocated,Unapplied Amount,Adjust Against,Withholding or Collection Tax (Confirmed Treatment),Voucher Number,Ledger Account,Source Document,Reconciliation Status,Prepared By,Verified By,Entry Verified,Notes,Receipt ID
+RCP-2026-0312,2026-08-19,Greyson Foods,Bank,HDFC Current ****0042,UTR-2026-0819,140000.00,Receivable Collection,No,SAL-2026-0033,130712.40,9287.60,Customer Advance - Greyson Foods,1307.12,VCH-2026-1027,Bank - HDFC Current,DOC-2026-0461,Unreconciled,Ananya Rao,Sneha Iyer,In progress,"Part collected against INV-2026-0733; Tax amount 1307.12 is an illustrative unresolved classification; do not post until the accountant confirms payer withholding versus seller collection; balance held as advance, not income.",
 ```
 
 ```sql
@@ -145,7 +144,7 @@ CREATE TABLE receipt_accounting (
   amount_allocated NUMERIC(14,2) NOT NULL,
   unapplied_amount NUMERIC(14,2) NOT NULL,
   adjust_against VARCHAR(255),
-  tds_collected_on_receipt NUMERIC(14,2) NOT NULL,
+  withholding_or_collection_tax_confirmed_treatment NUMERIC(14,2) NOT NULL,
   voucher_number VARCHAR(255),
   ledger_account VARCHAR(255),
   source_document VARCHAR(255),  -- relation -> target record
@@ -180,7 +179,7 @@ CREATE TABLE receipt_accounting (
       "Amount Allocated": { "type": "number" },
       "Unapplied Amount": { "type": "number" },
       "Adjust Against": { "type": "string" },
-      "TDS Collected on Receipt": { "type": "number" },
+      "Withholding or Collection Tax (Confirmed Treatment)": { "type": "number" },
       "Voucher Number": { "type": "string" },
       "Ledger Account": { "type": "string" },
       "Source Document": { "type": "string" },
@@ -199,7 +198,7 @@ CREATE TABLE receipt_accounting (
       "Treats as Sale Income",
       "Amount Allocated",
       "Unapplied Amount",
-      "TDS Collected on Receipt",
+      "Withholding or Collection Tax (Confirmed Treatment)",
       "Reconciliation Status",
       "Entry Verified"
   ]
@@ -222,7 +221,7 @@ CREATE TABLE receipt_accounting (
 | Amount Allocated | Number (format: currency) | Convert to Number, set format to Currency |
 | Unapplied Amount | Number (format: currency) | Convert to Number, set format to Currency |
 | Adjust Against | Text | Leave as Text |
-| TDS Collected on Receipt | Number (format: currency) | Convert to Number, set format to Currency |
+| Withholding or Collection Tax (Confirmed Treatment) | Number (format: currency) | Convert to Number, set format to Currency |
 | Voucher Number | Text | Leave as Text |
 | Ledger Account | Text | Leave as Text |
 | Source Document | Relation (link to the target database) | Convert to Relation, link to the target database |
@@ -253,7 +252,7 @@ The rows above are documentation examples only. Emit empty templates unless the 
 | 11 | Amount Allocated | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `130712.40` |
 | 12 | Unapplied Amount | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `9287.60` |
 | 13 | Adjust Against | `text` | `VARCHAR(255)` | `string` | Text | `Customer Advance - Greyson Foods` |
-| 14 | TDS Collected on Receipt | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `1307.12` |
+| 14 | Withholding or Collection Tax (Confirmed Treatment) | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `1307.12` |
 | 15 | Voucher Number | `text` | `VARCHAR(255)` | `string` | Text | `VCH-2026-1027` |
 | 16 | Ledger Account | `text` | `VARCHAR(255)` | `string` | Text | `Bank - HDFC Current` |
 | 17 | Source Document | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `DOC-2026-0461` |
@@ -261,7 +260,7 @@ The rows above are documentation examples only. Emit empty templates unless the 
 | 19 | Prepared By | `text` | `VARCHAR(255)` | `string` | Text | `Ananya Rao` |
 | 20 | Verified By | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
 | 21 | Entry Verified | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `In progress` |
-| 22 | Notes | `long_text` | `TEXT` | `string` | Text | `Part collected against INV-2026-0733; TDS of 1307.12 remitted from this receipt; balance held as advance, not income.` |
+| 22 | Notes | `long_text` | `TEXT` | `string` | Text | `Part collected against INV-2026-0733; Tax amount 1307.12 is an illustrative unresolved classification; do not post until the accountant confirms payer withholding versus seller collection; balance held as advance, not income.` |
 | 23 | Receipt ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
 
 ## Select Options
@@ -323,7 +322,7 @@ with the bank.
 
 **Recommended next step** - offered, not built:
 
-> One receipt record carrying the mode, the gross received, the receipt type, the invoice it clears and the unapplied balance, and post it to income only when the type says it is a sale.
+> One receipt record carrying the mode, the gross received, the receipt type, the invoice it clears and the unapplied balance, and determine income recognition from the confirmed accounting policy and underlying transaction, not the receipt label.
 >
 > Workflow: Money received → Mode and source recorded → Typed as collection, advance, loan or capital → Allocated to an invoice or held unapplied → Reconciled to bank or cash
 >
@@ -337,9 +336,7 @@ with the bank.
   first, then `Treats as Sale Income`, then allocate.
 - Keep the arithmetic visible: gross received = amount allocated + unapplied amount, every
   row. A row that will not balance means the allocation is still open.
-- `TDS Collected on Receipt` is a slice of the money received, not an addition to it. It is
-  the part of the allocation that is remitted to the government, so gross received still
-  equals amount allocated plus unapplied amount.
+- Distinguish tax withheld by the payer (potential tax receivable/credit) from tax collected by the seller (potential payable). Do not treat these as interchangeable or as an automatic slice remitted from cash received. Confirm the jurisdiction, taxable base, certificate/evidence and accountant-approved reconciliation equation before using the tax field.
 - An unapplied amount is a live question, not a rounding item. Carry it forward until it is
   identified as an advance, a loan, capital or an error.
 - Record the mode on every receipt. Cash, bank, cheque and digital reconcile through
@@ -406,7 +403,7 @@ with the bank.
 - @source-document-filing - holds the `Source Document` target.
 - @party-ledger-reconciliation - proves the debtor balance after allocation.
 - @day-book - the daily book these receipts land in.
-- @tds-booking-payment - carries `TDS Collected on Receipt` through to the return.
+- @tds-booking-payment - carries `Withholding or Collection Tax (Confirmed Treatment)` through to the return.
 - @petty-cash-management - the same receipt-versus-income question in cash.
 - @monthly-closing-statements - where the unapplied balance either clears or gets written off.
 - @credit-cycle-analysis - uses the unallocated balance to age the debtors.
@@ -422,3 +419,7 @@ Ask me one short question at a time, and only about what I have not already told
 Then recommend the smallest setup that fits, and wait for me to ask before you build it.
 When I ask, output CSV, SQL DDL, JSON Schema and a Notion property mapping. Data only.
 ```
+
+## Recognition and artifact limits
+
+Receipt labels do not determine revenue recognition; an invoice settlement can clear a receivable without recognizing revenue again. Define whether gross received is actual bank cash, invoice settlement including payer withholding, or an amount including seller-collected tax. The simple allocated-plus-unapplied equation applies only within one explicitly defined basis and currency; fees, withholding, refunds and FX need separate components or an approved adjustment model. Use an allocation child table for one receipt covering multiple invoices. Synthetic names, references and values are not transaction evidence. SQL timestamp defaults do not update automatically and string relations are not foreign keys; add explicit validation for amounts, balancing and Done status. JSON date formats require a supporting validator. No generator is bundled, so verify cross-format mappings manually, and protect spreadsheet exports against formula-leading free text for the chosen importer.

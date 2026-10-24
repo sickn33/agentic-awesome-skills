@@ -22,7 +22,7 @@ write will be approved.
 node "<skill-dir>/scripts/relay.mjs" --brief brief.txt --cd /path/to/repo
 ```
 
-(`<skill-dir>` is wherever this skill is installed - the folder containing its `SKILL.md`.)
+(`<skill-dir>` means a separately reviewed upstream runtime checkout; this catalog directory has no relay.)
 
 Options:
 
@@ -45,8 +45,7 @@ Options:
 | `--add-dir <dir>` | Add an extra workspace directory. Repeatable; relative paths resolve against `--cd`. Fresh runs always add the `--cd` repo (absolute path) as a workspace dir. Edits inside extra workspaces are not reported in `touchedFiles`. |
 | `--out-dir <dir>` | Where artifacts go (default: a fresh dir under the system temp dir). |
 
-Artifacts default to the system temp dir on purpose: the repo under review stays clean, so the
-touched-files report shows only Antigravity's edits and nothing of the helper's own.
+Artifacts default to the system temp dir on purpose: the repo under review stays clean, but touchedFiles still includes pre-existing dirty files and omits extra roots/artifacts. It is not edit attribution.
 
 ## The result
 
@@ -136,5 +135,5 @@ caps a single argument), so have `agy` read large context from the workspace ins
 
 ## The commit boundary
 
-The helper never commits - by design, not omission. The robust contract is: Antigravity edits the
+The helper itself does not commit; a write-capable child can still run Git commands despite the brief. Inspect staged state and history as well as unstaged changes. The robust contract is: Antigravity edits the
 working tree, the orchestrator reviews and commits. See [review-and-land.md](review-and-land.md).

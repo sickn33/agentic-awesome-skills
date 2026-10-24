@@ -10,3 +10,7 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | --- | --- | --- | --- |
 | `references/dockerfile-best-practices.md` | `plugins/devcontainer-setup/skills/devcontainer-setup/references/dockerfile-best-practices.md` | `50287dbbe2edf38e1107257aceacca9401b3c0b5` | text-only trailing whitespace and EOF blank lines normalized; pipefail example uses a local producer/consumer |
 | `references/features-vs-dockerfile.md` | `plugins/devcontainer-setup/skills/devcontainer-setup/references/features-vs-dockerfile.md` | `e2d9a174a7edc71b074a5522f4aadcac5e99b7fd` | text-only trailing whitespace and EOF blank lines normalized |
+
+## Local review adaptations (2026-10-23)
+
+Both listed references were modified: pipefail now selects a compatible shell, unverified image digest/architecture/template guarantees were removed, download extraction is staged, and Python installation timing was qualified. These adaptations retain CC-BY-SA-4.0. Original blob IDs above describe imported originals, not current file hashes.

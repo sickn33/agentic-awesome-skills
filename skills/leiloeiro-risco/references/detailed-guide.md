@@ -4,7 +4,7 @@
 
 ## Overview
 
-Analise de risco em leiloes de imoveis. Score 36 pontos, riscos juridicos/financeiros/operacionais, stress test 4 cenarios e ROI ponderado por risco.
+Analise de risco em leiloes de imoveis. Score 40 pontos, riscos juridicos/financeiros/operacionais, stress test 4 cenarios e ROI ponderado por risco.
 
 
 ## How It Works
@@ -77,14 +77,14 @@ ou crédito do art. 3º da Lei 8.009/90:
 ```
 IPTU:
   - Checar na prefeitura do município
-  - Calcular débito total (principal + multa 20% + juros 1% a.m.)
+  - Obter extrato oficial e aplicar apenas multa/juros previstos na legislação municipal e no caso
   - Prazo prescricional: 5 anos (CTN Art. 174)
-  - Impacto: propter rem — arrematante paga
+  - Impacto: verificar modalidade e CTN art. 130, parágrafo único: na hasta pública, sub-rogação sobre o preço, não cobrança automática do adquirente
 
 CONDOMÍNIO:
   - Solicitar ao síndico/administradora extrato completo
   - Incluir: taxa condominial + multas + correção
-  - Impacto: propter rem — arrematante paga (Súmula STJ 478)
+  - Impacto: verificar edital, modalidade, decisão e CPC art. 908 §1º; Súmula 478 trata de preferência do crédito condominial sobre o hipotecário, não de pagamento automático pelo arrematante
   - Atenção: condomínio pode ter ação de cobrança paralela
 
 ÁGUA/ESGOTO:
@@ -126,8 +126,7 @@ Exemplo: R$ 300.000 × 10,5% × 12 meses / 12 = R$ 31.500/ano (custo de oportuni
 
 **Estimativas de Custo de Reforma (valores 2024):**
 
-| Tipo de Reforma | Custo por m² |
-|----------------|---
+Sem tabela de preços fornecida: obter orçamento local com data, escopo, contingência e vistoria técnica; não inventar custo por m².
 
 
 ## Categoria 3 — Riscos Operacionais
@@ -142,7 +141,7 @@ Exemplo: R$ 300.000 × 10,5% × 12 meses / 12 = R$ 31.500/ano (custo de oportuni
 | Embargos com efeito suspensivo | Até o auto de arrematação | Baixo | Leilão suspenso |
 | Nulidade arguida no prazo de 10 dias | 10 dias após arrematação | Baixo | Anulação do leilão |
 | Bem de família reconhecido tardiamente | Após 10 dias — ação autônoma | Muito Baixo | Complexa defesa |
-| Ação de embargos de terceiro | Qualquer momento (prazo prescricional) | Muito Baixo | Requer defesa judicial |
+| Ação de embargos de terceiro | CPC art. 675: na execução, até 5 dias após arrematação e antes da assinatura da carta; outras ações dependem do caso | Muito Baixo | Requer defesa judicial |
 
 #### 3.2 Risco de Fraude ou Manipulação
 
@@ -187,7 +186,7 @@ Exemplo: R$ 300.000 × 10,5% × 12 meses / 12 = R$ 31.500/ano (custo de oportuni
 
 **Fontes de consulta:**
 - CEMADEN (cemaden.gov.br) — mapas de risco
-- IBGE Malha Digital — zoneamento
+- IBGE Malha Digital — limites territoriais; zoneamento deve ser verificado no município
 - Prefeitura Municipal — alvará, habite-se, plano diretor
 - MDR/MCID — banco de dados de risco
 
@@ -218,10 +217,10 @@ RISCOS DE MERCADO:
 [ ] Liquidez local?                       Alta: 0 / Média: 1 / Baixa: 3
 [ ] Risco ambiental?                      Baixo: 0 / Médio: 2 / Alto: 4
 
-SCORE TOTAL: ___ / 36
+SCORE TOTAL: ___ / 40
 
 CLASSIFICAÇÃO:
-0-5:   BAIXO RISCO ✅ — Proceder com segurança
+0-5:   POUCOS INDICADORES NO CHECKLIST — Não comprova segurança
 6-10:  MÉDIO RISCO ⚠️ — Mitigar os pontos identificados
 11-18: ALTO RISCO 🔴 — Só com expertise e desconto maior
 19+:   MUITO ALTO RISCO ❌ — Evitar, salvo especialista experiente
@@ -263,11 +262,11 @@ CLASSIFICAÇÃO:
 SCORE DE RISCO:
 
 ≤ 5 (BAIXO):
-  → ROI líquido > CDI? SIM → ARREMATAR
+  → ROI líquido anualizado e líquido de todos os custos supera referência comparável? SIM → PROSSEGUIR À DILIGÊNCIA
   → ROI líquido > CDI? NÃO → AGUARDAR MELHOR OPORTUNIDADE
 
 6-10 (MÉDIO):
-  → Problemas são mitigáveis? SIM + ROI > CDI+5% → ARREMATAR com cautelas
+  → Problemas são mitigáveis? SIM + prêmio de retorno justificado pelo investidor → REVISÃO PROFISSIONAL
   → Problemas são mitigáveis? NÃO → NÃO ARREMATAR
 
 11-18 (ALTO):
@@ -296,9 +295,9 @@ o valor efetivo da arrematação (lance). Isso aumenta o custo em até 3x.
 - ITBI 3% sobre venal: R$ 12.000 ← cobrado pela prefeitura
 
 **Base legal para contestar:**
-- STJ Tema 1.113: ITBI deve incidir sobre o valor efetivo da transação
+- STJ Tema 1.113: valor em condições normais de mercado; valor declarado tem presunção relativa, afastável por processo administrativo próprio, sem valor de referência unilateral prévio
 - Em leilão judicial: a carta de arrematação é o título — valor = lance
-- Em leilão extrajudicial: a escritura com valor do lance é o título
+- Em leilão extrajudicial: verificar o título aplicável e a situação registral; não presumir escritura em toda operação
 - Possível impugnar administrativamente ou via mandado de segurança
 
 **Recomendação:** Orçar ITBI sobre VMP (cenário pessimista) e incluir no custo total.
@@ -319,15 +318,14 @@ Se conseguir pagar sobre o lance, é economia extra.
 
 ## O Arrematante Está Protegido?
 
-**Regra geral (Art. 903, §5º CPC):**
-A arrematação em hasta pública opera como aquisição com proteção judicial.
-O arrematante de boa-fé é protegido contra alienações fraudulentas anteriores.
+**Revisão jurídica necessária (CPC art. 903):**
+A assinatura do auto produz efeitos definidos no caput, sujeitos às hipóteses legais de invalidação, ineficácia, resolução e ação autônoma. O §5º trata de desistência do arrematante em situações específicas; não é garantia geral contra títulos anteriores. As probabilidades da tabela abaixo são ilustrativas e não sustentam dispensa de análise dos autos.
 
 **Mas atenção aos cenários:**
 
 | Cenário | Risco para Arrematante | Proteção |
 |---------|----------------------|----------|
-| Devedor vendeu imóvel antes da penhora | Muito Baixo | Art. 903 CPC protege arrematante |
+| Devedor vendeu imóvel antes da penhora | Muito Baixo | Verificar título, registro, intimações e decisão; não presumir proteção automática |
 | Terceiro alega ter comprado antes da penhora | Médio | Depende de registro + boa-fé |
 | Imóvel objeto de ação de usucapião por terceiro | Alto | Conflito de títulos — pode anular |
 | Devedor doou para parente (fraude contra credores) | Baixo | Arrematante em hasta protegido |
@@ -362,7 +360,7 @@ CENÁRIO PESSIMISTA (probabilidade 25%):
   - ROI: ___ %
 
 CENÁRIO CATASTRÓFICO (probabilidade 5%):
-  - Arrematação anulada (perda do sinal, mas dinheiro devolvido)
+  - Arrematação anulada (modelar valores recuperáveis, prazo de restituição e custos não recuperáveis; não presumir perda do sinal e restituição integral simultaneamente)
   - OU: não consegue vender em 24 meses (capital travado)
   - OU: débitos ocultos consomem a margem (condomínio alto)
   - ROI: ___ % (possivelmente negativo)
@@ -371,7 +369,7 @@ ROI PONDERADO (esperança matemática):
 = (ROI otimista × 0,20) + (ROI base × 0,50) + (ROI pessimista × 0,25)
   + (ROI catastrófico × 0,05)
 
-Se ROI ponderado > CDI → ARREMATAR
+Se retorno comparável supera a referência, prosseguir apenas à diligência e decisão humana; não é ordem de arrematar
 Se ROI ponderado < CDI → NÃO VALE O RISCO
 ```
 
@@ -389,7 +387,7 @@ Se ROI ponderado < CDI → NÃO VALE O RISCO
 | Custo de Oportunidade | O que se deixa de ganhar ao imobilizar capital nesta operação |
 | Stress Test | Simulação do pior cenário possível para o investimento |
 | Due Diligence | Diligência prévia completa antes de arrematar |
-| VaR (Value at Risk) | Perda máxima estimada em cenário adverso |
+| VaR (Value at Risk) | Quantil de perda para horizonte e nível de confiança definidos; não é perda máxima |
 | Margem de Segurança | Buffer financeiro entre o custo total e o valor de mercado |
 | Fraude à Execução | Alienação do bem após a citação para frustrar a execução (Art. 792 CPC) |
 | ROI Ponderado | Retorno esperado considerando probabilidade de cada cenário |
@@ -397,61 +395,15 @@ Se ROI ponderado < CDI → NÃO VALE O RISCO
 ---
 
 
-## Instalação
+## Disponibilidade operacional e governança
 
-Skill baseada em conhecimento (knowledge-only). Não requer instalação de dependências.
-
-```bash
-
-## Verificar Se A Skill Está Registrada:
-
-python C:\Users\renat\skills\agent-orchestrator\scripts\scan_registry.py
-```
-
----
-
-
-## Comandos E Uso
-
-Como usar esta skill:
-
-```bash
-
-## Uso Via Orchestrator (Automático):
-
-python agent-orchestrator/scripts/match_skills.py "risco leilao imovel"
-
-## "Score De Risco Dessa Arrematação"
-
-```
-
----
-
-
-## Governança
-
-Esta skill implementa as seguintes políticas de governança:
-
-- **action_log**: Análises de risco são registradas pelo log_action para auditoria completa
-- **rate_limit**: Controle via check_rate integrado ao ecossistema
-- **requires_confirmation**: Score >28/36 (MUITO ALTO) gera confirmation_request obrigatório
-- **warning_threshold**: Score >21/36 (ALTO) dispara warning_threshold com alerta ao usuário
-
-Políticas adicionais:
-- **Responsável:** Ecossistema Leiloeiro IA
-- **Escopo:** Análise e gestão de risco em leilões de imóveis
-- **Limitações:** Scores e classificações são indicativos. Decisão final é do investidor.
-- **Auditoria:** Validada por skill-sentinel
-- **Dados sensíveis:** Não armazena dados de risco do usuário
-
----
-
+Guia estático: o orquestrador, scan_registry.py, match_skills.py e skill-sentinel não estão incluídos. scripts/governance.py fornece helpers manuais de log e aviso, sem integração automática ao fluxo, aprovação real ou bloqueio distribuído. Os gatilhos históricos >28/36 e >21/36 eram incompatíveis com a classificação acima e não devem ser usados como controles. Registrar manualmente evidências, fontes e pendências em armazenamento aprovado; não prometer ausência de retenção de dados pelo cliente/serviço.
 
 ## Referências
 
 Fontes normativas e referências de risco:
 - CEMADEN (cemaden.gov.br) — mapas de risco ambiental
-- IBGE — malha digital e zoneamento
+- IBGE — malha digital; prefeitura — zoneamento
 - CPC/2015 — Arts. 829-925 (Execução e Arrematação)
 - Lei 9.514/1997 — Alienação Fiduciária
 - Lei 8.009/1990 — Bem de Família

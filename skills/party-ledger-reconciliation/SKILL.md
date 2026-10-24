@@ -44,7 +44,7 @@ customer data.
 
 ## How It Works
 
-Follow the shared execution contract. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+No separate shared execution contract is bundled; follow this file and current host/user instructions. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -112,7 +112,7 @@ provide a usable link. Report material validation failures or limitations separa
 
 **A selected Notion output is rendered by `notion-manual-import`, so route the
 Notion step there.** When the user selects Notion, hand that step to
-](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/notion-manual-import/SKILL.md): it holds the CSV, the property
+@notion-manual-import: it holds the CSV, the property
 mapping, the import steps and the verification checklist, and it renders the Field
 Reference below instead of defining a table of its own. Do not restate the mapping
 here and do not improvise the import steps. Manual CSV and mapping outputs need no
@@ -122,7 +122,7 @@ Never ask for a Notion password or token.
 
 ```csv
 Reconciliation Number,Period Start,Period End,Party Type,Party Name,Party PAN/VAT,Ledger Balance,Statement Balance,Difference,Missing Invoices,Missing Receipts/Payments,Duplicate Entries,Credit/Debit Notes,Unadjusted Advances,Confirmation Sent,Confirmation Date,Confirmation Status,Difference Reason,Adjustment Required,Adjustment Entry,Adjustment Date,Adjusted By,Reconciliation Frequency,Reviewed By,Status,Notes,Reconciliation ID
-REC-2026-0044,2026-08-01,2026-08-31,Customer/Debtor,Greyson Foods,33CDEFG9012H1Z9,486200.00,471200.00,15000.00,1,2,3,4500.00,15000.00,Yes,2026-09-03,Partially Confirmed,Advance held in our books but not credited by the party,Yes,ADJ-2026-0118,2026-09-05,Sneha Iyer,Monthly,Vikram Singh,In progress,"2 missing receipts, 3 duplicate entries and a 4500.00 credit note cleared on both sides; difference matches the unadjusted advance, adjustment raised and pending review.",
+REC-2026-0044,2026-08-01,2026-08-31,Customer/Debtor,Greyson Foods,SYNTHETIC-TAX-ID,486200.00,471200.00,15000.00,1,2,3,4500.00,15000.00,Yes,2026-09-03,Partially Confirmed,Advance held in our books but not credited by the party,Yes,ADJ-2026-0118,2026-09-05,Sneha Iyer,Monthly,Vikram Singh,In progress,"2 missing receipts, 3 duplicate entries and a 4500.00 credit note cleared on both sides; difference matches the unadjusted advance, adjustment raised and pending review.",REC-ID-0044
 ```
 
 ```sql
@@ -133,9 +133,9 @@ CREATE TABLE party_ledger_reconciliation (
   party_type VARCHAR(100) NOT NULL,
   party_name VARCHAR(255),
   party_pan_vat VARCHAR(255),
-  ledger_balance NUMERIC(14,2) NOT NULL,
-  statement_balance NUMERIC(14,2) NOT NULL,
-  difference NUMERIC(14,2) NOT NULL,
+  ledger_balance NUMERIC(14,2),
+  statement_balance NUMERIC(14,2),
+  difference NUMERIC(14,2),
   missing_invoices NUMERIC,
   missing_receipts_payments NUMERIC,
   duplicate_entries NUMERIC,
@@ -153,7 +153,7 @@ CREATE TABLE party_ledger_reconciliation (
   reviewed_by VARCHAR(255),
   status VARCHAR(100) NOT NULL,
   notes TEXT,
-  reconciliation_id SERIAL PRIMARY KEY,
+  reconciliation_id VARCHAR(255) PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -174,9 +174,9 @@ CREATE INDEX idx_party_ledger_reconciliation_status ON party_ledger_reconciliati
       "Party Type": { "type": "string" },
       "Party Name": { "type": "string" },
       "Party PAN/VAT": { "type": "string" },
-      "Ledger Balance": { "type": "number" },
-      "Statement Balance": { "type": "number" },
-      "Difference": { "type": "number" },
+      "Ledger Balance": { "type": ["number", "null"] },
+      "Statement Balance": { "type": ["number", "null"] },
+      "Difference": { "type": ["number", "null"] },
       "Missing Invoices": { "type": "number" },
       "Missing Receipts/Payments": { "type": "number" },
       "Duplicate Entries": { "type": "number" },
@@ -194,7 +194,7 @@ CREATE INDEX idx_party_ledger_reconciliation_status ON party_ledger_reconciliati
       "Reviewed By": { "type": "string" },
       "Status": { "type": "string" },
       "Notes": { "type": "string" },
-      "Reconciliation ID": { "type": "integer" }
+      "Reconciliation ID": { "type": "string" }
   },
   "required": [
       "Period Start",
@@ -245,16 +245,22 @@ CREATE INDEX idx_party_ledger_reconciliation_status ON party_ledger_reconciliati
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
+## Reconciliation evidence and grain
+
+Confirm currency, account/party identity, as-of date and one consistent debit/credit sign convention before comparison. Synthetic difference = 486,200 - 471,200 = 15,000 after both statements are normalized to the same perspective. A balance difference does not by itself prove the advance is its cause. Trace individual items and timing evidence; a missing-item count is not a money amount. The example counts are historical investigated counts, not outstanding unresolved counts; the note must identify which items remain. Rename/add separate outstanding count fields if needed. Never force an adjustment solely to make a difference zero; timing differences may need no book entry.
+
+Preserve reconciliation IDs as stable strings, use Reconciliation Number as Notion Title and enforce party/account/currency/period grain. Unknown numeric balances use SQL NULL / JSON null / empty CSV cells with an explicit missing-data state, never zero or the word Unknown in a numeric column. Field Reference types denote non-null values. A proposed adjustment date/user is not evidence it was posted; distinguish proposed, approved and booked status with actual entry reference. Confirmations, actual postings and resolved differences require separate evidence before Done. updated_at needs explicit application/trigger maintenance. Escape formula-leading text in spreadsheet exports while preserving original source identifiers separately.
+
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Reconciliation Number | `text` | `VARCHAR(255)` | `string` | Text | `REC-2026-0044` |
+| 1 | Reconciliation Number | `text` | `VARCHAR(255)` | `string` | Title | `REC-2026-0044` |
 | 2 | Period Start | `date` | `DATE` | `string, format: date` | Date | `2026-08-01` |
 | 3 | Period End | `date` | `DATE` | `string, format: date` | Date | `2026-08-31` |
 | 4 | Party Type | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Customer/Debtor` |
 | 5 | Party Name | `text` | `VARCHAR(255)` | `string` | Text | `Greyson Foods` |
-| 6 | Party PAN/VAT | `text` | `VARCHAR(255)` | `string` | Text | `33CDEFG9012H1Z9` |
+| 6 | Party PAN/VAT | `text` | `VARCHAR(255)` | `string` | Text | `SYNTHETIC-TAX-ID` |
 | 7 | Ledger Balance | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `486200.00` |
 | 8 | Statement Balance | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `471200.00` |
 | 9 | Difference | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `15000.00` |
@@ -275,7 +281,7 @@ and anything pointing at another table stays `relation`.
 | 24 | Reviewed By | `text` | `VARCHAR(255)` | `string` | Text | `Vikram Singh` |
 | 25 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `In progress` |
 | 26 | Notes | `long_text` | `TEXT` | `string` | Text | `2 missing receipts, 3 duplicate entries and a 4500.00 credit note cleared on both sides; difference matches the unadjusted advance, adjustment raised and pending review.` |
-| 27 | Reconciliation ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
+| 27 | Reconciliation ID | `id` | `VARCHAR(255) PRIMARY KEY` | `string` | Text (preserve source ID) | `REC-ID-0044` |
 
 ## Select Options
 
@@ -369,8 +375,7 @@ Our biggest customer says we owe them less than our books show and we cannot pro
 - Local reads, generation commands, and validation are part of a requested artifact build.
   External writes, messages, provisioning, and publication require authorization for that
   action and target; existing explicit authorization does not need to be repeated.
-- If the user pastes real customer or supplier data, generate the template and tell them to
-  delete the pasted data from the conversation.
+- If the user pastes real customer or supplier data, minimize further exposure, keep output templates empty and do not claim deletion from conversation or provider storage.
 - Adjustments and disputed balances need a qualified human reviewer before anything is acted
   on.
 
@@ -399,7 +404,7 @@ Our biggest customer says we owe them less than our books show and we cannot pro
 - @sales-accounting - raises the invoices that make up the debtor balance.
 - @receipt-accounting - records the receipts that should clear that balance.
 - @credit-cycle-analysis - reads the aging that tells you which parties to chase first.
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/monthly-closing-statements/SKILL.md) - pulls the ledger totals this reconciliation compares against.
+- @monthly-closing-statements - pulls the ledger totals this reconciliation compares against.
 
 ## Reusable Prompt
 

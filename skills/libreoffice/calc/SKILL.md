@@ -71,10 +71,11 @@ def create_spreadsheet():
         "com.sun.star.bridge.UnoUrlResolver", local_ctx
     )
     ctx = resolver.resolve(
-        "uno:socket,host=localhost,port=8100;urp;StarOffice.ComponentContext"
+        "uno:socket,host=127.0.0.1,port=8100;urp;StarOffice.ComponentContext"
     )
     smgr = ctx.ServiceManager
-    doc = smgr.createInstanceWithContext("com.sun.star.sheet.SpreadsheetDocument", ctx)
+    desktop = smgr.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
+    doc = desktop.loadComponentFromURL("private:factory/scalc", "_blank", 0, ())
     sheets = doc.getSheets()
     sheet = sheets.getByIndex(0)
     cell = sheet.getCellByPosition(0, 0)
@@ -88,7 +89,8 @@ def create_spreadsheet():
 import ezodf
 
 doc = ezodf.newdoc('ods', 'spreadsheet.ods')
-sheet = doc.sheets[0]
+sheet = ezodf.Sheet('Sheet1', size=(10, 10))
+doc.sheets += sheet
 sheet['A1'].set_value('Hello')
 sheet['B1'].set_value('World')
 doc.save()
@@ -125,17 +127,18 @@ def create_formula_spreadsheet():
         "com.sun.star.bridge.UnoUrlResolver", local_ctx
     )
     ctx = resolver.resolve(
-        "uno:socket,host=localhost,port=8100;urp;StarOffice.ComponentContext"
+        "uno:socket,host=127.0.0.1,port=8100;urp;StarOffice.ComponentContext"
     )
     smgr = ctx.ServiceManager
-    doc = smgr.createInstanceWithContext("com.sun.star.sheet.SpreadsheetDocument", ctx)
+    desktop = smgr.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
+    doc = desktop.loadComponentFromURL("private:factory/scalc", "_blank", 0, ())
     sheet = doc.getSheets().getByIndex(0)
     
-    sheet.getCellByPosition(0, 0).setDoubleValue(100)
-    sheet.getCellByPosition(0, 1).setDoubleValue(200)
+    sheet.getCellByPosition(0, 0).setValue(100)
+    sheet.getCellByPosition(0, 1).setValue(200)
     
     cell = sheet.getCellByPosition(0, 2)
-    cell.setFormula("SUM(A1:A2)")
+    cell.setFormula("=SUM(A1:A2)")
     
     doc.storeToURL("file:///path/to/formulas.ods", ())
     doc.close(True)
@@ -171,7 +174,7 @@ pip install pandas    # Data analysis
 2. Document complex formulas
 3. Use data validation for input control
 4. Create templates for recurring reports
-5. Store ODS source files in version control
+5. Version only approved nonsensitive source spreadsheets
 6. Test conversions thoroughly
 7. Use CSV for data exchange
 8. Handle conversion failures gracefully
@@ -180,8 +183,8 @@ pip install pandas    # Data analysis
 
 ### Cannot open socket
 ```bash
-killall soffice.bin
-soffice --headless --accept="socket,host=localhost,port=8100;urp;"
+# Inspect the listener and stop only the task-owned process after saving its documents.
+soffice --headless --accept="socket,host=127.0.0.1,port=8100;urp;"
 ```
 
 ## Resources
@@ -196,10 +199,15 @@ soffice --headless --accept="socket,host=localhost,port=8100;urp;"
 - impress
 - draw
 - base
-- xlsx-official
 - workflow-automation
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Automation and document limits
+
+Verify the actual LibreOffice version, filters, Python UNO binding and database drivers; installing unrelated Python libraries does not provide UNO. Bind any UNO listener to loopback in a separate task-owned profile and stop it after use; UNO is not an authenticated sandbox. Do not terminate all office processes or expose the listener publicly. Use a fresh private output directory, check expected file type/nonempty output and inspect the rendered result; exit zero alone is insufficient.
+
+Opening documents can invoke macros, external links or embedded content: use approved inputs with macros/updates disabled and isolate untrusted conversions. Format conversion may lose layout, formulas, links, notes, multiple sheets/pages or features. Retain originals, clarify CSV sheet/delimiter/encoding and preserve formula/identifier semantics. Do not automatically install packages, publish documents or put sensitive records in Git. These examples were statically reviewed only; no LibreOffice process or conversion was run.

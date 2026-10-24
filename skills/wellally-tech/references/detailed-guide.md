@@ -53,7 +53,7 @@ Data Time Range: 2025-01-01 to 2025-01-22
 • data/sleep/sleep-records.json (sleep)
 
 ⚠️  Validation Warnings:
-• 3 step records missing timestamps, used default values
+• 3 step records missing timestamps, quarantined for review
 • 1 weight record abnormal (<20kg), skipped
 
 💡 Next Steps:
@@ -268,7 +268,7 @@ python scripts/import_fitbit.py --csv fitbit_export.csv
 
 **API Integration**:
 1. Create app on Oura Developer Platform
-2. Get Personal Access Token
+2. Use the currently supported authorization flow from the Oura API documentation; do not assume historical personal-access tokens remain supported
 3. Configure token in import script
 
 **Import Data**:
@@ -367,7 +367,7 @@ import json
 ## FAQ
 
 **Q: Will imported data overwrite existing data?**
-A: No. Imported data will be appended to existing data, not overwritten. Duplicate data will be automatically deduplicated.
+A: This catalog does not implement append or deduplication. Verify the actual importer, preserve a backup and inspect a staged diff before writing.
 
 **Q: Can I import data from multiple platforms?**
 A: Yes. You can import data from Apple Health, Fitbit, Oura, and other platforms simultaneously, the system will merge all data.
@@ -376,4 +376,4 @@ A: Yes. You can import data from Apple Health, Fitbit, Oura, and other platforms
 A: No. Knowledge base articles are referenced via URLs, requiring network connection to access the [WellAlly.tech](https://www.wellally.tech/) platform.
 
 **Q: Where are API credentials stored?**
-A: API credentials are encrypted and stored in local configuration files, not uploaded to any server.
+A: Storage security depends on the actual integration. Use approved secret storage, verify its access/retention controls and do not claim encryption from this documentation alone.

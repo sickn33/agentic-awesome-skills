@@ -7,7 +7,6 @@ import (
 
 	"github.com/go-rod/rod"
 	"github.com/go-rod/rod/lib/launcher"
-	"github.com/go-rod/rod/lib/utils"
 	"github.com/go-rod/stealth"
 )
 
@@ -74,6 +73,7 @@ func printBotDetectionReport(page *rod.Page) {
 	el := page.MustElement("#broken-image-dimensions.passed")
 	for _, row := range el.MustParents("table").First().MustElements("tr:nth-child(n+2)") {
 		cells := row.MustElements("td")
+        if len(cells) < 2 { continue }
 		key := cells[0].MustProperty("textContent")
 
 		if strings.HasPrefix(key.String(), "User Agent") {
@@ -87,5 +87,4 @@ func printBotDetectionReport(page *rod.Page) {
 		}
 	}
 
-	_ = utils.OutputFile("stealth_result.png", []byte{})
 }

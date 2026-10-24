@@ -4,7 +4,7 @@ Execute autonomous multi-step research tasks using Google's Gemini Deep Research
 
 ## Overview
 
-The Deep Research Agent (`deep-research-pro-preview-12-2025`) powered by Gemini 3 Pro:
+The Deep Research Agent (`deep-research-preview-04-2026`) (preview API; verify availability before starting):
 
 - **Plans** research strategy based on your query
 - **Searches** the web and analyzes sources
@@ -18,13 +18,13 @@ This process takes 2-10 minutes but produces thorough analysis that would take a
 
 ```bash
 # Navigate to skill directory
-cd skills/deep-research
+cd skills/gemini-deep-research
 
 # Install dependencies
 pip install -r requirements.txt
 
 # Set up API key
-cp .env.example .env
+# Create a gitignored .env file locally (no .env.example is bundled)
 # Edit .env and add your GEMINI_API_KEY
 ```
 
@@ -68,7 +68,7 @@ python3 scripts/research.py -q "Research topic" --no-wait
 
 ### `--stream`
 
-Stream research progress in real-time. Shows thinking steps and builds the report as it's generated.
+The legacy streaming parser is disabled before any request. Use polling until a current-preview streaming adapter is implemented.
 
 ```bash
 python3 scripts/research.py -q "Analyze market trends" --stream
@@ -188,7 +188,7 @@ python3 scripts/research.py -q "Review recent developments in \
 | Error | Cause | Solution |
 |-------|-------|----------|
 | `GEMINI_API_KEY not set` | Missing API key | Set in `.env` or environment |
-| `API error 429` | Rate limited | Wait and retry |
+| `API error 429` | Rate limited | Check the existing interaction before retrying; a POST can have an uncertain outcome |
 | `Research timed out` | Task took too long | Simplify query or increase timeout |
 | `Failed to parse result` | Unexpected response | Use `--raw` to see actual output |
 
@@ -227,16 +227,16 @@ python3 scripts/research.py -q "Review recent developments in \
 
 ## Safety & Privacy
 
-- **Read-only**: This skill only reads/researches; no file modifications
+- **Local writes**: Stores IDs, timestamps and statuses under ~/.cache/deep-research; query text is omitted. Existing older history may still contain queries. Serialize CLI processes to avoid lost updates.
 - **No secrets in queries**: Avoid including sensitive data in research queries
 - **Source verification**: Always verify citations in the output
-- **Cost awareness**: Each task costs $2-5; be mindful of usage
+- **Cost awareness**: The estimates above are historical examples, not a price or spending cap. Verify current pricing. Local timeout/Ctrl+C does not cancel the paid remote job.
 
 ## Limitations
 
-- **No custom tools**: Cannot use MCP or function calling
+- **Wrapper scope**: This wrapper does not expose custom tools; the underlying API capabilities differ.
 - **No structured output enforcement**: JSON formatting relies on prompt engineering
-- **Web-only research**: Cannot access private/authenticated sources
+- **Data disclosure**: Sends prompts to Google; do not include private/authenticated content without authorization.
 - **60-minute max**: Very complex tasks may time out
 
 ## References
@@ -244,3 +244,5 @@ python3 scripts/research.py -q "Review recent developments in \
 - [Gemini Deep Research Documentation](https://ai.google.dev/gemini-api/docs/deep-research)
 - [Google AI Studio](https://aistudio.google.com/)
 - [Gemini API Pricing](https://ai.google.dev/gemini-api/docs/pricing)
+
+Modified: current preview/polling compatibility, cache privacy and explicit local timeout boundaries. No live API test performed.

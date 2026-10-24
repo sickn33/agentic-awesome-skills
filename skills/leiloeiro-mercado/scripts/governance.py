@@ -12,8 +12,8 @@ from datetime import datetime
 from pathlib import Path
 
 # Diretorio de dados
-DATA_DIR = Path(__file__).parent.parent / "data"
-DATA_DIR.mkdir(exist_ok=True)
+DATA_DIR = Path(os.environ.get("LEILOEIRO_STATE_DIR", str(Path.home() / ".local" / "state" / "leiloeiro-ia")))
+# Import does not create storage. Configure/authorize persistence before log_action.
 
 LOG_FILE = DATA_DIR / "action_log.jsonl"
 RATE_LIMIT_WINDOW = 60  # segundos
@@ -26,9 +26,12 @@ def log_action(action: str, details: dict | None = None) -> dict:
     entry = {
         "timestamp": datetime.utcnow().isoformat(),
         "action": action,
-        "details": details or {},
+        "details": {k: str(v)[:200] for k, v in (details or {}).items()
+                    if k in {"skill", "status", "request_id"}},
     }
-    with open(LOG_FILE, "a", encoding="utf-8") as f:
+    DATA_DIR.mkdir(parents=True, exist_ok=True, mode=0o700)
+    flags = os.O_WRONLY | os.O_CREAT | os.O_APPEND | getattr(os, "O_NOFOLLOW", 0)
+    with os.fdopen(os.open(LOG_FILE, flags, 0o600), "a", encoding="utf-8") as f:
         f.write(json.dumps(entry, ensure_ascii=False) + "\n")
     return entry
 
@@ -44,7 +47,7 @@ def check_rate(action: str = "query") -> bool:
             try:
                 entry = json.loads(line)
                 ts = datetime.fromisoformat(entry["timestamp"])
-                if (now - ts).total_seconds() <= RATE_LIMIT_WINDOW:
+                if 0 <= (now - ts).total_seconds() <= RATE_LIMIT_WINDOW:
                     count += 1
             except (json.JSONDecodeError, KeyError, ValueError):
                 continue

@@ -82,7 +82,7 @@ function ForwardMessageDialog() {
 function ForwardMessageProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState(initialState)
   const forwardMessage = useForwardMessage()
-  const inputRef = useRef(null)
+  const inputRef = useRef<TextInput | null>(null)
 
   return (
     <Composer.Provider
@@ -111,7 +111,7 @@ function ForwardMessageDialog() {
 }
 
 function ForwardButton() {
-  const { actions } = use(Composer.Context)
+  const { actions } = useComposer()
   return <Button onPress={actions.submit}>Forward</Button>
 }
 ```

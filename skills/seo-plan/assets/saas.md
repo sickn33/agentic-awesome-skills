@@ -1,4 +1,6 @@
-<!-- Updated: 2026-02-07 -->
+<!-- Imported template dated 2026-02-07; locally reviewed 2026-10-23. -->
+
+All word-count, page-count, timing, character-range and publishing targets are editorial starting points, not Google requirements or guaranteed ranking effects. Use verified credentials, original evidence and real business facts only. Schema examples contain placeholders/fictional ratings that must not be published unchanged. Vocabulary validity differs from Google rich-result eligibility; check current feature documentation.
 # SaaS SEO Strategy Template
 
 ## Industry Characteristics
@@ -95,7 +97,7 @@
 
 ## Comparison & Alternative Pages
 
-Comparison pages are among the highest-converting content types for SaaS, with conversion rates of **4-7%** vs. 0.5-1.8% for standard blog content (35.8% of marketers report comparison content performs "better than ever" per Intergrowth November 2025 survey).
+Comparison pages may serve high-intent visitors, but this bundle establishes no universal conversion-rate advantage. Measure with a defined traffic population and qualified conversion event.
 
 **Recommended page types:**
 - `/{product}-vs-{competitor}`: Direct 1:1 comparison
@@ -107,7 +109,7 @@ Comparison pages are among the highest-converting content types for SaaS, with c
 - Include structured comparison tables with pricing, features, pros/cons
 - Be factually accurate about competitors: verify claims regularly
 - Include customer testimonials from users who switched
-- Add FAQ schema for common comparison questions (valuable for AI search)
+- Answer real comparison questions; do not promise Google FAQ rich results or AI-citation benefit from FAQPage markup
 - Update regularly: stale comparison data damages credibility
 - Cross-reference the `seo-competitor-pages` skill for detailed frameworks
 

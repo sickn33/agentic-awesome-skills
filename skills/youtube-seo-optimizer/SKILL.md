@@ -27,15 +27,16 @@ Read [the detailed guide](references/detailed-guide.md) before executing this sk
 
 ## Examples
 
-**Video, new upload:** User says "uploading a video about how farmers in Nepal can use mobile apps to sell vegetables directly." → Confirm target keyword ("sell vegetables online Nepal"), run Step 1, produce Mode A package — title, A/B variant, 800-word description with geo signals, 18 tags, 7 hashtags, 8 chapters, thumbnail text, cards, playlist note, pinned comment, end-screen script.
+**Video, new upload:** User says "uploading a video about how farmers in Nepal can use mobile apps to sell vegetables directly." → Confirm target keyword ("sell vegetables online Nepal"), run Step 1, produce Mode A package — title, A/B variant, a concise description within the platform limit, relevant tags/hashtags, and chapters only from verified timestamps, thumbnail text, cards, playlist note, pinned comment, end-screen script.
 
 **Podcast, existing episode, underperforming:** User says "My episode with [guest] has barely any views, here's the URL." → Fetch URL, confirm target keyword, produce Mode D audit — scorecard, detailed findings, rewritten metadata, action plan.
 
-**Short-form, new clip from a podcast:** User says "Cut a Short from the Agentic Awesome Skills part of that episode." → Mode E: reuse episode's keyword and tags, 60-70 char title, 150-200 word description, 3-5 hashtags including `#Shorts`, cross-post caption.
+**Short-form, new clip from a podcast:** User says "Cut a Short from the Agentic Awesome Skills part of that episode." → Mode E: reuse episode's keyword and tags, concise accurate title and description within destination limits, 3-5 hashtags including `#Shorts`, cross-post caption.
 
 ---
 
 ## Limitations
 - Use this skill only when the task matches the scope described above
 - Do not treat output as a substitute for platform-specific validation, testing, or expert review
+- A topic alone cannot establish video contents or timestamps; use explicit draft placeholders until media/transcript evidence is available.
 - Stop and ask for clarification if required inputs, permissions, or success criteria are missing

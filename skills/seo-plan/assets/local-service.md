@@ -1,4 +1,6 @@
-<!-- Updated: 2026-02-07 -->
+<!-- Imported template dated 2026-02-07; locally reviewed 2026-10-23. -->
+
+All word-count, page-count, timing, character-range and publishing targets are editorial starting points, not Google requirements or guaranteed ranking effects. Use verified credentials, original evidence and real business facts only. Schema examples contain placeholders/fictional ratings that must not be published unchanged. Vocabulary validity differs from Google rich-result eligibility; check current feature documentation.
 # Local Service Business SEO Strategy Template
 
 ## Industry Characteristics
@@ -98,27 +100,9 @@
 - Photo uploads
 - Review response strategy
 
-### Google Business Profile Updates (2025-2026)
+### Current platform boundary
 
-- **Video verification** is now standard: postcard verification has been largely phased out. Prepare for a short video verification process showing the business location or service area.
-- **WhatsApp integration** replaced Google Business Chat (deprecated). Businesses can connect WhatsApp as their primary messaging channel.
-- **Q&A removed from Maps**: replaced by AI-generated answers. Ensure your GBP description, services, and website FAQ are comprehensive, as Google AI uses them to answer queries.
-- **Business hours are a top-5 ranking factor**: "Business is open at time of search" ranked as a top individual factor for the first time (Whitespark 2026 Local Search Ranking Factors Report). Keep hours accurate; consider extended hours if feasible.
-- **Review "Stories" format**: Google Maps now shows review snippets in a swipeable Stories format on mobile. Encourage detailed, descriptive reviews with photos.
-
-### Service Area Business (SAB) Update (June 2025)
-
-Google updated SAB guidelines to **disallow entire states or countries** as service areas. SABs must specify: cities, postal/ZIP codes, or neighborhoods. If you serve an entire metro area, list the major cities within it rather than the state.
-
-### AI Visibility for Local Businesses
-
-AI Overviews appear for only ~0.14% of local keywords (March 2025 data), local SEO faces significantly less AI disruption than other verticals. However, ChatGPT and Perplexity are increasingly used for local recommendations.
-
-To optimize for AI local visibility:
-- Ensure presence on expert-curated "best of" lists (ranked #1 AI visibility factor in Whitespark 2026 report)
-- Maintain consistent NAP (Name, Address, Phone) across all platforms
-- Build genuine review volume and quality
-- Use LocalBusiness schema with complete properties (geo, openingHours, priceRange, areaServed)
+Verify current Google Business Profile eligibility, categories, available verification/messaging/Q&A methods and service-area rules against official help for the exact account/region. Do not assume a fixed verification route, universal feature removal or a top-five ranking weight. Maintain accurate hours and authentic reviews; do not extend displayed hours or fabricate locations for ranking. No AI-overview percentage or AI citation factor is established here.
 
 ## Content Priorities
 

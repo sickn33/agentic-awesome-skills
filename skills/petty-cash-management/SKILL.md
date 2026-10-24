@@ -25,7 +25,7 @@ request, from one field list so they cannot drift apart.
 
 Layer: Layer 4: Cash. Fits: Starter stage. Table code: n/a.
 
-**The control this table exists to enforce:** petty cash is only controlled by two things -
+**The control this table exists to enforce:** two core petty-cash controls are
 a fixed limit and a periodic count. The limit is on the float, not on each payment, and
 every payment carries a supporting document and a voucher. The reconciliation identity is
 fixed and is checked at every count:
@@ -38,7 +38,7 @@ The physical count must equal closing cash. Any difference is recorded as a vari
 investigation and a status, not absorbed quietly.
 
 The identity is computed on a `Count` entry row, not on a payment row: `Cash In` and
-`Cash Out` hold the period's replenishment and payments, `Running Cash Balance` is the
+`Cash Out` remain zero on the non-posting count row; derive the period's replenishment and payments from movement rows, `Running Cash Balance` is the
 closing balance per the register, and `Physical Count` is the money actually in the box.
 
 ## When to Use This Skill
@@ -117,7 +117,7 @@ Build an already requested artifact without asking again. For advice-only reques
 
 **Why this one:** A petty cash float leaks slowly and is only ever caught by counting it. The register without the count is a diary; the count without the register is an argument.
 
-**Workflow:** Payment made against a document → Voucher raised and approved → Running balance updated → Replenishment raised separately → Physical count → Variance recorded and investigated
+**Workflow:** Voucher and document checked and approved → Payment made → Running balance updated → Replenishment raised separately → Physical count → Variance recorded and investigated
 
 ### Step 5 - Build only on request
 
@@ -137,7 +137,7 @@ Never ask for a Notion password or token.
 
 ```csv
 Entry Number,Entry Date,Entry Type,Payee,Purpose,Cash Out,Cash In,Running Cash Balance,Cash Limit,Within Limit,Custodian,Supporting Document,Document Reference,Voucher Number,Approved By,Physical Count Date,Physical Count,Count Variance,Variance Status,Investigation Notes,Ledger Account,Entry Verified,Notes,Petty Cash ID
-PC-2026-0188,2026-08-31,Count,Several payees,Courier and postage paid from the float during August,7250.00,7000.00,2250.00,10000.00,Yes,Rohit Menon,Bill/Invoice,BILL-4471,VCH-2026-1044,Ananya Rao,2026-08-31,2100.00,150.00,Short,Count 150.00 short of the register; a courier bill of that amount may have been entered but not paid. Under investigation with the approver.,Petty Cash,In progress,Count sheet CNT-2026-08-31 signed by custodian and approver; replenishment drawn from bank on 01 Aug.,
+PC-2026-0188,2026-08-31,Count,Several payees,Courier and postage paid from the float during August,0.00,0.00,2250.00,10000.00,Yes,Rohit Menon,Bill/Invoice,BILL-4471,VCH-2026-1044,Ananya Rao,2026-08-31,2100.00,150.00,Short,Count 150.00 short of the register; a courier bill of that amount may have been entered but not paid. Under investigation with the approver.,Petty Cash,In progress,Count sheet CNT-2026-08-31 signed by custodian and approver; replenishment drawn from bank on 01 Aug.,
 ```
 
 ```sql
@@ -338,7 +338,7 @@ Petty cash keeps running out before the month ends and we never know by how much
 
 > One imprest register with a named custodian, a fixed float, a running balance on every entry, a supporting document type on every payment, and a count line that closes the register against the physical money.
 >
-> Workflow: Payment made against a document → Voucher raised and approved → Running balance updated → Replenishment raised separately → Physical count → Variance recorded and investigated
+> Workflow: Voucher and document checked and approved → Payment made → Running balance updated → Replenishment raised separately → Physical count → Variance recorded and investigated
 >
 > Want the CSV, SQL, JSON Schema and Notion mapping for this?
 
@@ -349,8 +349,8 @@ Petty cash keeps running out before the month ends and we never know by how much
 - Reconcile on the fixed identity: opening cash + receipts and replenishment - payments =
   closing cash. Compute it at every count, not at year end.
 - Keep the running balance under the limit. A float that is topped up only when it is empty
-  is a float that is out of control; `Within Limit` = `No` means raise the replenishment.
-- The limit is on the float. `Within Limit` is a warning to replenish, not a reason to
+  is a float that is out of control; `Within Limit` = `No` means investigate a negative balance or excess over the float; replenishment requires a separate approved request.
+- The limit is on the float. `Within Limit` tests whether the balance is between zero and the agreed float; it is not a replenishment trigger, not a reason to
   stop recording the payment.
 - Record replenishments as their own entry type. A replenishment mixed into a payment
   hides the expense.
@@ -405,8 +405,7 @@ Petty cash keeps running out before the month ends and we never know by how much
 - **Problem:** asked all six questions in one message.
   **Solution:** ask one, wait, and drop any the first answer already covered.
 - **Problem:** the custodian counts their own cash and signs it off.
-  **Solution:** a second person at the count. The limit and the count are the only two
-  controls this float has.
+  **Solution:** a second person at the count. Also retain approval, custody, voucher and access controls.
 - **Problem:** a shortage is fixed by editing the running balance.
   **Solution:** record the variance, set `Short` or `Under Investigation`, and document it.
 - **Problem:** replenishments are entered as payments.
@@ -426,7 +425,7 @@ Petty cash keeps running out before the month ends and we never know by how much
 
 - @accounting-audit-system-builder - routes to this skill and the other 15 modules.
 - @day-book - the daily cash book the float is counted into.
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/payment-accounting/SKILL.md) - the replenishment, when it is made from bank.
+- [payment-accounting](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/payment-accounting/SKILL.md) - the replenishment, when it is made from bank.
 - @expense-accounting - where the expenses paid from the float are classified.
 - @source-document-filing - where the supporting documents behind each entry are held.
 - @salary-wage-accounting - wage sheets are one of the acceptable petty cash documents.
@@ -446,3 +445,9 @@ Ask me one short question at a time, and only about what I have not already told
 Then recommend the smallest setup that fits, and wait for me to ask before you build it.
 When I ask, output CSV, SQL DDL, JSON Schema and a Notion property mapping. Data only.
 ```
+
+## Register calculation limits
+
+Count entries are reconciliation snapshots, never additional cash movements: repeating period totals in a posting count row would double-count them. Record opening cash explicitly in configuration or an opening row, and specify the count period and currency. In the synthetic example, opening cash is 2,500, receipts 7,000 and payments 7,250, so closing cash is 2,250; its count row must have zero Cash In and Cash Out. Define Count Variance as register balance minus physical count (positive Short, negative Over). A discrepancy is investigated before an approved correcting transaction, retaining the original audit trail.
+
+The DDL and schema do not enforce arithmetic, select vocabularies, cross-row balance or approvals; `updated_at DEFAULT NOW()` only initializes a value and needs an update mechanism. JSON date formats require format validation. The referenced shared contract/import renderer is not bundled here; verify availability or deliver the inline mapping manually. These templates do not enforce financial controls.

@@ -23,14 +23,14 @@ class AgentJSONFormatter(logging.Formatter):
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "level": record.levelname,
             "logger": record.name,
-            "message": record.getMessage(),
+            "message": record.getMessage(),  # log only fixed event names; never raw request content
             "module": record.module,
             "function": record.funcName,
             "line": record.lineno,
         }
         # Merge any extra fields attached to the record
         for key in ("trace_id", "span_id", "agent_name", "model",
-                     "tool_name", "request_id", "user_id",
+                     "tool_name", "request_id",
                      "prompt_tokens", "completion_tokens", "cost_usd",
                      "duration_seconds", "status", "error_type"):
             value = getattr(record, key, None)
@@ -38,7 +38,7 @@ class AgentJSONFormatter(logging.Formatter):
                 log_entry[key] = value
 
         if record.exc_info and record.exc_info[0] is not None:
-            log_entry["exception"] = self.formatException(record.exc_info)
+            log_entry["exception_type"] = record.exc_info[0].__name__
 
         return json.dumps(log_entry, default=str)
 
@@ -130,7 +130,7 @@ Example log output:
 
 ### Agent Overview Dashboard
 
-Save this JSON as `agent-overview.json` and import it into Grafana.
+The dashboard wrapper is an API payload sketch; adapt it to the selected Grafana import/API format and data source. LLM-call error ratios are not end-to-end agent availability. Ensure every attempted call (success and failure) contributes to the denominator; no-traffic is unknown, not 100% success.
 
 ```json
 {
@@ -285,7 +285,7 @@ class ModelPricing:
     prompt_cost_per_1k: float    # USD per 1,000 prompt tokens
     completion_cost_per_1k: float  # USD per 1,000 completion tokens
 
-# Updated pricing as of early 2026 -- adjust to your negotiated rates
+# Historical illustrative rates, not a current price feed; supply effective-date/provider-specific pricing including cached, reasoning and tool usage
 MODEL_PRICING: dict[str, ModelPricing] = {
     "gpt-4o":           ModelPricing(0.0025, 0.0100),
     "gpt-4o-mini":      ModelPricing(0.00015, 0.0006),
@@ -298,19 +298,23 @@ MODEL_PRICING: dict[str, ModelPricing] = {
 }
 
 def calculate_cost(model: str, prompt_tokens: int, completion_tokens: int) -> float:
-    """Return estimated cost in USD. Falls back to zero if model is unknown."""
+    """Return estimated cost in USD. Fails for unknown pricing rather than reporting zero cost."""
+    if prompt_tokens < 0 or completion_tokens < 0:
+        raise ValueError("Token counts must be nonnegative")
     pricing = MODEL_PRICING.get(model)
     if pricing is None:
-        return 0.0
+        raise ValueError("Unknown model pricing")
     prompt_cost = (prompt_tokens / 1000) * pricing.prompt_cost_per_1k
     completion_cost = (completion_tokens / 1000) * pricing.completion_cost_per_1k
     return prompt_cost + completion_cost
 
 def record_cost(model: str, prompt_tokens: int, completion_tokens: int, agent_name: str = "default"):
     """Calculate cost and record it in the Prometheus counter."""
+    if prompt_tokens < 0 or completion_tokens < 0:
+        raise ValueError("Token counts must be nonnegative")
     pricing = MODEL_PRICING.get(model)
     if pricing is None:
-        return
+        raise ValueError("Unknown model pricing")
     prompt_cost = (prompt_tokens / 1000) * pricing.prompt_cost_per_1k
     completion_cost = (completion_tokens / 1000) * pricing.completion_cost_per_1k
     LLM_COST.labels(model=model, agent_name=agent_name, cost_type="prompt").inc(prompt_cost)
@@ -373,6 +377,8 @@ groups:
 
 ## Langfuse / Helicone Integration
 
+The Langfuse snippet uses the historical v2 decorators API; pin a supported matching SDK or migrate using official SDK docs. Decorators/proxies can export raw input/output before a downstream redactor sees it. Obtain destination/retention approval and disable capture by default for private content. The proxy also receives provider credentials/requests; it is an additional trust boundary.
+
 ### Langfuse (Self-hosted or Cloud)
 
 Langfuse provides trace-level visibility with prompt management and scoring. It can run alongside your existing OTel stack.
@@ -427,16 +433,17 @@ Helicone acts as a logging proxy. Point your OpenAI base URL at Helicone and it 
 ```python
 # helicone_integration.py
 from openai import OpenAI
+import os
 
 client = OpenAI(
     base_url="https://oai.helicone.ai/v1",
     default_headers={
-        "Helicone-Auth": "Bearer sk-helicone-...",
+        "Helicone-Auth": f"Bearer {os.environ['HELICONE_API_KEY']}",
         "Helicone-Property-Agent": "support-agent",
         "Helicone-Property-Environment": "production",
         "Helicone-User-Id": "user-123",
         "Helicone-Session-Id": "session-abc",
-        "Helicone-Cache-Enabled": "true",       # enable response caching
+        "Helicone-Cache-Enabled": "false",  # enable only after tenant isolation/retention review       # enable response caching
         "Helicone-Rate-Limit-Policy": "100;w=60", # 100 req per 60s
     },
 )
@@ -494,7 +501,7 @@ groups:
 groups:
   - name: agent_slo_alerts
     rules:
-      # SLO: 99.5% success rate over a rolling 30-day window
+      # Short-window LLM-call indicator, not the rolling 30-day agent SLO
       - alert: AgentSuccessRateSLOBreach
         expr: agent:success_rate:5m < 0.995
         for: 10m
@@ -532,7 +539,7 @@ groups:
           description: >
             Current p50 latency: {{ $value | printf "%.2f" }}s.
 
-      # Error budget: burn rate alert (multi-window)
+      # Single-window error indicator; not a multi-window burn-rate implementation
       - alert: AgentErrorBudgetFastBurn
         expr: >
           (
@@ -652,7 +659,7 @@ slos:
 
 ## PII Redaction in Traces
 
-Scrub sensitive data before spans and logs leave the application boundary. This is critical for compliance with GDPR, HIPAA, and SOC 2.
+Minimize sensitive data before capture/export. These regex examples are incomplete and do not establish any regulatory compliance. The span processor exports synchronously without batching; production use needs bounded queues, exporter-failure handling and shutdown semantics.
 
 ### Span Processor for PII Redaction
 
@@ -744,17 +751,18 @@ class PIIRedactingFilter(logging.Filter):
     """Logging filter that redacts PII from log messages and extra fields."""
 
     def filter(self, record: logging.LogRecord) -> bool:
-        record.msg = redact_string(str(record.msg))
-        if record.args:
-            if isinstance(record.args, dict):
-                record.args = {k: redact_string(str(v)) for k, v in record.args.items()}
-            elif isinstance(record.args, tuple):
-                record.args = tuple(redact_string(str(a)) for a in record.args)
+        # Render interpolation before redaction so numeric placeholders keep their types.
+        record.msg = redact_string(record.getMessage())
+        record.args = None
+        # Raw exception/stack text is not covered by message regexes.
+        record.exc_info = None
+        record.exc_text = None
+        record.stack_info = None
         return True
 
-# Attach to your logger
-logger = logging.getLogger("agent")
-logger.addFilter(PIIRedactingFilter())
+# Attach to each exporting handler; logger filters do not cover propagated child records.
+# Apply a final structured-field allowlist/redaction in the formatter too.
+handler.addFilter(PIIRedactingFilter())
 ```
 
 ---
@@ -763,8 +771,8 @@ logger.addFilter(PIIRedactingFilter())
 ## Best Practices
 
 - **Separate high-cardinality labels.** Do not put `user_id` or `request_id` in Prometheus labels. Store those in traces and logs instead.
-- **Sample traces in production.** Use a head-based sampler (e.g., 10% of requests) plus a tail-based sampler that keeps all error traces.
-- **Keep a replayable request envelope.** Store the full prompt and response in a durable store (S3, GCS) keyed by trace ID for post-incident review.
+- **Sample traces in production.** Tail sampling cannot recover spans already dropped by head sampling. Design collector sampling to retain the required errors within the actual budget.
+- **Prefer metadata-only replay references.** Capture full prompts/responses only with a justified approved policy, encryption, access controls, deletion deadlines and secret exclusion. A trace ID does not authorize access.
 - **Alert on anomalies, not thresholds alone.** Combine static thresholds (SLO breach) with anomaly detection (cost spike relative to baseline).
 - **Version your prompts.** Tag each trace with the prompt template version so you can correlate quality regressions with prompt changes.
 - **Test observability in staging.** Run synthetic agent requests in staging and verify that traces, metrics, and alerts fire correctly before shipping to production.

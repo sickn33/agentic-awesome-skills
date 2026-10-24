@@ -142,8 +142,8 @@
 
 ### Performance
 
-- [ ] DataLoader for all relationships
-- [ ] Query batching enabled
+- [ ] Request-scoped DataLoader where batching/caching is useful
+- [ ] Query batching bounded and enabled only where needed
 - [ ] Persisted queries considered
 - [ ] Response caching implemented
 
@@ -152,4 +152,4 @@
 - [ ] All fields documented
 - [ ] Deprecations marked
 - [ ] Examples provided
-- [ ] Schema introspection enabled
+- [ ] Schema introspection policy chosen for the environment

@@ -1,6 +1,6 @@
 # LinkedIn Content Memory
 
-This file is the reinforcement learning database for the LinkedIn Content Skill.
+This file is the local preference file for the LinkedIn Content Skill.
 It is automatically read by every generator script to personalise your content.
 Use `/feedback` to update it. Use `/show-memory` to review it.
 
@@ -44,6 +44,3 @@ Use `/feedback` to update it. Use `/show-memory` to review it.
 
 ## 📝 Positive Feedback Log
 
-### [2026-06-01 21:58] — test-01
-- **What worked:** Great hook!
-- **Tags:** `hook`

@@ -18,7 +18,7 @@ Even imperative requests like "migrate my code", "upgrade to gemini 3", or "swit
 **Sizing the scope (large repos).** Before asking, get a per-directory count:
 
 ```sh
-rg -l "generate_content\|generateContent\|gemini-2\.0\|gemini-1\.5\|gemini-2\.5\|gemini-3-flash-preview\|thinking_budget\|temperature" --type-not md | cut -d/ -f1 | sort | uniq -c | sort -rn
+rg -l "generate_content\|generateContent\|gemini-2\.0\|gemini-1\.5\|gemini-2\.5\|gemini-3-flash-preview\|thinking_budget\|temperature" --glob "!*.md" | cut -d/ -f1 | sort | uniq -c | sort -rn
 ```
 
 Present the breakdown in your question (e.g. *"Found 42 references across 3 directories: src/ (28), tests/ (10), scripts/ (4). Which to migrate?"*).
@@ -32,7 +32,7 @@ The core changes when migrating from `generateContent` to the Interactions API:
 | What | `generateContent` | Interactions API |
 |------|----------------|-----------------|
 | **SDK method** | `client.models.generate_content()` | `client.interactions.create()` |
-| **Response text** | `response.text` | `interaction.steps[-1].content[0].text` |
+| **Response text** | `response.text` | `interaction.output_text (when supported); otherwise collect all text model_output parts safely` |
 | **Multi-turn** | Manual history array or `client.chats.create()` | `previous_interaction_id=interaction.id` |
 | **Streaming** | `generate_content_stream()` / `:streamGenerateContent` | `stream=True` + `step.delta` events |
 | **Structured output** | `config.response_format` inside `GenerateContentConfig` | Top-level `response_format` array |
@@ -64,7 +64,7 @@ For full before/after code examples, fetch the [Migration Guide](https://ai.goog
 | `gemini-2.5-pro` | `gemini-3.1-pro-preview` | Latest Pro with 1M context, complex reasoning |
 | `gemini-3-flash-preview` | `gemini-3.5-flash` | Latest Flash with Interactions API support |
 
-> **Note:** Within the Interactions API, model upgrades are generally drop-in — change the model string and verify. The breaking changes are at the **API level** (generateContent → Interactions), not between model generations.
+> **Note:** Model upgrades can change behavior, tools, output formats and controls; validate independently of API migration.
 
 ## Migration Checklist
 
@@ -74,7 +74,7 @@ Every item is tagged: **`[BLOCKS]`** items cause errors or broken behavior if mi
 
 - [ ] Updated SDK: `google-genai` ≥ 2.0.0 (Python) / `@google/genai` ≥ 2.0.0 (JS)
 - [ ] Replaced `client.models.generate_content()` → `client.interactions.create()`
-- [ ] Replaced `response.text` → `interaction.steps[-1].content[0].text`
+- [ ] Replaced `response.text` → `interaction.output_text (when supported); otherwise collect all text model_output parts safely`
 - [ ] Replaced `response.candidates[0].content.parts` → iterate `interaction.steps`
 - [ ] Replaced `client.chats.create()` / manual history → `previous_interaction_id`
 - [ ] Removed all `types.*` wrappers (`GenerateContentConfig`, `Tool`, `Content`, `Part`) — Interactions API uses plain dicts. Check feature docs for exact format.
@@ -116,3 +116,5 @@ After updating, run a spot-check to confirm the Interactions API is working:
 4. For multi-turn, verify `previous_interaction_id` preserves context across turns
 
 For verification code snippets, fetch the [Migration Guide](https://ai.google.dev/gemini-api/docs/migrate-to-interactions.md.txt).
+
+Do not remove configuration based only on these snapshot checklists; inspect the selected model and pinned API revision. Count matches with rg's actual regex semantics (use -e or an explicit alternation regex), inspect imports/call sites/tests and define parity before changing. Passing a simple text call does not test function results, multimodal content, error handling, security, state privacy or cost. Store flags/session retention and missing outputs require explicit tests. This review made no model call.

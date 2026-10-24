@@ -2,6 +2,10 @@
 
 Based on Robert C. Martin, *Clean Agile* (2019). Use this when discussing agile values, practices, and the "Iron Cross."
 
+## Iron Cross distinction
+
+Martin uses the Iron Cross for project trade-offs among quality, speed, cost and scope/completion. Communication, courage, feedback and simplicity below are supporting XP values, not those four project constraints.
+
 ## Agile values (manifesto)
 
 - Individuals and interactions over processes and tools.
@@ -11,7 +15,7 @@ Based on Robert C. Martin, *Clean Agile* (2019). Use this when discussing agile 
 
 Uncle Bob stresses that the right-hand side still has value; the left-hand side is preferred when there is a trade-off.
 
-## Iron Cross (four supporting values)
+## Supporting XP values (not the Iron Cross)
 
 | Value | What it means in practice |
 |-------|---------------------------|

@@ -15,7 +15,7 @@ var index = new SearchIndex("articles")
         new SearchableField("title"),
         new SearchableField("content"),
         new SearchableField("summary"),
-        new SimpleField("category", SearchFieldDataType.String) { IsFilterable = true }
+        new SearchableField("category") { IsFilterable = true }
     },
     SemanticSearch = new SemanticSearch
     {
@@ -148,7 +148,7 @@ await foreach (var result in results.Value.GetResultsAsync())
 
 ## Semantic Hybrid Search (Vector + Keyword + Semantic)
 
-Combines all three search modalities for best relevance:
+Combines modalities; compare relevance against a measured baseline:
 
 ```csharp
 var vectorQuery = new VectorizedQuery(embedding)
@@ -213,7 +213,7 @@ new QueryAnswer(QueryAnswerType.Extractive)
 
 | Score | Description |
 |-------|-------------|
-| `result.Score` | BM25 keyword relevance score |
+| `result.Score` | BM25 for text-only queries; RRF for hybrid queries |
 | `result.SemanticSearch.RerankerScore` | Semantic relevance (0-4 scale) |
 | `answer.Score` | Answer confidence (0-1 scale) |
 
@@ -234,8 +234,10 @@ if (results.Value.SemanticSearch?.ErrorReason != null)
 
 1. **Configure semantic fields carefully** - Title and content fields significantly impact quality
 2. **Use answers for Q&A scenarios** - Set appropriate threshold to filter low-confidence answers
-3. **Combine with vector search** - Semantic hybrid provides best relevance
-4. **Monitor reranker scores** - Scores below 1.0 indicate weak semantic match
+3. **Combine with vector search** - Measure whether semantic hybrid improves the target query set
+4. **Monitor reranker scores** - Calibrate thresholds against labeled queries; scores are not universal confidence probabilities
 5. **Enable captions** - Helps users understand why documents matched
 6. **Set answer count appropriately** - More answers = more latency
 7. **Use filters before semantic ranking** - Reduces documents to rerank
+
+Highlight strings contain indexed text as well as tags: escape or sanitize with a strict markup policy before HTML rendering. Captions/answers may be absent. Partial semantic results do not establish whether ranking ran; inspect supported partial-response fields for the pinned SDK and handle RequestFailedException. The sketches omit Article, client setup and consistent JSON field mappings.

@@ -34,7 +34,7 @@ report_count: 8
 Cache poisoning is high-value because a single poisoned cache entry can affect thousands or millions of victims simultaneously — one request, mass exploitation. Payout scales with blast radius.
 
 **Highest-value targets:**
-- **CDN-served assets** (cdn.shopify.com, cloudfront distributions, Fastly/Akamai edges) — poisoning these affects every visitor globally
+- **CDN-served assets** (cdn.shopify.com, cloudfront distributions, Fastly/Akamai edges) — impact depends on cache key, edge location, routing and actual consumers
 - **E-commerce platforms** with affiliate/referral flows (Shopify, WooCommerce storefronts) — session hijack or affiliate fraud potential
 - **Gaming platforms with update servers** (rockstargames updates.* domains) — DoS on update delivery = widespread client breakage
 - **Authentication endpoints** served through caches — leads to account takeover (the highest severity variant)
@@ -59,11 +59,12 @@ Host: attacker.com
 X-Forwarded-Host: attacker.com
 X-Host: attacker.com
 
-email=victim@target.com
 Content-Type: application/x-www-form-urlencoded
+
+email=owned-test-user@example.test
 ```
 
-Use a distinctive hostname you control or can identify in the response. **Proof:** the injected hostname appears in the response body (some apps reflect the generated reset link), or the action succeeds (2xx with a "reset email sent" message) after injection — confirming the poisoned link would be sent to the victim.
+Use a distinctive hostname you control or can identify in the response. **Proof:** the injected hostname appears in the response body (some apps reflect the generated reset link), and the reset email received by your owned test account contains that hostname. A 2xx response or reflected marker alone does not prove the link was sent or usable.
 
 Try multiple host headers — apps vary in which one they trust (`X-Forwarded-Host` is most common, but `Host` itself also works when the proxy passes it through).
 
@@ -73,7 +74,7 @@ Inject the attacker-controlled hostname into `X-Forwarded-Host` on a GET request
 
 Check for cache signals in the response: `X-Cache: HIT`, `CF-Cache-Status: HIT`, `Age: <nonzero>`, or `Via: cloudfront/varnish/fastly`.
 
-**Proof for both:** injected value reflected in response body, or action completed successfully despite the manipulated header.
+**Proof differs:** reset poisoning requires inspecting the owned test inbox; cache poisoning requires a clean second request receiving the altered stored response under the same verified isolated cache key. Reflection alone proves neither.
 
 ---
 
@@ -122,7 +123,7 @@ X-HTTP-Method-Override
 
 2. **Identify cache key components.** Send two identical requests — if `Age` increments, the response is cached. Vary headers one-by-one (e.g., add `X-Forwarded-Host`) to determine which headers are NOT included in the cache key (unkeyed).
 
-3. **Test unkeyed header reflection.** Add `X-Forwarded-Host: evil.com` and check if the value appears in the response body (redirects, canonical links, CSP headers, JS src attributes, meta tags). Append a unique cache-busting query parameter (e.g. `?cb=<random>`) so the probe lands on a cache MISS under a throwaway key — this verifies reflection without prematurely storing a live poison entry under the real, victim-shared cache key. (Param Miner's "Guess headers" mode is the canonical Burp tool for discovering these unkeyed headers/parameters automatically.)
+3. **Test unkeyed header reflection.** Add `X-Forwarded-Host: evil.com` and check if the value appears in the response body (redirects, canonical links, CSP headers, JS src attributes, meta tags). Append a unique cache-busting query parameter (e.g. `?cb=<random>`) only after proving this parameter is included in the cache key. An ignored parameter does not isolate a probe and can poison the normal public entry. (Param Miner's "Guess headers" mode is the canonical Burp tool for discovering these unkeyed headers/parameters automatically.)
 
 4. **Test URL path manipulation (Web Cache Deception).** Append fake static extensions to dynamic endpoints:
    - `GET /account/profile.css`
@@ -174,16 +175,16 @@ curl -s -b "session=YOUR_SESSION" \
 curl -s "https://target.com/account/profile.css"
 ```
 
-**Force cache miss to test poison without hitting cached version:**
+**Lab-only cache-key isolation candidate (verify keying first):**
 ```bash
-# Use a unique cache-busting query param to land on a fresh key — do NOT rely on
+# A unique parameter isolates only if independently verified as keyed; do NOT rely on
 # client-sent "Cache-Control: no-cache" (per RFC 7234 it requests revalidation, not
 # skip-storage, and Cloudflare/Fastly/Akamai generally ignore it on cacheable assets).
 curl -s -H "X-Forwarded-Host: canary.attacker.com" \
      "https://target.com/page?cb=$RANDOM"
 ```
 
-**DoS via poisoned error response:**
+**Disposable lab only: error-response storage:**
 ```bash
 curl -s -H "X-Forwarded-Host: aaaaaaaaaaa.invalid" \
   "https://target.com/js/app.js" -I
@@ -231,7 +232,7 @@ True-Client-IP
 ---
 
 ### Origin header → ACAO cache poisoning
-Add `Origin` to the unkeyed-header set. Test whether it is reflected into `Access-Control-Allow-Origin` and then cached: `curl -H "Origin: evil.example" URL -I` on two consecutive hits. A cached attacker/`*` ACAO breaks CORS for legit users (cache-DoS); a cached permissive ACAO enables cross-user data reads. Disclosed: reports/591302.
+Add `Origin` to the unkeyed-header set. Test whether it is reflected into `Access-Control-Allow-Origin` and then cached: `curl -H "Origin: evil.example" URL -I` on two consecutive hits. An attacker-specific cached ACAO may break reads from another origin. Wildcard ACAO is not automatically denial of service or credentialed disclosure; browsers reject wildcard origin with credentialed CORS. Demonstrate the exact browser, credentials, cached response and controlled second origin. Disclosed: reports/591302.
 
 ## Common Root Causes
 
@@ -266,12 +267,11 @@ Add `Origin` to the unkeyed-header set. Test whether it is reflected into `Acces
 - Bypass: Web Cache Deception — trick the cache into storing authenticated content by appending `.css`/`.js` to the URL, which matches a cache rule that ignores auth
 
 **Defense: Cache key includes full URL with query string**
-- Bypass: HTTP Parameter Pollution — some parsers take the first occurrence, caches key on full string; inject `?legit=1&param=evil` and cache stores it under `?legit=1&param=evil` but victim visits `?legit=1`
+- Bypass: HTTP Parameter Pollution — some parsers take the first occurrence, caches key on full string; a parser or normalization mismatch must be demonstrated; two different fully keyed query strings do not by themselves share an entry
 - Bypass: Fat GET request — send body parameters that the backend processes but the cache ignores
 
 **Defense: Short TTL / rapid cache purging**
-- Bypass: Automate re-poisoning; send the poison request in a loop just ahead of TTL expiry
-- Bypass: Target CDN nodes with longer default TTLs by routing requests through specific PoPs
+- Measure only the isolated lab entry and coordinate purge/expiry with the owner. Do not continuously re-poison or route around mitigations on shared production caches.
 
 **Defense: `Cache-Control: private` on sensitive endpoints**
 - Bypass: Check if CDN respects this header (some CDNs ignore it if an admin has overridden cache rules globally)
@@ -307,7 +307,7 @@ An attacker discovered that the Linkpop affiliate link service would cache respo
 
 ## Disclosed Report Citations (2017-2024)
 
-The following real, verified bug-bounty / coordinated-disclosure cases extend this skill. Spans the two major families: cache **poisoning** (attacker influences a cached response served to victims) and cache **deception** (attacker tricks the cache into storing a victim's private response).
+The following are upstream-attributed historical case summaries; amounts, details and links have not been independently revalidated in this static review and are not current target evidence. Spans the two major families: cache **poisoning** (attacker influences a cached response served to victims) and cache **deception** (attacker tricks the cache into storing a victim's private response).
 
 1. **Shopify — Cache poisoning via X-Forwarded-Host** ([H1 #977851](https://hackerone.com/reports/977851))
     - Subclass: X-Forwarded-Host header poisoning (unkeyed input → redirect/script-src corruption)
@@ -380,3 +380,9 @@ cat scope.txt  # target list from the authorized engagement brief
 ```
 
 > Adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT); frontmatter, When to Use/Limitations, and safety boundaries added for upstream compliance. Docs-only import: executable helpers, commands, engine, and research assets not bundled.
+
+## Safe reproduction and inference limits
+
+Use an owner-provided test cache namespace or disposable lab, two controlled clients and harmless markers. Prove isolation before sending a marker: a random query string, incognito mode, different IP, or request `no-cache` directive does not guarantee a separate shared-cache entry. Do not poison login pages, shared JS, update endpoints or error responses used by real visitors, trigger service denial, involve real victims, or repeatedly refresh poison. Arrange purge and verify clean readback afterward.
+
+GET and HEAD may take different caching paths. Age/Via/HIT headers suggest infrastructure but do not prove your injected response was stored, its key, worldwide scope or TTL. `max-age` and Age do not capture every CDN override. Deception, reset-link poisoning and shared-response poisoning need distinct evidence; disclosure does not imply account takeover without a usable authentication secret or separate demonstrated path. Treat named-target scenarios and payout claims as historical attribution, not guaranteed impact or authorization.

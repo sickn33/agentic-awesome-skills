@@ -49,11 +49,11 @@ reorder them or add a `##` heading above section 3.
   "verdicts": [
     { "id": "F1", "verdict": "confirm | refute | downgrade", "reason": "one sentence", "evidence": "file:line or quoted code" }
   ],
-  "new_findings": [ /* same shape as findings[], ids D1, D2, ... */ ]
+  "new_findings": []
 }
 ```
 
-- Every `F*` id gets exactly one verdict. A missing id counts as `confirm` with reason "no objection".
+- Every `F*` id gets exactly one verdict. A missing id is an incomplete review, never implied confirmation; reject/escalate the result until every ID has an evidence-backed verdict.
 - `downgrade` means the defect is real but severity or confidence was overstated.
 - `refute` must carry evidence. A bare "I disagree" is recorded but weighted as `downgrade`.
 - `new_findings` is a gap sweep, not a second review. Blocking only, with a named trigger. Entries

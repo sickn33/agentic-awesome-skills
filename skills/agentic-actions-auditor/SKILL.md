@@ -41,7 +41,7 @@ Static security analysis guidance for GitHub Actions workflows that invoke AI co
 When auditing agentic actions, reject these common rationalizations. Each represents a reasoning shortcut that leads to missed findings.
 
 **1. "It only runs on PRs from maintainers"**
-Wrong because it ignores `pull_request_target`, `issue_comment`, and other trigger events that expose actions to external input. Attackers do not need write access to trigger these workflows. A `pull_request_target` event runs in the context of the base branch, not the PR branch, meaning any external contributor can trigger it by opening a PR.
+Wrong because it ignores `pull_request_target`, `issue_comment`, and other trigger events that expose actions to external input. Attackers do not need write access to trigger these workflows. A `pull_request_target` event uses the base context; triggering still depends on configured activity types, filters and repository policy. Inspect those conditions rather than assuming every external PR reaches the agent.
 
 **2. "We use allowed_tools to restrict what it can do"**
 Wrong because tool restrictions can still be weaponized. Even restricted tools like `echo` can be abused for data exfiltration via subshell expansion (`echo $(env)`). A tool allowlist reduces attack surface but does not eliminate it. Limited tools != safe tools.
@@ -278,7 +278,7 @@ Severity is context-dependent. The same vector can be High or Low depending on t
 - **Trigger event exposure:** External-facing triggers (`pull_request_target`, `issue_comment`, `issues`) raise severity. Internal-only triggers (`push`, `workflow_dispatch`) lower it.
 - **Sandbox and tool configuration:** Dangerous modes (`danger-full-access`, `Bash(*)`, `--yolo`) raise severity. Restrictive tool lists and sandbox defaults lower it.
 - **User allowlist scope:** Wildcard `"*"` raises severity. Named user lists lower it.
-- **Data flow directness:** Direct injection (Vector B) rates higher than indirect multi-hop paths (Vector A, C, E).
+- **Data flow reachability:** Severity depends on reachable capabilities and impact, not the number of hops. Direct and indirect injection can have the same impact.
 - **Permissions and secrets exposure:** Elevated `github_token` permissions or broad secrets availability raise severity. Minimal read-only permissions lower it.
 - **Execution context trust:** Privileged contexts with full secret access raise severity. Fork PR contexts without secrets lower it.
 
@@ -349,3 +349,9 @@ For complete documentation beyond this methodology overview:
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Snapshot and coverage limits
+
+Resolve the chosen ref before listing files and include `?ref={full_sha}` on both example Contents API endpoints; omitting it fetches the default branch and invalidates a mixed-ref audit. Inspect both `action.yml` and `action.yaml`. Environment-variable transport alone is not shell injection: identify whether a shell parses attacker text as syntax, or an agent consumes it as instructions. Do not infer exfiltration from `echo` alone without an output/network recipient and secret-read path.
+
+Action input names above are discovery leads, not verified contracts for every version. Read the pinned revision before recommending exact inputs. Report analyzed SHAs, unresolved references and depth-limited coverage even with zero findings; that result is not a clean certification.

@@ -18,9 +18,7 @@ own patterns, pitfalls, and breaking points.
 
 This skill covers when to use which platform, how to build reliable
 automations, and when to graduate to code-based solutions. Key insight:
-Zapier optimizes for simplicity and integrations (7000+ apps), Make
-optimizes for power and cost-efficiency (visual branching, operations-based
-pricing).
+Platform selection depends on current integration support, account plans, data flow and credit/task pricing; compare the actual workflow rather than fixed app counts or cost claims.
 
 Critical distinction: No-code works until it doesn't. Know the limits.
 
@@ -61,7 +59,7 @@ Todoist Module:
 
 ### Best Practices:
 - Use descriptive Zap/Scenario names
-- Test with real sample data
+- Test with synthetic or authorized minimized sample data
 - Use filters to prevent unwanted runs
 
 ### Multi-Step Sequential Pattern
@@ -93,3 +91,7 @@ Each step's output available to subsequent steps
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Deployment and reliability boundaries
+
+Examples are design sketches, not importable or verified live workflows. Confirm current plan features, module fields and billing before enabling. Explicitly authorize outgoing messages, writes and recurring schedules; test in isolated targets with minimized data. A search-then-create deduplication sequence races under concurrent runs: use an atomic unique event claim plus idempotent downstream actions and reconciliation. Retrying an uncertain send can duplicate effects, and rollback cannot recall email or undo arbitrary third-party calls. Configure bounded retries/dead letters, budgets, credential ownership and an off switch. Verify error-route support in the installed editor; a normal downstream step does not automatically receive an upstream failure. n8n licensing and hosted limits require separate review; “self-hosted” does not guarantee unlimited cost or resources.

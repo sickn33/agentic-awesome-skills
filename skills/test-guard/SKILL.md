@@ -53,7 +53,7 @@ When writing new tests, ask for each test: "What specific bug does this catch th
 ## The Nine Rules
 
 ### Rule 1: Test behavior, not implementation
-Test what code does from the caller's perspective. Assert return values and observable side effects. Never assert that an internal helper was called with specific arguments — that test breaks on every refactor while catching nothing.
+Test what code does from the caller's perspective. Assert return values and observable side effects. Avoid incidental internal call assertions. Calls/arguments are legitimate observable contracts when they enforce authorization, redaction, idempotency, cancellation, retry/spend budgets or required protocol behavior.
 
 **Violation pattern:** asserting a mock of an internal function was called, where that function is not a system boundary.
 **Fix:** assert the return value or the state change the caller observes.
@@ -61,7 +61,7 @@ Test what code does from the caller's perspective. Assert return values and obse
 ### Rule 2: Every mock must be justified
 Mock only at system boundaries: network and HTTP calls, LLM APIs, databases, filesystem I/O on external files, clock and randomness, third-party SDKs. Never mock internal classes or helper functions to isolate a "unit" — the seams you create hide the integration bugs worth catching.
 
-When you mock a boundary, assert what the caller *does with the response*, not that the mock received specific arguments.
+When you mock a boundary, assert observable response handling and any required outbound contract, including target, method, authorization scope and exclusion of secrets.
 
 ### Rule 3: One scenario per test, data-driven for variants
 If two or more tests share identical setup and differ only in input/output values, merge them into one data-driven test (`@pytest.mark.parametrize`, PHPUnit `#[DataProvider]`, Jest `test.each`).
@@ -71,7 +71,7 @@ If two or more tests share identical setup and differ only in input/output value
 ### Rule 4: Every test must justify its existence
 Ask: "What bug does this catch that no other test catches?" Delete tests that only catch typos, verify default values of data classes, or test trivial pass-through logic.
 
-**Common unjustified tests:** constructors setting attributes, a function rejecting input the type system already forbids, string formatting of log messages, a constant equaling its literal value.
+**Common unjustified tests:** constructors setting attributes, a redundant type-level check with no runtime boundary; untrusted/deserialized input still needs runtime validation, string formatting of log messages, a constant equaling its literal value.
 
 ### Rule 5: Name tests for the scenario
 Pattern: `test_<scenario>_<expected_outcome>`. The name should read like a requirement, not echo the function signature.
@@ -83,7 +83,7 @@ Pattern: `test_<scenario>_<expected_outcome>`. The name should read like a requi
 | `test_add_tags_single_string` | `test_single_tag_normalizes_to_list` |
 
 ### Rule 6: Production regression tests are sacred
-Tests that reproduce a real production bug are always justified. Reference the incident (date, issue ID, or short description) in the name or a comment, and never delete them. They are exempt from Rule 4 — their justification is the incident.
+Tests that reproduce a real production bug are always justified. Reference the incident (date, issue ID, or short description) in the name or a comment, and preserve their behavioral coverage. Consolidation or replacement is acceptable only when equivalent protection is demonstrated and the incident reference remains. They are exempt from Rule 4 — their justification is the incident.
 
 ### Rule 7: No tests for framework guarantees
 Don't test that the validation library validates, the ORM commits, the router returns 404, or the test framework's fixtures work. Test *your* logic that sits on top of the framework.
@@ -124,9 +124,13 @@ Not all violations are equal. Use judgment:
 - [references/jest.md](references/jest.md) — Jest/Vitest patterns: test.each, module mocks, msw, snapshot discipline
 - [references/llm-app-testing.md](references/llm-app-testing.md) — three extra rules for LLM applications: prompt contracts, observability wiring, agent-flow transitions
 
+## Limitations
+
+These are review heuristics, not automatic deletion or merge authority. Preserve security/audit/output-contract checks even when they inspect calls or logs. Real infrastructure means an isolated test instance with synthetic data and resource limits, never production by default; verify migrations and cleanup boundaries before running. This skill does not run the displayed examples or prove test efficacy.
+
 ## What this skill does NOT do
 
 - It does not run tests. Use the project's test runner for that.
 - It does not enforce code style — that's the linter's job.
-- It does not decide *what* to test — only *how* to test it.
+- It does not decide *what* to test — only reviews test design in the requested scope.
 - It does not flag pre-existing violations in files you're not touching, unless asked to audit.

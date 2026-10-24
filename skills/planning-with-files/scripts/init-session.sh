@@ -3,6 +3,7 @@
 # Usage: ./init-session.sh [project-name]
 
 set -e
+set -C  # refuse to clobber an existing file or followed symlink
 
 PROJECT_NAME="${1:-project}"
 DATE=$(date +%Y-%m-%d)
@@ -10,7 +11,7 @@ DATE=$(date +%Y-%m-%d)
 echo "Initializing planning files for: $PROJECT_NAME"
 
 # Create task_plan.md if it doesn't exist
-if [ ! -f "task_plan.md" ]; then
+if [ ! -e "task_plan.md" ]; then
     cat > task_plan.md << 'EOF'
 # Task Plan: [Brief Description]
 
@@ -62,7 +63,7 @@ else
 fi
 
 # Create findings.md if it doesn't exist
-if [ ! -f "findings.md" ]; then
+if [ ! -e "findings.md" ]; then
     cat > findings.md << 'EOF'
 # Findings & Decisions
 
@@ -89,7 +90,7 @@ else
 fi
 
 # Create progress.md if it doesn't exist
-if [ ! -f "progress.md" ]; then
+if [ ! -e "progress.md" ]; then
     cat > progress.md << EOF
 # Progress Log
 

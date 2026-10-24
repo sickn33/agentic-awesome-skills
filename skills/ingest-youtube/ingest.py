@@ -54,6 +54,8 @@ def validate_youtube_url(raw_url: str) -> str:
     if parsed.scheme not in {"http", "https"}:
         raise ValueError("URL must use http or https")
 
+    if parsed.username or parsed.password or parsed.port not in (None, 80, 443):
+        raise ValueError("Credentials or nonstandard ports are not accepted")
     host = parsed.hostname.lower() if parsed.hostname else ""
     video_id = ""
 
@@ -123,6 +125,8 @@ def fetch_metadata(url: str, ytdlp: str) -> dict:
 
 def list_subs(url: str, ytdlp: str) -> str:
     proc = run_ytdlp([ytdlp, "--ignore-config", "--list-subs", "--skip-download", "--no-warnings", "--", url])
+    if proc.returncode != 0:
+        raise RuntimeError("Subtitle discovery failed; not evidence of missing captions")
     return proc.stdout
 
 
@@ -183,10 +187,16 @@ def download_subs(url: str, lang: str, source: str, ytdlp: str, workdir: Path) -
 def clean_vtt(vtt_path: Path) -> str:
     raw = vtt_path.read_text(encoding="utf-8", errors="replace")
     lines = []
-    seen_phrases: set[str] = set()
+    previous = None
+    in_note = False
     for line in raw.splitlines():
         line = line.rstrip()
         if not line:
+            in_note = False
+            continue
+        if line.startswith("NOTE"):
+            in_note = True
+        if in_note:
             continue
         if VTT_TIMING_RE.match(line) or VTT_HEADER_RE.match(line):
             continue
@@ -195,9 +205,9 @@ def clean_vtt(vtt_path: Path) -> str:
         cleaned = re.sub(r"<[^>]+>", "", line).strip()
         if not cleaned:
             continue
-        if cleaned in seen_phrases:
+        if cleaned == previous:
             continue
-        seen_phrases.add(cleaned)
+        previous = cleaned
         lines.append(cleaned)
     text = " ".join(lines)
     text = re.sub(r"\s+", " ", text).strip()
@@ -210,18 +220,32 @@ def detect_seeds(transcript: str) -> list[str]:
     return [kw for kw in SEED_KEYWORDS if kw in low]
 
 
+def private_target(vault_root: Path, relative: Path) -> Path:
+    target = vault_root / relative
+    current = vault_root
+    for part in relative.parts[:-1]:
+        current = current / part
+        if current.is_symlink():
+            raise ValueError("Refusing symlink in vault output path")
+        current.mkdir(exist_ok=True, mode=0o700)
+    if target.is_symlink():
+        raise ValueError("Refusing symlink output file")
+    target.resolve().relative_to(vault_root.resolve())
+    return target
+
+
 def write_vault_file(
     vault_root: Path, channel_slug: str, upload_date: str,
     video_slug: str, frontmatter: dict, body: str,
 ) -> Path:
-    target_dir = vault_root / "External Inputs" / "YouTube" / channel_slug
-    target_dir.mkdir(parents=True, exist_ok=True)
-    target = target_dir / f"{upload_date}-{video_slug}.md"
+    video_id = frontmatter["video_id"]
+    target = private_target(vault_root, Path("External Inputs") / "YouTube" / channel_slug / f"{upload_date}-{video_slug}-{video_id}.md")
     yaml_lines = ["---"]
     for k, v in frontmatter.items():
         yaml_lines.append(f"{k}: {yaml_scalar(v)}")
     yaml_lines.append("---")
-    target.write_text("\n".join(yaml_lines) + "\n\n" + body + "\n", encoding="utf-8")
+    with target.open("x", encoding="utf-8") as output:
+        output.write("\n".join(yaml_lines) + "\n\n" + body + "\n")
     return target
 
 
@@ -229,10 +253,10 @@ def write_seed_stub(
     vault_root: Path, upload_date: str, channel_slug: str, video_id: str,
     seeds: list[str], video_url: str, video_title: str,
 ) -> Path:
-    captures_dir = vault_root / "Meta" / "Captures"
-    captures_dir.mkdir(parents=True, exist_ok=True)
     fname = f"{upload_date}-youtube-{channel_slug}-{video_id}.md"
-    target = captures_dir / fname
+    target = private_target(vault_root, Path("Meta") / "Captures" / fname)
+    if target.exists():
+        return target  # Preserve user notes from a previous capture.
     body = (
         "---\n"
         "type: capture\n"
@@ -247,7 +271,8 @@ def write_seed_stub(
         f"Source: {markdown_text(video_url)}\n\n"
         "## Notes\n\n(fill in)\n"
     )
-    target.write_text(body, encoding="utf-8")
+    with target.open("x", encoding="utf-8") as output:
+        output.write(body)
     return target
 
 
@@ -259,6 +284,7 @@ def main() -> int:
     parser.add_argument("--whisper", action="store_true", help="Enable Whisper fallback if no subs")
     args = parser.parse_args()
 
+    os.umask(0o077)
     vault_root = Path(args.vault or os.environ.get("VAULT_ROOT") or ".").resolve()
     if not vault_root.is_dir():
         sys.stderr.write(f"Vault root not a directory: {vault_root}\n")
@@ -274,7 +300,9 @@ def main() -> int:
     prefs = [c.strip() for c in args.lang.split(",") if c.strip()]
 
     meta = fetch_metadata(youtube_url, ytdlp)
-    video_id = meta.get("id", "unknown")
+    video_id = meta.get("id", "")
+    if not YOUTUBE_VIDEO_ID_RE.fullmatch(video_id) or video_id != parse_qs(urlparse(youtube_url).query)["v"][0]:
+        raise ValueError("Metadata video ID does not match the requested video")
     title = meta.get("title", "Untitled")
     channel = meta.get("channel") or meta.get("uploader") or "unknown-channel"
     channel_slug = slugify(channel)
@@ -282,8 +310,8 @@ def main() -> int:
     upload_date_raw = meta.get("upload_date", "")
     upload_date = (
         f"{upload_date_raw[:4]}-{upload_date_raw[4:6]}-{upload_date_raw[6:8]}"
-        if len(upload_date_raw) == 8 else
-        datetime.now().strftime("%Y-%m-%d")
+        if isinstance(upload_date_raw, str) and re.fullmatch(r"[0-9]{8}", upload_date_raw) else
+        "unknown-date"
     )
 
     listing = list_subs(youtube_url, ytdlp)
@@ -301,7 +329,7 @@ def main() -> int:
             transcript = clean_vtt(vtt)
     elif args.whisper:
         sys.stderr.write("Whisper fallback requested but not yet implemented in v0.1.\n")
-        sys.stderr.write("Install whisper-cpp + ggml model and re-run, or pre-add subs to the video.\n")
+        sys.stderr.write("Installing a transcriber does not enable this unimplemented flag.\n")
         sub_source = "none"
     else:
         sys.stderr.write("No subtitles available and --whisper not set. Writing stub.\n")
@@ -314,7 +342,7 @@ def main() -> int:
         f"# {markdown_text(title)}\n\n"
         f"No subtitles or auto-captions available for this video.\n\n"
         "To capture this transcript, add captions to the source video or transcribe the audio "
-        "with your local Whisper workflow and re-run ingest.\n\n"
+        "with an authorized local workflow and import its output separately; this script cannot read it.\n\n"
         f"Source: {markdown_text(youtube_url)}\n"
     )
 
@@ -326,7 +354,7 @@ def main() -> int:
         "channel": channel,
         "channel_url": meta.get("channel_url", ""),
         "title": title,
-        "upload_date": upload_date,
+        "upload_date": None if upload_date == "unknown-date" else upload_date,
         "duration_seconds": meta.get("duration", 0),
         "language": lang_code,
         "subtitle_source": sub_source,

@@ -35,6 +35,8 @@ Comprehensive guide for implementing robust testing strategies in JavaScript/Typ
 
 ## Resources
 
+The bundled playbook contains illustrative fragments, not a tested project. Verify the selected framework’s version/configuration and isolate databases/network effects before executing tests; repository tests can run arbitrary code.
+
 - `resources/implementation-playbook.md` for detailed patterns and examples.
 
 ## Limitations

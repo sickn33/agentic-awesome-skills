@@ -88,7 +88,7 @@ trackio.init(
 )
 ```
 
-⚠️ **For remote training** (cloud GPUs, HF Jobs, etc.): Always use `space_id` since local storage is lost when the instance terminates.
+⚠️ **For remote training** (cloud GPUs, HF Jobs, etc.): Use a confirmed persistence strategy (mounted storage, authorized Space or artifact export); instance-local storage may be ephemeral. Do not deploy a public Space automatically.
 
 ### Sync Local to Remote
 
@@ -100,7 +100,7 @@ trackio.sync(project="my-project", space_id="username/my-experiments")
 
 ## wandb Compatibility
 
-Trackio is API-compatible with wandb. Drop-in replacement:
+Trackio supports a wandb-like subset; validate the methods and integrations used before replacing it:
 
 ```python
 import trackio as wandb
@@ -130,7 +130,8 @@ config = SFTConfig(
     # ... other config
 )
 
-trainer = SFTTrainer(model=model, args=config, ...)
+trainer = SFTTrainer(model=model, args=config, train_dataset=train_dataset)
+# model and train_dataset are application-supplied.
 trainer.train()
 trackio.finish()
 ```
@@ -204,3 +205,5 @@ Query parameters:
 - `sidebar`: `hidden` or `collapsed`
 - `smoothing`: 0-20 (smoothing slider value)
 - `xmin`, `xmax`: X-axis limits
+
+Explicitly finish each run before starting the next in sequential examples, and use try/finally for cleanup on training failures. Confirm successful persistence rather than inferring it from finish alone. The remote examples may create billable/public resources; choose explicit private Gradio storage where required and verify existing-resource visibility separately.

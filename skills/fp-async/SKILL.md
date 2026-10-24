@@ -66,19 +66,20 @@ const request = <T>(
 ): TE.TaskEither<ApiError, T> =>
   TE.tryCatch(
     async () => {
+      const headers = new Headers(options.headers)
+      if (options.body != null && !headers.has('Content-Type')) headers.set('Content-Type', 'application/json')
       const response = await fetch(url, {
-        headers: {
-          'Content-Type': 'application/json',
-          ...options.headers,
-        },
-        ...options,
+        ...options, headers,
+        signal: options.signal ?? AbortSignal.timeout(10000),
       })
 
       if (!response.ok) {
-        const body = await response.json().catch(() => ({}))
+        const parsed: unknown = await response.json().catch(() => ({}))
+        const body = typeof parsed === 'object' && parsed !== null
+          ? parsed as Record<string, unknown> : {}
         throw createApiError(
-          body.code || 'HTTP_ERROR',
-          body.message || response.statusText,
+          typeof body.code === 'string' ? body.code : 'HTTP_ERROR',
+          typeof body.message === 'string' ? body.message : response.statusText,
           response.status,
           body
         )
@@ -86,10 +87,10 @@ const request = <T>(
 
       // Handle 204 No Content
       if (response.status === 204) {
-        return undefined as T
+        throw createApiError("EMPTY_RESPONSE", "Expected JSON; use a separate void decoder for 204", 204)
       }
 
-      return response.json()
+      return response.json() // Decode unknown with a runtime schema before trusting T
     },
     (error): ApiError => {
       if (typeof error === 'object' && error !== null && 'code' in error) {
@@ -124,10 +125,10 @@ const api = {
 }
 
 // Usage
-const getUser = (id: string) => api.get<User>(`/api/users/${id}`)
+const getUser = (id: string) => api.get<User>(`/api/users/${encodeURIComponent(id)}`)
 const createUser = (data: CreateUserDto) => api.post<User>('/api/users', data)
-const updateUser = (id: string, data: UpdateUserDto) => api.put<User>(`/api/users/${id}`, data)
-const deleteUser = (id: string) => api.delete(`/api/users/${id}`)
+const updateUser = (id: string, data: UpdateUserDto) => api.put<User>(`/api/users/${encodeURIComponent(id)}`, data)
+const deleteUser = (id: string) => api.delete(`/api/users/${encodeURIComponent(id)}`)
 ```
 
 ### Database Operations (Prisma Example)
@@ -150,7 +151,9 @@ const wrapPrisma = <T>(
     (error): DbError => {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
-          const field = (error.meta?.target as string[])?.join(', ') || 'unknown'
+          const target = error.meta?.target
+          const field = Array.isArray(target) && target.every(x => typeof x === 'string')
+            ? target.join(', ') : 'unknown'
           return { _tag: 'UniqueViolation', field }
         }
         if (error.code === 'P2025') {
@@ -240,7 +243,7 @@ const writeFile = (filePath: string, content: string): TE.TaskEither<FileError, 
 const readJson = <T>(filePath: string): TE.TaskEither<FileError | { _tag: 'ParseError'; cause: unknown }, T> =>
   pipe(
     readFile(filePath),
-    TE.chain(content =>
+    TE.chainW(content =>
       TE.tryCatch(
         () => Promise.resolve(JSON.parse(content)),
         (e): { _tag: 'ParseError'; cause: unknown } => ({ _tag: 'ParseError', cause: e })
@@ -263,3 +266,9 @@ const loadConfig = () =>
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Execution and data boundaries
+
+These are separate fp-ts 2.x teaching fragments, with omitted imports, domain types, runtime decoders and application helpers. TaskEither is lazy: calling the returned task again repeats effects, and a pre-created Promise is not a fresh retry. The corrected batch traversal is sequential between batches; parallel traversal does not cancel in-flight work. Validate unknown JSON instead of asserting a generic T, and handle no-content responses through an explicit void decoder.
+
+A pipeline is not a database transaction or payment saga: preserve inventory checks, use durable/provider idempotency, and reconcile failed shipment or ambiguous charge outcomes. Keep uniqueness constraints even after a pre-check. Retry only classified transient, safely repeatable operations with an overall deadline and jitter; the generic example retries every Left. Do not recover authorization, malformed security configuration or invalid data with defaults; branch on typed status rather than message substrings. File paths need an authorized root, and writes currently overwrite existing files. Map errors to safe public status/messages without serializing raw causes or database details.

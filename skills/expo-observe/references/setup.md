@@ -14,7 +14,7 @@ The library exports differ between SDK versions. Pick the right one for the proj
 | `markInteractive()` API | Global: `AppMetrics.markInteractive()` | Hook: `const { markInteractive } = useObserve()` |
 | Import source | `expo-observe` | `expo-observe` (same package) |
 
-Everything else — package name, build process, dashboard, debug-mode behavior — is the same across versions.
+Other behavior can change across versions; consult the installed library types and target SDK documentation.
 
 ## Prerequisites
 
@@ -22,7 +22,7 @@ Before installing, confirm all of the following:
 
 1. **An Expo account.** Sign up at [expo.dev/signup](https://expo.dev/signup) if needed.
 2. **Expo SDK 55 or later.** Run `npx expo-doctor` to check, and `npx expo install --fix` to update dependencies. SDK 56+ unlocks the newer `ObserveRoot` / `useObserve` API.
-3. **An EAS project.** The app must have `extra.eas.projectId` set in its app config. If not, run `eas init` to create one.
+3. **An EAS project.** The app must have `extra.eas.projectId` set in its app config. If missing, resolve the intended account/project and obtain authorization before `eas init`, which creates or links cloud state.
 
 ## Step 1 — Install the library
 
@@ -90,10 +90,10 @@ function RootLayout() {
       try {
         await authenticateUser();
         await fetchInitialData();
-      } catch (e) {
-        console.warn(e);
-      } finally {
         setIsReady(true);
+      } catch {
+        // Render an explicit recoverable error state; do not mark failed startup interactive.
+        // Add error UI, splash handling and retry here before production use.
       }
     }
     prepare();
@@ -133,10 +133,10 @@ function RootLayout() {
       try {
         await authenticateUser();
         await fetchInitialData();
-      } catch (e) {
-        console.warn(e);
-      } finally {
         setIsReady(true);
+      } catch {
+        // Render an explicit recoverable error state; do not mark failed startup interactive.
+        // Add error UI, splash handling and retry here before production use.
       }
     }
     prepare();
@@ -213,6 +213,8 @@ Docs: https://docs.expo.dev/eas/observe/integrations/expo-router/
      return (/* screen content */);
    }
    ```
+
+Keep one Observe.configure call: later calls replace previous configuration. With route integration, call markInteractive inside the screen context, not a root outside screens.
 
 Events are tagged with the route **pattern** (e.g. `/(tabs)/sessions/[sessionId]`) so the dashboard buckets distinct param values together; the resolved `url` and `routeParams` are also included. Requires `expo-router` installed at runtime, or the integration no-ops.
 

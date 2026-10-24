@@ -22,7 +22,7 @@
 # naming conventions, etc.), use cdk-nag: https://github.com/cdklabs/cdk-nag
 # cdk-nag provides suppression mechanisms and supports all CDK languages.
 
-set -e
+set -euo pipefail
 
 PROJECT_ROOT="${CDK_PROJECT_ROOT:-$PWD}"
 if [[ ! -d "$PROJECT_ROOT" ]]; then
@@ -30,7 +30,13 @@ if [[ ! -d "$PROJECT_ROOT" ]]; then
     exit 2
 fi
 cd "$PROJECT_ROOT"
-PROJECT_ROOT="$(pwd)"
+PROJECT_ROOT="$(pwd -P)"
+if [[ ! -f "$PROJECT_ROOT/cdk.json" ]]; then
+    echo "Expected reviewed CDK project with cdk.json" >&2; exit 2
+fi
+command -v jq >/dev/null 2>&1 || { echo "jq is required" >&2; exit 2; }
+SYNTH_DIR=$(mktemp -d)
+trap 'rm -rf "$SYNTH_DIR"' EXIT
 
 echo "🔍 AWS CDK Stack Validation"
 echo "============================"
@@ -124,7 +130,7 @@ echo ""
 info "Running CDK synthesis..."
 
 # Synthesize stacks
-if cdk synth --quiet > /dev/null 2>&1; then
+if cdk synth --quiet --output "$SYNTH_DIR"; then
     success "CDK synthesis successful"
 else
     error "CDK synthesis failed"
@@ -198,7 +204,7 @@ info "Checking synthesized templates..."
 TEMPLATES=()
 while IFS= read -r -d '' file; do
     TEMPLATES+=("$file")
-done < <(find "${PROJECT_ROOT}/cdk.out" -name "*.template.json" -print0 2>/dev/null)
+done < <(find "${SYNTH_DIR}" -name "*.template.json" -print0 2>/dev/null)
 
 if [ ${#TEMPLATES[@]} -eq 0 ]; then
     error "No CloudFormation templates found in cdk.out/"
@@ -221,7 +227,10 @@ for template in "${TEMPLATES[@]}"; do
     fi
 
     # Count resources
-    RESOURCE_COUNT="$(jq '.Resources | length' "$template" 2>/dev/null || echo 0)"
+    if ! RESOURCE_COUNT="$(jq -er 'if (.Resources | type) == "object" then .Resources | length else error("Invalid Resources") end' "$template")"; then
+        error "${STACK_NAME}: Invalid template JSON/Resources"
+        continue
+    fi
 
     if [ "$RESOURCE_COUNT" -gt 200 ]; then
         warning "${STACK_NAME}: High resource count (${RESOURCE_COUNT})"
@@ -237,7 +246,7 @@ echo "============================"
 if [ "$VALIDATION_PASSED" = true ]; then
     echo -e "${GREEN}✓ Validation passed${NC}"
     echo ""
-    info "Stack is ready for deployment"
+    info "Synthesis/meta checks passed only; deployment readiness and security are not established"
     exit 0
 else
     echo -e "${RED}✗ Validation failed${NC}"

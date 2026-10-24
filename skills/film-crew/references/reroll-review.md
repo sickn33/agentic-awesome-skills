@@ -20,7 +20,7 @@ something.
 
 ## 2. Decide
 
-- Same failure twice in a row → it's the prompt, not the dice. Apply the fix.
+- Same failure twice suggests a systematic limitation or prompt issue; it does not distinguish causes conclusively. Test one controlled change within the authorized budget.
 - Different failures each time → the shot is too ambitious. Simplify it (split, tighten, slow down).
 - 3+ rerolls with no improvement → go back to the DP and director: re-block the shot.
 

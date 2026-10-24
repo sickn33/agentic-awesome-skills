@@ -189,18 +189,13 @@ Console.WriteLine($"DTU Capacity: {pool.Value.Data.Sku?.Capacity}");
 ## Delete Elastic Pool
 
 ```csharp
-// First, move all databases out of the pool or delete them
+// First move databases to approved target pools/standalone SKUs in a separate
+// reviewed migration; do not delete databases as a pool cleanup shortcut.
 var pool = await poolCollection.GetAsync("my-elastic-pool");
-
-// Check for databases
-var poolDatabases = pool.Value.GetElasticPoolDatabases();
-await foreach (var db in poolDatabases)
+await foreach (var db in pool.Value.GetElasticPoolDatabases())
 {
-    // Either delete or move to standalone
-    await db.DeleteAsync(WaitUntil.Completed);
+    throw new InvalidOperationException("Pool contains databases; migration required before deletion");
 }
-
-// Now delete the pool
 await pool.Value.DeleteAsync(WaitUntil.Completed);
 ```
 
@@ -231,4 +226,4 @@ await pool.Value.DeleteAsync(WaitUntil.Completed);
 3. **Use zone redundancy** for production Premium/BusinessCritical pools
 4. **Monitor utilization**: Scale up when consistently above 80% utilization
 5. **Consider Hyperscale**: For databases > 4TB or needing rapid scale
-6. **Use Azure Hybrid Benefit**: Set `LicenseType = BasePrice` if you have SQL Server licenses
+6. **Use Azure Hybrid Benefit**: Set `LicenseType = BasePrice` only after confirming the licenses meet Azure Hybrid Benefit eligibility requirements

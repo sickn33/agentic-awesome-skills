@@ -24,6 +24,8 @@ license_source: "https://github.com/sanjay3290/ai-skills/blob/main/LICENSE"
 
 Run autonomous research tasks that plan, search, read, and synthesize information into comprehensive reports.
 
+Modified: polling compatibility and cache/privacy review; no live API test. Streaming is disabled because the bundled legacy parser uses obsolete event names.
+
 ## Requirements
 
 - Python 3.8+
@@ -37,7 +39,7 @@ Run autonomous research tasks that plan, search, read, and synthesize informatio
    ```bash
    export GEMINI_API_KEY=your-api-key-here
    ```
-   Or create a `.env` file in the skill directory.
+   Or create a gitignored `.env` file in the skill directory; dotenv is optional and environment values take precedence.
 
 ## Safety Gate
 
@@ -113,9 +115,9 @@ python3 scripts/research.py --list
 
 ## Workflow
 
-1. User requests research → Run `--query "..."`
+1. Present exact query, destination and current cost estimate; obtain the Safety Gate approval before `--query`.
 2. Inform user of estimated time (2-10 minutes)
-3. Monitor with `--stream` or poll with `--status`
+3. Poll with `--status`; `--stream` is disabled before starting a job.
 4. Return formatted results
 5. Use `--continue` for follow-up questions
 
@@ -127,6 +129,8 @@ python3 scripts/research.py --list
 
 ## Limitations
 
+- The local cache writes IDs/status/timestamps; old history may contain prompts. Serialize writers. Timeout or Ctrl+C stops local waiting only and does not cancel remote billing.
+- Prices/timings above are historical examples; verify the preview model and pricing before use.
 - Each research job is a paid, third-party API request; costs and availability can change, and
   the listed estimate is not a spending authorization.
 - Reports may contain incomplete, stale, or incorrect citations. Verify consequential claims

@@ -42,6 +42,14 @@ data:
 
 ## Billing Integration
 
+The exporter below is a small reporting sketch, not an authoritative invoice
+ledger: Redis lists/floats have no durable idempotency or financial reconciliation.
+Use UTC consistently, decimal/integer currency units, durable request IDs, bounded
+pagination and restricted tenant access before invoicing. The sample rates in the
+entrypoint are hypothetical. Prometheus metrics below require an actual exporter;
+PriorityClass affects pod scheduling/preemption, not fairness within one GPU engine.
+
+
 ```python
 # billing_export.py
 """Export tenant usage data for billing systems."""
@@ -193,11 +201,11 @@ groups:
 
 | Symptom | Check | Fix |
 |---------|-------|-----|
-| Tenant getting 429 errors | Rate limit counters in Redis | Increase RPM/TPM limits or upgrade tier |
+| Tenant getting 429 errors | Rate limit counters in Redis | Identify retries/abuse and confirm approved capacity/budget before changing limits |
 | One tenant slowing others | Concurrent request counts per tenant | Reduce concurrency cap for offending tenant |
 | Billing data missing | Redis billing keys and export job logs | Check billing export CronJob and Redis connectivity |
-| Tenant cannot access model | Tenant config in ConfigMap | Add model to `models_allowed` list |
-| Cross-tenant data leakage | Cache key prefixes and namespace isolation | Ensure cache keys include tenant_id prefix |
+| Tenant cannot access model | Tenant config in ConfigMap | Confirm entitlement and capacity before editing the operator-owned allowlist |
+| Cross-tenant data leakage | Cache key prefixes and namespace isolation | Disable shared caches until engine-level tenant isolation is verified; a gateway prefix alone may not isolate engine prefix/KV caches |
 | Budget alerts not firing | Prometheus scrape targets and alert rules | Verify metric export and Alertmanager config |
 
 
