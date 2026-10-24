@@ -33,7 +33,8 @@ Host many teams/customers on shared inference infrastructure without sacrificing
 
 - Strong tenant identity on every request
 - Per-tenant API keys and scoped model access
-- Namespace or workload isolation for high-risk tenants
+- Namespace/workload isolation plus enforced network and storage boundaries; shared
+  engine/GPU memory may require separate processes or nodes for high-risk tenants
 - Strict data retention and log partitioning controls
 
 ## vLLM Multi-Model Serving
@@ -43,7 +44,7 @@ Host many teams/customers on shared inference infrastructure without sacrificing
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: vllm-gpt4o-equivalent
+  name: vllm-premium
   namespace: llm-serving
   labels:
     app: vllm
@@ -61,23 +62,20 @@ spec:
         model-tier: premium
       annotations:
         prometheus.io/scrape: "true"
-        prometheus.io/port: "8080"
+        prometheus.io/port: "8000"
     spec:
       containers:
         - name: vllm
-          image: vllm/vllm-openai:v0.4.1
+          image: YOUR_APPROVED_VLLM_IMAGE@sha256:REPLACE_WITH_VERIFIED_DIGEST
           args:
             - "--model=/models/llama-3.1-70b"
             - "--tensor-parallel-size=2"
             - "--max-model-len=8192"
             - "--gpu-memory-utilization=0.90"
             - "--max-num-seqs=128"
-            - "--enable-prefix-caching"
           ports:
             - containerPort: 8000
               name: inference
-            - containerPort: 8080
-              name: metrics
           resources:
             requests:
               nvidia.com/gpu: 2
@@ -124,18 +122,15 @@ spec:
     spec:
       containers:
         - name: vllm
-          image: vllm/vllm-openai:v0.4.1
+          image: YOUR_APPROVED_VLLM_IMAGE@sha256:REPLACE_WITH_VERIFIED_DIGEST
           args:
             - "--model=/models/llama-3.1-8b"
             - "--max-model-len=4096"
             - "--gpu-memory-utilization=0.85"
             - "--max-num-seqs=256"
-            - "--enable-prefix-caching"
           ports:
             - containerPort: 8000
               name: inference
-            - containerPort: 8080
-              name: metrics
           resources:
             requests:
               nvidia.com/gpu: 1
@@ -243,22 +238,27 @@ spec:
     - from:
         - namespaceSelector:
             matchLabels:
-              name: llm-gateway
+              kubernetes.io/metadata.name: llm-gateway
   egress:
     - to:
         - namespaceSelector:
             matchLabels:
-              name: llm-serving
+              kubernetes.io/metadata.name: llm-serving
       ports:
         - port: 8000
           protocol: TCP
     - to:
         - namespaceSelector:
             matchLabels:
-              name: kube-dns
+              kubernetes.io/metadata.name: kube-system
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
       ports:
         - port: 53
           protocol: UDP
+        - port: 53
+          protocol: TCP
 ---
 apiVersion: v1
 kind: ResourceQuota
@@ -277,136 +277,40 @@ spec:
 
 ## Request Routing and Rate Limiting
 
-```python
-# gateway_router.py
-"""Multi-tenant request router with rate limiting and model routing."""
-import time
-import json
-import redis
-from fastapi import FastAPI, HTTPException, Header, Request
-from typing import Optional
-import httpx
-import yaml
+The previous sample trusted `x_tenant_id` while never checking `x_api_key`,
+used racy check-then-increment counters, and treated missing usage as free. Do not
+expose an inference service with that pattern. Implement this server-side contract:
 
-app = FastAPI()
-redis_client = redis.Redis(host="redis", port=6379, decode_responses=True)
+1. Authenticate a hashed, revocable virtual key or verified gateway identity; derive
+   the tenant from that record. Ignore caller-supplied tenant headers. Apply this to
+   every route, including embeddings, models, metrics and streaming endpoints.
+2. Validate a bounded request schema, model allowlist, context/output-token limits
+   and allowed parameters. Remove caller override URLs/credentials. The endpoint
+   table is operator-owned. Reject streaming until accounting/cancellation support
+   is implemented; never parse an SSE stream as one JSON object.
+3. Atomically reserve RPM, TPM, a concurrency lease and worst-case request spend
+   against both daily and monthly budgets in a shared transaction/Lua operation.
+   Fail closed when the quota store is unavailable. Use expiring uniquely owned
+   leases and an idempotent finalizer so crashes cannot leak or double-release slots.
+4. Forward only to the fixed private endpoint with TLS where required, explicit
+   deadlines, bounded response size and status checks. Preserve upstream failures;
+   never return a provider error body as a successful completion.
+5. Reconcile reservation with authoritative usage and an append-only request-ID
+   ledger. Missing usage is unresolved accounting, not zero cost. Finalize or retain
+   a conservative hold after disconnect/timeouts and reconcile asynchronously.
 
-# Load tenant config
-with open("/etc/config/quotas.yaml") as f:
-    TENANT_CONFIG = yaml.safe_load(f)["tenants"]
+Worked reservation example (illustrative rates, not provider prices): a tenant
+has $1.00 remaining today, $20 monthly and one free concurrency slot. A request
+reserves $0.06 and 2,000 total tokens atomically; a simultaneous request must see
+$0.94 remaining and the occupied slot. Final verified cost $0.04 refunds $0.02
+once by request ID. Repeating finalization must not refund again.
 
-MODEL_ENDPOINTS = {
-    "llama-3.1-70b": "http://vllm-gpt4o-equivalent:8000",
-    "llama-3.1-8b": "http://vllm-economy:8000",
-    "nomic-embed-text": "http://embedding-service:8000",
-}
-
-def check_rate_limit(tenant_id: str, config: dict) -> bool:
-    """Check and update rate limit for a tenant."""
-    key = f"ratelimit:{tenant_id}:{int(time.time() // 60)}"
-    current = redis_client.incr(key)
-    if current == 1:
-        redis_client.expire(key, 120)
-    return current <= config["rate_limits"]["requests_per_minute"]
-
-def check_concurrent(tenant_id: str, config: dict) -> bool:
-    """Check concurrent request limit."""
-    key = f"concurrent:{tenant_id}"
-    current = int(redis_client.get(key) or 0)
-    return current < config["rate_limits"]["concurrent_requests"]
-
-def check_budget(tenant_id: str, config: dict) -> bool:
-    """Check if tenant is within daily budget."""
-    key = f"spend:{tenant_id}:{time.strftime('%Y-%m-%d')}"
-    current_spend = float(redis_client.get(key) or 0)
-    return current_spend < config["budget"]["daily_limit_usd"]
-
-def record_usage(tenant_id: str, model: str, prompt_tokens: int, completion_tokens: int):
-    """Record token usage and cost for billing."""
-    # Cost rates per 1K tokens
-    rates = {
-        "llama-3.1-70b": {"prompt": 0.004, "completion": 0.012},
-        "llama-3.1-8b": {"prompt": 0.0005, "completion": 0.0015},
-        "nomic-embed-text": {"prompt": 0.0001, "completion": 0.0},
-    }
-    rate = rates.get(model, {"prompt": 0.001, "completion": 0.003})
-    cost = (prompt_tokens * rate["prompt"] + completion_tokens * rate["completion"]) / 1000
-
-    # Update daily spend
-    spend_key = f"spend:{tenant_id}:{time.strftime('%Y-%m-%d')}"
-    redis_client.incrbyfloat(spend_key, cost)
-    redis_client.expire(spend_key, 172800)
-
-    # Record for billing export
-    billing_key = f"billing:{tenant_id}:{time.strftime('%Y-%m')}"
-    redis_client.rpush(billing_key, json.dumps({
-        "timestamp": time.time(),
-        "model": model,
-        "prompt_tokens": prompt_tokens,
-        "completion_tokens": completion_tokens,
-        "cost_usd": cost,
-    }))
-
-@app.post("/v1/chat/completions")
-async def chat_completions(
-    request: Request,
-    x_tenant_id: str = Header(...),
-    x_api_key: str = Header(...),
-):
-    """Route chat completion request with tenant controls."""
-    if x_tenant_id not in TENANT_CONFIG:
-        raise HTTPException(status_code=403, detail="Unknown tenant")
-
-    config = TENANT_CONFIG[x_tenant_id]
-    body = await request.json()
-    model = body.get("model", "llama-3.1-8b")
-
-    # Check model access
-    if model not in config["models_allowed"]:
-        raise HTTPException(status_code=403, detail=f"Model {model} not allowed for tenant")
-
-    # Check rate limit
-    if not check_rate_limit(x_tenant_id, config):
-        raise HTTPException(status_code=429, detail="Rate limit exceeded")
-
-    # Check concurrent requests
-    if not check_concurrent(x_tenant_id, config):
-        raise HTTPException(status_code=429, detail="Concurrent request limit exceeded")
-
-    # Check budget
-    if not check_budget(x_tenant_id, config):
-        raise HTTPException(status_code=402, detail="Daily budget exceeded")
-
-    # Route to model endpoint
-    endpoint = MODEL_ENDPOINTS.get(model)
-    if not endpoint:
-        raise HTTPException(status_code=404, detail=f"Model {model} not available")
-
-    # Track concurrent requests
-    concurrent_key = f"concurrent:{x_tenant_id}"
-    redis_client.incr(concurrent_key)
-
-    try:
-        async with httpx.AsyncClient(timeout=120.0) as client:
-            response = await client.post(
-                f"{endpoint}/v1/chat/completions",
-                json=body,
-                headers={"Content-Type": "application/json"},
-            )
-            result = response.json()
-
-            # Record usage
-            usage = result.get("usage", {})
-            record_usage(
-                x_tenant_id, model,
-                usage.get("prompt_tokens", 0),
-                usage.get("completion_tokens", 0),
-            )
-
-            return result
-    finally:
-        redis_client.decr(concurrent_key)
-```
+The ConfigMap above is policy data only: it enforces no quotas by itself. The
+Deployment fragments are one model per server, not a multi-model process. Supply
+a tested image/model/GPU-compatible release, namespace, Service, probes, secrets,
+TLS and NetworkPolicies before deployment; placeholders intentionally cannot run.
+Prefix caching is disabled until the chosen engine's tenant cache isolation has
+been tested. Never infer cache confidentiality from Kubernetes namespaces alone.
 
 
 ## Contents

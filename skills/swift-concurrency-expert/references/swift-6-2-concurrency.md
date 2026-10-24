@@ -1,3 +1,9 @@
+> Historical explanatory examples, not a complete compilable implementation or a
+> claim that every Swift 6.2 target enables these settings. SE-0461 caller-isolation
+> behavior and default MainActor isolation have separate opt-ins. Domain types,
+> property initialization and method bodies are omitted. Data-race checking does not
+> prove logical race freedom, cancellation or performance.
+
 ## Concurrent programming updates in Swift 6.2
 
 Concurrent programming is hard because sharing memory between multiple tasks is prone to mistakes that lead to unpredictable behavior.

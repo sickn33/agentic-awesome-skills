@@ -1,5 +1,7 @@
 # Fontes e Referências — Leiloeiro Avaliação
 
+Edições históricas a conferir no catálogo ABNT e nas fontes oficiais antes do uso. O pacote não inclui as normas licenciadas nem certifica conformidade.
+
 ## Normas Técnicas
 - ABNT NBR 14653-1:2019 — Procedimentos gerais
 - ABNT NBR 14653-2:2011 — Imóveis urbanos

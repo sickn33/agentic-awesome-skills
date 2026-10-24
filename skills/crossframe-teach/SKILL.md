@@ -49,7 +49,10 @@ This AAS-ready copy preserves the original CrossFrame skill body below. Chinese 
 
 中文是权威语义。`CrossFrame Teach` 只是教学入口，不重写、不替代、不压缩 canonical CrossFrame。
 
-每次触发后先读取相邻 canonical 材料：
+每次触发后先读取相邻 canonical 材料（下列路径均相对本 `SKILL.md`）：
+
+相邻技能未安装、版本不一致或材料不可读时，明确说明依赖缺失；只能解释
+本包已读样例，不得宣称已完成 canonical 联读或编造缺失协议。
 
 - `../crossframe/SKILL.md`
 - `../crossframe/references/read-routing-map.md`

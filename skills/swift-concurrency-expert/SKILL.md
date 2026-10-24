@@ -21,7 +21,7 @@ Review and fix Swift Concurrency issues in Swift 6.2+ codebases by applying acto
 ### 1. Triage the issue
 
 - Capture the exact compiler diagnostics and the offending symbol(s).
-- Check project concurrency settings: Swift language version (6.2+), strict concurrency level, and whether approachable concurrency (default actor isolation / main-actor-by-default) is enabled.
+- Check project concurrency settings: compiler version (6.2+), Swift language mode (5 or 6), strict concurrency level, and whether approachable concurrency (default actor isolation / main-actor-by-default) is enabled.
 - Identify the current actor context (`@MainActor`, `actor`, `nonisolated`) and whether a default actor isolation mode is enabled.
 - Confirm whether the code is UI-bound or intended to run off the main actor.
 
@@ -47,8 +47,8 @@ Common fixes:
 **UI-bound type — adding `@MainActor`**
 
 ```swift
-// Before: data-race warning because ViewModel is accessed from the main thread
-// but has no actor isolation
+// Before: mutable model lacks actor isolation; an actual diagnostic depends
+// on how it crosses isolation boundaries and the target settings
 class ViewModel: ObservableObject {
     @Published var title: String = ""
     func load() { title = "Loaded" }
@@ -75,8 +75,7 @@ class Foo: SomeProtocol {
 
 // After: scope the conformance to @MainActor so the requirement is
 // satisfied inside the correct isolation context
-@MainActor
-extension Foo: SomeProtocol {
+extension Foo: @MainActor SomeProtocol {
     func protocolMethod() { /* safely accesses main-actor state */ }
 }
 ```
@@ -92,11 +91,9 @@ func processData(_ input: [Int]) -> [Int] {
 
 // After: hop off the main actor for the heavy work, then return the result
 // The caller awaits the result and stays on its own actor
-nonisolated func processData(_ input: [Int]) async -> [Int] {
-    await Task.detached(priority: .userInitiated) {
-        input.map { heavyTransform($0) }
-    }.value
-}
+// Prefer structured offloading with the @concurrent example below. A detached
+// task is unstructured: it does not inherit actor isolation/task locals and parent
+// cancellation is not automatically forwarded; retain/cancel its handle explicitly.
 
 // Or, using a @concurrent async function (Swift 6.2+):
 @concurrent
@@ -115,3 +112,13 @@ func processData(_ input: [Int]) async -> [Int] {
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.
+
+## Verification boundaries
+
+The compiler prevents many data races, not logical races, stale responses, deadlocks,
+or incorrect business invariants across `await`. Revalidate mutable assumptions after
+suspension. Sendable/thread safety must hold for every stored reference; do not silence
+diagnostics with `@unchecked Sendable` or `nonisolated(unsafe)` as a routine fix.
+The before/after snippets are alternatives with missing domain types/helpers, not
+compiled evidence. Example: start request A then B, finish A last and verify A cannot
+overwrite B’s selected UI state; cancellation alone may not prevent stale completion.

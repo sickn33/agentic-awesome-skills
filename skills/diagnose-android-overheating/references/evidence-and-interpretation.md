@@ -148,7 +148,7 @@ Do not run the reset merely to make output shorter. Record that the reset occurr
 
 ## Bugreport Privacy
 
-`adb bugreport <local-path>.zip` creates a broad diagnostic archive. Before running it:
+`adb -s <serial> bugreport <local-path>.zip` creates a broad diagnostic archive. Before running it:
 
 - explain that it may include identifiers, accounts, app usage, notifications, networks, logs, and recent system activity;
 - choose a private local path with the user;

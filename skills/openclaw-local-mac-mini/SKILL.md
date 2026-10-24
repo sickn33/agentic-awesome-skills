@@ -19,408 +19,48 @@ metadata:
 
 # OpenClaw Local + Mac mini Setup
 
-Use this skill when you want to run [OpenClaw](https://github.com/openclaw/openclaw) on a developer laptop or promote it to a stable Mac mini host. Covers cloning and bootstrapping, Docker Compose configuration, Mac mini hardware optimization, networking, monitoring, and production-grade launchd services.
+## When to Use
+
+Use when setting up or reviewing a private OpenClaw host on macOS, choosing its service lifecycle, or diagnosing host reliability. This guide does not authorize installing tools, changing account permissions, exposing ports or connecting messaging accounts.
 
 ## Prerequisites
 
-- macOS 13 (Ventura) or later on Apple Silicon (M1/M2/M4 Mac mini recommended)
-- Docker Desktop for Mac or OrbStack installed
-- Git, Node.js (v18+), and a package manager (npm or pnpm)
-- API keys for your chosen LLM provider (OpenAI, Anthropic, or local Ollama)
-- At least 16 GB RAM (32 GB recommended for local model serving)
+Select a reviewed immutable OpenClaw release and inspect its official prerequisites and installation method. Current upstream getting-started documentation lists Node.js 24.16+ or 26.1+; verify the selected release rather than reusing historical Node 18 guidance. Establish the host/user, approved provider credentials, storage, backup, spending limits and allowed tool/channel scope before onboarding.
 
-## Local Setup (Any Dev Machine)
+## Procedure
 
-### Clone and Bootstrap
-
-```bash
-# Clone the repository
-git clone https://github.com/openclaw/openclaw.git
-cd openclaw
-
-# Review the upstream README for current prerequisites
-cat README.md
-
-# Copy the example environment file
-cp .env.example .env
-
-# Edit .env with your provider keys and configuration
-# At minimum, set the model provider and API key
-cat > .env << 'ENV'
-# LLM Provider Configuration
-OPENAI_API_KEY=sk-your-openai-key-here
-# Or for Anthropic:
-# ANTHROPIC_API_KEY=sk-ant-your-key-here
-# Or for local Ollama:
-# OLLAMA_BASE_URL=http://localhost:11434
-
-# Application settings
-NODE_ENV=development
-PORT=3000
-HOST=0.0.0.0
-LOG_LEVEL=info
-
-# Database (if applicable)
-DATABASE_URL=sqlite:./data/openclaw.db
-ENV
-```
-
-### Install Dependencies and Run
+1. Inventory the existing installation and preserve config/data before changes. Download external source/installers only with authorization, pin the reviewed release/commit, inspect the complete tree and lifecycle hooks in a temporary directory, then obtain activation/install authorization. Never pipe an unreviewed network installer into a shell.
+2. Use that release's documented installer or package workflow. Do not assume this application has `db:migrate`, `dist/server.js`, Redis, port3000 or `/api/health`: the previous generic web-app examples did not establish those interfaces.
+3. Configure through the supported onboarding interface under the intended non-admin user. Keep credentials in the supported secret mechanism, with restricted file permissions; do not overwrite an existing `.env` or put secrets in command arguments. Cloud models still transmit prompts off-host; local hosting alone is not a privacy guarantee.
+4. After approval to install persistence, use the supported Gateway service. The official macOS path uses a per-user LaunchAgent, not the generic root LaunchDaemon formerly shown here. Record login/unlock/reboot limitations.
 
 ```bash
-# Install dependencies
-npm install
-# Or with pnpm:
-# pnpm install
-
-# Run database migrations if needed
-npm run db:migrate
-
-# Start the development server
-npm run dev
-
-# Verify startup
-curl -s http://localhost:3000/api/health | jq .
-# Expected: {"status":"ok","version":"..."}
+# Existing reviewed CLI: inspect before making changes.
+openclaw --version
+openclaw gateway status
+# Authorized background service installation:
+openclaw gateway install
+# Open the local UI for an authenticated, non-sensitive smoke check:
+openclaw dashboard
 ```
 
-### Validate the Setup
+5. Verify the actual listener/address and authentication from both allowed and denied clients. The documented default Gateway port is18789; inspect configuration rather than assuming it. Bind privately, require authentication/pairing and restrict remote access to intended identities. A VPN is additional transport/access control, not authorization for agent tools.
+6. Test provider access with a synthetic prompt only after cost/data authorization; verify tool permissions, cancellation, logging and a restore procedure. Record exact versions and observations; dashboard HTTP success alone is not a working agent or native-session reload proof.
 
-```bash
-# Check the API health endpoint
-curl -f http://localhost:3000/api/health
+## Host Reliability
 
-# Check the UI loads
-curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/
-# Expected: 200
+Use [host and operational checks](references/details.md). Preserve FileVault and screen locking. FileVault may require an interactive unlock after reboot; test this with the user's recovery plan before claiming unattended availability. Review any power setting with its previous value and restore path; do not create an admin service account, disable screen security, or enable broad firewall access as a default.
 
-# Run built-in tests if available
-npm test
-```
+For Docker, use only the selected release's actual supported Compose files. Pin images, bind approved ports to loopback, keep volumes/backups explicit and verify the macOS container runtime starts in the intended user session. Do not add optional Redis/Ollama services without a demonstrated need; Linux containers on macOS do not imply native Apple GPU acceleration. Never remove volumes as routine troubleshooting.
 
-## Docker Compose Setup
+## Examples
 
-### docker-compose.yml
-
-```yaml
-version: "3.8"
-
-services:
-  openclaw:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: openclaw:latest
-    container_name: openclaw
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    env_file:
-      - .env
-    environment:
-      - NODE_ENV=production
-      - HOST=0.0.0.0
-      - PORT=3000
-    volumes:
-      - openclaw-data:/app/data
-      - ./config:/app/config:ro
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 15s
-    deploy:
-      resources:
-        limits:
-          memory: 4G
-        reservations:
-          memory: 1G
-    logging:
-      driver: json-file
-      options:
-        max-size: "50m"
-        max-file: "5"
-
-  # Optional: Redis for caching/queues
-  redis:
-    image: redis:7-alpine
-    container_name: openclaw-redis
-    restart: unless-stopped
-    volumes:
-      - redis-data:/data
-    command: redis-server --appendonly yes --maxmemory 512mb --maxmemory-policy allkeys-lru
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 3
-
-  # Optional: Ollama for local model serving
-  ollama:
-    image: ollama/ollama:latest
-    container_name: openclaw-ollama
-    restart: unless-stopped
-    ports:
-      - "11434:11434"
-    volumes:
-      - ollama-models:/root/.ollama
-    deploy:
-      resources:
-        limits:
-          memory: 16G
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:11434/api/tags"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-volumes:
-  openclaw-data:
-  redis-data:
-  ollama-models:
-```
-
-### Running with Docker Compose
-
-```bash
-# Build and start all services
-docker compose up -d --build
-
-# Check service status
-docker compose ps
-
-# View logs
-docker compose logs -f openclaw
-docker compose logs -f --tail=100 ollama
-
-# Pull a model into Ollama (if using local models)
-docker exec openclaw-ollama ollama pull llama3:8b
-docker exec openclaw-ollama ollama list
-
-# Restart a single service
-docker compose restart openclaw
-
-# Stop everything
-docker compose down
-
-# Stop and remove volumes (full reset)
-docker compose down -v
-```
-
-## Mac mini Production Setup
-
-### macOS Hardening and Baseline
-
-```bash
-# Enable automatic security updates
-sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticCheckEnabled -bool true
-sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate AutomaticDownload -bool true
-sudo defaults write /Library/Preferences/com.apple.SoftwareUpdate CriticalUpdateInstall -bool true
-
-# Enable FileVault disk encryption
-sudo fdesetup enable
-
-# Disable sleep (headless server should never sleep)
-sudo pmset -a sleep 0
-sudo pmset -a disksleep 0
-sudo pmset -a displaysleep 0
-
-# Enable auto-restart after power failure
-sudo pmset -a autorestart 1
-
-# Disable screen saver
-defaults -currentHost write com.apple.screensaver idleTime 0
-
-# Set hostname
-sudo scutil --set ComputerName "openclaw-mini"
-sudo scutil --set HostName "openclaw-mini"
-sudo scutil --set LocalHostName "openclaw-mini"
-
-# Verify power settings
-pmset -g
-```
-
-### Dedicated User Account
-
-```bash
-# Create a dedicated service user
-sudo sysadminctl -addUser openclaw -fullName "OpenClaw Service" -password "temp-change-me" -admin
-
-# Switch to the service user for setup
-su - openclaw
-
-# Clone and configure OpenClaw in the user's home
-cd ~
-git clone https://github.com/openclaw/openclaw.git
-cd openclaw
-cp .env.example .env
-# Edit .env with production values
-```
-
-### Secrets Management
-
-```bash
-# Store API keys in macOS Keychain instead of plaintext .env
-security add-generic-password -a openclaw -s "OPENAI_API_KEY" -w "sk-your-key-here"
-security add-generic-password -a openclaw -s "ANTHROPIC_API_KEY" -w "sk-ant-your-key-here"
-
-# Retrieve a secret from Keychain in scripts
-OPENAI_API_KEY=$(security find-generic-password -a openclaw -s "OPENAI_API_KEY" -w)
-export OPENAI_API_KEY
-
-# Helper script to load secrets from Keychain
-cat > /Users/openclaw/openclaw/load-secrets.sh << 'SCRIPT'
-#!/usr/bin/env bash
-export OPENAI_API_KEY=$(security find-generic-password -a openclaw -s "OPENAI_API_KEY" -w 2>/dev/null)
-export ANTHROPIC_API_KEY=$(security find-generic-password -a openclaw -s "ANTHROPIC_API_KEY" -w 2>/dev/null)
-SCRIPT
-chmod 700 /Users/openclaw/openclaw/load-secrets.sh
-```
-
-### launchd Service Configuration
-
-```xml
-<!-- /Library/LaunchDaemons/com.openclaw.service.plist -->
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.openclaw.service</string>
-
-    <key>UserName</key>
-    <string>openclaw</string>
-
-    <key>WorkingDirectory</key>
-    <string>/Users/openclaw/openclaw</string>
-
-    <key>ProgramArguments</key>
-    <array>
-        <string>/bin/bash</string>
-        <string>-c</string>
-        <string>source ./load-secrets.sh && /usr/local/bin/node ./dist/server.js</string>
-    </array>
-
-    <key>EnvironmentVariables</key>
-    <dict>
-        <key>NODE_ENV</key>
-        <string>production</string>
-        <key>PORT</key>
-        <string>3000</string>
-        <key>HOST</key>
-        <string>0.0.0.0</string>
-        <key>PATH</key>
-        <string>/usr/local/bin:/usr/bin:/bin</string>
-    </dict>
-
-    <key>RunAtLoad</key>
-    <true/>
-
-    <key>KeepAlive</key>
-    <dict>
-        <key>SuccessfulExit</key>
-        <false/>
-    </dict>
-
-    <key>ThrottleInterval</key>
-    <integer>10</integer>
-
-    <key>StandardOutPath</key>
-    <string>/var/log/openclaw/stdout.log</string>
-
-    <key>StandardErrorPath</key>
-    <string>/var/log/openclaw/stderr.log</string>
-
-    <key>SoftResourceLimits</key>
-    <dict>
-        <key>NumberOfFiles</key>
-        <integer>65536</integer>
-    </dict>
-</dict>
-</plist>
-```
-
-```bash
-# Create log directory
-sudo mkdir -p /var/log/openclaw
-sudo chown openclaw:staff /var/log/openclaw
-
-# Load the service
-sudo launchctl load -w /Library/LaunchDaemons/com.openclaw.service.plist
-
-# Verify it is running
-sudo launchctl list | grep openclaw
-curl -f http://localhost:3000/api/health
-
-# Stop/start/restart the service
-sudo launchctl stop com.openclaw.service
-sudo launchctl start com.openclaw.service
-
-# Unload the service (disable)
-sudo launchctl unload /Library/LaunchDaemons/com.openclaw.service.plist
-
-# View logs
-tail -f /var/log/openclaw/stdout.log
-tail -f /var/log/openclaw/stderr.log
-```
-
-### Docker Compose via launchd
-
-```xml
-<!-- /Library/LaunchDaemons/com.openclaw.docker.plist -->
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-    <key>Label</key>
-    <string>com.openclaw.docker</string>
-
-    <key>ProgramArguments</key>
-    <array>
-        <string>/usr/local/bin/docker</string>
-        <string>compose</string>
-        <string>-f</string>
-        <string>/Users/openclaw/openclaw/docker-compose.yml</string>
-        <string>up</string>
-    </array>
-
-    <key>RunAtLoad</key>
-    <true/>
-
-    <key>KeepAlive</key>
-    <true/>
-
-    <key>StandardOutPath</key>
-    <string>/var/log/openclaw/docker-stdout.log</string>
-
-    <key>StandardErrorPath</key>
-    <string>/var/log/openclaw/docker-stderr.log</string>
-</dict>
-</plist>
-```
-
-
-## Contents
-
-- [Networking](references/details.md)
-- [Monitoring](references/details.md)
-- [Validation Checklist](references/details.md)
-- [Troubleshooting](references/details.md)
-- [Related Skills](references/details.md)
-
-## When to Use
-
-- Running OpenClaw as a private, always-on local AI agent
-- Setting up a dedicated Mac mini as a home-lab AI server
-- Deploying OpenClaw with Docker Compose for reproducible environments
-- Optimizing macOS for headless server operation
-- Monitoring a local AI service for uptime and performance
+For a host that stops after logout, record the CLI version, Gateway status, service owner and login state; compare the selected release's service documentation. Restore the supported per-user service rather than adding a second root-managed process. Verify one process owns the configured port and test restart under an approved maintenance window.
 
 ## Limitations
 
-- Infrastructure commands can disrupt services: confirm target host/scope and have backups/snapshots before mutating state.
-- Docs-only import: upstream scripts and templates not bundled.
+No CLI, host, installation or provider request was exercised by this documentation. Hardware sizing depends on the workload and selected local model. This tree contains guidance only, not an installer or production Compose template. Channel pairing, remote access, persistence and paid model requests need explicit target-specific authorization.
 
+## Primary Reference
+
+- [Official getting started](https://docs.openclaw.ai/start/getting-started)

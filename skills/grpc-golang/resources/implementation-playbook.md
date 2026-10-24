@@ -89,7 +89,12 @@ plugins:
 
 ## Server Implementation
 
-### Full Server Setup with Graceful Shutdown
+### Server wiring sketch with graceful shutdown
+
+`newUserService`, recovery/logging/auth interceptors, TLS files, generated stubs
+and application handlers are not bundled. This is not a complete compilable server.
+Compose the mTLS and telemetry options in the SAME server/client; later snippets
+show individual options, not alternative insecure production instances.
 
 ```go
 package main
@@ -113,9 +118,11 @@ import (
 
 func main() {
 	srv := grpc.NewServer(
+		loadServerTLS(),
 		grpc.ChainUnaryInterceptor(
 			recoveryInterceptor,
 			loggingInterceptor,
+			authorizationInterceptor, // application-defined object/tenant authorization
 			otelUnaryInterceptor,
 		),
 		grpc.KeepaliveParams(keepalive.ServerParameters{
@@ -355,6 +362,7 @@ srv := grpc.NewServer(
 conn, err := grpc.Dial(
 	target,
 	grpc.WithStatsHandler(otelgrpc.NewClientHandler()),
+	grpc.WithTransportCredentials(creds), // previously configured verified mTLS
 )
 ```
 
@@ -436,7 +444,7 @@ func (s *userService) WatchUsers(
 		select {
 		case <-ctx.Done():
 			// Client disconnected or deadline exceeded; exit cleanly.
-			return status.Error(codes.Canceled, "client disconnected")
+			return status.FromContextError(ctx.Err()).Err()
 
 		case event, ok := <-events:
 			if !ok {
@@ -459,7 +467,7 @@ func (s *userService) WatchUsers(
 
 Map domain errors to gRPC status codes consistently:
 
-Only return `err.Error()` to clients when it is a safe, user-facing domain message (not an internal error string).
+Use fixed approved public messages: even an error matching `errors.Is` may wrap private identifiers or internal text. Map context cancellation/deadline separately when appropriate.
 
 ```go
 package service
@@ -485,13 +493,13 @@ func toGRPCError(err error) error {
 	}
 	switch {
 	case errors.Is(err, ErrNotFound):
-		return status.Error(codes.NotFound, err.Error())
+		return status.Error(codes.NotFound, "resource not found")
 	case errors.Is(err, ErrAlreadyExists):
-		return status.Error(codes.AlreadyExists, err.Error())
+		return status.Error(codes.AlreadyExists, "resource already exists")
 	case errors.Is(err, ErrInvalidInput):
-		return status.Error(codes.InvalidArgument, err.Error())
+		return status.Error(codes.InvalidArgument, "invalid input")
 	case errors.Is(err, ErrPermission):
-		return status.Error(codes.PermissionDenied, err.Error())
+		return status.Error(codes.PermissionDenied, "permission denied")
 	default:
 		return status.Error(codes.Internal, "internal error")
 	}
@@ -539,10 +547,24 @@ project/
 | Anti-Pattern                                  | Why It Hurts                                                                                  | Fix                                                          |
 | --------------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------ |
 | Create new `grpc.ClientConn` per request      | Exhausts OS sockets and disables HTTP/2 multiplexing, causing high latency and resource leaks | Initialize once, reuse globally                              |
-| Mix Protobuf v1 and v2 libraries              | Causes silent marshaling bugs; `proto.Marshal` from v1 and v2 are NOT interchangeable         | Pin to `google.golang.org/protobuf` (v2) throughout          |
+| Mix Protobuf v1 and v2 libraries              | Legacy compatibility varies; mixing APIs complicates support and must be checked, not assumed to silently corrupt         | Pin to `google.golang.org/protobuf` (v2) throughout          |
 | Expose raw internal error strings to clients  | Leaks stack traces and internal service names; a security and UX risk                         | Map errors with `status.Errorf` using appropriate gRPC codes |
 | Ignore `context.Done()` in streaming handlers | Goroutine and connection leak when client disconnects                                         | Check `ctx.Err()` in every iteration of a streaming loop     |
 | Skip error handling with `_ =`                | Hides failures silently; production outages become undiagnosable                              | Always check and handle errors explicitly                    |
 | Use `grpc.Dial` without health checks         | Connection failures are deferred and may surface as runtime errors                            | Use health checks and monitor connection state               |
 
-> **Migration note**: For gRPC-Go v1.63+ (Jan 2024), `grpc.NewClient` is the newer API recommended by the gRPC-Go project for new code. For older versions (or when following existing codebases and official grpc.io examples), using `grpc.Dial` / `grpc.DialContext` is still common.
+> **Migration note**: For gRPC-Go v1.63+ (verify the pinned release), `grpc.NewClient` is the newer API recommended by the gRPC-Go project for new code. For older versions (or when following existing codebases and official grpc.io examples), using `grpc.Dial` / `grpc.DialContext` is still common.
+
+## Operational limits
+
+Verified client certificates identify a trusted peer, not authorization for every
+user object or watch event. Authorize unary AND streaming RPCs before subscription,
+filter every event by tenant/object scope and bound buffers/backpressure; checking
+ctx.Done alone does not make an arbitrary blocking send/work cancellable.
+A `WatchUsers` empty request never authorizes global user disclosure. Do not log
+raw metadata, credentials, emails or event bodies. Pin generation tools/plugins
+and compare Buf breaking changes to an explicit trusted base. No compiled stubs,
+interceptors or fakeUserSvc are included; the test sketch is not passing evidence.
+`NewClient` constructs a lazy connection (introduced v1.63.0); success does not
+prove reachability or handshake. For custom bufconn dialers choose a resolver
+explicitly when migrating; verify server SAN/target authority and close connections.

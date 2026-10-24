@@ -64,7 +64,7 @@ This rule has saved more incidents than any other in this skill. Do not soften i
    - If the cost is invisible to the caller, write "callers see no change".
 
 4. **Justify the asymptotic win.** Do not propose a math technique without a one-line bound argument:
-   - "HyperLogLog: count uniques in O(log log n) bits at standard error 1.04/√m."
+   - "HyperLogLog: count uniques in O(m log log U) bits for m registers and cardinality range U; relative standard error ≈1.04/√m."
    - "FFT: polynomial multiplication O(n log n) vs schoolbook O(n²)."
    - "JL projection: preserves pairwise distances within (1±ε) using O(log n / ε²) dimensions."
    - "Sweep line: rectangle overlap from O(n²) pair checks to O(n log n) events."
@@ -98,19 +98,19 @@ If any of 1–7 is missing, do not propose the technique.
 | Problem | Classical | Math technique | Win | Caveat |
 |---|---|---|---|---|
 | Membership: "have I seen this key?" at scale | `Set<id>`, O(n) space | **Bloom filter** | O(n) bits at chosen ε false-positive | False positives only; cannot remove (use Cuckoo if needed) |
-| Count distinct values in a stream | `Set` to count, O(unique) space | **HyperLogLog** | O(log log n) bits, ~1% relative error | Approximate; cannot list elements |
+| Count distinct values in a stream | `Set` to count, O(unique) space | **HyperLogLog** | O(m log log U) bits; relative standard error ≈1.04/√m | Approximate; cannot list elements |
 | Top-K / heavy hitters in a stream | full counter, O(unique) space | **Count-Min Sketch** + heap | O(log(1/δ)·1/ε) space | Overestimates; choose ε,δ deliberately |
 | Document / set similarity at scale | full Jaccard, O(n·m) | **MinHash + LSH** | Sub-linear ANN query | Tunes recall vs precision; param search |
-| k-NN in high-dim vectors | brute O(n·d) | **JL projection → HNSW / IVF** | O(log n) per query, (1±ε) distortion | Index build cost; recall < 1 |
+| k-NN in high-dim vectors | brute O(n·d) | **JL projection → HNSW / IVF** | Empirical ANN speedup; JL distortion and ANN recall are separate guarantees | Index build cost; recall < 1 |
 | Reservoir of size k from a stream of unknown length | buffer all, O(n) space | **Reservoir sampling** | O(k) space, uniform sample | Single-pass only |
 | Find majority element | counter map | **Boyer-Moore majority vote** | O(1) space, O(n) time | Requires majority exists; verify pass |
-| Quantiles in a stream | sort, O(n log n) | **t-digest / GK** | O(1/ε) space, ε-accurate quantiles | Approximate |
+| Quantiles in a stream | sort, O(n log n) | **t-digest / GK** | Variant-specific: GK O((1/ε) log(εn)) space; t-digest has different guarantees | Approximate |
 
 ### Fast arithmetic / transforms (numeric and combinatorial)
 
 | Problem | Classical | Math technique | Win | Caveat |
 |---|---|---|---|---|
-| Multiply two polynomials / big integers | O(n²) | **FFT / NTT / Karatsuba** | O(n log n) | Floating FFT loses precision — use NTT for integers |
+| Multiply two polynomials / big integers | O(n²) | **FFT / NTT / Karatsuba** | FFT/NTT O(n log n); Karatsuba O(n^log₂3) | Floating FFT loses precision — use NTT for integers |
 | Convolution of two signals | O(n·m) | **FFT-based convolution** | O((n+m) log(n+m)) | Numerical noise at very small magnitudes |
 | `pow(a, b) mod p`, b large | O(b) multiplications | **Fast exponentiation (square-and-multiply)** | O(log b) | Watch for overflow inside; use modular arithmetic |
 | GCD of large integers | repeated subtraction | **Euclidean algorithm** | O(log min) | Standard; AI sometimes still writes the subtraction loop |
@@ -131,7 +131,7 @@ If any of 1–7 is missing, do not propose the technique.
 
 | Problem | Classical | Math technique | Win | Caveat |
 |---|---|---|---|---|
-| Range / nearest-neighbor in 2D-3D | O(n) per query | **kd-tree / R-tree / BVH** | O(log n) per query | Degrades in high d; use ANN instead |
+| Range / nearest-neighbor in 2D-3D | O(n) per query | **kd-tree / R-tree / BVH** | Typical low-dimensional speedup; worst case O(n) | Degrades in high d; ANN changes exactness |
 | Rectangle / interval overlap pairs | O(n²) pair check | **Sweep line + active set (BBST)** | O((n+k) log n) | k = output size; segment tree variant exists |
 | Polygon point-in-polygon at scale | O(n·v) | **BSP / monotone decomposition / R-tree** | O(log v) per query after build | Build cost |
 | Convex hull of n points | O(n²) gift wrap | **Graham scan / Andrew's monotone chain** | O(n log n) | Numerical robustness for collinear |
@@ -182,16 +182,18 @@ Or worse — proposed *with* a HyperLogLog "for performance" but plugged into th
 // Why classical is not enough: dashboard box has 512MB and refreshes every minute.
 // Technique: HyperLogLog (HLL).
 // Mode: approximate. ε ≈ 1.04/√m. With m=2^14 registers → ~0.8% relative error.
-// Trade: buys O(log log n)-bit space (~12KB); costs ±0.8% on the displayed count.
+// Trade: O(m log log U) bits; ~0.81% relative STANDARD ERROR, not a hard ± bound.
+// About 95% confidence is roughly ±1.6% under the estimator/hash assumptions.
 // When NOT to use: anything that flows into billing, primary keys, or per-user actions.
 // Caller acceptance: confirmed — dashboard product owner accepts ±2%, written in PR.
 
-import { createHLL } from 'hyperloglog-lite';
-const hll = createHLL({ precision: 14 });
+// Adapter pseudocode: choose a reviewed version-pinned HLL implementation.
+// No package or createHLL API is supplied by this skill.
+const hll = reviewedHllAdapter({ precision: 14 });
 for await (const event of stream) {
   hll.add(event.userId);
 }
-return hll.estimate(); // 49.6M ± 0.4M; dashboard reads ~50M
+return hll.estimate(); // An estimate; display uncertainty, not invented measured output.
 ```
 
 The first version is not "no HLL" — it is "HLL without writing down ε and who tolerates it." The second is identical in technique but auditable: ε is in the comment, the caller is named, the disqualifier (billing) is explicit.
@@ -220,8 +222,8 @@ Code that uses a math-level technique must include:
 | "Probabilistic structures sound fancy / academic." | Cloudflare runs Bloom filters in the request path. Redis ships HyperLogLog. These are production-tested, not academic. |
 | "Approximate is risky — I'll do exact and let it OOM later." | Silent OOM at 3am is riskier than a stated 0.81% error. State the ε, pick parameters, ship. |
 | "I'll just shard the set across machines." | Sharding multiplies your infra cost; HLL solves it in 12KB on one box. Ask whether you actually need exact. |
-| "FFT is overkill for this." | True 99% of the time. But state the n. At n ≥ ~64 for polynomial mult, schoolbook is already losing. |
-| "JL projection feels too lossy for embeddings." | At ε = 0.1, JL preserves pairwise distances within 10%. For ANN this is almost always fine — measure recall, do not eyeball. |
+| "FFT is overkill for this." | True 99% of the time. But state the n. The crossover depends on implementation, coefficients, hardware and precision; benchmark it. |
+| "JL projection feels too lossy for embeddings." | At ε = 0.1, JL preserves pairwise distances within 10%. This does not guarantee preserved neighbor rankings or ANN recall — measure recall, do not eyeball. |
 
 ## Red flags — STOP
 
@@ -267,3 +269,12 @@ Cannot check every box? The technique is not ready to ship. Keep classical, or s
 - `lemmaly` — gateway; pick the classical algorithm first before reaching for math.
 - `invariant-guard` — for stating ε-bounds as part of the postcondition of an approximate algorithm.
 - `complexity-cuts` — when baseline code already exists and the bottleneck is CPU/memory, not approximation.
+
+### Bound reference
+
+The [original HLL analysis](https://cermics.enpc.fr/~meuniefr/FlFuGaMe07.pdf)
+distinguishes register count, memory and standard error. Standard error is not
+a deterministic tolerance; choose a confidence target and validate hash assumptions.
+Conjugate gradient requires a symmetric positive-definite operator; sparse LU
+has fill-in-dependent cost and does not share the CG iteration bound. NTT needs
+suitable moduli/roots and CRT or range bounds to recover exact integer coefficients.

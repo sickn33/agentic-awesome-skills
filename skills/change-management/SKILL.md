@@ -21,6 +21,8 @@ metadata:
 
 Implement structured change management processes covering change classification, CAB workflows, emergency change procedures, and automation for compliance with SOC 2, ITIL, and regulatory frameworks.
 
+Approval counts, timelines, meeting dates and retention values here are example organization policy, not universal ITIL/SOC2 requirements. Match actual authority, duties and emergency procedures; urgency does not authorize bypassing protection or acting without the necessary scope. A rollback may be unsafe for irreversible data changes: define forward recovery, restore verification and decision ownership.
+
 ## Change Classification
 
 ```yaml
@@ -332,81 +334,28 @@ emergency_change_process:
 
 ## CI/CD Change Tracking Automation
 
+The following performs advisory file triage only; it does not authorize changes or enforce reviewer eligibility. A filename heuristic cannot decide actual risk. Use protected branch rules and an independent exact-head policy for required, unique, current approvals; historical review-count totals can include superseded/stale/author reviews.
+
 ```yaml
-# GitHub Actions - Automated change tracking
-name: Change Management
-on:
-  pull_request:
-    types: [opened, synchronize, labeled]
-  push:
-    branches: [main]
-
+name: Advisory change triage
+on: pull_request
+permissions:
+  contents: read
+  pull-requests: read
 jobs:
-  classify-change:
-    if: github.event_name == 'pull_request'
+  classify:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Classify change risk
-        id: classify
-        run: |
-          FILES_CHANGED=$(gh pr diff ${{ github.event.pull_request.number }} --name-only)
-
-          # High risk indicators
-          if echo "$FILES_CHANGED" | grep -qE 'terraform/|infrastructure/|migrations/|auth/|security/'; then
-            echo "risk=high" >> $GITHUB_OUTPUT
-            echo "::warning::High-risk change detected - CAB review may be required"
-          elif echo "$FILES_CHANGED" | grep -qE 'config/|database/|api/'; then
-            echo "risk=medium" >> $GITHUB_OUTPUT
-          else
-            echo "risk=low" >> $GITHUB_OUTPUT
-          fi
+      - name: List changed paths for manual risk review
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Add risk label
-        run: |
-          gh pr edit ${{ github.event.pull_request.number }} \
-            --add-label "risk:${{ steps.classify.outputs.risk }}"
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Enforce approvals by risk
-        if: steps.classify.outputs.risk == 'high'
-        run: |
-          APPROVALS=$(gh pr view ${{ github.event.pull_request.number }} \
-            --json reviews --jq '[.reviews[] | select(.state=="APPROVED")] | length')
-          if [ "$APPROVALS" -lt 2 ]; then
-            echo "::error::High-risk changes require at least 2 approvals"
-            exit 1
-          fi
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  record-deployment:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Record deployment
-        run: |
-          CHANGE_ID="CR-$(date +%Y)-$(printf '%04d' ${{ github.run_number }})"
-          echo "Change ID: $CHANGE_ID"
-          echo "Deployed at: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
-          echo "Commit: ${{ github.sha }}"
-          echo "Author: ${{ github.actor }}"
-
-          cat > /tmp/deployment-record.json <<EOF
-          {
-            "change_id": "$CHANGE_ID",
-            "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
-            "commit": "${{ github.sha }}",
-            "author": "${{ github.actor }}",
-            "environment": "production",
-            "status": "deployed"
-          }
-          EOF
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: gh pr diff "$PR_NUMBER" --name-only
 ```
+
+This job neither checks out nor executes fork code and does not need write tokens or `pull_request_target`. Add labels only through a separately authorized trusted process with precise permissions. A push to main is a source event, not proof of a production deployment. Emit a durable deployment record only after the actual deployment and required verification succeed; bind environment, artifact digest, commit, job/run/attempt, approver and timestamps. Failed/partial deployments must retain their real status, not `deployed`. Preserve evidence in an approved restricted audit store, not an ephemeral `/tmp` file.
+
 
 
 ## Contents

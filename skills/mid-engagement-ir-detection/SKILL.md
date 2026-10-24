@@ -3,7 +3,7 @@ name: mid-engagement-ir-detection
 description: Methodology for detecting client SOC patches, attacker activity, and
   security-state changes that occur DURING a red-team engagement
 category: security
-risk: safe
+risk: offensive
 source: https://github.com/elementalsouls/Claude-BugHunter
 source_repo: elementalsouls/Claude-BugHunter
 source_type: community
@@ -15,6 +15,15 @@ compatibility: Process guidance; no tooling required. Docs-only; upstream templa
 sources: authorized-engagement
 report_count: 1
 ---
+
+> **⚠️ AUTHORIZED USE ONLY**
+> This skill is for educational purposes or authorized security assessments only.
+> You must have explicit, written permission from the system owner before using this tool.
+> Misuse of this tool is illegal and strictly prohibited.
+
+## Mandatory confirmation gate
+
+Before any probe, evasion, source-IP change or credential-related request, collect the exact target URL, IP, account, or resource, written authorization and permitted scope; show the exact command and expected effect. Wait for explicit confirmation in the current conversation. Otherwise review existing evidence only. Unexpected blocks/lockouts trigger the engagement stop/contact procedure, not automatic evasion. Bound requests, account attempts, timing and cost; never test unrelated accounts or change tenant policies.
 
 ## When to use this skill
 
@@ -28,7 +37,7 @@ Trigger when:
 - Engagement is "assume breach" or "white box" — client knows you're testing
 
 DO NOT use for:
-- Bug bounty (client doesn't know you're there; no real-time IR)
+- Any program whose authorization excludes the proposed observation/probe; bug-bounty programs can also have active SOC monitoring
 - Pure recon (no state-change happening)
 - One-off vulnerability scanning (no temporal dimension)
 
@@ -39,10 +48,10 @@ DO NOT use for:
 In a real red-team engagement against a competent SOC, the security state of the target is **not static**. It changes during your test in response to your traffic. These state changes are:
 
 1. **Themselves valuable findings** (positive operational observations about IR responsiveness)
-2. **Confirmation evidence** (mid-engagement patch = the original vulnerability was real)
+2. **Contextual evidence** (a response change alone proves neither a patch nor the original vulnerability)
 3. **Classification signals** (WAF rule deployment vs code fix — different remediation depth)
 
-Anti-pattern: treating reproduction failure as evidence the original signal was a false positive. **Original PoC artifacts captured before the change are still the vulnerability finding.**
+Anti-pattern: treating reproduction failure as evidence the original signal was a false positive. Preserve original artifacts, then independently assess whether they actually established the vulnerability; label uncertain signals honestly.
 
 ---
 
@@ -50,7 +59,8 @@ Anti-pattern: treating reproduction failure as evidence the original signal was 
 
 ### Before any active test:
 
-```python
+```text
+# Pseudocode only; placeholders are not runnable Python.
 # Capture pre-test fingerprint of the target
 fingerprint = {
     "ts_pre": time.time(),
@@ -71,7 +81,8 @@ Log every test result with full context (timestamp, IP, payload, response code, 
 
 ### After the test session OR on first failed-recheck:
 
-```python
+```text
+# Pseudocode only.
 fingerprint_post = same structure
 delta = {
     "baseline_time_change_ms": post.time - pre.time,
@@ -82,7 +93,7 @@ delta = {
 }
 ```
 
-If any delta is significant — **investigate, don't retract**.
+If a delta is significant, investigate alternative explanations and update confidence; neither retain nor retract a finding automatically.
 
 ---
 
@@ -106,7 +117,7 @@ If any delta is significant — **investigate, don't retract**.
 
 If WAF-evasion variants restore the signal, the mitigation is at the WAF layer (bypassable).
 
-If even WAF-evasion variants stay blocked, the mitigation is likely in code.
+A failed variant does not identify a code fix. WAF/origin/cache/session/backend changes require owner logs, configuration or code evidence to distinguish.
 
 **Finding template:**
 ```
@@ -118,10 +129,9 @@ not] restore the signal.
 
 Description: This pattern is consistent with the client SOC observing engagement
 traffic and deploying a mitigation in real time. Mitigation depth assessment:
-[at-WAF, bypassable] vs [in-code, durable].
+[observed bypass under stated conditions] vs [layer/depth unknown pending owner evidence].
 
-Impact (positive): Client SOC has both detection-grade visibility into application
-traffic AND the authority to deploy mitigations within ~<minutes> of detection.
+Impact (positive): Only claim SOC detection/mitigation timing when owner telemetry confirms the detection and change events; response timing alone is not that evidence.
 
 Impact (caveat): The original vulnerability did exist and was exploitable for at
 least the engagement window before mitigation. If the mitigation is at the WAF
@@ -135,58 +145,20 @@ Recommendation:
 3. (Positive) Document the IR responsiveness as a capability metric.
 ```
 
-### Observation 2 — Active concurrent attacker
+### Observation 2 — Possible concurrent activity or authentication policy change
 
-**Symptoms:**
-- Many `AADSTS50053` (LOCKED) responses despite your 1-attempt-per-user discipline
-- Lockouts cluster alphabetically or by some other sort key
-- New lockouts appear DURING your engagement (diff before/after)
-- LOCKED rate exceeds expected baseline (in our engagement: 11% of all attempts → red flag)
+`AADSTS50053` can reflect account lockout or a malicious-source-IP block, irrespective of password validity. Defaults vary across cloud environments and tenant settings. Prior failures, familiar/unfamiliar-location counters, legitimate users, federated/pass-through behavior and the engagement itself can contribute. One logged attempt per user does **not** mathematically exclude tester contribution or prove an external actor.
 
-**Math check:**
-- Your discipline: 1 attempt per user lifetime
-- Smart Lockout default: lockout after 10 failed attempts; lockout duration starts at 60 seconds and grows with each subsequent lockout (not a flat 10-minute window)
-- Therefore: IF tool logs confirm exactly 1 attempt/user (no burst retries, no parallel-goroutine duplicate sends, no tool misconfiguration), you cannot mathematically cause Smart Lockout — verify `journal.jsonl` shows 1 attempt/user before asserting this
-- Therefore: every NEW AADSTS50053 accumulating during the window (per before/after diff) was caused by someone else; pre-existing locks may stem from the legitimate user's own failures or a prior test run, so attribute only the newly-accumulating locks to an external party
+Stop credential probes at the agreed threshold and coordinate with the authorized SOC contact. Review existing owner-provided sign-in logs, actual failure reasons, source identities/IPs, correlation IDs, timestamps and tenant policies. Compare against the tester's complete request journal and approved baseline. Alphabetic clustering or a rising response-code count is a hypothesis, not attribution. Do not probe service mailboxes to “confirm” a live attacker or assume they are MFA-exempt.
 
-**Confirmation:**
-- Sort locked accounts alphabetically; if they cluster, attacker is using sorted username list
-- Compare pre-session lockout count vs post-session — new locks during your session = attacker is active *right now*
-- Probe a known-active "system" account (`noreply@`, `info@`, `oc@`) — if it's locked, attacker is hitting service mailboxes too (typically MFA-exempt → high-value to attackers)
+Report observed counts separately from unique principals and actual lockout events. Preserve unknown causes and benign alternatives. Password resets, geo-blocking, risk-policy changes or tenant-wide containment belong to the authorized incident commander after impact review, not an automatic24-hour checklist.
 
-**Finding template:**
-```
-Subject: Active external password-spray campaign detected during engagement
-
-Observation: During M365 ROPC validation against the <tenant> Entra tenant, <N>
-unique principals returned AADSTS50053 (Smart Lockout) when probed with a single
-password attempt at safe pace. Our tool journal (journal.jsonl) confirms exactly
-1 attempt per user with no duplicate sends, so under the Smart Lockout default
-(lockout after 10 failed attempts) we cannot have caused these lockouts. The
-attribution below applies to the <K> NEW locks that accumulated during our
-engagement window between <timestamp_start> and <timestamp_end> (per before/after
-diff); pre-existing locks are not attributed to this campaign.
-
-Description: The pattern (alphabetical clustering, real-time accumulation,
-including system mailboxes) is consistent with an external attacker performing
-a username-list-driven password spray attack against the tenant.
-
-Impact: An external adversary is actively attempting to compromise corporate
-M365 accounts. The attacker has knowledge of the user-email schema and a
-password-guess wordlist. <List of locked accounts is now in attacker's hands>
-(Smart Lockout differentiates valid from invalid usernames).
-
-Recommendation (CRITICAL — within 24h):
-1. Open a P1 incident with the SOC. Pull Entra sign-in logs for the <N> locked
-   accounts over the last 30-60 days. Identify source IPs and time windows.
-2. Apply Conditional Access rule blocking sign-ins from outside <expected geo>
-   for non-admin accounts.
-3. Enable Identity Protection's User Risk policy with auto-reset on high risk.
-4. Force tenant-wide password reset for all <N> previously-locked accounts.
-5. Audit service accounts for MFA exemptions; ensure all human-interactive
-   accounts have phishing-resistant MFA.
-
-Evidence: engagement_log/poc/m365/locked_accounts.txt (<N> entries with timestamps)
+Example report:
+```text
+Observation: N responses contained50053 during [UTC window] from approved sourceX.
+Known: owner logs identify [documented failure reason]; tester journal covers [scope].
+Unknown: attribution and whether the response change resulted from a mitigation.
+Next: authorized SOC correlates existing identity/network telemetry and decides response.
 ```
 
 ### Observation 3 — Detection-induced rate limiting / IP blocks
@@ -199,8 +171,8 @@ Evidence: engagement_log/poc/m365/locked_accounts.txt (<N> entries with timestam
 - Some hosts work from one IP but not another
 
 **Confirmation:**
-- Rotate to a different IP and retry — if works, you got rate-limited/blocked
-- Compare TTL on DNS responses — sudden short TTL = active mitigation deployed
+- Compare already authorized source observations; do not rotate around a block unless the engagement owner explicitly approves that exact action
+- Compare DNS answers/TTL with resolver/cache/routing controls; a TTL change alone does not prove mitigation
 - Check `Server:`, `Via:`, `CF-Cache-Status:` headers for CDN-introduced limits
 
 **Finding template (operational note, usually low/info severity):**
@@ -215,8 +187,7 @@ Description: Active anti-automation control at the perimeter (CDN/WAF/origin).
 
 Impact (positive): Volumetric anti-automation is functional.
 
-Impact (caveat): Rotation defeats this control trivially (cloud VMs cost <$5).
-A patient adversary or spray-from-residential-proxies attacker is not affected.
+Impact (caveat): A permitted alternate-source observation may show a scope limitation; it does not establish universal bypass, attacker cost or complete control failure.
 ```
 
 ---
@@ -273,7 +244,7 @@ cd "$ENGAGEMENT_DIR"
 
 # Re-measure baseline timing on key targets
 for target in "$@"; do
-  ms=$(curl -sk -o /dev/null -w "%{time_total}" "$target" --max-time 30)
+  ms=$(curl -sS -o /dev/null -w "%{time_total}" "$target" --max-time 30)
   ms_int=$(echo "$ms * 1000" | bc | cut -d. -f1)
   echo "$(date -u +%FT%TZ) $target $ms_int" >> baseline_history.log
 done
@@ -306,17 +277,21 @@ echo "$(date -u +%FT%TZ) lockout_count $LOCK_COUNT" >> lockout_history.log
 
 If a confirmed-vulnerable finding stops reproducing:
 
-1. **DO NOT delete the original PoC.** Original timestamps + payloads + response captures are forever.
+1. **DO NOT delete the original PoC.** Preserve restricted/redacted evidence according to agreed retention; do not retain sensitive payloads indefinitely.
 2. **Capture the new state in detail.** What's the recheck response? What's different?
-3. **Try at least 3 alternative vectors** before declaring "indeterminate".
-4. **If none restore the signal**, document as "vulnerability confirmed at T0, mitigation observed at T0+<delta>, mitigation depth: [WAF | code]".
+3. Reassess original evidence and authorized scope. Stop or request owner correlation; do not require additional attack vectors when limits or uncertainty call for stopping.
+4. If no reproduction is available, report exactly what was confirmed atT0 and what changed; keep mitigation cause/depth unknown until independently established.
 5. **Both states go in the report.** The original finding + the IR observation.
 
 This is the discipline that distinguishes professional red team from "hobbyist scanning". Your client wants the timeline of vulnerability + mitigation, not just the static state.
 
 ---
 
-## Why this is a finding (selling it to the client)
+## Owner Correlation Before Causal Claims
+
+The following narrative applies only when original impact and owner detection/change events have been independently confirmed. A before/after response difference alone cannot establish any of these claims.
+
+## Why confirmed evidence can be useful
 
 When you tell a client "I confirmed SQLi at 14:24, you deployed a mitigation by 14:55, here's the original PoC and here's why you should still verify the fix is in code":
 
@@ -331,11 +306,11 @@ This is a more valuable deliverable than "I confirmed SQLi" alone, because it ca
 
 ## Anti-patterns to avoid
 
-- **"Recheck failed → false positive."** No. Recheck failed because the target changed. Investigate the change.
+- **"Recheck failed → false positive."** A failed recheck has multiple causes. Investigate and reassess the original evidence.
 - **"It's no longer vulnerable, drop the finding."** No. It WAS vulnerable. The finding stays. Add a "current state: mitigated" annotation.
 - **"They patched it, mission accomplished."** No. WAF rule != code fix. Verify the depth.
 - **"Don't tell the client we observed their patch."** Yes, do. It's a positive finding about their IR.
-- **"Don't include the locked accounts list — they'll think we caused it."** No. Math + journaling discipline proves you didn't. Include the list with the math.
+- **"Don't include the locked accounts list — they'll think we caused it."** No actor attribution follows from a response code. Share minimized account evidence only with the authorized SOC and state uncertainty.
 
 ---
 
@@ -351,7 +326,7 @@ This is a more valuable deliverable than "I confirmed SQLi" alone, because it ca
 
 ## One-line summary
 
-**Your engagement leaves a footprint. The footprint changes the target. Capture both states. Both are findings.**
+**Capture both states, distinguish observation from causation, and retain only evidence-supported findings.**
 
 ---
 

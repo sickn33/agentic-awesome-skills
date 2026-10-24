@@ -194,6 +194,8 @@ Would you be open to a quick call to explore?
 
 ---
 
+Drafting does not authorize outreach, campaign publication, spend or sharing customer/account lists. Use observed audience evidence rather than invented overlap claims. Before sharing registrations or uploading account data to matching services, verify consent/other applicable basis, privacy notices, approved fields/recipients, retention and the agreed follow-up permissions. A partner agreement alone is not attendee permission to receive marketing. Prefer aggregate overlap/metrics when sufficient.
+
 ## Structuring the Partnership
 
 ### Key Questions to Align On
@@ -289,7 +291,7 @@ For implementation, see the [tools registry](https://github.com/coreyhaines31/ma
 
 ## Related Skills
 
-- **referrals** — For customer referral and affiliate programs (customers referring customers)
+- **referral-program** (verify the installed ID; upstream calls it referrals) — For customer referral and affiliate programs (customers referring customers)
 - **launch** — For product launches with partners; covers co-marketing as a "borrowed channel"
 - **content-strategy** — For content planning including co-created content
 - **sales-enablement** — For partner-facing collateral and enablement materials

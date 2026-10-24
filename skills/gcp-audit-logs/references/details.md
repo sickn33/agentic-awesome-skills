@@ -2,6 +2,8 @@
 
 > Extended reference content for `gcp-audit-logs`, kept under `references/` so the entrypoint stays within the audit budget.
 
+Bucket retention locking is irreversible; establish approved retention and recovery implications before a separate lock action. Logging exemptions and exclusions create blind spots and require explicit security approval. An organization sink routes supported included children; it does not enable missing Data Access logs or backfill historical entries. Verify sink errors, destination permissions and latency for representative projects.
+
 ## Setup Checklist
 
 ```yaml

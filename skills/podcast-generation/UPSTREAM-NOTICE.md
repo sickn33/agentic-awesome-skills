@@ -11,3 +11,5 @@ License wording is unchanged; text-only trailing whitespace and EOF blank lines 
 | `scripts/pcm_to_wav.py` | `.github/skills/podcast-generation/scripts/pcm_to_wav.py` | `6f296aa89974d462d7def65daba5b91915947ec2` | text-only trailing whitespace normalized |
 | `references/architecture.md` | `.github/skills/podcast-generation/references/architecture.md` | `28e572aa1bc1b7189efdfe88fc5c8ee963c09494` | text-only trailing whitespace and EOF blank lines normalized |
 | `references/code-examples.md` | `.github/skills/podcast-generation/references/code-examples.md` | `18bbdc306505cdb9a9afe1deec121d3da8ab45e4` | text-only trailing whitespace and EOF blank lines normalized |
+
+Local review (2026-10-23): helper now bounds input, validates PCM frame/format, accounts for channels and refuses CLI overwrite; examples clarify authorization/session/error/resource limits. Original blob IDs above describe upstream provenance, not current local hashes. License unchanged.

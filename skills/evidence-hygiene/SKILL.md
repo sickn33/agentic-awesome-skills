@@ -22,7 +22,7 @@ The core principle: **Bug-bounty evidence is meant to convince a triager. Anythi
 
 ---
 
-## 1. Two Categories of Sensitive Data
+## 1. Sensitive Data Categories of Sensitive Data
 
 Every PoC artifact (screenshot, HAR, raw HTTP request, terminal transcript) potentially contains data that needs different treatment.
 
@@ -30,8 +30,8 @@ Every PoC artifact (screenshot, HAR, raw HTTP request, terminal transcript) pote
 |---|---|---|
 | **Your-account secrets** | Session cookies, OAuth tokens, refresh tokens, API keys | Always redact. Even in private bug-bounty platform attachments. Your account, your session — protect it. |
 | **Other users' PII** | Real names, emails, phone numbers, addresses, profile photos, account IDs | Redact unless explicitly demonstrating cross-account impact. Even then, mask faces and minimize the data you display. |
-| **Triager-useful metadata** | Trace IDs (`x-datadog-trace-id`), request IDs, server timestamps, your test account UID/email, GraphQL operation names, response shapes | **Leave visible** — these help the triager correlate to logs and reproduce. |
-| **Test-account passwords (limited use)** | Throwaway passwords on a test account (e.g., `Testing@5678`) | Acceptable in screenshots if you rotate immediately after submission so the value shown is dead. Don't leave real-use passwords in evidence. |
+| **Triager-useful metadata** | Trace IDs (`x-datadog-trace-id`), request IDs, server timestamps, your test account UID/email, GraphQL operation names, response shapes | **Review and minimize** — selected nonsecret values help the triager correlate to logs and reproduce. |
+| **Test-account passwords (limited use)** | Throwaway passwords on a test account (e.g., `Testing@5678`) | Redact passwords before sharing, including throwaway accounts. Rotate/revoke any exposed value; do not rely on later rotation to justify disclosure. |
 
 ---
 
@@ -49,8 +49,8 @@ The session cookie value is the highest-value secret in any PoC. Mask:
 
 ### 2.2 What's safe to leave visible
 
-- Cloudflare cookies (`__cf_bm`, `_cfuvid`) — these are bot-management, not session-bearing
-- Analytics cookies (`ajs_anonymous_id`, `_ga`)
+- Cookie NAMES and attributes can remain; redact all cookie values by default, including bot-management and analytics identifiers
+- Analytics ID names, with values masked unless needed and approved
 - Trace correlation IDs (`x-datadog-trace-id`, `x-request-id`)
 - Server / framework headers (`Server: cloudflare`, `X-Frame-Options`)
 - Your test account email/UID (per Bugcrowdninja alias section in `bugcrowd-reporting`)
@@ -61,10 +61,11 @@ The session cookie value is the highest-value secret in any PoC. Mask:
 - For DevTools Console PoCs: use `credentials: 'include'` so the browser sends cookies automatically. Console output won't echo the cookie. Screenshot the Console output, never the Network tab Headers panel.
 - For Burp Repeater PoCs: drag the bottom request/response panel divider DOWN to hide the request body before screenshotting. Capture only the Results table for Intruder runs.
 
-**Method B — Black-bar in image editor** (when capture inevitably includes cookies)
+**Method B — Destructive redaction on a flattened copy** (when capture includes cookies)
+- An editable rectangle overlay may be removable. Export a new flattened raster, strip metadata, reopen it and verify pixels/OCR at full resolution; never attach the editable original.
 - macOS: Open screenshot in Preview → Tools → Annotate → Rectangle → set fill color to black → drag rectangle over the cookie value → save
 - Windows: Use Snip & Sketch's annotation tools or any image editor (Paint.NET, etc.)
-- Burp itself: in Burp's Proxy → Match and Replace, you can pre-emptively redact cookie values to placeholder strings before screenshotting
+- Redact a COPY of captured evidence offline; do not alter live Proxy Match and Replace rules merely to sanitize a screenshot, since they can change requests and invalidate reproduction.
 
 **Method C — Find/replace in raw text** (for HAR files, terminal transcripts)
 - See §4 for the jq commands
@@ -136,7 +137,7 @@ Reference the redaction explicitly:
 ```markdown
 ## Proof of Concept
 
-The screenshot below demonstrates the IDOR. The attacker session (uid 12345678) successfully retrieves the victim's profile data (uid 99887766). **Real PII fields in the response are masked with black rectangles to limit unauthorized exposure of victim data, per responsible-disclosure hygiene.** The unredacted response is available privately on request.
+The screenshot below demonstrates the IDOR. The attacker session (uid 12345678) successfully retrieves the victim's profile data (uid 99887766). **Real PII fields in the response are masked with black rectangles to limit unauthorized exposure of victim data, per responsible-disclosure hygiene.** Use controlled test-account data where possible. Additional evidence requires separate minimization and an approved secure channel.
 ```
 
 This signals the triager that you're disciplined and gives them a clear path to the unredacted version if they need it for verification.
@@ -158,22 +159,16 @@ Use `jq` to strip sensitive headers. Save this as a shell function or one-liner 
 ```bash
 sanitize_har() {
   local input="$1"
-  local output="${1%.har}.sanitized.har"
-
-  jq '
-    .log.entries |= map(
-      (.request.headers |= map(
-        if .name | ascii_downcase | IN("cookie", "authorization", "x-csrf-token") then .value = "<REDACTED>" else . end
-      )) |
-      (.response.headers |= map(
-        if .name | ascii_downcase | IN("set-cookie") then .value = "<REDACTED>" else . end
-      )) |
-      (.request.cookies |= map(.value = "<REDACTED>")) |
-      (.response.cookies |= map(.value = "<REDACTED>"))
-    )
-  ' "$input" > "$output"
-
-  echo "Sanitized: $output"
+  local output="${1%.har}.metadata-only.json"
+  # This is deliberately NOT a full sanitized HAR: bodies/URLs/headers are omitted.
+  # Treat retained MIME strings as untrusted and inspect the output before sharing.
+  (umask 077; set -o noclobber
+    jq '{entries: [.log.entries[] | {
+      method: .request.method,
+      status: .response.status,
+      mimeType: .response.content.mimeType
+    }]}' "$input" > "$output") || return 1
+  printf 'Created metadata-only extract; review privately before sharing: %s\n' "$output"
 }
 ```
 
@@ -186,26 +181,13 @@ sanitize_har /path/to/exported.har
 
 ### 4.3 Verify before attaching
 
-```bash
-# Check that no Cookie or Authorization values are leaking
-grep -i 'authn\|"cookie"\|authorization' /path/to/exported.sanitized.har | head -20
-```
-
-If you see your real cookie value in the output, the sanitization missed something — fix the jq filter for that specific field name.
-
-### 4.4 Remove other-user PII (if applicable)
-
-If the HAR captured cross-account data (e.g., during an IDOR demo), additionally strip the response body fields that contain victim PII. Add to the jq filter:
-
-```jq
-(.response.content.text |= (
-  if . then 
-    (fromjson? // .) | tostring | gsub("real.first.name.example"; "<REDACTED>")
-  else . end
-))
-```
-
-Customize the gsub patterns to your specific captured data.
+A header-only filter does not sanitize HAR: credentials/PII can occur in URLs,
+queryString, postData, response bodies (including base64), cookies and extensions.
+Prefer a minimal allowlisted extract. If a full HAR is essential, review every
+retained field offline with a schema-aware tool and approved redaction list; scan
+for known secret fingerprints without printing their values. Keep originals in an
+encrypted restricted store with a defined retention window and disclose only the
+minimum separately approved evidence. Regex replacement alone cannot certify it.
 
 ---
 
@@ -231,7 +213,7 @@ Almost never the right screenshot — it shows entire request/response pairs wit
 
 ### 5.4 Scanner findings (if applicable)
 
-The Scanner tab's Issues panel is generally safe to screenshot — it shows finding summaries without the underlying request bodies. Click into a specific finding before screenshotting only if you've redacted its evidence first.
+The Scanner tab's Issues panel may contain sensitive URLs/evidence; inspect it before screenshotting — it shows finding summaries without the underlying request bodies. Click into a specific finding before screenshotting only if you've redacted its evidence first.
 
 ---
 
@@ -245,13 +227,13 @@ fetch('/api/endpoint', {
   headers: {'content-type': 'application/json'},
   credentials: 'include',  // sends cookies automatically — they won't appear in your code
   body: JSON.stringify({ /* your payload */ })
-}).then(r => r.json()).then(j => console.log("LABEL:", JSON.stringify(j)))
+}).then(r => r.json()).then(j => console.log("LABEL:", {hasData: !!j.data}))
 ```
 
 Why this is clean:
 - `credentials: 'include'` means the browser sends cookies. Your code never references them. They never appear in screenshots.
 - `console.log("LABEL:", ...)` produces a labeled output line you can search for in the screenshot
-- `JSON.stringify(j)` formats the response on a single line — easier to crop tightly
+- Log only explicitly allowlisted nonsecret fields; automatic JSON dumps can expose credentials and PII
 
 ### 6.2 Multi-step PoCs (clear console between calls)
 
@@ -271,14 +253,19 @@ fetch('/api/endpoint', { /* ... */ })
   .then(r => r.json())
   .then(j => {
     console.log("RESPONSE SHAPE:", Object.keys(j.data || {}));
-    console.log("CRITICAL FIELD:", j.data?.victim_id, j.data?.email);
+    console.log("FIELD PRESENCE:", {hasEmail: typeof j.data?.email === 'string'});
     // (Don't dump the full j — your screenshot becomes unreadable)
   })
 ```
 
-### 6.4 Allow-pasting reminder
+### 6.4 Console execution boundary
 
-Chrome blocks paste into DevTools Console as anti-self-XSS protection. Type `allow pasting` (literal phrase) once at the start of each session. Do this BEFORE you take any "running PoC" screenshot — otherwise the warning text appears in the screenshot.
+Do not disable or bypass self-XSS protections just for a cleaner screenshot.
+Inspect the exact code, approved test account and side effects before console
+execution. `credentials: include` omits cookie values from source code but does
+not prevent secrets in response bodies, errors, logs or unrelated visible panels.
+POST examples require separate authorization; this redaction workflow authorizes
+no new requests or account changes.
 
 ---
 
@@ -334,8 +321,8 @@ After clicking Submit on the bug-bounty platform:
 
 ```
 1. Log out of the target
-2. Log back in (this rotates the session cookie — any cookie shown in your screenshots is now dead)
-3. Change the password to a fresh value not used elsewhere (any password shown in your screenshots is now dead)
+2. Explicitly revoke exposed sessions/tokens using the service controls; logging in again does not prove old sessions invalid
+3. Rotate exposed passwords and independently revoke associated refresh/API tokens; verify invalidation without publishing the old value
 ```
 
 ### 8.2 Save the unredacted artifacts privately

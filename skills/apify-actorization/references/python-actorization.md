@@ -20,7 +20,7 @@ async def main() -> None:
 
         # Example: Get input from Apify Console or API
         actor_input = await Actor.get_input()
-        print(f'Input: {actor_input}')
+        # Avoid logging full input; it may contain secrets/personal data.
 
         # Example: Your crawler or processing logic
         # crawler = PlaywrightCrawler(...)
@@ -43,6 +43,8 @@ if __name__ == '__main__':
 - Automatically manages platform event listeners and graceful shutdown
 - Local execution remains unchanged - the SDK automatically detects the environment
 
+Validate input/schema, permitted targets and request/time/spend bounds as in the JS guide. The mutable counter below is illustrative; protect reservations across await points/concurrent workers before treating it as a hard output cap.
+
 ## Crawlee Python Projects
 
 ```python
@@ -64,9 +66,9 @@ async def main() -> None:
             if item_count >= max_items:
                 return
 
+            item_count += 1  # reserve before await within this event loop
             title = await context.page.title()
             await context.push_data({'url': context.request.url, 'title': title})
-            item_count += 1
 
         crawler = PlaywrightCrawler(request_handler=request_handler)
         await crawler.run([start_url])

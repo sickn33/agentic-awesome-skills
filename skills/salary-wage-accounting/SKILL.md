@@ -44,7 +44,7 @@ empty templates only - it never holds or processes real employee or customer dat
 
 ## How It Works
 
-Follow the shared execution contract. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
+No separate shared execution contract is bundled; follow this file and current host/user instructions. The module-specific rules below define only domain fields, decisions, calculations, and safety constraints.
 
 ### Step 1 - Identify intent
 
@@ -122,7 +122,7 @@ Never ask for a Notion password or token.
 
 ```csv
 Payroll Run,Employee,Employee ID,Department,Period Start,Period End,Attendance Days,Paid Days,Gross Salary/Wages,Allowances,Deductions,TDS,SSF/PF Contribution,Other Deductions,Net Salary/Wages,Payment Date,Payment Mode,Ledger Account,Approval Reference,Payroll Liability Balance,Statutory Reconciliation Status,Source Document,Prepared By,Reviewed By,Status,Notes,Salary Record ID
-PAYRUN-2026-08,Rohit Menon,EMP-0114,Operations,2026-08-01,2026-08-31,26,26,96000.00,8400.00,1600.00,3600.00,7680.00,500.00,91020.00,2026-08-28,Bank Transfer,Salaries & Wages,APR-PR-2026-08,7680.00,Pending,DOC-2026-0470,Sneha Iyer,Ananya Rao,In progress,"Deductions of 1600.00 and other deductions of 500.00 total 2100.00; PF contribution carried as a liability until deposited.",
+PAYRUN-2026-08,Rohit Menon,EMP-0114,Operations,2026-08-01,2026-08-31,26,26,96000.00,8400.00,1600.00,3600.00,7680.00,500.00,91020.00,2026-08-28,Bank Transfer,Salaries & Wages,APR-PR-2026-08,11280.00,Pending,DOC-2026-0470,Sneha Iyer,Ananya Rao,In progress,"Synthetic: base gross excludes allowances; total employee deductions 13380.00. TDS 3600.00 plus employee PF 7680.00 remain undeposited; other deductions already settled.",SAL-ID-0114
 ```
 
 ```sql
@@ -135,25 +135,25 @@ CREATE TABLE salary_wage_accounting (
   period_end DATE NOT NULL,
   attendance_days NUMERIC,
   paid_days NUMERIC,
-  gross_salary_wages NUMERIC(14,2) NOT NULL,
-  allowances NUMERIC(14,2) NOT NULL,
-  deductions NUMERIC(14,2) NOT NULL,
-  tds NUMERIC(14,2) NOT NULL,
-  ssf_pf_contribution NUMERIC(14,2) NOT NULL,
-  other_deductions NUMERIC(14,2) NOT NULL,
-  net_salary_wages NUMERIC(14,2) NOT NULL,
+  gross_salary_wages NUMERIC(14,2),
+  allowances NUMERIC(14,2),
+  deductions NUMERIC(14,2),
+  tds NUMERIC(14,2),
+  ssf_pf_contribution NUMERIC(14,2),
+  other_deductions NUMERIC(14,2),
+  net_salary_wages NUMERIC(14,2),
   payment_date DATE,
   payment_mode VARCHAR(100) NOT NULL,
   ledger_account VARCHAR(255),
   approval_reference VARCHAR(255),
-  payroll_liability_balance NUMERIC(14,2) NOT NULL,
+  payroll_liability_balance NUMERIC(14,2),
   statutory_reconciliation_status VARCHAR(100) NOT NULL,
   source_document VARCHAR(255),  -- relation -> target record
   prepared_by VARCHAR(255),
   reviewed_by VARCHAR(255),
   status VARCHAR(100) NOT NULL,
   notes TEXT,
-  salary_record_id SERIAL PRIMARY KEY,
+  salary_record_id VARCHAR(255) PRIMARY KEY,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -176,25 +176,25 @@ CREATE INDEX idx_salary_wage_accounting_status ON salary_wage_accounting (status
       "Period End": { "type": "string", "format": "date" },
       "Attendance Days": { "type": "number" },
       "Paid Days": { "type": "number" },
-      "Gross Salary/Wages": { "type": "number" },
-      "Allowances": { "type": "number" },
-      "Deductions": { "type": "number" },
-      "TDS": { "type": "number" },
-      "SSF/PF Contribution": { "type": "number" },
-      "Other Deductions": { "type": "number" },
-      "Net Salary/Wages": { "type": "number" },
+      "Gross Salary/Wages": { "type": ["number", "null"] },
+      "Allowances": { "type": ["number", "null"] },
+      "Deductions": { "type": ["number", "null"] },
+      "TDS": { "type": ["number", "null"] },
+      "SSF/PF Contribution": { "type": ["number", "null"] },
+      "Other Deductions": { "type": ["number", "null"] },
+      "Net Salary/Wages": { "type": ["number", "null"] },
       "Payment Date": { "type": "string", "format": "date" },
       "Payment Mode": { "type": "string" },
       "Ledger Account": { "type": "string" },
       "Approval Reference": { "type": "string" },
-      "Payroll Liability Balance": { "type": "number" },
+      "Payroll Liability Balance": { "type": ["number", "null"] },
       "Statutory Reconciliation Status": { "type": "string" },
       "Source Document": { "type": "string" },
       "Prepared By": { "type": "string" },
       "Reviewed By": { "type": "string" },
       "Status": { "type": "string" },
       "Notes": { "type": "string" },
-      "Salary Record ID": { "type": "integer" }
+      "Salary Record ID": { "type": "string" }
   },
   "required": [
       "Department",
@@ -250,11 +250,17 @@ CREATE INDEX idx_salary_wage_accounting_status ON salary_wage_accounting (status
 The rows above are documentation examples only. Emit empty templates unless the user explicitly requests examples. Money stays `currency`, dates stay `date`,
 and anything pointing at another table stays `relation`.
 
+## Arithmetic and record integrity
+
+The synthetic example uses base gross 96,000 excluding allowances 8,400. Employee deductions are 1,600 + TDS 3,600 + employee PF 7,680 + other 500 = 13,380; net pay = 96,000 + 8,400 - 13,380 = 91,020. The general Deductions field means additional deductions only, not the total; rename it in all outputs if that meaning is unclear. The example assumes TDS and PF remain undeposited (liability 11,280) and other deductions settled. Employer contributions, accruals, partial payments and adjustments require separate fields/allocations; never infer statutory rates or deadlines from these figures.
+
+Confirm jurisdiction, currency, pay-run/employee grain, period ordering and days. A run title repeats per employee; preserve a unique string Salary Record ID and enforce a run/employee key where appropriate. Use SQL NULL / JSON null / empty CSV cells for unknown numeric values, with a documented missing-data state; never zero or a literal Unknown in numeric cells. The Field Reference describes non-null values; schemas above define nullability. Require actual approvals, payment evidence and deposit allocation before Done/Reconciled; a status label alone is not evidence. updated_at requires application or trigger maintenance. Escape formula-leading spreadsheet text while preserving original identifiers separately.
+
 ## Field Reference
 
 | # | Field | Type | SQL | JSON Schema | Notion | CSV example |
 |---:|---|---|---|---|---|---|
-| 1 | Payroll Run | `text` | `VARCHAR(255)` | `string` | Text | `PAYRUN-2026-08` |
+| 1 | Payroll Run | `text` | `VARCHAR(255)` | `string` | Title | `PAYRUN-2026-08` |
 | 2 | Employee | `text` | `VARCHAR(255)` | `string` | Text | `Rohit Menon` |
 | 3 | Employee ID | `text` | `VARCHAR(255)` | `string` | Text | `EMP-0114` |
 | 4 | Department | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Operations` |
@@ -273,14 +279,14 @@ and anything pointing at another table stays `relation`.
 | 17 | Payment Mode | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Bank Transfer` |
 | 18 | Ledger Account | `text` | `VARCHAR(255)` | `string` | Text | `Salaries & Wages` |
 | 19 | Approval Reference | `text` | `VARCHAR(255)` | `string` | Text | `APR-PR-2026-08` |
-| 20 | Payroll Liability Balance | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `7680.00` |
+| 20 | Payroll Liability Balance | `currency` | `NUMERIC(14,2)` | `number` | Number (format: currency) | `11280.00` |
 | 21 | Statutory Reconciliation Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `Pending` |
 | 22 | Source Document | `relation` | `VARCHAR(255)` | `string` | Relation (link to the target database) | `DOC-2026-0470` |
 | 23 | Prepared By | `text` | `VARCHAR(255)` | `string` | Text | `Sneha Iyer` |
 | 24 | Reviewed By | `text` | `VARCHAR(255)` | `string` | Text | `Ananya Rao` |
 | 25 | Status | `select` | `VARCHAR(100)` | `string` | Select (add options after import) | `In progress` |
-| 26 | Notes | `long_text` | `TEXT` | `string` | Text | `Deductions of 1600.00 and other deductions of 500.00 total 2100.00; PF contribution carried as a liability until deposited.` |
-| 27 | Salary Record ID | `id` | `SERIAL PRIMARY KEY` | `integer` | Text (preserve source ID) | `(blank)` |
+| 26 | Notes | `long_text` | `TEXT` | `string` | Text | `Synthetic: base gross excludes allowances; total employee deductions 13380.00. TDS 3600.00 plus employee PF 7680.00 remain undeposited; other deductions already settled.` |
+| 27 | Salary Record ID | `id` | `VARCHAR(255) PRIMARY KEY` | `string` | Text (preserve source ID) | `SAL-ID-0114` |
 
 ## Select Options
 
@@ -400,7 +406,7 @@ Payroll runs on a sheet and at month end we cannot tell what is still owed as PF
 - @expense-accounting - books the salary and wage lines into the expense register.
 - @payment-accounting - records the bank or cash payment that settles the net figure.
 - @tds-booking-payment - carries the salary TDS into the statutory register and return.
-- ](https://github.com/sickn33/agentic-awesome-skills/blob/main/skills/source-document-filing/SKILL.md) - stores the signed wage sheet and the deposit challan.
+- @source-document-filing - stores the signed wage sheet and the deposit challan.
 
 ## Reusable Prompt
 

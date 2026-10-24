@@ -1,6 +1,7 @@
 # Local Skills Configuration Snapshot
 
 > **Historical snapshot**: This page preserves an older 35-skill local configuration recommendation from 2026-01-16. It is not the current repository catalog.
+> **License removal note (2026-10-23)**: Recommendations for `docx-official`, `pptx-official` and `xlsx-official` were withdrawn because their bundled license prohibits extraction, copying, derivatives and third-party distribution outside the Services absent separate permission. This historical list is not installation authority.
 > **Current catalog**: Use [`../../skills_index.json`](../../skills_index.json), [`../../CATALOG.md`](../../CATALOG.md), or the installer filters in the README for the active skill library.
 
 ## 📊 Recommended High-Priority Skills (35)
@@ -29,10 +30,7 @@ Essential skills used automatically by the agent:
 
 Skills actively used for your specific projects:
 
-- `docx-official` (+ symlink `docx`) - Official Anthropic Word manipulation
 - `pdf-official` (+ symlink `pdf`) - Official Anthropic PDF manipulation
-- `pptx-official` (+ symlink `pptx`) - Official Anthropic PowerPoint manipulation
-- `xlsx-official` (+ symlink `xlsx`) - Official Anthropic Excel manipulation
 - `react-best-practices` - Vercel's 40+ performance optimization rules
 - `web-design-guidelines` - Vercel's 100+ UI/UX audit rules
 - `frontend-dev-guidelines` - Modern React/TS development patterns

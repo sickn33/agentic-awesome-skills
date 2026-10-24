@@ -18,4 +18,4 @@
 - leilaojudicial.com.br
 - zukerman.com.br
 - superbid.net
-- caixavbr.com.br
+- Para bancos, partir do domínio institucional confirmado; não usar domínios históricos desta lista como prova de legitimidade.

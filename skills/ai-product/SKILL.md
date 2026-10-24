@@ -1,7 +1,6 @@
 ---
 name: ai-product
-description: Every product will be AI-powered. The question is whether you'll
-  build it right or ship a demo that falls apart in production.
+description: "Design and evaluate LLM product features, retrieval, validated outputs, latency, and cost controls."
 risk: safe
 source: vibeship-spawner-skills (Apache 2.0)
 date_added: 2026-02-27
@@ -9,8 +8,7 @@ date_added: 2026-02-27
 
 # AI Product Development
 
-Every product will be AI-powered. The question is whether you'll build it
-right or ship a demo that falls apart in production.
+Choose AI only when it improves the target user task against an evaluated baseline.
 
 This skill covers LLM integration patterns, RAG architecture, prompt
 engineering that scales, AI UX that users trust, and cost optimization
