@@ -427,6 +427,30 @@ class ChangedSkillEvidenceTests(unittest.TestCase):
         self.assertEqual(report["changes"][0]["change_type"], "deleted")
         self.assertIsNone(report["changes"][0]["after"])
 
+    def test_deleted_alias_requires_deleted_canonical_target(self):
+        root, _ = init_repo()
+        os.symlink("example", root / "skills/alias")
+        git(root, "add", ".")
+        git(root, "commit", "-m", "alias")
+        base = git(root, "rev-parse", "HEAD")
+        (root / "skills/alias").unlink()
+        git(root, "add", "-A")
+        git(root, "commit", "-m", "alias only")
+        retained = changed_skill_evidence.build_report(root, base, "HEAD")
+        self.assertEqual(retained["deleted_aliases"], [])
+        for path in (root / "skills/example").iterdir():
+            path.unlink()
+        (root / "skills/example").rmdir()
+        git(root, "add", "-A")
+        git(root, "commit", "-m", "target deletion")
+        report = changed_skill_evidence.build_report(root, base, "HEAD")
+        self.assertFalse(report["blocking"])
+        self.assertEqual(len(report["deleted_aliases"]), 1)
+        alias = report["deleted_aliases"][0]
+        self.assertEqual(alias["target_skill_id"], "example")
+        self.assertEqual(alias["record"]["old_mode"], "120000")
+        self.assertEqual(alias["record"]["old_path"], "skills/alias")
+
     def test_rename_compares_old_and_new_identities(self):
         root, base = init_repo()
         git(root, "mv", "skills/example", "skills/renamed")

@@ -278,6 +278,30 @@ function validateChangedSkillEvidence(report, expected) {
     evidenceRecords.push(...change.records.map(normalizeEvidenceRecord));
   }
 
+  const deletedAliases = report.deleted_aliases ?? [];
+  if (!Array.isArray(deletedAliases)) throw new Error("Deleted alias evidence must be an array.");
+  for (const alias of deletedAliases) {
+    const record = alias?.record;
+    const target = alias?.target_skill_id;
+    if (typeof target !== "string" || !/^[a-z0-9-]+$/.test(target)
+        || record?.status !== "D" || record.old_mode !== "120000"
+        || record.new_mode !== "000000" || record.new_path !== null
+        || !/^skills\/[a-z0-9-]+$/.test(record.old_path || "")
+        || !/^0{40}$|^0{64}$/.test(record.new_oid || "")
+        || !report.changes.some(change => change.change_type === "deleted"
+          && change.old_skill_id === target && change.new_skill_id === null
+          && change.records.some(item => item.status === "D"
+            && item.old_path === `skills/${target}/SKILL.md`))) {
+      throw new Error("Invalid deleted canonical-target alias evidence.");
+    }
+    const bytes = Buffer.from(target, "utf8");
+    const algorithm = record.old_oid?.length === 64 ? "sha256" : "sha1";
+    const blobOid = require("node:crypto").createHash(algorithm)
+      .update(Buffer.from(`blob ${bytes.length}\0`)).update(bytes).digest("hex");
+    if (record.old_oid !== blobOid) throw new Error("Deleted alias target does not match its Git blob.");
+    evidenceRecords.push(normalizeEvidenceRecord(record));
+  }
+
   const rawRecords = expected.rawRecords.filter(isSkillContentRecord).map(normalizeEvidenceRecord).sort();
   evidenceRecords.sort();
   if (new Set(evidenceRecords).size !== evidenceRecords.length) {

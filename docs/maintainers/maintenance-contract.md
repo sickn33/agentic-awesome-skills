@@ -40,6 +40,8 @@ For persistent review reuse, create a private mode-0700 state directory outside 
 
 Reuse is limited to skill-only changes with identical complete skill trees and identical protected/head evaluator, schemas, dependency and operational context. Changes to any bound content or mode invalidate reuse. A base-only update can reuse content review, but the helper still authorizes only the exact current full SHA and requires current checks/protection. Missing or invalid receipts cannot authorize merge. Deterministic evidence is also authenticated and reusable only for the same repository, evaluator, merge base, head and raw diff. A valid receipt never authorizes new unrelated web/runtime changes.
 
+Deleted top-level alias symlinks are evidence-bound only when their canonical target is deleted in the same diff. The evaluator records each exact alias Git record and target; the merge gate verifies the target blob identity, canonical deletion and full raw-diff coverage. Additions, retargeting, ordinary orphan files and aliases to retained trees remain rejected. This bookkeeping does not grant semantic review or waive owner review, checks or protection.
+
 ## Guided complete cycle
 
 Follow [the complete cycle](maintenance-cycle.md) for source PR batches from timed start through final exact-main verification. Complete that no-release cycle before preparing a release, and keep a separate overall timer for combined publication work. Record blockers once and continue independent PRs; no repeated history investigation without changed evidence. Reuse the supplied host verifier, never ad-hoc MCP scripts.
