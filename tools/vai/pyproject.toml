@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vai"
+version = "0.1.0"
+description = "Uninhibited CLI agent on Venice AI connected to local filesystem + CPU"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = []
+
+[project.scripts]
+vai = "vai.cli:main"

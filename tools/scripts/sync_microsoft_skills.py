@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 Sync Microsoft Skills Repository - v4 (Flat Structure)
 Reads each SKILL.md frontmatter 'name' field and uses it as a flat directory

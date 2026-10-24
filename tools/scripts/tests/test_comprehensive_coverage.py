@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """
 Test Script: Verify Microsoft Skills Sync Coverage and Flat Name Uniqueness
 Ensures all skills are captured and no directory name collisions exist.

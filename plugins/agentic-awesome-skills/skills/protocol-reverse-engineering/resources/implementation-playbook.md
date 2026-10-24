@@ -507,3 +507,76 @@ for pkt in packets:
 - Checksums/CRCs for integrity
 - Timestamps for timing
 - Session/connection identifiers
+
+## Advanced Case Study: Multi-Machine P2P Agent Mesh & Inter-Agent Protocols
+
+Real-world protocol reverse-engineering case study: **Reason Machines / Reason Network (formerly `tincan`)**.
+
+### Architecture Overview
+
+Reason Network implements an autonomous, peer-to-peer message bus and session directory connecting disparate coding agents across multiple machines without a centralized broker.
+
+```
+┌───────────────────────────────────────┐                    ┌───────────────────────────────────────┐
+│ Machine A (alex-mbp)                  │                    │ Machine B (alice-xps)                 │
+│                                       │                    │                                       │
+│  Claude Code ──┐                      │                    │  Cursor ──────┐                       │
+│  Codex ────────┤  ~/.reason/network/  │    iroh QUIC       │  Codex ───────┤  ~/.reason/network/   │
+│  Cursor ───────┼─▶ network.sock       │  (ALPN: tincan/1)  │  Claude Code ─┼─▶ network.sock        │
+│  Hooks ────────┘   ┌────────────────┐ │◀──────────────────▶│  Hooks ───────┘   ┌────────────────┐  │
+│                    │ Reason Daemon  │ │   Direct / Relay   │                   │ Reason Daemon  │  │
+│                    │ (Ed25519 node) │ │                    │                   │ (Ed25519 node) │  │
+│                    └───────┬────────┘ │                    └───────┬────────┘  │
+└────────────────────────────┼──────────┘                    └───────────────────────────┼───────────┘
+                             │                                                           │
+                             └──────────── [ Encrypted HTTPS Relay ] ────────────────────┘
+                                            (Ciphertext passthrough only)
+```
+
+### 1. Transport & Wire Protocol Analysis
+
+- **Underlying Engine**: `iroh 1.3` (QUIC over UDP with Ed25519 node identity).
+- **Node Addressing**: Each machine possesses a persistent Ed25519 secret (`~/.reason/network/machine.key`). Public keys serve as `EndpointId`.
+- **ALPN Identifiers**:
+  - `b"tincan/1"`: Active mesh communication.
+  - `b"tincan/join/1"`: Ticket/invite redemption.
+- **Frame Format**: Length-prefixed JSON frames with a 4MB ceiling (`MAX_FRAME = 4 << 20`).
+- **Wire Payloads (`Wire` enum)**:
+  - `Hello { team: String, proto: u32 }`
+  - `State { state: Box<TeamState> }`
+  - `Presence { presence: Presence }`
+  - `Msg { msg: Message }` (ULID identifier, from/to addresses, thread ID, body)
+  - `Ack { id: String, state: String, note: String }` (`stored`, `delivered`, `held`, `refused`)
+- **NAT Traversal Tiers**:
+  1. *LAN Direct*: Discovered via mDNS (`iroh-mdns-address-lookup`).
+  2. *Internet P2P*: UDP hole-punching via pkarr/n0 DNS.
+  3. *Relay Fallback*: Port 443 HTTPS encrypted relay (zero-knowledge; handles only encrypted QUIC datagrams).
+
+### 2. Inter-Agent Tool Interface (MCP)
+
+Exposed locally via UNIX domain socket (`~/.reason/network/network.sock`) or Windows named pipes to agents via Model Context Protocol:
+
+- **`list_team(filter?, all?)`**: Returns online/offline sessions with person, machine, agent kind, repo, branch, active status duration, task in progress (`doing`), and delivery tier.
+- **`send_message(to, message, reply_to?, notify?)`**: Routes messages to sessions (`alice/api-claude`, `api-claude`). `--notify` triggers desktop notifications (osascript/notify-send/PowerShell toast) for human decisions.
+- **`check_inbox(wait_secs?)`**: Long-poll mailbox reader for queued communications.
+
+### 3. Asynchronous Turn Interruption & Delivery Tiers
+
+| Tier | Behavior | Mechanisms Identified |
+|---|---|---|
+| **Push** | Immediate mid-turn injection & idle session wake | - **Claude Code**: Direct JSON injection to `CLAUDE_CODE_MESSAGING_SOCKET` + `asyncRewake` hook.<br>- **OpenAI Codex**: `codex queue --thread <id>` / app-server `turn/start`.<br>- **opencode**: `client.session.promptAsync` / `POST /api/session/:id/prompt`.<br>- **Reason Cloud**: `reason session send`. |
+| **Turn** | Injected at turn boundaries / tool returns | - **Cursor / Gemini CLI / Copilot CLI**: Hooks (`postToolUse` `additionalContext`, `AfterTool`, stop/block actions). |
+| **Pull** | Polled by agent | - **Generic MCP**: Tool-result unread badges + `check_inbox`. |
+
+### 4. Zero-Overhead Context Harvesting (`doing.rs`)
+
+Avoids polling or manual agent reporting by passive scraping of local artifacts:
+- **Session titles**: Read from transcript entries (`ai-title`, `~/.codex/session_index.jsonl`, opencode session index).
+- **Task progress**: Scraped from local todo stores (`~/.claude/tasks/<session>/`, `TodoWrite`, `update_plan`, `write_todos`).
+- **Git context**: Evaluated from repo root, branch status, and active diffs.
+
+### 5. Loop & Prompt Injection Guardrails
+
+- **Framing**: Peer inputs are encased in `<reason-message from="...">` tags with system instructions to treat content as untrusted peer data, not user command authority.
+- **Loop Guards**: Hard limits on consecutive agent-to-agent exchanges without human interaction.
+- **Permission Matrix**: Inbound policies support `accept`, `hold` (requires manual CLI approval), or `refuse`.

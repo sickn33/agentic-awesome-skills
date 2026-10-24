@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 import argparse
 import json
 import os
@@ -363,7 +365,8 @@ def update_text_file(path: Path, transform, metadata: dict, dry_run: bool) -> bo
         print(f"[dry-run] Would update {path}")
         return True
 
-    path.write_text(updated, encoding="utf-8", newline="\n")
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(updated)
     print(f"[ok] Updated {path}")
     return True
 

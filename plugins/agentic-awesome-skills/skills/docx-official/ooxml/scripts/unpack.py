@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+from __future__ import annotations
+
 """Unpack and format XML contents of Office files (.docx, .pptx, .xlsx)"""
 
 import random

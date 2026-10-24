@@ -106,6 +106,8 @@ class Parser:
             return json.loads(token.value)
         if token.kind == "number":
             self.index += 1
+            if len(token.value) > 4000:
+                raise ManifestSyntaxError("numeric literal exceeds the supported range")
             try:
                 return (
                     float(token.value)

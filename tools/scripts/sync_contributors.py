@@ -148,7 +148,8 @@ def sync_contributors(base_dir: str | Path, dry_run: bool = False) -> bool:
         print(f"[dry-run] Would update contributors in {readme_path}")
         return True
 
-    readme_path.write_text(updated, encoding="utf-8", newline="\n")
+    with open(readme_path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(updated)
     print(f"✅ Updated contributors in {readme_path}")
     return True
 
