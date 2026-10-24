@@ -1,0 +1,18 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>MG film</title>
+<style>
+@font-face{font-family:HandEN;src:url(assets/fonts/PatrickHand-Regular.ttf)}
+@font-face{font-family:HandJA;src:url(assets/fonts/Yomogi-Regular.ttf)}
+@font-face{font-family:HandKO;src:url(assets/fonts/Gaegu-Bold.ttf)}
+@font-face{font-family:HandZH;src:url(assets/fonts/ZCOOLKuaiLe-Regular.ttf)}
+html,body{margin:0;background:#151515;color:#ccc;font:13px -apple-system,sans-serif}
+#wrap{display:flex;flex-direction:column;align-items:center;gap:10px;padding:14px}
+canvas{height:84vh;aspect-ratio:9/16;border-radius:8px}
+.render canvas{height:auto}
+</style></head><body>
+<div id="wrap"><canvas id="c" width="1080" height="1920"></canvas>
+<div><button id="play">▶ play</button> <input id="scrub" type="range" min="0" step="0.01" value="0" style="width:420px"> <span id="tl">0.00s</span></div></div>
+<audio id="au" src="music/track.mp3" preload="auto"></audio>
+<script src="motion-lib.js"></script>
+<script src="film.js"></script>
+</body></html>
