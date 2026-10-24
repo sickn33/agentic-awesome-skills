@@ -10,7 +10,7 @@ Mandatory tools must exist on the current task base. Never import missing proced
 
 - Main is PR-only with strict protection and administrator enforcement. `merge:batch` is the only fork-run approval and merge authority. No admin bypass or auto-merge.
 - Review complete `skills/<skill-id>/**` trees. Safe analysis can precede review; merge requires real Tessl review or exact-head maintainer attestation. Private authenticated receipts reuse only unchanged content and context.
-- Source PRs exclude generated snapshots. Main CI validates ephemeral state; distribution snapshots, mirrors and generated contributor credits refresh only in the release PR.
+- Source PRs exclude generated snapshots. Main CI validates ephemeral state; distribution snapshots, general mirrors and generated contributor credits refresh only in the release PR. The contract separately permits strictly verified existing lockfile replicas for an owner-requested no-release security repair; all other generated paths remain forbidden.
 - Unknown/policy/shared changes receive full checks. Missing or skipped required evidence cannot pass.
 - Use the scripted protected release path, build the immutable candidate once, publish its exact tested bytes, and run the mandatory full-release-alignment gate. Main may advance beyond the released commit.
 - Catalog-only revisions are independently pinned and compatible with an explicit runtime; no runtime bump is required.
