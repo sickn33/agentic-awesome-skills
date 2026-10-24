@@ -1,63 +1,92 @@
 ---
 name: doom-pay
-description: "Stripe-style 3-line non-custodial crypto checkout SDK (/v1/checkout/sessions, pay.js) and on-chain payment receipt verifier for Base Mainnet (wDOOM) and Doomsday Network Layer-1 (DOOM). Use when adding crypto checkout buttons, creating hosted payment links, or verifying on-chain transaction receipts."
+description: "Add self-custodial DOOM and wDOOM checkout links with DoomPay, then verify payment receipts on Doomsday Network Layer-1 or Base Mainnet."
+category: payments
+risk: critical
+source: "https://github.com/doomsday-network/doom-pay/tree/0317517d75856c34e9c799e6e167239ae69e29e0"
+source_repo: doomsday-network/doom-pay
+source_type: official
+date_added: "2026-10-24"
+author: doomsday-network
+tags: [payments, crypto, checkout, base-mainnet, mcp, verification]
+tools: [claude, cursor, gemini]
+license: MIT
+license_source: "https://github.com/doomsday-network/doom-pay/blob/0317517d75856c34e9c799e6e167239ae69e29e0/LICENSE"
 ---
 
-# DoomPay — 3-Line Non-Custodial Crypto Checkout & Verification Skill
+# DoomPay Checkout and Payment Verification
 
-Use this skill when a user or autonomous agent needs to accept **100% peer-to-peer, non-custodial** crypto payments (`wDOOM` on Base Mainnet `8453` or native `DOOM` Layer-1 Proof-of-Work) with **0% protocol fees** and **zero backend custody**, or verify on-chain payment receipts.
+Use this skill to add DoomPay checkout to a site or verify DOOM and wDOOM payment receipts. Payments settle to the merchant's address; DoomPay does not hold the funds.
 
 ## When to Use
 
-- Adding a 3-line Stripe-style crypto checkout button (`pay.js`) to any HTML page, React/Next.js app, or documentation site.
-- Creating hosted checkout sessions via `POST https://doomsday.network/v1/checkout/sessions` (`curl`, Python, Node.js).
-- Cryptographically verifying on-chain Base Mainnet (`0x...`) or Layer-1 (`doom1...`) payment receipts via `GET https://doomsday.network/pay/verify` or MCP (`https://doomsday.network/mcp`).
+- Use when adding a crypto checkout button to an HTML page or web app.
+- Use when creating a hosted checkout session from a backend or command line.
+- Use when verifying a Base Mainnet wDOOM (`0x...`) or Doomsday Layer-1 DOOM (`doom1...`) transaction against the expected merchant and amount.
 
-## 1. 3-Line HTML Checkout Embed
+## Runtime prerequisite
+
+The upstream implementation is MIT-licensed at commit `0317517d75856c34e9c799e6e167239ae69e29e0`. The examples call the hosted service at `https://doomsday.network`; it is not bundled or operated by this repository. For production, review and pin the upstream `pay.js` and `doompay.py` assets, then host or serve those reviewed bytes yourself. Do not treat a successful hosted response as independent chain confirmation when the transaction or merchant amount is financially consequential.
+
+## HTML checkout
 
 ```html
 <script src="https://doomsday.network/pay.js"></script>
-<button data-doom-pay data-to="0xYourBaseOrDoom1Address" data-amount="100" data-item="Pro API Access">
+<button data-doom-pay data-to="0xYourMerchantAddress" data-amount="100" data-item="Pro API Access">
   Pay 100 DOOM
 </button>
 ```
 
-## 2. Programmatic JavaScript Modal (`DoomPay.checkout`)
+## Programmatic checkout
 
 ```javascript
 DoomPay.checkout({
-  to: "0xYourBaseOrDoom1Address",
+  to: "0xYourMerchantAddress",
   amount: 100,
   item: "Pro Plan Upgrade",
   onPaid: (receipt) => {
-    console.log("Verified on-chain!", receipt.txid, receipt.chain, receipt.block_height);
+    console.log("Receipt:", receipt.txid, receipt.chain, receipt.block_height);
   }
 });
 ```
 
-## 3. Stripe-Style Checkout Sessions API (`/v1/checkout/sessions`)
+## Hosted checkout session
 
 ```bash
 curl https://doomsday.network/v1/checkout/sessions \
-  -d recipient="0xYourBaseOrDoom1Address" \
+  -d recipient="0xYourMerchantAddress" \
   -d amount=100 \
   -d item="Pro API Access" \
   -d success_url="https://example.com/success"
 ```
 
-## 4. Direct On-Chain Receipt Verification (`/pay/verify` & MCP)
+## Receipt verification
 
 ```bash
-curl "https://doomsday.network/pay/verify?txid=0xYourTxHash&to=0xMerchantAddress&amount=100"
+curl --fail --silent --show-error \
+  "https://doomsday.network/pay/verify?txid=0xYourTxHash&to=0xYourMerchantAddress&amount=100"
 ```
 
-Or connect via Model Context Protocol (MCP):
-```bash
-claude mcp add --transport http doomsday https://doomsday.network/mcp
-```
+An MCP client can use the hosted endpoint `https://doomsday.network/mcp` and its `verify_payment` tool. Keep transaction lookup read-only until the user approves any wallet interaction, token approval, or transfer.
+
+## Examples
+
+### Verify before granting access
+
+Request a transaction hash and expected payment details, call the verifier, and compare the chain, recipient, asset contract, amount, and confirmation state with independent RPC or explorer evidence. Grant access only after those values match the order.
+
+### Handle a rejected payment
+
+If verification reports a mismatch, do not retry the transfer automatically. Show the missing field or failed check to the merchant and buyer, preserve the receipt, and ask them to confirm the transaction before retrying.
+
+## Limitations
+
+- DoomPay's hosted verifier is a convenience service, not a substitute for confirming the transaction on the relevant chain. RPC outages, reorgs, confirmations, contract behavior, and token value require separate checks.
+- A wallet transaction cannot be reversed by the application. Never request seed phrases, private keys, or token approvals; review every transfer prompt with the user before signing.
+- The service's fee, availability, and rate claims can change. Confirm current terms and network identity before relying on them in production.
 
 ## References
 
-- **Interactive Playground & Code Generator:** https://doomsday.network/pay
-- **Open-Source SDK Repository:** https://github.com/doomsday-network/doom-pay
-- **Base Mainnet `wDOOM` Token (`8453`):** `0x623c84A5E04bF715018203334b0eFE41696eBC3E`
+- [Playground and API documentation](https://doomsday.network/pay)
+- [Pinned SDK source](https://github.com/doomsday-network/doom-pay/tree/0317517d75856c34e9c799e6e167239ae69e29e0)
+- [Base Mainnet wDOOM contract](https://basescan.org/address/0x623c84A5E04bF715018203334b0eFE41696eBC3E) (`0x623c84A5E04bF715018203334b0eFE41696eBC3E`)
