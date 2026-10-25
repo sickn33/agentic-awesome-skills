@@ -345,6 +345,7 @@ Key source families include:
 - **[qrxcodes/qrx-mcp](https://github.com/qrxcodes/qrx-mcp)**: Official QRX skill - turn a text prompt and a link into an artistic, branded QR code through the hosted QRX MCP server, checked to scan before it is returned (MIT).
 - **[opencanviz/opencanviz-skills-repo](https://github.com/opencanviz/opencanviz-skills-repo)**: Official openCanviz source for the `opencanviz-json` skill - write an openCanviz video project as JSON with a standard-library Python builder and validator (text entrances, 22 scene transitions, motion presets, LaTeX math, plots, tables, rings, 22 example projects), then import it at opencanviz.com/create, where a free account builds and plays it as a narrated, animated explainer and the MP4 download needs a plan or a one-time export purchase (MIT).
 - **[doomsday-network/doom-pay](https://github.com/doomsday-network/doom-pay)**: Official DoomPay source for the `doom-pay` skill - add self-custodial DOOM and wDOOM checkout links and verify payment receipts on Doomsday Network Layer-1 or Base Mainnet (MIT).
+- **[doomsday-network/cuda-gpu-miner](https://github.com/doomsday-network/cuda-gpu-miner)**: Official DoomHash GPU/CPU Miner source for the `doom-miner` skill - benchmark CUDA, OpenCL, or CPU workers and submit Proof-of-Work shares to the Doomsday Network pool (MIT).
 
 - **[a4a-network/a4a](https://github.com/a4a-network/a4a)**: Source for `a4a`.
 - **[beatra-ai/ai-audiobook-generator-skill](https://github.com/beatra-ai/ai-audiobook-generator-skill)**: Source for `ai-audiobook-narration`.
