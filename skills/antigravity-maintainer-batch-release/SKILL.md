@@ -81,3 +81,7 @@ moves before preparation. Never shrink the recorded scope to hide blockers.
 For a genuinely release-only task with no source PR batch, explicitly start a
 cycle with `--prs none` and verify it; no implicit no-cycle bypass is supported.
 The original batch inventory must include every PR in the authorized scope.
+
+## Contributor readiness
+
+Follow [contribution intake](references/contribution-intake.md) for author evidence, initial corrections and restricted bundles. Reuse the existing contributor preflight and Actions summaries; they do not authorize approval or merge. Request substantive author-actionable repairs before semantic review, distinguish actual task tests from structural/source/protocol checks, and retain exact-head review. Measure real external PR outcomes before claiming lower maintenance cost.

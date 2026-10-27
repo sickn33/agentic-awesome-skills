@@ -1,3 +1,5 @@
+> 当前贡献流程和检查要求以英文源为准。 [Current canonical source](../../docs/contributors/quality-bar.md)
+
 # 🏆 质量标准与验证标准
 
 要将 **Agentic Awesome Skills** 从脚本集合转变为可信平台，每个技能都必须达到特定的质量和安全标准。

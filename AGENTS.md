@@ -15,7 +15,7 @@ This repository publishes an installable library of agent skills and plugin bund
 - `npm run app:dev`: start the local Vite catalog app.
 - `npm run app:build`: build and prerender the catalog app.
 
-Before PRs, run `npm run pr:preflight -- --base origin/main --head HEAD` from the clean committed source head. It runs the component policy in an isolated checkout; unknown and policy changes require the full suite.
+For ordinary external contributions, fetch the official upstream and run `npm run pr:preflight -- --contributor --base upstream/main --head HEAD`. For maintainer topic PRs, run `npm run pr:preflight -- --base origin/main --head HEAD` from the clean committed source head. It runs the component policy in an isolated checkout; unknown and policy changes require the full suite.
 
 ## Coding Style & Naming Conventions
 
@@ -106,3 +106,5 @@ moves before preparation. Never shrink the recorded scope to hide blockers.
 For a genuinely release-only task with no source PR batch, explicitly start a
 cycle with `--prs none` and verify it; no implicit no-cycle bypass is supported.
 The original batch inventory must include every PR in the authorized scope.
+
+For contribution readiness, follow `docs/maintainers/contribution-intake.md`. Ask authors to resolve substantive reproducible submission defects and provide truthful scoped evidence; retain complete-tree exact-head semantic review. Restricted bundles need a reviewed maintainer path, not relaxed fork policy.

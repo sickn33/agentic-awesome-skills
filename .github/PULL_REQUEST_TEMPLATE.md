@@ -1,37 +1,44 @@
-# Pull Request Description
+## Summary
 
-Please include a summary of the change and which skill is added or fixed.
+Describe the problem and resulting behavior. Identify affected skill IDs or paths.
 
 ## Change Classification
 
-- [ ] Skill PR
-- [ ] Docs PR
-- [ ] Infra PR
+- [ ] New skill
+- [ ] Skill correction
+- [ ] Upstream skill update
+- [ ] Documentation or tooling
 
-## Issue Link (Optional)
+## Change evidence
 
-Use this only when the PR should auto-close an issue:
+<!-- New skill: gap versus named existing skills and one concrete use case.
+Correction: before/after behavior and the reproduction being fixed.
+Upstream update: full source commit, changed capabilities and local adaptations retained.
+Small docs/typo changes: a brief explanation is enough. -->
 
-`Closes #N` or `Fixes #N`
+## Validation evidence
 
-## Quality Bar Checklist ✅
+<!-- Record the contribution preflight command, selected base/head and result.
+For a practical test: prompt/input, tool and version, expected result, observed result.
+Label source inspection and structural validation accurately. State what was not run and why.
+Never spend money or perform external/destructive writes just to complete this template.
+Redact private data and credentials. -->
 
-**All applicable items must be checked before merging.**
+## Source and operational boundaries
 
-- [ ] **Standards**: I have read `docs/contributors/quality-bar.md` and `docs/contributors/security-guardrails.md`.
-- [ ] **Metadata**: The `SKILL.md` frontmatter is valid (checked with `npm run validate`).
-- [ ] **Risk Label**: I have assigned the correct `risk:` tag (`none`, `safe`, `critical`, `offensive`, or `unknown` for legacy/unclassified content).
-- [ ] **Triggers**: The "When to use" section is clear and specific.
-- [ ] **Limitations**: The skill includes a `## Limitations` (or equivalent accepted constraints) section.
-- [ ] **Security**: If this is an _offensive_ skill, I included the "Authorized Use Only" disclaimer.
-- [ ] **Safety scan**: If this PR adds or modifies `SKILL.md` command guidance, remote/network examples, or token-like strings, I ran `npm run security:docs` (or equivalent hardening check) and addressed any findings.
-- [ ] **Automated Skill Review**: If this PR changes `SKILL.md`, I checked the `skill-review` GitHub Actions result and addressed any actionable feedback.
-- [ ] **Manual Logic Review**: If this PR changes `SKILL.md` or risky guidance, I manually reviewed the logic, safety, failure modes, and `risk:` label instead of relying on automated checks alone.
-- [ ] **Local Test**: I have verified the skill works locally.
-- [ ] **Repo Checks**: I ran `npm run validate:references` if my change affected docs, workflows, or infrastructure.
-- [ ] **Source-Only PR**: I did not manually include generated registry artifacts (`CATALOG.md`, `skills_index.json`, `data/*.json`) in this PR.
-- [ ] **Credits**: I declared accurate source metadata and checked the generated attribution preview (if applicable); custom credit text belongs in `data/source-credits.json`.
-- [ ] **License provenance**: If this skill imports from an external `source_repo`, I have declared `license:` and `license_source:` in the frontmatter, or confirmed the upstream repo carries no restricting license.
-- [ ] **Maintainer Edits**: I enabled **Allow edits from maintainers** on the PR.
+<!-- Origin and pinned upstream revision; license and retained LICENSE/NOTICE files.
+Required accounts/connectors, data sent outside the machine, writes and costs/limits.
+Disclose affiliation. Mark irrelevant items N/A with a reason. -->
 
-## Screenshots (if applicable)
+## Quality Bar Checklist
+
+- [ ] I read the quality bar and security guardrails and reviewed the complete changed skill bundle.
+- [ ] I ran the contribution preflight on the committed source head, or explained the exact blocker above.
+- [ ] I provided accurate change and validation evidence, including untested behavior.
+- [ ] I preserved source attribution and required license notices, and disclosed affiliation where applicable.
+- [ ] I kept generated artifacts and plugin mirrors out of this source PR.
+- [ ] I enabled maintainer edits where GitHub supports them.
+
+<!-- Optional: Closes #N / Fixes #N only when this should close an issue.
+CI review is separate: manual-review-required is not a Tessl pass.
+Author-actionable failures should be corrected before requesting maintainer review. -->

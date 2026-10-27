@@ -1,3 +1,5 @@
+> 当前模板以英文源为准，请复制链接中的模板。 [Current canonical source](../../docs/contributors/skill-template.md)
+
 ---
 name: your-skill-name
 description: "简要一句话描述这个技能的作用（200字符以内）"

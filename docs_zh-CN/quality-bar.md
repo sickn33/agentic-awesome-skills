@@ -1,3 +1,5 @@
+> Current contribution requirements: [canonical English source](../docs/contributors/quality-bar.md). This translation may lag; use the canonical source for submission and license requirements.
+
 # 质量标准
 
 本页已合并到[贡献者质量标准](contributors/quality-bar.md)。请使用该文档中的现有验证命令；本页旧版列出的单技能评分命令不是仓库提供的工具。

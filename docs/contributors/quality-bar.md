@@ -91,7 +91,7 @@ stale when those bytes change and cannot replace the exact-head merge gate.
 
 ## How to Validate Your Skill
 
-The canonical validator is `tools/scripts/validate_skills.py`, but the recommended entrypoint is `npm run validate` before submitting a PR:
+Use the complete contribution preflight on a clean committed head after fetching the official upstream repository. See [the contribution guide](../../CONTRIBUTING.md) for setup and evidence requirements. While editing, individual checks provide early feedback:
 
 ```bash
 npm run validate
@@ -103,10 +103,19 @@ npm run security:docs
 
 Notes:
 
-- `npm run validate` is the operational contributor gate.
+- `npm run pr:preflight -- --contributor --base upstream/main --head HEAD` is the complete contributor entrypoint; it includes fork-policy preview and changed-skill evidence.
+- `npm run validate` checks structure; it does not prove a usable or correct skill.
 - `npm run audit:skills` is the maintainer-facing compliance/usability report for the full library.
 - `npm run security:docs` is required for command-heavy or risky skill content.
 - PRs that touch `SKILL.md` also get an automated `skill-review` GitHub Actions check.
 - Skill changes and risky guidance still require a manual logic review before merge, even when the automated gates pass.
 - `npm run validate:strict` is a useful hardening pass, but the repository still contains legacy skills that do not yet satisfy strict validation.
 - Examples and limitations remain part of the quality bar even when they are not fully auto-enforced by the current validator.
+
+## Contribution evidence and review readiness
+
+Use the default PR template's Change evidence, Validation evidence, and Source and operational boundaries sections. Describe real inputs, observed outputs, host/tool versions and untested behavior. For a small correction, scale evidence to the actual change. An agent test is distinct from validation, a source inspection or a connector handshake. Never invent a successful test or execute a paid/destructive task just to fill the template.
+
+The preflight reuses the existing changed-skill evidence evaluator: new findings and regressions are evaluated without forcing unrelated legacy skills to meet a new global strict threshold. Existing evidence already checks examples and limitations for regressions; a structural presence check still cannot judge whether their content is useful.
+
+New skills must explain their gap against existing skills. Upstream updates must identify an immutable revision and retain required license/NOTICE files. Missing license permission requires clarification; no license is not an unrestricted license. Scripts and other restricted fork files require the documented maintainer review path, not renamed extensions or a broader automatic allowlist.

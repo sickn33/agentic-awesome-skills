@@ -133,13 +133,13 @@ tools: [claude, cursor, gemini]
 - **What it is:** SPDX license identifier for the upstream source material
 - **Format:** A valid SPDX expression (e.g. `MIT`, `Apache-2.0`, `CC-BY-4.0`)
 - **Example:** `license: MIT`
-- **When to use:** Declare when `source_repo` points to material under a known license. Omitting it signals "license not verified" to downstream tooling.
+- **When to use:** For an external import, declare the verified upstream license and retain required license/NOTICE files with the bundle. The schema permits legacy omissions; that does not establish redistribution rights for a new submission.
 
 #### `license_source` *(optional)*
 - **What it is:** Direct URL to the upstream license file
 - **Format:** Full URL string
 - **Example:** `license_source: "https://github.com/owner/repo/blob/main/LICENSE"`
-- **When to use:** Include alongside `license:` so automated tooling can verify the claim. If the upstream repo has no LICENSE file, omit this field.
+- **When to use:** Include alongside `license:` with a link to the upstream license, preferably pinned to the reviewed revision. A URL is evidence of the claim, not a substitute for required notices. If no license grants redistribution, clarify permission before importing.
 
 ### Source-credit contract
 

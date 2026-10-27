@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 const { findProjectRoot } = require("../lib/project-root");
+const { buildContributorReport, formatContributorReport } = require("../lib/contributor-report");
 const { buildDecisionManifest } = require("../lib/pr-decision");
 
 function parseArgs(argv) {
@@ -103,7 +104,10 @@ function main() {
     fs.mkdirSync(path.dirname(outputPath), { recursive: true });
     fs.writeFileSync(outputPath, serialized, { encoding: "utf8", mode: 0o600 });
   }
-  if (args.writeStepSummary) appendSummary(manifest);
+  if (args.writeStepSummary) {
+    appendSummary(manifest);
+    if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, formatContributorReport(buildContributorReport(preflight, evidence)), "utf8");
+  }
   if (args.writeGithubOutput) appendGithubOutput(manifest);
   if (args.json || !args.output) process.stdout.write(serialized);
 }

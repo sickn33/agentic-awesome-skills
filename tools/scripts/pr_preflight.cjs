@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require("fs");
+const { buildContributorReport, formatContributorReport } = require("../lib/contributor-report");
 const { classifyImpact } = require("../lib/maintenance-impact");
 const { resolveLicenseContents } = require("../lib/skill-license");
 const path = require("path");
@@ -31,6 +32,7 @@ function parseArgs(argv) {
     base: null,
     head: "HEAD",
     eventPath: null,
+    contributor: false,
     checkPolicy: false,
     checkForkSafety: false,
     noRun: false,
@@ -53,6 +55,8 @@ function parseArgs(argv) {
     } else if (arg === "--event-path") {
       args.eventPath = argv[index + 1];
       index += 1;
+    } else if (arg === "--contributor") {
+      args.contributor = true;
     } else if (arg === "--check-policy") {
       args.checkPolicy = true;
     } else if (arg === "--check-fork-safety") {
@@ -68,6 +72,9 @@ function parseArgs(argv) {
     }
   }
 
+  if (args.contributor && !args.base) {
+    throw new Error("--contributor requires --base upstream/main (fetch the official upstream main first).");
+  }
   return args;
 }
 
@@ -260,7 +267,10 @@ function evaluateForkSafety(projectRoot, changeRecords, pullRequest) {
     projectRoot,
     reviewedIdentity,
   );
-  const policyOptions = { reviewedSkillRoots, reviewedSupportPaths };
+  return evaluateContributorSafety(projectRoot, changeRecords, { reviewedSkillRoots, reviewedSupportPaths });
+}
+
+function evaluateContributorSafety(projectRoot, changeRecords, policyOptions = {}) {
   const preliminary = classifyChangeRecords(changeRecords, {
     requireBlobSizes: false,
     ...policyOptions,
@@ -335,6 +345,7 @@ function appendStepSummary(result) {
     "> Generated drift is reported separately in the artifact preview job and remains informational on pull requests.",
   ];
 
+  lines.push(formatContributorReport(buildContributorReport(result)));
   fs.appendFileSync(summaryPath, `${lines.join("\n")}\n`, "utf8");
 }
 
@@ -465,6 +476,29 @@ function runLocalChecks(
   }
   return checks;
 }
+function runContributorEvidence(root, base, head, execute = spawnSync) {
+  const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "aas-contributor-evidence-"));
+  const output = path.join(temporary, "changed-skills.json");
+  const started = Date.now();
+  try {
+    const run = execute(process.execPath, [
+      path.join(__dirname, "run-python.js"),
+      path.join(__dirname, "changed_skill_evidence.py"),
+      "--repo", root, "--base", base, "--head", head, "--output", output,
+    ], { cwd: root, encoding: "utf8", timeout: 300000, maxBuffer: 32 * 1024 * 1024, shell: false });
+    const evidence = fs.existsSync(output) ? JSON.parse(fs.readFileSync(output, "utf8")) : null;
+    if (evidence && (evidence.base_oid !== base || evidence.head_oid !== head || typeof evidence.blocking !== "boolean")) {
+      throw new Error("Changed-skill evidence does not match the selected immutable commits.");
+    }
+    return {
+      script: "pr:evidence", elapsedMs: Date.now() - started,
+      exitCode: run.error || !evidence || evidence.blocking ? 1 : (run.status ?? 1), evidence,
+      output: `${run.stdout || ""}${run.stderr || ""}${run.error?.message || ""}`,
+    };
+  } finally {
+    fs.rmSync(temporary, { recursive: true, force: true });
+  }
+}
 function assertCleanSnapshot(root, headOid, execute = spawnSync) {
   const head = execute("git", ["rev-parse", "HEAD"], {
     cwd: root,
@@ -525,14 +559,13 @@ function main() {
   const directDerivedChanges = getDirectDerivedChanges(changedFiles, contract)
     .filter(file => !repairedPaths.has(file));
   const pullRequestBody = pullRequest?.body ?? null;
-  const forkSafety = evaluateForkSafety(
-    projectRoot,
-    changeRecords,
-    pullRequest,
-  );
+  const forkSafety = args.contributor && !pullRequest
+    ? evaluateContributorSafety(projectRoot, changeRecords)
+    : evaluateForkSafety(projectRoot, changeRecords, pullRequest);
   const shadowImpact = classifyShadowImpact(changeRecords, contract);
 
   const result = {
+    contributor: args.contributor,
     baseRef,
     baseOid,
     headOid,
@@ -552,10 +585,13 @@ function main() {
     validationImpact: classifyImpact(changeRecords),
     prBody: {
       available: pullRequestBody !== null,
+      body: pullRequestBody,
       hasQualityChecklist: hasQualityChecklist(pullRequestBody),
       hasIssueLink: hasIssueLink(pullRequestBody),
     },
   };
+
+  result.contributorReport = buildContributorReport(result);
 
   if (args.writeGithubOutput) {
     appendGithubOutput(result);
@@ -575,44 +611,44 @@ function main() {
     );
   }
 
-  if (args.checkPolicy) {
-    if (directDerivedChanges.length > 0) {
-      console.error(
-        [
-          "Pull requests are source-only.",
-          "Remove derived files from the PR and let main regenerate them after merge.",
-          `Derived files detected: ${directDerivedChanges.join(", ")}`,
-        ].join(" "),
-      );
-      process.exit(1);
-    }
-
-    if (pullRequestBody !== null && !result.prBody.hasQualityChecklist) {
-      console.error(
-        "PR body must include the Quality Bar Checklist section from the template.",
-      );
-      process.exit(1);
-    }
+  if (args.checkPolicy && pullRequestBody !== null && !result.prBody.hasQualityChecklist) {
+    if (args.json && !args.noRun) process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    console.error("PR body must include the Quality Bar Checklist section from the template.");
+    process.exitCode = 1;
+    return;
   }
-
-  if (
-    args.checkForkSafety &&
-    forkSafety.applicable &&
-    !forkSafety.approvalSafe
-  ) {
-    console.error(
-      `Fork PR is not approval-safe: ${forkSafety.reasons.slice(0, 12).join(", ") || "unclassified diff"}.`,
-    );
-    process.exit(1);
+  const policyBlocked = (args.checkPolicy || args.contributor) && directDerivedChanges.length > 0;
+  const forkBlocked = (args.checkForkSafety || args.contributor) && forkSafety.applicable && !forkSafety.approvalSafe;
+  if (policyBlocked || forkBlocked) {
+    if (policyBlocked) console.error("Pull requests are source-only. Remove derived changes; tracked snapshots refresh in protected release PRs.");
+    if (forkBlocked) console.error(`Fork PR is not approval-safe: ${forkSafety.reasons.slice(0, 12).join(", ") || "unclassified diff"}.`);
+    if (args.json && !args.noRun) process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    if (!args.json) console.error(formatContributorReport(result.contributorReport));
+    process.exitCode = 1;
+    return;
   }
 
   if (!args.noRun) {
-    const checks = runLocalChecks(projectRoot, result, baseOid, headOid);
-    if (args.json)
-      process.stdout.write(
-        `${JSON.stringify({ ...result, localChecks: checks }, null, 2)}\n`,
-      );
-    if (checks.some((check) => check.exitCode !== 0)) process.exitCode = 1;
+    // Evaluate immutable skill trees before running candidate checks. The same
+    // evaluator produces CI pr-evidence; it never executes bundled skill files.
+    const evidenceCheck = args.contributor
+      ? runContributorEvidence(projectRoot, baseOid, headOid)
+      : null;
+    const checks = evidenceCheck ? [evidenceCheck] : [];
+    if (!evidenceCheck || evidenceCheck.exitCode === 0) {
+      checks.push(...runLocalChecks(projectRoot, result, baseOid, headOid));
+    }
+    result.contributorReport = buildContributorReport(result, evidenceCheck?.evidence, checks);
+    if (args.json) process.stdout.write(`${JSON.stringify({ ...result, localChecks: checks }, null, 2)}\n`);
+    else {
+      console.log(formatContributorReport(result.contributorReport));
+      for (const check of checks.filter(check => check.exitCode !== 0)) {
+        console.error(`[pr:preflight] ${check.script} output:\n${check.output}`);
+      }
+    }
+    if (checks.some(check => check.exitCode !== 0)) process.exitCode = 1;
+  } else if (!args.json) {
+    console.log(formatContributorReport(result.contributorReport));
   }
 }
 
@@ -627,6 +663,8 @@ module.exports = {
   runLocalChecks,
   changedFilesFromRecords,
   evaluateForkSafety,
+  evaluateContributorSafety,
+  runContributorEvidence,
   getChangeRecords,
   getChangedFiles,
   loadPullRequestEvent,

@@ -139,3 +139,9 @@ moves before preparation. Never shrink the recorded scope to hide blockers.
 For a genuinely release-only task with no source PR batch, explicitly start a
 cycle with `--prs none` and verify it; no implicit no-cycle bypass is supported.
 The original batch inventory must include every PR in the authorized scope.
+
+## Contributor readiness and repair ownership
+
+Use the [contribution intake guide](contribution-intake.md) for new skills, corrections, upstream updates and restricted bundles. Contributor preflight uses `--contributor` with an explicit fetched upstream base, previews the existing fork policy and evaluates changed-skill evidence before component checks. Local classification or green structural validation does not establish a tested agent workflow. CI summaries distinguish corrections, requested author evidence and maintainer semantic review; no new approval authority is added.
+
+Return substantive author-actionable defects with file, finding and corrective action before semantic review. Small maintainer repairs remain discretionary. Restricted scripts require a reviewed owner-sponsored path with attribution preserved; never widen the fork allowlist or close a valid contribution just to clear a batch. Preserve required checks, exact-head attestation and the existing release cycle. Measure initial evidence, correction rounds, maintainer repair time and policy-only interventions for a real cohort before claiming improvement.

@@ -146,7 +146,7 @@ def collect_validation_results(skills_dir, strict_mode=False):
                 if not isinstance(desc, str):
                     errors.append(f"❌ {rel_path}: 'description' must be a string, got {type(desc).__name__}")
                 elif not desc.strip() or re.fullmatch(
-                    r"one sentence\s*[-–—]\s*what this skill does and when to invoke it[.!]?",
+                    r"(?:one sentence\s*[-–—]\s*what this skill does and when to invoke it[.!]?|Replace with the concrete task and when to invoke it, under 200 characters)",
                     desc.strip(), re.IGNORECASE,
                 ):
                     errors.append(f"❌ {rel_path}: Description is empty or contains the skill-template placeholder")
