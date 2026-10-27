@@ -121,6 +121,93 @@ function githubReleaseExists(projectRoot, tagName) {
   return result.status === 0;
 }
 
+const NPM_PUBLICATION_WORKFLOW = ".github/workflows/publish-npm.yml";
+
+function npmPublicationTitle(version, commit) {
+  return `Publish npm v${version} at ${commit}`;
+}
+
+function npmPublicationRuns(projectRoot, version, commit, dependencies = {}) {
+  const execute = dependencies.runCommand || runCommand;
+  const payload = JSON.parse(execute(
+    "gh",
+    [
+      "api",
+      "--method",
+      "GET",
+      "repos/{owner}/{repo}/actions/workflows/publish-npm.yml/runs",
+      "-f",
+      "event=workflow_dispatch",
+      "-f",
+      "branch=main",
+      "-f",
+      "per_page=100",
+    ],
+    projectRoot,
+    { capture: true },
+  ));
+  if (!Array.isArray(payload.workflow_runs)) {
+    throw new Error("npm publication response is malformed.");
+  }
+  return payload.workflow_runs.filter(run => (
+    run.display_title === npmPublicationTitle(version, commit)
+    && run.path === NPM_PUBLICATION_WORKFLOW
+    && run.event === "workflow_dispatch"
+    && run.head_branch === "main"
+  )).sort((left, right) => right.id - left.id);
+}
+
+function requireSuccessfulNpmPublication(projectRoot, version, commit, dependencies = {}) {
+  const repository = JSON.parse((dependencies.runCommand || runCommand)(
+    "gh",
+    ["repo", "view", "--json", "nameWithOwner"],
+    projectRoot,
+    { capture: true },
+  )).nameWithOwner;
+  const successful = npmPublicationRuns(projectRoot, version, commit, dependencies).filter(run => (
+    run.repository?.full_name === repository
+    && run.head_repository?.full_name === repository
+    && run.status === "completed"
+    && run.conclusion === "success"
+    && Number.isSafeInteger(run.id)
+    && run.id > 0
+  ));
+  if (!successful.length) {
+    throw new Error(`Refusing to create GitHub Release v${version}: npm publication has not succeeded for ${commit}.`);
+  }
+  return successful[0];
+}
+
+function dispatchNpmPublication(projectRoot, version, commit, dependencies = {}) {
+  try {
+    return requireSuccessfulNpmPublication(projectRoot, version, commit, dependencies);
+  } catch (error) {
+    if (!/npm publication has not succeeded/u.test(error.message)) throw error;
+  }
+
+  const execute = dependencies.runCommand || runCommand;
+  const sleep = dependencies.sleep || (ms => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms));
+  const now = dependencies.now || Date.now;
+  const timeoutMs = dependencies.timeoutMs || 45 * 60 * 1000;
+  const intervalMs = dependencies.intervalMs || 15_000;
+  const tag = `v${version}`;
+  const started = now();
+  execute(
+    "gh",
+    ["workflow", "run", "publish-npm.yml", "--ref", "main", "-f", `tag=${tag}`, "-f", `commit=${commit}`],
+    projectRoot,
+  );
+  while (now() - started <= timeoutMs) {
+    try {
+      return requireSuccessfulNpmPublication(projectRoot, version, commit, dependencies);
+    } catch (error) {
+      if (!/npm publication has not succeeded/u.test(error.message)) throw error;
+    }
+    sleep(intervalMs);
+  }
+  throw new Error(`Timed out waiting for npm publication of v${version} at ${commit}.`);
+}
+
 function distributionCandidateRuns(projectRoot, commit, dependencies = {}) {
   const execute = dependencies.runCommand || runCommand;
   const payload = JSON.parse(execute(
@@ -518,11 +605,14 @@ function publishRelease(projectRoot, version) {
     runCommand("git", ["push", "origin", tagName], projectRoot);
   }
 
+  requireSuccessfulDistributionCandidate(projectRoot, version, headCommit);
+  dispatchNpmPublication(projectRoot, version, headCommit);
+  requireSuccessfulNpmPublication(projectRoot, version, headCommit);
+
   if (githubReleaseExists(projectRoot, tagName)) {
-    console.log(`[release] ${tagName} is already published.`);
+    console.log(`[release] ${tagName} already has a GitHub Release after verified npm publication.`);
     return;
   }
-  requireSuccessfulDistributionCandidate(projectRoot, version, headCommit);
   const releaseArgs = ["release", "create", tagName, "--title", tagName, "--notes-file", notesPath];
   if (isPrereleaseVersion(version)) releaseArgs.push("--prerelease");
   runCommand("gh", releaseArgs, projectRoot);
@@ -562,6 +652,10 @@ module.exports = {
   localTagTarget,
   remoteTagTarget,
   isPrereleaseVersion,
+  dispatchNpmPublication,
+  npmPublicationRuns,
+  npmPublicationTitle,
+  requireSuccessfulNpmPublication,
   requireSuccessfulDistributionCandidate,
   resolveCommandInvocation,
   runCommand,

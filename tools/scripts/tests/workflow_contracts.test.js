@@ -141,13 +141,18 @@ const publishWorkflow = fs.readFileSync(
 assert.match(publishWorkflow, /name: Verify protected release provenance/);
 assert.match(publishWorkflow, /git merge-base --is-ancestor "\$tag_commit" "\$main_commit"/);
 assert.match(publishWorkflow, /ref: main/);
-assert.doesNotMatch(publishWorkflow, /workflow_dispatch/);
+assert.match(publishWorkflow, /workflow_dispatch:/);
+assert.doesNotMatch(publishWorkflow, /release:\s*\n\s+types:/);
+assert.match(publishWorkflow, /test "\$tag_commit" = "\$RELEASE_COMMIT"/);
 assert.match(publishWorkflow, /distribution_fetch\.cjs/);
+assert.match(publishWorkflow, /verify_npm_candidate\.cjs/);
 const releaseWorkflow = fs.readFileSync(path.join(repositoryRoot, "tools/scripts/release_workflow.js"), "utf8");
 assert.match(releaseWorkflow, /runPreparedReleaseTestSuite\(projectRoot\)/);
 assert.match(releaseWorkflow, /requireSuccessfulDistributionCandidate\(projectRoot, version, headCommit\)/);
+assert.match(releaseWorkflow, /dispatchNpmPublication\(projectRoot, version, headCommit\)/);
+assert.match(releaseWorkflow, /requireSuccessfulNpmPublication\(projectRoot, version, headCommit\)/);
 assert.match(detailedContract, /Preparation also creates the local release commit, packs its final sealed tree and runs the complete local test suite/);
-assert.match(detailedContract, /must not create the GitHub Release yet/);
+assert.match(detailedContract, /creates the GitHub Release only after npm publication succeeds/);
 
 const pagesWorkflow = fs.readFileSync(
   path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "pages.yml"),

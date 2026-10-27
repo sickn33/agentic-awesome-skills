@@ -33,10 +33,14 @@ for (const workflow of [publish,pages]) {
   assert.match(all,/distribution_fetch\.cjs/);
   assert.doesNotMatch(all,/npm run (test|app:build|sync:release-state)|npm pack/);
 }
-assert.deepEqual(Object.keys(publish.on),["release"]);
+assert.deepEqual(Object.keys(publish.on),["workflow_dispatch"]);
+assert.deepEqual(Object.keys(publish.on.workflow_dispatch.inputs),["tag","commit"]);
+assert.equal(publish["run-name"],"Publish npm ${{ inputs.tag }} at ${{ inputs.commit }}");
 assert.match(commands(publish.jobs.publish),/git merge-base --is-ancestor "\$tag_commit" "\$main_commit"/);
-assert.match(commands(publish.jobs.publish),/npm publish "\$RUNNER_TEMP\/distribution\/package.tgz" --ignore-scripts --tag next/);
-assert.match(commands(publish.jobs.publish),/npm publish "\$RUNNER_TEMP\/distribution\/package.tgz" --ignore-scripts --tag latest/);
+assert.match(commands(publish.jobs.publish),/test "\$tag_commit" = "\$RELEASE_COMMIT"/);
+assert.match(commands(publish.jobs.publish),/npm publish "\$candidate" --ignore-scripts --tag "\$tag"/);
+assert.match(commands(publish.jobs.publish),/then tag=next; else tag=latest/);
+assert.match(commands(publish.jobs.publish),/verify_npm_candidate\.cjs/);
 assert.deepEqual(pages.on.workflow_dispatch.inputs.deployment_target.options,["release"]);
 assert.match(commands(pages.jobs.build),/\.draft == false/);
 assert.match(commands(pages.jobs.build),/tag_commit[^\n]+GITHUB_SHA/);

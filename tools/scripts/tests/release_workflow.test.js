@@ -113,6 +113,60 @@ for (const override of [
   );
 }
 
+const npmRun = {
+  id: 73,
+  repository: { full_name: "owner/repo" },
+  head_repository: { full_name: "owner/repo" },
+  path: ".github/workflows/publish-npm.yml",
+  event: "workflow_dispatch",
+  head_branch: "main",
+  display_title: release.npmPublicationTitle("1.2.3", candidateRun.head_sha),
+  status: "completed",
+  conclusion: "success",
+};
+function npmProofDependencies(runs) {
+  return {
+    runCommand(command, args) {
+      if (command === "gh" && args[0] === "repo") {
+        return JSON.stringify({ nameWithOwner: "owner/repo" });
+      }
+      if (command === "gh" && args[0] === "api") {
+        return JSON.stringify({ workflow_runs: runs });
+      }
+      throw new Error(`Unexpected command: ${command} ${args.join(" ")}`);
+    },
+  };
+}
+assert.strictEqual(
+  release.requireSuccessfulNpmPublication(
+    "/fixture",
+    "1.2.3",
+    candidateRun.head_sha,
+    npmProofDependencies([npmRun]),
+  ).id,
+  npmRun.id,
+);
+for (const override of [
+  { repository: { full_name: "attacker/repo" } },
+  { head_repository: { full_name: "attacker/repo" } },
+  { path: ".github/workflows/ci.yml" },
+  { event: "release" },
+  { head_branch: "release/v1.2.3" },
+  { display_title: release.npmPublicationTitle("9.9.9", candidateRun.head_sha) },
+  { status: "in_progress" },
+  { conclusion: "failure" },
+]) {
+  assert.throws(
+    () => release.requireSuccessfulNpmPublication(
+      "/fixture",
+      "1.2.3",
+      candidateRun.head_sha,
+      npmProofDependencies([{ ...npmRun, ...override }]),
+    ),
+    /npm publication has not succeeded/,
+  );
+}
+
 let preparedSuite = null;
 release.runPreparedReleaseTestSuite("/fixture", {
   pack(root, destination) {
