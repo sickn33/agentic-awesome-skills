@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [20.1.1] - 2026-10-27 - "Reliable Release Gate"
+
+> Patch release for the npm distribution after `v20.1.0` reached GitHub but its immutable candidate failed on stale onboarding release pins.
+
+### Fixed
+
+- Align the onboarding examples with the published release identity.
+- Make `release:prepare` pack the sealed release commit and run the complete test suite against its exact tarball before pushing a release branch or opening its PR.
+- Require `release:publish` to wait for a successful immutable Distribution candidate bound to the exact tag, commit, repository and workflow before it creates the GitHub Release that triggers npm.
+- Add negative tests for wrong commits, repositories, tags, events, workflow paths and unsuccessful candidate runs.
+- Document the two-pass tag/candidate/publication flow in the canonical maintainer skill, maintenance contract and release guide.
+
+### Upgrade notes
+
+`20.1.1` carries the same reviewed catalog as `20.1.0` and supersedes its incomplete public tag for installable npm and release-owned site artifacts. The immutable `v20.1.0` tag stays unchanged.
+
 ## [20.1.0] - 2026-10-27 - "122 Reviewed Skills And A Clear Maintenance Queue"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants. Adds **122** catalog skills, ships **2,872** total entrypoints, and clears the open PR, issue, Dependabot, CodeQL, and secret-scanning queues before release preparation.
