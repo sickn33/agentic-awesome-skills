@@ -37,6 +37,10 @@ function git(args) { const run=spawnSync('git',args,{cwd:temporary,encoding:'utf
 try {
  git(['init','-q']); git(['config','user.email','test@example.invalid']); git(['config','user.name','Test']);
  fs.writeFileSync(path.join(temporary,'README.md'),'# Fixture\n');
+ fs.writeFileSync(path.join(temporary,'.gitignore'),fs.readFileSync(path.join(root,'.gitignore'),'utf8'));
+ fs.mkdirSync(path.join(temporary,'.venv/lib'),{recursive:true});
+ fs.writeFileSync(path.join(temporary,'.venv/lib/local.cfg'),'local environment');
+ assert.equal(git(['check-ignore','.venv/lib/local.cfg']),'.venv/lib/local.cfg', 'documented Python environment must not dirty the committed source checkout');
  git(['add','.']); git(['commit','-qm','base']); const base=git(['rev-parse','HEAD']);
  fs.mkdirSync(path.join(temporary,'skills/sample/scripts'),{recursive:true});
  fs.writeFileSync(path.join(temporary,'skills/sample/SKILL.md'),'---\nname: sample\ndescription: "Concrete fixture for a contributor regression"\nrisk: none\nsource: self\nsource_type: self\n---\n# Sample\n\n## When to Use\nUse when testing the contributor preflight.\n');
