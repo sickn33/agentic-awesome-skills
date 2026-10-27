@@ -1,5 +1,25 @@
+// Parse Markdown template comments only for evidence presence. This is not the
+// output security boundary; literal() escapes all displayed untrusted values.
+// Keep a newline at each removed span so fragments cannot join into new markup.
+function evidenceText(body) {
+  const text = String(body || "");
+  const visible = [];
+  let cursor = 0;
+  while (cursor < text.length) {
+    const open = text.indexOf("<!--", cursor);
+    if (open === -1) {
+      visible.push(text.slice(cursor));
+      break;
+    }
+    visible.push(text.slice(cursor, open), "\n");
+    const close = text.indexOf("-->", open + 4);
+    if (close === -1) break;
+    cursor = close + 3;
+  }
+  return visible.join("");
+}
 function missingEvidence(body) {
-  const text = String(body || "").replace(/<!--[\s\S]*?-->/g, "");
+  const text = evidenceText(body);
   const required = ["Change evidence", "Validation evidence", "Source and operational boundaries"];
   return required.filter(heading => {
     const section = text.match(new RegExp("^## " + heading + "[ \\t]*$([\\s\\S]*?)(?=^## |$(?![\\s\\S]))", "im"));
@@ -77,4 +97,4 @@ function formatContributorReport(report) {
   lines.push("", "### Evidence to provide", "", ...(report.missing_evidence || []).map(heading => `- Complete the PR section: ${heading}.`), ...report.contributor_evidence.map(item => `- ${item}`), "", "### Maintainer review", "", report.maintainer_review, "", report.verification, "");
   return lines.join("\n");
 }
-module.exports = { buildContributorReport, formatContributorReport, instruction, missingEvidence };
+module.exports = { buildContributorReport, formatContributorReport, instruction, missingEvidence, evidenceText };

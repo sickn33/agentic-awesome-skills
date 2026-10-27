@@ -85,3 +85,5 @@ The original batch inventory must include every PR in the authorized scope.
 ## Contributor readiness
 
 Follow [contribution intake](references/contribution-intake.md) for author evidence, initial corrections and restricted bundles. Reuse the existing contributor preflight and Actions summaries; they do not authorize approval or merge. Request substantive author-actionable repairs before semantic review, distinguish actual task tests from structural/source/protocol checks, and retain exact-head review. Measure real external PR outcomes before claiming lower maintenance cost.
+
+When checking PR evidence, parse template comments without concatenating visible fragments; an unfinished comment is not author evidence. Keep this parser separate from escaping untrusted report output.
