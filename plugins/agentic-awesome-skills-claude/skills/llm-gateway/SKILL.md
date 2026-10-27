@@ -192,6 +192,53 @@ curl http://localhost:4000/spend/keys \
   -H "Authorization: Bearer $LITELLM_MASTER_KEY"
 ```
 
+## Bifrost (Alternative Open-Source Gateway)
+
+[Bifrost](https://github.com/maximhq/bifrost) is an open-source (Apache-2.0) LLM gateway written in Go that you run yourself. Like LiteLLM, it puts an OpenAI-compatible API in front of multiple providers and handles fallbacks, load balancing, virtual keys with budgets and rate limits, and an optional semantic cache. Providers and their API keys are configured in its web UI or in `config.json`.
+
+```bash
+# Run with Docker (web UI and API on port 8080, state persisted in ./bifrost-data)
+docker run -d \
+  --name bifrost \
+  -p 127.0.0.1:8080:8080 \
+  -v $(pwd)/bifrost-data:/app/data \
+  maximhq/bifrost:v2.3.0               # pin a release tag
+```
+
+Existing OpenAI SDK code only needs a new base URL and a Bifrost virtual key:
+
+```python
+import os
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://localhost:8080/openai",
+    api_key=os.environ["BIFROST_VIRTUAL_KEY"],  # sk-bf-...
+)
+response = client.chat.completions.create(
+    model="openai/gpt-4o-mini",                 # provider/model
+    messages=[{"role": "user", "content": "Hello"}],
+)
+```
+
+Create a virtual key with a monthly budget and request/token rate limits:
+
+```bash
+curl -X POST http://localhost:8080/api/governance/virtual-keys \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "backend-team-key",
+    "provider_configs": [{"provider": "openai", "allowed_models": ["gpt-4o-mini"], "key_ids": ["*"]}],
+    "budgets": [{"max_limit": 100, "reset_duration": "1M"}],
+    "rate_limit": {
+      "request_max_limit": 100, "request_reset_duration": "1m",
+      "token_max_limit": 500000, "token_reset_duration": "1m"
+    }
+  }'
+```
+
+Requests without a virtual key are still accepted unless "Enforce Virtual Keys on Inference" (`enforce_auth_on_inference`) is turned on. A fresh instance has no dashboard password, so enable authentication before exposing it beyond localhost. See the [Bifrost docs](https://docs.getbifrost.ai) for fallbacks, semantic caching and Kubernetes (Helm) deployment.
+
 ## Nginx Load Balancer (Alternative/Complement)
 
 ```nginx

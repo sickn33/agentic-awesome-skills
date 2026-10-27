@@ -1,8 +1,8 @@
 # Skill Catalog
 
-Generated at: 2026-10-24T08:21:30.000Z
+Generated at: 2026-10-27T08:28:40.000Z
 
-Total skills: 2750
+Total skills: 2872
 
 ## agent-behavior (5)
 
@@ -268,6 +268,21 @@ Total skills: 2750
 | `yann-lecun-filosofia` | Sub-skill filosófica e pedagógica de Yann LeCun. | safe | community | persona, ai-philosophy, open-source, education | persona, ai-philosophy, open-source, education, yann, lecun, filosofia, sub, skill, filos, fica, pedag |
 | `yann-lecun-tecnico` | Sub-skill técnica de Yann LeCun. Cobre CNNs, LeNet, backpropagation, JEPA (I-JEPA, V-JEPA, MC-JEPA), AMI (Advanced Machinery of Intelligence), Self-Supervise... | safe | community | persona, cnn, jepa, self-supervised, pytorch | persona, cnn, jepa, self-supervised, pytorch, yann, lecun, tecnico, sub, skill, cnica, de |
 
+## ai-powered seo (10)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `ai-blog-intro-writer` | AI Blog Intro Writer. Use when working with topic and article angle, or article draft. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, ai, blog, intro, writer, working, topic, article, angle, draft |
+| `ai-competitor-title-rewriter` | AI Competitor Title Rewriter. Use when working with competitor title and your page topic. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, ai, competitor, title, rewriter, working, page, topic |
+| `ai-content-detector` | AI Content Detector. Use when working with text to review. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, ai, content, detector, working, text, review |
+| `ai-content-improver` | AI Content Improver. Use when working with draft text. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, ai, content, improver, working, draft, text |
+| `ai-content-outline-generator` | AI Content Outline Generator. Use when working with topic or reader question. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, ai, content, outline, generator, working, topic, reader, question |
+| `ai-faq-creator` | AI FAQ Creator. Use when working with source content or topic. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, ai, faq, creator, working, source, content, topic |
+| `ai-keyword-explainer` | AI Keyword Explainer. Use when working with keyword or phrase. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, ai, keyword, explainer, working, phrase |
+| `ai-meta-tag-writer` | AI Meta Tag Writer. Use when working with page copy or factual page summary. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, ai, meta, tag, writer, working, page, copy, factual, summary |
+| `ai-schema-generator` | AI Schema Generator. Use when working with visible page content and page URL. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, ai, schema, generator, working, visible, page, content, url |
+| `ai-snippet-generator` | AI Snippet Generator. Use when working with question and supporting source text. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, ai, snippet, generator, working, question, supporting, source, text |
+
 ## ai-research (1)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
@@ -513,6 +528,20 @@ Total skills: 2750
 | `whatsapp-cloud-api` | Integracao com WhatsApp Business Cloud API (Meta). Mensagens, templates, webhooks HMAC-SHA256, automacao de atendimento. Boilerplates Node.js e Python. | critical | community | messaging, whatsapp, meta, webhooks | messaging, whatsapp, meta, webhooks, cloud, api, integracao, com, business, mensagens, hmac, sha256 |
 | `x402-express-wrapper` | Wrapper oficial de M2MCent (Node.js) para inyectar muros de pago x402 en APIs o servidores Model Context Protocol (MCP). Usar al construir nuevos servicios q... | critical | community | x402, defi, monetization, express, mcp | x402, defi, monetization, express, mcp, wrapper, oficial, de, m2mcent, node, js, para |
 
+## backlink & link-building (9)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `anchor-text-analyzer` | Anchor Text Analyzer. Use when working with links with anchor text and destinations. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, anchor, text, analyzer, working, links, destinations |
+| `backlink-idea-generator` | Backlink Idea Generator. Use when working with site topic and target audience. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, backlink, idea, generator, working, site, topic, target, audience |
+| `backlink-tracking-template-generator` | Backlink Tracking Template Generator. Use when working with tracking goal; existing rows optional. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, backlink, tracking, generator, working, goal, existing, rows, optional |
+| `domain-authority-simulator` | Domain Authority Simulator. Use when working with domain signals and an explicit scoring rubric. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, domain, authority, simulator, working, signals, explicit, scoring, rubric |
+| `guest-posting-opportunity-finder` | Guest Posting Opportunity Finder. Use when working with topic, audience and optional prospect list. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, guest, posting, opportunity, finder, working, topic, audience, optional, prospect, list |
+| `link-relevance-evaluator` | Link Relevance Evaluator. Use when working with source page context and destination page context. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, link, relevance, evaluator, working, source, page, context, destination |
+| `link-source-categorizer` | Link Source Categorizer. Use when working with backlink rows with source URLs and optional page context. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, link, source, categorizer, working, backlink, rows, urls, optional, page, context |
+| `link-toxicity-checker` | Link Toxicity Checker. Use when working with backlink examples and available evidence. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, link, toxicity, checker, working, backlink, examples, available, evidence |
+| `outreach-email-template-generator` | Outreach Email Template Generator. Use when working with recipient context, outreach purpose and genuine offer. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, outreach, email, generator, working, recipient, context, purpose, genuine, offer |
+
 ## blockchain (13)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
@@ -544,7 +573,7 @@ Total skills: 2750
 | `reverse-browser-automation` | Automate browsers (Playwright) and Windows desktop applications (UI automation) for reverse-engineering evidence collection, UI-driven workflows, and network... | offensive | zhaoxuya520/reverse-skill | reverse, browser | reverse, browser, automation, automate, browsers, playwright, windows, desktop, applications, ui, engineering, evidence |
 | `skyvern-browser-automation` | AI-powered browser automation — navigate sites, fill forms, extract structured data, log in with stored credentials, and build reusable workflows. | safe | Skyvern-AI/skyvern | browser-automation, mcp, web-scraping, form-filling, ai-agents, workflow-automation | browser-automation, mcp, web-scraping, form-filling, ai-agents, workflow-automation, skyvern, browser, automation, ai, powered, navigate |
 
-## business (179)
+## business (180)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -673,6 +702,7 @@ Total skills: 2750
 | `pre-boarding` | Pre-boarding checklist: task, employee and department, owner, category, joining and due dates, documents received, laptop, email and account-record readiness... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, onboard | sme, business, operations, database, csv, notion, sql, onboard, pre, boarding, checklist, task |
 | `presentation-deck` | Build an evidence-linked slide register after context-first intake. Use when an SME needs a presentation deck, speaker notes, or a structured business story. | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, presentation, deck, pitch, slides, storytelling, speaker-notes, data-source, brand-kit, csv, sql, notion | sme, presentation, deck, pitch, slides, storytelling, speaker-notes, data-source, brand-kit, csv, sql, notion |
 | `pricing-strategy` | Design pricing, packaging, and monetization strategies based on value, customer willingness to pay, and growth objectives. | none | community | pricing | pricing, packaging, monetization, value, customer, willingness, pay, growth, objectives |
+| `pro-launch` | Build an app or product from 0 to 1, taste-first, with phase gates: references, naming, style frames, UI loop, launch video, GTM and shipping. Use for 做产品, 起... | safe | jack-reson8/pro-launch | product, launch, naming, ui, gtm | product, launch, naming, ui, gtm, pro, app, taste, first, phase, gates, references |
 | `probation-tracker` | Probation register: employee, start and end dates, 30, 60 and 90-day review scores, overall score and confirmation letter. Use for probation tracking. | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, onboard | sme, business, operations, database, csv, notion, sql, onboard, probation, tracker, register, employee |
 | `product-design` | Design de produto nivel Apple — sistemas visuais, UX flows, acessibilidade, linguagem visual proprietaria, design tokens, prototipagem e handoff. Cobre Figma... | none | community | design, ux, design-systems, accessibility, figma | design, ux, design-systems, accessibility, figma, product, de, produto, nivel, apple, sistemas, visuais |
 | `product-inventor` | Product Inventor e Design Alchemist de nivel maximo — combina Product Thinking, Design Systems, UI Engineering, Psicologia Cognitiva, Storytelling e execucao... | critical | community | product-thinking, innovation, ux-design, storytelling | product-thinking, innovation, ux-design, storytelling, product, inventor, alchemist, de, nivel, maximo, combina, thinking |
@@ -986,13 +1016,27 @@ Total skills: 2750
 | `a4a` | Connect your AI agent to the A4A end-to-end encrypted agent-to-agent messaging network via local MCP tools or Python SDK. | critical | a4a-network/a4a | a4a, mcp, e2ee, agent-communication, messaging | a4a, mcp, e2ee, agent-communication, messaging, connect, ai, agent, encrypted, network, via, local |
 | `cooper-email` | Give an AI agent its own email inbox with Cooper Email: send, receive, reply, and wait for replies or verification codes over MCP or HTTP. | critical | cooper-email/cooper-email | email, inbox, agents, mcp, otp | email, inbox, agents, mcp, otp, cooper, give, ai, agent, own, send, receive |
 
+## competitor analysis (9)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `competitor-backlink-idea-generator` | Competitor Backlink Idea Generator. Use when working with your niche and competitor backlink examples or export. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, competitor, backlink, idea, generator, working, niche, examples, export |
+| `competitor-gap-analyzer` | Competitor Gap Analyzer. Use when working with your offering and at least one competitor profile. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, competitor, gap, analyzer, working, offering, least, one, profile |
+| `competitor-keyword-overlap-checker` | Competitor Keyword Overlap Checker. Use when working with two labeled keyword sets. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, competitor, keyword, overlap, checker, working, two, labeled, sets |
+| `competitor-summary-report-creator` | Competitor Summary Report Creator. Use when working with competitor names or URLs and evidence to summarize. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, competitor, summary, report, creator, working, names, urls, evidence, summarize |
+| `content-length-comparator` | Content Length Comparator. Use when working with two or more labeled text samples. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, content, length, comparator, working, two, labeled, text, samples |
+| `domain-comparison-report-tool` | Domain Comparison Report Tool. Use when working with two or more domains with dated comparable metrics. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, domain, comparison, report, working, two, domains, dated, comparable, metrics |
+| `keyword-share-estimator` | Keyword Share Estimator. Use when working with comparable visibility values for your domain and selected competitors. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, keyword, share, estimator, working, comparable, visibility, values, domain, selected, competitors |
+| `meta-tag-comparison-tool` | Meta Tag Comparison Tool. Use when working with HTML or extracted metadata from two or more labeled pages. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, meta, tag, comparison, working, html, extracted, metadata, two, labeled, pages |
+| `ranking-opportunity-finder` | Ranking Opportunity Finder. Use when working with query/page performance export or dated ranking evidence. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, ranking, opportunity, finder, working, query, page, performance, export, dated, evidence |
+
 ## consulting (1)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `web-project-brainstorming` | Masterclass framework for brainstorming web development projects and page designs. Outlines structural phases for concept, UX flow, styling aesthetics, techn... | safe | self | brainstorming, project-planning, web-development, product-scoping, design-system, architecture | brainstorming, project-planning, web-development, product-scoping, design-system, architecture, web, masterclass, framework, development, page, designs |
 
-## content (77)
+## content (78)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1034,6 +1078,7 @@ Total skills: 2750
 | `prompt-library` | A comprehensive collection of battle-tested prompts inspired by [awesome-chatgpt-prompts](https://github.com/f/awesome-chatgpt-prompts) and community best pr... | critical | community | prompt, library | prompt, library, collection, battle, tested, prompts, inspired, awesome, chatgpt, https, github, com |
 | `readme` | You are an expert technical writer creating comprehensive project documentation. Write an accurate README sized to the project and task, with verified setup ... | safe | https://github.com/Shpigford/skills/tree/main/readme | readme | readme, technical, writer, creating, documentation, write, accurate, sized, task, verified, setup, instructions |
 | `reference-builder` | Creates exhaustive technical references and API documentation. Generates comprehensive parameter listings, configuration guides, and searchable reference mat... | safe | community | reference, builder | reference, builder, creates, exhaustive, technical, references, api, documentation, generates, parameter, listings, configuration |
+| `renhua` | Write Chinese social posts and product copy in a real person's voice, removing AI tells. Use for 小红书, X 帖子, 日记, 朋友圈, 产品介绍, 去 AI 味, 说人话. | safe | jack-reson8/renhua | chinese, copywriting, social, humanizer | chinese, copywriting, social, humanizer, renhua, write, posts, product, copy, real, person, voice |
 | `scientific-writing` | Draft and revise scientific manuscripts with evidence-based structure, citation verification, reporting guidelines and venue-specific formatting. | critical | community | scientific, writing | scientific, writing, draft, revise, manuscripts, evidence, structure, citation, verification, reporting, guidelines, venue |
 | `search-specialist` | Research questions with focused web searches, primary-source verification, and explicit evidence gaps. | critical | community | search | search, research, questions, web, searches, primary, source, verification, explicit, evidence, gaps |
 | `seo` | Run a broad SEO audit across technical SEO, on-page SEO, schema, sitemaps, content quality, AI search readiness, and GEO. Use as the umbrella skill when the ... | critical | https://github.com/AgriciDaniel/claude-seo | seo | seo, run, broad, audit, technical, page, schema, sitemaps, content, quality, ai, search |
@@ -1073,6 +1118,23 @@ Total skills: 2750
 | `writing-guidelines` | Curated upstream guidance for Writing Guidelines; use when the workflow matches the user goal. | unknown | vercel-labs/agent-skills | writing, guidelines | writing, guidelines, curated, upstream, guidance, matches, user, goal |
 | `youtube-seo-optimizer` | Generate complete YouTube & podcast SEO packages with live-researched keywords — titles, descriptions, tags, hashtags, chapters, and audit fixes. Use for new... | safe | community | youtube, seo, optimizer | youtube, seo, optimizer, generate, complete, podcast, packages, live, researched, keywords, titles, descriptions |
 | `youtube-summarizer` | Extract transcripts from YouTube videos and generate comprehensive, detailed summaries using intelligent analysis frameworks | safe | community | video, summarization, transcription, youtube, content-analysis | video, summarization, transcription, youtube, content-analysis, summarizer, extract, transcripts, videos, generate, detailed, summaries |
+
+## content seo (12)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `blog-title-generator` | Blog Title Generator. Use when working with topic or page summary. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, blog, title, generator, working, topic, page, summary |
+| `content-freshness-checker` | Content Freshness Checker. Use when working with content and known publication or update date if available. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, content, freshness, checker, working, known, publication, update, date, available |
+| `content-gap-finder` | Content Gap Finder. Use when working with existing content inventory and audience goal. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, content, gap, finder, working, existing, inventory, audience, goal |
+| `faq-generator` | FAQ Generator. Use when working with actual questions plus answer facts. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, faq, generator, working, actual, questions, plus, answer, facts |
+| `featured-snippet-optimizer` | Featured Snippet Optimizer. Use when working with target question and existing passage. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, featured, snippet, optimizer, working, target, question, existing, passage |
+| `headline-analyzer` | Headline Analyzer. Use when working with headline and intended article summary. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, headline, analyzer, working, intended, article, summary |
+| `keyword-placement-highlighter` | Keyword Placement Highlighter. Use when working with text and target keywords. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, keyword, placement, highlighter, working, text, target, keywords |
+| `meta-description-writer` | Meta Description Writer. Use when working with page content or factual summary. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, meta, description, writer, working, page, content, factual, summary |
+| `paragraph-keyword-optimizer` | Paragraph Keyword Optimizer. Use when working with paragraph and target keyword. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, paragraph, keyword, optimizer, working, target |
+| `product-description-generator` | Product Description Generator. Use when working with verified product features and intended buyer. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, product, description, generator, working, verified, features, intended, buyer |
+| `readability-enhancer` | Readability Enhancer. Use when working with text and optional reader level. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, readability, enhancer, working, text, optional, reader, level |
+| `tone-of-voice-analyzer` | Tone of Voice Analyzer. Use when working with text and optional brand voice sample. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, tone, voice, analyzer, working, text, optional, brand, sample |
 
 ## content-writing (1)
 
@@ -1610,7 +1672,7 @@ Total skills: 2750
 | `systematic-debugging` | Use when encountering any bug, test failure, or unexpected behavior, before proposing fixes | critical | community | systematic, debugging | systematic, debugging, encountering, any, bug, test, failure, unexpected, behavior, before, proposing, fixes |
 | `test-fixing` | Systematically identify and fix all failing tests using smart grouping strategies. Use when explicitly asks to fix tests ("fix these tests", "make tests pass... | critical | community | fixing | fixing, test, systematically, identify, fix, all, failing, tests, smart, grouping, explicitly, asks |
 
-## devops (167)
+## devops (168)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1780,6 +1842,7 @@ Total skills: 2750
 | `vercel-optimize` | Audit deployed Vercel apps for cost and performance issues using metrics, project config, code scans, and version-aware recommendations. | critical | https://github.com/vercel-labs/agent-skills | vercel, optimize | vercel, optimize, audit, deployed, apps, cost, performance, issues, metrics, config, code, scans |
 | `vibecode-production-qa-validator` | 13-phase production QA for fullstack Next.js apps: build verification, SEO tags, OG images, favicon, route regression, API auth, page speed, lazy load, vulne... | critical | self | qa, nextjs, production, deployment, seo, authentication, api, performance, favicon, cleanup, lighthouse, database, security, ui-ux | qa, nextjs, production, deployment, seo, authentication, api, performance, favicon, cleanup, lighthouse, database |
 | `vllm-server` | Deploy and manage vLLM for high-throughput LLM inference. Configure continuous batching, tensor parallelism, quantization, and OpenAI-compatible API endpoint... | critical | BagelHole/DevOps-Security-Agent-Skills | vllm, server | vllm, server, deploy, high, throughput, llm, inference, configure, continuous, batching, tensor, parallelism |
+| `webly` | Publish a website or share files at a live URL in seconds with no account, then let the person claim it, edit it over Webly's MCP server, and publish drafts ... | critical | Webly-AI/webly-plugin | deploy, static-site, hosting, publish, file-sharing, mcp | deploy, static-site, hosting, publish, file-sharing, mcp, webly, website, share, files, live, url |
 | `windows-server` | Administer Windows Server systems. Manage IIS, Active Directory, and PowerShell automation. Use when administering Windows infrastructure. | critical | BagelHole/DevOps-Security-Agent-Skills | windows, server | windows, server, administer, iis, active, directory, powershell, automation, administering, infrastructure |
 
 ## document-processing (4)
@@ -2058,12 +2121,33 @@ Total skills: 2750
 | `weightloss-analyzer` | 分析减肥数据、计算代谢率、追踪能量缺口、管理减肥阶段 | critical | community | weightloss, analyzer | weightloss, analyzer |
 | `wellally-tech` | Integrate multiple digital health data sources, connect to [WellAlly.tech](https://www.wellally.tech/) knowledge base, providing data import and knowledge re... | critical | community | wellally, tech | wellally, tech, integrate, multiple, digital, health, data, sources, connect, https, www, knowledge |
 
+## keyword research (10)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `keyword-clustering-tool` | Keyword Clustering Tool. Use when working with keyword list. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, keyword, clustering, working, list |
+| `keyword-comparison-tool` | Keyword Comparison Tool. Use when working with two or more keywords and optional metrics. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, keyword, comparison, working, two, keywords, optional, metrics |
+| `keyword-density-checker` | Keyword Density Checker. Use when working with text and target word or phrase. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, keyword, density, checker, working, text, target, word, phrase |
+| `keyword-difficulty-estimator` | Keyword Difficulty Estimator. Use when working with keyword plus supplied SERP or competitor evidence. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, keyword, difficulty, estimator, working, plus, supplied, serp, competitor, evidence |
+| `keyword-expansion-tool` | Keyword Expansion Tool. Use when working with seed terms and optional industry. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, keyword, expansion, working, seed, terms, optional, industry |
+| `keyword-gap-finder` | Keyword Gap Finder. Use when working with your keyword set and competitor keyword sets. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, keyword, gap, finder, working, set, competitor, sets |
+| `keyword-intent-identifier` | Keyword Intent Identifier. Use when working with keyword or query list. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, keyword, intent, identifier, working, query, list |
+| `keyword-suggestion-tool` | Keyword Suggestion Tool. Use when working with seed topic. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, keyword, suggestion, working, seed, topic |
+| `long-tail-keyword-generator` | Long-Tail Keyword Generator. Use when working with seed topic and optional audience or use case. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, long, tail, keyword, generator, working, seed, topic, optional, audience, case |
+| `trending-keyword-visualizer` | Trending Keyword Visualizer. Use when working with dated keyword interest or volume series with source. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, trending, keyword, visualizer, working, dated, interest, volume, series, source |
+
 ## knowledge-management (2)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `maintain-codex-wiki` | Maintain a review-first engineering wiki with provenance, citation-aware queries, explicit capture and promotion, and deterministic checks. | critical | Phelan164/codex-howto | codex, wiki, knowledge-management, provenance, engineering | codex, wiki, knowledge-management, provenance, engineering, maintain, review, first, citation, aware, queries, explicit |
 | `wiki-builder` | Create and maintain reusable research wikis with source provenance, configurable structure, and local markdown outputs. | safe | dair-ai/dair-academy-plugins | dair-academy, ai, workflow | dair-academy, ai, workflow, wiki, builder, maintain, reusable, research, wikis, source, provenance, configurable |
+
+## learning (1)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `onboard` | Decompose mixed project materials (code, docs, PDF/Excel/PPT) into a sourced overview and a goal-driven three-tier learning path, then teach it interactively. | safe | Keviniscool-boy/onboard | onboarding, learning-path, codebase-understanding, documentation | onboarding, learning-path, codebase-understanding, documentation, onboard, decompose, mixed, materials, code, docs, pdf, excel |
 
 ## legal (9)
 
@@ -2096,7 +2180,20 @@ Total skills: 2750
 | --- | --- | --- | --- | --- | --- |
 | `party-planning` | Estimate party food and drink quantities, select games, and draft hosting timelines using HostPartyPlay's published planning heuristics. | safe | self | party, planning | party, planning, estimate, food, drink, quantities, select, games, draft, hosting, timelines, hostpartyplay |
 
-## marketing (115)
+## local seo (8)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `geo-keyword-expansion-tool` | Geo Keyword Expansion Tool. Use when working with seed keyword and target locations. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, geo, keyword, expansion, working, seed, target, locations |
+| `gmb-optimization-helper` | GMB Optimization Helper. Use when working with Google Business Profile details or business facts. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, gmb, optimization, helper, working, google, business, profile, details, facts |
+| `local-citation-finder` | Local Citation Finder. Use when working with business category and service location. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, local, citation, finder, working, business, category, location |
+| `local-keyword-generator` | Local Keyword Generator. Use when working with service or product and actual target location. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, local, keyword, generator, working, product, actual, target, location |
+| `local-seo-audit-checklist` | Local SEO Audit Checklist. Use when working with business type, location and profile or site details. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, local, audit, checklist, working, business, type, location, profile, site, details |
+| `location-based-content-idea-generator` | Local Content Idea Generator. Use when working with location, audience and business topic. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, location, content, idea, generator, local, working, audience, business, topic |
+| `nap-consistency-checker` | NAP Consistency Checker. Use when working with canonical business name, address and phone plus listing records. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, nap, consistency, checker, working, canonical, business, name, address, phone, plus |
+| `review-response-generator` | Review Response Generator. Use when working with review text and verified business context. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, review, response, generator, working, text, verified, business, context |
+
+## marketing (117)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2180,6 +2277,8 @@ Total skills: 2750
 | `paywall-upgrade-cro` | You are an expert in in-app paywalls and upgrade flows. Your goal is to convert free users to paid, or upgrade users to higher tiers, at moments when they've... | critical | community | paywall, upgrade, cro | paywall, upgrade, cro, app, paywalls, flows, goal, convert, free, users, paid, higher |
 | `pitch-psychologist` | Structure pitches, decks, and talk tracks around audience beliefs, proof, and a clear decision when presentations need stronger progression. | safe | community | pitch, psychologist | pitch, psychologist, structure, pitches, decks, talk, tracks, around, audience, beliefs, proof, clear |
 | `popup-cro` | Create and optimize popups, modals, overlays, slide-ins, and banners to increase conversions without harming user experience or brand trust. | none | community | popup, cro | popup, cro, optimize, popups, modals, overlays, slide, ins, banners, increase, conversions, without |
+| `post` | Make share-post image sets that look native: Xiaohongshu carousels, X images, covers, App Store poster layouts, real screenshots and faithful app-UI mocks. U... | safe | jack-reson8/post-skill | social, image, xiaohongshu, carousel | social, image, xiaohongshu, carousel, post, share, sets, look, native, carousels, images, covers |
+| `postel-writing` | Draft X (Twitter) or LinkedIn posts in the user's own voice, research high-performing posts, and schedule or publish them through the user's Postel account. | critical | robinfaraj/postel-mcp | linkedin, twitter, writing, scheduling, social-media, mcp | linkedin, twitter, writing, scheduling, social-media, mcp, postel, draft, posts, user, own, voice |
 | `power-user-cultivation` | When the user wants to identify and nurture developer advocates, build champion programs, or turn active users into contributors and evangelists. | safe | jonathimer/devmarketing-skills | power, user, cultivation | power, user, cultivation, wants, identify, nurture, developer, advocates, champion, programs, turn, active |
 | `price-psychology-strategist` | Design pricing presentation, anchors, and tiers when an offer needs clearer value and fairness without misleading comparisons. | safe | community | price, psychology, strategist | price, psychology, strategist, pricing, presentation, anchors, tiers, offer, clearer, value, fairness, without |
 | `pricing` | When the user wants help with pricing decisions, packaging, or monetization strategy. | safe | coreyhaines31/marketingskills | pricing | pricing, user, wants, decisions, packaging, monetization |
@@ -2216,7 +2315,7 @@ Total skills: 2750
 | `youtube-automation` | Automate YouTube tasks via Rube MCP (Composio): upload videos, manage playlists, search content, get analytics, and handle comments. Always search tools firs... | critical | community | youtube | youtube, automation, automate, tasks, via, rube, mcp, composio, upload, videos, playlists, search |
 | `zhongcao-note-copywriter` | Install and use the official Xiaohongshu Copywriter package, pinned by digest, for paid hosted work on the Beatra service. | critical | beatra-ai/xiaohongshu-copywriter-skill | xiaohongshu, rednote, copywriting, social-media, social-data, mcp, paid-api, beatra | xiaohongshu, rednote, copywriting, social-media, social-data, mcp, paid-api, beatra, zhongcao, note, copywriter, install |
 
-## mcp (8)
+## mcp (9)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2227,9 +2326,10 @@ Total skills: 2750
 | `not-human-search-mcp` | Search AI-ready websites, inspect indexed site details, verify MCP endpoints, and discover tools and APIs using the Not Human Search MCP server | safe | https://nothumansearch.ai | mcp, search, ai-discovery, api-discovery, mcp-verification, agent-tools | mcp, search, ai-discovery, api-discovery, mcp-verification, agent-tools, human, ai, websites, inspect, indexed, site |
 | `parallel-search-mcp` | Search the public web and verify sources with Parallel's free Search MCP. Use when the user chooses Parallel or its connected tools for current information a... | safe | self | mcp, web-search, research, citations | mcp, web-search, research, citations, parallel, search, public, web, verify, sources, free, user |
 | `protect-mcp-governance` | Agent governance skill for MCP tool calls — Cedar policy authoring, shadow-to-enforce rollout, and Ed25519 receipt verification. | critical | scopeblind/scopeblind-gateway | protect, mcp, governance | protect, mcp, governance, agent, skill, calls, cedar, policy, authoring, shadow, enforce, rollout |
+| `restosignals` | Find US restaurants and bars before they open, as scored leads fused from liquor-license, food-permit and business-filing records, via the RestoSignals MCP s... | safe | paperandbeyond23-gif/restosignals-mcp | mcp, restaurants, leads, public-records, liquor-license, prospecting | mcp, restaurants, leads, public-records, liquor-license, prospecting, restosignals, find, us, bars, before, open |
 | `serply-search-mcp` | Search Google, Bing, Google News and Google Scholar, and read public pages, with the Serply MCP server. Use when the user chooses Serply or its connected too... | safe | self | mcp, web-search, news, scholar, research, citations | mcp, web-search, news, scholar, research, citations, serply, search, google, bing, read, public |
 
-## media (50)
+## media (52)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2260,6 +2360,7 @@ Total skills: 2750
 | `nsfw-ai-spicyapi` | Generate adult (18+) images, image-to-video clips and image edits through the SpicyAPI API, with a cost quote before every paid run and adults-only / consent... | critical | Spicy-API/nsfw-ai-skill | image-generation, video-generation, image-to-video, adult-content, api | image-generation, video-generation, image-to-video, adult-content, api, nsfw, ai, spicyapi, generate, adult, 18, images |
 | `podcast-generation` | Generate real audio narratives from text content using Azure OpenAI's Realtime API. | critical | community | podcast, generation | podcast, generation, generate, real, audio, narratives, text, content, azure, openai, realtime, api |
 | `poster-design-studio` | Install and use the official AI Poster Maker package, pinned by digest, for paid hosted work on the Beatra service. | critical | beatra-ai/ai-poster-maker-skill | poster-design, text-to-image, mcp, paid-api, beatra | poster-design, text-to-image, mcp, paid-api, beatra, poster, studio, install, official, ai, maker, package |
+| `pro-motion` | Make a motion-graphics launch, brand or promo film audio first: plan the music, then render the film in code (canvas to MP4) cut to the track. Use for 发布视频, ... | safe | jack-reson8/pro-motion | motion-graphics, video, music, launch-film | motion-graphics, video, music, launch-film, pro, motion, graphics, launch, brand, promo, film, audio |
 | `product-photo-studio` | Install and use the official AI Product Photography package, pinned by digest, for paid hosted work on the Beatra service. | critical | beatra-ai/ai-product-photography-skill | product-photography, ecommerce, text-to-image, mcp, paid-api, beatra | product-photography, ecommerce, text-to-image, mcp, paid-api, beatra, product, photo, studio, install, official, ai |
 | `remotion` | Generate walkthrough videos from Stitch projects using Remotion with smooth transitions, zooming, and text overlays | critical | community | remotion | remotion, generate, walkthrough, videos, stitch, smooth, transitions, zooming, text, overlays |
 | `remotion-best-practices` | Best practices for Remotion - Video creation in React | critical | community | remotion, video, react, animation, composition | remotion, video, react, animation, composition, creation |
@@ -2270,6 +2371,7 @@ Total skills: 2750
 | `remotion-render` | Export a Remotion video | unknown | remotion-dev/skills | remotion, render | remotion, render, export, video |
 | `screenstudio-alt` | Open-source headless Screen Studio alternative: auto speed-up of idle, auto-zoom on click clusters, keystroke overlay chips, smoothed synthetic cursor, and 9... | critical | connerkward/screenstudio-alternative-skill | screen-recording, video, post-production, auto-zoom, vertical-video, ffmpeg | screen-recording, video, post-production, auto-zoom, vertical-video, ffmpeg, screenstudio, alt, open, source, headless, screen |
 | `slack-gif-creator` | A toolkit providing utilities and knowledge for creating animated GIFs optimized for Slack. | critical | community | slack, gif, creator | slack, gif, creator, toolkit, providing, utilities, knowledge, creating, animated, gifs, optimized |
+| `soundza` | Find, audition and add free sound effects, ambience or music to a game, video or app with Soundza, or generate a new sound effect from a prompt, over MCP or ... | safe | soundza/soundza-mcp | audio, sound-effects, music, gamedev, video, mcp | audio, sound-effects, music, gamedev, video, mcp, soundza, find, audition, add, free, sound |
 | `stability-ai` | Geracao de imagens via Stability AI (SD3.5, Ultra, Core). Text-to-image, img2img, inpainting, upscale, remove-bg, search-replace. 15 estilos artisticos. | critical | community | image-generation, stable-diffusion, ai-art, api | image-generation, stable-diffusion, ai-art, api, stability, ai, geracao, de, imagens, via, sd3, ultra |
 | `suno-lyrics-to-song` | Install and use the official Lyrics to Song package, pinned by digest, for paid hosted work on the Beatra service. | critical | beatra-ai/lyrics-to-song-skill | lyrics-to-song, music-generation, mcp, paid-api, beatra | lyrics-to-song, music-generation, mcp, paid-api, beatra, suno, lyrics, song, install, official, package, pinned |
 | `talking-avatar-video` | Install and use the official Talking Avatar Video package, pinned by digest, for paid hosted work on the Beatra service. | critical | beatra-ai/talking-avatar-video-skill | talking-avatar, talking-head, text-to-video, mcp, paid-api, beatra | talking-avatar, talking-head, text-to-video, mcp, paid-api, beatra, talking, avatar, video, install, official, package |
@@ -2290,7 +2392,7 @@ Total skills: 2750
 | --- | --- | --- | --- | --- | --- |
 | `video-content-extractor` | Extract key frames from MP4 videos at configurable intervals, run Tesseract OCR, and generate structured Markdown reports with video metadata and timestamped... | safe | 274326424/video-content-extractor | video, ocr, ffmpeg, tesseract, frame-extraction, media | video, ocr, ffmpeg, tesseract, frame-extraction, media, content, extractor, extract, key, frames, mp4 |
 
-## memory (7)
+## memory (8)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2299,10 +2401,11 @@ Total skills: 2750
 | `context-window-management` | Strategies for managing LLM context windows including summarization, trimming, routing, and avoiding context rot | critical | vibeship-spawner-skills (Apache 2.0) | window | window, context, managing, llm, windows, including, summarization, trimming, routing, avoiding, rot |
 | `conversation-memory` | Persistent memory systems for LLM conversations including short-term, long-term, and entity-based memory | critical | vibeship-spawner-skills (Apache 2.0) | conversation, memory | conversation, memory, persistent, llm, conversations, including, short, term, long, entity |
 | `hierarchical-agent-memory` | Scoped CLAUDE.md memory system that reduces context token spend. Creates directory-level context files, tracks savings via dashboard, and routes agents to th... | safe | https://github.com/kromahlusenii-ops/ham | hierarchical, agent, memory | hierarchical, agent, memory, scoped, claude, md, reduces, context, token, spend, creates, directory |
+| `memory-handoff` | Portable session handoff across agent CLIs: read a project's handoff file at session start, rewrite it at session end, so the next session starts mid-thought... | critical | WyattAu/memory-handoff-skill | agent-memory, handoff, session-management, context-engineering, cross-cli | agent-memory, handoff, session-management, context-engineering, cross-cli, memory, portable, session, agent, clis, read, file |
 | `memory-systems` | Design short-term, long-term, and graph-based memory architectures. Use when building agents that must persist across sessions, needing to maintain entity co... | critical | https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering/tree/main/skills/memory-systems | memory | memory, short, term, long, graph, architectures, building, agents, must, persist, sessions, needing |
 | `recallmax` | Prepare source-linked conversation handoffs and bounded document summaries, preserving decisions, uncertainty and task state within the host context limit. | safe | community | memory, context, rag, summarization, compression, long-context, agent-infrastructure | memory, context, rag, summarization, compression, long-context, agent-infrastructure, recallmax, prepare, source, linked, conversation |
 
-## meta (38)
+## meta (39)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2337,6 +2440,7 @@ Total skills: 2750
 | `skill-scanner` | Scan agent skills for security issues before adoption. Detects prompt injection, malicious code, excessive permissions, secret exposure, and supply chain risks. | safe | community | skill, scanner | skill, scanner, scan, agent, skills, security, issues, before, adoption, detects, prompt, injection |
 | `skill-seekers` | Convert approved documentation, repositories, or PDFs into an agent skill using the Skill Seekers workflow, then review the generated content. | safe | https://github.com/yusufkaraaslan/Skill_Seekers | skill, seekers | skill, seekers, convert, approved, documentation, repositories, pdfs, agent, then, review, generated, content |
 | `skill-sentinel` | Auditoria e evolucao do ecossistema de skills. Qualidade de codigo, seguranca, custos, gaps, duplicacoes, dependencias e relatorios de saude. | critical | community | governance, audit, quality, skill-health | governance, audit, quality, skill-health, skill, sentinel, auditoria, evolucao, do, ecossistema, de, skills |
+| `skill-skill` | Write, upgrade or audit a Claude skill so it changes what gets generated: forcing functions, triggerable descriptions, and a static audit script with a 0-100... | safe | jack-reson8/skill-skill | skills, authoring, lint, audit | skills, authoring, lint, audit, skill, write, upgrade, claude, so, changes, what, gets |
 | `skill-suggester` | Scan prompt history for recurring patterns and unmet needs, then propose new skills or command templates | safe | mskadu/opencode-agent-skills | skill, suggester | skill, suggester, scan, prompt, history, recurring, unmet, then, propose, new, skills, command |
 | `skill-writer` | Create and improve agent skills following the Agent Skills specification. Use when asked to create, write, or update skills. | critical | community | skill, writer | skill, writer, improve, agent, skills, following, specification, asked, write, update |
 | `the-honoured-one` | Forces the AI to fully load context and read relevant files before performing complex, multi-file tasks, architectural changes, or debugging. Prevents acting... | safe | community | the, honoured, one | the, honoured, one, forces, ai, fully, load, context, read, relevant, files, before |
@@ -2409,6 +2513,23 @@ Total skills: 2750
 | --- | --- | --- | --- | --- | --- |
 | `pptx-deck-creation` | Create editable, production-ready PPTX decks with narrative planning, explicit layout specs, asset guidance, and quality checks. | critical | kimtth/agent-pptify-kit | powerpoint, pptx, presentation, slide-design, document-generation | powerpoint, pptx, presentation, slide-design, document-generation, deck, creation, editable, decks, narrative, planning, explicit |
 
+## on-page optimization (12)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `duplicate-content-checker` | Duplicate Content Checker. Use when working with two or more texts or accessible pages. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, duplicate, content, checker, working, two, texts, accessible, pages |
+| `heading-analyzer` | Heading Analyzer. Use when working with HTML, Markdown or extracted headings. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, heading, analyzer, working, html, markdown, extracted, headings |
+| `image-alt-tag-generator` | Image Alt Tag Generator. Use when working with image or accurate image description and page context. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, image, alt, tag, generator, working, accurate, description, page, context |
+| `internal-link-suggestion-tool` | Internal Link Suggestion Tool. Use when working with source text and available destination pages. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, internal, link, suggestion, working, source, text, available, destination, pages |
+| `internal-linking-planner` | Internal Linking Planner. Use when working with site page inventory and priority user journeys. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, internal, linking, planner, working, site, page, inventory, priority, user, journeys |
+| `meta-description-optimizer` | Meta Description Optimizer. Use when working with existing description and page content or summary. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, meta, description, optimizer, working, existing, page, content, summary |
+| `meta-tag-generator` | Meta Tag Generator. Use when working with page summary, URL and optional brand or social image. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, meta, tag, generator, working, page, summary, url, optional, brand, social |
+| `on-page-seo-audit-checker` | On-Page SEO Audit Checker. Use when working with page URL or HTML and target reader task. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, page, audit, checker, working, url, html, target, reader, task |
+| `readability-score-calculator` | Readability Score Calculator. Use when working with text and language. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, readability, score, calculator, working, text, language |
+| `seo-content-checker` | SEO Content Checker. Use when working with content and target query or reader task. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, content, checker, working, target, query, reader, task |
+| `title-meta-length-counter` | Title & Meta Length Counter. Use when working with title and/or meta description. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, title, meta, length, counter, working, description |
+| `word-count-structure-checker` | Word Count & Structure Checker. Use when working with text or structured article. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, word, count, structure, checker, working, text, structured, article |
+
 ## operations (8)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
@@ -2427,6 +2548,12 @@ Total skills: 2750
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `polis-protocol` | Coordinate multi-vendor AI agents as a self-improving team — a learning router assigns work by track record and citizens can amend the protocol's own rules. | critical | yehudalevy-collab/polis-protocol | multi-agent, coordination, routing, orchestration, governance, vendor-agnostic | multi-agent, coordination, routing, orchestration, governance, vendor-agnostic, polis, protocol, coordinate, multi, vendor, ai |
+
+## payments (1)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `doom-pay` | Add self-custodial DOOM and wDOOM checkout links with DoomPay, then verify payment receipts on Doomsday Network Layer-1 or Base Mainnet. | critical | doomsday-network/doom-pay | payments, crypto, checkout, base-mainnet, mcp, verification | payments, crypto, checkout, base-mainnet, mcp, verification, doom, pay, add, self, custodial, wdoom |
 
 ## pentest-tools (1)
 
@@ -2483,7 +2610,7 @@ Total skills: 2750
 | --- | --- | --- | --- | --- | --- |
 | `idea-os` | Five-phase pipeline (triage → clarify → research → PRD → plan) that turns a raw idea into four linked files: clarifying questions, deep research, a PRD with ... | safe | Slashworks-biz/idea-os | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical, idea, os |
 
-## productivity (57)
+## productivity (58)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2537,6 +2664,7 @@ Total skills: 2750
 | `session-handoff` | Use when context approaches capacity, before /clear or /compact, when switching tasks, or when ending a coding session: produces a structured handoff artifac... | safe | alapha888/session-handoff-kit | context-management, session-handoff, coding-agents, workflow | context-management, session-handoff, coding-agents, workflow, session, handoff, context, approaches, capacity, before, clear, compact |
 | `setup-help` | Walk a user through setup or installation one step at a time with the remaining steps visible. | safe | davidondrej/skills | setup, onboarding, installation | setup, onboarding, installation, walk, user, through, one, step, time, remaining, steps, visible |
 | `speed` | Launch RSVP speed reader for text | critical | community | speed | speed, launch, rsvp, reader, text |
+| `syncbook-discovery` | Find reciprocal collaborators on Syncbook or prepare a private profile draft for human review using only explicitly supplied task facts. | critical | theguysaccount/syncbook-chatgpt | collaboration, networking, mcp, profiles | collaboration, networking, mcp, profiles, syncbook, discovery, find, reciprocal, collaborators, prepare, private, profile |
 | `taasky` | Negotiate terms with another person or their agent through the hosted Taasky MCP server: meeting times, prices, dates. The human confirms every accept, rejec... | critical | https://docs.taasky.ai/.well-known/agent-skills/default/skill.md | taasky, negotiation, scheduling, meetings, mcp, agent-to-agent, telegram | taasky, negotiation, scheduling, meetings, mcp, agent-to-agent, telegram, negotiate, terms, another, person, agent |
 | `telegram-bot-messaging` | Send Telegram messages, files, and alerts via bot API; ask questions with inline buttons and wait for the answer. Supports multiple bots, named chat targets,... | critical | sanjay3290/ai-skills | telegram, notifications, bots, approvals | telegram, notifications, bots, approvals, bot, messaging, send, messages, files, alerts, via, api |
 | `time-ledger` | Natural-language time tracking: parse what the user says they did into Activity/Minutes/Date rows in their own Notion database — asking instead of guessing w... | critical | cruisekkk/time-ledger | time-tracking, notion, quantified-self, productivity, journaling | time-tracking, notion, quantified-self, productivity, journaling, time, ledger, natural, language, tracking, parse, what |
@@ -2544,6 +2672,12 @@ Total skills: 2750
 | `unpaid-intern` | A free second brain for work in plain markdown files the user owns. Turns transcripts, docs, and tickets into briefings, meeting prep, debriefs, follow-ups, ... | critical | kevinmmiddleton/unpaid-intern | second-brain, knowledge-work, meetings, follow-ups, project-status, markdown, productivity | second-brain, knowledge-work, meetings, follow-ups, project-status, markdown, productivity, unpaid, intern, free, second, brain |
 | `usage-engineer` | Cut wasted tokens in coding-agent sessions: compact long logs, stop identical retries, check stale project maps, and audit local Codex/OpenCode usage. | critical | noamshorts22-prog/usage-engineer | tokens, usage, context, logs, cost, codex | tokens, usage, context, logs, cost, codex, engineer, cut, wasted, coding, agent, sessions |
 | `workorai` | WorkorAI talent-marketplace skill: candidates search jobs and manage applications; employers run the job lifecycle and get ranked candidate matches with whit... | critical | work0r-ai/agent-kit | job-search, hiring, recruiting, talent-marketplace, mcp | job-search, hiring, recruiting, talent-marketplace, mcp, workorai, talent, marketplace, skill, candidates, search, jobs |
+
+## project management (1)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `project-brief` | Project Detail Optimizer. Use when working with one sentence, rough notes or an existing project brief. | safe | WHOISABHISHEKADHIKARI/100seotools | pm, tool, documentation | pm, tool, documentation, brief, detail, optimizer, working, one, sentence, rough, notes, existing |
 
 ## project-management (31)
 
@@ -2624,7 +2758,7 @@ Total skills: 2750
 | `tune-monitor` | Analyze a Monte Carlo monitor and recommend config changes to reduce alert noise. Supports metric, custom SQL, validation, and table monitors. Fetches the re... | critical | monte-carlo-data/mc-agent-toolkit | tune, monitor | tune, monitor, analyze, monte, carlo, recommend, config, changes, reduce, alert, noise, supports |
 | `windows-shell-reliability` | Reliable command execution on Windows: paths, encoding, and common binary pitfalls. | safe | community | windows, shell, reliability | windows, shell, reliability, reliable, command, execution, paths, encoding, common, binary, pitfalls |
 
-## research (25)
+## research (26)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2648,6 +2782,7 @@ Total skills: 2750
 | `oss-hunter` | Automatically hunt for high-impact OSS contribution opportunities in trending repositories. | safe | https://github.com/jackjin1997/ClawForge | oss, hunter | oss, hunter, automatically, hunt, high, impact, contribution, opportunities, trending, repositories |
 | `papers-skill` | Skill for academic research workflows: search Semantic Scholar (200M+ papers), inspect citations, download arXiv PDFs, and extract PDF text. Bundles a self-c... | safe | xwmxcz/papers-skill | research, academic, papers, citations, arxiv, semantic-scholar, pdf | research, academic, papers, citations, arxiv, semantic-scholar, pdf, skill, search, semantic, scholar, 200m |
 | `people-data` | Research LinkedIn professional profiles and public business-contact data, including email/phone lookup, people search, and YouTube channel business-email dis... | safe | agentbody/skills | linkedin, youtube, people-search, business-contacts, research | linkedin, youtube, people-search, business-contacts, research, people, data, professional, profiles, public, business, contact |
+| `perq` | Find verified free AI credits, free tiers, startup programs and student perks for AI APIs, GPUs and dev tools, each with the vendor's source link and a last-... | safe | f-o-x11/perq-skill | credits, free-tier, startups, students, mcp | credits, free-tier, startups, students, mcp, perq, find, verified, free, ai, tiers, startup |
 | `pi-web-search` | Give Pi Agents a safe web-search and fetch workflow using the installed pi-web-access package. | safe | davidondrej/skills | web-search, pi-agent, research | web-search, pi-agent, research, pi, web, search, give, agents, safe, fetch, installed, access |
 | `research-prompt` | Turn vague research needs into one precise deep-research prompt with context and output criteria. | safe | davidondrej/skills | research, prompting, briefs | research, prompting, briefs, prompt, turn, vague, one, precise, deep, context, output, criteria |
 | `survey-generator` | Generate source-backed AI/ML survey paper artifacts with curated bibliographies and Fireworks/Kimi HTML rendering. | critical | dair-ai/dair-academy-plugins | dair-academy, ai, workflow | dair-academy, ai, workflow, survey, generator, generate, source, backed, ml, paper, artifacts, curated |
@@ -2659,6 +2794,15 @@ Total skills: 2750
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `reverse-engineering/dsl-vm-reverse` | Reverse JavaScript-based custom DSL/VM interpreters and risk-control engines: identify IIFE/switch-based opcode dispatch, extract opcode tables, and capture ... | critical | zhaoxuya520/reverse-skill | reverse, engineering/dsl, vm | reverse, engineering/dsl, vm, dsl, javascript, custom, interpreters, risk, control, engines, identify, iife |
+
+## schema & structured data (4)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `ai-schema-markup-generator` | Schema Markup Generator. Use when working with entity type or page facts and canonical page URL. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, ai, schema, markup, generator, working, entity, type, page, facts, canonical |
+| `featured-tool-schema-generator` | Featured Tool Schema Generator. Use when working with tool page URL and visible tool capabilities. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, featured, schema, generator, working, page, url, visible, capabilities |
+| `local-schema-builder` | Local Schema Builder. Use when working with business facts, page URL and actual address or service area. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, local, schema, builder, working, business, facts, page, url, actual, address |
+| `structured-data-validator` | Structured Data Validator. Use when working with JSON-LD, Microdata or RDFa source. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, structured, data, validator, working, json, ld, microdata, rdfa, source |
 
 ## science (14)
 
@@ -2679,7 +2823,7 @@ Total skills: 2750
 | `statsmodels` | Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistic... | safe | community | statsmodels | statsmodels, python, premier, library, statistical, modeling, providing, estimation, inference, diagnostics, wide, range |
 | `sympy` | SymPy is a Python library for symbolic mathematics that enables exact computation using mathematical symbols rather than numerical approximations. | safe | https://github.com/sympy/sympy | sympy | sympy, python, library, symbolic, mathematics, enables, exact, computation, mathematical, symbols, rather, than |
 
-## security (267)
+## security (268)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2850,6 +2994,7 @@ Total skills: 2750
 | `mid-engagement-ir-detection` | Methodology for detecting client SOC patches, attacker activity, and security-state changes that occur DURING a red-team engagement | offensive | elementalsouls/Claude-BugHunter | mid, engagement, ir, detection | mid, engagement, ir, detection, methodology, detecting, client, soc, patches, attacker, activity, security |
 | `model-supply-chain-security` | Secure the AI model supply chain with artifact signing, provenance attestation, SBOM workflows, dependency controls, and trusted model promotion. | critical | BagelHole/DevOps-Security-Agent-Skills | model, supply, chain, security | model, supply, chain, security, secure, ai, artifact, signing, provenance, attestation, sbom, dependency |
 | `mtls-configuration` | Configure mutual TLS (mTLS) for zero-trust service-to-service communication. Use when implementing zero-trust networking, certificate management, or securing... | critical | community | mtls, configuration | mtls, configuration, configure, mutual, tls, zero, trust, communication, implementing, networking, certificate, securing |
+| `netapi` | Check domains and IPs against a free compromised feed, find newly registered lookalike domains, and get TLD stats and Top 1M ranks from NetAPI, with no API key. | safe | self | threat-intel, ioc, domains, phishing, osint, dns, registrar, mcp | threat-intel, ioc, domains, phishing, osint, dns, registrar, mcp, netapi, check, ips, against |
 | `nextjs-supabase-auth` | Expert integration of Supabase Auth with Next.js App Router | critical | vibeship-spawner-skills (Apache 2.0) | nextjs, supabase, auth | nextjs, supabase, auth, integration, next, js, app, router |
 | `offensive-osint` | Operational arsenal for authorized external red-team and bug-bounty recon. | offensive | elementalsouls/Claude-BugHunter | offensive, osint | offensive, osint, operational, arsenal, authorized, external, red, team, bug, bounty, recon |
 | `okta-attack` | Okta-as-IdP red-team attack chain | offensive | elementalsouls/Claude-BugHunter | okta, attack | okta, attack, idp, red, team, chain |
@@ -2990,6 +3135,37 @@ Total skills: 2750
 | `social-metadata-hardening` | Fix social sharing previews so URLs render as rich cards on Facebook, LinkedIn, X/Twitter, WhatsApp, Telegram, and more. Covers OG tags, Twitter cards, absol... | safe | self | seo, open-graph, twitter-card, social-sharing, og-image, nextjs, metadata | seo, open-graph, twitter-card, social-sharing, og-image, nextjs, metadata, social, hardening, fix, sharing, previews |
 | `tools-page-seo-optimizer` | Framework-agnostic SEO workflow for any site with multiple tool, product, or feature pages. Covers duplicate content, unique meta tags, heading hierarchy, in... | safe | community | seo, tools-pages, product-pages, duplicate-content, content-registry, meta-tags, internal-linking, url-slugs, e-e-a-t, framework-agnostic | seo, tools-pages, product-pages, duplicate-content, content-registry, meta-tags, internal-linking, url-slugs, e-e-a-t, framework-agnostic, page, optimizer |
 
+## seo performance (10)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `bounce-rate-estimator` | Bounce Rate Estimator. Use when working with sessions and bounced sessions, or sessions and engaged sessions with metric definition. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, bounce, rate, estimator, working, sessions, bounced, engaged, metric, definition |
+| `ctr-predictor` | CTR Predictor. Use when working with impressions and an explicitly supplied CTR assumption or historical benchmark. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, ctr, predictor, working, impressions, explicitly, supplied, assumption, historical, benchmark |
+| `impression-to-click-ratio-calculator` | Impression-to-Click Ratio Calculator. Use when working with clicks and impressions for the same scope. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, impression, click, ratio, calculator, working, clicks, impressions, same, scope |
+| `keyword-roi-calculator` | Keyword ROI Calculator. Use when working with traffic estimate, conversion rate, value per conversion, margin and SEO cost for one period. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, keyword, roi, calculator, working, traffic, estimate, conversion, rate, value, per |
+| `organic-growth-forecast-tool` | Organic Growth Forecast Tool. Use when working with dated traffic history or baseline with explicit growth assumptions. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, organic, growth, forecast, working, dated, traffic, history, baseline, explicit, assumptions |
+| `ranking-progress-tracker` | Ranking Progress Tracker. Use when working with dated keyword positions with engine, market and device. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, ranking, progress, tracker, working, dated, keyword, positions, engine, market, device |
+| `seo-health-score-calculator` | SEO Health Score Calculator. Use when working with audit findings and a disclosed scoring rubric. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, health, score, calculator, working, audit, findings, disclosed, scoring, rubric |
+| `site-comparison-report-generator` | Site Comparison Report Generator. Use when working with two or more sites and the user's comparison goal. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, site, comparison, report, generator, working, two, sites, user, goal |
+| `traffic-potential-calculator` | Traffic Potential Calculator. Use when working with search volume and explicit CTR assumptions for matching period and market. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, traffic, potential, calculator, working, search, volume, explicit, ctr, assumptions, matching |
+| `visibility-index-calculator` | Visibility Index Calculator. Use when working with keyword weights and rank-to-CTR mapping with rankings. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, visibility, index, calculator, working, keyword, weights, rank, ctr, mapping, rankings |
+
+## seo utility (11)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `canonical-url-builder` | Canonical URL Builder. Use when working with preferred page URL and duplicate URL variants. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, canonical, url, builder, working, preferred, page, duplicate, variants |
+| `og-tag-generator` | OG Tag Generator. Use when working with page URL, title, description and optional public image URL. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, og, tag, generator, working, page, url, title, description, optional, public |
+| `redirect-301-generator` | 301 Redirect Generator. Use when working with source-to-destination mapping and deployment platform. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, redirect, 301, generator, working, source, destination, mapping, deployment, platform |
+| `reverse-image-search` | Reverse Image Search. Use when working with image or public image URL. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, reverse, image, search, working, public, url |
+| `robots-txt-creator` | Robots.txt Creator. Use when working with site origin and desired crawl rules. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, robots, txt, creator, working, site, origin, desired, crawl, rules |
+| `search-preview-simulator` | Search Preview Simulator. Use when working with title, description and page URL. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, search, preview, simulator, working, title, description, page, url |
+| `seo-checklist-generator` | SEO Checklist Generator. Use when working with site type and current goal. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, checklist, generator, working, site, type, current, goal |
+| `sitemap-generator` | XML Sitemap Generator. Use when working with canonical public page URLs and optional real modification dates. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, sitemap, generator, xml, working, canonical, public, page, urls, optional, real |
+| `text-to-html-converter` | Text to HTML Converter. Use when working with plain text and optional structure preferences. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, text, html, converter, working, plain, optional, structure, preferences |
+| `text-translator` | Text Translator. Use when working with source text and target language or locale. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, text, translator, working, source, target, language, locale |
+| `url-slug-generator` | URL Slug Generator. Use when working with page title and optional language or URL policy. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, url, slug, generator, working, page, title, optional, language, policy |
+
 ## shopping (5)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
@@ -2999,6 +3175,12 @@ Total skills: 2750
 | `parcel-coupon` | Call parcel/courier coupon API to fetch one-stop logistics service coupons, including smart shipping and smart price matching. Returns coupon links and QR co... | safe | moooai/parcel-coupon | coupons, parcel, courier, sf-express, cainiao | coupons, parcel, courier, sf-express, cainiao, coupon, call, api, fetch, one, stop, logistics |
 | `takeout-coupon` | Call takeout coupon API to fetch hidden coupon lists, red packets and aggregated redemption pages for platforms (Meituan, Taobao Flash/Ele.me, JD.com). Retur... | critical | moooai/takeout-coupon | coupons, takeout, food-delivery, meituan, eleme | coupons, takeout, food-delivery, meituan, eleme, coupon, call, api, fetch, hidden, lists, red |
 | `trip-coupon` | Call trip/travel coupon API to fetch travel coupons including DiDi ride-hailing gift packages and hotel coupon bundles. Returns coupon links and QR code imag... | critical | moooai/trip-coupon | coupons, travel, didi, hotel, ride-hailing | coupons, travel, didi, hotel, ride-hailing, trip, coupon, call, api, fetch, including, ride |
+
+## skill discovery (1)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `selector` | Select a specialized 100seotools skill from a plain-language SEO or project-documentation request. Use when the user needs help choosing the appropriate work... | safe | WHOISABHISHEKADHIKARI/100seotools | seo, discovery, workflow | seo, discovery, workflow, selector, select, specialized, 100seotools, skill, plain, language, documentation, request |
 
 ## skill-authoring (2)
 
@@ -3035,6 +3217,20 @@ Total skills: 2750
 | `super-code/scala` | Language-specific super-code guidelines for scala. | safe | community | super, code/scala | super, code/scala, scala, language, specific, code, guidelines |
 | `super-code/swift` | Language-specific super-code guidelines for swift. | safe | community | super, code/swift | super, code/swift, swift, language, specific, code, guidelines |
 | `super-code/typescript` | Language-specific super-code guidelines for typescript. | safe | community | super, code/typescript | super, code/typescript, typescript, language, specific, code, guidelines |
+
+## technical seo (9)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `broken-link-finder` | Broken Link Finder. Use when working with page URL, HTML or a list of links. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, broken, link, finder, working, page, url, html, list, links |
+| `canonical-tag-checker` | Canonical Tag Checker. Use when working with HTML and page URL, or accessible page URL. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, canonical, tag, checker, working, html, page, url, accessible |
+| `hreflang-tag-generator` | Hreflang Tag Generator. Use when working with equivalent page URLs mapped to language and optional region. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, hreflang, tag, generator, working, equivalent, page, urls, mapped, language, optional |
+| `http-status-code-tester` | HTTP Status Code Tester. Use when working with one or more HTTP(S) URLs. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, http, status, code, tester, working, one, urls |
+| `mobile-friendly-test` | Mobile-Friendly Test. Use when working with accessible page or supplied screenshots and HTML. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, mobile, friendly, test, working, accessible, page, supplied, screenshots, html |
+| `page-speed-score-simulator` | Page Speed Score Simulator. Use when working with performance report or explicit hypothetical performance inputs. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, page, speed, score, simulator, working, performance, report, explicit, hypothetical, inputs |
+| `redirect-checker` | Redirect Checker. Use when working with URL or recorded response chain. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, redirect, checker, working, url, recorded, response, chain |
+| `robots-txt-validator` | Robots.txt Validator. Use when working with robots.txt text, crawler and URLs to test. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, robots, txt, validator, working, text, crawler, urls, test |
+| `xml-sitemap-visualizer` | XML Sitemap Visualizer. Use when working with XML sitemap or sitemap index. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, xml, sitemap, visualizer, working, index |
 
 ## test-automation (9)
 
@@ -3319,10 +3515,11 @@ Total skills: 2750
 | `testing-qa` | Comprehensive testing and QA workflow covering unit testing, integration testing, E2E testing, browser automation, and quality assurance. | safe | personal | qa | qa, testing, covering, unit, integration, e2e, browser, automation, quality, assurance |
 | `wordpress` | WordPress development workflow covering theme development, plugin creation, WooCommerce integration, performance optimization, and security hardening. Includ... | critical | personal | wordpress | wordpress, development, covering, theme, plugin, creation, woocommerce, integration, performance, optimization, security, hardening |
 
-## writing (5)
+## writing (6)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `bluebook-writing` | Write design-reading books and articles in plain language with a two-layer skeleton: a zero-terminology everyday story first, then the professional layer wit... | safe | TobeMagic/deepseek-harness-bluebook | writing, plain-language, design-reading, documentation, technical-communication | writing, plain-language, design-reading, documentation, technical-communication, bluebook, write, reading, books, articles, plain, language |
 | `bulletmind` | Convert input into clean, structured, hierarchical bullet points for summarization, note-taking, and structured thinking. | safe | community | writing, summarization, note-taking, formatting, structured-output | writing, summarization, note-taking, formatting, structured-output, bulletmind, convert, input, clean, structured, hierarchical, bullet |
 | `email-issue-fixer` | Fix small email mistakes without touching the writer's voice, and strip tracking parameters from links on request. Always returns the corrected draft plus a ... | safe | self | email, proofreading, grammar, links | email, proofreading, grammar, links, issue, fixer, fix, small, mistakes, without, touching, writer |
 | `short` | Rewrite the previous response more briefly while preserving the substance. | safe | davidondrej/skills | writing, editing, concise | writing, editing, concise, short, rewrite, previous, response, briefly, while, preserving, substance |

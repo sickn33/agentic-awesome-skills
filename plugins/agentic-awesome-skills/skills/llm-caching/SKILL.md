@@ -196,6 +196,27 @@ def smart_llm_call(query: str, model: str = "gpt-4o-mini") -> dict:
     return {"response": text, "source": "llm_api", "cost": cost}
 ```
 
+## Gateway-Level Semantic Cache
+
+If LLM traffic already goes through a gateway (see `llm-gateway`), the semantic cache can live there instead of in each application. LiteLLM's `cache: true` setting is one option; Bifrost's `semantic_cache` plugin is another. Bifrost checks an exact-match hash first and runs the vector similarity search only on a miss. It needs a vector store (RediSearch-compatible Redis/Valkey, Weaviate, Qdrant or Pinecone) and an embedding model for the semantic path, and it only caches requests that carry a cache key (the `x-bf-cache-key` header, or a configured `default_cache_key`).
+
+```json
+{
+  "vector_store": { "enabled": true, "type": "redis", "config": { "addr": "redis:6379" } },
+  "plugins": [{
+    "enabled": true,
+    "name": "semantic_cache",
+    "config": {
+      "provider": "openai",
+      "embedding_model": "text-embedding-3-small",
+      "dimension": 1536,
+      "threshold": 0.85,
+      "ttl": "1h"
+    }
+  }]
+}
+```
+
 ## Layer 3: Provider-Side Prompt Caching
 
 ```python

@@ -4,7 +4,7 @@ Agent-focused map of the `pxt` CLI. Official source: [platform/cli.md](https://d
 
 CLI table paths use `/` only, for example `my_app/docs`. A dotted path such as `my_app.docs` is a Python SDK convenience (`pxt.get_table('my_app.docs')`) and is not a CLI argument.
 
-Python 3.11+. There is no `pxt serve`, no `pxt deploy`, no `pxt app`, no `pxt db create` (`pxt db update` creates), and no `[tool.pixeltable.service]` TOML.
+Python 3.11+. There is no `pxt serve`, no `pxt deploy`, no `pxt app`, no `pxt db create` (`pxt db update` creates), and no `[tool.pixeltable.service]` TOML. Hosted service size is `[pixeltable.database.services.'<path>']`.
 
 ## Two surfaces
 
@@ -26,6 +26,8 @@ pxt service update app.py my_app -f  # starts local HTTP; does NOT create tables
 ```
 
 Without a TTY, a pending `service update` exits 3 unless given `-f`, even a first start. An additive or no-op `schema update` does not prompt.
+
+Exit codes (0.7.20+): `0` done, `1` error (a usage error too, in `schema`, `service`, `db` and `init`), `2` a usage error anywhere else (for example `pxt feedback` without `--kind`), pending changes on a `schema`/`service`/`db` plan (`diff`, `-n`), or a hosted change still under way after the three-hour wait, `3` refused for want of `-f` or `--allow-destructive`, or declined at the prompt. Catalog dry runs such as `pxt drop PATH -n` exit `0`. A failed request ends with its code, as in `[TABLE_NOT_FOUND]`, and with `--json` prints `{"error_code", "message", "retryable"}`, plus `retry_after` when Cloud gives a wait. A refusal only the user can lift (`PLAN_LIMIT`, `PAYMENT_REQUIRED`, `STORE_FULL`) prints Cloud's reason alone: tell the user rather than retrying. `next:` lines on stderr name the command that finishes the job.
 
 `my_app` is a catalog directory, not a folder on disk. After apply: `t = pxt.get_table('my_app.docs')`. Cloud: `t = pxt.get_table('pxt://org:db/docs')`. Tables live under `~/.pixeltable`, not in the repo. Directory names from the project root to `app.py` must be Python identifiers. Do not `python app.py` if the file only declares models and routers. After a schema change, run `pxt service update` again if routes exist.
 
@@ -56,10 +58,10 @@ The daemon reads `config.toml` and the environment once, at startup, and local s
 | Flag | Description |
 |------|-------------|
 | `-h`, `--help` | Every command |
-| `--json` | Machine-readable output on catalog commands, `init`, the `schema` / `service` verbs other than `example`, `login`, `whoami`, `db`, `org`, `secret`, `key`, `daemon status`. Not on `shell`, `dashboard`, `logout`, or `daemon start`/`stop`/`restart`. `health` is always JSON. |
+| `--json` | Machine-readable output on catalog commands, `init`, the `schema` / `service` verbs other than `example`, `login`, `whoami`, `db`, `org`, `secret`, `key`, `usage`, `feedback`, `daemon status`. Not on `shell`, `dashboard`, `logout`, or `daemon start`/`stop`/`restart`. `health` is always JSON. |
 | `--json-schema` | `schema diff`, `service diff`, `service list`, `db diff`, `db status`: print the JSON Schema of that command's `--json` output, every field and enum value described, and exit. Takes no other argument |
 | `-n`, `--dry-run` | Catalog mutations (`drop`, `drop-dir`, `rename`, `mv`, `recompute`, `revert`) plus `schema update`, `schema prune`, `service update`, `service prune`, and `db update` |
-| `-f`, `--force` | Skip `[y/N]` on `drop`, `drop-dir`, `recompute`, `revert`, schema/service update and prune, `db update`, and `db delete`. Use it in non-interactive runs when a pending plan can prompt. Additive or no-op schema updates do not prompt. Not on `rename`/`mv`. |
+| `-f`, `--force` | Skip `[y/N]` on `drop`, `drop-dir`, `recompute`, `revert`, schema/service update and prune, `db update`, and `db delete`. Use it in non-interactive runs when a pending plan can prompt. Additive or no-op schema updates do not prompt. Not on `rename`/`mv`. Without it and without a TTY, a confirmation prompt exits 3 and prints `next: <the same command with -f>  # <what it does>`. A destructive plan refused for want of `--allow-destructive` prints `next:` with `--allow-destructive`, and also `-f` when there is no TTY. With `--json`, catalog commands print `{"error_code": "CONFIRMATION_REQUIRED", ..., "next": [{"command", "effect"}]}`. `schema`, `service`, and `db update` print the refused plan instead of that document. |
 
 ## Agent workflows
 
@@ -80,6 +82,7 @@ The daemon reads `config.toml` and the environment once, at startup, and local s
 | Many commands in sequence | `pxt shell` | amortizes startup; errors don't kill session |
 | Visual inspection | `pxt dashboard` | read-only UI at daemon port |
 | Hosted database | `pxt db update` | `pxt db update pxt://myorg:mydb -f`, then schema, then service |
+| Report a gap or bug | `pxt feedback` (0.7.20+) | `pxt feedback --kind gap '...'` previews and sends nothing; add `--send` only after the user agrees. With `DO_NOT_TRACK` set to `1`, `true`, or `yes` (trimmed, case-insensitive), `--send` exits 3 with no `next:`; any other value, including empty, still sends |
 
 **SDK vs CLI:** Notebooks and one-off REPL use the Python SDK (`create_table`, `add_computed_column`). Apps use a `TableModel` file plus `pxt schema` / `pxt service`. Use CLI for inspect, debug, and CI drift checks.
 
@@ -125,7 +128,7 @@ pxt dashboard
 
 - **`pxt rows`**: `-n N` (default 10), `--cols a,b,c`. Unstored computed columns skipped unless listed in `--cols` (forces eval).
 - **`pxt get`**: PK lookup; composite PKs in declared order. Table must have a primary key.
-- **`pxt errors`**: rows where stored computed columns failed; `--col NAME` to filter. Table must have a primary key.
+- **`pxt errors`**: rows where stored computed columns failed; `--col NAME` to filter. Table must have a primary key. On 0.7.20+ it prints a `next:` recompute for each recomputable failed column. A snapshot column names no recompute.
 
 ## Mutation highlights
 
@@ -226,7 +229,7 @@ A service binds its tables when it starts. After `pxt schema update` changes one
 
 **Tracing.** `service diff`, `service update` and `service run` take `--otel`, which emits OpenTelemetry traces and needs `a separately reviewed Pixeltable runtime with the otel extra` (`serve` and `otel` are the only two extras). The setting belongs to the running service, not to the file: a service already running without it restarts when `update` is given the flag, dropping the flag restarts it again, and `diff --otel` reports tracing that is off but was asked for as a pending change.
 
-Do **not** write `[tool.pixeltable.service]` TOML or call `pxt serve`.
+Do **not** write `[tool.pixeltable.service]` TOML or call `pxt serve`. Size a hosted service in `pixeltable.toml` with `[pixeltable.database.services.'<path>']` (`cpu`, `memory_mb`, `workers`, `file_cache_gb`). The path is the service URL path `'<base path>/<service name>'`, or the name alone at the database root. Put that table after the hosted `[[pixeltable.database]]` entry it belongs to. `pxt service update` applies it. A `workers` change needs no restart. A setting left out keeps the current value.
 
 ## Cloud (`pxt login`, `pxt db`, `pxt org`, `pxt secret`, `pxt key`)
 
@@ -240,9 +243,9 @@ pxt org status pxt://myorg         # also: create, list
 pxt key create ci                  # a key that acts as you; its secret prints once
 ```
 
-`pxt db update pxt://org:db` selects `[[pixeltable.database]]` by `name = 'pxt://org:db'`. A URI with no matching entry is an error. First `update` creates the hosted database. `pxt db delete` is irreversible and takes the storage with it; without a TTY it exits 3 unless given `-f`.
+`pxt db update pxt://org:db` selects `[[pixeltable.database]]` by `name = 'pxt://org:db'`. A URI with no matching entry is an error; the error suggests `pxt db diff <uri> --add-config-entry`. Prefer that flag on `diff` or `update` over a hand-edited entry. It appends a new `[[pixeltable.database]]` block with `name = '<uri>'` in lowercase unless one already matches (matching ignores case). The append happens on `diff` as well as `update`. A hand edit of the existing local block sets `name` on that entry instead of adding a hosted one. `diff --add-config-entry` then previews a first deployment; `update --add-config-entry` creates it in one command. First `update` creates the hosted database. `pxt db delete` is irreversible and takes the storage with it; without a TTY it exits 3 unless given `-f`.
 
-Hosted order: `pxt db update pxt://org:db -f` uploads the project and sets image and workers, then `pxt schema update app.py pxt://org:db -f`, then `pxt service update app.py pxt://org:db -f`. Taking capacity away requires `--allow-destructive`. If `pxt db diff` says the database project is behind the working copy, run `pxt db update` first.
+Hosted order: `pxt db update pxt://org:db -f` uploads the project and sets image and workers, then `pxt schema update app.py pxt://org:db -f`, then `pxt service update app.py pxt://org:db -f`. Non-secret settings (`vars`, `db_*`, sections such as `[openai]`) reach a hosted database without an upload; `pxt db diff --json` reports those changes under target `config`. A secret key such as `[openai] api_key` is refused. Taking capacity away requires `--allow-destructive`. If `pxt db diff` says the database project is behind the working copy, run `pxt db update` first.
 
 `pxt db update`, `start`, `stop`, `restart`, `retry`, `build-image` and `delete` wait until Cloud has applied the change, showing the step and what it waits for. Cloud carries on with an accepted change even if the command stops: Ctrl-C or a timed-out tool call stops only the waiting. An agent whose tool calls time out passes `--no-wait` and follows with `pxt db status pxt://org:db`. After three hours the command exits 2 with the change still under way. A failed update names its fix: `pxt db retry pxt://org:db` or `pxt service retry pxt://org:db/NAME` retries it unchanged, and rerunning the same `pxt db update` does too. An update refused because the database changed after its plan is run again as is.
 
@@ -260,7 +263,7 @@ Optional Cloud MCP: when a Cloud user wants the agent to inspect or operate thei
 pxt secret set pxt://myorg OPENAI_API_KEY=<your-key>    # also: list, delete
 ```
 
-An org secret applies to every database in the org; a database secret wins on a key collision. The `PIXELTABLE_` prefix is reserved, so such a name is refused. Secrets are set with `pxt secret`, never in `pixeltable.toml`: a `[[pixeltable.database]]` entry with a `secrets` mapping fails to load. A process reads its secrets once, at startup, so a running one keeps the values it began with. After `pxt secret set` or `pxt secret delete`, run `pxt db restart pxt://org:db` for the database's tables and `pxt service restart pxt://org:db/NAME` for its services; both keep the old pods serving until the new ones are ready. Never ask the user to paste a secret's value into the chat: give them `pxt secret set pxt://org KEY=<value>` to run in their own terminal.
+An org secret applies to every database in the org; a database secret wins on a key collision. The `PIXELTABLE_` prefix is reserved, so such a name is refused. Secrets are set with `pxt secret`, never in `pixeltable.toml`: a `[[pixeltable.database]]` entry with a `secrets` mapping fails to load, and for a hosted database `pxt db update` also refuses a secret key such as `[openai] api_key`. A process reads its secrets once, at startup, so a running one keeps the values it began with. After `pxt secret set` or `pxt secret delete`, run `pxt db restart pxt://org:db` for the database's tables and `pxt service restart pxt://org:db/NAME` for its services; both keep the old pods serving until the new ones are ready. Never ask the user to paste a secret's value into the chat: give them `pxt secret set pxt://org KEY=<value>` to run in their own terminal.
 
 ## Scripting with `--json`
 

@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-24T08:21:30.000Z",
-  "total": 2750,
+  "generatedAt": "2026-10-27T08:28:40.000Z",
+  "total": 2872,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -2713,6 +2713,35 @@
       "path": "skills/ai-audiobook-narration/SKILL.md"
     },
     {
+      "id": "ai-blog-intro-writer",
+      "canonical_id": "ai-blog-intro-writer",
+      "name": "ai-blog-intro-writer",
+      "description": "AI Blog Intro Writer. Use when working with topic and article angle, or article draft.",
+      "category": "ai-powered seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "ai",
+        "blog",
+        "intro",
+        "writer",
+        "working",
+        "topic",
+        "article",
+        "angle",
+        "draft"
+      ],
+      "path": "skills/ai-blog-intro-writer/SKILL.md"
+    },
+    {
       "id": "ai-code-generation-guardrails",
       "canonical_id": "ai-code-generation-guardrails",
       "name": "ai-code-generation-guardrails",
@@ -2779,6 +2808,113 @@
         "permission"
       ],
       "path": "skills/ai-coding-agent-guardrails/SKILL.md"
+    },
+    {
+      "id": "ai-competitor-title-rewriter",
+      "canonical_id": "ai-competitor-title-rewriter",
+      "name": "ai-competitor-title-rewriter",
+      "description": "AI Competitor Title Rewriter. Use when working with competitor title and your page topic.",
+      "category": "ai-powered seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "ai",
+        "competitor",
+        "title",
+        "rewriter",
+        "working",
+        "page",
+        "topic"
+      ],
+      "path": "skills/ai-competitor-title-rewriter/SKILL.md"
+    },
+    {
+      "id": "ai-content-detector",
+      "canonical_id": "ai-content-detector",
+      "name": "ai-content-detector",
+      "description": "AI Content Detector. Use when working with text to review.",
+      "category": "ai-powered seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "ai",
+        "content",
+        "detector",
+        "working",
+        "text",
+        "review"
+      ],
+      "path": "skills/ai-content-detector/SKILL.md"
+    },
+    {
+      "id": "ai-content-improver",
+      "canonical_id": "ai-content-improver",
+      "name": "ai-content-improver",
+      "description": "AI Content Improver. Use when working with draft text.",
+      "category": "ai-powered seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "ai",
+        "content",
+        "improver",
+        "working",
+        "draft",
+        "text"
+      ],
+      "path": "skills/ai-content-improver/SKILL.md"
+    },
+    {
+      "id": "ai-content-outline-generator",
+      "canonical_id": "ai-content-outline-generator",
+      "name": "ai-content-outline-generator",
+      "description": "AI Content Outline Generator. Use when working with topic or reader question.",
+      "category": "ai-powered seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "ai",
+        "content",
+        "outline",
+        "generator",
+        "working",
+        "topic",
+        "reader",
+        "question"
+      ],
+      "path": "skills/ai-content-outline-generator/SKILL.md"
     },
     {
       "id": "ai-dev-jobs-mcp",
@@ -2872,6 +3008,33 @@
         "prompt"
       ],
       "path": "skills/ai-engineering-toolkit/SKILL.md"
+    },
+    {
+      "id": "ai-faq-creator",
+      "canonical_id": "ai-faq-creator",
+      "name": "ai-faq-creator",
+      "description": "AI FAQ Creator. Use when working with source content or topic.",
+      "category": "ai-powered seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "ai",
+        "faq",
+        "creator",
+        "working",
+        "source",
+        "content",
+        "topic"
+      ],
+      "path": "skills/ai-faq-creator/SKILL.md"
     },
     {
       "id": "ai-headshot-studio",
@@ -3014,6 +3177,31 @@
       "path": "skills/ai-inference-service-mesh/SKILL.md"
     },
     {
+      "id": "ai-keyword-explainer",
+      "canonical_id": "ai-keyword-explainer",
+      "name": "ai-keyword-explainer",
+      "description": "AI Keyword Explainer. Use when working with keyword or phrase.",
+      "category": "ai-powered seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "ai",
+        "keyword",
+        "explainer",
+        "working",
+        "phrase"
+      ],
+      "path": "skills/ai-keyword-explainer/SKILL.md"
+    },
+    {
       "id": "ai-logo-maker",
       "canonical_id": "ai-logo-maker",
       "name": "ai-logo-maker",
@@ -3108,6 +3296,35 @@
         "evaluate"
       ],
       "path": "skills/ai-md/SKILL.md"
+    },
+    {
+      "id": "ai-meta-tag-writer",
+      "canonical_id": "ai-meta-tag-writer",
+      "name": "ai-meta-tag-writer",
+      "description": "AI Meta Tag Writer. Use when working with page copy or factual page summary.",
+      "category": "ai-powered seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "ai",
+        "meta",
+        "tag",
+        "writer",
+        "working",
+        "page",
+        "copy",
+        "factual",
+        "summary"
+      ],
+      "path": "skills/ai-meta-tag-writer/SKILL.md"
     },
     {
       "id": "ai-ml",
@@ -3400,6 +3617,64 @@
       "path": "skills/ai-red-teaming/SKILL.md"
     },
     {
+      "id": "ai-schema-generator",
+      "canonical_id": "ai-schema-generator",
+      "name": "ai-schema-generator",
+      "description": "AI Schema Generator. Use when working with visible page content and page URL.",
+      "category": "ai-powered seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "ai",
+        "schema",
+        "generator",
+        "working",
+        "visible",
+        "page",
+        "content",
+        "url"
+      ],
+      "path": "skills/ai-schema-generator/SKILL.md"
+    },
+    {
+      "id": "ai-schema-markup-generator",
+      "canonical_id": "ai-schema-markup-generator",
+      "name": "ai-schema-markup-generator",
+      "description": "Schema Markup Generator. Use when working with entity type or page facts and canonical page URL.",
+      "category": "schema & structured data",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "ai",
+        "schema",
+        "markup",
+        "generator",
+        "working",
+        "entity",
+        "type",
+        "page",
+        "facts",
+        "canonical"
+      ],
+      "path": "skills/ai-schema-markup-generator/SKILL.md"
+    },
+    {
       "id": "ai-security-hardening",
       "canonical_id": "ai-security-hardening",
       "name": "ai-security-hardening",
@@ -3459,6 +3734,34 @@
         "gemini"
       ],
       "path": "skills/ai-seo/SKILL.md"
+    },
+    {
+      "id": "ai-snippet-generator",
+      "canonical_id": "ai-snippet-generator",
+      "name": "ai-snippet-generator",
+      "description": "AI Snippet Generator. Use when working with question and supporting source text.",
+      "category": "ai-powered seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "ai",
+        "snippet",
+        "generator",
+        "working",
+        "question",
+        "supporting",
+        "source",
+        "text"
+      ],
+      "path": "skills/ai-snippet-generator/SKILL.md"
     },
     {
       "id": "ai-sre-incident-response",
@@ -4129,6 +4432,32 @@
         "antigravity"
       ],
       "path": "skills/analyze-project/SKILL.md"
+    },
+    {
+      "id": "anchor-text-analyzer",
+      "canonical_id": "anchor-text-analyzer",
+      "name": "anchor-text-analyzer",
+      "description": "Anchor Text Analyzer. Use when working with links with anchor text and destinations.",
+      "category": "backlink & link-building",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "anchor",
+        "text",
+        "analyzer",
+        "working",
+        "links",
+        "destinations"
+      ],
+      "path": "skills/anchor-text-analyzer/SKILL.md"
     },
     {
       "id": "andrej-karpathy",
@@ -12610,6 +12939,62 @@
       "path": "skills/backend-security-coder/SKILL.md"
     },
     {
+      "id": "backlink-idea-generator",
+      "canonical_id": "backlink-idea-generator",
+      "name": "backlink-idea-generator",
+      "description": "Backlink Idea Generator. Use when working with site topic and target audience.",
+      "category": "backlink & link-building",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "backlink",
+        "idea",
+        "generator",
+        "working",
+        "site",
+        "topic",
+        "target",
+        "audience"
+      ],
+      "path": "skills/backlink-idea-generator/SKILL.md"
+    },
+    {
+      "id": "backlink-tracking-template-generator",
+      "canonical_id": "backlink-tracking-template-generator",
+      "name": "backlink-tracking-template-generator",
+      "description": "Backlink Tracking Template Generator. Use when working with tracking goal; existing rows optional.",
+      "category": "backlink & link-building",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "backlink",
+        "tracking",
+        "generator",
+        "working",
+        "goal",
+        "existing",
+        "rows",
+        "optional"
+      ],
+      "path": "skills/backlink-tracking-template-generator/SKILL.md"
+    },
+    {
       "id": "backtesting-frameworks",
       "canonical_id": "backtesting-frameworks",
       "name": "backtesting-frameworks",
@@ -13513,6 +13898,33 @@
       "path": "skills/blockrun/SKILL.md"
     },
     {
+      "id": "blog-title-generator",
+      "canonical_id": "blog-title-generator",
+      "name": "blog-title-generator",
+      "description": "Blog Title Generator. Use when working with topic or page summary.",
+      "category": "content seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "blog",
+        "title",
+        "generator",
+        "working",
+        "topic",
+        "page",
+        "summary"
+      ],
+      "path": "skills/blog-title-generator/SKILL.md"
+    },
+    {
       "id": "blog-writing-guide",
       "canonical_id": "blog-writing-guide",
       "name": "blog-writing-guide",
@@ -13571,6 +13983,41 @@
         "deployments"
       ],
       "path": "skills/blue-green-deploy/SKILL.md"
+    },
+    {
+      "id": "bluebook-writing",
+      "canonical_id": "bluebook-writing",
+      "name": "bluebook-writing",
+      "description": "Write design-reading books and articles in plain language with a two-layer skeleton: a zero-terminology everyday story first, then the professional layer with formal names, mechanisms, boundaries, and costs. Use when explaining unfamiliar systems to non-programmers.",
+      "category": "writing",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "TobeMagic/deepseek-harness-bluebook",
+      "license": "MIT",
+      "license_source": "https://github.com/TobeMagic/deepseek-harness-bluebook/blob/main/LICENSE",
+      "tags": [
+        "writing",
+        "plain-language",
+        "design-reading",
+        "documentation",
+        "technical-communication"
+      ],
+      "triggers": [
+        "writing",
+        "plain-language",
+        "design-reading",
+        "documentation",
+        "technical-communication",
+        "bluebook",
+        "write",
+        "reading",
+        "books",
+        "articles",
+        "plain",
+        "language"
+      ],
+      "path": "skills/bluebook-writing/SKILL.md"
     },
     {
       "id": "blueprint",
@@ -13670,6 +14117,35 @@
         "tcp"
       ],
       "path": "skills/boost-asio-pro/SKILL.md"
+    },
+    {
+      "id": "bounce-rate-estimator",
+      "canonical_id": "bounce-rate-estimator",
+      "name": "bounce-rate-estimator",
+      "description": "Bounce Rate Estimator. Use when working with sessions and bounced sessions, or sessions and engaged sessions with metric definition.",
+      "category": "seo performance",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "bounce",
+        "rate",
+        "estimator",
+        "working",
+        "sessions",
+        "bounced",
+        "engaged",
+        "metric",
+        "definition"
+      ],
+      "path": "skills/bounce-rate-estimator/SKILL.md"
     },
     {
       "id": "box-automation",
@@ -14112,6 +14588,35 @@
         "top"
       ],
       "path": "skills/broken-authentication/SKILL.md"
+    },
+    {
+      "id": "broken-link-finder",
+      "canonical_id": "broken-link-finder",
+      "name": "broken-link-finder",
+      "description": "Broken Link Finder. Use when working with page URL, HTML or a list of links.",
+      "category": "technical seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "broken",
+        "link",
+        "finder",
+        "working",
+        "page",
+        "url",
+        "html",
+        "list",
+        "links"
+      ],
+      "path": "skills/broken-link-finder/SKILL.md"
     },
     {
       "id": "brooks-audit",
@@ -15644,6 +16149,62 @@
         "prospect"
       ],
       "path": "skills/candidate-talent-pool/SKILL.md"
+    },
+    {
+      "id": "canonical-tag-checker",
+      "canonical_id": "canonical-tag-checker",
+      "name": "canonical-tag-checker",
+      "description": "Canonical Tag Checker. Use when working with HTML and page URL, or accessible page URL.",
+      "category": "technical seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "canonical",
+        "tag",
+        "checker",
+        "working",
+        "html",
+        "page",
+        "url",
+        "accessible"
+      ],
+      "path": "skills/canonical-tag-checker/SKILL.md"
+    },
+    {
+      "id": "canonical-url-builder",
+      "canonical_id": "canonical-url-builder",
+      "name": "canonical-url-builder",
+      "description": "Canonical URL Builder. Use when working with preferred page URL and duplicate URL variants.",
+      "category": "seo utility",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "canonical",
+        "url",
+        "builder",
+        "working",
+        "preferred",
+        "page",
+        "duplicate",
+        "variants"
+      ],
+      "path": "skills/canonical-url-builder/SKILL.md"
     },
     {
       "id": "canva-automation",
@@ -19303,6 +19864,90 @@
       "path": "skills/competitor-analysis/SKILL.md"
     },
     {
+      "id": "competitor-backlink-idea-generator",
+      "canonical_id": "competitor-backlink-idea-generator",
+      "name": "competitor-backlink-idea-generator",
+      "description": "Competitor Backlink Idea Generator. Use when working with your niche and competitor backlink examples or export.",
+      "category": "competitor analysis",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "competitor",
+        "backlink",
+        "idea",
+        "generator",
+        "working",
+        "niche",
+        "examples",
+        "export"
+      ],
+      "path": "skills/competitor-backlink-idea-generator/SKILL.md"
+    },
+    {
+      "id": "competitor-gap-analyzer",
+      "canonical_id": "competitor-gap-analyzer",
+      "name": "competitor-gap-analyzer",
+      "description": "Competitor Gap Analyzer. Use when working with your offering and at least one competitor profile.",
+      "category": "competitor analysis",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "competitor",
+        "gap",
+        "analyzer",
+        "working",
+        "offering",
+        "least",
+        "one",
+        "profile"
+      ],
+      "path": "skills/competitor-gap-analyzer/SKILL.md"
+    },
+    {
+      "id": "competitor-keyword-overlap-checker",
+      "canonical_id": "competitor-keyword-overlap-checker",
+      "name": "competitor-keyword-overlap-checker",
+      "description": "Competitor Keyword Overlap Checker. Use when working with two labeled keyword sets.",
+      "category": "competitor analysis",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "competitor",
+        "keyword",
+        "overlap",
+        "checker",
+        "working",
+        "two",
+        "labeled",
+        "sets"
+      ],
+      "path": "skills/competitor-keyword-overlap-checker/SKILL.md"
+    },
+    {
       "id": "competitor-profiling",
       "canonical_id": "competitor-profiling",
       "name": "competitor-profiling",
@@ -19330,6 +19975,35 @@
         "urls"
       ],
       "path": "skills/competitor-profiling/SKILL.md"
+    },
+    {
+      "id": "competitor-summary-report-creator",
+      "canonical_id": "competitor-summary-report-creator",
+      "name": "competitor-summary-report-creator",
+      "description": "Competitor Summary Report Creator. Use when working with competitor names or URLs and evidence to summarize.",
+      "category": "competitor analysis",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "competitor",
+        "summary",
+        "report",
+        "creator",
+        "working",
+        "names",
+        "urls",
+        "evidence",
+        "summarize"
+      ],
+      "path": "skills/competitor-summary-report-creator/SKILL.md"
     },
     {
       "id": "competitor-tracking",
@@ -20018,6 +20692,91 @@
         "diagnostics"
       ],
       "path": "skills/content-creator/SKILL.md"
+    },
+    {
+      "id": "content-freshness-checker",
+      "canonical_id": "content-freshness-checker",
+      "name": "content-freshness-checker",
+      "description": "Content Freshness Checker. Use when working with content and known publication or update date if available.",
+      "category": "content seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "content",
+        "freshness",
+        "checker",
+        "working",
+        "known",
+        "publication",
+        "update",
+        "date",
+        "available"
+      ],
+      "path": "skills/content-freshness-checker/SKILL.md"
+    },
+    {
+      "id": "content-gap-finder",
+      "canonical_id": "content-gap-finder",
+      "name": "content-gap-finder",
+      "description": "Content Gap Finder. Use when working with existing content inventory and audience goal.",
+      "category": "content seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "content",
+        "gap",
+        "finder",
+        "working",
+        "existing",
+        "inventory",
+        "audience",
+        "goal"
+      ],
+      "path": "skills/content-gap-finder/SKILL.md"
+    },
+    {
+      "id": "content-length-comparator",
+      "canonical_id": "content-length-comparator",
+      "name": "content-length-comparator",
+      "description": "Content Length Comparator. Use when working with two or more labeled text samples.",
+      "category": "competitor analysis",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "content",
+        "length",
+        "comparator",
+        "working",
+        "two",
+        "labeled",
+        "text",
+        "samples"
+      ],
+      "path": "skills/content-length-comparator/SKILL.md"
     },
     {
       "id": "content-marketer",
@@ -21815,6 +22574,35 @@
         "list"
       ],
       "path": "skills/csv-manual-export/SKILL.md"
+    },
+    {
+      "id": "ctr-predictor",
+      "canonical_id": "ctr-predictor",
+      "name": "ctr-predictor",
+      "description": "CTR Predictor. Use when working with impressions and an explicitly supplied CTR assumption or historical benchmark.",
+      "category": "seo performance",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "ctr",
+        "predictor",
+        "working",
+        "impressions",
+        "explicitly",
+        "supplied",
+        "assumption",
+        "historical",
+        "benchmark"
+      ],
+      "path": "skills/ctr-predictor/SKILL.md"
     },
     {
       "id": "cucumber-skill",
@@ -27569,6 +28357,63 @@
       "path": "skills/docusign-automation/SKILL.md"
     },
     {
+      "id": "domain-authority-simulator",
+      "canonical_id": "domain-authority-simulator",
+      "name": "domain-authority-simulator",
+      "description": "Domain Authority Simulator. Use when working with domain signals and an explicit scoring rubric.",
+      "category": "backlink & link-building",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "domain",
+        "authority",
+        "simulator",
+        "working",
+        "signals",
+        "explicit",
+        "scoring",
+        "rubric"
+      ],
+      "path": "skills/domain-authority-simulator/SKILL.md"
+    },
+    {
+      "id": "domain-comparison-report-tool",
+      "canonical_id": "domain-comparison-report-tool",
+      "name": "domain-comparison-report-tool",
+      "description": "Domain Comparison Report Tool. Use when working with two or more domains with dated comparable metrics.",
+      "category": "competitor analysis",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "domain",
+        "comparison",
+        "report",
+        "working",
+        "two",
+        "domains",
+        "dated",
+        "comparable",
+        "metrics"
+      ],
+      "path": "skills/domain-comparison-report-tool/SKILL.md"
+    },
+    {
       "id": "domain-driven-design",
       "canonical_id": "domain-driven-design",
       "name": "domain-driven-design",
@@ -27630,6 +28475,42 @@
         "terminology"
       ],
       "path": "skills/domain-modeling/SKILL.md"
+    },
+    {
+      "id": "doom-pay",
+      "canonical_id": "doom-pay",
+      "name": "doom-pay",
+      "description": "Add self-custodial DOOM and wDOOM checkout links with DoomPay, then verify payment receipts on Doomsday Network Layer-1 or Base Mainnet.",
+      "category": "payments",
+      "risk": "critical",
+      "source": "https://github.com/doomsday-network/doom-pay/tree/0317517d75856c34e9c799e6e167239ae69e29e0",
+      "source_type": "official",
+      "source_repo": "doomsday-network/doom-pay",
+      "license": "MIT",
+      "license_source": "https://github.com/doomsday-network/doom-pay/blob/0317517d75856c34e9c799e6e167239ae69e29e0/LICENSE",
+      "tags": [
+        "payments",
+        "crypto",
+        "checkout",
+        "base-mainnet",
+        "mcp",
+        "verification"
+      ],
+      "triggers": [
+        "payments",
+        "crypto",
+        "checkout",
+        "base-mainnet",
+        "mcp",
+        "verification",
+        "doom",
+        "pay",
+        "add",
+        "self",
+        "custodial",
+        "wdoom"
+      ],
+      "path": "skills/doom-pay/SKILL.md"
     },
     {
       "id": "doomsday-escrow",
@@ -28040,6 +28921,34 @@
         "pdfs"
       ],
       "path": "skills/dsh-deepread/SKILL.md"
+    },
+    {
+      "id": "duplicate-content-checker",
+      "canonical_id": "duplicate-content-checker",
+      "name": "duplicate-content-checker",
+      "description": "Duplicate Content Checker. Use when working with two or more texts or accessible pages.",
+      "category": "on-page optimization",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "duplicate",
+        "content",
+        "checker",
+        "working",
+        "two",
+        "texts",
+        "accessible",
+        "pages"
+      ],
+      "path": "skills/duplicate-content-checker/SKILL.md"
     },
     {
       "id": "dwarf-expert",
@@ -31037,6 +31946,34 @@
       "path": "skills/famulor-skill/SKILL.md"
     },
     {
+      "id": "faq-generator",
+      "canonical_id": "faq-generator",
+      "name": "faq-generator",
+      "description": "FAQ Generator. Use when working with actual questions plus answer facts.",
+      "category": "content seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "faq",
+        "generator",
+        "working",
+        "actual",
+        "questions",
+        "plus",
+        "answer",
+        "facts"
+      ],
+      "path": "skills/faq-generator/SKILL.md"
+    },
+    {
       "id": "fastapi-pro",
       "canonical_id": "fastapi-pro",
       "name": "fastapi-pro",
@@ -31260,6 +32197,62 @@
         "ai"
       ],
       "path": "skills/feature-tracking/SKILL.md"
+    },
+    {
+      "id": "featured-snippet-optimizer",
+      "canonical_id": "featured-snippet-optimizer",
+      "name": "featured-snippet-optimizer",
+      "description": "Featured Snippet Optimizer. Use when working with target question and existing passage.",
+      "category": "content seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "featured",
+        "snippet",
+        "optimizer",
+        "working",
+        "target",
+        "question",
+        "existing",
+        "passage"
+      ],
+      "path": "skills/featured-snippet-optimizer/SKILL.md"
+    },
+    {
+      "id": "featured-tool-schema-generator",
+      "canonical_id": "featured-tool-schema-generator",
+      "name": "featured-tool-schema-generator",
+      "description": "Featured Tool Schema Generator. Use when working with tool page URL and visible tool capabilities.",
+      "category": "schema & structured data",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "featured",
+        "schema",
+        "generator",
+        "working",
+        "page",
+        "url",
+        "visible",
+        "capabilities"
+      ],
+      "path": "skills/featured-tool-schema-generator/SKILL.md"
     },
     {
       "id": "fedora-hyprland-installer",
@@ -34937,6 +35930,33 @@
       "path": "skills/geo-fundamentals/SKILL.md"
     },
     {
+      "id": "geo-keyword-expansion-tool",
+      "canonical_id": "geo-keyword-expansion-tool",
+      "name": "geo-keyword-expansion-tool",
+      "description": "Geo Keyword Expansion Tool. Use when working with seed keyword and target locations.",
+      "category": "local seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "geo",
+        "keyword",
+        "expansion",
+        "working",
+        "seed",
+        "target",
+        "locations"
+      ],
+      "path": "skills/geo-keyword-expansion-tool/SKILL.md"
+    },
+    {
       "id": "geo-llmstxt",
       "canonical_id": "geo-llmstxt",
       "name": "geo-llmstxt",
@@ -36174,6 +37194,35 @@
       "path": "skills/gmail-automation/SKILL.md"
     },
     {
+      "id": "gmb-optimization-helper",
+      "canonical_id": "gmb-optimization-helper",
+      "name": "gmb-optimization-helper",
+      "description": "GMB Optimization Helper. Use when working with Google Business Profile details or business facts.",
+      "category": "local seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "gmb",
+        "optimization",
+        "helper",
+        "working",
+        "google",
+        "business",
+        "profile",
+        "details",
+        "facts"
+      ],
+      "path": "skills/gmb-optimization-helper/SKILL.md"
+    },
+    {
       "id": "go-concurrency-patterns",
       "canonical_id": "go-concurrency-patterns",
       "name": "go-concurrency-patterns",
@@ -37169,6 +38218,36 @@
       "path": "skills/grpc-golang/SKILL.md"
     },
     {
+      "id": "guest-posting-opportunity-finder",
+      "canonical_id": "guest-posting-opportunity-finder",
+      "name": "guest-posting-opportunity-finder",
+      "description": "Guest Posting Opportunity Finder. Use when working with topic, audience and optional prospect list.",
+      "category": "backlink & link-building",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "guest",
+        "posting",
+        "opportunity",
+        "finder",
+        "working",
+        "topic",
+        "audience",
+        "optional",
+        "prospect",
+        "list"
+      ],
+      "path": "skills/guest-posting-opportunity-finder/SKILL.md"
+    },
+    {
       "id": "handoff",
       "canonical_id": "handoff",
       "name": "handoff",
@@ -37339,6 +38418,59 @@
         "cabal"
       ],
       "path": "skills/haskell-pro/SKILL.md"
+    },
+    {
+      "id": "heading-analyzer",
+      "canonical_id": "heading-analyzer",
+      "name": "heading-analyzer",
+      "description": "Heading Analyzer. Use when working with HTML, Markdown or extracted headings.",
+      "category": "on-page optimization",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "heading",
+        "analyzer",
+        "working",
+        "html",
+        "markdown",
+        "extracted",
+        "headings"
+      ],
+      "path": "skills/heading-analyzer/SKILL.md"
+    },
+    {
+      "id": "headline-analyzer",
+      "canonical_id": "headline-analyzer",
+      "name": "headline-analyzer",
+      "description": "Headline Analyzer. Use when working with headline and intended article summary.",
+      "category": "content seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "headline",
+        "analyzer",
+        "working",
+        "intended",
+        "article",
+        "summary"
+      ],
+      "path": "skills/headline-analyzer/SKILL.md"
     },
     {
       "id": "headline-psychologist",
@@ -38285,6 +39417,36 @@
       "path": "skills/hr-pro/SKILL.md"
     },
     {
+      "id": "hreflang-tag-generator",
+      "canonical_id": "hreflang-tag-generator",
+      "name": "hreflang-tag-generator",
+      "description": "Hreflang Tag Generator. Use when working with equivalent page URLs mapped to language and optional region.",
+      "category": "technical seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "hreflang",
+        "tag",
+        "generator",
+        "working",
+        "equivalent",
+        "page",
+        "urls",
+        "mapped",
+        "language",
+        "optional"
+      ],
+      "path": "skills/hreflang-tag-generator/SKILL.md"
+    },
+    {
       "id": "html-injection-testing",
       "canonical_id": "html-injection-testing",
       "name": "html-injection-testing",
@@ -38311,6 +39473,33 @@
         "web"
       ],
       "path": "skills/html-injection-testing/SKILL.md"
+    },
+    {
+      "id": "http-status-code-tester",
+      "canonical_id": "http-status-code-tester",
+      "name": "http-status-code-tester",
+      "description": "HTTP Status Code Tester. Use when working with one or more HTTP(S) URLs.",
+      "category": "technical seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "http",
+        "status",
+        "code",
+        "tester",
+        "working",
+        "one",
+        "urls"
+      ],
+      "path": "skills/http-status-code-tester/SKILL.md"
     },
     {
       "id": "hubspot-automation",
@@ -41317,6 +42506,35 @@
       "path": "skills/ilya-sutskever/SKILL.md"
     },
     {
+      "id": "image-alt-tag-generator",
+      "canonical_id": "image-alt-tag-generator",
+      "name": "image-alt-tag-generator",
+      "description": "Image Alt Tag Generator. Use when working with image or accurate image description and page context.",
+      "category": "on-page optimization",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "image",
+        "alt",
+        "tag",
+        "generator",
+        "working",
+        "accurate",
+        "description",
+        "page",
+        "context"
+      ],
+      "path": "skills/image-alt-tag-generator/SKILL.md"
+    },
+    {
       "id": "image-generator",
       "canonical_id": "image-generator",
       "name": "image-generator",
@@ -41432,6 +42650,35 @@
         "issues"
       ],
       "path": "skills/implement/SKILL.md"
+    },
+    {
+      "id": "impression-to-click-ratio-calculator",
+      "canonical_id": "impression-to-click-ratio-calculator",
+      "name": "impression-to-click-ratio-calculator",
+      "description": "Impression-to-Click Ratio Calculator. Use when working with clicks and impressions for the same scope.",
+      "category": "seo performance",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "impression",
+        "click",
+        "ratio",
+        "calculator",
+        "working",
+        "clicks",
+        "impressions",
+        "same",
+        "scope"
+      ],
+      "path": "skills/impression-to-click-ratio-calculator/SKILL.md"
     },
     {
       "id": "improve-codebase-architecture",
@@ -42136,6 +43383,65 @@
         "title"
       ],
       "path": "skills/internal-communication/SKILL.md"
+    },
+    {
+      "id": "internal-link-suggestion-tool",
+      "canonical_id": "internal-link-suggestion-tool",
+      "name": "internal-link-suggestion-tool",
+      "description": "Internal Link Suggestion Tool. Use when working with source text and available destination pages.",
+      "category": "on-page optimization",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "internal",
+        "link",
+        "suggestion",
+        "working",
+        "source",
+        "text",
+        "available",
+        "destination",
+        "pages"
+      ],
+      "path": "skills/internal-link-suggestion-tool/SKILL.md"
+    },
+    {
+      "id": "internal-linking-planner",
+      "canonical_id": "internal-linking-planner",
+      "name": "internal-linking-planner",
+      "description": "Internal Linking Planner. Use when working with site page inventory and priority user journeys.",
+      "category": "on-page optimization",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "internal",
+        "linking",
+        "planner",
+        "working",
+        "site",
+        "page",
+        "inventory",
+        "priority",
+        "user",
+        "journeys"
+      ],
+      "path": "skills/internal-linking-planner/SKILL.md"
     },
     {
       "id": "interview-coach",
@@ -43516,6 +44822,141 @@
       "path": "skills/kernel-prompt/SKILL.md"
     },
     {
+      "id": "keyword-clustering-tool",
+      "canonical_id": "keyword-clustering-tool",
+      "name": "keyword-clustering-tool",
+      "description": "Keyword Clustering Tool. Use when working with keyword list.",
+      "category": "keyword research",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "keyword",
+        "clustering",
+        "working",
+        "list"
+      ],
+      "path": "skills/keyword-clustering-tool/SKILL.md"
+    },
+    {
+      "id": "keyword-comparison-tool",
+      "canonical_id": "keyword-comparison-tool",
+      "name": "keyword-comparison-tool",
+      "description": "Keyword Comparison Tool. Use when working with two or more keywords and optional metrics.",
+      "category": "keyword research",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "keyword",
+        "comparison",
+        "working",
+        "two",
+        "keywords",
+        "optional",
+        "metrics"
+      ],
+      "path": "skills/keyword-comparison-tool/SKILL.md"
+    },
+    {
+      "id": "keyword-density-checker",
+      "canonical_id": "keyword-density-checker",
+      "name": "keyword-density-checker",
+      "description": "Keyword Density Checker. Use when working with text and target word or phrase.",
+      "category": "keyword research",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "keyword",
+        "density",
+        "checker",
+        "working",
+        "text",
+        "target",
+        "word",
+        "phrase"
+      ],
+      "path": "skills/keyword-density-checker/SKILL.md"
+    },
+    {
+      "id": "keyword-difficulty-estimator",
+      "canonical_id": "keyword-difficulty-estimator",
+      "name": "keyword-difficulty-estimator",
+      "description": "Keyword Difficulty Estimator. Use when working with keyword plus supplied SERP or competitor evidence.",
+      "category": "keyword research",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "keyword",
+        "difficulty",
+        "estimator",
+        "working",
+        "plus",
+        "supplied",
+        "serp",
+        "competitor",
+        "evidence"
+      ],
+      "path": "skills/keyword-difficulty-estimator/SKILL.md"
+    },
+    {
+      "id": "keyword-expansion-tool",
+      "canonical_id": "keyword-expansion-tool",
+      "name": "keyword-expansion-tool",
+      "description": "Keyword Expansion Tool. Use when working with seed terms and optional industry.",
+      "category": "keyword research",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "keyword",
+        "expansion",
+        "working",
+        "seed",
+        "terms",
+        "optional",
+        "industry"
+      ],
+      "path": "skills/keyword-expansion-tool/SKILL.md"
+    },
+    {
       "id": "keyword-extractor",
       "canonical_id": "keyword-extractor",
       "name": "keyword-extractor",
@@ -43542,6 +44983,171 @@
         "wants"
       ],
       "path": "skills/keyword-extractor/SKILL.md"
+    },
+    {
+      "id": "keyword-gap-finder",
+      "canonical_id": "keyword-gap-finder",
+      "name": "keyword-gap-finder",
+      "description": "Keyword Gap Finder. Use when working with your keyword set and competitor keyword sets.",
+      "category": "keyword research",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "keyword",
+        "gap",
+        "finder",
+        "working",
+        "set",
+        "competitor",
+        "sets"
+      ],
+      "path": "skills/keyword-gap-finder/SKILL.md"
+    },
+    {
+      "id": "keyword-intent-identifier",
+      "canonical_id": "keyword-intent-identifier",
+      "name": "keyword-intent-identifier",
+      "description": "Keyword Intent Identifier. Use when working with keyword or query list.",
+      "category": "keyword research",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "keyword",
+        "intent",
+        "identifier",
+        "working",
+        "query",
+        "list"
+      ],
+      "path": "skills/keyword-intent-identifier/SKILL.md"
+    },
+    {
+      "id": "keyword-placement-highlighter",
+      "canonical_id": "keyword-placement-highlighter",
+      "name": "keyword-placement-highlighter",
+      "description": "Keyword Placement Highlighter. Use when working with text and target keywords.",
+      "category": "content seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "keyword",
+        "placement",
+        "highlighter",
+        "working",
+        "text",
+        "target",
+        "keywords"
+      ],
+      "path": "skills/keyword-placement-highlighter/SKILL.md"
+    },
+    {
+      "id": "keyword-roi-calculator",
+      "canonical_id": "keyword-roi-calculator",
+      "name": "keyword-roi-calculator",
+      "description": "Keyword ROI Calculator. Use when working with traffic estimate, conversion rate, value per conversion, margin and SEO cost for one period.",
+      "category": "seo performance",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "keyword",
+        "roi",
+        "calculator",
+        "working",
+        "traffic",
+        "estimate",
+        "conversion",
+        "rate",
+        "value",
+        "per"
+      ],
+      "path": "skills/keyword-roi-calculator/SKILL.md"
+    },
+    {
+      "id": "keyword-share-estimator",
+      "canonical_id": "keyword-share-estimator",
+      "name": "keyword-share-estimator",
+      "description": "Keyword Share Estimator. Use when working with comparable visibility values for your domain and selected competitors.",
+      "category": "competitor analysis",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "keyword",
+        "share",
+        "estimator",
+        "working",
+        "comparable",
+        "visibility",
+        "values",
+        "domain",
+        "selected",
+        "competitors"
+      ],
+      "path": "skills/keyword-share-estimator/SKILL.md"
+    },
+    {
+      "id": "keyword-suggestion-tool",
+      "canonical_id": "keyword-suggestion-tool",
+      "name": "keyword-suggestion-tool",
+      "description": "Keyword Suggestion Tool. Use when working with seed topic.",
+      "category": "keyword research",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "keyword",
+        "suggestion",
+        "working",
+        "seed",
+        "topic"
+      ],
+      "path": "skills/keyword-suggestion-tool/SKILL.md"
     },
     {
       "id": "kimi-delegate",
@@ -45206,6 +46812,92 @@
       "path": "skills/linear-claude-skill/SKILL.md"
     },
     {
+      "id": "link-relevance-evaluator",
+      "canonical_id": "link-relevance-evaluator",
+      "name": "link-relevance-evaluator",
+      "description": "Link Relevance Evaluator. Use when working with source page context and destination page context.",
+      "category": "backlink & link-building",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "link",
+        "relevance",
+        "evaluator",
+        "working",
+        "source",
+        "page",
+        "context",
+        "destination"
+      ],
+      "path": "skills/link-relevance-evaluator/SKILL.md"
+    },
+    {
+      "id": "link-source-categorizer",
+      "canonical_id": "link-source-categorizer",
+      "name": "link-source-categorizer",
+      "description": "Link Source Categorizer. Use when working with backlink rows with source URLs and optional page context.",
+      "category": "backlink & link-building",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "link",
+        "source",
+        "categorizer",
+        "working",
+        "backlink",
+        "rows",
+        "urls",
+        "optional",
+        "page",
+        "context"
+      ],
+      "path": "skills/link-source-categorizer/SKILL.md"
+    },
+    {
+      "id": "link-toxicity-checker",
+      "canonical_id": "link-toxicity-checker",
+      "name": "link-toxicity-checker",
+      "description": "Link Toxicity Checker. Use when working with backlink examples and available evidence.",
+      "category": "backlink & link-building",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "link",
+        "toxicity",
+        "checker",
+        "working",
+        "backlink",
+        "examples",
+        "available",
+        "evidence"
+      ],
+      "path": "skills/link-toxicity-checker/SKILL.md"
+    },
+    {
       "id": "linkdigest-social-link-reader",
       "canonical_id": "linkdigest-social-link-reader",
       "name": "linkdigest-social-link-reader",
@@ -46254,6 +47946,61 @@
       "path": "skills/load-balancing/SKILL.md"
     },
     {
+      "id": "local-citation-finder",
+      "canonical_id": "local-citation-finder",
+      "name": "local-citation-finder",
+      "description": "Local Citation Finder. Use when working with business category and service location.",
+      "category": "local seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "local",
+        "citation",
+        "finder",
+        "working",
+        "business",
+        "category",
+        "location"
+      ],
+      "path": "skills/local-citation-finder/SKILL.md"
+    },
+    {
+      "id": "local-keyword-generator",
+      "canonical_id": "local-keyword-generator",
+      "name": "local-keyword-generator",
+      "description": "Local Keyword Generator. Use when working with service or product and actual target location.",
+      "category": "local seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "local",
+        "keyword",
+        "generator",
+        "working",
+        "product",
+        "actual",
+        "target",
+        "location"
+      ],
+      "path": "skills/local-keyword-generator/SKILL.md"
+    },
+    {
       "id": "local-legal-seo-audit",
       "canonical_id": "local-legal-seo-audit",
       "name": "local-legal-seo-audit",
@@ -46310,6 +48057,95 @@
         "vllm"
       ],
       "path": "skills/local-llm-expert/SKILL.md"
+    },
+    {
+      "id": "local-schema-builder",
+      "canonical_id": "local-schema-builder",
+      "name": "local-schema-builder",
+      "description": "Local Schema Builder. Use when working with business facts, page URL and actual address or service area.",
+      "category": "schema & structured data",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "local",
+        "schema",
+        "builder",
+        "working",
+        "business",
+        "facts",
+        "page",
+        "url",
+        "actual",
+        "address"
+      ],
+      "path": "skills/local-schema-builder/SKILL.md"
+    },
+    {
+      "id": "local-seo-audit-checklist",
+      "canonical_id": "local-seo-audit-checklist",
+      "name": "local-seo-audit-checklist",
+      "description": "Local SEO Audit Checklist. Use when working with business type, location and profile or site details.",
+      "category": "local seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "local",
+        "audit",
+        "checklist",
+        "working",
+        "business",
+        "type",
+        "location",
+        "profile",
+        "site",
+        "details"
+      ],
+      "path": "skills/local-seo-audit-checklist/SKILL.md"
+    },
+    {
+      "id": "location-based-content-idea-generator",
+      "canonical_id": "location-based-content-idea-generator",
+      "name": "location-based-content-idea-generator",
+      "description": "Local Content Idea Generator. Use when working with location, audience and business topic.",
+      "category": "local seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "location",
+        "content",
+        "idea",
+        "generator",
+        "local",
+        "working",
+        "audience",
+        "business",
+        "topic"
+      ],
+      "path": "skills/location-based-content-idea-generator/SKILL.md"
     },
     {
       "id": "logic-diff",
@@ -46701,6 +48537,36 @@
         "experimental"
       ],
       "path": "skills/loki-mode/SKILL.md"
+    },
+    {
+      "id": "long-tail-keyword-generator",
+      "canonical_id": "long-tail-keyword-generator",
+      "name": "long-tail-keyword-generator",
+      "description": "Long-Tail Keyword Generator. Use when working with seed topic and optional audience or use case.",
+      "category": "keyword research",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "long",
+        "tail",
+        "keyword",
+        "generator",
+        "working",
+        "seed",
+        "topic",
+        "optional",
+        "audience",
+        "case"
+      ],
+      "path": "skills/long-tail-keyword-generator/SKILL.md"
     },
     {
       "id": "longbridge",
@@ -49550,6 +51416,41 @@
       "path": "skills/memory-forensics/SKILL.md"
     },
     {
+      "id": "memory-handoff",
+      "canonical_id": "memory-handoff",
+      "name": "memory-handoff",
+      "description": "Portable session handoff across agent CLIs: read a project's handoff file at session start, rewrite it at session end, so the next session starts mid-thought instead of cold.",
+      "category": "memory",
+      "risk": "critical",
+      "source": "https://github.com/WyattAu/memory-handoff-skill",
+      "source_type": "community",
+      "source_repo": "WyattAu/memory-handoff-skill",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/WyattAu/memory-handoff-skill/blob/main/LICENSE",
+      "tags": [
+        "agent-memory",
+        "handoff",
+        "session-management",
+        "context-engineering",
+        "cross-cli"
+      ],
+      "triggers": [
+        "agent-memory",
+        "handoff",
+        "session-management",
+        "context-engineering",
+        "cross-cli",
+        "memory",
+        "portable",
+        "session",
+        "agent",
+        "clis",
+        "read",
+        "file"
+      ],
+      "path": "skills/memory-handoff/SKILL.md"
+    },
+    {
       "id": "memory-safety-patterns",
       "canonical_id": "memory-safety-patterns",
       "name": "memory-safety-patterns",
@@ -49742,6 +51643,122 @@
         "decisions"
       ],
       "path": "skills/mesh-memory/SKILL.md"
+    },
+    {
+      "id": "meta-description-optimizer",
+      "canonical_id": "meta-description-optimizer",
+      "name": "meta-description-optimizer",
+      "description": "Meta Description Optimizer. Use when working with existing description and page content or summary.",
+      "category": "on-page optimization",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "meta",
+        "description",
+        "optimizer",
+        "working",
+        "existing",
+        "page",
+        "content",
+        "summary"
+      ],
+      "path": "skills/meta-description-optimizer/SKILL.md"
+    },
+    {
+      "id": "meta-description-writer",
+      "canonical_id": "meta-description-writer",
+      "name": "meta-description-writer",
+      "description": "Meta Description Writer. Use when working with page content or factual summary.",
+      "category": "content seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "meta",
+        "description",
+        "writer",
+        "working",
+        "page",
+        "content",
+        "factual",
+        "summary"
+      ],
+      "path": "skills/meta-description-writer/SKILL.md"
+    },
+    {
+      "id": "meta-tag-comparison-tool",
+      "canonical_id": "meta-tag-comparison-tool",
+      "name": "meta-tag-comparison-tool",
+      "description": "Meta Tag Comparison Tool. Use when working with HTML or extracted metadata from two or more labeled pages.",
+      "category": "competitor analysis",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "meta",
+        "tag",
+        "comparison",
+        "working",
+        "html",
+        "extracted",
+        "metadata",
+        "two",
+        "labeled",
+        "pages"
+      ],
+      "path": "skills/meta-tag-comparison-tool/SKILL.md"
+    },
+    {
+      "id": "meta-tag-generator",
+      "canonical_id": "meta-tag-generator",
+      "name": "meta-tag-generator",
+      "description": "Meta Tag Generator. Use when working with page summary, URL and optional brand or social image.",
+      "category": "on-page optimization",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "meta",
+        "tag",
+        "generator",
+        "working",
+        "page",
+        "summary",
+        "url",
+        "optional",
+        "brand",
+        "social"
+      ],
+      "path": "skills/meta-tag-generator/SKILL.md"
     },
     {
       "id": "metasploit-framework",
@@ -50318,6 +52335,35 @@
         "development"
       ],
       "path": "skills/mobile-developer/SKILL.md"
+    },
+    {
+      "id": "mobile-friendly-test",
+      "canonical_id": "mobile-friendly-test",
+      "name": "mobile-friendly-test",
+      "description": "Mobile-Friendly Test. Use when working with accessible page or supplied screenshots and HTML.",
+      "category": "technical seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "mobile",
+        "friendly",
+        "test",
+        "working",
+        "accessible",
+        "page",
+        "supplied",
+        "screenshots",
+        "html"
+      ],
+      "path": "skills/mobile-friendly-test/SKILL.md"
     },
     {
       "id": "mobile-reverse",
@@ -52203,6 +54249,36 @@
       "path": "skills/nanobanana-ppt-skills/SKILL.md"
     },
     {
+      "id": "nap-consistency-checker",
+      "canonical_id": "nap-consistency-checker",
+      "name": "nap-consistency-checker",
+      "description": "NAP Consistency Checker. Use when working with canonical business name, address and phone plus listing records.",
+      "category": "local seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "nap",
+        "consistency",
+        "checker",
+        "working",
+        "canonical",
+        "business",
+        "name",
+        "address",
+        "phone",
+        "plus"
+      ],
+      "path": "skills/nap-consistency-checker/SKILL.md"
+    },
+    {
       "id": "native-data-fetching",
       "canonical_id": "native-data-fetching",
       "name": "native-data-fetching",
@@ -52515,6 +54591,41 @@
         "injection"
       ],
       "path": "skills/nestjs-expert/SKILL.md"
+    },
+    {
+      "id": "netapi",
+      "canonical_id": "netapi",
+      "name": "netapi",
+      "description": "Check domains and IPs against a free compromised feed, find newly registered lookalike domains, and get TLD stats and Top 1M ranks from NetAPI, with no API key.",
+      "category": "security",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "threat-intel",
+        "ioc",
+        "domains",
+        "phishing",
+        "osint",
+        "dns",
+        "registrar",
+        "mcp"
+      ],
+      "triggers": [
+        "threat-intel",
+        "ioc",
+        "domains",
+        "phishing",
+        "osint",
+        "dns",
+        "registrar",
+        "mcp",
+        "netapi",
+        "check",
+        "ips",
+        "against"
+      ],
+      "path": "skills/netapi/SKILL.md"
     },
     {
       "id": "network-101",
@@ -54799,6 +56910,36 @@
       "path": "skills/office-productivity/SKILL.md"
     },
     {
+      "id": "og-tag-generator",
+      "canonical_id": "og-tag-generator",
+      "name": "og-tag-generator",
+      "description": "OG Tag Generator. Use when working with page URL, title, description and optional public image URL.",
+      "category": "seo utility",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "og",
+        "tag",
+        "generator",
+        "working",
+        "page",
+        "url",
+        "title",
+        "description",
+        "optional",
+        "public"
+      ],
+      "path": "skills/og-tag-generator/SKILL.md"
+    },
+    {
       "id": "okr-system",
       "canonical_id": "okr-system",
       "name": "okr-system",
@@ -54988,6 +57129,69 @@
         "incident"
       ],
       "path": "skills/on-call-handoff-patterns/SKILL.md"
+    },
+    {
+      "id": "on-page-seo-audit-checker",
+      "canonical_id": "on-page-seo-audit-checker",
+      "name": "on-page-seo-audit-checker",
+      "description": "On-Page SEO Audit Checker. Use when working with page URL or HTML and target reader task.",
+      "category": "on-page optimization",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "page",
+        "audit",
+        "checker",
+        "working",
+        "url",
+        "html",
+        "target",
+        "reader",
+        "task"
+      ],
+      "path": "skills/on-page-seo-audit-checker/SKILL.md"
+    },
+    {
+      "id": "onboard",
+      "canonical_id": "onboard",
+      "name": "onboard",
+      "description": "Decompose mixed project materials (code, docs, PDF/Excel/PPT) into a sourced overview and a goal-driven three-tier learning path, then teach it interactively.",
+      "category": "learning",
+      "risk": "safe",
+      "source": "https://github.com/Keviniscool-boy/onboard",
+      "source_type": "community",
+      "source_repo": "Keviniscool-boy/onboard",
+      "license": "MIT",
+      "license_source": "https://github.com/Keviniscool-boy/onboard/blob/main/LICENSE",
+      "tags": [
+        "onboarding",
+        "learning-path",
+        "codebase-understanding",
+        "documentation"
+      ],
+      "triggers": [
+        "onboarding",
+        "learning-path",
+        "codebase-understanding",
+        "documentation",
+        "onboard",
+        "decompose",
+        "mixed",
+        "materials",
+        "code",
+        "docs",
+        "pdf",
+        "excel"
+      ],
+      "path": "skills/onboard/SKILL.md"
     },
     {
       "id": "onboarding",
@@ -55812,6 +58016,36 @@
       "path": "skills/orchestrate-batch-refactor/SKILL.md"
     },
     {
+      "id": "organic-growth-forecast-tool",
+      "canonical_id": "organic-growth-forecast-tool",
+      "name": "organic-growth-forecast-tool",
+      "description": "Organic Growth Forecast Tool. Use when working with dated traffic history or baseline with explicit growth assumptions.",
+      "category": "seo performance",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "organic",
+        "growth",
+        "forecast",
+        "working",
+        "dated",
+        "traffic",
+        "history",
+        "baseline",
+        "explicit",
+        "assumptions"
+      ],
+      "path": "skills/organic-growth-forecast-tool/SKILL.md"
+    },
+    {
       "id": "organization-design",
       "canonical_id": "organization-design",
       "name": "organization-design",
@@ -56050,6 +58284,35 @@
       "path": "skills/outlook-calendar-automation/SKILL.md"
     },
     {
+      "id": "outreach-email-template-generator",
+      "canonical_id": "outreach-email-template-generator",
+      "name": "outreach-email-template-generator",
+      "description": "Outreach Email Template Generator. Use when working with recipient context, outreach purpose and genuine offer.",
+      "category": "backlink & link-building",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "outreach",
+        "email",
+        "generator",
+        "working",
+        "recipient",
+        "context",
+        "purpose",
+        "genuine",
+        "offer"
+      ],
+      "path": "skills/outreach-email-template-generator/SKILL.md"
+    },
+    {
       "id": "outreachagent",
       "canonical_id": "outreachagent",
       "name": "outreachagent",
@@ -56142,6 +58405,36 @@
         "performance"
       ],
       "path": "skills/page-cro/SKILL.md"
+    },
+    {
+      "id": "page-speed-score-simulator",
+      "canonical_id": "page-speed-score-simulator",
+      "name": "page-speed-score-simulator",
+      "description": "Page Speed Score Simulator. Use when working with performance report or explicit hypothetical performance inputs.",
+      "category": "technical seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "page",
+        "speed",
+        "score",
+        "simulator",
+        "working",
+        "performance",
+        "report",
+        "explicit",
+        "hypothetical",
+        "inputs"
+      ],
+      "path": "skills/page-speed-score-simulator/SKILL.md"
     },
     {
       "id": "pagerduty-automation",
@@ -56331,6 +58624,31 @@
         "200m"
       ],
       "path": "skills/papers-skill/SKILL.md"
+    },
+    {
+      "id": "paragraph-keyword-optimizer",
+      "canonical_id": "paragraph-keyword-optimizer",
+      "name": "paragraph-keyword-optimizer",
+      "description": "Paragraph Keyword Optimizer. Use when working with paragraph and target keyword.",
+      "category": "content seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "paragraph",
+        "keyword",
+        "optimizer",
+        "working",
+        "target"
+      ],
+      "path": "skills/paragraph-keyword-optimizer/SKILL.md"
     },
     {
       "id": "parallel-agents",
@@ -57289,6 +59607,41 @@
         "commands"
       ],
       "path": "skills/permission-manager/SKILL.md"
+    },
+    {
+      "id": "perq",
+      "canonical_id": "perq",
+      "name": "perq",
+      "description": "Find verified free AI credits, free tiers, startup programs and student perks for AI APIs, GPUs and dev tools, each with the vendor's source link and a last-verified date.",
+      "category": "research",
+      "risk": "safe",
+      "source": "https://github.com/f-o-x11/perq-skill",
+      "source_type": "official",
+      "source_repo": "f-o-x11/perq-skill",
+      "license": "MIT",
+      "license_source": "https://github.com/f-o-x11/perq-skill/blob/main/LICENSE",
+      "tags": [
+        "credits",
+        "free-tier",
+        "startups",
+        "students",
+        "mcp"
+      ],
+      "triggers": [
+        "credits",
+        "free-tier",
+        "startups",
+        "students",
+        "mcp",
+        "perq",
+        "find",
+        "verified",
+        "free",
+        "ai",
+        "tiers",
+        "startup"
+      ],
+      "path": "skills/perq/SKILL.md"
     },
     {
       "id": "personal-tool-builder",
@@ -58385,6 +60738,76 @@
       "path": "skills/posix-shell-pro/SKILL.md"
     },
     {
+      "id": "post",
+      "canonical_id": "post",
+      "name": "post",
+      "description": "Make share-post image sets that look native: Xiaohongshu carousels, X images, covers, App Store poster layouts, real screenshots and faithful app-UI mocks. Use for 图文, 配图, 组图, 封面, 分享帖.",
+      "category": "marketing",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "jack-reson8/post-skill",
+      "license": "MIT",
+      "license_source": "https://github.com/jack-reson8/post-skill/blob/main/LICENSE",
+      "tags": [
+        "social",
+        "image",
+        "xiaohongshu",
+        "carousel"
+      ],
+      "triggers": [
+        "social",
+        "image",
+        "xiaohongshu",
+        "carousel",
+        "post",
+        "share",
+        "sets",
+        "look",
+        "native",
+        "carousels",
+        "images",
+        "covers"
+      ],
+      "path": "skills/post/SKILL.md"
+    },
+    {
+      "id": "postel-writing",
+      "canonical_id": "postel-writing",
+      "name": "postel-writing",
+      "description": "Draft X (Twitter) or LinkedIn posts in the user's own voice, research high-performing posts, and schedule or publish them through the user's Postel account.",
+      "category": "marketing",
+      "risk": "critical",
+      "source": "https://github.com/robinfaraj/postel-mcp/tree/2d83f7b26a0950e2e16314a23423e3f0d416fa6a/skills/postel-writing",
+      "source_type": "official",
+      "source_repo": "robinfaraj/postel-mcp",
+      "license": "MIT",
+      "license_source": "https://github.com/robinfaraj/postel-mcp/blob/2d83f7b26a0950e2e16314a23423e3f0d416fa6a/LICENSE",
+      "tags": [
+        "linkedin",
+        "twitter",
+        "writing",
+        "scheduling",
+        "social-media",
+        "mcp"
+      ],
+      "triggers": [
+        "linkedin",
+        "twitter",
+        "writing",
+        "scheduling",
+        "social-media",
+        "mcp",
+        "postel",
+        "draft",
+        "posts",
+        "user",
+        "own",
+        "voice"
+      ],
+      "path": "skills/postel-writing/SKILL.md"
+    },
+    {
       "id": "poster-design-studio",
       "canonical_id": "poster-design-studio",
       "name": "poster-design-studio",
@@ -59320,6 +61743,75 @@
       "path": "skills/privilege-escalation-methods/SKILL.md"
     },
     {
+      "id": "pro-launch",
+      "canonical_id": "pro-launch",
+      "name": "pro-launch",
+      "description": "Build an app or product from 0 to 1, taste-first, with phase gates: references, naming, style frames, UI loop, launch video, GTM and shipping. Use for 做产品, 起名, 找参考, UI 太丑, launch plans.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "jack-reson8/pro-launch",
+      "license": "MIT",
+      "license_source": "https://github.com/jack-reson8/pro-launch/blob/main/LICENSE",
+      "tags": [
+        "product",
+        "launch",
+        "naming",
+        "ui",
+        "gtm"
+      ],
+      "triggers": [
+        "product",
+        "launch",
+        "naming",
+        "ui",
+        "gtm",
+        "pro",
+        "app",
+        "taste",
+        "first",
+        "phase",
+        "gates",
+        "references"
+      ],
+      "path": "skills/pro-launch/SKILL.md"
+    },
+    {
+      "id": "pro-motion",
+      "canonical_id": "pro-motion",
+      "name": "pro-motion",
+      "description": "Make a motion-graphics launch, brand or promo film audio first: plan the music, then render the film in code (canvas to MP4) cut to the track. Use for 发布视频, 宣传片, TVC, BGM, Suno prompts.",
+      "category": "media",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "jack-reson8/pro-motion",
+      "license": "MIT",
+      "license_source": "https://github.com/jack-reson8/pro-motion/blob/main/LICENSE",
+      "tags": [
+        "motion-graphics",
+        "video",
+        "music",
+        "launch-film"
+      ],
+      "triggers": [
+        "motion-graphics",
+        "video",
+        "music",
+        "launch-film",
+        "pro",
+        "motion",
+        "graphics",
+        "launch",
+        "brand",
+        "promo",
+        "film",
+        "audio"
+      ],
+      "path": "skills/pro-motion/SKILL.md"
+    },
+    {
       "id": "probation-tracker",
       "canonical_id": "probation-tracker",
       "name": "probation-tracker",
@@ -59387,6 +61879,34 @@
         "test"
       ],
       "path": "skills/product-decision-agent/SKILL.md"
+    },
+    {
+      "id": "product-description-generator",
+      "canonical_id": "product-description-generator",
+      "name": "product-description-generator",
+      "description": "Product Description Generator. Use when working with verified product features and intended buyer.",
+      "category": "content seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "product",
+        "description",
+        "generator",
+        "working",
+        "verified",
+        "features",
+        "intended",
+        "buyer"
+      ],
+      "path": "skills/product-description-generator/SKILL.md"
     },
     {
       "id": "product-design",
@@ -59907,6 +62427,37 @@
         "manager"
       ],
       "path": "skills/project-based-performance/SKILL.md"
+    },
+    {
+      "id": "project-brief",
+      "canonical_id": "project-brief",
+      "name": "project-brief",
+      "description": "Project Detail Optimizer. Use when working with one sentence, rough notes or an existing project brief.",
+      "category": "project management",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "pm",
+        "tool",
+        "documentation"
+      ],
+      "triggers": [
+        "pm",
+        "tool",
+        "documentation",
+        "brief",
+        "detail",
+        "optimizer",
+        "working",
+        "one",
+        "sentence",
+        "rough",
+        "notes",
+        "existing"
+      ],
+      "path": "skills/project-brief/SKILL.md"
     },
     {
       "id": "project-development",
@@ -61528,6 +64079,66 @@
       "path": "skills/ralph-loop-yylo/SKILL.md"
     },
     {
+      "id": "ranking-opportunity-finder",
+      "canonical_id": "ranking-opportunity-finder",
+      "name": "ranking-opportunity-finder",
+      "description": "Ranking Opportunity Finder. Use when working with query/page performance export or dated ranking evidence.",
+      "category": "competitor analysis",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "ranking",
+        "opportunity",
+        "finder",
+        "working",
+        "query",
+        "page",
+        "performance",
+        "export",
+        "dated",
+        "evidence"
+      ],
+      "path": "skills/ranking-opportunity-finder/SKILL.md"
+    },
+    {
+      "id": "ranking-progress-tracker",
+      "canonical_id": "ranking-progress-tracker",
+      "name": "ranking-progress-tracker",
+      "description": "Ranking Progress Tracker. Use when working with dated keyword positions with engine, market and device.",
+      "category": "seo performance",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "ranking",
+        "progress",
+        "tracker",
+        "working",
+        "dated",
+        "keyword",
+        "positions",
+        "engine",
+        "market",
+        "device"
+      ],
+      "path": "skills/ranking-progress-tracker/SKILL.md"
+    },
+    {
       "id": "rayden-code",
       "canonical_id": "rayden-code",
       "name": "rayden-code",
@@ -61993,6 +64604,59 @@
       "path": "skills/read-all-adrs/SKILL.md"
     },
     {
+      "id": "readability-enhancer",
+      "canonical_id": "readability-enhancer",
+      "name": "readability-enhancer",
+      "description": "Readability Enhancer. Use when working with text and optional reader level.",
+      "category": "content seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "readability",
+        "enhancer",
+        "working",
+        "text",
+        "optional",
+        "reader",
+        "level"
+      ],
+      "path": "skills/readability-enhancer/SKILL.md"
+    },
+    {
+      "id": "readability-score-calculator",
+      "canonical_id": "readability-score-calculator",
+      "name": "readability-score-calculator",
+      "description": "Readability Score Calculator. Use when working with text and language.",
+      "category": "on-page optimization",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "readability",
+        "score",
+        "calculator",
+        "working",
+        "text",
+        "language"
+      ],
+      "path": "skills/readability-score-calculator/SKILL.md"
+    },
+    {
       "id": "readme",
       "canonical_id": "readme",
       "name": "readme",
@@ -62400,6 +65064,62 @@
         "premium"
       ],
       "path": "skills/redesign-existing-projects/SKILL.md"
+    },
+    {
+      "id": "redirect-301-generator",
+      "canonical_id": "redirect-301-generator",
+      "name": "redirect-301-generator",
+      "description": "301 Redirect Generator. Use when working with source-to-destination mapping and deployment platform.",
+      "category": "seo utility",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "redirect",
+        "301",
+        "generator",
+        "working",
+        "source",
+        "destination",
+        "mapping",
+        "deployment",
+        "platform"
+      ],
+      "path": "skills/redirect-301-generator/SKILL.md"
+    },
+    {
+      "id": "redirect-checker",
+      "canonical_id": "redirect-checker",
+      "name": "redirect-checker",
+      "description": "Redirect Checker. Use when working with URL or recorded response chain.",
+      "category": "technical seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "redirect",
+        "checker",
+        "working",
+        "url",
+        "recorded",
+        "response",
+        "chain"
+      ],
+      "path": "skills/redirect-checker/SKILL.md"
     },
     {
       "id": "redis",
@@ -62850,6 +65570,40 @@
       "path": "skills/render-automation/SKILL.md"
     },
     {
+      "id": "renhua",
+      "canonical_id": "renhua",
+      "name": "renhua",
+      "description": "Write Chinese social posts and product copy in a real person's voice, removing AI tells. Use for 小红书, X 帖子, 日记, 朋友圈, 产品介绍, 去 AI 味, 说人话.",
+      "category": "content",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "jack-reson8/renhua",
+      "license": "MIT",
+      "license_source": "https://github.com/jack-reson8/renhua/blob/main/LICENSE",
+      "tags": [
+        "chinese",
+        "copywriting",
+        "social",
+        "humanizer"
+      ],
+      "triggers": [
+        "chinese",
+        "copywriting",
+        "social",
+        "humanizer",
+        "renhua",
+        "write",
+        "posts",
+        "product",
+        "copy",
+        "real",
+        "person",
+        "voice"
+      ],
+      "path": "skills/renhua/SKILL.md"
+    },
+    {
       "id": "repo-foundation",
       "canonical_id": "repo-foundation",
       "name": "repo-foundation",
@@ -63139,6 +65893,42 @@
       "path": "skills/resolving-merge-conflicts/SKILL.md"
     },
     {
+      "id": "restosignals",
+      "canonical_id": "restosignals",
+      "name": "restosignals",
+      "description": "Find US restaurants and bars before they open, as scored leads fused from liquor-license, food-permit and business-filing records, via the RestoSignals MCP server or REST API.",
+      "category": "mcp",
+      "risk": "safe",
+      "source": "https://restosignals.com",
+      "source_type": "community",
+      "source_repo": "paperandbeyond23-gif/restosignals-mcp",
+      "license": "MIT",
+      "license_source": "https://github.com/paperandbeyond23-gif/restosignals-mcp/blob/main/LICENSE",
+      "tags": [
+        "mcp",
+        "restaurants",
+        "leads",
+        "public-records",
+        "liquor-license",
+        "prospecting"
+      ],
+      "triggers": [
+        "mcp",
+        "restaurants",
+        "leads",
+        "public-records",
+        "liquor-license",
+        "prospecting",
+        "restosignals",
+        "find",
+        "us",
+        "bars",
+        "before",
+        "open"
+      ],
+      "path": "skills/restosignals/SKILL.md"
+    },
+    {
       "id": "resumable-implementation-contracts",
       "canonical_id": "resumable-implementation-contracts",
       "name": "resumable-implementation-contracts",
@@ -63356,6 +66146,32 @@
       "path": "skills/reverse-engineering/dsl-vm-reverse/SKILL.md"
     },
     {
+      "id": "reverse-image-search",
+      "canonical_id": "reverse-image-search",
+      "name": "reverse-image-search",
+      "description": "Reverse Image Search. Use when working with image or public image URL.",
+      "category": "seo utility",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "reverse",
+        "image",
+        "search",
+        "working",
+        "public",
+        "url"
+      ],
+      "path": "skills/reverse-image-search/SKILL.md"
+    },
+    {
       "id": "reverse-proxy",
       "canonical_id": "reverse-proxy",
       "name": "reverse-proxy",
@@ -63482,6 +66298,34 @@
         "boundaries"
       ],
       "path": "skills/review-multi-agent-orchestration/SKILL.md"
+    },
+    {
+      "id": "review-response-generator",
+      "canonical_id": "review-response-generator",
+      "name": "review-response-generator",
+      "description": "Review Response Generator. Use when working with review text and verified business context.",
+      "category": "local seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "review",
+        "response",
+        "generator",
+        "working",
+        "text",
+        "verified",
+        "business",
+        "context"
+      ],
+      "path": "skills/review-response-generator/SKILL.md"
     },
     {
       "id": "review-swarm",
@@ -63843,6 +66687,63 @@
         "requestslibrary"
       ],
       "path": "skills/robot-framework-skill/SKILL.md"
+    },
+    {
+      "id": "robots-txt-creator",
+      "canonical_id": "robots-txt-creator",
+      "name": "robots-txt-creator",
+      "description": "Robots.txt Creator. Use when working with site origin and desired crawl rules.",
+      "category": "seo utility",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "robots",
+        "txt",
+        "creator",
+        "working",
+        "site",
+        "origin",
+        "desired",
+        "crawl",
+        "rules"
+      ],
+      "path": "skills/robots-txt-creator/SKILL.md"
+    },
+    {
+      "id": "robots-txt-validator",
+      "canonical_id": "robots-txt-validator",
+      "name": "robots-txt-validator",
+      "description": "Robots.txt Validator. Use when working with robots.txt text, crawler and URLs to test.",
+      "category": "technical seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "robots",
+        "txt",
+        "validator",
+        "working",
+        "text",
+        "crawler",
+        "urls",
+        "test"
+      ],
+      "path": "skills/robots-txt-validator/SKILL.md"
     },
     {
       "id": "routerbase-model-gateway",
@@ -65230,6 +68131,34 @@
       "path": "skills/seaborn/SKILL.md"
     },
     {
+      "id": "search-preview-simulator",
+      "canonical_id": "search-preview-simulator",
+      "name": "search-preview-simulator",
+      "description": "Search Preview Simulator. Use when working with title, description and page URL.",
+      "category": "seo utility",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "search",
+        "preview",
+        "simulator",
+        "working",
+        "title",
+        "description",
+        "page",
+        "url"
+      ],
+      "path": "skills/search-preview-simulator/SKILL.md"
+    },
+    {
       "id": "search-specialist",
       "canonical_id": "search-specialist",
       "name": "search-specialist",
@@ -65847,6 +68776,37 @@
         "plans"
       ],
       "path": "skills/segment-cdp/SKILL.md"
+    },
+    {
+      "id": "selector",
+      "canonical_id": "selector",
+      "name": "selector",
+      "description": "Select a specialized 100seotools skill from a plain-language SEO or project-documentation request. Use when the user needs help choosing the appropriate workflow.",
+      "category": "skill discovery",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "discovery",
+        "workflow"
+      ],
+      "triggers": [
+        "seo",
+        "discovery",
+        "workflow",
+        "selector",
+        "select",
+        "specialized",
+        "100seotools",
+        "skill",
+        "plain",
+        "language",
+        "documentation",
+        "request"
+      ],
+      "path": "skills/selector/SKILL.md"
     },
     {
       "id": "selenium-skill",
@@ -66629,6 +69589,33 @@
       "path": "skills/seo-cannibalization-detector/SKILL.md"
     },
     {
+      "id": "seo-checklist-generator",
+      "canonical_id": "seo-checklist-generator",
+      "name": "seo-checklist-generator",
+      "description": "SEO Checklist Generator. Use when working with site type and current goal.",
+      "category": "seo utility",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "checklist",
+        "generator",
+        "working",
+        "site",
+        "type",
+        "current",
+        "goal"
+      ],
+      "path": "skills/seo-checklist-generator/SKILL.md"
+    },
+    {
       "id": "seo-competitor-pages",
       "canonical_id": "seo-competitor-pages",
       "name": "seo-competitor-pages",
@@ -66713,6 +69700,33 @@
         "established"
       ],
       "path": "skills/seo-content-auditor/SKILL.md"
+    },
+    {
+      "id": "seo-content-checker",
+      "canonical_id": "seo-content-checker",
+      "name": "seo-content-checker",
+      "description": "SEO Content Checker. Use when working with content and target query or reader task.",
+      "category": "on-page optimization",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "content",
+        "checker",
+        "working",
+        "target",
+        "query",
+        "reader",
+        "task"
+      ],
+      "path": "skills/seo-content-checker/SKILL.md"
     },
     {
       "id": "seo-content-planner",
@@ -66990,6 +70004,35 @@
         "citations"
       ],
       "path": "skills/seo-geo/SKILL.md"
+    },
+    {
+      "id": "seo-health-score-calculator",
+      "canonical_id": "seo-health-score-calculator",
+      "name": "seo-health-score-calculator",
+      "description": "SEO Health Score Calculator. Use when working with audit findings and a disclosed scoring rubric.",
+      "category": "seo performance",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "health",
+        "score",
+        "calculator",
+        "working",
+        "audit",
+        "findings",
+        "disclosed",
+        "scoring",
+        "rubric"
+      ],
+      "path": "skills/seo-health-score-calculator/SKILL.md"
     },
     {
       "id": "seo-hreflang",
@@ -68254,6 +71297,65 @@
       "path": "skills/site-architecture/SKILL.md"
     },
     {
+      "id": "site-comparison-report-generator",
+      "canonical_id": "site-comparison-report-generator",
+      "name": "site-comparison-report-generator",
+      "description": "Site Comparison Report Generator. Use when working with two or more sites and the user's comparison goal.",
+      "category": "seo performance",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "site",
+        "comparison",
+        "report",
+        "generator",
+        "working",
+        "two",
+        "sites",
+        "user",
+        "goal"
+      ],
+      "path": "skills/site-comparison-report-generator/SKILL.md"
+    },
+    {
+      "id": "sitemap-generator",
+      "canonical_id": "sitemap-generator",
+      "name": "sitemap-generator",
+      "description": "XML Sitemap Generator. Use when working with canonical public page URLs and optional real modification dates.",
+      "category": "seo utility",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "sitemap",
+        "generator",
+        "xml",
+        "working",
+        "canonical",
+        "public",
+        "page",
+        "urls",
+        "optional",
+        "real"
+      ],
+      "path": "skills/sitemap-generator/SKILL.md"
+    },
+    {
       "id": "skeleton-first",
       "canonical_id": "skeleton-first",
       "name": "skeleton-first",
@@ -68806,6 +71908,40 @@
         "skills"
       ],
       "path": "skills/skill-sentinel/SKILL.md"
+    },
+    {
+      "id": "skill-skill",
+      "canonical_id": "skill-skill",
+      "name": "skill-skill",
+      "description": "Write, upgrade or audit a Claude skill so it changes what gets generated: forcing functions, triggerable descriptions, and a static audit script with a 0-100 health score. Use for 写 skill, 改 skill.",
+      "category": "meta",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "jack-reson8/skill-skill",
+      "license": "MIT",
+      "license_source": "https://github.com/jack-reson8/skill-skill/blob/main/LICENSE",
+      "tags": [
+        "skills",
+        "authoring",
+        "lint",
+        "audit"
+      ],
+      "triggers": [
+        "skills",
+        "authoring",
+        "lint",
+        "audit",
+        "skill",
+        "write",
+        "upgrade",
+        "claude",
+        "so",
+        "changes",
+        "what",
+        "gets"
+      ],
+      "path": "skills/skill-skill/SKILL.md"
     },
     {
       "id": "skill-suggester",
@@ -69872,6 +73008,42 @@
         "architecture"
       ],
       "path": "skills/soroban-token-minter/SKILL.md"
+    },
+    {
+      "id": "soundza",
+      "canonical_id": "soundza",
+      "name": "soundza",
+      "description": "Find, audition and add free sound effects, ambience or music to a game, video or app with Soundza, or generate a new sound effect from a prompt, over MCP or a REST API.",
+      "category": "media",
+      "risk": "safe",
+      "source": "https://github.com/soundza/soundza-mcp/blob/main/skills/soundza/SKILL.md",
+      "source_type": "official",
+      "source_repo": "soundza/soundza-mcp",
+      "license": "MIT",
+      "license_source": "https://github.com/soundza/soundza-mcp/blob/main/LICENSE",
+      "tags": [
+        "audio",
+        "sound-effects",
+        "music",
+        "gamedev",
+        "video",
+        "mcp"
+      ],
+      "triggers": [
+        "audio",
+        "sound-effects",
+        "music",
+        "gamedev",
+        "video",
+        "mcp",
+        "soundza",
+        "find",
+        "audition",
+        "add",
+        "free",
+        "sound"
+      ],
+      "path": "skills/soundza/SKILL.md"
     },
     {
       "id": "source-document-filing",
@@ -71270,6 +74442,35 @@
       "path": "skills/stripe-integration/SKILL.md"
     },
     {
+      "id": "structured-data-validator",
+      "canonical_id": "structured-data-validator",
+      "name": "structured-data-validator",
+      "description": "Structured Data Validator. Use when working with JSON-LD, Microdata or RDFa source.",
+      "category": "schema & structured data",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "structured",
+        "data",
+        "validator",
+        "working",
+        "json",
+        "ld",
+        "microdata",
+        "rdfa",
+        "source"
+      ],
+      "path": "skills/structured-data-validator/SKILL.md"
+    },
+    {
       "id": "styleseed-design-review",
       "canonical_id": "styleseed-design-review",
       "name": "styleseed-design-review",
@@ -72345,6 +75546,40 @@
         "than"
       ],
       "path": "skills/sympy/SKILL.md"
+    },
+    {
+      "id": "syncbook-discovery",
+      "canonical_id": "syncbook-discovery",
+      "name": "syncbook-discovery",
+      "description": "Find reciprocal collaborators on Syncbook or prepare a private profile draft for human review using only explicitly supplied task facts.",
+      "category": "productivity",
+      "risk": "critical",
+      "source": "https://github.com/theguysaccount/syncbook-chatgpt",
+      "source_type": "community",
+      "source_repo": "theguysaccount/syncbook-chatgpt",
+      "license": "MIT",
+      "license_source": "https://github.com/theguysaccount/syncbook-chatgpt/blob/main/LICENSE",
+      "tags": [
+        "collaboration",
+        "networking",
+        "mcp",
+        "profiles"
+      ],
+      "triggers": [
+        "collaboration",
+        "networking",
+        "mcp",
+        "profiles",
+        "syncbook",
+        "discovery",
+        "find",
+        "reciprocal",
+        "collaborators",
+        "prepare",
+        "private",
+        "profile"
+      ],
+      "path": "skills/syncbook-discovery/SKILL.md"
     },
     {
       "id": "system-prompt-lookup",
@@ -74131,6 +77366,61 @@
       "path": "skills/testng-skill/SKILL.md"
     },
     {
+      "id": "text-to-html-converter",
+      "canonical_id": "text-to-html-converter",
+      "name": "text-to-html-converter",
+      "description": "Text to HTML Converter. Use when working with plain text and optional structure preferences.",
+      "category": "seo utility",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "text",
+        "html",
+        "converter",
+        "working",
+        "plain",
+        "optional",
+        "structure",
+        "preferences"
+      ],
+      "path": "skills/text-to-html-converter/SKILL.md"
+    },
+    {
+      "id": "text-translator",
+      "canonical_id": "text-translator",
+      "name": "text-translator",
+      "description": "Text Translator. Use when working with source text and target language or locale.",
+      "category": "seo utility",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "text",
+        "translator",
+        "working",
+        "source",
+        "target",
+        "language",
+        "locale"
+      ],
+      "path": "skills/text-translator/SKILL.md"
+    },
+    {
       "id": "the-honoured-one",
       "canonical_id": "the-honoured-one",
       "name": "the-honoured-one",
@@ -74780,6 +78070,32 @@
       "path": "skills/time-tracking/SKILL.md"
     },
     {
+      "id": "title-meta-length-counter",
+      "canonical_id": "title-meta-length-counter",
+      "name": "title-meta-length-counter",
+      "description": "Title & Meta Length Counter. Use when working with title and/or meta description.",
+      "category": "on-page optimization",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "title",
+        "meta",
+        "length",
+        "counter",
+        "working",
+        "description"
+      ],
+      "path": "skills/title-meta-length-counter/SKILL.md"
+    },
+    {
       "id": "tmux",
       "canonical_id": "tmux",
       "name": "tmux",
@@ -74980,6 +78296,34 @@
         "driven"
       ],
       "path": "skills/tokenwise/SKILL.md"
+    },
+    {
+      "id": "tone-of-voice-analyzer",
+      "canonical_id": "tone-of-voice-analyzer",
+      "name": "tone-of-voice-analyzer",
+      "description": "Tone of Voice Analyzer. Use when working with text and optional brand voice sample.",
+      "category": "content seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "tone",
+        "voice",
+        "analyzer",
+        "working",
+        "text",
+        "optional",
+        "brand",
+        "sample"
+      ],
+      "path": "skills/tone-of-voice-analyzer/SKILL.md"
     },
     {
       "id": "tool-design",
@@ -75377,6 +78721,36 @@
       "path": "skills/trading-ledger/SKILL.md"
     },
     {
+      "id": "traffic-potential-calculator",
+      "canonical_id": "traffic-potential-calculator",
+      "name": "traffic-potential-calculator",
+      "description": "Traffic Potential Calculator. Use when working with search volume and explicit CTR assumptions for matching period and market.",
+      "category": "seo performance",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "traffic",
+        "potential",
+        "calculator",
+        "working",
+        "search",
+        "volume",
+        "explicit",
+        "ctr",
+        "assumptions",
+        "matching"
+      ],
+      "path": "skills/traffic-potential-calculator/SKILL.md"
+    },
+    {
       "id": "train-sentence-transformers",
       "canonical_id": "train-sentence-transformers",
       "name": "train-sentence-transformers",
@@ -75554,6 +78928,35 @@
         "members"
       ],
       "path": "skills/trello-automation/SKILL.md"
+    },
+    {
+      "id": "trending-keyword-visualizer",
+      "canonical_id": "trending-keyword-visualizer",
+      "name": "trending-keyword-visualizer",
+      "description": "Trending Keyword Visualizer. Use when working with dated keyword interest or volume series with source.",
+      "category": "keyword research",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "trending",
+        "keyword",
+        "visualizer",
+        "working",
+        "dated",
+        "interest",
+        "volume",
+        "series",
+        "source"
+      ],
+      "path": "skills/trending-keyword-visualizer/SKILL.md"
     },
     {
       "id": "triage",
@@ -77277,6 +80680,35 @@
       "path": "skills/upstash-redis/SKILL.md"
     },
     {
+      "id": "url-slug-generator",
+      "canonical_id": "url-slug-generator",
+      "name": "url-slug-generator",
+      "description": "URL Slug Generator. Use when working with page title and optional language or URL policy.",
+      "category": "seo utility",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "url",
+        "slug",
+        "generator",
+        "working",
+        "page",
+        "title",
+        "optional",
+        "language",
+        "policy"
+      ],
+      "path": "skills/url-slug-generator/SKILL.md"
+    },
+    {
       "id": "url-to-markdown",
       "canonical_id": "url-to-markdown",
       "name": "url-to-markdown",
@@ -78945,6 +82377,36 @@
       "path": "skills/viral-video-teardown-remake/SKILL.md"
     },
     {
+      "id": "visibility-index-calculator",
+      "canonical_id": "visibility-index-calculator",
+      "name": "visibility-index-calculator",
+      "description": "Visibility Index Calculator. Use when working with keyword weights and rank-to-CTR mapping with rankings.",
+      "category": "seo performance",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "visibility",
+        "index",
+        "calculator",
+        "working",
+        "keyword",
+        "weights",
+        "rank",
+        "ctr",
+        "mapping",
+        "rankings"
+      ],
+      "path": "skills/visibility-index-calculator/SKILL.md"
+    },
+    {
       "id": "visual-emotion-engineer",
       "canonical_id": "visual-emotion-engineer",
       "name": "visual-emotion-engineer",
@@ -80274,6 +83736,42 @@
       "path": "skills/webflow-automation/SKILL.md"
     },
     {
+      "id": "webly",
+      "canonical_id": "webly",
+      "name": "webly",
+      "description": "Publish a website or share files at a live URL in seconds with no account, then let the person claim it, edit it over Webly's MCP server, and publish drafts they approve.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "https://github.com/Webly-AI/webly-plugin/tree/main/skills/webly",
+      "source_type": "official",
+      "source_repo": "Webly-AI/webly-plugin",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/Webly-AI/webly-plugin/blob/main/LICENSE",
+      "tags": [
+        "deploy",
+        "static-site",
+        "hosting",
+        "publish",
+        "file-sharing",
+        "mcp"
+      ],
+      "triggers": [
+        "deploy",
+        "static-site",
+        "hosting",
+        "publish",
+        "file-sharing",
+        "mcp",
+        "webly",
+        "website",
+        "share",
+        "files",
+        "live",
+        "url"
+      ],
+      "path": "skills/webly/SKILL.md"
+    },
+    {
       "id": "wechat-cover-maker",
       "canonical_id": "wechat-cover-maker",
       "name": "wechat-cover-maker",
@@ -81114,6 +84612,34 @@
       "path": "skills/woo-guard/SKILL.md"
     },
     {
+      "id": "word-count-structure-checker",
+      "canonical_id": "word-count-structure-checker",
+      "name": "word-count-structure-checker",
+      "description": "Word Count & Structure Checker. Use when working with text or structured article.",
+      "category": "on-page optimization",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "word",
+        "count",
+        "structure",
+        "checker",
+        "working",
+        "text",
+        "structured",
+        "article"
+      ],
+      "path": "skills/word-count-structure-checker/SKILL.md"
+    },
+    {
       "id": "wordpress",
       "canonical_id": "wordpress",
       "name": "wordpress",
@@ -81821,6 +85347,31 @@
         "native"
       ],
       "path": "skills/xiaohongshu-content-strategist/SKILL.md"
+    },
+    {
+      "id": "xml-sitemap-visualizer",
+      "canonical_id": "xml-sitemap-visualizer",
+      "name": "xml-sitemap-visualizer",
+      "description": "XML Sitemap Visualizer. Use when working with XML sitemap or sitemap index.",
+      "category": "technical seo",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "source_repo": "WHOISABHISHEKADHIKARI/100seotools",
+      "tags": [
+        "seo",
+        "tool"
+      ],
+      "triggers": [
+        "seo",
+        "tool",
+        "xml",
+        "sitemap",
+        "visualizer",
+        "working",
+        "index"
+      ],
+      "path": "skills/xml-sitemap-visualizer/SKILL.md"
     },
     {
       "id": "xss-html-injection",
