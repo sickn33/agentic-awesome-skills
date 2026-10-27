@@ -58,6 +58,82 @@ assert.throws(
   /found 0/,
 );
 
+const candidateRun = {
+  id: 42,
+  run_attempt: 1,
+  head_sha: "c".repeat(40),
+  repository: { full_name: "owner/repo" },
+  head_repository: { full_name: "owner/repo" },
+  path: ".github/workflows/distribution-candidate.yml",
+  event: "push",
+  head_branch: "v1.2.3",
+  status: "completed",
+  conclusion: "success",
+};
+function candidateProofDependencies(runs) {
+  return {
+    runCommand(command, args) {
+      if (command === "gh" && args[0] === "repo") {
+        return JSON.stringify({ nameWithOwner: "owner/repo" });
+      }
+      if (command === "gh" && args[0] === "api") {
+        return JSON.stringify({ workflow_runs: runs });
+      }
+      throw new Error(`Unexpected command: ${command} ${args.join(" ")}`);
+    },
+  };
+}
+assert.strictEqual(
+  release.requireSuccessfulDistributionCandidate(
+    "/fixture",
+    "1.2.3",
+    candidateRun.head_sha,
+    candidateProofDependencies([candidateRun]),
+  ).id,
+  candidateRun.id,
+);
+for (const override of [
+  { head_sha: "d".repeat(40) },
+  { head_branch: "main" },
+  { repository: { full_name: "attacker/repo" } },
+  { head_repository: { full_name: "attacker/repo" } },
+  { path: ".github/workflows/ci.yml" },
+  { event: "pull_request" },
+  { status: "in_progress" },
+  { conclusion: "failure" },
+]) {
+  assert.throws(
+    () => release.requireSuccessfulDistributionCandidate(
+      "/fixture",
+      "1.2.3",
+      candidateRun.head_sha,
+      candidateProofDependencies([{ ...candidateRun, ...override }]),
+    ),
+    /no successful immutable distribution candidate/,
+  );
+}
+
+let preparedSuite = null;
+release.runPreparedReleaseTestSuite("/fixture", {
+  pack(root, destination) {
+    preparedSuite = { ...preparedSuite, packedRoot: root, destination };
+  },
+  runReleaseSuite(root) {
+    preparedSuite = { ...preparedSuite, suiteRoot: root };
+  },
+  run(command, args, cwd, options) {
+    preparedSuite = { ...preparedSuite, command, args, cwd, env: options.env };
+  },
+});
+assert.deepStrictEqual(preparedSuite.args, ["run", "test"]);
+assert.strictEqual(preparedSuite.packedRoot, "/fixture");
+assert.strictEqual(preparedSuite.suiteRoot, "/fixture");
+assert.strictEqual(preparedSuite.cwd, "/fixture");
+assert.strictEqual(
+  preparedSuite.env.AAS_TEST_CANDIDATE_TARBALL,
+  path.join(preparedSuite.destination, "package.tgz"),
+);
+
 const root = fs.mkdtempSync(path.join(os.tmpdir(), "release-workflow-"));
 const repo = path.join(root, "repo");
 const remote = path.join(root, "remote.git");

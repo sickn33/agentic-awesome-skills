@@ -143,6 +143,11 @@ assert.match(publishWorkflow, /git merge-base --is-ancestor "\$tag_commit" "\$ma
 assert.match(publishWorkflow, /ref: main/);
 assert.doesNotMatch(publishWorkflow, /workflow_dispatch/);
 assert.match(publishWorkflow, /distribution_fetch\.cjs/);
+const releaseWorkflow = fs.readFileSync(path.join(repositoryRoot, "tools/scripts/release_workflow.js"), "utf8");
+assert.match(releaseWorkflow, /runPreparedReleaseTestSuite\(projectRoot\)/);
+assert.match(releaseWorkflow, /requireSuccessfulDistributionCandidate\(projectRoot, version, headCommit\)/);
+assert.match(detailedContract, /Preparation also creates the local release commit, packs its final sealed tree and runs the complete local test suite/);
+assert.match(detailedContract, /must not create the GitHub Release yet/);
 
 const pagesWorkflow = fs.readFileSync(
   path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "pages.yml"),

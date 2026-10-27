@@ -66,6 +66,7 @@ function runCommand(command, args, cwd, options = {}) {
   const result = spawnSync(invocation.command, invocation.args, {
     cwd,
     encoding: "utf8",
+    env: options.env || process.env,
     stdio: options.capture ? ["ignore", "pipe", "pipe"] : "inherit",
     shell: false,
   });
@@ -118,6 +119,56 @@ function githubReleaseExists(projectRoot, tagName) {
     stdio: "ignore",
   });
   return result.status === 0;
+}
+
+function distributionCandidateRuns(projectRoot, commit, dependencies = {}) {
+  const execute = dependencies.runCommand || runCommand;
+  const payload = JSON.parse(execute(
+    "gh",
+    [
+      "api",
+      "--method",
+      "GET",
+      "repos/{owner}/{repo}/actions/workflows/distribution-candidate.yml/runs",
+      "-f",
+      `head_sha=${commit}`,
+      "-f",
+      "per_page=100",
+    ],
+    projectRoot,
+    { capture: true },
+  ));
+  if (!Array.isArray(payload.workflow_runs)) {
+    throw new Error("Distribution candidate response is malformed.");
+  }
+  return payload.workflow_runs;
+}
+
+function requireSuccessfulDistributionCandidate(projectRoot, version, commit, dependencies = {}) {
+  const tag = `v${version}`;
+  const execute = dependencies.runCommand || runCommand;
+  const repository = JSON.parse(execute(
+    "gh",
+    ["repo", "view", "--json", "nameWithOwner"],
+    projectRoot,
+    { capture: true },
+  )).nameWithOwner;
+  const successful = distributionCandidateRuns(projectRoot, commit, dependencies).filter((run) => (
+    run.head_sha === commit
+    && run.repository?.full_name === repository
+    && run.head_repository?.full_name === repository
+    && run.path === ".github/workflows/distribution-candidate.yml"
+    && ["push", "workflow_dispatch"].includes(run.event)
+    && run.head_branch === tag
+    && run.status === "completed"
+    && run.conclusion === "success"
+    && Number.isSafeInteger(run.id)
+    && run.id > 0
+  )).sort((left, right) => right.id - left.id);
+  if (!successful.length) {
+    throw new Error(`Refusing to create GitHub Release ${tag}: no successful immutable distribution candidate exists for ${commit}.`);
+  }
+  return successful[0];
 }
 
 function localTagTarget(projectRoot, tagName) {
@@ -263,10 +314,21 @@ function writeReleaseNotes(projectRoot, version, sectionContent) {
 }
 
 function runReleaseSuite(projectRoot) {
-  // Source changes have already passed their protected component checks. Full
-  // runtime/web/platform validation executes once on the immutable tag candidate.
   for (const script of ["sync:release-state", "validate:references", "security:docs", "plugin-compat:check", "bundles:check", "check:aas-v1-catalog"])
     runCommand("npm", ["run", script], projectRoot);
+}
+
+function runPreparedReleaseTestSuite(projectRoot, options = {}) {
+  const temporary = fs.mkdtempSync(path.join(require("os").tmpdir(), "aas-release-tests-"));
+  try {
+    (options.runReleaseSuite || runReleaseSuite)(projectRoot);
+    (options.pack || require("./distribution_pack.cjs").pack)(projectRoot, temporary);
+    (options.run || runCommand)("npm", ["run", "test"], projectRoot, {
+      env: { ...(options.env || process.env), AAS_TEST_CANDIDATE_TARBALL: path.join(temporary, "package.tgz") },
+    });
+  } finally {
+    fs.rmSync(temporary, { recursive: true, force: true });
+  }
 }
 
 function runReleasePreflight(projectRoot, dependencies = {}) {
@@ -358,8 +420,6 @@ function prepareRelease(projectRoot, version, stateDir) {
   // Volatile metadata is an input to catalog timestamps. Refresh it before the
   // canonical release sync so the tagged tree is exactly what publish CI will
   // regenerate and verify.
-  runReleaseSuite(projectRoot);
-
   const refreshedReleaseNotes = ensureChangelogSection(projectRoot, version);
   const notesPath = writeReleaseNotes(projectRoot, version, refreshedReleaseNotes);
   const contract = loadWorkflowContract(projectRoot);
@@ -374,6 +434,7 @@ function prepareRelease(projectRoot, version, stateDir) {
 
   runCommand("git", ["commit", "-m", `chore: release v${version}`], projectRoot);
   convergePreparedRelease(projectRoot, contract);
+  runPreparedReleaseTestSuite(projectRoot);
   require("./distribution_snapshot.cjs").seal(projectRoot);
   runCommand("git", ["add", "data/distribution-snapshot.json"], projectRoot);
   runCommand("git", ["commit", "--amend", "--no-edit"], projectRoot);
@@ -461,6 +522,7 @@ function publishRelease(projectRoot, version) {
     console.log(`[release] ${tagName} is already published.`);
     return;
   }
+  requireSuccessfulDistributionCandidate(projectRoot, version, headCommit);
   const releaseArgs = ["release", "create", tagName, "--title", tagName, "--notes-file", notesPath];
   if (isPrereleaseVersion(version)) releaseArgs.push("--prerelease");
   runCommand("gh", releaseArgs, projectRoot);
@@ -495,10 +557,12 @@ function main() {
 
 module.exports = {
   runReleasePreflight,
+  runPreparedReleaseTestSuite,
   convergePreparedRelease,
   localTagTarget,
   remoteTagTarget,
   isPrereleaseVersion,
+  requireSuccessfulDistributionCandidate,
   resolveCommandInvocation,
   runCommand,
   selectMergedReleaseCandidate,
