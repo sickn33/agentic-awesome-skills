@@ -7,6 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [20.1.0] - 2026-10-27 - "122 Reviewed Skills And A Clear Maintenance Queue"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants. Adds **122** catalog skills, ships **2,872** total entrypoints, and clears the open PR, issue, Dependabot, CodeQL, and secret-scanning queues before release preparation.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@20.1.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **100seotools suite** - add **100** focused SEO workflows and selector across 15 reviewed PRs: selector; AI content generation; metadata and structured data; keyword research; content writing and gaps; keyword placement, metadata and readability; on-page structure and internal linking; metadata audit; technical SEO; utility metadata, redirects and robots; converters and previews; SEO performance; backlink and link building; competitor analysis; and local SEO.
+- **perq** - find verified free AI credits, free tiers, startup programs and student perks, with vendor links and last-verified dates.
+- **webly** - publish a website or share files at a live URL, claim the site and publish only drafts that the person approves.
+- **pro-launch** and **pro-motion** - build a product through taste-led phase gates, then plan and render an audio-first launch or promo film.
+- **skill-skill**, **renhua**, **post**, and **postel-writing** - author and audit skills, write Chinese social copy in a human voice, produce native share-post image sets, and draft or schedule X and LinkedIn posts through Postel.
+- **onboard**, **doom-pay**, **restosignals**, **syncbook-discovery**, **memory-handoff**, **bluebook-writing**, **soundza**, and **netapi** - inspect mixed project materials read-only; create and verify self-custodial checkout links; research restaurant openings; prepare collaborator profiles and drafts; maintain cross-CLI handoffs; write accessible design readings; add free sound assets; and enrich domain or IP indicators.
+
+### Changed
+
+- **onboard** - synchronize to upstream v3.2.1 and bundle both read-only helpers. Git calls use argv arrays and disable `fsmonitor`; traversal skips symlinks and secret-named files, with bounded depth, reads, output and timeouts.
+- **datacircle** - refresh the API-plan catalog, item and pricing semantics, currency calculations, provider coverage, trust boundaries and purchase/contact limits.
+- **llm-gateway** and **llm-caching** - document Bifrost as an open-source gateway option, with pinned local-container setup, virtual-key enforcement prerequisites, semantic-cache isolation and authentication limits.
+- **pixeltable** - synchronize the upstream 0.7.20 guidance, including hosted configuration, exit codes and `next:` confirmations, feedback previews and explicit `--send` approval, secret rejection and destructive-action gates.
+- Update **@modelcontextprotocol/sdk** to **1.32.1** and **express-rate-limit** to **8.7.1** in the affected canonical plugin and bundled example, with their lockfiles.
+
+### Maintenance and security
+
+- Resolve all **13** PRs recorded in the maintenance cycle: merge **11**, close **#2143** through owner replacement **#2150**, and supersede generated-mirror-only PR **#2146** with canonical PR **#2148**. Every closure carries an exact-head owner rationale.
+- Close **#828**, **#845**, **#1149**, and **#1734** as duplicate or unsupported CorpusIQ submissions without a reviewable skill tree, tracked license or canonical `SKILL.md`; close **#2136** as an unfilled bug template with no reproduction.
+- Record a successful maintenance cycle over **62 min 46 s**, bound to protected-main CI and CodeQL. The release preparation begins only after the open PR and issue queues, plus Dependabot, CodeQL and secret-scanning alerts, are empty.
+- Apply the normal protected lanes throughout: exact-head semantic review, component validation, strict up-to-date branch protection, guarded `merge:batch`, and the scripted release flow.
+
+### Review scope
+
+Every canonical skill tree in the maintenance batch was reviewed at its exact submitted content or an identical owner replacement. Validation, reference validation, documentation security, warning budget, source credits, catalog integrity and changed-skill evidence passed or the required CI gate passed on the exact rebased head. Live hosted services, paid runs, destructive commands and native client reloads were not executed as part of static skill review. The broader catalog audit remains unfinished.
+
+### Thanks
+
+Thanks to **@WHOISABHISHEKADHIKARI** for the 100seotools batches, **@f-o-x11** for `perq`, **@tokifyi** for `webly`, **@jack-reson8** for the four creative-product skills, **@doomsday-network** for `doom-pay`, **@Keviniscool-boy** for `onboard`, **@pierrebrunelle** for `pixeltable`, **@waynehamadi** for `datacircle`, **@Swpn0neel** for the Bifrost guidance, **@paperandbeyond23-gif** for `restosignals`, **@theguysaccount** for `syncbook-discovery`, **@WyattAu** for `memory-handoff`, **@TobeMagic** for `bluebook-writing`, **@vfseanm** for `soundza`, and **@slavaolesik** for `netapi`, along with **@robinsadeghpour** for `postel-writing` and the upstream authors whose licensed material is included.
+
 ## [20.0.0] - 2026-10-24 - "The Full-Catalog Review"
 
 > Our most significant catalog quality milestone yet: **2,750 skill entrypoints**, a completed individual-review inventory, and corrections across more than **2,000 skill bundles**. AAS 20 brings the entire catalog onto a documented review baseline.
