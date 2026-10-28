@@ -16,7 +16,7 @@ assert.equal(missingEvidence('## Change evidence\nValid author explanation.<!-- 
 assert.equal(parseArgs(['--contributor', '--base', 'upstream/main']).contributor, true);
 assert.deepEqual(missingEvidence('## Change evidence\n<!-- long instructions are not evidence -->\n## Validation evidence\nTODO fill this in later'), ['Change evidence','Validation evidence','Source and operational boundaries']);
 assert.equal(missingEvidence('## Change evidence\nCorrected the example port.\n## Validation evidence\nInspected source; live task not run.\n## Source and operational boundaries\nN/A: original prose, no external writes.').length, 0);
-const emptyReport = buildContributorReport({prBody:{available:true,body:fs.readFileSync(path.join(root,'.github/PULL_REQUEST_TEMPLATE.md'),'utf8')}});
+const emptyReport = buildContributorReport({changeRecords:[{status:"A",new_path:"skills/demo/SKILL.md"}],prBody:{available:true,body:fs.readFileSync(path.join(root,'.github/PULL_REQUEST_TEMPLATE.md'),'utf8')}});
 assert.equal(emptyReport.missing_evidence.length,3, 'unfilled template must request real evidence');
 for (const reason of ['missing_examples','missing_limitations','provenance_identity','risk_downgrade']) {
  const report=buildContributorReport({headOid:'a'.repeat(40)}, {reasons:[`example:${reason}`]});

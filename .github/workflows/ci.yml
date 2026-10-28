@@ -5,6 +5,7 @@ on:
     branches: ["main"]
   pull_request:
     branches: ["main"]
+    types: [opened, synchronize, reopened, edited, ready_for_review]
   workflow_dispatch:
     inputs:
       canonical_sync_pr:
@@ -65,6 +66,7 @@ jobs:
             --head "${{ github.event.pull_request.head.sha }}" \
             --event-path "$GITHUB_EVENT_PATH" \
             --check-fork-safety \
+            --check-submission \
             --no-run \
             --write-github-output \
             --write-step-summary

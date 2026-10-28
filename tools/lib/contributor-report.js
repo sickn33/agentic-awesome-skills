@@ -1,34 +1,7 @@
-// Parse Markdown template comments only for evidence presence. This is not the
-// output security boundary; literal() escapes all displayed untrusted values.
-// Keep a newline at each removed span so fragments cannot join into new markup.
-function evidenceText(body) {
-  const text = String(body || "");
-  const visible = [];
-  let cursor = 0;
-  while (cursor < text.length) {
-    const open = text.indexOf("<!--", cursor);
-    if (open === -1) {
-      visible.push(text.slice(cursor));
-      break;
-    }
-    visible.push(text.slice(cursor, open), "\n");
-    const close = text.indexOf("-->", open + 4);
-    if (close === -1) break;
-    cursor = close + 3;
-  }
-  return visible.join("");
-}
-function missingEvidence(body) {
-  const text = evidenceText(body);
-  const required = ["Change evidence", "Validation evidence", "Source and operational boundaries"];
-  return required.filter(heading => {
-    const section = text.match(new RegExp("^## " + heading + "[ \\t]*$([\\s\\S]*?)(?=^## |$(?![\\s\\S]))", "im"));
-    const content = section?.[1]?.trim() || "";
-    return content.length < 12 || /^\[.*\]$/.test(content) || /^(?:todo|tbd|placeholder|replace with)\b/i.test(content);
-  });
-}
+const { evidenceText, missingEvidence, evaluateAdmission } = require("./contribution-admission");
 // Contributor guidance only. Trusted intake and merge:batch remain authoritative.
 function instruction(reason) {
+  if (/license/.test(reason)) return "For new external imports declare license and license_source, retain the upstream LICENSE in the skill bundle, and preserve existing notices. Ask if redistribution rights are unclear.";
   if (/missing_change_records/.test(reason)) return "No contribution diff was found. Fetch the official upstream main and select the intended base and committed head.";
   if (/derived|generated/.test(reason)) return "Remove generated changes; distribution snapshots refresh in a protected release PR.";
   if (/unapproved_path|unknown_extension/.test(reason)) return "Use the documented source paths. For scripts or other restricted bundle files, request maintainer review in a Discussion; do not move or rename files to evade policy.";
@@ -45,6 +18,10 @@ function instruction(reason) {
 }
 function buildContributorReport(preflight, evidence = null, checks = []) {
   const blockers = [];
+  const admission = evaluateAdmission(preflight.changeRecords, preflight.prBody?.body, preflight.prBody?.available);
+  if (admission.checked && admission.blocking) for (const name of admission.missing) {
+    blockers.push({ path: "PR description", reason: "missing_submission_evidence", action: `Complete ${name}; short, truthful evidence and explained unrun tests are accepted.` });
+  }
   for (const file of preflight.directDerivedChanges || []) {
     blockers.push({ path: file, reason: "direct_derived_change", action: instruction("derived") });
   }
@@ -70,11 +47,12 @@ function buildContributorReport(preflight, evidence = null, checks = []) {
   }
   return {
     schema_version: 1, advisory: true,
+    admission,
     base: preflight.baseOid || null, head: preflight.headOid || null,
     scope: preflight.contributor ? "local fork-policy preview" : "PR intake",
     checks_run: checks.map(check => ({ name: check.script, passed: check.exitCode === 0 })),
     blockers,
-    missing_evidence: preflight.prBody?.available ? missingEvidence(preflight.prBody.body) : [],
+    missing_evidence: admission.checked ? admission.missing : [],
     contributor_evidence: [
       "Describe input or prompt, tool/version, expected and observed result; distinguish a live test from a source inspection or structural validation.",
       "For additions explain the gap versus existing skills; for fixes show before/after; for upstream updates identify the revision, retained local changes and license notices.",
@@ -90,7 +68,7 @@ function literal(value) {
   return String(value).replace(/[\x00-\x1f\x7f-\x9f]/g, "?").replace(/[&<>`|\[\]\\]/g, char => `&#${char.charCodeAt(0)};`);
 }
 function formatContributorReport(report) {
-  const lines = ["## Contribution readiness", "", `Head: ${literal(report.head || "unknown")}`, "", "### Corrections", ""];
+  const lines = ["## Contribution readiness", "", `Head: ${literal(report.head || "unknown")}`, "", `Submission evidence: ${!report.admission?.applicable ? "not required for non-skill changes" : !report.admission.checked ? "not checked; fill the PR description or supply --body-file" : report.admission.blocking ? "incomplete" : "present; claims still require review"}`, "", "### Corrections", ""];
   if (!report.blockers.length) lines.push("No intake blockers reported in this summary. Check all required jobs before requesting review.");
   for (const item of report.blockers.slice(0,40)) lines.push(`- ${literal(item.path)}: ${literal(item.reason)}. ${item.detail ? literal(item.detail) + ". " : ""}${literal(item.action)}`);
   if (report.blockers.length > 40) lines.push(`Further findings: ${report.blockers.length - 40}; see the full JSON report.`);

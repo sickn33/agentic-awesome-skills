@@ -278,6 +278,12 @@ def evaluate_snapshot(snapshot_root: Path, skill_id: str) -> dict[str, object]:
         "risk": {
             "declared": _safe_metadata_value(metadata.get("risk")),
         },
+        "license": {
+            "declared": _safe_metadata_value(metadata.get("license")),
+            "source": _safe_metadata_value(metadata.get("license_source")),
+            "retained_notice": (skill_root / "LICENSE").is_file()
+                and 0 < (skill_root / "LICENSE").stat().st_size <= 64 * 1024,
+        },
         "provenance": {
             "source": _safe_metadata_value(metadata.get("source")),
             "source_type": source_type,
@@ -384,6 +390,30 @@ def regression_reasons(
     after_declared = str(after["risk"].get("declared") or "unknown").lower()
     if before and RISK_RANK.get(after_declared, -1) < RISK_RANK.get(before_declared, -1):
         reasons.append(f"{skill_id}:risk_downgrade:{before_declared}->{after_declared}")
+    return reasons
+
+
+def license_reasons(skill_id, change_type, before, after):
+    """Enforce new-import notices without imposing a full legacy migration.
+
+    Presence and declared provenance are structural evidence, not a legal
+    determination that the license grants the requested use.
+    """
+    if after is None or change_type == "deleted":
+        return []
+    reasons = []
+    current = after.get("license", {})
+    if before and before.get("license", {}).get("retained_notice") and not current.get("retained_notice"):
+        reasons.append(f"{skill_id}:license_notice_removed")
+    provenance = after.get("provenance", {})
+    source = provenance.get("source")
+    external = not (isinstance(source, str) and source.strip().lower() == "self")
+    if change_type in {"added", "copied"} and external:
+        declared, origin = current.get("declared"), current.get("source")
+        if not isinstance(declared, str) or not declared.strip() or not isinstance(origin, str) or not origin.startswith("https://"):
+            reasons.append(f"{skill_id}:external_license_metadata_missing")
+        if not current.get("retained_notice"):
+            reasons.append(f"{skill_id}:external_license_notice_missing")
     return reasons
 
 
@@ -535,6 +565,7 @@ def build_report(
                         )
             comparison_before = None if change_type in {"added", "copied"} else before
             reasons.extend(regression_reasons(effective_id, change_type, comparison_before, after))
+            reasons.extend(license_reasons(effective_id, change_type, comparison_before, after))
             provenance_blockers, applied_exceptions = provenance_reasons(
                 effective_id,
                 change_type,

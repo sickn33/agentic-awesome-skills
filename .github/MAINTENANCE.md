@@ -48,3 +48,5 @@ cycle with `--prs none` and verify it; no implicit no-cycle bypass is supported.
 The original batch inventory must include every PR in the authorized scope.
 
 Contribution readiness and author correction ownership follow [contribution intake](../docs/maintainers/contribution-intake.md). Local preview and CI summaries remain advisory to protected merge authority.
+
+Canonical skill-tree PRs must pass mandatory evidence admission in `pr-policy` and current-body revalidation in `merge:batch`. Body/draft drift stops an active merge; content attestations cannot waive incomplete evidence. Keep author requirements proportionate and free of mandatory paid tools or unsafe live tests.
