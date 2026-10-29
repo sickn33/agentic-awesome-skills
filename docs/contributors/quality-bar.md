@@ -119,3 +119,7 @@ Use the default PR template's Change evidence, Validation evidence, and Source a
 The preflight reuses the existing changed-skill evidence evaluator: new findings and regressions are evaluated without forcing unrelated legacy skills to meet a new global strict threshold. Existing evidence already checks examples and limitations for regressions; a structural presence check still cannot judge whether their content is useful.
 
 New skills must explain their gap against existing skills. Upstream updates must identify an immutable revision and retain required license/NOTICE files. Missing license permission requires clarification; no license is not an unrestricted license. Scripts and other restricted fork files require the documented maintainer review path, not renamed extensions or a broader automatic allowlist.
+
+## Mandatory PR admission
+
+Canonical skill-tree changes require the three evidence sections in the default PR template. Empty/placeholder-only sections fail `pr-policy` before dependent checks; trusted merging rechecks the live body. Small corrections need only proportionate evidence. Explained unrun live tests are accepted and require no spending, credentials or paid AI tools. Drafts remain available for feedback. New external additions/copies must declare license provenance and retain a root LICENSE; existing notice removal is blocked. These structural gates do not certify semantic correctness or legal permission.

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require("fs");
+const { evaluateAdmission, admissionMessage } = require("../lib/contribution-admission");
 const { buildContributorReport, formatContributorReport } = require("../lib/contributor-report");
 const { classifyImpact } = require("../lib/maintenance-impact");
 const { resolveLicenseContents } = require("../lib/skill-license");
@@ -33,6 +34,8 @@ function parseArgs(argv) {
     head: "HEAD",
     eventPath: null,
     contributor: false,
+    bodyFile: null,
+    checkSubmission: false,
     checkPolicy: false,
     checkForkSafety: false,
     noRun: false,
@@ -55,6 +58,11 @@ function parseArgs(argv) {
     } else if (arg === "--event-path") {
       args.eventPath = argv[index + 1];
       index += 1;
+    } else if (arg === "--body-file") {
+      args.bodyFile = argv[++index];
+      if (!args.bodyFile || args.bodyFile.startsWith("--")) throw new Error("--body-file requires a path");
+    } else if (arg === "--check-submission") {
+      args.checkSubmission = true;
     } else if (arg === "--contributor") {
       args.contributor = true;
     } else if (arg === "--check-policy") {
@@ -72,6 +80,7 @@ function parseArgs(argv) {
     }
   }
 
+  if (args.bodyFile && args.eventPath) throw new Error("Use either --body-file or --event-path, not both.");
   if (args.contributor && !args.base) {
     throw new Error("--contributor requires --base upstream/main (fetch the official upstream main first).");
   }
@@ -558,7 +567,7 @@ function main() {
   const repairedPaths = new Set(mirrorLockfileRepairs.map(item => item.path));
   const directDerivedChanges = getDirectDerivedChanges(changedFiles, contract)
     .filter(file => !repairedPaths.has(file));
-  const pullRequestBody = pullRequest?.body ?? null;
+  const pullRequestBody = args.bodyFile ? fs.readFileSync(safeUserPath(args.bodyFile), "utf8") : (pullRequest?.body ?? null);
   const forkSafety = args.contributor && !pullRequest
     ? evaluateContributorSafety(projectRoot, changeRecords)
     : evaluateForkSafety(projectRoot, changeRecords, pullRequest);
@@ -614,6 +623,13 @@ function main() {
   if (args.checkPolicy && pullRequestBody !== null && !result.prBody.hasQualityChecklist) {
     if (args.json && !args.noRun) process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
     console.error("PR body must include the Quality Bar Checklist section from the template.");
+    process.exitCode = 1;
+    return;
+  }
+  const admission = evaluateAdmission(changeRecords, pullRequestBody, pullRequestBody !== null);
+  if ((args.checkSubmission || args.bodyFile) && admission.blocking) {
+    if (args.json && !args.noRun) process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    console.error(admissionMessage(admission));
     process.exitCode = 1;
     return;
   }

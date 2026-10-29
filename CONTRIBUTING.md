@@ -35,7 +35,7 @@ For a new skill, copy the one canonical [skill template](docs/contributors/skill
 
 ## Files to include
 
-Keep the contribution source-only and focused on `skills/<skill-id>/`. Preserve upstream authorship and notices. Original work uses `source: self` and `source_type: self`; external imports identify `source_repo`, `source_type`, `license` and `license_source`. A license URL does not replace a required retained notice: include the upstream `LICENSE` and applicable attribution/NOTICE material with the bundle. If the right to redistribute is unclear or no license is present, ask before importing; an absent license is not permission.
+Keep the contribution source-only and focused on `skills/<skill-id>/`. Preserve upstream authorship and notices. Original work uses `source: self` and `source_type: self`; external imports identify `source_repo`, `source_type`, `license` and `license_source`. New external skill additions/copies must declare `license` and an HTTPS `license_source`, and include a nonempty bounded root `LICENSE`; removing an existing root notice is blocked. Existing legacy imports are not forced through a blanket migration for a small edit. A license URL does not replace a required retained notice: include the upstream `LICENSE` and applicable attribution/NOTICE material with the bundle. If the right to redistribute is unclear or no license is present, ask before importing; an absent license is not permission.
 
 The normal fork intake accepts regular non-executable `SKILL.md` files, supported reference/resource/asset files, and bounded text `skills/<skill-id>/LICENSE` files. Exact supported paths, types and limits are enforced by the current preflight. **Scripts, executable files, symlinks, workflow changes and other restricted files need a maintainer review path.** Describe the complete bundle and its purpose in [Discussions Ideas](https://github.com/sickn33/agentic-awesome-skills/discussions/new?category=ideas) before submitting it. Maintainers decide whether to sponsor a protected owner PR or decline the bundle; the ordinary fork check cannot authorize it. Do not rename scripts as data to bypass intake.
 
@@ -59,6 +59,20 @@ For an existing skill, stage its actual directory and use `fix:` or an appropria
 For classification only while editing, add `--no-run`. For machine-readable results, add `--json`. **Classification only is not a passing complete preflight.** A local preview cannot grant fork workflow approval, consume maintainer exceptions without a real PR identity, or replace current CI and semantic review. Keep your checkout's tooling current; GitHub uses trusted base policy and may reject an older local preview.
 
 The report separates corrections, evidence to provide and maintainer review. If a check fails, its output identifies the details. Fix author-actionable failures and push the correction. If a restriction requires maintainer action, explain the blocker instead of repeatedly pushing the same files.
+
+## Required evidence before merge
+
+Every PR changing a canonical `skills/<skill-id>/**` tree must fill the default template's three evidence sections: **Change evidence**, **Validation evidence**, and **Source and operational boundaries**. Brief, concrete sentences are sufficient for a typo or small correction. A statement such as “not run because a live deploy publishes an app and spends credits” is valid; bare placeholders, empty comments and unexplained “N/A” are not evidence. The check verifies presence, not truth; reviewers still inspect the claims.
+
+You can open a draft and use CI feedback without installing local tools. Incomplete evidence fails the existing `pr-policy` check before its dependent validation jobs, and `merge:batch` independently checks the current PR description. Fill the sections in GitHub and let checks complete. Description edits rerun CI; unchanged skill content does not trigger another paid semantic review merely because the body was edited. A draft remains unmergeable until its author marks it ready. No paid tool, AI subscription or consequential live test is required to fill the form.
+
+To check a prepared description locally as part of the same preflight, save it in a gitignored file and add `--body-file`:
+
+```bash
+npm run pr:preflight -- --contributor --base upstream/main --head HEAD --body-file .tmp/pr-body.md
+```
+
+Without a body file or PR event, local preflight checks content only; admission is still checked on GitHub. Source changes require fresh checks on the new commit. A changed description or draft state stops an active merge attempt and requires fresh admission. CI results from an earlier description cannot waive missing current evidence.
 
 ## Describe what you actually tested
 

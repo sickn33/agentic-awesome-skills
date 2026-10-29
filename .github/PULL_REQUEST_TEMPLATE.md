@@ -1,3 +1,5 @@
+<!-- Skill-tree PRs: the three evidence sections below are required before merge. Short, truthful evidence is enough; explain any unrun tests. Drafts are welcome for feedback. -->
+
 ## Summary
 
 Describe the problem and resulting behavior. Identify affected skill IDs or paths.

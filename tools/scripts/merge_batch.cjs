@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require("fs");
+const { evaluateAdmission, admissionMessage, bodyDigest } = require("../lib/contribution-admission");
 const { resolveLicenseContents } = require("../lib/skill-license");
 const os = require("os");
 const path = require("path");
@@ -612,6 +613,7 @@ function loadPullRequestDetails(projectRoot, repoSlug, prNumber) {
   const details = runGhJson(projectRoot, ["pr", "view", String(prNumber)], {
     jsonFields: [
       "body",
+      "isDraft",
       "state",
       "mergeCommit",
       "autoMergeRequest",
@@ -640,6 +642,8 @@ function pullRequestTuple(prDetails) {
     throw new Error(`PR #${number || "<unknown>"} must target main.`);
   }
   return {
+    bodyDigest: bodyDigest(prDetails?.body),
+    draft: Boolean(prDetails?.isDraft),
     baseOid: assertFullSha(prDetails?.baseRefOid, `PR #${number} base SHA`),
     headOid: assertFullSha(prDetails?.headRefOid, `PR #${number} head SHA`),
   };
@@ -693,7 +697,18 @@ function assertUnchangedTuple(prDetails, expected, phase, prNumber) {
       `received ${actual.baseOid}/${actual.headOid}. Rerun merge:batch.`,
     );
   }
+  if ((expected.bodyDigest !== undefined && actual.bodyDigest !== expected.bodyDigest)
+      || (expected.draft !== undefined && actual.draft !== expected.draft)) {
+    throw failure("PR_CHANGED", `PR #${prNumber} description or draft state changed ${phase}; refresh admission before merging.`);
+  }
   return actual;
+}
+
+function assertSubmissionReady(records, details) {
+  const admission = evaluateAdmission(records, details.body);
+  if (admission.blocking) throw failure("SUBMISSION_INCOMPLETE", admissionMessage(admission));
+  if (details.isDraft) throw failure("DRAFT_PR", "Draft PRs may receive feedback but cannot merge; ask the author to mark it ready.");
+  return admission;
 }
 
 function validateEffectiveMainProtection(protection, rulesets = []) {
@@ -1286,6 +1301,7 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
     excludedRunIds: [],
     dependencies: options.approvalDependencies,
   });
+  assertSubmissionReady(approval.records, prDetails);
   const headSha = prDetails.headRefOid;
   const currentReviewedHeads = new Set(options.reviewedHeads || []);
   if (options.stateStore && approval.records.length && approval.records.every(isSkillContentRecord)) {
@@ -1387,6 +1403,7 @@ function prepareBatch(projectRoot, repoSlug, prNumbers, options, dependencies = 
       dryRun: options.dryRun, evaluatorOid: options.evaluatorOid,
       reviewedHeads: options.reviewedHeads, dependencies: options.approvalDependencies,
     });
+    assertSubmissionReady(approval.records, details);
     return { prNumber, merged: false, approvedRuns: approval.approvedRuns.map((run) => run.id),
       headSha: details.headRefOid, prepared: true, reviewAttested: (options.reviewedHeads || []).includes(details.headRefOid) };
     } catch (error) {
@@ -1521,6 +1538,7 @@ module.exports = {
   assertEffectiveMainProtection,
   assertFullSha,
   assertUnchangedTuple,
+  assertSubmissionReady,
   assertPendingPullRequest,
   buildSquashMergeBody,
   buildSquashMergeSubject,
