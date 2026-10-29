@@ -7,6 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [20.2.0] - 2026-10-29 - "Reviewed Skills And A Clean Release Path"
+
+> Installable catalog update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related assistants. Adds **5** reviewed skills, refreshes two existing workflows, and fixes the three canonical dependency alerts before publication; regenerated plugin copies are verified in the release alignment gate.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@20.2.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **bifrost-gateway** - run and configure Bifrost as a self-hosted OpenAI-compatible gateway, with fallbacks, virtual-key budgets, caching, observability, MCP routing, and explicit credential and public-exposure boundaries.
+- **comment-to-dm-cta** - plan an Instagram comment-to-DM CTA locally, then require explicit confirmation before creating or changing the automation through CommentKeyword.
+- **landing-page**, **web-design-system**, and **web-review** - adaptive UXKIN-derived workflows for truthful landing-page copy, a documented design system, and a prioritized rendered-page review. The optional UXKIN MCP path requires a user-selected account and plan.
+
+### Changed
+
+- **cloudish** - synchronize the official 0.1.6 workflow with server-side builds, verified log checks, custom domains, replicas, instance sizing, OIDC sign-in, credit operations, and retained MIT notice.
+- **datacircle** - refresh the GTM API-plan model, cached API coverage, search and SERP rows, pricing semantics, and query examples against the current public skill.
+- **animated GitHub profile and Satori updates remain on their prior reviewed catalog versions** - the proposed updates were not shipped because their exact-head content did not meet current structural, safety, provenance, or license-notice gates.
+
+### Security and reliability
+
+- Fix Dependabot's `qs` denial-of-service advisory in the three canonical Loki, Telegram, and WhatsApp boilerplate lockfiles by moving from **6.16.0** to **6.16.1**. The protected release snapshot propagates the patched lockfiles into both plugin mirrors.
+- Add retained MIT notices for imported skill bundles and replace Bifrost's secret-shaped examples with process-environment reads so the trusted SEC009 gate passes without weakening the scanner.
+- Complete two protected maintenance cycles: merge **#2164** and **#2172**, and close the remaining batch PRs with exact-head owner rationale where superseded or not admissible. Protected-main CI, CodeQL, required merge gates, and the release-cycle barrier are green on the verified source commit.
+
+### Upgrade notes
+
+- Run `npx agentic-awesome-skills@20.2.0` or update an existing pinned installation to receive the five new skills, refreshed Cloudish and Datacircle content, and the patched boilerplate lockfiles.
+- Existing projects install only the skills they select. Re-select or refresh a stack to receive catalog changes.
+- The optional CommentKeyword, UXKIN, Cloudish, and Bifrost workflows use external services with their own account, credential, data-transfer, cost, and confirmation boundaries.
+
+### Thanks
+
+Thanks to **@commentkeyword** for `comment-to-dm-cta`, **@Swpn0neel** for `bifrost-gateway`, **@ronaldmanlupig30-web** and UXKIN for the three website-workflow adaptations, **@waynehamadi** for the Datacircle refresh, and **@javierluraschi** plus the Cloudish team for the official upstream synchronization. Thanks also to **@MetcalfSolutions** and **@shivamnamdev** for their submissions; those updates remain available for a corrected resubmission.
+
+---
+
 ## [20.1.0] - 2026-10-27 - "122 Reviewed Skills And A Clear Maintenance Queue"
 
 > Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants. Adds **122** catalog skills, ships **2,872** total entrypoints, and clears the open PR, issue, Dependabot, CodeQL, and secret-scanning queues before release preparation.
