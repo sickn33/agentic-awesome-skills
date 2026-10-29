@@ -93,9 +93,13 @@ Existing SDKs only change their base URL:
 | LangChain | `http://localhost:8080/langchain` |
 
 ```python
+import os
 from openai import OpenAI
 
-client = OpenAI(base_url="http://localhost:8080/openai", api_key="<BIFROST_VIRTUAL_KEY>")  # Bifrost virtual key
+client = OpenAI(
+    base_url="http://localhost:8080/openai",
+    api_key=os.environ["BIFROST_VIRTUAL_KEY"],
+)
 reply = client.chat.completions.create(
     model="anthropic/claude-sonnet-4-6",  # any configured provider through the same client
     messages=[{"role": "user", "content": "Summarize this ticket in one line."}],
@@ -249,7 +253,7 @@ Score one point per item before calling a deployment production-ready (8/8 is th
 
 ## Best Practices
 
-- Prefer `env.` references and a secrets manager for provider keys; never paste real keys into prompts, docs or committed `config.json`. Use descriptive angle-bracket placeholders in examples.
+- Prefer `env.` references and a secrets manager for provider keys; never paste real keys into prompts, docs or committed `config.json`. Client examples read `BIFROST_VIRTUAL_KEY` from the process environment.
 - Use the `provider/model` form everywhere, so a model change is a one-line config edit.
 - Start with a virtual key per application. A new key with no `provider_configs` blocks every request, so allow at least one provider.
 - Semantic caching adds an embedding call on every cache miss. Enable it only where prompts actually repeat, and use hash mode for exact repeats.
