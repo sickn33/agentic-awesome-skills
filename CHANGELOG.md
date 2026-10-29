@@ -35,6 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fix Dependabot's `qs` denial-of-service advisory in the three canonical Loki, Telegram, and WhatsApp boilerplate lockfiles by moving from **6.16.0** to **6.16.1**. The protected release snapshot propagates the patched lockfiles into both plugin mirrors.
 - Add retained MIT notices for imported skill bundles and replace Bifrost's secret-shaped examples with process-environment reads so the trusted SEC009 gate passes without weakening the scanner.
+- Encode the two `pentest-tools` XSS reference payload archives as explicit UTF-8 Base64 companions so Windows Defender does not quarantine raw test markup during clone. The Markdown entrypoints retain authorization, data-minimization, and decoding boundaries, and a regression verifies byte-exact round trips.
 - Complete two protected maintenance cycles: merge **#2164** and **#2172**, and close the remaining batch PRs with exact-head owner rationale where superseded or not admissible. Protected-main CI, CodeQL, required merge gates, and the release-cycle barrier are green on the verified source commit.
 
 ### Upgrade notes
