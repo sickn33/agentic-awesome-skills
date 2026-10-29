@@ -13,8 +13,8 @@ describe('initial skill HTML', () => {
   });
   it('pins bundle links and images and rejects executable URLs, traversal and raw HTML', () => {
     const html = renderSkillBody('[Guide](references/guide.md)\n\n![Diagram](images/example.png)\n\n[Bad](javascript:alert)\n\n[Escape](../../../../secret)\n\n<script>alert(1)</script>', 'skills/sample', 'https://aaskills.tech/skill/sample/');
-    expect(html).toMatch(/github.com\/sickn33\/agentic-awesome-skills\/blob\/v[\d.]+\/skills\/sample\/references\/guide.md/);
-    expect(html).toMatch(/raw.githubusercontent.com\/sickn33\/agentic-awesome-skills\/v[\d.]+\/skills\/sample\/images\/example.png/);
+    expect(html).toMatch(/github\.com\/sickn33\/agentic-awesome-skills\/blob\/v[\d.]+\/skills\/sample\/references\/guide\.md/);
+    expect(html).toMatch(/raw\.githubusercontent\.com\/sickn33\/agentic-awesome-skills\/v[\d.]+\/skills\/sample\/images\/example\.png/);
     expect(html).not.toContain('href="javascript:');
     expect(html).not.toContain('href="https://github.com/secret');
     expect(html).not.toContain('<script>');
