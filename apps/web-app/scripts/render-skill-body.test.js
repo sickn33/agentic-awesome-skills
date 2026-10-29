@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { renderSkillBody } from './render-skill-body.js';
+import { renderSkillBody, setRootFallback } from './render-skill-body.js';
 
 describe('initial skill HTML', () => {
   it('includes instructions, tables, code and stable anchors without YAML metadata', () => {
@@ -19,4 +19,9 @@ describe('initial skill HTML', () => {
     expect(html).not.toContain('href="https://github.com/secret');
     expect(html).not.toContain('<script>');
   });
+});
+
+it('preserves literal replacement tokens from skill instructions when embedding the HTML', () => {
+  const body = "<p>$& $' $` $$</p>";
+  expect(setRootFallback('<html><div id="root"></div></html>', body)).toBe(`<html><div id="root">${body}</div></html>`);
 });

@@ -19,3 +19,14 @@ export function renderSkillBody(markdown, skillPath, pageUrl) {
     },
   }, body));
 }
+
+export function setRootFallback(html, fallbackHtml) {
+  const rootPattern = /<div\s+id=["']root["']><\/div>/i;
+
+  if (!fallbackHtml || !rootPattern.test(html)) {
+    return html;
+  }
+
+  return html.replace(rootPattern, () => `<div id="root">${fallbackHtml}</div>`);
+}
+

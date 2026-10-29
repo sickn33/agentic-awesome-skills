@@ -9,7 +9,7 @@ import Markdown from 'react-markdown';
 import { getDocsMetadata } from './docs-metadata.js';
 import { remarkHeadings } from '../src/utils/markdownHeadings.js';
 import remarkGfm from 'remark-gfm';
-import { renderSkillBody } from './render-skill-body.js';
+import { renderSkillBody, setRootFallback } from './render-skill-body.js';
 
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DIST_DIR = path.join(ROOT_DIR, 'dist');
@@ -369,17 +369,7 @@ function buildSkillFallback({ skill, landingPages, siteBaseUrl }) {
     heading: `@${safeText(skill.name) || safeText(skill.id) || 'Skill'}`,
     description: safeText(skill.description) || 'Installable skill from Agentic Awesome Skills.',
     links: [{ href: routeToUrl('/directory', siteBaseUrl), label: 'All skills A–Z' }, ...relatedLinks],
-  }).replace('</main>', `<article class="markdown-body">${body}</article></main>`);
-}
-
-function setRootFallback(html, fallbackHtml) {
-  const rootPattern = /<div\s+id=["']root["']><\/div>/i;
-
-  if (!fallbackHtml || !rootPattern.test(html)) {
-    return html;
-  }
-
-  return html.replace(rootPattern, `<div id="root">${fallbackHtml}</div>`);
+  }).replace('</main>', () => `<article class="markdown-body">${body}</article></main>`);
 }
 
 function buildLandingMeta({ catalogCount, imageUrl, canonicalUrl }) {
