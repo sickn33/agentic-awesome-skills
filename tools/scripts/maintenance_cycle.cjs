@@ -136,7 +136,7 @@ async function mainUnlocked(argv, dependencies = {}) {
       const latestProofs=proofForRuns(gh(['api','--paginate','--slurp',`repos/${REPO}/actions/runs?head_sha=${sha}&per_page=100`]).flatMap(p=>p.workflow_runs),sha);
       if(latestProofs.some((current,index)=>current.id!==proofs[index].id || current.run_attempt!==proofs[index].run_attempt)) throw failure('CI_WAIT_TIMEOUT','A newer workflow run appeared during verification; collect fresh evidence');
       if(batch.ensureTrustedMain(ROOT)!==sha) throw Error('Main changed during final verification');
-      attempt.result={main:sha,pulls:pulls.map(p=>({number:p.number,head:p.head.sha,merge:p.merge_commit_sha,mergedAt:p.merged_at,closedAt:p.closed_at})),workflows:raw};
+      attempt.result={main:sha,pulls:pulls.map(p=>({number:p.number,head:p.head.sha,merge:p.merged ? p.merge_commit_sha : null,mergedAt:p.merged_at,closedAt:p.closed_at})),workflows:raw};
       attempt.success=true;state.completedAt=new Date().toISOString();state.elapsedMs=Date.parse(state.completedAt)-Date.parse(state.startedAt);
       state.measurement='observed-source-maintenance-through-final-verification';
       state.limitations=['Includes review, agent gaps, blocked attempts and branch updates since start.','Not comparable to a release cycle or CI-only timing.','No runtime/catalog publication or native-client restart is performed.'];
