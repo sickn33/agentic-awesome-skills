@@ -174,7 +174,7 @@ The 1,273+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflow
 
             self.assertGreaterEqual(updated_files, 12)
             readme = (root / "README.md").read_text(encoding="utf-8")
-            self.assertIn("# AAS Core — Agentic Awesome Skills", readme)
+            self.assertIn("# Agentic Awesome Skills — AI Skills & AAS Core", readme)
             self.assertIn("1,304+ skills across development", readme)
             self.assertIn("[📚 Browse 1,304+ Skills](#browse-1304-skills)", readme)
             self.assertIn("[Browse 1,304+ Skills](#browse-1304-skills)", readme)

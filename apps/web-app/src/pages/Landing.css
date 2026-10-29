@@ -1,7 +1,7 @@
 .core-landing { max-width: 1600px; margin: 0 auto; padding: 0 60px 2.5rem; }
 .core-intro { padding-top: 38px; }
 .core-eyebrow { color: var(--text-muted); font: 13px var(--font-mono); letter-spacing: .2em; text-transform: uppercase; margin: 0 0 18px; }
-.core-intro h1 { font-size: clamp(3.5rem, 6.6vw, 94px); line-height: .94; letter-spacing: 0; font-weight: 800; margin: 0 0 10px; }
+.core-intro h1 { font-size: clamp(2.5rem, 5.2vw, 74px); line-height: 1.04; letter-spacing: 0; font-weight: 800; margin: 0 0 10px; }
 .core-intro h2 { font-size: clamp(1.7rem, 3.2vw, 46px); line-height: 1.044; letter-spacing: 0; font-weight: 700; margin: 0 0 8px; }
 .core-intro__lede { color: var(--text-secondary); font-size: clamp(1rem, 1.8vw, 26px); line-height: 1.39; margin: 0; }
 .core-intro__actions { display: flex; gap: 28px; align-items: center; flex-wrap: wrap; margin: 17px 0 24px; }

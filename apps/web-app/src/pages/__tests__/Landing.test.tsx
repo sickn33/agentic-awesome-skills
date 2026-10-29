@@ -7,11 +7,12 @@ import plan from '../../../../../docs/examples/workflows/mcp-contract/plan.json'
 
 const mount = () => render(<MemoryRouter><Landing /></MemoryRouter>);
 describe('Core product homepage', () => {
-  it('leads with Core, one setup action, and a recorded example rather than catalog controls', () => {
+  it('introduces the skill library with catalog and Core setup entry points', () => {
     mount();
-    expect(screen.getByRole('heading', { level: 1, name: 'AAS Core' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: 'Agentic Awesome Skills' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Get started with Core' })).toHaveAttribute('href', '#get-started');
     expect(screen.getByRole('link', { name: 'See an example' })).toHaveAttribute('href', '#recorded-example');
+    expect(screen.getByRole('link', { name: 'Explore the skill catalog' })).toHaveAttribute('href', '/core/');
     expect(screen.queryByRole('searchbox')).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: /^Codex setup/ })).toHaveAttribute('href', '/docs/codex-cli-skills/');
     expect(screen.getByRole('link', { name: /^Claude Code setup/ })).toHaveAttribute('href', '/docs/claude-code-skills/');

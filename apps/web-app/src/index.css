@@ -2918,3 +2918,7 @@ samp {
   .app-header__actions::before { content: ''; position: absolute; left: -40px; height: 32px; width: 1px; background: var(--stroke-subtle); }
 }
 .brand-link__logo { height: 40px; }
+
+.skill-directory { width: 100%; columns: 3 16rem; list-style: none; padding: 0; text-align: left; }
+.skill-directory li { break-inside: avoid; margin-bottom: .5rem; overflow-wrap: anywhere; }
+.skill-directory a { text-decoration: underline; }

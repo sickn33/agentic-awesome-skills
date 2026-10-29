@@ -7,7 +7,7 @@ it('renders the Core homepage without catalog requests', async () => {
   vi.clearAllMocks();
   render(<App />);
   expect(await screen.findByRole('heading', {
-    level: 1, name: 'AAS Core',
+    level: 1, name: 'Agentic Awesome Skills',
   })).toBeInTheDocument();
   expect(globalThis.fetch).not.toHaveBeenCalled();
 });
