@@ -2,7 +2,7 @@ const assert = require('node:assert');
 const { assertLiveSeoDocuments, readExpectedState } = require('../check-live-seo-geo');
 
 const expected = { countLabel: '1,987+', releaseLabel: 'V15.3.0', pluginCount: 21 };
-const description = 'Explore 1,987+ reusable skills for Claude Code, Codex and Cursor. AAS Core records your agent’s selection and previews a plan locally.';
+const description = 'Explore 1,987+ reusable skills for Claude Code, Codex and Cursor. AAS Core records your agent’s catalog selection and previews a plan locally.';
 const documents = {
   home: `Agentic Awesome Skills | AI Skills &amp; AAS Core <meta name="description" content="${description}"> SoftwareSourceCode FAQ specialized plugin`,
   plugins: 'AAS Specialized Plugins | 21 AI coding workflow packs specialized plugin packs numberOfItems',

@@ -347,7 +347,7 @@ export function buildLandingMeta(skillCount = 0): SeoMeta {
   const visibleCount = Math.max(skillCount, 0);
   const countLabel = getCatalogCountLabel(visibleCount);
   const title = 'Agentic Awesome Skills | AI Skills & AAS Core';
-  const description = `Explore ${countLabel} reusable skills for Claude Code, Codex and Cursor. AAS Core records your agent’s selection and previews a plan locally.`;
+  const description = `Explore ${countLabel} reusable skills for Claude Code, Codex and Cursor. AAS Core records your agent’s catalog selection and previews a plan locally.`;
   return {
     title,
     description,
