@@ -463,14 +463,26 @@ function stageReleaseFiles(projectRoot, contract) {
 // Prepare only: settle HEAD-dependent generated metadata before publishing a branch.
 function convergePreparedRelease(projectRoot, contract, options = {}) {
   const run = options.runCommand || runCommand;
-  run("npm", ["run", "sync:release-state"], projectRoot);
-  stageReleaseFiles(projectRoot, contract);
-  const changed = run("git", ["diff", "--cached", "--name-only"], projectRoot, { capture: true });
-  if (changed) {
-    // No remote branch or tag exists yet. Preserve the author date so doc lastmods settle.
-    run("git", ["commit", "--amend", "--no-edit"], projectRoot);
+  // Generated docs can change file mtimes consumed by the sitemap generator.
+  // Permit one settling amendment, then require an exact no-drift pass. A
+  // generator that changes again after settling still fails closed.
+  let amendments = 0;
+  for (let pass = 0; pass < 3; pass += 1) {
+    run("npm", ["run", "sync:release-state"], projectRoot);
+    stageReleaseFiles(projectRoot, contract);
+    const changed = run("git", ["diff", "--cached", "--name-only"], projectRoot, { capture: true });
+    if (changed) {
+      if (amendments === 2) {
+        throw new Error("Prepared release has generated or unmanaged drift; refusing to push.");
+      }
+      // No remote branch or tag exists yet. Preserve the author date so
+      // filesystem-derived release timestamps settle on this cleanup commit.
+      run("git", ["commit", "--amend", "--no-edit"], projectRoot);
+      amendments += 1;
+      continue;
+    }
+    if (amendments > 0) break;
   }
-  run("npm", ["run", "sync:release-state"], projectRoot);
   ensureCleanWorkingTree(projectRoot, "Prepared release has generated or unmanaged drift; refusing to push.");
 }
 

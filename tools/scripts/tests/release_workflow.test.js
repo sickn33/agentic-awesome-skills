@@ -329,6 +329,20 @@ release.convergePreparedRelease(stable, convergenceContract, { runCommand: fixtu
 assert.notStrictEqual(git(stable, "rev-parse", "HEAD"), initial);
 assert.strictEqual(fs.readFileSync(path.join(stable, "sitemap.xml"), "utf8"), "2026-10-13\n");
 assert.strictEqual(git(stable, "status", "--porcelain"), "");
+const twoStamp = convergenceFixture("two-stamp-generator");
+let twoStampGeneration = 0;
+release.convergePreparedRelease(twoStamp, convergenceContract, {
+  runCommand: fixtureRunner(cwd => {
+    const stamps = ["2026-10-13\n", "2026-10-14\n"];
+    fs.writeFileSync(path.join(cwd, "sitemap.xml"), stamps[Math.min(twoStampGeneration++, stamps.length - 1)]);
+  }),
+});
+assert.strictEqual(twoStampGeneration, 3);
+assert.strictEqual(fs.readFileSync(path.join(twoStamp, "sitemap.xml"), "utf8"), "2026-10-14\n");
+assert.strictEqual(git(twoStamp, "status", "--porcelain"), "");
+const firstPassAmend = git(twoStamp, "rev-parse", "HEAD");
+release.convergePreparedRelease(twoStamp, convergenceContract, { runCommand: fixtureRunner(() => {}) });
+assert.strictEqual(git(twoStamp, "rev-parse", "HEAD"), firstPassAmend, "no amendment after two stable passes");
 const settled = git(stable, "rev-parse", "HEAD");
 release.convergePreparedRelease(stable, convergenceContract, { runCommand: fixtureRunner(() => {}) });
 assert.strictEqual(git(stable, "rev-parse", "HEAD"), settled, "no amendment when already stable");
@@ -339,9 +353,12 @@ assert.throws(() => release.convergePreparedRelease(missing, { ...convergenceCon
 const moving = convergenceFixture("moving-generator");
 let generation = 0;
 assert.throws(() => release.convergePreparedRelease(moving, convergenceContract, {
-  runCommand: fixtureRunner(cwd => fs.writeFileSync(path.join(cwd, "sitemap.xml"), `generation ${++generation}\n`)),
+  runCommand: fixtureRunner(cwd => {
+    const stamps = ["2026-10-13\n", "2026-10-14\n", "2026-10-15\n"];
+    fs.writeFileSync(path.join(cwd, "sitemap.xml"), stamps[Math.min(generation++, stamps.length - 1)]);
+  }),
 }), /drift/);
-assert.strictEqual(generation, 2, "persistent drift is not retried or published");
+assert.strictEqual(generation, 3, "a third changed pass fails closed after two settling amendments");
 
 fs.rmSync(root, { recursive: true, force: true });
 console.log("Release workflow tests passed.");
