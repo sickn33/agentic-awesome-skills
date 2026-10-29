@@ -124,7 +124,7 @@ const deps = {
     if (url.endsWith("/sitemap.xml")) return "https://aaskills.tech/plugins";
     if (url.endsWith("/robots.txt"))
       return "User-agent: GPTBot User-agent: OAI-SearchBot User-agent: ClaudeBot User-agent: PerplexityBot";
-    return '<meta name="description" content="Explore 1+ reusable skills">AAS Core | Your agent chooses. You stay in control. SoftwareSourceCode';
+    return '<meta name="description" content="Explore 1+ reusable skills">Agentic Awesome Skills | AI Skills &amp; AAS Core SoftwareSourceCode';
   },
 };
 assert.throws(

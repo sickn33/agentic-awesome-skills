@@ -29,4 +29,3 @@ export function setRootFallback(html, fallbackHtml) {
 
   return html.replace(rootPattern, () => `<div id="root">${fallbackHtml}</div>`);
 }
-

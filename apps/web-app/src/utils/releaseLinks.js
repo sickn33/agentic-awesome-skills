@@ -29,4 +29,3 @@ export function skillSourcePath(path) {
   if (!/^skills\/[a-z0-9_-]+(?:\/[a-z0-9_-]+)*(?:\/SKILL\.md)?$/.test(normalized)) return '';
   return normalized.endsWith('/SKILL.md') ? normalized : `${normalized}/SKILL.md`;
 }
-
