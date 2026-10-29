@@ -25,5 +25,5 @@ for (const question of faq.mainEntity) {
 }
 assert.match(read('404.html'), /name="robots" content="noindex, follow"/);
 assert.match(read('404.html'), /<h1>Page not found<\/h1>/);
-assert.ok(fs.existsSync(path.join(root, 'dist/share/index.html')), 'Shared selections must retain a static entry route');
+assert.match(read('share/index.html'), /name="robots" content="noindex, follow"/, 'Shared selections must retain a non-indexable static entry route');
 console.log(`Discovery verified: ${skills.length} linked skills with initial HTML, visible FAQ answers and 404 document.`);

@@ -1003,7 +1003,7 @@ function main() {
     canonicalUrl: routeToUrl('/directory', siteBaseUrl), ogImage: socialImage, jsonLd: [],
   }, `<main><h1>All skills A–Z</h1><p>Browse the complete alphabetical directory of reusable AI agent skills.</p><a href="${escapeHtml(homeCanonical)}">Search and filter the catalog</a><ul>${buildStaticLinkList(directoryLinks)}</ul></main>`);
   // Shared selections are client state, but their entry route must remain reachable.
-  writePrerenderedRoute('/share', template, { ...homeMeta, canonicalUrl: routeToUrl('/share', siteBaseUrl), jsonLd: [] }, '<main><h1>Shared skill selection</h1><p>Open the selection in the catalog.</p></main>');
+  writePrerenderedRoute('/share', setMetaTag(template, 'name', 'robots', 'noindex, follow'), { ...homeMeta, title: 'Shared skill selection | Agentic Awesome Skills', description: 'Inspect a shared skill selection and prepare a brief for your coding agent.', canonicalUrl: routeToUrl('/share', siteBaseUrl), jsonLd: [] }, '<main><h1>Shared skill selection</h1><p>Open the selection in the catalog.</p></main>');
   const notFound = setRootFallback(applySeoMeta(template, {
     title: 'Page not found | Agentic Awesome Skills', description: 'The requested catalog page does not exist.',
     canonicalUrl: routeToUrl('/404', siteBaseUrl), ogImage: socialImage, jsonLd: [],
