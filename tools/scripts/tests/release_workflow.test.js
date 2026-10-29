@@ -343,6 +343,21 @@ assert.strictEqual(git(twoStamp, "status", "--porcelain"), "");
 const firstPassAmend = git(twoStamp, "rev-parse", "HEAD");
 release.convergePreparedRelease(twoStamp, convergenceContract, { runCommand: fixtureRunner(() => {}) });
 assert.strictEqual(git(twoStamp, "rev-parse", "HEAD"), firstPassAmend, "no amendment after two stable passes");
+const committer = convergenceFixture("committer-date-generator");
+const committerBefore = git(committer, "show", "-s", "--format=%cI", "HEAD");
+let committerPasses = 0;
+release.convergePreparedRelease(committer, convergenceContract, {
+  runCommand(command, args, cwd, options = {}) {
+    if (command === "npm") {
+      committerPasses += 1;
+      fs.writeFileSync(path.join(cwd, "sitemap.xml"), git(cwd, "log", "-1", "--format=%cI", "--", "guide.md") + "\n");
+      return "";
+    }
+    return release.runCommand(command, args, cwd, options);
+  },
+});
+assert.equal(git(committer, "show", "-s", "--format=%cI", "HEAD"), committerBefore);
+assert.equal(committerPasses, 2, "Git committer-date metadata converges without moving time");
 const settled = git(stable, "rev-parse", "HEAD");
 release.convergePreparedRelease(stable, convergenceContract, { runCommand: fixtureRunner(() => {}) });
 assert.strictEqual(git(stable, "rev-parse", "HEAD"), settled, "no amendment when already stable");

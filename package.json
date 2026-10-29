@@ -61,6 +61,7 @@
     "pr:decision": "node tools/scripts/pr_decision_manifest.cjs",
     "merge:batch": "node tools/scripts/merge_batch.cjs",
     "release:preflight": "node tools/scripts/release_workflow.js preflight",
+    "release:rehearse": "node tools/scripts/release_workflow.js rehearse",
     "release:prepare": "node tools/scripts/release_workflow.js prepare",
     "release:publish": "node tools/scripts/release_workflow.js publish",
     "test": "node tools/scripts/tests/run-test-suite.js",
