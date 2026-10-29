@@ -6,9 +6,11 @@ const { spawnSync } = require('node:child_process');
 const root = path.resolve(__dirname, '../../..');
 const bootstrap = path.join(root, 'skills/using-lwc/scripts/bootstrap.sh');
 const installer = path.join(root, 'skills/using-lwc/scripts/install-lwc.sh');
-// Preflight clones the repo beneath a temporary root that bootstrap rejects.
-// Use an owned private disposable fixture outside temp, and always remove it below.
-const fixture = fs.mkdtempSync(path.join(os.homedir(), '.aas-lwc-review-'));
+// Bootstrap rejects projects beneath the active temporary root, so use a
+// private disposable fixture outside it. Sandboxed maintainers can provide a
+// writable explicit root without changing the security case.
+const fixtureRoot = fs.realpathSync(process.env.AAS_LWC_TEST_ROOT || os.homedir());
+const fixture = fs.mkdtempSync(path.join(fixtureRoot, '.aas-lwc-review-'));
 try {
   const home = path.join(fixture, 'home');
   const bin = path.join(fixture, 'bin');
