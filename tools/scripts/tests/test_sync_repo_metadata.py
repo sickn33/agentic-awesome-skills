@@ -1,4 +1,5 @@
 import importlib.util
+import re
 import sys
 import tempfile
 import unittest
@@ -114,7 +115,13 @@ The 1,273+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflow
             )
 
             (root / "docs" / "users" / "getting-started.md").write_text(
-                "# Getting Started with Agentic Awesome Skills (V8.3.0)\n",
+                "# Getting Started with Agentic Awesome Skills (V8.3.0)\n\n"
+                "In release 8.3.0, the release-pinned flow.\n"
+                "The 8.3.0 installer requires Git.\n"
+                "git clone --branch v8.3.0 repo ./aas-review-v8.3.0\n"
+                "--pin v8.3.0\n"
+                "npx agentic-awesome-skills@8.3.0 --release 8.3.0\n"
+                "For this published release, the commit is `1111111111111111111111111111111111111111`. Inspect the selected trees before activation; use the direct installer for its destination and update checks.\n",
                 encoding="utf-8",
             )
             (root / "docs" / "users" / "aas-core.md").write_text(
@@ -177,10 +184,12 @@ The 1,273+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflow
             self.assertIn("The reusable `SKILL.md` playbooks", readme)
             self.assertIn("Guide capability coverage", readme)
             self.assertIn("does not certify semantic completeness", readme)
-            self.assertEqual(
-                "# Getting Started with AAS Core\n",
-                (root / "docs" / "users" / "getting-started.md").read_text(encoding="utf-8"),
-            )
+            getting_started = (root / "docs" / "users" / "getting-started.md").read_text(encoding="utf-8")
+            self.assertIn("# Getting Started with AAS Core\n", getting_started)
+            self.assertEqual(set(re.findall(r"8\.4\.0", getting_started)), {"8.4.0"})
+            self.assertNotIn("8.3.0", getting_started)
+            self.assertNotIn("1111111111111111111111111111111111111111", getting_started)
+            self.assertIn("Git tag and npm `gitHead` must agree", getting_started)
             aas_core = (root / "docs" / "users" / "aas-core.md").read_text(encoding="utf-8")
             self.assertIn("--package=agentic-awesome-skills@8.4.0", aas_core)
             self.assertIn("searchable, readable, and available for agent selection", aas_core)

@@ -101,7 +101,7 @@ git clone --depth 1 --branch v20.1.0 https://github.com/sickn33/agentic-awesome-
 git -C ./aas-review-v20.1.0 rev-parse HEAD
 ```
 
-For this published release, the commit is `6d4ea18320984083107f07ff69587fa355ee94c0`. Inspect the selected trees before activation; use the direct installer for its destination and update checks.
+Inspect the selected trees before activation. The Git tag and npm `gitHead` must agree with the release provenance; use the direct installer for its destination and update checks.
 
 **Option C — one exact skill with GitHub CLI (preview):**
 

@@ -278,6 +278,50 @@ def sync_getting_started(content: str, metadata: dict) -> str:
         GETTING_STARTED_TITLE_RE,
         "# Getting Started with AAS Core",
     )
+    version = metadata["version"]
+    content = re.sub(
+        r"In release " + VERSION_TOKEN_PATTERN,
+        f"In release {version}",
+        content,
+    )
+    content = re.sub(
+        r"The " + VERSION_TOKEN_PATTERN + r" installer requires",
+        f"The {version} installer requires",
+        content,
+    )
+    content = re.sub(
+        r"(--branch )v" + VERSION_TOKEN_PATTERN,
+        rf"\g<1>v{version}",
+        content,
+    )
+    content = re.sub(
+        r"(aas-review-)v" + VERSION_TOKEN_PATTERN,
+        rf"\g<1>v{version}",
+        content,
+    )
+    content = re.sub(
+        r"(--pin )v" + VERSION_TOKEN_PATTERN,
+        rf"\g<1>v{version}",
+        content,
+    )
+    content = re.sub(
+        r"(agentic-awesome-skills@)" + VERSION_TOKEN_PATTERN,
+        rf"\g<1>{version}",
+        content,
+    )
+    content = re.sub(
+        r"(--release )" + VERSION_TOKEN_PATTERN,
+        rf"\g<1>{version}",
+        content,
+    )
+    content = re.sub(
+        r"^For this published release, the commit is `[0-9a-f]{40}`\. "
+        r"Inspect the selected trees before activation; use the direct installer for its destination and update checks\.$",
+        "Inspect the selected trees before activation. The Git tag and npm `gitHead` must agree with the release provenance; "
+        "use the direct installer for its destination and update checks.",
+        content,
+        flags=re.MULTILINE,
+    )
     return content
 
 
