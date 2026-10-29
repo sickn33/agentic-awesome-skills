@@ -39,6 +39,7 @@ export function Plugins(): React.ReactElement {
         <p>AAS specialized plugins are domain-specific distributions of the full skill library — smaller scope, clearer activation, faster starts.</p>
         <p>These bundles contain skill instructions. External tools, service accounts and connectors must be configured separately. Choose the skills relevant to your project; a bundle is not a requirement to use every included tool.</p>
         <div>
+          <Link to="/plugins/aas-core/">Explore the AAS Core remote preview</Link>
           <a href={pluginDocUrl()}>Read plugin install guide <Icon name="arrowRight" size={16} /></a>
           <Link to="/core">Browse full skill catalog <Icon name="arrowRight" size={16} /></Link>
           <a href={gettingStartedDocUrl()}>Install one skill with GitHub CLI</a>

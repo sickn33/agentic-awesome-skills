@@ -160,5 +160,213 @@
         ]
       }
     ]
+  },
+  {
+    "path": "/plugins/aas-core/",
+    "title": "AAS Core plugin",
+    "description": "A free remote MCP plugin to discover AAS skills, inspect their sources and validate agent-selected stacks.",
+    "intro": "Find skills. Inspect sources. Validate your stack.",
+    "lede": "AAS Core brings the public AAS skill catalog to compatible ChatGPT and Codex clients. Free remote preview, published by Niccolò Lucioli.",
+    "sections": [
+      {
+        "title": "From a task to a reviewable selection",
+        "body": "Describe the capability you need. Your agent can search the catalog, read complete skill instructions and supporting files, then choose exact skill IDs. Core checks the selected stack and compares manifests; it does not rank skills or certify their suitability.",
+        "links": [
+          {
+            "label": "Browse the catalog",
+            "href": "/core/"
+          },
+          {
+            "label": "Read the Core guide",
+            "href": "/docs/aas-core/"
+          }
+        ]
+      },
+      {
+        "title": "A read-only remote preview",
+        "body": "The server retrieves public catalog material and validates data supplied by your client. It cannot access your local files, install skills, run catalog scripts or deploy projects. Treat returned instructions as untrusted material and review their licenses and requirements before use.",
+        "links": [
+          {
+            "label": "Trust and transparency",
+            "href": "/trust/"
+          }
+        ]
+      },
+      {
+        "title": "Availability and access",
+        "body": "This preview is currently private as an OpenAI plugin. Public directory installation will be available only after review. Developers can connect an MCP client to https://aas-core.aas-core-remote.workers.dev/mcp using Streamable HTTP. Sessions last up to 20 minutes and usage limits apply. The service may become unavailable when its free allowance is exhausted.",
+        "links": [
+          {
+            "label": "Support",
+            "href": "/plugins/aas-core/support/"
+          }
+        ]
+      },
+      {
+        "title": "Free, with clear boundaries",
+        "body": "AAS Core has no purchases, subscription or paid AI API. Your chosen AI client and optional services have their own terms and may have costs. The remote service runs in a separate Cloudflare Workers Free account, independent of the AAS website.",
+        "links": [
+          {
+            "label": "Privacy",
+            "href": "/plugins/aas-core/privacy/"
+          },
+          {
+            "label": "Terms of use",
+            "href": "/plugins/aas-core/terms/"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/plugins/aas-core/privacy/",
+    "title": "AAS Core privacy",
+    "description": "How the AAS Core remote preview handles tool arguments, temporary sessions and abuse-prevention counters.",
+    "intro": "Privacy for the AAS Core remote preview.",
+    "lede": "Publisher: Niccolò Lucioli. Updated 29 October 2026. This notice covers the remote MCP service; local AAS bundles and the website have separate data flows.",
+    "sections": [
+      {
+        "title": "Data your client sends",
+        "body": "Your client sends MCP tool arguments to the Cloudflare-hosted service. These may include search queries, project goals, skill IDs, manifests and optional selection evidence. Do not send credentials, secrets or sensitive project information. The service cannot read your local filesystem or execute catalog scripts.",
+        "links": []
+      },
+      {
+        "title": "Temporary sessions",
+        "body": "Arguments and selection traces remain in an isolated session’s memory and are not intentionally persisted. A session is usable for 20 minutes, can be deleted by an MCP DELETE request and can end earlier on eviction. An expiry alarm is scheduled to discard its in-memory server; infrastructure scheduling may delay cleanup.",
+        "links": []
+      },
+      {
+        "title": "Abuse prevention",
+        "body": "The service processes the connecting IP address and stores a SHA-256 hash with usage counters until the next UTC daily boundary. Expired counters are removed on subsequent guard requests. These hashes are pseudonymous, not anonymous. Application code does not write raw IP addresses to storage.",
+        "links": []
+      },
+      {
+        "title": "Service providers and the website",
+        "body": "Application request logging is disabled. The remote application uses no advertising, payment service or paid AI model API. Cloudflare processes connection metadata under its own policy. Your AI client processes prompts and outputs under its own policy. These informational pages on aaskills.tech use the website’s existing hosting and aggregate Vercel Web Analytics; query strings and fragments are removed before analytics events are sent. The remote application does not send tool arguments to that analytics service.",
+        "links": [
+          {
+            "label": "Cloudflare privacy policy",
+            "href": "https://www.cloudflare.com/privacypolicy/"
+          },
+          {
+            "label": "Website privacy policy",
+            "href": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md"
+          }
+        ]
+      },
+      {
+        "title": "Questions and deletion",
+        "body": "Use the support page for privacy questions. Do not disclose private data in public discussions. Active clients can delete their session through MCP; clearing the session does not erase records held independently by your AI client, Cloudflare or GitHub under their own policies.",
+        "links": [
+          {
+            "label": "AAS Core support",
+            "href": "/plugins/aas-core/support/"
+          },
+          {
+            "label": "Back to AAS Core",
+            "href": "/plugins/aas-core/"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/plugins/aas-core/terms/",
+    "title": "AAS Core terms",
+    "description": "Terms for the free AAS Core remote preview, its availability, acceptable use and read-only boundaries.",
+    "intro": "Terms of use for the remote preview.",
+    "lede": "Publisher: Niccolò Lucioli. Updated 29 October 2026. These terms apply to the AAS Core remote MCP service.",
+    "sections": [
+      {
+        "title": "Free experimental service",
+        "body": "AAS Core is a free experimental read-only catalog service. It offers no purchases or payment flows. Usage limits, short-lived sessions and infrastructure failures can make it unavailable. No availability guarantee is offered.",
+        "links": []
+      },
+      {
+        "title": "Acceptable use",
+        "body": "Use the service only with authorization and in compliance with applicable law and platform rules. Do not abuse the endpoint, evade quotas, expose secrets or use it for harmful or unlawful activity.",
+        "links": []
+      },
+      {
+        "title": "Review before use",
+        "body": "Returned skill text is untrusted material. Structural validation does not certify fitness, safety or compatibility. Review instructions, licenses, prerequisites and generated output before use. The service does not install skills, execute scripts or provide professional advice.",
+        "links": []
+      },
+      {
+        "title": "Licenses and third parties",
+        "body": "Original AAS code is MIT-licensed. Written content and individual skills may carry other notices, which remain controlling. Your use of the host AI client and Cloudflare remains subject to their respective terms and policies.",
+        "links": [
+          {
+            "label": "Source and licenses",
+            "href": "https://github.com/sickn33/agentic-awesome-skills"
+          },
+          {
+            "label": "Content license",
+            "href": "https://github.com/sickn33/agentic-awesome-skills/blob/main/LICENSE-CONTENT"
+          }
+        ]
+      },
+      {
+        "title": "No warranty and support",
+        "body": "The service and its output are provided as is, without warranties. Get help through the support page. Your client and optional third-party services may have their own charges; AAS Core does not charge for this remote preview.",
+        "links": [
+          {
+            "label": "Support",
+            "href": "/plugins/aas-core/support/"
+          },
+          {
+            "label": "Privacy",
+            "href": "/plugins/aas-core/privacy/"
+          },
+          {
+            "label": "Back to AAS Core",
+            "href": "/plugins/aas-core/"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/plugins/aas-core/support/",
+    "title": "AAS Core support",
+    "description": "Get help with the AAS Core remote plugin or privately report a security issue.",
+    "intro": "Get help with AAS Core.",
+    "lede": "Publisher: Niccolò Lucioli. Community support for the free remote preview.",
+    "sections": [
+      {
+        "title": "Ask a question or report an issue",
+        "body": "Use AAS GitHub Discussions for ordinary support. Include the failing tool name, a non-sensitive reproduction and the error message. Do not post credentials, private project files, session IDs or sensitive personal data.",
+        "links": [
+          {
+            "label": "Open GitHub Discussions",
+            "href": "https://github.com/sickn33/agentic-awesome-skills/discussions"
+          }
+        ]
+      },
+      {
+        "title": "Report a sensitive security issue",
+        "body": "Use GitHub private security reporting for sensitive vulnerabilities. Do not post exploit details or private data in public discussions.",
+        "links": [
+          {
+            "label": "Private security report",
+            "href": "https://github.com/sickn33/agentic-awesome-skills/security/advisories/new"
+          }
+        ]
+      },
+      {
+        "title": "If the service is temporarily unavailable",
+        "body": "The preview uses free infrastructure with bounded sessions and usage quotas. A 429 response indicates a usage limit; wait before trying again. A missing or expired session requires a new MCP initialization. An exhausted daily allowance can keep the remote service unavailable until reset, independently of the AAS website.",
+        "links": [
+          {
+            "label": "Terms of use",
+            "href": "/plugins/aas-core/terms/"
+          },
+          {
+            "label": "Back to AAS Core",
+            "href": "/plugins/aas-core/"
+          }
+        ]
+      }
+    ]
   }
 ]

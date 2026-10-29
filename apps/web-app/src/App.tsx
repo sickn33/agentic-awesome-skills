@@ -104,6 +104,10 @@ function App(): React.ReactElement {
               <Route path="/teams" element={<InformationPage />} />
               <Route path="/trust" element={<InformationPage />} />
               <Route path="/plugins" element={<Plugins />} />
+              <Route path="/plugins/aas-core" element={<InformationPage />} />
+              <Route path="/plugins/aas-core/privacy" element={<InformationPage />} />
+              <Route path="/plugins/aas-core/terms" element={<InformationPage />} />
+              <Route path="/plugins/aas-core/support" element={<InformationPage />} />
               <Route path="/docs" element={<Docs />} />
               <Route path="/docs/:slug" element={<Docs />} />
               <Route path="/workbench" element={<Workbench />} />
