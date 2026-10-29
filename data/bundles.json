@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-27T08:28:40.000Z",
+  "generatedAt": "2026-10-29T09:02:11.000Z",
   "bundles": {
     "core-dev": {
       "description": "Core development skills across languages, frameworks, and backend/frontend fundamentals.",
@@ -150,6 +150,7 @@
         "bdistill-behavioral-xray",
         "bdistill-knowledge-extraction",
         "bevy-ecs-expert",
+        "bifrost-gateway",
         "bilig-workpaper",
         "biopython",
         "browser-testing-with-devtools",
@@ -319,6 +320,7 @@
         "junta-leiloeiros",
         "k6-load-testing",
         "lambdatest-agent-skills",
+        "landing-page",
         "landing-page-generator",
         "langgraph",
         "laravel-development-workflow",
@@ -529,6 +531,8 @@
         "voice-ai-development",
         "vscode-extension-guide-en",
         "web-artifacts-builder",
+        "web-design-system",
+        "web-review",
         "web3-transaction-relayer-pool",
         "webapp-testing",
         "webdriverio-skill",
@@ -1321,6 +1325,7 @@
         "azure-mgmt-weightsandbiases-dotnet",
         "azure-monitor-opentelemetry-ts",
         "backend-development-feature-development",
+        "bifrost-gateway",
         "blue-green-deploy",
         "brand-growth-system-builder",
         "brendangregg-use-tsa",
@@ -2227,7 +2232,8 @@
         "upgrading-expo",
         "use-dom",
         "ux-audit",
-        "uxkin-research"
+        "uxkin-research",
+        "web-review"
       ]
     },
     "seo-core": {
@@ -2281,6 +2287,7 @@
         "canonical-url-builder",
         "client-secret-exposure-audit",
         "codebase-to-wordpress-converter",
+        "comment-to-dm-cta",
         "competitor-backlink-idea-generator",
         "competitor-gap-analyzer",
         "competitor-keyword-overlap-checker",

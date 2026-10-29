@@ -75,6 +75,8 @@ Use `npm run merge:batch -- --prs 123,124 --state-dir /absolute/private/state` w
 
 When a runtime release is requested, write truthful changelog notes based on the actual tag diff, then use `release:prepare -- X.Y.Z` from clean current main. This creates `release/vX.Y.Z`, synchronizes distribution snapshots, plugin compatibility, Codex/Claude mirrors, editorial bundles, manifests and marketplaces together, validates them, and opens a protected PR. Contributor credit comes from reviewed frontmatter and `data/source-credits.json`; generated leaderboards are never edited by hand.
 
+Preparation also creates the local release commit, packs its final sealed tree and runs the complete local test suite against that exact tarball before pushing. `release:publish` may create or reuse the immutable tag to trigger the distributed candidate. After that candidate succeeds for the exact tag and commit, the publisher rechecks the dependency inventory and live alerts, dispatches npm publication for the tested bytes, and requires the registry version, `gitHead` and integrity to match before it creates the GitHub Release. A failed npm publication leaves the release public-incomplete with no GitHub Release created by this flow. `release:publish` creates the GitHub Release only after npm publication succeeds.
+
 Prepared release PRs and their merged main commit run snapshot/schema/reference/security/compatibility checks; the full runtime/web suite and platform matrix execute on the immutable tag candidate. The separate agent-first preview also defers a valid prepared snapshot to that candidate, avoiding a second package and platform matrix before the tag.
 
 The prepared `data/distribution-snapshot.json` binds version and tracked tree modes/content independently of commit SHA. Packaging unprepared development main fails through `prepack`. Ephemeral PR test packing explicitly uses `--ignore-scripts`; it does not produce publication authority. The release workflow seals the final staged tree after generator convergence. Exactly one merged release PR authored by the repository owner must match the version.
@@ -137,3 +139,15 @@ moves before preparation. Never shrink the recorded scope to hide blockers.
 For a genuinely release-only task with no source PR batch, explicitly start a
 cycle with `--prs none` and verify it; no implicit no-cycle bypass is supported.
 The original batch inventory must include every PR in the authorized scope.
+
+## Contributor readiness and repair ownership
+
+Use the [contribution intake guide](contribution-intake.md) for new skills, corrections, upstream updates and restricted bundles. Contributor preflight uses `--contributor` with an explicit fetched upstream base, previews the existing fork policy and evaluates changed-skill evidence before component checks. Local classification or green structural validation does not establish a tested agent workflow. CI summaries distinguish corrections, requested author evidence and maintainer semantic review; no new approval authority is added.
+
+Return substantive author-actionable defects with file, finding and corrective action before semantic review. Small maintainer repairs remain discretionary. Restricted scripts require a reviewed owner-sponsored path with attribution preserved; never widen the fork allowlist or close a valid contribution just to clear a batch. Preserve required checks, exact-head attestation and the existing release cycle. Measure initial evidence, correction rounds, maintainer repair time and policy-only interventions for a real cohort before claiming improvement.
+
+## Mandatory contribution admission
+
+Canonical skill-tree PRs require filled Change evidence, Validation evidence, and Source and operational boundaries sections before merge. The protected-base `pr-policy` check and trusted merge runner both enforce this independently; head attestations and content receipts cannot bypass admission. The runner binds body digest and draft state in its attempt tuple, rechecking while waiting and immediately before merge. Metadata drift stops with PR_CHANGED. Drafts permit feedback but cannot merge.
+
+Description edits re-run the existing CI workflow; check names and strict protection are unchanged. A local `--body-file` is optional for preview; its absence cannot certify PR admission. New external skill additions/copies require declared license/source and retained root LICENSE, while existing unrelated legacy omissions are not a blanket migration gate. The contract does not require paid tools, credentials, consequential live tests or releases from contributors. See [contribution intake](contribution-intake.md).

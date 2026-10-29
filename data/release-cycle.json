@@ -1,27 +1,19 @@
 {
   "schemaVersion": 1,
   "repository": "sickn33/agentic-awesome-skills",
-  "version": "20.1.0",
-  "main": "62f80d2ccca3ab7cbd125bedff8a9efc6e8f04ae",
+  "version": "20.2.0",
+  "main": "6e4106fb38458d2bb2bf50b53db74031daabc208",
   "prs": [
-    2151,
-    2152
+    2180
   ],
   "pulls": [
     {
-      "number": 2151,
-      "head": "b3a001fb0d5f67bb867b1170b5cc559ab8704098",
-      "merge": "726c83739e71a09c0086ee7050e287616197110c",
-      "mergedAt": "2026-10-27T08:21:21Z",
-      "closedAt": "2026-10-27T08:21:21Z"
-    },
-    {
-      "number": 2152,
-      "head": "ec59c210e6e8a19c86db185df835b75e7c92a32d",
-      "merge": "62f80d2ccca3ab7cbd125bedff8a9efc6e8f04ae",
-      "mergedAt": "2026-10-27T08:25:19Z",
-      "closedAt": "2026-10-27T08:25:19Z"
+      "number": 2180,
+      "head": "f5d10aac22f9119aea29344aa28495d6b162336e",
+      "merge": "6e4106fb38458d2bb2bf50b53db74031daabc208",
+      "mergedAt": "2026-10-29T08:56:43Z",
+      "closedAt": "2026-10-29T08:56:43Z"
     }
   ],
-  "completedAt": "2026-10-27T08:28:27.820Z"
+  "completedAt": "2026-10-29T09:01:58.624Z"
 }

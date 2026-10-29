@@ -11544,6 +11544,39 @@
     }
   },
   {
+    "id": "bifrost-gateway",
+    "path": "skills/bifrost-gateway",
+    "category": "ai-ml",
+    "name": "bifrost-gateway",
+    "description": "Run and configure Bifrost, the open-source AI gateway: one OpenAI-compatible API for 20+ LLM providers with fallbacks, virtual keys and budgets, semantic caching, observability and an MCP gateway.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-10-27",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ]
+    },
+    "source_type": "self",
+    "tags": [
+      "bifrost",
+      "ai-gateway",
+      "llm-gateway",
+      "openai-compatible",
+      "mcp-gateway",
+      "llm-routing"
+    ]
+  },
+  {
     "id": "bilig-workpaper",
     "path": "skills/bilig-workpaper",
     "category": "web-development",
@@ -16857,6 +16890,40 @@
     "source_repo": "amElnagdy/delegate-skills",
     "license": "MIT",
     "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE"
+  },
+  {
+    "id": "comment-to-dm-cta",
+    "path": "skills/comment-to-dm-cta",
+    "category": "marketing",
+    "name": "comment-to-dm-cta",
+    "description": "Plan the \"Comment KEYWORD\" CTA of an Instagram Reel (keyword, overlay, caption, DM copy), then, after explicit user confirmation, set up the matching auto-DM in CommentKeyword.",
+    "risk": "critical",
+    "source": "https://github.com/commentkeyword/agent-toolkit/tree/c8117ca569b4b8d0de9bbec14aa9a90b59e6bb35/skills/comment-to-dm-cta",
+    "date_added": "2026-10-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "commentkeyword/agent-toolkit",
+    "license": "MIT",
+    "license_source": "https://github.com/commentkeyword/agent-toolkit/blob/c8117ca569b4b8d0de9bbec14aa9a90b59e6bb35/LICENSE",
+    "tags": [
+      "instagram",
+      "reels",
+      "comment-to-dm",
+      "cta",
+      "short-form-video",
+      "mcp"
+    ]
   },
   {
     "id": "commit",
@@ -39088,6 +39155,40 @@
       "pytest",
       "appium",
       "lambdatest"
+    ]
+  },
+  {
+    "id": "landing-page",
+    "path": "skills/landing-page",
+    "category": "frontend",
+    "name": "landing-page",
+    "description": "Build landing, home and pricing pages that look like a real product instead of AI output: honest copy, one design system, checked on phone and desktop.",
+    "risk": "safe",
+    "source": "https://github.com/uxkin/agent/tree/ee24e34dd0d2361417a48b96e4a0ad4e27d251ca/.agents/skills/design-md",
+    "date_added": "2026-10-28",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "uxkin/agent",
+    "license": "MIT",
+    "license_source": "https://github.com/uxkin/agent/blob/ee24e34dd0d2361417a48b96e4a0ad4e27d251ca/LICENSE",
+    "tags": [
+      "ui",
+      "frontend",
+      "landing-page",
+      "web-design",
+      "copywriting",
+      "responsive"
     ]
   },
   {
@@ -72170,6 +72271,40 @@
     }
   },
   {
+    "id": "web-design-system",
+    "path": "skills/web-design-system",
+    "category": "frontend",
+    "name": "web-design-system",
+    "description": "Choose a design direction for a website from real sites and write it down as a DESIGN.md: colors with roles, type, spacing, radius, shadows and components, in light and dark.",
+    "risk": "safe",
+    "source": "https://github.com/uxkin/agent/tree/ee24e34dd0d2361417a48b96e4a0ad4e27d251ca/.agents/skills/design-md",
+    "date_added": "2026-10-28",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "uxkin/agent",
+    "license": "MIT",
+    "license_source": "https://github.com/uxkin/agent/blob/ee24e34dd0d2361417a48b96e4a0ad4e27d251ca/LICENSE",
+    "tags": [
+      "design-system",
+      "design-md",
+      "ui",
+      "frontend",
+      "tailwind",
+      "theming"
+    ]
+  },
+  {
     "id": "web-games",
     "path": "skills/game-development/web-games",
     "category": "game-development",
@@ -72276,6 +72411,40 @@
       "product-scoping",
       "design-system",
       "architecture"
+    ]
+  },
+  {
+    "id": "web-review",
+    "path": "skills/web-review",
+    "category": "frontend",
+    "name": "web-review",
+    "description": "Review a website or landing page and list what to fix, most important first: message, generic AI look, consistency, copy, mobile, accessibility, speed and missing states.",
+    "risk": "safe",
+    "source": "https://github.com/uxkin/agent/tree/ee24e34dd0d2361417a48b96e4a0ad4e27d251ca/.agents/skills/design-md",
+    "date_added": "2026-10-28",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "uxkin/agent",
+    "license": "MIT",
+    "license_source": "https://github.com/uxkin/agent/blob/ee24e34dd0d2361417a48b96e4a0ad4e27d251ca/LICENSE",
+    "tags": [
+      "ui",
+      "ux",
+      "review",
+      "accessibility",
+      "web-design",
+      "audit"
     ]
   },
   {

@@ -1,0 +1,35 @@
+# Contribution intake and author feedback
+
+The canonical contributor path is [CONTRIBUTING.md](https://github.com/sickn33/agentic-awesome-skills/blob/main/CONTRIBUTING.md). Its one skill template and one PR template cover additions, corrections and upstream updates. Issue forms collect affected paths, versions and reproduction; proposals ask for existing coverage, source/license, affiliation and operational requirements. Small corrections do not need an issue.
+
+## Readiness and authority
+
+`npm run pr:preflight -- --contributor --base upstream/main --head HEAD` requires an explicit fetched upstream base and a committed clean head. It previews the existing ordinary fork policy, rejects generated edits and evaluates complete changed skill trees with the same `changed_skill_evidence.py` used in CI. It then runs the component plan through the existing isolated validation helper. Failed intake stops before candidate check execution; failed changed-skill evidence is reported before component checks. `--no-run` is classification only. JSON names every executed check; never describe unexecuted checks as passing.
+
+This is a local readiness preview, not workflow approval or merge authority. Without an actual PR identity it deliberately cannot consume reviewed-fork exceptions. When inspecting an existing fork PR, pass its real event via `--event-path`; current trusted intake and `merge:batch` independently recheck policy and exact-head review. Ordinary same-repository maintainer tooling uses the existing preflight mode. Do not broaden script allowlists to make the local preview pass.
+
+Actions intake and the existing PR decision summary display **Contribution readiness**: corrections with actions, evidence to provide and remaining maintainer review. The latter summary combines intake with changed-skill evidence. Reports are advisory and sanitize untrusted paths/reasons; no bot comments, new privileged execution or new required check names are introduced. Failure details remain in the original check log and evidence artifact. A fork rejected at intake may not have downstream evidence: report that boundary rather than implying a complete review. Third-party deployment authorization and exhausted reviewer quotas are distinct from content defects.
+
+## Author corrections and semantic review
+
+Ask the author to fix reproducible submission defects: metadata, missing references/examples, incomplete notices, generated files and inaccurate test claims. Give file, finding and next action. Read all three evidence sections: Change evidence, Validation evidence, and Source and operational boundaries. The summary flags empty or placeholder sections when the PR body is available; presence is not proof that the claims are true. Parse template comments as bounded text spans, preserve separators between visible fragments and ignore an unfinished comment through the end; output escaping remains a separate boundary. For canonical skill changes these three sections are now mandatory in `pr-policy` and independently in trusted `merge:batch`, including existing open PRs when evaluated under current protected main. Ask the author to fill them; do not manufacture tests, rewrite contributor bodies, or close/reopen PRs to refresh a template. Short evidence and explained unrun tests are accepted. Non-skill documentation edits do not require these sections.
+
+For a new skill, assess its gap against named existing skills. For a correction, verify before/after behavior. For upstream synchronization, inspect the full pinned revision, retained adaptations, source identity and redistribution notices. Distinguish structure, source inspection, protocol discovery and an agent completing the intended task. Accept a truthful untested boundary when a live check requires credentials, spending or consequential external actions; decide whether that limits merge readiness. Tiny wording fixes need proportionate evidence.
+
+Complete-tree semantic review, real Tessl review or exact-current-head maintainer attestation, required CI and strict protected merging remain mandatory. Jev is optional and advisory. A source hash or license URL cannot prove correctness or satisfy all upstream license obligations.
+
+## Restricted bundles
+
+Scripts, workflows and other paths blocked by fork policy need a preliminary Discussion or concrete proposal describing every file, dependencies, side effects and license. Review the complete bundle before deciding on a protected owner-sponsored source PR. Preserve original authorship and explicitly link any replacement PR; explain the policy constraint. Sponsorship is a case-specific decision, never an automatic exception, a generalized allowlist, or permission to execute unreviewed contributor files. Do not tell contributors to hide executable content under allowed extensions.
+
+## Measure the next cohort
+
+For the next 20–30 external skill PRs, record immutable initial head, contribution type, whether initial evidence was complete, deterministic first-pass result, author correction rounds, maintainer repair minutes, policy-only intervention and final disposition. Record intake/main timing separately from optional release/publication. Count a protocol-only test as such. Keep raw observations privately with the maintenance cycle, without secrets or full private transcripts. Report sample size and actual observations; this change does not establish an improvement percentage yet.
+
+## Admission enforcement
+
+The existing required check names and strict protection stay unchanged. `pr-policy` invokes `--check-submission` from the protected-base evaluator. `pull_request` includes `edited` and `ready_for_review` so a body fix is rechecked; existing concurrency cancels superseded runs. Dependent component/evidence/preview jobs only proceed after intake passes. This does not add a paid review service or broaden workflow approval. The separate semantic workflow is not triggered by body edits. Content fingerprints may reuse unchanged semantic work; they never waive live admission.
+
+The merge runner checks the live body independently of CI artifacts, local reports, checklist ticks, signed content review receipts or owner head attestations. Its immutable-attempt tuple also binds a description digest and draft state, rechecked while waiting and immediately before merge. Changed metadata returns `PR_CHANGED`; incomplete evidence returns `SUBMISSION_INCOMPLETE`; drafts return `DRAFT_PR`. Safe analysis/workflow approval may precede readiness for feedback, but merging cannot. GitHub cannot atomically bind a merge to body text; these checks are point-in-time observations under strict branch protection.
+
+The same offline changed-skill evaluator enforces license metadata and a retained root LICENSE for newly added/copied external skills, and prevents removal of an existing notice. It does not infer redistribution permission from an absent license or certify legal suitability. Existing unrelated legacy debt is not made a prerequisite for a focused correction. Relevant content checks, actual semantic judgment, exact-head review, and component validation remain required.

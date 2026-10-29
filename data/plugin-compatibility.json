@@ -8678,6 +8678,31 @@
       "runtime_files": []
     },
     {
+      "id": "bifrost-gateway",
+      "path": "skills/bifrost-gateway",
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "target_specific_home_path"
+        ],
+        "claude": [
+          "target_specific_home_path"
+        ]
+      },
+      "runtime_files": []
+    },
+    {
       "id": "bilig-workpaper",
       "path": "skills/bilig-workpaper",
       "targets": {
@@ -12446,6 +12471,25 @@
     {
       "id": "commandcode-delegate",
       "path": "skills/commandcode-delegate",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "comment-to-dm-cta",
+      "path": "skills/comment-to-dm-cta",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -29258,6 +29302,25 @@
     {
       "id": "lambdatest-agent-skills",
       "path": "skills/lambdatest-agent-skills",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "landing-page",
+      "path": "skills/landing-page",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -53203,6 +53266,25 @@
       "runtime_files": []
     },
     {
+      "id": "web-design-system",
+      "path": "skills/web-design-system",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "web-media-getter",
       "path": "skills/web-media-getter",
       "targets": {
@@ -53243,6 +53325,25 @@
     {
       "id": "web-project-brainstorming",
       "path": "skills/web-project-brainstorming",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "web-review",
+      "path": "skills/web-review",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -55053,14 +55154,14 @@
     }
   ],
   "summary": {
-    "total_skills": 2872,
+    "total_skills": 2877,
     "supported": {
-      "codex": 2789,
-      "claude": 2809
+      "codex": 2793,
+      "claude": 2813
     },
     "blocked": {
-      "codex": 83,
-      "claude": 63
+      "codex": 84,
+      "claude": 64
     },
     "manual_setup": 22
   }

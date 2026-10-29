@@ -1,8 +1,8 @@
 # Skill Catalog
 
-Generated at: 2026-10-27T08:28:40.000Z
+Generated at: 2026-10-29T09:02:11.000Z
 
-Total skills: 2872
+Total skills: 2877
 
 ## agent-behavior (5)
 
@@ -129,7 +129,7 @@ Total skills: 2872
 | `pydantic-ai` | Build production-ready AI agents with PydanticAI — type-safe tool use, structured outputs, dependency injection, and multi-model support. | safe | community | pydantic-ai, ai-agents, llm, openai, anthropic, gemini, tool-use, structured-output, python | pydantic-ai, ai-agents, llm, openai, anthropic, gemini, tool-use, structured-output, python, pydantic, ai, agents |
 | `superpowers-lab` | Evaluate experimental Claude workflow skills in an isolated lab with reproducible tasks, observed results, and explicit adoption criteria. | safe | https://github.com/obra/superpowers-lab | superpowers, lab | superpowers, lab, evaluate, experimental, claude, skills, isolated, reproducible, tasks, observed, results, explicit |
 
-## ai-ml (134)
+## ai-ml (135)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -161,6 +161,7 @@ Total skills: 2872
 | `autonomous-agent-patterns` | Design patterns for building autonomous coding agents, inspired by [Cline](https://github.com/cline/cline) and [OpenAI Codex](https://github.com/openai/codex). | critical | community | autonomous, agent | autonomous, agent, building, coding, agents, inspired, cline, https, github, com, openai, codex |
 | `autonomous-agents` | Autonomous agents are AI systems that can independently decompose goals, plan actions, execute tools, and self-correct without constant human guidance. The c... | critical | vibeship-spawner-skills (Apache 2.0) | autonomous, agents | autonomous, agents, ai, independently, decompose, goals, plan, actions, execute, self, correct, without |
 | `bdi-mental-states` | This skill should be used when the user asks to "model agent mental states", "implement BDI architecture", "create belief-desire-intention models", "transfor... | critical | community | bdi, mental, states | bdi, mental, states, skill, should, used, user, asks, model, agent, architecture, belief |
+| `bifrost-gateway` | Run and configure Bifrost, the open-source AI gateway: one OpenAI-compatible API for 20+ LLM providers with fallbacks, virtual keys and budgets, semantic cac... | safe | self | bifrost, ai-gateway, llm-gateway, openai-compatible, mcp-gateway, llm-routing | bifrost, ai-gateway, llm-gateway, openai-compatible, mcp-gateway, llm-routing, gateway, run, configure, open, source, ai |
 | `brave-man` | Runs a structured clarifying interview for new project requests before building. Instead of writing code, it outputs a fully specified prompt.md for a fresh ... | critical | community | brave, man | brave, man, runs, structured, clarifying, interview, new, requests, before, building, instead, writing |
 | `claude-ally-health` | A health assistant skill for medical information analysis, symptom tracking, and wellness guidance. | critical | https://github.com/huifer/Claude-Ally-Health | claude, ally, health | claude, ally, health, assistant, skill, medical, information, analysis, symptom, tracking, wellness, guidance |
 | `claude-api` | Build apps with the Claude API or Anthropic SDK. TRIGGER when: code imports `anthropic`/`@anthropic-ai/sdk`/`claude_agent_sdk`, or user asks to use Claude AP... | critical | https://github.com/anthropics/skills | claude, api | claude, api, apps, anthropic, sdk, trigger, code, imports, ai, agent, user, asks |
@@ -1974,7 +1975,7 @@ Total skills: 2872
 | `ui-ux-pro-max` | Comprehensive design guide for web and mobile applications. Use when designing new UI components or pages, choosing color palettes and typography, or reviewi... | critical | community | ui, ux, max | ui, ux, max, pro, web, mobile, applications, designing, new, components, pages, choosing |
 | `web-performance-optimization` | Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance | critical | community | web, performance, optimization | web, performance, optimization, optimize, website, application, including, loading, speed, core, vitals, bundle |
 
-## frontend (43)
+## frontend (46)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1995,6 +1996,7 @@ Total skills: 2872
 | `high-end-visual-design` | Use when designing expensive agency-grade interfaces with premium fonts, spatial rhythm, soft depth, and fluid microinteractions. | safe | Leonxlnx/taste-skill | frontend, visual-design, motion, ui | frontend, visual-design, motion, ui, high, visual, designing, expensive, agency, grade, interfaces, premium |
 | `industrial-brutalist-ui` | Use when creating raw industrial or tactical telemetry UIs with rigid grids, stark typography, CRT effects, and high-density data. | safe | Leonxlnx/taste-skill | frontend, design, brutalism, ui | frontend, design, brutalism, ui, industrial, brutalist, creating, raw, tactical, telemetry, uis, rigid |
 | `ios-screens` | Build iPhone app screens that feel native: navigation, sheets, Dynamic Type, dark mode, permissions and paywalls, checked on small and large iPhones. | safe | uxkin/agent | ios, iphone, swiftui, react-native, mobile, ui | ios, iphone, swiftui, react-native, mobile, ui, screens, app, feel, native, navigation, sheets |
+| `landing-page` | Build landing, home and pricing pages that look like a real product instead of AI output: honest copy, one design system, checked on phone and desktop. | safe | uxkin/agent | ui, frontend, landing-page, web-design, copywriting, responsive | ui, frontend, landing-page, web-design, copywriting, responsive, landing, page, home, pricing, pages, look |
 | `markstream-angular` | Integrate the alpha markstream-angular renderer into Angular 20+ applications with standalone components, signals, safe HTML defaults, and optional peer feat... | critical | Simon-He95/markstream-vue | angular, markdown, streaming, ai-chat, frontend | angular, markdown, streaming, ai-chat, frontend, markstream, integrate, alpha, renderer, 20, applications, standalone |
 | `markstream-custom-components` | Override Markstream node renderers and add trusted custom tags across Vue, React, Svelte, and Angular using scoped or renderer-local mappings. | critical | Simon-He95/markstream-vue | markdown, components, vue, react, svelte, angular | markdown, components, vue, react, svelte, angular, markstream, custom, override, node, renderers, add |
 | `markstream-install` | Install and configure Markstream streaming Markdown renderers for Vue, React, Svelte, Angular, Nuxt, Next.js, and Vue 2 applications. | critical | Simon-He95/markstream-vue | markdown, streaming, vue, react, svelte, angular, ai-chat | markdown, streaming, vue, react, svelte, angular, ai-chat, markstream, install, configure, renderers, nuxt |
@@ -2019,6 +2021,8 @@ Total skills: 2872
 | `ui-from-screenshot` | Turn a screenshot or mockup into matching UI with the project's own components, then compare the result side by side with the image and fix the differences. | safe | uxkin/agent | ui, frontend, screenshot, mockup, implementation | ui, frontend, screenshot, mockup, implementation, turn, matching, own, components, then, compare, result |
 | `ui-states` | Design and build the UI states agents forget: first use, empty, loading, error, offline, no results, long content, permission denied and success. | safe | uxkin/agent | ui, ux, edge-cases, states, frontend, quality | ui, ux, edge-cases, states, frontend, quality, agents, forget, first, empty, loading, error |
 | `uxkin-research` | Research how real products handle a screen, flow or visual style before designing it: search UXKIN's real iOS screens, user journeys and website design syste... | safe | uxkin/agent | ui, ux, design, research, mcp, design-system | ui, ux, design, research, mcp, design-system, uxkin, how, real, products, handle, screen |
+| `web-design-system` | Choose a design direction for a website from real sites and write it down as a DESIGN.md: colors with roles, type, spacing, radius, shadows and components, i... | safe | uxkin/agent | design-system, design-md, ui, frontend, tailwind, theming | design-system, design-md, ui, frontend, tailwind, theming, web, choose, direction, website, real, sites |
+| `web-review` | Review a website or landing page and list what to fix, most important first: message, generic AI look, consistency, copy, mobile, accessibility, speed and mi... | safe | uxkin/agent | ui, ux, review, accessibility, web-design, audit | ui, ux, review, accessibility, web-design, audit, web, website, landing, page, list, what |
 | `write-design-md` | Write or update a project's DESIGN.md from the colors, type, spacing and components it really uses, with rules agents follow so new screens match. | safe | uxkin/agent | design-system, design-md, design-tokens, documentation, frontend | design-system, design-md, design-tokens, documentation, frontend, write, md, update, colors, type, spacing, components |
 | `zustand-store-ts` | Create Zustand stores following established patterns with proper TypeScript types and middleware. | critical | community | zustand, store, ts | zustand, store, ts, stores, following, established, proper, typescript, types, middleware |
 
@@ -2193,7 +2197,7 @@ Total skills: 2872
 | `nap-consistency-checker` | NAP Consistency Checker. Use when working with canonical business name, address and phone plus listing records. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, nap, consistency, checker, working, canonical, business, name, address, phone, plus |
 | `review-response-generator` | Review Response Generator. Use when working with review text and verified business context. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, review, response, generator, working, text, verified, business, context |
 
-## marketing (117)
+## marketing (118)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2212,6 +2216,7 @@ Total skills: 2872
 | `churn-prevention` | Reduce voluntary and involuntary churn with cancel flows, save offers, dunning, win-back tactics, and retention strategy. Use when users are cancelling, fail... | critical | https://github.com/coreyhaines31/marketingskills | churn, prevention | churn, prevention, reduce, voluntary, involuntary, cancel, flows, save, offers, dunning, win, back |
 | `co-marketing` | When the user wants to find co-marketing partners, plan joint campaigns, or brainstorm partnership opportunities. | safe | coreyhaines31/marketingskills | co, marketing | co, marketing, user, wants, find, partners, plan, joint, campaigns, brainstorm, partnership, opportunities |
 | `cold-email` | Write B2B cold emails and follow-up sequences that earn replies. Use when creating outbound prospecting emails, SDR outreach, personalized opening lines, sub... | safe | https://github.com/coreyhaines31/marketingskills | cold, email | cold, email, write, b2b, emails, follow, up, sequences, earn, replies, creating, outbound |
+| `comment-to-dm-cta` | Plan the "Comment KEYWORD" CTA of an Instagram Reel (keyword, overlay, caption, DM copy), then, after explicit user confirmation, set up the matching auto-DM... | critical | commentkeyword/agent-toolkit | instagram, reels, comment-to-dm, cta, short-form-video, mcp | instagram, reels, comment-to-dm, cta, short-form-video, mcp, comment, dm, plan, keyword, reel, overlay |
 | `community-building` | When the user wants to build, grow, or improve a developer community on Discord, Slack, or forums. | critical | jonathimer/devmarketing-skills | community, building | community, building, user, wants, grow, improve, developer, discord, slack, forums |
 | `competitor-ad-intelligence` | Research public competitor ads, analyze creative patterns and landing pages, and produce an evidence-labeled strategic teardown. | critical | gooseworks-ai/goose-skills | ads, competitive-intelligence, meta-ads, google-ads, marketing | ads, competitive-intelligence, meta-ads, google-ads, marketing, competitor, ad, intelligence, research, public, analyze, creative |
 | `competitor-analysis` | Research competitors with Browserbase discovery, enrichment lanes, screenshots, matrices, and HTML reports. | critical | browserbase/skills | competitor-analysis, browserbase, market-research, browser-automation | competitor-analysis, browserbase, market-research, browser-automation, competitor, analysis, research, competitors, discovery, enrichment, lanes, screenshots |
