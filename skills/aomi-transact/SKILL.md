@@ -1,6 +1,6 @@
 ---
 name: aomi-transact
-description: "Build natural-language crypto/DeFi agents and EVM MCP plugins (Claude Code, Cursor, Codex, Gemini). Aomi turns prompts into wallet-signed txs on Ethereum, Base, Arbitrum, Optimism, Polygon, Linea — non-custodial, fork-simulated. 40+ apps: Uniswap, Aave, Lido, Morpho, GMX, Hyperliquid, Polymarket."
+description: "Use Aomi's standalone CLI or hosted Agent/Pipeline MCP to read chain state and prepare user-authorized transactions. Review durable Commit simulation before a designated signer executes. Use for swaps, lending, bridging, staking, perps and account queries."
 risk: critical
 source: "aomi-labs/skills (MIT)"
 source_repo: "aomi-labs/skills"
@@ -20,79 +20,107 @@ tags:
 
 # Aomi Transact
 
-> **Authorized use only.** This skill signs and broadcasts on-chain transactions on the user's behalf. The user must explicitly request each signing step. The skill will not run `aomi tx sign` without an explicit user request and a corresponding `tx-N` queued by `aomi tx list`.
+> **Authorized use only.** This skill can sign and broadcast on-chain transactions. The user must explicitly request each signing step and name the reviewed Commit or legacy Action.
 >
-> **Signing gate.** Do not include `aomi tx sign` in a copied or runnable multi-command block. Stop after listing or simulating queued transactions, summarize the tx ids, chain, value, recipient, calldata purpose, and simulation result, then ask the user for an explicit signing instruction such as `sign tx-1`. Only run the exact signing command after that separate approval.
+> **Signing gate.** Keep signing commands out of runnable multi-command examples. First summarize the exact identifier, sender, chain, token, amount, recipient, fees, approval limits, calldata purpose, and simulation evidence. Wait for the user's separate instruction before signing those exact reviewed bytes.
 
-## Overview
+## When to Use
 
-`aomi-transact` is a procedure for driving the Aomi CLI ([`@aomi-labs/client`](https://www.npmjs.com/package/@aomi-labs/client)) from natural-language prompts. The user types something like *"swap 1 ETH for USDC on Uniswap"*; the agent picks the right protocol and contract, stages the approve+swap as a batch, simulates it on a forked chain, and returns a queued wallet request for the user to sign. Require an observed simulation for the exact queued bytes where supported; a provider claim or passed fork run is not proof of economic safety.
+Use when a user wants chain reads, quotes, balances, transaction preparation,
+wallet review, or an explicitly authorized execution through Aomi. For App
+construction, use the separate Aomi Build skill.
 
-The CLI is **account-abstraction-first**: by default it signs through a zero-config Alchemy proxy (no provider credentials needed), using EIP-7702 on Ethereum mainnet and ERC-4337 on L2s. Each `aomi <subcommand>` invocation starts, runs, and exits — there is no long-running process.
+## Installation
 
-The full skill including references (`account-abstraction.md`, `apps.md`, `examples.md`, `session.md`, `troubleshooting.md`, `drain-vectors.md`), templates (`aomi-workflow.sh`), and per-host metadata (`agents/openai.yaml`) lives upstream at [`aomi-labs/skills`](https://github.com/aomi-labs/skills/tree/main/aomi-transact). This entry is the canonical SKILL.md only — clone the upstream for the full bundle.
+The `aomi` terminal command belongs to `@aomi-labs/cli`. `@aomi-labs/client` is
+the TypeScript SDK; its old terminal entry prints migration instructions.
+For user-requested CLI setup:
 
-## When to Use This Skill
+```bash
+npm install -g @aomi-labs/cli@latest
+aomi --version
+aomi tx --help
+```
 
-- The user wants to chat with the Aomi agent from the terminal.
-- The user wants balances, prices, routes, quotes, or transaction status.
-- The user wants to build, simulate, confirm, sign, or broadcast wallet requests.
-- The user wants to simulate a batch of pending transactions before signing.
-- The user wants to inspect or switch apps, models, chains, or sessions.
-- The user wants to inspect or change Account Abstraction settings (EIP-7702 / ERC-4337).
-- The user wants to sign EIP-712 typed-data payloads (off-chain agreements, intent fillers).
+Require standalone CLI `0.2.0` or newer and verify the needed commands. The CLI
+and older embedded-client package have separate version histories. Installing a
+skill does not upgrade an existing global binary. For one-shot use, substitute
+`npx @aomi-labs/cli@latest` for `aomi`.
+
+The default backend is `https://chat.aomi.dev`. Account authorization and the
+RPC or designated wallet signer are separate boundaries. Keep credentials
+opaque and use only the existing signer authorized by the user.
+
+## Procedure
+
+1. Resolve the exact recipient, amount, token contract, source and destination
+   chains, funding, native gas, and route fees before preparing a payment.
+2. Start a new session only for a new task. Continue the original session on
+   follow-ups and preserve the full durable Commit ID.
+3. Export that Commit, then match its review and simulation evidence to the
+   approved intent. `tx simulate` accepts legacy EVM Action IDs; a Commit's
+   simulation belongs to its durable review.
+4. Summarize the exact review and wait for a separate user signing instruction.
+   Only then execute the named Commit through the available designated signer.
+   A prepared AA payload does not imply local gas sponsorship.
+5. Refresh the same Commit before retrying. Keep the original session, Commit
+   ID, approved intent and transaction hash together. A known hash or outstanding
+   wallet attempt needs reconciliation. Confirmation requires a successful
+   receipt; bridges also require destination settlement and spendable output.
 
 ## Examples
 
-### Read-only — price check
+Read-only request:
 
 ```bash
-aomi --prompt "what is the price of ETH?" --new-session
+aomi chat "what is the price of ETH?" --new-session
 ```
 
-Returns a quote with no wallet request queued. Use `aomi tx list` to confirm there's nothing pending.
-
-### Single-tx flow — Lido stake
+Prepare and inspect a user-requested transaction without signing:
 
 ```bash
-aomi chat "Stake 0.01 ETH with Lido to get stETH" \
-  --public-key 0xUserAddress --chain 1 --new-session
-aomi tx list
+aomi chat "swap 1 USDC for WETH on Base" --new-session --public-key 0xYourAddress --chain 8453
+aomi tx list --json
+aomi tx export <commit-id> --format commit
 ```
 
-`submit(address(0))` on Lido stETH `0xae7ab96520DE3A18E5e111B5EaAb095312D7fE84`, `value = 0.01 ETH`. No approve, single tx. Stop here, show the queued transaction details, and wait for the user's explicit instruction before signing.
+Show the reviewed terms and simulation to the user. Signing is a separate
+command after explicit approval, using that exact Commit ID.
 
-### Multi-step batch — Uniswap V3 swap
+## Hosted MCP
+
+When the user requests hosted MCP setup, connect each resource separately:
 
 ```bash
-aomi chat "swap 1 USDC for WETH on Uniswap V3, send to my wallet" \
-  --public-key 0xUserAddress --chain 1 --new-session
-aomi tx list                        # tx-1 = approve, tx-2 = swap
-aomi tx simulate tx-1 tx-2          # mandatory for multi-step
+codex mcp add aomi-agent --url https://chat.aomi.dev/v1/agent/mcp
+codex mcp add aomi-pipeline --url https://chat.aomi.dev/v1/pipeline/mcp
 ```
 
-The simulator runs each tx sequentially on a forked chain so the swap step sees the approve's state changes. Don't sign step 2 independently — it would revert. Stop after simulation, summarize the batch, and wait for an explicit user instruction naming both tx ids before signing.
+Each OAuth grant must have the exact connected resource URL as its audience.
+Agent, Pipeline, REST and guest tokens are not interchangeable. Codex derives
+`resource` from the URL; omit `--oauth-resource` to avoid sending it twice.
+If the browser reports a CIMD metadata-fetch failure, retry that server's login
+with `--oauth-client-registration dcr`. Open a fresh client session and verify
+one harmless session-list or catalog call for each resource.
 
-### Cross-chain — CCTP Ethereum → Base
-
-```bash
-aomi chat "Bridge 50 USDC from Ethereum to Base via CCTP. Recipient is my wallet." \
-  --public-key 0xUserAddress --chain 1 --new-session
-aomi tx list
-aomi tx simulate tx-1 tx-2
-```
-
-Stop after simulation and wait for the user to explicitly approve signing the named tx ids. After signing, source-chain burn confirms in 1-2 blocks; destination mint requires Circle's off-chain attestation (~13-19 minutes).
+A plain GET can return 404 because the MCP resources accept POST and OPTIONS.
+OAuth grants tool access; wallet execution still uses the user's review and
+signing policy.
 
 ## Limitations
 
-- **Requires `@aomi-labs/client` v0.1.30 or newer.** Older versions lack `--aa`, `--aa-provider`, `--aa-mode` and the simulation gate. Install with `npm install -g @aomi-labs/client` or run on demand via `npx @aomi-labs/client@0.1.30 ...`.
-- **Active backend connection.** The skill drives a CLI that talks to `api.aomi.dev`. Without network access, only local read commands (`aomi tx list`, `aomi session log`) work.
-- **AA sponsorship on L2s is not guaranteed.** The zero-config proxy path does not reliably sponsor on Base/Arbitrum/Optimism in v0.1.30. If the EOA has 0 native gas on the destination chain, `aomi tx sign` returns viem's `insufficient funds for transfer`. Either fund the EOA with a small amount of native gas, or configure a real BYOK Alchemy/Pimlico provider with a sponsorship policy. Do not retry with `--eoa` — that path also needs gas.
-- **Per-session secret ingestion.** Apps that require provider tokens (`binance`, `polymarket`, `dune`, etc.) must have credentials configured by the user in their own shell or via `aomi secret add NAME=<value>`. The skill never sets credentials on its own initiative.
-- **Drain vectors are guard-blocked.** The agent rejects calldata where `recipient`/`onBehalfOf`/`mintRecipient` ≠ `msg.sender`. This is a security feature, not a bug — surface the block to the user rather than reformulating the prompt.
-- **Network/RPC failures.** Public RPCs may rate-limit (`429`) or fail auth (`401`). The user must supply a reliable chain-matching RPC via `--rpc-url` for production signing.
-- **Slippage and deadlines on live transactions.** Quotes from deadline-bearing routes (Across, Khalani fillers) can expire while the user is reviewing; the agent self-heals by rebuilding with fresh deadlines, but the user should re-check `aomi tx list` for the latest passing batch.
+Network access and a compatible backend are required. A chat response is not
+proof that a transaction exists, simulation is not settlement, and a source
+bridge receipt is not destination completion. Check live balances, chain IDs,
+RPC endpoints, current quotes and the exact prepared bytes. Stop a missing
+capability branch rather than guessing commands or reconstructing calldata.
+
+Use the maintained [command reference](https://github.com/aomi-labs/skills/blob/c3f7ed922fc2762b1a23a49552e2ab7c86caf7de/aomi-transact/references/commands.md),
+[workflow](https://github.com/aomi-labs/skills/blob/c3f7ed922fc2762b1a23a49552e2ab7c86caf7de/aomi-transact/references/workflows.md),
+and [credential rules](https://github.com/aomi-labs/skills/blob/c3f7ed922fc2762b1a23a49552e2ab7c86caf7de/aomi-transact/references/gotchas.md)
+when that branch is needed. This update follows Aomi's MIT-licensed canonical
+source at `c3f7ed922fc2762b1a23a49552e2ab7c86caf7de` and retains this catalog's
+separate signing-approval gate.
 
 ## Signing evidence boundaries
 
