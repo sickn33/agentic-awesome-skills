@@ -122,7 +122,7 @@ test("child termination and missing commands are failures, including web install
     fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({ scripts: {
       test: `node -e "process.kill(process.pid, 'SIGTERM')"`,
       "app:install": "node -e \"process.exit(5)\"",
-      "app:test:coverage": "node -e \"require('fs').writeFileSync('unexpected', 'coverage')\"",
+      "app:ci": "node -e \"require('fs').writeFileSync('unexpected', 'coverage')\"",
     } }));
     assert.notEqual((await executeCheckAsync(root, "test", plan)).exitCode, 0);
     assert.notEqual((await executeCheckAsync(root, "web", plan)).exitCode, 0);

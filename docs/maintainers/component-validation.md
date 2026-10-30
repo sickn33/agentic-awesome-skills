@@ -34,7 +34,8 @@ Full-history CI checkouts use `filter: blob:none`, retaining commits/trees and
 fetching historical file contents on demand. Required diff, evidence, trusted-base
 and Git-date checks still run; history is not truncated. The one-file artifact
 verifier retains its existing sparse shallow checkout. No remote task cache,
-paid service, extra runner matrix or cached validation result is enabled. Measure
+paid service or extra runner matrix is enabled. The web result cache described
+below preserves fresh finalization and every required gate. Measure
 whole workflow duration separately from the recorded component execution time.
 
 The full suite also exercises freshly generated web data. New first-party plugin
@@ -60,4 +61,47 @@ null shard fields, worker count and a digest of the full sorted test inventory.
 When modifying a cohort member, recheck that it reads shared source only and writes
 within isolated fixtures; return it to sequential scheduling if that no longer holds.
 Compare complete suites and whole CI separately. No product verification, durability
-barrier or test assertion is removed, and no test result cache is introduced.
+barrier or test assertion is removed, and the repository script suite is never restored from a result cache.
+
+## Turborepo web cache
+
+After `npm ci` and `npm run app:install`, `npm run app:ci` prepares current public assets and the sitemap, then runs the
+pinned Turborepo `app:ci:test` and `app:ci:compile` tasks. The former runs the
+complete web coverage suite with unchanged thresholds; the latter runs both
+TypeScript projects and Vite. These two successful results may be reused
+independently. The repository script suite, prerequisites, admission, review and
+protected merge evidence still execute normally. The immutable release candidate
+retains its existing fresh coverage and full build commands.
+
+Explicit inputs include ignored generated public files, app sources/configuration,
+web lockfile, external docs/data/indexes and shared tooling. Compile excludes test
+sources; test-only edits still invalidate coverage. Root package/lock/configuration
+are global inputs. Vite/SEO environment, Node/npm, OS/architecture and timezone are
+fingerprinted. Do not add an external source or environment dependency without
+updating this boundary and its invalidation checks.
+
+The cached bundle reads documentation provenance from the page, rather than
+embedding the compiling commit in JavaScript. Each invocation deletes old output,
+restores or rebuilds complete artifacts, verifies file inventories and hashes,
+then freshly injects current Git metadata, prerenders every route and runs docs,
+discovery and exact-current-commit runtime/guide provenance verification. Missing,
+extra, altered or symlinked outputs and stale guide metadata fail closed. There
+is no fallback that accepts an incomplete cache hit. Source dates remain Git-derived.
+Development and ordinary `app:build` also supply runtime metadata; unit tests use
+an explicit fixed metadata fixture while build verification checks actual history.
+
+Only local Turbo caching is enabled; inherited `TURBO_*` settings are stripped and
+telemetry is disabled. CI stores the local directory through pinned `actions/cache`
+inside the existing 10 GB repository quota, with automatic eviction. No quota
+increase, Vercel CI, remote-cache credentials or paid service is activated. GitHub
+branch scoping prevents a pull-request cache from becoming a default-branch cache;
+never promote fork caches into trusted main storage. Artifact hashes detect
+corruption, not malicious content with a matching rewritten manifest. Review and
+GitHub's trusted cache boundary remain necessary.
+
+A shared absolute `AAS_WEB_CACHE_DIR` keeps the cache available to the isolated web
+clone. Local runs default to `.turbo/cache`; optional `AAS_WEB_CI_RECEIPT` records
+per-task HIT/MISS/hash, current head and elapsed timings. CI uploads that receipt
+beside the component receipt when the web plan runs. A hit reuses passing coverage;
+it does not mean those tests executed again. Measure cold, warm, cross-commit and
+whole hosted workflows separately; the fresh script suite may remain critical.

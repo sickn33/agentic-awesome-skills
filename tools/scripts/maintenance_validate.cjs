@@ -35,7 +35,7 @@ function commandsFor(check, root, plan = {}) {
   if (check === "source-credits") return [["npm", ["run", "check:readme-credits", "--", "--base", plan.baseSha, "--head", plan.headSha]]];
   if (check === "documentation") return [["node", ["tools/scripts/run-python.js", "tools/scripts/tests/test_documentation_consistency.py"]]];
   if (check === "preview") return ["plugin-compat:sync", "index", "bundles:sync", "sync:metadata", "catalog", "build:aas-v1-catalog", "sync:web-assets"].map(s => ["npm", ["run", s]]);
-  if (check === "web") return ["app:install", "app:test:coverage", "app:build"].map(s => ["npm", ["run", s]]);
+  if (check === "web") return ["app:install", "app:ci"].map(s => ["npm", ["run", s]]);
   if (check === "package-tests") return fs.readdirSync(path.join(root, "tools/scripts/tests"))
     .filter(f => /^(installer_.*|npm_package_contents)\.test\.js$/.test(f)).sort()
     .map(f => ["node", [`tools/scripts/tests/${f}`]]);

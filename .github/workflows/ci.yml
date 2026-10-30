@@ -193,9 +193,36 @@ jobs:
           test -f README.md
           test -f CONTRIBUTING.md
 
+      - name: Plan web cache use
+        id: web_cache_plan
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const { planFor } = require('./tools/scripts/maintenance_validate.cjs');
+          const head = process.env.HEAD_SHA;
+          const base = /^[a-f0-9]{40}$/.test(process.env.BASE_SHA || '') && !/^0+$/.test(process.env.BASE_SHA) ? process.env.BASE_SHA : head;
+          const plan = planFor(process.cwd(), base, head);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `web=${plan.checks.includes('web')}\n`);
+          NODE
+
+      - name: Restore free local Turborepo cache
+        if: steps.web_cache_plan.outputs.web == 'true'
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ${{ runner.temp }}/aas-web-turbo
+          key: ${{ runner.os }}-aas-web-turbo-v1-${{ github.sha }}-${{ github.run_attempt }}
+          restore-keys: |
+            ${{ runner.os }}-aas-web-turbo-v1-
+
       - name: Run component validation
         if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         env:
+          AAS_WEB_CACHE_DIR: ${{ runner.temp }}/aas-web-turbo
+          AAS_WEB_CI_RECEIPT: ${{ runner.temp }}/aas-web-ci.json
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: node tools/scripts/maintenance_validate.cjs --base "$BASE_SHA" --head "$HEAD_SHA" --output .tmp/component-validation.json --parallel
@@ -207,6 +234,15 @@ jobs:
           name: component-validation-${{ github.run_id }}-${{ github.run_attempt }}
           path: .tmp/component-validation.json
           if-no-files-found: error
+          retention-days: 14
+
+      - name: Upload web cache and fresh finalization receipt
+        if: always() && steps.web_cache_plan.outputs.web == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: web-ci-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/aas-web-ci.json
+          if-no-files-found: ignore
           retention-days: 14
 
       - name: Verify README source credits for changed skills
@@ -481,8 +517,33 @@ jobs:
         run: |
           npm ci --ignore-scripts --audit=false
           pip install -r tools/requirements.txt
+      - name: Plan web cache use
+        id: web_cache_plan
+        env:
+          BASE_SHA: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const { planFor } = require('./tools/scripts/maintenance_validate.cjs');
+          const head = process.env.HEAD_SHA;
+          const base = /^[a-f0-9]{40}$/.test(process.env.BASE_SHA || '') && !/^0+$/.test(process.env.BASE_SHA) ? process.env.BASE_SHA : head;
+          const plan = planFor(process.cwd(), base, head);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `web=${plan.checks.includes('web')}\n`);
+          NODE
+
+      - name: Restore free local Turborepo cache
+        if: steps.web_cache_plan.outputs.web == 'true'
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ${{ runner.temp }}/aas-web-turbo
+          key: ${{ runner.os }}-aas-web-turbo-v1-${{ github.sha }}-${{ github.run_attempt }}
+          restore-keys: |
+            ${{ runner.os }}-aas-web-turbo-v1-
       - name: Validate protected source diff with ephemeral snapshots
         env:
+          AAS_WEB_CACHE_DIR: ${{ runner.temp }}/aas-web-turbo
+          AAS_WEB_CI_RECEIPT: ${{ runner.temp }}/aas-web-ci.json
           BEFORE_SHA: ${{ github.event.before }}
           HEAD_SHA: ${{ github.sha }}
         shell: bash
@@ -497,3 +558,11 @@ jobs:
           name: main-component-validation
           path: .tmp/component-validation.json
           if-no-files-found: error
+      - name: Upload web cache and fresh finalization receipt
+        if: always() && steps.web_cache_plan.outputs.web == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: web-ci-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/aas-web-ci.json
+          if-no-files-found: ignore
+          retention-days: 14
