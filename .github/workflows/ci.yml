@@ -143,6 +143,8 @@ jobs:
           fi
 
   source-validation:
+    env:
+      AAS_TEST_COHORT_WORKERS: "2"
     if: github.event_name == 'pull_request' || inputs.canonical_sync_pr == true
     runs-on: ubuntu-latest
     needs: pr-policy
@@ -457,6 +459,8 @@ jobs:
           exit 1
 
   main-validation-and-sync:
+    env:
+      AAS_TEST_COHORT_WORKERS: "2"
     if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.canonical_sync_pr != true && github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     permissions:

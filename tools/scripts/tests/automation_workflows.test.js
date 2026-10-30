@@ -83,3 +83,7 @@ for (const name of ['source-validation', 'main-validation-and-sync']) {
  assert.match(commands(ci.jobs[name]), /maintenance_validate\.cjs[^\n]* --parallel/);
 }
 assert.doesNotMatch(commands(ci.jobs['source-validation']), /--shard|turbo run|vercel/);
+
+for (const name of ["source-validation", "main-validation-and-sync"]) {
+ assert.equal(ci.jobs[name].env.AAS_TEST_COHORT_WORKERS, "2");
+}

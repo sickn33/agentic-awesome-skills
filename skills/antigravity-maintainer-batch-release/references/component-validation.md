@@ -40,3 +40,24 @@ whole workflow duration separately from the recorded component execution time.
 The full suite also exercises freshly generated web data. New first-party plugin
 information pages have no legacy routes: the bridge excludes their exact four
 paths while retaining the 188-route curated lock and rejecting unknown additions.
+
+## Scheduling the complete script suite
+
+Source and main CI set `AAS_TEST_COHORT_WORKERS=2` for the full unsharded
+`npm run test`. The same complete discovered test inventory runs exactly once.
+Six reviewed groups (`aas_v1_runtime_config`, `test_report_skill_boundary_examples`,
+`aas_v1_update`, `aas_v1_cli`, `npm_package_contents`, `aas_v1_mcp`) read repository
+inputs and keep writes in their own temporary fixtures; at most two run together.
+They finish before every other group, which retains sequential execution. New or
+unreviewed groups are sequential automatically. This schedule changes no fork
+admission, review authority, command coverage, network opt-in or required check.
+
+The default local value is one worker. Values other than 1 or 2 fail; two-worker
+scheduling cannot be combined with local sharding. On a failed, missing, signalled
+or rejected child result, stop dispatch, wait for both active children and fail
+before the sequential remainder. A successful summary includes the complete count,
+null shard fields, worker count and a digest of the full sorted test inventory.
+When modifying a cohort member, recheck that it reads shared source only and writes
+within isolated fixtures; return it to sequential scheduling if that no longer holds.
+Compare complete suites and whole CI separately. No product verification, durability
+barrier or test assertion is removed, and no test result cache is introduced.
