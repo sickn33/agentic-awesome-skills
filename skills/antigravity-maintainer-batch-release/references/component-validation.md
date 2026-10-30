@@ -36,3 +36,7 @@ and Git-date checks still run; history is not truncated. The one-file artifact
 verifier retains its existing sparse shallow checkout. No remote task cache,
 paid service, extra runner matrix or cached validation result is enabled. Measure
 whole workflow duration separately from the recorded component execution time.
+
+The full suite also exercises freshly generated web data. New first-party plugin
+information pages have no legacy routes: the bridge excludes their exact four
+paths while retaining the 188-route curated lock and rejecting unknown additions.
