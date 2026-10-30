@@ -18,6 +18,7 @@ function run(command, args, options = {}) {
   return result;
 }
 function outputInventory(directory) {
+  if (!fs.lstatSync(directory).isDirectory()) throw new Error('Symlink or non-directory cached web output root');
   const files = Object.create(null);
   function visit(current) {
     for (const entry of fs.readdirSync(current, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name, 'en'))) {
@@ -33,6 +34,7 @@ function outputInventory(directory) {
   return files;
 }
 function verifyOutput(directory, manifest) {
+  if (!fs.lstatSync(manifest).isFile()) throw new Error('Symlink or non-file cached web manifest');
   const recorded = JSON.parse(fs.readFileSync(manifest, 'utf8'));
   if (recorded.schema !== 1 || JSON.stringify(recorded.files) !== JSON.stringify(outputInventory(directory))) {
     throw new Error('Cached web output inventory or bytes mismatch');

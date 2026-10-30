@@ -16,6 +16,10 @@ try {
   fs.writeFileSync(path.join(output, 'index.html'), 'original');
   fs.writeFileSync(manifest, JSON.stringify({ schema: 1, files: outputInventory(output) }));
   verifyOutput(output, manifest);
+  fs.symlinkSync(output, path.join(dir, 'linked-root'));
+  assert.throws(() => outputInventory(path.join(dir, 'linked-root')), /Symlink/);
+  fs.symlinkSync(manifest, path.join(dir, 'linked-manifest'));
+  assert.throws(() => verifyOutput(output, path.join(dir, 'linked-manifest')), /Symlink/);
   fs.writeFileSync(path.join(output, 'index.html'), 'tampered');
   assert.throws(() => verifyOutput(output, manifest), /mismatch/);
   fs.writeFileSync(path.join(output, 'index.html'), 'original');
