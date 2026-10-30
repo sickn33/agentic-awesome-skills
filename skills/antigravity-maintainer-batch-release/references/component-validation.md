@@ -77,7 +77,15 @@ Explicit inputs include ignored generated public files, app sources/configuratio
 web lockfile, external docs/data/indexes and shared tooling. Compile excludes test
 sources; test-only edits still invalidate coverage. Root package/lock/configuration
 are global inputs. Vite/SEO environment, Node/npm, OS/architecture and timezone are
-fingerprinted. Do not add an external source or environment dependency without
+fingerprinted. Cached source/main jobs pin the same exact Node patch (24.22.1),
+so a runner's older preinstalled patch cannot silently split the cache. The
+userland fingerprint includes Node/npm, platform/architecture, libc, ICU, locale
+and timezone; kernel release and cloud-provider identity are excluded because
+these browser tasks do not depend on them. Node/ABI/locale changes still invalidate
+reuse. Actions cache keys and restore prefixes include the toolchain-context digest,
+so incompatible machine contexts get separate immutable archives. Receipts expose
+that non-secret identity plus global/input/environment digests to diagnose misses.
+Do not add an external source or environment dependency without
 updating this boundary and its invalidation checks.
 
 The cached bundle reads documentation provenance from the page, rather than

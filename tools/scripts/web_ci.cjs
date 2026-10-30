@@ -2,7 +2,6 @@
 'use strict';
 const fs = require('node:fs');
 const path = require('node:path');
-const os = require('node:os');
 const crypto = require('node:crypto');
 const { spawnSync } = require('node:child_process');
 const { resolveCommandInvocation } = require('./release_workflow');
@@ -45,7 +44,9 @@ function turboEnvironment(environment = process.env) {
   selected.TURBO_TELEMETRY_DISABLED = '1';
   selected.DO_NOT_TRACK = '1';
   selected.AAS_WEB_TOOLCHAIN = JSON.stringify({ node: process.version, npm: run('npm', ['--version'], { stdio: 'pipe' }).stdout.toString().trim(),
-    platform: process.platform, arch: process.arch, release: os.release(), timezone: Intl.DateTimeFormat().resolvedOptions().timeZone });
+    platform: process.platform, arch: process.arch,
+    libc: process.report.getReport().header.glibcVersionRuntime || null, icu: process.versions.icu,
+    locale: Intl.DateTimeFormat().resolvedOptions().locale, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone });
   return selected;
 }
 function cacheable(phase) {
@@ -81,9 +82,10 @@ function main() {
   const cacheDir = path.resolve(process.env.AAS_WEB_CACHE_DIR || path.join(root, '.turbo/cache'));
   if (cacheDir === root || cacheDir === app || cacheDir === path.parse(cacheDir).root) throw new Error('Unsafe web cache directory');
   const turbo = path.join(root, 'node_modules/turbo/bin/turbo');
+  const environment = turboEnvironment();
   const taskStarted = Date.now();
   run(process.execPath, [turbo, 'run', 'app:ci:test', 'app:ci:compile', '--cache=local:rw', '--cache-dir', cacheDir,
-    '--env-mode=strict', '--framework-inference=false', '--concurrency=1', '--summarize', '--output-logs=errors-only'], { env: turboEnvironment() });
+    '--env-mode=strict', '--framework-inference=false', '--concurrency=1', '--summarize', '--output-logs=errors-only'], { env: environment });
   const taskMs = Date.now() - taskStarted;
   const added = fs.readdirSync(summaries).filter(file => file.endsWith('.json') && !before.has(file));
   if (added.length !== 1) throw new Error('Missing or ambiguous Turbo run summary');
@@ -95,7 +97,10 @@ function main() {
   run('npm', ['--prefix', app, 'run', 'build:finalize']);
   const head = run('git', ['rev-parse', 'HEAD'], { stdio: 'pipe' }).stdout.toString().trim();
   const receipt = { schema: 1, passed: true, head, elapsedMs: Date.now() - started, taskMs, finalizeMs: Date.now() - finalizeStarted,
-    tasks: summary.tasks.map(task => ({ task: task.taskId, hash: task.hash, cache: task.cache.status })) };
+    toolchain: JSON.parse(environment.AAS_WEB_TOOLCHAIN),
+    globalInputsDigest: digest(JSON.stringify(summary.globalCacheInputs)),
+    tasks: summary.tasks.map(task => ({ task: task.taskId, hash: task.hash, cache: task.cache.status,
+      inputsDigest: digest(JSON.stringify(task.inputs)), environmentDigest: digest(JSON.stringify(task.environmentVariables)) })) };
   if (process.env.AAS_WEB_CI_RECEIPT) {
     const filename = path.resolve(process.env.AAS_WEB_CI_RECEIPT);
     fs.mkdirSync(path.dirname(filename), { recursive: true });

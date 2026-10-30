@@ -173,7 +173,7 @@ jobs:
         if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
-          node-version: "lts/*"
+          node-version: "24.22.1"
 
       - name: Fetch base branch
         if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
@@ -207,6 +207,11 @@ jobs:
           const base = /^[a-f0-9]{40}$/.test(process.env.BASE_SHA || '') && !/^0+$/.test(process.env.BASE_SHA) ? process.env.BASE_SHA : head;
           const plan = planFor(process.cwd(), base, head);
           fs.appendFileSync(process.env.GITHUB_OUTPUT, `web=${plan.checks.includes('web')}\n`);
+          if (plan.checks.includes('web')) {
+            const { turboEnvironment } = require('./tools/scripts/web_ci.cjs');
+            const context = require('node:crypto').createHash('sha256').update(turboEnvironment().AAS_WEB_TOOLCHAIN).digest('hex');
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `context=${context}\n`);
+          }
           NODE
 
       - name: Restore free local Turborepo cache
@@ -214,9 +219,9 @@ jobs:
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ${{ runner.temp }}/aas-web-turbo
-          key: ${{ runner.os }}-aas-web-turbo-v1-${{ github.sha }}-${{ github.run_attempt }}
+          key: ${{ runner.os }}-aas-web-turbo-v2-${{ steps.web_cache_plan.outputs.context }}-${{ github.sha }}-${{ github.run_attempt }}
           restore-keys: |
-            ${{ runner.os }}-aas-web-turbo-v1-
+            ${{ runner.os }}-aas-web-turbo-v2-${{ steps.web_cache_plan.outputs.context }}-
 
       - name: Run component validation
         if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
@@ -512,7 +517,7 @@ jobs:
           python-version: "3.10"
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
-          node-version: "24"
+          node-version: "24.22.1"
       - name: Install validation dependencies
         run: |
           npm ci --ignore-scripts --audit=false
@@ -530,6 +535,11 @@ jobs:
           const base = /^[a-f0-9]{40}$/.test(process.env.BASE_SHA || '') && !/^0+$/.test(process.env.BASE_SHA) ? process.env.BASE_SHA : head;
           const plan = planFor(process.cwd(), base, head);
           fs.appendFileSync(process.env.GITHUB_OUTPUT, `web=${plan.checks.includes('web')}\n`);
+          if (plan.checks.includes('web')) {
+            const { turboEnvironment } = require('./tools/scripts/web_ci.cjs');
+            const context = require('node:crypto').createHash('sha256').update(turboEnvironment().AAS_WEB_TOOLCHAIN).digest('hex');
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `context=${context}\n`);
+          }
           NODE
 
       - name: Restore free local Turborepo cache
@@ -537,9 +547,9 @@ jobs:
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ${{ runner.temp }}/aas-web-turbo
-          key: ${{ runner.os }}-aas-web-turbo-v1-${{ github.sha }}-${{ github.run_attempt }}
+          key: ${{ runner.os }}-aas-web-turbo-v2-${{ steps.web_cache_plan.outputs.context }}-${{ github.sha }}-${{ github.run_attempt }}
           restore-keys: |
-            ${{ runner.os }}-aas-web-turbo-v1-
+            ${{ runner.os }}-aas-web-turbo-v2-${{ steps.web_cache_plan.outputs.context }}-
       - name: Validate protected source diff with ephemeral snapshots
         env:
           AAS_WEB_CACHE_DIR: ${{ runner.temp }}/aas-web-turbo
