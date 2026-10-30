@@ -41,7 +41,7 @@ Use real IDs, paths and a full immutable SHA. The state directory must already e
 
 ## Validation
 
-Read [component validation](references/component-validation.md) and the [maintenance contract](references/maintenance-contract.md) for exact checks, release proof, catalog compatibility and timing methodology. Required checks remain `pr-policy`, `pr-evidence`, `source-validation`, `artifact-preview`. Unknown/shared/policy changes receive full validation.
+Read [component validation](references/component-validation.md) and the [maintenance contract](references/maintenance-contract.md) for exact checks, release proof, catalog compatibility and timing methodology. Required checks remain `pr-policy`, `pr-evidence`, `source-validation`, `artifact-preview`. Unknown/shared/policy changes receive full validation. CI may overlap only the full plan’s complete unsharded script suite and isolated web coverage/build after successful prerequisites, as defined in the component guide; every ordered result remains mandatory. Blob-filtered checkouts retain full history and fetch required bytes on demand. No paid CI or remote result cache is required.
 
 ## Limitations
 

@@ -16,3 +16,23 @@ Unknown, mixed, operational skill, executable/link/mode, policy, workflow, gener
 Use `npm run pr:preflight -- --base origin/main --head HEAD` from a committed source head. The helper validates a clean isolated copy. Direct `maintenance:validate` execution rejects a dirty checkout or different HEAD. Generated previews are temporary development state; tracked distribution snapshots may intentionally lag source main.
 
 Measure whole cycles separately from individual command timings. See the maintenance contract for controls, raw timestamp evidence and manual intervention accounting.
+
+## CI execution efficiency
+
+The existing required job names and component plans are unchanged. CI opts into
+`maintenance:validate --parallel`: only a full plan's final `npm run test` and
+web coverage/build overlap, on the same runner. The complete script suite remains
+unsharded. Every prerequisite, including preview generation and catalog checks,
+must pass before either branch starts. The web branch uses a disposable clone of
+the exact head with the already-generated preview bytes and separate dependencies;
+Git history is retained for prerender timestamps. Both branches must finish and
+pass, and the receipt retains plan order regardless of completion order. Preparation
+or child-process failures fail closed; the clone is removed after both finish.
+Other profiles and the default local invocation keep sequential behavior.
+
+Full-history CI checkouts use `filter: blob:none`, retaining commits/trees and
+fetching historical file contents on demand. Required diff, evidence, trusted-base
+and Git-date checks still run; history is not truncated. The one-file artifact
+verifier retains its existing sparse shallow checkout. No remote task cache,
+paid service, extra runner matrix or cached validation result is enabled. Measure
+whole workflow duration separately from the recorded component execution time.

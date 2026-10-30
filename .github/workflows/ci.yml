@@ -43,6 +43,7 @@ jobs:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
 
       - name: Set up Node
@@ -153,6 +154,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
 
       - name: Set up Python
@@ -194,7 +196,16 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: node tools/scripts/maintenance_validate.cjs --base "$BASE_SHA" --head "$HEAD_SHA" --output .tmp/component-validation.json
+        run: node tools/scripts/maintenance_validate.cjs --base "$BASE_SHA" --head "$HEAD_SHA" --output .tmp/component-validation.json --parallel
+
+      - name: Upload component validation receipt
+        if: always() && env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: component-validation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .tmp/component-validation.json
+          if-no-files-found: error
+          retention-days: 14
 
       - name: Verify README source credits for changed skills
         if: github.event_name == 'pull_request' && env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
@@ -255,6 +266,7 @@ jobs:
         if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         with:
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
 
       - name: Set up Python
@@ -363,6 +375,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
 
       - name: Set up Python
@@ -452,6 +465,7 @@ jobs:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
@@ -471,7 +485,7 @@ jobs:
         run: |
           base="$BEFORE_SHA"
           if [[ ! "$base" =~ ^[a-f0-9]{40}$ || "$base" =~ ^0+$ ]]; then base="$HEAD_SHA"; fi
-          node tools/scripts/maintenance_validate.cjs --base "$base" --head "$HEAD_SHA" --output .tmp/component-validation.json
+          node tools/scripts/maintenance_validate.cjs --base "$base" --head "$HEAD_SHA" --output .tmp/component-validation.json --parallel
       - name: Upload source validation receipt
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1

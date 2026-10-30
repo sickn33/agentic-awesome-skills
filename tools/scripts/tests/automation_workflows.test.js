@@ -71,3 +71,15 @@ for (const job of ["candidate","workbench"]) {
 const catalogBootstrap = catalog.jobs.candidate.steps.find(step => step.name === "Verify immutable protected source and catalog compatibility").run;
 assert(catalogBootstrap.indexOf("npm ci --ignore-scripts") >= 0);
 assert(catalogBootstrap.indexOf("npm ci --ignore-scripts") < catalogBootstrap.indexOf("catalog-release"), "install dependencies before loading the schema-backed compatibility verifier");
+
+for (const [name, job] of Object.entries(ci.jobs)) {
+ for (const step of job.steps || []) {
+  if (!(step.uses || '').startsWith('actions/checkout@')) continue;
+  if (step.with?.['fetch-depth'] === 0) assert.equal(step.with.filter, 'blob:none', name + ': retain full history without eager historical blobs');
+  if (step.with?.['sparse-checkout']) assert.equal(step.with.filter, undefined, 'filter must not override sparse checkout');
+ }
+}
+for (const name of ['source-validation', 'main-validation-and-sync']) {
+ assert.match(commands(ci.jobs[name]), /maintenance_validate\.cjs[^\n]* --parallel/);
+}
+assert.doesNotMatch(commands(ci.jobs['source-validation']), /--shard|turbo run|vercel/);
