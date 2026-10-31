@@ -6,5 +6,8 @@ const {validate}=require('../release_parallel_checks.cjs');
  await assert.rejects(()=>validate('/root',deps),/checks failed/);assert(cleaned);assert(!collected,'failed branches must not publish outputs');
  finished=0;active=0;deps.run=async(root,check)=>{finished++;return {check,exitCode:0};};
  assert.equal((await validate('/root',deps)).passed,true);assert(collected);
+ const cache=process.env.AAS_WEB_CACHE_DIR;
+ await assert.rejects(()=>validate('/root',{head:'a'.repeat(40),prepare:()=>{throw Error('setup failure');}}),/setup failure/);
+ assert.equal(process.env.AAS_WEB_CACHE_DIR,cache,'setup failure restores environment');
  console.log('Parallel release checks drain failures and gate artifact collection');
 })().catch(e=>{console.error(e);process.exitCode=1;});

@@ -6,10 +6,11 @@ async function validate(root, dependencies={}) {
  const head=dependencies.head || execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
  const previousCache=process.env.AAS_WEB_CACHE_DIR;
  if(!previousCache)process.env.AAS_WEB_CACHE_DIR=path.join(root,'.turbo','cache');
- const copy=(dependencies.prepare || prepareWebCopy)(root,head);
+ let copy;
  const run=dependencies.run || executeCheckAsync;
  const started=Date.now();
  try {
+  copy=(dependencies.prepare || prepareWebCopy)(root,head);
   const results=await Promise.allSettled([run(root,'test',{}),run(copy.root,'web',{})]);
   if(results.some(r=>r.status!=='fulfilled'||r.value.exitCode!==0)) throw Error('Required candidate checks failed: '+JSON.stringify(results));
   (dependencies.collect || (()=>{
@@ -20,7 +21,7 @@ async function validate(root, dependencies={}) {
    }
   }))();
   return {passed:true,head,elapsedMs:Date.now()-started,results:results.map(r=>r.value)};
- }finally{copy.cleanup();if(previousCache===undefined)delete process.env.AAS_WEB_CACHE_DIR;else process.env.AAS_WEB_CACHE_DIR=previousCache;}
+ }finally{copy?.cleanup();if(previousCache===undefined)delete process.env.AAS_WEB_CACHE_DIR;else process.env.AAS_WEB_CACHE_DIR=previousCache;}
 }
 module.exports={validate};
 if(require.main===module)validate(process.cwd()).then(r=>console.log(JSON.stringify(r))).catch(e=>{console.error(e.message);process.exitCode=1;});
