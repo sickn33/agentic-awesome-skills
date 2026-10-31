@@ -118,7 +118,10 @@ whole hosted workflows separately; the fresh script suite may remain critical.
 
 PR metadata events use the separate `pr-metadata.yml` policy/evidence workflow;
 source events retain all technical checks. Their policy/evidence job definitions
-are regression-checked for equivalence. Base retargeting requires fresh source
+are regression-checked for equivalence. Missing/skipped technical checks get
+first execution through identical jobs; existing runs are observed, not cancelled,
+and genuine failures are not automatically retried. Skipped fallback jobs never
+reuse required check names. Base retargeting requires fresh source
 validation. The tag candidate's runtime producer feeds parallel installation
 matrix and full suite/site branches, with scoped provenance verified by each.
 Publication requires the full manifest and successful whole workflow.

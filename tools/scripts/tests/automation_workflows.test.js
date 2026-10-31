@@ -103,7 +103,13 @@ for (const name of ["source-validation", "main-validation-and-sync"]) {
 const metadata=load('pr-metadata');
 assert.deepEqual(ci.on.pull_request.types,['opened','synchronize','reopened']);
 assert.deepEqual(metadata.on.pull_request.types,['edited','ready_for_review','converted_to_draft']);
-assert.deepEqual(Object.keys(metadata.jobs),['pr-policy','pr-evidence']);
+assert.deepEqual(Object.keys(metadata.jobs),['pr-policy','pr-evidence','technical-plan','source-validation','artifact-preview']);
+assert.equal(metadata.concurrency['cancel-in-progress'],false,'metadata corrections must not cancel first technical execution');
+for(const name of ['source-validation','artifact-preview']) {
+ assert.deepEqual(metadata.jobs[name].steps,ci.jobs[name].steps,'first technical execution retains all original steps');
+ assert.match(metadata.jobs[name].name,/metadata-.*-reuse/,'skipped fallback must never shadow required check names');
+ assert.equal(metadata.jobs[name].if,"needs.technical-plan.outputs.needed == 'true'");
+}
 assert.deepEqual(metadata.jobs['pr-policy'].steps.slice(1),ci.jobs['pr-policy'].steps,'metadata must retain the exact protected policy implementation');
 assert.deepEqual(metadata.jobs['pr-evidence'].steps,ci.jobs['pr-evidence'].steps);
 assert.match(metadata.jobs['pr-policy'].steps[0].if,/changes.base/);

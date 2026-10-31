@@ -9,11 +9,13 @@ on:
       - converted_to_draft
 permissions:
   contents: read
+  checks: read
+  actions: read
 env:
   IS_TRUSTED_CANONICAL_SYNC_PR: ${{ (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'automation/canonical-repo-state' && github.event.pull_request.user.login == 'github-actions[bot]') }}
 concurrency:
   group: pr-metadata-${{ github.event.pull_request.number }}
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
   pr-policy:
     if: github.event_name == 'pull_request'
@@ -215,3 +217,258 @@ jobs:
       - name: Record canonical-sync evidence boundary
         if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
         run: echo "Canonical-sync content is verified by managed-path and reproducibility gates."
+  technical-plan:
+    needs: pr-policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    outputs:
+      needed: ${{ steps.plan.outputs.needed }}
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        with:
+          persist-credentials: false
+      - name: Wait for existing technical checks or plan first execution
+        id: plan
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: node tools/scripts/pr_metadata_plan.cjs
+  source-validation:
+    env:
+      AAS_TEST_COHORT_WORKERS: "2"
+    if: needs.technical-plan.outputs.needed == 'true'
+    runs-on: ubuntu-latest
+    needs:
+      - pr-policy
+      - technical-plan
+    outputs:
+      preview_manifest_digest: ${{ steps.preview_manifest.outputs.manifest_digest }}
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+          filter: blob:none
+          persist-credentials: false
+      - name: Set up Python
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: "3.10"
+      - name: Install Python dependencies
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        run: pip install -r tools/requirements.txt
+      - name: Set up Node
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
+        with:
+          node-version: 24.22.1
+      - name: Fetch base branch
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        run: git fetch origin "${{ github.base_ref || 'main' }}"
+      - name: Install npm dependencies
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        run: npm ci --audit=false
+      - name: Verify directory structure
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        run: |
+          test -d skills/
+          test -d apps/web-app/
+          test -d tools/scripts/
+          test -d tools/lib/
+          test -f README.md
+          test -f CONTRIBUTING.md
+      - name: Plan web cache use
+        id: web_cache_plan
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          node <<'NODE'
+          const fs = require('node:fs');
+          const { planFor } = require('./tools/scripts/maintenance_validate.cjs');
+          const head = process.env.HEAD_SHA;
+          const base = /^[a-f0-9]{40}$/.test(process.env.BASE_SHA || '') && !/^0+$/.test(process.env.BASE_SHA) ? process.env.BASE_SHA : head;
+          const plan = planFor(process.cwd(), base, head);
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `web=${plan.checks.includes('web')}\n`);
+          if (plan.checks.includes('web')) {
+            const { turboEnvironment } = require('./tools/scripts/web_ci.cjs');
+            const context = require('node:crypto').createHash('sha256').update(turboEnvironment().AAS_WEB_TOOLCHAIN).digest('hex');
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, `context=${context}\n`);
+          }
+          NODE
+      - name: Restore free local Turborepo cache
+        if: steps.web_cache_plan.outputs.web == 'true'
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
+        with:
+          path: ${{ runner.temp }}/aas-web-turbo
+          key: ${{ runner.os }}-aas-web-turbo-v2-${{ steps.web_cache_plan.outputs.context }}-${{ github.sha }}-${{ github.run_attempt }}
+          restore-keys: |
+            ${{ runner.os }}-aas-web-turbo-v2-${{ steps.web_cache_plan.outputs.context }}-
+      - name: Run component validation
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        env:
+          AAS_WEB_CACHE_DIR: ${{ runner.temp }}/aas-web-turbo
+          AAS_WEB_CI_RECEIPT: ${{ runner.temp }}/aas-web-ci.json
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: node tools/scripts/maintenance_validate.cjs --base "$BASE_SHA" --head "$HEAD_SHA" --output .tmp/component-validation.json --parallel
+      - name: Upload component validation receipt
+        if: always() && env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: component-validation-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .tmp/component-validation.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Upload web cache and fresh finalization receipt
+        if: always() && steps.web_cache_plan.outputs.web == 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: web-ci-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/aas-web-ci.json
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Verify README source credits for changed skills
+        if: github.event_name == 'pull_request' && env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        run: npm run check:readme-credits -- --base "${{ github.event.pull_request.base.sha }}" --head "${{ github.event.pull_request.head.sha }}"
+      - name: Create exact-head artifact preview manifest
+        id: preview_manifest
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        env:
+          CATEGORIES_CSV: ${{ needs.pr-policy.outputs.categories }}
+          PRIMARY_CATEGORY: ${{ needs.pr-policy.outputs.primary_category }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          mapfile -t managed_files < <(node tools/scripts/generated_files.js --include-mixed)
+          if [ "${#managed_files[@]}" -eq 0 ]; then
+            echo "::error::No managed files resolved from generated_files contract."
+            exit 1
+          fi
+          mapfile -d '' -t drift_files < <(git diff --name-only -z -- "${managed_files[@]}")
+          categories_json=$(node -e 'process.stdout.write(JSON.stringify(process.argv[1].split(",").filter(Boolean).sort()))' "$CATEGORIES_CSV")
+          args=()
+          for drift_file in "${drift_files[@]}"; do
+            args+=(--drift-file "$drift_file")
+          done
+          node tools/scripts/ci_artifact_preview.cjs create \
+            --output .tmp/artifact-preview/manifest.json \
+            --mode source-preview \
+            --repository "$GITHUB_REPOSITORY" \
+            --run-id "$GITHUB_RUN_ID" \
+            --run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --workflow-sha "$GITHUB_WORKFLOW_SHA" \
+            --head-sha "$PR_HEAD_SHA" \
+            --primary-category "$PRIMARY_CATEGORY" \
+            --categories-json "$categories_json" \
+            "${args[@]}" \
+            --write-github-output
+      - name: Upload exact-head artifact preview manifest
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: source-preview-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .tmp/artifact-preview/manifest.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Record canonical source-validation boundary
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
+        run: echo "Canonical source state and exact generated tree were reproduced by required pr-policy."
+    name: ${{ needs.technical-plan.outputs.needed == 'true' && 'source-validation' || 'metadata-source-reuse' }}
+  artifact-preview:
+    if: needs.technical-plan.outputs.needed == 'true'
+    runs-on: ubuntu-latest
+    needs:
+      - pr-policy
+      - source-validation
+      - technical-plan
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+          sparse-checkout: tools/scripts/ci_artifact_preview.cjs
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          filter: blob:none
+          persist-credentials: false
+      - name: Set up Python
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: "3.10"
+      - name: Install Python dependencies
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
+        run: pip install -r tools/requirements.txt
+      - name: Set up Node
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
+        with:
+          node-version: lts/*
+      - name: Install npm dependencies
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
+        run: npm ci --audit=false
+      - name: Download exact-head artifact preview manifest
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: source-preview-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .tmp/artifact-preview
+      - name: Verify and report exact-head artifact preview
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
+        env:
+          EXPECTED_DIGEST: ${{ needs.source-validation.outputs.preview_manifest_digest }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          node "$GITHUB_WORKSPACE/tools/scripts/ci_artifact_preview.cjs" verify-summary \
+            --manifest .tmp/artifact-preview/manifest.json \
+            --expected-repository "$GITHUB_REPOSITORY" \
+            --expected-run-id "$GITHUB_RUN_ID" \
+            --expected-run-attempt "$GITHUB_RUN_ATTEMPT" \
+            --expected-workflow-sha "$GITHUB_WORKFLOW_SHA" \
+            --expected-head-sha "$PR_HEAD_SHA" \
+            --expected-digest "$EXPECTED_DIGEST" \
+            --write-step-summary
+      - name: Reproduce canonical-sync PR from main
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: npm run sync:repo-state
+      - name: Report generated drift
+        if: env.IS_TRUSTED_CANONICAL_SYNC_PR == 'true'
+        run: |
+          mapfile -t managed_files < <(node tools/scripts/generated_files.js --include-mixed)
+          if [ "${#managed_files[@]}" -eq 0 ]; then
+            echo "::error::No managed files resolved from generated_files contract."
+            exit 1
+          fi
+          drift_files=$(git diff --name-only -- "${managed_files[@]}")
+
+          {
+            echo "## Artifact Preview"
+            echo
+            echo "- Primary change: \`${{ needs.pr-policy.outputs.primary_category }}\`"
+            echo "- Categories: \`${{ needs.pr-policy.outputs.categories }}\`"
+            echo "- Derived-file policy: PRs remain source-only; main will canonicalize final generated outputs."
+            echo
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ -z "$drift_files" ]; then
+            echo "No generated drift detected after preview."
+            echo "- Generated drift: none" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          echo "::error::Canonical-sync PR is not byte-for-byte reproducible from main."
+          printf '%s\n' "$drift_files"
+          exit 1
+    name: ${{ needs.technical-plan.outputs.needed == 'true' && 'artifact-preview' || 'metadata-preview-reuse' }}

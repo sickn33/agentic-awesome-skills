@@ -254,7 +254,11 @@ batch. Use separate cycles if the authorized scope changes.
 `ci.yml` validates source on opened, synchronize and reopened events.
 `pr-metadata.yml` runs the same protected-base `pr-policy` and `pr-evidence`
 implementations for description/draft changes. Its independent concurrency group
-cannot cancel in-flight source validation. No skipped technical check is emitted
+cannot cancel in-flight source validation, including first execution after a
+submission correction. A bounded read-only planner waits for existing technical
+checks; missing or skipped checks execute the identical full technical jobs.
+Genuine failures are never automatically rerun. Skipped fallback jobs use distinct
+non-required names. No skipped technical check is emitted
 as a replacement for an earlier result. Current-body admission, exact current
 head, strict up-to-date protection, artifact identity and all four required
 checks remain mandatory. Retargeting a PR fails metadata admission until a new
