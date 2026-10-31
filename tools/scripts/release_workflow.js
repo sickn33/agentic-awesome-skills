@@ -13,6 +13,9 @@ const {
 
 function parseArgs(argv) {
   const [command, version, ...rest] = argv;
+  if (command === 'publish' && rest.length === 1 && rest[0] === '--tag-only') {
+    return { command, version: version || null, stateDir: undefined, tagOnly: true };
+  }
   if (rest.length && (rest.length !== 2 || rest[0] !== '--state-dir' || !rest[1])) throw Error('Use --state-dir /absolute/private/cycle');
   return {
     command,
@@ -585,7 +588,16 @@ function prepareRelease(projectRoot, version, stateDir, options = {}) {
   console.log(`[release] Next step: merge ${releaseBranch}, update local main, then run npm run release:publish -- ${version}`);
 }
 
-function publishRelease(projectRoot, version) {
+function publishNpmUnlessTagOnly(projectRoot, version, headCommit, tagOnly, dependencies = {}) {
+  if (tagOnly) return false;
+  if (dependencies.dispatch) dependencies.dispatch(projectRoot, version, headCommit);
+  else dispatchNpmPublication(projectRoot, version, headCommit);
+  if (dependencies.verify) dependencies.verify(projectRoot, version, headCommit);
+  else requireSuccessfulNpmPublication(projectRoot, version, headCommit);
+  return true;
+}
+
+function publishRelease(projectRoot, version, { tagOnly = false } = {}) {
   if (!version) {
     throw new Error("Usage: npm run release:publish -- X.Y.Z");
   }
@@ -634,9 +646,10 @@ function publishRelease(projectRoot, version) {
   }
 
   requireSuccessfulDistributionCandidate(projectRoot, version, headCommit);
-  dispatchNpmPublication(projectRoot, version, headCommit);
-  requireSuccessfulNpmPublication(projectRoot, version, headCommit);
-
+  if (!publishNpmUnlessTagOnly(projectRoot, version, headCommit, tagOnly)) {
+    console.log(`[release] ${tagName} is tagged with a verified distribution candidate; npm, GitHub Release and public release alignment are incomplete.`);
+    return;
+  }
   if (githubReleaseExists(projectRoot, tagName)) {
     console.log(`[release] ${tagName} already has a GitHub Release after verified npm publication.`);
     return;
@@ -668,7 +681,7 @@ function main() {
   }
 
   if (args.command === "publish") {
-    publishRelease(projectRoot, args.version);
+    publishRelease(projectRoot, args.version, { tagOnly: args.tagOnly });
     return;
   }
 
@@ -679,6 +692,8 @@ function main() {
 
 
 module.exports = {
+  parseArgs,
+  publishNpmUnlessTagOnly,
   prepareRelease,
   runReleasePreflight,
   runPreparedReleaseTestSuite,

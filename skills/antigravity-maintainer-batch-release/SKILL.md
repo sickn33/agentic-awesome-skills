@@ -23,6 +23,8 @@ Use for AAS maintainer sweeps, PR repairs and merge batches, runtime/catalog rel
 7. For compatible catalog-only publication, use the independent catalog workflow and immutable revision/SRI. Preserve offline operation, rollback and agent-owned selection. Do not bump or republish runtime just to update catalog data.
 8. Finish a source batch with `maintenance:cycle verify` on exact main CI/CodeQL after all other source-cycle actions. Without publication, stop there: public distribution snapshots intentionally remain at the last release. For releases, complete the full-release-alignment gate in the contract, including actual public bytes and live surfaces. Report personal MCP configuration and session reload separately. Update installed maintainer skills from the adopted canonical source, preserving unrelated installations.
 
+When the user explicitly requests a tag while prohibiting npm publication, `release:publish -- X.Y.Z --tag-only` performs the same release admission and candidate checks, creates or verifies the tag, and stops before npm and GitHub Release. This is an incomplete distribution, not a completed release or a waiver of the full-release-alignment gate. Never infer this mode from a failed npm attempt. A later normal publication still requires explicit authorization.
+
 ## Examples
 
 Prepare safe analyses without merging:
