@@ -46,3 +46,16 @@ test('adopted evaluator changes stop the old process before another action',asyn
  const report=await drive(options,{snapshot:()=>({state:{prs:[],attempts:[]},pulls:[],contract:String(count)}),sleep:async()=>{},execute:async()=>{count++;return {success:false,failureCode:'CI_WAIT_TIMEOUT'};}});
  assert.equal(report.status,'attention-required');assert.equal(count,1);
 });
+test('real cycle entry owns one lock, invalidates stale completion and preserves scope',async()=>{
+ const {main}=require('../maintenance_cycle.cjs');
+ const saved={cycle:{repository:'sickn33/agentic-awesome-skills',prs:[1],attempts:[],completedAt:'old'}};
+ let locked=false,acquired=0;
+ const store={readBatch:key=>structuredClone(saved[key]),writeBatch:(key,value)=>{saved[key]=structuredClone(value);},acquireLock:()=>{assert(!locked);locked=true;acquired++;return()=>{locked=false;};}};
+ const originalLog=console.log,originalExit=process.exitCode;
+ try {
+  console.log=()=>{};
+  const result=await main(['run','--state-dir','/fixture'],{openStore:()=>store,run:()=> 'contract',batch:{assertEffectiveMainProtection:()=>{}},gh:()=>({...pr(1),draft:true})});
+  assert.equal(result.status,'attention-required');assert.equal(saved.cycle.completedAt,undefined);
+  assert.deepEqual(saved.cycle.prs,[1]);assert.equal(acquired,1);assert(!locked);
+ }finally{console.log=originalLog;process.exitCode=originalExit;}
+});

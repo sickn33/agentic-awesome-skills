@@ -79,6 +79,8 @@ async function mainUnlocked(argv, dependencies = {}) {
   if(o.command==='status' || o.command==='start') { console.log(JSON.stringify(state,null,2)); return; }
   if(o.command==='run') {
     if(o.prs) throw Error('run processes the complete recorded scope; do not narrow it');
+    for(const key of ['completedAt','elapsedMs','measurement','limitations']) delete state[key];
+    store.writeBatch('cycle',state);
     const report=await require('./maintenance_run.cjs').drive({maxSteps:Number(o['max-steps']),seconds:Number(o.seconds),allowAlign:o['allow-align']==='true',reviewedHeads:o.reviewedHeads}, {
       snapshot:()=>{
         batch.assertEffectiveMainProtection(ROOT,REPO);
