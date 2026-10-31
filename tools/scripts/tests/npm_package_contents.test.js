@@ -26,7 +26,17 @@ function runNpmPackDryRunJson(cwd = repoRoot) {
     throw new Error(result.stderr.trim() || "npm pack --dry-run --json failed");
   }
 
-  return JSON.parse(result.stdout);
+  const parsed = JSON.parse(result.stdout);
+  if (Array.isArray(parsed)) {
+    return parsed;
+  }
+  if (parsed && typeof parsed === "object") {
+    const keys = Object.keys(parsed);
+    if (keys.length > 0 && typeof parsed[keys[0]] === "object") {
+      return Object.values(parsed);
+    }
+  }
+  return parsed;
 }
 
 const packOutput = runNpmPackDryRunJson();
