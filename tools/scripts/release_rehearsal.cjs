@@ -43,7 +43,16 @@ function rehearse(source, version, stateDir, dependencies = {}) {
     run('git', ['checkout', '-B', 'main', verifiedMain], clone);
     const cycleProof = (dependencies.gate || require('./release_cycle_gate.cjs')).prepareProof(clone, version, privateState);
     run('git', ['checkout', '-B', 'main', head], clone);
-    const result = prepare(clone, version, privateState, { localOnly: true, cycleProof });
+    // Reuse only the existing verified local cache, including across disposable rehearsals.
+    const previousCache=process.env.AAS_WEB_CACHE_DIR;
+    let result;
+    try {
+      if(!previousCache) process.env.AAS_WEB_CACHE_DIR=path.join(source,'.turbo','cache');
+      result=prepare(clone, version, privateState, { localOnly: true, cycleProof });
+    } finally {
+      if(previousCache===undefined) delete process.env.AAS_WEB_CACHE_DIR;
+      else process.env.AAS_WEB_CACHE_DIR=previousCache;
+    }
     if (run('git', ['remote'], clone, { capture: true })) throw Error('Rehearsal created a remote');
     if (run('git', ['rev-parse', 'HEAD'], source, { capture: true }) !== head ||
         run('git', ['status', '--porcelain'], source, { capture: true }))

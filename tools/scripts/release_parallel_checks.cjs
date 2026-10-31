@@ -4,6 +4,8 @@ const {execFileSync}=require('node:child_process');
 const {prepareWebCopy,executeCheckAsync}=require('./maintenance_validate.cjs');
 async function validate(root, dependencies={}) {
  const head=dependencies.head || execFileSync('git',['rev-parse','HEAD'],{cwd:root,encoding:'utf8'}).trim();
+ const previousCache=process.env.AAS_WEB_CACHE_DIR;
+ if(!previousCache)process.env.AAS_WEB_CACHE_DIR=path.join(root,'.turbo','cache');
  const copy=(dependencies.prepare || prepareWebCopy)(root,head);
  const run=dependencies.run || executeCheckAsync;
  const started=Date.now();
@@ -18,7 +20,7 @@ async function validate(root, dependencies={}) {
    }
   }))();
   return {passed:true,head,elapsedMs:Date.now()-started,results:results.map(r=>r.value)};
- }finally{copy.cleanup();}
+ }finally{copy.cleanup();if(previousCache===undefined)delete process.env.AAS_WEB_CACHE_DIR;else process.env.AAS_WEB_CACHE_DIR=previousCache;}
 }
 module.exports={validate};
 if(require.main===module)validate(process.cwd()).then(r=>console.log(JSON.stringify(r))).catch(e=>{console.error(e.message);process.exitCode=1;});

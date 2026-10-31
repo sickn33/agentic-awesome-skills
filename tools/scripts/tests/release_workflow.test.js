@@ -197,7 +197,8 @@ release.runPreparedReleaseTestSuite("/fixture", {
     preparedSuite = { ...preparedSuite, command, args, cwd, env: options.env };
   },
 });
-assert.deepStrictEqual(preparedSuite.args, ["run", "test"]);
+assert.deepStrictEqual(preparedSuite.args, ["tools/scripts/release_parallel_checks.cjs"]);
+assert.strictEqual(preparedSuite.command, process.execPath);
 assert.strictEqual(preparedSuite.packedRoot, "/fixture");
 assert.strictEqual(preparedSuite.suiteRoot, "/fixture");
 assert.strictEqual(preparedSuite.cwd, "/fixture");

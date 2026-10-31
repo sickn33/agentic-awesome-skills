@@ -70,8 +70,7 @@ pinned Turborepo `app:ci:test` and `app:ci:compile` tasks. The former runs the
 complete web coverage suite with unchanged thresholds; the latter runs both
 TypeScript projects and Vite. These two successful results may be reused
 independently. The repository script suite, prerequisites, admission, review and
-protected merge evidence still execute normally. The immutable release candidate
-retains its existing fresh coverage and full build commands.
+protected merge evidence still execute normally. The immutable release candidate and local preparation also use this verified web cache; current-commit finalization remains fresh. Their full script suite runs concurrently with an isolated web copy, and both must pass before site artifacts are collected.
 
 Explicit inputs include ignored generated public files, app sources/configuration,
 web lockfile, external docs/data/indexes and shared tooling. Compile excludes test

@@ -417,7 +417,7 @@ function runPreparedReleaseTestSuite(projectRoot, options = {}) {
   try {
     (options.runReleaseSuite || runReleaseSuite)(projectRoot);
     (options.pack || require("./distribution_pack.cjs").pack)(projectRoot, temporary);
-    (options.run || runCommand)("npm", ["run", "test"], projectRoot, {
+    (options.run || runCommand)(process.execPath, ["tools/scripts/release_parallel_checks.cjs"], projectRoot, {
       env: { ...(options.env || process.env), AAS_TEST_CANDIDATE_TARBALL: path.join(temporary, "package.tgz") },
     });
   } finally {
@@ -566,8 +566,6 @@ function prepareRelease(projectRoot, version, stateDir, options = {}) {
   require("./distribution_snapshot.cjs").verify(projectRoot);
   // Test the final sealed commit, not a predecessor amended after testing.
   runPreparedReleaseTestSuite(projectRoot);
-  for (const script of ["app:install", "app:ci"])
-    runCommand("npm", ["run", script], projectRoot);
   ensureCleanWorkingTree(projectRoot, "Release tests changed the sealed candidate; refusing to push.");
   require("./distribution_snapshot.cjs").verify(projectRoot);
   if (options.localOnly === true) {
