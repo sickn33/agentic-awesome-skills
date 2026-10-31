@@ -218,3 +218,70 @@ reported `not-requested`, never passed; local configurations remain unchanged an
 no client reload is claimed. The default `npm` target retains all registry checks.
 Do not infer the GitHub/site target from a registry error. Record the selected
 target and observed timings; do not claim an overall speedup from isolated tests.
+
+
+## Bounded execution and critical-path scheduling
+
+Use `maintenance:cycle run --state-dir /absolute/private/state --seconds 300 --max-steps 40`
+after recording the complete authorized scope and actual review evidence. The
+bounded driver performs fresh intake, delegates eligible merges to `merge:batch`,
+continues independent PRs, and finishes with exact-main CI/CodeQL verification.
+It never creates semantic approval, closes PRs, publishes, reruns failed CI, or
+rewrites PR metadata. A non-complete status exits nonzero and preserves the
+journal; inspect the reported action before resuming. The time budget bounds new
+stage dispatch, not an already-running protected operation.
+
+For authorized branch alignment, explicitly add `--allow-align true`. This
+permits one head-bound update per PR per invocation, never a retry after base
+movement or an uncertain write. Re-intake afterward; unchanged-tree review
+receipts may be reused only under the existing authenticated context contract.
+Supply `--reviewed-head`, `--reviewer` and `--review-evidence` only for a review
+actually completed on that exact head. Without this evidence, independent work
+continues and the driver reports attention required. A previous uncertain write
+requires explicit fresh intake before another automatic run. Hold the existing
+single-writer cycle lock throughout the driver.
+
+Prepare incoming PRs before the release window: start a measured source cycle
+with the complete known scope, run `intake`, resolve author evidence/provenance/
+license defects, and review complete bundles before selecting the next merge.
+The existing PR admission and changed-skill evidence workflows provide early
+feedback on arrival. Do not claim that moving review earlier removes its cost,
+add unattended scheduled merges, or omit late-arriving PRs from an authorized
+batch. Use separate cycles if the authorized scope changes.
+
+### Metadata-only CI events
+
+`ci.yml` validates source on opened, synchronize and reopened events.
+`pr-metadata.yml` runs the same protected-base `pr-policy` and `pr-evidence`
+implementations for description/draft changes. Its independent concurrency group
+cannot cancel in-flight source validation. No skipped technical check is emitted
+as a replacement for an earlier result. Current-body admission, exact current
+head, strict up-to-date protection, artifact identity and all four required
+checks remain mandatory. Retargeting a PR fails metadata admission until a new
+source update validates the new base. Do not use an old base's green checks.
+
+### Immutable runtime handoff
+
+The tag candidate first verifies the prepared source and packs the runtime once.
+A scoped `runtime.json` binds the exact package bytes, commit, repository,
+workflow, run/attempt, version and lockfile. Linux/Windows Node 22/24 installation
+checks and the complete suite/site branch independently verify that handoff and
+run concurrently. Runtime-only evidence is explicitly rejected by the full
+publication verifier. The final distribution manifest still requires both the
+same runtime and site bytes, and publishers still require a successful complete
+candidate workflow. Early runtime handoff artifacts expire after one day; no
+paid runner, remote cache, quota increase or organization migration is enabled.
+
+Local rehearsal/preparation also uses the existing reviewed two-worker test
+cohort by default; `AAS_TEST_COHORT_WORKERS=1` retains serial diagnosis. No group
+is removed or sharded. Runtime installation writes at most four files concurrently
+inside its private unpublished staging directory. Exclusive creation, private
+permissions, per-file fsync, full byte verification and atomic promotion remain;
+all active writers drain before cleanup after failure.
+
+Web cache inputs retain user guides, the imported MCP example and contributor
+alias mapping; unrelated maintainer documentation no longer invalidates compiled
+web assets/coverage. Data and library inputs remain conservative. Fresh setup,
+metadata, prerender, audits and final checks still run. Record cache hits/misses,
+full test inventory, stage durations and overall elapsed time separately; do not
+sum overlapping savings or present fixture results as a whole-cycle benchmark.

@@ -19,7 +19,7 @@ for (const job of [ci.jobs["main-validation-and-sync"],hygiene.jobs["source-heal
 assert.deepEqual(ci.jobs["main-validation-and-sync"].permissions,{contents:"read"});
 assert.deepEqual(hygiene.permissions,{contents:"read"});
 for (const command of ["distribution:verify","sync:release-state","validate:strict","validate:glossary","validate:references","security:docs","security:scan:strict","plugin-compat:check","bundles:check"])
-  assert.ok(commands(candidate.jobs.build).includes(`npm run ${command}`),`candidate must execute ${command}`);
+  assert.ok(commands(candidate.jobs.runtime).includes(`npm run ${command}`),`candidate must execute ${command}`);
 assert.match(commands(candidate.jobs.build),/release_parallel_checks\.cjs/);
 const parallelStep=candidate.jobs.build.steps.find(s=>s.run?.includes('release_parallel_checks.cjs'));
 assert.equal(parallelStep.env.AAS_TEST_CANDIDATE_TARBALL,'${{ runner.temp }}/distribution/package.tgz');
@@ -32,13 +32,13 @@ assert.match(read('tools/scripts/release_parallel_checks.cjs'),/'audit','--audit
 assert.match(read('tools/scripts/release_parallel_checks.cjs'),/'verify:seo'/);
 assert.match(read('tools/scripts/web_ci.cjs'),/test:coverage/);
 assert.match(read('tools/scripts/web_ci.cjs'),/build:finalize/);
-assert.match(commands(candidate.jobs.build),/git merge-base --is-ancestor HEAD origin\/main/);
-assert.match(commands(candidate.jobs.build),/distribution_pack\.cjs/,"the candidate must pack through the release-identity-aware packer");
+assert.match(commands(candidate.jobs.runtime),/git merge-base --is-ancestor HEAD origin\/main/);
+assert.match(commands(candidate.jobs.runtime),/distribution_pack\.cjs/,"the candidate must pack through the release-identity-aware packer");
 assert.doesNotMatch(commands(candidate.jobs.build),/npm pack/,"the candidate must not pack a tarball without recording gitHead");
 assert.match(commands(candidate.jobs.build),/distribution_manifest\.cjs create/);
 assert.deepEqual([...new Set(candidate.jobs.functional.strategy.matrix.include.map(job => job.os))],["ubuntu-24.04","windows-2025"]);
 assert.deepEqual([...new Set(candidate.jobs.functional.strategy.matrix.include.map(job => job.node))],["22.23.1","24.22.1"]);
-assert.match(commands(candidate.jobs.functional),/distribution_manifest\.cjs verify/);
+assert.match(commands(candidate.jobs.functional),/distribution_manifest\.cjs verify-runtime/);
 assert.match(commands(candidate.jobs.functional),/run-installed-candidate\.mjs/);
 for (const workflow of [publish,pages]) {
   const all = Object.values(workflow.jobs).map(commands).join("\n");
@@ -99,3 +99,19 @@ assert.doesNotMatch(commands(ci.jobs['source-validation']), /--shard|turbo run|v
 for (const name of ["source-validation", "main-validation-and-sync"]) {
  assert.equal(ci.jobs[name].env.AAS_TEST_COHORT_WORKERS, "2");
 }
+
+const metadata=load('pr-metadata');
+assert.deepEqual(ci.on.pull_request.types,['opened','synchronize','reopened']);
+assert.deepEqual(metadata.on.pull_request.types,['edited','ready_for_review','converted_to_draft']);
+assert.deepEqual(Object.keys(metadata.jobs),['pr-policy','pr-evidence']);
+assert.deepEqual(metadata.jobs['pr-policy'].steps.slice(1),ci.jobs['pr-policy'].steps,'metadata must retain the exact protected policy implementation');
+assert.deepEqual(metadata.jobs['pr-evidence'].steps,ci.jobs['pr-evidence'].steps);
+assert.match(metadata.jobs['pr-policy'].steps[0].if,/changes.base/);
+assert.match(metadata.jobs['pr-policy'].steps[0].run,/exit 1/);
+assert.notEqual(metadata.concurrency.group,ci.concurrency.group,'body edits must not cancel source validation');
+assert.equal(candidate.jobs.build.needs,'runtime');
+assert.equal(candidate.jobs.functional.needs,'runtime');
+assert.match(commands(candidate.jobs.runtime),/create-runtime/);
+assert.match(commands(candidate.jobs.build),/verify-runtime/);
+assert.doesNotMatch(commands(candidate.jobs.build),/distribution_pack/,'site branch must consume identical runtime bytes');
+assert.equal(candidate.jobs.runtime.steps.find(s=>s.uses?.startsWith('actions/upload-artifact@')).with['retention-days'],1);

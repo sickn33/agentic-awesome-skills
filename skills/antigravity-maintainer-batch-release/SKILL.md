@@ -93,3 +93,11 @@ When checking PR evidence, parse template comments without concatenating visible
 Mandatory admission for canonical skill-tree PRs is enforced by protected-base pr-policy and by the current-body merge check. Require the three filled evidence sections, accept brief scoped results and explained unrun tests, and return author-actionable corrections. Do not waive this with an owner attestation or cached semantic receipt. Description/draft drift stops the merge attempt; drafts remain available for feedback. New external imports must retain license provenance and a root LICENSE, without forcing unrelated legacy cleanup. Follow the admission details in the bundled contribution intake guide.
 
 Use `maintenance:doctor` before triage and `maintenance:cycle next` between stages. Continue independent authorized work, complete repairs before full validation, align only the next merge, and include release notes in the final planned source PR. Follow the maintenance contract for authenticated candidate promotion, cached release web checks and the explicit GitHub/site verification target.
+
+
+Use bounded `maintenance:cycle run` to execute already-authorized deterministic
+continuations through the sole merge authority. Actual exact-head review remains
+required. Explicit `--allow-align true` permits one observed-head update per PR;
+never retry uncertain writes or invent review. Read the contract for separate
+metadata admission, early PR readiness, runtime-first candidate scheduling and
+bounded durable installation. Preserve every check and measure the actual cycle.

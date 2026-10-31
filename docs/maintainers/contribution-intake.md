@@ -28,8 +28,20 @@ For the next 20–30 external skill PRs, record immutable initial head, contribu
 
 ## Admission enforcement
 
-The existing required check names and strict protection stay unchanged. `pr-policy` invokes `--check-submission` from the protected-base evaluator. `pull_request` includes `edited` and `ready_for_review` so a body fix is rechecked; existing concurrency cancels superseded runs. Dependent component/evidence/preview jobs only proceed after intake passes. This does not add a paid review service or broaden workflow approval. The separate semantic workflow is not triggered by body edits. Content fingerprints may reuse unchanged semantic work; they never waive live admission.
+The existing required check names and strict protection stay unchanged. `pr-policy` invokes `--check-submission` from the protected-base evaluator. `pr-metadata.yml` handles `edited`, `ready_for_review` and `converted_to_draft`, so body/draft changes recheck policy and evidence without canceling source validation. Source events keep component/evidence/preview jobs behind successful intake. Retargeting a base requires a new source update. This does not add a paid review service or broaden workflow approval. The separate semantic workflow is not triggered by body edits. Content fingerprints may reuse unchanged semantic work; they never waive live admission.
 
 The merge runner checks the live body independently of CI artifacts, local reports, checklist ticks, signed content review receipts or owner head attestations. Its immutable-attempt tuple also binds a description digest and draft state, rechecked while waiting and immediately before merge. Changed metadata returns `PR_CHANGED`; incomplete evidence returns `SUBMISSION_INCOMPLETE`; drafts return `DRAFT_PR`. Safe analysis/workflow approval may precede readiness for feedback, but merging cannot. GitHub cannot atomically bind a merge to body text; these checks are point-in-time observations under strict branch protection.
 
 The same offline changed-skill evaluator enforces license metadata and a retained root LICENSE for newly added/copied external skills, and prevents removal of an existing notice. It does not infer redistribution permission from an absent license or certify legal suitability. Existing unrelated legacy debt is not made a prerequisite for a focused correction. Relevant content checks, actual semantic judgment, exact-head review, and component validation remain required.
+
+
+## Prepare before the release window
+
+Use the existing opened/synchronize policy and evidence results to resolve
+submission, provenance and licensing defects while a PR is being prepared.
+Complete source-cycle intake and actual bundle review before the release window
+where possible; review changes again when bound content/context changes. The
+bounded maintenance driver can consume the resulting exact-head evidence, but
+cannot manufacture it. Description corrections trigger policy/evidence checks
+without canceling or restarting source builds. Retargeted bases need a fresh
+source update. This reduces release waiting, not the amount of review required.

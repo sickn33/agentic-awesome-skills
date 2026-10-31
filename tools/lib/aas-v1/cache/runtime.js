@@ -275,6 +275,21 @@ async function writeExclusive(filePath, bytes, { sync = true } = {}) {
   } finally { await handle.close(); }
 }
 
+async function writeRuntimeAssets(stagePath, records, write = writeExclusive) {
+  // Directories already exist in the private unpublished staging tree. Keep
+  // exclusive creation, permissions and fsync for every byte; drain writers
+  // before promotion or cleanup, including on error.
+  let next = 0, failed = false, firstError;
+  await Promise.all(Array.from({ length: Math.min(4, records.length) }, async () => {
+    while (!failed && next < records.length) {
+      const record = records[next++];
+      try { await write(path.join(stagePath, ...record.path.split("/")), record.bytes); }
+      catch (error) { if (!failed) { failed = true; firstError = error; } }
+    }
+  }));
+  if (failed) throw firstError || new Error("Runtime asset write failed");
+}
+
 async function readRuntimeAsset(targetPath, record) {
   const absolute = path.join(targetPath, ...record.path.split("/"));
   const stat = await fsp.lstat(absolute);
@@ -389,8 +404,8 @@ async function promoteRuntime({ cacheRoot, release, parsed }) {
         cursor = path.join(cursor, segment);
         if (!directories.has(cursor)) { await fsp.mkdir(cursor, { mode: 0o700 }); directories.add(cursor); }
       }
-      await writeExclusive(path.join(stagePath, ...segments), record.bytes);
     }
+    await writeRuntimeAssets(stagePath, scanned.records);
     const identity = validateRuntimeIdentity({
       schemaVersion: 1,
       package: CATALOG_PACKAGE,
@@ -458,4 +473,5 @@ module.exports = {
   runtimeStatus,
   resolveUniqueRuntime,
   validateRuntimeIdentity,
+  writeRuntimeAssets,
 };

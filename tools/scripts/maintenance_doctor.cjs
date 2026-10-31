@@ -1,7 +1,10 @@
 'use strict';
 const {execFileSync} = require('node:child_process');
 function doctor(root, dependencies = {}) {
-  const run = dependencies.run || ((command,args) => execFileSync(command,args,{cwd:root,encoding:'utf8',timeout:120000,maxBuffer:32*1024*1024}).trim());
+  const run = dependencies.run || ((command,args) => {
+    const invocation=require('./release_workflow.js').resolveCommandInvocation(command,args);
+    return execFileSync(invocation.command,invocation.args,{cwd:root,encoding:'utf8',timeout:120000,maxBuffer:32*1024*1024}).trim();
+  });
   const checks = [];
   for (const [name,command,args] of [
     ['node',process.execPath,['--version']], ['npm','npm',['--version']],
