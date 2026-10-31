@@ -437,33 +437,19 @@ Valores de `status`: `sent` → `delivered` → `read`; `failed` e um desfecho d
 ### Tratamento de Erros
 
 ```typescript
-async function sendWithRetry(payload: any, maxRetries = 3): Promise<any> {
-  for (let attempt = 1; attempt <= maxRetries; attempt++) {
-    try {
-      const response = await axios.post(
-        `${GRAPH_API}/${process.env.PHONE_NUMBER_ID}/messages`,
-        payload,
-        { headers: { Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}` } }
-      );
-      return response.data;
-    } catch (error: any) {
-      const errorCode = error.response?.data?.error?.code;
-      const errorMessage = error.response?.data?.error?.message;
-
-      // Erros que nao devem ser retentados
-      if ([100, 131026, 131051, 132000, 132001].includes(errorCode)) {
-        throw new Error(`WhatsApp API Error ${errorCode}: ${errorMessage}`);
-      }
-
-      // Rate limit ou erro temporario - retry com backoff
-      if (attempt < maxRetries && [4, 135000].includes(errorCode)) {
-        const delay = Math.pow(2, attempt) * 1000; // 2s, 4s, 8s
-        await new Promise(resolve => setTimeout(resolve, delay));
-        continue;
-      }
-
-      throw error;
-    }
+async function sendWithRetry(payload: any): Promise<any> {
+  // The legacy name is retained for the examples; it does not retry automatically.
+  // Send only to the authorized recipient and reconcile an unknown outcome
+  // before any retry; an error can follow acceptance by the provider.
+  try {
+    const response = await axios.post(
+      `${GRAPH_API}/${process.env.PHONE_NUMBER_ID}/messages`,
+      payload,
+      { headers: { Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}` }, maxRedirects: 0 }
+    );
+    return response.data;
+  } catch {
+    throw new Error('WhatsApp send failed or outcome unknown; reconcile before retrying');
   }
 }
 ```
