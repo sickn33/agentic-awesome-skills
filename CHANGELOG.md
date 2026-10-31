@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [20.3.0] - 2026-10-31 - "New Skills And Reviewed Updates"
+
+> Adds **7** reviewed catalog skills and updates existing workflows. This GitHub release is not published to npm because npm publication is unavailable; npm distribution and full release alignment remain incomplete.
+
+### Added
+
+- **tweetapi** — look up public X profiles, posts and related data through a read-only API or hosted MCP service.
+- **harvey-specter** — prepare negotiations and difficult conversations with evidence and clear boundaries.
+- **ios-flows** and **ios-review** — plan iPhone app flows and review screens for usability and accessibility, adapted from UXKIN.
+- **keepmacawake** — manage an explicitly authorized Keep Mac Awake session for long-running Mac tasks.
+- **requirements-writing** — write and review verifiable requirements with EARS patterns and traceability.
+- **zambo** — connect to Zambo's remote MCP tools with explicit consent, data-handling boundaries and receipt verification.
+
+### Changed
+
+- **aomi-transact**, **firecrawl-scraper**, **datacircle** and **satori** — refresh setup, source references and guidance, with clearer limits on claims and external services.
+- Add AAS Core remote plugin and policy pages, and restore crawlable skill content for catalog search.
+- Improve CI reuse and release candidate validation while keeping the protected review and merge gates.
+
+### Security and distribution
+
+- Update the web app's vulnerable `minimatch` dependency and the WhatsApp boilerplate's `follow-redirects` dependency. The release snapshot propagates the WhatsApp fix to the two plugin mirrors.
+- Remove automatic retries from the WhatsApp sending example; retries of non-idempotent sends require application-specific delivery safeguards.
+- The GitHub tag and release provide the reviewed source snapshot. npm publication was explicitly skipped, so `agentic-awesome-skills@20.3.0` is not available from npm as part of this release.
+
+### Thanks
+
+Thanks to **@restocked** and TweetAPI, **@YannisKiefer**, **@ronaldmanlupig30-web** and UXKIN, **@keepmacawake**, **@jgsystemsconsulting**, and **@zambodotdev** for the new skills; and to **@CeciliaZ030**, **@JuampiHernandez**, **@waynehamadi**, and **@MetcalfSolutions** for the reviewed updates.
+
+---
+
 ## [20.2.0] - 2026-10-29 - "Reviewed Skills And A Clean Release Path"
 
 > Installable catalog update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related assistants. Adds **5** reviewed skills, refreshes two existing workflows, and fixes the three canonical dependency alerts before publication; regenerated plugin copies are verified in the release alignment gate.
