@@ -149,6 +149,8 @@ assert.match(publishWorkflow, /verify_npm_candidate\.cjs/);
 const releaseWorkflow = fs.readFileSync(path.join(repositoryRoot, "tools/scripts/release_workflow.js"), "utf8");
 assert.match(releaseWorkflow, /runPreparedReleaseTestSuite\(projectRoot\)/);
 assert.match(releaseWorkflow, /requireSuccessfulDistributionCandidate\(projectRoot, version, headCommit\)/);
+assert.match(releaseWorkflow, /requireSuccessfulDistributionCandidate\(projectRoot, version, headCommit\);\s*publishNpmUnlessSkipped\(projectRoot, version, headCommit, skipNpm\)/);
+assert.match(releaseWorkflow, /releaseNotesForPublication\(section, skipNpm\)/);
 assert.match(releaseWorkflow, /dispatchNpmPublication\(projectRoot, version, headCommit\)/);
 assert.match(releaseWorkflow, /requireSuccessfulNpmPublication\(projectRoot, version, headCommit\)/);
 assert.match(detailedContract, /Preparation also creates the local release commit, packs its final sealed tree and runs the complete local test suite/);
