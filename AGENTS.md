@@ -112,3 +112,5 @@ For contribution readiness, follow `docs/maintainers/contribution-intake.md`. As
 Canonical skill-tree PRs must pass mandatory evidence admission in `pr-policy` and current-body revalidation in `merge:batch`. Body/draft drift stops an active merge; content attestations cannot waive incomplete evidence. Keep author requirements proportionate and free of mandatory paid tools or unsafe live tests.
 
 For release process repairs, validate the full shared candidate path through `npm run release:rehearse -- X.Y.Z --state-dir /absolute/private/completed-cycle`. Keep changes in an isolated topic checkout while another release is active; do not modify its source, state or installed skill. Rehearsal never grants publication authority.
+
+For efficient cycles, follow the maintenance contract’s environment doctor, advisory `maintenance:cycle next`, private candidate rehearsal/promotion and explicit `github-site` verification target. Preserve all exact-head checks; never treat excluded npm or local hosts as passed.

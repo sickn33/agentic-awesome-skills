@@ -210,7 +210,7 @@ function commandAsync(command, args, cwd, timeout = 600000) {
     });
   });
 }
-async function canonicalProof(sha) {
+async function canonicalProof(sha, options = {}) {
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), "aas-release-verify-"));
   try {
     run("git", ["clone", "--shared", "--no-checkout", ROOT, temp]);
@@ -240,14 +240,16 @@ async function canonicalProof(sha) {
       "require('./tools/scripts/distribution_fetch.cjs').main([process.argv[1]], {...process.env, GITHUB_REPOSITORY:'sickn33/agentic-awesome-skills'}).catch(e=>{console.error(e);process.exitCode=1})", artifactRoot], temp);
     const manifest = JSON.parse(fs.readFileSync(path.join(artifactRoot, "distribution.json")));
     const expectedIntegrity = "sha512-" + crypto.createHash("sha512").update(fs.readFileSync(path.join(artifactRoot, "package.tgz"))).digest("base64");
+    if (options.target !== "github-site") {
     const observedIntegrity = run("npm", ["view", `agentic-awesome-skills@${manifest.version}`, "dist.integrity", "--cache", path.join(temp, ".tmp", "npm-cache")], temp);
     if (observedIntegrity !== expectedIntegrity) throw new Error("Published npm bytes differ from the tested candidate");
+    }
     const installRoot = path.join(temp, ".tmp", "fresh-install");
     await commandAsync("npm", ["install", "--ignore-scripts", "--audit=false", "--prefix", installRoot,
-      "--cache", path.join(temp, ".tmp", "npm-cache"), `agentic-awesome-skills@${manifest.version}`], temp);
+      "--cache", path.join(temp, ".tmp", "npm-cache"), options.target === "github-site" ? path.join(artifactRoot, "package.tgz") : `agentic-awesome-skills@${manifest.version}`], temp);
     await commandAsync(process.execPath, [path.join(installRoot, "node_modules", "agentic-awesome-skills", "tools", "bin", "aas.js"), "--help"], temp);
     return { sha, snapshot: "verified", candidateRun: manifest.runId, candidateAttempt: manifest.runAttempt,
-      npmIntegrity: expectedIntegrity, freshInstall: "passed", regeneration: "verified-by-immutable-candidate" };
+      candidateIntegrity: expectedIntegrity, distribution: options.target === "github-site" ? "verified-candidate" : "npm", freshInstall: "passed", regeneration: "verified-by-immutable-candidate" };
   } finally {
     fs.rmSync(temp, { recursive: true, force: true });
   }
@@ -494,7 +496,10 @@ async function verifyRelease(options, dependencies = {}) {
       .version !== version
   )
     throw new Error("Tagged package version mismatch");
+  const target = options.target || "npm";
+  if (!["npm", "github-site"].includes(target)) throw new Error("Unknown publication target");
   const report = {
+    publicationTarget: target,
     schemaVersion: 1,
     version,
     tag,
@@ -559,6 +564,7 @@ async function verifyRelease(options, dependencies = {}) {
         const release = gh(`releases/tags/${tag}`);
         if (release.draft || !release.published_at || release.tag_name !== tag)
           throw new Error("Published GitHub Release missing");
+        if (target === "github-site") require("./release_workflow.js").requireSkippedNpmDisclosure(release.body);
         const remote = gh(`git/ref/tags/${tag}`);
         const peeled =
           remote.object.type === "tag"
@@ -570,7 +576,7 @@ async function verifyRelease(options, dependencies = {}) {
       },
       "Verify the protected release PR and immutable remote tag.",
     ),
-    check(
+    target === "github-site" ? report.checks.push({component: "npm", status: "not-requested", expected: version, observed: "Explicit github-site target; npm publication not verified"}) : check(
       "npm",
       version,
       async () => {
@@ -632,7 +638,7 @@ async function verifyRelease(options, dependencies = {}) {
       () => {
         if (provenanceError)
           throw new Error(`Tag execution refused: ${provenanceError}`);
-        return (dependencies.canonicalProof || canonicalProof)(sha);
+        return (dependencies.canonicalProof || canonicalProof)(sha, { target });
       },
       "Repair distribution drift in a new protected release; never rebuild inside a publisher.",
     ),
@@ -689,7 +695,7 @@ async function verifyRelease(options, dependencies = {}) {
       () => (dependencies.legacyProof || legacyProof)(sha, activeCatalog),
       "Run protected bridge synchronization and full live verification, including webmaster verification.",
     ),
-    check(
+    target === "github-site" ? report.checks.push({component: "local-mcp-hosts", status: "not-requested", expected: version, observed: "Registry-backed local hosts unchanged; no runtime or client reload claim"}) : check(
       "local-mcp-hosts",
       version,
       async () => {
@@ -750,14 +756,15 @@ async function verifyRelease(options, dependencies = {}) {
     });
   report.machineChecksPassed = report.checks
     .filter((c) => c.component !== "client-session-reload")
-    .every((c) => c.status === "passed");
+    .every((c) => (c.status === "passed" || (target === "github-site" && c.status === "not-requested" && ["npm", "local-mcp-hosts"].includes(c.component))));
   const personal = new Set(["local-mcp-hosts", "client-session-reload"]);
   report.publicReleaseComplete = report.provenance.status === "passed" && report.checks
     .filter((c) => !personal.has(c.component))
-    .every((c) => c.status === "passed");
-  report.personalEnvironmentUpdated = report.checks
+    .every((c) => (c.status === "passed" || (target === "github-site" && c.status === "not-requested" && ["npm", "local-mcp-hosts"].includes(c.component))));
+  report.personalEnvironmentUpdated = target !== "github-site" && report.checks
     .filter((c) => personal.has(c.component))
-    .every((c) => c.status === "passed");
+    .every((c) => (c.status === "passed" || (target === "github-site" && c.status === "not-requested" && ["npm", "local-mcp-hosts"].includes(c.component))));
+  report.fullDistributionComplete = target === "npm" && report.publicReleaseComplete;
   report.complete = report.publicReleaseComplete;
   report.completionLimit =
     "Machine checks do not attest editorial approval or that already-open native clients reloaded their MCP process.";
@@ -777,6 +784,7 @@ function parseArgs(argv) {
         "--version",
         "--hosts",
         "--client-confirmed-head",
+        "--target",
       ].includes(key)
     ) {
       if (!argv[i + 1] || argv[i + 1].startsWith("--"))

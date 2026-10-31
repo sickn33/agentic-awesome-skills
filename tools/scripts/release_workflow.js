@@ -16,12 +16,16 @@ function parseArgs(argv) {
   if (command === 'publish' && rest.length === 1 && rest[0] === '--skip-npm') {
     return { command, version: version || null, stateDir: undefined, skipNpm: true };
   }
-  if (rest.length && (rest.length !== 2 || rest[0] !== '--state-dir' || !rest[1])) throw Error('Use --state-dir /absolute/private/cycle');
-  return {
-    command,
-    version: version || null,
-    stateDir: rest[1],
-  };
+  const options = {command, version: version || null, stateDir: undefined};
+  for(let i=0;i<rest.length;i+=2) {
+    const key=rest[i],value=rest[i+1];
+    if(!value || value.startsWith('--') || !['--state-dir','--candidate-dir'].includes(key)
+       || (key==='--candidate-dir' && !['prepare','rehearse'].includes(command))) throw Error('Use --state-dir /absolute/private/cycle and optional --candidate-dir /absolute/private/candidate');
+    const field=key==='--state-dir'?'stateDir':'candidateDir';
+    if(options[field]) throw Error('Duplicate '+key);
+    options[field]=value;
+  }
+  return options;
 }
 
 function isRegularFile(filePath) {
@@ -506,6 +510,19 @@ function prepareRelease(projectRoot, version, stateDir, options = {}) {
     ? cycleGate.validateProof(options.cycleProof, version, cycleGate.dependencies(projectRoot))
     : cycleGate.prepareProof(projectRoot, version, stateDir);
   const releaseBranch = `release/v${version}`;
+  if (options.candidateDir) {
+    const merger=require("./merge_batch.cjs");
+    merger.ensureTrustedMain(projectRoot);
+    merger.assertEffectiveMainProtection(projectRoot,"sickn33/agentic-awesome-skills");
+    const source=runCommand('git',['rev-parse','HEAD'],projectRoot,{capture:true});
+    const receipt=require('./release_candidate_receipt.cjs').load(projectRoot,options.candidateDir,source,version,runCommand);
+    const recorded=JSON.parse(runCommand('git',['show',`${receipt.commit}:${cycleGate.FILE}`],projectRoot,{capture:true}));
+    if(JSON.stringify(recorded)!==JSON.stringify(cycleProof)) throw Error('Candidate cycle proof changed; rehearse again');
+    runCommand('git',['switch','-c',releaseBranch,receipt.commit],projectRoot);
+    require('./distribution_snapshot.cjs').verify(projectRoot);
+    ensureCleanWorkingTree(projectRoot,'Promoted candidate is not clean');
+    return pushPreparedRelease(projectRoot,version,releaseBranch);
+  }
   runCommand("git", ["switch", "-c", releaseBranch], projectRoot);
 
   fs.writeFileSync(path.join(projectRoot, cycleGate.FILE), JSON.stringify(cycleProof, null, 2) + '\n');
@@ -549,7 +566,7 @@ function prepareRelease(projectRoot, version, stateDir, options = {}) {
   require("./distribution_snapshot.cjs").verify(projectRoot);
   // Test the final sealed commit, not a predecessor amended after testing.
   runPreparedReleaseTestSuite(projectRoot);
-  for (const script of ["app:install", "app:test:coverage", "app:build"])
+  for (const script of ["app:install", "app:ci"])
     runCommand("npm", ["run", script], projectRoot);
   ensureCleanWorkingTree(projectRoot, "Release tests changed the sealed candidate; refusing to push.");
   require("./distribution_snapshot.cjs").verify(projectRoot);
@@ -557,6 +574,9 @@ function prepareRelease(projectRoot, version, stateDir, options = {}) {
     console.log(`[release] Rehearsal passed for v${version}; no push, tag, PR or publication.`);
     return { version, commit: runCommand("git", ["rev-parse", "HEAD"], projectRoot, { capture: true }) };
   }
+  return pushPreparedRelease(projectRoot,version,releaseBranch);
+}
+function pushPreparedRelease(projectRoot,version,releaseBranch) {
   runCommand("git", ["push", "-u", "origin", releaseBranch], projectRoot);
   runCommand(
     "gh",
@@ -584,7 +604,7 @@ function prepareRelease(projectRoot, version, stateDir, options = {}) {
   );
 
   console.log(`[release] Prepared v${version}.`);
-  console.log(`[release] Notes file: ${notesPath}`);
+
   console.log(`[release] Next step: merge ${releaseBranch}, update local main, then run npm run release:publish -- ${version}`);
 }
 
@@ -683,12 +703,12 @@ function main() {
   }
 
   if (args.command === "rehearse") {
-    require("./release_rehearsal.cjs").rehearse(projectRoot, args.version, args.stateDir);
+    require("./release_rehearsal.cjs").rehearse(projectRoot, args.version, args.stateDir, {candidateDir: args.candidateDir});
     return;
   }
 
   if (args.command === "prepare") {
-    prepareRelease(projectRoot, args.version, args.stateDir);
+    prepareRelease(projectRoot, args.version, args.stateDir, {candidateDir: args.candidateDir});
     return;
   }
 

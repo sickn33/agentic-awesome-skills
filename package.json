@@ -94,6 +94,7 @@
     "prepack": "node tools/scripts/distribution_snapshot.cjs verify",
     "distribution:verify": "node tools/scripts/distribution_snapshot.cjs verify",
     "maintenance:measure": "node tools/scripts/maintenance_measure.cjs",
+    "maintenance:doctor": "node tools/scripts/maintenance_doctor.cjs",
     "maintenance:cycle": "node tools/scripts/maintenance_cycle.cjs",
     "app:ci": "node tools/scripts/web_ci.cjs",
     "app:ci:test": "node tools/scripts/web_ci.cjs cacheable test",

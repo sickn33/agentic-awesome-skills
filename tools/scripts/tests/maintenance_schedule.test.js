@@ -1,0 +1,13 @@
+const assert=require('node:assert/strict');
+const {schedule}=require('../maintenance_schedule.cjs');
+const {doctor}=require('../maintenance_doctor.cjs');
+const state={prs:[1,2],attempts:[]};
+const p=(n,s)=>({number:n,state:'open',head:{sha:String(n).repeat(40)},mergeable_state:s});
+assert.equal(schedule(state,[{...p(1,'clean'),draft:true},p(2,'clean')]).next.pr,2);
+assert.equal(schedule(state,[p(1,'dirty'),p(2,'behind')]).next.pr,2);
+assert.equal(schedule(state,[]).next.action,'verify');
+state.attempts=[{results:[{pr:1,headSha:'x',reviewAttested:true}]}];
+assert.equal(schedule(state,[p(1,'clean')]).next.action,'intake','stale review cannot schedule merge');
+assert.throws(()=>doctor('/fixture',{run:(cmd,args)=>{if(args.includes('--is-shallow-repository'))return 'true';return 'ok';}}),/Full history required/);
+assert.throws(()=>doctor('/fixture',{run:(cmd,args)=>{if(cmd==='python3')throw Error('No yaml');if(args.includes('--is-shallow-repository'))return 'false';return 'ok';}}),/No yaml/);
+console.log('Maintenance scheduling and environment fail-fast regressions passed');

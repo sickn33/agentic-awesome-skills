@@ -223,6 +223,23 @@ assert.equal(verifyTagExecutionProvenance("owner/repo", version, sha, endpoint =
     ),
     /exact released head/,
   );
+  const skipDeps={...deps,hostProof:()=>assert.fail('excluded host invoked'),fetch:async url=>{if(url.includes('registry.npmjs.org'))assert.fail('excluded npm queried');return deps.fetch(url);},run:(cmd,args)=>{
+    const value=JSON.parse(deps.run(cmd,args));
+    if(args.at(-1).includes('releases/tags/'))value.body=require('../release_workflow.js').releaseNotesForPublication('notes',true);
+    return JSON.stringify(value);
+  }};
+  result=await verifyRelease({version,target:'github-site'},skipDeps);
+  assert.equal(result.complete,true,JSON.stringify(result));
+  assert.equal(result.fullDistributionComplete,false);
+  assert.equal(result.personalEnvironmentUpdated,false);
+  assert.equal(result.checks.find(c=>c.component==='npm').status,'not-requested');
+  drift=true;
+  assert.equal((await verifyRelease({version,target:'github-site'},skipDeps)).complete,false,'candidate drift still blocks github-site');
+  drift=false;latestFailed=true;
+  assert.equal((await verifyRelease({version,target:'github-site'},skipDeps)).complete,false,'CI failures still block github-site');
+  latestFailed=false;
+  assert.equal((await verifyRelease({version,target:'github-site'},deps)).complete,false,'missing disclosure blocks github-site');
+  await assert.rejects(()=>verifyRelease({version,target:'invalid'},deps),/Unknown publication target/);
   console.log("release verification regressions passed");
 })().catch((error) => {
   console.error(error);

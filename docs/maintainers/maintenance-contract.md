@@ -156,8 +156,65 @@ Description edits re-run the existing CI workflow; check names and strict protec
 
 ## Full local release rehearsal
 
-Before a publication attempt, use `npm run release:rehearse -- X.Y.Z --state-dir /absolute/private/completed-cycle` from a clean committed checkout descended from the main verified by that cycle (topic rehearsal is allowed, production preparation still requires exact verified main). It clones the committed source into a disposable directory, copies cycle state privately, removes the clone remote, and executes the same cycle admission, version/metadata generation, bounded convergence, snapshot sealing, packed-candidate script tests, web coverage/build and final clean-tree verification as preparation. It never pushes, opens a release PR, tags, publishes npm or deploys. The source checkout and original cycle state remain unchanged; temporary candidates are discarded on success and failure. GitHub reads and normal dependency installation remain necessary; no paid review service is invoked. A rehearsal receipt is diagnostic, not merge or publication authority. Main/head/body/CI drift still requires fresh cycle verification; do not loop the same failure.
+Before a publication attempt, use `npm run release:rehearse -- X.Y.Z --state-dir /absolute/private/completed-cycle` from a clean committed checkout descended from the main verified by that cycle (topic rehearsal is allowed, production preparation still requires exact verified main). It clones the committed source into a disposable directory, copies cycle state privately, removes the clone remote, and executes the same cycle admission, version/metadata generation, bounded convergence, snapshot sealing, packed-candidate script tests, web coverage/build and final clean-tree verification as preparation. It never pushes, opens a release PR, tags, publishes npm or deploys. The source checkout and original cycle state remain unchanged; temporary checkouts are discarded on success and failure; an explicitly requested private candidate bundle is retained only after successful tests. GitHub reads and normal dependency installation remain necessary; no paid review service is invoked. A rehearsal receipt is diagnostic, not merge or publication authority. Main/head/body/CI drift still requires fresh cycle verification; do not loop the same failure.
 
 The final sealed commit must be the commit tested by preparation. Do not amend it after tests. Convergence preserves the initial candidate committer timestamp because Docs lastmod derives from Git commit dates, and fails closed after the bounded settling passes. Cycle verification records the same normalized resolved-PR records consumed by release admission. A closed non-merged PR never records GitHub's synthetic merge SHA as a real merge.
 
 If another release is active, implement and validate this tooling on a separate topic branch; do not merge it, update installed maintainer skills, or edit that release's state while its owner is working. Adopt through the protected source path after that work finishes, then synchronize the installed skill from the adopted source.
+
+## Efficient maintenance and release preparation
+
+Run `npm run maintenance:doctor` before triage. The CLI `maintenance:cycle start`
+also checks Node/npm, Python/PyYAML, GitHub authentication, full Git history and
+attribution history traversal before recording a cycle. Fix missing prerequisites
+before expensive validation; never treat an environment failure as a content failure.
+
+Use `maintenance:cycle next --state-dir /absolute/private/state` between actions.
+It refreshes protection and PR state, records advisory scheduling outside the
+checkout, and identifies the next repair, intake, deliberate alignment or merge.
+It never merges, updates branches, supplies semantic review or retries writes.
+Continue independent authorized work when another PR is blocked. Complete source
+repairs and decide dependency order before full validation; align only the next
+PR selected for merge. Recheck changed content and exact-head evidence after an
+alignment. Do not bulk-align all remaining branches after every merge.
+For an authorized release, include reviewed release notes in the final planned
+source PR instead of opening a separate notes-only PR. A status update is not a
+stop condition when independent authorized work remains.
+
+For a reusable local rehearsal, create a new private external directory (0700)
+and run `npm run release:rehearse -- X.Y.Z --state-dir /absolute/private/cycle --candidate-dir /absolute/private/candidate`.
+The temporary checkout still has no remote destinations. Successful tests seal
+a Git bundle and an authenticated private receipt; failure never creates a valid
+receipt. Source state and the cycle remain unchanged. Without `--candidate-dir`,
+rehearsal remains disposable. A receipt from a topic checkout is diagnostic only:
+production promotion requires that exact source to be current protected main.
+
+After explicit release authorization, `npm run release:prepare -- X.Y.Z --state-dir /absolute/private/cycle --candidate-dir /absolute/private/candidate`
+revalidates current main, strict protection, live completed-cycle evidence, exact
+source/version/toolchain, authenticated receipt and bundle integrity. It imports
+the exact tested commit and verifies its sealed snapshot before opening the
+protected release PR. Any mismatch requires a new rehearsal; never edit a receipt
+or transplant it across a changed base. This reuses local tests only. Required PR
+checks and the independent hosted immutable-candidate Linux/Windows tests remain
+mandatory, and publishing is still a separate authorized command.
+
+Preparation uses the integrity-checked `app:ci` Turborepo path. The hosted candidate
+runs the complete unsharded repository suite alongside the isolated web checks,
+waits for both even on failure, and collects site output only after both pass.
+Node is pinned to the existing cached-CI patch. Cached coverage and compile outputs
+are fully verified; Git metadata, prerender and final checks remain fresh. Only
+the existing local/GitHub cache is used, with no paid remote cache or quota increase.
+
+## Explicit GitHub and site target
+
+When npm is explicitly excluded, publish with `release:publish -- X.Y.Z --skip-npm`
+and verify with `npm run release:verify -- --version X.Y.Z --target github-site`.
+The verifier requires the public npm-unavailability disclosure and all normal
+GitHub, exact-commit CI/CodeQL/candidate/Pages, snapshot, site and legacy proofs.
+It installs the verified immutable candidate locally instead of querying npm.
+`complete` and `publicReleaseComplete` refer to the selected publication target;
+`fullDistributionComplete` remains false. npm and registry-backed local hosts are
+reported `not-requested`, never passed; local configurations remain unchanged and
+no client reload is claimed. The default `npm` target retains all registry checks.
+Do not infer the GitHub/site target from a registry error. Record the selected
+target and observed timings; do not claim an overall speedup from isolated tests.

@@ -22,7 +22,7 @@ const run = (cmd,args,cwd,options={}) => {
  return execFileSync(cmd,args,{cwd,encoding:'utf8',stdio:['ignore','pipe','pipe']}).trim();
 };
 try {
- rehearse(source,'1.2.3',state,{run,gate,prepare:(clone,version,copiedState,options)=>{
+ rehearse(source,'1.2.3',state,{run,gate,doctor:()=>({passed:true}),prepare:(clone,version,copiedState,options)=>{
   clonePath=clone;prepared=true;
   assert.equal(version,'1.2.3');assert.deepEqual(options,{localOnly:true,cycleProof:{main:before}});
   assert.notEqual(copiedState,state);assert.equal(JSON.parse(fs.readFileSync(path.join(copiedState,'batch.cycle.json'),'utf8')).attempts[0].result.main,before);
@@ -32,9 +32,9 @@ try {
  }});
  assert(prepared);assert(!fs.existsSync(clonePath));assert.equal(git(['rev-parse','HEAD']),before);
  assert.equal(fs.readFileSync(path.join(source,'fixture'),'utf8'),'source');
- assert.throws(()=>rehearse(source,'1.2.3',state,{run,gate,prepare:()=>{throw Error('candidate failed');}}),/candidate failed/);
+ assert.throws(()=>rehearse(source,'1.2.3',state,{run,gate,doctor:()=>({passed:true}),prepare:()=>{throw Error('candidate failed');}}),/candidate failed/);
  fs.writeFileSync(path.join(source,'fixture'),'dirty');
- assert.throws(()=>rehearse(source,'1.2.3',state,{run,gate,prepare:()=>assert.fail('dirty source accepted')}),/clean committed/);
+ assert.throws(()=>rehearse(source,'1.2.3',state,{run,gate,doctor:()=>({passed:true}),prepare:()=>assert.fail('dirty source accepted')}),/clean committed/);
  assert.throws(()=>rehearse(source,'1.2.3','relative'),/Usage/);
 } finally {fs.rmSync(root,{recursive:true,force:true});}
 console.log('Rehearsal clone, local-only boundary, source preservation and failure cleanup passed');

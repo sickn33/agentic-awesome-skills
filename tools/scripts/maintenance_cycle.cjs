@@ -12,7 +12,7 @@ const REPO = 'sickn33/agentic-awesome-skills';
 function moduleRun(command, args) { return execFileSync(command, args, {cwd:ROOT, encoding:'utf8', timeout:120000, maxBuffer:16*1024*1024}).trim(); }
 function parse(argv) {
   const command=argv.shift(), options={command, reviewedHeads:[]};
-  if(!['start','intake','merge','align','verify','status','hosts','close'].includes(command)) throw Error('Use start, intake, merge, align, verify, status, hosts or close');
+  if(!['start','intake','merge','align','verify','status','hosts','close','next'].includes(command)) throw Error('Use start, intake, merge, align, verify, status, hosts or close');
   for(let i=0;i<argv.length;i+=2) {
     if(!['--state-dir','--prs','--reviewed-head','--reviewer','--review-evidence','--version','--config','--expected-head','--reason'].includes(argv[i]) || !argv[i+1] || argv[i+1].startsWith('--')) throw Error('Unknown or incomplete option: '+argv[i]);
     if(argv[i]==='--reviewed-head') options.reviewedHeads.push(batch.assertFullSha(argv[i+1], 'Reviewed head'));
@@ -72,6 +72,13 @@ async function mainUnlocked(argv, dependencies = {}) {
   if(o.prs && o.command!=='start' && batch.parsePrList(o.prs).some(n=>!state.prs.includes(n))) throw Error('PR outside the recorded cycle');
   if(state.repository!==REPO) throw Error('Repository mismatch');
   if(o.command==='status' || o.command==='start') { console.log(JSON.stringify(state,null,2)); return; }
+  if(o.command==='next') {
+    batch.assertEffectiveMainProtection(ROOT,REPO);
+    const pulls=state.prs.map(n=>gh(['api',`repos/${REPO}/pulls/${n}`]));
+    const report=require('./maintenance_schedule.cjs').schedule(state,pulls);
+    store.writeBatch('schedule',{checkedAt:new Date().toISOString(),...report});
+    console.log(JSON.stringify(report,null,2));return report;
+  }
   // A new action invalidates prior completion; history retains the old proof.
   for(const key of ['completedAt','elapsedMs','measurement','limitations']) delete state[key];
   const attempt={stage:o.command,startedAt:new Date().toISOString()};state.attempts.push(attempt);store.writeBatch('cycle',state);
@@ -145,4 +152,4 @@ async function mainUnlocked(argv, dependencies = {}) {
   finally {attempt.completedAt=new Date().toISOString();attempt.elapsedMs=Date.parse(attempt.completedAt)-Date.parse(attempt.startedAt);store.writeBatch('cycle',state);console.log(JSON.stringify({startedAt:state.startedAt,completedAt:state.completedAt,elapsedMs:state.elapsedMs,attempt},null,2));}
 }
 module.exports={parse,nextAction,proofForRuns,main};
-if(require.main===module)main(process.argv.slice(2)).catch(e=>{console.error(e.message);process.exitCode=1;});
+if(require.main===module)Promise.resolve().then(()=>{if(process.argv[2]==='start')require('./maintenance_doctor.cjs').doctor(ROOT);return main(process.argv.slice(2));}).catch(e=>{console.error(e.message);process.exitCode=1;});

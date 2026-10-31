@@ -11,7 +11,7 @@ to freshly fetched `origin/main`. Create a private external state directory (mod
 0700). Start the clock before content triage/review, not when CI begins. The start
 command rejects a dirty, topic-branch, stale or wrong-repository checkout. Use the
 same directory through completion. If there are no source PRs, record audit time
-separately; this source-batch runner requires a nonempty exact PR list:
+separately; record an explicit empty cycle with `--prs none`; otherwise use the exact PR list:
 
 ```sh
 npm run maintenance:cycle -- start --state-dir /absolute/private/state --prs 123,124
@@ -174,3 +174,5 @@ moves before preparation. Never shrink the recorded scope to hide blockers.
 For a genuinely release-only task with no source PR batch, explicitly start a
 cycle with `--prs none` and verify it; no implicit no-cycle bypass is supported.
 The original batch inventory must include every PR in the authorized scope.
+
+Use `maintenance:cycle next` for fresh advisory scheduling and `maintenance:doctor` for early environment checks. Follow the efficient preparation and explicit publication-target sections of the maintenance contract. Finish repairs before full checks, align only the next merge, and include release notes in the final planned source PR.

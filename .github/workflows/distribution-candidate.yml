@@ -29,7 +29,7 @@ jobs:
           test "$GITHUB_REF_NAME" = "v$(node -p "require('./package.json').version")"
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
         with:
-          node-version: '24'
+          node-version: '24.22.1'
           cache: npm
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
@@ -55,20 +55,29 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/distribution"
           node tools/scripts/distribution_pack.cjs "$RUNNER_TEMP/distribution"
-      - name: Run complete suite against candidate bytes
+      - name: Identify web cache context
+        id: web_cache
+        run: |
+          node -e "const c=require('node:crypto'),fs=require('node:fs');const env=require('./tools/scripts/web_ci.cjs').turboEnvironment();fs.appendFileSync(process.env.GITHUB_OUTPUT,'context='+c.createHash('sha256').update(env.AAS_WEB_TOOLCHAIN).digest('hex')+'\n')"
+      - name: Restore free local Turborepo cache
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ${{ runner.temp }}/aas-web-turbo
+          key: ${{ runner.os }}-aas-web-turbo-v2-${{ steps.web_cache.outputs.context }}-${{ github.sha }}-${{ github.run_attempt }}
+          restore-keys: |
+            ${{ runner.os }}-aas-web-turbo-v2-${{ steps.web_cache.outputs.context }}-
+      - name: Run complete suite and isolated public site checks
         env:
           AAS_TEST_CANDIDATE_TARBALL: ${{ runner.temp }}/distribution/package.tgz
-        run: npm run test
-      - name: Build and test public site once
-        env:
+          AAS_WEB_CACHE_DIR: ${{ runner.temp }}/aas-web-turbo
+          AAS_WEB_CI_RECEIPT: ${{ runner.temp }}/web-receipt.json
           VITE_BASE_PATH: /
           SEO_SITE_URL: https://aaskills.tech
         run: |
-          npm run app:install
-          npm run app:test:coverage
-          npm run app:build
+          node tools/scripts/release_parallel_checks.cjs
           npm --prefix apps/web-app audit --audit-level=high
           npm --prefix apps/web-app run verify:seo -- --require-hosted-url
+          git diff --exit-code
       - name: Pack immutable publication bytes
         shell: bash
         run: |
@@ -90,9 +99,9 @@ jobs:
       matrix:
         include:
           - { os: ubuntu-24.04, node: '22.23.1', job-id: linux-node-22 }
-          - { os: ubuntu-24.04, node: '24', job-id: linux-node-24 }
+          - { os: ubuntu-24.04, node: '24.22.1', job-id: linux-node-24 }
           - { os: windows-2025, node: '22.23.1', job-id: windows-node-22 }
-          - { os: windows-2025, node: '24', job-id: windows-node-24 }
+          - { os: windows-2025, node: '24.22.1', job-id: windows-node-24 }
     runs-on: ${{ matrix.os }}
     timeout-minutes: 25
     steps:
