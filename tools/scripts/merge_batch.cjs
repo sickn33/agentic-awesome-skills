@@ -49,6 +49,7 @@ const MAX_EVIDENCE_BYTES = 8 * 1024 * 1024;
 const APPROVAL_WORKFLOW_PATHS = new Set([
   ".github/workflows/actionlint.yml",
   ".github/workflows/ci.yml",
+  ".github/workflows/pr-metadata.yml",
   ".github/workflows/codeql.yml",
   ".github/workflows/dependency-review.yml",
   // Runs with `contents: read`, no secrets and SHA-pinned actions; it is the

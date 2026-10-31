@@ -56,3 +56,9 @@ Use `release:rehearse` with a completed cycle bound to an ancestor of the rehear
 Web CI uses pinned Turborepo with local caching persisted within the existing free GitHub cache quota. Follow the component guide for fresh current-commit finalization, input invalidation, output integrity and branch-scoped cache trust. Repository script tests and protected merge authority remain uncached.
 
 For efficient cycles, follow the maintenance contract’s environment doctor, advisory `maintenance:cycle next`, private candidate rehearsal/promotion and explicit `github-site` verification target. Preserve all exact-head checks; never treat excluded npm or local hosts as passed.
+
+
+For bounded deterministic continuation, use `maintenance:cycle run` under the
+current maintenance contract. Keep semantic review explicit and preserve sole
+merge authority. PR metadata checks must not cancel source validation; runtime
+handoff evidence never replaces the full successful publication candidate.

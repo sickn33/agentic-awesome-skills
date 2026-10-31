@@ -112,3 +112,24 @@ per-task HIT/MISS/hash, current head and elapsed timings. CI uploads that receip
 beside the component receipt when the web plan runs. A hit reuses passing coverage;
 it does not mean those tests executed again. Measure cold, warm, cross-commit and
 whole hosted workflows separately; the fresh script suite may remain critical.
+
+
+### Further critical-path reductions
+
+PR metadata events use the separate `pr-metadata.yml` policy/evidence workflow;
+source events retain all technical checks. Their policy/evidence job definitions
+are regression-checked for equivalence. Missing/skipped technical checks get
+first execution through identical jobs; existing runs are observed, not cancelled,
+and genuine failures are not automatically retried. Skipped fallback jobs never
+reuse required check names. Base retargeting requires fresh source
+validation. The tag candidate's runtime producer feeds parallel installation
+matrix and full suite/site branches, with scoped provenance verified by each.
+Publication requires the full manifest and successful whole workflow.
+
+Release validation defaults to the existing two-worker complete test cohort.
+Runtime staging limits durable file writes to four, draining failures before
+cleanup. Web cache documentation dependencies are `docs/users/**`,
+`docs/examples/workflows/mcp-contract/**` and
+`docs/contributors/content-aliases.json`; conservative data/library inputs and
+fresh metadata/prerender verification are retained. New external imports must
+be added to task inputs before they can be cached.

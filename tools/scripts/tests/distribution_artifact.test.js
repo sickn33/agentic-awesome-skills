@@ -8,6 +8,13 @@ try {
   const provenance = { commit: "a".repeat(40), version: "20.0.0", runId: "12", runAttempt: "1", repository: "owner/repo", workflow: ".github/workflows/distribution-candidate.yml", lockfileDigest: "b".repeat(64) };
   const manifest = createManifest(root, provenance);
   assert(verifyManifest(root, manifest, provenance));
+  const runtime=createManifest(root,provenance,'runtime');
+  assert(verifyManifest(root,runtime,provenance,'runtime'));
+  assert.throws(()=>verifyManifest(root,runtime,provenance),/scope/,'runtime handoff can never authorize publication');
+  assert.throws(()=>verifyManifest(root,manifest,provenance,'runtime'),/scope/);
+  assert.throws(()=>verifyManifest(root,runtime,{...provenance,runAttempt:'2'},'runtime'),/identity/);
+  assert.throws(()=>verifyManifest(root,{...runtime,artifacts:[]},provenance,'runtime'),/Incomplete/);
+
   assert.equal(manifest.toolchain.node, process.version);
   assert.throws(() => verifyManifest(root, { ...manifest, toolchain: undefined }, provenance), /toolchain/);
   for (const key of ["commit", "version", "runId", "runAttempt", "repository", "workflow", "lockfileDigest"])

@@ -12,13 +12,18 @@ const REPO = 'sickn33/agentic-awesome-skills';
 function moduleRun(command, args) { return execFileSync(command, args, {cwd:ROOT, encoding:'utf8', timeout:120000, maxBuffer:16*1024*1024}).trim(); }
 function parse(argv) {
   const command=argv.shift(), options={command, reviewedHeads:[]};
-  if(!['start','intake','merge','align','verify','status','hosts','close','next'].includes(command)) throw Error('Use start, intake, merge, align, verify, status, hosts or close');
+  if(!['start','intake','merge','align','verify','status','hosts','close','next','run'].includes(command)) throw Error('Use start, intake, merge, align, verify, status, hosts, close, next or run');
   for(let i=0;i<argv.length;i+=2) {
-    if(!['--state-dir','--prs','--reviewed-head','--reviewer','--review-evidence','--version','--config','--expected-head','--reason'].includes(argv[i]) || !argv[i+1] || argv[i+1].startsWith('--')) throw Error('Unknown or incomplete option: '+argv[i]);
+    if(!['--state-dir','--prs','--reviewed-head','--reviewer','--review-evidence','--version','--config','--expected-head','--reason','--max-steps','--seconds','--allow-align'].includes(argv[i]) || !argv[i+1] || argv[i+1].startsWith('--')) throw Error('Unknown or incomplete option: '+argv[i]);
     if(argv[i]==='--reviewed-head') options.reviewedHeads.push(batch.assertFullSha(argv[i+1], 'Reviewed head'));
     else options[argv[i].slice(2)]=argv[i+1];
   }
   if(!options['state-dir']) throw Error('A private external --state-dir is required');
+  for(const [key, fallback, maximum] of [['max-steps','40',200],['seconds','300',3600]]) {
+    options[key] ??= fallback;
+    if(!/^[1-9][0-9]*$/.test(options[key]) || Number(options[key])>maximum) throw Error('Invalid '+key);
+  }
+  if(options['allow-align'] && !['true','false'].includes(options['allow-align'])) throw Error('allow-align must be true or false');
   return options;
 }
 function nextAction(result) {
@@ -72,6 +77,35 @@ async function mainUnlocked(argv, dependencies = {}) {
   if(o.prs && o.command!=='start' && batch.parsePrList(o.prs).some(n=>!state.prs.includes(n))) throw Error('PR outside the recorded cycle');
   if(state.repository!==REPO) throw Error('Repository mismatch');
   if(o.command==='status' || o.command==='start') { console.log(JSON.stringify(state,null,2)); return; }
+  if(o.command==='run') {
+    if(o.prs) throw Error('run processes the complete recorded scope; do not narrow it');
+    for(const key of ['completedAt','elapsedMs','measurement','limitations']) delete state[key];
+    store.writeBatch('cycle',state);
+    const report=await require('./maintenance_run.cjs').drive({maxSteps:Number(o['max-steps']),seconds:Number(o.seconds),allowAlign:o['allow-align']==='true',reviewedHeads:o.reviewedHeads}, {
+      snapshot:()=>{
+        batch.assertEffectiveMainProtection(ROOT,REPO);
+        return {state:store.readBatch('cycle'),pulls:state.prs.map(n=>gh(['api',`repos/${REPO}/pulls/${n}`])),
+          contract:run('git',['rev-parse','HEAD:AGENTS.md','HEAD:.github/MAINTENANCE.md','HEAD:tools','HEAD:package.json','HEAD:package-lock.json','HEAD:skills/antigravity-maintainer-batch-release'])};
+      },
+      // Scheduling only: merge_batch independently checks these again, including
+      // semantic-review requirements, exact PR tuple and strict protection.
+      checks:item=>batch.summarizeRequiredCheckRuns(batch.listCheckRuns(ROOT,REPO,item.head),batch.getRequiredCheckAliases({})),
+      execute:async(action,item)=>{
+        const args=[action,'--state-dir',o['state-dir']];
+        if(item)args.push('--prs',String(item.pr));
+        if(action==='align')args.push('--expected-head',item.head);
+        if(['intake','merge'].includes(action)) {
+          for(const head of o.reviewedHeads)args.push('--reviewed-head',head);
+          if(o.reviewer)args.push('--reviewer',o.reviewer);
+          if(o['review-evidence'])args.push('--review-evidence',o['review-evidence']);
+        }
+        return mainUnlocked(args,{...dependencies,openStore:()=>store});
+      },
+    });
+    store.writeBatch('run',{checkedAt:new Date().toISOString(),...report});
+    process.exitCode=report.status==='complete'?0:1;
+    console.log(JSON.stringify(report,null,2));return report;
+  }
   if(o.command==='next') {
     batch.assertEffectiveMainProtection(ROOT,REPO);
     const pulls=state.prs.map(n=>gh(['api',`repos/${REPO}/pulls/${n}`]));
@@ -150,6 +184,7 @@ async function mainUnlocked(argv, dependencies = {}) {
     }
   } catch(error) {attempt.success=false;attempt.error=error.message;Object.assign(attempt,describeFailure(error));process.exitCode=1;}
   finally {attempt.completedAt=new Date().toISOString();attempt.elapsedMs=Date.parse(attempt.completedAt)-Date.parse(attempt.startedAt);store.writeBatch('cycle',state);console.log(JSON.stringify({startedAt:state.startedAt,completedAt:state.completedAt,elapsedMs:state.elapsedMs,attempt},null,2));}
+  return attempt;
 }
 module.exports={parse,nextAction,proofForRuns,main};
 if(require.main===module)Promise.resolve().then(()=>{if(process.argv[2]==='start')require('./maintenance_doctor.cjs').doctor(ROOT);return main(process.argv.slice(2));}).catch(e=>{console.error(e.message);process.exitCode=1;});

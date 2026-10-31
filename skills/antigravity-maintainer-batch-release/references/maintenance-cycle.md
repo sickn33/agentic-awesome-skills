@@ -176,3 +176,14 @@ cycle with `--prs none` and verify it; no implicit no-cycle bypass is supported.
 The original batch inventory must include every PR in the authorized scope.
 
 Use `maintenance:cycle next` for fresh advisory scheduling and `maintenance:doctor` for early environment checks. Follow the efficient preparation and explicit publication-target sections of the maintenance contract. Finish repairs before full checks, align only the next merge, and include release notes in the final planned source PR.
+
+
+## Execute a bounded continuation
+
+After real review, use `npm run maintenance:cycle -- run --state-dir /absolute/private/state --seconds 300 --max-steps 40`.
+The driver keeps the same journal and sole merge authority, continues independent
+PRs, and waits in bounded read intervals for final exact-main verification.
+Review/repair blockers remain explicit. Add `--allow-align true` only when branch
+alignment is authorized; it never retries the same PR update within the run.
+See the maintenance contract for uncertain writes, exact-head review arguments,
+metadata event isolation, early contributor intake and immutable runtime handoff.

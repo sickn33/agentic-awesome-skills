@@ -114,3 +114,9 @@ Canonical skill-tree PRs must pass mandatory evidence admission in `pr-policy` a
 For release process repairs, validate the full shared candidate path through `npm run release:rehearse -- X.Y.Z --state-dir /absolute/private/completed-cycle`. Keep changes in an isolated topic checkout while another release is active; do not modify its source, state or installed skill. Rehearsal never grants publication authority.
 
 For efficient cycles, follow the maintenance contract’s environment doctor, advisory `maintenance:cycle next`, private candidate rehearsal/promotion and explicit `github-site` verification target. Preserve all exact-head checks; never treat excluded npm or local hosts as passed.
+
+
+For bounded deterministic continuation, use `maintenance:cycle run` under the
+current maintenance contract. Keep semantic review explicit and preserve sole
+merge authority. PR metadata checks must not cancel source validation; runtime
+handoff evidence never replaces the full successful publication candidate.

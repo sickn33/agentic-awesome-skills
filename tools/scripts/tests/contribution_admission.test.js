@@ -31,7 +31,8 @@ for(const change of [{body:''},{body:valid+' More evidence'},{isDraft:true}]) {
  assert.throws(()=>assertUnchangedTuple({...details,...change},tuple,'before merge',10),error=>error.failureCode==='PR_CHANGED');
 }
 const ci=yaml.parse(fs.readFileSync(path.join(root,'.github/workflows/ci.yml'),'utf8'));
-for(const event of ['opened','synchronize','reopened','edited','ready_for_review']) assert.ok(ci.on.pull_request.types.includes(event));
+const metadata= yaml.parse(fs.readFileSync(path.join(root,'.github/workflows/pr-metadata.yml'),'utf8'));
+for(const event of ['opened','synchronize','reopened','edited','ready_for_review']) assert.ok([...ci.on.pull_request.types,...metadata.on.pull_request.types].includes(event));
 const intake=ci.jobs['pr-policy'].steps.find(step=>step.id==='intake');
 assert.match(intake.run,/trusted_root\/tools\/scripts\/pr_preflight/);
 assert.match(intake.run,/--check-submission/);

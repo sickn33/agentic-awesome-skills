@@ -56,6 +56,8 @@ try {
   for (const task of Object.values(config.tasks)) {
     assert(task.inputs.includes('apps/web-app/**'), 'ignored generated public bytes must be inputs');
     assert(task.inputs.includes('tools/lib/**'));
+    assert(!task.inputs.includes('docs/**'));
+    for(const input of ['docs/users/**','docs/examples/workflows/mcp-contract/**','docs/contributors/content-aliases.json'])assert(task.inputs.includes(input));
     assert(task.env.includes('VITE_*'));
     assert(task.env.includes('CI'));
     assert(task.env.includes('NODE_OPTIONS'));
@@ -74,6 +76,21 @@ try {
   }
   assert.equal(new Set(pinned).size, 1, 'cached jobs must use the same exact Node patch');
   const compile = config.tasks['app:ci:compile'];
+  // Every current static documentation import must remain within the narrowed
+  // input boundary. This catches new aliases/examples being added without inputs.
+  function checkImports(directory) {
+    for(const entry of fs.readdirSync(directory,{withFileTypes:true})) {
+      const file=path.join(directory,entry.name);
+      if(entry.isDirectory())checkImports(file);
+      else if(/\.(tsx?|jsx?|mjs)$/.test(file)) {
+        for(const match of fs.readFileSync(file,'utf8').matchAll(/['"]((?:\.\.\/)+docs\/[^'"]+)['"]/g)) {
+          const relative=path.relative(path.resolve(__dirname,'../../..'),path.resolve(path.dirname(file),match[1])).split(path.sep).join('/');
+          for(const task of Object.values(config.tasks))assert(task.inputs.some(input=>input.endsWith('/**')?relative.startsWith(input.slice(0,-2)):relative===input),`Untracked web documentation dependency: ${relative}`);
+        }
+      }
+    }
+  }
+  checkImports(path.resolve(__dirname,'../../../apps/web-app/src'));
   assert(compile.inputs.includes('!apps/web-app/**/*.test.*'));
   assert(!config.tasks['app:ci:test'].inputs.includes('!apps/web-app/**/*.test.*'));
   const valid = { tasks: ['test', 'compile'].map(phase => ({ taskId: `app:ci:${phase}`, hash: 'a'.repeat(16), cache: { status: 'HIT' }, execution: { exitCode: 0 } })) };

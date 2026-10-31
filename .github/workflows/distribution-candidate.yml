@@ -1,23 +1,20 @@
 name: Distribution candidate
-
 on:
   push:
-    tags: ['v*']
-  workflow_dispatch:
-
+    tags:
+      - v*
+  workflow_dispatch: null
 permissions:
   contents: read
-
 concurrency:
   group: distribution-candidate-${{ github.sha }}
   cancel-in-progress: false
-
 jobs:
-  build:
+  runtime:
     runs-on: ubuntu-24.04
     timeout-minutes: 40
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
         with:
           fetch-depth: 0
           persist-credentials: false
@@ -27,13 +24,13 @@ jobs:
           git merge-base --is-ancestor HEAD origin/main
           test "${GITHUB_REF_TYPE}" = tag
           test "$GITHUB_REF_NAME" = "v$(node -p "require('./package.json').version")"
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
         with:
-          node-version: '24.22.1'
+          node-version: 24.22.1
           cache: npm
-      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
         with:
-          python-version: '3.10'
+          python-version: "3.10"
       - name: Install verifier dependencies
         run: |
           npm ci --ignore-scripts
@@ -55,12 +52,45 @@ jobs:
         run: |
           mkdir -p "$RUNNER_TEMP/distribution"
           node tools/scripts/distribution_pack.cjs "$RUNNER_TEMP/distribution"
+      - name: Seal runtime-only handoff
+        run: node tools/scripts/distribution_manifest.cjs create-runtime "$RUNNER_TEMP/distribution" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: runtime-candidate-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/distribution/*
+          if-no-files-found: error
+          retention-days: 1
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
+        with:
+          node-version: 24.22.1
+          cache: npm
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: "3.10"
+      - name: Install verifier dependencies
+        run: |
+          npm ci --ignore-scripts
+          pip install -r tools/requirements.txt
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
+        with:
+          name: runtime-candidate-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/distribution
+      - name: Verify exact runtime handoff
+        run: node tools/scripts/distribution_manifest.cjs verify-runtime "$RUNNER_TEMP/distribution" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
       - name: Identify web cache context
         id: web_cache
         run: |
           node -e "const c=require('node:crypto'),fs=require('node:fs');const env=require('./tools/scripts/web_ci.cjs').turboEnvironment();fs.appendFileSync(process.env.GITHUB_OUTPUT,'context='+c.createHash('sha256').update(env.AAS_WEB_TOOLCHAIN).digest('hex')+'\n')"
       - name: Restore free local Turborepo cache
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830
         with:
           path: ${{ runner.temp }}/aas-web-turbo
           key: ${{ runner.os }}-aas-web-turbo-v2-${{ steps.web_cache.outputs.context }}-${{ github.sha }}-${{ github.run_attempt }}
@@ -83,41 +113,49 @@ jobs:
           touch apps/web-app/dist/.nojekyll
           tar -cf "$RUNNER_TEMP/distribution/site.tar" -C apps/web-app/dist .
           node tools/scripts/distribution_manifest.cjs create "$RUNNER_TEMP/distribution" "$GITHUB_RUN_ID" "$GITHUB_RUN_ATTEMPT"
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: distribution-candidate
           path: ${{ runner.temp }}/distribution/*
           if-no-files-found: error
           retention-days: 30
-
+    needs: runtime
   functional:
-    needs: build
+    needs: runtime
     strategy:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-24.04, node: '22.23.1', job-id: linux-node-22 }
-          - { os: ubuntu-24.04, node: '24.22.1', job-id: linux-node-24 }
-          - { os: windows-2025, node: '22.23.1', job-id: windows-node-22 }
-          - { os: windows-2025, node: '24.22.1', job-id: windows-node-24 }
+          - os: ubuntu-24.04
+            node: 22.23.1
+            job-id: linux-node-22
+          - os: ubuntu-24.04
+            node: 24.22.1
+            job-id: linux-node-24
+          - os: windows-2025
+            node: 22.23.1
+            job-id: windows-node-22
+          - os: windows-2025
+            node: 24.22.1
+            job-id: windows-node-24
     runs-on: ${{ matrix.os }}
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
         with:
           persist-credentials: false
-      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
         with:
           node-version: ${{ matrix.node }}
-      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c
         with:
-          name: distribution-candidate
+          name: runtime-candidate-${{ github.run_attempt }}
           path: ${{ runner.temp }}/distribution
       - name: Verify candidate bytes and identity
-        run: node tools/scripts/distribution_manifest.cjs verify "${{ runner.temp }}/distribution" "${{ github.run_id }}" "${{ github.run_attempt }}"
+        run: node tools/scripts/distribution_manifest.cjs verify-runtime "${{ runner.temp }}/distribution" "${{ github.run_id }}" "${{ github.run_attempt }}"
       - name: Install and exercise exact packed product
         run: node verification/aas-preview/run-installed-candidate.mjs --artifact-root "${{ runner.temp }}/distribution" --install-root "${{ runner.temp }}/candidate-install" --work-root "${{ runner.temp }}/candidate-work" --job-id "${{ matrix.job-id }}" --out "${{ runner.temp }}/functional.json"
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: functional-${{ matrix.os }}-node-${{ matrix.node }}
           path: ${{ runner.temp }}/functional.json

@@ -11,7 +11,7 @@ function schedule(state,pulls) {
   else if(pr.mergeable_state==='dirty'){action='repair';reason='Resolve conflicts before validation';}
   else if(pr.mergeable_state==='behind'){action='align';reason='Align this PR only when selected next; then refresh evidence';}
   else if(result?.headSha===pr.head.sha && result.status==='blocked'){action='repair';reason=result.reason || result.nextAction;}
-  else if(result?.headSha===pr.head.sha && result.reviewAttested){action='merge';reason='Resume sole protected merge authority; recheck exact head and current checks';}
+  else if(result?.headSha===pr.head.sha && result.prepared){action='merge';reason='Delegate to sole protected merge authority; it must validate exact-head review or an authenticated receipt and all current checks';}
   return {pr:pr.number,head:pr.head.sha,action,reason};
  });
  const rank={merge:0,intake:1,align:2,repair:3};
