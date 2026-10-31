@@ -592,6 +592,12 @@ function releaseNotesForPublication(section, skipNpm) {
   return skipNpm ? `> **npm unavailable:** This version is not published to npm; package distribution and full release alignment remain incomplete.\n\n${section}` : section;
 }
 
+function requireSkippedNpmDisclosure(body) {
+  if (typeof body !== 'string' || !body.includes('This version is not published to npm; package distribution and full release alignment remain incomplete.')) {
+    throw new Error('Existing GitHub Release does not disclose that npm publication and full release alignment are incomplete.');
+  }
+}
+
 function publishNpmUnlessSkipped(projectRoot, version, headCommit, skipNpm, dependencies = {}) {
   if (skipNpm) return false;
   if (dependencies.dispatch) dependencies.dispatch(projectRoot, version, headCommit);
@@ -653,6 +659,10 @@ function publishRelease(projectRoot, version, { skipNpm = false } = {}) {
   requireSuccessfulDistributionCandidate(projectRoot, version, headCommit);
   publishNpmUnlessSkipped(projectRoot, version, headCommit, skipNpm);
   if (githubReleaseExists(projectRoot, tagName)) {
+    if (skipNpm) {
+      const existing = JSON.parse(runCommand('gh', ['release', 'view', tagName, '--json', 'body'], projectRoot, { capture: true }));
+      requireSkippedNpmDisclosure(existing.body);
+    }
     console.log(`[release] ${tagName} already has a GitHub Release; verify its notes and npm status.`);
     return;
   }
@@ -697,6 +707,7 @@ module.exports = {
   parseArgs,
   publishNpmUnlessSkipped,
   releaseNotesForPublication,
+  requireSkippedNpmDisclosure,
   prepareRelease,
   runReleasePreflight,
   runPreparedReleaseTestSuite,

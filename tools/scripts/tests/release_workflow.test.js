@@ -12,6 +12,8 @@ assert.throws(() => release.parseArgs(["prepare", "20.3.0", "--skip-npm"]), /sta
 assert.throws(() => release.parseArgs(["publish", "20.3.0", "--skip-npm", "--state-dir", "/tmp/x"]), /state-dir/);
 assert.match(release.releaseNotesForPublication("notes", true), /not published to npm/);
 assert.strictEqual(release.releaseNotesForPublication("notes", false), "notes");
+release.requireSkippedNpmDisclosure(release.releaseNotesForPublication("notes", true));
+assert.throws(() => release.requireSkippedNpmDisclosure("notes"), /does not disclose/);
 const publicationCalls = [];
 const publicationDependencies = {
   dispatch: (...args) => publicationCalls.push(["dispatch", ...args]),
