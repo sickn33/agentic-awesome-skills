@@ -1,19 +1,88 @@
 {
   "schemaVersion": 1,
   "repository": "sickn33/agentic-awesome-skills",
-  "version": "20.2.0",
-  "main": "6e4106fb38458d2bb2bf50b53db74031daabc208",
+  "version": "20.3.0",
+  "main": "4accb37b29f1eaa5a6816efd2fe014de9a719812",
   "prs": [
-    2180
+    2203,
+    2202,
+    2195,
+    2194,
+    2193,
+    2192,
+    2190,
+    2189,
+    2186,
+    2184,
+    2182
   ],
   "pulls": [
     {
-      "number": 2180,
-      "head": "f5d10aac22f9119aea29344aa28495d6b162336e",
-      "merge": "6e4106fb38458d2bb2bf50b53db74031daabc208",
-      "mergedAt": "2026-10-29T08:56:43Z",
-      "closedAt": "2026-10-29T08:56:43Z"
+      "number": 2203,
+      "head": "7b3562652fd0370aa3b2b93f64d9cf0a004da203",
+      "merge": "cbb3ce44d0785e6b44c6c1e3f8abf49181a55c1c",
+      "closedAt": "2026-10-31T07:09:43Z"
+    },
+    {
+      "number": 2202,
+      "head": "d6b9466d7f5ff26455ec17748d0da2df6ee003ae",
+      "merge": "054c73af3c17ca08028ecc2f823ca5703650a744",
+      "closedAt": "2026-10-31T07:12:27Z"
+    },
+    {
+      "number": 2195,
+      "head": "0c838cdc125425cac155661af04265f694e80646",
+      "merge": "79cc345c3ac8c825b5b9dee283f5d4b6ec4f7d51",
+      "closedAt": "2026-10-31T07:45:13Z"
+    },
+    {
+      "number": 2194,
+      "head": "fc300f7ce84195dc9362cb58bb22e4a69c59695a",
+      "merge": "1b61402aeb231cd5f4ec393cb9ce43433725e289",
+      "closedAt": "2026-10-31T07:15:27Z"
+    },
+    {
+      "number": 2193,
+      "head": "547464d14550569bec657ec9d585028787b1bbd3",
+      "merge": "850461bc28f57fed9ad487c7e67097e381bf01cc",
+      "closedAt": "2026-10-31T07:50:32Z"
+    },
+    {
+      "number": 2192,
+      "head": "c53078289f2f713b5fd911091c34fe84d6221394",
+      "merge": "2a60316c370825f3040c50ea942a8c710c9ff84c",
+      "closedAt": "2026-10-31T07:18:13Z"
+    },
+    {
+      "number": 2190,
+      "head": "39cb663a98e6940e71f417a4d26673147329d836",
+      "merge": null,
+      "closedAt": "2026-10-31T07:55:26Z"
+    },
+    {
+      "number": 2189,
+      "head": "6f4d6d6c06c099167af9e0eb48c95330de2cee7c",
+      "merge": "0a009197ccba24c433b0aa0dc3c5377ed02c325a",
+      "closedAt": "2026-10-31T07:26:51Z"
+    },
+    {
+      "number": 2186,
+      "head": "d20ae2f445dba6d5359856dde7ffb369e69b88ca",
+      "merge": "c148cb11975917e3e3955ba6fb9fdabbb3965f49",
+      "closedAt": "2026-10-31T07:48:12Z"
+    },
+    {
+      "number": 2184,
+      "head": "de9335f307ffff1e60b89af49ddadf1848e0f6da",
+      "merge": "2af2dcbe9fadd326f7c0db3300ebe1fb1fb6b07c",
+      "closedAt": "2026-10-31T07:39:37Z"
+    },
+    {
+      "number": 2182,
+      "head": "29fa98d9db55c94f2494a5798881a90a469d970d",
+      "merge": "f05c0a92d588c220cabf4b056c76f7a132fbed57",
+      "closedAt": "2026-10-31T07:20:33Z"
     }
   ],
-  "completedAt": "2026-10-29T09:01:58.624Z"
+  "completedAt": "2026-10-31T08:14:51.664Z"
 }

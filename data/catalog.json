@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-29T09:02:11.000Z",
-  "total": 2877,
+  "generatedAt": "2026-10-31T08:21:15.000Z",
+  "total": 2884,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -5258,8 +5258,8 @@
       "id": "aomi-transact",
       "canonical_id": "aomi-transact",
       "name": "aomi-transact",
-      "description": "Build natural-language crypto/DeFi agents and EVM MCP plugins (Claude Code, Cursor, Codex, Gemini). Aomi turns prompts into wallet-signed txs on Ethereum, Base, Arbitrum, Optimism, Polygon, Linea — non-custodial, fork-simulated. 40+ apps: Uniswap, Aave, Lido, Morpho, GMX, Hyperliquid, Polymarket.",
-      "category": "ai-ml",
+      "description": "Use Aomi's standalone CLI or hosted Agent/Pipeline MCP to read chain state and prepare user-authorized transactions. Review durable Commit simulation before a designated signer executes. Use for swaps, lending, bridging, staking, perps and account queries.",
+      "category": "uncategorized",
       "risk": "critical",
       "source": "aomi-labs/skills (MIT)",
       "source_repo": "aomi-labs/skills",
@@ -5286,8 +5286,8 @@
         "intent",
         "aomi",
         "transact",
-        "natural",
-        "language"
+        "standalone",
+        "hosted"
       ],
       "path": "skills/aomi-transact/SKILL.md"
     },
@@ -38382,6 +38382,40 @@
       "path": "skills/hardware-security/SKILL.md"
     },
     {
+      "id": "harvey-specter",
+      "canonical_id": "harvey-specter",
+      "name": "harvey-specter",
+      "description": "Prepare negotiations, difficult conversations, and leadership replies with evidence, clear boundaries, relationship-aware tone, and Harvey Specter-inspired composure.",
+      "category": "business",
+      "risk": "none",
+      "source": "https://github.com/YannisKiefer/harvey-specter/tree/372bac9104d7511d8cf64a9bd10d9e7de461af0e/skills/harvey-specter",
+      "source_type": "community",
+      "source_repo": "YannisKiefer/harvey-specter",
+      "license": "MIT",
+      "license_source": "https://raw.githubusercontent.com/YannisKiefer/harvey-specter/372bac9104d7511d8cf64a9bd10d9e7de461af0e/LICENSE",
+      "tags": [
+        "negotiation",
+        "communication",
+        "leadership",
+        "decision-making"
+      ],
+      "triggers": [
+        "negotiation",
+        "communication",
+        "leadership",
+        "decision-making",
+        "harvey",
+        "specter",
+        "prepare",
+        "negotiations",
+        "difficult",
+        "conversations",
+        "replies",
+        "evidence"
+      ],
+      "path": "skills/harvey-specter/SKILL.md"
+    },
+    {
       "id": "hasdata",
       "canonical_id": "hasdata",
       "name": "hasdata",
@@ -43835,6 +43869,42 @@
       "path": "skills/ios-developer/SKILL.md"
     },
     {
+      "id": "ios-flows",
+      "canonical_id": "ios-flows",
+      "name": "ios-flows",
+      "description": "Plan an iPhone app flow from how real apps handle it: onboarding, sign-up, paywalls, permissions, cancellation, account deletion and settings.",
+      "category": "frontend",
+      "risk": "safe",
+      "source": "https://github.com/uxkin/agent/tree/0c44dd6e44f565643fcf45339fce19d0696f9b8c/plugins/mobile-app-design/skills/ios-flows",
+      "source_type": "official",
+      "source_repo": "uxkin/agent",
+      "license": "MIT",
+      "license_source": "https://github.com/uxkin/agent/blob/0c44dd6e44f565643fcf45339fce19d0696f9b8c/plugins/mobile-app-design/skills/ios-flows/LICENSE",
+      "tags": [
+        "ios",
+        "mobile",
+        "ux",
+        "user-flows",
+        "onboarding",
+        "paywall"
+      ],
+      "triggers": [
+        "ios",
+        "mobile",
+        "ux",
+        "user-flows",
+        "onboarding",
+        "paywall",
+        "flows",
+        "plan",
+        "iphone",
+        "app",
+        "flow",
+        "how"
+      ],
+      "path": "skills/ios-flows/SKILL.md"
+    },
+    {
       "id": "ios-redteam-pipeline",
       "canonical_id": "ios-redteam-pipeline",
       "name": "ios-redteam-pipeline",
@@ -43859,6 +43929,42 @@
         "team"
       ],
       "path": "skills/ios-redteam-pipeline/SKILL.md"
+    },
+    {
+      "id": "ios-review",
+      "canonical_id": "ios-review",
+      "name": "ios-review",
+      "description": "Review an iPhone app screen or flow and list what to fix, most important first: navigation, layout, touch targets, accessibility, states and App Store issues.",
+      "category": "frontend",
+      "risk": "safe",
+      "source": "https://github.com/uxkin/agent/tree/0c44dd6e44f565643fcf45339fce19d0696f9b8c/plugins/mobile-app-design/skills/ios-review",
+      "source_type": "official",
+      "source_repo": "uxkin/agent",
+      "license": "MIT",
+      "license_source": "https://github.com/uxkin/agent/blob/0c44dd6e44f565643fcf45339fce19d0696f9b8c/plugins/mobile-app-design/skills/ios-review/LICENSE",
+      "tags": [
+        "ios",
+        "mobile",
+        "ui",
+        "review",
+        "accessibility",
+        "audit"
+      ],
+      "triggers": [
+        "ios",
+        "mobile",
+        "ui",
+        "review",
+        "accessibility",
+        "audit",
+        "iphone",
+        "app",
+        "screen",
+        "flow",
+        "list",
+        "what"
+      ],
+      "path": "skills/ios-review/SKILL.md"
     },
     {
       "id": "ios-screens",
@@ -44855,6 +44961,42 @@
         "read"
       ],
       "path": "skills/keenable-search-mcp/SKILL.md"
+    },
+    {
+      "id": "keepmacawake",
+      "canonical_id": "keepmacawake",
+      "name": "keepmacawake",
+      "description": "Keep a MacBook with Apple silicon awake with the lid closed during a long agent task, with the keepmacawake command of the Keep Mac Awake app.",
+      "category": "productivity",
+      "risk": "critical",
+      "source": "https://github.com/bartdudzic/keepmacawake/tree/f64ce3db2669311aeca40b21c1bdba9db4f1e56d/plugins/keep-mac-awake/skills/keepmacawake",
+      "source_type": "community",
+      "source_repo": "bartdudzic/keepmacawake",
+      "license": "MIT",
+      "license_source": "https://github.com/bartdudzic/keepmacawake/blob/f64ce3db2669311aeca40b21c1bdba9db4f1e56d/plugins/keep-mac-awake/LICENSE",
+      "tags": [
+        "macos",
+        "macbook",
+        "lid-closed",
+        "keep-awake",
+        "sleep",
+        "long-running-tasks"
+      ],
+      "triggers": [
+        "macos",
+        "macbook",
+        "lid-closed",
+        "keep-awake",
+        "sleep",
+        "long-running-tasks",
+        "keepmacawake",
+        "keep",
+        "apple",
+        "silicon",
+        "awake",
+        "lid"
+      ],
+      "path": "skills/keepmacawake/SKILL.md"
     },
     {
       "id": "kernel-prompt",
@@ -65936,6 +66078,41 @@
       "path": "skills/requesting-code-review/SKILL.md"
     },
     {
+      "id": "requirements-writing",
+      "canonical_id": "requirements-writing",
+      "name": "requirements-writing",
+      "description": "Write and review verifiable requirements using EARS patterns, quality checks, defect review, and traceability.",
+      "category": "uncategorized",
+      "risk": "none",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "jgsystemsconsulting/jgs-se-knowledge-packs",
+      "license": "CC-BY-4.0",
+      "license_source": "https://github.com/jgsystemsconsulting/jgs-se-knowledge-packs/blob/fd228690a3dec8c040cee49cff0534bfaa965127/packs/requirements-writing/LICENSE",
+      "tags": [
+        "requirements",
+        "ears",
+        "specification",
+        "quality",
+        "verification"
+      ],
+      "triggers": [
+        "requirements",
+        "ears",
+        "specification",
+        "quality",
+        "verification",
+        "writing",
+        "write",
+        "review",
+        "verifiable",
+        "checks",
+        "defect",
+        "traceability"
+      ],
+      "path": "skills/requirements-writing/SKILL.md"
+    },
+    {
       "id": "research-prompt",
       "canonical_id": "research-prompt",
       "name": "research-prompt",
@@ -67663,12 +67840,14 @@
       "id": "satori",
       "canonical_id": "satori",
       "name": "satori",
-      "description": "Clinically informed wisdom companion blending psychology and philosophy into a structured thinking partner",
+      "description": "Use supportive, non-diagnostic reflection informed by Satori's philosophical and psychological lenses.",
       "category": "personal-development",
       "risk": "safe",
       "source": "community",
       "source_type": "community",
       "source_repo": "MetcalfSolutions/Satori",
+      "license": "Apache-2.0",
+      "license_source": "https://raw.githubusercontent.com/MetcalfSolutions/Satori/v6.5.5/LICENSE",
       "tags": [
         "mental-health",
         "psychology",
@@ -67689,9 +67868,9 @@
         "jungian",
         "conversation",
         "satori",
-        "clinically",
-        "informed",
-        "companion"
+        "supportive",
+        "non",
+        "diagnostic"
       ],
       "path": "skills/satori/SKILL.md"
     },
@@ -79399,6 +79578,41 @@
       "path": "skills/tutorial-engineer/SKILL.md"
     },
     {
+      "id": "tweetapi",
+      "canonical_id": "tweetapi",
+      "name": "tweetapi",
+      "description": "Look up public Twitter/X profiles, tweets, search results, lists, communities and Spaces with TweetAPI's REST API or hosted MCP server. Read-only: no posting or account access.",
+      "category": "data",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "twitter",
+        "x",
+        "social-media",
+        "tweet-search",
+        "user-lookup",
+        "rest-api",
+        "mcp",
+        "read-only"
+      ],
+      "triggers": [
+        "twitter",
+        "x",
+        "social-media",
+        "tweet-search",
+        "user-lookup",
+        "rest-api",
+        "mcp",
+        "read-only",
+        "tweetapi",
+        "look",
+        "up",
+        "public"
+      ],
+      "path": "skills/tweetapi/SKILL.md"
+    },
+    {
       "id": "twilio-communications",
       "canonical_id": "twilio-communications",
       "name": "twilio-communications",
@@ -86046,6 +86260,39 @@
         "videos"
       ],
       "path": "skills/youtube-transcript-skills/SKILL.md"
+    },
+    {
+      "id": "zambo",
+      "canonical_id": "zambo",
+      "name": "zambo",
+      "description": "Connect an agent to Zambo: 153 tools behind one remote MCP endpoint, cross-AI handover, memory, and a verifiable AER-1 receipt for every call. Use when a task needs real work done.",
+      "category": "development",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "mcp",
+        "tools",
+        "handover",
+        "receipts",
+        "memory",
+        "continuity"
+      ],
+      "triggers": [
+        "mcp",
+        "tools",
+        "handover",
+        "receipts",
+        "memory",
+        "continuity",
+        "zambo",
+        "connect",
+        "agent",
+        "153",
+        "behind",
+        "one"
+      ],
+      "path": "skills/zambo/SKILL.md"
     },
     {
       "id": "zapier-make-patterns",

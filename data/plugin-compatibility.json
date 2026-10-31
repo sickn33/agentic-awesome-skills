@@ -24496,6 +24496,25 @@
       "runtime_files": []
     },
     {
+      "id": "harvey-specter",
+      "path": "skills/harvey-specter",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "hasdata",
       "path": "skills/hasdata",
       "targets": {
@@ -28103,8 +28122,46 @@
       "runtime_files": []
     },
     {
+      "id": "ios-flows",
+      "path": "skills/ios-flows",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ios-redteam-pipeline",
       "path": "skills/ios-redteam-pipeline",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "ios-review",
+      "path": "skills/ios-review",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -28751,6 +28808,25 @@
     {
       "id": "keenable-search-mcp",
       "path": "skills/keenable-search-mcp",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "keepmacawake",
+      "path": "skills/keepmacawake",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -42069,6 +42145,25 @@
       "runtime_files": []
     },
     {
+      "id": "requirements-writing",
+      "path": "skills/requirements-writing",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "research-prompt",
       "path": "skills/research-prompt",
       "targets": {
@@ -50723,6 +50818,25 @@
       "runtime_files": []
     },
     {
+      "id": "tweetapi",
+      "path": "skills/tweetapi",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "twilio-communications",
       "path": "skills/twilio-communications",
       "targets": {
@@ -54906,6 +55020,25 @@
       "runtime_files": []
     },
     {
+      "id": "zambo",
+      "path": "skills/zambo",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "zapier-make-patterns",
       "path": "skills/zapier-make-patterns",
       "targets": {
@@ -55154,10 +55287,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2877,
+    "total_skills": 2884,
     "supported": {
-      "codex": 2793,
-      "claude": 2813
+      "codex": 2800,
+      "claude": 2820
     },
     "blocked": {
       "codex": 84,

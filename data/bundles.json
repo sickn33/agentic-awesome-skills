@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-29T09:02:11.000Z",
+  "generatedAt": "2026-10-31T08:21:15.000Z",
   "bundles": {
     "core-dev": {
       "description": "Core development skills across languages, frameworks, and backend/frontend fundamentals.",
@@ -306,7 +306,9 @@
         "instagram",
         "ios-debugger-agent",
         "ios-developer",
+        "ios-flows",
         "ios-redteam-pipeline",
+        "ios-review",
         "ios-screens",
         "java-pro",
         "javascript-mastery",
@@ -503,6 +505,7 @@
         "trigger-dev",
         "trip-coupon",
         "trpc-fullstack",
+        "tweetapi",
         "twilio-communications",
         "typescript-advanced-types",
         "typescript-expert",
@@ -1303,6 +1306,7 @@
         "airflow-dag-patterns",
         "alerting-oncall",
         "android-cli",
+        "aomi-transact",
         "api-testing-observability-api-mock",
         "apify-actor-development",
         "apify-brand-reputation-monitoring",
@@ -2201,7 +2205,9 @@
         "game-development/mobile-games",
         "ios-debugger-agent",
         "ios-developer",
+        "ios-flows",
         "ios-redteam-pipeline",
+        "ios-review",
         "ios-screens",
         "lambdatest-agent-skills",
         "macos-menubar-tuist-app",

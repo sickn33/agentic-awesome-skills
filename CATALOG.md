@@ -1,8 +1,8 @@
 # Skill Catalog
 
-Generated at: 2026-10-29T09:02:11.000Z
+Generated at: 2026-10-31T08:21:15.000Z
 
-Total skills: 2877
+Total skills: 2884
 
 ## agent-behavior (5)
 
@@ -129,7 +129,7 @@ Total skills: 2877
 | `pydantic-ai` | Build production-ready AI agents with PydanticAI — type-safe tool use, structured outputs, dependency injection, and multi-model support. | safe | community | pydantic-ai, ai-agents, llm, openai, anthropic, gemini, tool-use, structured-output, python | pydantic-ai, ai-agents, llm, openai, anthropic, gemini, tool-use, structured-output, python, pydantic, ai, agents |
 | `superpowers-lab` | Evaluate experimental Claude workflow skills in an isolated lab with reproducible tasks, observed results, and explicit adoption criteria. | safe | https://github.com/obra/superpowers-lab | superpowers, lab | superpowers, lab, evaluate, experimental, claude, skills, isolated, reproducible, tasks, observed, results, explicit |
 
-## ai-ml (135)
+## ai-ml (134)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -156,7 +156,6 @@ Total skills: 2877
 | `ai-seo` | Optimize content for AI search and LLM citations across AI Overviews, ChatGPT, Perplexity, Claude, Gemini, and similar systems. Use when improving AI visibil... | critical | https://github.com/coreyhaines31/marketingskills | ai, seo | ai, seo, optimize, content, search, llm, citations, overviews, chatgpt, perplexity, claude, gemini |
 | `ai-studio-image` | Geracao de imagens humanizadas via Google AI Studio (Gemini). Fotos realistas estilo influencer ou educacional com iluminacao natural e imperfeicoes sutis. | critical | community | image-generation, ai-studio, google, photography | image-generation, ai-studio, google, photography, ai, studio, image, geracao, de, imagens, humanizadas, via |
 | `ai-wrapper-product` | Expert in building products that wrap AI APIs (OpenAI, Anthropic, etc. ) into focused tools people will pay for. Not just "ChatGPT but different" - products ... | critical | vibeship-spawner-skills (Apache 2.0) | ai, wrapper, product | ai, wrapper, product, building, products, wrap, apis, openai, anthropic, etc, people, pay |
-| `aomi-transact` | Build natural-language crypto/DeFi agents and EVM MCP plugins (Claude Code, Cursor, Codex, Gemini). Aomi turns prompts into wallet-signed txs on Ethereum, Ba... | critical | aomi-labs/skills | defi, wallet, account-abstraction, cli, eip-712, onchain, agent, intent | defi, wallet, account-abstraction, cli, eip-712, onchain, agent, intent, aomi, transact, natural, language |
 | `app-builder` | Main application building orchestrator. Creates full-stack applications from natural language requests. Determines project type, selects tech stack, coordina... | critical | community | app, builder | app, builder, main, application, building, orchestrator, creates, full, stack, applications, natural, language |
 | `autonomous-agent-patterns` | Design patterns for building autonomous coding agents, inspired by [Cline](https://github.com/cline/cline) and [OpenAI Codex](https://github.com/openai/codex). | critical | community | autonomous, agent | autonomous, agent, building, coding, agents, inspired, cline, https, github, com, openai, codex |
 | `autonomous-agents` | Autonomous agents are AI systems that can independently decompose goals, plan actions, execute tools, and self-correct without constant human guidance. The c... | critical | vibeship-spawner-skills (Apache 2.0) | autonomous, agents | autonomous, agents, ai, independently, decompose, goals, plan, actions, execute, self, correct, without |
@@ -574,7 +573,7 @@ Total skills: 2877
 | `reverse-browser-automation` | Automate browsers (Playwright) and Windows desktop applications (UI automation) for reverse-engineering evidence collection, UI-driven workflows, and network... | offensive | zhaoxuya520/reverse-skill | reverse, browser | reverse, browser, automation, automate, browsers, playwright, windows, desktop, applications, ui, engineering, evidence |
 | `skyvern-browser-automation` | AI-powered browser automation — navigate sites, fill forms, extract structured data, log in with stored credentials, and build reusable workflows. | safe | Skyvern-AI/skyvern | browser-automation, mcp, web-scraping, form-filling, ai-agents, workflow-automation | browser-automation, mcp, web-scraping, form-filling, ai-agents, workflow-automation, skyvern, browser, automation, ai, powered, navigate |
 
-## business (180)
+## business (181)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -632,6 +631,7 @@ Total skills: 2877
 | `expense-management` | Expense claim register: claim id, employee and department, amount and tax, approver and level, category, cost centre, budget line, receipt flag and status. U... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, manage | sme, business, operations, database, csv, notion, sql, manage, expense, claim, register, id |
 | `gamification-engine` | Gamification points register: player and department, points balance and points earned this month, level, badges, source module and last-updated date. Use for... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, develop | sme, business, operations, database, csv, notion, sql, develop, gamification, engine, points, register |
 | `gbp-local-seo-intent` | Google Business Profile register: element, primary and supporting keywords, search intent, landing page, post dates, review rating and reply status, visibili... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, gbp, google-business-profile, local-seo, local-pack, map-pack, intent, categories, services, reviews, posts, photos, attributes, csv, sql, notion | sme, gbp, google-business-profile, local-seo, local-pack, map-pack, intent, categories, services, reviews, posts, photos |
+| `harvey-specter` | Prepare negotiations, difficult conversations, and leadership replies with evidence, clear boundaries, relationship-aware tone, and Harvey Specter-inspired c... | none | YannisKiefer/harvey-specter | negotiation, communication, leadership, decision-making | negotiation, communication, leadership, decision-making, harvey, specter, prepare, negotiations, difficult, conversations, replies, evidence |
 | `health-wellness` | Wellbeing check-in register: anonymous flag, department, check-in date, wellbeing score, stress and energy levels, support and resource flags, confidentialit... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, engage | sme, business, operations, database, csv, notion, sql, engage, health, wellness, wellbeing, check |
 | `hr-pro` | Professional, ethical HR partner for hiring, onboarding/offboarding, PTO and leave, performance, compliant policies, and employee relations. | critical | community | hr | hr, pro, professional, ethical, partner, hiring, onboarding, offboarding, pto, leave, performance, compliant |
 | `intern-program` | Internship register: intern and department, supervisor and mentor, institution, start and end dates, stipend, learning goals, mid-term and final scores, conv... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, onboard | sme, business, operations, database, csv, notion, sql, onboard, intern, program, internship, register |
@@ -1163,7 +1163,7 @@ Total skills: 2877
 | `liuguang-banlan-ui` | Builds two parameterized UI modes—流光溢彩白 (iridescent white) and 五彩斑斓黑 (colorful black)—with OKLCH, WebGL/CSS fallback, vision gating, screenshot QA, and total... | critical | self | ui, frontend, oklch, webgl, accessibility | ui, frontend, oklch, webgl, accessibility, liuguang, banlan, two, parameterized, modes, iridescent, white |
 | `modellix` | Integrate the Modellix API/CLI for async AI image, video, and speech generation or transcription (model run --wait, task download). | critical | Modellix/modellix-plugin | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api, integrate, async, ai |
 
-## data (56)
+## data (57)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1213,6 +1213,7 @@ Total skills: 2877
 | `spark-optimization` | Optimize Apache Spark jobs with partitioning, caching, shuffle optimization, and memory tuning. Use when improving Spark performance, debugging slow jobs, or... | critical | community | spark, optimization | spark, optimization, optimize, apache, jobs, partitioning, caching, shuffle, memory, tuning, improving, performance |
 | `sql-pro` | Master modern SQL with cloud-native databases, OLTP/OLAP optimization, and advanced query techniques. Expert in performance tuning, data modeling, and hybrid... | critical | community | sql | sql, pro, cloud, native, databases, oltp, olap, optimization, query, techniques, performance, tuning |
 | `sql-sentinel` | Audit SQL for the cost & performance anti-patterns that burn warehouse credits. Scores warehouse health 0-100 and outputs a prioritized cost-reduction plan f... | critical | takeaseatventure/sql-sentinel | sql, bigquery, snowflake, redshift, postgres, data-warehouse, cost-optimization, performance, audit, finops | sql, bigquery, snowflake, redshift, postgres, data-warehouse, cost-optimization, performance, audit, finops, sentinel, cost |
+| `tweetapi` | Look up public Twitter/X profiles, tweets, search results, lists, communities and Spaces with TweetAPI's REST API or hosted MCP server. Read-only: no posting... | safe | self | twitter, x, social-media, tweet-search, user-lookup, rest-api, mcp, read-only | twitter, x, social-media, tweet-search, user-lookup, rest-api, mcp, read-only, tweetapi, look, up, public |
 | `us-watchlist-alerts` | Free US stock watchlists, price alerts and daily briefs; no API key, NYSE-holiday aware. Informational only, never places trades. | safe | eli-alvarado/us-watchlist-alerts | stocks, watchlist, price-alerts, market-brief, finance | stocks, watchlist, price-alerts, market-brief, finance, us, alerts, free, stock, watchlists, price, daily |
 | `warehouse` | Plan and review read-only data warehouse analysis with explicit scope, privacy, provenance, and validation checks. | critical | self | analytics, data-warehouse, sql, data-quality | analytics, data-warehouse, sql, data-quality, warehouse, plan, review, read, data, analysis, explicit, scope |
 | `weather-data-lifecycle-management` | Manage ownership, retention, and cleanup of downloaded weather data across one-shot jobs, interactive viewers, caches, failures, and cancellation. | safe | self | weather, data-lifecycle, cleanup, caching, desktop-apps | weather, data-lifecycle, cleanup, caching, desktop-apps, data, lifecycle, ownership, retention, downloaded, one, shot |
@@ -1428,7 +1429,7 @@ Total skills: 2877
 | `skill-porter` | Preview conservative tool-name translations and copy complete local skill bundles for manual adaptation to Google Antigravity. | critical | Pranav-Nexus/antigravity-skill-porter | antigravity, claude, skills, migration, agent | antigravity, claude, skills, migration, agent, skill, porter, preview, conservative, name, translations, copy |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (229)
+## development (230)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1661,6 +1662,7 @@ Total skills: 2877
 | `vexor-cli` | Semantic file discovery via `vexor`. Use whenever locating where something is implemented/loaded/defined in a medium or large repo, or when the file location... | critical | community | vexor, cli | vexor, cli, semantic, file, discovery, via, whenever, locating, where, something, implemented, loaded |
 | `what-could-break` | Find what a change breaks outside its own diff, then prove the one fact that makes it safe by running real code. Use before any multi-file edit or an edit to... | safe | stas4000/what-could-break | code-review, refactoring, testing, blast-radius, verification | code-review, refactoring, testing, blast-radius, verification, what, could, break, find, change, breaks, outside |
 | `wp-site-health-auditor` | Turns a WordPress Site Health report into a risk-tiered, backup-first fix plan with exact WP-CLI/PHP snippets. Use for site health, recommended improvements,... | critical | self | wordpress, site-health, wp-cli, seo, performance, security, hardening | wordpress, site-health, wp-cli, seo, performance, security, hardening, wp, site, health, auditor, turns |
+| `zambo` | Connect an agent to Zambo: 153 tools behind one remote MCP endpoint, cross-AI handover, memory, and a verifiable AER-1 receipt for every call. Use when a tas... | critical | self | mcp, tools, handover, receipts, memory, continuity | mcp, tools, handover, receipts, memory, continuity, zambo, connect, agent, 153, behind, one |
 
 ## development-and-testing (6)
 
@@ -1975,7 +1977,7 @@ Total skills: 2877
 | `ui-ux-pro-max` | Comprehensive design guide for web and mobile applications. Use when designing new UI components or pages, choosing color palettes and typography, or reviewi... | critical | community | ui, ux, max | ui, ux, max, pro, web, mobile, applications, designing, new, components, pages, choosing |
 | `web-performance-optimization` | Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance | critical | community | web, performance, optimization | web, performance, optimization, optimize, website, application, including, loading, speed, core, vitals, bundle |
 
-## frontend (46)
+## frontend (48)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1995,6 +1997,8 @@ Total skills: 2877
 | `gpt-taste` | Use when generating elite GSAP-heavy frontend pages with strict AIDA structure, wide hero typography, and gapless bento grids. | safe | Leonxlnx/taste-skill | frontend, design, gsap, motion | frontend, design, gsap, motion, gpt, taste, generating, elite, heavy, pages, strict, aida |
 | `high-end-visual-design` | Use when designing expensive agency-grade interfaces with premium fonts, spatial rhythm, soft depth, and fluid microinteractions. | safe | Leonxlnx/taste-skill | frontend, visual-design, motion, ui | frontend, visual-design, motion, ui, high, visual, designing, expensive, agency, grade, interfaces, premium |
 | `industrial-brutalist-ui` | Use when creating raw industrial or tactical telemetry UIs with rigid grids, stark typography, CRT effects, and high-density data. | safe | Leonxlnx/taste-skill | frontend, design, brutalism, ui | frontend, design, brutalism, ui, industrial, brutalist, creating, raw, tactical, telemetry, uis, rigid |
+| `ios-flows` | Plan an iPhone app flow from how real apps handle it: onboarding, sign-up, paywalls, permissions, cancellation, account deletion and settings. | safe | uxkin/agent | ios, mobile, ux, user-flows, onboarding, paywall | ios, mobile, ux, user-flows, onboarding, paywall, flows, plan, iphone, app, flow, how |
+| `ios-review` | Review an iPhone app screen or flow and list what to fix, most important first: navigation, layout, touch targets, accessibility, states and App Store issues. | safe | uxkin/agent | ios, mobile, ui, review, accessibility, audit | ios, mobile, ui, review, accessibility, audit, iphone, app, screen, flow, list, what |
 | `ios-screens` | Build iPhone app screens that feel native: navigation, sheets, Dynamic Type, dark mode, permissions and paywalls, checked on small and large iPhones. | safe | uxkin/agent | ios, iphone, swiftui, react-native, mobile, ui | ios, iphone, swiftui, react-native, mobile, ui, screens, app, feel, native, navigation, sheets |
 | `landing-page` | Build landing, home and pricing pages that look like a real product instead of AI output: honest copy, one design system, checked on phone and desktop. | safe | uxkin/agent | ui, frontend, landing-page, web-design, copywriting, responsive | ui, frontend, landing-page, web-design, copywriting, responsive, landing, page, home, pricing, pages, look |
 | `markstream-angular` | Integrate the alpha markstream-angular renderer into Angular 20+ applications with standalone components, signals, safe HTML defaults, and optional peer feat... | critical | Simon-He95/markstream-vue | angular, markdown, streaming, ai-chat, frontend | angular, markdown, streaming, ai-chat, frontend, markstream, integrate, alpha, renderer, 20, applications, standalone |
@@ -2571,7 +2575,7 @@ Total skills: 2877
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `quit-sponsor` | Helps an AI agent provide non-judgmental, evidence-informed quit-smoking support with user-consented tracking, craving check-ins, and escalation to human or ... | safe | metrox-eth/quit-sponsor | quit-smoking, smoking-cessation, health, habits, addiction-recovery, wellbeing, coaching | quit-smoking, smoking-cessation, health, habits, addiction-recovery, wellbeing, coaching, quit, sponsor, helps, ai, agent |
-| `satori` | Clinically informed wisdom companion blending psychology and philosophy into a structured thinking partner | safe | MetcalfSolutions/Satori | mental-health, psychology, wisdom, philosophy, ifs, stoicism, jungian, conversation | mental-health, psychology, wisdom, philosophy, ifs, stoicism, jungian, conversation, satori, clinically, informed, companion |
+| `satori` | Use supportive, non-diagnostic reflection informed by Satori's philosophical and psychological lenses. | safe | MetcalfSolutions/Satori | mental-health, psychology, wisdom, philosophy, ifs, stoicism, jungian, conversation | mental-health, psychology, wisdom, philosophy, ifs, stoicism, jungian, conversation, satori, supportive, non, diagnostic |
 
 ## planning (12)
 
@@ -2615,7 +2619,7 @@ Total skills: 2877
 | --- | --- | --- | --- | --- | --- |
 | `idea-os` | Five-phase pipeline (triage → clarify → research → PRD → plan) that turns a raw idea into four linked files: clarifying questions, deep research, a PRD with ... | safe | Slashworks-biz/idea-os | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical | product-management, prd, market-research, mvp, idea-validation, jtbd, swot, competitor-analysis, founder, non-technical, idea, os |
 
-## productivity (58)
+## productivity (59)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2650,6 +2654,7 @@ Total skills: 2877
 | `interview-style-doc-building` | Build structured strategy documents by asking one question at a time and patching the file. | critical | davidondrej/skills | documentation, interview, planning | documentation, interview, planning, style, doc, building, structured, documents, asking, one, question, time |
 | `jobgpt` | Job search automation, auto apply, resume generation, application tracking, salary intelligence, and recruiter outreach using the JobGPT MCP server. | critical | community | jobgpt | jobgpt, job, search, automation, auto, apply, resume, generation, application, tracking, salary, intelligence |
 | `json-canvas` | Create and edit JSON Canvas files (.canvas) with nodes, edges, groups, and connections. Use when working with .canvas files, creating visual canvases, mind m... | critical | https://github.com/kepano/obsidian-skills | json, canvas | json, canvas, edit, files, nodes, edges, groups, connections, working, creating, visual, canvases |
+| `keepmacawake` | Keep a MacBook with Apple silicon awake with the lid closed during a long agent task, with the keepmacawake command of the Keep Mac Awake app. | critical | bartdudzic/keepmacawake | macos, macbook, lid-closed, keep-awake, sleep, long-running-tasks | macos, macbook, lid-closed, keep-awake, sleep, long-running-tasks, keepmacawake, keep, apple, silicon, awake, lid |
 | `kernel-prompt` | Use when composing or improving an LLM prompt or agent instruction. Asks one round of questions, then returns only the prompt; never performs the task. | safe | codegiveness/kernel-prompt | prompt-engineering, meta-prompting, prompt-optimization, agent-handoff | prompt-engineering, meta-prompting, prompt-optimization, agent-handoff, kernel, prompt, composing, improving, llm, agent, instruction, asks |
 | `markdown-rendering` | Open Markdown reliably in cmux panes and recover from blank rendered surfaces. | safe | davidondrej/skills | markdown, cmux, rendering | markdown, cmux, rendering, open, reliably, panes, recover, blank, rendered, surfaces |
 | `mcd-secret-menu-lab` | Plan McDonald's China recipe combinations using an authorized MCP connection for current store menus, prices and nutrition. Use for recreating food hacks or ... | safe | Reak-Z/mcd-secret-menu-lab | mcdonalds, hidden-menu, food, recipe, mcp, price-check, nutrition, lifehack | mcdonalds, hidden-menu, food, recipe, mcp, price-check, nutrition, lifehack, mcd, secret, menu, lab |
@@ -3324,16 +3329,18 @@ Total skills: 2877
 | --- | --- | --- | --- | --- | --- |
 | `travel-planner` | 旅行/行程规划需求时使用:规划去某地旅行、X天X城、带老人孩子、自驾、假期安排等。产出逐日行程表、预算估算(经济/舒适/奢华三档)、交通住宿建议、景点美食清单。必须先问预算,预算未确认只输出问题清单;事实数据带来源和查询日期。 | safe | saudademjj/luopan | travel, itinerary, planning, trip, chinese | travel, itinerary, planning, trip, chinese, planner |
 
-## uncategorized (9)
+## uncategorized (11)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `aegisops-ai` | Autonomous DevSecOps & FinOps Guardrails. Guide to reviewing Linux kernel patches, Terraform cost changes and Kubernetes policy with a separately reviewed up... | critical | community | aegisops, ai | aegisops, ai, autonomous, devsecops, finops, guardrails, reviewing, linux, kernel, patches, terraform, cost |
+| `aomi-transact` | Use Aomi's standalone CLI or hosted Agent/Pipeline MCP to read chain state and prepare user-authorized transactions. Review durable Commit simulation before ... | critical | aomi-labs/skills | defi, wallet, account-abstraction, cli, eip-712, onchain, agent, intent | defi, wallet, account-abstraction, cli, eip-712, onchain, agent, intent, aomi, transact, standalone, hosted |
 | `avoid-ai-writing` | Audit and rewrite prose for repetitive, vague, or formulaic wording while preserving meaning, evidence, and the writer's voice. | none | https://github.com/conorbronsdon/avoid-ai-writing | avoid, ai, writing | avoid, ai, writing, audit, rewrite, prose, repetitive, vague, formulaic, wording, while, preserving |
 | `changelog-entry` | Generate a properly formatted CHANGELOG.md entry in Keep a Changelog format from a commit range or PR. Groups changes into Added/Changed/Deprecated/Removed/F... | safe | self | git, changelog, developer-workflow, documentation | git, changelog, developer-workflow, documentation, entry, generate, properly, formatted, md, keep, format, commit |
 | `loki-mode` | Historical 2.35.x multi-agent workflow for turning a scoped PRD into reviewed implementation; includes experimental runner and benchmark artifacts. | critical | community | loki, mode | loki, mode, historical, 35, multi, agent, turning, scoped, prd, reviewed, includes, experimental |
 | `polars` | Expression-based DataFrame library for Python and Rust. Use for eager or lazy tabular analytics, ETL, and pandas migration; streaming support and memory need... | critical | community | polars | polars, expression, dataframe, library, python, rust, eager, lazy, tabular, analytics, etl, pandas |
 | `production-code-audit` | Audit an explicitly scoped codebase for evidenced security, correctness and performance issues; implement authorized targeted repairs and report validation p... | critical | community | production, code, audit | production, code, audit, explicitly, scoped, codebase, evidenced, security, correctness, performance, issues, authorized |
+| `requirements-writing` | Write and review verifiable requirements using EARS patterns, quality checks, defect review, and traceability. | none | jgsystemsconsulting/jgs-se-knowledge-packs | requirements, ears, specification, quality, verification | requirements, ears, specification, quality, verification, writing, write, review, verifiable, checks, defect, traceability |
 | `reverse-engineer-anything` | Use REA to investigate shipped apps, binaries, packages, and runtimes; trace features with evidence, compare versions, or guide reconstruction. Skip ordinary... | critical | morluto/rea | reverse, anything | reverse, anything, engineer, rea, investigate, shipped, apps, binaries, packages, runtimes, trace, features |
 | `sam-altman` | Persona fictícia inspirada em temas públicos associados a Sam Altman; sem representação, citações verificadas ou acesso interno. | safe | community | persona, startups, agi, yc, fundraising | persona, startups, agi, yc, fundraising, sam, altman, fict, cia, inspirada, em, temas |
 | `user-thoughts` | Persist user decisions and project constraints to mdbase across sessions. Use on explicit /user-thoughts or /ustht requests, or within previously authorized ... | critical | JularDepick/user-thoughts.SKILL | userthoughts, documentation, project-management, mdbase | userthoughts, documentation, project-management, mdbase, user, thoughts, persist, decisions, constraints, sessions, explicit, ustht |
