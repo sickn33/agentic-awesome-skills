@@ -322,19 +322,25 @@ FROM 'datacircle.json' WHERE billing != 'free' AND perThousand IS NOT NULL GROUP
 Without DuckDB, with jq:
 
 ```bash
-jq '[.[] | select(.api == "Employee email" and .billing != "free" and .pay != null and .pay * .exchangeRate <= 50 and .perThousand != null)] | sort_by(.perThousand) | .[:10] | map({provider, plan, pay, currency, perThousand, score, page})' datacircle.json
+jq '[.[] | select(.api == "Employee email" and .billing != "free" and (.pay | type) == "number" and (.exchangeRate | type) == "number" and (.perThousand | type) == "number") | select(.pay * .exchangeRate <= 50)] | sort_by(.perThousand) | .[:10] | map({provider, plan, pay, currency, perThousand, score, page})' datacircle.json
 ```
 
 Or Python:
 
 ```python
 import json
+import math
 rows = json.load(open("datacircle.json"))
+def number(value):
+    return type(value) in (int, float) and math.isfinite(value)
+
 found = sorted(
-    (r for r in rows if r["api"] == "Employee email" and r["billing"] != "free" and r["pay"] is not None and r["pay"] * r["exchangeRate"] <= 50 and r["perThousand"] is not None),
+    (r for r in rows if isinstance(r, dict) and r.get("api") == "Employee email" and r.get("billing") != "free" and all(number(r.get(k)) for k in ("pay", "exchangeRate", "perThousand")) and r["pay"] * r["exchangeRate"] <= 50),
     key=lambda r: r["perThousand"],
 )[:10]
 ```
+
+These examples exclude rows with missing or non-numeric pay, exchange rates or per-thousand prices; disclose those exclusions. The Python example assumes the top-level JSON list and download size were validated as described above. The SQL example likewise requires validated numeric types.
 
 Each row's `page` is its plan's page on datacircle.dev, and `docs` the provider's own page for the call. Give your user those links with what you found. Every key is also explained at https://datacircle.dev/fields, and the docs are at https://datacircle.dev/docs.
 
