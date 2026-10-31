@@ -14,6 +14,12 @@ const BING_VERIFICATION_TOKEN = 'CAC904EB0D2DD1B22B5F2BC540CAD654';
 const DEFAULT_CURRENT_BASE = 'https://aaskills.tech/';
 const DEFAULT_LEGACY_BASE = 'https://sickn33.github.io/antigravity-awesome-skills/';
 const DEFAULT_EXPECTED_ROUTES = 188;
+// These first-party pages were introduced after the legacy catalog moved.
+// Keep this list exact so an unexpected route still fails the curated lock.
+const NEW_INFORMATION_ROUTES = new Set([
+  'teams', 'trust', 'aas-core', 'plugins/aas-core',
+  'plugins/aas-core/privacy', 'plugins/aas-core/terms', 'plugins/aas-core/support',
+]);
 const SAFE_SEGMENT = /^[A-Za-z0-9._~-]+$/;
 
 function isSafeSegment(value) {
@@ -255,7 +261,7 @@ function generateBridge(options) {
   });
   // First-party docs and new informational pages have no legacy routes to migrate.
   const bridgeSitemapRoutes = sitemapRoutes.filter(
-    ({ relativeRoute }) => relativeRoute !== 'docs' && !relativeRoute.startsWith('docs/') && !['teams', 'trust', 'aas-core'].includes(relativeRoute),
+    ({ relativeRoute }) => relativeRoute !== 'docs' && !relativeRoute.startsWith('docs/') && !NEW_INFORMATION_ROUTES.has(relativeRoute),
   );
   if (bridgeSitemapRoutes.length !== expectedRoutes) {
     throw new Error(`sitemap route count ${bridgeSitemapRoutes.length} does not match locked expectation ${expectedRoutes}`);

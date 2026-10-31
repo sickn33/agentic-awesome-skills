@@ -10,13 +10,15 @@
     "prebuild": "npm run generate:sitemap",
     "verify:seo": "node scripts/verify-seo-assets.js --require-hosted-url",
     "verify:docs": "node scripts/verify-docs.js",
-    "build": "npm run typecheck && vite build && npm run prerender:seo && npm run verify:docs && node scripts/verify-discovery.js",
+    "build": "npm run typecheck && vite build && npm run build:finalize",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "vitest",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit && tsc -p tsconfig.node.json --noEmit",
-    "build:plugin-ui": "vite build --config vite.plugin.config.ts && node scripts/inline-single-file.js ../../.tmp/aas-plugin/workbench.html"
+    "build:plugin-ui": "vite build --config vite.plugin.config.ts && node scripts/inline-single-file.js ../../.tmp/aas-plugin/workbench.html",
+    "build:finalize": "node scripts/docs-runtime.js && npm run prerender:seo && npm run verify:docs && node scripts/verify-discovery.js && node scripts/docs-runtime.js verify",
+    "ci:compile": "npm run typecheck && vite build"
   },
   "dependencies": {
     "@fontsource/jetbrains-mono": "^5.3.0",
