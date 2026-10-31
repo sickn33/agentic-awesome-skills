@@ -3,8 +3,11 @@ name: keepmacawake
 description: "Keep a MacBook with Apple silicon awake with the lid closed during a long agent task, with the keepmacawake command of the Keep Mac Awake app."
 category: productivity
 risk: critical
-source: self
-source_type: self
+source: https://github.com/bartdudzic/keepmacawake/tree/f64ce3db2669311aeca40b21c1bdba9db4f1e56d/plugins/keep-mac-awake/skills/keepmacawake
+source_type: community
+source_repo: bartdudzic/keepmacawake
+license: MIT
+license_source: https://github.com/bartdudzic/keepmacawake/blob/f64ce3db2669311aeca40b21c1bdba9db4f1e56d/plugins/keep-mac-awake/LICENSE
 date_added: "2026-10-30"
 author: keepmacawake
 tags: [macos, macbook, lid-closed, keep-awake, sleep, long-running-tasks]
@@ -28,7 +31,7 @@ This works only when your commands run on the user's Mac itself, as in Claude Co
 
 ## When to Use
 
-- Before work likely to run 15 minutes or more, or that the user may leave running: an agent run, a build, a test suite, a migration, a download or upload, a render, a backup.
+- For a user-authorized need to keep the Mac awake during a task, such as a build, migration, download, render or backup.
 - When the user says they will close the lid, step away, go to bed or check in from their phone (Claude Code Remote Control, Codex in the ChatGPT app, Cursor, SSH).
 - When a remote session went offline because the Mac slept, or the user asks to keep the Mac awake.
 - Use `@anti-sleep` instead when the lid stays open and the user does not want to install an app.
@@ -43,9 +46,9 @@ This works only when your commands run on the user's Mac itself, as in Claude Co
 
 ### 1. What you decide and what you ask
 
-The user installed this so that you take care of it:
+Use a session only when the user has authorized keeping the Mac awake, such as by asking for it or saying they will close the lid while the requested task runs. Task duration alone is not authorization:
 
-- Start a timed session yourself before qualifying work, and tell the user in one line, for example: "Keep Mac Awake is on for 3 hours, so you can close the lid."
+- Start an authorized timed session before the task, and tell the user in one line, for example: "Keep Mac Awake is on for 3 hours, so you can close the lid."
 - Always ask first before a session without a time limit, allowing battery use, installing the app, buying, or the first session ever (`access.trial_started` is false), which starts the 3-day trial.
 - Start a session only for a task the user asked for, never just to test. If they ask to keep the Mac awake without naming a task or a length, ask how long.
 - Never pay, never handle payment details, and never ask for a password in chat.
@@ -125,5 +128,6 @@ Expected result: the agent runs keepmacawake start --hours 3 --json, gets "confi
 ## Sources and related skills
 
 - Agent guide: https://keepmacawake.com/agents.md
+- Adapted from the [pinned upstream skill](https://github.com/bartdudzic/keepmacawake/tree/f64ce3db2669311aeca40b21c1bdba9db4f1e56d/plugins/keep-mac-awake/skills/keepmacawake); its MIT notice is retained in [LICENSE](LICENSE).
 - Source of this skill (MIT): https://github.com/bartdudzic/keepmacawake/tree/main/plugins/keep-mac-awake/skills/keepmacawake
 - Related: `@anti-sleep` (caffeinate, lid open).
