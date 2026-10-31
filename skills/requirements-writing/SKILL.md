@@ -1,9 +1,9 @@
 ---
 name: requirements-writing
-description: "Guidance on writing high-quality requirements: the requirement quality characteristics and the EARS (Easy Approach to Requirements Syntax) patterns — ubiquitous, event-driven, state-driven, optional-feature, unwanted-behaviour — for unambiguous, singular, verifiable requirements, plus defect/anti-pattern review and verification & traceability. Use when authoring or reviewing requirements. Original synthesis citing EARS (Mavin et al.) and NASA public-domain guidance; not a reproduction of ISO/IEC/IEEE 29148 or the EARS paper."
+description: "Write and review verifiable requirements using EARS patterns, quality checks, defect review, and traceability."
 risk: none
 source: community
-source_type: external
+source_type: community
 source_repo: jgsystemsconsulting/jgs-se-knowledge-packs
 license: CC-BY-4.0
 license_source: https://github.com/jgsystemsconsulting/jgs-se-knowledge-packs/blob/fd228690a3dec8c040cee49cff0534bfaa965127/packs/requirements-writing/LICENSE
