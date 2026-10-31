@@ -437,7 +437,8 @@ Valores de `status`: `sent` → `delivered` → `read`; `failed` e um desfecho d
 ### Tratamento de Erros
 
 ```typescript
-async function sendOnce(payload: any): Promise<any> {
+async function sendWithRetry(payload: any): Promise<any> {
+  // The legacy name is retained for the examples; it does not retry automatically.
   // Send only to the authorized recipient and reconcile an unknown outcome
   // before any retry; an error can follow acceptance by the provider.
   try {
