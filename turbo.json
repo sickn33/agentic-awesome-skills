@@ -1,0 +1,86 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "ui": "stream",
+  "noUpdateNotifier": true,
+  "agentGuidance": false,
+  "tasks": {
+    "app:ci:test": {
+      "inputs": [
+        "apps/web-app/**",
+        "!apps/web-app/node_modules/**",
+        "!apps/web-app/dist/**",
+        "!apps/web-app/coverage/**",
+        "!apps/web-app/.ci-cache/**",
+        "!apps/web-app/.turbo/**",
+        "!apps/web-app/.last-sync-sha",
+        "docs/**",
+        "data/**",
+        "skills_index.json",
+        "tools/lib/**",
+        "tools/scripts/setup_web.js",
+        "tools/scripts/web_ci.cjs"
+      ],
+      "env": [
+        "VITE_*",
+        "SEO_*",
+        "SITEMAP_*",
+        "NODE_ENV",
+        "TZ",
+        "LANG",
+        "LC_ALL",
+        "SOURCE_DATE_EPOCH",
+        "AAS_WEB_TOOLCHAIN",
+        "NO_COLOR",
+        "FORCE_COLOR",
+        "NODE_OPTIONS",
+        "CI",
+        "GITHUB_ACTIONS"
+      ],
+      "outputs": [
+        "apps/web-app/coverage/**",
+        "apps/web-app/.ci-cache/test.json"
+      ]
+    },
+    "app:ci:compile": {
+      "inputs": [
+        "apps/web-app/**",
+        "!apps/web-app/node_modules/**",
+        "!apps/web-app/dist/**",
+        "!apps/web-app/coverage/**",
+        "!apps/web-app/.ci-cache/**",
+        "!apps/web-app/.turbo/**",
+        "!apps/web-app/.last-sync-sha",
+        "docs/**",
+        "data/**",
+        "skills_index.json",
+        "tools/lib/**",
+        "tools/scripts/setup_web.js",
+        "tools/scripts/web_ci.cjs",
+        "!apps/web-app/**/*.test.*",
+        "!apps/web-app/src/**/__tests__/**",
+        "!apps/web-app/src/test/**",
+        "!apps/web-app/vitest.config.ts"
+      ],
+      "env": [
+        "VITE_*",
+        "SEO_*",
+        "SITEMAP_*",
+        "NODE_ENV",
+        "TZ",
+        "LANG",
+        "LC_ALL",
+        "SOURCE_DATE_EPOCH",
+        "AAS_WEB_TOOLCHAIN",
+        "NO_COLOR",
+        "FORCE_COLOR",
+        "NODE_OPTIONS",
+        "CI",
+        "GITHUB_ACTIONS"
+      ],
+      "outputs": [
+        "apps/web-app/dist/**",
+        "apps/web-app/.ci-cache/compile.json"
+      ]
+    }
+  }
+}
