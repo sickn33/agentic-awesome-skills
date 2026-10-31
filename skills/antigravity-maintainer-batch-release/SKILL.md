@@ -101,3 +101,7 @@ required. Explicit `--allow-align true` permits one observed-head update per PR;
 never retry uncertain writes or invent review. Read the contract for separate
 metadata admission, early PR readiness, runtime-first candidate scheduling and
 bounded durable installation. Preserve every check and measure the actual cycle.
+
+For fork CI awaiting approval, the coordinator delegates to the same protected
+merge gate before waiting for checks; it never approves runs directly. See the
+cycle reference for exact-head scheduling and failure boundaries.

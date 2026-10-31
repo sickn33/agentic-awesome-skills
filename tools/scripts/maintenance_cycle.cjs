@@ -90,6 +90,8 @@ async function mainUnlocked(argv, dependencies = {}) {
       // Scheduling only: merge_batch independently checks these again, including
       // semantic-review requirements, exact PR tuple and strict protection.
       checks:item=>batch.summarizeRequiredCheckRuns(batch.listCheckRuns(ROOT,REPO,item.head),batch.getRequiredCheckAliases({})),
+      approvalPending:item=>batch.listActionRequiredRuns(ROOT,REPO,item.head).some(run=>
+        run.head_sha===item.head && run.event==='pull_request' && run.conclusion==='action_required'),
       execute:async(action,item)=>{
         const args=[action,'--state-dir',o['state-dir']];
         if(item)args.push('--prs',String(item.pr));

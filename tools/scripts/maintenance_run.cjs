@@ -39,7 +39,7 @@ async function drive(options, dependencies) {
       await sleep(Math.min(30_000, Math.max(0, deadline - Date.now())));
       continue;
     }
-    let item, waiting = false;
+    let item, approvalCandidate, waiting = false;
     for (const candidate of available) {
       if (candidate.action === 'merge' && dependencies.checks) {
         const checks = await dependencies.checks(candidate);
@@ -48,10 +48,19 @@ async function drive(options, dependencies) {
           steps.push({pr:candidate.pr,head:candidate.head,action:'checks',result:{success:false,failureCode:'CI_FAILED',checks}});
           continue;
         }
-        if (checks.some(c => c.state !== 'success')) { waiting = true; continue; }
+        if (checks.some(c => c.state !== 'success')) {
+          // A fork's first checks cannot exist until the sole merge authority
+          // approves its workflows. This read-only hint only schedules that gate;
+          // it grants no approval, review, workflow or merge authority itself.
+          if (!approvalCandidate && dependencies.approvalPending
+              && await dependencies.approvalPending(candidate)) approvalCandidate = candidate;
+          waiting = true;
+          continue;
+        }
       }
       item = candidate; break;
     }
+    item ??= approvalCandidate; // Prefer independently ready work before waiting inside the gate.
     if (!item && waiting) {
       await sleep(Math.min(30_000, Math.max(0, deadline - Date.now())));
       continue;
