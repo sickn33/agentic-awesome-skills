@@ -9,8 +9,8 @@ function schedule(state,pulls) {
   let action='intake',reason='Inspect current content and required checks';
   if(pr.draft){action='repair';reason='Draft: finish corrections before expensive checks';}
   else if(pr.mergeable_state==='dirty'){action='repair';reason='Resolve conflicts before validation';}
-  else if(result?.headSha===pr.head.sha && result.status==='blocked'){action='repair';reason=result.reason || result.nextAction;}
   else if(pr.mergeable_state==='behind'){action='align';reason='Align this PR only when selected next; then refresh evidence';}
+  else if(result?.headSha===pr.head.sha && result.status==='blocked'){action='repair';reason=result.reason || result.nextAction;}
   else if(result?.headSha===pr.head.sha && result.reviewAttested){action='merge';reason='Resume sole protected merge authority; recheck exact head and current checks';}
   return {pr:pr.number,head:pr.head.sha,action,reason};
  });
