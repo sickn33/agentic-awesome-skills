@@ -63,3 +63,7 @@ skills/spline-3d-integration/*.zip
 # Temporary plugin staging directories
 plugins/.antigravity-awesome-skills.staging-*/
 .vercel
+
+# Local Turborepo artifacts (never publication inputs)
+.turbo/
+apps/web-app/.ci-cache/
