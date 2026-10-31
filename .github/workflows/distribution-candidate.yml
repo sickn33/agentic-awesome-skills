@@ -75,8 +75,6 @@ jobs:
           SEO_SITE_URL: https://aaskills.tech
         run: |
           node tools/scripts/release_parallel_checks.cjs
-          npm --prefix apps/web-app audit --audit-level=high
-          npm --prefix apps/web-app run verify:seo -- --require-hosted-url
           git diff --exit-code
       - name: Pack immutable publication bytes
         shell: bash

@@ -28,6 +28,8 @@ assert.equal(parallelStep.env.SEO_SITE_URL,'https://aaskills.tech');
 const {commandsFor}=require('../maintenance_validate.cjs');
 assert.deepEqual(commandsFor('test',root),[['npm',['run','test']]]);
 assert.deepEqual(commandsFor('web',root),[['npm',['run','app:install']],['npm',['run','app:ci']]]);
+assert.match(read('tools/scripts/release_parallel_checks.cjs'),/'audit','--audit-level=high'/);
+assert.match(read('tools/scripts/release_parallel_checks.cjs'),/'verify:seo'/);
 assert.match(read('tools/scripts/web_ci.cjs'),/test:coverage/);
 assert.match(read('tools/scripts/web_ci.cjs'),/build:finalize/);
 assert.match(commands(candidate.jobs.build),/git merge-base --is-ancestor HEAD origin\/main/);
