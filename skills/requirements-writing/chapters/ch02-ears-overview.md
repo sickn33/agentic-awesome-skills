@@ -1,7 +1,7 @@
 # Chapter 2: EARS — The Easy Approach to Requirements Syntax
 
 ## Core Idea
-Most requirement ambiguity comes from unconstrained natural language; EARS removes most of it by channelling each requirement into one of a small number of sentence templates, so the structure itself forces the author to state the trigger, the condition, and the response.
+Unconstrained natural language can introduce ambiguity. EARS reduces common structural omissions by guiding each requirement into a small number of sentence templates. Reviewers must still check the actual terms, conditions and response for ambiguity and completeness.
 
 ## Frameworks Introduced
 - **EARS (Easy Approach to Requirements Syntax)**: a lightweight set of natural-language requirement templates, originated by Alistair Mavin and colleagues (Mavin et al., 2009). It keeps requirements readable plain English while constraining their *shape* to remove common ambiguities.
@@ -24,7 +24,7 @@ Most requirement ambiguity comes from unconstrained natural language; EARS remov
 
 ## Key Takeaways
 1. EARS is a *method* (a set of sentence templates), not a tool or a standard — you can adopt it for free, in your own words, today.
-2. The value is structural: by mandating a named system and an explicit trigger, EARS eliminates the two most common sources of ambiguity.
+2. The value is structural: naming the system and, where applicable, its trigger can reduce ambiguity; the wording and underlying need still require review.
 3. It is deliberately small — a few patterns learnable in an afternoon — which is why teams actually adopt it.
 4. Credit the method to Mavin et al. (2009); the patterns themselves are a technique anyone may apply.
 

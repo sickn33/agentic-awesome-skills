@@ -6,7 +6,7 @@ source: community
 source_type: external
 source_repo: jgsystemsconsulting/jgs-se-knowledge-packs
 license: CC-BY-4.0
-license_source: https://github.com/jgsystemsconsulting/jgs-se-knowledge-packs/blob/main/packs/requirements-writing/LICENSE
+license_source: https://github.com/jgsystemsconsulting/jgs-se-knowledge-packs/blob/fd228690a3dec8c040cee49cff0534bfaa965127/packs/requirements-writing/LICENSE
 date_added: "2026-10-29"
 author: jgsystemsconsulting
 tags: [requirements, ears, specification, quality, verification]
@@ -82,3 +82,5 @@ Supporting files: `glossary.md`, `patterns.md`, `cheatsheet.md` (the EARS patter
 ## Scope & Limits
 
 This is **original guidance** written by JG Systems Consulting Ltd., synthesising widely-taught requirements practice. It **cites** its methods rather than reproducing them: the EARS patterns are credited to Mavin et al. (2009) and described in original words; the quality and verification material aligns with **NASA public-domain** SE guidance (NPR 7123.1 / SE Handbook). It is **not** a reproduction of ISO/IEC/IEEE 29148, the INCOSE Guide for Writing Requirements, or the EARS conference paper — for the authoritative text, consult those sources directly. The pack covers behavioural/functional requirement writing; it is not a full requirements-management or elicitation methodology.
+
+Source: [JG Systems Consulting knowledge packs, v1.24.1](https://github.com/jgsystemsconsulting/jgs-se-knowledge-packs/tree/fd228690a3dec8c040cee49cff0534bfaa965127/packs/requirements-writing). The retained LICENSE refers to the upstream repository's [source vetting](https://github.com/jgsystemsconsulting/jgs-se-knowledge-packs/blob/fd228690a3dec8c040cee49cff0534bfaa965127/docs/SOURCE-VETTING.md), [licensing](https://github.com/jgsystemsconsulting/jgs-se-knowledge-packs/blob/fd228690a3dec8c040cee49cff0534bfaa965127/docs/LICENSING.md), and [tooling license](https://github.com/jgsystemsconsulting/jgs-se-knowledge-packs/blob/fd228690a3dec8c040cee49cff0534bfaa965127/LICENSE), not local files. This adaptation clarifies that structured syntax reduces but cannot eliminate ambiguity.
