@@ -129,11 +129,9 @@ Simulation cannot guarantee live execution, slippage, MEV protection or safe app
 ## Best Practices
 
 - **Default `--new-session` on the first command of a new task.** Reusing it mid-task starts a fresh conversation and the agent loses the quote it just gave you.
-- **Always `aomi tx list` before `aomi tx sign`.** Never assume a chat response queued a transaction.
-- **Always `aomi tx simulate tx-1 tx-2 ...` before signing a multi-step batch.** Single-tx flows are simulation-optional but never wrong to simulate.
-- **Keep signing commands out of runnable examples.** Show or run `aomi tx sign` only after the user gives a separate, explicit approval naming the exact queued `tx-N` ids.
-- **Sign only `Batch [...] passed` txs.** Skip orphans from earlier failed attempts (`failed at step N: 0x...`).
-- **Match `--rpc-url` to the queued tx's chain**, not the session chain (`--chain`) — they are independent controls.
+- **Review the exact durable Commit and its simulation evidence before signing.** For legacy EVM Actions, use the supported Action simulation workflow; do not treat that command as Commit simulation.
+- **Keep signing commands out of runnable examples.** Sign only after separate explicit approval of the exact reviewed Commit or legacy Action.
+- **Match the configured RPC to the transaction's chain.** Never assume the session chain proves the execution chain.
 - **Never echo credential values.** The skill confirms credential setup with handle name or derived address only.
 
 ## Authorization Disclaimer
@@ -144,7 +142,7 @@ This skill can sign and broadcast on-chain transactions worth real value. Use on
 
 - **Upstream**: [aomi-labs/skills](https://github.com/aomi-labs/skills) — MIT licensed
 - **Author**: [Aomi Labs](https://aomi.dev)
-- **CLI**: [`@aomi-labs/client`](https://www.npmjs.com/package/@aomi-labs/client) on npm
+- **CLI**: [`@aomi-labs/cli`](https://www.npmjs.com/package/@aomi-labs/cli) on npm; `@aomi-labs/client` is the SDK
 - **Security review**: [aomi-transact/SECURITY.md](https://github.com/aomi-labs/skills/blob/main/aomi-transact/SECURITY.md) — OWASP AST01–AST10 walkthrough plus captured scanner reports
 
 ## Additional Resources
