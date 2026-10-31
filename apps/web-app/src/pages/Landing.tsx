@@ -26,12 +26,13 @@ export function Landing(): React.ReactElement {
   usePageMeta(buildLandingMeta(typeof __CATALOG_COUNT__ === 'number' ? __CATALOG_COUNT__ : 0));
   return <div className="core-landing">
     <section className="core-intro" aria-labelledby="core-title">
-      <p className="core-eyebrow">AAS Core</p>
-      <h1 id="core-title">AAS Core</h1>
-      <h2>Your agent chooses. You stay in control.</h2>
-      <p className="core-intro__lede">A local workflow to inspect skills, record your agent’s selection,<br className="core-desktop-break" /> and review a plan before changing your project.</p>
+      <p className="core-eyebrow">AI agent skills · CLI · MCP · Plugins</p>
+      <h1 id="core-title">Agentic Awesome Skills</h1>
+      <h2>Reusable skills for your AI coding agent.</h2>
+      <p className="core-intro__lede">Explore {typeof __CATALOG_COUNT__ === 'number' ? __CATALOG_COUNT__.toLocaleString('en-US') : 'the catalog of'} reusable SKILL.md playbooks for Claude Code, Codex, Cursor and other coding agents. AAS Core lets your agent inspect the catalog, record its selection and preview a plan locally.</p>
       <div className="core-intro__actions">
-        <a className="core-primary" href="#get-started">Get started with Core <Icon name="arrowRight" size={22} /></a>
+        <Link className="core-primary" to="/core/">Explore the skill catalog <Icon name="arrowRight" size={22} /></Link>
+        <a className="core-text-link" href="#get-started">Get started with Core <Icon name="arrowRight" size={20} /></a>
         <a className="core-text-link" href="#recorded-example">See an example <Icon name="arrowDown" size={20} /></a>
       </div>
     </section>

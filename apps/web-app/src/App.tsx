@@ -6,6 +6,7 @@ import { Icon } from './components/ui/Icon';
 
 const InformationPage = lazy(() => import('./pages/InformationPage'));
 const Landing = lazy(() => import('./pages/Landing'));
+const SkillDirectory = lazy(() => import('./pages/SkillDirectory'));
 const Home = lazy(() => import('./pages/Home'));
 const SharedSelection = lazy(() => import('./pages/SharedSelection'));
 const SkillDetail = lazy(() => import('./pages/SkillDetail'));
@@ -29,7 +30,7 @@ function CoreRedirect(): React.ReactElement {
 function PrimaryNavigation(): React.ReactElement {
   const { pathname } = useLocation();
   const entries = [
-    { label: 'Catalog', href: '/core/', active: /^\/(core|plugins|skill|share)(\/|$)/.test(pathname) },
+    { label: 'Catalog', href: '/core/', active: /^\/(core|directory|plugins|skill|share)(\/|$)/.test(pathname) },
     { label: 'Docs', href: '/docs/', active: /^\/(docs|workbench)(\/|$)/.test(pathname) },
     { label: 'For teams', href: '/teams/', active: pathname.startsWith('/teams') },
   ];
@@ -94,6 +95,7 @@ function App(): React.ReactElement {
               <Route path="/" element={<Landing />} />
               <Route element={<CatalogRouteProvider />}>
                 <Route path="/core" element={<Home />} />
+                <Route path="/directory" element={<SkillDirectory />} />
                 <Route path="/share" element={<SharedSelection />} />
                 <Route path="/topics/:slug" element={<TopicLanding />} />
                 <Route path="/skill/:id" element={<SkillDetail />} />
@@ -102,6 +104,10 @@ function App(): React.ReactElement {
               <Route path="/teams" element={<InformationPage />} />
               <Route path="/trust" element={<InformationPage />} />
               <Route path="/plugins" element={<Plugins />} />
+              <Route path="/plugins/aas-core" element={<InformationPage />} />
+              <Route path="/plugins/aas-core/privacy" element={<InformationPage />} />
+              <Route path="/plugins/aas-core/terms" element={<InformationPage />} />
+              <Route path="/plugins/aas-core/support" element={<InformationPage />} />
               <Route path="/docs" element={<Docs />} />
               <Route path="/docs/:slug" element={<Docs />} />
               <Route path="/workbench" element={<Workbench />} />

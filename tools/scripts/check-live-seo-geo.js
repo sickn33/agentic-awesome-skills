@@ -70,7 +70,7 @@ function assertNotIncludes(text, snippet, label) {
 }
 
 function assertLiveSeoDocuments({ home, plugins, sitemap, llms, robots }, expected) {
-  assertIncludes(home, 'AAS Core | Your agent chooses. You stay in control.', 'home title');
+  assertIncludes(home, 'Agentic Awesome Skills | AI Skills &amp; AAS Core', 'home title');
   const description = home.match(/<meta\s+name=["']description["']\s+content=["']([^"']*)["']/i)?.[1];
   if (!description) {
     throw new Error('home description meta tag is missing');

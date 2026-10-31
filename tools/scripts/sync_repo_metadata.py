@@ -49,7 +49,7 @@ README_TAGLINE_RE = re.compile(
     re.MULTILINE,
 )
 README_TITLE_RE = re.compile(
-    r"^# (?:🌌 Agentic Awesome Skills: .*|AAS Core — Agentic Awesome Skills)$",
+    r"^# (?:🌌 Agentic Awesome Skills: .*|AAS Core — Agentic Awesome Skills|Agentic Awesome Skills — AI Skills & AAS Core)$",
     re.MULTILINE,
 )
 README_RELEASE_RE = re.compile(
@@ -94,9 +94,8 @@ BUNDLES_FOOTER_RE = re.compile(
 
 def build_about_description(metadata: dict) -> str:
     return (
-        "AAS Core is the local, agent-first control plane for complete catalog discovery, agent-owned selection, "
-        f"stack validation, and planning, backed by {metadata['total_skills_label']} agentic skills. "
-        "Includes CLI, local MCP, catalog, plugins, and Workbench."
+        f"{metadata['total_skills_label']} reusable AI agent skills for Claude Code, Codex, Cursor and Gemini CLI. "
+        "AAS Core adds local catalog discovery, agent-owned selection and plan preview. CLI, MCP and plugins."
     )
 
 
@@ -164,7 +163,7 @@ def sync_readme_copy(content: str, metadata: dict) -> str:
     replacements = [
         (
             README_TITLE_RE,
-            "# AAS Core — Agentic Awesome Skills",
+            "# Agentic Awesome Skills — AI Skills & AAS Core",
         ),
         (
             README_TAGLINE_RE,

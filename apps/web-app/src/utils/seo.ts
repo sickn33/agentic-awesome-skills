@@ -1,3 +1,4 @@
+import { buildFaqItems } from './catalogFaq.js';
 import type { SeoJsonLdValue, SeoMeta, TwitterCard, Skill } from '../types';
 import { getAbsolutePublicAssetUrl } from './publicAssetUrls';
 
@@ -35,38 +36,6 @@ export interface SeoLandingPage {
   sections: SeoLandingPageSection[];
   links: SeoLandingPageLink[];
 }
-const FAQ_ITEMS = [
-  {
-    question: 'What is Agentic Awesome Skills?',
-    answer: (countLabel: string) =>
-      `Agentic Awesome Skills is built around AAS Core, a local agent-first preview boundary for neutral catalog retrieval, exact agent-owned selection, validation, and planning. AAS Core is backed by an evidence-rich catalog of ${countLabel} reusable SKILL.md playbooks.`,
-  },
-  {
-    question: 'How do I use AAS Core preview?',
-    answer:
-      'Configure the local stdio MCP with the AAS CLI, let the agent search and inspect the complete catalog, choose exact skill IDs itself, then validate the schema 2 aas-stack.json with its project profile and preview the immutable plan in the CLI. Apply and recovery are outside the non-applying preview path.',
-  },
-  {
-    question: 'Is Agentic Awesome Skills a GitHub repository?',
-    answer:
-      'Yes. The GitHub repository at https://github.com/sickn33/agentic-awesome-skills is the canonical source for AAS Core, its CLI and local MCP, the skill catalog, plugins, and documentation. The hosted site is a companion catalog and local artifact-review surface.',
-  },
-  {
-    question: 'What are AAS specialized plugins?',
-    answer:
-      'AAS specialized plugins are focused, domain-specific distributions of the skill library. They package relevant skills for web apps, security, data analytics, documents, DevOps, QA, OSS maintenance, and agent or MCP work so users can start with the right surface instead of activating the entire catalog.',
-  },
-  {
-    question: 'What is the difference between skills and MCP tools?',
-    answer:
-      'Skills are reusable playbooks that tell an AI assistant how to execute a workflow. MCP tools expose external systems or callable actions. Skills guide behavior, context, constraints, and output quality; MCP tools provide the external capabilities an assistant may need while following those instructions.',
-  },
-  {
-    question: 'How are plugins, bundles, and workflows different?',
-    answer:
-      'Plugins are installable packaging surfaces, bundles are curated skill recommendations, and workflows are ordered execution playbooks. Start with a plugin when the domain is clear, use bundles to compare adjacent skills, and use workflows when sequencing planning, coding, testing, auditing, or release work matters.',
-  },
-] as const;
 
 export function getCatalogCountLabel(skillCount = 0): string {
   const visibleCount = skillCount > 0 ? skillCount : HOME_CATALOG_COUNT_FALLBACK;
@@ -75,10 +44,7 @@ export function getCatalogCountLabel(skillCount = 0): string {
 
 function getResolvedHomeFaqItems(skillCount = 0): Array<{ question: string; answer: string }> {
   const countLabel = getCatalogCountLabel(skillCount);
-  return FAQ_ITEMS.map((item) => ({
-    question: item.question,
-    answer: typeof item.answer === 'function' ? item.answer(countLabel) : item.answer,
-  }));
+  return buildFaqItems(countLabel);
 }
 
 export function toCanonicalPath(pathname: string): string {
@@ -380,8 +346,8 @@ export function isTopSkill(skillId: string, skills: ReadonlyArray<Skill>, limit 
 export function buildLandingMeta(skillCount = 0): SeoMeta {
   const visibleCount = Math.max(skillCount, 0);
   const countLabel = getCatalogCountLabel(visibleCount);
-  const title = 'AAS Core | Your agent chooses. You stay in control.';
-  const description = `AAS Core records and validates your agent’s skill selection and previews a plan before project changes.${visibleCount > 0 ? ` Explore ${countLabel} reusable skills in the catalog.` : ''}`;
+  const title = 'Agentic Awesome Skills | AI Skills & AAS Core';
+  const description = `Explore ${countLabel} reusable skills for Claude Code, Codex and Cursor. AAS Core records your agent’s catalog selection and previews a plan locally.`;
   return {
     title,
     description,

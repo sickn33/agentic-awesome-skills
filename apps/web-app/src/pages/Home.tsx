@@ -16,7 +16,7 @@ import { useSkills } from '../context/SkillContext';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useSkillShortlist } from '../hooks/useSkillShortlist';
 import type { CategoryStats, SyncMessage } from '../types';
-import { buildHomeMeta, toIndexableRoutePath } from '../utils/seo';
+import { buildHomeMeta, getHomeFaqItems, toIndexableRoutePath } from '../utils/seo';
 
 const syncFeatureEnabled = (
   (import.meta as ImportMeta & { env: Record<string, string | undefined> }).env.VITE_ENABLE_SKILLS_SYNC === 'true'
@@ -236,7 +236,8 @@ export function Home(): React.ReactElement {
       </aside>
 
       <div className="catalog-content">
-        <CatalogNavigation active={view as 'skills' | 'workflows' | 'collections'} onSelect={(next) => { setView(next); setActivePanel(null); }} />
+        <p><Link to="/directory/">Browse all skills A–Z</Link></p>
+          <CatalogNavigation active={view as 'skills' | 'workflows' | 'collections'} onSelect={(next) => { setView(next); setActivePanel(null); }} />
         <div hidden={view !== 'skills'}>
         <section className="catalog-hero">
           <h1>Find the skills for your next project.</h1>
@@ -411,6 +412,7 @@ export function Home(): React.ReactElement {
           <SkillCollections shortlistIds={shortlistIds} availableIds={skills.map((skill) => skill.id)} onAdd={addToShortlist} standalone />
         </div>
       </div>
+      <section className="platform-panel platform-panel__body" aria-label="Catalog questions">{getHomeFaqItems(skills.length).map((item) => <div key={item.question}><h2>{item.question}</h2><p>{item.answer}</p></div>)}</section>
     </div>
   );
 }

@@ -95,7 +95,7 @@ describe('Home', () => {
       })).toBeInTheDocument();
       expect(screen.getByText(/Compare a few candidates/)).toBeInTheDocument();
       expect(screen.getByRole('navigation', { name: 'Catalog views' })).toBeInTheDocument();
-      expect(screen.queryByText(/What is the difference between skills and MCP tools/i)).not.toBeInTheDocument();
+      expect(screen.getByText(/What is the difference between skills and MCP tools/i)).toBeInTheDocument();
       expect(document.querySelector('meta[property="og:title"]')).toHaveAttribute(
         'content',
         expect.stringContaining('Skill Catalog'),
