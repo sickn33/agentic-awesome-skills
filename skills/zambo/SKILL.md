@@ -21,10 +21,12 @@ Distinction from related skills: memory-handoff moves a session through a local 
 
 ## When to Use
 
-- A task needs real work beyond the model's own knowledge: live data, code audits and security reviews, lead and market research, wallet and token analysis, document work.
+- A task the user has authorized needs real work beyond the model's own knowledge: live data, code audits and security reviews, lead and market research, wallet and token analysis, document work.
 - Work has to continue in a different AI, or be delivered to a client as one link with its record attached (use handover).
 - A result needs to be checkable later: every call leaves a receipt anyone can verify.
 - The task is pure Q&A or creative writing with no external execution: skip this skill.
+
+Everything this skill does stays inside the task the user authorized and the data scope they intend for it. Use of the hosted service, hosted memory, and shareable handovers is conditional on that scope: send the context the task needs, and do not send unrelated session context, private information, or secrets by default.
 
 ## Prerequisites
 
@@ -50,11 +52,11 @@ claude mcp add --transport http zambo https://zambo.dev/mcp
 
 More clients and one-paste setup: https://zambo.dev/add
 
-List tools first with `tools/list`. Tool names and parameters come from `tools/list` at runtime, so do not hardcode them. There are 153 tools, with 35 on the default surface; the rest are reachable through `capability_search` and the full catalog. First tools to try: `handover`, `capability_search`, `memory_remember`, `memory_recall`, `continuity_get_recent`.
+List tools first with `tools/list`. Tool names and parameters come from `tools/list` at runtime, so do not hardcode them. There are 153 tools, with 36 on the default surface; the rest are reachable through `capability_search` and the full catalog. First tools to try: `handover`, `capability_search`, `memory_remember`, `memory_recall`, `continuity_get_recent`.
 
 ### 2. Perform the task
 
-Describe the job in the tool call the way a user would type it. Keep calls purposeful. For multi-step work that will change hands, run the steps first, then call `handover` with the goal, a summary, and the work itself, so the receiver gets one link with the context and the receipts. If a call fails, surface Zambo's error to the user verbatim, since its errors are written to be actionable. If a limit is hit, tell the user about the passes below rather than failing silently.
+Describe the job in the tool call the way a user would type it. Keep calls purposeful, and keep what you send inside the task's scope: unrelated session context, private information, and secrets stay out of jobs, memory entries, and handovers by default. For multi-step work that will change hands, run the steps first, then call `handover` with the goal, a summary, and the work itself, so the receiver gets one link with the context and the receipts. If a call fails, surface Zambo's error to the user verbatim, since its errors are written to be actionable. If a limit is hit, tell the user about the passes below rather than failing silently.
 
 ### 3. Verify the result
 
@@ -64,6 +66,8 @@ Every call files a verifiable receipt, and anyone can check one. Receipts follow
 - Or send a GET request to https://zambo.dev/api/v2/receipt/{id}/verify, replacing {id} with the receipt id. A genuine, unchanged record returns the outcome "verified".
 
 A handover produces a receipt pair of its own: one for the wrap-up and one for the pickup. Both verify exactly like any other receipt.
+
+A receipt verifies the integrity of the recorded result: the saved record matches what was recorded and was not changed afterward. It does not verify that the result is true, and it does not verify that the caller was authorized to make the call. Receipts can include the arguments of a call, and a handover link carries its contents with it, so share a public receipt or handover link only within the scope the user intends to share.
 
 ## Examples
 
@@ -92,7 +96,7 @@ Never put secrets in tool arguments. Receipts are public, shareable records and 
 ## Sources and related skills
 
 - Public repo: https://github.com/zambodotdev/zambo-mcp
-- This skill's home repo: https://github.com/zambodotdev/zambo-skills
+- This skill's home repo: https://github.com/zambodotdev/zambo-skills. This text is original to the Zambo project (frontmatter `source: self`); it is not an adaptation of another skill. The home repo is the canonical source for the skill and publishes it under the MIT License; see the LICENSE file in that repo.
 - Agent docs: https://zambo.dev/.well-known/llms.txt
 - Human docs: https://zambo.dev/for-agents/ and https://zambo.dev/install
 - Receipt format: AER-1, IETF draft-zambo-aer1-26, https://datatracker.ietf.org/doc/draft-zambo-aer1/26/
