@@ -494,6 +494,7 @@ function convergePreparedRelease(projectRoot, contract, options = {}) {
 }
 
 function prepareRelease(projectRoot, version, stateDir, options = {}) {
+  if (options.localOnly && options.candidateDir) throw Error("Local-only rehearsal cannot promote or push a retained candidate");
   if (!version) {
     throw new Error("Usage: npm run release:prepare -- X.Y.Z");
   }

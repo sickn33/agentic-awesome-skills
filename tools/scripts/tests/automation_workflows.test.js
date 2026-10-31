@@ -18,14 +18,24 @@ for (const job of [ci.jobs["main-validation-and-sync"],hygiene.jobs["source-heal
 }
 assert.deepEqual(ci.jobs["main-validation-and-sync"].permissions,{contents:"read"});
 assert.deepEqual(hygiene.permissions,{contents:"read"});
-for (const command of ["distribution:verify","sync:release-state","validate:strict","validate:glossary","validate:references","security:docs","security:scan:strict","plugin-compat:check","bundles:check","test","app:test:coverage","app:build"])
+for (const command of ["distribution:verify","sync:release-state","validate:strict","validate:glossary","validate:references","security:docs","security:scan:strict","plugin-compat:check","bundles:check"])
   assert.ok(commands(candidate.jobs.build).includes(`npm run ${command}`),`candidate must execute ${command}`);
+assert.match(commands(candidate.jobs.build),/release_parallel_checks\.cjs/);
+const parallelStep=candidate.jobs.build.steps.find(s=>s.run?.includes('release_parallel_checks.cjs'));
+assert.equal(parallelStep.env.AAS_TEST_CANDIDATE_TARBALL,'${{ runner.temp }}/distribution/package.tgz');
+assert.equal(parallelStep.env.VITE_BASE_PATH,'/');
+assert.equal(parallelStep.env.SEO_SITE_URL,'https://aaskills.tech');
+const {commandsFor}=require('../maintenance_validate.cjs');
+assert.deepEqual(commandsFor('test',root),[['npm',['run','test']]]);
+assert.deepEqual(commandsFor('web',root),[['npm',['run','app:install']],['npm',['run','app:ci']]]);
+assert.match(read('tools/scripts/web_ci.cjs'),/test:coverage/);
+assert.match(read('tools/scripts/web_ci.cjs'),/build:finalize/);
 assert.match(commands(candidate.jobs.build),/git merge-base --is-ancestor HEAD origin\/main/);
 assert.match(commands(candidate.jobs.build),/distribution_pack\.cjs/,"the candidate must pack through the release-identity-aware packer");
 assert.doesNotMatch(commands(candidate.jobs.build),/npm pack/,"the candidate must not pack a tarball without recording gitHead");
 assert.match(commands(candidate.jobs.build),/distribution_manifest\.cjs create/);
 assert.deepEqual([...new Set(candidate.jobs.functional.strategy.matrix.include.map(job => job.os))],["ubuntu-24.04","windows-2025"]);
-assert.deepEqual([...new Set(candidate.jobs.functional.strategy.matrix.include.map(job => job.node))],["22.23.1","24"]);
+assert.deepEqual([...new Set(candidate.jobs.functional.strategy.matrix.include.map(job => job.node))],["22.23.1","24.22.1"]);
 assert.match(commands(candidate.jobs.functional),/distribution_manifest\.cjs verify/);
 assert.match(commands(candidate.jobs.functional),/run-installed-candidate\.mjs/);
 for (const workflow of [publish,pages]) {

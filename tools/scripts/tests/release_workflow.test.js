@@ -185,6 +185,7 @@ for (const override of [
   );
 }
 
+assert.throws(()=>release.prepareRelease('/fixture','1.2.3','/state',{localOnly:true,candidateDir:'/candidate'}),/Local-only/);
 let preparedSuite = null;
 release.runPreparedReleaseTestSuite("/fixture", {
   pack(root, destination) {
