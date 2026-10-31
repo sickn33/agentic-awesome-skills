@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require("fs");
-const { spawnSync } = require("child_process");
+const { spawn, spawnSync } = require("child_process");
 const crypto = require("crypto");
 const path = require("path");
 
@@ -16,6 +16,25 @@ const NETWORK_TEST_FILES = new Set([
   path.join(TOOL_TESTS, "inspect_microsoft_repo.py"),
   path.join(TOOL_TESTS, "test_comprehensive_coverage.py"),
 ]);
+
+// These groups read repository inputs and write only their own temporary
+// fixtures. Keep all other groups behind the completion barrier. Priority is
+// observational scheduling only; it never selects or removes required tests.
+const ISOLATED_COHORT = [
+  "aas_v1_runtime_config.test.js",
+  "test_report_skill_boundary_examples.py",
+  "aas_v1_update.test.js",
+  "aas_v1_cli.test.js",
+  "npm_package_contents.test.js",
+  "aas_v1_mcp.test.js",
+].map(name => path.join(TOOL_TESTS, name));
+
+function cohortWorkers(environment = process.env) {
+  const value = environment.AAS_TEST_COHORT_WORKERS;
+  if (value === undefined || value === "1") return 1;
+  if (value === "2") return 2;
+  throw new Error("AAS_TEST_COHORT_WORKERS must be 1 or 2");
+}
 
 function isTestFile(relativePath) {
   const basename = path.basename(relativePath);
@@ -205,11 +224,64 @@ function runNodeCommand(args) {
   }
 }
 
-function runCommandSet(commands, metadata = {}) {
+function runNodeCommandAsync(args, report = emitTiming) {
   const startedAt = process.hrtime.bigint();
-  for (const commandArgs of commands) {
-    runNodeCommand(commandArgs);
-  }
+  return new Promise(resolve => {
+    let settled = false;
+    function finish(result) {
+      if (settled) return;
+      settled = true;
+      report({ type: "test", path: args.at(-1),
+        elapsed_ms: Math.round(Number(process.hrtime.bigint() - startedAt) / 1_000_000),
+        status: result.error || result.signal || result.exitCode !== 0 ? "failed" : "passed" });
+      resolve(result);
+    }
+    try {
+      const child = spawn(process.execPath, args, {
+        env: { ...process.env, PYTHONDONTWRITEBYTECODE: process.env.PYTHONDONTWRITEBYTECODE || "1" },
+        stdio: "inherit", shell: false,
+      });
+      child.once("error", error => finish({ error, exitCode: 1 }));
+      child.once("close", (code, signal) => finish({ exitCode: code ?? 1, signal }));
+    } catch (error) { finish({ error, exitCode: 1 }); }
+  });
+}
+
+async function runIsolatedCohort(commands, workers, execute = runNodeCommandAsync) {
+  if (workers !== 2) throw new Error("Isolated cohort requires exactly two workers");
+  const byPath = new Map(commands.map(args => [args.at(-1), args]));
+  if (byPath.size !== commands.length) throw new Error("Duplicate test group in inventory");
+  const cohort = ISOLATED_COHORT.filter(file => byPath.has(file)).map(file => byPath.get(file));
+  const selected = new Set(cohort);
+  let next = 0;
+  let failed = false;
+  let failure;
+  await Promise.all(Array.from({ length: Math.min(workers, cohort.length) }, async () => {
+    while (!failed && next < cohort.length) {
+      const args = cohort[next++];
+      try {
+        const result = await execute(args);
+        if (!result || result.error || result.signal || result.exitCode !== 0) {
+          const error = new Error(`Test group failed: ${args.at(-1)}`);
+          error.exitCode = result?.exitCode || 1;
+          error.signal = result?.signal;
+          throw error;
+        }
+      } catch (error) {
+        if (!failed) { failed = true; failure = error instanceof Error ? error : new Error("Test execution rejected without an error"); }
+      }
+    }
+  }));
+  // Both active children are finished before failure propagation or the
+  // sequential remainder. Never exit while a sibling is using its fixtures.
+  if (failed) throw failure;
+  return commands.filter(args => !selected.has(args));
+}
+
+async function runCommandSet(commands, metadata = {}) {
+  const startedAt = process.hrtime.bigint();
+  const remaining = metadata.workers === 2 ? await runIsolatedCohort(commands, 2) : commands;
+  for (const commandArgs of remaining) runNodeCommand(commandArgs);
 
   const elapsedMs = Number(process.hrtime.bigint() - startedAt) / 1_000_000;
   emitTiming({
@@ -218,26 +290,30 @@ function runCommandSet(commands, metadata = {}) {
     shard_index: metadata.shardIndex,
     shard_count: metadata.shardCount,
     test_count: commands.length,
+    isolated_workers: metadata.workers || 1,
+    manifest_sha256: crypto.createHash("sha256").update(JSON.stringify(commands.map(args => args.at(-1)).sort())).digest("hex"),
     elapsed_ms: Math.round(elapsedMs),
   });
 }
 
-function main() {
+async function main() {
   const { mode, shardIndex, shardCount } = parseArgs(process.argv.slice(2));
+  const workers = cohortWorkers();
+  if (shardCount !== null && workers !== 1) throw new Error("Isolated concurrency cannot be combined with local sharding");
   const { local, network } = discoverTestCommands();
 
   if (mode === "--local") {
     const selected = shardCommands(local, shardIndex, shardCount);
-    runCommandSet(selected, { mode: "local", shardIndex, shardCount });
+    await runCommandSet(selected, { mode: "local", shardIndex, shardCount, workers });
     return;
   }
 
   if (mode === "--network") {
-    runCommandSet(network, { mode: "network", shardIndex: null, shardCount: null });
+    await runCommandSet(network, { mode: "network", shardIndex: null, shardCount: null, workers: 1 });
     return;
   }
 
-  runCommandSet(local, { mode: "local", shardIndex: null, shardCount: null });
+  await runCommandSet(local, { mode: "local", shardIndex: null, shardCount: null, workers });
 
   if (!isNetworkTestsEnabled()) {
     console.log(
@@ -247,15 +323,23 @@ function main() {
   }
 
   console.log(`[tests] ${NETWORK_TEST_ENV} enabled; running network integration tests.`);
-  runCommandSet(network, { mode: "network", shardIndex: null, shardCount: null });
+  await runCommandSet(network, { mode: "network", shardIndex: null, shardCount: null, workers: 1 });
 }
 
 if (require.main === module) {
-  main();
+  main().catch(error => {
+    console.error(error.message);
+    if (error.signal) process.kill(process.pid, error.signal);
+    else process.exitCode = error.exitCode || 1;
+  });
 }
 
 module.exports = {
   NETWORK_TEST_FILES,
+  ISOLATED_COHORT,
+  cohortWorkers,
+  runIsolatedCohort,
+  runNodeCommandAsync,
   commandForTest,
   discoverTestCommands,
   isTestFile,

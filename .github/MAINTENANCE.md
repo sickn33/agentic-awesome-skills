@@ -52,3 +52,5 @@ Contribution readiness and author correction ownership follow [contribution inta
 Canonical skill-tree PRs must pass mandatory evidence admission in `pr-policy` and current-body revalidation in `merge:batch`. Body/draft drift stops an active merge; content attestations cannot waive incomplete evidence. Keep author requirements proportionate and free of mandatory paid tools or unsafe live tests.
 
 Use `release:rehearse` with a completed cycle bound to an ancestor of the rehearsed source for the full disposable local candidate proof before publication. Rehearsal has no remote write or publication authority; see the maintenance contract. Keep concurrent release tooling repairs isolated until the active release finishes.
+
+Web CI uses pinned Turborepo with local caching persisted within the existing free GitHub cache quota. Follow the component guide for fresh current-commit finalization, input invalidation, output integrity and branch-scoped cache trust. Repository script tests and protected merge authority remain uncached.
