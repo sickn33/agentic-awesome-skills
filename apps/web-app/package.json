@@ -70,6 +70,7 @@
     "fast-uri": "^3.1.9",
     "flatted": "^3.4.0",
     "ip-address": "^10.7.1",
+    "minimatch": "11.0.1",
     "proxy-addr": "^2.0.8",
     "source-map-js": "^1.2.2"
   },
