@@ -13,8 +13,8 @@ const {
 
 function parseArgs(argv) {
   const [command, version, ...rest] = argv;
-  if (command === 'publish' && rest.length === 1 && rest[0] === '--tag-only') {
-    return { command, version: version || null, stateDir: undefined, tagOnly: true };
+  if (command === 'publish' && rest.length === 1 && rest[0] === '--skip-npm') {
+    return { command, version: version || null, stateDir: undefined, skipNpm: true };
   }
   if (rest.length && (rest.length !== 2 || rest[0] !== '--state-dir' || !rest[1])) throw Error('Use --state-dir /absolute/private/cycle');
   return {
@@ -588,8 +588,12 @@ function prepareRelease(projectRoot, version, stateDir, options = {}) {
   console.log(`[release] Next step: merge ${releaseBranch}, update local main, then run npm run release:publish -- ${version}`);
 }
 
-function publishNpmUnlessTagOnly(projectRoot, version, headCommit, tagOnly, dependencies = {}) {
-  if (tagOnly) return false;
+function releaseNotesForPublication(section, skipNpm) {
+  return skipNpm ? `> **npm unavailable:** This version is not published to npm; package distribution and full release alignment remain incomplete.\n\n${section}` : section;
+}
+
+function publishNpmUnlessSkipped(projectRoot, version, headCommit, skipNpm, dependencies = {}) {
+  if (skipNpm) return false;
   if (dependencies.dispatch) dependencies.dispatch(projectRoot, version, headCommit);
   else dispatchNpmPublication(projectRoot, version, headCommit);
   if (dependencies.verify) dependencies.verify(projectRoot, version, headCommit);
@@ -597,7 +601,7 @@ function publishNpmUnlessTagOnly(projectRoot, version, headCommit, tagOnly, depe
   return true;
 }
 
-function publishRelease(projectRoot, version, { tagOnly = false } = {}) {
+function publishRelease(projectRoot, version, { skipNpm = false } = {}) {
   if (!version) {
     throw new Error("Usage: npm run release:publish -- X.Y.Z");
   }
@@ -627,7 +631,8 @@ function publishRelease(projectRoot, version, { tagOnly = false } = {}) {
   }
   require("./distribution_snapshot.cjs").verify(projectRoot);
 
-  const notesPath = writeReleaseNotes(projectRoot, version, ensureChangelogSection(projectRoot, version));
+  const section = ensureChangelogSection(projectRoot, version);
+  const notesPath = writeReleaseNotes(projectRoot, version, releaseNotesForPublication(section, skipNpm));
 
   const existingLocalTarget = localTagTarget(projectRoot, tagName);
   if (existingLocalTarget && existingLocalTarget !== headCommit) {
@@ -646,19 +651,16 @@ function publishRelease(projectRoot, version, { tagOnly = false } = {}) {
   }
 
   requireSuccessfulDistributionCandidate(projectRoot, version, headCommit);
-  if (!publishNpmUnlessTagOnly(projectRoot, version, headCommit, tagOnly)) {
-    console.log(`[release] ${tagName} is tagged with a verified distribution candidate; npm, GitHub Release and public release alignment are incomplete.`);
-    return;
-  }
+  publishNpmUnlessSkipped(projectRoot, version, headCommit, skipNpm);
   if (githubReleaseExists(projectRoot, tagName)) {
-    console.log(`[release] ${tagName} already has a GitHub Release after verified npm publication.`);
+    console.log(`[release] ${tagName} already has a GitHub Release; verify its notes and npm status.`);
     return;
   }
   const releaseArgs = ["release", "create", tagName, "--title", tagName, "--notes-file", notesPath];
   if (isPrereleaseVersion(version)) releaseArgs.push("--prerelease");
   runCommand("gh", releaseArgs, projectRoot);
 
-  console.log(`[release] Published ${tagName}.`);
+  console.log(skipNpm ? `[release] ${tagName} GitHub Release created without npm; full release alignment is incomplete.` : `[release] Published ${tagName}.`);
 }
 
 function main() {
@@ -681,7 +683,7 @@ function main() {
   }
 
   if (args.command === "publish") {
-    publishRelease(projectRoot, args.version, { tagOnly: args.tagOnly });
+    publishRelease(projectRoot, args.version, { skipNpm: args.skipNpm });
     return;
   }
 
@@ -693,7 +695,8 @@ function main() {
 
 module.exports = {
   parseArgs,
-  publishNpmUnlessTagOnly,
+  publishNpmUnlessSkipped,
+  releaseNotesForPublication,
   prepareRelease,
   runReleasePreflight,
   runPreparedReleaseTestSuite,
