@@ -56,7 +56,7 @@ List tools first with `tools/list`. Tool names and parameters come from `tools/l
 
 ### 2. Perform the task
 
-Describe the job in the tool call the way a user would type it. Keep calls purposeful, and keep what you send inside the task's scope: unrelated session context, private information, and secrets stay out of jobs, memory entries, and handovers by default. For multi-step work that will change hands, run the steps first, then call `handover` with the goal, a summary, and the work itself, so the receiver gets one link with the context and the receipts. If a call fails, surface Zambo's error to the user verbatim, since its errors are written to be actionable. If a limit is hit, tell the user about the passes below rather than failing silently.
+Describe the job in the tool call the way a user would type it. Keep calls purposeful, and keep what you send inside the task's scope: unrelated session context, private information, and secrets stay out of jobs, memory entries, and handovers by default. For multi-step work that will change hands, run the steps first, then call `handover` with the goal, a summary, and the work itself, so the receiver gets one link with the context and the receipts. If a call fails, report Zambo's error to the user, but summarize it or redact sensitive information first: an error can echo request arguments or credentials. Keep enough detail for the problem to be diagnosed. If a limit is hit, tell the user about the passes below rather than failing silently.
 
 ### 3. Verify the result
 
