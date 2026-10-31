@@ -39,7 +39,23 @@ async function drive(options, dependencies) {
       await sleep(Math.min(30_000, Math.max(0, deadline - Date.now())));
       continue;
     }
-    const item = available[0];
+    let item, waiting = false;
+    for (const candidate of available) {
+      if (candidate.action === 'merge' && dependencies.checks) {
+        const checks = await dependencies.checks(candidate);
+        if (checks.some(c => c.state === 'failed')) {
+          attempted.add(`${candidate.pr}:${candidate.head}:merge`);
+          steps.push({pr:candidate.pr,head:candidate.head,action:'checks',result:{success:false,failureCode:'CI_FAILED',checks}});
+          continue;
+        }
+        if (checks.some(c => c.state !== 'success')) { waiting = true; continue; }
+      }
+      item = candidate; break;
+    }
+    if (!item && waiting) {
+      await sleep(Math.min(30_000, Math.max(0, deadline - Date.now())));
+      continue;
+    }
     if (!item) return {status:'attention-required', pending:plan.pending, steps};
     const action = item.action === 'merge' ? 'merge' : item.action === 'align' ? 'align' : 'intake';
     attempted.add(`${item.pr}:${item.head}:${item.action}`);

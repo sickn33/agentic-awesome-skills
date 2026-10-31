@@ -87,6 +87,9 @@ async function mainUnlocked(argv, dependencies = {}) {
         return {state:store.readBatch('cycle'),pulls:state.prs.map(n=>gh(['api',`repos/${REPO}/pulls/${n}`])),
           contract:run('git',['rev-parse','HEAD:AGENTS.md','HEAD:.github/MAINTENANCE.md','HEAD:tools','HEAD:package.json','HEAD:package-lock.json','HEAD:skills/antigravity-maintainer-batch-release'])};
       },
+      // Scheduling only: merge_batch independently checks these again, including
+      // semantic-review requirements, exact PR tuple and strict protection.
+      checks:item=>batch.summarizeRequiredCheckRuns(batch.listCheckRuns(ROOT,REPO,item.head),batch.getRequiredCheckAliases({})),
       execute:async(action,item)=>{
         const args=[action,'--state-dir',o['state-dir']];
         if(item)args.push('--prs',String(item.pr));

@@ -18,9 +18,15 @@ test('driver delegates intake, reviewed merge and final verification exactly onc
 test('missing semantic review stops unchanged intake but permits independent work',async()=>{
  const state={prs:[1,2],attempts:[]},pulls=[pr(1),pr(2)],seen=[];
  const report=await drive(options,{snapshot:()=>({state,pulls}),execute:async(action,item)=>{
-  seen.push(item.pr);const result={success:true,results:[{prNumber:item.pr,headSha:item.head,prepared:true,reviewAttested:false}]};state.attempts.push(result);return result;
+  seen.push([action,item.pr]);const result=action==='intake'?{success:true,results:[{prNumber:item.pr,headSha:item.head,prepared:true,reviewAttested:false}]}:{success:false,results:[{prNumber:item.pr,headSha:item.head,status:'blocked',failureCode:'REVIEW_REQUIRED'}]};state.attempts.push(result);return result;
  }});
- assert.equal(report.status,'attention-required');assert.deepEqual(seen,[1,2]);
+ assert.equal(report.status,'attention-required');assert.deepEqual(seen,[['intake',1],['merge',1],['intake',2],['merge',2]]);
+});
+test('pending checks do not starve another ready reviewed PR',async()=>{
+ const pulls=[pr(1),pr(2)],state={prs:[1,2],attempts:[{results:pulls.map(p=>({prNumber:p.number,headSha:p.head.sha,prepared:true}))}]};
+ let merged;
+ const report=await drive({...options,maxSteps:1},{snapshot:()=>({state,pulls}),checks:item=>[{state:item.pr===1?'pending':'success'}],execute:async(action,item)=>{assert.equal(action,'merge');merged=item.pr;return {success:true};}});
+ assert.equal(merged,2);assert.equal(report.status,'budget-exhausted');
 });
 test('unknown write stops independent actions and cannot be retried by resume',async()=>{
  const state={prs:[1,2],attempts:[]},pulls=[pr(1),pr(2)];let count=0;
