@@ -79,7 +79,7 @@ Supporting files: `glossary.md`, `patterns.md`, `cheatsheet.md` (the EARS patter
 
 ---
 
-## Scope & Limits
+## Limitations
 
 This is **original guidance** written by JG Systems Consulting Ltd., synthesising widely-taught requirements practice. It **cites** its methods rather than reproducing them: the EARS patterns are credited to Mavin et al. (2009) and described in original words; the quality and verification material aligns with **NASA public-domain** SE guidance (NPR 7123.1 / SE Handbook). It is **not** a reproduction of ISO/IEC/IEEE 29148, the INCOSE Guide for Writing Requirements, or the EARS conference paper — for the authoritative text, consult those sources directly. The pack covers behavioural/functional requirement writing; it is not a full requirements-management or elicitation methodology.
 
