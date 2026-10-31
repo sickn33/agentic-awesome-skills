@@ -223,7 +223,7 @@ assert.equal(verifyTagExecutionProvenance("owner/repo", version, sha, endpoint =
     ),
     /exact released head/,
   );
-  const skipDeps={...deps,hostProof:()=>assert.fail('excluded host invoked'),fetch:async url=>{if(url.includes('registry.npmjs.org'))assert.fail('excluded npm queried');return deps.fetch(url);},run:(cmd,args)=>{
+  const skipDeps={...deps,hostProof:()=>assert.fail('excluded host invoked'),fetch:async url=>{if(new URL(url).hostname === 'registry.npmjs.org')assert.fail('excluded npm queried');return deps.fetch(url);},run:(cmd,args)=>{
     const value=JSON.parse(deps.run(cmd,args));
     if(args.at(-1).includes('releases/tags/'))value.body=require('../release_workflow.js').releaseNotesForPublication('notes',true);
     return JSON.stringify(value);

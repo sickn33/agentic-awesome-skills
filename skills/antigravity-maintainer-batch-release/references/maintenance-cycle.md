@@ -187,3 +187,11 @@ Review/repair blockers remain explicit. Add `--allow-align true` only when branc
 alignment is authorized; it never retries the same PR update within the run.
 See the maintenance contract for uncertain writes, exact-head review arguments,
 metadata event isolation, early contributor intake and immutable runtime handoff.
+
+For a prepared PR whose checks are missing or pending, the coordinator reads
+exact-head pull-request runs awaiting approval. It prefers independently ready
+work, then delegates the waiting fork to the existing merge gate, which alone
+revalidates protected-base policy, workflow identity, current admission, review
+and strict protection before approving runs and waiting for all required checks.
+The scheduling hint grants no authority. Failed checks, uncertain writes and
+ordinary in-progress CI retain their existing stop/wait behavior.
