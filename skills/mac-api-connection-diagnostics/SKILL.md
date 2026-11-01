@@ -99,7 +99,7 @@ Keep certificate validation enabled. Do not send diagnostics or credentials to t
 
 - [Kilobat CLI installation, requirements and agent setup](https://github.com/seifip/kilobat-cli/blob/v0.20.0/README.md).
 - [Public CLI 0.20.0 source](https://github.com/seifip/kilobat-cli/tree/9bf0b7aaeddcff288db0195b47da6cc579b30376).
-- [Network Engineer](../network-engineer/SKILL.md) for cloud and infrastructure networking.
-- [Systematic Debugging](../systematic-debugging/SKILL.md) for the broader debugging process.
+- [Network Engineer](https://github.com/sickn33/agentic-awesome-skills/blob/6f819e34e3847c4a9a4715409ec4d76b0ad42bdb/skills/network-engineer/SKILL.md) for cloud and infrastructure networking.
+- [Systematic Debugging](https://github.com/sickn33/agentic-awesome-skills/blob/6f819e34e3847c4a9a4715409ec4d76b0ad42bdb/skills/systematic-debugging/SKILL.md) for the broader debugging process.
 
 These are original instructions contributed on behalf of Kilobat's builder. They do not copy or relicense the separate `kilobat-skills` repository.
