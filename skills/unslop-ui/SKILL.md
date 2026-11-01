@@ -17,7 +17,7 @@ metadata:
 
 # Unslop UI
 
-Adapted by AAS from [heydamir/unslop](https://github.com/heydamir/unslop) at commit `1d13095e4bef6ad6c74f1dd828d84c4ba309a4dc`. Renamed to avoid a collision with the writing skill `unslop`; the story script uses a unique temporary directory and refuses to overwrite output. See LICENSE.
+Adapted by AAS from [heydamir/unslop](https://github.com/heydamir/unslop) at commit `1d13095e4bef6ad6c74f1dd828d84c4ba309a4dc`. Renamed to avoid a collision with the writing skill `unslop`; the story script uses a unique temporary directory, restricts its local file server to the story directory, and refuses to overwrite output; the snapshot script also refuses to overwrite output. See LICENSE.
 
 ## When to Use
 
@@ -25,7 +25,7 @@ Use for a requested visual audit or redesign of an existing interface. Use the s
 
 ## Limitations and safety
 
-Screenshots and page snapshots may access external sites and write files; use authorized pages and review output paths. Generated images may send prompts to external services and incur costs. Video rendering requires Playwright and ffmpeg. Verify functionality and accessibility in the target project; design guidance is subjective.
+Screenshots and page snapshots load site scripts, may access external sites and write files; use authorized pages and fresh output paths. Render only trusted story HTML: its scripts can access files served from the story directory and make network requests. Generated images may send prompts to external services and incur costs. Video rendering requires Playwright and ffmpeg. Verify functionality and accessibility in the target project; design guidance is subjective.
 
 unslop was created by Damir Sokolovsky ([@heydamir](https://x.com/heydamir)), who started the Unslopping series on X. It is licensed under CC BY 4.0, so keep this credit in any copy or adaptation.
 

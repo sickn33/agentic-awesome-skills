@@ -1,8 +1,8 @@
 import { createRequire } from "node:module";
 import { createServer } from "node:http";
-import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
-import { dirname, extname, join, normalize, resolve } from "node:path";
+import { dirname, extname, isAbsolute, join, relative, resolve, sep } from "node:path";
 import { tmpdir } from "node:os";
 
 const usage = "usage: node story.mjs <story.html> <out.mp4> [--wide], or node story.mjs <story.html> --play to watch it live in a browser window";
@@ -345,18 +345,23 @@ const runtime = `
 
 const types = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript", ".png": "image/png", ".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".webp": "image/webp", ".avif": "image/avif", ".svg": "image/svg+xml", ".woff2": "font/woff2", ".woff": "font/woff", ".mp4": "video/mp4" };
 const server = createServer((request, response) => {
-  const path = decodeURIComponent(new URL(request.url, "http://local").pathname);
-  if (path === "/__stage.html") {
-    response.writeHead(200, { "content-type": "text/html" });
-    return response.end(stage);
-  }
-  const target = normalize(join(root, path.replace(/^\/__story\//, "/")));
-  if (!target.startsWith(root) || !existsSync(target)) {
+  try {
+    const path = decodeURIComponent(new URL(request.url, "http://local").pathname);
+    if (path === "/__stage.html") {
+      response.writeHead(200, { "content-type": "text/html" });
+      return response.end(stage);
+    }
+    if (!path.startsWith("/__story/")) throw new Error("Unknown route");
+    const target = realpathSync(resolve(root, "." + path.slice("/__story".length)));
+    const rel = relative(realpathSync(root), target);
+    if (!rel || rel === ".." || rel.startsWith(".." + sep) || isAbsolute(rel)) throw new Error("Outside story directory");
+    const bytes = readFileSync(target);
+    response.writeHead(200, { "content-type": types[extname(target).toLowerCase()] ?? "application/octet-stream" });
+    response.end(bytes);
+  } catch {
     response.writeHead(404);
-    return response.end();
+    response.end();
   }
-  response.writeHead(200, { "content-type": types[extname(target).toLowerCase()] ?? "application/octet-stream" });
-  response.end(readFileSync(target));
 });
 await new Promise((done) => server.listen(0, "127.0.0.1", done));
 const base = `http://127.0.0.1:${server.address().port}`;

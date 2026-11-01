@@ -135,9 +135,13 @@ try {
     return "<!doctype html>\n" + copy.outerHTML;
   }, [label ?? "", scheme]);
   mkdirSync(dirname(resolve(out)), { recursive: true });
-  writeFileSync(resolve(out), html);
+  const output = resolve(out);
+  const screenshot = output.replace(/\.html?$/, "") + ".live.png";
+  if (existsSync(output) || existsSync(screenshot)) throw new Error("Output already exists; choose a new path");
   await page.evaluate(() => window.scrollTo(0, 0));
-  await page.screenshot({ path: resolve(out).replace(/\.html?$/, "") + ".live.png" });
+  const pixels = await page.screenshot();
+  writeFileSync(output, html, { flag: "wx" });
+  writeFileSync(screenshot, pixels, { flag: "wx" });
   console.log(`saved ${resolve(out)}${label ? ` as ${label}` : ""}`);
 } finally {
   await browser.close();
