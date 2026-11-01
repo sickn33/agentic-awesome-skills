@@ -103,3 +103,9 @@ Choose a frontend library from Emil Kowalski’s curated list after checking the
 ## Limitations and safety
 
 Treat the values and library choices as opinionated starting points. User requirements, project conventions, keyboard alternatives, and accessibility take precedence. Verify current APIs against the installed versions and official documentation; code examples are illustrative, not measured results. Limit edits and dependency installation to the authorized task; use development-only fixtures for experiments. Check final visible states and reduced-motion behavior before shipping.
+
+## Examples
+
+Illustrative request: "Which library should this React app use for toast notifications?"
+
+Expected workflow: Check the installed stack, explain whether Sonner fits the task or an existing dependency should be kept, and install only when the task authorizes it. This is an example, not a measured execution result.

@@ -193,3 +193,9 @@ Stress-test a component with realistic worst-case data through a development-onl
 ## Limitations and safety
 
 Treat the values and library choices as opinionated starting points. User requirements, project conventions, keyboard alternatives, and accessibility take precedence. Verify current APIs against the installed versions and official documentation; code examples are illustrative, not measured results. Limit edits and dependency installation to the authorized task; use development-only fixtures for experiments. Check final visible states and reduced-motion behavior before shipping.
+
+## Examples
+
+Illustrative request: "Stress-test this member list with long names, missing avatars, empty results and one member."
+
+Expected workflow: Create development-only representative fixtures and a toggle, inspect the supported widths, then report verified failures before applying fixes. This is an example, not a measured execution result.

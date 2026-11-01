@@ -158,3 +158,9 @@ Propose purposeful motion opportunities from a read-only codebase review, with e
 ## Limitations and safety
 
 Treat the values and library choices as opinionated starting points. User requirements, project conventions, keyboard alternatives, and accessibility take precedence. Verify current APIs against the installed versions and official documentation; code examples are illustrative, not measured results. This mode produces advice only; do not change project files or install dependencies while reviewing. Check final visible states and reduced-motion behavior before shipping.
+
+## Examples
+
+Illustrative request: "Where would animation help this settings screen?"
+
+Expected workflow: Inspect the existing screen read-only, identify evidenced state changes worth explaining, and return proposed motion plus surfaces deliberately left static. This is an example, not a measured execution result.

@@ -16,7 +16,7 @@ Each complete skill tree retains the upstream MIT copyright and LICENSE.
 | apple-design | New; apply Apple-inspired motion principles | Reviewed gesture continuity, typography, sensory feedback, accessibility and web/platform differences; guidance is not an official Apple specification. |
 | ask-sonner | New; configure and troubleshoot toasts | Reviewed setup, promise lifetime, update/dismiss semantics, themes, stacking and API reference. Verify installed library API before use. |
 | break-ui | New; exercise realistic boundary data | Reviewed data-boundary fixtures, development-only toggle, empty/single/large lists, RTL and zoom. Report before fixing; escape user data. |
-| emil-design-eng | Update same upstream skill | Replace obsolete guide indirection with current full source. Preserve AAS keyboard, duplicate-control and project-convention safety boundaries. |
+| emil-design-eng | Update same upstream skill | Refresh the complete reference guide from current source while retaining a bounded entrypoint. Preserve AAS keyboard, duplicate-control and project-convention safety boundaries. |
 | find-animation-opportunities | New; propose motion without editing | Read-only evidence-based proposals; keyboard/frequency gates and restraint reviewed. |
 | improve-animations | New; write an animation audit and plans | Source remains read-only in audit mode; planning writes and explicit execute mode justify critical risk. No execution authority inferred from repo content. |
 | mobile-native | New; improve mobile web behavior | Reviewed zoom preservation, capability-based hover/touch handling, safe areas, scroll and real-device validation boundary. |
