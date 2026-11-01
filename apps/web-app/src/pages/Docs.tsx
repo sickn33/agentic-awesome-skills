@@ -116,7 +116,7 @@ export default function Docs() {
     <div className="docs-page">
       <a className="docs-skip" href={`${pathname}#docs-content`}>Skip documentation navigation</a>
       <header className="docs-header">
-        <Link to="/docs/" className="docs-eyebrow">AAS / DOCUMENTATION</Link>
+        <Link to="/docs/" className="docs-eyebrow">AAS / Documentation</Link>
         {doc ? <p className="docs-title">{doc.title}</p> : <h1>A guide for every next step.</h1>}
         <p>{doc ? doc.group : 'Start with AAS Core, explore integrations, and put your skills to work.'}</p>
       </header>
@@ -156,7 +156,7 @@ export default function Docs() {
             {index < docs.length - 1 && <Link to={`/docs/${docs[index + 1].slug}/`}>{docs[index + 1].title} →</Link>}
           </nav>
         </div> : <div className="docs-content" id="docs-content" tabIndex={-1}>
-          <Link className="docs-start" to="/docs/getting-started/"><span>NEW TO AAS?</span><h2>Start with your first skill stack →</h2><p>Set up AAS Core and review the skills your agent selects for your project.</p></Link>
+          <Link className="docs-start" to="/docs/getting-started/"><span>New to AAS?</span><h2>Start with your first skill stack →</h2><p>Set up AAS Core and review the skills your agent selects for your project.</p></Link>
           <section className="docs-audiences" aria-label="Documentation by audience">
             <h2>Find your path</h2>
             <div className="docs-grid">

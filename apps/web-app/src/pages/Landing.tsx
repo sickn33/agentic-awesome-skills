@@ -33,12 +33,11 @@ export function Landing(): React.ReactElement {
       <div className="core-intro__actions">
         <Link className="core-primary" to="/core/">Explore the skill catalog <Icon name="arrowRight" size={22} /></Link>
         <a className="core-text-link" href="#get-started">Get started with Core <Icon name="arrowRight" size={20} /></a>
-        <a className="core-text-link" href="#recorded-example">See an example <Icon name="arrowDown" size={20} /></a>
       </div>
     </section>
 
     <section className="core-example" id="recorded-example" aria-label="Recorded Core example">
-      <header className="core-example__header">Recorded example · Preview only</header>
+      <header className="core-example__header"><span>Recorded example · Preview only</span><a href="https://github.com/sickn33/agentic-awesome-skills/tree/main/docs/examples/workflows/mcp-contract">View recorded project</a></header>
       <div className="core-example__stages" role="tablist" aria-label="Example stages">
         {stages.map((item, index) => <button key={item.name} id={`stage-${index}`} role="tab" type="button" aria-selected={stage === index} aria-controls="example-panel" tabIndex={stage === index ? 0 : -1} onClick={() => setStage(index)} onKeyDown={(event) => {
           let next: number;
