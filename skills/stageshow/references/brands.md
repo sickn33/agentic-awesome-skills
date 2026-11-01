@@ -1,5 +1,7 @@
 # Brand marks
 
+AAS adaptation: the Linear, American Express and USDC files use neutral placeholders rather than official artwork. Supply permitted artwork via `src` before using those named brands in a published illustration. The optical and artwork descriptions below refer to the original upstream examples.
+
 Use current real artwork when a scene shows a known product or payment method. Check the official brand source before trusting a third-party icon catalog: catalogs keep outdated colors and logos. `BrandMark` has a small local registry for common integrations and checkout rows. The SVGs ship with the kit, keep their original colors and proportions, and never call an icon service at runtime.
 
 ```tsx
