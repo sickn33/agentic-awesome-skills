@@ -115,7 +115,7 @@ Two things follow:
 
 | Driver | Thread |
 | --- | --- |
-| JS + `requestAnimationFrame` (GSAP, `motion/react` components) | Main thread, always |
+| JS + `requestAnimationFrame` driving DOM updates | Main thread; libraries may also offer WAAPI/compositor drivers |
 | Web Animations API (`element.animate()`, Motion's `animate()`) | Can be hardware-accelerated |
 | CSS transitions and keyframes | Can be hardware-accelerated |
 
@@ -128,11 +128,11 @@ Reliably accelerated: `transform` and `opacity`. Gaining support: `filter`, `cli
 The transform-string form can enable a compositor path in supported Motion versions and configurations; verify it rather than treating either form as a performance guarantee:
 
 ```jsx
-<motion.div animate={{ x: 100 }} />                          // main thread, can jank
-<motion.div animate={{ transform: "translateX(100px)" }} />  // hardware-accelerated
+<motion.div animate={{ x: 100 }} />                          // profile the installed driver
+<motion.div animate={{ transform: "translateX(100px)" }} />  // compositor eligibility depends on driver/browser
 ```
 
-The `x`, `y`, `scale`, `rotate` shorthands are implemented with CSS variables, and animated CSS variables aren't accelerated. The shorthands read better, so keep them by default and switch to the string form when the animation has to survive a busy main thread.
+Transform shorthand implementation and acceleration depend on the installed Motion version and selected driver. Keep readable shorthands by default; compare profiles under the actual load before changing them to a transform string. Do not infer a main-thread bottleneck from the property name alone.
 
 **Acceleration is progressive enhancement.** Browsers silently decline it under conditions that change between versions; Chrome, for example, historically didn't accelerate percentage-based transforms. That's not a reason to stop using `translateY(100%)`. Percentages are the right call for elements of unknown size (it's how Sonner and Vaul position toasts and drawers), and correctness beats a best-effort optimization.
 
