@@ -54,7 +54,7 @@ A 40-second introduction to Agentic Awesome Skills and AAS Core, with music and 
 
 [![Watch the AAS and AAS Core introduction](apps/web-app/public/videos/aas-introduction-v3-poster.jpg)](https://raw.githubusercontent.com/sickn33/agentic-awesome-skills/main/apps/web-app/public/videos/aas-introduction-v3.mp4)
 
-If GitHub's player stalls, [watch the video on the AAS website](https://aaskills.tech/).
+You can also [watch the video on the AAS website](https://aaskills.tech/).
 
 ## Support the Project
 

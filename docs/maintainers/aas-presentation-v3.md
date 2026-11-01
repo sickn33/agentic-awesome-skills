@@ -8,4 +8,4 @@ The README and homepage now feature the approved 40-second English AAS + Core pr
 - Previous GitHub attachment retained: https://github.com/user-attachments/assets/02aa20ca-c3bb-4984-807e-7b06ef77e785
 - Creative v1, v2 and v3 projects remain in the maintainer's Documents/AAS directory.
 
-Website distribution follows the protected release-only Pages workflow; source merge alone does not update the live site.
+The primary aaskills.tech site uses the existing Vercel production deployment. Verify its deployed video bytes after protected source merge. The separate GitHub Pages workflow remains release-only and is outside this source-only update.
