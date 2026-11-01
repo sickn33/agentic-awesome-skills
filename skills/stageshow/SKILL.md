@@ -21,7 +21,7 @@ Use for a requested illustrated product interface or animated walkthrough built 
 
 ## Limitations and safety
 
-The kit requires React and local dependencies; filming runs a browser and writes files. Inspect URLs and output paths, use authorized sites and review screenshots for private content. Some supplied brand marks are third-party assets subject to their notices and brand terms. Examples are illustrative, not evidence of affiliation. Verify accessibility, motion preferences and behavior in the host application.
+The kit requires React and local dependencies; filming runs a browser and writes files. The tools may overwrite screenshots and reports at the requested paths; choose fresh output paths. Inspect URLs, use authorized sites and review screenshots for private content. Some supplied brand marks are third-party assets subject to their notices and brand terms. Examples are illustrative, not evidence of affiliation. Verify accessibility, motion preferences and behavior in the host application.
 
 Miniature product UI: a believable interface, framed in its space, as one still or a short animation in which one thing happens. The viewer recognizes the screen and sees the thing happen.
 
