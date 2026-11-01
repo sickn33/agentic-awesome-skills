@@ -1,3 +1,5 @@
+> AAS modification (2026-11-01): use explicit Bash invocation for non-executable source distribution.
+
 # Eval: how to validate a translation end-to-end
 
 Every translation should be measured. The skill ships a source linter and
@@ -20,7 +22,7 @@ Run them in this order: **lint → render → diff → (if fail) read the sheet*
 python3 ../../scripts/lint_source.py ./remotion-src/src/
 
 # 2. Generate any binary assets (T2+T3 only)
-[ -f setup.sh ] && ./setup.sh
+[ -f setup.sh ] && bash setup.sh
 
 # 3. Render Remotion baseline
 cd remotion-src && npm install && npm run render

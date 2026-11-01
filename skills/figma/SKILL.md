@@ -20,7 +20,7 @@ These rules govern the upstream workflow and bundled references below. Work only
 
 Set `HYPERFRAMES_NO_TELEMETRY=1`, `HYPERFRAMES_SKIP_SKILLS=1` and `HYPERFRAMES_NO_UPDATE_CHECK=1` for CLI/helper invocations by default. Do not upgrade a working project pin automatically. Upstream analytics can link usage to an account and send email/username to PostHog; enable only when the user explicitly wants that. Feedback and issue reports are external messages and require a user request; telemetry consent alone is insufficient. Paid generation, cloud rendering/deployment, publishing, provider uploads, billing and avatar/voice recreation require authorization already covering that action and payer; ask only when it is missing. Honor the user's budget, disclose known costs and limitations, and never hide usage or infer unlimited permission from a host credential. Do not bypass a provider refusal. Obtain rights and consent for source footage, likeness and cloned voices; label recreated material accurately. Keep credentials in the existing secret store or ignored environment files, never chat, output or tracked files.
 
-**Plugin installs:** Before setup or freshness commands, follow [plugin execution rules](../hyperframes/references/plugin-installation.md) when this skill is inside a HyperFrames plugin.
+**Plugin installs:** Before setup or freshness commands, follow the sibling `../hyperframes/references/plugin-installation.md` ([pinned upstream plugin rules](https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/skills/hyperframes/references/plugin-installation.md)) when this skill is inside a HyperFrames plugin.
 
 # Figma → HyperFrames
 

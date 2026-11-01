@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
+# AAS modification (2026-11-01): use explicit Bash invocation for non-executable source distribution.
 # setup.sh — generate the binary assets this fixture needs.
 #
 # Both Remotion and HyperFrames variants need a 200x200 blue PNG and a
 # 6-second silent WAV. Generating them via ffmpeg keeps binaries out of
 # the repo while still letting the fixture render reproducibly.
 #
-# Run from the fixture root: ./setup.sh
+# Run from the fixture root: bash setup.sh
 
 set -euo pipefail
 

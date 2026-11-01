@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# AAS modification (2026-11-01): use explicit Bash invocation for non-executable source distribution.
 # validate.sh — assert lint_source.py output matches expected.json for every T4 case.
 #
 # T4 has no renders to diff. The skill is graded on whether it correctly
@@ -6,7 +7,7 @@
 # or warns appropriately in cases 6 and 7).
 #
 # Usage:
-#   ./validate.sh
+#   bash validate.sh
 # Exit 0 on pass.
 
 set -euo pipefail

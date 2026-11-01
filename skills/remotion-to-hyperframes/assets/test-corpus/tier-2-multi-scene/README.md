@@ -1,3 +1,5 @@
+> AAS modification (2026-11-01): use explicit Bash invocation for non-executable source distribution.
+
 # Tier 2 — title-image-outro
 
 ## What it tests
@@ -34,7 +36,7 @@ right time. Remotion does this implicitly by virtue of `<Sequence>`'s durationIn
 
 ```bash
 # 1. Generate the binary assets (PNG + WAV) via ffmpeg
-./setup.sh
+bash setup.sh
 
 # 2. Render Remotion baseline
 cd remotion-src && npm install && npm run render

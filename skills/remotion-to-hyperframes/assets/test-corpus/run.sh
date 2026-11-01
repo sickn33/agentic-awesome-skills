@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# AAS modification (2026-11-01): invoke reviewed source scripts via explicit Bash; installed kit does not carry a monorepo CLI.
 # run.sh — corpus orchestrator. Runs every tier and prints a pass/fail summary.
 #
 # Tiers 1-3: render Remotion baseline + HF translation, run SSIM diff,
@@ -7,8 +8,8 @@
 #            expected.json.
 #
 # Usage:
-#   ./run.sh                    run all tiers
-#   ./run.sh tier-1-title-card  run a single tier
+#   bash run.sh                    run all tiers
+#   bash run.sh tier-1-title-card  run a single tier
 #
 # Requirements:
 #   - ffmpeg, ffprobe, python3 on PATH
@@ -40,7 +41,7 @@ trap 'rm -rf "$RESULTS_DIR"' EXIT
 
 # T4 is lint-only — no ffmpeg or HF CLI needed. Defer the render-tier
 # toolchain checks until run_render_tier() actually runs, so
-# `./run.sh tier-4-escape-hatch` works on a clean checkout.
+# `bash run.sh tier-4-escape-hatch` works on a clean checkout.
 require_render_tier_tools() {
   if [[ ! -f "$HF_CLI" ]]; then
     echo "error: HF CLI not built at $HF_CLI" >&2
@@ -113,8 +114,8 @@ run_render_tier() {
 
   echo "  ▶ $fixture_name (threshold $threshold, composition $composition_id)"
 
-  if [[ -x "$fixture_dir/setup.sh" ]]; then
-    "$fixture_dir/setup.sh" >/dev/null
+  if [[ -f "$fixture_dir/setup.sh" ]]; then
+    bash "$fixture_dir/setup.sh" >/dev/null
   fi
 
   if ! python3 "$LINT" "$fixture_dir/remotion-src/src/" >/dev/null; then
@@ -169,7 +170,7 @@ run_lint_tier() {
   fixture_name=$(basename "$fixture_dir")
 
   echo "  ▶ $fixture_name (lint-only)"
-  if "$fixture_dir/validate.sh" >/dev/null 2>&1; then
+  if bash "$fixture_dir/validate.sh" >/dev/null 2>&1; then
     echo "    ✓ pass (8/8 cases)"
     write_result "$fixture_name" "pass" mode "lint"
   else
@@ -203,7 +204,7 @@ fi
 # any skip so a clean checkout that lacks the HF CLI doesn't accidentally
 # report "passed 1/4" (T4 alone) and look like the corpus is healthy.
 #
-# Single-tier mode (`./run.sh tier-N`) only writes a result file for the
+# Single-tier mode (`bash run.sh tier-N`) only writes a result file for the
 # selected tier; tiers that weren't run aren't counted as skips.
 python3 - "$RESULTS_DIR" "$REPORT" <<'PY'
 import json

@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
+# AAS modification (2026-11-01): use explicit Bash invocation for non-executable source distribution.
 # smoke.sh — exercise the skill's source linter against fixture .tsx files.
 #
 # Scoring a translation is the CLI's `hyperframes diff`, tested with the CLI.
 #
-# Usage: ./smoke.sh
+# Usage: bash smoke.sh
 # Exit 0 on pass.
 
 set -euo pipefail

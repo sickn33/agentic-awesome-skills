@@ -51,6 +51,15 @@ Remotion authoring or Figma workspace automation.
 - Scoped an upstream monorepo-only test to these complete eight imported trees,
   retaining the optional CLI check when that source exists.
 
+- Skill-local snapshot admission uses pinned upstream links for cross-skill
+  plugin guidance; the actual sibling core reference is retained. Source scripts
+  are distributed as mode 0644 and invoked explicitly with Node/Python/Bash;
+  corpus internal calls and instructions follow that convention.
+- Dependency review identified GHSA-mrhx-c7xc-m3w5 in the fixture Zod range.
+  The three Remotion fixtures now pin Remotion/CLI 4.0.539 and override direct
+  and transitive Zod to patched 4.6.6. The data-driven fixture type-checks with
+  TypeScript 5.9.3 and its runtime dependency audit reports zero vulnerabilities.
+
 ## Validation and limits
 
 224 bundled Node tests passed with isolated media/config paths, no inherited

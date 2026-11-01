@@ -1,3 +1,5 @@
+> AAS modification (2026-11-01): use explicit Bash invocation for non-executable source distribution.
+
 # Tier 4 — escape-hatch
 
 ## What it tests
@@ -39,7 +41,7 @@ demonstrates one specific pattern. The skill should:
 ## Validation
 
 ```bash
-./validate.sh
+bash validate.sh
 ```
 
 The script runs `lint_source.py` against each case and asserts:
