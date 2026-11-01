@@ -8,7 +8,7 @@ it('preserves the old Core overview URL and presents the reduced navigation', as
   vi.clearAllMocks(); render(<App />);
   await screen.findByRole('heading', { level: 1, name: 'Agentic Awesome Skills' });
   expect(window.location.pathname).toBe('/');
-  expect(within(screen.getByRole('navigation', { name: 'Primary navigation' })).getAllByRole('link').map((link) => link.textContent)).toEqual(['Catalog', 'Docs', 'For teams']);
+  expect(within(screen.getByRole('navigation', { name: 'Primary navigation' })).getAllByRole('link').map((link) => link.textContent)).toEqual(['Catalog', 'Docs', 'Sponsors', 'For teams']);
   expect(globalThis.fetch).not.toHaveBeenCalled();
 });
 it('preserves an old technical section link as a guide destination', async () => {
