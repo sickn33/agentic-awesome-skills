@@ -5,9 +5,10 @@ import Sponsors from '../Sponsors';
 describe('sponsors page', () => {
   it('recognizes all five OSS programs with official links and locally served marks', () => {
     render(<Sponsors />);
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Backed by open source');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Sponsors & Supporters');
     const sponsors = screen.getAllByRole('article');
     expect(sponsors).toHaveLength(5);
+    expect(screen.getAllByRole('heading', { level: 2 }).map((heading) => heading.textContent)).toEqual(['Financial Sponsors', 'Infrastructure & Tooling Supporters']);
     const urls = [
       'https://developers.openai.com/community/codex-for-oss',
       'https://vercel.com/open-source-program',

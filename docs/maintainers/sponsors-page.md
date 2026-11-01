@@ -9,7 +9,7 @@ to AAS. No cash sponsorship amounts or security certifications are claimed.
 
 The copy lives in `apps/web-app/src/data/informationPages.json`. The sponsor
 renderer uses that same copy as the existing sitemap and HTML prerender pipeline.
-The order is Codex, Vercel, Snyk, Atlas Cloud, BrowserStack, then community support.
+Financial Sponsors comes first, with community support links and no unconfirmed financial sponsor names. Infrastructure & Tooling Supporters follows with Codex, Vercel, Snyk, Atlas Cloud and BrowserStack.
 Keep the five identities in `Sponsors.tsx` aligned with those five sections.
 
 - [Codex for Open Source](https://developers.openai.com/community/codex-for-oss):

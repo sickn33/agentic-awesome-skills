@@ -371,11 +371,30 @@
   },
   {
     "path": "/sponsors/",
-    "title": "Sponsors",
+    "title": "Sponsors & Supporters",
     "description": "Meet the open-source programs supporting Agentic Awesome Skills: Codex, Vercel, Snyk, Atlas Cloud, and BrowserStack.",
-    "intro": "Backed by open source",
-    "lede": "Thank you to the programs that support the people and tools behind Agentic Awesome Skills.",
+    "intro": "Sponsors & Supporters",
+    "lede": "The organizations helping keep Agentic Awesome Skills free, open, and independently maintained.",
     "sections": [
+      {
+        "title": "Financial Sponsors",
+        "body": "Financial contributions support ongoing maintenance, skill reviews, and release work. Help keep Agentic Awesome Skills free and independently maintained.",
+        "links": [
+          {
+            "label": "Sponsor AAS",
+            "href": "https://github.com/sponsors/sickn33"
+          },
+          {
+            "label": "Buy Me a Coffee",
+            "href": "https://buymeacoffee.com/sickn33"
+          }
+        ]
+      },
+      {
+        "title": "Infrastructure & Tooling Supporters",
+        "body": "Tools, platform access, and credits provided through open-source programs.",
+        "links": []
+      },
       {
         "title": "Codex for Open Source",
         "body": "OpenAI’s program supports open-source maintainers with access to Codex for coding, review, and maintenance work. Thank you for supporting AAS.",
@@ -423,20 +442,6 @@
           {
             "label": "Explore BrowserStack for OSS",
             "href": "https://www.browserstack.com/open-source"
-          }
-        ]
-      },
-      {
-        "title": "Help keep AAS open",
-        "body": "Individual contributions support ongoing maintenance, skill reviews, and release work. You can support the project through GitHub Sponsors or Buy Me a Coffee.",
-        "links": [
-          {
-            "label": "Sponsor AAS",
-            "href": "https://github.com/sponsors/sickn33"
-          },
-          {
-            "label": "Buy Me a Coffee",
-            "href": "https://buymeacoffee.com/sickn33"
           }
         ]
       }

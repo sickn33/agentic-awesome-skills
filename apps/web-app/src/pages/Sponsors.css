@@ -3,9 +3,9 @@
   margin: 0 auto;
   padding: 64px 24px 80px;
 }
-.sponsors-intro { margin-bottom: 72px; }
+.sponsors-intro { margin-bottom: 48px; }
 .sponsors-intro h1 {
-  max-width: 12ch;
+  max-width: 16ch;
   margin: 0 0 32px;
   font-size: clamp(48px, 7vw, 88px);
   font-weight: 500;
@@ -19,7 +19,7 @@
 .sponsors-page a:hover { color: var(--text-primary); text-decoration: underline; }
 .sponsors-page .sponsors-action { flex: none; display: inline-flex; align-items: center; gap: 24px; padding: 12px 20px; border-radius: var(--radius-sm); background: var(--accent-solid); color: var(--surface-canvas); font-weight: 500; }
 .sponsors-action:hover { text-decoration: none; background: var(--text-primary); }
-.sponsors-section-heading { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 8px; }
+.sponsors-section-heading { display: flex; flex-direction: column; gap: 12px; margin-bottom: 8px; }
 .sponsors-section-heading h2 { font-size: 24px; font-weight: 500; margin: 0; }
 .sponsors-section-heading p { margin: 0; color: var(--text-muted); font-size: 16px; }
 .sponsor { display: grid; grid-template-columns: 280px 1fr; gap: 48px; padding: 40px 0; }
@@ -35,8 +35,8 @@
 .sponsor__description p { color: var(--text-secondary); margin: 0 0 16px; line-height: 1.7; font-size: 16px; }
 .sponsor__description .sponsor__category { color: var(--text-muted); font-size: 14px; margin: 0; }
 .sponsor__description a { display: inline-flex; align-items: center; gap: 12px; min-height: 44px; font-size: 16px; }
-.sponsors-support { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin-top: 48px; padding: 40px; background: var(--surface-elevated); border-radius: var(--radius-xl); scroll-margin-top: 96px; }
-.sponsors-support h2 { margin: 0; font-size: 40px; font-weight: 500; line-height: 1.1; max-width: 10ch; }
+.sponsors-support { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin: 0 0 64px; padding: 32px; background: var(--surface-elevated); border-radius: var(--radius-xl); scroll-margin-top: 96px; }
+.sponsors-support h2 { margin: 0; font-size: 32px; font-weight: 500; line-height: 1.1; max-width: 12ch; }
 .sponsors-support p { color: var(--text-secondary); line-height: 1.7; margin: 0 0 20px; font-size: 16px; }
 .sponsors-support__links { display: flex; flex-wrap: wrap; gap: 8px 24px; }
 .sponsors-support__links a { display: inline-flex; gap: 12px; align-items: center; min-height: 44px; }
