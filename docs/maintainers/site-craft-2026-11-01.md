@@ -14,7 +14,7 @@ The existing site mixed heavy headings, tracked uppercase labels, small metadata
 
 The homepage keeps its existing sections, historical example data, keyboard-operated stages and artifact disclosures. The plan is the focal output; its supporting goal and selected skills have quieter treatment. The example links directly to its recorded project. Setup, video and maintainer sections retain their content with clearer spacing.
 
-Catalog controls take less vertical space. The A–Z directory sits in the shared catalog navigation. At tablet widths, the category rail yields to the existing category selector so result descriptions remain readable. Documentation uses its collapsible navigation earlier for a wider reading column. Skill details use neutral metadata and consistent actions; actual selected/saved states remain distinct. Workbench gives the recorded review a clear action and keeps optional discovery subordinate. Sponsors and information pages inherit the shared visual system without changing their claims or assets.
+Catalog controls take less vertical space. The A–Z directory sits in the shared catalog navigation. At tablet widths, the category rail yields to the existing category selector so result descriptions remain readable. Documentation uses its collapsible navigation earlier for a wider reading column. Skill details use neutral metadata and consistent actions; actual selected/saved states remain distinct. Workbench gives the recorded review a clear action and keeps optional discovery subordinate. The A–Z directory has its own reading layout, and shared selections retain phone-side gutters. Sponsors and information pages inherit the shared visual system without changing their claims or assets.
 
 ## Verification scope
 

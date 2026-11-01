@@ -2969,3 +2969,11 @@ samp {
 }
 .skill-row__titleline { flex-wrap: wrap; }
 .skill-row__titleline h3 { overflow-wrap: anywhere; }
+
+.skill-directory-page { max-width: 1200px; margin: 0 auto; padding: 48px 24px; }
+.skill-directory-page h1 { font-size: var(--page-title-size); font-weight: 500; line-height: var(--page-title-leading); letter-spacing: var(--page-title-tracking); margin: 0 0 24px; }
+.skill-directory-page > p { color: var(--text-secondary); line-height: 1.65; margin-bottom: 16px; }
+.skill-directory-page > a { display: inline-flex; align-items: center; min-height: 44px; color: var(--accent-solid); text-underline-offset: 4px; }
+.skill-directory-page .skill-directory { margin-top: 32px; column-gap: 32px; }
+.skill-directory a { display: inline-block; min-height: 32px; text-underline-offset: 4px; }
+.topic-missing > p:first-child { text-transform: none; letter-spacing: 0; font-size: 14px; }
