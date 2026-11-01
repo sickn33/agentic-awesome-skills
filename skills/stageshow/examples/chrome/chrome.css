@@ -1,0 +1,39 @@
+.wc-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(288px, 100%), 332px));
+  justify-content: center;
+  gap: 28px 24px;
+  color: #34383f;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  & .wc-figure { min-width: 0; margin: 0; }
+  & .wc-picture { overflow: hidden; border-radius: 12px; }
+  & .ss-stage { background: transparent; }
+  & .wc-ground { position: absolute; inset: 0; display: grid; place-items: center; background: #edeef1; }
+  & .wc-ground[data-material='glass'] { background: linear-gradient(115deg, #a8b2db 0 27%, #d2d9ed 27% 65%, #e8cbbd 65%); }
+  & .wc-ground[data-material='card'] { background: #e8edf2; }
+  & .wc-ground[data-material='terminal'] { background: #e0e3e7; }
+  & .wc-content { display: grid; padding: 8px; font-size: 11px; line-height: 15px; }
+  & .wc-file-row { display: grid; grid-template-columns: 14px minmax(0, 1fr) auto; align-items: center; gap: 8px; height: 28px; padding: 0 8px; border-radius: 4px; color: #525d6a; }
+  & .wc-file-row[data-selected] { background: #e9edf3; color: #364250; }
+  & .wc-file-row > span { white-space: nowrap; }
+  & .wc-file-row > .ss-icon { color: #818c9b; }
+  & .wc-file-size { color: #8b939e; font-size: 10px; font-variant-numeric: tabular-nums; }
+  & .wc-tools { display: flex; gap: 10px; align-items: center; color: #828b98; }
+  & .wc-tall-tool { display: inline-flex; align-items: center; gap: 5px; height: 32px; color: #6d7889; font-size: 12px; line-height: 16px; font-weight: 500; white-space: nowrap; }
+  & .wc-tall-tool__icon { display: grid; place-items: center; flex: none; width: 16px; height: 16px; }
+  /* This specimen uses one row of controls. Keep the native light position,
+     but don't retain a second row's empty space above the file list. */
+  & .wc-window[data-bar='tall'] > .ss-window__bar,
+  & .wc-window[data-bar='tall'] .ss-window__main > .ss-window__bar { height: 48px; }
+  & .wc-side { display: grid; padding: 8px; font-size: 10px; line-height: 17px; color: #7c8592; }
+  & .wc-side > span { display: flex; align-items: center; height: 28px; padding: 0 5px; border-radius: 4px; }
+  & .wc-side > span[data-active] { background: #e9edf3; color: #4b5564; }
+  /* The address is supplied content. Keep it readable in the small specimen. */
+  & .wc-address { display: block; font-size: 10px; line-height: 14px; }
+  & .wc-terminal { display: grid; gap: 8px; padding: 3px 2px; font-size: 12px; line-height: 19px; }
+  & .wc-terminal > span { color: #a3a6ad; }
+  & .wc-figure figcaption { display: flex; flex-direction: column; gap: 4px; margin-top: 12px; }
+  & .wc-figure figcaption strong { font-size: 13px; line-height: 18px; font-weight: 600; }
+  & .wc-figure figcaption > span { font-size: 11px; line-height: 16px; color: #7c828b; }
+}

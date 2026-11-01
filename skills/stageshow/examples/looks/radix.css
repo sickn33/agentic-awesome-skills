@@ -1,0 +1,39 @@
+/* A look from a public design system: Radix Themes' default light tokens
+   (MIT, radix-ui.com/themes), slate grays and the indigo accent, medium
+   radius. Copy this file to start a look for a product: set the tokens the
+   design system defines and leave the rest to the kit. */
+
+.look-radix .ss-stage {
+  /* Color: the slate scale for surfaces, lines and text, indigo 9 for the accent */
+  --ss-canvas: #f9f9fb; /* slate 2 */
+  --ss-surface: #fff;
+  --ss-chrome: #fff;
+  --ss-well: #f0f0f3; /* slate 3 */
+  --ss-line: #e8e8ec; /* slate 4 */
+  --ss-line-faint: #f0f0f3; /* slate 3 */
+  --ss-text: #60646c; /* slate 11 */
+  --ss-text-strong: #1c2024; /* slate 12 */
+  --ss-text-faint: #8b8d98; /* slate 9 */
+  --ss-icon: #60646c;
+  --ss-icon-faint: #b9bbc6; /* slate 8 */
+  --ss-accent: #3e63dd; /* indigo 9 */
+  --ss-accent-2: #3e63dd;
+  --ss-accent-soft: #e1e9ff; /* indigo 3 */
+  --ss-success: #30a46c; /* green 9 */
+  --ss-danger: #e5484d; /* red 9 */
+
+  /* Type: the system stack Radix Themes ships */
+  --ss-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", system-ui, sans-serif;
+
+  /* Shape: radius 2 (4px) for small controls, 3 (6px) for fields, 4 (8px)
+     for panels, 5 (12px) for the window, full for badges */
+  --ss-radius-sm: 4px;
+  --ss-radius-md: 6px;
+  --ss-radius-lg: 8px;
+  --ss-radius-window: 12px;
+  --ss-radius-pill: 9999px;
+
+  /* Density: size 2 controls (32px), size 1 rows (24px) */
+  --ss-control: 32px;
+  --ss-row: 24px;
+}

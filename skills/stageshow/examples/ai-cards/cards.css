@@ -1,0 +1,273 @@
+.aic .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+/* Pinned top and sides, off the bottom just under the composer */
+.aic-win {
+  position: absolute;
+  top: 28px;
+  left: 40px;
+  width: 560px;
+  height: 540px;
+}
+
+.aic-body {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  height: 100%;
+  padding: 16px 20px 56px;
+  background: var(--ss-surface);
+}
+
+/* Anchored at the bottom over the composer; the earlier turn goes up out of
+   the window as the cards open */
+.aic-thread {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 14px;
+  min-height: 0;
+  padding-bottom: 20px;
+  overflow: hidden;
+  /* The earlier turns fade as they go up out of the window, never sliced
+     by its edge */
+  mask-image: linear-gradient(to bottom, transparent, #000 24px);
+}
+
+/* Everything in the thread rides up as the cards open: each keeps a layer
+   of its own, so its words don't step on whole pixels as it moves */
+.aic-thread > *,
+.aic-choice {
+  will-change: transform;
+}
+
+.aic-past {
+  display: grid;
+  gap: 8px;
+}
+
+.aic-past-q {
+  justify-self: end;
+}
+
+.aic-q {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.aic-q .ss-text {
+  padding: 8px 14px;
+  border-radius: 16px;
+  background: var(--ss-ink-1);
+  color: var(--ss-text-strong);
+  font-size: 13px;
+}
+
+.aic-a {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 10px;
+}
+
+.aic-line {
+  white-space: normal;
+  text-wrap: pretty;
+}
+
+.aic-line,
+.aic-thinking {
+  color: var(--ss-text-strong);
+  font-size: 13px;
+}
+
+.aic-thinking {
+  color: var(--ss-text);
+}
+
+/* Multiple choice: one row of fixed options. A pick fills one and draws its
+   check; the rest go quiet but stay, as the record of the answer */
+.aic-choices {
+  display: flex;
+  gap: 8px;
+}
+
+.aic-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 32px;
+  /* The round check reads as further in than a letter: its side is 2px
+     tighter, so both ends look the same */
+  padding: 0 12px 0 10px;
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px var(--ss-line);
+  color: var(--ss-text-strong);
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease, opacity 0.3s ease;
+}
+
+.aic-reply {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* The pick is marked in the accent, not the success green: choosing is not
+   finishing */
+.aic-choice {
+  --ss-success: var(--ss-accent);
+}
+
+.aic-choice__mark {
+  display: grid;
+  color: var(--ss-text);
+}
+
+.aic-choice__mark .ss-check:not([data-on]) .ss-check__ring {
+  stroke: var(--ss-line-strong, var(--ss-line));
+}
+
+.aic-choice[data-on] {
+  background: var(--ss-accent-soft);
+  box-shadow: inset 0 0 0 1.5px var(--ss-accent);
+  color: var(--ss-accent-text);
+}
+
+.aic-choices[data-answered] .aic-choice:not([data-on]) {
+  opacity: 0.45;
+}
+
+/* The flights card: rows of one height, a radio, the price on the right */
+.aic-card {
+  display: grid;
+  gap: 2px;
+  padding: 6px;
+  border-radius: 14px;
+  box-shadow: inset 0 0 0 1px var(--ss-line);
+}
+
+.aic-flight {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 12px;
+  height: 46px;
+  padding: 0 14px 0 12px;
+  border-radius: 9px;
+  transition: background-color 0.25s ease, box-shadow 0.25s ease, opacity 0.3s ease;
+}
+
+.aic-flight[data-on] {
+  background: var(--ss-accent-soft);
+  box-shadow: inset 0 0 0 1.5px var(--ss-accent);
+}
+
+.aic-card[data-booked] .aic-flight:not([data-on]) {
+  opacity: 0.45;
+}
+
+.aic-radio {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1.5px var(--ss-line-strong, var(--ss-line));
+  transition: box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.aic-flight[data-on] .aic-radio {
+  box-shadow: inset 0 0 0 5px var(--ss-accent);
+}
+
+.aic-flight__main {
+  display: grid;
+  gap: 5px;
+}
+
+.aic-times {
+  color: var(--ss-text-strong);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-box: trim-both cap alphabetic;
+}
+
+.aic-arrow {
+  color: var(--ss-text);
+  font-weight: 400;
+}
+
+.aic-airline {
+  color: var(--ss-text);
+  font-size: 11px;
+  text-box: trim-both cap alphabetic;
+}
+
+.aic-price {
+  color: var(--ss-text-strong);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The card's action: one cell, every label a layer in it that crossfades,
+   so nothing moves sideways; the fill eases from quiet to accent to done */
+.aic-book {
+  display: grid;
+  grid-template-areas: 'stack';
+  place-items: center;
+  height: 38px;
+  margin-top: 4px;
+  border-radius: 9px;
+  background: var(--ss-ink-1);
+  color: var(--ss-text);
+  font-size: 13px;
+  font-weight: 600;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.aic-book[data-ready] {
+  background: var(--ss-accent);
+  color: #fff;
+}
+
+.aic-book[data-done] {
+  background: var(--ss-success);
+}
+
+.aic-layer {
+  grid-area: stack;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  filter: blur(2px);
+  transition: opacity 0.25s ease, filter 0.25s ease;
+  text-box: trim-both cap alphabetic;
+}
+
+.aic-layer[data-on] {
+  opacity: 1;
+  filter: none;
+  transition-delay: 0.08s;
+}
+
+.aic-book .ss-check__ring { stroke: rgb(255 255 255 / 0.45); }
+.aic-book .ss-check__arc { stroke: #fff; }
+.aic-book .ss-check__fill { fill: #fff; }
+.aic-book .ss-check__tick { stroke: var(--ss-success); }
+
+/* Narrow: a gutter each side, the window the stage's width */
+.aic .ss-stage[data-layout='compact'] .aic-win {
+  left: 16px;
+  width: 326px;
+  height: 600px;
+}
+
+.aic .ss-stage[data-layout='compact'] .aic-body {
+  padding-inline: 14px;
+}
+
+.aic .ss-stage[data-layout='compact'] .aic-choice {
+  padding: 0 10px 0 8px;
+}

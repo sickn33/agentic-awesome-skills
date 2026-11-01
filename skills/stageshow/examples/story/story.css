@@ -1,0 +1,168 @@
+/* All rules belong to this example, including its responsive variants. */
+.st {
+  & .ss-stage {
+    --ss-accent: #635bff;
+    --ss-accent-2: #e15bff;
+    --ss-accent-soft: rgba(99, 91, 255, 0.1);
+    --gutter: 28px;
+    overflow: hidden;
+    border-radius: 14px;
+    background: #f6f8fb;
+    font: 12px/1.4 var(--ss-font);
+    color: var(--ss-text-strong);
+  }
+
+  /* The color lives in the background, low and to one side */
+  .st-wash {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(60% 70% at 15% 105%, rgba(99, 91, 255, 0.45), transparent 70%),
+      radial-gradient(40% 50% at 95% 110%, rgba(255, 186, 90, 0.4), transparent 70%);
+  }
+
+  .st-strong { font-weight: 600; }
+  .st-muted { color: var(--ss-text); }
+
+  /* Entrances: rise and fade. Everything is in the DOM from the start. */
+  .st-invoice,
+  .st-plan,
+  .st-chart {
+    position: absolute;
+    opacity: 0;
+    /* The text and its card travel on one retained layer. */
+    transform: translateY(14px);
+    /* Long entrances settle softly while related arrivals overlap. */
+    will-change: transform;
+    transition: opacity 0.8s ease, transform 1.1s cubic-bezier(0.45, 0, 0.1, 1);
+  }
+
+  .st-invoice[data-in],
+  .st-plan[data-in],
+  .st-chart[data-in] {
+    opacity: 1;
+    transform: translate(0, 0);
+    transition-timing-function: ease, cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  /* The plan arrives from the side it straddles */
+  .st-plan { transform: translateX(18px); }
+  .st-chart { transition-delay: 0.35s; transform: translateX(18px); }
+
+  /* Exits run in reverse: satellites leave first, the invoice last */
+  .st-invoice:not([data-in]) { transition-delay: 0.5s; }
+  .st-plan:not([data-in]) { transition-delay: 0.22s; }
+  .st-chart:not([data-in]) { transition-delay: 0s; }
+
+  .st-invoice {
+    top: var(--gutter);
+    left: var(--gutter);
+    width: 340px;
+    height: 480px;
+    box-shadow: var(--ss-shadow-hero);
+  }
+
+  .st-invoice .ss-window__bar { display: none; }
+  .st-invoice .ss-window__body { background: var(--ss-surface); }
+
+  .st-inv { padding: 22px 24px; }
+  .st-inv__head { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+  .st-inv__title { font-size: 15px; font-weight: 600; }
+  .st-inv__meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 26px; }
+  .st-inv__meta > div { display: grid; gap: 7px; }
+
+  .st-inv__due {
+    margin-bottom: 18px;
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .st-inv__due span { font-weight: 600; }
+
+  .st-inv__row {
+    /* Qty sits in a fixed column that ends before the plan card's edge, so
+       the satellite only covers empty row */
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    align-items: center;
+    height: 34px;
+    border-bottom: 1px solid var(--ss-line);
+  }
+
+  .st-inv__row--head { height: 26px; color: var(--ss-text); font-size: 11px; }
+  .st-qty { color: var(--ss-text); }
+
+  /* Satellites straddle the invoice's right edge */
+  .st-plan,
+  .st-chart {
+    left: 300px;
+    width: 236px;
+    padding: 16px;
+    border-radius: 10px;
+    background: var(--ss-raised);
+    box-shadow: var(--ss-shadow-satellite);
+  }
+
+  .st-plan { top: 92px; }
+
+  .st-plan__head { display: flex; gap: 10px; align-items: center; margin-bottom: 14px; line-height: 1.35; }
+
+  .st-plan__mark {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    box-shadow: inset 0 0 0 1px var(--ss-line);
+    color: var(--ss-accent);
+  }
+
+  .st-plan__price { display: flex; justify-content: space-between; margin-bottom: 12px; }
+
+  /* The kit's Segmented at the plan card's size: its thumb slides between
+     the tiers */
+  .st-seg {
+    margin-bottom: 14px;
+    border-radius: 8px;
+    background: var(--ss-ink-1);
+  }
+
+  .st-seg .ss-seg__option {
+    height: 24px;
+    font-size: 11px;
+  }
+
+  .st-seg .ss-seg__thumb { border-radius: 6px; }
+
+  /* One gutter under the plan. The card bleeds off the bottom just past its
+     axis labels, so nothing important is cropped and no empty card is left over. */
+  .st-chart { top: 274px; height: 220px; }
+
+  .st-bars {
+    display: block;
+    margin-top: 14px;
+  }
+
+  .st-axis {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    color: var(--ss-text);
+    font-size: 10px;
+  }
+
+
+  .st-inv__due, .st-qty { transition: opacity 180ms ease; }
+  .st-inv[data-reset] .st-inv__due, .st-inv[data-reset] .st-qty { opacity: 0; }
+
+  /* On a phone, the story reads down the invoice instead of beside it. */
+  & .ss-stage[data-layout='compact'] { --gutter: 16px; }
+  & .ss-stage[data-layout='compact'] .st-invoice { width: 310px; height: 640px; }
+  & .ss-stage[data-layout='compact'] .st-inv { padding: 20px; }
+  & .ss-stage[data-layout='compact'] .st-inv__meta { gap: 8px; }
+  & .ss-stage[data-layout='compact'] .st-plan,
+  & .ss-stage[data-layout='compact'] .st-chart { left: 40px; width: 302px; }
+  & .ss-stage[data-layout='compact'] .st-plan { top: 250px; }
+  & .ss-stage[data-layout='compact'] .st-chart { top: 432px; }
+}

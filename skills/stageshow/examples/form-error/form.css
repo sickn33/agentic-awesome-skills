@@ -1,0 +1,127 @@
+.fe .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+/* Pinned top and sides, off the bottom */
+.fe-win {
+  position: absolute;
+  top: 28px;
+  left: 60px;
+  width: 440px;
+  height: 420px;
+}
+
+.fe-card {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  height: 100%;
+  padding: 28px 40px;
+  background: var(--ss-surface);
+}
+
+.fe-title {
+  margin-bottom: 14px;
+  color: var(--ss-text-strong);
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.fe-group {
+  display: grid;
+  gap: 6px;
+}
+
+/* One line, always there, so the error never moves the form */
+.fe-lane {
+  height: 18px;
+}
+
+.fe-msg {
+  color: var(--ss-text);
+  font-size: 11px;
+}
+
+.fe-msg--error {
+  color: var(--ss-danger-text, var(--ss-danger));
+}
+
+.fe-button {
+  display: grid;
+  place-items: center;
+  height: 38px;
+  margin-top: 6px;
+  border-radius: 8px;
+  background: var(--ss-accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.fe-button[data-done] {
+  background: var(--ss-success);
+}
+
+/* Layers in one cell, crossfading in place */
+.fe-button {
+  grid-template-areas: 'stack';
+}
+
+.fe-layer {
+  grid-area: stack;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  filter: blur(2px);
+  transition: opacity 0.25s ease, filter 0.25s ease;
+  text-box: trim-both cap alphabetic;
+}
+
+.fe-layer[data-on] {
+  opacity: 1;
+  filter: none;
+  transition-delay: 0.08s;
+}
+
+.fe-labels {
+  display: grid;
+  justify-items: start;
+}
+
+.fe-label {
+  grid-area: 1 / 1;
+  opacity: 0;
+  filter: blur(2px);
+  transition: opacity 0.25s ease, filter 0.25s ease;
+}
+
+.fe-label[data-on] {
+  opacity: 1;
+  filter: none;
+  transition-delay: 0.08s;
+}
+
+.fe-button .ss-check__ring { stroke: rgb(255 255 255 / 0.45); }
+.fe-button .ss-check__arc { stroke: #fff; }
+.fe-button .ss-check__fill { fill: #fff; }
+.fe-button .ss-check__tick { stroke: var(--ss-success); }
+
+/* Narrow: a gutter each side */
+.fe .ss-stage[data-layout='compact'] .fe-win {
+  left: 16px;
+  width: 326px;
+}
+
+.fe .ss-stage[data-layout='compact'] .fe-card {
+  padding: 24px 22px;
+}
+
+/* The label trimmed to cap height, so the Check centers on the letters */
+
+/* Air between one field's message lane and the next field's label */
+.fe-group + .fe-group {
+  margin-top: 8px;
+}
