@@ -59,3 +59,23 @@ to satisfy those generic heuristics.
 `/sponsors/` is a new route with no historical counterpart. It is excluded from
 the legacy bridge's curated route inventory while retaining the existing count
 lock and rejection of unexpected routes.
+
+## Search and answer-engine follow-up
+
+On 2026-11-01, Google Search Console reported the existing sitemap successful,
+last read the same day. Bing Webmaster Tools reported short descriptions on
+13 documentation URLs. The generic title-based descriptions were replaced with
+individual summaries for all 27 guides and the documentation index. React and
+prerendered HTML use the same descriptions for search/social metadata and
+WebPage/TechArticle structured data. The historical v8.2.0 walkthrough remains
+explicitly historical.
+
+The editorial portions of `public/llms.txt` now lead with the reusable skill
+library, distinguish the companion AAS Core preview, and link the catalog,
+directory, documentation, trust page and sponsors page. Generated count/version
+fields and existing Core limitations remain intact. Existing FAQ visibility,
+unknown-route noindex/404 handling and canonical route rules are preserved.
+
+Search-console crawl counts lag deployment and are not evidence of ranking
+recovery. Indexing requests, if submitted after deployment, do not guarantee
+indexing or immediate clearance of Bing recommendations.

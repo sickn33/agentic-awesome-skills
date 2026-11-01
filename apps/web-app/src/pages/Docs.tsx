@@ -81,7 +81,7 @@ export default function Docs() {
   const missing = Boolean(slug && !doc);
   usePageMeta({
     title: `${missing ? 'Page not found' : doc?.title || 'Documentation'} | Agentic Awesome Skills`,
-    description: doc ? `${doc.title}: guides and reference for Agentic Awesome Skills.` : 'Learn AAS Core, install skills, configure integrations, and follow practical workflows.',
+    description: doc ? doc.description : 'Find Agentic Awesome Skills setup guides, agent integrations, security guidance, and practical workflows. Learn how to discover, select, and use reusable skills.',
     canonicalPath: slug ? `/docs/${slug}/` : '/docs/',
     ogImage: doc && socialGuides.includes(doc.slug) ? `social/docs/${doc.slug}.png` : undefined,
     robots: missing ? 'noindex, follow' : 'index, follow',
@@ -90,6 +90,7 @@ export default function Docs() {
       '@type': doc ? ['WebPage', 'TechArticle'] : 'WebPage',
       name: doc?.title || 'Documentation',
       headline: doc?.title || 'Documentation',
+      description: doc ? doc.description : 'Find Agentic Awesome Skills setup guides, agent integrations, security guidance, and practical workflows. Learn how to discover, select, and use reusable skills.',
       url: canonical,
       mainEntityOfPage: canonical,
       ...(metadata ? { dateModified: metadata.modified, version: metadata.commit } : {}),
