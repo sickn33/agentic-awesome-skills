@@ -72,10 +72,10 @@ export function Landing(): React.ReactElement {
     <div className="core-boundary"><p>Core validates and previews. Review the instructions and plan before any separate installation.</p><Link to="/docs/aas-core/">Core, CLI & MCP reference <Icon name="arrowRight" size={16} /></Link></div>
     <section className="core-video" aria-labelledby="core-video-title">
       <p className="core-eyebrow">AAS in 40 seconds</p>
-      <h2 id="core-video-title">Meet the skill catalog behind Core.</h2>
-      <p>A short introduction to reusable skills and the agent workflow around them.</p>
-      <video controls playsInline preload="none" poster={`${import.meta.env.BASE_URL}videos/aas-onboarding-poster.jpg`} aria-label="AAS introduction video">
-        <source src={`${import.meta.env.BASE_URL}videos/aas-onboarding.mp4`} type="video/mp4" />
+      <h2 id="core-video-title">See AAS and AAS Core in action.</h2>
+      <p>Discover reusable playbooks, agent-owned skill selection, and Core validation and plan previews.</p>
+      <video controls playsInline preload="none" poster={`${import.meta.env.BASE_URL}videos/aas-introduction-v3-poster.jpg`} aria-label="AAS introduction video">
+        <source src={`${import.meta.env.BASE_URL}videos/aas-introduction-v3.mp4`} type="video/mp4" />
         Your browser does not support HTML video.
       </video>
     </section>

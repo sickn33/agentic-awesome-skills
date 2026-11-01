@@ -50,9 +50,9 @@ This is an independent community project, not affiliated with or endorsed by Goo
 
 ## Watch the Introduction
 
-A 40-second introduction to Agentic Awesome Skills. Press play to watch it here on GitHub.
+A 40-second introduction to Agentic Awesome Skills and AAS Core, with music and on-screen explanations.
 
-https://github.com/user-attachments/assets/02aa20ca-c3bb-4984-807e-7b06ef77e785
+[![Watch the AAS and AAS Core introduction](apps/web-app/public/videos/aas-introduction-v3-poster.jpg)](https://raw.githubusercontent.com/sickn33/agentic-awesome-skills/main/apps/web-app/public/videos/aas-introduction-v3.mp4)
 
 If GitHub's player stalls, [watch the video on the AAS website](https://aaskills.tech/).
 
