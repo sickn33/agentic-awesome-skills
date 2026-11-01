@@ -23,7 +23,7 @@ function Viewer() {
   const annotation = useRef(new URLSearchParams(location.search).get('annotation') ?? 'collect')
   const selected = examples.find(e => e.id === name)!
   const transportDisabled = !ready || still || staticScene
-  const source = useMemo(() => `?embed=${name}&still=${still ? 1 : 0}${name === 'contrasts' ? `&lesson=${encodeURIComponent(lesson.current)}` : name === 'annotations' ? `&annotation=${encodeURIComponent(annotation.current)}` : ''}`, [name, revision, still])
+  const source = useMemo(() => `?embed=${encodeURIComponent(name)}&still=${still ? 1 : 0}${name === 'contrasts' ? `&lesson=${encodeURIComponent(lesson.current)}` : name === 'annotations' ? `&annotation=${encodeURIComponent(annotation.current)}` : ''}`, [name, revision, still])
   const send = (data: object) => iframe.current?.contentWindow?.postMessage({ type: 'stageshow:control', ...data }, location.origin)
   useEffect(() => {
     const preference = matchMedia('(prefers-reduced-motion: reduce)')
