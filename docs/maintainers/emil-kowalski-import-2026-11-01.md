@@ -49,3 +49,13 @@ Supporting primary references for the technical corrections:
   product, Expo device project or Swift application in this contribution. The
   examples remain illustrative and require host/toolchain/device verification.
 - Generated indexes, plugin mirrors and release versions are intentionally excluded.
+
+## Post-import Swift availability correction
+
+The final inspection found upstream August-era wording that described Swift 6.4
+as unreleased. The [official release announcement](https://www.swift.org/blog/swift-6.4-released/)
+confirms release on 15 September 2026. The guide now separates its Swift 6.3
+compatibility baseline from Swift 6.4 feature availability, requires checking the
+actual compiler/SDK/deployment configuration, and removes an unsupported
+compile-time Continuation guarantee. This is source review, not a claim that all
+illustrative Swift examples were compiled on every native toolchain.
