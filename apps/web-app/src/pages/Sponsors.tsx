@@ -27,7 +27,7 @@ export default function Sponsors(): React.ReactElement {
       <h1>{page.intro}</h1>
       <div className="sponsors-intro__bottom">
         <p>{page.lede}</p>
-        <a className="sponsors-action" href="#support-aas">Support AAS <span aria-hidden="true">↗</span></a>
+        <a className="sponsors-action" href={`${import.meta.env.BASE_URL}sponsors/#support-aas`}>Support AAS <span aria-hidden="true">↗</span></a>
       </div>
     </header>
     <section aria-labelledby="sponsors-heading">

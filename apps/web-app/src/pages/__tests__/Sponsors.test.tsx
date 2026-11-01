@@ -24,7 +24,7 @@ describe('sponsors page', () => {
   });
   it('separates community support from the five program acknowledgements', () => {
     render(<Sponsors />);
-    expect(screen.getByRole('link', { name: 'Support AAS' })).toHaveAttribute('href', '#support-aas');
+    expect(screen.getByRole('link', { name: 'Support AAS' })).toHaveAttribute('href', '/sponsors/#support-aas');
     expect(screen.getByRole('link', { name: 'Sponsor AAS' })).toHaveAttribute('href', 'https://github.com/sponsors/sickn33');
     expect(screen.getByRole('link', { name: 'Buy Me a Coffee' })).toHaveAttribute('href', 'https://buymeacoffee.com/sickn33');
   });
