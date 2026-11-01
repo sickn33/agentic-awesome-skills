@@ -2,6 +2,7 @@
 
 The README and homepage now feature the approved 40-second English AAS + Core presentation, with music and no narration. Original AAS branding, full-frame walkthroughs and no precise catalog count.
 
+- README native player attachment: https://github.com/user-attachments/assets/0129747c-3e92-4a18-805f-58fe2e59909b
 - Current video: `apps/web-app/public/videos/aas-introduction-v3.mp4`
 - Current poster: `apps/web-app/public/videos/aas-introduction-v3-poster.jpg`
 - Previous website video/poster retained byte-for-byte as `aas-onboarding.mp4` and `aas-onboarding-poster.jpg`.
