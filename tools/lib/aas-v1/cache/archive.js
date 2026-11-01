@@ -5,7 +5,7 @@ const { cacheError } = require("./identity");
 const { collisionKey, validateRelativeAssetPath } = require("./scan");
 
 const DEFAULT_ARCHIVE_LIMITS = Object.freeze({
-  maxEntries: 10000,
+  maxEntries: 20000,
   maxSingleFileBytes: 32 * 1024 * 1024,
   maxExpandedTotalBytes: 160 * 1024 * 1024,
   maxCompressionRatio: 128,
