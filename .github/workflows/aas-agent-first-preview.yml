@@ -52,6 +52,7 @@ jobs:
         with:
           persist-credentials: false
           fetch-depth: 0
+          filter: blob:none
 
       - name: Use Node 22.23.1
         uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
@@ -69,7 +70,6 @@ jobs:
           npm run catalog
           npm run build:aas-v1-catalog
           npm run check:aas-v1-catalog
-          npm run test:aas-v1
           node --check verification/aas-preview/runner.mjs
           node --check verification/aas-preview/aggregate.mjs
           node --check verification/aas-preview/run-installed-candidate.mjs
@@ -84,6 +84,31 @@ jobs:
           path: agentic-awesome-skills-*.tgz
           if-no-files-found: error
           retention-days: 7
+
+  contracts:
+    name: preview Core contracts
+    needs: candidate
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+          filter: blob:none
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 22.23.1
+          cache: npm
+      - run: npm ci --ignore-scripts --audit=false
+      - name: Verify all Core contracts
+        run: |
+          npm run plugin-compat:sync
+          npm run index
+          npm run catalog
+          npm run build:aas-v1-catalog
+          npm run check:aas-v1-catalog
+          npm run test:aas-v1
 
   functional:
     name: ${{ matrix.job-id }}
@@ -172,7 +197,7 @@ jobs:
 
   aggregate:
     name: aas-agent-first-preview
-    needs: [functional, workbench]
+    needs: [functional, workbench, contracts]
     runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
