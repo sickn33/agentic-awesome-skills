@@ -47,6 +47,10 @@ function missingEvidence(body) {
     const entries = sections.get(name);
     if (entries?.length !== 1) return true;
     const value = entries[0].join("\n").trim();
+    const lines = value.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+    // Presence admission rejects untouched scaffolding, never grades semantic truth.
+    if (lines.length && lines.every(line => /^[-*]\s+\[[ xX]\]/.test(line))) return true;
+    if (/^(?:[-*]\s*)?(?:[\w /-]+:\s*)?\[(?:replace|insert|describe|add|your)\b[^\]\n]*\]\s*$/im.test(value)) return true;
     return value.length < 12 || /^\[.*\]$/.test(value)
       || /^(?:todo|tbd|placeholder|replace with)\b/i.test(value)
       || /^(?:n\/?a|none|not applicable|pending|not tested)[.!\s]*$/i.test(value);

@@ -45,13 +45,21 @@ try{
  git(['init','-q']);git(['config','user.email','test@example.invalid']);git(['config','user.name','Test']);
  fs.mkdirSync(path.join(temporary,'skills/demo'),{recursive:true});fs.writeFileSync(path.join(temporary,'skills/demo/SKILL.md'),'# Fixture\n');
  git(['add','.']);git(['commit','-qm','base']);const base=git(['rev-parse','HEAD']);
- fs.appendFileSync(path.join(temporary,'skills/demo/SKILL.md'),'One correction.\n');git(['add','.']);git(['commit','-qm','fix']);
+ fs.appendFileSync(path.join(temporary,'skills/demo/SKILL.md'),'One correction.\n');fs.writeFileSync(path.join(temporary,'CATALOG.md'),'generated fixture');git(['add','.']);git(['commit','-qm','fix']);
  const file=path.join(temporary,'body.md');
  const args=[path.join(root,'tools/scripts/pr_preflight.cjs'),'--repo',temporary,'--base',base,'--head','HEAD','--body-file',file,'--check-submission','--no-run','--json'];
  fs.writeFileSync(file,'## Change evidence\n<!-- template only -->');
  let run=spawnSync(process.execPath,args,{encoding:'utf8'});assert.equal(run.status,1);assert.match(run.stderr,/evidence is incomplete/);assert.ok(JSON.parse(run.stdout).contributorReport.admission.blocking);
+ const human=spawnSync(process.execPath,args.filter(arg=>arg!=='--json'),{encoding:'utf8'});assert.equal(human.status,1);assert.match(human.stderr,/CATALOG[.]md/);assert.match(human.stderr,/Change evidence/);
  fs.writeFileSync(file,valid);run=spawnSync(process.execPath,args,{encoding:'utf8'});assert.equal(run.status,0,run.stderr);assert.equal(JSON.parse(run.stdout).contributorReport.admission.blocking,false);
  const noBody=args.slice(0,args.indexOf('--body-file')).concat(['--check-submission','--no-run','--json']);
  run=spawnSync(process.execPath,noBody,{encoding:'utf8'});assert.equal(run.status,1);assert.match(run.stderr,/description unavailable/);
 }finally{fs.rmSync(temporary,{recursive:true,force:true});}
 console.log('Mandatory contribution admission regressions passed.');
+for(const placeholder of ['- [x] I tested the change\n- [x] It works', 'Input: [replace with prompt]\nResult: [insert result]']) {
+ assert.ok(missingEvidence(valid.replace('Corrected one wrong example port.',placeholder)).includes('Change evidence'));
+}
+assert.deepEqual(missingEvidence(valid.replace('Corrected one wrong example port.','Corrected the checkbox parsing example; [x] remains literal sample output.')),[]);
+const {parseArgs}=require('../pr_preflight.cjs');
+for(const args of [['--contributer'],['--base'],['--head','--json'],['--event-path']]) assert.throws(()=>parseArgs(args),/Unknown|Missing/);
+assert.equal(parseArgs(['--contributor','--base','upstream/main','--head','HEAD']).contributor,true);
