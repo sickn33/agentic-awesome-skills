@@ -12,6 +12,7 @@ function finalize(root,version,directory,dependencies={}) {
  try {
  const id=`finalize-${version}`,state=store.readBatch(id)||{version,startedAt:new Date().toISOString(),stages:[]};
  const save=()=>store.writeBatch(id,state);
+ state.complete=false;save();
  const stages=[{repo:SOURCE,workflow:'pages.yml',ref:`v${version}`,inputs:['deployment_target=release']},{repo:LEGACY,workflow:'legacy-redirect-sync.yml',ref:'main',inputs:['live_mode=all']},{repo:LEGACY,workflow:'legacy-redirect-sync.yml',ref:'main',inputs:['live_mode=all']},{repo:SOURCE,workflow:'release-final-verification.yml',ref:'main',inputs:[`version=${version}`]}];
  for(let index=0;index<stages.length;index++) {
   const stage=stages[index];let record=state.stages[index];
@@ -30,9 +31,9 @@ function finalize(root,version,directory,dependencies={}) {
    record.run=matches[0].databaseId;record.status='running';save();
   }
   // Revalidate successful records too; a rerun or changed conclusion invalidates completion.
-  let proof=json(['run','view',String(record.run),'--repo',stage.repo,'--json','status,conclusion,headSha,event,workflowName']);
-  if(proof.status!=='completed'){run(['run','watch',String(record.run),'--repo',stage.repo,'--exit-status']);proof=json(['run','view',String(record.run),'--repo',stage.repo,'--json','status,conclusion,headSha,event,workflowName']);}
-  if(proof.headSha!==record.expected||proof.event!=='workflow_dispatch'||proof.conclusion!=='success'){record.status='failed';save();throw Error('Exact dispatched workflow failed or identity changed');}
+  let proof=json(['api',`repos/${stage.repo}/actions/runs/${record.run}`]);
+  if(proof.status!=='completed'){run(['run','watch',String(record.run),'--repo',stage.repo,'--exit-status']);proof=json(['api',`repos/${stage.repo}/actions/runs/${record.run}`]);}
+  if(proof.head_sha!==record.expected||proof.repository?.full_name!==stage.repo||proof.path?.split('@')[0]!==`.github/workflows/${stage.workflow}`||proof.event!=='workflow_dispatch'||proof.conclusion!=='success'){record.status='failed';save();throw Error('Exact dispatched workflow failed or identity changed');}
   record.status='passed';record.finishedAt=new Date().toISOString();record.proof=proof;save();
  }
  state.complete=true;state.finishedAt=new Date().toISOString();save();return state;
