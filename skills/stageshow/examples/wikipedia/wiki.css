@@ -1,0 +1,577 @@
+/* Wikipedia (Vector 2022) in a browser on a docs plate. Pinned with a 32px
+   gutter on the left, right and top; the window runs off the bottom. Colors
+   and the search menu's geometry are Codex's own values (measured on
+   en.wikipedia.org, October 2026), all one cool neutral family. */
+
+.wk-stage .ss-stage {
+  --gutter: 32px;
+  --wk-text: #202122;
+  --wk-subtle: #54595d;
+  --wk-placeholder: #72777d;
+  --wk-link: #36c;
+  --wk-border: #a2a9b1;
+  --wk-border-soft: #c8ccd1;
+  --wk-soft: #f8f9fa;
+  --wk-hover: #eaecf0;
+  --wk-active: #dadde3;
+  --wk-serif: 'Linux Libertine', 'Georgia', 'Times', serif;
+  --wk-sans: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+.wk-window {
+  position: absolute;
+  top: var(--gutter);
+  left: var(--gutter);
+  right: var(--gutter);
+  height: 640px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: var(--ss-shadow-hero);
+}
+
+.wk-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0 24px;
+  background: #fff;
+  color: var(--wk-text);
+  font-family: var(--wk-sans);
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.wk-spacer {
+  flex: 1;
+}
+
+.wk-icon {
+  display: block;
+  flex-shrink: 0;
+  color: var(--wk-text);
+}
+
+/* ---- Header ---- */
+
+.wk-header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 16px;
+  height: 58px;
+}
+
+.wk-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wk-logo svg {
+  display: block;
+}
+
+.wk-wordmark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: var(--wk-serif);
+  color: #000;
+  line-height: 1;
+}
+
+.wk-wordmark__name {
+  font-size: 17px;
+  letter-spacing: 0.06em;
+}
+
+.wk-wordmark__name small {
+  font-size: 13.5px;
+}
+
+.wk-wordmark__tag {
+  margin-top: 3px;
+  font-size: 9.5px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.wk-search {
+  position: relative;
+  display: flex;
+  margin-left: 8px;
+}
+
+.wk-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 316px;
+  height: 32px;
+  padding: 0 10px;
+  border: 1px solid var(--wk-border);
+  border-radius: 2px 0 0 2px;
+  transition: border-color 0.1s ease, box-shadow 0.1s ease;
+}
+
+/* Codex's focus: a progressive-blue border doubled by an inset ring */
+.wk-field[data-focus] {
+  border-color: var(--wk-link);
+  box-shadow: inset 0 0 0 1px var(--wk-link);
+}
+
+.wk-field[data-menu] {
+  border-bottom-left-radius: 0;
+}
+
+.wk-field__icon {
+  color: var(--wk-placeholder);
+}
+
+.wk-field__text {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 22px;
+}
+
+.wk-ph,
+.wk-q {
+  position: absolute;
+  inset: 0 auto 0 0;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+/* The placeholder leaves on the first key, as a real field's does; it
+   comes back with a fade when the page changes and the field is reset */
+.wk-ph {
+  color: var(--wk-placeholder);
+  /* Comes back once the query has gone, so the two never overlap */
+  transition: opacity 0.25s ease 0.14s;
+}
+
+.wk-ph[data-hide] {
+  opacity: 0;
+  transition: none;
+}
+
+.wk-q {
+  opacity: 0;
+  transition: opacity 0.14s ease;
+}
+
+.wk-q[data-show] {
+  opacity: 1;
+  transition: none;
+}
+
+.wk-caret {
+  width: 1px;
+  height: 17px;
+  margin-left: 1px;
+  background: var(--wk-text);
+  opacity: 0;
+}
+
+.wk-caret[data-on] {
+  animation: wk-blink 1.06s steps(1) infinite;
+}
+
+.wk-caret[data-on][data-typing] {
+  animation: none;
+  opacity: 1;
+}
+
+@keyframes wk-blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.wk-button {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--wk-placeholder);
+  border-left: 0;
+  border-radius: 0 2px 2px 0;
+  background: var(--wk-soft);
+  font-weight: 700;
+}
+
+.wk-userlink {
+  color: var(--wk-link);
+  white-space: nowrap;
+}
+
+/* ---- The typeahead menu ----
+   Hangs from the field's bottom edge at the field's width, square at the
+   top, with Codex's hairline and soft shadow. */
+
+.wk-menu.ss-popover {
+  --ss-popover-bg: #fff;
+  /* The hairline sits inside the box, so the menu's edges line up with the
+     field's, as on wikipedia.org; no top line, the field's border is it */
+  --ss-popover-shadow: inset 1px 0 0 var(--wk-border), inset -1px 0 0 var(--wk-border), inset 0 -1px 0 var(--wk-border), 0 4px 4px rgba(0, 0, 0, 0.06), 0 0 8px rgba(0, 0, 0, 0.06);
+  top: 32px;
+  left: 0;
+  width: 316px;
+  padding: 0;
+  border-radius: 0 0 2px 2px;
+}
+
+.wk-menu__list {
+  /* Rows run the menu's full width, as Codex's do (measured on
+     wikipedia.org: no menu padding, 8px 12px inside each row) */
+  padding: 0;
+  /* One lasting layer for the rows, so their text never hops in its box */
+  will-change: transform;
+}
+
+/* Rows are links; Codex's hover is a square fill the full width of the menu */
+.wk-result {
+  height: 60px;
+  transition: background-color 0.1s ease;
+}
+
+.wk-result[data-hover] {
+  background: var(--wk-hover);
+}
+
+.wk-result[data-pressed] {
+  background: var(--wk-active);
+}
+
+.wk-swap.ss-swap {
+  display: block;
+  height: 60px;
+}
+
+.wk-swap .ss-swap__in,
+.wk-swap .ss-swap__out {
+  width: 100%;
+}
+
+.wk-result__inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 60px;
+  padding: 0 12px;
+}
+
+.wk-thumb {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  overflow: hidden;
+  border: 1px solid var(--wk-border-soft);
+  border-radius: 2px;
+  background: var(--wk-soft) center / cover;
+}
+
+.wk-thumb svg {
+  display: block;
+}
+
+.wk-thumb[data-empty] .wk-icon {
+  color: var(--wk-placeholder);
+}
+
+.wk-result__text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  line-height: 22px;
+}
+
+.wk-result__title {
+  overflow: hidden;
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.wk-result__desc {
+  overflow: hidden;
+  color: var(--wk-subtle);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.wk-menu__footer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 8px 12px;
+  line-height: 22px;
+}
+
+.wk-menu__footer-icon {
+  display: flex;
+  justify-content: center;
+  width: 40px;
+}
+
+.wk-menu__footer-icon .wk-icon {
+  color: var(--wk-subtle);
+}
+
+.wk-menu__footer-text {
+  min-width: 0;
+}
+
+/* ---- Pages: a navigation crossfades the article under the header ---- */
+
+.wk-pages {
+  position: relative;
+  flex: 1;
+}
+
+.wk-pg {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(8px);
+  /* Kept on its layer, so the article's text doesn't hop as the rise lands */
+  will-change: transform;
+  transition: opacity 0.2s ease, transform 0s linear 0.2s;
+}
+
+.wk-pg[data-show] {
+  opacity: 1;
+  transform: none;
+  transition: opacity 0.45s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s, transform 0.7s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s;
+}
+
+/* ---- Title, tabs ---- */
+
+.wk-titlebar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--wk-border);
+}
+
+.wk-title {
+  margin: 0;
+  font-family: var(--wk-serif);
+  font-size: 28.8px;
+  font-weight: 400;
+  line-height: 1.375;
+  white-space: nowrap;
+}
+
+.wk-lang {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--wk-link);
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.wk-lang .wk-icon {
+  color: var(--wk-link);
+}
+
+.wk-tabs {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  height: 40px;
+}
+
+.wk-tab {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+}
+
+.wk-tab[data-selected] {
+  border-bottom-color: var(--wk-text);
+}
+
+.wk-blue {
+  color: var(--wk-link);
+}
+
+/* ---- Article ---- */
+
+.wk-tagline {
+  margin: 6px 0 8px;
+  font-size: 12.3px;
+  color: var(--wk-subtle);
+}
+
+.wk-content p {
+  margin: 0 0 10px;
+}
+
+.wk-link {
+  color: var(--wk-link);
+}
+
+.wk-infobox {
+  float: right;
+  width: 232px;
+  margin: 10px 0 12px 20px;
+  padding: 3px;
+  border: 1px solid var(--wk-border);
+  background: var(--wk-soft);
+  font-size: 12.3px;
+  line-height: 1.5;
+}
+
+/* Wikipedia tints an infobox's title by subject */
+.wk-infobox__name {
+  margin-bottom: 4px;
+  padding: 2px 4px;
+  text-align: center;
+  font-size: 15.5px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.wk-infobox__name[data-tone="mountain"] {
+  background: #e7dcc3;
+}
+
+.wk-infobox__name[data-tone="water"] {
+  background: #cedeff;
+}
+
+/* Real photos, both CC0 on Wikimedia Commons: "Fuji Kawaguchi 465.JPG" and
+   "Kawaguchiko, Part III - Kawaguchiko6782.jpg" */
+[data-img="fuji"] {
+  background: #9fb6cc url('./fuji.jpg') center 30% / cover;
+}
+
+[data-img="lake"] {
+  background: #c9d4dc url('./kawaguchiko.jpg') center / cover;
+}
+
+.wk-infobox__img {
+  display: block;
+  width: 220px;
+  height: 146px;
+  margin: 0 auto;
+}
+
+.wk-infobox__caption {
+  padding: 4px 4px 6px;
+  text-align: center;
+  font-size: 11.5px;
+}
+
+.wk-infobox table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.wk-infobox th,
+.wk-infobox td {
+  padding: 3px 4px;
+  vertical-align: top;
+  text-align: left;
+}
+
+.wk-infobox th {
+  width: 42%;
+  font-weight: 700;
+}
+
+.wk-figure {
+  height: 150px;
+  margin: 4px 0 12px;
+  border: 1px solid var(--wk-border-soft);
+}
+
+/* ---- Compact (narrow containers) ---- */
+
+.ss-stage[data-layout="compact"] .wk-window {
+  --gutter: 16px;
+}
+.ss-stage[data-layout="compact"] .wk-page {
+  padding: 0 16px;
+}
+.ss-stage[data-layout="compact"] .wk-header {
+  gap: 12px;
+}
+.ss-stage[data-layout="compact"] .wk-search {
+  flex: 1;
+  min-width: 0;
+  margin-left: 0;
+}
+.ss-stage[data-layout="compact"] .wk-field {
+  width: 100%;
+  border-radius: 2px;
+}
+.ss-stage[data-layout="compact"] .wk-field[data-menu] {
+  border-radius: 2px 2px 0 0;
+}
+.ss-stage[data-layout="compact"] .wk-menu.ss-popover {
+  width: 100%;
+}
+.ss-stage[data-layout="compact"] .wk-title {
+  font-size: 24px;
+}
+.wk-window .ss-window__url {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* The refine crossfades each row in place: the new row starts to show as the
+   old one leaves, so no row is ever empty (the kit's Swap holds the new text
+   back for its first 30%, which leaves a blank row mid-swap) */
+.wk-swap .ss-swap__in {
+  animation-name: wk-row-in;
+}
+
+.wk-swap .ss-swap__out {
+  animation-name: wk-row-out;
+}
+
+@keyframes wk-row-in { from { opacity: 0; } to { opacity: 1; } }
+
+@keyframes wk-row-out { to { opacity: 0; } }
+
+.wk-h2 {
+  margin: 18px 0 8px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--wk-border);
+  font-family: var(--wk-serif);
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.375;
+}
+
+/* Vector's collapsed page tools are a vertical ellipsis */
+.wk-kebab {
+  transform: rotate(90deg);
+}
+.ss-stage[data-layout="compact"] .wk-header > .wk-spacer {
+  display: none;
+}
+
+/* Picking a result navigates, so the menu goes quickly rather than hanging
+   half-faded over the article underneath (the kit's 0.3s close) */
+.wk-menu.ss-popover:not([data-show]) {
+  transition: opacity 0.15s ease, transform 0.15s cubic-bezier(0.4, 0, 1, 1);
+}

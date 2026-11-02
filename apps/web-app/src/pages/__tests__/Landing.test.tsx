@@ -11,7 +11,7 @@ describe('Core product homepage', () => {
     mount();
     expect(screen.getByRole('heading', { level: 1, name: 'Agentic Awesome Skills' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Get started with Core' })).toHaveAttribute('href', '#get-started');
-    expect(screen.getByRole('link', { name: 'See an example' })).toHaveAttribute('href', '#recorded-example');
+    expect(screen.getByRole('link', { name: 'View recorded project' })).toHaveAttribute('href', 'https://github.com/sickn33/agentic-awesome-skills/tree/main/docs/examples/workflows/mcp-contract');
     expect(screen.getByRole('link', { name: 'Explore the skill catalog' })).toHaveAttribute('href', '/core/');
     expect(screen.queryByRole('searchbox')).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: /^Codex setup/ })).toHaveAttribute('href', '/docs/codex-cli-skills/');

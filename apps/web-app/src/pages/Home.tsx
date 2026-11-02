@@ -236,7 +236,6 @@ export function Home(): React.ReactElement {
       </aside>
 
       <div className="catalog-content">
-        <p><Link to="/directory/">Browse all skills A–Z</Link></p>
           <CatalogNavigation active={view as 'skills' | 'workflows' | 'collections'} onSelect={(next) => { setView(next); setActivePanel(null); }} />
         <div hidden={view !== 'skills'}>
         <section className="catalog-hero">

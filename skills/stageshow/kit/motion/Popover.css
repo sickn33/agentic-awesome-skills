@@ -1,0 +1,65 @@
+/* Popover */
+
+@layer stageshow {
+  .ss-popover {
+    position: absolute;
+    /* Above connectors and flights: an open menu is the topmost surface */
+    z-index: 25;
+    isolation: isolate;
+    /* The surface and its shadow are drawn on ::before, so clipping the popover
+       cuts its shadow off. A sliding submenu clips an inner track instead. */
+    overflow: visible !important;
+    padding: 4px;
+    border-radius: var(--ss-radius-lg);
+    opacity: 0;
+    pointer-events: none;
+    /* Long enough to read as a fade at a demo's pace: at 0.15s it falls
+       between frames and the menu seems to vanish */
+    transition: opacity 0.3s ease;
+  }
+
+  /* The surface scales a touch from the origin; the text only fades. Text that
+     ends a scale is redrawn snapped to the pixel grid and wobbles as it lands,
+     so it never rides the transform. Restyle it with --ss-popover-bg and
+     --ss-popover-shadow rather than background and box-shadow. */
+  .ss-popover::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--ss-popover-bg, var(--ss-raised));
+    box-shadow: var(--ss-popover-shadow, var(--ss-shadow-float));
+    transform: scale(0.96);
+    transform-origin: var(--ss-popover-origin, top left);
+    transition: transform 0.3s ease;
+    pointer-events: none;
+  }
+
+  .ss-popover[data-show] {
+    opacity: 1;
+    transition: opacity 0.18s ease;
+  }
+
+  .ss-popover[data-show]::before {
+    transform: none;
+    transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Closing, it leaves as one object: the whole popover, contents and all,
+     shrinks a touch toward its origin as it fades. A surface that shrank
+     alone would slip out from under its contents and leave them floating.
+     (Text landing at the end of a scale wobbles; on the way out it ends
+     invisible, so that doesn't apply.) Once it has faded (data-instant),
+     the surface takes its opening scale again, out of sight */
+  .ss-popover:not([data-show]):not([data-instant]) {
+    transform: scale(0.96);
+    transform-origin: var(--ss-popover-origin, top left);
+    transition: opacity 0.24s ease, transform 0.24s cubic-bezier(0.4, 0, 1, 1);
+  }
+
+  .ss-popover:not([data-show]):not([data-instant])::before {
+    transform: none;
+    transition: none;
+  }
+}

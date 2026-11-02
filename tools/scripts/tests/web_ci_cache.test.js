@@ -70,7 +70,7 @@ try {
     const version = steps.find(step => step.uses?.startsWith('actions/setup-node@')).with['node-version'];
     assert.match(version, /^\d+\.\d+\.\d+$/);
     pinned.push(version);
-    const cache = steps.find(step => step.uses?.startsWith('actions/cache@'));
+    const cache = steps.find(step => step.uses?.startsWith('actions/cache/restore@'));
     assert.match(cache.with.key, /web_cache_plan.outputs.context/);
     assert.match(cache.with['restore-keys'], /web_cache_plan.outputs.context/);
   }

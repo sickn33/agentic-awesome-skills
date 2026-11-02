@@ -1,0 +1,128 @@
+/* All rules belong to this example, including its responsive variants. */
+.ms {
+  & .ss-stage {
+    overflow: hidden;
+    background: var(--ss-well);
+  }
+
+  /* A close crop of the conversation: the top of the phone runs off-stage,
+     while the composer and bottom edge remain in view. */
+  .ms-phone {
+    position: absolute;
+    bottom: 16px;
+    left: 47px;
+  }
+  & .ss-stage[data-layout='compact'] .ms-phone { left: 16px; }
+
+  .ms-phone .ss-phone__content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .ms-head {
+    display: grid;
+    justify-items: center;
+    gap: 4px;
+    padding: 4px 0 10px;
+    border-bottom: 1px solid var(--ss-line);
+  }
+
+  /* The kit's iOS contact avatar */
+  .ms-avatar {
+    font-size: 22px;
+  }
+
+  .ms-name {
+    font-size: 12px;
+    color: var(--ss-text-strong);
+  }
+
+  .ms-thread {
+    flex: 1;
+    padding: 0 16px 10px;
+  }
+
+  .ms-send[data-pressed] { scale: .9; }
+
+  /* The composer: a round plus, then the field. The field's words are the
+     send's origin, so they sit in a target of their own */
+  .ms-compose {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 14px 36px;
+  }
+
+  .ms-plus {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #e9e9eb;
+    color: #3c3c43;
+  }
+
+  .ms-field {
+    position: relative;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    min-width: 0;
+    min-height: 36px;
+    padding: 0 4px 0 14px;
+    border-radius: 18px;
+    background: #fff;
+    box-shadow: inset 0 0 0 1px #d1d1d6;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+  }
+
+  .ms-field__text {
+    flex: 1;
+    min-width: 0;
+    color: #000;
+    white-space: nowrap;
+  }
+
+  .ms-caret {
+    display: inline-block;
+    width: 2px;
+    height: 20px;
+    margin-left: 1px;
+    border-radius: 1px;
+    background: #0a84ff;
+    vertical-align: -4px;
+  }
+
+  .ms-field__ph {
+    position: absolute;
+    left: 14px;
+    color: #b0b0b5;
+    pointer-events: none;
+  }
+
+  .ms-field__ph[data-hide] {
+    opacity: 0;
+  }
+
+  .ms-send {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #0a84ff;
+    color: #fff;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: scale .12s ease, opacity 0.18s ease, transform 0.25s cubic-bezier(0.3, 0.75, 0.1, 1);
+  }
+
+  .ms-send[data-show] {
+    opacity: 1;
+    transform: none;
+  }
+}

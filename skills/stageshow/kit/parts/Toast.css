@@ -1,0 +1,35 @@
+/* Toast */
+
+@layer stageshow {
+  .ss-toast {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: var(--ss-radius-lg);
+    background: #1c1c1f;
+    box-shadow: var(--ss-shadow-satellite);
+    color: #fff;
+    font-size: 12px;
+    opacity: 0;
+    /* Rises by margin on a layer it keeps: the equal and opposite margins move
+       it the same whether it's placed by its top, its bottom or the flow, and
+       nothing around it moves. The layer moves box and text as one picture;
+       without it the text steps whole pixels inside the gliding box */
+    will-change: transform;
+    margin-block: var(--ss-toast-rise, 10px) calc(-1 * var(--ss-toast-rise, 10px));
+    transition: opacity 0.35s ease, margin 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .ss-toast[data-show] { opacity: 1; margin-block: 0; }
+
+  .ss-toast__icon { display: grid; opacity: 0.8; }
+
+  .ss-toast__action { margin-left: 6px; color: rgba(255, 255, 255, 0.6); font-weight: 500; }
+
+  [data-theme='dark'] .ss-toast,
+  .ss-stage[data-theme='dark'] .ss-toast {
+    background: var(--ss-raised);
+    color: var(--ss-text-strong);
+  }
+}

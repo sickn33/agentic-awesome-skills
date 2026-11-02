@@ -1,0 +1,88 @@
+.mo .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+/* Five columns of 184 with 16 between, offset up and left so every edge
+   cuts a tile by a third or more */
+.mo-grid {
+  position: absolute;
+  top: -78px;
+  left: -116px;
+  display: grid;
+  grid-template-columns: repeat(5, 184px);
+  gap: 16px;
+}
+
+.mo-tile {
+  display: grid;
+  gap: 8px;
+  padding: 8px 8px 12px;
+  border-radius: 12px;
+  background: var(--ss-surface);
+  box-shadow: var(--ss-shadow-card);
+}
+
+.mo-tile[data-focus] {
+  position: relative;
+  z-index: 1;
+  box-shadow: var(--ss-shadow-hero), 0 0 0 1.5px var(--ss-accent);
+}
+
+.mo-thumb {
+  height: 92px;
+  border-radius: 6px;
+  background: var(--ss-ink-1);
+}
+
+/* The focus tile's thumbnail is a tiny page: a heading block and two lines */
+.mo-thumb--focus {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 14px 12px;
+  background: linear-gradient(180deg, var(--ss-accent-soft), var(--ss-surface));
+}
+
+.mo-thumb__head {
+  width: 70%;
+  height: 10px;
+  border-radius: 5px;
+  background: var(--ss-accent);
+}
+
+.mo-thumb__line {
+  width: 86%;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--ss-ink-3);
+}
+
+.mo-thumb__line--short {
+  width: 54%;
+}
+
+.mo-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 20px;
+  padding: 0 2px;
+}
+
+.mo-branch {
+  color: var(--ss-text-strong);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.mo-commit {
+  padding: 0 2px;
+  color: var(--ss-text);
+  font-size: 11px;
+}
+
+/* Narrow: the same grid, shifted so the focus tile sits in the middle */
+.mo .ss-stage[data-layout='compact'] .mo-grid {
+  left: -321px;
+}

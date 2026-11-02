@@ -1,0 +1,539 @@
+/* Phones (phone.tsx): frames, the status bar, the lock screen and
+   notification banners. */
+
+@layer stageshow {
+  /* Zero specificity for the positioning, so a demo's own class (.xx-phone
+     { position: absolute }) wins whichever stylesheet happens to load last */
+  :where(.ss-phone) {
+    position: relative;
+  }
+
+  .ss-phone {
+    flex-shrink: 0;
+    box-shadow:
+      0 calc(var(--ps) * 40) calc(var(--ps) * 80) calc(var(--ps) * -16) rgba(50, 50, 93, 0.25),
+      0 calc(var(--ps) * 24) calc(var(--ps) * 48) calc(var(--ps) * -24) rgba(0, 0, 0, 0.3);
+  }
+
+  .ss-phone__glass {
+    height: 100%;
+  }
+
+  .ss-phone__window {
+    position: relative;
+    overflow: hidden;
+    /* Keeps the scaled screen clipped to the rounded corners in Safari */
+    isolation: isolate;
+  }
+
+  /* The iOS frames paint their bands as strokes of the screen's outline
+     (Phone's BANDS), from these colors; the body and glass paint nothing */
+  .ss-phone:is([data-frame="pro"], [data-frame="silver"], [data-frame="bezel"], [data-frame="clay"], [data-frame="outline"], [data-frame="bare"]) {
+    --ss-phone-glass: #0b0b0c;
+    --ss-phone-rim: #2c2c2d;
+    --ss-phone-seam: #e0dfdc;
+    --ss-phone-line: var(--ss-text-faint, #9a9a9d);
+    background: none;
+  }
+
+  .ss-phone__bands {
+    position: absolute;
+    inset: 0;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .ss-phone:is([data-frame="pro"], [data-frame="silver"], [data-frame="bezel"], [data-frame="clay"], [data-frame="outline"]) .ss-phone__glass {
+    position: relative;
+  }
+
+  /* Pro: brushed titanium band around black glass */
+  .ss-phone[data-frame="pro"] {
+    --ss-phone-band-1: #e3e3e6;
+    --ss-phone-band-2: #9a9ba0;
+    --ss-phone-band-3: #cfd0d4;
+    --ss-phone-band-4: #85868b;
+    --ss-phone-band-5: #c9cacd;
+  }
+
+  /* On dark stages, black titanium: a light band would be the brightest thing in the shot */
+  .ss-stage[data-theme="dark"] .ss-phone[data-frame="pro"],
+  .ss-stage[data-theme="glass"] .ss-phone[data-frame="pro"][data-dark] {
+    --ss-phone-band-1: #5b5c61;
+    --ss-phone-band-2: #2b2c2f;
+    --ss-phone-band-3: #48494d;
+    --ss-phone-band-4: #232427;
+    --ss-phone-band-5: #404145;
+  }
+
+  /* Silver: light titanium around black glass */
+  .ss-phone[data-frame="silver"] {
+    --ss-phone-band-1: #f4f4f6;
+    --ss-phone-band-2: #c9cacf;
+    --ss-phone-band-3: #eeeef1;
+    --ss-phone-band-4: #b9babf;
+    --ss-phone-band-5: #e6e6ea;
+  }
+
+  /* Bezel: a plain black border */
+  .ss-phone[data-frame="bezel"] {
+    --ss-phone-glass: #111113;
+  }
+
+  /* Clay: one matte color, soft and thick, lit from above like a rendered
+     model rather than a black ring. Light by default; set --ss-phone-clay */
+  .ss-phone[data-frame="clay"] {
+    --ss-phone-clay-top: color-mix(in srgb, var(--ss-phone-clay, #ecebe8), #fff 45%);
+    --ss-phone-clay-bottom: color-mix(in srgb, var(--ss-phone-clay, #ecebe8), #000 6%);
+    box-shadow:
+      0 calc(var(--ps) * 30) calc(var(--ps) * 60) calc(var(--ps) * -12) rgba(50, 50, 93, 0.2),
+      0 calc(var(--ps) * 16) calc(var(--ps) * 32) calc(var(--ps) * -16) rgba(0, 0, 0, 0.16);
+  }
+
+  .ss-stage[data-theme="dark"] .ss-phone[data-frame="clay"] {
+    --ss-phone-clay-top: color-mix(in srgb, var(--ss-phone-clay, #2a2a2e), #fff 6%);
+    --ss-phone-clay-bottom: var(--ss-phone-clay, #2a2a2e);
+    --ss-phone-seam: #333338;
+  }
+
+  /* Outline: line art. One fine stroke for the body, a hairline for the
+     screen; no shadow, nothing filled */
+  .ss-phone[data-frame="outline"] {
+    box-shadow: none;
+  }
+
+  .ss-stage[data-theme="blueprint"] .ss-phone[data-frame="outline"] {
+    --ss-phone-line: var(--ss-line);
+  }
+
+  /* Every iPhone frame lays the status bar out exactly as Apple's iOS 27 UI
+     kit does (Status bar, iPhone, in points): the time centered in the first
+     138.5, its 22pt line from y 21.5; signal, wifi and battery from x 285.25,
+     8 apart, their tops at 26.33, 25.33 and 25.67 */
+  .ss-phone:not([data-frame="android"], [data-frame="soft"]) .ss-phone__status {
+    height: 62px;
+    padding: 0;
+  }
+
+  .ss-phone:not([data-frame="android"], [data-frame="soft"]) .ss-phone__time {
+    position: absolute;
+    top: 21.5px;
+    left: 0;
+    width: 138.5px;
+    line-height: 22px;
+    text-align: center;
+  }
+
+  .ss-phone:not([data-frame="android"], [data-frame="soft"]) .ss-phone__glyphs {
+    position: absolute;
+    top: 25.33px;
+    left: 285.25px;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .ss-phone:not([data-frame="android"], [data-frame="soft"]) .ss-phone__signal {
+    margin-top: 1px;
+  }
+
+  .ss-phone:not([data-frame="android"], [data-frame="soft"]) .ss-phone__battery {
+    margin-top: 0.33px;
+  }
+
+  /* Photo: Apple's iPhone 18 Pro product bezel, silver, black on dark stages.
+     The body paints nothing but keeps the phone's soft shadow (a shadow on
+     the image would also fall inward, through its cut-out, onto the screen);
+     the image lies over the screen, its cut-out framing it */
+  .ss-phone[data-frame="photo"] {
+    position: relative;
+    background: none;
+  }
+
+  .ss-phone__photo {
+    position: absolute;
+    z-index: 4;
+    background: var(--ss-phone-photo-light, none) center / 100% 100% no-repeat;
+    pointer-events: none;
+  }
+
+  .ss-stage[data-theme="dark"] .ss-phone__photo,
+  .ss-phone[data-dark] .ss-phone__photo {
+    background-image: var(--ss-phone-photo-dark, var(--ss-phone-photo-light, none));
+  }
+
+  /* Android: an even dark frame, a punch-hole camera instead of an island */
+  .ss-phone[data-frame="android"] {
+    background: linear-gradient(150deg, #3a3b3f, #1d1e21 40%, #2f3034 70%, #1a1b1e);
+  }
+
+  .ss-phone[data-frame="android"] .ss-phone__glass {
+    background: #050505;
+  }
+
+  .ss-phone[data-frame="android"] .ss-phone__island {
+    top: 14px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+  }
+
+  .ss-phone[data-frame="android"] .ss-phone__status {
+    height: 48px;
+    padding: 0 26px;
+  }
+
+  .ss-phone[data-frame="android"] .ss-phone__time {
+    font-family: system-ui, sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .ss-phone[data-frame="android"] .ss-phone__content[data-status] {
+    padding-top: 48px;
+  }
+
+  .ss-phone[data-frame="android"] .ss-phone__home {
+    width: 108px;
+    height: 4px;
+  }
+
+  /* Soft: a frosted white frame with a hairline edge. */
+  /* Soft: the illustrative phone of a product marketing page. One pale,
+     even band with a hairline ring, a soft shade along its inner bottom edge
+     (lit from above), a light lifted shadow; no island, no status bar */
+  .ss-phone[data-frame="soft"] {
+    box-shadow:
+      0 0 0 calc(var(--ps) * 1.5) rgba(10, 37, 64, 0.05),
+      0 calc(var(--ps) * 30) calc(var(--ps) * 60) calc(var(--ps) * -12) rgba(50, 50, 93, 0.18),
+      0 calc(var(--ps) * 18) calc(var(--ps) * 36) calc(var(--ps) * -18) rgba(0, 0, 0, 0.12);
+  }
+
+  .ss-phone[data-frame="soft"] .ss-phone__glass {
+    background: #f6f9fc;
+    box-shadow: inset 0 calc(var(--ps) * -2.9) calc(var(--ps) * 7.2) rgba(10, 37, 64, 0.22);
+  }
+
+  .ss-stage[data-theme="dark"] .ss-phone[data-frame="soft"] .ss-phone__glass {
+    background: #1c2433;
+    box-shadow: inset 0 calc(var(--ps) * -2.9) calc(var(--ps) * 7.2) rgba(0, 0, 0, 0.45);
+  }
+
+  .ss-phone__screen {
+    --pt: 1px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    /* Most iOS screens are white; a grouped list (Settings) sets #f2f2f7 itself */
+    background: #fff;
+    color: #000;
+    font-family: -apple-system, system-ui, sans-serif;
+    font-size: 15px;
+    letter-spacing: -0.015em;
+    transform-origin: 0 0;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .ss-phone[data-dark] .ss-phone__screen {
+    background: #000;
+    color: #fff;
+  }
+
+  .ss-phone__status {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 54px;
+    padding: 0 34px 0 52px;
+    /* Light to dark content fades, never cuts, when an app opens over a dark
+       screen or closes back to it */
+    transition: color 0.3s ease;
+    /* A layer of its own for good: when an app launches under it, it would
+       otherwise be lifted onto one mid-open and its text would shift */
+    will-change: transform;
+  }
+
+  /* iOS sets the time in SF Pro Text. At this size a browser's system font
+     switches to the Display cut, whose 9 has a straighter tail; name Text
+     first, and ask the variable system font for text optics */
+  .ss-phone__time {
+    font-family: "SF Pro Text", -apple-system, system-ui, sans-serif;
+    font-variation-settings: "opsz" 17;
+    font-size: 17.67px;
+    font-weight: 590;
+    letter-spacing: 0;
+  }
+
+  .ss-phone__island {
+    position: absolute;
+    top: var(--ss-island-top, 14px);
+    left: 50%;
+    z-index: 3;
+    width: var(--ss-island-w, 95px);
+    height: 37px;
+    border-radius: 18.5px;
+    background: #000;
+    transform: translateX(-50%);
+  }
+
+  .ss-phone__glyphs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+
+  .ss-phone__glyph {
+    display: block;
+  }
+
+  .ss-phone__content {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .ss-phone__content[data-status] {
+    padding-top: 62px;
+  }
+
+  /* Frames without a status bar keep its safe area: content starts below the
+     corner's curve, never tucked into it */
+  .ss-phone__content:not([data-status]) {
+    padding-top: 44px;
+  }
+
+  /* With no frame, the screen's edge is the object's edge, and iOS's 20pt
+     margins read as cramped against it. Bare screens get a wider margin */
+  .ss-phone[data-frame="bare"] .ss-phone__content {
+    padding-right: 8px;
+    padding-left: 8px;
+  }
+
+  .ss-phone__home {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    z-index: 2;
+    width: 144px;
+    height: 5px;
+    border-radius: 2.5px;
+    background: currentColor;
+    transform: translateX(-50%);
+    /* The color fades, not the fill: currentColor is a keyword, so a
+       background-color transition never sees it change and the bar snaps */
+    transition: color 0.3s ease;
+    /* Its own layer for good, as the status bar: lifted onto one mid-open,
+       the thin bar would jump half a pixel and thin out */
+    will-change: transform;
+  }
+
+  .ss-lock {
+    position: absolute;
+    inset: 0;
+    color: #fff;
+    text-align: center;
+  }
+
+  .ss-lock__date {
+    margin-top: 66px;
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    opacity: 0.85;
+  }
+
+  .ss-lock__clock {
+    margin-top: -4px;
+    font-size: 112px;
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.035em;
+    font-variant-numeric: tabular-nums;
+    opacity: 0.92;
+  }
+
+  .ss-lock__stack {
+    position: absolute;
+    right: 0;
+    bottom: 118px;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    text-align: left;
+  }
+
+  /* Under the clock instead, for a phone cropped by the stage's bottom edge */
+  .ss-lock__stack[data-at='top'] {
+    top: 290px;
+    bottom: auto;
+  }
+
+  .ss-lock__controls {
+    position: absolute;
+    right: 46px;
+    bottom: 48px;
+    left: 46px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .ss-lock__control {
+    display: grid;
+    place-items: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    /* The lock screen's frosted buttons: a dim, blurred disc with a white glyph */
+    background: rgba(10, 12, 24, 0.26);
+    backdrop-filter: blur(24px) saturate(1.3);
+    color: #fff;
+  }
+
+  /* iOS notification banner, in points, measured from Apple's own iOS 26
+     screenshots: 38pt icon 14pt from the edges, 13pt to the text, 17pt on the
+     right, 15pt type on 18pt lines. The radius is the icon's 9 plus 14. On a
+     wallpaper it is frosted glass, so the wallpaper tints it. */
+  .ss-notification {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    /* Inset well inside the screen's corners, as iOS sets lock screen banners.
+       Where the stage (or a clipping tile) cuts the screen's sides, the
+       banner measures the cut and insets from the visible edge instead, so
+       a phone drawn past the sides at true size keeps its banner whole */
+    margin: 0 18px;
+    padding: 14px 17px 14px 14px;
+    border-radius: 23px;
+    background: rgba(252, 252, 253, 0.76);
+    backdrop-filter: blur(30px) saturate(1.25);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.06);
+    color: #000;
+    text-align: left;
+  }
+
+  /* Unlocked: the banner drops in at the top, just under the island, over
+     the app. Mount and unmount it with the story; it eases down from above */
+  .ss-notification[data-banner] {
+    position: absolute;
+    top: 56px;
+    right: 0;
+    left: 0;
+    /* Over the status bar (the same layer, later in the page) and under the
+       island, which is the hardware cutout: a banner slides in beneath it */
+    z-index: 2;
+    animation: ss-banner-in 520ms cubic-bezier(0.2, 0.9, 0.25, 1) both;
+  }
+
+  @keyframes ss-banner-in {
+    from { transform: translateY(-110px); }
+  }
+
+  .ss-notification__icon {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    overflow: hidden;
+    border-radius: 9px;
+    background: var(--ss-accent);
+    color: #fff;
+  }
+
+  /* A real app icon: the image is the whole tile, its own corners included */
+  .ss-notification__icon:has(> img) {
+    background: none;
+  }
+
+  .ss-notification__icon > img {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+
+  .ss-notification__text {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    min-width: 0;
+    font-size: 15px;
+    line-height: 18px;
+    letter-spacing: -0.016em;
+  }
+
+  .ss-notification__head {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+
+  .ss-notification__title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    font-weight: 600;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .ss-notification__time {
+    flex-shrink: 0;
+    font-size: 12px;
+    letter-spacing: -0.005em;
+    color: rgba(60, 60, 67, 0.6);
+  }
+
+  /* Wraps to three lines, as iOS shows a banner's body */
+  .ss-notification__body {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+  }
+
+  /* Satellite: a phone beside a window. No controls, and notifications stack
+     under the clock so a cropped phone still shows them. Everything stays at
+     true iOS proportion: a notification is never scaled up to read. */
+  .ss-lock[data-size='satellite'] .ss-lock__stack {
+    top: 232px;
+    bottom: auto;
+  }
+
+  /* No clock: the stack takes its place, just under the status bar, as
+     Notification Center sits, rather than floating where the clock was */
+  .ss-lock[data-size='satellite'][data-clock='off'] .ss-lock__stack {
+    top: 74px;
+  }
+
+  /* Small boxes with text keep a layer of their own. Pushed by a row opening
+     above them, or carried along by anything that moves by layout, their text
+     would step whole pixels while the fill glides, and hop about inside it */
+  .ss-notification {
+    will-change: transform;
+  }
+
+  /* A banner on a light screen needs its own edge: frosted white on white vanishes */
+  .ss-phone:not([data-dark]) .ss-notification {
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.08), 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+
+  /* Minimal fidelity: the status bar time is a placeholder like any other word */
+  .ss-phone__time-bar {
+    display: inline-block;
+    width: 30px;
+    height: 7px;
+    border-radius: 4px;
+    background: currentColor;
+    opacity: 0.5;
+  }
+}

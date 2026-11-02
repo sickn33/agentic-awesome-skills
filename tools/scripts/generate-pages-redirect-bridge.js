@@ -17,7 +17,7 @@ const DEFAULT_EXPECTED_ROUTES = 188;
 // These first-party pages were introduced after the legacy catalog moved.
 // Keep this list exact so an unexpected route still fails the curated lock.
 const NEW_INFORMATION_ROUTES = new Set([
-  'teams', 'trust', 'aas-core', 'plugins/aas-core',
+  'teams', 'trust', 'sponsors', 'aas-core', 'plugins/aas-core',
   'plugins/aas-core/privacy', 'plugins/aas-core/terms', 'plugins/aas-core/support',
 ]);
 const SAFE_SEGMENT = /^[A-Za-z0-9._~-]+$/;

@@ -33,12 +33,11 @@ export function Landing(): React.ReactElement {
       <div className="core-intro__actions">
         <Link className="core-primary" to="/core/">Explore the skill catalog <Icon name="arrowRight" size={22} /></Link>
         <a className="core-text-link" href="#get-started">Get started with Core <Icon name="arrowRight" size={20} /></a>
-        <a className="core-text-link" href="#recorded-example">See an example <Icon name="arrowDown" size={20} /></a>
       </div>
     </section>
 
     <section className="core-example" id="recorded-example" aria-label="Recorded Core example">
-      <header className="core-example__header">Recorded example · Preview only</header>
+      <header className="core-example__header"><span>Recorded example · Preview only</span><a href="https://github.com/sickn33/agentic-awesome-skills/tree/main/docs/examples/workflows/mcp-contract">View recorded project</a></header>
       <div className="core-example__stages" role="tablist" aria-label="Example stages">
         {stages.map((item, index) => <button key={item.name} id={`stage-${index}`} role="tab" type="button" aria-selected={stage === index} aria-controls="example-panel" tabIndex={stage === index ? 0 : -1} onClick={() => setStage(index)} onKeyDown={(event) => {
           let next: number;
@@ -72,10 +71,10 @@ export function Landing(): React.ReactElement {
     <div className="core-boundary"><p>Core validates and previews. Review the instructions and plan before any separate installation.</p><Link to="/docs/aas-core/">Core, CLI & MCP reference <Icon name="arrowRight" size={16} /></Link></div>
     <section className="core-video" aria-labelledby="core-video-title">
       <p className="core-eyebrow">AAS in 40 seconds</p>
-      <h2 id="core-video-title">Meet the skill catalog behind Core.</h2>
-      <p>A short introduction to reusable skills and the agent workflow around them.</p>
-      <video controls playsInline preload="none" poster={`${import.meta.env.BASE_URL}videos/aas-onboarding-poster.jpg`} aria-label="AAS introduction video">
-        <source src={`${import.meta.env.BASE_URL}videos/aas-onboarding.mp4`} type="video/mp4" />
+      <h2 id="core-video-title">See AAS and AAS Core in action.</h2>
+      <p>Discover reusable playbooks, agent-owned skill selection, and Core validation and plan previews.</p>
+      <video controls playsInline preload="none" poster={`${import.meta.env.BASE_URL}videos/aas-introduction-v3-poster.jpg`} aria-label="AAS introduction video">
+        <source src={`${import.meta.env.BASE_URL}videos/aas-introduction-v3.mp4`} type="video/mp4" />
         Your browser does not support HTML video.
       </video>
     </section>
