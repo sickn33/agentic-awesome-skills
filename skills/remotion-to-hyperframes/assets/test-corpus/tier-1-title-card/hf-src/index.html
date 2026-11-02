@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>tier-1-title-card</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: #0a0a0a;
+        font-family: Helvetica, Arial, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="stage"
+      data-composition-id="tier-1-title-card"
+      data-start="0"
+      data-width="1280"
+      data-height="720"
+      data-duration="3"
+      data-fps="30"
+    >
+      <div
+        id="title"
+        class="clip"
+        data-composition-id="title-scene"
+        data-composition-src="compositions/title.html"
+        data-start="0"
+        data-duration="3"
+        data-track-index="0"
+      ></div>
+
+      <script>
+        window.__timelines = window.__timelines || {};
+        window.__timelines["tier-1-title-card"] = gsap.timeline({ paused: true });
+      </script>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,514 @@
+/* PowerPoint for Mac. The stage clips the window: pinned top-left and right
+   on one 30px gutter, running off the bottom. */
+
+.pp-stage .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+  border-radius: 14px;
+}
+
+.pp-window {
+  position: absolute;
+  background: var(--ss-surface);
+  box-shadow: var(--ss-shadow-hero);
+}
+
+.pp-window .ss-window__body {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+}
+
+.pp-spacer { flex: 1; }
+
+/* ---- Tabs ---- */
+
+.pp-tabs {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 18px;
+  height: 30px;
+  padding: 0 16px;
+  background: var(--ss-chrome);
+}
+
+.pp-window[data-layout="compact"] .pp-tabs { gap: 14px; padding: 0 12px; }
+
+.pp-tab {
+  position: relative;
+  font-size: 11.5px;
+  line-height: 30px;
+  color: var(--ss-text);
+  white-space: nowrap;
+}
+
+.pp-tab[data-active] {
+  color: var(--ss-accent);
+  font-weight: 600;
+}
+
+.pp-tab[data-active]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 3px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--ss-accent);
+}
+
+.pp-share {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 54px;
+  height: 20px;
+  border-radius: 5px;
+  background: var(--ss-accent);
+}
+
+.pp-share-bar { background: rgba(255, 255, 255, 0.6) !important; }
+
+/* ---- Ribbon ---- */
+
+.pp-ribbon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 14px;
+  height: 62px;
+  padding: 0 16px;
+  background: var(--ss-chrome);
+  border-bottom: 1px solid var(--ss-line);
+  color: var(--ss-icon);
+}
+
+.pp-window[data-layout="compact"] .pp-ribbon { gap: 10px; padding: 0 12px; }
+
+.pp-big {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  width: 40px;
+}
+
+.pp-sep {
+  width: 1px;
+  height: 40px;
+  background: var(--ss-line);
+}
+
+.pp-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pp-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 20px;
+}
+
+.pp-icons { gap: 11px; }
+
+.pp-field {
+  display: inline-flex;
+  align-items: center;
+  height: 20px;
+  padding: 0 7px;
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 1px var(--ss-line);
+}
+
+.pp-designer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 64px;
+  height: 52px;
+  border-radius: 7px;
+  transition: background 0.15s ease;
+}
+
+.pp-designer[data-hover],
+.pp-designer[data-open] {
+  background: var(--ss-ink-2);
+}
+
+.pp-designer-icon { color: var(--ss-accent); }
+
+.pp-designer-label {
+  font-size: 10.5px;
+  line-height: 1.3;
+  color: var(--ss-text-strong);
+}
+
+/* ---- Rail, canvas, notes ---- */
+
+.pp-main {
+  position: relative;
+  display: flex;
+  flex: 1;
+  min-height: 0;
+}
+
+.pp-rail {
+  position: relative;
+  flex-shrink: 0;
+  background: var(--ss-canvas);
+  border-right: 1px solid var(--ss-line);
+}
+
+.pp-thumb {
+  position: absolute;
+  left: 0;
+  right: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding-left: 10px;
+}
+
+.pp-window[data-layout="compact"] .pp-thumb { gap: 5px; padding-left: 6px; }
+
+.pp-num {
+  width: 10px;
+  font-size: 10px;
+  line-height: 1.3;
+  color: var(--ss-text-faint);
+  text-align: right;
+}
+
+.pp-window[data-layout="compact"] .pp-num { width: 7px; font-size: 9px; }
+
+.pp-thumb-box {
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px var(--ss-line), 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.18s ease;
+}
+
+.pp-thumb-box[data-selected] {
+  box-shadow: 0 0 0 2px var(--ss-accent), 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.pp-mini {
+  overflow: hidden;
+  border-radius: 3px;
+  background: #fff;
+}
+
+.pp-work {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.pp-canvas {
+  position: relative;
+  flex-shrink: 0;
+  background: var(--ss-well);
+}
+
+.pp-fit {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 640px;
+  height: 360px;
+  transform-origin: 0 0;
+  transition: transform 0.6s cubic-bezier(0.3, 0.75, 0.1, 1);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+/* A slide swap: the old one fades out, the new one fades in with a small rise. */
+.pp-page {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  /* The outgoing slide stays solid under the incoming one, then drops away */
+  transition: opacity 0s linear 0.4s;
+}
+
+.pp-page[data-on] {
+  z-index: 1;
+  opacity: 1;
+  transition: opacity 0.35s ease;
+  animation: pp-rise 0.45s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+@keyframes pp-rise {
+  from { transform: translateY(8px); }
+}
+
+.pp-notes {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  align-items: flex-start;
+  height: 64px;
+  padding: 14px 24px 0;
+  background: var(--ss-surface);
+  border-top: 1px solid var(--ss-line);
+}
+
+.pp-window[data-layout="compact"] .pp-notes { height: 56px; padding: 12px 14px 0; }
+
+.pp-status {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  height: 26px;
+  padding: 0 16px;
+  background: var(--ss-canvas);
+  border-top: 1px solid var(--ss-line);
+}
+
+/* ---- Designer pane ---- */
+
+.pp-pane {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 0 16px;
+  background: var(--ss-surface);
+  border-left: 1px solid var(--ss-line);
+  transform: translateX(100%);
+  transition: transform 0.6s cubic-bezier(0.3, 0.75, 0.1, 1);
+}
+
+.pp-pane[data-open] { transform: none; }
+
+.pp-window[data-layout="compact"] .pp-pane { gap: 10px; padding: 0 12px; }
+
+.pp-pane-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.pp-window[data-layout="compact"] .pp-pane-head { height: 34px; }
+
+.pp-pane-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ss-text-strong);
+}
+
+.pp-window[data-layout="compact"] .pp-pane-title { font-size: 12px; }
+
+.pp-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-right: -4px;
+  border-radius: 5px;
+  color: var(--ss-icon);
+  transition: background 0.15s ease;
+}
+
+.pp-close[data-hover] { background: var(--ss-ink-2); }
+
+.pp-idea {
+  flex-shrink: 0;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px var(--ss-line);
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity 0.4s ease var(--d, 0ms),
+    transform 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) var(--d, 0ms),
+    box-shadow 0.15s ease;
+}
+
+.pp-idea .pp-mini { border-radius: 4px; }
+
+.pp-idea[data-show] { opacity: 1; transform: none; }
+
+.pp-idea[data-hover] { box-shadow: 0 0 0 2px var(--ss-ink-5); }
+
+.pp-idea[data-picked] { box-shadow: 0 0 0 2px var(--ss-accent); }
+
+/* ---- The slide (640 × 360) ---- */
+
+.pp-slide {
+  position: relative;
+  width: 640px;
+  height: 360px;
+  overflow: hidden;
+  background: #fff;
+  font-family: var(--ss-font);
+  --move: 0.9s cubic-bezier(0.45, 0, 0.1, 1);
+}
+
+.pp-panel {
+  position: absolute;
+  left: 300px;
+  top: 0;
+  width: 340px;
+  height: 360px;
+  background: #1f2b3a;
+  transform: translateX(100%);
+  transition: transform var(--move);
+}
+
+.pp-panel[data-show] { transform: none; }
+
+.pp-photo {
+  position: absolute;
+  overflow: hidden;
+  transition: left var(--move), top var(--move), width var(--move), height var(--move);
+}
+
+.pp-photo-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.pp-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 22, 32, 0) 35%, rgba(15, 22, 32, 0.72) 100%);
+  transition: opacity 0.5s ease;
+}
+
+.pp-rule {
+  position: absolute;
+  left: 336px;
+  top: 108px;
+  width: 44px;
+  height: 4px;
+  border-radius: 2px;
+  background: #e8834f;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.pp-rule[data-show] {
+  transform: none;
+  transition-delay: 0.6s;
+}
+
+.pp-title {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  color: #1f1f1f;
+  transition: transform var(--move), color 0.25s ease 0.15s;
+}
+
+.pp-slide[data-light] .pp-title {
+  color: #fff;
+  transition: transform var(--move), color 0.25s ease 0.55s;
+}
+
+.pp-bullets {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  transition: transform var(--move) 0.05s;
+}
+
+.pp-bullet {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.pp-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #3a3a3a;
+  transition: background 0.25s ease 0.15s;
+}
+
+.pp-line {
+  height: 10px;
+  border-radius: 5px;
+  background: #dcdcdc;
+  transition: background 0.25s ease 0.15s;
+}
+
+.pp-slide[data-light] .pp-dot { background: #e8834f; transition-delay: 0.6s; }
+.pp-slide[data-light] .pp-line { background: rgba(255, 255, 255, 0.32); transition-delay: 0.6s; }
+
+/* Slide 1: the title slide */
+.pp-slide[data-n="1"] {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+}
+
+.pp-s1-title {
+  font-size: 40px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  color: #1f1f1f;
+}
+
+.pp-s1-sub {
+  width: 220px;
+  height: 12px;
+  border-radius: 6px;
+  background: #dcdcdc;
+}
+
+/* Later slides: a title and a few lines */
+.pp-slide[data-n="other"] {
+  display: flex;
+  flex-direction: column;
+  gap: 26px;
+  padding: 52px 56px;
+}
+
+.pp-o-title {
+  height: 24px;
+  margin-bottom: 16px;
+  border-radius: 6px;
+  background: #cfcfcf;
+}
+
+.pp-o-row {
+  height: 12px;
+  border-radius: 6px;
+  background: #e2e2e2;
+}
+
+/* Narrow, the window runs off the left by the rail's width (78px): the tab
+   row and ribbon start that far in, so they begin in frame with Home, never
+   a word sliced at the stage edge. Paste goes to make room. */
+.pp-window[data-layout="compact"] .pp-tabs,
+.pp-window[data-layout="compact"] .pp-ribbon { padding-left: 94px; }
+.pp-window[data-layout="compact"] .pp-ribbon > :first-child { display: none; }

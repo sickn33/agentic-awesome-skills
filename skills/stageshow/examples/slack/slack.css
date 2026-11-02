@@ -1,0 +1,847 @@
+/* Slack, Aubergine theme. One purple family for the chrome, Slack's own
+   neutral grays for the content, Slack blue only on what the user did. */
+
+.sl {
+  --sl-aub: #3f0e40;
+  --sl-side: #522653;
+  --sl-aub-raise: #5f3360;
+  --sl-on-aub: #e7dbe8;
+  --sl-on-aub-soft: #c9b5ca;
+  --sl-ink: #1d1c1d;
+  --sl-ink-2: #616061;
+  --sl-ink-3: #868686;
+  --sl-line: #e2e2e2;
+  --sl-line-2: #d0d0d0;
+  --sl-hover: #f6f6f6;
+  --sl-blue: #1264a3;
+  --sl-blue-line: #1d9bd1;
+  --sl-blue-soft: #e8f5fa;
+  --sl-green: #007a5a;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+.sl .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+.sl-grow {
+  flex: 1;
+}
+
+.sl-i {
+  display: block;
+  flex-shrink: 0;
+}
+
+/* ---- Window and top bar ---- */
+
+.sl-win {
+  position: absolute;
+  left: 40px;
+  top: 40px;
+  width: 860px;
+  height: 560px;
+  background: var(--sl-aub);
+  box-shadow: var(--ss-shadow-hero);
+}
+
+.sl-win .ss-window__bar {
+  position: relative;
+  background: var(--sl-aub);
+  border-bottom: none;
+  color: var(--sl-on-aub-soft);
+}
+
+.sl-win .ss-window__spacer {
+  flex: 1;
+}
+
+.sl-top__nav {
+  display: flex;
+  gap: 12px;
+  margin-left: 26px;
+}
+
+.sl-top__search {
+  position: absolute;
+  top: 7px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 380px;
+  height: 24px;
+  margin-left: -190px;
+  border-radius: 6px;
+  background: var(--sl-aub-raise);
+  color: var(--sl-on-aub);
+  font-size: 12.5px;
+}
+
+.sl-top__help {
+  display: flex;
+  color: var(--sl-on-aub-soft);
+}
+
+.sl-body {
+  display: flex;
+  height: 100%;
+  background: var(--sl-aub);
+}
+
+/* ---- Rail ---- */
+
+.sl-rail {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  gap: 12px;
+  width: 68px;
+  padding: 4px 0 14px;
+}
+
+.sl-rail__ws {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 4px;
+  border-radius: 9px;
+  background: #f3eaf3;
+  color: var(--sl-aub);
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.sl-rail__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  color: var(--sl-on-aub);
+}
+
+.sl-rail__btn {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+}
+
+.sl-rail__item[data-active] .sl-rail__btn {
+  background: var(--sl-aub-raise);
+  color: #fff;
+}
+
+.sl-rail__label {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.sl-rail__plus {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--sl-aub-raise);
+  color: var(--sl-on-aub);
+}
+
+.sl-rail__me {
+  position: relative;
+  display: flex;
+}
+
+.sl-rail__status {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--sl-aub);
+  border-radius: 50%;
+  background: #2bac76;
+}
+
+/* ---- Faces: Slack's rounded-square avatars ---- */
+
+.sl-face {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  color: #fff;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.sl-face[data-who='maya'] { background: #c9715c; }
+.sl-face[data-who='alex'] { background: #4d8b77; }
+.sl-face[data-who='p1'] { background: #7a8ca5; }
+.sl-face[data-who='p2'] { background: #9686b0; }
+.sl-face[data-who='p3'] { background: #ad9471; }
+
+/* ---- The workspace panel ---- */
+
+.sl-panel {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  margin: 0 6px 6px 0;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.sl-side {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 180px;
+  padding: 0 8px;
+  background: var(--sl-side);
+  color: var(--sl-on-aub-soft);
+}
+
+.sl-side__head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 49px;
+  padding: 0 4px 0 10px;
+  color: #fff;
+}
+
+.sl-side__ws {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.sl-side__compose {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: #f3eaf3;
+  color: var(--sl-aub);
+}
+
+.sl-side__list {
+  display: grid;
+  gap: 2px;
+}
+
+.sl-side__row,
+.sl-side__section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  padding: 0 10px;
+  border-radius: 6px;
+}
+
+.sl-side__section {
+  margin-top: 10px;
+  gap: 9px;
+}
+
+.sl-side__row[data-active] {
+  background: #f5edf5;
+  color: var(--sl-aub);
+}
+
+.sl-side__name {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.sl-side__glyph {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: #8c6a8e;
+}
+
+.sl-side__row .sl-face {
+  font-size: 9px !important;
+}
+
+/* ---- Channel ---- */
+
+.sl-channel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.sl-channel__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  height: 49px;
+  padding: 0 12px 0 18px;
+}
+
+.sl-channel__title {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--sl-ink);
+}
+
+.sl-channel__title .sl-i:last-child {
+  margin-left: 2px;
+  color: var(--sl-ink-2);
+}
+
+.sl-members {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 8px 0 4px;
+  border: 1px solid var(--sl-line-2);
+  border-radius: 6px;
+}
+
+.sl-members__faces {
+  display: flex;
+}
+
+.sl-members__faces .sl-face {
+  font-size: 9px !important;
+  box-shadow: 0 0 0 2px #fff;
+}
+
+.sl-members__faces .sl-face + .sl-face {
+  margin-left: -5px;
+}
+
+.sl-members__count {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sl-ink-2);
+}
+
+.sl-headbtn {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--sl-line-2);
+  border-radius: 6px;
+  color: var(--sl-ink-2);
+  transition: background 0.12s ease;
+}
+
+.sl-headbtn[data-hover] {
+  background: var(--sl-hover);
+}
+
+.sl-tabs {
+  display: flex;
+  gap: 20px;
+  flex-shrink: 0;
+  height: 36px;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--sl-line);
+}
+
+.sl-tab {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--sl-ink-2);
+}
+
+.sl-tab[data-active] {
+  color: var(--sl-ink);
+  box-shadow: inset 0 -2px 0 var(--sl-aub);
+}
+
+.sl-tab__glyph {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: var(--ss-ink-2);
+}
+
+.sl-feed {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding-bottom: 6px;
+}
+
+.sl-divider {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  margin: 4px 0 6px;
+}
+
+.sl-divider::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  right: 20px;
+  top: 50%;
+  border-top: 1px solid var(--sl-line);
+}
+
+.sl-divider__pill {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 26px;
+  padding: 0 14px;
+  border: 1px solid var(--sl-line-2);
+  border-radius: 13px;
+  background: #fff;
+}
+
+/* ---- Messages ---- */
+
+.sl-msg {
+  position: relative;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  column-gap: 10px;
+  margin: 0 8px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: background 0.14s ease;
+}
+
+.sl-row {
+  position: relative;
+}
+
+.sl-row[data-hover] .sl-msg--live {
+  background: var(--sl-hover);
+}
+
+.sl-msg__body {
+  min-width: 0;
+}
+
+.sl-msg__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  height: 20px;
+}
+
+.sl-msg__meta--bars {
+  align-items: center;
+  gap: 8px;
+}
+
+.sl-msg__lines {
+  display: grid;
+  gap: 10px;
+  padding: 8px 0 6px;
+}
+
+.sl-msg__name {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--sl-ink);
+}
+
+.sl-msg__time {
+  font-size: 12px;
+  color: var(--sl-ink-2);
+}
+
+.sl-msg__text {
+  /* Three short lines that keep their breaks whether the thread is open or not */
+  max-width: 224px;
+  margin: 2px 0 0;
+  font-size: 15px;
+  line-height: 22px;
+  color: var(--sl-ink);
+}
+
+.sl-msg--thread .sl-msg__text {
+  max-width: none;
+}
+
+.sl-msg__reacts {
+  display: flex;
+  gap: 4px;
+  padding-top: 6px;
+}
+
+.sl-react {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 24px;
+  padding: 0 9px 0 7px;
+  border: 1px solid var(--sl-line-2);
+  border-radius: 12px;
+  background: #f5f5f5;
+  transform: scale(0.82);
+  transition: transform 0.36s cubic-bezier(0.3, 0.75, 0.1, 1);
+}
+
+.ss-collapse[data-open] .sl-react,
+.sl-msg--thread .sl-react {
+  transform: none;
+}
+
+.sl-react[data-mine] {
+  border-color: var(--sl-blue-line);
+  background: var(--sl-blue-soft);
+}
+
+.sl-react__emoji {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.sl-react__count {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--sl-ink-2);
+}
+
+.sl-react[data-mine] .sl-react__count {
+  color: var(--sl-blue);
+}
+
+.sl-replies {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 6px;
+}
+
+.sl-replies__link {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--sl-blue);
+}
+
+.sl-replies__when {
+  font-size: 13px;
+  color: var(--sl-ink-3);
+}
+
+/* The hover toolbar: quick reactions, then the actions */
+
+.sl-hover {
+  position: absolute;
+  top: -15px;
+  right: 18px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  padding: 2px;
+  border: 1px solid var(--sl-line-2);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  transform: translateY(3px);
+  transition: opacity 0.14s ease, transform 0.18s ease;
+  pointer-events: none;
+}
+
+.sl-row[data-hover] .sl-hover {
+  opacity: 1;
+  transform: none;
+}
+
+/* Once the thread opens, the toolbar's job is done: it leaves rather than ride over the name as the column narrows */
+.sl-channel[data-thread] .sl-hover {
+  opacity: 0;
+}
+
+.sl-hover__btn {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  color: var(--sl-ink-2);
+  transition: background 0.1s ease;
+}
+
+.sl-hover__btn[data-hover] {
+  background: #ededed;
+}
+
+.sl-hover__emoji {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.sl-hover__div {
+  width: 1px;
+  height: 18px;
+  margin: 0 3px;
+  background: var(--sl-line-2);
+}
+
+/* ---- Composer ---- */
+
+.sl-channel__compose {
+  flex-shrink: 0;
+  padding: 0 20px 20px;
+}
+
+.sl-compose {
+  border: 1px solid var(--sl-line-2);
+  border-radius: 8px;
+  background: #fff;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.sl-compose[data-focus] {
+  border-color: #8a8a8a;
+  box-shadow: 0 1px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.sl-compose__text {
+  position: relative;
+  min-height: 42px;
+  padding: 11px 12px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--sl-ink);
+}
+
+.sl-compose__placeholder {
+  position: absolute;
+  left: 12px;
+  top: 11px;
+  color: var(--sl-ink-3);
+  transition: opacity 0.1s ease;
+}
+
+.sl-compose__placeholder[data-hide] {
+  opacity: 0;
+}
+
+.sl-caret {
+  display: inline-block;
+  width: 1.5px;
+  height: 18px;
+  margin-left: 1px;
+  vertical-align: -4px;
+  background: var(--sl-ink);
+  opacity: 0;
+}
+
+.sl-caret[data-show] {
+  animation: sl-blink 1.05s steps(1) infinite;
+}
+
+.sl-caret[data-typing] {
+  animation: none;
+  opacity: 1;
+}
+
+@keyframes sl-blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.sl-compose__tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 36px;
+  padding: 0 6px 0 8px;
+  color: var(--sl-ink-2);
+}
+
+.sl-compose__round {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #efefef;
+}
+
+.sl-compose__sep {
+  width: 1px;
+  height: 16px;
+  background: var(--sl-line-2);
+}
+
+.sl-compose__send {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 24px;
+  border-radius: 5px;
+  color: #a5a5a5;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sl-compose__send[data-ready] {
+  background: var(--sl-green);
+  color: #fff;
+}
+
+/* ---- Thread panel ---- */
+
+.sl-thread-wrap {
+  position: relative;
+  flex-shrink: 0;
+  width: 0;
+  overflow: hidden;
+  transition: width 0.6s cubic-bezier(0.3, 0.75, 0.1, 1);
+}
+
+.sl-thread-wrap[data-open] {
+  width: 280px;
+}
+
+/* Pinned to the column's left, so as the column opens the panel slides out
+   from under the window's right edge, whole, rather than being wiped on */
+.sl-thread {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  width: 280px;
+  border-left: 1px solid var(--sl-line);
+  background: #fff;
+}
+
+.sl-thread__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  height: 49px;
+  padding: 0 12px 0 16px;
+  border-bottom: 1px solid var(--sl-line);
+}
+
+.sl-thread__title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--sl-ink);
+}
+
+.sl-thread__where {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  font-size: 12.5px;
+  color: var(--sl-ink-2);
+}
+
+.sl-thread__body {
+  padding: 10px 0;
+}
+
+.sl-thread__count {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 20px 4px;
+  font-size: 12.5px;
+  color: var(--sl-ink-2);
+}
+
+.sl-thread__rule {
+  flex: 1;
+  border-top: 1px solid var(--sl-line);
+}
+
+.sl-thread__compose {
+  padding: 8px 16px 0;
+}
+
+/* The live message's toolbar floats half above the row, as Slack's does, so
+   its Collapse clips wider than the kit's 3px */
+.sl-live > .ss-collapse__inner {
+  overflow-clip-margin: 24px;
+}
+
+/* ---- Compact: the channel alone, for an article column ----
+   The rail and sidebar go, the window runs off the bottom, and the thread
+   slides over the channel from the right instead of squeezing it. Open, it
+   covers the channel whole: a strip of channel beside it would show its
+   words sliced at the thread's edge. */
+
+.ss-stage[data-layout='compact'] .sl-win {
+  left: 20px;
+  top: 20px;
+  width: 400px;
+  height: 460px;
+}
+
+.ss-stage[data-layout='compact'] .sl-rail,
+.ss-stage[data-layout='compact'] .sl-side,
+.ss-stage[data-layout='compact'] .sl-top__nav {
+  display: none;
+}
+
+.ss-stage[data-layout='compact'] .sl-panel {
+  position: relative;
+  margin-left: 6px;
+}
+
+.ss-stage[data-layout='compact'] .sl-thread-wrap {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  box-shadow: -12px 0 24px -16px rgba(0, 0, 0, 0.25);
+}
+
+.ss-stage[data-layout='compact'] .sl-thread-wrap {
+  /* A real slide: the whole panel moves in from the right edge, so no word is
+     ever wiped or cut by a growing edge */
+  width: 388px;
+  translate: 100% 0;
+  transition: translate 0.6s cubic-bezier(0.3, 0.75, 0.1, 1);
+}
+
+.ss-stage[data-layout='compact'] .sl-thread-wrap[data-open] {
+  width: 388px;
+  translate: 0 0;
+}
+
+.ss-stage[data-layout='compact'] .sl-thread {
+  width: 388px;
+}
+
+.ss-stage[data-layout='compact'] .sl-top__search {
+  width: 280px;
+  margin-left: -140px;
+}
+
+/* The compact feed keeps one older message, so Maya's arrival, its reaction
+   and its reply line fit without pushing anything under the tabs */
+.ss-stage[data-layout='compact'] .sl-feed > .sl-divider + .sl-msg {
+  display: none;
+}

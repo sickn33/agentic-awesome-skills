@@ -1,0 +1,417 @@
+/* Notion, light. One warm neutral family (Notion's rgb(55,53,47) ink), its
+   blue for the thing acted on. Gutter: 40px wide, 20px compact. */
+
+.nt .ss-stage {
+  --gutter: 40px;
+  --nt-ink: #37352f;
+  --nt-ink-2: #787774;
+  --nt-ink-3: #a5a4a0;
+  --nt-side: #f8f8f7;
+
+  --ss-ink-1: rgba(55, 53, 47, 0.04);
+  --ss-ink-2: rgba(55, 53, 47, 0.06);
+  --ss-ink-3: rgba(55, 53, 47, 0.09);
+  --ss-ink-4: rgba(55, 53, 47, 0.13);
+  --ss-ink-5: rgba(55, 53, 47, 0.2);
+  --ss-line: rgba(55, 53, 47, 0.09);
+  --ss-line-faint: rgba(55, 53, 47, 0.05);
+  --ss-text: var(--nt-ink-2);
+  --ss-text-strong: var(--nt-ink);
+  --ss-text-faint: var(--nt-ink-3);
+  --ss-icon: #91918e;
+  --ss-icon-faint: #c3c2bf;
+  --ss-canvas: var(--nt-side);
+  --ss-well: #ecebe8;
+  --ss-font: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, sans-serif;
+
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+.nt .ss-stage[data-layout="compact"] {
+  --gutter: 20px;
+}
+
+/* Pinned top-left, runs off the right (the page's empty margin) and the bottom */
+.nt-window {
+  position: absolute;
+  top: var(--gutter);
+  left: var(--gutter);
+  width: 820px;
+  height: 600px;
+  border-radius: 10px;
+  box-shadow: var(--ss-shadow-hero);
+}
+
+.ss-stage[data-layout="compact"] .nt-window {
+  width: 460px;
+  height: 520px;
+  background: #fff;
+}
+
+.ss-stage[data-layout="compact"] .nt-window > .ss-window__bar {
+  background: #fff;
+}
+
+.nt-window .ss-window__main > .ss-window__bar,
+.ss-stage[data-layout="compact"] .nt-window > .ss-window__bar {
+  border-bottom-color: transparent;
+}
+
+.nt-ico {
+  flex-shrink: 0;
+  color: var(--ss-icon);
+}
+
+.nt-ico-faint {
+  flex-shrink: 0;
+  color: var(--ss-icon-faint);
+}
+
+/* ---- Sidebar ---- */
+
+.nt-side {
+  display: flex;
+  flex-direction: column;
+  padding: 2px 8px;
+}
+
+.nt-ws {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 8px;
+  margin-bottom: 4px;
+}
+
+.nt-ws__mark {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  background: #e3e2df;
+  color: var(--nt-ink-2);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.nt-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.nt-nav__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 6px;
+}
+
+.nt-nav__row[data-active] {
+  background: rgba(55, 53, 47, 0.06);
+}
+
+.nt-nav__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--nt-ink);
+}
+
+.nt-section {
+  display: flex;
+  align-items: center;
+  height: 30px;
+  padding: 0 8px;
+  margin-top: 14px;
+}
+
+/* ---- Top bar ---- */
+
+.nt-crumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ss-stage[data-layout="compact"] .nt-crumb {
+  margin-left: 12px;
+}
+
+.nt-crumb__toggle {
+  margin-right: 6px;
+}
+
+.nt-crumb__label {
+  font-size: 13px;
+  color: var(--nt-ink);
+}
+
+.nt-tools {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.nt-share {
+  font-size: 13px;
+  color: var(--nt-ink);
+}
+
+/* ---- Page ---- */
+
+.nt-page {
+  padding: 34px 96px 0 96px;
+  color: var(--nt-ink);
+}
+
+.ss-stage[data-layout="compact"] .nt-page {
+  padding: 26px 40px 0 52px;
+}
+
+.nt-title {
+  margin: 0 0 12px;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.ss-stage[data-layout="compact"] .nt-title {
+  font-size: 28px;
+}
+
+.nt-block {
+  display: flex;
+  align-items: center;
+  height: 30px;
+}
+
+.nt-h2 {
+  height: 40px;
+  margin-top: 10px;
+}
+
+.nt-line {
+  position: relative;
+  height: 30px;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+/* Notion's block handle: + and the drag dots, shown while the block is hovered */
+.nt-handle {
+  position: absolute;
+  top: 3px;
+  left: -46px;
+  display: flex;
+  gap: 2px;
+  color: var(--ss-icon-faint);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.nt-line[data-hover] .nt-handle {
+  opacity: 1;
+}
+
+.nt-layer {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.nt-layer[data-show] {
+  opacity: 1;
+}
+
+.nt-slash {
+  white-space: pre;
+}
+
+.nt-placeholder {
+  color: var(--nt-ink-3);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.nt-placeholder[data-show] {
+  opacity: 1;
+}
+
+/* A text caret: solid while typing, blinking at rest */
+.nt-caret {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 1.5px;
+  height: 20px;
+  margin: 0 1px 0 0;
+  background: var(--nt-ink);
+  opacity: 0;
+  vertical-align: middle;
+}
+
+.nt-caret[data-show] {
+  animation: nt-blink 1.06s steps(1, end) infinite;
+}
+
+.nt-caret[data-show][data-typing] {
+  opacity: 1;
+  animation: none;
+}
+
+@keyframes nt-blink {
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* ---- The to-do block ---- */
+
+.nt-todo {
+  gap: 8px;
+  transform: translateY(0);
+  transition: opacity 0.22s ease, transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.nt-todo:not([data-show]) {
+  transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.45, 0, 0.1, 1);
+}
+
+.nt-box {
+  position: relative;
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 16px;
+  height: 16px;
+  margin: 0 2px 0 2px;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1.5px var(--nt-ink);
+  color: #fff;
+  transform: scale(0.6);
+  transition: background-color 0.14s ease, box-shadow 0.14s ease, transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.nt-todo[data-show] .nt-box {
+  transform: none;
+}
+
+.nt-box[data-pressed] {
+  transform: scale(0.92) !important;
+}
+
+.nt-box svg {
+  opacity: 0;
+  transform: scale(0.5);
+  transition: opacity 0.12s ease, transform 0.22s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.nt-todo[data-done] .nt-box {
+  background: var(--ss-accent);
+  box-shadow: inset 0 0 0 1.5px var(--ss-accent);
+}
+
+.nt-todo[data-done] .nt-box svg {
+  opacity: 1;
+  transform: none;
+}
+
+.nt-todo__text {
+  display: flex;
+  align-items: center;
+  white-space: pre;
+  text-decoration: line-through;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  transition: color 0.2s ease, text-decoration-color 0.2s ease;
+}
+
+.nt-todo[data-done] .nt-todo__text {
+  color: var(--nt-ink-3);
+  text-decoration-color: #c3c2bf;
+}
+
+/* ---- Slash menu ---- */
+
+.nt-menu {
+  top: calc(100% + 4px);
+  left: -4px;
+  width: 300px;
+  padding: 6px 4px;
+  border-radius: 10px;
+  --ss-popover-bg: #fff;
+  --ss-popover-shadow: 0 0 0 1px rgba(55, 53, 47, 0.09), 0 3px 6px rgba(15, 15, 15, 0.06), 0 9px 24px rgba(15, 15, 15, 0.12);
+}
+
+.ss-stage[data-layout="compact"] .nt-menu {
+  width: 264px;
+}
+
+.nt-menu__head {
+  display: flex;
+  align-items: center;
+  height: 26px;
+  padding: 0 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--nt-ink-2);
+}
+
+.nt-menu .ss-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: var(--nt-ink);
+  transition: background-color 0.12s ease;
+}
+
+.nt-menu .ss-menu__item[data-active],
+.nt-menu .ss-menu__item[data-hover] {
+  background: rgba(55, 53, 47, 0.06);
+  transition-duration: 0s;
+}
+
+.nt-menu__icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  color: var(--nt-ink-2);
+}
+
+.nt-menu__label {
+  flex: 1;
+}
+
+.nt-menu__hint {
+  font-size: 12px;
+  color: var(--nt-ink-3);
+}
+
+/* ---- Cursor rest ---- */
+
+.nt-rest {
+  position: absolute;
+  top: 330px;
+  left: 560px;
+  width: 1px;
+  height: 1px;
+}
+
+.ss-stage[data-layout="compact"] .nt-rest {
+  top: 300px;
+  left: 330px;
+}

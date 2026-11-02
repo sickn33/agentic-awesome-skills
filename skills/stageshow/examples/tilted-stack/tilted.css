@@ -1,0 +1,63 @@
+.ts .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+/* The pile: centered, every card the same size, stacked in one cell */
+.ts-pile {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  translate: -50% -50%;
+}
+
+.ts-card {
+  grid-area: 1 / 1;
+  display: grid;
+  align-content: start;
+  gap: 10px;
+  width: 220px;
+  height: 196px;
+  padding: 20px;
+  border-radius: 10px;
+  background: var(--ss-surface);
+  box-shadow: var(--ss-shadow-card);
+}
+
+/* Small, alternating angles, each about its own center, offset unevenly */
+.ts-card--back { translate: -20px 10px; rotate: -6deg; }
+.ts-card--mid { translate: 18px -6px; rotate: 4deg; }
+.ts-card--top { translate: 0 4px; rotate: -2deg; box-shadow: var(--ss-shadow-satellite); }
+
+.ts-merchant {
+  color: var(--ss-text-strong);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.ts-date {
+  margin-top: -6px;
+  color: var(--ss-text);
+  font-size: 11px;
+}
+
+.ts-items {
+  display: grid;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 12px 0;
+  border-block: 1px dashed var(--ss-line);
+}
+
+.ts-item,
+.ts-total {
+  display: flex;
+  justify-content: space-between;
+  color: var(--ss-text-strong);
+  font-size: 12px;
+}
+
+.ts-total {
+  font-weight: 600;
+}

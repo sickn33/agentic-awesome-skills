@@ -1,0 +1,192 @@
+/* All rules belong to this example, including its responsive variants. */
+.sc-card {
+  /* The card is the stage: it clips the window, so the bleed is a clean crop.
+     One gutter for every edge something sits near: the window's top, and the
+     detail card's left and bottom. */
+  & .ss-stage {
+    --gutter: 24px;
+    overflow: hidden;
+    border-radius: 16px;
+    background: var(--ss-well);
+  }
+
+  /* Pinned top-left with a gutter on the left for the detail card; runs about
+     a third past the right edge and off the bottom. */
+  .sc-window {
+    position: absolute;
+    top: var(--gutter);
+    left: 104px;
+    width: 460px;
+    height: 320px;
+    background: var(--ss-surface);
+    border-radius: 10px;
+    box-shadow: var(--ss-shadow-hero);
+  }
+
+  /* Keep the selected customer whole in the narrow crop; only filler bleeds. */
+  & [data-layout="compact"] .sc-window { left: 68px; }
+
+  .sc-window .ss-window__body {
+    display: flex;
+  }
+
+  .sc-sidebar {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    gap: 4px;
+    width: 120px;
+    padding: 16px 10px;
+    border-right: 1px solid var(--ss-line);
+    background: var(--ss-canvas);
+  }
+
+  .sc-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 24px;
+    padding: 0 6px;
+    border-radius: 6px;
+  }
+
+  .sc-main {
+    flex: 1;
+    min-width: 0;
+    padding: 16px 18px;
+  }
+
+  .sc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+
+  .sc-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ss-text-strong);
+  }
+
+  .sc-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Kit Rows at this list's pitch: a hairline between, the selection inset */
+  .sc-row {
+    align-content: center;
+    height: 36px;
+    margin: 0 -8px;
+    padding: 0 8px;
+    border-radius: 8px;
+    border-bottom: 1px solid var(--ss-line-faint);
+    transition: background 0.15s ease;
+  }
+
+  .sc-row[data-selected] {
+    background: var(--ss-accent-soft);
+    border-bottom-color: transparent;
+  }
+
+  .sc-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ss-text-strong);
+  }
+
+  .sc-row .ss-avatar,
+  .sc-avatar-large {
+    font-weight: 600;
+  }
+
+  /* The satellite: straddles the window's lower-left edge, over filler rows
+     and clear of the selection, with a stronger shadow than the window so it
+     sits a level above it. */
+  .sc-detail {
+    position: absolute;
+    bottom: var(--gutter);
+    left: var(--gutter);
+    /* Ends a full gutter short of the sidebar divider (104 + 120 = 224) rather
+       than nearly touching it */
+    width: 176px;
+    padding: 14px 16px 10px;
+    border-radius: 12px;
+    background: var(--ss-surface);
+    box-shadow: var(--ss-shadow-satellite);
+  }
+
+  .sc-detail-head {
+    display: flex;
+    align-items: center;
+    /* 26 + 8 + the name (106) leaves the 144px row a few pixels of air */
+    gap: 8px;
+    padding-bottom: 12px;
+    margin-bottom: 2px;
+    border-bottom: 1px solid var(--ss-line);
+  }
+
+  .sc-detail-who {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .sc-detail-name {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ss-text-strong);
+  }
+
+  .sc-detail-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 28px;
+  }
+
+  .sc-detail-row.total {
+    margin-top: 4px;
+    padding-top: 4px;
+    border-top: 1px solid var(--ss-line);
+    height: 32px;
+  }
+
+  .sc-detail-label {
+    font-size: 11px;
+    color: var(--ss-text);
+  }
+
+  .sc-detail-total {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ss-text-strong);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sc-nav__label {
+    font-size: 10.5px;
+    line-height: 14px;
+    color: var(--ss-text);
+  }
+
+  .sc-nav[data-on] .sc-nav__label {
+    color: var(--ss-text-strong);
+    font-weight: 600;
+  }
+
+  .sc-rowname {
+    font-size: 11px;
+    font-weight: 400;
+    line-height: 14px;
+    color: var(--ss-text);
+  }
+
+  .sc-rowamount {
+    margin-left: auto;
+    font-size: 11px;
+    line-height: 14px;
+    color: var(--ss-text-faint);
+  }
+}

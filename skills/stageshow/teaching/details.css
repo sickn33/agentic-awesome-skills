@@ -1,0 +1,90 @@
+/* Detail pairs: one small scene per lesson, the same on both sides but for
+   the one choice */
+
+.tc-lessons .dd-pair figure { height: 302px; }
+.tc-lessons .dd-visual { height: 252px; overflow: hidden; border-radius: 10px; background: #f3f3f2; color: #1f1f1f; font: 400 13px/18px var(--ss-font); }
+
+/* Shared row */
+.tc-lessons .dt-row { display: flex; align-items: center; gap: 10px; height: 56px; padding: 0 14px; background: #fff; }
+.tc-lessons .dt-av { display: grid; flex: none; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: #8e9aaf; color: #fff; font: 600 13px/1 var(--ss-font); }
+.tc-lessons .dt-av--jp { background: #6a8caf; }
+.tc-lessons .dt-av--fill { background: #e6e6e4; }
+.tc-lessons .dt-lines { display: grid; gap: 3px; min-width: 0; }
+.tc-lessons .dt-lines b { font-weight: 600; font-size: 13px; }
+.tc-lessons .dt-lines span { color: #7a7a7a; font-size: 12px; }
+.tc-lessons .dt-lines i { display: block; height: 8px; border-radius: 4px; background: #e6e6e4; }
+
+/* Throw */
+.tc-lessons .dt-list { width: 300px; overflow: hidden; border-radius: 12px; box-shadow: 0 0 0 1px #0000000d, 0 6px 18px #0000000f; background: #fff; }
+.tc-lessons .dt-list .dt-row + .dt-row, .tc-lessons .dt-slot + .dt-row { box-shadow: inset 0 1px #0000000a; }
+.tc-lessons .dt-slot { position: relative; height: 56px; overflow: hidden; }
+.tc-lessons .dt-action { position: absolute; inset: 0; display: flex; align-items: center; justify-content: flex-end; padding-right: 16px; background: #8e5bd8; color: #fff; font: 600 12px/1 var(--ss-font); opacity: 0; }
+.tc-lessons .dt-slot .dt-row { position: relative; will-change: transform; }
+.tc-lessons [data-phase="1"] .dt-action, .tc-lessons [data-phase="2"] .dt-action, .tc-lessons [data-phase="3"] .dt-action { opacity: 1; }
+.tc-lessons [data-phase="1"] .dt-slot .dt-row { transform: translateX(-38%); transition: transform 320ms linear; }
+.tc-lessons [data-phase="2"] .dt-slot .dt-row, .tc-lessons [data-phase="3"] .dt-slot .dt-row { transform: translateX(-101%); }
+/* Bad: a held beat, then an ease-in from rest, then the gap snaps shut */
+.tc-lessons .dt-list:not([data-good])[data-phase="2"] .dt-slot .dt-row { transition: transform 420ms cubic-bezier(.45, 0, .55, 1) 220ms; }
+.tc-lessons .dt-list:not([data-good])[data-phase="3"] .dt-slot { height: 0; }
+/* Good: leaves at the drag's own speed and eases out; the gap closes in one ease */
+.tc-lessons .dt-list[data-good][data-phase="2"] .dt-slot .dt-row { transition: transform 300ms cubic-bezier(.25, .55, .35, 1); }
+.tc-lessons .dt-list[data-good] .dt-slot { transition: height 340ms cubic-bezier(.4, 0, .2, 1); }
+.tc-lessons .dt-list[data-good][data-phase="3"] .dt-slot { height: 0; }
+
+/* Reaction */
+.tc-lessons .dr-thread { display: grid; gap: 10px; width: 280px; }
+.tc-lessons .dr-bubble { position: relative; max-width: 220px; padding: 8px 12px; border-radius: 18px; font-size: 14px; line-height: 19px; }
+.tc-lessons .dr-bubble--them { justify-self: start; background: #e9e9eb; }
+.tc-lessons .dr-bubble--me { justify-self: end; background: #0a84ff; color: #fff; }
+.tc-lessons .dr-disc { position: absolute; top: -8px; left: 6px; display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #ff2d55; opacity: 0; }
+.tc-lessons [data-on] .dr-disc { opacity: 1; }
+.tc-lessons .dr-pill { position: absolute; right: 6px; bottom: -18px; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: #fff; box-shadow: inset 0 0 0 0.5px #00000014, 0 0 0 2px #f3f3f2; opacity: 0; transform: scale(.5); transform-origin: 30% 20%; transition: opacity 160ms ease, transform 380ms cubic-bezier(.3, 1.35, .5, 1); }
+.tc-lessons [data-on] .dr-pill { opacity: 1; transform: none; }
+.tc-lessons .dr-emoji { display: block; }
+.tc-lessons .dr-thread { padding-bottom: 10px; }
+
+/* Chart */
+.tc-lessons .dc-card { display: grid; width: 300px; padding: 16px 12px 10px; border-radius: 12px; background: #fff; box-shadow: 0 0 0 1px #0000000d, 0 6px 18px #0000000f; }
+.tc-lessons .dc-label { padding-left: 4px; color: #7a7a7a; font-size: 12px; }
+.tc-lessons .dc-value { padding-left: 4px; margin-bottom: 10px; font: 650 22px/28px var(--ss-font); }
+.tc-lessons .dc-line { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.tc-lessons .dc-dot { opacity: 0; }
+.tc-lessons .dc-card:not([data-good]) .dc-svg { opacity: 0; transition: opacity 0s; }
+.tc-lessons .dc-card:not([data-good]) .dc-line { stroke-dashoffset: 0; }
+.tc-lessons .dc-card:not([data-good]) .dc-dot { opacity: 1; }
+.tc-lessons .dc-card:not([data-good])[data-on] .dc-svg { opacity: 1; transition: opacity 600ms ease; }
+.tc-lessons .dc-card[data-good] .dc-wipe { transform: scaleX(0); transform-box: fill-box; transform-origin: left; }
+.tc-lessons .dc-card[data-good][data-on] .dc-line { stroke-dashoffset: 0; transition: stroke-dashoffset 1100ms cubic-bezier(.45, 0, .3, 1); }
+.tc-lessons .dc-card[data-good][data-on] .dc-wipe { transform: none; transition: transform 1100ms cubic-bezier(.45, 0, .3, 1) 80ms; }
+.tc-lessons .dc-card[data-good][data-on] .dc-dot { opacity: 1; transition: opacity 240ms ease 1080ms; }
+
+/* Top bar */
+.tc-lessons .db-screen { align-self: start; width: 300px; height: 280px; margin-top: 20px; border-radius: 26px 26px 0 0; background: #fff; box-shadow: 0 0 0 1px #0000000d, 0 6px 18px #0000000f; }
+.tc-lessons .db-top { display: flex; justify-content: space-between; padding: 14px 14px 0; }
+.tc-lessons .db-round { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #f1f1f2; color: #1f1f1f; }
+.tc-lessons .db-title { padding: 8px 16px 6px; font: 700 26px/32px var(--ss-font); letter-spacing: -.01em; }
+
+/* Copy */
+.tc-lessons .dy-card { width: 300px; padding: 14px; border-radius: 12px; background: #fff; box-shadow: 0 0 0 1px #0000000d, 0 6px 18px #0000000f; }
+.tc-lessons .dy-field { display: flex; height: 36px; align-items: center; padding: 0 6px; border-radius: 8px; box-shadow: inset 0 0 0 1px #0000001a; }
+.tc-lessons .dy-chip { overflow: hidden; max-width: 190px; padding: 3px 8px; border-radius: 6px; background: #eef3fe; color: #2459c9; font-size: 12px; text-overflow: ellipsis; white-space: nowrap; }
+.tc-lessons .dy-people { display: grid; gap: 4px; margin-top: 10px; }
+.tc-lessons .dy-person { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; align-items: center; gap: 10px; min-height: 40px; }
+.tc-lessons .dy-person .dt-av { width: 28px; height: 28px; }
+.tc-lessons .dy-name { font-weight: 500; }
+.tc-lessons .dy-role { max-width: 110px; color: #7a7a7a; font-size: 12px; text-align: right; }
+
+/* Pinned label */
+.tc-lessons .dp-row { display: flex; align-items: center; justify-content: space-between; width: 300px; height: 56px; padding: 0 12px; border-radius: 12px; background: #fff; box-shadow: 0 0 0 1px #0000000d, 0 6px 18px #0000000f; }
+.tc-lessons .dp-who { display: flex; align-items: center; gap: 10px; font-weight: 500; }
+.tc-lessons .dp-who .dt-av { width: 28px; height: 28px; }
+.tc-lessons .dp-select { display: flex; align-items: center; gap: 4px; height: 28px; padding: 0 6px 0 8px; border-radius: 6px; color: #3a3a3a; font-size: 12.5px; white-space: nowrap; }
+/* Bad: a fixed slot, the label at its left, the chevron at its right */
+.tc-lessons .dp-select:not([data-good]) { justify-content: space-between; width: 104px; }
+/* Good: hugs its words; the row's flex end anchors the chevron */
+.tc-lessons .dp-select svg { flex: none; color: #8a8a8a; }
+.tc-lessons .dp-labels { display: grid; justify-items: start; }
+.tc-lessons .dp-select[data-good] .dp-labels { justify-items: end; }
+.tc-lessons .dp-select:not([data-good]) .dp-labels { flex: 1; }
+.tc-lessons .dp-label { grid-area: 1 / 1; opacity: 0; filter: blur(2px); transition: opacity .25s ease, filter .25s ease; }
+.tc-lessons .dp-label[data-on] { opacity: 1; filter: none; transition-delay: .08s; }

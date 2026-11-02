@@ -1,0 +1,430 @@
+/* Finder in the Liquid Glass design (macOS Tahoe), column view, matched to a
+   real macOS 26 screenshot (2x, halved to points, then drawn at about 0.95).
+   Pinned with a bottom bleed on a blue Tahoe ground: the window sits one
+   gutter in from the top, left and right, so the whole toolbar shows, and
+   runs off the bottom. Everything is nested under .fgl so it can sit on a
+   page beside the finder (.fq) and figma (.fg) examples.
+
+   The kit draws the macOS 26 chrome: sidebarStyle="floating" (the inset
+   panel, the window's 24 radius), lightsSize="large", barSize="tall" (the
+   64px icon-and-label toolbar) and greys="cool" (the panel's cool gray). */
+
+.fgl .ss-stage {
+  overflow: hidden;
+  border-radius: 14px;
+  /* One cool family throughout: the ground, the glass and the grays */
+  --ss-text: #8a8b91;
+  --ss-text-strong: #1d1d1f;
+  --ss-text-faint: #a1a2a8;
+  --ss-icon: #3d3e44;
+  --ss-icon-faint: #b6b7bd;
+  --fgl-glass: rgba(255, 255, 255, 0.9);
+  --fgl-btn-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.07), inset 0 0.5px 0 rgba(255, 255, 255, 1), 0 1px 2px rgba(20, 30, 60, 0.05), 0 5px 16px rgba(20, 30, 60, 0.09);
+  /* A Tahoe wallpaper: deep blue, lighter toward the top left */
+  background:
+    radial-gradient(110% 80% at 10% 0%, #cfe0f7 0%, rgba(207, 224, 247, 0) 62%),
+    radial-gradient(90% 110% at 100% 100%, #2f6fd0 0%, rgba(47, 111, 208, 0) 72%),
+    linear-gradient(165deg, #b4ccf0 0%, #7ea6e6 50%, #4f86dc 100%);
+}
+
+/* ---- The window: a soft wide shadow, deeper than the kit's for the blue
+   ground ---- */
+
+.fgl .fgl-window {
+  position: absolute;
+  box-shadow:
+    0 0 0 0.5px rgba(0, 0, 0, 0.16),
+    0 24px 60px -10px rgba(10, 30, 80, 0.38),
+    0 8px 20px -10px rgba(10, 30, 80, 0.24);
+}
+
+/* The toolbar's buttons start close to the panel, as Finder sets them */
+.fgl .fgl-window .ss-window__main > .ss-window__bar {
+  padding-inline: 12px 14px;
+}
+
+/* ---- Toolbar ---- */
+
+.fgl .fgl-lead {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.fgl .fgl-tools {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.fgl .fgl-tool {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.fgl .fgl-tool__label {
+  font-size: 10.5px;
+  line-height: 13px;
+  color: var(--ss-text);
+  white-space: nowrap;
+}
+
+.fgl .fgl-cap,
+.fgl .fgl-round {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  height: 32px;
+  border-radius: 16px;
+  background: var(--fgl-glass);
+  box-shadow: var(--fgl-btn-shadow);
+  color: var(--ss-icon);
+}
+
+.fgl .fgl-cap {
+  gap: 4px;
+  padding: 0 11px 0 12px;
+}
+
+.fgl .fgl-round {
+  width: 32px;
+}
+
+.fgl .fgl-nav {
+  gap: 0;
+  padding: 0 4px;
+}
+
+.fgl .fgl-nav > svg {
+  width: 30px;
+}
+
+.fgl .fgl-nav__rule {
+  width: 1px;
+  height: 16px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.fgl .fgl-off {
+  color: var(--ss-icon-faint);
+}
+
+.fgl .fgl-heading {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--ss-text-strong);
+  white-space: nowrap;
+}
+
+/* ---- Sidebar ---- */
+
+.fgl .fgl-side {
+  display: flex;
+  flex-direction: column;
+  padding: 4px 8px 0;
+}
+
+.fgl .fgl-side__label {
+  display: block;
+  margin: 12px 10px 5px;
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 13px;
+  color: var(--ss-text);
+}
+
+.fgl .fgl-side__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 27px;
+  padding: 0 10px 0 9px;
+  border-radius: 9px;
+  font-size: 12.5px;
+  color: var(--ss-text-strong);
+}
+
+.fgl .fgl-side__icon {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  color: var(--ss-icon);
+}
+
+.fgl .fgl-side__cloud {
+  margin-left: auto;
+  color: var(--ss-text-faint);
+}
+
+/* The current place: a soft gray capsule, as in an inactive or focused-away
+   sidebar */
+.fgl .fgl-side__item[data-current] {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+/* ---- Path bar: one rounded capsule with the folder centered, and a + ---- */
+
+.fgl .fgl-body {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.fgl .fgl-path {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 14px 8px 12px;
+}
+
+.fgl .fgl-path__tab {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  border-radius: 13px;
+  background: rgba(0, 0, 0, 0.025);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.07);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ss-text-strong);
+}
+
+.fgl .fgl-path__add {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 26px;
+  height: 26px;
+  border-radius: 13px;
+  background: var(--fgl-glass);
+  box-shadow: var(--fgl-btn-shadow);
+  color: var(--ss-icon);
+}
+
+/* ---- Columns, split by hairlines ---- */
+
+.fgl .fgl-cols {
+  display: grid;
+  flex: 1;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  border-top: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+.fgl .fgl-cols:not([data-docs]) {
+  /* Compact: two narrow columns, so the second is in view and the rest of
+     the row stays blank, as Finder leaves it */
+  grid-template-columns: 112px 112px;
+}
+
+.fgl .fgl-cols[data-docs] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.fgl .fgl-col {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 6px 0;
+  /* A layer it keeps, so the column's text never hops as it slides in */
+  will-change: transform;
+  transition: opacity 0.16s ease, transform 0.16s ease;
+}
+
+/* Every column closes with a hairline on its right, the last one too */
+.fgl .fgl-col {
+  border-right: 1px solid rgba(0, 0, 0, 0.07);
+}
+
+/* The last column comes in with its folder's selection: a short slide from
+   the column before it, already moving on its first frame */
+.fgl .fgl-col:not([data-open]) {
+  opacity: 0;
+  transform: translateX(-10px);
+}
+
+.fgl .fgl-col[data-open] {
+  transition: opacity 0.3s ease-out, transform 0.42s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.fgl .fgl-col:not([data-open]) .fgl-row {
+  visibility: hidden;
+  transition: visibility 0s 0.16s;
+}
+
+.fgl .fgl-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 21px;
+  margin: 0 7px;
+  padding: 0 7px 0 8px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  color: var(--ss-text-strong);
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.fgl .fgl-row__name {
+  white-space: nowrap;
+}
+
+.fgl .fgl-row__chev {
+  flex-shrink: 0;
+  margin-left: auto;
+  color: #a9aab0;
+  transition: color 0.12s ease;
+}
+
+/* Focus moved on: the gray capsule */
+.fgl .fgl-row[data-sel="quiet"] {
+  background: rgba(0, 0, 0, 0.07);
+}
+
+/* The column with focus: blue */
+.fgl .fgl-row[data-sel="focus"] {
+  background: var(--ss-accent);
+  color: #fff;
+}
+
+.fgl .fgl-row[data-sel="focus"] .fgl-row__chev {
+  color: #fff;
+}
+
+/* ---- File icons ---- */
+
+.fgl .fgl-folder {
+  flex-shrink: 0;
+  color: #3f9ae8;
+  fill: #8cc7f5;
+}
+
+.fgl .fgl-doc {
+  flex-shrink: 0;
+  color: #a7a8ae;
+  fill: #fff;
+}
+
+.fgl .fgl-thumb {
+  display: block;
+  flex-shrink: 0;
+  width: 16px;
+  height: 12px;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px #fff, 0 0 0 1.5px rgba(0, 0, 0, 0.14);
+}
+
+.fgl .fgl-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ---- Quick Look: zooms out of the thumbnail and back into it ---- */
+
+.fgl .fgl-ql {
+  position: absolute;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 18px;
+  background: #f5f6f9;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.16), 0 26px 60px -10px rgba(10, 30, 80, 0.4), 0 10px 22px -10px rgba(10, 30, 80, 0.24);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform;
+  --fgl-close: 0.34s cubic-bezier(0.4, 0, 0.2, 1);
+  --fgl-open: 0.46s cubic-bezier(0.3, 0.75, 0.1, 1);
+  /* Closing waits for the bar's words to fade before the box moves */
+  transition:
+    left var(--fgl-close) 0.1s, top var(--fgl-close) 0.1s, width var(--fgl-close) 0.1s, height var(--fgl-close) 0.1s, border-radius var(--fgl-close) 0.1s,
+    opacity 0.2s ease-in 0.24s;
+}
+
+.fgl .fgl-ql[data-open] {
+  opacity: 1;
+  transition:
+    left var(--fgl-open), top var(--fgl-open), width var(--fgl-open), height var(--fgl-open), border-radius var(--fgl-open),
+    opacity 0.24s ease-out;
+}
+
+/* The bar shrinks with the window; its words fade out first and back in once
+   the zoom has landed: text moved by layout snaps to whole pixels, so it is
+   never seen while the box is still gliding */
+.fgl .fgl-ql__bar > * {
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.fgl .fgl-ql[data-open] .fgl-ql__bar > * {
+  opacity: 1;
+  transition: opacity 0.18s ease 0.5s;
+}
+
+.fgl .fgl-ql__bar {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 6px;
+  height: 38px;
+  overflow: hidden;
+  padding: 0 7px;
+  color: var(--ss-icon);
+  transition: height var(--fgl-close) 0.1s;
+}
+
+.fgl .fgl-ql[data-open] .fgl-ql__bar {
+  transition: height var(--fgl-open);
+}
+
+.fgl .fgl-ql__title + * {
+  margin-left: auto;
+}
+
+.fgl .fgl-ql__round {
+  width: 26px;
+  height: 26px;
+}
+
+/* Centered on the window, as macOS does, not in the space between two
+   buttons on the left and one on the right */
+.fgl .fgl-ql__title {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 140px);
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ss-text-strong);
+}
+
+.fgl .fgl-ql__open {
+  height: 26px;
+  padding: 0 11px;
+  font-size: 11.5px;
+  color: var(--ss-text-strong);
+  white-space: nowrap;
+}
+
+.fgl .fgl-ql__photo {
+  flex: 1;
+  min-height: 0;
+}

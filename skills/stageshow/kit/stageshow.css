@@ -1,0 +1,43 @@
+/* Stageshow kit: every style in one import, for a host that wants them all
+   loaded up front. Components import their own files, so a demo that
+   imports from kit/index.ts needs nothing else. The order is the order
+   the components load them in. */
+
+@import './stage.css';
+@import './keys.css';
+@import './cursor.css';
+@import './window.css';
+@import './phone.css';
+@import './ios.css';
+@import './motion/Roll.css';
+@import './messages.css';
+@import './motion/Connector.css';
+@import './motion/Count.css';
+@import './motion/Swap.css';
+@import './motion/Collapse.css';
+@import './motion/Fly.css';
+@import './motion/Follow.css';
+@import './motion/States.css';
+@import './motion/Stream.css';
+@import './motion/Popover.css';
+@import './motion/Camera.css';
+@import './motion/Scroll.css';
+@import './motion/Expand.css';
+@import './parts/Avatar.css';
+@import './parts/Check.css';
+@import './parts/Icon.css';
+@import './parts/Spinner.css';
+@import './parts/Toast.css';
+@import './parts/Meter.css';
+@import './parts/Menu.css';
+@import './parts/Facepile.css';
+@import './parts/Chip.css';
+@import './parts/BrandMark.css';
+@import './controls/Field.css';
+@import './controls/Segmented.css';
+@import './controls/Toggle.css';
+@import './controls/Tabs.css';
+@import './controls/Badge.css';
+@import './controls/Slot.css';
+@import './code.css';
+@import './chart.css';
