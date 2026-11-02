@@ -113,3 +113,5 @@ scheduling. SkillSpector must select evidence by upstream CI run provenance befo
 check name; metadata checks cannot substitute for scanner evidence. Keep private
 benchmark timings distinct from actual whole-cycle savings. No paid service,
 quota increase, privileged fork trigger or reduced test coverage is authorized.
+
+For reviewed upstream source repins, bind the complete immutable skill tree in the protected source-exception ledger; changing any bundled byte invalidates it. Review CDN script integrity in bundled HTML fixtures without executing the fixture or suppressing a real finding. See the [dated maintenance report](references/2026-11-02-maintenance.md) for evidence and scope.
