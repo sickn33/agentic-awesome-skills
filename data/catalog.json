@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-10-31T08:21:15.000Z",
-  "total": 2884,
+  "generatedAt": "2026-11-02T08:26:20.000Z",
+  "total": 2917,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -4779,6 +4779,68 @@
       "path": "skills/angular-ui-patterns/SKILL.md"
     },
     {
+      "id": "animate",
+      "canonical_id": "animate",
+      "name": "animate",
+      "description": "Build purposeful web animations with appropriate tools, easing, duration, interruption, exits, and reduced-motion support.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "emilkowalski/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/emilkowalski/skills/blob/a81dbca07f2217b7103e510c0f13f8d5b017afc9/LICENSE",
+      "tags": [
+        "animate"
+      ],
+      "triggers": [
+        "animate",
+        "purposeful",
+        "web",
+        "animations",
+        "appropriate",
+        "easing",
+        "duration",
+        "interruption",
+        "exits",
+        "reduced",
+        "motion"
+      ],
+      "path": "skills/animate/SKILL.md"
+    },
+    {
+      "id": "animate-expo",
+      "canonical_id": "animate-expo",
+      "name": "animate-expo",
+      "description": "Build React Native and Expo motion with gestures, Reanimated, haptics, accessible fallbacks, and device verification.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "emilkowalski/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/emilkowalski/skills/blob/a81dbca07f2217b7103e510c0f13f8d5b017afc9/LICENSE",
+      "tags": [
+        "animate",
+        "expo"
+      ],
+      "triggers": [
+        "animate",
+        "expo",
+        "react",
+        "native",
+        "motion",
+        "gestures",
+        "reanimated",
+        "haptics",
+        "accessible",
+        "fallbacks",
+        "device",
+        "verification"
+      ],
+      "path": "skills/animate-expo/SKILL.md"
+    },
+    {
       "id": "animated-github-profile",
       "canonical_id": "animated-github-profile",
       "name": "animated-github-profile",
@@ -4811,6 +4873,67 @@
         "play"
       ],
       "path": "skills/animated-github-profile/SKILL.md"
+    },
+    {
+      "id": "animation-performance",
+      "canonical_id": "animation-performance",
+      "name": "animation-performance",
+      "description": "Diagnose dropped animation frames and choose properties, rendering paths, and profiling checks for smooth web motion.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "emilkowalski/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/emilkowalski/skills/blob/a81dbca07f2217b7103e510c0f13f8d5b017afc9/LICENSE",
+      "tags": [
+        "animation",
+        "performance"
+      ],
+      "triggers": [
+        "animation",
+        "performance",
+        "diagnose",
+        "dropped",
+        "frames",
+        "choose",
+        "properties",
+        "rendering",
+        "paths",
+        "profiling",
+        "checks",
+        "smooth"
+      ],
+      "path": "skills/animation-performance/SKILL.md"
+    },
+    {
+      "id": "animation-vocabulary",
+      "canonical_id": "animation-vocabulary",
+      "name": "animation-vocabulary",
+      "description": "Name a described animation effect using a reverse-lookup motion glossary.",
+      "category": "frontend",
+      "risk": "none",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "emilkowalski/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/emilkowalski/skills/blob/a81dbca07f2217b7103e510c0f13f8d5b017afc9/LICENSE",
+      "tags": [
+        "animation",
+        "vocabulary"
+      ],
+      "triggers": [
+        "animation",
+        "vocabulary",
+        "name",
+        "described",
+        "effect",
+        "reverse",
+        "lookup",
+        "motion",
+        "glossary"
+      ],
+      "path": "skills/animation-vocabulary/SKILL.md"
     },
     {
       "id": "animejs-animation",
@@ -6742,6 +6865,37 @@
       "path": "skills/apple-container/SKILL.md"
     },
     {
+      "id": "apple-design",
+      "canonical_id": "apple-design",
+      "name": "apple-design",
+      "description": "Apply Apple-inspired interface and motion principles to gestures, typography, depth, feedback, and accessibility on the web.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "emilkowalski/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/emilkowalski/skills/blob/a81dbca07f2217b7103e510c0f13f8d5b017afc9/LICENSE",
+      "tags": [
+        "apple"
+      ],
+      "triggers": [
+        "apple",
+        "apply",
+        "inspired",
+        "interface",
+        "motion",
+        "principles",
+        "gestures",
+        "typography",
+        "depth",
+        "feedback",
+        "accessibility",
+        "web"
+      ],
+      "path": "skills/apple-design/SKILL.md"
+    },
+    {
       "id": "apple-notes-search",
       "canonical_id": "apple-notes-search",
       "name": "apple-notes-search",
@@ -7346,6 +7500,38 @@
         "arise"
       ],
       "path": "skills/ask-questions-if-underspecified/SKILL.md"
+    },
+    {
+      "id": "ask-sonner",
+      "canonical_id": "ask-sonner",
+      "name": "ask-sonner",
+      "description": "Set up and troubleshoot Sonner React toasts, including promises, loading states, updates, styling, theming, and placement.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "emilkowalski/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/emilkowalski/skills/blob/a81dbca07f2217b7103e510c0f13f8d5b017afc9/LICENSE",
+      "tags": [
+        "ask",
+        "sonner"
+      ],
+      "triggers": [
+        "ask",
+        "sonner",
+        "set",
+        "up",
+        "troubleshoot",
+        "react",
+        "toasts",
+        "including",
+        "promises",
+        "loading",
+        "states",
+        "updates"
+      ],
+      "path": "skills/ask-sonner/SKILL.md"
     },
     {
       "id": "assay",
@@ -13931,6 +14117,40 @@
       "path": "skills/blockrun/SKILL.md"
     },
     {
+      "id": "blockvectra-docs",
+      "canonical_id": "blockvectra-docs",
+      "name": "blockvectra-docs",
+      "description": "Answer BlockVectra RPC, indexed-data, and Robinhood Chain integration questions from cited documentation. Use for source guidance, not blockchain execution.",
+      "category": "development",
+      "risk": "safe",
+      "source": "https://github.com/blockvectra/agent-quickstart/tree/9103506405cdabf2f98aefca88363085781873d1/skills/blockvectra-docs",
+      "source_type": "community",
+      "source_repo": "blockvectra/agent-quickstart",
+      "license": "MIT",
+      "license_source": "https://github.com/blockvectra/agent-quickstart/blob/9103506405cdabf2f98aefca88363085781873d1/LICENSE",
+      "tags": [
+        "documentation",
+        "blockchain",
+        "rpc",
+        "robinhood"
+      ],
+      "triggers": [
+        "documentation",
+        "blockchain",
+        "rpc",
+        "robinhood",
+        "blockvectra",
+        "docs",
+        "answer",
+        "indexed",
+        "data",
+        "chain",
+        "integration",
+        "questions"
+      ],
+      "path": "skills/blockvectra-docs/SKILL.md"
+    },
+    {
       "id": "blog-title-generator",
       "canonical_id": "blog-title-generator",
       "name": "blog-title-generator",
@@ -14529,6 +14749,38 @@
         "coding"
       ],
       "path": "skills/break-ai-fix-loops/SKILL.md"
+    },
+    {
+      "id": "break-ui",
+      "canonical_id": "break-ui",
+      "name": "break-ui",
+      "description": "Stress-test a component with realistic worst-case data through a development-only fixture toggle and report verified failures.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "emilkowalski/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/emilkowalski/skills/blob/a81dbca07f2217b7103e510c0f13f8d5b017afc9/LICENSE",
+      "tags": [
+        "break",
+        "ui"
+      ],
+      "triggers": [
+        "break",
+        "ui",
+        "stress",
+        "test",
+        "component",
+        "realistic",
+        "worst",
+        "case",
+        "data",
+        "through",
+        "development",
+        "fixture"
+      ],
+      "path": "skills/break-ui/SKILL.md"
     },
     {
       "id": "brendangregg-use-tsa",
@@ -23788,7 +24040,7 @@
       "id": "datacircle",
       "canonical_id": "datacircle",
       "name": "datacircle",
-      "description": "Every GTM API plan on datacircle.dev, as one file you download and query. Use it to compare or price a GTM data API.",
+      "description": "Every plan of every GTM API on datacircle.dev, as one file you download and query. Use the file to compare or price a GTM API.",
       "category": "data",
       "risk": "critical",
       "source": "self",
@@ -23808,8 +24060,8 @@
         "api-pricing",
         "datacircle",
         "every",
-        "api",
         "plan",
+        "api",
         "dev",
         "one",
         "file"
@@ -25077,6 +25329,39 @@
         "another"
       ],
       "path": "skills/deprecation-and-migration/SKILL.md"
+    },
+    {
+      "id": "desearch-mcp",
+      "canonical_id": "desearch-mcp",
+      "name": "desearch-mcp",
+      "description": "Use Desearch MCP when the user chooses Desearch for web research, X posts, people discovery, or company search and enrichment. Confirm before starting billed background tasks.",
+      "category": "mcp",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "mcp",
+        "web-search",
+        "x",
+        "research",
+        "people-search",
+        "company-search"
+      ],
+      "triggers": [
+        "mcp",
+        "web-search",
+        "x",
+        "research",
+        "people-search",
+        "company-search",
+        "desearch",
+        "user",
+        "chooses",
+        "web",
+        "posts",
+        "people"
+      ],
+      "path": "skills/desearch-mcp/SKILL.md"
     },
     {
       "id": "design-it",
@@ -29940,36 +30225,66 @@
       "id": "emil-design-eng",
       "canonical_id": "emil-design-eng",
       "name": "emil-design-eng",
-      "description": "Use when designing or reviewing polished product UI with Emil Kowalski-inspired animation, interaction, and component craft guidance.",
+      "description": "Design and review polished UI with Emil Kowalski’s guidance on animation, interaction feedback, component craft, and accessibility.",
       "category": "frontend",
-      "risk": "safe",
+      "risk": "critical",
       "source": "community",
       "source_type": "community",
       "source_repo": "emilkowalski/skills",
       "license": "MIT",
-      "license_source": "https://github.com/emilkowalski/skills/blob/main/LICENSE.txt",
+      "license_source": "https://github.com/emilkowalski/skills/blob/a81dbca07f2217b7103e510c0f13f8d5b017afc9/LICENSE",
       "tags": [
-        "frontend",
-        "design",
-        "ui",
-        "animation",
-        "motion"
+        "emil",
+        "eng"
       ],
       "triggers": [
-        "frontend",
-        "design",
-        "ui",
-        "animation",
-        "motion",
         "emil",
         "eng",
-        "designing",
-        "reviewing",
+        "review",
         "polished",
-        "product",
-        "kowalski"
+        "ui",
+        "kowalski",
+        "guidance",
+        "animation",
+        "interaction",
+        "feedback",
+        "component",
+        "craft"
       ],
       "path": "skills/emil-design-eng/SKILL.md"
+    },
+    {
+      "id": "emil-ui-prototype",
+      "canonical_id": "emil-ui-prototype",
+      "name": "emil-ui-prototype",
+      "description": "Build distinct UI variants behind a development-only picker and integrate the variant the user selects.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "emilkowalski/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/emilkowalski/skills/blob/a81dbca07f2217b7103e510c0f13f8d5b017afc9/LICENSE",
+      "tags": [
+        "emil",
+        "ui",
+        "prototype"
+      ],
+      "triggers": [
+        "emil",
+        "ui",
+        "prototype",
+        "distinct",
+        "variants",
+        "behind",
+        "development",
+        "picker",
+        "integrate",
+        "variant",
+        "user",
+        "selects"
+      ],
+      "path": "skills/emil-ui-prototype/SKILL.md"
     },
     {
       "id": "emotional-arc-designer",
@@ -32441,6 +32756,37 @@
       "path": "skills/ffuf-web-fuzzing/SKILL.md"
     },
     {
+      "id": "figma",
+      "canonical_id": "figma",
+      "name": "figma",
+      "description": "Import Figma assets, tokens, components and motion into editable HyperFrames videos with source and fidelity checks.",
+      "category": "content",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "heygen-com/hyperframes",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/LICENSE",
+      "tags": [
+        "figma"
+      ],
+      "triggers": [
+        "figma",
+        "import",
+        "assets",
+        "tokens",
+        "components",
+        "motion",
+        "editable",
+        "hyperframes",
+        "videos",
+        "source",
+        "fidelity",
+        "checks"
+      ],
+      "path": "skills/figma/SKILL.md"
+    },
+    {
       "id": "figma-automation",
       "canonical_id": "figma-automation",
       "name": "figma-automation",
@@ -32613,6 +32959,39 @@
         "shot"
       ],
       "path": "skills/film-crew/SKILL.md"
+    },
+    {
+      "id": "find-animation-opportunities",
+      "canonical_id": "find-animation-opportunities",
+      "name": "find-animation-opportunities",
+      "description": "Propose purposeful motion opportunities from a read-only codebase review, with evidence and explicit exclusions.",
+      "category": "frontend",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "emilkowalski/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/emilkowalski/skills/blob/a81dbca07f2217b7103e510c0f13f8d5b017afc9/LICENSE",
+      "tags": [
+        "find",
+        "animation",
+        "opportunities"
+      ],
+      "triggers": [
+        "find",
+        "animation",
+        "opportunities",
+        "propose",
+        "purposeful",
+        "motion",
+        "read",
+        "codebase",
+        "review",
+        "evidence",
+        "explicit",
+        "exclusions"
+      ],
+      "path": "skills/find-animation-opportunities/SKILL.md"
     },
     {
       "id": "find-bugs",
@@ -42036,6 +42415,95 @@
       "path": "skills/hyperexecute-skill/SKILL.md"
     },
     {
+      "id": "hyperframes",
+      "canonical_id": "hyperframes",
+      "name": "hyperframes",
+      "description": "Create and review editable HTML-to-video projects with the HyperFrames timeline, composition and rendering contract.",
+      "category": "content",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "heygen-com/hyperframes",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/LICENSE",
+      "tags": [
+        "hyperframes"
+      ],
+      "triggers": [
+        "hyperframes",
+        "review",
+        "editable",
+        "html",
+        "video",
+        "timeline",
+        "composition",
+        "rendering",
+        "contract"
+      ],
+      "path": "skills/hyperframes/SKILL.md"
+    },
+    {
+      "id": "hyperframes-cli",
+      "canonical_id": "hyperframes-cli",
+      "name": "hyperframes-cli",
+      "description": "Scaffold, inspect, preview and render HyperFrames projects; use local or explicitly authorized hosted workflows.",
+      "category": "content",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "heygen-com/hyperframes",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/LICENSE",
+      "tags": [
+        "hyperframes",
+        "cli"
+      ],
+      "triggers": [
+        "hyperframes",
+        "cli",
+        "scaffold",
+        "inspect",
+        "preview",
+        "render",
+        "local",
+        "explicitly",
+        "authorized",
+        "hosted"
+      ],
+      "path": "skills/hyperframes-cli/SKILL.md"
+    },
+    {
+      "id": "hyperframes-registry",
+      "canonical_id": "hyperframes-registry",
+      "name": "hyperframes-registry",
+      "description": "Find and integrate editable HyperFrames blocks and components for video scenes, transitions and effects.",
+      "category": "content",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "heygen-com/hyperframes",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/LICENSE",
+      "tags": [
+        "hyperframes",
+        "registry"
+      ],
+      "triggers": [
+        "hyperframes",
+        "registry",
+        "find",
+        "integrate",
+        "editable",
+        "blocks",
+        "components",
+        "video",
+        "scenes",
+        "transitions",
+        "effects"
+      ],
+      "path": "skills/hyperframes-registry/SKILL.md"
+    },
+    {
       "id": "i-have-adhd",
       "canonical_id": "i-have-adhd",
       "name": "i-have-adhd",
@@ -42782,6 +43250,38 @@
         "scope"
       ],
       "path": "skills/impression-to-click-ratio-calculator/SKILL.md"
+    },
+    {
+      "id": "improve-animations",
+      "canonical_id": "improve-animations",
+      "name": "improve-animations",
+      "description": "Audit existing motion and write prioritized implementation plans with exact evidence, scope, and verification steps.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "emilkowalski/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/emilkowalski/skills/blob/a81dbca07f2217b7103e510c0f13f8d5b017afc9/LICENSE",
+      "tags": [
+        "improve",
+        "animations"
+      ],
+      "triggers": [
+        "improve",
+        "animations",
+        "audit",
+        "existing",
+        "motion",
+        "write",
+        "prioritized",
+        "plans",
+        "exact",
+        "evidence",
+        "scope",
+        "verification"
+      ],
+      "path": "skills/improve-animations/SKILL.md"
     },
     {
       "id": "improve-codebase-architecture",
@@ -47010,6 +47510,40 @@
       "path": "skills/lightning-factory-explainer/SKILL.md"
     },
     {
+      "id": "lightweight-charts-react-components",
+      "canonical_id": "lightweight-charts-react-components",
+      "name": "lightweight-charts-react-components",
+      "description": "Build and debug React financial charts with realtime candles, viewport-preserving history, indicator panes, markers, and chart API refs using lightweight-charts-react-components.",
+      "category": "development",
+      "risk": "critical",
+      "source": "https://github.com/ukorvl/lightweight-charts-react-components/tree/0368191127568e48aef6f7bda2ff3900e8e24756/skills/lightweight-charts-react-components",
+      "source_type": "community",
+      "source_repo": "ukorvl/lightweight-charts-react-components",
+      "license": "MIT",
+      "license_source": "https://github.com/ukorvl/lightweight-charts-react-components/blob/0368191127568e48aef6f7bda2ff3900e8e24756/skills/lightweight-charts-react-components/LICENSE",
+      "tags": [
+        "react",
+        "typescript",
+        "financial-charts",
+        "lightweight-charts"
+      ],
+      "triggers": [
+        "react",
+        "typescript",
+        "financial-charts",
+        "lightweight-charts",
+        "lightweight",
+        "charts",
+        "components",
+        "debug",
+        "financial",
+        "realtime",
+        "candles",
+        "viewport"
+      ],
+      "path": "skills/lightweight-charts-react-components/SKILL.md"
+    },
+    {
       "id": "linear-automation",
       "canonical_id": "linear-automation",
       "name": "linear-automation",
@@ -48395,6 +48929,40 @@
       "path": "skills/location-based-content-idea-generator/SKILL.md"
     },
     {
+      "id": "logbrew-debug-production",
+      "canonical_id": "logbrew-debug-production",
+      "name": "logbrew-debug-production",
+      "description": "Debug a production error with LogBrew evidence: find the issue, read its stack and first release, pull its trace and logs, fix it, then check new events stop.",
+      "category": "devops",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "license": "MIT",
+      "tags": [
+        "debugging",
+        "production",
+        "error-tracking",
+        "observability",
+        "mcp",
+        "logbrew"
+      ],
+      "triggers": [
+        "debugging",
+        "production",
+        "error-tracking",
+        "observability",
+        "mcp",
+        "logbrew",
+        "debug",
+        "error",
+        "evidence",
+        "find",
+        "issue",
+        "read"
+      ],
+      "path": "skills/logbrew-debug-production/SKILL.md"
+    },
+    {
       "id": "logic-diff",
       "canonical_id": "logic-diff",
       "name": "logic-diff",
@@ -49415,6 +49983,38 @@
         "chain"
       ],
       "path": "skills/m365-entra-attack/SKILL.md"
+    },
+    {
+      "id": "mac-api-connection-diagnostics",
+      "canonical_id": "mac-api-connection-diagnostics",
+      "name": "mac-api-connection-diagnostics",
+      "description": "Diagnose an API or website connection failure from a Mac with Kilobat's read-only JSON probes before changing application code or network settings.",
+      "category": "development",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "macos",
+        "networking",
+        "api",
+        "debugging",
+        "kilobat"
+      ],
+      "triggers": [
+        "macos",
+        "networking",
+        "api",
+        "debugging",
+        "kilobat",
+        "mac",
+        "connection",
+        "diagnostics",
+        "diagnose",
+        "website",
+        "failure",
+        "read"
+      ],
+      "path": "skills/mac-api-connection-diagnostics/SKILL.md"
     },
     {
       "id": "mac-mini-llm-lab",
@@ -51542,6 +52142,38 @@
       "path": "skills/mdpr-skill/SKILL.md"
     },
     {
+      "id": "media-use",
+      "canonical_id": "media-use",
+      "name": "media-use",
+      "description": "Resolve and prepare licensed media, voice, music, captions and sound for HyperFrames with explicit provider and cost boundaries.",
+      "category": "content",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "heygen-com/hyperframes",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/LICENSE",
+      "tags": [
+        "media",
+        "use"
+      ],
+      "triggers": [
+        "media",
+        "use",
+        "resolve",
+        "prepare",
+        "licensed",
+        "voice",
+        "music",
+        "captions",
+        "sound",
+        "hyperframes",
+        "explicit",
+        "provider"
+      ],
+      "path": "skills/media-use/SKILL.md"
+    },
+    {
       "id": "meeting-distiller-pro",
       "canonical_id": "meeting-distiller-pro",
       "name": "meeting-distiller-pro",
@@ -52530,6 +53162,42 @@
       "path": "skills/moatmri/SKILL.md"
     },
     {
+      "id": "mobbin",
+      "canonical_id": "mobbin",
+      "name": "mobbin",
+      "description": "Find real app screens, user flows and website sections on Mobbin through the Mobbin MCP server, to ground UI design and code in shipped products.",
+      "category": "frontend",
+      "risk": "safe",
+      "source": "official",
+      "source_type": "official",
+      "source_repo": "mobbin/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/mobbin/skills/blob/main/LICENSE",
+      "tags": [
+        "mobbin",
+        "mcp",
+        "ui",
+        "ux",
+        "design",
+        "design-references"
+      ],
+      "triggers": [
+        "mobbin",
+        "mcp",
+        "ui",
+        "ux",
+        "design",
+        "design-references",
+        "find",
+        "real",
+        "app",
+        "screens",
+        "user",
+        "flows"
+      ],
+      "path": "skills/mobbin/SKILL.md"
+    },
+    {
       "id": "mobile-design",
       "canonical_id": "mobile-design",
       "name": "mobile-design",
@@ -52611,6 +53279,38 @@
         "html"
       ],
       "path": "skills/mobile-friendly-test/SKILL.md"
+    },
+    {
+      "id": "mobile-native",
+      "canonical_id": "mobile-native",
+      "name": "mobile-native",
+      "description": "Improve mobile web behavior for touch, viewport sizing, safe areas, inputs, scrolling, and native-feeling interaction.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "emilkowalski/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/emilkowalski/skills/blob/a81dbca07f2217b7103e510c0f13f8d5b017afc9/LICENSE",
+      "tags": [
+        "mobile",
+        "native"
+      ],
+      "triggers": [
+        "mobile",
+        "native",
+        "improve",
+        "web",
+        "behavior",
+        "touch",
+        "viewport",
+        "sizing",
+        "safe",
+        "areas",
+        "inputs",
+        "scrolling"
+      ],
+      "path": "skills/mobile-native/SKILL.md"
     },
     {
       "id": "mobile-reverse",
@@ -57964,32 +58664,32 @@
       "id": "openhook",
       "canonical_id": "openhook",
       "name": "openhook",
-      "description": "Creates private callback inboxes with Openhook. Use when an agent needs to wait for a webhook, inspect received HTTP/email/DNS events, or verify a test callback's contents.",
+      "description": "Creates and joins private Openhook channels so people and their AI agents can exchange messages. Use for an Openhook invite, collaboration with another person’s agent, or listening for channel messages.",
       "category": "development",
       "risk": "critical",
-      "source": "https://github.com/openhook-dev/openhook-inbox/tree/9b11d08dfa520f37f387f6b003b67371dca930eb/skills/openhook",
+      "source": "https://github.com/openhook-dev/openhook-inbox/tree/30cf989b0cac5fcd3d6bf638063c65745b64de6b/skills/openhook",
       "source_type": "community",
       "source_repo": "openhook-dev/openhook-inbox",
       "license": "MIT",
-      "license_source": "https://github.com/openhook-dev/openhook-inbox/blob/9b11d08dfa520f37f387f6b003b67371dca930eb/LICENSE",
+      "license_source": "https://github.com/openhook-dev/openhook-inbox/blob/30cf989b0cac5fcd3d6bf638063c65745b64de6b/LICENSE",
       "tags": [
-        "webhooks",
-        "integration-testing",
+        "agent-collaboration",
+        "messaging",
         "mcp"
       ],
       "triggers": [
-        "webhooks",
-        "integration-testing",
+        "agent-collaboration",
+        "messaging",
         "mcp",
         "openhook",
         "creates",
+        "joins",
         "private",
-        "callback",
-        "inboxes",
-        "agent",
-        "wait",
-        "webhook",
-        "inspect"
+        "channels",
+        "so",
+        "people",
+        "ai",
+        "agents"
       ],
       "path": "skills/openhook/SKILL.md"
     },
@@ -60144,6 +60844,39 @@
       "path": "skills/pi-web-search/SKILL.md"
     },
     {
+      "id": "pick-ui-library",
+      "canonical_id": "pick-ui-library",
+      "name": "pick-ui-library",
+      "description": "Choose a frontend library from Emil Kowalski’s curated list after checking the project’s existing stack and requirements.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "emilkowalski/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/emilkowalski/skills/blob/a81dbca07f2217b7103e510c0f13f8d5b017afc9/LICENSE",
+      "tags": [
+        "pick",
+        "ui",
+        "library"
+      ],
+      "triggers": [
+        "pick",
+        "ui",
+        "library",
+        "choose",
+        "frontend",
+        "emil",
+        "kowalski",
+        "curated",
+        "list",
+        "after",
+        "checking",
+        "existing"
+      ],
+      "path": "skills/pick-ui-library/SKILL.md"
+    },
+    {
       "id": "pilot-protocol",
       "canonical_id": "pilot-protocol",
       "name": "pilot-protocol",
@@ -60927,6 +61660,42 @@
         "agents"
       ],
       "path": "skills/polis-protocol-a-self-optimizing-city-of-agents/SKILL.md"
+    },
+    {
+      "id": "ponder",
+      "canonical_id": "ponder",
+      "name": "ponder",
+      "description": "Run coverage-gated multi-pass code, architecture, security, UI, or product reviews where every file must be graded and 4 perspectives deliberate to convergence.",
+      "category": "development",
+      "risk": "safe",
+      "source": "https://github.com/Quinnod345/ponder/blob/5f81a6db4586a42bd554d9a3d5279d4b587ff018/skills/ponder/SKILL.md",
+      "source_type": "official",
+      "source_repo": "Quinnod345/ponder",
+      "license": "MIT",
+      "license_source": "https://github.com/Quinnod345/ponder/blob/5f81a6db4586a42bd554d9a3d5279d4b587ff018/LICENSE",
+      "tags": [
+        "code-review",
+        "audit",
+        "deliberation",
+        "security-review",
+        "architecture",
+        "testing"
+      ],
+      "triggers": [
+        "code-review",
+        "audit",
+        "deliberation",
+        "security-review",
+        "architecture",
+        "testing",
+        "ponder",
+        "run",
+        "coverage",
+        "gated",
+        "multi",
+        "pass"
+      ],
+      "path": "skills/ponder/SKILL.md"
     },
     {
       "id": "popup-cro",
@@ -65790,6 +66559,71 @@
       "path": "skills/remotion-render/SKILL.md"
     },
     {
+      "id": "remotion-to-hyperframes",
+      "canonical_id": "remotion-to-hyperframes",
+      "name": "remotion-to-hyperframes",
+      "description": "Migrate Remotion or other animation code and footage into HyperFrames, recording editability and frame comparison limits.",
+      "category": "content",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "heygen-com/hyperframes",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/LICENSE",
+      "tags": [
+        "remotion",
+        "to",
+        "hyperframes"
+      ],
+      "triggers": [
+        "remotion",
+        "to",
+        "hyperframes",
+        "migrate",
+        "other",
+        "animation",
+        "code",
+        "footage",
+        "recording",
+        "editability",
+        "frame",
+        "comparison"
+      ],
+      "path": "skills/remotion-to-hyperframes/SKILL.md"
+    },
+    {
+      "id": "remove-animations",
+      "canonical_id": "remove-animations",
+      "name": "remove-animations",
+      "description": "Remove unnecessary interface motion while preserving final states, focus, layout, and animation-dependent behavior.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "emilkowalski/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/emilkowalski/skills/blob/a81dbca07f2217b7103e510c0f13f8d5b017afc9/LICENSE",
+      "tags": [
+        "remove",
+        "animations"
+      ],
+      "triggers": [
+        "remove",
+        "animations",
+        "unnecessary",
+        "interface",
+        "motion",
+        "while",
+        "preserving",
+        "final",
+        "states",
+        "layout",
+        "animation",
+        "dependent"
+      ],
+      "path": "skills/remove-animations/SKILL.md"
+    },
+    {
       "id": "render-automation",
       "canonical_id": "render-automation",
       "name": "render-automation",
@@ -66272,6 +67106,39 @@
       "path": "skills/returns-reverse-logistics/SKILL.md"
     },
     {
+      "id": "reverse-any-video",
+      "canonical_id": "reverse-any-video",
+      "name": "reverse-any-video",
+      "description": "Reconstruct authorized video as an editable HyperFrames project, with measured timing, rights and likeness boundaries.",
+      "category": "content",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "heygen-com/hyperframes",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/LICENSE",
+      "tags": [
+        "reverse",
+        "any",
+        "video"
+      ],
+      "triggers": [
+        "reverse",
+        "any",
+        "video",
+        "reconstruct",
+        "authorized",
+        "editable",
+        "hyperframes",
+        "measured",
+        "timing",
+        "rights",
+        "likeness",
+        "boundaries"
+      ],
+      "path": "skills/reverse-any-video/SKILL.md"
+    },
+    {
       "id": "reverse-browser-automation",
       "canonical_id": "reverse-browser-automation",
       "name": "reverse-browser-automation",
@@ -66522,34 +67389,30 @@
       "id": "review-animations",
       "canonical_id": "review-animations",
       "name": "review-animations",
-      "description": "Use when reviewing animation and motion code against a strict craft, performance, accessibility, and interaction-quality bar.",
+      "description": "Review motion code against a craft, performance, accessibility, and interaction-quality standard with evidence.",
       "category": "frontend",
       "risk": "safe",
       "source": "community",
       "source_type": "community",
       "source_repo": "emilkowalski/skills",
       "license": "MIT",
-      "license_source": "https://github.com/emilkowalski/skills/blob/main/LICENSE.txt",
+      "license_source": "https://github.com/emilkowalski/skills/blob/a81dbca07f2217b7103e510c0f13f8d5b017afc9/LICENSE",
       "tags": [
-        "frontend",
-        "animation",
-        "motion",
-        "review",
-        "accessibility"
+        "animations"
       ],
       "triggers": [
-        "frontend",
-        "animation",
-        "motion",
-        "review",
-        "accessibility",
         "animations",
-        "reviewing",
+        "review",
+        "motion",
         "code",
         "against",
-        "strict",
         "craft",
-        "performance"
+        "performance",
+        "accessibility",
+        "interaction",
+        "quality",
+        "standard",
+        "evidence"
       ],
       "path": "skills/review-animations/SKILL.md"
     },
@@ -70978,6 +71841,42 @@
       "path": "skills/sexual-health-analyzer/SKILL.md"
     },
     {
+      "id": "sfxmint",
+      "canonical_id": "sfxmint",
+      "name": "sfxmint",
+      "description": "Find and add free CC0 sound effects to an app, game or video by event, set or description over a keyless API or MCP; generate a missing sound with an API key.",
+      "category": "media",
+      "risk": "safe",
+      "source": "https://github.com/sfxmint/sfxmint-mcp/blob/edce59b646cea067846206a927707dc79aa3c5f2/skills/sfxmint/SKILL.md",
+      "source_type": "official",
+      "source_repo": "sfxmint/sfxmint-mcp",
+      "license": "CC0-1.0",
+      "license_source": "https://github.com/sfxmint/sfxmint-mcp/blob/master/LICENSE",
+      "tags": [
+        "audio",
+        "sound-effects",
+        "gamedev",
+        "cc0",
+        "mcp",
+        "api"
+      ],
+      "triggers": [
+        "audio",
+        "sound-effects",
+        "gamedev",
+        "cc0",
+        "mcp",
+        "api",
+        "sfxmint",
+        "find",
+        "add",
+        "free",
+        "sound",
+        "effects"
+      ],
+      "path": "skills/sfxmint/SKILL.md"
+    },
+    {
       "id": "shadcn",
       "canonical_id": "shadcn",
       "name": "shadcn",
@@ -71430,6 +72329,40 @@
         "substance"
       ],
       "path": "skills/short/SKILL.md"
+    },
+    {
+      "id": "show-the-change",
+      "canonical_id": "show-the-change",
+      "name": "show-the-change",
+      "description": "Explain a specific project change to non-programmers, with evidence and practical checks.",
+      "category": "development",
+      "risk": "safe",
+      "source": "https://github.com/LydiaTools/show-the-change/tree/f81d5bd297cea1014e2a52b8744e1dd4a2136c18/skills/show-the-change",
+      "source_type": "community",
+      "source_repo": "LydiaTools/show-the-change",
+      "license": "MIT",
+      "license_source": "https://github.com/LydiaTools/show-the-change/blob/f81d5bd297cea1014e2a52b8744e1dd4a2136c18/LICENSE",
+      "tags": [
+        "change-explanation",
+        "non-technical",
+        "acceptance",
+        "evidence"
+      ],
+      "triggers": [
+        "change-explanation",
+        "non-technical",
+        "acceptance",
+        "evidence",
+        "show",
+        "change",
+        "explain",
+        "specific",
+        "non",
+        "programmers",
+        "practical",
+        "checks"
+      ],
+      "path": "skills/show-the-change/SKILL.md"
     },
     {
       "id": "signup-flow-cro",
@@ -72488,6 +73421,35 @@
         "slide"
       ],
       "path": "skills/slideops/SKILL.md"
+    },
+    {
+      "id": "slideshow",
+      "canonical_id": "slideshow",
+      "name": "slideshow",
+      "description": "Build live HyperFrames slide decks with fragments, branching hotspots and presenter notes.",
+      "category": "content",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "heygen-com/hyperframes",
+      "license": "Apache-2.0",
+      "license_source": "https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/LICENSE",
+      "tags": [
+        "slideshow"
+      ],
+      "triggers": [
+        "slideshow",
+        "live",
+        "hyperframes",
+        "slide",
+        "decks",
+        "fragments",
+        "branching",
+        "hotspots",
+        "presenter",
+        "notes"
+      ],
+      "path": "skills/slideshow/SKILL.md"
     },
     {
       "id": "slo-implementation",
@@ -74085,6 +75047,37 @@
         "ultra"
       ],
       "path": "skills/stability-ai/SKILL.md"
+    },
+    {
+      "id": "stageshow",
+      "canonical_id": "stageshow",
+      "name": "stageshow",
+      "description": "Create React product illustrations and cursor demos using a reusable UI kit, examples, motion guidance, and visual verification tools.",
+      "category": "web-development",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "benjitaylor/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/benjitaylor/skills/blob/802057409787133703c56001080169e347305572/stageshow/LICENSE",
+      "tags": [
+        "stageshow"
+      ],
+      "triggers": [
+        "stageshow",
+        "react",
+        "product",
+        "illustrations",
+        "cursor",
+        "demos",
+        "reusable",
+        "ui",
+        "kit",
+        "examples",
+        "motion",
+        "guidance"
+      ],
+      "path": "skills/stageshow/SKILL.md"
     },
     {
       "id": "stakeholder-investor-reports",
@@ -80783,6 +81776,38 @@
       "path": "skills/unslop-review/SKILL.md"
     },
     {
+      "id": "unslop-ui",
+      "canonical_id": "unslop-ui",
+      "name": "unslop-ui",
+      "description": "Audit and redesign AI-generated interfaces with product-specific visual direction, structured design passes, and optional snapshots or story video.",
+      "category": "uncategorized",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "heydamir/unslop",
+      "license": "CC-BY-4.0",
+      "license_source": "https://github.com/heydamir/unslop/blob/1d13095e4bef6ad6c74f1dd828d84c4ba309a4dc/LICENSE",
+      "tags": [
+        "unslop",
+        "ui"
+      ],
+      "triggers": [
+        "unslop",
+        "ui",
+        "audit",
+        "redesign",
+        "ai",
+        "generated",
+        "interfaces",
+        "product",
+        "specific",
+        "visual",
+        "direction",
+        "structured"
+      ],
+      "path": "skills/unslop-ui/SKILL.md"
+    },
+    {
       "id": "unsloth-finetuning",
       "canonical_id": "unsloth-finetuning",
       "name": "unsloth-finetuning",
@@ -85500,6 +86525,36 @@
         "person"
       ],
       "path": "skills/write-in-my-voice/SKILL.md"
+    },
+    {
+      "id": "write-swift",
+      "canonical_id": "write-swift",
+      "name": "write-swift",
+      "description": "Write and review modern Swift with value types, concurrency, protocols, API design, memory management, and testing.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "emilkowalski/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/emilkowalski/skills/blob/a81dbca07f2217b7103e510c0f13f8d5b017afc9/LICENSE",
+      "tags": [
+        "write",
+        "swift"
+      ],
+      "triggers": [
+        "write",
+        "swift",
+        "review",
+        "value",
+        "types",
+        "concurrency",
+        "protocols",
+        "api",
+        "memory",
+        "testing"
+      ],
+      "path": "skills/write-swift/SKILL.md"
     },
     {
       "id": "writing-great-skills",
