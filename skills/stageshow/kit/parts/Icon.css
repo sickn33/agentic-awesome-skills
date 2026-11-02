@@ -1,0 +1,8 @@
+/* Icon */
+
+@layer stageshow {
+  .ss-icon {
+    display: block;
+    flex-shrink: 0;
+  }
+}

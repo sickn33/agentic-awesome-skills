@@ -1,0 +1,48 @@
+/* Swap */
+
+@layer stageshow {
+  .ss-swap {
+    position: relative;
+    display: inline-block;
+    vertical-align: top;
+    /* Sideways only: a word can't spill while the box narrows, but a label
+       trimmed to cap height keeps its overshoot above and below */
+    overflow-x: clip;
+    overflow-y: visible;
+  }
+
+  /* While the box resizes, its edge is soft: a word passing it fades out
+     rather than being sliced */
+  .ss-swap[data-swapping] {
+    mask-image: linear-gradient(to right, #000 calc(100% - 8px), transparent);
+  }
+
+  .ss-swap__in,
+  .ss-swap__out {
+    display: block;
+    width: max-content;
+    max-width: 100%;
+    /* A label trimmed to its cap height (text-box on the Swap) trims both
+       copies alike: the fading one is its own box and would sit lower */
+    text-box: inherit;
+  }
+
+  .ss-swap__out {
+    position: absolute;
+    top: 0;
+    left: 0;
+    animation: ss-swap-out ease forwards;
+  }
+
+  .ss-swap__in {
+    animation: ss-swap-in cubic-bezier(0.25, 0.8, 0.25, 1) both;
+  }
+
+  @keyframes ss-swap-out { to { opacity: 0; filter: blur(2px); } }
+
+  @keyframes ss-swap-in { 0%, 30% { opacity: 0; filter: blur(2px); } 100% { opacity: 1; filter: none; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ss-swap__in, .ss-swap__out { animation-duration: 1ms !important; }
+  }
+}

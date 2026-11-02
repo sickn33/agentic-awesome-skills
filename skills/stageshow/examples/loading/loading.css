@@ -1,0 +1,164 @@
+.ld .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+/* One window, inset at the top, off the bottom */
+.ld-win {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  width: 500px;
+  translate: -50% 0;
+}
+
+.ld .ss-stage[data-layout='compact'] .ld-win {
+  width: 326px;
+}
+
+.ld-body {
+  min-height: 420px;
+  padding: 20px 24px 0;
+  background: var(--ss-surface);
+}
+
+.ld .ss-stage[data-layout='compact'] .ld-body {
+  padding: 18px 16px 0;
+}
+
+.ld-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.ld-title {
+  margin: 0;
+  color: var(--ss-text-strong);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.ld-refresh {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--ss-radius-sm);
+  color: var(--ss-icon);
+  transition: background-color 0.15s ease;
+}
+
+.ld-refresh[data-hover] {
+  background: var(--ss-ink-1);
+}
+
+.ld-refresh svg {
+  transition: rotate 0s;
+}
+
+.ld-refresh[data-spin] svg {
+  rotate: 360deg;
+  transition: rotate 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ld-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 84px 76px;
+  align-items: center;
+  gap: 16px;
+  height: 54px;
+  border-top: 1px solid var(--ss-line-faint);
+  color: var(--ss-text-strong);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.ld .ss-stage[data-layout='compact'] .ld-row {
+  grid-template-columns: minmax(0, 1fr) 72px 70px;
+  gap: 10px;
+}
+
+.ld-row--cols {
+  height: 32px;
+  border-top: 0;
+  color: var(--ss-text);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.ld-num {
+  justify-items: end;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.ld-who {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.ld-lines {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.ld-what {
+  color: var(--ss-text);
+  font-size: 12px;
+}
+
+/* A bar and its words share one cell: the bar fades as the words arrive,
+   in place, so nothing moves */
+.ld-slot {
+  display: grid;
+  align-items: center;
+}
+
+.ld-slot > * {
+  grid-area: 1 / 1;
+}
+
+.ld-sk {
+  overflow: hidden;
+  position: relative;
+  transition: opacity 0.3s ease calc(var(--i) * 70ms);
+}
+
+/* Faint, slow shimmer while waiting */
+.ld-sk::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.55), transparent);
+  translate: -100% 0;
+  animation: ld-shimmer 1.6s ease-in-out infinite;
+}
+
+@keyframes ld-shimmer {
+  to { translate: 100% 0; }
+}
+
+.ld-real {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.ld-row[data-ready] .ld-sk {
+  opacity: 0;
+}
+
+.ld-row[data-ready] .ld-real {
+  opacity: 1;
+  transition: opacity 0.4s ease calc(var(--i) * 70ms + 80ms);
+}
+
+.ld-name,
+.ld-what {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

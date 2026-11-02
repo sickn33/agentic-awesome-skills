@@ -1,0 +1,150 @@
+/* The section background is the stage: light gray, no box. One gutter for
+   the window's top and left and the phone's right. */
+.ps-section .ss-stage {
+  --gutter: 32px;
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+/* Pinned top-left, runs about a quarter past the bottom */
+.ps-window {
+  position: absolute;
+  top: var(--gutter);
+  left: var(--gutter);
+  width: 496px;
+  height: 460px;
+  background: var(--ss-surface);
+  border-radius: 10px;
+  box-shadow: var(--ss-shadow-hero);
+}
+
+.ps-window .ss-window__body {
+  display: flex;
+}
+
+.ps-sidebar {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 4px;
+  width: 112px;
+  padding: 16px 10px;
+  border-right: 1px solid var(--ss-line);
+  background: var(--ss-canvas);
+}
+
+.ps-logo {
+  /* A plain wordmark: a fictional company gets no invented mark */
+  display: flex;
+  align-items: center;
+  height: 20px;
+  margin: 0 0 12px 6px;
+  color: var(--ss-text-strong);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ps-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: 6px;
+}
+
+.ps-nav[data-active] {
+  background: var(--ss-surface);
+  box-shadow: 0 0 0 1px var(--ss-line);
+}
+
+.ps-main {
+  flex: 1;
+  min-width: 0;
+  padding: 20px 22px;
+}
+
+.ps-top {
+  display: grid;
+  grid-template-columns: 224px;
+}
+
+.ps-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ps-label {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ss-text);
+}
+
+.ps-figure {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 10px;
+}
+
+.ps-total {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--ss-text-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.ps-chart {
+  display: block;
+  margin-top: 16px;
+}
+
+.ps-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
+
+.ps-list {
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--ss-line);
+}
+
+.ps-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 34px;
+  border-bottom: 1px solid var(--ss-line-faint);
+}
+
+/* Straddles the window's right edge, about half outside, over empty margin
+   and placeholder rows; its top sits in the upper half of the stage and the stage crops its
+   base. Stronger shadow than the window: a level above. */
+.ps-phone {
+  position: absolute;
+  top: 84px;
+  right: var(--gutter);
+  box-shadow: var(--ss-shadow-satellite), 0 30px 50px -20px rgba(50, 50, 93, 0.35);
+}
+
+/* Narrow: the sidebar goes; the window runs off the right under the phone */
+.ps-section .ss-stage[data-layout='compact'] {
+  --gutter: 16px;
+}
+
+.ps-section .ss-stage[data-layout='compact'] .ps-sidebar {
+  display: none;
+}
+
+.ps-section .ss-stage[data-layout='compact'] .ps-window {
+  width: 420px;
+}
+
+.ps-section .ss-stage[data-layout='compact'] .ps-phone {
+  top: 150px;
+}

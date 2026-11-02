@@ -1,0 +1,56 @@
+/* Badge */
+
+@layer stageshow {
+  /* Small boxes with text keep a layer of their own. Pushed by a row opening
+     above them, or carried along by anything that moves by layout, their text
+     would step whole pixels while the fill glides, and hop about inside it */
+  .ss-badge {
+    will-change: transform;
+  }
+
+  .ss-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    height: 20px;
+    padding: 0 9px;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-ink-2);
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--ss-text-strong);
+    white-space: nowrap;
+    /* A tone change (Working to Ready) eases on the same pill, no swap */
+    transition: background-color 0.35s ease, color 0.35s ease;
+  }
+
+  /* A round mark before the words reads as further in than text does, so
+     its side is 2px tighter: the dot and the last letter then sit the same
+     distance from their ends */
+  .ss-badge[data-lead] {
+    padding-left: 7px;
+  }
+
+  .ss-badge[data-tone="accent"] { background: var(--ss-accent-soft); color: var(--ss-accent-text); }
+
+  .ss-badge[data-tone="success"] { background: var(--ss-success-soft); color: var(--ss-success-text); }
+
+  .ss-badge[data-tone="danger"] { background: var(--ss-danger-soft); color: var(--ss-danger-text); }
+
+  .ss-badge[data-tone="warning"] { background: var(--ss-warning-soft); color: var(--ss-warning-text); }
+
+  /* The label's line box trimmed to cap height and baseline, so the words
+     center on their own ink; a plain line box keeps descender room and sits
+     the text about 2px low in a 20px pill */
+  .ss-badge__label {
+    display: block;
+    text-box: trim-both cap alphabetic;
+  }
+
+  .ss-badge__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "chime": {
+    "file": "chime.mp3",
+    "duration": 2.5,
+    "description": "Soft melodic chime \u2014 gentle positive beat: success/confirmation or a lighthearted transition. Sync to the visual moment.",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  },
+  "click-soft": {
+    "file": "click-soft.mp3",
+    "duration": 0.37,
+    "description": "Quiet short click \u2014 low-key UI tap / soft selection. Short accent, sync exactly to the on-screen action.",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  },
+  "click": {
+    "file": "click.mp3",
+    "duration": 0.37,
+    "description": "Crisp UI click \u2014 button press, toggle, selection. Short accent, sync exactly to the on-screen action.",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  },
+  "error": {
+    "file": "error.mp3",
+    "duration": 1.62,
+    "description": "Negative / error tone \u2014 failure state, a 'wrong' beat, or a glitchy interruption.",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  },
+  "glitch-1": {
+    "file": "glitch-1.mp3",
+    "duration": 2.64,
+    "description": "Punchy digital glitch \u2014 hard-cut accent or sudden reveal. Trigger on the hit; let the decay bleed into the next shot (J-cut).",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  },
+  "glitch-2": {
+    "file": "glitch-2.mp3",
+    "duration": 3.5,
+    "description": "Harsh, longer glitch \u2014 chaotic / jarring transition or a distorted reveal.",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  },
+  "glitch-3": {
+    "file": "glitch-3.mp3",
+    "duration": 3.1,
+    "description": "Low-key glitch texture \u2014 subtle digital shift, minimal transition that sits under other audio.",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  },
+  "impact-bass-1": {
+    "file": "impact-bass-1.mp3",
+    "duration": 2.12,
+    "description": "Bass impact hit \u2014 logo/hero snap, headline slam. Trigger on the visual landing; decay carries into the next shot (J-cut).",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  },
+  "impact-bass-2": {
+    "file": "impact-bass-2.mp3",
+    "duration": 2.59,
+    "description": "Bass impact with a short swell \u2014 brief anticipation then a deep hit. Place so the peak lands on the reveal.",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  },
+  "key-press": {
+    "file": "key-press.mp3",
+    "duration": 0.4,
+    "description": "Single key press \u2014 one keystroke / terminal-input beat. Short accent, sync to the typed character.",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  },
+  "notification": {
+    "file": "notification.mp3",
+    "duration": 2.46,
+    "description": "Notification chime \u2014 alert, message-in, toast/badge appears. Sync to the element entering.",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  },
+  "ping": {
+    "file": "ping.mp3",
+    "duration": 1.32,
+    "description": "Sharp electronic ping \u2014 punchy accent on a key reveal or data point. Sync to the beat.",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  },
+  "pop": {
+    "file": "pop.mp3",
+    "duration": 0.72,
+    "description": "Quick pop \u2014 element appear/spawn, chip/tag/badge in. Small precise accent, sync to the pop-in.",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  },
+  "riser": {
+    "file": "riser.mp3",
+    "duration": 10.03,
+    "description": "Long cinematic riser (~10s build, peak at the end). Trigger at (climax_time \u2212 10.03s) so it crests exactly on the reveal.",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  },
+  "sparkle": {
+    "file": "sparkle.mp3",
+    "duration": 1.8,
+    "description": "Bright sparkle / shimmer \u2014 magical reveal or 'shine' highlight on a hero element. Sync to the highlight.",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  },
+  "typing": {
+    "file": "typing.mp3",
+    "duration": 1.5,
+    "description": "Typing burst (~1.5s of keys) \u2014 keyboard / code typing reveal, text-being-typed beat. Start as the text begins typing.",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  },
+  "whoosh-cinematic": {
+    "file": "whoosh-cinematic.mp3",
+    "duration": 5.54,
+    "description": "Cinematic whoosh build (~5.5s) \u2014 sweeping scene transition. Align so the swell peaks on the cut.",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  },
+  "whoosh-short": {
+    "file": "whoosh-short.mp3",
+    "duration": 0.57,
+    "description": "Short whoosh \u2014 quick swipe/slide accent, fast element move, snappy transition. Sync to the motion.",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  },
+  "whoosh": {
+    "file": "whoosh.mp3",
+    "duration": 0.57,
+    "description": "Punchy whoosh/impact \u2014 fast reveal or hard transition accent. Sync to the motion.",
+    "license": "CC0-1.0",
+    "source": "AAS original procedural replacement; modified 2026-11-01"
+  }
+}

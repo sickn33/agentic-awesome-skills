@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>tier-2-multi-scene</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        width: 1280px;
+        height: 720px;
+        overflow: hidden;
+        background: #0a0a0a;
+        font-family: Helvetica, Arial, sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="stage"
+      data-composition-id="tier-2-multi-scene"
+      data-start="0"
+      data-width="1280"
+      data-height="720"
+      data-duration="6"
+      data-fps="30"
+    >
+      <div
+        id="scene-1"
+        class="clip"
+        data-composition-id="scene-1"
+        data-composition-src="compositions/scene-1.html"
+        data-start="0"
+        data-duration="2"
+        data-track-index="0"
+      ></div>
+
+      <div
+        id="scene-2"
+        class="clip"
+        data-composition-id="scene-2"
+        data-composition-src="compositions/scene-2.html"
+        data-start="2"
+        data-duration="2"
+        data-track-index="0"
+      ></div>
+
+      <div
+        id="scene-3"
+        class="clip"
+        data-composition-id="scene-3"
+        data-composition-src="compositions/scene-3.html"
+        data-start="4"
+        data-duration="2"
+        data-track-index="0"
+      ></div>
+
+      <audio
+        id="bg-music"
+        data-start="0"
+        data-duration="6"
+        data-track-index="1"
+        data-volume="0.5"
+        src="assets/music.wav"
+      ></audio>
+
+      <script>
+        window.__timelines = window.__timelines || {};
+        window.__timelines["tier-2-multi-scene"] = gsap.timeline({ paused: true });
+      </script>
+    </div>
+  </body>
+</html>

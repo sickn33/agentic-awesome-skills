@@ -39,18 +39,18 @@ Use an existing authorized Arcmira MCP connection. If it is missing, direct the 
 
 1. Call `arcmira_describe` before the first program to obtain the current method arguments and response fields. Run research programs through `arcmira_execute_read`.
 2. Resolve names with `arcmira.resolve`; filters take IDs, not names. Supply `context` only from the user's own disambiguating words. Use `best`, disclose a `suggested` match and its evidence, or present `ask.options`. Do not invent an identity when no match exists.
-3. Put topic words in `query`. Use a resolved person's ID in `speakerIds` for who said it, `about` for who or what was discussed, and a resolved show's `youtube_channel_id` in `channelIds`. Preserve the user's date window; otherwise state the window chosen.
+3. Put topic words in `query`. Use a resolved person's ID in `speakerIds` for who said it, `about` for who or what was discussed, and a resolved show's `youtube_channel_id` in `channelIds`. Use the dates the user asked for. If they give no dates, search the last 90 days and state the window. The Free plan withholds the newest 30 days of media, so report that cutoff when it affects the answer.
 4. Read a short transcript window around a useful hit. Check `state` before accessing `lines`: `pending` includes an estimated wait; `failed` or `refunded` is not a transcript. Do not silently retry failed processing.
 5. Quote complete thoughts verbatim, with the episode, publication date and returned timestamped source link. Clip boundaries come from transcript line offsets, not guessed word timing. A multi-speaker passage is not entirely attributable to the speaker used as a search filter.
 
 ## Examples
 
-After reading the live reference, search for recent discussion of a topic:
+For a topic without a date range, search the last 90 days:
 
 ```javascript
 const hits = await arcmira.search({
   query: "vibe coding",
-  after: arcmira.daysAgo(30),
+  after: arcmira.daysAgo(90),
   limit: 3
 });
 return {

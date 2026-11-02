@@ -1,0 +1,47 @@
+.oc .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+/* The art: a panel hung from the top-right corner, off the top and right
+   edges; the thread inside keeps clear of the cut */
+.oc-art {
+  position: absolute;
+  top: -32px;
+  right: -32px;
+  width: 316px;
+  height: 260px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 0 52px 20px 20px;
+  border-radius: 16px;
+  background: var(--ss-surface);
+  box-shadow: var(--ss-shadow-card);
+}
+
+/* The copy: bottom-left at the tile's full inset */
+.oc-copy {
+  position: absolute;
+  left: 24px;
+  bottom: 24px;
+  display: grid;
+  gap: 4px;
+  max-width: 220px;
+}
+
+.oc-title {
+  color: var(--ss-text-strong);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.oc-line {
+  color: var(--ss-text);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.oc .ss-stage[data-layout='compact'] .oc-art {
+  width: 296px;
+}

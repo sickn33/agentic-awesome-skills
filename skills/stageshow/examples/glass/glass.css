@@ -1,0 +1,93 @@
+.gl-window {
+  position: absolute;
+  top: 48px;
+  left: 64px;
+  width: 440px;
+  height: 300px;
+}
+
+.gl-body {
+  display: grid;
+  gap: 18px;
+  padding: 20px 24px;
+}
+
+.gl-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.gl-label {
+  font-size: 12px;
+  color: var(--ss-text);
+}
+
+.gl-value {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ss-text-strong);
+}
+
+.gl-head .ss-badge {
+  align-self: center;
+}
+
+.gl-rows {
+  display: grid;
+  gap: 12px;
+}
+
+.gl-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gl-row > :last-child {
+  margin-left: auto;
+}
+
+.gl-chip {
+  position: absolute;
+  top: 80px;
+  left: 456px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 17px;
+  background: var(--ss-surface);
+  box-shadow: var(--ss-shadow-float);
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--ss-text-strong);
+}
+
+.gl-chip .ss-icon {
+  color: var(--ss-accent);
+}
+
+.gl-menu {
+  top: 230px;
+  left: 420px;
+  width: 168px;
+}
+
+.gl .ss-stage[data-layout="compact"] .gl-window {
+  top: 32px;
+  left: 16px;
+  width: 318px;
+}
+
+.gl .ss-stage[data-layout="compact"] .gl-chip {
+  top: 200px;
+  left: 190px;
+}
+
+.gl .ss-stage[data-layout="compact"] .gl-menu {
+  top: 252px;
+  left: 166px;
+}
