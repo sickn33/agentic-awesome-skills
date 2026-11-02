@@ -110,7 +110,7 @@ Reads can expose subscriber personal data. Return only information needed for th
 - [Pinned upstream guide](https://github.com/Sequenzy/skills/blob/eba0df500fc71489b115044ebb97e63de32bf61a/skills/sequenzy-email-marketing/SKILL.md)
 - [Sequenzy MCP documentation](https://docs.sequenzy.com/concepts/mcp)
 - [Sequenzy CLI documentation](https://docs.sequenzy.com/concepts/cli)
-- [Email sequence strategy](../email-sequence/SKILL.md)
-- [Retained upstream MIT license](LICENSE)
+- [Email sequence strategy](https://github.com/sickn33/agentic-awesome-skills/tree/main/skills/email-sequence)
+- Retained upstream MIT license: `LICENSE` in this bundle
 
 The two files in this adaptation are this guide and the retained license. Upstream's broad command references and client-specific metadata are not copied because this narrower workflow has no dependency on them. Consult current tool help for exact parameter syntax.
