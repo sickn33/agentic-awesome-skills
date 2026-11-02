@@ -13,14 +13,16 @@ Describe the problem and resulting behavior. Identify affected skill IDs or path
 
 ## Change evidence
 
-<!-- New skill: gap versus named existing skills and one concrete use case.
+<!-- Choose only what applies. Do not leave visible placeholders or substitute checklist ticks for evidence. See CONTRIBUTING.md and docs/contributors/pr-examples.md.
+New skill: gap versus named existing skills and one concrete use case.
 Correction: before/after behavior and the reproduction being fixed.
 Upstream update: full source commit, changed capabilities and local adaptations retained.
 Small docs/typo changes: a brief explanation is enough. -->
 
 ## Validation evidence
 
-<!-- Record the contribution preflight command, selected base/head and result.
+<!-- Suggested format: Scope/path; Input or reproduction; Command/tool + version; Expected; Observed; Not tested + reason.
+Record the contribution preflight command, selected full base/head and result.
 For a practical test: prompt/input, tool and version, expected result, observed result.
 Label source inspection and structural validation accurately. State what was not run and why.
 Never spend money or perform external/destructive writes just to complete this template.

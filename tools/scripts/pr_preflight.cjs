@@ -46,6 +46,7 @@ function parseArgs(argv) {
 
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
+    if (["--repo", "--base", "--head", "--event-path", "--body-file"].includes(arg) && (!argv[index+1] || argv[index+1].startsWith("--"))) throw new Error(`Missing value for ${arg}`);
     if (arg === "--repo") {
       args.repo = argv[index + 1] || null;
       index += 1;
@@ -77,7 +78,7 @@ function parseArgs(argv) {
       args.writeStepSummary = true;
     } else if (arg === "--json") {
       args.json = true;
-    }
+    } else { throw new Error(`Unknown preflight option: ${arg}`); }
   }
 
   if (args.bodyFile && args.eventPath) throw new Error("Use either --body-file or --event-path, not both.");
@@ -622,6 +623,7 @@ function main() {
 
   if (args.checkPolicy && pullRequestBody !== null && !result.prBody.hasQualityChecklist) {
     if (args.json && !args.noRun) process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    if (!args.json) console.error(formatContributorReport(result.contributorReport));
     console.error("PR body must include the Quality Bar Checklist section from the template.");
     process.exitCode = 1;
     return;
@@ -629,6 +631,7 @@ function main() {
   const admission = evaluateAdmission(changeRecords, pullRequestBody, pullRequestBody !== null);
   if ((args.checkSubmission || args.bodyFile) && admission.blocking) {
     if (args.json && !args.noRun) process.stdout.write(`${JSON.stringify(result, null, 2)}\n`);
+    if (!args.json) console.error(formatContributorReport(result.contributorReport));
     console.error(admissionMessage(admission));
     process.exitCode = 1;
     return;
