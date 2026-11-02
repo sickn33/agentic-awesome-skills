@@ -5,7 +5,7 @@ category: marketing
 risk: critical
 source: https://github.com/Sequenzy/skills/tree/eba0df500fc71489b115044ebb97e63de32bf61a/skills/sequenzy-email-marketing
 source_repo: Sequenzy/skills
-source_type: adapted
+source_type: community
 license: MIT
 license_source: https://github.com/Sequenzy/skills/blob/eba0df500fc71489b115044ebb97e63de32bf61a/LICENSE
 date_added: "2026-11-02"
