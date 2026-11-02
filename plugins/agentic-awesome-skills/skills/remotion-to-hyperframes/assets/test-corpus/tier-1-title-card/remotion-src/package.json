@@ -1,0 +1,18 @@
+{
+  "name": "tier-1-title-card-remotion",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "render": "remotion render TitleCard out/baseline.mp4"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.539",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "remotion": "4.0.539"
+  },
+  "overrides": {
+    "zod": "4.6.6"
+  },
+  "aasModification": "2026-11-01: pin reviewed Remotion fixture and patched Zod 4.6.6, including transitive copies (GHSA-mrhx-c7xc-m3w5)"
+}

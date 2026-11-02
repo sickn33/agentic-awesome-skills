@@ -3024,8 +3024,84 @@
       "runtime_files": []
     },
     {
+      "id": "animate",
+      "path": "skills/animate",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "animate-expo",
+      "path": "skills/animate-expo",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "animated-github-profile",
       "path": "skills/animated-github-profile",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "animation-performance",
+      "path": "skills/animation-performance",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "animation-vocabulary",
+      "path": "skills/animation-vocabulary",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -4256,6 +4332,25 @@
       "runtime_files": []
     },
     {
+      "id": "apple-design",
+      "path": "skills/apple-design",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "apple-notes-search",
       "path": "skills/apple-notes-search",
       "targets": {
@@ -4628,6 +4723,25 @@
     {
       "id": "ask-questions-if-underspecified",
       "path": "skills/ask-questions-if-underspecified",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "ask-sonner",
+      "path": "skills/ask-sonner",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -8905,6 +9019,25 @@
       "runtime_files": []
     },
     {
+      "id": "blockvectra-docs",
+      "path": "skills/blockvectra-docs",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "blog-title-generator",
       "path": "skills/blog-title-generator",
       "targets": {
@@ -9249,6 +9382,25 @@
     {
       "id": "break-ai-fix-loops",
       "path": "skills/break-ai-fix-loops",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "break-ui",
+      "path": "skills/break-ui",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -15980,6 +16132,25 @@
       "runtime_files": []
     },
     {
+      "id": "desearch-mcp",
+      "path": "skills/desearch-mcp",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "design-it",
       "path": "skills/design-it",
       "targets": {
@@ -19163,6 +19334,25 @@
       "runtime_files": []
     },
     {
+      "id": "emil-ui-prototype",
+      "path": "skills/emil-ui-prototype",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "emotional-arc-designer",
       "path": "skills/emotional-arc-designer",
       "targets": {
@@ -20740,6 +20930,25 @@
       "runtime_files": []
     },
     {
+      "id": "figma",
+      "path": "skills/figma",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "figma-automation",
       "path": "skills/figma-automation",
       "targets": {
@@ -20837,6 +21046,25 @@
     {
       "id": "film-crew",
       "path": "skills/film-crew",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "find-animation-opportunities",
+      "path": "skills/find-animation-opportunities",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -26982,6 +27210,63 @@
       "runtime_files": []
     },
     {
+      "id": "hyperframes",
+      "path": "skills/hyperframes",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "hyperframes-cli",
+      "path": "skills/hyperframes-cli",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "hyperframes-registry",
+      "path": "skills/hyperframes-registry",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "i-have-adhd",
       "path": "skills/i-have-adhd",
       "targets": {
@@ -27421,6 +27706,25 @@
     {
       "id": "impression-to-click-ratio-calculator",
       "path": "skills/impression-to-click-ratio-calculator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "improve-animations",
+      "path": "skills/improve-animations",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -30117,6 +30421,25 @@
       "runtime_files": []
     },
     {
+      "id": "lightweight-charts-react-components",
+      "path": "skills/lightweight-charts-react-components",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "linear-automation",
       "path": "skills/linear-automation",
       "targets": {
@@ -30999,6 +31322,25 @@
       "runtime_files": []
     },
     {
+      "id": "logbrew-debug-production",
+      "path": "skills/logbrew-debug-production",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "logic-diff",
       "path": "skills/logic-diff",
       "targets": {
@@ -31600,6 +31942,25 @@
     {
       "id": "m365-entra-attack",
       "path": "skills/m365-entra-attack",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "mac-api-connection-diagnostics",
+      "path": "skills/mac-api-connection-diagnostics",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -32940,6 +33301,25 @@
       "runtime_files": []
     },
     {
+      "id": "media-use",
+      "path": "skills/media-use",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "meeting-distiller-pro",
       "path": "skills/meeting-distiller-pro",
       "targets": {
@@ -33592,6 +33972,25 @@
       "runtime_files": []
     },
     {
+      "id": "mobbin",
+      "path": "skills/mobbin",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "mobile-design",
       "path": "skills/mobile-design",
       "targets": {
@@ -33632,6 +34031,25 @@
     {
       "id": "mobile-friendly-test",
       "path": "skills/mobile-friendly-test",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "mobile-native",
+      "path": "skills/mobile-native",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -38374,6 +38792,25 @@
       "runtime_files": []
     },
     {
+      "id": "pick-ui-library",
+      "path": "skills/pick-ui-library",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "pilot-protocol",
       "path": "skills/pilot-protocol",
       "targets": {
@@ -38840,6 +39277,25 @@
     {
       "id": "polis-protocol-a-self-optimizing-city-of-agents",
       "path": "skills/polis-protocol-a-self-optimizing-city-of-agents",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "ponder",
+      "path": "skills/ponder",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -41974,6 +42430,44 @@
       "runtime_files": []
     },
     {
+      "id": "remotion-to-hyperframes",
+      "path": "skills/remotion-to-hyperframes",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "remove-animations",
+      "path": "skills/remove-animations",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "render-automation",
       "path": "skills/render-automation",
       "targets": {
@@ -42242,6 +42736,25 @@
     {
       "id": "returns-reverse-logistics",
       "path": "skills/returns-reverse-logistics",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "reverse-any-video",
+      "path": "skills/reverse-any-video",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -45280,6 +45793,25 @@
       "runtime_files": []
     },
     {
+      "id": "sfxmint",
+      "path": "skills/sfxmint",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "shadcn",
       "path": "skills/shadcn",
       "targets": {
@@ -45548,6 +46080,25 @@
     {
       "id": "short",
       "path": "skills/short",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "show-the-change",
+      "path": "skills/show-the-change",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -46241,6 +46792,25 @@
     {
       "id": "slideops",
       "path": "skills/slideops",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "slideshow",
+      "path": "skills/slideshow",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -47247,6 +47817,33 @@
         "claude": []
       },
       "runtime_files": []
+    },
+    {
+      "id": "stageshow",
+      "path": "skills/stageshow",
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "undeclared_runtime_dependency"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "undeclared_runtime_dependency"
+        ],
+        "claude": [
+          "undeclared_runtime_dependency"
+        ]
+      },
+      "runtime_files": [
+        "package.json"
+      ]
     },
     {
       "id": "stakeholder-investor-reports",
@@ -51584,6 +52181,25 @@
       "runtime_files": []
     },
     {
+      "id": "unslop-ui",
+      "path": "skills/unslop-ui",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "unsloth-finetuning",
       "path": "skills/unsloth-finetuning",
       "targets": {
@@ -54539,6 +55155,25 @@
       "runtime_files": []
     },
     {
+      "id": "write-swift",
+      "path": "skills/write-swift",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "writing-great-skills",
       "path": "skills/writing-great-skills",
       "targets": {
@@ -55287,14 +55922,14 @@
     }
   ],
   "summary": {
-    "total_skills": 2884,
+    "total_skills": 2917,
     "supported": {
-      "codex": 2800,
-      "claude": 2820
+      "codex": 2832,
+      "claude": 2852
     },
     "blocked": {
-      "codex": 84,
-      "claude": 64
+      "codex": 85,
+      "claude": 65
     },
     "manual_setup": 22
   }

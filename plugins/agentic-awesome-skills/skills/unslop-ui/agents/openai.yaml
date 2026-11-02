@@ -1,0 +1,4 @@
+interface:
+  display_name: "Unslop UI"
+  short_description: "Turn vibecoded, AI-looking UI into a designed interface"
+  default_prompt: "Use $unslop-ui on this screen so it stops looking AI-generated."

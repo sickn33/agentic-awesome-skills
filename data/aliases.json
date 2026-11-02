@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-31T08:21:15.000Z",
+  "generatedAt": "2026-11-02T08:26:20.000Z",
   "aliases": {
     "20-andruia-intelligence": "20-andruia-niche-intelligence",
     "accessibility-compliance-audit": "accessibility-compliance-accessibility-audit",
@@ -192,11 +192,13 @@
     "draw": "libreoffice/draw",
     "impress": "libreoffice/impress",
     "writer": "libreoffice/writer",
+    "lightweight-charts-components": "lightweight-charts-react-components",
     "linkdigest-social-reader": "linkdigest-social-link-reader",
     "llm-application-assistant": "llm-application-dev-ai-assistant",
     "llm-application-agent": "llm-application-dev-langchain-agent",
     "llm-application-optimize": "llm-application-dev-prompt-optimize",
     "location-based-generator": "location-based-content-idea-generator",
+    "mac-api-diagnostics": "mac-api-connection-diagnostics",
     "machine-learning-pipeline": "machine-learning-ops-ml-pipeline",
     "mailtrap-setting-domain": "mailtrap-setting-up-sending-domain",
     "mailtrap-testing-sandbox": "mailtrap-testing-with-sandbox",

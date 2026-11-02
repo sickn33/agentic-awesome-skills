@@ -70,8 +70,7 @@ pinned Turborepo `app:ci:test` and `app:ci:compile` tasks. The former runs the
 complete web coverage suite with unchanged thresholds; the latter runs both
 TypeScript projects and Vite. These two successful results may be reused
 independently. The repository script suite, prerequisites, admission, review and
-protected merge evidence still execute normally. The immutable release candidate
-retains its existing fresh coverage and full build commands.
+protected merge evidence still execute normally. The immutable release candidate and local preparation also use this verified web cache; current-commit finalization remains fresh. Their full script suite runs concurrently with an isolated web copy, and both must pass before site artifacts are collected.
 
 Explicit inputs include ignored generated public files, app sources/configuration,
 web lockfile, external docs/data/indexes and shared tooling. Compile excludes test
@@ -113,3 +112,67 @@ per-task HIT/MISS/hash, current head and elapsed timings. CI uploads that receip
 beside the component receipt when the web plan runs. A hit reuses passing coverage;
 it does not mean those tests executed again. Measure cold, warm, cross-commit and
 whole hosted workflows separately; the fresh script suite may remain critical.
+
+
+### Further critical-path reductions
+
+PR metadata events use the separate `pr-metadata.yml` policy/evidence workflow;
+source events retain all technical checks. Their policy/evidence job definitions
+are regression-checked for equivalence. Missing/skipped technical checks get
+first execution through identical jobs; existing runs are observed, not cancelled,
+and genuine failures are not automatically retried. Skipped fallback jobs never
+reuse required check names. Base retargeting requires fresh source
+validation. The tag candidate's runtime producer feeds parallel installation
+matrix and full suite/site branches, with scoped provenance verified by each.
+Publication requires the full manifest and successful whole workflow.
+
+Release validation defaults to the existing two-worker complete test cohort.
+Runtime staging limits durable file writes to four, draining failures before
+cleanup. Web cache documentation dependencies are `docs/users/**`,
+`docs/examples/workflows/mcp-contract/**` and
+`docs/contributors/content-aliases.json`; conservative data/library inputs and
+fresh metadata/prerender verification are retained. New external imports must
+be added to task inputs before they can be cached.
+
+### November 2026 measured CI follow-up
+
+The 150-run audit found short runner queues (median two seconds), while the full
+script suite exceeded the parallel web branch in all 18 successful full receipts.
+Optimize the actual critical path; task HIT rates and runner-seconds are not
+whole-cycle savings. See [the implementation notes](ci-audit-improvements.md).
+
+The original six-group isolated cohort remains at two workers. A measured
+seven-group/reordered alternative was slower locally and was rejected. All
+assertions, durability barriers, network opt-ins and coverage thresholds remain.
+
+Component receipts include each sequential subcommand's arguments, elapsed time
+and exit code, including the first failure. Preview generation remains fresh and
+ordered. `registry:preview` analyzes compatibility once, passes that in-memory
+report to the index and bundle generators, and discards it after the invocation.
+Standalone generators and check modes still analyze independently. No on-disk
+analysis cache or cross-input reuse is introduced; verify full output equivalence.
+
+Source/main and metadata-fallback CI restore branch-scoped Turbo storage, then
+save only after successful web evidence contains a MISS. Opt-in CI compaction
+keeps the current task hashes plus the most recent entries, at most 16 opaque
+hash groups. It rejects symlink entries and never extracts archives or promotes
+PR caches into main. Unknown unrelated files are left alone. Final output hash
+verification and current-commit finalization remain mandatory. This limits each
+new archive; it does not delete older GitHub archives or increase their quota.
+
+The Node 22 preview packs once and allows Linux/Windows installation checks to
+start before the independent Core-contract job finishes. The aggregate requires
+both platform receipts, Workbench and the Core-contract job. Complete Core tests
+still run against the same source revision and freshly generated catalog. These
+checks are distinct from cached Node 24 web validation.
+
+Before pushing a committed maintainer topic, run
+`npm run maintenance:quick-check -- --base origin/main --head HEAD`.
+It runs targeted README, landing/navigation or workflow regressions based on the
+diff and reports the first failure. It does not install dependencies, call paid
+services, or replace preflight, required CI or exact-head review. A checkout may
+opt into `.githooks/pre-push` with `git config core.hooksPath .githooks`; never
+replace an existing hook configuration without reconciling it. The hook checks
+each pushed non-deleted ref against its known remote head (or origin/main for a
+new branch), refuses a different checkout head or dirty source, and fails closed
+when a base or dependency is missing. Fetch missing remote bases explicitly.

@@ -1,0 +1,166 @@
+# Media translation: Audio, Video, Img, IFrame, staticFile
+
+## Asset paths
+
+Remotion's `staticFile("x.png")` resolves to the project's `public/` directory.
+HF uses relative paths from the composition's `index.html`, conventionally
+`assets/`:
+
+```tsx
+<Img src={staticFile("logo.png")} />
+```
+
+```html
+<img src="assets/logo.png" />
+```
+
+When translating, copy the asset from `remotion-src/public/x` to
+`hf-src/assets/x`. Multiple files can be batched with a setup script;
+see T2's `setup.sh` for an example pattern.
+
+## `<Audio>`
+
+```tsx
+<Audio src={staticFile("music.wav")} volume={0.5} />
+```
+
+```html
+<audio
+  data-start="0"
+  data-duration="6"
+  data-track-index="2"
+  data-volume="0.5"
+  src="assets/music.wav"
+></audio>
+```
+
+`data-start` and `data-duration` are required — the runtime needs them to
+schedule the audio. Default to the composition's full duration if Remotion
+didn't specify trim.
+
+### Volume ramps
+
+```tsx
+<Audio src={staticFile("music.wav")} volume={(f) => interpolate(f, [0, 30], [0, 1])} />
+```
+
+Volume ramps become a `data-automation` volume lane on the `<audio>`
+(form in `/media-use` → `references/mixing.md`); `data-volume`
+is the static baseline.
+
+### Trim / playbackRate
+
+```tsx
+<Audio src={staticFile("music.wav")} startFrom={60} endAt={180} playbackRate={1.5} />
+```
+
+```html
+<audio
+  data-start="0"
+  data-duration="<resolved from trim>"
+  data-trim-start="2"
+  data-trim-end="6"
+  data-playback-rate="1.5"
+  src="assets/music.wav"
+></audio>
+```
+
+`startFrom` / `endAt` are frame indexes; convert to seconds.
+
+## `<Video>` and `<OffthreadVideo>`
+
+```tsx
+<Video src={staticFile("intro.mp4")} playsInline />
+<OffthreadVideo src={staticFile("intro.mp4")} />
+```
+
+```html
+<!-- intro.mp4 has an audio stream -->
+<video
+  playsinline
+  data-has-audio="true"
+  data-start="0"
+  data-duration="5"
+  data-track-index="0"
+  src="assets/intro.mp4"
+></video>
+
+<!-- intro.mp4 is silent (or the Remotion element is muted) -->
+<video
+  playsinline
+  muted
+  data-start="0"
+  data-duration="5"
+  data-track-index="0"
+  src="assets/intro.mp4"
+></video>
+```
+
+`<OffthreadVideo>` is a Remotion-specific optimization for headless
+rendering. HF runs in headless Chrome already, so the off-thread variant
+collapses to a regular `<video>`.
+
+`playsinline` is required for the runtime to autoplay (browser policy); always
+emit it. Check the source file for an audio stream first:
+`ffprobe -v error -select_streams a -show_entries stream=codec_type -of csv=p=0 <file>`
+(non-empty output means it has audio). Remotion `<Video>` maps to
+`<video playsinline>` + `data-has-audio="true"` only when the file has an audio
+stream and the Remotion source does not set `muted` or `volume={0}`; otherwise
+emit `muted`. Silent b-roll with `data-has-audio="true"` aborts the render
+(`ASSET_MEDIA_TYPE_MISMATCH`).
+
+## `<Img>`
+
+```tsx
+<Img src={staticFile("logo.png")} style={{ width: 200, height: 200 }} />
+```
+
+```html
+<img src="assets/logo.png" style="width: 200px; height: 200px;" />
+```
+
+Width/height get rounded to integer px. If the original style has
+animated dimensions, the GSAP tween animates them — see [timing.md](timing.md).
+
+## `<IFrame>`
+
+```tsx
+<IFrame src="https://example.com" />
+```
+
+```html
+<iframe src="https://example.com"></iframe>
+```
+
+When HF detects a nested iframe in a composition, it auto-falls back to
+**screenshot mode** rather than the deterministic BeginFrame mode. This
+costs render performance but produces visibly-correct output. See
+[hyperframes-vs-remotion.mdx](https://github.com/heygen-com/hyperframes/blob/main/docs/guides/hyperframes-vs-remotion.mdx)
+for details.
+
+## `delayRender()` / `continueRender()`
+
+```tsx
+const handle = delayRender();
+useEffect(() => {
+  loadAsset().then(() => continueRender(handle));
+}, []);
+```
+
+Drop. HF waits on asset readiness via the [Frame Adapter pattern](https://hyperframes.heygen.com/concepts/frame-adapters)
+— images, videos, fonts, and Lottie animations all signal load
+completion natively. There's nothing to do at the application level.
+
+## When the asset isn't a file
+
+If Remotion's media source is a Buffer, dataURL, or URL.createObjectURL,
+the asset doesn't exist on disk and can't be copied via setup.sh. Two
+options:
+
+1. Materialize the asset at translation time — write the buffer to a file
+   in `hf-src/assets/`.
+2. Embed as a data URL directly in the HTML (`src="data:image/png;base64,..."`)
+   for small assets (< 100 KB).
+
+For audio/video Buffers, option 1 is preferred — base64-encoded media
+bloats the HTML and slows the renderer.
