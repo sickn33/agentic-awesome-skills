@@ -494,7 +494,6 @@ function convergePreparedRelease(projectRoot, contract, options = {}) {
 }
 
 function prepareRelease(projectRoot, version, stateDir, options = {}) {
-  require("./release_resources.cjs").checkSpace();
   if (options.localOnly && options.candidateDir) throw Error("Local-only rehearsal cannot promote or push a retained candidate");
   if (!version) {
     throw new Error("Usage: npm run release:prepare -- X.Y.Z");
@@ -503,6 +502,7 @@ function prepareRelease(projectRoot, version, stateDir, options = {}) {
 
   ensureOnMain(projectRoot);
   ensureCleanWorkingTree(projectRoot, "release:prepare requires a clean tracked working tree.");
+  require("./release_resources.cjs").checkSpace();
   if (options.localOnly !== true) ensureTagMissing(projectRoot, `v${version}`);
   require("./release_credits.cjs").validateCredits(projectRoot, ensureChangelogSection(projectRoot, version));
   const cycleGate = require('./release_cycle_gate.cjs');

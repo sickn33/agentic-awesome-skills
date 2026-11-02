@@ -113,3 +113,13 @@ test('real cycle wiring binds approval hints to the captured head and pull_reque
   }
  } finally {console.log=originalLog;process.exitCode=originalExit;}
 });
+
+test('pending selected merge never bulk-aligns other branches',async()=>{
+ const first=pr(1),second={...pr(2),mergeable_state:'behind'};
+ const state={prs:[1,2],attempts:[{results:[{prNumber:1,headSha:first.head.sha,prepared:true}]}]};
+ let waits=0;
+ const result=await drive({...options,allowAlign:true,maxSteps:2},{
+  snapshot:()=>({state,pulls:[first,second]}),checks:()=>[{state:'pending'}],
+  sleep:async()=>{waits++;},execute:()=>assert.fail('must not align another PR while selected merge waits')});
+ assert.equal(result.status,'budget-exhausted');assert.equal(waits,2);
+});
