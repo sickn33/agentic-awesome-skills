@@ -26,13 +26,16 @@ for (const invalid of [null, {}, { fixture: null }, { fixture: "bad" }, 1]) {
   assert.throws(() => parseNpmPackJson(JSON.stringify(invalid)), /Unexpected npm pack JSON schema/);
 }
 
+const packCache = fs.mkdtempSync(path.join(os.tmpdir(), "aas-npm-pack-test-"));
+process.once("exit",()=>fs.rmSync(packCache,{recursive:true,force:true}));
+
 function runNpmPackDryRunJson(cwd = repoRoot) {
   const result = spawnSync(npmCommand, ["pack", "--dry-run", "--json", "--ignore-scripts"], {
     cwd,
     encoding: "utf8",
     shell: process.platform === "win32",
     maxBuffer: npmPackOutputLimit,
-    env: { ...process.env, npm_config_cache: path.join(os.tmpdir(), "aas-npm-pack-test-cache") },
+    env: { ...process.env, npm_config_cache: packCache },
   });
 
   if (result.error) {

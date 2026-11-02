@@ -124,10 +124,12 @@ async function runPool(items, concurrency, worker) {
       await worker(item);
     }
   });
-  await Promise.all(runners);
+  const settled = await Promise.allSettled(runners);
+  const failed = settled.find(r => r.status === "rejected");
+  if (failed) throw failed.reason;
 }
 
-async function verifyLiveDeployment(options) {
+async function verifyLiveDeploymentOnce(options) {
   const deploymentRoot = path.resolve(options.deploymentRoot);
   const liveRoot = new URL(options.liveRoot);
   if (liveRoot.protocol !== 'https:' || !liveRoot.pathname.endsWith('/')) {
@@ -173,6 +175,22 @@ async function verifyLiveDeployment(options) {
     await fetchText(redirect.to, fetchImpl, timeoutMs);
   });
   return { checked_redirects: redirects.length, route_count: manifest.route_count };
+}
+
+async function verifyLiveDeployment(options) {
+  const attempts=Number(options.attempts ?? 3);
+  if(!Number.isInteger(attempts)||attempts<1||attempts>3) throw Error('Live attempts must be 1..3');
+  const history=[];
+  for(let attempt=1;attempt<=attempts;attempt++) {
+    const started=Date.now();
+    try { return {...await verifyLiveDeploymentOnce(options), attempts: [...history,{attempt,passed:true,elapsedMs:Date.now()-started}]}; }
+    catch(error) {
+      history.push({attempt,passed:false,elapsedMs:Date.now()-started,error:error.message});
+      if(attempt===attempts || !/returned (429|502|503|504)\b|fetch failed|timed out|timeout/i.test(error.message)) {error.attempts=history;throw error;}
+      console.error(JSON.stringify({fullAuditRetry:history.at(-1)}));
+      await (options.sleep || (ms=>new Promise(resolve=>setTimeout(resolve,ms))))(attempt*2000);
+    }
+  }
 }
 
 function parseArgs(argv) {

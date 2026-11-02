@@ -289,3 +289,9 @@ web assets/coverage. Data and library inputs remain conservative. Fresh setup,
 metadata, prerender, audits and final checks still run. Record cache hits/misses,
 full test inventory, stage durations and overall elapsed time separately; do not
 sum overlapping savings or present fixture results as a whole-cycle benchmark.
+
+## Audited public finalization
+
+See [release finalization](release-finalization.md) for scratch-space admission,
+verified PR credits and the resumable post-publication command. This extends the
+existing protected flow, never replaces its gates or publication authorization.

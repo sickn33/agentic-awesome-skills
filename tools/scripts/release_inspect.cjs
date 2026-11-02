@@ -293,7 +293,7 @@ async function legacyProof(sha, activeCatalog = null) {
       deploymentRoot,
       liveRoot: "https://sickn33.github.io/",
       liveMode: "all",
-      concurrency: 8,
+      concurrency: Number(process.env.AAS_LEGACY_CONCURRENCY || 8),
       timeoutMs: 30000,
     });
     return {

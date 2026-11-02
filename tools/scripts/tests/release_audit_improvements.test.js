@@ -1,0 +1,11 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {checkSpace}=require('../release_resources.cjs');
+assert.throws(()=>checkSpace('/unused',100,()=>({bavail:9,bsize:10})),/Insufficient/);
+assert.equal(checkSpace('/unused',100,()=>({bavail:10,bsize:10})).available,100);
+const {validateCredits}=require('../release_credits.cjs');
+const run=(c,a)=>c==='git'?(a[0]==='describe'?'v1.0.0':'feat: accepted (#12)'):JSON.stringify({merged_at:'now',user:{login:'contributor'}});
+assert.throws(()=>validateCredits('.', 'Thanks project',run),/missing/);
+assert.equal(validateCredits('.','Thanks @contributor https://github.com/sickn33/agentic-awesome-skills/pull/12',run).contributors.length,1);
+assert.throws(()=>validateCredits('.','@contributor',run),/missing/);
+console.log('Resource boundaries and exact PR credit admission passed');

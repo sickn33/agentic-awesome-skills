@@ -16,6 +16,7 @@ function rehearse(source, version, stateDir, dependencies = {}) {
   (dependencies.doctor || require("./maintenance_doctor.cjs").doctor)(source);
   if (dependencies.candidateDir) require("../lib/maintenance-state").openStore(dependencies.candidateDir, source);
   const head = run('git', ['rev-parse', 'HEAD'], source, { capture: true });
+  (dependencies.checkSpace || require("./release_resources.cjs").checkSpace)();
   const temporary = fs.mkdtempSync(path.join(fs.realpathSync(os.tmpdir()), 'aas-release-rehearsal-'));
   const clone = path.join(temporary, 'source');
   try {
