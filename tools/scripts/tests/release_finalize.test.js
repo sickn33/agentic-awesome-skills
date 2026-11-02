@@ -14,6 +14,8 @@ function run(a){
 try{
  assert.equal(finalize(process.cwd(),'1.2.3',directory,{run}).complete,true);assert.equal(dispatch,4);
  assert.equal(finalize(process.cwd(),'1.2.3',directory,{run}).complete,true);assert.equal(dispatch,4,'resume must not dispatch again');
+ const unlock=require('../../lib/maintenance-state').openStore(directory,process.cwd()).acquireLock('finalize');
+ try{assert.throws(()=>finalize(process.cwd(),'1.2.3',directory,{run}),/locked/i);}finally{unlock();}
  const {record}=require('../maintenance_activity.cjs');record(process.cwd(),directory,'start','review');
  assert.throws(()=>record(process.cwd(),directory,'start','review'),/Unpaired/);record(process.cwd(),directory,'end','review');
  const other=fs.mkdtempSync(path.join(fs.realpathSync(os.tmpdir()),'aas-finalize-uncertain-'));fs.chmodSync(other,0o700);

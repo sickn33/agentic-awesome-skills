@@ -125,7 +125,8 @@ async function runPool(items, concurrency, worker) {
     }
   });
   const settled = await Promise.allSettled(runners);
-  const failed = settled.find(r => r.status === "rejected");
+  const failures = settled.filter(r => r.status === "rejected");
+  const failed = failures.find(r => !transient(r.reason)) || failures[0];
   if (failed) throw failed.reason;
 }
 
@@ -177,6 +178,7 @@ async function verifyLiveDeploymentOnce(options) {
   return { checked_redirects: redirects.length, route_count: manifest.route_count };
 }
 
+function transient(error) { return /^live probe failed: .* returned (429|502|503|504)\b|^fetch failed$|aborted due to timeout/i.test(error.message); }
 async function verifyLiveDeployment(options) {
   const attempts=Number(options.attempts ?? 3);
   if(!Number.isInteger(attempts)||attempts<1||attempts>3) throw Error('Live attempts must be 1..3');
@@ -186,7 +188,7 @@ async function verifyLiveDeployment(options) {
     try { return {...await verifyLiveDeploymentOnce(options), attempts: [...history,{attempt,passed:true,elapsedMs:Date.now()-started}]}; }
     catch(error) {
       history.push({attempt,passed:false,elapsedMs:Date.now()-started,error:error.message});
-      if(attempt===attempts || !/returned (429|502|503|504)\b|fetch failed|timed out|timeout/i.test(error.message)) {error.attempts=history;throw error;}
+      if(attempt===attempts || !transient(error)) {error.attempts=history;throw error;}
       console.error(JSON.stringify({fullAuditRetry:history.at(-1)}));
       await (options.sleep || (ms=>new Promise(resolve=>setTimeout(resolve,ms))))(attempt*2000);
     }
