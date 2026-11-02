@@ -34,7 +34,7 @@ function planFor(root, base, head) {
 function commandsFor(check, root, plan = {}) {
   if (check === "source-credits") return [["npm", ["run", "check:readme-credits", "--", "--base", plan.baseSha, "--head", plan.headSha]]];
   if (check === "documentation") return [["node", ["tools/scripts/run-python.js", "tools/scripts/tests/test_documentation_consistency.py"]]];
-  if (check === "preview") return ["plugin-compat:sync", "index", "bundles:sync", "sync:metadata", "catalog", "build:aas-v1-catalog", "sync:web-assets"].map(s => ["npm", ["run", s]]);
+  if (check === "preview") return ["registry:preview", "sync:metadata", "catalog", "build:aas-v1-catalog", "sync:web-assets"].map(s => ["npm", ["run", s]]);
   if (check === "web") return ["app:install", "app:ci"].map(s => ["npm", ["run", s]]);
   if (check === "package-tests") return fs.readdirSync(path.join(root, "tools/scripts/tests"))
     .filter(f => /^(installer_.*|npm_package_contents)\.test\.js$/.test(f)).sort()
@@ -46,14 +46,17 @@ function executePlan(root, plan, execute = spawnSync) {
   for (const check of plan.checks) {
     const started = Date.now();
     let exitCode = 0;
+    const commandTimings = [];
     const commands = commandsFor(check, root, plan);
     if (!commands.length) throw new Error(`Empty required check: ${check}`);
     for (const [command, args] of commands) {
       const invocation = resolveCommandInvocation(command, args);
+      const commandStarted = Date.now();
       const r = execute(invocation.command, invocation.args, { cwd: root, stdio: "inherit", shell: false });
+      commandTimings.push({ command, args, elapsedMs: Date.now() - commandStarted, exitCode: r.error ? 1 : (r.status ?? 1) });
       if (r.error || r.status !== 0) { exitCode = r.status || 1; break; }
     }
-    results.push({ check, exitCode, elapsedMs: Date.now() - started });
+    results.push({ check, exitCode, elapsedMs: Date.now() - started, commands: commandTimings });
     if (exitCode) break;
   }
   let passed = false;

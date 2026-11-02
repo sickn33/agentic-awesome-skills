@@ -27,54 +27,57 @@ jobs:
           PR_HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
           PR_HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
         run: |
+          fail() { echo "$1" | tee -a "$GITHUB_STEP_SUMMARY"; exit 1; }
           for attempt in $(seq 1 60); do
-            checks=$(gh api "repos/$GITHUB_REPOSITORY/commits/$PR_HEAD/check-runs?per_page=100" \
-              --jq '[.check_runs[] | select(.name == "pr-evidence" and .app.id == 15368)] | sort_by(.id) | last | {id, status, conclusion}')
-            status=$(printf '%s' "$checks" | jq -r '.status')
-            conclusion=$(printf '%s' "$checks" | jq -r '.conclusion')
-            if [ "$status" = "completed" ]; then
-              if [ "$conclusion" = "success" ]; then
-                # GitHub may leave check_run.pull_requests empty on fork PRs.
-                # Bind this exact-head check to the trusted upstream CI run instead.
-                job_id=$(printf '%s' "$checks" | jq -r '.id')
-                job=$(gh api "repos/$GITHUB_REPOSITORY/actions/jobs/$job_id")
-                if ! printf '%s' "$job" | jq -e --arg sha "$PR_HEAD" \
-                  '.name == "pr-evidence" and .head_sha == $sha and (.run_id | type == "number")' >/dev/null; then
-                  echo "PR evidence job provenance mismatch." >> "$GITHUB_STEP_SUMMARY"
-                  exit 1
+            # Select the newest eligible CI run BEFORE selecting its evidence job.
+            # Metadata emits the same check name but is not scanner provenance.
+            runs=$(gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$PR_HEAD&event=pull_request&per_page=100")
+            run=$(printf '%s' "$runs" | jq -c --arg sha "$PR_HEAD" \
+              --arg repo "$PR_HEAD_REPO" --arg branch "$PR_HEAD_BRANCH" --arg upstream "$GITHUB_REPOSITORY" \
+              '[.[].workflow_runs[] | select(.event == "pull_request" and .path == ".github/workflows/ci.yml" and
+                .head_sha == $sha and .head_repository.full_name == $repo and
+                .head_branch == $branch and .repository.full_name == $upstream)] | sort_by(.id) | last')
+            if [ "$run" != "null" ]; then
+              run_id=$(printf '%s' "$run" | jq -er '.id')
+              run_attempt=$(printf '%s' "$run" | jq -er '.run_attempt')
+              jobs=$(gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/actions/runs/$run_id/attempts/$run_attempt/jobs?per_page=100")
+              count=$(printf '%s' "$jobs" | jq '[.[].jobs[] | select(.name == "pr-evidence")] | length')
+              [ "$count" -le 1 ] || fail "Ambiguous PR evidence jobs."
+              job=$(printf '%s' "$jobs" | jq -c '[.[].jobs[] | select(.name == "pr-evidence")] | first')
+              if [ "$job" != "null" ]; then
+                printf '%s' "$job" | jq -e --arg sha "$PR_HEAD" --argjson run "$run_id" --argjson attempt "$run_attempt" \
+                  '.head_sha == $sha and .run_id == $run and .run_attempt == $attempt' >/dev/null || fail "PR evidence job provenance mismatch."
+                if [ "$(printf '%s' "$job" | jq -r '.status')" = "completed" ]; then
+                  [ "$(printf '%s' "$job" | jq -r '.conclusion')" = "success" ] || fail "PR evidence did not pass; no scan ran."
+                  job_id=$(printf '%s' "$job" | jq -er '.id')
+                  check=$(gh api "repos/$GITHUB_REPOSITORY/check-runs/$job_id")
+                  printf '%s' "$check" | jq -e --arg sha "$PR_HEAD" --argjson id "$job_id" \
+                    '.id == $id and .app.id == 15368 and .name == "pr-evidence" and .head_sha == $sha and
+                     .status == "completed" and .conclusion == "success"' >/dev/null || fail "PR evidence check identity mismatch."
+                  pr=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER")
+                  printf '%s' "$pr" | jq -e --arg sha "$PR_HEAD" --arg repo "$PR_HEAD_REPO" \
+                    --arg branch "$PR_HEAD_BRANCH" --arg upstream "$GITHUB_REPOSITORY" --arg number "$PR_NUMBER" \
+                    '.number == ($number | tonumber) and .state == "open" and .head.sha == $sha and
+                     .head.repo.full_name == $repo and .head.ref == $branch and .base.repo.full_name == $upstream' >/dev/null || fail "The PR changed while waiting."
+                  latest=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id")
+                  [ "$(printf '%s' "$latest" | jq -r '.run_attempt')" = "$run_attempt" ] || fail "CI was rerun while reading evidence."
+                  # Recheck selection after collecting evidence; a newer CI run cannot be hidden by old green jobs.
+                  runs=$(gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$PR_HEAD&event=pull_request&per_page=100")
+                  newest=$(printf '%s' "$runs" | jq -r --arg sha "$PR_HEAD" --arg repo "$PR_HEAD_REPO" \
+                    --arg branch "$PR_HEAD_BRANCH" --arg upstream "$GITHUB_REPOSITORY" \
+                    '[.[].workflow_runs[] | select(.event == "pull_request" and .path == ".github/workflows/ci.yml" and
+                      .head_sha == $sha and .head_repository.full_name == $repo and .head_branch == $branch and
+                      .repository.full_name == $upstream)] | sort_by(.id) | last | .id')
+                  [ "$newest" = "$run_id" ] || fail "CI selection changed while reading evidence."
+                  echo "Exact-head pr-evidence passed; advisory scanning may start." | tee -a "$GITHUB_STEP_SUMMARY"
+                  exit 0
                 fi
-                run_id=$(printf '%s' "$job" | jq -r '.run_id')
-                run=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id")
-                if ! printf '%s' "$run" | jq -e --arg sha "$PR_HEAD" \
-                  --arg repo "$PR_HEAD_REPO" --arg branch "$PR_HEAD_BRANCH" \
-                  --arg upstream "$GITHUB_REPOSITORY" \
-                  '.event == "pull_request" and .path == ".github/workflows/ci.yml" and
-                   .head_sha == $sha and .head_repository.full_name == $repo and
-                   .head_branch == $branch and .repository.full_name == $upstream' >/dev/null; then
-                  echo "PR evidence was not produced by the expected exact-head upstream CI run." >> "$GITHUB_STEP_SUMMARY"
-                  exit 1
-                fi
-                pr=$(gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER")
-                if ! printf '%s' "$pr" | jq -e --arg sha "$PR_HEAD" \
-                  --arg repo "$PR_HEAD_REPO" --arg branch "$PR_HEAD_BRANCH" \
-                  --arg upstream "$GITHUB_REPOSITORY" --arg number "$PR_NUMBER" \
-                  '.number == ($number | tonumber) and .head.sha == $sha and
-                   .head.repo.full_name == $repo and .head.ref == $branch and
-                   .base.repo.full_name == $upstream' >/dev/null; then
-                  echo "The PR head no longer matches the exact-head CI evidence." >> "$GITHUB_STEP_SUMMARY"
-                  exit 1
-                fi
-                echo "Exact-head pr-evidence passed; advisory scanning may start." >> "$GITHUB_STEP_SUMMARY"
-                exit 0
               fi
-              echo "PR evidence did not pass; advisory scanning is skipped." >> "$GITHUB_STEP_SUMMARY"
-              exit 1
             fi
-            echo "Waiting for exact-head pr-evidence ($attempt/60)."
+            echo "Waiting for exact-head CI evidence ($attempt/60)."
             sleep 10
           done
-          echo "Timed out waiting for exact-head PR evidence; no scan ran." >> "$GITHUB_STEP_SUMMARY"
-          exit 1
+          fail "Timed out waiting for exact-head PR evidence; no scan ran."
 
   skillspector-advisory:
     needs: evidence-ready
@@ -89,6 +92,7 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.base.sha }}
           fetch-depth: 0
+          filter: blob:none
           persist-credentials: false
       - name: Detect advisory tooling
         id: tooling
