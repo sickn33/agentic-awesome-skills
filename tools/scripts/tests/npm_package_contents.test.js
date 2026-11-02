@@ -9,6 +9,23 @@ const repoRoot = path.resolve(__dirname, "..", "..", "..");
 const npmCommand = process.platform === "win32" ? "npm.cmd" : "npm";
 const npmPackOutputLimit = 16 * 1024 * 1024;
 
+function parseNpmPackJson(output) {
+  const parsed = JSON.parse(output);
+  if (Array.isArray(parsed)) return parsed;
+  if (parsed && typeof parsed === "object") {
+    const values = Object.values(parsed);
+    if (values.length && values.every(value => value && typeof value === "object" && !Array.isArray(value))) return values;
+  }
+  throw new Error("Unexpected npm pack JSON schema");
+}
+
+const samplePack = { name: "fixture", files: [], bundled: [] };
+assert.deepStrictEqual(parseNpmPackJson(JSON.stringify([samplePack])), [samplePack]);
+assert.deepStrictEqual(parseNpmPackJson(JSON.stringify({ "fixture@1.0.0": samplePack })), [samplePack]);
+for (const invalid of [null, {}, { fixture: null }, { fixture: "bad" }, 1]) {
+  assert.throws(() => parseNpmPackJson(JSON.stringify(invalid)), /Unexpected npm pack JSON schema/);
+}
+
 function runNpmPackDryRunJson(cwd = repoRoot) {
   const result = spawnSync(npmCommand, ["pack", "--dry-run", "--json", "--ignore-scripts"], {
     cwd,
@@ -26,7 +43,7 @@ function runNpmPackDryRunJson(cwd = repoRoot) {
     throw new Error(result.stderr.trim() || "npm pack --dry-run --json failed");
   }
 
-  return JSON.parse(result.stdout);
+  return parseNpmPackJson(result.stdout);
 }
 
 const packOutput = runNpmPackDryRunJson();
