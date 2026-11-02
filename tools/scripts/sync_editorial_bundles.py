@@ -1429,9 +1429,10 @@ def load_editorial_bundles(root: Path) -> list[dict[str, Any]]:
     return _validate_editorial_bundles(root, payload)
 
 
-def sync_editorial_bundles(root: Path) -> None:
+def sync_editorial_bundles(root: Path, *, compatibility_report=None) -> None:
     metadata = load_metadata(str(root))
-    compatibility_report = sync_plugin_compatibility(root)
+    if compatibility_report is None:
+        compatibility_report = sync_plugin_compatibility(root)
     compatibility = compatibility_by_skill_id(compatibility_report)
     bundles = load_editorial_bundles(root)
     bundle_support = {

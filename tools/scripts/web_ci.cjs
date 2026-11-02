@@ -64,6 +64,32 @@ function validateSummary(summary) {
     throw new Error('Incomplete or unsuccessful Turbo task evidence');
   }
 }
+// Persist only bounded opaque Turbo entries. Never unpack or trust their contents here.
+function compactCache(directory, hashes, limit = 16) {
+  if (!Array.isArray(hashes) || hashes.some(hash => !/^[a-f0-9]{16}$/.test(hash)) || !Number.isInteger(limit) || limit < hashes.length) throw new Error('Invalid cache retention');
+  if (!fs.existsSync(directory)) return { entries: 0, bytes: 0 };
+  if (!fs.lstatSync(directory).isDirectory()) throw new Error('Unsafe cache root');
+  const entries = new Map();
+  for (const name of fs.readdirSync(directory)) {
+    const match = /^([a-f0-9]{16})\.(?:tar.zst|json)$/.exec(name);
+    if (!match) continue;
+    const file = path.join(directory, name), stat = fs.lstatSync(file);
+    if (!stat.isFile()) throw new Error('Unsafe cache entry');
+    const entry = entries.get(match[1]) || { files: [], time: 0 };
+    entry.files.push({ file, size: stat.size }); entry.time = Math.max(entry.time, stat.mtimeMs);
+    entries.set(match[1], entry);
+  }
+  const keep = new Set(hashes);
+  for (const [hash] of [...entries].sort((a, b) => b[1].time - a[1].time || a[0].localeCompare(b[0]))) {
+    if (keep.size < limit) keep.add(hash);
+  }
+  let bytes = 0;
+  for (const [hash, entry] of entries) for (const file of entry.files) {
+    if (keep.has(hash)) bytes += file.size;
+    else fs.unlinkSync(file.file);
+  }
+  return { entries: [...entries.keys()].filter(hash => keep.has(hash)).length, bytes };
+}
 function main() {
   if (process.env.AAS_WEB_CI_RECEIPT) {
     const filename = path.resolve(process.env.AAS_WEB_CI_RECEIPT);
@@ -101,6 +127,7 @@ function main() {
     globalInputsDigest: digest(JSON.stringify(summary.globalCacheInputs)),
     tasks: summary.tasks.map(task => ({ task: task.taskId, hash: task.hash, cache: task.cache.status,
       inputsDigest: digest(JSON.stringify(task.inputs)), environmentDigest: digest(JSON.stringify(task.environmentVariables)) })) };
+  if (process.env.AAS_WEB_CACHE_COMPACT === '1') receipt.cacheStorage = compactCache(cacheDir, receipt.tasks.map(task => task.hash));
   if (process.env.AAS_WEB_CI_RECEIPT) {
     const filename = path.resolve(process.env.AAS_WEB_CI_RECEIPT);
     fs.mkdirSync(path.dirname(filename), { recursive: true });
@@ -116,4 +143,4 @@ if (require.main === module) {
     else throw new Error('Usage: web_ci.cjs [cacheable test|compile]');
   } catch (error) { console.error(`Web CI failed: ${error.message}`); process.exitCode = 1; }
 }
-module.exports = { outputInventory, verifyOutput, turboEnvironment, validateSummary };
+module.exports = { compactCache, outputInventory, verifyOutput, turboEnvironment, validateSummary };
