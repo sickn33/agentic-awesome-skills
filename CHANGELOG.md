@@ -31,7 +31,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Thanks
 
-Thanks to Emil Kowalski, HeyGen, Benji Taylor, Damir Sokolovsky, Desearch-ai, SFXMint, LogBrew, seifip, BlockVectra, Quinnod345, ukorvl, LydiaTools and Mobbin for the new skills and upstream work; and to the Arcmira, Openhook, Datacircle and Mercury contributors for reviewed updates. The source notices and bundled licenses retain individual attribution.
+Thanks to the contributors whose pull requests are included in this release:
+
+- @liaujianjie — add mobbin skill for real app UI references ([#2217](https://github.com/sickn33/agentic-awesome-skills/pull/2217)).
+- @LydiaTools — add show-the-change for non-programmer acceptance ([#2218](https://github.com/sickn33/agentic-awesome-skills/pull/2218)).
+- @waynehamadi — Update Datacircle's skill ([#2219](https://github.com/sickn33/agentic-awesome-skills/pull/2219)).
+- @berkantay — refresh Openhook for private agent channels ([#2232](https://github.com/sickn33/agentic-awesome-skills/pull/2232)).
+- @Whq02 — add Mercury CLI to Choose Your Tool ([#2220](https://github.com/sickn33/agentic-awesome-skills/pull/2220)).
+- @ukorvl — add lightweight-charts-react-components skill ([#2221](https://github.com/sickn33/agentic-awesome-skills/pull/2221)).
+- @Quinnod345 — add ponder skill for convergent multi-pass review ([#2236](https://github.com/sickn33/agentic-awesome-skills/pull/2236)).
+- @gjwang — add source-cited BlockVectra documentation skill ([#2233](https://github.com/sickn33/agentic-awesome-skills/pull/2233)).
+- @seifip — add Mac API connection diagnostics skill ([#2234](https://github.com/sickn33/agentic-awesome-skills/pull/2234)).
+- @zealous1 — use a 90-day default for Arcmira quote search ([#2235](https://github.com/sickn33/agentic-awesome-skills/pull/2235)).
+- @furkanerday — add logbrew-debug-production skill (official, LogBrew production debugging) ([#2238](https://github.com/sickn33/agentic-awesome-skills/pull/2238)).
+- @Chkhikvadze — add desearch-mcp for Desearch MCP search and research ([#2213](https://github.com/sickn33/agentic-awesome-skills/pull/2213)).
+- @flreey — add sfxmint skill (official, CC0 sound effects for apps and games) ([#2211](https://github.com/sickn33/agentic-awesome-skills/pull/2211)).
+
+Thanks also to @emilkowalski, @heygen-com, @benjitaylor and @heydamir for the upstream design, motion and creative-production collections imported in this release. Individual source notices and bundled licenses retain attribution.
 
 ---
 
