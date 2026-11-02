@@ -1,0 +1,150 @@
+/* All rules belong to this example, including its responsive variants. */
+.crs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 340px));
+    gap: 28px 24px;
+    justify-content: center;
+    padding: 0;
+
+  & figure { margin: 0; }
+
+  & figcaption {
+    margin-top: 10px;
+    color: #8a8a8e;
+    font: 12px/1.4 system-ui, sans-serif;
+    text-align: center;
+  }
+
+  .crs .ss-stage {
+    overflow: hidden;
+    border-radius: 12px;
+    background: var(--ss-well);
+    font: 12px/1.4 var(--ss-font);
+    color: var(--ss-text-strong);
+  }
+
+  /* Inset top and left, bleeding off the right and bottom */
+  .crs-window {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    width: 340px;
+    height: 240px;
+    box-shadow: var(--ss-shadow-hero);
+  }
+
+  .crs-body {
+    display: grid;
+    gap: 12px;
+    padding: 16px 18px;
+  }
+
+  .crs-row {
+    display: grid;
+    grid-template-columns: 56px auto;
+    column-gap: 16px;
+    align-items: center;
+    justify-content: start;
+    min-height: 28px;
+  }
+
+  .crs-label { color: var(--ss-text); }
+
+  .crs-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 168px;
+    height: 28px;
+    padding: 0 9px;
+    border-radius: 7px;
+    background: var(--ss-surface);
+    box-shadow: inset 0 0 0 1px var(--ss-line);
+    transition: box-shadow 0.2s ease;
+  }
+
+  .crs-field[data-focus] {
+    box-shadow: inset 0 0 0 1px var(--ss-accent), 0 0 0 3px color-mix(in srgb, var(--ss-accent) 18%, transparent);
+  }
+
+  .crs-value { white-space: pre; border-radius: 3px; transition: background 0.15s ease; }
+  .crs-value[data-select] { background: color-mix(in srgb, var(--ss-accent) 25%, transparent); }
+  .crs-placeholder { color: var(--ss-text-faint, #a1a1a6); }
+
+  .crs-caret {
+    width: 1px;
+    height: 14px;
+    margin-left: 1px;
+    background: var(--ss-accent);
+  }
+
+  .crs-slider { display: flex; align-items: center; gap: 12px; padding-left: 8px; }
+
+  .crs-track {
+    position: relative;
+    height: 4px;
+    border-radius: 2px;
+    background: var(--ss-ink-2);
+  }
+
+  .crs-fill { position: absolute; inset: 0 auto 0 0; border-radius: inherit; background: var(--ss-accent); }
+
+  .crs-handle {
+    position: absolute;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.12), 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+
+  .crs-pct { width: 28px; color: var(--ss-text); font-variant-numeric: tabular-nums; }
+
+  .crs-link { color: var(--ss-accent); font-weight: 500; transition: color 0.2s ease; }
+  .crs-link[data-hover] { text-decoration: underline; text-underline-offset: 3px; }
+  .crs-note { height: 28px; }
+  .crs-note .ss-states__item:not([data-on]) { pointer-events: none; }
+  .crs-note-content { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; color: var(--ss-text); }
+  .crs-note-remove { display: grid; place-items: center; width: 20px; height: 20px; border-radius: 5px; color: var(--ss-text); transition: background 160ms ease, color 160ms ease; }
+  .crs-note-remove[data-hover] { background: var(--ss-ink-1); color: var(--ss-text-strong); }
+  .crs-note-remove[data-pressed] { background: var(--ss-ink-2); }
+
+  .crs-seg {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3px;
+    width: 168px;
+    padding: 3px;
+    border-radius: 8px;
+    background: var(--ss-ink-1);
+    font-size: 11px;
+    text-align: center;
+  }
+
+  .crs-seg span {
+    padding: 5px 0;
+    border-radius: 5px;
+    color: var(--ss-text);
+    transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .crs-seg span[data-on] {
+    background: var(--ss-surface);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    color: var(--ss-text-strong);
+    font-weight: 500;
+  }
+
+  .crs-seg span[data-pressed] { background: var(--ss-ink-2); }
+
+
+  /* Programmatic changes glide; direct drags remain attached to the pointer. */
+  .crs-window[data-system] .crs-fill { transition: width 450ms cubic-bezier(0.45, 0, 0.1, 1); }
+  .crs-window[data-system] .crs-handle { transition: left 450ms cubic-bezier(0.45, 0, 0.1, 1); }
+  .ss-stage[data-layout="compact"] .crs-window { left: 20px; width: 300px; }
+  .ss-stage[data-layout="compact"] .crs-body { padding-inline: 14px; }
+  .ss-stage[data-layout="compact"] .crs-row { grid-template-columns: 52px auto; }
+  .ss-stage[data-layout="compact"] :is(.crs-field, .crs-seg) { width: 152px; }
+}

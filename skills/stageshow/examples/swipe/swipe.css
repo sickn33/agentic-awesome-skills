@@ -1,0 +1,169 @@
+/* A mail app on iOS, light. The phone is centered and runs off the bottom;
+   everything inside is in screen points. */
+
+.sw .ss-stage {
+  --sw-ink: #111;
+  --sw-ink-2: #8a8a8e;
+  --sw-line: #e3e3e6;
+  --sw-archive: #5856d6;
+  --sw-blue: #0a84ff;
+  overflow: hidden;
+  background: #efeef0;
+}
+
+.sw-phone {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  translate: -50% 0;
+}
+
+.sw-app {
+  color: var(--sw-ink);
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+}
+
+.sw-head {
+  padding: 2px 20px 10px;
+}
+
+/* Back to Mailboxes on the left, more on the right, as Mail's bar has */
+.sw-bar-top {
+  display: flex;
+  justify-content: space-between;
+  height: 36px;
+}
+
+/* The round glass button iOS puts in the top bar */
+.sw-round {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f0f0f2;
+  color: var(--sw-ink);
+}
+
+.sw-title {
+  margin: 4px 0 0;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 41px;
+  letter-spacing: 0.01em;
+}
+
+/* Categories: the chosen one is a filled pill with its name, the rest icons */
+.sw-cats {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.sw-cat {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 52px;
+  height: 34px;
+  padding: 0 14px;
+  border-radius: 17px;
+  background: #f0f0f2;
+  color: #3c3c43;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.sw-cat[data-on] {
+  background: var(--sw-blue);
+  color: #fff;
+}
+
+/* ---- Rows ---- */
+
+.sw-cell {
+  position: relative;
+  overflow: hidden;
+}
+
+/* The archive color sits under the row; its mark rides on the row's
+   trailing edge */
+.sw-action {
+  position: absolute;
+  inset: 0;
+  background: var(--sw-archive);
+}
+
+.sw-action__mark {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 74px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* The kit Row at Mail's geometry: square, white, 12pt between avatar and text */
+.sw-row {
+  column-gap: 12px;
+  border-radius: 0;
+  /* Mail reserves a dot column on every row: the list sits 12pt in from
+     the title, read or not, so nothing moves when a message is read */
+  padding: 12px 20px 12px 32px;
+  background: #fff;
+  will-change: transform;
+}
+
+/* A hairline under each row, from the text's edge, as Mail draws it */
+.sw-row::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 84px;
+  height: 0.5px;
+  background: var(--sw-line);
+  content: '';
+}
+
+.sw-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+  color: var(--sw-ink-2);
+  font-size: 15px;
+  line-height: 20px;
+}
+
+.sw-subject {
+  color: var(--ss-text-strong);
+}
+
+.sw-row .ss-row__preview[data-text] {
+  color: var(--sw-ink-2);
+}
+
+.sw-time svg {
+  color: #c4c4c7;
+}
+
+/* Mail centers the photo on the sender and subject, not lower with the
+   preview the way the kit's default does */
+.sw .ss-row.sw-row:has(.ss-row__preview) {
+  --ss-row-lead-h: calc(var(--ss-row-line) + var(--ss-row-line-2) + var(--ss-row-gap));
+}
+
+/* Placeholder rows at the real ones' height: the gold's bars are 11pt for
+   the sender and 9pt for the lines, centered in their line boxes */
+.sw-row .ss-row__title > .ss-bar { margin: 5.5px 0; }
+.sw-row .ss-row__subtitle > .ss-bar { display: block; margin: 5.5px 0; }
+.sw-fill { display: flex; align-items: center; height: 20px; }
+.sw-row .ss-row__meta > .ss-bar { display: block; margin: 6.5px 0; }

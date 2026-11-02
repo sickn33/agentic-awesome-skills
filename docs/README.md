@@ -70,3 +70,5 @@ Current operational guidance lives in `users/`, `contributors/`, and the current
 - [Plugin consolidation review](maintainers/plugin-offer-consolidation-2026-10-13.md): preservation, migration and validation scope.
 
 - [Maintainer flow and recovery](maintainers/maintainer-flow.md): batch coordination, source credits, preflight, dossiers, and release verification.
+
+- [CI audit improvements](maintainers/ci-audit-improvements.md): measured scheduling, cache and evidence changes.

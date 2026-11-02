@@ -228,7 +228,9 @@ The 1,273+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflow
         twice = sync_repo_metadata.sync_readme_copy(update_readme.apply_metadata(once, metadata), metadata)
         self.assertEqual(once, twice)
         self.assertIn("## Watch the Introduction", once)
-        self.assertIn("https://github.com/user-attachments/assets/02aa20ca-c3bb-4984-807e-7b06ef77e785", once)
+        original_intro = current.split("## Watch the Introduction", 1)[1].split("\n## ", 1)[0]
+        synced_intro = once.split("## Watch the Introduction", 1)[1].split("\n## ", 1)[0]
+        self.assertEqual(original_intro, synced_intro)
         self.assertIn("library of 2,500+ installable", once)
         self.assertIn("## Browse 2,500+ Skills", once)
         self.assertIn("[Browse 2,500+ Skills](#browse-2500-skills)", once)

@@ -1,0 +1,44 @@
+.lk-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap: 24px; }
+.lk-pair figure { margin: 0; min-width: 0; width: 358px; max-width: 100%; justify-self: center; }
+.lk-pair figcaption { display: grid; gap: 4px; padding: 14px 2px 0; font: 12px/1.5 system-ui, sans-serif; color: #73737c; }
+.lk-pair figcaption strong { color: #303036; font-size: 13px; font-weight: 550; }
+.lk-pair .ss-stage { overflow: hidden; background: var(--ss-well); border-radius: 16px; }
+.lk-pair .lk-window { position: absolute; inset: 24px 20px auto; width: 318px; box-shadow: var(--ss-shadow-ground); }
+/* Let the window follow its content. Every look keeps the same 20px inset
+   below the action as above and beside the form, regardless of its density. */
+.lk-pair .lk-body { position: relative; display: flex; flex-direction: column; gap: 16px; padding: 20px; }
+.lk-pair .lk-intro { display: grid; gap: 6px; }
+.lk-pair .lk-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.lk-pair .lk-title { font-size: 16px; line-height: 1.4; font-weight: 600; color: var(--ss-text-strong); }
+.lk-pair .lk-description { font-size: 12px; line-height: 1.5; }
+.lk-pair .lk-body .ss-seg, .lk-pair .lk-body .ss-field { width: 100%; }
+.lk-pair .lk-invite { display: flex; justify-content: space-between; align-items: center; min-height: 38px; padding: 9px 12px; border-radius: var(--ss-radius-md); background: var(--ss-accent); color: #fff; font-size: 13px; line-height: 20px; font-weight: 550; }
+.lk-pair .lk-invite svg { flex: none; }
+.lk-pair .look-consumer .ss-stage {
+  --ss-canvas: #fff;
+  --ss-surface: #f7f8fa;
+  --ss-chrome: #fafbfc;
+  --ss-well: #eef0f3;
+  --ss-line: #e1e5e9;
+  --ss-line-faint: #edf0f3;
+  --ss-text: #737b86;
+  --ss-text-strong: #242a32;
+  --ss-accent: #272d35;
+  --ss-accent-soft: #e9edf3;
+  --ss-accent-text: #526174;
+  --ss-radius-sm: 8px;
+  --ss-radius-md: 10px;
+  --ss-radius-lg: 14px;
+  --ss-radius-window: 18px;
+  --ss-control: 40px;
+  --ss-row: 30px;
+}
+.lk-pair .look-consumer .lk-title { font-size: 17px; font-weight: 600; }
+.lk-pair .look-consumer .ss-field__box { box-shadow: inset 0 0 0 1px var(--ss-line); }
+.lk-pair .look-consumer .ss-seg { background: #f0f2f5; }
+.lk-pair .look-consumer .lk-invite { min-height: 42px; padding-inline: 14px; }
+/* Reflow inside a 320px host's 288px slot; preserve the type's native size. */
+.lk-pair .ss-stage[data-layout="compact"] .lk-window { inset: 24px 16px auto; width: 256px; }
+.lk-pair .ss-stage[data-layout="compact"] .lk-body { padding: 16px; }
+.lk-pair .ss-stage[data-layout="compact"] .lk-head { align-items: flex-start; }
+.lk-pair .ss-stage[data-layout="compact"] .lk-head .ss-badge { flex: none; }

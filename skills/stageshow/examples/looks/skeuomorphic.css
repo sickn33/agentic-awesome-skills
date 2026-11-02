@@ -1,0 +1,36 @@
+/* One light direction and small material separation. Type remains flat,
+   crisp and uncovered by reflections. */
+.lk-pair .look-dimensional .ss-stage {
+  display: grid; place-items: center;
+  background: radial-gradient(ellipse at 25% 10%, #fbfdff 0, transparent 65%), linear-gradient(150deg, #e9eff5, #dde5ee);
+}
+.lk-transfer-frame {
+  width: 306px; padding: 6px 6px 0; box-sizing: border-box;
+  border: 1px solid #c3ced9; border-radius: 13px;
+  background: linear-gradient(145deg, #ffffffa6, #e7edf4b3);
+  box-shadow: inset 0 1px 0 #fff, inset 1px 0 0 #ffffffa6, 0 1px 2px #263d5320, 0 18px 28px -18px #263d5359;
+  color: #263645; font: 11px/17px var(--ss-font);
+}
+.lk-transfer-paper {
+  position: relative; padding: 18px 18px 16px; border: 1px solid #d4dce4; border-radius: 8px;
+  background: linear-gradient(#fff, #fdfefe); box-shadow: 0 1px 2px #2a3f5512, 0 4px 6px -5px #2a3f552b;
+}
+.lk-transfer-head { display: flex; align-items: center; gap: 7px; font-weight: 550; white-space: nowrap; }
+.lk-transfer-symbol { display: grid; place-items: center; width: 24px; height: 24px; flex: none; border: 1px solid #d8e2ec; border-radius: 6px; background: linear-gradient(#fff, #f0f4f8); box-shadow: inset 0 1px 0 #fff, 0 1px 1px #2233440a; }
+.lk-transfer-symbol svg { width: 17px; height: 17px; fill: none; stroke: #60788e; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.lk-transfer-id { margin-left: auto; color: #8794a1; font: 10px/17px var(--ss-mono); font-weight: 400; }
+.lk-transfer-amount { display: grid; gap: 4px; margin: 24px 0 22px; color: #7c8995; }
+.lk-transfer-amount strong { font-size: 35px; line-height: 42px; font-weight: 550; letter-spacing: -1.4px; color: #233647; font-variant-numeric: tabular-nums; }
+.lk-transfer-amount strong span { color: #91a0ae; }
+.lk-transfer-details { display: grid; gap: 9px; margin: 0; padding-top: 15px; border-top: 1px solid #e9edf0; }
+.lk-transfer-details > div { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.lk-transfer-details dt { color: #7c8995; }
+.lk-transfer-details dd { margin: 0; font-weight: 500; }
+.lk-transfer-details dd span { margin-left: 5px; color: #8794a1; font-weight: 400; }
+.lk-transfer-status { display: flex; align-items: center; gap: 6px; padding: 12px 11px 13px; color: #557461; text-shadow: 0 1px 0 #ffffffb3; }
+.lk-transfer-check { display: grid; place-items: center; width: 16px; height: 16px; border: 1px solid #b7cdbc; border-radius: 50%; background: linear-gradient(#f0f8f1, #dceadd); box-shadow: inset 0 1px 0 #fff, 0 1px 1px #48664f0f; }
+.lk-transfer-check svg { width: 13px; height: 13px; fill: none; stroke: #62846a; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.lk-transfer-date { margin-left: auto; color: #8794a1; }
+.lk-pair .ss-stage[data-layout="compact"] .lk-transfer-frame { width: 256px; }
+.lk-pair .ss-stage[data-layout="compact"] .lk-transfer-paper { padding-inline: 14px; }
+.lk-pair .ss-stage[data-layout="compact"] .lk-transfer-id { display: none; }

@@ -1,0 +1,128 @@
+/* Connector */
+
+@layer stageshow {
+  .ss-connector {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .ss-connector__line {
+    fill: none;
+    stroke: var(--ss-accent);
+    stroke-width: 1.5;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 1s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.25s ease;
+  }
+
+  .ss-connector[data-dashed] .ss-connector__line {
+    stroke-dasharray: 4 4;
+    stroke-dashoffset: 0;
+  }
+
+  .ss-connector__reveal {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 1s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+
+  .ss-connector[data-show] .ss-connector__reveal { stroke-dashoffset: 0; }
+  .ss-connector:not([data-show]) .ss-connector__reveal {
+    transition: stroke-dashoffset 0s 0.25s;
+  }
+
+  .ss-connector[data-show] .ss-connector__line {
+    stroke-dashoffset: 0;
+  }
+
+  .ss-connector[data-show][data-dashed] .ss-connector__line {
+    opacity: 1;
+  }
+
+  .ss-connector:not([data-show]) .ss-connector__line {
+    opacity: 0;
+    transition: opacity 0.25s ease, stroke-dashoffset 0s 0.25s;
+  }
+
+  .ss-connector__dot {
+    fill: var(--ss-accent);
+    stroke: #fff;
+    stroke-width: 2;
+    filter: drop-shadow(0 1px 1px rgb(20 35 55 / .16));
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: scale(0.4);
+    transition: opacity 0.2s ease, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .ss-connector[data-arrived] .ss-connector__dot {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .ss-connector[data-show] .ss-connector__dot--start {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .ss-connector__arrow {
+    fill: none;
+    stroke: var(--ss-accent);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  /* The head arrives as the line reaches it */
+  .ss-connector[data-arrived] .ss-connector__arrow {
+    opacity: 1;
+  }
+
+  /* The head is always solid: it must not pick up the line's draw-in dash */
+  .ss-connector__arrow {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .ss-connector__label {
+    position: absolute;
+    z-index: 21;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: var(--ss-raised);
+    box-shadow: 0 0 0 1px var(--ss-line), var(--ss-shadow-card);
+    font-size: 10.5px;
+    font-weight: 500;
+    line-height: 14px;
+    color: var(--ss-text-strong);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+
+  /* A step number: a small circle on the line */
+  .ss-connector__label[data-step] {
+    display: grid;
+    place-items: center;
+    width: 18px;
+    height: 18px;
+    padding: 0;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ss-connector__label[data-arrived] {
+    opacity: 1;
+    transition: opacity 0.2s ease;
+  }
+}

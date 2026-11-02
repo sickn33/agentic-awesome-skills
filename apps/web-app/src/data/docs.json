@@ -1,29 +1,164 @@
 [
-  {"slug":"getting-started","title":"Getting started","group":"Start here"},
-  {"slug":"aas-core","title":"AAS Core","group":"Start here"},
-  {"slug":"usage","title":"Usage guide","group":"Start here"},
-  {"slug":"walkthrough","title":"Walkthrough","group":"Start here"},
-  {"slug":"visual-guide","title":"Visual guide","group":"Start here"},
-  {"slug":"skills-library-overview","title":"Library overview","group":"Concepts"},
-  {"slug":"ai-agent-skills","title":"AI agent skills","group":"Concepts"},
-  {"slug":"skills-vs-mcp-tools","title":"Skills and MCP tools","group":"Concepts"},
-  {"slug":"discovery-manifest","title":"Discovery manifest","group":"Concepts"},
-  {"slug":"plugins","title":"Plugins","group":"Workflows and plugins"},
-  {"slug":"bundles","title":"Bundles","group":"Workflows and plugins"},
-  {"slug":"workflows","title":"Workflows","group":"Workflows and plugins"},
-  {"slug":"specialized-plugin-roadmap","title":"Plugin roadmap","group":"Workflows and plugins"},
-  {"slug":"codex-cli-skills","title":"Codex CLI","group":"Integrations"},
-  {"slug":"claude-code-skills","title":"Claude Code","group":"Integrations"},
-  {"slug":"cursor-skills","title":"Cursor","group":"Integrations"},
-  {"slug":"gemini-cli-skills","title":"Gemini CLI","group":"Integrations"},
-  {"slug":"kiro-integration","title":"Kiro","group":"Integrations"},
-  {"slug":"local-config","title":"Local configuration","group":"Integrations"},
-  {"slug":"security-and-antivirus","title":"Security and antivirus","group":"Help and safety"},
-  {"slug":"security-skills","title":"Security skills","group":"Help and safety"},
-  {"slug":"agent-overload-recovery","title":"Agent overload recovery","group":"Help and safety"},
-  {"slug":"windows-truncation-recovery","title":"Windows recovery","group":"Help and safety"},
-  {"slug":"faq","title":"Frequently asked questions","group":"Help and safety"},
-  {"slug":"agentic-awesome-skills-vs-awesome-claude-skills","title":"Comparing skill libraries","group":"Comparisons"},
-  {"slug":"best-claude-code-skills-github","title":"Claude Code skills on GitHub","group":"Comparisons"},
-  {"slug":"best-cursor-skills-github","title":"Cursor skills on GitHub","group":"Comparisons"}
+  {
+    "slug": "getting-started",
+    "title": "Getting started",
+    "group": "Start here",
+    "description": "Set up Agentic Awesome Skills, discover your first skills, and review a project stack with AAS Core. Compare direct installation, bundles, and supported agents."
+  },
+  {
+    "slug": "aas-core",
+    "title": "AAS Core",
+    "group": "Start here",
+    "description": "Use the local AAS Core CLI and MCP to search skills, record an agent-selected stack, validate its manifest, and preview a plan before separate installation."
+  },
+  {
+    "slug": "usage",
+    "title": "Usage guide",
+    "group": "Start here",
+    "description": "Learn how to compose an AAS skill stack, invoke skills in your coding agent, write focused prompts, and combine instructions for a practical project workflow."
+  },
+  {
+    "slug": "walkthrough",
+    "title": "Walkthrough",
+    "group": "Start here",
+    "description": "Read the historical AAS v8.2.0 maintenance walkthrough, covering integrated community pull requests, documentation updates, verified fixes, and release steps."
+  },
+  {
+    "slug": "visual-guide",
+    "title": "Visual guide",
+    "group": "Start here",
+    "description": "Explore diagrams of the AAS repository, skill file anatomy, categories, and installation paths. Follow visual examples for finding, using, and creating skills."
+  },
+  {
+    "slug": "skills-library-overview",
+    "title": "Library overview",
+    "group": "Concepts",
+    "description": "Understand how the Agentic Awesome Skills library is organized, including capability areas, risk labels, discovery options, and available distribution formats."
+  },
+  {
+    "slug": "ai-agent-skills",
+    "title": "AI agent skills",
+    "group": "Concepts",
+    "description": "Learn what AI agent skills provide, how to evaluate a skill library, and when to choose a broad catalog or a smaller curated collection for your coding agent."
+  },
+  {
+    "slug": "skills-vs-mcp-tools",
+    "title": "Skills and MCP tools",
+    "group": "Concepts",
+    "description": "Compare reusable skill instructions, local AAS MCP catalog access, external MCP tools, and CLI commands. Choose a starting path and understand preview limits."
+  },
+  {
+    "slug": "discovery-manifest",
+    "title": "Discovery manifest",
+    "group": "Concepts",
+    "description": "Read the AAS discovery manifest contract, required fields, and recommended host behavior. See how clients locate catalog data and understand the mirrored files."
+  },
+  {
+    "slug": "plugins",
+    "title": "Plugins",
+    "group": "Workflows and plugins",
+    "description": "Compare full-library installation with specialized AAS plugins for compatible agents. Learn about delivery formats, plugin-safe labels, and client-specific setup."
+  },
+  {
+    "slug": "bundles",
+    "title": "Bundles",
+    "group": "Workflows and plugins",
+    "description": "Browse AAS starter bundles and specialized plugin packs for development, design, security, and maintenance. Choose a focused set of skills for your next project."
+  },
+  {
+    "slug": "workflows",
+    "title": "Workflows",
+    "group": "Workflows and plugins",
+    "description": "Follow task-oriented AAS workflows for shipping apps, auditing security, building agents, and testing browsers, with skill sequences and recorded worked cases."
+  },
+  {
+    "slug": "specialized-plugin-roadmap",
+    "title": "Plugin roadmap",
+    "group": "Workflows and plugins",
+    "description": "Review AAS specialized plugin coverage, composition decisions, and verification notes. Compare related plugins and understand the documented scope of each pack."
+  },
+  {
+    "slug": "codex-cli-skills",
+    "title": "Codex CLI",
+    "group": "Integrations",
+    "description": "Connect Codex CLI to the local AAS MCP, verify the connection, request a project-specific skill selection, then validate and preview the plan before installation."
+  },
+  {
+    "slug": "claude-code-skills",
+    "title": "Claude Code",
+    "group": "Integrations",
+    "description": "Connect Claude Code to the local AAS MCP, inspect the configuration, choose skills for a project, and validate the selected stack before reviewing its plan."
+  },
+  {
+    "slug": "cursor-skills",
+    "title": "Cursor",
+    "group": "Integrations",
+    "description": "Set up Agentic Awesome Skills in Cursor, choose starter instructions, and try focused prompts. Compare direct skill installation with project-specific selection."
+  },
+  {
+    "slug": "gemini-cli-skills",
+    "title": "Gemini CLI",
+    "group": "Integrations",
+    "description": "Install and use Agentic Awesome Skills with Gemini CLI. Find starter skills, invocation examples, and focused prompts for your development tasks and projects."
+  },
+  {
+    "slug": "kiro-integration",
+    "title": "Kiro",
+    "group": "Integrations",
+    "description": "Integrate Agentic Awesome Skills with Kiro, from installation and skill invocation to specification-driven workflows, steering files, and focused starter bundles."
+  },
+  {
+    "slug": "local-config",
+    "title": "Local configuration",
+    "group": "Integrations",
+    "description": "Explore a documented AAS local configuration snapshot, including prioritized skills, directory organization, and recommendations for a focused development setup."
+  },
+  {
+    "slug": "security-and-antivirus",
+    "title": "Security and antivirus",
+    "group": "Help and safety",
+    "description": "Understand AAS trust boundaries, review skills before installation, and respond to antivirus warnings. Use safer operating defaults for third-party instructions."
+  },
+  {
+    "slug": "security-skills",
+    "title": "Security skills",
+    "group": "Help and safety",
+    "description": "Browse security-related AAS skills with their descriptions and source links. Inspect individual instructions, scope, and requirements before choosing a workflow."
+  },
+  {
+    "slug": "agent-overload-recovery",
+    "title": "Agent overload recovery",
+    "group": "Help and safety",
+    "description": "Recover from agent overload caused by large skill directories. Follow Linux, macOS, and Windows guidance, then use focused selections to reduce future overload."
+  },
+  {
+    "slug": "windows-truncation-recovery",
+    "title": "Windows recovery",
+    "group": "Help and safety",
+    "description": "Recover from Windows agent truncation crash loops with cautious manual steps, backup guidance, and an optional batch helper. Review prevention recommendations."
+  },
+  {
+    "slug": "faq",
+    "title": "Frequently asked questions",
+    "group": "Help and safety",
+    "description": "Find answers about Agentic Awesome Skills, including installation, supported agents, security, skill usage, troubleshooting, and contributing to the open library."
+  },
+  {
+    "slug": "agentic-awesome-skills-vs-awesome-claude-skills",
+    "title": "Comparing skill libraries",
+    "group": "Comparisons",
+    "description": "Compare Agentic Awesome Skills with VoltAgent Awesome Agent Skills, including discovery, local stack selection, supported agents, and the tradeoffs of each library."
+  },
+  {
+    "slug": "best-claude-code-skills-github",
+    "title": "Claude Code skills on GitHub",
+    "group": "Comparisons",
+    "description": "Evaluate Claude Code skill repositories on GitHub, compare discovery and distribution options, and find practical starting points for selecting project skills."
+  },
+  {
+    "slug": "best-cursor-skills-github",
+    "title": "Cursor skills on GitHub",
+    "group": "Comparisons",
+    "description": "Evaluate Cursor skill repositories on GitHub, compare installation and discovery options, and choose reusable instructions suited to your development workflow."
+  }
 ]
