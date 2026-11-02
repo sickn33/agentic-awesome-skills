@@ -12,8 +12,9 @@ function run(a){
  throw Error('Unexpected invocation '+JSON.stringify(a));
 }
 try{
- assert.equal(finalize(process.cwd(),'1.2.3',directory,{run}).complete,true);assert.equal(dispatch,4);
- assert.equal(finalize(process.cwd(),'1.2.3',directory,{run}).complete,true);assert.equal(dispatch,4,'resume must not dispatch again');
+ const original=finalize(process.cwd(),'1.2.3',directory,{run});assert.equal(original.complete,true);assert.equal(dispatch,4);
+ const resumed=finalize(process.cwd(),'1.2.3',directory,{run});assert.equal(resumed.complete,true);assert.equal(dispatch,4,'resume must not dispatch again');
+ assert.deepEqual(resumed.stages.map(s=>s.finishedAt),original.stages.map(s=>s.finishedAt),'resume must preserve measured completion timestamps');
  const unlock=require('../../lib/maintenance-state').openStore(directory,process.cwd()).acquireLock('finalize');
  try{assert.throws(()=>finalize(process.cwd(),'1.2.3',directory,{run}),/locked/i);}finally{unlock();}
  const {record}=require('../maintenance_activity.cjs');record(process.cwd(),directory,'start','review');

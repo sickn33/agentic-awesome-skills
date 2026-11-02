@@ -37,7 +37,7 @@ function finalize(root,version,directory,dependencies={}) {
   let proof=json(['api',`repos/${stage.repo}/actions/runs/${record.run}`]);
   if(proof.status!=='completed'){run(['run','watch',String(record.run),'--repo',stage.repo,'--exit-status']);proof=json(['api',`repos/${stage.repo}/actions/runs/${record.run}`]);}
   if(proof.head_sha!==record.expected||proof.repository?.full_name!==stage.repo||proof.path?.split('@')[0]!==`.github/workflows/${stage.workflow}`||proof.event!=='workflow_dispatch'||proof.conclusion!=='success'){record.status='failed';save();throw Error('Exact dispatched workflow failed or identity changed');}
-  record.status='passed';record.finishedAt=new Date().toISOString();record.proof=proof;save();
+  record.status='passed';record.finishedAt ??= new Date().toISOString();record.lastVerifiedAt=new Date().toISOString();record.proof=proof;save();
  }
  state.complete=true;state.finishedAt=new Date().toISOString();save();return state;
  } finally {unlock();}
