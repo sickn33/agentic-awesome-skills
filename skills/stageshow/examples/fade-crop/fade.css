@@ -1,0 +1,80 @@
+.fc .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+/* The mask lives on a wrapper with 40px of room, so the window keeps its
+   shadow on the top and sides. The last third fades to transparent. */
+.fc-mask {
+  position: absolute;
+  inset: 0;
+  padding: 40px 72px 0;
+  mask-image: linear-gradient(to bottom, #000 58%, transparent 96%);
+}
+
+.fc-win {
+  width: 100%;
+  height: 420px;
+}
+
+.fc-win .ss-window__body {
+  background: var(--ss-surface);
+}
+
+.fc-body {
+  padding: 20px 24px;
+}
+
+.fc-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.fc-title {
+  color: var(--ss-text-strong);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.fc-row {
+  padding: 10px 0;
+  border-top: 1px solid var(--ss-line);
+  /* A divided list, not a hover fill: square ends on the rule */
+  border-radius: 0;
+}
+
+
+.fc-commit {
+  color: var(--ss-text-strong);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.fc-branch,
+.fc-age {
+  color: var(--ss-text);
+  font-size: 12px;
+}
+
+/* Narrow: a gutter each side, the window keeps its size and runs off the
+   right; the commit and the status stay whole */
+.fc .ss-stage[data-layout='compact'] .fc-mask {
+  padding: 32px 0 0 16px;
+}
+
+.fc .ss-stage[data-layout='compact'] .fc-win {
+  width: 420px;
+}
+
+.fc .ss-stage[data-layout='compact'] .fc-age {
+  display: none;
+}
+
+/* One lead column, so every row's text starts on the same line whatever the
+   status says */
+.fc-row .ss-row__lead {
+  width: 76px;
+  justify-content: flex-start;
+}

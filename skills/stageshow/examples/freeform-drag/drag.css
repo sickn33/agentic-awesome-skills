@@ -1,0 +1,131 @@
+/* All rules belong to this example, including its responsive variants. */
+.fd {
+  & .ss-stage {
+    overflow: hidden;
+    background: var(--ss-well);
+  }
+
+  .fd-window {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    width: 560px;
+    height: 340px;
+    box-shadow: var(--ss-shadow-hero);
+  }
+
+  .fd-window .ss-window__body {
+    background: var(--ss-surface);
+  }
+
+  .fd-head {
+    display: grid;
+    grid-template-columns: repeat(5, 104px);
+    margin-left: 52px;
+    padding: 10px 0 8px;
+    border-bottom: 1px solid var(--ss-line);
+    font: 500 11px/1 var(--ss-font);
+    color: var(--ss-text);
+  }
+
+  .fd-head span {
+    padding-left: 6px;
+  }
+
+  .fd-body {
+    display: flex;
+  }
+
+  .fd-hours {
+    display: grid;
+    grid-auto-rows: 40px;
+    width: 52px;
+    padding: 0 8px;
+    font: 500 10px/1 var(--ss-font);
+    color: var(--ss-text-faint);
+    text-align: right;
+  }
+
+  .fd-hours span {
+    transform: translateY(-4px);
+  }
+
+  .fd-grid {
+    position: relative;
+    width: 520px;
+    height: 240px;
+    background:
+      linear-gradient(var(--ss-line) 1px, transparent 1px) 0 0 / 100% 40px,
+      linear-gradient(90deg, var(--ss-line) 1px, transparent 1px) 0 0 / 104px 100%;
+  }
+
+  .fd-busy {
+    position: absolute;
+    padding: 8px;
+    border-radius: 6px;
+    background: var(--ss-ink-1);
+  }
+
+  /* The drop slot: where the card will land. Jumps between cells, only fades
+     in and out. */
+  .fd-target {
+    position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.12s ease;
+    border: 1.5px dashed color-mix(in srgb, var(--ss-accent) 55%, transparent);
+    border-radius: 6px;
+    background: var(--ss-accent-soft);
+  }
+
+  .fd-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 7px 8px;
+    border-left: 3px solid var(--ss-accent);
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--ss-accent) 12%, var(--ss-surface));
+    font: 600 11px/1.3 var(--ss-font);
+    color: color-mix(in srgb, var(--ss-accent) 70%, #000);
+    /* Translate before scale, so lifting never scales its stage position. */
+    will-change: translate;
+    transition: translate 0.32s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s ease, scale 0.2s ease;
+  }
+
+  /* Carried: no position transition, so it stays exactly under the cursor */
+  .fd-card[data-dragging] {
+    transition: box-shadow 0.2s ease, scale 0.2s ease;
+  }
+
+  .fd-card[data-lifted] {
+    box-shadow: var(--ss-shadow-lift);
+    scale: 1.03;
+  }
+
+  .fd-card__people {
+    display: flex;
+  }
+
+  .fd-card__people .ss-avatar + .ss-avatar {
+    margin-left: -4px;
+    box-shadow: 0 0 0 1.5px var(--ss-surface);
+  }
+
+  .fd-target[data-show] {
+    opacity: 1;
+  }
+
+  /* The phone is a closer calendar viewport, not a smaller calendar. The two
+     days involved in the drag stay fully visible; neighboring days bleed. */
+  & .ss-stage[data-layout='compact'] .fd-window { left: 16px; top: 16px; }
+  & .ss-stage[data-layout='compact'] .fd-head { transform: translateX(-104px); }
+  & .ss-stage[data-layout='compact'] .fd-grid { margin-left: -104px; }
+  & .ss-stage[data-layout='compact'] .fd-hours { position: relative; z-index: 1; flex: none; background: var(--ss-surface); }
+}

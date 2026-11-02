@@ -1,0 +1,10 @@
+.bm-gallery { display: grid; gap: 32px; }
+.bm-sheet { min-width: 0; }
+.bm-sheet > h2 { margin: 0 0 12px; color: #303238; font: 550 14px/20px -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.bm-frame { width: 100%; overflow: hidden; border-radius: 10px; }
+.bm-content { display: grid; gap: 28px; height: 100%; background: var(--ss-canvas); }
+.bm-group { min-width: 0; }
+.bm-group h3 { margin: 0 0 16px; color: var(--ss-text); font-size: 13px; line-height: 20px; font-weight: 500; }
+.bm-grid { display: grid; row-gap: 20px; }
+.bm-item { display: flex; min-width: 0; height: 82px; flex-direction: column; align-items: center; gap: 10px; }
+.bm-item > span:last-child { max-width: 100%; height: 32px; padding-inline: 4px; color: var(--ss-text); font-size: 12px; line-height: 16px; text-align: center; }

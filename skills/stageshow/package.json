@@ -1,0 +1,34 @@
+{
+  "name": "stageshow",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "The self-contained Stageshow skill, React kit, examples, and playground.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.19"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "typecheck": "tsc --noEmit -p playground",
+    "build": "vite build playground --config playground/vite.config.ts",
+    "check:css": "node scripts/class-clash.mjs --bundle teaching --bundle examples/looks examples teaching"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "lucide-react": "0.468.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.1",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.7.0",
+    "vite": "^6.4.5",
+    "typescript": "^5.6.3",
+    "playwright-core": "~1.48.2",
+    "postcss": "^8.5.6"
+  },
+  "optionalDependencies": {
+    "portless": "^0.4.1"
+  }
+}

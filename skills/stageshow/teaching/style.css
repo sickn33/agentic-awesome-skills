@@ -1,0 +1,84 @@
+/* The deploys card, then one block per fault. The good side never changes */
+
+.tc-lessons .st-pair figure { height: 302px; }
+.tc-lessons .st-pair .tc-visual { height: 252px; border-radius: 10px; background: #f3f3f2; }
+
+.tc-lessons .st-card { width: 296px; padding: 14px 0 6px; border-radius: 12px; background: #fff; box-shadow: 0 0 0 1px #0000000d, 0 6px 18px #0000000f; color: #6b6b6b; font: 400 12px/16px var(--ss-font); }
+.tc-lessons .st-head { display: flex; align-items: center; justify-content: space-between; padding: 0 16px 8px; }
+.tc-lessons .st-title { color: #1f1f1f; font: 600 14px/20px var(--ss-font); }
+.tc-lessons .st-button { display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 11px; border-radius: 7px; background: #1f1f1f; color: #fff; font: 550 12px/1 var(--ss-font); }
+/* Icon and time sit on the name's line, not the middle of the row */
+.tc-lessons .st-row { display: flex; align-items: flex-start; gap: 10px; padding: 12px 16px; }
+.tc-lessons .st-row + .st-row { box-shadow: inset 0 1px #0000000a; }
+.tc-lessons .st-icon { display: grid; flex: none; place-items: center; width: 18px; height: 18px; color: #9a9a9a; }
+.tc-lessons .st-row[data-state="live"] .st-icon { color: #1f9d55; }
+.tc-lessons .st-row[data-state="failed"] .st-icon { color: #d1453b; }
+.tc-lessons .st-text { display: flex; flex: 1; flex-direction: column; gap: 2px; min-width: 0; }
+.tc-lessons .st-name { overflow: hidden; color: #1f1f1f; font: 500 14px/18px var(--ss-font); white-space: nowrap; text-overflow: ellipsis; }
+.tc-lessons .st-meta { display: flex; align-items: center; gap: 3px; overflow: hidden; color: #8a8a8a; font: 400 12px/16px var(--ss-font); white-space: nowrap; }
+.tc-lessons .st-time { flex: none; color: #9a9a9a; font: 400 12px/18px var(--ss-font); }
+
+/* Purple slop: gradient ground, tinted card, gradient title, violet everything */
+.tc-lessons .tc-visual:has(> [data-fault="style-purple"]) { background: linear-gradient(135deg, #7c3aed, #db2777 60%, #f59e0b); }
+.tc-lessons [data-fault="style-purple"] { background: linear-gradient(160deg, #faf5ff, #fdf2f8); box-shadow: 0 0 0 1px #c4b5fd80, 0 10px 30px #7c3aed40; }
+.tc-lessons [data-fault="style-purple"] .st-title { background: linear-gradient(90deg, #7c3aed, #db2777); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.tc-lessons [data-fault="style-purple"] .st-button { background: linear-gradient(90deg, #7c3aed, #db2777); }
+.tc-lessons [data-fault="style-purple"] .st-icon,
+.tc-lessons [data-fault="style-purple"] .st-row[data-state] .st-icon { color: #8b5cf6; }
+.tc-lessons [data-fault="style-purple"] .st-name { color: #4c1d95; }
+.tc-lessons [data-fault="style-purple"] .st-meta,
+.tc-lessons [data-fault="style-purple"] .st-time { color: #a78bfa; }
+.tc-lessons [data-fault="style-purple"] .st-row + .st-row { box-shadow: inset 0 1px #c4b5fd55; }
+
+/* Tiny text: everything shrunk to fit */
+.tc-lessons [data-fault="style-tiny"] .st-title { font-size: 10.5px; line-height: 14px; }
+.tc-lessons [data-fault="style-tiny"] .st-button { height: 18px; padding: 0 6px; font-size: 8.5px; }
+.tc-lessons [data-fault="style-tiny"] .st-row { padding: 6px 16px; }
+.tc-lessons [data-fault="style-tiny"] .st-icon { height: 13px; }
+.tc-lessons [data-fault="style-tiny"] .st-icon svg { width: 11px; height: 11px; }
+.tc-lessons [data-fault="style-tiny"] .st-name { font-size: 10px; line-height: 13px; }
+.tc-lessons [data-fault="style-tiny"] .st-meta,
+.tc-lessons [data-fault="style-tiny"] .st-time { font-size: 8.5px; line-height: 13px; }
+
+/* Over-detailed: every row carries everything */
+.tc-lessons [data-fault="style-detail"] .st-meta { font-size: 11px; }
+.tc-lessons .st-row .st-badge { margin-top: 1px; }
+.tc-lessons .st-badge { flex: none; padding: 1px 6px; border-radius: 99px; background: #eef7f1; color: #1f9d55; font: 600 10px/16px var(--ss-font); text-transform: capitalize; }
+.tc-lessons .st-badge[data-state="building"] { background: #fff6e5; color: #b7791f; }
+.tc-lessons .st-badge[data-state="failed"] { background: #fdeeed; color: #d1453b; }
+
+/* Glow: colored light on the card, button and status */
+.tc-lessons .tc-visual:has(> [data-fault="style-glow"]) { background: #f1f0f7; }
+.tc-lessons [data-fault="style-glow"] { box-shadow: 0 0 0 1px #6366f155, 0 0 24px #6366f166, 0 0 60px #22d3ee44; }
+.tc-lessons [data-fault="style-glow"] .st-button { background: #4f46e5; box-shadow: 0 0 14px #6366f1cc, 0 0 2px #a5b4fc; }
+.tc-lessons [data-fault="style-glow"] .st-row[data-state] .st-icon { filter: drop-shadow(0 0 4px currentColor) drop-shadow(0 0 8px currentColor); }
+.tc-lessons [data-fault="style-glow"] .st-name { text-shadow: 0 0 10px #6366f155; }
+
+/* Capitals: tracked caps on everything */
+.tc-lessons [data-fault="style-caps"] .st-title { font-size: 12px; letter-spacing: 0.12em; }
+.tc-lessons [data-fault="style-caps"] .st-button { font-size: 10.5px; letter-spacing: 0.1em; }
+.tc-lessons .st-eyebrow { padding: 0 16px 4px; color: #9a9a9a; font: 600 10px/14px var(--ss-font); letter-spacing: 0.14em; }
+.tc-lessons [data-fault="style-caps"] .st-meta,
+.tc-lessons [data-fault="style-caps"] .st-time { font-size: 10px; letter-spacing: 0.08em; }
+.tc-lessons [data-fault="style-caps"] .st-row { padding: 10px 16px; }
+
+/* Invented icons in rainbow tiles */
+.tc-lessons .st-row .st-blob { margin-top: -5px; }
+.tc-lessons .st-blob { display: grid; flex: none; place-items: center; width: 28px; height: 28px; border-radius: 9px; background: linear-gradient(135deg, #a78bfa, #6366f1); color: #fff; }
+.tc-lessons .st-blob[data-state="building"] { border-radius: 50%; background: linear-gradient(135deg, #fbbf24, #f97316); }
+.tc-lessons .st-blob[data-state="failed"] { border-radius: 6px; background: #fecdd3; color: #e11d48; }
+.tc-lessons .st-button .st-blob { width: 16px; height: 16px; margin-left: -4px; border-radius: 5px; background: linear-gradient(135deg, #34d399, #06b6d4); }
+.tc-lessons .st-button .st-blob svg { width: 11px; height: 11px; }
+
+/* Onion skin: translucent ink, so every crossing and join paints darker */
+.tc-lessons [data-fault="style-onion"] .st-icon { color: #00000059; }
+.tc-lessons [data-fault="style-onion"] .st-row[data-state="live"] .st-icon { color: #1f9d5580; }
+.tc-lessons [data-fault="style-onion"] .st-row[data-state="failed"] .st-icon { color: #d1453b80; }
+
+/* The onion pair is a detail: both sides at 2x, cropped to the icons */
+.tc-lessons .st-pair[data-style="style-onion"] .tc-visual { place-items: start; overflow: hidden; }
+.tc-lessons .st-pair[data-style="style-onion"] .st-card { margin: 16px 0 0 16px; transform: scale(2); transform-origin: 0 0; }
+
+/* AI action on the failed row */
+.tc-lessons .st-ai { display: inline-flex; flex: none; align-items: center; gap: 4px; height: 22px; margin-top: -2px; padding: 0 8px; border-radius: 6px; box-shadow: inset 0 0 0 1px #0000001a; color: #1f1f1f; font: 500 12px/1 var(--ss-font); }
+.tc-lessons .st-ai[data-slop] { background: linear-gradient(90deg, #8b5cf6, #ec4899); box-shadow: 0 0 12px #a855f766; color: #fff; }

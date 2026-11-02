@@ -1,0 +1,163 @@
+/* A specimen sheet: an even grid of tiles, one part each, every tile the
+   same padding and radius. A catalog, not a composition to copy. */
+.pt .ss-stage {
+  background: var(--ss-well);
+}
+
+.pt-grid {
+  position: absolute;
+  inset: 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 196px;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.pt-a { grid-area: 1 / 1; }
+.pt-b { grid-area: 2 / 1; }
+.pt-c { grid-area: 3 / 1; }
+.pt-d { grid-area: 1 / 2; }
+.pt-e { grid-area: 2 / 2 / 4 / 3; }
+.pt-f { grid-area: 1 / 3 / 4 / 4; }
+
+.pt-tile {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--ss-raised);
+  box-shadow: var(--ss-shadow-card), 0 0 0 1px var(--ss-line-faint);
+}
+
+.pt-name {
+  font: 500 10.5px/14px ui-monospace, 'SF Mono', monospace;
+  color: var(--ss-text-faint);
+}
+
+/* The part, centered in what's left under the name */
+.pt-body {
+  display: grid;
+  flex: 1;
+  place-items: center;
+  align-content: center;
+  gap: 12px;
+  min-height: 0;
+}
+
+.pt-button {
+  display: inline-grid;
+  place-items: center;
+  height: 30px;
+  padding: 0 14px;
+  border-radius: 8px;
+  background: var(--ss-text-strong);
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+  transition: background-color 0.2s ease;
+}
+
+.pt-button[data-pressed] {
+  background: #000;
+}
+
+.pt-button[data-state='done'] {
+  background: var(--ss-success);
+}
+
+.pt-status {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ss-text-strong);
+}
+
+.pt-meter {
+  width: 180px;
+}
+
+.pt-copy {
+  margin: 0;
+  max-width: 220px;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--ss-text-strong);
+}
+
+.pt-rest {
+  position: absolute;
+  right: 28px;
+  bottom: 22px;
+}
+
+.pt-ends {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.pt-end {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 40px;
+  border-radius: 8px;
+  background: var(--ss-ink-1);
+}
+
+.pt-e .pt-body {
+  align-content: start;
+  place-items: start stretch;
+  padding-top: 10px;
+}
+
+.pt-rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.pt-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 34px;
+  padding: 0 8px;
+  border-radius: 7px;
+  transition: background-color 0.15s ease;
+}
+
+.pt-row[data-on] {
+  background: var(--ss-ink-1);
+}
+
+.pt-menu {
+  width: 150px;
+}
+
+.pt-note {
+  opacity: 0;
+  /* Drops in by margin, not transform, so its text lands without a hop */
+  margin-block: -12px 12px;
+  transition: opacity 0.2s ease, margin 0.3s ease;
+}
+
+.pt-note[data-show] {
+  opacity: 1;
+  margin-block: 0;
+  transition: opacity 0.45s ease-out, margin 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Reflow the catalog rather than shrinking its controls and labels. */
+.pt .ss-stage[data-layout="compact"] .pt-grid {
+  inset: 16px;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: repeat(4, 130px) 220px 680px;
+}
+
+.pt .ss-stage[data-layout="compact"] .pt-grid > .pt-tile {
+  grid-area: auto;
+}

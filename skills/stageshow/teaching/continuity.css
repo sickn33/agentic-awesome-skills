@@ -1,0 +1,29 @@
+.tc-lessons .ci-drag { position: relative; width: 236px; height: 60px; }
+.tc-lessons .ci-drag__travel { position: absolute; left: 20px; top: 14px; transition: transform .6s cubic-bezier(.25,1,.5,1); }
+.tc-lessons .ci-file { width: 72px; height: 32px; display: flex; align-items: center; justify-content: center; gap: 7px; border: 1px solid #e3e3e3; border-radius: 6px; background: #fff; color: #444; font: 12px/20px var(--ss-font); transition: box-shadow .16s ease; }
+.tc-lessons .ci-file path { fill: none; stroke: #888; stroke-width: 1.1; stroke-linecap: round; stroke-linejoin: round; }
+.tc-lessons .ci-drag[data-gripped] .ci-file { box-shadow: 0 3px 8px #00000012; }
+.tc-lessons .ci-drag:not([data-good]):is([data-gripped], [data-moved]) .ci-file { transform: translateX(24px); }
+.tc-lessons .ci-drag__pointer { position: absolute; left: 80px; top: 30px; width: 0; height: 0; transition: transform .6s cubic-bezier(.25,1,.5,1); }
+.tc-lessons .ci-drag[data-pressed] .ss-cursor__press { transform: scale(.9); }
+.tc-lessons .ci-drag[data-moved] :is(.ci-drag__travel, .ci-drag__pointer) { transform: translateX(104px); }
+.tc-lessons .ci-save { position: relative; }
+.tc-lessons .ci-save .tc-button { display: flex; justify-content: center; gap: 7px; width: 92px; }
+.tc-lessons .ci-save[data-pressed] .tc-button { transform: scale(.96); background: #e4e4e4; }
+.tc-lessons .ci-save__label { display: block; height: 22px; }
+.tc-lessons .ci-save__status { display: grid; place-items: center; width: 14px; height: 14px; }
+.tc-lessons .ci-save__status svg { grid-area: 1 / 1; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.tc-lessons .ci-save-icon { opacity: 0; transition: opacity .16s ease; }
+.tc-lessons .ci-save[data-phase=idle] .ci-save-icon { opacity: 1; }
+.tc-lessons .ci-spinner { opacity: 0; transition: opacity .18s ease; animation: ci-spin .8s linear infinite; animation-play-state: paused; }
+.tc-lessons .ci-spinner circle { opacity: .15; }
+.tc-lessons .ci-save:not([data-phase=idle]):not([data-settled]) .ci-spinner { animation-play-state: running; }
+.tc-lessons .ci-save[data-phase=pending] .ci-spinner { opacity: 1; }
+.tc-lessons .ci-save:not([data-good]) .ci-spinner { animation-delay: .35s; }
+.tc-lessons .ci-check { opacity: 0; transition: opacity .18s ease; }
+.tc-lessons .ci-save[data-phase=done] .ci-check { opacity: 1; }
+.tc-lessons .ci-save__pointer { position: absolute; right: 2px; top: 24px; width: 24px; height: 24px; }
+@keyframes ci-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .tc-lessons :is(.ci-drag__travel, .ci-drag__pointer, .ci-file, .ci-spinner, .ci-check) { transition: none; animation: none; }
+}

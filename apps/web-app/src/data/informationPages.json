@@ -60,7 +60,7 @@
       },
       {
         "title": "What to check before wider use",
-        "body": "Review each skill\u2019s source, license, declared risk, limitations, and required services. AAS is community-maintained open source; it does not provide a service-level agreement, compliance certification, or guaranteed agent outcomes. Model providers and optional services have their own terms and costs.",
+        "body": "Review each skill’s source, license, declared risk, limitations, and required services. AAS is community-maintained open source; it does not provide a service-level agreement, compliance certification, or guaranteed agent outcomes. Model providers and optional services have their own terms and costs.",
         "links": [
           {
             "label": "Trust & transparency",
@@ -115,7 +115,7 @@
       },
       {
         "title": "Browser data and analytics",
-        "body": "Saved skills and shortlists stay in this browser\u2019s local storage. Workbench imports stay in memory. Shared links contain selected IDs and a catalog version, and anyone with the link can read them. The hosted catalog uses Vercel Web Analytics for aggregate visit statistics; AAS removes query strings and fragments from analytics URLs. The catalog also requests public aggregate skill-save counts from Supabase.",
+        "body": "Saved skills and shortlists stay in this browser’s local storage. Workbench imports stay in memory. Shared links contain selected IDs and a catalog version, and anyone with the link can read them. The hosted catalog uses Vercel Web Analytics for aggregate visit statistics; AAS removes query strings and fragments from analytics URLs. The catalog also requests public aggregate skill-save counts from Supabase.",
         "links": [
           {
             "label": "Privacy policy",
@@ -129,7 +129,7 @@
       },
       {
         "title": "Local tools and third parties",
-        "body": "Skills-only plugins are local instruction bundles and do not independently collect telemetry. AAS Core\u2019s local catalog discovery is read-only and offline-capable. Your agent client, model provider, and any services you enable handle data under their own policies. A skill mentioning a service does not grant access or include its fees.",
+        "body": "Skills-only plugins are local instruction bundles and do not independently collect telemetry. AAS Core’s local catalog discovery is read-only and offline-capable. Your agent client, model provider, and any services you enable handle data under their own policies. A skill mentioning a service does not grant access or include its fees.",
         "links": [
           {
             "label": "Core reference",
@@ -364,6 +364,84 @@
           {
             "label": "Back to AAS Core",
             "href": "/plugins/aas-core/"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/sponsors/",
+    "title": "Sponsors & Supporters",
+    "description": "Meet the open-source programs supporting Agentic Awesome Skills: Codex, Vercel, Snyk, Atlas Cloud, and BrowserStack.",
+    "intro": "Sponsors & Supporters",
+    "lede": "The organizations helping keep Agentic Awesome Skills free, open, and independently maintained.",
+    "sections": [
+      {
+        "title": "Financial Sponsors",
+        "body": "Financial contributions support ongoing maintenance, skill reviews, and release work. Help keep Agentic Awesome Skills free and independently maintained.",
+        "links": [
+          {
+            "label": "Sponsor AAS",
+            "href": "https://github.com/sponsors/sickn33"
+          },
+          {
+            "label": "Buy Me a Coffee",
+            "href": "https://buymeacoffee.com/sickn33"
+          }
+        ]
+      },
+      {
+        "title": "Infrastructure & Tooling Supporters",
+        "body": "Tools, platform access, and credits provided through open-source programs.",
+        "links": []
+      },
+      {
+        "title": "Codex for Open Source",
+        "body": "OpenAI’s program supports open-source maintainers with access to Codex for coding, review, and maintenance work. Thank you for supporting AAS.",
+        "links": [
+          {
+            "label": "Explore Codex for OSS",
+            "href": "https://developers.openai.com/community/codex-for-oss"
+          }
+        ]
+      },
+      {
+        "title": "Vercel Open Source Program",
+        "body": "Vercel supports open-source projects with platform credits and resources for building on the web. AAS is part of the 2026 program.",
+        "links": [
+          {
+            "label": "Explore Vercel for OSS",
+            "href": "https://vercel.com/open-source-program"
+          }
+        ]
+      },
+      {
+        "title": "Snyk for Open Source",
+        "body": "Snyk provides security tooling for open-source projects. Its support helps AAS maintainers examine code and dependencies for vulnerabilities.",
+        "links": [
+          {
+            "label": "Explore Snyk for OSS",
+            "href": "https://snyk.io/open-source/"
+          }
+        ]
+      },
+      {
+        "title": "Atlas Cloud Open Source Program",
+        "body": "Atlas Cloud supports AAS with AI compute and model credits, including the image and video generation workflows documented in the atlas-cloud-media skill.",
+        "links": [
+          {
+            "label": "Explore Atlas Cloud for OSS",
+            "href": "https://www.atlascloud.ai/oss-program"
+          }
+        ]
+      },
+      {
+        "title": "BrowserStack Open Source Program",
+        "body": "BrowserStack supports open-source projects with access to real browsers and devices. This project is tested with BrowserStack.",
+        "links": [
+          {
+            "label": "Explore BrowserStack for OSS",
+            "href": "https://www.browserstack.com/open-source"
           }
         ]
       }

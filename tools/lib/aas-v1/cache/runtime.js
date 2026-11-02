@@ -22,7 +22,9 @@ const { REGISTRY_ORIGIN, fetchBytes, verifySri } = require("./update");
 
 const MAX_RUNTIME_IDENTITY_BYTES = 4 * 1024 * 1024;
 const RUNTIME_ARCHIVE_LIMITS = Object.freeze({
-  maxEntries: 10000,
+  // The bundled catalog exceeds 10,000 files; keep a finite entry budget
+  // alongside the unchanged expanded-byte and compression limits.
+  maxEntries: 20000,
   maxSingleFileBytes: 32 * 1024 * 1024,
   maxExpandedTotalBytes: 160 * 1024 * 1024,
   maxCompressionRatio: 128,

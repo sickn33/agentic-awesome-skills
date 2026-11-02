@@ -413,3 +413,12 @@ test("runtime discovery verifies bytes, rejects ambiguity, and never downloads o
   for (let index = 0; index < 63; index++) await fsp.mkdir(path.join(path.dirname(secondPath), `ignored-${index}`));
   await assert.rejects(core.cache.resolveUniqueRuntime(options), { code: "AAS_RUNTIME_RESOLVER_LIMIT" });
 });
+
+test("runtime archive entry budget admits catalog growth and rejects excess", () => {
+  const limit = core.cache.RUNTIME_ARCHIVE_LIMITS.maxEntries;
+  const entries = Array.from({ length: limit }, (_, i) => [`package/skills/fixture-${i}/SKILL.md`, "x"]);
+  const limits = { ...core.cache.RUNTIME_ARCHIVE_LIMITS, maxCompressionRatio: 10000 };
+  assert.doesNotThrow(() => core.cache.parsePackageArchive(tar(entries), { limits }));
+  entries.push(["package/skills/excess/SKILL.md", "x"]);
+  assert.throws(() => core.cache.parsePackageArchive(tar(entries), { limits }), { code: "AAS_ARCHIVE_ENTRY_LIMIT" });
+});

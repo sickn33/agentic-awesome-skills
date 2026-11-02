@@ -1,0 +1,320 @@
+@keyframes cal-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Well-gray stage; the window sits in from the top-left on one gutter and runs
+   off the right (Friday, cut by more than half) and the bottom (the late
+   afternoon). */
+.cal .ss-stage {
+  --gutter: 28px;
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+.cal-window {
+  position: absolute;
+  top: var(--gutter);
+  left: var(--gutter);
+  width: 740px;
+  height: 420px;
+  /* The hero shadow already carries the ring */
+  box-shadow: var(--ss-shadow-hero);
+}
+
+.cal-window[data-layout='compact'] {
+  left: 20px;
+  width: 600px;
+  height: 400px;
+}
+
+/* Compact type is set for the phone's column, drawn close to 1:1 */
+.cal-window[data-layout='compact'] .cal-hours {
+  width: 48px;
+  font-size: 10.5px;
+}
+
+.cal-window[data-layout='compact'] .cal-head {
+  margin-left: 48px;
+}
+
+.cal-window[data-layout='compact'] .cal-event__time {
+  font-size: 10.5px;
+}
+
+.cal-window .ss-window__body {
+  background: var(--ss-surface);
+}
+
+/* ---- Sidebar ---- */
+
+.cal-side {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding: 10px 16px;
+}
+
+.cal-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cal-mini__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  row-gap: 4px;
+  margin: 0 -3px;
+}
+
+.cal-mini__grid span {
+  position: relative;
+  height: 14px;
+}
+
+.cal-mini__grid span::after {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  left: calc(50% - 2px);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--ss-ink-4);
+}
+
+.cal-mini__grid span[data-week] {
+  background: var(--ss-ink-1);
+}
+
+.cal-mini__grid span[data-week]:first-of-type,
+.cal-mini__grid span:nth-child(22) {
+  border-radius: 7px 0 0 7px;
+}
+
+.cal-mini__grid span:nth-child(28) {
+  border-radius: 0 7px 7px 0;
+}
+
+.cal-mini__grid span[data-today]::after {
+  background: var(--ss-text-strong);
+}
+
+.cal-cals {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cal-cal {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cal-cal__sw {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  background: var(--ss-ink-4);
+}
+
+.cal-cal__sw[data-accent] {
+  background: var(--ss-accent);
+}
+
+/* ---- Toolbar ---- */
+
+.cal-tools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ss-icon);
+}
+
+.cal-today {
+  margin-right: 4px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 1px var(--ss-line);
+  font: 500 11px/1.3 var(--ss-font);
+  color: var(--ss-text-strong);
+}
+
+.cal-prev {
+  transform: scaleX(-1);
+}
+
+/* ---- Week grid ---- */
+
+.cal-head {
+  display: grid;
+  grid-template-columns: repeat(5, 108px);
+  margin-left: 44px;
+  padding: 2px 0 10px;
+  border-bottom: 1px solid var(--ss-line);
+  font: 500 11px/1.3 var(--ss-font);
+  color: var(--ss-text);
+}
+
+.cal-head span {
+  padding-left: 8px;
+}
+
+.cal-head span[data-today] {
+  color: var(--ss-text-strong);
+  font-weight: 600;
+}
+
+.cal-body {
+  display: flex;
+  padding-top: 8px;
+}
+
+.cal-hours {
+  display: grid;
+  grid-auto-rows: 40px;
+  width: 44px;
+  padding-right: 8px;
+  font: 500 9px/1 var(--ss-font);
+  color: var(--ss-text-faint);
+  text-align: right;
+}
+
+.cal-hours span {
+  transform: translateY(-4px);
+}
+
+.cal-grid {
+  position: relative;
+  width: 540px;
+  height: 280px;
+  background:
+    linear-gradient(var(--ss-line) 1px, transparent 1px) 0 0 / 100% 40px,
+    linear-gradient(90deg, var(--ss-line) 1px, transparent 1px) 0 0 / 108px 100%;
+}
+
+.cal-busy {
+  position: absolute;
+  padding: 9px 9px;
+  border-radius: 6px;
+  background: var(--ss-ink-1);
+}
+
+/* ---- The drop slot: appears in the landing cell and jumps, never travels ---- */
+
+.cal-slot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+  border: 1.5px dashed color-mix(in srgb, var(--ss-accent) 55%, transparent);
+  border-radius: 6px;
+  background: var(--ss-accent-soft);
+}
+
+.cal-slot[data-show] {
+  opacity: 1;
+}
+
+/* ---- The meeting ---- */
+
+.cal-event {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  padding: 10px 9px 13px 9px;
+  border-left: 3px solid var(--ss-accent);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--ss-accent) 11%, var(--ss-surface));
+  transition:
+    translate 0.8s cubic-bezier(0.45, 0, 0.1, 1),
+    box-shadow 0.2s ease,
+    scale 0.2s ease,
+    rotate 0.2s ease;
+}
+
+/* Carried: no travel transition. Independent translate keeps the lift's
+   scale and rotation from multiplying the card's grid coordinates. */
+.cal-event[data-dragging] {
+  transition: box-shadow 0.2s ease, scale 0.2s ease, rotate 0.2s ease;
+}
+
+.cal-event[data-lifted] {
+  box-shadow: var(--ss-shadow-lift);
+  scale: 1.03;
+  rotate: -1.5deg;
+}
+
+.cal-event__title {
+  font: 600 11px/1.3 var(--ss-font);
+  color: color-mix(in srgb, var(--ss-accent) 70%, #000);
+}
+
+.cal-event__time {
+  font: 500 10px/1.3 var(--ss-font);
+  color: color-mix(in srgb, var(--ss-accent) 55%, var(--ss-text));
+}
+
+.cal-event__people {
+  display: flex;
+  gap: 7px;
+  margin-top: auto;
+  padding-left: 2px;
+}
+
+.cal-person {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+}
+
+.cal-person .ss-avatar {
+  box-shadow: 0 0 0 1.5px var(--ss-surface);
+}
+
+/* Availability ring: a gray arc turns while it checks, then closes into a
+   full green ring as the avatar fills green. One mark, pending to done. */
+.cal-ring {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  overflow: visible;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  animation: cal-spin 0.9s linear infinite;
+}
+
+.cal-ring__arc {
+  fill: none;
+  stroke: var(--ss-icon-faint);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 0.28 1;
+  transition: stroke-dasharray 0.45s cubic-bezier(0.25, 0.8, 0.25, 1), stroke 0.2s ease;
+}
+
+.cal-ring[data-state='pending'],
+.cal-ring[data-state='ok'] {
+  opacity: 1;
+}
+
+.cal-ring[data-state='ok'] .cal-ring__arc {
+  stroke: var(--ss-success);
+  stroke-dasharray: 1 0;
+}
+
+.cal-ring[data-state='idle'] .cal-ring__arc {
+  /* Fades out intact, then resets unseen */
+  transition: stroke-dasharray 0s 0.3s, stroke 0s 0.3s;
+}

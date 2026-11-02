@@ -1,0 +1,668 @@
+/* Figma: layers, canvas and the properties panel in one app window */
+
+.fg .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+  font-family: var(--ss-font);
+}
+
+.fg-window {
+  position: absolute;
+  left: 40px;
+  top: 40px;
+  width: 780px;
+  height: 540px;
+  box-shadow: var(--ss-shadow-hero);
+}
+
+/* Narrow, the window keeps its size and runs off the left by 58px, so it
+   draws at true scale; the canvas takes the crop, the panel stays whole */
+.fg-window[data-layout="compact"] {
+  left: -58px;
+  top: 20px;
+  width: 400px;
+  height: 500px;
+}
+
+.fg-icon {
+  flex-shrink: 0;
+  color: var(--ss-icon);
+}
+
+/* ---- Toolbar ---- */
+
+.fg-tools {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 14px;
+}
+
+.fg-mark {
+  margin-right: 10px;
+}
+
+.fg-tool {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  color: var(--ss-icon);
+}
+
+.fg-tool[data-active] {
+  background: var(--ss-accent);
+  color: #fff;
+}
+
+.fg-share-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-right: 2px;
+}
+
+.fg-share {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 11px;
+  border-radius: 6px;
+  background: var(--ss-accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 550;
+}
+
+/* ---- Body ---- */
+
+.fg-body {
+  display: flex;
+  height: 100%;
+}
+
+.fg-layers,
+.fg-props {
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--ss-surface);
+}
+
+.fg-layers {
+  width: 184px;
+  border-right: 1px solid var(--ss-line);
+}
+
+.fg-props {
+  width: 224px;
+  border-left: 1px solid var(--ss-line);
+}
+
+.fg-window[data-layout="compact"] .fg-props {
+  width: 196px;
+}
+
+/* ---- Layers ---- */
+
+.fg-file {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 14px 14px 12px;
+}
+
+.fg-file-name {
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ss-text-strong);
+}
+
+.fg-tabs {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 34px;
+  padding: 0 14px;
+  border-top: 1px solid var(--ss-line);
+  border-bottom: 1px solid var(--ss-line);
+}
+
+.fg-tree {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 6px;
+}
+
+.fg-layer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 26px;
+  padding-right: 8px;
+  border-radius: 5px;
+  transition: background 0.15s ease;
+}
+
+.fg-layer[data-parent] {
+  background: color-mix(in srgb, var(--ss-accent) 6%, transparent);
+}
+
+.fg-layer[data-selected] {
+  background: color-mix(in srgb, var(--ss-accent) 16%, transparent);
+}
+
+.fg-layer-name {
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--ss-text-strong);
+}
+
+.fg-layer[data-selected] .fg-icon {
+  color: var(--ss-accent-text);
+}
+
+/* ---- Canvas ---- */
+
+.fg-canvas {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  background: #f5f5f5;
+}
+
+.fg-frames {
+  position: absolute;
+  left: 24px;
+  top: 34px;
+}
+
+.fg-window[data-layout="compact"] .fg-frames {
+  /* 20px in from the stage edge, past the 58px the window runs off */
+  left: 78px;
+}
+
+.fg-frame-wrap {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.fg-frame-label {
+  font-size: 10px;
+  line-height: 1.3;
+  color: var(--ss-text);
+}
+
+.fg-frame-label-bar {
+  margin: 3px 0 2px;
+}
+
+.fg-frame {
+  position: relative;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.fg-desktop {
+  left: 0;
+  top: 0;
+}
+
+.fg-desktop .fg-frame {
+  display: flex;
+  flex-direction: column;
+  width: 256px;
+  height: 196px;
+  padding: 14px 16px;
+}
+
+.fg-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fg-nav-links {
+  display: flex;
+  gap: 10px;
+  margin: 0 auto;
+}
+
+.fg-hero {
+  display: flex;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.fg-hero-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.fg-sub {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.fg-buttons {
+  display: flex;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.fg-cta {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 22px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.fg-cta[data-dragging],
+.fg-swatch[data-dragging] {
+  transition: none;
+}
+
+.fg-cta-label {
+  width: 34px;
+  height: 4px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.fg-hero-art {
+  position: relative;
+  width: 76px;
+  height: 84px;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--ss-ink-1);
+}
+
+.fg-art-sun {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--ss-ink-3);
+}
+
+.fg-art-hill {
+  position: absolute;
+  left: -20px;
+  bottom: -40px;
+  width: 110px;
+  height: 80px;
+  border-radius: 50%;
+  background: var(--ss-ink-3);
+}
+
+.fg-logos {
+  display: flex;
+  justify-content: space-between;
+  margin-top: auto;
+  padding: 0 6px;
+}
+
+.fg-mobile {
+  left: 284px;
+  top: 0;
+}
+
+.fg-mobile .fg-frame {
+  display: flex;
+  flex-direction: column;
+  width: 108px;
+  height: 196px;
+  padding: 12px;
+}
+
+.fg-mobile .fg-nav {
+  justify-content: space-between;
+  margin-bottom: 22px;
+}
+
+.fg-mobile-art {
+  height: 46px;
+  margin-top: 16px;
+  border-radius: 5px;
+  background: var(--ss-ink-1);
+}
+
+.fg-row2 {
+  left: 0;
+  top: 240px;
+}
+
+.fg-row2 .fg-frame {
+  width: 256px;
+  height: 200px;
+  padding: 20px 16px;
+}
+
+.fg-cards {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.fg-card {
+  flex: 1;
+  height: 90px;
+  border-radius: 6px;
+  background: var(--ss-ink-1);
+}
+
+.fg-blank {
+  position: absolute;
+  left: 300px;
+  top: 300px;
+  width: 50px;
+  height: 50px;
+}
+
+/* Compact: the gap between the two rows of frames */
+.fg-window[data-layout="compact"] .fg-blank {
+  left: 98px;
+  top: 250px;
+  width: 120px;
+  height: 16px;
+}
+
+/* ---- Canvas overlays ---- */
+
+.fg-hover,
+.fg-select {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.fg-hover {
+  box-shadow: 0 0 0 1.5px var(--ss-accent);
+}
+
+.fg-select {
+  box-shadow: 0 0 0 1px var(--ss-accent);
+}
+
+.fg-hover[data-show],
+.fg-select[data-show] {
+  opacity: 1;
+}
+
+.fg-select i {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  margin: -3px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--ss-accent);
+}
+
+.fg-select i[data-c="tl"] { left: 0; top: 0; }
+.fg-select i[data-c="tr"] { right: 0; top: 0; margin-right: -3px; }
+.fg-select i[data-c="bl"] { left: 0; bottom: 0; margin-bottom: -3px; }
+.fg-select i[data-c="br"] { right: 0; bottom: 0; margin-right: -3px; margin-bottom: -3px; }
+
+/* ---- Maya ---- */
+
+.fg-maya {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 8;
+  pointer-events: none;
+}
+
+.fg-maya-arrow {
+  position: absolute;
+  left: -1.5px;
+  top: -1.5px;
+  overflow: visible;
+}
+
+.fg-maya-arrow path {
+  fill: var(--ss-success);
+  stroke: #fff;
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+}
+
+.fg-maya-name {
+  position: absolute;
+  left: 12px;
+  top: 15px;
+  padding: 3px 7px;
+  border-radius: 4px 9px 9px 9px;
+  background: var(--ss-success);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 550;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+/* ---- Properties ---- */
+
+.fg-props-tabs {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 40px;
+  padding: 0 14px;
+  border-bottom: 1px solid var(--ss-line);
+}
+
+.fg-zoom {
+  margin-left: auto;
+}
+
+.fg-props-body {
+  position: relative;
+}
+
+.fg-props-layer {
+  position: absolute;
+  inset: 0 0 auto;
+  opacity: 0;
+  /* Rises by top, not transform, so its text lands without a hop */
+  top: 6px;
+  visibility: hidden;
+  transition: opacity 0.2s ease, top 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), visibility 0s 0.3s;
+}
+
+.fg-props-layer[data-show] {
+  opacity: 1;
+  top: 0;
+  visibility: visible;
+  transition: opacity 0.2s ease, top 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.fg-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px 14px;
+  border-bottom: 1px solid var(--ss-line);
+}
+
+.fg-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 16px;
+}
+
+.fg-section-title {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--ss-text-strong);
+}
+
+.fg-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fg-pair .fg-field {
+  flex: 1;
+}
+
+.fg-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 5px;
+  background: #f5f5f5;
+  box-shadow: inset 0 0 0 1px transparent;
+  transition: box-shadow 0.15s ease;
+}
+
+.fg-field-wide {
+  flex: 1;
+  min-width: 0;
+  padding-left: 6px;
+}
+
+.fg-field[data-open] {
+  box-shadow: inset 0 0 0 1px var(--ss-accent);
+}
+
+.fg-swatch {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease;
+}
+
+.fg-hex {
+  font-size: 11px;
+  line-height: 1.3;
+  color: var(--ss-text-strong);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+/* ---- Color picker ---- */
+
+.fg-picker {
+  padding: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  /* The clip would cut a shadow drawn inside it, so it's drawn outside */
+  --ss-popover-shadow: none;
+  filter: drop-shadow(0 0 0.5px rgba(0, 0, 0, 0.3)) drop-shadow(0 4px 12px rgba(0, 0, 0, 0.12)) drop-shadow(0 12px 24px rgba(0, 0, 0, 0.08));
+}
+
+.fg-picker-head {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 38px;
+  padding: 0 12px;
+  border-bottom: 1px solid var(--ss-line);
+}
+
+.fg-picker-x {
+  margin-left: auto;
+}
+
+.fg-picker-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+}
+
+.fg-sv {
+  position: relative;
+  height: 100px;
+  border-radius: 6px;
+  background: linear-gradient(to top, #000, transparent), linear-gradient(to right, #fff, var(--hue));
+}
+
+.fg-picker[data-layout="compact"] .fg-sv {
+  height: 76px;
+}
+
+.fg-sv-knob {
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  margin: -6px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 3px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.fg-sliders {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fg-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.fg-hue,
+.fg-alpha {
+  position: relative;
+  height: 12px;
+  border-radius: 6px;
+}
+
+.fg-hue {
+  background: linear-gradient(to right, #f00, #ff0 17%, #0f0 33%, #0ff 50%, #00f 67%, #f0f 83%, #f00);
+}
+
+.fg-alpha {
+  background:
+    linear-gradient(to right, transparent, var(--c)),
+    repeating-conic-gradient(#e6e6e6 0 25%, #fff 0 50%) 0 0 / 8px 8px;
+}
+
+.fg-hue-thumb {
+  position: absolute;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  margin: -6px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 3px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.fg-picker-hex {
+  display: flex;
+  gap: 8px;
+}
+
+.fg-field-sm {
+  width: 52px;
+}
+
+.fg-field-grow {
+  flex: 1;
+}

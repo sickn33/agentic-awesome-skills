@@ -1,0 +1,6 @@
+* { box-sizing: border-box; }
+html, body { margin: 0; background: transparent; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+#example { width: 100%; min-height: 1px; }
+#example > .ss-fit { margin-inline: auto; }
+#example > [role="alert"] { padding: 24px; font-size: 13px; color: #a42a2a; }

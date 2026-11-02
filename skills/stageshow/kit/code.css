@@ -1,0 +1,87 @@
+/* Code (code.tsx). */
+
+@layer stageshow {
+  .ss-code {
+    --ss-code-key: #7c3aed;
+    --ss-code-str: #15803d;
+    --ss-code-num: #b45309;
+    --ss-code-fn: #2563eb;
+    font: 11.5px/19px ui-monospace, 'SF Mono', Menlo, monospace;
+    color: var(--ss-text-strong);
+  }
+
+  .ss-stage[data-theme="dark"] .ss-code {
+    --ss-code-key: #c4b5fd;
+    --ss-code-str: #86efac;
+    --ss-code-num: #fdba74;
+    --ss-code-fn: #93c5fd;
+  }
+
+  .ss-stage[data-palette="mono"] .ss-code,
+  .ss-stage[data-theme="blueprint"] .ss-code {
+    --ss-code-key: var(--ss-text-strong);
+    --ss-code-str: var(--ss-text);
+    --ss-code-num: var(--ss-text-strong);
+    --ss-code-fn: var(--ss-text-strong);
+  }
+
+  /* Lines not yet shown are laid out but hidden, so streaming never reflows */
+  .ss-code__line {
+    display: flex;
+    padding-right: 12px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .ss-code__line[data-on] {
+    opacity: 1;
+  }
+
+  .ss-code__num {
+    flex-shrink: 0;
+    width: 30px;
+    padding-right: 10px;
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--ss-text-faint);
+  }
+
+  /* Wide enough that the + or − stands clear of the code after it */
+  .ss-code__mark {
+    flex-shrink: 0;
+    width: 16px;
+    color: var(--ss-text-faint);
+  }
+
+  .ss-code__text {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    white-space: pre;
+  }
+
+  /* A line longer than the block fades at its right edge, never cut hard;
+     the diff tint behind it still runs the full width */
+  .ss-code__text[data-over] {
+    mask-image: linear-gradient(to right, #000 calc(100% - 14px), transparent);
+  }
+
+  .ss-code__line[data-kind="add"] { background: var(--ss-success-soft); }
+
+  .ss-code__line[data-kind="add"] .ss-code__mark { color: var(--ss-success-text); }
+
+  .ss-code__line[data-kind="del"] { background: var(--ss-danger-soft); }
+
+  .ss-code__line[data-kind="del"] .ss-code__mark { color: var(--ss-danger-text); }
+
+  .ss-code__key { color: var(--ss-code-key); }
+
+  .ss-code__str { color: var(--ss-code-str); }
+
+  .ss-code__num + .ss-code__mark + .ss-code__text .ss-code__num,
+  .ss-code__text .ss-code__num { width: auto; padding: 0; text-align: inherit; color: var(--ss-code-num); }
+
+  .ss-code__fn { color: var(--ss-code-fn); }
+
+  .ss-code__com { color: var(--ss-text-faint); }
+}

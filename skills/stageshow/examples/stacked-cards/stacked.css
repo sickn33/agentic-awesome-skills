@@ -1,0 +1,89 @@
+.sk .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+/* One column, centered, the second card off the bottom */
+.sk-stack {
+  position: absolute;
+  top: 56px;
+  left: 50%;
+  display: grid;
+  gap: 12px;
+  width: 340px;
+  translate: -50% 0;
+}
+
+.sk-card {
+  display: grid;
+  gap: 10px;
+  padding: 18px 20px;
+  border-radius: 12px;
+  background: var(--ss-surface);
+  box-shadow: var(--ss-shadow-card);
+}
+
+.sk-plan {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.sk-mark {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--ss-accent-soft);
+  color: var(--ss-accent);
+}
+
+.sk-name {
+  color: var(--ss-text-strong);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sk-sub,
+.sk-label {
+  color: var(--ss-text);
+  font-size: 12px;
+}
+
+.sk-usage {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sk-value {
+  color: var(--ss-text-strong);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.sk-who {
+  display: grid;
+  gap: 2px;
+}
+
+.sk-chart {
+  display: block;
+  margin-top: 4px;
+}
+
+/* The second card runs on past the stage's bottom edge, under the axis */
+.sk-card:last-child {
+  padding-bottom: 80px;
+}
+
+/* A flat accent: the usage is the point, not the fill */
+.sk .ss-meter__fill {
+  background: var(--ss-accent);
+}
+
+/* Narrow: the column fills the stage less a 16px gutter each side */
+.sk .ss-stage[data-layout='compact'] .sk-stack {
+  width: 326px;
+}

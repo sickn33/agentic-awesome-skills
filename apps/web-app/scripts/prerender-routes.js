@@ -954,7 +954,7 @@ function main() {
     }, content)) : `<h1>Documentation</h1><p>Start with AAS Core, explore integrations, and put your skills to work.</p>${docsNavigation}`;
     writePrerenderedRoute(routePath, template, {
       title,
-      description: doc ? `${doc.title}: guides and reference for Agentic Awesome Skills.` : 'Learn AAS Core, install skills, configure integrations, and follow practical workflows.',
+      description: doc ? doc.description : 'Find Agentic Awesome Skills setup guides, agent integrations, security guidance, and practical workflows. Learn how to discover, select, and use reusable skills.',
       canonicalUrl: routeToUrl(routePath, siteBaseUrl),
       ogImage: doc && socialGuides.includes(doc.slug) ? `${siteBaseUrl.replace(/\/+$/, '')}/social/docs/${doc.slug}.png` : socialImage,
       jsonLd: [{
@@ -963,7 +963,7 @@ function main() {
         name: title,
         headline: title,
         ...(metadata ? { dateModified: metadata.modified, version: metadata.commit } : {}),
-        description: doc ? `${doc.title}: guides and reference for Agentic Awesome Skills.` : 'Learn AAS Core, install skills, configure integrations, and follow practical workflows.',
+        description: doc ? doc.description : 'Find Agentic Awesome Skills setup guides, agent integrations, security guidance, and practical workflows. Learn how to discover, select, and use reusable skills.',
         url: routeToUrl(routePath, siteBaseUrl),
         mainEntityOfPage: routeToUrl(routePath, siteBaseUrl),
       }, {

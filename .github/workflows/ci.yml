@@ -216,7 +216,7 @@ jobs:
 
       - name: Restore free local Turborepo cache
         if: steps.web_cache_plan.outputs.web == 'true'
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ${{ runner.temp }}/aas-web-turbo
           key: ${{ runner.os }}-aas-web-turbo-v2-${{ steps.web_cache_plan.outputs.context }}-${{ github.sha }}-${{ github.run_attempt }}
@@ -226,6 +226,7 @@ jobs:
       - name: Run component validation
         if: env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
         env:
+          AAS_WEB_CACHE_COMPACT: "1"
           AAS_WEB_CACHE_DIR: ${{ runner.temp }}/aas-web-turbo
           AAS_WEB_CI_RECEIPT: ${{ runner.temp }}/aas-web-ci.json
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
@@ -249,6 +250,25 @@ jobs:
           path: ${{ runner.temp }}/aas-web-ci.json
           if-no-files-found: ignore
           retention-days: 14
+
+      - name: Plan bounded cache persistence
+        id: cache_save
+        if: success() && steps.web_cache_plan.outputs.web == 'true'
+        env:
+          AAS_WEB_CI_RECEIPT: ${{ runner.temp }}/aas-web-ci.json
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const receipt = JSON.parse(fs.readFileSync(process.env.AAS_WEB_CI_RECEIPT, 'utf8'));
+          if (!receipt.passed || receipt.tasks.length !== 2 || receipt.tasks.some(task => !['HIT', 'MISS'].includes(task.cache))) throw new Error('Invalid cache receipt');
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `changed=${receipt.tasks.some(task => task.cache === 'MISS')}\n`);
+          NODE
+      - name: Save changed bounded local cache
+        if: success() && steps.cache_save.outputs.changed == 'true'
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ${{ runner.temp }}/aas-web-turbo
+          key: ${{ runner.os }}-aas-web-turbo-v2-${{ steps.web_cache_plan.outputs.context }}-${{ github.sha }}-${{ github.run_attempt }}
 
       - name: Verify README source credits for changed skills
         if: github.event_name == 'pull_request' && env.IS_TRUSTED_CANONICAL_SYNC_PR != 'true'
@@ -544,7 +564,7 @@ jobs:
 
       - name: Restore free local Turborepo cache
         if: steps.web_cache_plan.outputs.web == 'true'
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: ${{ runner.temp }}/aas-web-turbo
           key: ${{ runner.os }}-aas-web-turbo-v2-${{ steps.web_cache_plan.outputs.context }}-${{ github.sha }}-${{ github.run_attempt }}
@@ -552,6 +572,7 @@ jobs:
             ${{ runner.os }}-aas-web-turbo-v2-${{ steps.web_cache_plan.outputs.context }}-
       - name: Validate protected source diff with ephemeral snapshots
         env:
+          AAS_WEB_CACHE_COMPACT: "1"
           AAS_WEB_CACHE_DIR: ${{ runner.temp }}/aas-web-turbo
           AAS_WEB_CI_RECEIPT: ${{ runner.temp }}/aas-web-ci.json
           BEFORE_SHA: ${{ github.event.before }}
@@ -576,3 +597,22 @@ jobs:
           path: ${{ runner.temp }}/aas-web-ci.json
           if-no-files-found: ignore
           retention-days: 14
+
+      - name: Plan bounded cache persistence
+        id: cache_save
+        if: success() && steps.web_cache_plan.outputs.web == 'true'
+        env:
+          AAS_WEB_CI_RECEIPT: ${{ runner.temp }}/aas-web-ci.json
+        run: |
+          node - <<'NODE'
+          const fs = require('node:fs');
+          const receipt = JSON.parse(fs.readFileSync(process.env.AAS_WEB_CI_RECEIPT, 'utf8'));
+          if (!receipt.passed || receipt.tasks.length !== 2 || receipt.tasks.some(task => !['HIT', 'MISS'].includes(task.cache))) throw new Error('Invalid cache receipt');
+          fs.appendFileSync(process.env.GITHUB_OUTPUT, `changed=${receipt.tasks.some(task => task.cache === 'MISS')}\n`);
+          NODE
+      - name: Save changed bounded local cache
+        if: success() && steps.cache_save.outputs.changed == 'true'
+        uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: ${{ runner.temp }}/aas-web-turbo
+          key: ${{ runner.os }}-aas-web-turbo-v2-${{ steps.web_cache_plan.outputs.context }}-${{ github.sha }}-${{ github.run_attempt }}

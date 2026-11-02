@@ -1,0 +1,209 @@
+/* A document editor, light. The window sits one gutter in from the top and
+   both sides and runs off the bottom; the Share popover is the hero. */
+
+.sh .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+.sh-window {
+  position: absolute;
+  background: var(--ss-surface);
+  box-shadow: var(--ss-shadow-hero);
+}
+
+/* ---- Toolbar ---- */
+
+/* A 52px unified toolbar, as recent macOS document windows have: room after
+   the lights, and the Share button inset the same 10.5px from the top and the
+   right edge */
+.sh-window > .ss-window__bar {
+  height: 52px;
+  padding-right: 10.5px;
+}
+
+.sh-lead {
+  display: flex;
+  margin-left: 8px;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ss-text-strong);
+}
+
+.sh-lead svg {
+  color: var(--ss-icon);
+}
+
+.sh-tools {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sh-share {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  height: 30px;
+  padding: 0 12px 0 10px;
+  border-radius: 8px;
+  background: var(--ss-accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  transition: filter 0.15s ease;
+}
+
+.sh-share[data-hover],
+.sh-share[data-on] {
+  filter: brightness(0.92);
+}
+
+/* ---- The document behind ---- */
+
+.sh-body {
+  background: var(--ss-surface);
+}
+
+.sh-doc {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 26px 28px;
+}
+
+.sh-doc__title {
+  margin-bottom: 8px;
+}
+
+.sh-doc__gap {
+  height: 6px;
+}
+
+/* ---- The popover ---- */
+
+.sh-pop {
+  padding: 0;
+  font-size: 12.5px;
+  --ss-popover-shadow: var(--ss-shadow-float);
+}
+
+.sh-pop__head {
+  padding: 14px 16px 10px;
+}
+
+.sh-pop__title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ss-text-strong);
+}
+
+.sh-invite {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 16px;
+}
+
+.sh-field {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Inside the field, pinned right. The slot is as wide as the longest label
+   it shows, so the field never moves; the hover surface is the picker
+   itself, label and chevron with an even inset, and grows to the left with
+   the label as the Roll measures it */
+.sh-role {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: flex-end;
+  width: 96px;
+  margin-right: -6px;
+}
+
+.sh-role__hit {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  height: 24px;
+  padding: 0 6px 0 7px;
+  border-radius: 6px;
+  color: var(--ss-text);
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
+}
+
+.sh-role__hit svg {
+  flex-shrink: 0;
+  color: var(--ss-icon);
+}
+
+.sh-role__hit[data-hover],
+.sh-role__hit[data-on] {
+  background: var(--ss-ink-2);
+}
+
+.sh-invite__btn {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: var(--ss-control);
+  padding: 0 13px;
+  border-radius: var(--ss-radius-md);
+  background: var(--ss-ink-2);
+  color: var(--ss-text);
+  font-weight: 600;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.sh-invite__btn[data-ready] {
+  background: var(--ss-accent);
+  color: #fff;
+}
+
+.sh-access {
+  padding: 12px 16px 6px;
+}
+
+.sh-access__label {
+  margin-bottom: 2px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--ss-text);
+}
+
+/* Rows bleed into the popover's inset so their avatars sit on its 16px edge */
+.sh-people {
+  margin: 0 -6px;
+}
+
+.sh-person__role {
+  color: var(--ss-text);
+}
+
+/* ---- The role menu ---- */
+
+.sh-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sh-menu__tick {
+  display: grid;
+  place-items: center;
+  width: 12px;
+  color: var(--ss-accent);
+}
+
+/* Compact: a narrower role picker leaves the chip its whole email */
+.sh .ss-stage[data-layout="compact"] .sh-role {
+  width: 86px;
+}
+
+.sh .ss-stage[data-layout="compact"] .sh-invite__btn {
+  padding: 0 11px;
+}

@@ -1,0 +1,334 @@
+# Media operations: agent guidance
+
+media-use resolves and remembers assets. For **operating** on them: cutting,
+reframing, stitching, transforming, it does not wrap every action as a bespoke
+command. Instead it points you at the right local tool (decision OP1). Run the
+tool, then register the output with `resolve --from <output> --type <type>` so the
+result lands in the ledger and the global cache like any other asset.
+
+The ffmpeg and local-model operations below run locally. Direct `heygen` recipes
+use the HeyGen CLI's own login and HeyGen/API billing; they do not inherit a
+HyperFrames subscription. Use those recipes only when that separate payer was
+selected. `hyperframes media-use resolve` uses the HyperFrames-selected credential.
+ffmpeg is assumed present (it backs the engine already).
+
+## Cut / trim: keep a slice
+
+```bash
+ffmpeg -i in.mp4 -ss 00:00:12 -to 00:00:20 -c copy out.mp4   # 0:12–0:20, no re-encode
+```
+
+In-composition trimming usually needs **no new file**: a clip plays a sub-window
+via `data-media-start` + `data-duration` (see `/hyperframes` → `references/format.md`). Only cut a
+physical file when exporting/assembling outside the composition.
+
+## Reframe / crop: change aspect ratio
+
+```bash
+# 16:9 -> 9:16, crop centered
+ffmpeg -i in.mp4 -vf "crop=ih*9/16:ih,scale=1080:1920" out.mp4
+```
+
+For a non-destructive crop, set a `clip-path` on the element in the composition
+itself (render-time, source file untouched) instead of re-encoding with ffmpeg.
+
+## Montage / stitch: join clips
+
+```bash
+printf "file '%s'\n" a.mp4 b.mp4 c.mp4 > list.txt
+ffmpeg -f concat -safe 0 -i list.txt -c copy out.mp4
+```
+
+## Silence-cut / highlight: trim dead air, grab the best moment
+
+```bash
+auto-editor in.mp4 --edit audio:threshold=4% -o tight.mp4   # pip install auto-editor
+scenedetect -i in.mp4 detect-adaptive list-scenes           # pip install scenedetect
+```
+
+## Transforms with a quality choice (process)
+
+These have a local option AND a higher-quality HeyGen-CLI option. Run the local
+one for free/offline; use the HeyGen CLI when quality matters. Showing the user
+a **side-by-side** (local vs HeyGen) is the honest way to let them choose.
+
+| Op                      | Local (free)                                       | HeyGen CLI (quality)        |
+| ----------------------- | -------------------------------------------------- | --------------------------- |
+| Background removal      | `hyperframes remove-background in.png` (u2net)     | `heygen background-removal` |
+| Upscale                 | `realesrgan-ncnn-vulkan -i in.png -o out.png -s 4` | n/a                         |
+| Lipsync (dub)           | n/a                                                | `heygen lipsync`            |
+| Translate               | n/a                                                | `heygen video-translate`    |
+| Clone a voice           | n/a                                                | `heygen voice clone create` |
+| Text to video           | n/a                                                | `heygen video-agent create` |
+| Clips from a long video | n/a                                                | `heygen ai-clipping`        |
+
+After any op: `resolve --from out.ext --type <type>` to register the derived
+asset (it records provenance and auto-promotes to the global cache).
+
+> ponytail: media-use doesn't re-wrap ffmpeg/heygen here, that's deliberate
+> (OP1). The value it adds is the ledger + global reuse on the _output_, via
+> `--from`. Add a thin `process` verb only if agents repeatedly fumble these
+> recipes.
+
+## Exact error-diffusion dither
+
+Use the local processor when the requested look specifically calls for
+Floyd-Steinberg, Atkinson/Macintosh, Jarvis-Judice-Ninke, Stucki, Burkes, or a
+Sierra variant. These are sequential error-diffusion algorithms, not the
+realtime Bayer `effects.dither` shader.
+
+```bash
+node <SKILL_DIR>/scripts/dither.mjs \
+  --input source.mp4 \
+  --out source.atkinson.mp4 \
+  --algorithm atkinson \
+  --palette '#0f380f,#306230,#8bac0f,#9bbc0f' \
+  --point-size 3
+
+npx hyperframes media-use resolve \
+  --from source.atkinson.mp4 --type video --project .
+```
+
+Available algorithms: `floyd-steinberg`, `atkinson`,
+`jarvis-judice-ninke`, `stucki`, `burkes`, `sierra`, `sierra-lite`, and
+`two-row-sierra`. The default is balanced Floyd-Steinberg with a black/white
+palette. Palettes contain 2-6 `#rrggbb` colors in authored dark-to-light order;
+reversing the order intentionally inverts the mapping. `--point-size` controls
+1-20px blocks; `--brightness` and `--contrast` accept 0.5-2; `--detail` accepts
+0.1-1.
+
+The processor supports ordinary SDR images and MP4 video, preserves video
+audio, and emits BT.709 MP4. It rejects tagged PQ/HLG input rather than silently
+tone-mapping it. To animate the transformation, keep the original and processed
+files as two real media layers and use the seek-safe GSAP timeline to reveal or
+crossfade between them. Use the realtime Bayer shader instead when the dither
+amount itself must animate continuously.
+
+## Transcription (default: Parakeet, better than whisper.cpp)
+
+`transcribe.mjs` is the default local transcription path. It runs **NVIDIA
+Parakeet-TDT via parakeet-mlx**, which beats whisper.cpp on the Open ASR
+Leaderboard (avg WER ~6.05% vs 7.44%; on NOISY audio 4.73% vs 5.96%, where
+whisper-large-v3 hallucinated to 308% WER on meetings) and is 5-10x faster.
+It emits `{ text, words:[{text,start,end}] }` with word timestamps (merged from
+Parakeet's sub-word tokens), feeding transcript-cut, captions, and the audio
+engine directly.
+
+```bash
+# install once: uv venv ~/.venvs/parakeet && VIRTUAL_ENV=~/.venvs/parakeet uv pip install parakeet-mlx
+node <SKILL_DIR>/scripts/transcribe.mjs --input talk.mp4 --out talk.transcribe.json
+
+# the hyperframes CLI runs Parakeet on macOS, Linux and Windows once it is installed:
+npx hyperframes models install parakeet                 # once, ~640 MB, ask the user first
+npx hyperframes transcribe talk.mp4 --engine parakeet   # or --engine auto (default)
+```
+
+VERIFIED on 24GB: accurate, ~3s (cached) for 8s audio. Parakeet covers 25
+European languages, English included. For other languages, or when parakeet-mlx is not
+installed, transcribe.mjs falls back to `hyperframes transcribe`, which uses the
+CLI's Parakeet when `models install parakeet` has run and whisper.cpp (99
+languages) otherwise. `--engine parakeet|whisper` forces one, except that a
+`--language` other than English runs whisper whenever it is installed, since
+Parakeet detects the language itself. (Cohere
+Transcribe tops the leaderboard on paper but its mlx-audio quants produced
+garbage and ran 40-70x slower on a Mac in testing, so it is not wired in.)
+
+## Text-based editing (transcript cut)
+
+`transcript-cut.mjs` is a compiler, not a wrapper: it turns word timestamps and
+agent cut decisions into exact kept segments. It is provided even though the rest
+of this file is guidance-only.
+
+```bash
+node <SKILL_DIR>/scripts/transcript-cut.mjs \
+  --input talk.mp4 \
+  --transcript talk.transcribe.json \
+  --remove "12.41-15.02,88.3-91.7" \
+  --remove-fillers "um,uh,like" \
+  --cut-silence 0.8 \
+  --out talk.cut.mp4
+
+resolve --from talk.cut.mp4 --type video
+```
+
+Use `--plan` first when you want to inspect the kept segment JSON before encoding.
+
+## Ducking (declare in-composition / bake for export)
+
+B1, declare ducking in the composition. `audio-duck.mjs` emits a volume lane
+as a `data-automation` attribute. Add it to the background `<audio>` element;
+the source file stays untouched. Lane times are clip-local, so pass
+`--composition` to let the script subtract the element's `data-start`.
+
+```bash
+node <SKILL_DIR>/scripts/audio-duck.mjs \
+  --meta audio_meta.json \
+  --target "#bgm" \
+  --composition index.html
+```
+
+```html
+<!-- auto-duck: #bgm under narration; add to its <audio> element -->
+data-automation='{"version":1,"lanes":[{"target":"volume","points":[{"t":0,"v":0.6},{"t":3.42,"v":0.6},{"t":3.57,"v":0.15},{"t":9.87,"v":0.15},{"t":10.27,"v":0.6}]}]}'
+```
+
+B2, bake ducking only for exported or standalone files.
+
+```bash
+ffmpeg -i bgm.mp3 -i voice.wav \
+  -filter_complex "[0][1]sidechaincompress=threshold=0.03:ratio=8:attack=200:release=400[ducked]" \
+  -map "[ducked]" bgm.ducked.wav
+```
+
+Declare inside compositions. Bake only for assets leaving the hyperframes
+pipeline.
+
+## Publish loudness
+
+Two-pass `loudnorm` measures first, then applies the measured values with the
+target LUFS baked in.
+
+Socials target, -14 LUFS:
+
+```bash
+ffmpeg -i mix.wav \
+  -af loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json \
+  -f null -
+
+ffmpeg -i mix.wav \
+  -af loudnorm=I=-14:TP=-1.5:LRA=11:measured_I=<input_i>:measured_TP=<input_tp>:measured_LRA=<input_lra>:measured_thresh=<input_thresh>:offset=<target_offset>:linear=true:print_format=summary \
+  mix.social.wav
+```
+
+Podcast target, -16 LUFS:
+
+```bash
+ffmpeg -i mix.wav \
+  -af loudnorm=I=-16:TP=-1.5:LRA=11:print_format=json \
+  -f null -
+
+ffmpeg -i mix.wav \
+  -af loudnorm=I=-16:TP=-1.5:LRA=11:measured_I=<input_i>:measured_TP=<input_tp>:measured_LRA=<input_lra>:measured_thresh=<input_thresh>:offset=<target_offset>:linear=true:print_format=summary \
+  mix.podcast.wav
+```
+
+## Generate: images (local first, cloud upsell)
+
+`resolve --type image` retrieves from the HeyGen catalog first; on a miss it
+GENERATES. Two paths, best-for-the-machine picked automatically:
+
+1. **Local (default, free, private): mflux** (FLUX-on-MLX). `resolve` spec-checks
+   AVAILABLE RAM and runs the best FLUX-class model that fits, using the
+   CLI-bundled `imagegen` ladder (its modules are not shipped in the standalone
+   skill). The RAM ladder:
+
+   | Tier   | Model                | Needs (available RAM) | Notes                               |
+   | ------ | -------------------- | --------------------- | ----------------------------------- |
+   | medium | FLUX.1 schnell int4  | ~8GB (`--low-ram`)    | ~20s/512px on 24GB. VERIFIED. Fast. |
+   | large  | FLUX.2 Klein 4B int4 | ~32GB                 | higher quality, full-resident       |
+   | xlarge | Qwen-Image           | ~64GB                 | top quality, 64GB+ Macs only        |
+
+   Gotchas baked into the table: the official FLUX repos are HF-gated, so it
+   points at non-gated community 4-bit re-uploads; and `--low-ram` is MANDATORY
+   at the medium tier (without it a 768x512 run swap-thrashed to 90 minutes on
+   24GB; with it, 20 seconds).
+
+2. **Cloud upsell (better quality): the `codex` CLI** `image_gen` tool, on the
+   user's ChatGPT subscription (codex owns auth, no key here, no per-call
+   charge). It is the automatic fallback when no local model fits AND the
+   explicit "make it better" choice on any machine. Users who just want codex
+   can ask for it directly. Verified: prompt -> raster -> frozen + ledgered.
+
+`--local-only` keeps mflux (once cached) and skips codex (network).
+
+## Generate: video (`resolve --type video`, HeyGen avatar first)
+
+`resolve --type video "<intent>"` is the default path. It generates a
+script-driven HeyGen avatar video first using the HyperFrames-selected credential
+(the server decides eligibility and charges; explicit API keys use API billing), falling back to local generative LTX only when
+HeyGen is unavailable, uncredentialed, or `--local-only` is passed. The two
+are non-substitutable outputs (a real presenter vs. a generic generative
+clip), so treat the fallback as "HeyGen wasn't reachable," not "upgrade the
+quality":
+
+- **HeyGen avatar video (default):**
+  The CLI-bundled provider shells the
+  `heygen` CLI — never the raw API — auto-picking a public avatar and a
+  starfish voice (override with `--avatar-id`/`--voice-id`, threaded through
+  as `ctx.avatarId`/`ctx.voiceId`). If the CLI reports `not_authenticated`,
+  the provider prints a HyperFrames sign-in recommendation to stderr and falls through to LTX instead of
+  hard-failing.
+- **Local fallback: LTX 2.3 on MLX** via `dgrauet/ltx-2-mlx`, the `videogen`
+  ladder bundled in the HyperFrames CLI. Generative clips
+  (t2v), spec-gated to RAM. Verified on 24GB: 512x320 x 33f with audio.
+
+Every generating `heygen` call from media-use — TTS, avatar video, and
+catalog search — sends the allowlisted `X-HeyGen-Client-Source: media-use`
+header (persistent flag, works on every subcommand) via the shared
+CLI-internal `HEYGEN_CLIENT_SOURCE_ARGV` constant, so usage
+tags correctly in billing/resource meta and shows up in the API dashboards.
+Read-only discovery (`avatar list`, `voice list`) doesn't need it.
+
+For structured bodies `resolve --type video` doesn't expose yet (a specific
+`avatar_id`/`voice_id` combination beyond the ctx overrides, or a
+pre-recorded `audio_url` instead of a script), the raw `heygen video create`
+recipe below remains the escape hatch. This direct command uses the separate
+HeyGen CLI credential and HeyGen/API billing, not the HyperFrames subscription:
+
+```bash
+# discover an avatar + a starfish voice, then create + wait
+heygen avatar list --ownership public --limit 5
+heygen voice list --engine starfish --limit 5
+heygen video create --headers "X-HeyGen-Client-Source: media-use" --wait -d '{
+  "type": "avatar",
+  "avatar_id": "<avatar-id>",
+  "script": "Your narration here.",
+  "voice_id": "<voice-id>"
+}'
+```
+
+Avatar videos are deterministic + script-driven (lip-sync from a script or a
+pre-recorded `audio_url`), distinct from the generative LTX clips. After a
+manual recipe renders, `resolve --from <downloaded.mp4> --type video` to
+ledger it (not needed when generating via `resolve --type video` directly —
+that already ledgers the result).
+
+### Image-to-video (animate any still into a talking clip)
+
+Not wired into `resolve --type video` (deferred — the `avatar` type covers
+the default script-driven case). `heygen video create` takes the raw
+`POST /v3/videos` body, so switching `type`
+from `avatar` to `image` animates **any image of a person** into a lip-synced
+talking video, with no avatar/photo-avatar creation step first. Point `image` at a
+public URL or an uploaded `asset_id`, and drive speech with a `script`+`voice_id`
+or a pre-recorded `audio_url`:
+
+```bash
+heygen video create --headers "X-HeyGen-Client-Source: media-use" --wait -d '{
+  "type": "image",
+  "image": { "type": "url", "url": "https://example.com/person.jpg" },
+  "script": "Your narration here.",
+  "voice_id": "<voice-id>"
+}'
+```
+
+Common optional fields: `title`, `resolution` (`4k`/`1080p`/`720p`),
+`aspect_ratio`, `remove_background`, `background`, `voice_settings`,
+`motion_prompt` + `expressiveness` (photo-avatar animation), and
+`callback_url`/`callback_id` for webhooks. Don't hardcode these from memory: the
+CLI self-documents the full, current body with
+`heygen video create --request-schema` (a discriminated union keyed on `type`),
+so read the schema rather than trusting a stale field list. For a still you'll
+reuse across many scripts, create a reusable **Photo Avatar** once instead
+(`heygen avatar create`). Ledger the result with
+`resolve --from <downloaded.mp4> --type video`. Docs:
+<https://developers.heygen.com/image-to-video>.
+
+## HEVC / H.265 sources
+
+HEVC/H.265 sources need no conversion for **render** (FFmpeg pre-decodes all
+input video) or for **preview** (auto-proxy transcodes and caches an H.264
+copy on first use, disable with `--no-proxy` or `media.autoProxy: false` in
+hyperframes.json). A manual H.264 proxy via `ffmpeg -i in.mp4 -c:v libx264
+-crf 18 proxy.mp4`, registered with `resolve --from`, remains available for
+edge cases (e.g. auto-proxy disabled, or ffmpeg unavailable at preview time).
