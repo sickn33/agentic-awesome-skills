@@ -19,6 +19,8 @@ try{
  try{assert.throws(()=>finalize(process.cwd(),'1.2.3',directory,{run}),/locked/i);}finally{unlock();}
  const {record}=require('../maintenance_activity.cjs');record(process.cwd(),directory,'start','review');
  assert.throws(()=>record(process.cwd(),directory,'start','review'),/Unpaired/);record(process.cwd(),directory,'end','review');
+ const stored=require('../../lib/maintenance-state').openStore(directory,process.cwd());const stale=stored.readBatch('finalize-1.2.3');stale.stages[3].finishedAt='2000-01-01T00:00:00Z';stored.writeBatch('finalize-1.2.3',stale);
+ assert.throws(()=>finalize(process.cwd(),'1.2.3',directory,{run}),/expired/);assert.equal(dispatch,4);
  const other=fs.mkdtempSync(path.join(fs.realpathSync(os.tmpdir()),'aas-finalize-uncertain-'));fs.chmodSync(other,0o700);
  try {const uncertain=a=>a[0]==='workflow'?(()=>{throw Error('transport unknown')})():run(a);
  assert.throws(()=>finalize(process.cwd(),'1.2.3',other,{run:uncertain}),/transport/);

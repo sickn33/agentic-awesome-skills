@@ -28,3 +28,5 @@ Review, repairs, preflight, queue, compute and dispatch gaps must be reported se
 Record work outside the coordinator with `npm run maintenance:activity -- /absolute/private/state start review` and the matching `end review` (also repair, preflight, queue and dispatch). Pairing and the private-store writer lock reject overlapping or orphan transitions; this records observations, never review approval.
 
 The bounded driver refuses further alignments while any prepared selected merge awaits checks/review. Independent intake stays available; merge authority and its exact-head checks are unchanged. This prevents aligning a batch ahead of sequential strict-base merges.
+
+Successful final live proof can be resumed for at most 15 minutes. An expired or invalid timestamp stops, requiring a fresh private finalization state and complete live audit; an old green workflow never establishes current public health. Resume preserves original stage completion times.
