@@ -11,13 +11,13 @@ function finalize(root,version,directory,dependencies={}) {
  const store=openStore(directory,root),unlock=store.acquireLock('finalize');
  try {
  const id=`finalize-${version}`,state=store.readBatch(id)||{version,startedAt:new Date().toISOString(),stages:[]};
+ const save=()=>store.writeBatch(id,state);
+ state.complete=false;save();
  const previousFinal=state.stages[3];
  if(previousFinal?.status==='passed') {
   const age=Date.now()-Date.parse(previousFinal.finishedAt);
   if(!Number.isFinite(age)||age<0||age>15*60*1000)throw Error('Final live proof expired; start a fresh private finalization state for a new complete public audit');
  }
- const save=()=>store.writeBatch(id,state);
- state.complete=false;save();
  const stages=[{repo:SOURCE,workflow:'pages.yml',ref:`v${version}`,inputs:['deployment_target=release']},{repo:LEGACY,workflow:'legacy-redirect-sync.yml',ref:'main',inputs:['live_mode=all']},{repo:LEGACY,workflow:'legacy-redirect-sync.yml',ref:'main',inputs:['live_mode=all']},{repo:SOURCE,workflow:'release-final-verification.yml',ref:'main',inputs:[`version=${version}`]}];
  for(let index=0;index<stages.length;index++) {
   const stage=stages[index];let record=state.stages[index];
