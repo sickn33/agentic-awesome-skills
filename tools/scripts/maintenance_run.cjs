@@ -29,9 +29,6 @@ async function drive(options, dependencies) {
     const available = plan.pending.filter(item => {
       if (item.action === 'repair') return false;
       if (item.action === 'align' && (!options.allowAlign || aligned.has(item.pr))) return false;
-      // Keep one selected merge train: do not invalidate further branches while
-      // a prepared PR still needs its exact-head checks/review. Intake remains independent.
-      if (item.action === 'align' && plan.pending.some(other => other.action === 'merge')) return false;
       return !attempted.has(`${item.pr}:${item.head}:${item.action}`);
     });
     if (!plan.pending.length) {
@@ -44,6 +41,9 @@ async function drive(options, dependencies) {
     }
     let item, approvalCandidate, waiting = false;
     for (const candidate of available) {
+      // Pending selected checks must not cause speculative batch alignment.
+      // Failed PRs still allow independent repairs/intake and the next merge train.
+      if (candidate.action === 'align' && waiting) continue;
       if (candidate.action === 'merge' && dependencies.checks) {
         const checks = await dependencies.checks(candidate);
         if (checks.some(c => c.state === 'failed')) {
