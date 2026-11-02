@@ -34,5 +34,20 @@ class ReviewedSources(unittest.TestCase):
             with self.assertRaises(ValueError):self.load({**e,'after_source':value})
     def test_missing_protected_ledger_is_not_exception(self):
         with patch.object(ledger,'read_path',return_value=None):self.assertEqual(ledger.load('/repo','base'),[])
+    def test_community_repin_binds_whole_tree_and_preserves_other_blockers(self):
+        entry = {**self.entry, 'kind': 'source-repin', 'source_type': 'community',
+                 'source_repo': 'owner/repo',
+                 'before_source': 'https://github.com/owner/repo/tree/' + 'b'*40 + '/skills/example',
+                 'after_source': 'https://github.com/owner/repo/tree/' + 'c'*40 + '/skills/example'}
+        entries = self.load(entry)
+        before = {'provenance': {'source': entry['before_source']}}
+        after = {'provenance': {'source': entry['after_source'], 'source_type': 'community', 'source_repo': 'owner/repo'}}
+        reason = 'example:provenance_identity_changed:source'
+        def evaluate(tree, old=before):
+            with patch.object(ledger, '_run_git', return_value=(tree+'\n').encode()):
+                return ledger.apply('/repo','head','example','modified',old,after,[reason,'example:security_regression'],entries,'')
+        self.assertEqual(evaluate('a'*40)[0], ['example:security_regression'])
+        self.assertIn(reason, evaluate('d'*40)[0])
+        self.assertIn(reason, evaluate('a'*40, {'provenance': {'source': 'self'}})[0])
 
 if __name__=='__main__':unittest.main()

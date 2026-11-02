@@ -22,6 +22,17 @@
       "source_repo": "Krexa-xyz/skills",
       "evidence_url": "https://github.com/Krexa-xyz/skills/commit/4a757951918c1a393d7840f2401f2d2f0b5afb3c",
       "verified_at": "2026-10-19"
+    },
+    {
+      "skill_id": "openhook",
+      "kind": "source-repin",
+      "tree_oid": "0825cff925b194cd0573e151a48dcaa31982029f",
+      "before_source": "https://github.com/openhook-dev/openhook-inbox/tree/9b11d08dfa520f37f387f6b003b67371dca930eb/skills/openhook",
+      "after_source": "https://github.com/openhook-dev/openhook-inbox/tree/30cf989b0cac5fcd3d6bf638063c65745b64de6b/skills/openhook",
+      "source_type": "community",
+      "source_repo": "openhook-dev/openhook-inbox",
+      "evidence_url": "https://github.com/openhook-dev/openhook-inbox/commit/30cf989b0cac5fcd3d6bf638063c65745b64de6b",
+      "verified_at": "2026-11-02"
     }
   ]
 }
