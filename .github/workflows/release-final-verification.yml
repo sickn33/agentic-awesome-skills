@@ -1,0 +1,42 @@
+name: Full public release verification
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Existing published runtime version
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+      RELEASE_VERSION: ${{ inputs.version }}
+      AAS_LEGACY_CONCURRENCY: '8'
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444
+        with:
+          node-version: 24.22.1
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1
+        with:
+          python-version: '3.10'
+      - run: npm ci --ignore-scripts && pip install -r tools/requirements.txt
+      - name: Verify every public release gate
+        run: |
+          node -e 'if(!/^\d+\.\d+\.\d+(?:-[a-zA-Z0-9.-]+)?$/.test(process.env.RELEASE_VERSION))process.exit(1)'
+          npm run release:verify -- --version "$RELEASE_VERSION" --target github-site --output "$RUNNER_TEMP/release-verification.json"
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: full-release-verification
+          path: ${{ runner.temp }}/release-verification.json
+          if-no-files-found: error
+          retention-days: 7

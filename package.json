@@ -100,7 +100,9 @@
     "app:ci:test": "node tools/scripts/web_ci.cjs cacheable test",
     "app:ci:compile": "node tools/scripts/web_ci.cjs cacheable compile",
     "maintenance:quick-check": "node tools/scripts/maintenance_quick_check.cjs",
-    "registry:preview": "node tools/scripts/run-python.js tools/scripts/preview_registry.py"
+    "registry:preview": "node tools/scripts/run-python.js tools/scripts/preview_registry.py",
+    "release:finalize": "node tools/scripts/release_finalize.cjs",
+    "maintenance:activity": "node tools/scripts/maintenance_activity.cjs"
   },
   "dependencies": {
     "ajv": "^8.20.0",

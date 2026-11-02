@@ -115,3 +115,11 @@ benchmark timings distinct from actual whole-cycle savings. No paid service,
 quota increase, privileged fork trigger or reduced test coverage is authorized.
 
 For reviewed upstream source repins, bind the complete immutable skill tree in the protected source-exception ledger; changing any bundled byte invalidates it. Review CDN script integrity in bundled HTML fixtures without executing the fixture or suppressing a real finding. See the [dated maintenance report](references/2026-11-02-maintenance.md) for evidence and scope.
+
+Follow [measured release finalization](references/release-finalization.md) after an
+explicitly authorized GitHub/site publication. Use the resumable finalizer instead
+of manually omitting Pages/legacy stages; preserve exact-run identity, no-drift
+proof, complete hosted verification and unknown-write stops. Preparation checks
+scratch capacity and verifies external PR contributor mentions before generating
+version surfaces. Do not narrow cache inputs or shard additional tests without
+negative invalidation and complete inventory evidence.
