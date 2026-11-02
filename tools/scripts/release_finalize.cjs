@@ -21,7 +21,10 @@ function finalize(root,version,directory,dependencies={}) {
   if(!record){
    const before=json(['run','list','--repo',stage.repo,'--workflow',stage.workflow,'--event','workflow_dispatch','--limit','100','--json','databaseId']).map(r=>r.databaseId);
    const branch=stage.ref.startsWith('v')?`tags/${stage.ref}`:`heads/${stage.ref}`;
-   const expected=json(['api',`repos/${stage.repo}/git/ref/${branch}`]).object.sha;
+   let target=json(['api',`repos/${stage.repo}/git/ref/${branch}`]).object;
+   for(let depth=0;target.type==='tag'&&depth<5;depth++)target=json(['api',`repos/${stage.repo}/git/tags/${target.sha}`]).object;
+   if(target.type==='tag'||!/^[a-f0-9]{40}$/.test(target.sha||''))throw Error('Cannot resolve exact workflow commit');
+   const expected=target.sha;
    record={...stage,expected,before,status:'dispatching',startedAt:new Date().toISOString()};state.stages.push(record);save();
    run(['workflow','run',stage.workflow,'--repo',stage.repo,'--ref',stage.ref,...stage.inputs.flatMap(i=>['-f',i])]);
    // Dispatch identity is reconciled read-only. Ambiguity is never resolved by guessing.
