@@ -23,7 +23,7 @@ argument-hint: '[scan | discover | deep | pdf | text | latex | latex-tex | cover
   | titles | upskill | followup | reply-watch | outcome | update]'
 ---
 
-# career-ops -- Router
+# career-ops: open-source AI job search agent
 
 career-ops is a multi-CLI AI job search agent. The routing below is shared across supported agent CLIs even when the invocation surface differs.
 
@@ -122,7 +122,7 @@ career-ops -- AI Job Search Agent
 Available commands:
   /career-ops {JD}      → AUTO-PIPELINE: evaluate + report + PDF + tracker (paste text or URL)
   /career-ops pipeline  → Process pending URLs from inbox (data/pipeline.md)
-  /career-ops oferta    → Evaluation only A-F (no auto PDF)
+  /career-ops oferta    → Evaluation only A-H (no auto PDF)
   /career-ops ofertas   → Compare and rank multiple offers
   /career-ops contacto  → LinkedIn power move: find contacts + draft message
   /career-ops deep      → Deep research prompt about company
