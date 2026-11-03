@@ -1,3 +1,4 @@
+import { GuideStart } from '../components/GuideStart';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useParams } from 'react-router';
 import Markdown from 'react-markdown';
@@ -112,6 +113,7 @@ export default function Docs() {
     }
   }, [hash, pathname, content]);
   if (missing) return <NotFound />;
+  if (!slug) return <GuideStart />;
   return (
     <div className="docs-page">
       <a className="docs-skip" href={`${pathname}#docs-content`}>Skip documentation navigation</a>

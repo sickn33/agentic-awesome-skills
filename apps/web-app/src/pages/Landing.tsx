@@ -1,91 +1,43 @@
-import { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router';
-import { Icon } from '../components/ui/Icon';
-import { usePageMeta } from '../hooks/usePageMeta';
-import { buildLandingMeta } from '../utils/seo';
-import stack from '../../../../docs/examples/workflows/mcp-contract/aas-stack.json';
-import plan from '../../../../docs/examples/workflows/mcp-contract/plan.json';
+import { Link, Navigate, useLocation } from 'react-router';
+import { XLogo, GithubLogo, BookOpen } from '@phosphor-icons/react';
+import AgentSetup from '../components/AgentSetup';
+import { HomeSupporters } from '../components/HomeSupporters';
 import './Landing.css';
+import './LandingPolish.css';
+import { WorkflowDemo } from '../components/WorkflowDemo';
+import { buildLandingMeta } from '../utils/seo';
+import { usePageMeta } from '../hooks/usePageMeta';
 
-const stages = [
-  { name: 'Goal', description: 'Your agent works on a goal' },
-  { name: 'Agent selection', description: 'It chooses skill IDs from the catalog' },
-  { name: 'Plan preview', description: 'Review the plan before changing anything' },
-];
-const featuredIds = ['mcp-builder', 'javascript-pro', 'invariant-guard'];
-const additionalIds = stack.skills.map((skill) => skill.id).filter((id) => !featuredIds.includes(id));
-
-export function Landing(): React.ReactElement {
+export function Landing() {
   const { hash } = useLocation();
-  useEffect(() => {
-    if (hash === '#get-started' || hash === '#recorded-example') document.getElementById(hash.slice(1))?.scrollIntoView({ block: 'start' });
-  }, [hash]);
-  const [stage, setStage] = useState(2);
-  const [showMore, setShowMore] = useState(false);
-  const [artifact, setArtifact] = useState<'stack' | 'plan' | null>(null);
   usePageMeta(buildLandingMeta(typeof __CATALOG_COUNT__ === 'number' ? __CATALOG_COUNT__ : 0));
-  return <div className="core-landing">
-    <section className="core-intro" aria-labelledby="core-title">
-      <p className="core-eyebrow">AI agent skills · CLI · MCP · Plugins</p>
-      <h1 id="core-title">Agentic Awesome Skills</h1>
-      <h2>Reusable skills for your AI coding agent.</h2>
-      <p className="core-intro__lede">Explore {typeof __CATALOG_COUNT__ === 'number' ? __CATALOG_COUNT__.toLocaleString('en-US') : 'the catalog of'} reusable SKILL.md playbooks for Claude Code, Codex, Cursor and other coding agents. AAS Core lets your agent inspect the catalog, record its selection and preview a plan locally.</p>
-      <div className="core-intro__actions">
-        <Link className="core-primary" to="/core/">Explore the skill catalog <Icon name="arrowRight" size={22} /></Link>
-        <a className="core-text-link" href="#get-started">Get started with Core <Icon name="arrowRight" size={20} /></a>
+  if (hash === '#recorded-example' || hash === '#get-started') {
+    return <Navigate replace to={hash === '#recorded-example' ? '/aas-core/#recorded-example' : '/aas-core/#connect'} />;
+  }
+  return <div className="brand-home">
+    <section className="brand-hero brand-wrap" aria-labelledby="hero-title">
+      <div><h1 id="hero-title">Your agent.<br /><span className="hero-accent">The right skills.</span></h1><p>An open-source library of skills for coding agents.</p><div className="action-row"><Link className="brand-button" to="/docs/">Get started</Link><Link className="text-action" to="/plugins/">Browse packs</Link></div></div>
+      <figure className="brand-video"><video controls playsInline preload="none" poster={`${import.meta.env.BASE_URL}videos/aas-introduction-v3-poster.jpg`} aria-label="AAS introduction video"><source src="https://aaskills.tech/videos/aas-introduction-v3.mp4" type="video/mp4" /><a href="https://aaskills.tech/videos/aas-introduction-v3.mp4">Watch the introduction</a></video><figcaption>AAS in 40 seconds</figcaption></figure>
+    </section>
+    <div className="brand-wrap"><AgentSetup /></div>
+    <section className="home-story brand-wrap" aria-labelledby="method-title">
+      <div className="home-section-head"><span className="home-eyebrow">What is AAS?</span><h2 id="method-title">Instructions.<br /><span>Ready to reuse.</span></h2><p>A skill is a file of instructions, with examples and resources. Your agent reads it to carry out a task.</p><Link className="text-action" to="/docs/getting-started/">How skills work</Link></div>
+      <img className="skill-editorial-art" src={`${import.meta.env.BASE_URL}illustrations/aas-skill-manual.png`} alt="A reusable SKILL.md manual, with examples and resources, for Codex, Claude Code, Cursor, T3 Code and Antigravity." width="1200" height="1080" />
+    </section>
+    <section className="home-start brand-wrap" aria-labelledby="start-title"><WorkflowDemo /><div className="workflow-copy"><div className="home-section-head"><h2 id="start-title">Your agent.<br />Your workflow.</h2></div><ol className="start-steps"><li><span>01</span><h3>Choose skills</h3><p>Ask your agent through Core, or choose a pack.</p><Link to="/aas-core/">Explore Core</Link></li><li><span>02</span><h3>Add it to your agent</h3><p>Install the selected skills in your app.</p><Link to="/docs/">Setup guides</Link></li><li><span>03</span><h3>Give it a task</h3><p>Your agent follows the instructions. You review the result.</p><Link to="/docs/getting-started/">Usage guide</Link></li></ol></div></section>
+    <section className="home-choice" aria-labelledby="choice-title"><div className="brand-wrap"><div className="home-section-head"><h2 id="choice-title">Start with your task</h2></div><div className="home-choice-options"><article><img className="choice-art" src={`${import.meta.env.BASE_URL}illustrations/aas-core.png`} alt="AAS Core: a reviewable selection with skill IDs, catalog version and project target." width="1100" height="760" loading="lazy" /><span className="home-eyebrow">AAS Core</span><h3>Ask your agent</h3><p>Your agent finds skills. Core validates the selection for you to review.</p><Link className="brand-button" to="/aas-core/">Discover Core</Link></article><article><img className="choice-art" src={`${import.meta.env.BASE_URL}illustrations/aas-packs.png`} alt="AAS Packs: related skill manuals grouped into one collection." width="1100" height="760" loading="lazy" /><span className="home-eyebrow">AAS Packs</span><h3>Install a collection</h3><p>Related skills, grouped by task and installed together.</p><Link className="text-action" to="/plugins/">Explore the packs</Link></article></div></div></section>
+    <section className="home-open"><div className="brand-wrap"><h2>Open source.<br /><span>Yours to build on.</span></h2><div className="open-actions"><p>Explore the code. Make it yours.</p><div className="open-links"><a className="open-github" href="https://github.com/sickn33/agentic-awesome-skills"><GithubLogo size={32} weight="fill" aria-hidden="true"/><span><strong>View on GitHub</strong><small>sickn33 / agentic-awesome-skills</small></span></a><Link className="open-license" to="/trust/"><BookOpen size={22} aria-hidden="true"/><span>Sources & licenses</span></Link></div></div></div></section>
+    <HomeSupporters />
+    <section className="home-faq brand-wrap" aria-labelledby="faq-title">
+      <header className="faq-heading"><h2 id="faq-title">Frequently asked questions</h2><Link className="text-action" to="/docs/">Read the guides</Link></header>
+      <div className="faq-answers">
+        <article><h3>What does AAS add to my agent?</h3><p>Reusable instructions for specific tasks, with examples and resources. Your agent reads them and applies them to your project.</p></article>
+        <article><h3>Which agents can I use?</h3><p>Codex, Claude Code, Cursor and other agents that support skill files. The setup guides cover each supported app.</p></article>
+        <article><h3>Do I need the whole library?</h3><p>No. Install a few skills or a pack. Core can help your agent find the relevant ones.</p></article>
+        <article><h3>Can I change the instructions?</h3><p>Yes. Skills are readable files. Adapt them to your project while respecting their licenses and attribution.</p></article>
       </div>
     </section>
-
-    <section className="core-example" id="recorded-example" aria-label="Recorded Core example">
-      <header className="core-example__header"><span>Recorded example · Preview only</span><a href="https://github.com/sickn33/agentic-awesome-skills/tree/main/docs/examples/workflows/mcp-contract">View recorded project</a></header>
-      <div className="core-example__stages" role="tablist" aria-label="Example stages">
-        {stages.map((item, index) => <button key={item.name} id={`stage-${index}`} role="tab" type="button" aria-selected={stage === index} aria-controls="example-panel" tabIndex={stage === index ? 0 : -1} onClick={() => setStage(index)} onKeyDown={(event) => {
-          let next: number;
-          if (event.key === 'ArrowRight') next = (index + 1) % stages.length;
-          else if (event.key === 'ArrowLeft') next = (index + stages.length - 1) % stages.length;
-          else if (event.key === 'Home') next = 0;
-          else if (event.key === 'End') next = stages.length - 1;
-          else return;
-          event.preventDefault(); setStage(next); document.getElementById(`stage-${next}`)?.focus();
-        }}>
-          <span className="core-stage-number">{index + 1}</span><span><strong>{item.name}</strong><span>{item.description}</span></span>
-        </button>)}
-      </div>
-      <div className="core-example__content" id="example-panel" role="tabpanel" aria-labelledby={`stage-${stage}`}>
-        {stage === 2 ? <div className="core-plan-summary">
-          <div><h3>Goal</h3><p className="core-goal">Review an MCP contract</p></div>
-          <Icon name="arrowRight" size={23} />
-          <div><h3>Agent-selected skills</h3><ul className="core-skill-tags">{featuredIds.map((id) => <li key={id}><code>{id}</code></li>)}</ul><button className="core-more" type="button" aria-expanded={showMore} onClick={() => setShowMore(!showMore)}>{showMore ? 'Show fewer' : `+${additionalIds.length} more`}</button>{showMore && <ul className="core-additional-skills">{additionalIds.map((id) => <li key={id}><code>{id}</code></li>)}</ul>}</div>
-          <Icon name="arrowRight" size={23} />
-          <div><h3>Reviewable plan</h3><div className="core-artifacts"><button type="button" aria-expanded={artifact === 'stack'} onClick={() => setArtifact(artifact === 'stack' ? null : 'stack')}><Icon name="file" size={23} /><code>aas-stack.json</code><Icon name="arrowRight" size={17} /></button><button type="button" aria-expanded={artifact === 'plan'} onClick={() => setArtifact(artifact === 'plan' ? null : 'plan')}><Icon name="file" size={23} /><code>plan.json</code><Icon name="arrowRight" size={17} /></button><p><Icon name="info" size={20} /> Preview only</p></div></div>
-        </div> : stage === 0 ? <div className="core-example__explanation"><h3>Review an MCP contract</h3><p>This recorded project uses a local read-only Node MCP catalog. Its constraints include an offline runtime, bounded inputs, and agent-owned selection.</p><p>The agent inspects the project and searches the catalog before deciding which skills to use.</p><Link to="/core/">Explore the skill catalog <Icon name="arrowRight" size={18} /></Link></div> : <div className="core-example__explanation"><h3>The agent chooses the exact IDs.</h3><p>Core records and validates this choice against its catalog. It does not choose the skills for the agent.</p><ul className="core-skill-tags">{stack.skills.map((skill) => <li key={skill.id}><code>{skill.id}</code></li>)}</ul><Link to="/docs/aas-core/#ask-the-agent-to-choose-the-stack">Read the selection workflow <Icon name="arrowRight" size={18} /></Link></div>}
-        {artifact && stage === 2 && <div className="core-artifact-detail"><h4>{artifact === 'stack' ? 'Recorded stack manifest' : 'Recorded plan artifact'}</h4><p>Example catalog v{stack.catalog.version}. This is the original recorded artifact, not a new selection or live execution.</p><pre tabIndex={0}>{JSON.stringify(artifact === 'stack' ? stack : plan, null, 2)}</pre><Link to="/workbench/">Open the plan reviewer <Icon name="arrowRight" size={18} /></Link></div>}
-      </div>
-    </section>
-
-    <section className="core-setup" id="get-started" aria-labelledby="core-setup-title">
-      <div><p className="core-eyebrow">Get started</p><h2 id="core-setup-title">Start with your agent</h2><p>Set up your agent with AAS Core and start working with the skill catalog.</p></div>
-      <Link className="core-setup-card" to="/docs/codex-cli-skills/"><span className="core-setup-icon"><Icon name="terminal" size={39} /></span><span><strong>Codex setup <Icon name="arrowRight" size={18} /></strong><span>Connect Codex to AAS Core using the local stdio MCP.</span></span></Link>
-      <Link className="core-setup-card" to="/docs/claude-code-skills/"><span className="core-setup-icon"><img src={`${import.meta.env.BASE_URL}claude-setup-mark.png`} width={52} height={52} alt="" /></span><span><strong>Claude Code setup <Icon name="arrowRight" size={18} /></strong><span>Connect Claude Code to AAS Core using the local stdio MCP.</span></span></Link>
-    </section>
-    <div className="core-boundary"><p>Core validates and previews. Review the instructions and plan before any separate installation.</p><Link to="/docs/aas-core/">Core, CLI & MCP reference <Icon name="arrowRight" size={16} /></Link></div>
-    <section className="core-video" aria-labelledby="core-video-title">
-      <p className="core-eyebrow">AAS in 40 seconds</p>
-      <h2 id="core-video-title">See AAS and AAS Core in action.</h2>
-      <p>Discover reusable playbooks, agent-owned skill selection, and Core validation and plan previews.</p>
-      <video controls playsInline preload="none" poster={`${import.meta.env.BASE_URL}videos/aas-introduction-v3-poster.jpg`} aria-label="AAS introduction video">
-        <source src={`${import.meta.env.BASE_URL}videos/aas-introduction-v3.mp4`} type="video/mp4" />
-        Your browser does not support HTML video.
-      </video>
-    </section>
-    <section className="core-maintainer" aria-label="Project">
-      <a href="https://github.com/sickn33" target="_blank" rel="noreferrer" className="core-maintainer__profile">
-        <img src={`${import.meta.env.BASE_URL}maintainer-avatar.jpg`} alt="" width={40} height={40} loading="lazy" />
-        <span><span className="core-maintainer__label">Maintained by</span><strong>@sickn33</strong></span>
-      </a>
-      <p>Open source: MIT code, CC BY 4.0 original content, with upstream notices preserved. Source PRs are welcome.</p>
-      <a href="https://github.com/sickn33/agentic-awesome-skills" target="_blank" rel="noreferrer" className="core-text-link"><Icon name="star" size={16} /> Star on GitHub</a>
-    </section>
+    <section className="brand-wrap founder-strip" aria-label="Project"><a href="https://github.com/sickn33" className="founder-profile"><img src={`${import.meta.env.BASE_URL}maintainer-avatar.jpg`} alt="sickn33" width="64" height="64" /><span><span>Maintained by</span><strong>@sickn33</strong></span></a><nav className="founder-links" aria-label="AAS and Nick on X"><a className="founder-social" href="https://x.com/AASkills_" target="_blank" rel="noopener noreferrer" aria-label="Follow AAS on X, @AASkills_"><XLogo size={28} aria-hidden="true"/><span><strong>Follow AAS</strong><small>@AASkills_</small></span></a><a className="founder-social" href="https://x.com/sickn33" target="_blank" rel="noopener noreferrer" aria-label="Follow Nick on X, @sickn33"><XLogo size={28} aria-hidden="true"/><span><strong>Follow Nick</strong><small>@sickn33</small></span></a><Link className="founder-about" to="/contribute/">Contribute to AAS</Link></nav></section>
   </div>;
 }
 export default Landing;
