@@ -1,0 +1,137 @@
+/* Final Unslop polish: the approved AAS composition, with quieter surrounding UI. */
+/* 1. Spacing */
+.brand-home .agent-strip{padding-block:24px 32px}
+.brand-home .home-story .home-section-head>p{margin-bottom:24px}
+.brand-home .home-story h2{margin-bottom:24px}
+.brand-home .workflow-copy .start-steps li{column-gap:16px}
+.brand-home .workflow-copy .start-steps h3{margin-bottom:8px}
+.brand-home .faq-answers article{padding-top:24px}
+.brand-home .home-supporter-logos{padding-block:16px}
+#main-content .brand-home :is(.brand-button,.text-action){min-height:48px;padding:12px 20px;line-height:22px}
+
+/* 2. Color: three text roles, the original cyan remains the accent. */
+.brand-home{--home-ink:#eef4f1;--home-secondary:#b1c0b8;--home-muted:#93a79d;--home-line:#293c33}
+.brand-home :is(.brand-hero>div>p,.home-section-head>p,.start-steps p,.home-choice-options p,.supporter-invitation p,.faq-answers p){color:var(--home-secondary)}
+.brand-home :is(.brand-video figcaption,.supporters-label,.supporter-note){color:var(--home-muted)}
+.brand-home .home-eyebrow{color:var(--home-secondary)}
+#main-content .brand-home .text-action{color:var(--home-ink);border-color:#3b5046}
+#main-content .brand-home .text-action:hover{color:#64eee7;border-color:#6b8d7b;background:#ffffff04}
+#main-content .brand-home .home-open .text-action{color:#082724;border-color:#08272460}
+#main-content .brand-home .home-open .text-action:hover{background:#ffffff30;border-color:#082724}
+.brand-home .brand-video video{box-shadow:none;border-color:var(--home-line)}
+
+/* 3. Icons: preserve actual brand marks; remove decorative caption rule. */
+.brand-home .brand-video figcaption:before{display:none}
+.brand-home .brand-video figcaption{padding:0}
+
+/* 4. Copy adjustments stay in Landing.tsx; paired brand headlines are retained. */
+/* 5. Type */
+.brand-home :is(h2,h3){font-weight:500}
+.brand-home .brand-hero h1{letter-spacing:-.045em;line-height:1.02}
+.brand-home :is(p,.home-eyebrow,figcaption,.brand-button,.text-action,.supporters-label,.supporter-note){letter-spacing:0}
+.brand-home .home-eyebrow{font-size:12px;line-height:16px;font-weight:400;text-transform:none}
+.brand-home .start-steps li>span{font-variant-numeric:tabular-nums}
+.brand-home .faq-answers h3{font-size:20px;font-weight:500;letter-spacing:0}
+
+/* 6. Layout: keep the illustrations large and align the two entry-point actions. */
+.brand-home .home-choice-options article{display:flex;flex-direction:column;align-items:flex-start}
+.brand-home .home-choice-options .choice-art{flex-shrink:0}
+.brand-home .home-choice-options p{flex:1;margin-bottom:16px}
+.brand-home .home-choice-options :is(.brand-button,.text-action){margin-top:auto}
+
+/* 7. Details */
+.brand-home .brand-video video{border-radius:12px}
+.brand-home :is(.agent-brand,.founder-profile,.home-supporter-logos a,.start-steps a,.supporters-label a):focus-visible{outline:2px solid #64eee7;outline-offset:6px;border-radius:4px}
+.brand-home .home-supporter-logos a{border-radius:8px}
+
+/* 8. Visuals: approved Slideshow artwork, introduction video and original marks retained. */
+/* 9. Motion: the explicitly requested explanatory loop stays; surrounding UI stays still. */
+.brand-home a{transition-property:color,background-color,border-color,opacity;transition-duration:160ms;transition-timing-function:cubic-bezier(.22,1,.36,1)}
+.brand-home :is(.agent-brand,.home-supporter-logos a,.text-action):hover{transform:none}
+@media(prefers-reduced-motion:reduce){.brand-home a{transition:none}}
+@media(max-width:600px){
+ .brand-home .brand-hero h1{font-size:48px;letter-spacing:-.035em;line-height:1.04}
+ .brand-home .faq-answers h3{font-size:20px}
+ .brand-home .home-choice-options article{padding-bottom:24px}
+ .brand-home .home-choice-options article:last-child{padding-bottom:0}
+}
+
+/* Cyan bands mark the agent entry point and the people behind AAS. */
+.brand-home .agent-strip{background:#64eee7;color:#082b24;padding-block:24px;box-shadow:0 0 0 100vmax #64eee7;clip-path:inset(0 -100vmax);margin-bottom:24px}
+.brand-home .agent-strip>p,.brand-home .agent-strip .agent-brand{color:#082b24}
+.brand-home .agent-strip .agent-brand img{filter:brightness(0)}
+.brand-home .agent-strip .agent-brand:hover{text-decoration:underline;text-underline-offset:6px;color:#000}
+.brand-home .agent-strip .agent-brand:focus-visible{outline-color:#082b24}
+.brand-home .founder-strip{background:#64eee7;color:#082b24;border:0;max-width:none;width:100%;padding:32px max(24px,calc((100% - 1248px)/2));margin:0}
+.brand-home .founder-profile span span,.brand-home .founder-profile strong{color:#082b24}
+#main-content .brand-home .founder-strip .text-action{color:#082b24;border-color:#225c51;background:transparent}
+#main-content .brand-home .founder-strip .text-action:hover{color:#64eee7;background:#082b24}
+.brand-home .founder-strip :is(a,button):focus-visible{outline-color:#082b24}
+@media(min-width:761px) and (max-width:1100px){.brand-home .founder-strip{padding-inline:32px}}
+
+.brand-home .agent-strip{padding-block:36px}
+.brand-home .agent-strip .agent-brand{font-size:21px;gap:12px;min-height:48px}
+.brand-home .agent-strip .agent-brand img{width:32px;height:32px}
+.founder-links{display:flex;align-items:center;flex-wrap:wrap;gap:12px}
+@media(max-width:700px){.brand-home .agent-strip{padding-block:32px}.brand-home .agent-strip .agent-brand{font-size:18px}.brand-home .agent-strip .agent-brand img{width:28px;height:28px}.founder-links{gap:8px}}
+
+/* Social profile links have their own identity, separate from site navigation. */
+.brand-home .founder-links{gap:12px}
+.brand-home .founder-social{display:flex;align-items:center;gap:16px;min-height:72px;min-width:184px;padding:14px 20px;background:#082b24;color:#edfffa;border:1px solid #082b24;border-radius:10px;text-decoration:none}
+.brand-home .founder-social>svg{flex:none;color:#64eee7}
+.brand-home .founder-social>span{display:grid;gap:3px}
+.brand-home .founder-social strong{font-size:16px;line-height:22px;font-weight:500}
+.brand-home .founder-social small{font-size:13px;line-height:18px;color:#add4c9}
+.brand-home .founder-social:hover{background:#000;border-color:#000}
+.brand-home .founder-social:hover strong{text-decoration:underline;text-underline-offset:4px}
+.brand-home .founder-about{display:flex;align-items:center;min-height:48px;padding:12px 8px;margin-left:12px;color:#082b24;font-size:14px;text-decoration:underline;text-underline-offset:5px}
+@media(max-width:700px){
+ .brand-home .founder-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%;gap:12px}
+ .brand-home .founder-social{min-width:0;min-height:76px;gap:12px;padding:14px}
+ .brand-home .founder-social>svg{width:24px;height:24px}
+ .brand-home .founder-about{grid-column:1/-1;justify-content:center;margin:0;padding:8px;min-height:44px}
+}
+
+/* Landing palette: black, neutral surfaces and the original AAS cyan. */
+.brand-home{--home-ink:#f4f4f4;--home-secondary:#bdbdbd;--home-muted:#999;--home-line:#303030;color:var(--home-ink)}
+.brand-home .home-story,.brand-home .home-choice>.brand-wrap{background:#141414;border-color:#303030}
+.brand-home .home-supporters{background:#101010}
+.brand-home :is(.home-choice-options article,.home-choice-options article+article,.supporter-invitation,.faq-answers article,.start-steps li){border-color:#303030}
+#main-content .brand-home .text-action{border-color:#444}
+#main-content .brand-home .text-action:hover{border-color:#64eee7}
+.brand-home .home-open{background:#64eee7;color:#111}
+.brand-home .home-open :is(h2,h2 span,p,.home-eyebrow){color:#111}
+#main-content .brand-home .home-open .brand-button{background:#111;border-color:#111;color:#fff}
+#main-content .brand-home .home-open .text-action{color:#111;border-color:#1116}
+.brand-home .agent-strip>p,.brand-home .agent-strip .agent-brand,.brand-home .founder-profile span span,.brand-home .founder-profile strong,.brand-home .founder-about{color:#111}
+.brand-home .founder-social{background:#111;border-color:#111;color:#fff}
+.brand-home .founder-social small{color:#bdbdbd}
+.brand-home .setup-sheet{background:#141414;color:#f4f4f4}
+.brand-home .setup-sheet p{color:#bdbdbd}
+
+/* Product-specific actions, with the same sizing as the profile links. */
+.brand-home .home-open .open-actions{border:0;padding-left:32px}
+.brand-home .home-open .open-actions>p{font-size:18px;margin-bottom:20px}
+.open-links{display:flex;align-items:flex-start;flex-direction:column;gap:16px}
+.open-github{display:flex;align-items:center;gap:20px;min-height:88px;padding:20px 24px;background:#111;color:#fff;border:1px solid #111;border-radius:12px;text-decoration:none;width:100%;max-width:440px}
+.open-github>svg{flex:none;color:#64eee7}
+.open-github>span,.support-cta>span{display:grid;gap:4px}
+.open-github strong{font-size:19px;font-weight:500;line-height:24px}
+.open-github small{font-size:13px;line-height:18px;color:#bdbdbd}
+.open-github:hover{background:#252525;border-color:#252525}
+.open-license{display:flex;align-items:center;gap:12px;min-height:44px;padding:8px 4px;color:#111;text-decoration:none;font-size:15px}
+.open-license:hover span{text-decoration:underline;text-underline-offset:5px}
+.brand-home .supporter-invitation .action-row{gap:12px;margin:0}
+.support-cta{display:flex;align-items:center;gap:16px;padding:16px 20px;min-height:80px;min-width:200px;border-radius:12px;border:1px solid transparent;text-decoration:none}
+.support-cta>svg,.support-cta>img{flex:none;object-fit:contain}
+.support-cta strong{font-size:17px;line-height:24px;font-weight:500}
+.support-cta small{font-size:13px;line-height:18px}
+.support-sponsor{background:#64eee7;color:#111}
+.support-sponsor small{color:#333}
+.support-sponsor:hover{background:#96f5f0}
+.support-coffee{background:#ffdd00;color:#0d0c22}
+.support-coffee small{color:#403700}
+.support-coffee:hover{background:#ffe84d}
+.brand-home :is(.open-github,.open-license,.support-cta):focus-visible{outline:2px solid currentColor;outline-offset:5px}
+@media(max-width:800px){.brand-home .home-open .open-actions{padding:0}.brand-home .supporter-invitation{align-items:flex-start;flex-direction:column}.brand-home .supporter-invitation .action-row{width:100%}.support-cta{flex:1}}
+@media(max-width:480px){.open-github{padding:18px;gap:14px}.open-github small{font-size:11px}.support-cta{min-width:0;width:100%;flex-basis:100%}.brand-home .supporter-invitation .action-row{gap:12px}}
