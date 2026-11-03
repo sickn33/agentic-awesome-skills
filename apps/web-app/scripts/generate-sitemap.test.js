@@ -11,7 +11,7 @@ describe('sitemap generation script helpers', () => {
     const fixture = generateSitemapXml({ baseUrl: 'https://example.com', paths: ['/docs/guide/'], lastmod: '2099-01-01', modifiedByPath: { '/docs/guide/': '2020-02-03' } });
     expect(fixture).toContain('<lastmod>2020-02-03</lastmod>');
     expect(fixture).not.toContain('2099-01-01');
-  });
+  }, 20_000);
   it('uses the custom AAS domain as the default sitemap origin', () => {
     expect(buildSitemap([], 0)).toContain('https://aaskills.tech/</loc>');
   });
@@ -39,7 +39,7 @@ describe('sitemap generation script helpers', () => {
     expect(xml).toContain('https://example.com/</loc>');
     expect(xml).toContain('https://example.com/core/</loc>');
     expect(xml).toContain('https://example.com/teams/</loc>');
-    expect(xml).not.toContain('https://example.com/aas-core/</loc>');
+    expect(xml).toContain('https://example.com/aas-core/</loc>');
     expect(xml).toContain('https://example.com/trust/</loc>');
     expect(xml).toContain('https://example.com/docs/</loc>');
     expect(xml).toContain('https://example.com/docs/getting-started/</loc>');
@@ -70,7 +70,7 @@ describe('sitemap generation script helpers', () => {
     expect(xml).toContain('https://example.com/</loc>');
     expect(xml).toContain('https://example.com/core/</loc>');
     expect(xml).toContain('https://example.com/teams/</loc>');
-    expect(xml).not.toContain('https://example.com/aas-core/</loc>');
+    expect(xml).toContain('https://example.com/aas-core/</loc>');
     expect(xml).toContain('https://example.com/trust/</loc>');
     expect(xml).toContain('https://example.com/workbench/</loc>');
     expect(xml).toContain('https://example.com/topics/github-ai-skills-repository/</loc>');

@@ -1,6 +1,6 @@
 ---
 name: pixeltable
-description: "Build Pixeltable apps in app.py with tables, computed columns, embedding search, and HTTP routes. Use for RAG, media pipelines, and tool-calling agents."
+description: "Build Pixeltable apps for multimodal RAG, video and image search, audio transcription, agent memory, embeddings stored with the data, incremental pipelines, dataset versioning, and tool-calling agents."
 category: databases
 risk: critical
 source: community
@@ -11,7 +11,7 @@ author: pierrebrunelle
 tags: [pixeltable, multimodal, embeddings, rag, computed-columns, vector-search]
 tools: [claude, cursor, gemini]
 license: Apache-2.0
-license_source: "https://github.com/pixeltable/pixeltable-skill/blob/main/LICENSE"
+license_source: "https://github.com/pixeltable/pixeltable-skill/blob/9296e22ad083307ac983217eef8e62f488409c67/LICENSE"
 ---
 
 # Pixeltable
@@ -20,7 +20,7 @@ license_source: "https://github.com/pixeltable/pixeltable-skill/blob/main/LICENS
 
 Pixeltable is the backend for a multimodal app: one application file (`app.py`) declares `TableModel` tables and `FastAPIRouter` routes. `pxt schema update` creates the tables. `pxt service update` starts HTTP. Insert a row, or POST after the service is up, and computed columns run.
 
-Use computed columns instead of LangChain, pandas-as-store, or a separate vector database. This skill is adapted from the Apache-2.0 Pixeltable skill at `pixeltable/pixeltable-skill` (`skills/pixeltable-skill/`, commit `106be4615c54ecff2fef67c0c508f48036e5feb9`).
+Use computed columns instead of LangChain, pandas-as-store, or a separate vector database. This skill is adapted from the Apache-2.0 Pixeltable skill at `pixeltable/pixeltable-skill` (`skills/pixeltable-skill/`, version 2.14.0, commit `9296e22ad083307ac983217eef8e62f488409c67`).
 
 CLI table paths use `/` only (`my_app/docs`). A dotted path (`my_app.docs`) is a Python SDK convenience (`pxt.get_table('my_app.docs')`).
 
@@ -28,6 +28,7 @@ CLI table paths use `/` only (`my_app/docs`). A dotted path (`my_app.docs`) is a
 
 - Use when building or changing a Pixeltable app: `app.py`, `TableModel`, computed columns, embedding indexes, or `FastAPIRouter` routes.
 - Use when the user asks for RAG, a tool-calling agent, or an image, video, audio, or document pipeline stored in Pixeltable.
+- Use when the user asks for multimodal or PDF RAG, video search, image similarity, audio transcription search, agent memory, embeddings stored with the data, an incremental pipeline, or dataset versioning.
 - Use when debugging `pxt schema`, `pxt service`, failed computed cells, or a hosted `pxt://` database.
 - Use when the user mentions `pxt`, computed columns, `add_embedding_index`, `document_splitter`, or `invoke_tools`.
 
@@ -80,7 +81,7 @@ Already have FastAPI: after schema update, `ingest.bind('my_app')` then `app.inc
 
 Local Python handle: `pxt.get_table('my_app.docs')`, or `import app; app.TableModel.bind_all('my_app')`, then `app.Docs.insert(...)` and `app.Docs.select(...).collect()`. CLI inspect uses slashes: `pxt ls -l`, `pxt errors my_app/docs`, `pxt dashboard`.
 
-Provider keys (`OPENAI_API_KEY` and the rest) come from the environment or `~/.pixeltable/config.toml`. The `pxt` daemon reads both once, at startup, and local services inherit that copy. After either changes, run `pxt daemon restart` (every command answers 409 until you do), then `pxt service restart my_app/ingest`.
+Provider keys (`OPENAI_API_KEY` and the rest) come from the environment or `~/.pixeltable/config.toml`. The `pxt` daemon reads both once, at startup, and local services inherit that copy. After either changes, a daemon and service restart may be needed (commands can answer 409). Inspect affected services and obtain authorization for any interruption before running `pxt daemon restart` or `pxt service restart my_app/ingest`.
 
 On Cloud, prefer `--add-config-entry` on `pxt db diff` or `pxt db update` over writing the hosted `[[pixeltable.database]]` entry by hand. The flag appends a new block with `name = '<uri>'` in lowercase unless an entry already matches (matching ignores case), and it writes that block even on `diff`. Editing the existing local block by hand sets `name` on the local entry instead of adding a hosted one. Then:
 
@@ -93,9 +94,9 @@ pxt service update app.py pxt://org:db -f
 
 Cloud handle: `pxt.get_table('pxt://org:db/docs')`. Org secrets: `pxt secret set pxt://org OPENAI_API_KEY=<value>`, never in `pixeltable.toml`. A hosted `pxt db update` also refuses a secret key in the project file, such as `[openai] api_key`. The user types the value in their own terminal. Media goes to the database's managed home bucket unless a column sets `destination=`. Try the app with a dashboard insert plus `pxt schema diff`. Read failures with `pxt service logs` or `pxt db logs`. Hosted `pxt db` commands wait until Cloud applies the change; pass `--no-wait` and follow with `pxt db status` when a tool call would time out. See [cli.md](references/cli.md).
 
-Since Pixeltable 0.7.20, a command refused for want of `-f` or `--allow-destructive` exits 3 and ends with `next: <command>  # <what it does>`. `pxt errors` prints the same line for each recomputable failed column. A snapshot column never changes, so it names no recompute. Run that command when it does what the user asked. Ask first when it drops data, stops or restarts what others call, or recomputes rows the user did not mention. When Pixeltable cannot do what the task needs, or you work around it, show the user `pxt feedback --kind gap '<what was needed, what you tried, what happened>'`. That prints a preview and sends nothing. Add `--send` only once they agree. Single quotes keep the shell from expanding the text. Use placeholder data, never customer names, hosts, paths, or secrets.
+Since Pixeltable 0.7.20, a command refused for want of `-f` or `--allow-destructive` exits 3 and ends with `next: <command>  # <what it does>`. `pxt errors` prints the same line for each recomputable failed column. A snapshot column never changes, so it names no recompute. A hosted wait stopped with SIGTERM (0.7.22+) exits 143 and prints a `next:` line. A database wait prints `next: pxt db status ...`. The change continues in Cloud. Run that line. Run a `next:` command when it does what the user asked. Ask first when it drops data, stops or restarts what others call, or recomputes rows the user did not mention. When Pixeltable cannot do what the task needs, or you work around it, show the user `pxt feedback --kind gap '<what was needed, what you tried, what happened>'`. That prints a preview and sends nothing. Add `--send` only once they agree. Single quotes keep the shell from expanding the text. Use placeholder data, never customer names, hosts, paths, or secrets.
 
-OpenAI, Anthropic, and Gemini retry on their own (rate limits, 503s, timeouts, with backoff), and so do the fixed request-rate providers. Bedrock and the local model integrations do not retry. OpenAI-compatible calls reach a proxy through `OPENAI_BASE_URL`. Do not wrap a call that already retries in another retry loop or client. [providers.md](references/providers.md#retries-and-proxies).
+OpenAI chat, embeddings, and responses, plus Anthropic and Gemini, retry on their own (rate limits, 503s, timeouts, with backoff). Fixed request-rate calls retry up to 3 times, including Bedrock `converse`, `invoke_model`, and `embed`. The local model integrations do not retry. OpenAI-compatible calls reach a proxy through `OPENAI_BASE_URL`. DeepSeek also reads `DEEPSEEK_BASE_URL`. Do not wrap a call that already retries in another retry loop or client. [providers.md](references/providers.md#retries-and-proxies).
 
 ### Step 5: Look up the operation
 
@@ -103,6 +104,7 @@ OpenAI, Anthropic, and Gemini retry on their own (rate limits, 503s, timeouts, w
 |------|------|
 | `pxt schema`, `pxt service`, inspect, logs | [cli.md](references/cli.md) |
 | Types, views, UDFs, UDAs, tool calling | [core-api.md](references/core-api.md) |
+| Versions, snapshots, time travel | [core-api.md](references/core-api.md#versioning) |
 | Provider import, arguments, output shape, retries | [providers.md](references/providers.md) |
 | Serving, FastAPIRouter, routes | [workflows.md](references/workflows.md) |
 | Wrong stack | [anti-patterns.md](references/anti-patterns.md) |
@@ -186,12 +188,12 @@ Types are non-nullable by default. Optional is `T | None`. Do not use `pxt.Requi
 
 ## Limitations
 
-- This is an upstream API snapshot through pixeltable-skill commit `106be4615c54ecff2fef67c0c508f48036e5feb9` (Pixeltable 0.7.20). It still records the 0.7.11 PXT-1429 observation below. Installed help and current official docs take precedence; service logs, Cloud keys and retry policies may differ.
+- This is an upstream API snapshot of pixeltable-skill 2.14.0 at commit `9296e22ad083307ac983217eef8e62f488409c67`, checked against Pixeltable main `2eca8e44e31dc4ad6eee2c602615cb35e5d89dcc` (latest tag `v0.7.22`). It still records the 0.7.11 PXT-1429 observation below. Installed help and current official docs take precedence; service logs, Cloud keys and retry policies may differ.
 
 - This skill does not replace environment-specific validation, testing, or expert review. Stop and ask when the catalog target, Cloud organization, or permission to change data is missing.
 - Requires Python 3.11 or newer. HTTP serving requires `a separately installed and reviewed Pixeltable runtime with the serve extra`.
 - CLI table paths use `/` only, for example `pxt errors my_app/docs` and `pxt recompute my_app/docs summary -f`. Dotted paths are Python only.
-- OpenAI, Anthropic, and Gemini retry up to 10 times. Groq, Together, Mistral, Nebius, Fireworks, DeepSeek, OpenRouter, Fabric, fal.ai, Replicate, BFL, Jina, Voyage AI, Twelve Labs, and RunwayML retry up to 3 times. Bedrock does not retry. Ollama, llama.cpp, vLLM, Hugging Face, Whisper, WhisperX, and YOLOX do not retry.
+- OpenAI `chat_completions`, `embeddings`, `responses`, and the deprecated `vision`, plus Anthropic `messages` and the Gemini model calls, retry up to 10 times. Fixed request-rate calls retry up to 3 times: OpenAI `decisions`, `speech`, `transcriptions`, `translations`, `image_generations`, `image_edits`, `image_variations`, and `moderations`; Groq, Together, Mistral, Nebius, Fireworks, DeepSeek, OpenRouter, Fabric, fal.ai, Replicate, BFL, Jina, Voyage AI, Twelve Labs, and RunwayML; and Bedrock `converse`, `invoke_model`, and `embed`. Ollama, llama.cpp, vLLM, Hugging Face, Whisper, WhisperX, and YOLOX do not retry.
 - Local service logs are the file above. Do not scrape the log path out of command output.
 - On Pixeltable 0.7.11 a `tools=` column never reaches schema agreement (PXT-1429). `pxt service update` then refuses every service in that file. Insert and read from Python instead of serving that column.
 - `string_splitter` and `document_splitter(..., separators='sentence')` need spaCy. `token_limit` needs `tiktoken`. Embedding indexes need `.using(...)` to bind model arguments.
@@ -230,12 +232,20 @@ Commands in this skill change a local Pixeltable catalog under `${PIXELTABLE_HOM
   **Solution:** Both are `requires_order_by` UDAs. The ordering expression is the first positional argument: `make_video(t.pos, t.frame, fps=25)`.
 - **Problem:** `pxt.create_table()` or `get_table()` at import time in `app.py`.
   **Solution:** Declare `TableModel` classes and run `pxt schema update`. Import must not mutate the catalog.
+- **Problem:** `add_query_route(..., one_row=True)` or `@pxt.query(return_scalar=...)`.
+  **Solution:** Both arguments are gone (0.7.22+). The shape follows the query. An ungrouped aggregate or a literal `limit(1)` is a single row, and 0 rows is a 404. A single unnamed expression returns values. Name the column (`select(text=t.text)`) to keep dicts.
 - **Problem:** `uuid.astype(pxt.String)` or `json_col.astype(pxt.String)` on a dict or list.
   **Solution:** `uuid.to_string()`. Serialize JSON with `pxtf.json.dumps(json_col)`. A dict fails insert with `Expected string, got dict`.
 - **Problem:** `t.summary_errortype`, `recompute_columns(columns=['summary'])`, or `pxt.Required[pxt.String]`.
   **Solution:** `t.summary.errortype` and `t.summary.errormsg` on stored computed or media columns. `t.recompute_columns('summary', errors_only=True)`. Columns are non-nullable unless written `T | None`. Media cells also expose `.fileurl` and `.localpath`.
-- **Problem:** A Bedrock or local-model cell failed and the agent waits for an automatic retry.
-  **Solution:** Those integrations do not retry. `pxt errors my_app/docs` lists the cell. `pxt recompute my_app/docs summary --errors-only -f` runs it again.
+- **Problem:** A local-model cell failed and the agent waits for an automatic retry.
+  **Solution:** Ollama, llama.cpp, vLLM, Hugging Face, Whisper, WhisperX, and YOLOX do not retry. `pxt errors my_app/docs` lists the cell. `pxt recompute my_app/docs summary --errors-only -f` runs it again. Bedrock `converse`, `invoke_model`, and `embed` already retry up to 3 times. Recompute a Bedrock cell the same way only after that retry is exhausted.
+
+## Troubleshooting
+
+- After API keys change, the daemon and services may need a restart to read the new environment and `config.toml`. Inspect the impact and obtain authorization for any interruption before restarting them.
+- Define `@pxt.udf` and `@pxt.query` in an importable module, the file `pxt schema update` loads, not in a script run as `__main__`. A UDF in a script's global namespace is refused. A query defined as `__main__` has no importable path.
+- `order_by` on a Python UDF expression that has no SQL translation raises `AttributeError` when descending (`asc=False`). Ascending passes no SQL ordering, so the rows are not sorted. Order by a stored column instead.
 
 ## Related Skills
 

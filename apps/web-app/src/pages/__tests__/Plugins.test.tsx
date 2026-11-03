@@ -6,35 +6,13 @@ import { catalogVersion } from '../../utils/catalogRelease';
 import { Plugins } from '../Plugins';
 import { renderWithRouter } from '../../utils/testUtils';
 
-describe('Plugins', () => {
-  it(
-    'renders the specialized plugin catalog and sets metadata',
-    () => {
-      renderWithRouter(<Plugins />, { route: '/plugins', path: '/plugins', useProvider: false });
-
-      expect(screen.getByRole('heading', { name: /Choose the focused AAS plugin/i })).toBeInTheDocument();
-      expect(screen.getByText('AAS Web App Builder')).toBeInTheDocument();
-      expect(screen.getByText('AAS Security Engineer')).toBeInTheDocument();
-      expect(screen.getByText('AAS Marketing, SEO & Growth')).toBeInTheDocument();
-      expect(screen.getByText(/distributions of the full skill library/i)).toBeInTheDocument();
-      expect(screen.queryByText(/1,550\+/i)).not.toBeInTheDocument();
-      expect(screen.getByRole('link', { name: /Install one skill with GitHub CLI/i })).toHaveAttribute(
-        'href',
-        '/docs/getting-started/',
-      );
-      expect(screen.getByText(/Plugins, bundles, and workflows serve different decisions/i)).toBeInTheDocument();
-      expect(screen.getAllByRole('link', { name: '@frontend-developer' })[0]).toHaveAttribute(
-        'href',
-        '/skill/frontend-developer/',
-      );
-      expect(document.title).toContain('AAS Specialized Plugins');
-      expect(document.querySelector('meta[name="description"]')).toHaveAttribute(
-        'content',
-        expect.stringContaining('specialized plugin'),
-      );
-    },
-    20_000,
-  );
+describe('Packs', () => {
+  it('opens the migrated web pack from its older URL', () => {
+    renderWithRouter(<Plugins />, { route: '/plugins?pack=aas-web-app-builder', path: '/plugins', useProvider: false });
+    expect(screen.getByRole('heading', { name: 'Build a web app' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'frontend-developer' })).toHaveAttribute('href', '/skill/frontend-developer/');
+    expect(document.title).toContain('AAS Specialized Plugins');
+  });
 });
 
 describe('canonical specialized plugin definitions', () => {
@@ -60,40 +38,20 @@ describe('canonical specialized plugin definitions', () => {
     expect(ids.has('oss-maintainer')).toBe(true);
   });
 
-  it('finds the one current pack when searching for a retired ID', () => {
-    renderWithRouter(<Plugins />, { route: '/plugins', path: '/plugins', useProvider: false });
-    fireEvent.change(screen.getByLabelText('Filter plugins'), { target: { value: 'web-wizard' } });
-    expect(screen.getByRole('status')).toHaveTextContent('1 plugin');
-    expect(screen.getByRole('heading', { name: 'AAS Web App Builder' })).toBeInTheDocument();
-    expect(screen.queryByRole('heading', { name: 'Web Wizard' })).not.toBeInTheDocument();
+  it('finds the current pack when searching for a retired ID', () => {
+    renderWithRouter(<Plugins />, { route: '/plugins?work=all', path: '/plugins', useProvider: false });
+    fireEvent.change(screen.getByLabelText('Filter packs'), { target: { value: 'web-wizard' } });
+    expect(screen.getByRole('heading', { name: 'Build a web app' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'View pack source' })).toHaveAttribute('href', expect.stringContaining(`/tree/v${catalogVersion}/plugins/agentic-bundle-web-app`));
+    fireEvent.change(screen.getByLabelText('Filter packs'), { target: { value: 'no-such-pack-unique' } });
+    expect(screen.getByText(/No packs match/)).toBeVisible();
   });
 
-  it('filters by exact included skill and exposes the full list and scope', () => {
-    renderWithRouter(<Plugins />, { route: '/plugins', path: '/plugins', useProvider: false });
-    expect(screen.getByRole('status')).toHaveTextContent(`${specializedPlugins.length} plugins`);
-    fireEvent.change(screen.getByLabelText('Filter plugins'), { target: { value: 'web-app' } });
-    expect(screen.getByRole('status')).toHaveTextContent('1 plugin');
-    const row = screen.getByText('AAS Web App Builder').closest('[role="row"]')! as HTMLElement;
-    const plugin = specializedPlugins.find((entry) => entry.id === 'web-app')!;
-    fireEvent.click(within(row).getByText(`Show all ${plugin.skills.length} skills`));
-    expect(within(row).getByRole('link', { name: '@browser-automation' })).toBeVisible();
-    expect(within(row).getByRole('link', { name: '@nextjs-best-practices' })).toBeVisible();
-    fireEvent.click(within(row).getByText('Scope and starting prompt'));
-    expect(within(row).getByText(/report checks actually run/)).toBeVisible();
-    expect(within(row).getByRole('link', { name: 'View plugin' })).toHaveAttribute('href', expect.stringContaining(`/tree/v${catalogVersion}/plugins/`));
-    fireEvent.change(screen.getByLabelText('Filter plugins'), { target: { value: 'no-such-plugin-unique' } });
-    expect(screen.getByText(/No plugins match/)).toBeVisible();
-  });
-
-  it.each(specializedPlugins)('exposes every expanded member in $name', (plugin) => {
-    renderWithRouter(<Plugins />, { route: '/plugins', path: '/plugins', useProvider: false });
-    fireEvent.change(screen.getByLabelText('Filter plugins'), { target: { value: plugin.id } });
-    const row = screen.getByText(plugin.name).closest('[role="row"]')! as HTMLElement;
-    const expanded = within(row).getByText(`Show all ${plugin.skills.length} skills`);
-    fireEvent.click(expanded);
+  it.each(specializedPlugins)('exposes every member in $name', (plugin) => {
+    renderWithRouter(<Plugins />, { route: `/plugins?pack=${encodeURIComponent(plugin.id)}`, path: '/plugins', useProvider: false });
+    const detail = within(screen.getByRole('article'));
     for (const id of plugin.skills) {
-      expect(within(row).getByRole('link', { name: `@${id}` })).toBeVisible();
+      expect(detail.getByRole('link', { name: id })).toHaveAttribute('href', `/skill/${encodeURIComponent(id)}/`);
     }
-    if (plugin.skills.length !== 10) expect(within(row).queryByText('Show all 10 skills')).not.toBeInTheDocument();
   });
 });
