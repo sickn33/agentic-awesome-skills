@@ -64,6 +64,8 @@ named that site.
 
 ## Examples
 
+The examples assume comparable, numeric prices in the same currency. Verify currency, fees and coverage before calling a result cheapest; disclose missing providers.
+
 ```js
 const { flights, warnings } = await bowmark.flights.search({ from: "SFO", to: "JFK", depart: "2026-12-01" });
 return { cheapest: flights.sort((a, b) => (a.price ?? 1e9) - (b.price ?? 1e9))[0], warnings };
