@@ -9,8 +9,10 @@ describe('Changelog', () => {
     expect(screen.getByRole('article', {name:`Release ${archive.releases[0].tag}`})).toBeInTheDocument();
     const oldest=archive.releases.at(-1)!;
     fireEvent.change(screen.getByLabelText('Search releases'),{target:{value:oldest.tag}});
-    const link=screen.getByRole('link',{name:new RegExp(`^${oldest.tag.replace(/\./g, '\\.')}`)});
-    fireEvent.click(link);
+    const releaseHref = `/?version=${encodeURIComponent(oldest.tag)}`;
+    const link = screen.getAllByRole('link').find(entry => entry.getAttribute('href') === releaseHref);
+    expect(link).toBeDefined();
+    fireEvent.click(link!);
     expect(screen.getByRole('article',{name:`Release ${oldest.tag}`})).toBeInTheDocument();
     expect(screen.getByRole('link',{name:'View on GitHub'})).toHaveAttribute('href',oldest.url);
   });
