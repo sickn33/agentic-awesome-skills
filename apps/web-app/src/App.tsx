@@ -4,6 +4,8 @@ import { redactAnalyticsUrl } from './utils/analyticsPrivacy';
 import { Analytics } from '@vercel/analytics/react';
 import { Icon } from './components/ui/Icon';
 
+const Contribute = lazy(() => import('./pages/Contribute'));
+const Changelog = lazy(() => import('./pages/Changelog'));
 const Sponsors = lazy(() => import('./pages/Sponsors'));
 const InformationPage = lazy(() => import('./pages/InformationPage'));
 const Landing = lazy(() => import('./pages/Landing'));
@@ -33,7 +35,8 @@ function PrimaryNavigation(): React.ReactElement {
   const entries = [
     { label: 'Catalog', href: '/core/', active: /^\/(core|directory|plugins|skill|share)(\/|$)/.test(pathname) },
     { label: 'Docs', href: '/docs/', active: /^\/(docs|workbench)(\/|$)/.test(pathname) },
-    { label: 'Sponsors', href: '/sponsors/', active: pathname.startsWith('/sponsors') },
+    { label: 'Contribute', href: '/contribute/', active: /^\/(contribute|sponsors)(\/|$)/.test(pathname) },
+    { label: 'Changelog', href: '/changelog/', active: pathname.startsWith('/changelog') },
     { label: 'For teams', href: '/teams/', active: pathname.startsWith('/teams') },
   ];
   return <nav className="app-nav" aria-label="Primary navigation">{entries.map((entry) => <Link key={entry.href} to={entry.href} aria-current={entry.active ? 'page' : undefined} className={`app-nav__link ${entry.active ? 'is-active' : ''}`}>{entry.label}</Link>)}</nav>;
@@ -78,7 +81,7 @@ function App(): React.ReactElement {
                   <Link to="/core/">Catalog</Link>
                   <Link to="/docs/">Docs</Link>
                   <Link to="/teams/">For teams</Link>
-                  <Link to="/sponsors/">Sponsors</Link>
+                  <Link to="/sponsors/">Sponsors</Link><Link to="/contribute/">Contribute</Link><Link to="/changelog/">Changelog</Link>
                   <a href="https://github.com/sickn33/agentic-awesome-skills" target="_blank" rel="noreferrer">View on GitHub</a>
                 </nav>
               </details>
@@ -105,6 +108,8 @@ function App(): React.ReactElement {
               </Route>
               <Route path="/aas-core" element={<CoreRedirect />} />
               <Route path="/teams" element={<InformationPage />} />
+              <Route path="/contribute" element={<Contribute />} />
+              <Route path="/changelog" element={<Changelog />} />
               <Route path="/sponsors" element={<Sponsors />} />
               <Route path="/trust" element={<InformationPage />} />
               <Route path="/plugins" element={<Plugins />} />
@@ -123,7 +128,7 @@ function App(): React.ReactElement {
         <footer className="app-footer">
           <p>Independent, community-curated project. Review skills before use.</p>
           <nav aria-label="Footer navigation">
-            <Link to="/sponsors/">Sponsors</Link>
+            <Link to="/sponsors/">Sponsors</Link><Link to="/contribute/">Contribute</Link><Link to="/changelog/">Changelog</Link>
             <Link to="/trust/">Trust & transparency</Link>
             <a href="https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md">Privacy</a>
             <a href="https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md">Terms</a>
