@@ -7,7 +7,7 @@ it('renders the Core homepage without catalog requests', async () => {
   vi.clearAllMocks();
   render(<App />);
   expect(await screen.findByRole('heading', {
-    level: 1, name: 'Agentic Awesome Skills',
+    level: 1, name: /Your agent.*The right skills/i,
   })).toBeInTheDocument();
   expect(globalThis.fetch).not.toHaveBeenCalled();
 });

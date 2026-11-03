@@ -2,21 +2,19 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { Landing } from '../Landing';
+import { CoreRecordedExample } from '../CoreRecordedExample';
 import stack from '../../../../../docs/examples/workflows/mcp-contract/aas-stack.json';
 import plan from '../../../../../docs/examples/workflows/mcp-contract/plan.json';
 
-const mount = () => render(<MemoryRouter><Landing /></MemoryRouter>);
+const mount = () => render(<MemoryRouter><CoreRecordedExample /></MemoryRouter>);
 describe('Core product homepage', () => {
   it('introduces the skill library with catalog and Core setup entry points', () => {
-    mount();
-    expect(screen.getByRole('heading', { level: 1, name: 'Agentic Awesome Skills' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Get started with Core' })).toHaveAttribute('href', '#get-started');
-    expect(screen.getByRole('link', { name: 'View recorded project' })).toHaveAttribute('href', 'https://github.com/sickn33/agentic-awesome-skills/tree/main/docs/examples/workflows/mcp-contract');
-    expect(screen.getByRole('link', { name: 'Explore the skill catalog' })).toHaveAttribute('href', '/core/');
+    render(<MemoryRouter><Landing /></MemoryRouter>);
+    expect(screen.getByRole('heading', { level: 1, name: /Your agent.*The right skills/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Get started' })).toHaveAttribute('href', '/docs/');
+    expect(screen.getByRole('link', { name: 'Browse packs' })).toHaveAttribute('href', '/plugins/');
+    expect(screen.getByRole('link', { name: 'Contribute to AAS' })).toHaveAttribute('href', '/contribute/');
     expect(screen.queryByRole('searchbox')).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /^Codex setup/ })).toHaveAttribute('href', '/docs/codex-cli-skills/');
-    expect(screen.getByRole('link', { name: /^Claude Code setup/ })).toHaveAttribute('href', '/docs/claude-code-skills/');
-    expect(screen.getByRole('tab', { name: /3 Plan preview/ })).toHaveAttribute('aria-selected', 'true');
     expect(document.title).toContain('AAS Core');
   });
   it('shows all exact recorded IDs and renders the real artifact, including its historical version', () => {
