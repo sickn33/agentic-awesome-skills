@@ -7,23 +7,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
-## [20.5.0] - 2026-11-03 - "Skills and the AAS website"
-
-### Added
-
-- Add the `figma-designer` and `landing-page-design` skills from ELAYA.
-- Add a public release archive and a contribution hub for sponsorship, documentation, skills, and issue reporting.
-
-### Changed
-
-- Refresh the homepage, Core overview, Packs and Guides. Keep the recorded Core example, current pack IDs, older pack links and guide search available.
-- Add crawlable entry points for the new pages, with canonical URLs and an updated current-site sitemap. Keep new pages out of the legacy migration sitemap.
-- Improve contributor guidance, release verification and the handling of responsive images in Unslop snapshots.
-
-### Distribution
-
-- This release targets GitHub and the hosted site. npm publication is excluded.
-
 ## [20.4.0] - 2026-11-02 - "Design, Motion & Production Tools"
 
 > Adds **33** catalog skills, bringing the release catalog to **2,917** skills. GitHub and the hosted catalog are the publication targets; npm publication is intentionally excluded because account access is unavailable.
