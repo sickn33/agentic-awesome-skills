@@ -12,10 +12,12 @@ npm install
 npm run dev
 ```
 
-On macOS and Linux, open **http://stageshow.localhost:1355**. On Windows,
-Vite starts directly; open the local URL it prints (normally **http://127.0.0.1:5173**).
-Portless is installed automatically on supported platforms. If npm skipped
-optional dependencies on macOS or Linux, run `npm install --include=optional`.
+On macOS and Linux with Node 24 or later, open **http://stageshow.localhost:1355**.
+The launcher explicitly uses local HTTP on port 1355; it does not request TLS or
+install a local certificate. On Node 20–23 or Windows, Vite starts directly; open
+the local URL it prints (normally **http://127.0.0.1:5173**). Portless is optional
+and requires Node 24; if it is missing on macOS or Linux with Node 24 or later,
+run `npm install --include=optional`.
 
 The playground includes the gold
 examples, nine visual styles, and labeled bad/good teaching pairs.

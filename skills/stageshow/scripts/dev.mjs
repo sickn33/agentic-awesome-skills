@@ -17,10 +17,10 @@ function packageBin(name) {
   return path
 }
 
-export function devCommand(platform = process.platform, extra = []) {
+export function devCommand(platform = process.platform, extra = [], nodeMajor = Number(process.versions.node.split('.')[0])) {
   const vite = packageBin('vite')
   const args = ['playground', '--config', 'playground/vite.config.ts', ...extra]
-  if (platform === 'darwin' || platform === 'linux') {
+  if ((platform === 'darwin' || platform === 'linux') && nodeMajor >= 24) {
     let portless
     try { portless = packageBin('portless') } catch {
       throw new Error('Portless is unavailable. Run npm install --include=optional in this folder on macOS or Linux.')
@@ -29,9 +29,9 @@ export function devCommand(platform = process.platform, extra = []) {
     // Use the local POSIX shim rather than an unrelated executable on PATH.
     const shim = resolve(root, 'node_modules', '.bin', 'vite')
     if (!existsSync(shim)) throw new Error('The local Vite launcher is missing; run npm install in this folder.')
-    return { command: process.execPath, args: [portless, 'stageshow', shim, ...args], cwd: root, named: true }
+    return { command: process.execPath, args: [portless, 'stageshow', shim, ...args], cwd: root, named: true, env: { ...process.env, PORTLESS_HTTPS: '0', PORTLESS_PORT: '1355' } }
   }
-  // Node runs the actual JS bin, so Windows needs neither a .cmd shim nor a shell.
+  // Windows and Node versions unsupported by Portless run Vite directly.
   return { command: process.execPath, args: [vite, ...args], cwd: root, named: false }
 }
 
@@ -43,7 +43,7 @@ function main() {
     return
   }
   if (!command.named) console.log('Stageshow: starting Vite directly. Open the local URL Vite prints below.')
-  const child = spawn(command.command, command.args, { cwd: command.cwd, stdio: 'inherit', shell: false })
+  const child = spawn(command.command, command.args, { cwd: command.cwd, env: command.env ?? process.env, stdio: 'inherit', shell: false })
   const handlers = new Map(['SIGINT', 'SIGTERM'].map((signal) => [signal, () => {
     if (child.exitCode === null && child.signalCode === null) child.kill(signal)
   }]))
