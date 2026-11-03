@@ -9,7 +9,7 @@ test('Node 20 on macOS uses Vite without portless', () => {
   assert.deepEqual(command.args.slice(-2), ['--host', '127.0.0.1'])
 })
 
-test('Node 24 on macOS uses local HTTP on an unprivileged port', () => {
+test('Node 24 on macOS uses local HTTP on an unprivileged port', { skip: Number(process.versions.node.split('.')[0]) < 24 }, () => {
   const command = devCommand('darwin', [], 24)
   assert.equal(command.named, true)
   assert.equal(command.env.PORTLESS_HTTPS, '0')
