@@ -45,3 +45,9 @@ bounded maintenance driver can consume the resulting exact-head evidence, but
 cannot manufacture it. Description corrections trigger policy/evidence checks
 without canceling or restarting source builds. Retargeted bases need a fresh
 source update. This reduces release waiting, not the amount of review required.
+
+## Precision without gate inflation
+
+Use the contributor [worked examples](https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/contributors/pr-examples.md). Reject untouched standalone field placeholders and checklist-only evidence with the existing admission gate; do not infer test truth or require a live paid task. Local option typos/missing values must fail, never silently select a weaker mode. On early admission failure, print all already-known readiness findings (including generated-path and fork-policy defects) without executing candidate content. Later offline evidence can still reveal additional issues; do not claim this is exhaustive.
+
+Return author-owned corrections together with path, reason and remediation. Separate them from exact-head semantic review and restricted maintainer sponsorship; do not repair an entire mixed proposal merely to clear a release. New skills need a concrete distinction and example; focused corrections can use brief source inspection and explained unrun tests. Do not make a maximum skill count or a heuristic similarity/quality score a merge authority.

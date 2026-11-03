@@ -446,5 +446,96 @@
         ]
       }
     ]
+  },
+  {
+    "path": "/contribute/",
+    "title": "Support & contribute",
+    "description": "Sponsor AAS, contribute skills and code, improve the guides or help test the project.",
+    "sections": [
+      {
+        "title": "Sponsor AAS",
+        "body": "Financial support helps with maintenance, skill reviews and releases.",
+        "links": [
+          {
+            "label": "GitHub Sponsors",
+            "href": "https://github.com/sponsors/sickn33"
+          },
+          {
+            "label": "Buy me a coffee",
+            "href": "https://buymeacoffee.com/sickn33"
+          }
+        ]
+      },
+      {
+        "title": "Ways to contribute",
+        "body": "Share a skill, improve documentation, contribute code or report reproducible problems.",
+        "links": [
+          {
+            "label": "Contributor guide",
+            "href": "https://github.com/sickn33/agentic-awesome-skills/blob/main/CONTRIBUTING.md"
+          }
+        ]
+      },
+      {
+        "title": "Infrastructure & tooling supporters",
+        "body": "Tools, access and credits provided through open-source programs are separate from financial sponsorship.",
+        "links": [
+          {
+            "label": "Meet the supporters",
+            "href": "/sponsors/"
+          }
+        ]
+      }
+    ],
+    "intro": "Support and contribute to AAS",
+    "lede": "Sponsor AAS, contribute skills and code, improve the guides or help test the project."
+  },
+  {
+    "path": "/changelog/",
+    "title": "Changelog",
+    "intro": "AAS Changelog",
+    "description": "Browse published AAS releases and original release notes.",
+    "lede": "Browse published AAS releases by version or year.",
+    "sections": [
+      {
+        "title": "Release archive",
+        "body": "Search by version, skill or change. Each entry links to the original GitHub release.",
+        "links": [
+          {
+            "label": "GitHub releases",
+            "href": "https://github.com/sickn33/agentic-awesome-skills/releases"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "path": "/aas-core/",
+    "title": "AAS Core",
+    "intro": "AAS Core",
+    "description": "Let your coding agent explore the AAS catalog, choose skills and return a selection you can review.",
+    "lede": "AAS Core validates a selection and previews a plan before installation.",
+    "sections": [
+      {
+        "title": "Recorded example",
+        "body": "Review an MCP contract with an agent-selected stack and a saved plan.",
+        "links": [
+          {
+            "label": "Open Workbench",
+            "href": "/workbench/"
+          }
+        ]
+      },
+      {
+        "title": "Set up AAS Core",
+        "body": "Connect a supported agent and ask it to select skills for your project.",
+        "links": [
+          {
+            "label": "Core guide",
+            "href": "/docs/aas-core/"
+          }
+        ]
+      }
+    ]
   }
 ]

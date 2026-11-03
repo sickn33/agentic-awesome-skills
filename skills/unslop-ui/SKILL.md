@@ -8,7 +8,7 @@ source_type: community
 date_added: "2026-11-01"
 author: Damir Sokolovsky
 license: CC-BY-4.0
-license_source: https://github.com/heydamir/unslop/blob/1d13095e4bef6ad6c74f1dd828d84c4ba309a4dc/LICENSE
+license_source: https://github.com/heydamir/unslop/blob/a6f121eee5f29c2f74976b75456feae8b66afb3a/LICENSE
 metadata:
   author: Damir Sokolovsky
   x: https://x.com/heydamir
@@ -17,7 +17,7 @@ metadata:
 
 # Unslop UI
 
-Adapted by AAS from [heydamir/unslop](https://github.com/heydamir/unslop) at commit `1d13095e4bef6ad6c74f1dd828d84c4ba309a4dc`. Renamed to avoid a collision with the writing skill `unslop`; the story script uses a unique temporary directory, restricts its local file server to the story directory, and refuses to overwrite output; the snapshot script also refuses to overwrite output. See LICENSE.
+Adapted by AAS from [heydamir/unslop](https://github.com/heydamir/unslop) at commit `a6f121eee5f29c2f74976b75456feae8b66afb3a`. Includes the upstream responsive-image snapshot fix: freeze each image’s browser-selected `currentSrc` before removing responsive markup. Renamed to avoid a collision with the writing skill `unslop`; the story script uses a unique temporary directory, restricts its local file server to the story directory, and refuses to overwrite output; the snapshot script also refuses to overwrite output. See LICENSE.
 
 ## When to Use
 

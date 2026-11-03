@@ -93,3 +93,7 @@ Maintainers review complete skill trees, safety, correctness, provenance and lim
 Use the [issue forms](https://github.com/sickn33/agentic-awesome-skills/issues/new/choose) for reproducible bugs and concrete improvements. Include the affected skill/path, installed version or commit, host/tool, exact input, expected and observed behavior, and a redacted reproduction. A report against an older release should say whether current source was also inspected.
 
 Use [Discussions](https://github.com/sickn33/agentic-awesome-skills/discussions) for setup questions, early ideas and bundle proposals. Report vulnerabilities through the [security policy](SECURITY.md), without public credentials or exploit details. Be respectful, disclose affiliations, and keep submissions useful to users rather than promotional listings.
+
+## Concrete submission examples
+
+See [PR evidence examples](docs/contributors/pr-examples.md) for a new skill, a small correction and an upstream update. They distinguish expected output from real observations and show how to explain an unrun test. Keep one coherent outcome per PR; a necessary multi-file bundle is valid when its dependency and complete contents are explained. Checklist ticks and untouched placeholders do not replace the three evidence sections. The same report shows all intake findings already known at that stage; fix them together before another push.

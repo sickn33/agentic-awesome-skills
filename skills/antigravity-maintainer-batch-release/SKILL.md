@@ -123,3 +123,9 @@ proof, complete hosted verification and unknown-write stops. Preparation checks
 scratch capacity and verifies external PR contributor mentions before generating
 version surfaces. Do not narrow cache inputs or shard additional tests without
 negative invalidation and complete inventory evidence.
+
+For precise contribution readiness, use the bundled intake guide and contributor
+worked examples. Report all already-known author corrections before expensive
+review. Checklist-only evidence and untouched field scaffolding do not establish
+admission. Keep small fixes proportional; never require paid/live consequential
+tests or treat a heuristic quality score as review authority.
