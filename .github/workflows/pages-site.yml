@@ -1,0 +1,95 @@
+name: Deploy verified main site
+
+on:
+  workflow_dispatch:
+    inputs:
+      expected_sha:
+        description: "Exact verified commit on protected main"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: "24"
+
+      - name: Verify exact protected-main checks
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXPECTED_SHA: ${{ inputs.expected_sha }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/main
+          test "$GITHUB_REF_PROTECTED" = true
+          test "$EXPECTED_SHA" = "$GITHUB_SHA"
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+          test "$(gh api "repos/$GITHUB_REPOSITORY/branches/main" --jq .commit.sha)" = "$GITHUB_SHA"
+
+          runs="$RUNNER_TEMP/site-main-runs.json"
+          gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/actions/runs?head_sha=$GITHUB_SHA&per_page=100" > "$runs"
+          ci_run="$(node - "$runs" <<'JS'
+          const { readFileSync } = require('node:fs');
+          const { proofForRuns } = require('./tools/scripts/maintenance_cycle.cjs');
+          const runs = JSON.parse(readFileSync(process.argv[2], 'utf8')).flatMap(page => page.workflow_runs);
+          const [ci] = proofForRuns(runs, process.env.GITHUB_SHA);
+          console.log(ci.id + '/attempts/' + ci.run_attempt);
+          JS
+          )"
+          gh api --paginate --slurp "repos/$GITHUB_REPOSITORY/actions/runs/$ci_run/jobs?per_page=100" |
+            jq -e 'any(.[].jobs[]; .name == "main-validation-and-sync" and .conclusion == "success" and any(.steps[]; .name == "Validate protected source diff with ephemeral snapshots" and .conclusion == "success"))'
+
+      - name: Build and verify public site
+        env:
+          VITE_BASE_PATH: /
+          SEO_SITE_URL: https://aaskills.tech
+        run: |
+          npm ci --ignore-scripts
+          npm --prefix apps/web-app ci --ignore-scripts
+          npm run app:build
+          npm --prefix apps/web-app run verify:seo
+          touch apps/web-app/dist/.nojekyll
+
+      - name: Upload verified Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: apps/web-app/dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - name: Confirm main still points to the verified artifact source
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: test "$(gh api "repos/$GITHUB_REPOSITORY/branches/main" --jq .commit.sha)" = "$GITHUB_SHA"
+
+      - name: Deploy to GitHub Pages
+        id: deploy
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5
