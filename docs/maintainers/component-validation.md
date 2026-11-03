@@ -39,8 +39,8 @@ below preserves fresh finalization and every required gate. Measure
 whole workflow duration separately from the recorded component execution time.
 
 The full suite also exercises freshly generated web data. New first-party plugin
-information pages have no legacy routes: the bridge excludes their exact four
-paths while retaining the 188-route curated lock and rejecting unknown additions.
+information pages and the Contribute and Changelog routes have no legacy
+predecessors: the bridge excludes their exact paths while retaining the 188-route curated lock and rejecting unknown additions.
 
 ## Scheduling the complete script suite
 
