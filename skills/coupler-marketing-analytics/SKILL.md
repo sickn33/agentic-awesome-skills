@@ -41,7 +41,7 @@ Only data flows whose destination is set to the connected AI tool are visible to
 
 ### Step 1: Check the connection and find data
 
-Call `list-datasets` (or `search-datasets` with the channel the user named). If nothing relevant comes back, stop and tell the user which data to connect in Coupler.io. Do not analyze pasted screenshots, remembered numbers or generic industry benchmarks in place of connected data.
+Inspect the connected server’s current tool schema. Use the exposed listing or search tool to find relevant dataflows or datasets (the published server includes `list-dataflows`; hosted versions may differ). Never invent a missing tool or arguments. If nothing relevant comes back, stop and tell the user which data to connect in Coupler.io. Do not analyze pasted screenshots, remembered numbers or generic industry benchmarks in place of connected data.
 
 ### Step 2: Confirm the data with the user
 
@@ -49,7 +49,7 @@ List the candidate datasets with a one-line reason for each and ask the user to 
 
 ### Step 3: Read the structure and sample
 
-Call `get-dataflow` to report when the data last refreshed. Call `get-schema` to map column names to labels, then sample each dataset:
+When supported by the connected server, use `get-dataflow` to report when the data last refreshed and `get-schema` to map column names to labels. Follow their current schemas to identify the execution or dataset, then sample it:
 
 ```sql
 SELECT * FROM data LIMIT 5
@@ -57,7 +57,7 @@ SELECT * FROM data LIMIT 5
 
 - The table is always called `data`; use the column names from the schema.
 - Values may be stored as text; use `CAST(column AS DOUBLE)` before aggregating.
-- `get-data` reads one dataset at a time. Query each dataset separately and combine the results.
+- Use `get-data` only with the identifiers and arguments exposed by the connected server; query each relevant dataflow separately and combine comparable results.
 
 ### Step 4: Compute metrics with SQL
 
