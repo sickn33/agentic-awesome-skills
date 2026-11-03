@@ -61,6 +61,8 @@ try {
     `${current}teams/`,
     `${current}trust/`,
     `${current}sponsors/`,
+    `${current}contribute/`,
+    `${current}changelog/`,
     `${current}plugins/aas-core/`,
     `${current}plugins/aas-core/privacy/`,
     `${current}plugins/aas-core/terms/`,
@@ -120,7 +122,7 @@ try {
   const legacySitemapSource = fs.readFileSync(path.join(outputOne, 'antigravity-awesome-skills/sitemap.xml'), 'utf8');
   assert.strictEqual((legacySitemapSource.match(/<loc>/g) || []).length, 4, 'legacy sitemap stays on the curated source sitemap');
   assert(!legacySitemapSource.includes('/skill/catalog-only/'), 'catalog-only redirects must not expand crawler discovery');
-  assert(!manifest.redirects.some(({ to }) => /\/(teams|trust|sponsors|aas-core)\/$/.test(to)), 'new informational pages have no legacy routes');
+  assert(!manifest.redirects.some(({ to }) => /\/(teams|trust|sponsors|contribute|changelog|aas-core)\/$/.test(to)), 'new informational pages have no legacy routes');
   assert(!legacySitemapSource.includes('/teams/') && !legacySitemapSource.includes('/trust/'));
   assert(!manifest.redirects.some(({ to }) => to.includes('/plugins/aas-core/')),
     'new plugin informational pages must not expand legacy redirects');

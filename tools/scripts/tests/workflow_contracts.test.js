@@ -165,6 +165,19 @@ assert.match(pagesWorkflow, /distribution_fetch\.cjs/);
 assert.match(pagesWorkflow, /\.draft == false/);
 assert.doesNotMatch(pagesWorkflow, /npm run app:build|npm run test/);
 
+const siteWorkflow = fs.readFileSync(path.join(repositoryRoot, ".github/workflows/pages-site.yml"), "utf8");
+assert.match(siteWorkflow, /workflow_dispatch:\s+inputs:\s+expected_sha:/);
+assert.match(siteWorkflow, /group: pages\b/);
+assert.match(siteWorkflow, /test "\$GITHUB_REF" = refs\/heads\/main/);
+assert.match(siteWorkflow, /test "\$GITHUB_REF_PROTECTED" = true/);
+assert.match(siteWorkflow, /test "\$EXPECTED_SHA" = "\$GITHUB_SHA"/);
+assert.match(siteWorkflow, /proofForRuns\(runs, process\.env\.GITHUB_SHA\)/);
+assert.match(siteWorkflow, /Validate protected source diff with ephemeral snapshots/);
+assert.match(siteWorkflow, /npm --prefix apps\/web-app run verify:seo/);
+assert.match(siteWorkflow, /deploy:\s+needs: build/);
+assert.doesNotMatch(siteWorkflow, /git (tag|push)|gh release create|npm publish/);
+
+
 const ciWorkflow = fs.readFileSync(
   path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "ci.yml"),
   "utf8",
