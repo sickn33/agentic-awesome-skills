@@ -300,6 +300,8 @@ function buildLandingFallback({ siteBaseUrl, catalogCount }) {
     { href: routeToUrl('/docs/claude-code-skills', siteBaseUrl), label: 'Claude Code setup' },
     { href: routeToUrl('/core', siteBaseUrl), label: 'Explore the skill catalog' },
     { href: routeToUrl('/docs/aas-core', siteBaseUrl), label: 'Core, CLI and MCP reference' },
+    { href: routeToUrl('/contribute', siteBaseUrl), label: 'Support and contribute' },
+    { href: routeToUrl('/changelog', siteBaseUrl), label: 'Changelog' },
   ];
   return `<main data-prerender-fallback="true"><h1>Agentic Awesome Skills</h1><h2>Reusable skills for your AI coding agent.</h2><p>Explore ${catalogCount.toLocaleString('en-US')} reusable SKILL.md playbooks for Claude Code, Codex, Cursor and other coding agents. AAS Core lets your agent inspect the catalog, record its selection and preview a plan locally.</p><section id="recorded-example"><h2>Recorded example · Preview only</h2><p>Review an MCP contract. The agent chooses exact IDs; Core records and validates the choice. Review the plan before any separate installation.</p></section><section id="get-started"><h2>Start with your agent</h2><nav>${buildStaticLinkList(links)}</nav></section></main>`;
 }
@@ -986,7 +988,7 @@ function main() {
   });
   writePrerenderedRoute('/', template, landingMeta, buildLandingFallback({ siteBaseUrl, catalogCount: skills.length }));
 
-  writePrerenderedRoute('/aas-core', template, { ...landingMeta, canonicalUrl: landingCanonical }, `<main><h1>AAS Core</h1><p>The product overview is now on the homepage.</p><a href="${escapeHtml(landingCanonical)}">Open AAS Core</a></main>`);
+  writePrerenderedRoute('/aas-core', template, { ...landingMeta, title: 'AAS Core | AAS', description: 'Let your coding agent explore the AAS catalog, choose skills and return a selection you can review.', canonicalUrl: routeToUrl('/aas-core', siteBaseUrl), jsonLd: [] }, buildLandingFallback({ siteBaseUrl, catalogCount: skills.length }));
 
   const homeCanonical = routeToUrl('/core', siteBaseUrl);
   const homeMeta = buildHomeMeta({

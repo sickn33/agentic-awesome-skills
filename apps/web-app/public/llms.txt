@@ -27,6 +27,7 @@
 ## Main Pages
 
 - Project README: https://github.com/sickn33/agentic-awesome-skills
+- AAS Core overview and recorded example: https://aaskills.tech/aas-core/
 - Searchable skill catalog: https://aaskills.tech/core/
 - Complete A–Z skill directory: https://aaskills.tech/directory/
 - Setup and usage documentation: https://aaskills.tech/docs/
