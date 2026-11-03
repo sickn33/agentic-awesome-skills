@@ -148,7 +148,6 @@ export function buildSitemap(skills, topCount = TOP_SKILL_COUNT, baseUrl = SITE_
     paths: [
       '/',
       toIndexableRoutePath('/core'),
-      '/aas-core/',
       toIndexableRoutePath('/workbench'),
       toIndexableRoutePath('/plugins'),
       ...JSON.parse(fs.readFileSync(path.join(ROOT_DIR, 'src/data/informationPages.json'), 'utf8')).map((page) => page.path),

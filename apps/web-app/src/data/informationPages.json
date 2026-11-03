@@ -508,5 +508,34 @@
         ]
       }
     ]
+  },
+  {
+    "path": "/aas-core/",
+    "title": "AAS Core",
+    "intro": "AAS Core",
+    "description": "Let your coding agent explore the AAS catalog, choose skills and return a selection you can review.",
+    "lede": "AAS Core validates a selection and previews a plan before installation.",
+    "sections": [
+      {
+        "title": "Recorded example",
+        "body": "Review an MCP contract with an agent-selected stack and a saved plan.",
+        "links": [
+          {
+            "label": "Open Workbench",
+            "href": "/workbench/"
+          }
+        ]
+      },
+      {
+        "title": "Set up AAS Core",
+        "body": "Connect a supported agent and ask it to select skills for your project.",
+        "links": [
+          {
+            "label": "Core guide",
+            "href": "/docs/aas-core/"
+          }
+        ]
+      }
+    ]
   }
 ]

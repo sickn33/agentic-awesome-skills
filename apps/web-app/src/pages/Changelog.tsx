@@ -10,7 +10,7 @@ import { releasePresentation } from '../utils/releasePresentation';
 const releases = archive.releases;
 const formatDate = (value: string) => new Date(value).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
 export default function Changelog() {
-  usePageMeta({ title: 'Changelog | AAS', description: 'Every published AAS release, with original release notes from GitHub.', canonicalPath: '/changelog/' });
+  usePageMeta({ title: 'Changelog | AAS', description: 'Every published AAS release, with original release notes from GitHub.', canonicalPath: '/changelog/', jsonLd: (url: string) => ({ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Changelog', url }) });
   const [params] = useSearchParams();
   const [query, setQuery] = useState('');
   const [year, setYear] = useState('all');

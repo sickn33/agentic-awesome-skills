@@ -988,7 +988,6 @@ function main() {
   });
   writePrerenderedRoute('/', template, landingMeta, buildLandingFallback({ siteBaseUrl, catalogCount: skills.length }));
 
-  writePrerenderedRoute('/aas-core', template, { ...landingMeta, title: 'AAS Core | AAS', description: 'Let your coding agent explore the AAS catalog, choose skills and return a selection you can review.', canonicalUrl: routeToUrl('/aas-core', siteBaseUrl), jsonLd: [] }, buildLandingFallback({ siteBaseUrl, catalogCount: skills.length }));
 
   const homeCanonical = routeToUrl('/core', siteBaseUrl);
   const homeMeta = buildHomeMeta({

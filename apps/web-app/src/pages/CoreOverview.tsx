@@ -17,7 +17,7 @@ export function CoreOverview() {
       document.getElementById(hash.slice(1))?.scrollIntoView?.({ block: 'start' });
     }
   }, [hash]);
-  usePageMeta({ title: 'AAS Core | AAS', description: 'Let your coding agent explore the AAS catalog, choose skills and return a selection you can review.', canonicalPath: '/aas-core/' });
+  usePageMeta({ title: 'AAS Core | AAS', description: 'Let your coding agent explore the AAS catalog, choose skills and return a selection you can review.', canonicalPath: '/aas-core/', jsonLd: (url: string) => ({ '@context': 'https://schema.org', '@type': 'WebPage', name: 'AAS Core', url }) });
   const [host, setHost] = useState<CoreAgent>('Codex');
   const managedHost = host === 'Codex' || host === 'Claude Code';
   const prompt = managedHost ? selectionPrompt : `Help me use AAS Core in ${host === 'Other agent' ? 'this coding agent' : host}. First identify the actual agent and version and check whether it supports local stdio MCP. Read https://aaskills.tech/docs/aas-core/ and verify the supported configuration for this client. The built-in configuration adapters are for Codex and Claude; do not invent a --host value or use another client's configuration. Show the proposed configuration and ask before changing it. If MCP is unavailable, explain that clearly rather than claiming Core is connected. Once Core is connected: ${selectionPrompt}`;
