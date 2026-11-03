@@ -81,7 +81,7 @@ Already have FastAPI: after schema update, `ingest.bind('my_app')` then `app.inc
 
 Local Python handle: `pxt.get_table('my_app.docs')`, or `import app; app.TableModel.bind_all('my_app')`, then `app.Docs.insert(...)` and `app.Docs.select(...).collect()`. CLI inspect uses slashes: `pxt ls -l`, `pxt errors my_app/docs`, `pxt dashboard`.
 
-Provider keys (`OPENAI_API_KEY` and the rest) come from the environment or `~/.pixeltable/config.toml`. The `pxt` daemon reads both once, at startup, and local services inherit that copy. After either changes, run `pxt daemon restart` (every command answers 409 until you do), then `pxt service restart my_app/ingest`.
+Provider keys (`OPENAI_API_KEY` and the rest) come from the environment or `~/.pixeltable/config.toml`. The `pxt` daemon reads both once, at startup, and local services inherit that copy. After either changes, a daemon and service restart may be needed (commands can answer 409). Inspect affected services and obtain authorization for any interruption before running `pxt daemon restart` or `pxt service restart my_app/ingest`.
 
 On Cloud, prefer `--add-config-entry` on `pxt db diff` or `pxt db update` over writing the hosted `[[pixeltable.database]]` entry by hand. The flag appends a new block with `name = '<uri>'` in lowercase unless an entry already matches (matching ignores case), and it writes that block even on `diff`. Editing the existing local block by hand sets `name` on the local entry instead of adding a hosted one. Then:
 
@@ -243,7 +243,7 @@ Commands in this skill change a local Pixeltable catalog under `${PIXELTABLE_HOM
 
 ## Troubleshooting
 
-- After API keys change, run `pxt daemon restart`. The daemon reads the environment and `config.toml` once at startup. Then run `pxt service restart my_app/ingest` so a running service picks them up.
+- After API keys change, the daemon and services may need a restart to read the new environment and `config.toml`. Inspect the impact and obtain authorization for any interruption before restarting them.
 - Define `@pxt.udf` and `@pxt.query` in an importable module, the file `pxt schema update` loads, not in a script run as `__main__`. A UDF in a script's global namespace is refused. A query defined as `__main__` has no importable path.
 - `order_by` on a Python UDF expression that has no SQL translation raises `AttributeError` when descending (`asc=False`). Ascending passes no SQL ordering, so the rows are not sorted. Order by a stored column instead.
 

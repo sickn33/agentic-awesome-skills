@@ -35,7 +35,7 @@ Exit codes (0.7.20+): `0` done, `1` error (a usage error too, in `schema`, `serv
 
 On the first catalog command, `pxt` auto-spawns a daemon at `127.0.0.1:22089` (~40 ms per command after warm-up). Override with `PXT_PORT`. Lifecycle: `pxt daemon status`, `pxt daemon stop`, `pxt daemon start`, `pxt daemon restart`.
 
-The daemon reads `config.toml` and the environment once, at startup, and local services start with the daemon's copy. When either has changed since (a new `OPENAI_API_KEY` exported, an edited `config.toml`), every command answers 409 (`the daemon started with a different environment` / `configuration has changed since the daemon started`). Run `pxt daemon restart`, then `pxt service restart NAME` so running services pick it up. A route whose provider key is missing answers with `error_code` `MISSING_CREDENTIALS`.
+The daemon reads `config.toml` and the environment once, at startup, and local services start with the daemon's copy. When either has changed since (a new `OPENAI_API_KEY` exported, an edited `config.toml`), every command answers 409 (`the daemon started with a different environment` / `configuration has changed since the daemon started`). A daemon restart followed by `pxt service restart NAME` lets services pick it up. Inspect affected services and obtain authorization for any interruption before restarting. A route whose provider key is missing answers with `error_code` `MISSING_CREDENTIALS`.
 
 ## Command categories
 
@@ -263,7 +263,7 @@ Optional Cloud MCP: when a Cloud user wants the agent to inspect or operate thei
 pxt secret set pxt://myorg OPENAI_API_KEY=<your-key>    # also: list, delete
 ```
 
-An org secret applies to every database in the org; a database secret wins on a key collision. The `PIXELTABLE_` prefix is reserved, so such a name is refused. Secrets are set with `pxt secret`, never in `pixeltable.toml`: a `[[pixeltable.database]]` entry with a `secrets` mapping fails to load, and for a hosted database `pxt db update` also refuses a secret key such as `[openai] api_key`. A process reads its secrets once, at startup, so a running one keeps the values it began with. After `pxt secret set` or `pxt secret delete`, run `pxt db restart pxt://org:db` for the database's tables and `pxt service restart pxt://org:db/NAME` for its services; both keep the old pods serving until the new ones are ready. Never ask the user to paste a secret's value into the chat: give them `pxt secret set pxt://org KEY=<value>` to run in their own terminal.
+An org secret applies to every database in the org; a database secret wins on a key collision. The `PIXELTABLE_` prefix is reserved, so such a name is refused. Secrets are set with `pxt secret`, never in `pixeltable.toml`: a `[[pixeltable.database]]` entry with a `secrets` mapping fails to load, and for a hosted database `pxt db update` also refuses a secret key such as `[openai] api_key`. A process reads its secrets once, at startup, so a running one keeps the values it began with. After `pxt secret set` or `pxt secret delete`, database and service restarts may be needed for the new values. Inspect the affected resources and obtain authorization for any interruption before restarting; the documented rollout keeps old pods serving until new ones are ready. Never ask the user to paste a secret's value into the chat: give them `pxt secret set pxt://org KEY=<value>` to run in their own terminal.
 
 ## Scripting with `--json`
 
