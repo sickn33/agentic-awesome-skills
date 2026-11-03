@@ -187,9 +187,9 @@ describe('seo assets verification helpers', () => {
     expect(() => analyzeSitemap(xml, { minSkillUrls: 1 })).not.toThrow();
   });
 
-  it('keeps the redirected Core overview out of the sitemap', () => {
+  it('accepts the standalone Core overview in the sitemap', () => {
     const xml = `<urlset><url><loc>${FIXTURE_ROOT_URL}</loc></url><url><loc>${FIXTURE_ROOT_URL}aas-core/</loc></url><url><loc>${FIXTURE_ROOT_URL}skill/agent-a/</loc></url></urlset>`;
-    expect(() => analyzeSitemap(xml, { minSkillUrls: 1 })).toThrow('unsupported non-skill routes');
+    expect(() => analyzeSitemap(xml, { minSkillUrls: 1 })).not.toThrow();
   });
 
   it('rejects undeclared non-skill routes outside the information page allowlist', () => {
