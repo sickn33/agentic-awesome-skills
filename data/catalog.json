@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-02T08:26:20.000Z",
-  "total": 2917,
+  "generatedAt": "2026-11-04T05:06:21.000Z",
+  "total": 2923,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -14401,6 +14401,42 @@
       "path": "skills/bounce-rate-estimator/SKILL.md"
     },
     {
+      "id": "bowmark",
+      "canonical_id": "bowmark",
+      "name": "bowmark",
+      "description": "Use Bowmark when a task depends on what a live website shows right now: current prices, availability or stock, fares and quotes, a site search, or data behind a form or a login. The agent writes a short JavaScript script against typed site functions and gets typed results back.",
+      "category": "mcp",
+      "risk": "critical",
+      "source": "https://github.com/bowmark-ai/skill/tree/a872ed29015c7fec61a24c6d21d0d47cbaf2b73b/bowmark",
+      "source_type": "community",
+      "source_repo": "bowmark-ai/skill",
+      "license": "MIT",
+      "license_source": "https://github.com/bowmark-ai/skill/blob/a872ed29015c7fec61a24c6d21d0d47cbaf2b73b/LICENSE",
+      "tags": [
+        "mcp",
+        "web-data",
+        "live-websites",
+        "prices",
+        "availability",
+        "typed-functions"
+      ],
+      "triggers": [
+        "mcp",
+        "web-data",
+        "live-websites",
+        "prices",
+        "availability",
+        "typed-functions",
+        "bowmark",
+        "task",
+        "depends",
+        "what",
+        "live",
+        "website"
+      ],
+      "path": "skills/bowmark/SKILL.md"
+    },
+    {
       "id": "box-automation",
       "canonical_id": "box-automation",
       "name": "box-automation",
@@ -16585,7 +16621,7 @@
       "id": "career-ops",
       "canonical_id": "career-ops",
       "name": "career-ops",
-      "description": "Multi-CLI job-search command center: evaluate offers, scan portals, tailor CVs, track applications, prep interviews. Invoke per mode.",
+      "description": "Open-source AI job search agent for AI coding CLIs: evaluate offers, scan portals, tailor CVs, track applications, prep interviews. Invoke per mode.",
       "category": "productivity",
       "risk": "safe",
       "source": "https://github.com/career-ops-hq/career-ops",
@@ -16600,16 +16636,16 @@
       "triggers": [
         "career",
         "ops",
-        "multi",
-        "cli",
+        "open",
+        "source",
+        "ai",
         "job",
         "search",
-        "command",
-        "center",
+        "agent",
+        "coding",
+        "clis",
         "evaluate",
-        "offers",
-        "scan",
-        "portals"
+        "offers"
       ],
       "path": "skills/career-ops/SKILL.md"
     },
@@ -21913,6 +21949,44 @@
         "gcp"
       ],
       "path": "skills/cost-optimization/SKILL.md"
+    },
+    {
+      "id": "coupler-marketing-analytics",
+      "canonical_id": "coupler-marketing-analytics",
+      "name": "coupler-marketing-analytics",
+      "description": "Analyze cross-channel marketing performance from live Coupler.io data through its hosted MCP server: channel and campaign comparison, ROI, anomalies and budget insights.",
+      "category": "marketing",
+      "risk": "critical",
+      "source": "https://github.com/coupler-io/skills/tree/d25f3b33c62682049577af3e2e96e3efcdf7867b/marketing-and-ads/marketing-analytics",
+      "source_type": "official",
+      "source_repo": "coupler-io/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/coupler-io/skills/blob/d25f3b33c62682049577af3e2e96e3efcdf7867b/LICENSE",
+      "tags": [
+        "marketing",
+        "analytics",
+        "ppc",
+        "google-ads",
+        "meta-ads",
+        "ga4",
+        "mcp",
+        "reporting"
+      ],
+      "triggers": [
+        "marketing",
+        "analytics",
+        "ppc",
+        "google-ads",
+        "meta-ads",
+        "ga4",
+        "mcp",
+        "reporting",
+        "coupler",
+        "analyze",
+        "cross",
+        "channel"
+      ],
+      "path": "skills/coupler-marketing-analytics/SKILL.md"
     },
     {
       "id": "course-upskilling-requests",
@@ -32812,6 +32886,38 @@
         "comments"
       ],
       "path": "skills/figma-automation/SKILL.md"
+    },
+    {
+      "id": "figma-designer",
+      "canonical_id": "figma-designer",
+      "name": "figma-designer",
+      "description": "Create structured Figma screens and libraries with ELAYA spacing, radius, semantic color variables, text styles, auto layout, and component states.",
+      "category": "uncategorized",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "ELAYADESIGN/AI-DESIGN-SKILLS",
+      "license": "MIT",
+      "license_source": "https://github.com/ELAYADESIGN/AI-DESIGN-SKILLS/blob/456d9e0d3e2d84c748bb143c6ca3d90c45e16213/LICENSE",
+      "tags": [
+        "figma",
+        "designer"
+      ],
+      "triggers": [
+        "figma",
+        "designer",
+        "structured",
+        "screens",
+        "libraries",
+        "elaya",
+        "spacing",
+        "radius",
+        "semantic",
+        "color",
+        "variables",
+        "text"
+      ],
+      "path": "skills/figma-designer/SKILL.md"
     },
     {
       "id": "file-organizer",
@@ -46394,6 +46500,38 @@
       "path": "skills/landing-page/SKILL.md"
     },
     {
+      "id": "landing-page-design",
+      "canonical_id": "landing-page-design",
+      "name": "landing-page-design",
+      "description": "Plan and build conversion-focused landing pages with intake, proof-based copy, explicit page structure, and the ELAYA visual system.",
+      "category": "uncategorized",
+      "risk": "critical",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "ELAYADESIGN/AI-DESIGN-SKILLS",
+      "license": "MIT",
+      "license_source": "https://github.com/ELAYADESIGN/AI-DESIGN-SKILLS/blob/456d9e0d3e2d84c748bb143c6ca3d90c45e16213/LICENSE",
+      "tags": [
+        "landing",
+        "page"
+      ],
+      "triggers": [
+        "landing",
+        "page",
+        "plan",
+        "conversion",
+        "pages",
+        "intake",
+        "proof",
+        "copy",
+        "explicit",
+        "structure",
+        "elaya",
+        "visual"
+      ],
+      "path": "skills/landing-page-design/SKILL.md"
+    },
+    {
       "id": "landing-page-generator",
       "canonical_id": "landing-page-generator",
       "name": "landing-page-generator",
@@ -55169,6 +55307,38 @@
       "path": "skills/n8n-workflow-patterns/SKILL.md"
     },
     {
+      "id": "nano-settlement-verify",
+      "canonical_id": "nano-settlement-verify",
+      "name": "nano-settlement-verify",
+      "description": "Check that a Nano (XNO) payment settled before a seller serves a paid call: one inline read-only script asks a public node about a send block and returns a verdict. No seed, no wallet.",
+      "category": "finance",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "nano",
+        "xno",
+        "payments",
+        "settlement",
+        "x402"
+      ],
+      "triggers": [
+        "nano",
+        "xno",
+        "payments",
+        "settlement",
+        "x402",
+        "verify",
+        "check",
+        "payment",
+        "settled",
+        "before",
+        "seller",
+        "serves"
+      ],
+      "path": "skills/nano-settlement-verify/SKILL.md"
+    },
+    {
       "id": "nanobanana-ppt-skills",
       "canonical_id": "nanobanana-ppt-skills",
       "name": "nanobanana-ppt-skills",
@@ -61001,14 +61171,14 @@
       "id": "pixeltable",
       "canonical_id": "pixeltable",
       "name": "pixeltable",
-      "description": "Build Pixeltable apps in app.py with tables, computed columns, embedding search, and HTTP routes. Use for RAG, media pipelines, and tool-calling agents.",
+      "description": "Build Pixeltable apps for multimodal RAG, video and image search, audio transcription, agent memory, embeddings stored with the data, incremental pipelines, dataset versioning, and tool-calling agents.",
       "category": "databases",
       "risk": "critical",
       "source": "community",
       "source_type": "official",
       "source_repo": "pixeltable/pixeltable-skill",
       "license": "Apache-2.0",
-      "license_source": "https://github.com/pixeltable/pixeltable-skill/blob/main/LICENSE",
+      "license_source": "https://github.com/pixeltable/pixeltable-skill/blob/9296e22ad083307ac983217eef8e62f488409c67/LICENSE",
       "tags": [
         "pixeltable",
         "multimodal",
@@ -61025,11 +61195,11 @@
         "computed-columns",
         "vector-search",
         "apps",
-        "app",
-        "py",
-        "tables",
-        "computed",
-        "columns"
+        "video",
+        "image",
+        "search",
+        "audio",
+        "transcription"
       ],
       "path": "skills/pixeltable/SKILL.md"
     },
@@ -71578,6 +71748,39 @@
       "path": "skills/sequence-psychologist/SKILL.md"
     },
     {
+      "id": "sequenzy-email-marketing",
+      "canonical_id": "sequenzy-email-marketing",
+      "name": "sequenzy-email-marketing",
+      "description": "Operate Sequenzy email campaigns through an authorized CLI or MCP connection: inspect audiences, prepare drafts, schedule approved sends, and verify delivery results.",
+      "category": "marketing",
+      "risk": "critical",
+      "source": "https://github.com/Sequenzy/skills/tree/eba0df500fc71489b115044ebb97e63de32bf61a/skills/sequenzy-email-marketing",
+      "source_type": "community",
+      "source_repo": "Sequenzy/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/Sequenzy/skills/blob/eba0df500fc71489b115044ebb97e63de32bf61a/LICENSE",
+      "tags": [
+        "email-marketing",
+        "campaigns",
+        "mcp"
+      ],
+      "triggers": [
+        "email-marketing",
+        "campaigns",
+        "mcp",
+        "sequenzy",
+        "email",
+        "marketing",
+        "operate",
+        "through",
+        "authorized",
+        "cli",
+        "connection",
+        "inspect"
+      ],
+      "path": "skills/sequenzy-email-marketing/SKILL.md"
+    },
+    {
       "id": "serply-search-mcp",
       "canonical_id": "serply-search-mcp",
       "name": "serply-search-mcp",
@@ -75052,7 +75255,7 @@
       "id": "stageshow",
       "canonical_id": "stageshow",
       "name": "stageshow",
-      "description": "Create React product illustrations and cursor demos using a reusable UI kit, examples, motion guidance, and visual verification tools.",
+      "description": "Use when a user asks for a React product illustration, animated walkthrough, product demo, or cursor-led UI animation. Build from the reusable UI kit and verify the result in the browser.",
       "category": "web-development",
       "risk": "critical",
       "source": "community",
@@ -75065,17 +75268,17 @@
       ],
       "triggers": [
         "stageshow",
+        "user",
+        "asks",
         "react",
         "product",
-        "illustrations",
+        "illustration",
+        "animated",
+        "walkthrough",
+        "demo",
         "cursor",
-        "demos",
-        "reusable",
-        "ui",
-        "kit",
-        "examples",
-        "motion",
-        "guidance"
+        "led",
+        "ui"
       ],
       "path": "skills/stageshow/SKILL.md"
     },
@@ -81786,7 +81989,7 @@
       "source_type": "community",
       "source_repo": "heydamir/unslop",
       "license": "CC-BY-4.0",
-      "license_source": "https://github.com/heydamir/unslop/blob/1d13095e4bef6ad6c74f1dd828d84c4ba309a4dc/LICENSE",
+      "license_source": "https://github.com/heydamir/unslop/blob/a6f121eee5f29c2f74976b75456feae8b66afb3a/LICENSE",
       "tags": [
         "unslop",
         "ui"

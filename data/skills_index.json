@@ -12238,6 +12238,40 @@
     ]
   },
   {
+    "id": "bowmark",
+    "path": "skills/bowmark",
+    "category": "mcp",
+    "name": "bowmark",
+    "description": "Use Bowmark when a task depends on what a live website shows right now: current prices, availability or stock, fares and quotes, a site search, or data behind a form or a login. The agent writes a short JavaScript script against typed site functions and gets typed results back.",
+    "risk": "critical",
+    "source": "https://github.com/bowmark-ai/skill/tree/a872ed29015c7fec61a24c6d21d0d47cbaf2b73b/bowmark",
+    "date_added": "2026-11-03",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "bowmark-ai/skill",
+    "license": "MIT",
+    "license_source": "https://github.com/bowmark-ai/skill/blob/a872ed29015c7fec61a24c6d21d0d47cbaf2b73b/LICENSE",
+    "tags": [
+      "mcp",
+      "web-data",
+      "live-websites",
+      "prices",
+      "availability",
+      "typed-functions"
+    ]
+  },
+  {
     "id": "box-automation",
     "path": "skills/box-automation",
     "category": "productivity",
@@ -14270,7 +14304,7 @@
     "path": "skills/career-ops",
     "category": "productivity",
     "name": "career-ops",
-    "description": "Multi-CLI job-search command center: evaluate offers, scan portals, tailor CVs, track applications, prep interviews. Invoke per mode.",
+    "description": "Open-source AI job search agent for AI coding CLIs: evaluate offers, scan portals, tailor CVs, track applications, prep interviews. Invoke per mode.",
     "risk": "safe",
     "source": "https://github.com/career-ops-hq/career-ops",
     "date_added": "2026-09-20",
@@ -18876,6 +18910,42 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "coupler-marketing-analytics",
+    "path": "skills/coupler-marketing-analytics",
+    "category": "marketing",
+    "name": "coupler-marketing-analytics",
+    "description": "Analyze cross-channel marketing performance from live Coupler.io data through its hosted MCP server: channel and campaign comparison, ROI, anomalies and budget insights.",
+    "risk": "critical",
+    "source": "https://github.com/coupler-io/skills/tree/d25f3b33c62682049577af3e2e96e3efcdf7867b/marketing-and-ads/marketing-analytics",
+    "date_added": "2026-10-27",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "coupler-io/skills",
+    "license": "MIT",
+    "license_source": "https://github.com/coupler-io/skills/blob/d25f3b33c62682049577af3e2e96e3efcdf7867b/LICENSE",
+    "tags": [
+      "marketing",
+      "analytics",
+      "ppc",
+      "google-ads",
+      "meta-ads",
+      "ga4",
+      "mcp",
+      "reporting"
+    ]
   },
   {
     "id": "course-upskilling-requests",
@@ -27567,6 +27637,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "figma-designer",
+    "path": "skills/figma-designer",
+    "category": "uncategorized",
+    "name": "figma-designer",
+    "description": "Create structured Figma screens and libraries with ELAYA spacing, radius, semantic color variables, text styles, auto layout, and component states.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-11-03",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "ELAYADESIGN/AI-DESIGN-SKILLS",
+    "license": "MIT",
+    "license_source": "https://github.com/ELAYADESIGN/AI-DESIGN-SKILLS/blob/456d9e0d3e2d84c748bb143c6ca3d90c45e16213/LICENSE"
   },
   {
     "id": "file-organizer",
@@ -39746,6 +39842,32 @@
     ]
   },
   {
+    "id": "landing-page-design",
+    "path": "skills/landing-page-design",
+    "category": "uncategorized",
+    "name": "landing-page-design",
+    "description": "Plan and build conversion-focused landing pages with intake, proof-based copy, explicit page structure, and the ELAYA visual system.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-11-03",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "ELAYADESIGN/AI-DESIGN-SKILLS",
+    "license": "MIT",
+    "license_source": "https://github.com/ELAYADESIGN/AI-DESIGN-SKILLS/blob/456d9e0d3e2d84c748bb143c6ca3d90c45e16213/LICENSE"
+  },
+  {
     "id": "landing-page-generator",
     "path": "skills/landing-page-generator",
     "category": "front-end",
@@ -47381,6 +47503,36 @@
     }
   },
   {
+    "id": "nano-settlement-verify",
+    "path": "skills/nano-settlement-verify",
+    "category": "finance",
+    "name": "nano-settlement-verify",
+    "description": "Check that a Nano (XNO) payment settled before a seller serves a paid call: one inline read-only script asks a public node about a send block and returns a verdict. No seed, no wallet.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-11-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "nano",
+      "xno",
+      "payments",
+      "settlement",
+      "x402"
+    ]
+  },
+  {
     "id": "nanobanana-ppt-skills",
     "path": "skills/nanobanana-ppt-skills",
     "category": "presentation-processing",
@@ -52472,7 +52624,7 @@
     "path": "skills/pixeltable",
     "category": "databases",
     "name": "pixeltable",
-    "description": "Build Pixeltable apps in app.py with tables, computed columns, embedding search, and HTTP routes. Use for RAG, media pipelines, and tool-calling agents.",
+    "description": "Build Pixeltable apps for multimodal RAG, video and image search, audio transcription, agent memory, embeddings stored with the data, incremental pipelines, dataset versioning, and tool-calling agents.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-10-20",
@@ -52491,7 +52643,7 @@
     "source_type": "official",
     "source_repo": "pixeltable/pixeltable-skill",
     "license": "Apache-2.0",
-    "license_source": "https://github.com/pixeltable/pixeltable-skill/blob/main/LICENSE",
+    "license_source": "https://github.com/pixeltable/pixeltable-skill/blob/9296e22ad083307ac983217eef8e62f488409c67/LICENSE",
     "tags": [
       "pixeltable",
       "multimodal",
@@ -61716,6 +61868,37 @@
     }
   },
   {
+    "id": "sequenzy-email-marketing",
+    "path": "skills/sequenzy-email-marketing",
+    "category": "marketing",
+    "name": "sequenzy-email-marketing",
+    "description": "Operate Sequenzy email campaigns through an authorized CLI or MCP connection: inspect audiences, prepare drafts, schedule approved sends, and verify delivery results.",
+    "risk": "critical",
+    "source": "https://github.com/Sequenzy/skills/tree/eba0df500fc71489b115044ebb97e63de32bf61a/skills/sequenzy-email-marketing",
+    "date_added": "2026-11-02",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "Sequenzy/skills",
+    "license": "MIT",
+    "license_source": "https://github.com/Sequenzy/skills/blob/eba0df500fc71489b115044ebb97e63de32bf61a/LICENSE",
+    "tags": [
+      "email-marketing",
+      "campaigns",
+      "mcp"
+    ]
+  },
+  {
     "id": "serply-search-mcp",
     "path": "skills/serply-search-mcp",
     "category": "mcp",
@@ -64917,7 +65100,7 @@
     "path": "skills/stageshow",
     "category": "web-development",
     "name": "stageshow",
-    "description": "Create React product illustrations and cursor demos using a reusable UI kit, examples, motion guidance, and visual verification tools.",
+    "description": "Use when a user asks for a React product illustration, animated walkthrough, product demo, or cursor-led UI animation. Build from the reusable UI kit and verify the result in the browser.",
     "risk": "critical",
     "source": "community",
     "date_added": "2026-11-01",
@@ -70732,7 +70915,7 @@
     "source_type": "community",
     "source_repo": "heydamir/unslop",
     "license": "CC-BY-4.0",
-    "license_source": "https://github.com/heydamir/unslop/blob/1d13095e4bef6ad6c74f1dd828d84c4ba309a4dc/LICENSE"
+    "license_source": "https://github.com/heydamir/unslop/blob/a6f121eee5f29c2f74976b75456feae8b66afb3a/LICENSE"
   },
   {
     "id": "unsloth-finetuning",

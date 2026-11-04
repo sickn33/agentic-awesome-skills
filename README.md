@@ -1,13 +1,13 @@
-<!-- registry-sync: version=20.4.0; skills=2917; stars=49013; updated_at=2026-11-02T08:26:20+00:00 -->
+<!-- registry-sync: version=20.5.0; skills=2923; stars=49113; updated_at=2026-11-04T05:06:21+00:00 -->
 # Agentic Awesome Skills — AI Skills & AAS Core
 
 > **Find reusable instructions for your project, inspect their complete files, and keep an exact skill set you can review and reuse.**
 
-Agentic Awesome Skills is a library of 2,917+ installable `SKILL.md` playbooks for Claude Code, Codex, Cursor, Gemini CLI and other AI coding agents. AAS Core helps Codex or Claude search the complete local catalog, record the skills the agent chooses, and preview a plan you can inspect before changing a target. Core does not rank or recommend skills.
+Agentic Awesome Skills is a library of 2,923+ installable `SKILL.md` playbooks for Claude Code, Codex, Cursor, Gemini CLI and other AI coding agents. AAS Core helps Codex or Claude search the complete local catalog, record the skills the agent chooses, and preview a plan you can inspect before changing a target. Core does not rank or recommend skills.
 
 **Start here:** [Explore the skill catalog](https://aaskills.tech/core/) · [Codex setup](https://aaskills.tech/docs/codex-cli-skills/) · [Claude Code setup](https://aaskills.tech/docs/claude-code-skills/) · [Install skills directly](#installation)
 
-**Current release: V20.4.0.** AAS Core supports local catalog inspection, agent-owned selection, stack validation, and plan preview. Apply and recovery remain experimental. [Read the AAS Core preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/v20.4.0/docs/users/aas-core.md) for setup and exact trust boundaries.
+**Current release: V20.5.0.** AAS Core supports local catalog inspection, agent-owned selection, stack validation, and plan preview. Apply and recovery remain experimental. [Read the AAS Core preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/v20.5.0/docs/users/aas-core.md) for setup and exact trust boundaries.
 
 This README tracks `main`. Features listed under [Unreleased](CHANGELOG.md#unreleased) require a later release; the versioned guide describes the published package.
 
@@ -37,7 +37,7 @@ This is an independent community project, not affiliated with or endorsed by Goo
 - [Choose Your Tool](#choose-your-tool)
 - [Recommended Specialized Plugins](#recommended-specialized-plugins)
 - [Bundles & Workflows](#bundles--workflows)
-- [Browse 2,917+ Skills](#browse-2917-skills)
+- [Browse 2,923+ Skills](#browse-2923-skills)
 - [Troubleshooting](#troubleshooting)
 - [Stable Skills Manifest v1](#stable-skills-manifest-v1)
 - [Contributing](#contributing)
@@ -90,7 +90,7 @@ Codex or Claude inspects your project and chooses exact skills. Every current ca
 > [!IMPORTANT]
 > Structural and identity validity does not certify semantic fit, compatibility, setup correctness, operational safety, or safety to apply. Apply and recovery require experimental opt-in and remain outside the supported preview.
 
-The [Workbench](https://aaskills.tech/workbench) reviews stack and plan artifacts in browser memory without accessing your filesystem. See the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v20.4.0/docs/users/aas-core.md) for tool contracts, capability coverage, and limits.
+The [Workbench](https://aaskills.tech/workbench) reviews stack and plan artifacts in browser memory without accessing your filesystem. See the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v20.5.0/docs/users/aas-core.md) for tool contracts, capability coverage, and limits.
 
 ## Installation
 
@@ -99,22 +99,22 @@ The [Workbench](https://aaskills.tech/workbench) reviews stack and plan artifact
 Start with AAS Core in Codex or Claude. Configure the local MCP using the [Codex](docs/users/codex-cli-skills.md) or [Claude](docs/users/claude-code-skills.md) guide. With the MCP available, ask the agent to inspect your project, compare relevant skills, and save the exact selection. Then validate its manifest and review the resulting plan before any installation. The first configuration command previews a change and returns an approval digest:
 
 ```bash
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@20.4.0 -- aas mcp configure \
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@20.5.0 -- aas mcp configure \
   --host codex \
   --scope user \
   --config /absolute/path/to/codex/config.toml \
   --cache-root /absolute/path/to/aas-cache
 ```
 
-Use `--host claude` and its configuration path for Claude. The [Core setup guide](https://github.com/sickn33/agentic-awesome-skills/blob/v20.4.0/docs/users/aas-core.md#configure-the-local-mcp) explains approval, reconnection, validation, and planning. To hand the reviewed IDs to the direct installer, use `aas stack install-preview` as described in the [manifest handoff](docs/users/aas-core.md#use-the-reviewed-selection); that command only prepares a `--dry-run` preview and does not apply a Core plan.
+Use `--host claude` and its configuration path for Claude. The [Core setup guide](https://github.com/sickn33/agentic-awesome-skills/blob/v20.5.0/docs/users/aas-core.md#configure-the-local-mcp) explains approval, reconnection, validation, and planning. To hand the reviewed IDs to the direct installer, use `aas stack install-preview` as described in the [manifest handoff](docs/users/aas-core.md#use-the-reviewed-selection); that command only prepares a `--dry-run` preview and does not apply a Core plan.
 
 ### Install selected skills directly
 
 If you already know the IDs, preview a focused install into your host's skill directory:
 
 ```bash
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@20.4.0 -- \
-  agentic-awesome-skills --release 20.4.0 --path .agents/skills \
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@20.5.0 -- \
+  agentic-awesome-skills --release 20.5.0 --path .agents/skills \
   --skills brainstorming,systematic-debugging --dry-run
 ```
 
@@ -173,7 +173,7 @@ Bundles suggest related skills; workflows describe the order to use them. They a
 - [Workflows](docs/users/workflows.md) give ordered playbooks for planning, shipping, testing, and auditing; [workflow metadata](data/workflows.json) is available for integrations.
 - If too many installed skills overload Antigravity, follow the [selective activation guide](docs/users/agent-overload-recovery.md). For other hosts, preview a smaller exact install or use the installer's `--risk`, `--category`, and `--tags` filters.
 
-## Browse 2,917+ Skills
+## Browse 2,923+ Skills
 
 Explore the complete library in the [hosted catalog](https://aaskills.tech/) or [`CATALOG.md`](CATALOG.md). The canonical playbooks live in [`skills/`](skills/); [`skills_index.json`](skills_index.json) provides machine-readable discovery. Use [Getting Started](docs/users/getting-started.md) and [Usage](docs/users/usage.md) for first steps, or the [Workbench](https://aaskills.tech/workbench) to inspect a saved Core stack and plan in your browser.
 
@@ -181,7 +181,7 @@ For narrower comparisons, see [Claude Code skills](docs/users/best-claude-code-s
 
 ## Troubleshooting
 
-- [Core setup and trust boundaries](https://github.com/sickn33/agentic-awesome-skills/blob/v20.4.0/docs/users/aas-core.md)
+- [Core setup and trust boundaries](https://github.com/sickn33/agentic-awesome-skills/blob/v20.5.0/docs/users/aas-core.md)
 - [Installation and everyday use](docs/users/usage.md)
 - [Windows context and truncation recovery](docs/users/windows-truncation-recovery.md)
 - [Linux/macOS overload and selective activation](docs/users/agent-overload-recovery.md)
@@ -223,8 +223,6 @@ Key source families include:
 <summary><strong>Official Sources</strong></summary>
 
 ### Official Sources
-
-- **[coupler-io/skills](https://github.com/coupler-io/skills/tree/main/marketing-and-ads/marketing-analytics)**: MIT official source for the `coupler-marketing-analytics` skill - cross-channel marketing analysis (channel and campaign comparison, ROI, anomalies) on live Coupler.io data through the hosted Coupler.io MCP server.
 
 - **[fclairamb/solidping-plugin](https://github.com/fclairamb/solidping-plugin/tree/main/skills/solidping-monitoring)**: MIT official source for the `solidping` skill - uptime checks across 40+ types, results, incidents, diagnosis and status pages through the hosted SolidPing MCP server, with every write confirmed by the person first. SolidPing itself is AGPL-3.0.
 
@@ -360,6 +358,7 @@ Key source families include:
 - **[ces107/agent-forge](https://github.com/ces107/agent-forge)**: Source for `launch-check`.
 - **[commentkeyword/agent-toolkit](https://github.com/commentkeyword/agent-toolkit)**: Source for `comment-to-dm-cta`.
 - **[cooper-email/cooper-email](https://github.com/cooper-email/cooper-email)**: Source for `cooper-email`.
+- **[coupler-io/skills](https://github.com/coupler-io/skills)**: Source for `coupler-marketing-analytics`.
 - **[datawebot/datawebot-mcp](https://github.com/datawebot/datawebot-mcp)**: Source for `datawebot`.
 - **[doomsday-network/doom-pay](https://github.com/doomsday-network/doom-pay)**: Source for `doom-pay`.
 - **[doomsday-network/doomsday](https://github.com/doomsday-network/doomsday)**: Source for `doomsday-escrow`.
@@ -386,8 +385,6 @@ Key source families include:
 <summary><strong>Community Contributors & Source Repositories</strong></summary>
 
 ### Community Contributors
-
-- **[ELAYADESIGN/AI-DESIGN-SKILLS](https://github.com/ELAYADESIGN/AI-DESIGN-SKILLS)**: MIT source for `figma-designer` and `landing-page-design`, covering structured Figma tokens/components and conversion-focused landing pages.
 
 - **[timini/agentic-verification](https://github.com/timini/agentic-verification)**: MIT source for the `agentic-verify` and `agentic-test-audit` skills - check a Python change by running every mutant of the changed lines and writing tests until they catch them, and audit a pytest suite for gaps, flaky and slow tests, and removal candidates checked on held-out mutants.
 - **[UmarSiddiqui/obsess](https://github.com/UmarSiddiqui/obsess)**: MIT source for the `obsess` skill - a bounded perfectionist loop for one target that keeps the best evidence-backed attempt and stops on an attempt or time budget.
@@ -679,9 +676,11 @@ Key source families include:
 - **[bartdudzic/keepmacawake](https://github.com/bartdudzic/keepmacawake)**: Source for `keepmacawake`.
 - **[benjitaylor/skills](https://github.com/benjitaylor/skills)**: Source for `stageshow`.
 - **[blockvectra/agent-quickstart](https://github.com/blockvectra/agent-quickstart)**: Source for `blockvectra-docs`.
+- **[bowmark-ai/skill](https://github.com/bowmark-ai/skill)**: Source for `bowmark`.
 - **[cclank/lanshu-create-ai-presenter-video](https://github.com/cclank/lanshu-create-ai-presenter-video)**: Source for `lanshu-create-ai-presenter-video`.
 - **[cis2042/ux3-product-design-harness](https://github.com/cis2042/ux3-product-design-harness)**: Source for `product-design-harness`.
 - **[clagoss/claude-code-para-disenadores](https://github.com/clagoss/claude-code-para-disenadores)**: Source for `design-token-contrast`.
+- **[elayadesign/ai-design-skills](https://github.com/elayadesign/ai-design-skills)**: Source for `figma-designer`, `landing-page-design`.
 - **[eli-alvarado/us-watchlist-alerts](https://github.com/eli-alvarado/us-watchlist-alerts)**: Source for `us-watchlist-alerts`.
 - **[harshmaur/apify-facebook-ads-library-scraper](https://github.com/harshmaur/apify-facebook-ads-library-scraper)**: Source for `apify-facebook-ads-library-scraper`.
 - **[harshmaur/apify-linkedin-jobs-scraper](https://github.com/harshmaur/apify-linkedin-jobs-scraper)**: Source for `apify-linkedin-jobs-scraper`.
@@ -698,6 +697,7 @@ Key source families include:
 - **[mksd0398/nitrogen](https://github.com/mksd0398/nitrogen)**: Source for `shopify-firebase-app`.
 - **[noamshorts22-prog/usage-engineer](https://github.com/noamshorts22-prog/usage-engineer)**: Source for `usage-engineer`.
 - **[paperandbeyond23-gif/restosignals-mcp](https://github.com/paperandbeyond23-gif/restosignals-mcp)**: Source for `restosignals`.
+- **[sequenzy/skills](https://github.com/sequenzy/skills)**: Source for `sequenzy-email-marketing`.
 - **[theguysaccount/syncbook-chatgpt](https://github.com/theguysaccount/syncbook-chatgpt)**: Source for `syncbook-discovery`.
 - **[tobemagic/deepseek-harness-bluebook](https://github.com/tobemagic/deepseek-harness-bluebook)**: Source for `bluebook-writing`.
 - **[ukorvl/lightweight-charts-react-components](https://github.com/ukorvl/lightweight-charts-react-components)**: Source for `lightweight-charts-react-components`.
@@ -743,8 +743,8 @@ Contributors ranked by the number of commits.
 | 4 | <a href="https://github.com/zinzied"><img src="https://github.com/zinzied.png?size=48" width="32" height="32" alt="" /></a> [@zinzied](https://github.com/zinzied) | 24 |
 | 5 | <a href="https://github.com/beatra-ai"><img src="https://github.com/beatra-ai.png?size=48" width="32" height="32" alt="" /></a> [@beatra-ai](https://github.com/beatra-ai) | 19 |
 | 6 | <a href="https://github.com/Prince-1652"><img src="https://github.com/Prince-1652.png?size=48" width="32" height="32" alt="" /></a> [@Prince-1652](https://github.com/Prince-1652) | 17 |
-| 7 | <a href="https://github.com/ssumanbiswas"><img src="https://github.com/ssumanbiswas.png?size=48" width="32" height="32" alt="" /></a> [@ssumanbiswas](https://github.com/ssumanbiswas) | 15 |
-| 8 | <a href="https://github.com/waynehamadi"><img src="https://github.com/waynehamadi.png?size=48" width="32" height="32" alt="" /></a> [@waynehamadi](https://github.com/waynehamadi) | 14 |
+| 7 | <a href="https://github.com/waynehamadi"><img src="https://github.com/waynehamadi.png?size=48" width="32" height="32" alt="" /></a> [@waynehamadi](https://github.com/waynehamadi) | 15 |
+| 8 | <a href="https://github.com/ssumanbiswas"><img src="https://github.com/ssumanbiswas.png?size=48" width="32" height="32" alt="" /></a> [@ssumanbiswas](https://github.com/ssumanbiswas) | 15 |
 | 9 | <a href="https://github.com/FrancoStino"><img src="https://github.com/FrancoStino.png?size=48" width="32" height="32" alt="" /></a> [@FrancoStino](https://github.com/FrancoStino) | 13 |
 | 10 | <a href="https://github.com/Dokhacgiakhoa"><img src="https://github.com/Dokhacgiakhoa.png?size=48" width="32" height="32" alt="" /></a> [@Dokhacgiakhoa](https://github.com/Dokhacgiakhoa) | 10 |
 

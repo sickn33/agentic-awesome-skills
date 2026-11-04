@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-02T08:26:20.000Z",
+  "generatedAt": "2026-11-04T05:06:21.000Z",
   "bundles": {
     "core-dev": {
       "description": "Core development skills across languages, frameworks, and backend/frontend fundamentals.",
@@ -155,6 +155,7 @@
         "bifrost-gateway",
         "bilig-workpaper",
         "biopython",
+        "bowmark",
         "browser-testing-with-devtools",
         "build-ui",
         "bullmq-specialist",
@@ -374,6 +375,7 @@
         "n8n-code-tool",
         "n8n-expression-syntax",
         "n8n-node-configuration",
+        "nano-settlement-verify",
         "native-data-fetching",
         "neon-ai-gateway",
         "neon-functions",
@@ -1004,6 +1006,7 @@
         "biopython",
         "blockvectra-docs",
         "board-governance",
+        "bowmark",
         "brand-kit-print-collateral",
         "break-ui",
         "browser-automation",
@@ -1032,6 +1035,7 @@
         "constant-time-analysis",
         "content-marketer",
         "contract-document-renewal",
+        "coupler-marketing-analytics",
         "course-upskilling-requests",
         "credit-cycle-analysis",
         "cross-platform-contract-propagation-audit",
@@ -1187,6 +1191,7 @@
         "performance-management",
         "petty-cash-management",
         "php-pro",
+        "pixeltable",
         "planetscale",
         "polars",
         "policy-acknowledgement",
