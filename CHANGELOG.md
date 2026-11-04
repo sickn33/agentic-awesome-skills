@@ -12,7 +12,8 @@ Release entry template
 Copy this structure above the latest release. Use the actual tag diff, lead
 with user-facing changes, and credit contributors with their GitHub handles
 and merged PR links. Write a short opening paragraph and keep at least one
-nonempty section. Omit sections with no entries and keep the order below.
+nonempty section. Use bullets for every section entry and indent continuation
+lines. Omit sections with no entries and keep the order below.
 
 ## [X.Y.Z] - YYYY-MM-DD - "Release title"
 

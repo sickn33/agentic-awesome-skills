@@ -611,6 +611,12 @@ function pushPreparedRelease(projectRoot,version,releaseBranch) {
   console.log(`[release] Next step: merge ${releaseBranch}, update local main, then run npm run release:publish -- ${version}`);
 }
 
+function githubReleaseTitle(tag, section) {
+  const heading = section.split(/\r?\n/, 1)[0];
+  const title = /^## \[[^\]]+\] - \d{4}-\d{2}-\d{2} - "([^"]+)"$/.exec(heading)?.[1];
+  return title ? `${tag} "${title}"` : tag;
+}
+
 function releaseNotesForPublication(section, skipNpm) {
   return skipNpm ? `> **npm unavailable:** This version is not published to npm; package distribution and full release alignment remain incomplete.\n\n${section}` : section;
 }
@@ -689,7 +695,7 @@ function publishRelease(projectRoot, version, { skipNpm = false } = {}) {
     console.log(`[release] ${tagName} already has a GitHub Release; verify its notes and npm status.`);
     return;
   }
-  const releaseArgs = ["release", "create", tagName, "--title", tagName, "--notes-file", notesPath];
+  const releaseArgs = ["release", "create", tagName, "--title", githubReleaseTitle(tagName, section), "--notes-file", notesPath];
   if (isPrereleaseVersion(version)) releaseArgs.push("--prerelease");
   runCommand("gh", releaseArgs, projectRoot);
 
@@ -729,6 +735,7 @@ function main() {
 module.exports = {
   parseArgs,
   publishNpmUnlessSkipped,
+  githubReleaseTitle,
   releaseNotesForPublication,
   requireSkippedNpmDisclosure,
   prepareRelease,

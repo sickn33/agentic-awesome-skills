@@ -27,6 +27,8 @@ const changelog = fs.readFileSync(path.join(__dirname, "../../../CHANGELOG.md"),
 const template = changelog.match(/^## \[X\.Y\.Z\] - YYYY-MM-DD[\s\S]*?(?=^-->)/m)[0];
 validateReleaseChangelog(template.replace("X.Y.Z", changelogVersion).replace("YYYY-MM-DD", "2026-11-05"), changelogVersion);
 
+assert.strictEqual(release.githubReleaseTitle(`v${changelogVersion}`, entry), `v${changelogVersion} "Release title"`);
+assert.strictEqual(release.githubReleaseTitle("v98.0.0", oldEntry), "v98.0.0");
 const extractedEntry = extractChangelogSection(`${entry}\n\n${oldEntry}\n`, changelogVersion);
 validateReleaseChangelog(extractedEntry, changelogVersion);
 validateReleaseChangelog(entry.replaceAll("\n", "\r\n"), changelogVersion);
@@ -41,6 +43,7 @@ for (const [invalid, expected] of [
   [[heading, summary, contributors, newSkills].join("\n\n"), /out of order/],
   [`${entry}\n\n${contributors}`, /duplicated/],
   [entry.replace("- Add a catalog skill.", ""), /must start with a bullet/],
+  [entry.replace("- Add a catalog skill.", "- Add a catalog skill.\n\nA stray paragraph."), /bullet entries only/],
 ]) {
   assert.throws(() => validateReleaseChangelog(invalid, changelogVersion), expected);
 }
