@@ -99,6 +99,12 @@ try {
     }
 
     const copy = document.documentElement.cloneNode(true);
+    // Freeze the browser's selected image before removing responsive markup.
+    const images = document.querySelectorAll("img");
+    copy.querySelectorAll("img").forEach((node, index) => {
+      const selected = images[index].currentSrc;
+      if (selected) node.setAttribute("src", selected);
+    });
     copy.querySelectorAll("script, noscript, link[rel='stylesheet'], link[rel='preload'], link[rel='modulepreload'], style").forEach((node) => node.remove());
     copy.querySelectorAll("[srcset]").forEach((node) => node.removeAttribute("srcset"));
     copy.querySelectorAll("source").forEach((node) => node.remove());

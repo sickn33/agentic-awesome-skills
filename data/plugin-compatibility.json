@@ -9190,6 +9190,25 @@
       "runtime_files": []
     },
     {
+      "id": "bowmark",
+      "path": "skills/bowmark",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "box-automation",
       "path": "skills/box-automation",
       "targets": {
@@ -13976,6 +13995,25 @@
     {
       "id": "cost-optimization",
       "path": "skills/cost-optimization",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "coupler-marketing-analytics",
+      "path": "skills/coupler-marketing-analytics",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -20951,6 +20989,25 @@
     {
       "id": "figma-automation",
       "path": "skills/figma-automation",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "figma-designer",
+      "path": "skills/figma-designer",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -29718,6 +29775,25 @@
       "runtime_files": []
     },
     {
+      "id": "landing-page-design",
+      "path": "skills/landing-page-design",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "landing-page-generator",
       "path": "skills/landing-page-generator",
       "targets": {
@@ -35221,6 +35297,25 @@
     {
       "id": "n8n-workflow-patterns",
       "path": "skills/n8n-workflow-patterns",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "nano-settlement-verify",
+      "path": "skills/nano-settlement-verify",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -45622,6 +45717,25 @@
       "runtime_files": []
     },
     {
+      "id": "sequenzy-email-marketing",
+      "path": "skills/sequenzy-email-marketing",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "serply-search-mcp",
       "path": "skills/serply-search-mcp",
       "targets": {
@@ -55922,10 +56036,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2917,
+    "total_skills": 2923,
     "supported": {
-      "codex": 2832,
-      "claude": 2852
+      "codex": 2838,
+      "claude": 2858
     },
     "blocked": {
       "codex": 85,

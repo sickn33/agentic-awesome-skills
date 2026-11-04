@@ -47,10 +47,10 @@ One row is one plan of one call. A provider's plan that covers two calls is two 
 | `pitch` | text | How the provider sells the row's call, quoted from the call's own page. When one page covers all the provider's calls, we quote the provider's own pitch. "[...]" marks a cut. |
 | `strengths` | list | The plan's strengths, which we work out from the plan's row. Each strength is a band that many plans of the same API are in. Strengths differ by API. We list and explain them under Strengths on datacircle.dev/fields. Only LinkedIn profiles and Find email have strengths so far. Blank (`[]` in the JSON) when the plan has none, and then the plan's page leaves Strengths out. Under Filters, you see only the rows with every strength you tick. |
 | `aggregators` | list, or empty | Aggregators like treg and Deepline sell the row's call. With one aggregator account, you reach many providers. Each cell gives what a call costs through the aggregator with your own provider key. The cell also gives what 1,000 items cost when you pay the aggregator and have no account at the provider: "treg: your key free, paid $1.50". We add "per 1,000 results" when the aggregator charges per result found. We say "paid, no fixed price" when the aggregator publishes no price. When an aggregator charges by the page, we divide a page's price by the most results one page holds. Then we multiply by 1,000. We write "paid, page size not stated" when the aggregator doesn't say how many results a page holds. Some aggregators list the call but don't say whether you pay them or use your own key. For those, we write "listed, how it's sold not stated". An aggregator may sell one of the provider's calls without saying which. Then the cell ends with "this call or another", the provider's name and "call": "this call or another Pubrio call". A cell says "none" when no aggregator we checked for the row's API sells the call. A blank cell (`null` in the JSON) means we haven't checked any aggregator for that API. We skip calls an aggregator doesn't list. In the JSON, each aggregator has these keys. `aggregator` is the aggregator's name. `url` is the aggregator's page for the call. `ownKey` is what a call costs there with your own key, or null when you can't use yours. `paid` is true when you can pay the aggregator. `paid` and `ownKey` are both null when the aggregator doesn't say how the call is sold. `callStated` is false when the aggregator doesn't say whether the call is this one or another of the provider's. `usd` is the aggregator's price in dollars for one `per`, or null when the aggregator sets no price. `perThousand` is the aggregator's price in dollars for 1,000. `per` is "call", "result" or "page". `resultsPerPage` is the most results a page holds, or null. |
-| `waterfall` | list, or empty | Some routers, like treg's, try one provider after another until one finds the answer. On a router's call, the Waterfall column lists each provider the router tries, in order. Each provider shows the router's name for the provider's call in brackets. Then we give the provider's price per 1,000 on this plan and how often the provider finds the answer. We add "misses billed" when the provider charges for a miss. When a provider charges by the page, we divide a page's price by the most results one page holds. Then we multiply by 1,000. We write "page size not stated" when the provider doesn't say how many results a page holds. The router publishes how often each provider finds an answer over all the router's calls. We assume each provider finds answers at that same rate on the calls the earlier providers miss. We leave the Waterfall column blank on calls with a single provider. In the JSON, each step has these keys. `provider` is the provider's name. `call` is the provider's call, which you can also make alone. `perThousand`, `per` and `resultsPerPage` mean the same as on a plan's row. `hitRate` is from 0 to 1, or null when the router gives none. `missesBilled` is true when the provider charges for a miss. |
+| `waterfall` | list, or empty | Some routers, like treg's, try one provider after another until one finds the answer. On a router's call, the Waterfall column lists each provider the router tries, in order. After each provider, we give in brackets the name the router uses for that provider's call. Then we give the provider's price per 1,000 on this plan and how often the provider finds the answer. For Validate email and Validate phone, we give how often the provider checks what you send. We count a check whether the provider's verdict is right or wrong. We add "misses billed" when the provider charges for a miss. For a provider that charges by the page, we divide a page's price by the most results one page holds. Then we multiply by 1,000. We write "page size not stated" when the provider doesn't say how many results a page holds. The router publishes how often each provider finds an answer over all the router's calls. We assume each provider finds answers at the published rate. We assume this even on calls where the earlier providers found nothing. We leave the Waterfall column blank on calls with a single provider. In the JSON, each provider in the Waterfall is a step with these keys. `provider` is the provider's name. `call` is the provider's call, which you can also make alone. `perThousand`, `per` and `resultsPerPage` mean the same as the keys of the same names on a plan's row. `hitRate` is from 0 to 1, or null when the router publishes no rate. `missesBilled` is true when the provider charges for a miss. |
 | `freshness`, `fieldFreshness` | `freshness`: text, or empty. `fieldFreshness`: object, or empty. | How old the answer may be, as the provider's pages say. "live": the provider gets the data at the moment you call. The provider reads sources like LinkedIn, company websites, job boards, search results, keyword data or a page you send. Or the provider finds or checks an email or phone number at the moment you call. Some providers keep each answer for an hour or less. They give the same answer to anyone who asks the same question in that time. We call a plan that keeps answers for an hour or less "live" too. Renidly, for example, keeps each answer for 20 minutes. "1 month" or "30 days": the provider answers from a copy and refreshes the copy as often as the value says. "as of 2025-11-13": from a copy last refreshed that day. "stored": from a copy with no date on the provider's pages. Some email or phone checks never ask the mail server or the carrier. They read only the format, the domain's DNS and the provider's own lists. We mark those checks "stored" too. Freshness is blank (`null` in the JSON) when the provider's pages don't say how fresh the answer is. Freshness is also blank when the pages don't agree with each other. Plans that answer from a copy are on the same sheet as the plans that read live. When the provider's pages give some fields a different freshness from the rest, we list those fields in brackets. `fieldFreshness` gives the freshness of each field in brackets. Bright Data's LinkedIn profile is "live (current title, jobs, schools: as of 2025-11-13)". LinkedIn put current title, jobs and schools behind a login wall. Bright Data serves those three fields from a copy. |
 | `history` | text, or empty | How far back the answers reach, on an API whose answers are dated. A company's funding rounds and open jobs are dated. "since 2016": back to 2016. "open only": only what is open now. "the last 7 days": a window that ends today. "no limit": every one ever. ", closed only" after a value: the closed ones alone. Blank (`null` in the JSON) when the provider's pages don't say, or when the answers aren't dated. |
-| `countries` | list, or empty | On Validate phone, the countries whose numbers the call checks, like "United States". On Business verification, the countries whose companies the call finds, like "France". We take them from the provider's pages. "Worldwide": the call covers any country. "Worldwide" also means the call covers over 100 countries. Blank (`null` in the JSON) until we read the countries on the provider's pages. Also blank when the provider's pages don't list the countries. Blank on every other API. |
+| `countries` | list, or empty | On Validate phone, the countries whose numbers the call checks, like "United States". On Business verification, Company enrichment, Company discovery, Company hierarchy, Company headcount and Similar companies, the countries of the companies found. On People search, Person enrichment and Find email, the countries whose people the call finds. We take them from the provider's pages. "Worldwide": the call covers any country. "Worldwide" also means the call covers over 100 countries. Blank (`null` in the JSON) until we read the countries on the provider's pages. Also blank when the provider's pages don't list the countries. Blank on every other API. |
 | `fullFamilyTree` | true/false, or empty | On Company hierarchy, this column says whether one call gives the whole family tree. The whole tree runs from the top parent down each branch. "yes" (`true` in the JSON): one call gives the whole tree, counting every page of results the call returns. "no" (`false`): one call gives part of the tree, like the parents or one level of subsidiaries. You call again for each company to get the rest. The column is blank (`null` in the JSON) until we read the provider's website. The column is also blank when the provider's website doesn't say. Always blank on every other API. |
 | `checks` | list, or empty | This column lists the checks each call makes, as the provider's pages describe them. You find this column on the Validate email and Validate phone sheets. On Find email, the column lists the checks a finder makes on an address before giving you the address. A finder that asks the mail server takes longer than a finder that doesn't. On an email, "format": the address is well formed. "mail servers": the domain has servers that take mail. "disposable domains": the call spots a domain on a list of throwaway domains. "role addresses": the call spots a shared address, like sales@. "mailbox": the call checks with the mail server that the mailbox exists. On a number, "numbering plan": the number fits the rules of the number's country. "carrier": the call finds the carrier the number is with today. If the owner moved the number to a new carrier, you see the new carrier. "line in service": the call checks with the network that the line is live. "messaging apps": the call checks with a messaging app, like WhatsApp, that the number has an account there. A call without "mailbox" doesn't check the mailbox. Such a call can pass an address that bounces. The column is blank (`null` in the JSON) until we read the provider's pages. Also blank when the provider's pages don't say. Always blank on every other API. |
 | `searchesIn` | text, or empty | This column says where the call looks for posts. We read where the call looks on the provider's pages. You find this column on the LinkedIn post search sheet. "LinkedIn's search": the call runs LinkedIn's own search. "Google's index": the call searches Google for LinkedIn posts. Google sets how many posts the call can find. New posts show up only after Google indexes them. "a search engine's index": the call searches another search engine for LinkedIn posts. We also mark a call "a search engine's index" when the provider's pages don't name the search engine. "the provider's own database": the call searches a copy of LinkedIn posts the provider keeps. We leave the column blank (`null` in the JSON) when the provider's pages don't say. We leave the column blank for every other API. |
@@ -266,20 +266,20 @@ The directory is a third-party snapshot, not an exhaustive or verified live mark
 DuckDB reads the JSON and the CSV as they are, with no setup:
 
 ```bash
-duckdb -c "SELECT provider, plan, billing, pay, currency, perThousand, score, page FROM 'datacircle.json' WHERE api = 'Employee email' AND billing != 'free' AND pay * exchangeRate <= 50 AND perThousand IS NOT NULL ORDER BY perThousand LIMIT 10"
+duckdb -c "SELECT provider, plan, billing, pay, currency, perThousand, score, page, docs FROM 'datacircle.json' WHERE api = 'Employee email' AND billing != 'free' AND pay * exchangeRate <= 50 AND perThousand IS NOT NULL ORDER BY perThousand LIMIT 10"
 ```
 
 The best scored plans of an API, with each part of the score:
 
 ```sql
-SELECT provider, plan, call, score, priceScore, dataScore, costToGetStartedScore, bundleScore, performanceScore, page
+SELECT provider, plan, call, score, priceScore, dataScore, costToGetStartedScore, bundleScore, performanceScore, page, docs
 FROM 'datacircle.json' WHERE api = 'Employee profile' AND score IS NOT NULL ORDER BY score DESC LIMIT 10;
 ```
 
 Every plan of one provider:
 
 ```sql
-SELECT api, plan, billing, pay, perThousand, page FROM 'datacircle.json' WHERE provider ILIKE '%fetchin%' ORDER BY api, perThousand;
+SELECT api, plan, billing, pay, perThousand, page, docs FROM 'datacircle.json' WHERE provider ILIKE '%fetchin%' ORDER BY api, perThousand;
 ```
 
 The cheapest paid plan per 1,000 of each API:
@@ -292,7 +292,7 @@ FROM 'datacircle.json' WHERE billing != 'free' AND perThousand IS NOT NULL GROUP
 Without DuckDB, with jq:
 
 ```bash
-jq '[.[] | select(.api == "Employee email" and .billing != "free" and (.pay | type) == "number" and (.exchangeRate | type) == "number" and (.perThousand | type) == "number") | select(.pay * .exchangeRate <= 50)] | sort_by(.perThousand) | .[:10] | map({provider, plan, pay, currency, perThousand, score, page})' datacircle.json
+jq '[.[] | select(.api == "Employee email" and .billing != "free" and (.pay | type) == "number" and (.exchangeRate | type) == "number" and (.perThousand | type) == "number") | select(.pay * .exchangeRate <= 50)] | sort_by(.perThousand) | .[:10] | map({provider, plan, pay, currency, perThousand, score, page, docs})' datacircle.json
 ```
 
 Or Python:
@@ -309,7 +309,7 @@ found = sorted(
     key=lambda r: r["perThousand"],
 )[:10]
 for r in found:
-    print(r["provider"], r["plan"], r["pay"], r["currency"], r["perThousand"], r["score"], r["page"])
+    print(r["provider"], r["plan"], r["pay"], r["currency"], r["perThousand"], r["score"], r["page"], r["docs"])
 ```
 
 These examples exclude rows with missing or non-numeric pay, exchange rates or per-thousand prices; disclose those exclusions. The Python example assumes the top-level JSON list and download size were validated as described above. The SQL example likewise requires validated numeric types.
@@ -332,6 +332,7 @@ Each row's `page` is its plan's page on datacircle.dev, and `docs` the provider'
 - [Best Instagram API in 2026](https://datacircle.dev/best-instagram-api)
 - [Best Reddit API in 2026](https://datacircle.dev/best-reddit-api)
 - [Best Threads API in 2026](https://datacircle.dev/best-threads-api)
+- [Best SEO API in 2026](https://datacircle.dev/best-seo-api)
 - [Best LinkedIn profile API in 2026](https://datacircle.dev/best-linkedin-profile-api)
 - [Best email finder API in 2026](https://datacircle.dev/best-email-finder-api)
 - [Most accurate email finder API in 2026](https://datacircle.dev/most-accurate-email-finder-api)
@@ -364,6 +365,7 @@ Each row's `page` is its plan's page on datacircle.dev, and `docs` the provider'
 - [Best LinkedIn profile comment API in 2026](https://datacircle.dev/best-linkedin-profile-comment-api)
 - [Best LinkedIn profile reaction API in 2026](https://datacircle.dev/best-linkedin-profile-reaction-api)
 - [Best LinkedIn post repost API in 2026](https://datacircle.dev/best-linkedin-post-repost-api)
+- [Best similar jobs API in 2026](https://datacircle.dev/best-similar-jobs-api)
 - [Best company enrichment API in 2026](https://datacircle.dev/best-company-enrichment-api)
 - [Best people search API in 2026](https://datacircle.dev/best-people-search-api)
 - [Best company discovery API in 2026](https://datacircle.dev/best-company-discovery-api)
@@ -411,11 +413,14 @@ Each row's `page` is its plan's page on datacircle.dev, and `docs` the provider'
 - [Best GitHub profile API in 2026](https://datacircle.dev/best-github-profile-api)
 - [Best GitHub repository API in 2026](https://datacircle.dev/best-github-repository-api)
 - [Best GitHub user repository API in 2026](https://datacircle.dev/best-github-user-repository-api)
+- [Best Weibo user post API in 2026](https://datacircle.dev/best-weibo-user-post-api)
+- [Best Xiaohongshu note API in 2026](https://datacircle.dev/best-xiaohongshu-note-api)
 - [Best Facebook Ad Library API in 2026](https://datacircle.dev/best-facebook-ad-library-api)
 - [Best G2 review API in 2026](https://datacircle.dev/best-g2-review-api)
 - [Best Capterra review API in 2026](https://datacircle.dev/best-capterra-review-api)
 - [Best Trustpilot review API in 2026](https://datacircle.dev/best-trustpilot-review-api)
 - [Best Glassdoor review API in 2026](https://datacircle.dev/best-glassdoor-review-api)
+- [Best App Store API in 2026](https://datacircle.dev/best-app-store-api)
 - [Best App Store review API in 2026](https://datacircle.dev/best-app-store-review-api)
 - [Best Google Play API in 2026](https://datacircle.dev/best-google-play-api)
 - [Best Amazon product API in 2026](https://datacircle.dev/best-amazon-product-api)
@@ -426,6 +431,7 @@ Each row's `page` is its plan's page on datacircle.dev, and `docs` the provider'
 - [Best Zillow search API in 2026](https://datacircle.dev/best-zillow-search-api)
 - [Best Realtor.com search API in 2026](https://datacircle.dev/best-realtor-com-search-api)
 - [Best Realtor.com property API in 2026](https://datacircle.dev/best-realtor-com-property-api)
+- [Best App Store search API in 2026](https://datacircle.dev/best-app-store-search-api)
 - [Best ChatGPT scraper API in 2026](https://datacircle.dev/best-chatgpt-scraper-api)
 - [Best Gemini scraper API in 2026](https://datacircle.dev/best-gemini-scraper-api)
 - [Best business verification API in 2026](https://datacircle.dev/best-business-verification-api)
