@@ -1,6 +1,6 @@
 ---
 name: stageshow
-description: "Create React product illustrations and cursor demos using a reusable UI kit, examples, motion guidance, and visual verification tools."
+description: "Use when a user asks for a React product illustration, animated walkthrough, product demo, or cursor-led UI animation. Build from the reusable UI kit and verify the result in the browser."
 risk: critical
 source: community
 source_repo: benjitaylor/skills
@@ -18,6 +18,8 @@ Adapted from [benjitaylor/skills](https://github.com/benjitaylor/skills/tree/802
 ## When to Use
 
 Use for a requested illustrated product interface or animated walkthrough built in React. For general frontend implementation use a broader frontend design skill.
+
+For the local examples, follow the [playground setup](README.md). On macOS or Linux with Node 24 or later, the launcher serves the playground through Portless on local HTTP. On Windows or Node 20–23, open the local address printed by Vite.
 
 ## Limitations and safety
 

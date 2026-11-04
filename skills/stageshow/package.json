@@ -10,6 +10,7 @@
   },
   "scripts": {
     "dev": "node scripts/dev.mjs",
+    "test": "node --test scripts/dev.test.mjs",
     "typecheck": "tsc --noEmit -p playground",
     "build": "vite build playground --config playground/vite.config.ts",
     "check:css": "node scripts/class-clash.mjs --bundle teaching --bundle examples/looks examples teaching"
@@ -17,7 +18,7 @@
   "dependencies": {
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "lucide-react": "0.468.0"
+    "lucide-react": "0.577.0"
   },
   "devDependencies": {
     "@types/react": "^18.3.1",
@@ -29,6 +30,6 @@
     "postcss": "^8.5.6"
   },
   "optionalDependencies": {
-    "portless": "^0.4.1"
+    "portless": "0.15.7"
   }
 }

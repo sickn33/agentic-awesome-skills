@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [20.5.0] - 2026-11-04 - "Connected Analytics and Design Workflows"
+
+### New skills
+
+- Add Bowmark for live website data and Coupler.io for cross-channel marketing analytics.
+- Add Sequenzy for email campaign operations and Nano settlement verification for sellers.
+- Add ELAYA Figma and landing-page design workflows.
+
+### Improvements
+
+- Refresh Pixeltable, Datacircle and Career Ops. Preserve responsive images in Unslop snapshots.
+- Add a contribution hub and release archive to the hosted catalog.
+- Update the catalog's list rendering dependency and the Remotion fixture's Zod pin.
+
+- Update Stageshow’s icons and local playground launcher. Portless runs on Node 24 and later on macOS and Linux. The launcher uses Vite directly on Windows and on Node 20–23.
+
+### Contributors
+
+- @dhyabi2 for Nano settlement verification ([#2244](https://github.com/sickn33/agentic-awesome-skills/pull/2244)).
+- @polnikale for Sequenzy ([#2246](https://github.com/sickn33/agentic-awesome-skills/pull/2246)).
+- @pierrebrunelle for Pixeltable ([#2248](https://github.com/sickn33/agentic-awesome-skills/pull/2248)).
+- @Metroxe for Bowmark ([#2252](https://github.com/sickn33/agentic-awesome-skills/pull/2252)).
+- @waynehamadi for Datacircle ([#2253](https://github.com/sickn33/agentic-awesome-skills/pull/2253)).
+- @zeeshangulzar for Coupler.io ([#2254](https://github.com/sickn33/agentic-awesome-skills/pull/2254)).
+- @santifer for Career Ops ([#2255](https://github.com/sickn33/agentic-awesome-skills/pull/2255)).
+
+---
+
 ## [20.4.0] - 2026-11-02 - "Design, Motion & Production Tools"
 
 > Adds **33** catalog skills, bringing the release catalog to **2,917** skills. GitHub and the hosted catalog are the publication targets; npm publication is intentionally excluded because account access is unavailable.
