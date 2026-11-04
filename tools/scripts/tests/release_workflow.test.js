@@ -5,6 +5,7 @@ const path = require("path");
 const { spawnSync } = require("child_process");
 
 const release = require("../release_workflow.js");
+const { validateReleaseChangelog } = require("../release_changelog.cjs");
 
 assert.strictEqual(release.parseArgs(["publish", "20.3.0", "--skip-npm"]).skipNpm, true);
 assert.strictEqual(release.parseArgs(["publish", "20.3.0"]).skipNpm, undefined);
@@ -14,6 +15,36 @@ assert.match(release.releaseNotesForPublication("notes", true), /not published t
 assert.strictEqual(release.releaseNotesForPublication("notes", false), "notes");
 release.requireSkippedNpmDisclosure(release.releaseNotesForPublication("notes", true));
 assert.throws(() => release.requireSkippedNpmDisclosure("notes"), /does not disclose/);
+const changelogVersion = "99.0.0-rc.1";
+const heading = `## [${changelogVersion}] - 2026-11-05 - "Release title"`;
+const summary = "Explore the catalog updates.";
+const newSkills = "### New skills\n\n- Add a catalog skill.";
+const contributors = "### Contributors\n\n- Credit a contributor.";
+const entry = [heading, summary, newSkills, contributors].join("\n\n");
+const oldEntry = "## [98.0.0] - 2026-11-01\n\n### Added\n\n- Legacy formatting.";
+const { extractChangelogSection } = require("../../lib/workflow-contract");
+const changelog = fs.readFileSync(path.join(__dirname, "../../../CHANGELOG.md"), "utf8");
+const template = changelog.match(/^## \[X\.Y\.Z\] - YYYY-MM-DD[\s\S]*?(?=^-->)/m)[0];
+validateReleaseChangelog(template.replace("X.Y.Z", changelogVersion).replace("YYYY-MM-DD", "2026-11-05"), changelogVersion);
+
+const extractedEntry = extractChangelogSection(`${entry}\n\n${oldEntry}\n`, changelogVersion);
+validateReleaseChangelog(extractedEntry, changelogVersion);
+validateReleaseChangelog(entry.replaceAll("\n", "\r\n"), changelogVersion);
+assert.strictEqual(release.releaseNotesForPublication(extractedEntry, false), `${entry}\n`);
+
+for (const [invalid, expected] of [
+  [entry.replace(' - "Release title"', ""), /use the heading/],
+  [entry.replace("2026-11-05", "2026-02-30"), /valid release date/],
+  [entry.replace(summary, ""), /summary paragraph/],
+  [[heading, summary].join("\n\n"), /at least one section/],
+  [entry.replace("### New skills", "### Added"), /unexpected heading/],
+  [[heading, summary, contributors, newSkills].join("\n\n"), /out of order/],
+  [`${entry}\n\n${contributors}`, /duplicated/],
+  [entry.replace("- Add a catalog skill.", ""), /must start with a bullet/],
+]) {
+  assert.throws(() => validateReleaseChangelog(invalid, changelogVersion), expected);
+}
+
 const publicationCalls = [];
 const publicationDependencies = {
   dispatch: (...args) => publicationCalls.push(["dispatch", ...args]),
@@ -411,4 +442,23 @@ console.log("Release workflow tests passed.");
  assert.equal(cleaned,true);assert.equal(fs.readFileSync(path.join(root,'snapshot.txt'),'utf8'),'old');assert.equal(git(root,'status','--porcelain'),'');
  assert.throws(()=>release.runReleasePreflight(root,{...deps,suite:()=>{throw Error('validation failed');}}),/validation failed/);
  fs.rmSync(root,{recursive:true,force:true});
+}
+
+// Preparation rejects a malformed target entry while the source checkout is untouched.
+{
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "release-changelog-source-"));
+  try {
+    git(root, "init", "-b", "main");
+    git(root, "config", "user.name", "Tests");
+    git(root, "config", "user.email", "tests@example.com");
+    fs.writeFileSync(path.join(root, "CHANGELOG.md"), entry.replace("### New skills", "### Added"));
+    git(root, "add", "CHANGELOG.md");
+    git(root, "commit", "-m", "fixture");
+
+    assert.throws(() => release.prepareRelease(root, changelogVersion, "/unused-state"), /unexpected heading "### Added"/);
+    assert.strictEqual(git(root, "branch", "--list"), "* main");
+    assert.strictEqual(git(root, "status", "--porcelain"), "");
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
 }

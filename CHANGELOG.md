@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+<!--
+Release entry template
+Copy this structure above the latest release. Use the actual tag diff, lead
+with user-facing changes, and credit contributors with their GitHub handles
+and merged PR links. Write a short opening paragraph and keep at least one
+nonempty section. Omit sections with no entries and keep the order below.
+
+## [X.Y.Z] - YYYY-MM-DD - "Release title"
+
+Summarize the most important change for users in one short paragraph.
+
+### New skills
+
+- Describe the new catalog skills and what they enable.
+
+### Improvements
+
+- Describe changes to existing skills, Core, or the site.
+
+### Security and distribution
+
+- Describe security fixes, compatibility changes, or distribution updates.
+
+### Contributors
+
+- Credit each contributor with their GitHub handle and merged PR link.
+-->
+
 ## [20.5.0] - 2026-11-04 - "Connected Analytics and Design Workflows"
 
 ### New skills
