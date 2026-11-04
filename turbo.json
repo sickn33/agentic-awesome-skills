@@ -18,6 +18,8 @@
         "docs/contributors/content-aliases.json",
         "data/**",
         "skills_index.json",
+        "CHANGELOG.md",
+        "tools/scripts/release_changelog.cjs",
         "tools/lib/**",
         "tools/scripts/setup_web.js",
         "tools/scripts/web_ci.cjs"
@@ -57,6 +59,8 @@
         "docs/contributors/content-aliases.json",
         "data/**",
         "skills_index.json",
+        "CHANGELOG.md",
+        "tools/scripts/release_changelog.cjs",
         "tools/lib/**",
         "tools/scripts/setup_web.js",
         "tools/scripts/web_ci.cjs",

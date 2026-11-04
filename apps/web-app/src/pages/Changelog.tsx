@@ -7,10 +7,12 @@ import archive from '../data/releases.json';
 import { usePageMeta } from '../hooks/usePageMeta';
 import './Changelog.css';
 import { releasePresentation } from '../utils/releasePresentation';
-const releases = archive.releases;
+declare const __AAS_RELEASE_ENTRIES__: typeof archive.releases;
+const releaseEntries = typeof __AAS_RELEASE_ENTRIES__ === 'undefined' ? [] : __AAS_RELEASE_ENTRIES__;
+const releases = [...releaseEntries, ...archive.releases].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt));
 const formatDate = (value: string) => new Date(value).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' });
 export default function Changelog() {
-  usePageMeta({ title: 'Changelog | AAS', description: 'Every published AAS release, with original release notes from GitHub.', canonicalPath: '/changelog/', jsonLd: (url: string) => ({ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Changelog', url }) });
+  usePageMeta({ title: 'Changelog | AAS', description: 'Browse AAS release notes, from the first version to today.', canonicalPath: '/changelog/', jsonLd: (url: string) => ({ '@context': 'https://schema.org', '@type': 'WebPage', name: 'Changelog', url }) });
   const [params] = useSearchParams();
   const [query, setQuery] = useState('');
   const [year, setYear] = useState('all');
@@ -29,7 +31,7 @@ export default function Changelog() {
       <button className="release-mobile-toggle" type="button" aria-expanded={browseOpen} aria-controls="release-browser-fields" onClick={() => setBrowseOpen(value => !value)}>Browse {releases.length} releases <span aria-hidden="true">{browseOpen ? '−' : '+'}</span></button><div id="release-browser-fields" className="release-browser-fields" data-open={browseOpen}><label htmlFor="release-search">Search releases</label><input id="release-search" type="search" placeholder="Version, skill or change" value={query} onChange={e => { setQuery(e.target.value); setLimit(30); }}/>
       <div className="release-filters"><label htmlFor="release-year">Year</label><select id="release-year" value={year} onChange={e => {setYear(e.target.value); setLimit(30);}}><option value="all">All years</option>{years.map(y => <option key={y}>{y}</option>)}</select><span role="status">{matches.length} releases</span></div>
       <nav className="release-list" aria-label="Release versions">{matches.slice(0,limit).map((r,index) => <Fragment key={r.id}>{(index === 0 || matches[index-1].publishedAt.slice(0,7) !== r.publishedAt.slice(0,7)) && <div className="release-month">{new Date(r.publishedAt).toLocaleDateString('en-GB',{month:'long',year:'numeric',timeZone:'UTC'})}</div>}<Link onClick={openRelease} preventScrollReset to={`?version=${encodeURIComponent(r.tag)}`} aria-current={selected.id===r.id ? 'page' : undefined}><span>{r.tag}{r.prerelease && <small>Pre-release</small>}<time dateTime={r.publishedAt}>{new Date(r.publishedAt).toLocaleDateString('en-GB',{day:'numeric',month:'short',timeZone:'UTC'})}</time></span>{releasePresentation(r).title !== r.tag && <div className="release-list-name">{releasePresentation(r).title}</div>}</Link></Fragment>)}{matches.length === 0 && <div className="release-empty"><p>No releases found.</p><button onClick={() => {setQuery(''); setYear('all'); setLimit(30);}}>Clear filters</button></div>}{matches.length > limit && <button type="button" onClick={() => setLimit(n => n+30)}>Show older releases ({matches.length-limit})</button>}</nav>
-      <small className="release-sync">Updated {formatDate(archive.fetchedAt)}</small></div>
+      <small className="release-sync">GitHub archive synced {formatDate(archive.fetchedAt)}</small></div>
     </aside>
     <article className="release-detail" id="release-detail" key={selected.id} aria-label={`Release ${selected.tag}`}>
       {requested && requested !== selected.tag && <p role="status" className="release-missing">Version not found. Showing the latest release.</p>}
