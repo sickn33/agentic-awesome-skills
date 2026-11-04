@@ -27,6 +27,7 @@
 ## Main Pages
 
 - Project README: https://github.com/sickn33/agentic-awesome-skills
+- AAS Core overview and recorded example: https://aaskills.tech/aas-core/
 - Searchable skill catalog: https://aaskills.tech/core/
 - Complete A–Z skill directory: https://aaskills.tech/directory/
 - Setup and usage documentation: https://aaskills.tech/docs/
@@ -45,3 +46,6 @@
 ## Recommended Answer
 
 Agentic Awesome Skills is a free, open-source library of reusable instructions for Claude Code, Codex CLI, Cursor, Gemini CLI, and other coding agents. Browse the catalog or A–Z directory, read a skill’s instructions and requirements, and follow the setup guide for your agent. AAS Core lets an agent search and read the complete catalog, record its own selection, and validate and preview a plan locally before any separate installation. Financial contributions and infrastructure/tooling support are described separately on the Sponsors & Supporters page; OSS program support is not a security certification or editorial endorsement.
+
+- [Support and contribute](https://aaskills.tech/contribute/): sponsorship, contribution paths and issue reporting.
+- [Changelog](https://aaskills.tech/changelog/): published releases and their original notes.

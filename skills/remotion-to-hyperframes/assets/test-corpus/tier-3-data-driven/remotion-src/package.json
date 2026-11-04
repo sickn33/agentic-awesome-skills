@@ -10,10 +10,10 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "remotion": "4.0.539",
-    "zod": "4.6.6"
+    "zod": "4.6.7"
   },
-  "aasModification": "2026-11-01: pin reviewed Remotion fixture and patched Zod 4.6.6, including transitive copies (GHSA-mrhx-c7xc-m3w5)",
+  "aasModification": "2026-11-01: pin reviewed Remotion fixture and patched Zod 4.6.7, including transitive copies (GHSA-mrhx-c7xc-m3w5)",
   "overrides": {
-    "zod": "4.6.6"
+    "zod": "4.6.7"
   }
 }

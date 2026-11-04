@@ -387,6 +387,8 @@ Key source families include:
 
 ### Community Contributors
 
+- **[ELAYADESIGN/AI-DESIGN-SKILLS](https://github.com/ELAYADESIGN/AI-DESIGN-SKILLS)**: MIT source for `figma-designer` and `landing-page-design`, covering structured Figma tokens/components and conversion-focused landing pages.
+
 - **[timini/agentic-verification](https://github.com/timini/agentic-verification)**: MIT source for the `agentic-verify` and `agentic-test-audit` skills - check a Python change by running every mutant of the changed lines and writing tests until they catch them, and audit a pytest suite for gaps, flaky and slow tests, and removal candidates checked on held-out mutants.
 - **[UmarSiddiqui/obsess](https://github.com/UmarSiddiqui/obsess)**: MIT source for the `obsess` skill - a bounded perfectionist loop for one target that keeps the best evidence-backed attempt and stops on an attempt or time budget.
 - **[openhook-dev/openhook-inbox](https://github.com/openhook-dev/openhook-inbox)**: MIT source for the `openhook` skill: disposable callback inboxes, event inspection and cursor-based waiting for authorized integration tests.
