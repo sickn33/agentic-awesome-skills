@@ -37,11 +37,9 @@ function PrimaryNavigation(): React.ReactElement {
   const entries = [
     { label: 'Core', href: '/aas-core/', active: pathname.startsWith('/aas-core') },
     { label: 'Packs', href: '/plugins/', active: pathname.startsWith('/plugins') },
-    { label: 'Catalog', href: '/core/', active: /^\/(core|directory|skill|share)(\/|$)/.test(pathname) },
     { label: 'Docs', href: '/docs/', active: /^\/(docs|workbench)(\/|$)/.test(pathname) },
     { label: 'Contribute', href: '/contribute/', active: /^\/(contribute|sponsors)(\/|$)/.test(pathname) },
     { label: 'Changelog', href: '/changelog/', active: pathname.startsWith('/changelog') },
-    { label: 'For teams', href: '/teams/', active: pathname.startsWith('/teams') },
   ];
   return <nav className="app-nav" aria-label="Primary navigation">{entries.map((entry) => <Link key={entry.href} to={entry.href} aria-current={entry.active ? 'page' : undefined} className={`app-nav__link ${entry.active ? 'is-active' : ''}`}>{entry.label}</Link>)}</nav>;
 }
@@ -82,9 +80,7 @@ function App(): React.ReactElement {
                 <summary aria-label="Open navigation">Menu</summary>
                 <nav aria-label="Mobile navigation">
                   <Link to="/">Overview</Link><Link to="/aas-core/">Core</Link><Link to="/plugins/">Packs</Link>
-                  <Link to="/core/">Catalog</Link>
                   <Link to="/docs/">Docs</Link>
-                  <Link to="/teams/">For teams</Link>
                   <Link to="/sponsors/">Sponsors</Link><Link to="/contribute/">Contribute</Link><Link to="/changelog/">Changelog</Link>
                   <a href="https://github.com/sickn33/agentic-awesome-skills" target="_blank" rel="noreferrer">View on GitHub</a>
                 </nav>
