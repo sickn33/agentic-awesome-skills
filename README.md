@@ -224,6 +224,8 @@ Key source families include:
 
 ### Official Sources
 
+- **[coupler-io/skills](https://github.com/coupler-io/skills/tree/main/marketing-and-ads/marketing-analytics)**: MIT official source for the `coupler-marketing-analytics` skill - cross-channel marketing analysis (channel and campaign comparison, ROI, anomalies) on live Coupler.io data through the hosted Coupler.io MCP server.
+
 - **[fclairamb/solidping-plugin](https://github.com/fclairamb/solidping-plugin/tree/main/skills/solidping-monitoring)**: MIT official source for the `solidping` skill - uptime checks across 40+ types, results, incidents, diagnosis and status pages through the hosted SolidPing MCP server, with every write confirmed by the person first. SolidPing itself is AGPL-3.0.
 
 - **[Outreachgenie/outreachgenie-linkedin-mcp](https://github.com/Outreachgenie/outreachgenie-linkedin-mcp)**: MIT source for `outreachgenie-list-audit`, a read-only saved-list and template audit with local Python reports. Connected use requires an OutreachGenie workspace and compatible MCP host.
@@ -384,6 +386,8 @@ Key source families include:
 <summary><strong>Community Contributors & Source Repositories</strong></summary>
 
 ### Community Contributors
+
+- **[ELAYADESIGN/AI-DESIGN-SKILLS](https://github.com/ELAYADESIGN/AI-DESIGN-SKILLS)**: MIT source for `figma-designer` and `landing-page-design`, covering structured Figma tokens/components and conversion-focused landing pages.
 
 - **[timini/agentic-verification](https://github.com/timini/agentic-verification)**: MIT source for the `agentic-verify` and `agentic-test-audit` skills - check a Python change by running every mutant of the changed lines and writing tests until they catch them, and audit a pytest suite for gaps, flaky and slow tests, and removal candidates checked on held-out mutants.
 - **[UmarSiddiqui/obsess](https://github.com/UmarSiddiqui/obsess)**: MIT source for the `obsess` skill - a bounded perfectionist loop for one target that keeps the best evidence-backed attempt and stops on an attempt or time budget.
