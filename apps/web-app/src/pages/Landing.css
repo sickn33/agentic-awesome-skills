@@ -108,10 +108,9 @@
 .brand-home .workflow-copy .start-steps p{font-size:14px;line-height:1.5}
 .brand-home .workflow-copy .start-steps a{font-size:13px;padding-top:6px;min-height:30px}
 .workflow-demo{margin:0;min-width:0}
-.workflow-demo-surface{width:100%;aspect-ratio:640/440;overflow:hidden}
-.workflow-demo-surface img,.workflow-demo-surface iframe{display:block;width:100%;height:100%;border:0;object-fit:contain}
+.workflow-demo-surface{width:100%;overflow:hidden}
 @media(max-width:900px){.brand-home .home-start{grid-template-columns:1fr}.workflow-demo{width:100%;max-width:640px;margin-inline:auto}}
-@media(max-width:600px){.brand-home .home-start{gap:24px;padding-block:36px}.brand-home .workflow-copy .home-section-head h2{font-size:36px}.workflow-demo-surface{aspect-ratio:1}.workflow-demo figcaption{padding-inline:0}}
+@media(max-width:600px){.brand-home .home-start{gap:24px;padding-block:36px}.brand-home .workflow-copy .home-section-head h2{font-size:36px}.workflow-demo figcaption{padding-inline:0}}
 
 /* Keep the shorter copy in one compact composition. */
 .brand-home .home-open h2{grid-row:1/3}

@@ -9,10 +9,8 @@
 .core-intro>p{max-width:36ch;font-size:18px;line-height:28px}
 .core-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}
 .core-demo{margin:0;min-width:0;container-type:inline-size}
-.core-demo iframe{width:100%;aspect-ratio:680/460;display:block;border:0;background:#000}
 .core-demo figcaption{font-size:14px;color:var(--core-muted);margin:12px 16px 0}
 .core-demo figcaption a{color:inherit;text-decoration:underline;text-underline-offset:3px}
-@container(max-width:559px){.core-demo iframe{aspect-ratio:1}}
 #main-content .core-page :is(.brand-button,.text-action){min-height:48px;padding:12px 20px;font-size:14px;line-height:22px;font-weight:500;border-radius:8px;gap:8px;text-decoration:none}
 #main-content .core-page .text-action{border:1px solid #6c6c6c;background:transparent;color:var(--core-ink);justify-content:center}
 #main-content .core-page .text-action:hover{border-color:#64eee7;color:#64eee7;transform:none}

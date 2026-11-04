@@ -1,3 +1,4 @@
+import CoreDemo from '../components/stageshow/examples/aas-core';
 import { CoreRecordedExample } from './CoreRecordedExample';
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router';
@@ -31,7 +32,7 @@ export function CoreOverview() {
   return <div className="core-page">
     <section className="core-hero brand-wrap">
       <div className="core-intro"><h1>AAS Core</h1><p>Your agent finds and chooses skills. Core checks the selection and returns a stack for you to review.</p><div className="core-actions"><a className="brand-button" href="#connect">Connect your agent</a><Link className="text-action" to="/workbench/">See a real selection</Link></div></div>
-      <figure className="core-demo"><iframe src={`${import.meta.env.BASE_URL}core-demo/index.html`} title="Illustrated AAS Core selection workflow"/><figcaption>Illustrated workflow · <Link to="/workbench/">Based on a recorded selection</Link></figcaption></figure>
+      <figure className="core-demo"><CoreDemo /><figcaption>Illustrated workflow · <Link to="/workbench/">Based on a recorded selection</Link></figcaption></figure>
     </section>
     <section className="core-process brand-wrap" aria-labelledby="core-how-title">
       <header><h2 id="core-how-title">From your project<br/>to a selection you can review.</h2><p>A stack is a saved list of skills for your project.</p></header>

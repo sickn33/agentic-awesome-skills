@@ -1,0 +1,60 @@
+/* Keystrokes (act.key): the keycap rows. */
+
+@layer stageshow {
+  .ss-keys {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    z-index: 99;
+    display: flex;
+    gap: 4px;
+    opacity: 0;
+    transform: translate(-50%, 6px) scale(0.96);
+    transition: opacity 0.16s ease, transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    pointer-events: none;
+  }
+
+  .ss-keys[data-show="true"] {
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+
+  .ss-keys[data-at="top"] {
+    top: 16px;
+    bottom: auto;
+  }
+
+  .ss-keys[data-at="bottom-left"],
+  .ss-keys[data-at="bottom-right"] {
+    left: auto;
+    transform: translateY(6px) scale(0.96);
+  }
+
+  .ss-keys[data-at="bottom-left"] { left: 16px; }
+
+  .ss-keys[data-at="bottom-right"] { right: 16px; }
+
+  .ss-keys[data-at="bottom-left"][data-show="true"],
+  .ss-keys[data-at="bottom-right"][data-show="true"] {
+    transform: none;
+  }
+
+  .ss-key {
+    display: grid;
+    place-items: center;
+    min-width: 28px;
+    height: 28px;
+    padding: 0 8px;
+    border-radius: 7px;
+    background: rgba(24, 24, 27, 0.88);
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.18);
+    color: #fff;
+    font: 500 13px/1 var(--ss-font);
+    transition: transform 0.08s ease-out, box-shadow 0.08s ease-out;
+  }
+
+  .ss-key[data-down="true"] {
+    transform: translateY(1px) scale(0.94);
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.18);
+  }
+}
