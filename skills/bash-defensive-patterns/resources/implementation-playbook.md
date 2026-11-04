@@ -19,15 +19,26 @@ set -Eeuo pipefail  # Exit on error, unset variables, pipe failures
 - `set -o pipefail`: Pipe fails if any command fails (not just last)
 
 ### 2. Error Trapping and Cleanup
-Implement proper cleanup on script exit or error.
+Implement proper cleanup on script exit or error using a dedicated cleanup handler that validates resources before removal.
 
 ```bash
 #!/bin/bash
 set -Eeuo pipefail
 
-trap 'echo "Error on line $LINENO"' ERR
-task_tmp=$(mktemp -d) || exit 1
-trap 'rm -rf -- "$task_tmp"' EXIT
+task_tmp=""
+
+cleanup() {
+    local -r exit_code=$?
+    if [[ -n "${task_tmp:-}" && -d "$task_tmp" ]]; then
+        rm -rf -- "$task_tmp"
+    fi
+    exit "$exit_code"
+}
+
+trap 'echo "Error on line $LINENO" >&2' ERR
+trap cleanup EXIT INT TERM
+
+task_tmp=$(mktemp -d) || { echo "ERROR: Failed to create temp directory" >&2; exit 1; }
 # Script code here
 ```
 
@@ -142,8 +153,19 @@ process_files() {
 #!/bin/bash
 set -Eeuo pipefail
 
+task_tmp=""
+
+cleanup() {
+    local -r exit_code=$?
+    if [[ -n "${task_tmp:-}" && -d "$task_tmp" ]]; then
+        rm -rf -- "$task_tmp"
+    fi
+    exit "$exit_code"
+}
+
+trap cleanup EXIT INT TERM
+
 task_tmp=$(mktemp -d) || { echo "ERROR: Failed to create temp directory" >&2; exit 1; }
-trap 'rm -rf -- "$task_tmp"' EXIT
 
 # Create temporary files in directory
 TMPFILE1="$task_tmp/temp1.txt"
@@ -251,41 +273,42 @@ log_error "Error occurred"
 ```
 
 ### Pattern 6: Process Orchestration with Signals
+Manage concurrent child jobs within the script lifecycle, ensuring all child processes are properly tracked, terminated on interrupt, and reaped so no orphaned processes remain.
 
 ```bash
 #!/bin/bash
 set -Eeuo pipefail
 
-# Track background processes
-PIDS=()
+# Track child subprocess PIDs spawned during script execution
+CHILD_PIDS=()
 
 cleanup() {
-    log_info "Shutting down..."
+    log_info "Terminating active child worker jobs..."
 
-    # Terminate all background processes
-    for pid in "${PIDS[@]}"; do
+    # Terminate all tracked child subprocesses
+    for pid in "${CHILD_PIDS[@]}"; do
         if kill -0 "$pid" 2>/dev/null; then
             kill -TERM "$pid" 2>/dev/null || true
         fi
     done
 
-    # Wait for graceful shutdown
-    for pid in "${PIDS[@]}"; do
+    # Wait for child jobs to exit cleanly
+    for pid in "${CHILD_PIDS[@]}"; do
         wait "$pid" 2>/dev/null || true
     done
 }
 
-trap cleanup SIGTERM SIGINT
+trap cleanup SIGTERM SIGINT EXIT
 
-# Start background tasks
-background_task &
-PIDS+=($!)
+# Launch concurrent child worker jobs (ephemeral, bounded to script run)
+worker_job_a &
+CHILD_PIDS+=($!)
 
-another_task &
-PIDS+=($!)
+worker_job_b &
+CHILD_PIDS+=($!)
 
-# Wait for all background processes
-wait
+# Wait for all child worker jobs to finish
+wait "${CHILD_PIDS[@]}"
 ```
 
 ### Pattern 7: Safe File Operations
@@ -312,17 +335,38 @@ safe_move() {
     mv -i -- "$source" "$dest"
 }
 
-# Safe directory cleanup
+# Safe directory cleanup with path validation and boundary guards
 safe_rmdir() {
-    local -r dir="$1"
+    local -r target_dir="$1"
 
-    if [[ ! -d "$dir" ]]; then
-        echo "ERROR: Not a directory: $dir" >&2
+    # Validate non-empty and exists
+    if [[ -z "$target_dir" || ! -d "$target_dir" ]]; then
+        echo "ERROR: Target directory does not exist or is invalid: $target_dir" >&2
         return 1
     fi
 
-    # Interactive confirmation; verify platform options and authorized path first
-    rm -ri -- "$dir"
+    # Guard against accidental deletion of root or critical system directories
+    case "$target_dir" in
+        /|/root|/home|"$HOME"|/etc|/var|/usr|/bin|/sbin)
+            echo "ERROR: Refusing to delete protected system path: $target_dir" >&2
+            return 1
+            ;;
+    esac
+
+    # Attempt safe non-recursive rmdir first for empty directories
+    if rmdir -- "$target_dir" 2>/dev/null; then
+        echo "Successfully removed empty directory: $target_dir"
+        return 0
+    fi
+
+    # For non-empty directories, require explicit user confirmation
+    read -r -p "Directory '$target_dir' is not empty. Delete contents? [y/N] " confirm
+    if [[ "$confirm" =~ ^[Yy]$ ]]; then
+        rm -rf -- "$target_dir"
+    else
+        echo "Directory removal cancelled." >&2
+        return 1
+    fi
 }
 
 # Atomic file writes
