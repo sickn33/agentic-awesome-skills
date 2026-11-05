@@ -33,6 +33,17 @@
       "source_repo": "openhook-dev/openhook-inbox",
       "evidence_url": "https://github.com/openhook-dev/openhook-inbox/commit/30cf989b0cac5fcd3d6bf638063c65745b64de6b",
       "verified_at": "2026-11-02"
+    },
+    {
+      "skill_id": "postel-writing",
+      "kind": "source-repin",
+      "tree_oid": "44fd4b6512f0cc650566b52b24ba3e179fdf00e3",
+      "before_source": "https://github.com/robinfaraj/postel-mcp/tree/2d83f7b26a0950e2e16314a23423e3f0d416fa6a/skills/postel-writing",
+      "after_source": "https://github.com/robinfaraj/postel-mcp/tree/fe2c6756d1989490f6c2b168c5ef27ea0a052571/skills/postel-writing",
+      "source_type": "official",
+      "source_repo": "robinfaraj/postel-mcp",
+      "evidence_url": "https://github.com/robinfaraj/postel-mcp/commit/fe2c6756d1989490f6c2b168c5ef27ea0a052571",
+      "verified_at": "2026-11-05"
     }
   ]
 }
