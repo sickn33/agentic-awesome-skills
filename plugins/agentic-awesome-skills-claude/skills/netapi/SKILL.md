@@ -21,7 +21,7 @@ metadata:
 
 ## Overview
 
-NetAPI (https://netapi.com/) tracks the registered domains of more than 1,500 zones and publishes free data built from them: a compromised feed of domains and IP addresses reported by public threat feeds, the daily lists of newly registered domains, zone statistics and the NetAPI Top 1M popularity ranking. This skill answers domain and IP questions with NetAPI's JSON API. The free methods need no account and no API key. Risk is `safe`: every call is a read-only HTTPS GET, and the only data sent is the indicator or search text itself.
+NetAPI (https://netapi.com/) tracks the registered domains of more than 1,500 zones and publishes free data built from them: a compromised feed of domains reported by public threat feeds and of IP addresses that attacked NetAPI Nightwatch, NetAPI's own honeypot network, the daily lists of newly registered domains, zone statistics and the NetAPI Top 1M popularity ranking. This skill answers domain and IP questions with NetAPI's JSON API. The free methods need no account and no API key. Risk is `safe`: every call is a read-only HTTPS GET, and the only data sent is the indicator or search text itself.
 
 ## When to Use This Skill
 
@@ -38,7 +38,7 @@ Every call is `GET https://netapi.com/api-json/?method=<method>&<parameters>` an
 
 | Method | Parameters | Answers |
 |---|---|---|
-| `compromised-check` | `value`: domain, hostname, URL or IP | `listed_now` (reported within the last 24 hours), `listed_ever`, `first_seen`, `last_seen`, `block_reason` (source tag), `matched_value`, `registrar`. For a hostname the parent domains are checked too. |
+| `compromised-check` | `value`: domain, hostname, URL or IP | `listed_now` (within the last 24 hours for a domain, 48 hours for an IP), `listed_ever`, `first_seen`, `last_seen`, `block_reason` (source tag for a domain, attack type for an IP), `matched_value`, `registrar`. For a hostname the parent domains are checked too. |
 | `search-new` | `q` (4+ characters), `days` (1-7), `tld`, `match` (`contains` or `starts`), `limit` | Domains registered in the last days whose name contains or starts with `q`, from the zones that publish daily lists (1,100+ TLDs). |
 | `domain-rank` | `domain` | Position in the NetAPI Top 1M and inside its TLD (`in_top_1m`, `rank`, `rank_in_tld`). |
 | `tld-stats` | `tld` (`com`, `io`, ...) | Domain count, daily new and deleted counts where the registry publishes them, abuse share, registry. |
@@ -54,7 +54,7 @@ Errors come back as `{"error": {"code": "...", "message": "..."}}` with an HTTP 
 
 ### Step 3: Report the result
 
-- `listed_now: true` means the indicator was reported within the last 24 hours; `listed_ever: true` with `listed_now: false` means an older listing, so give `last_seen`.
+- `listed_now: true` means the indicator was listed within the last 24 hours (48 hours for an IP); `listed_ever: true` with `listed_now: false` means an older listing, so give `last_seen`.
 - `listed_ever: false` means the feed never held it. That is not a verdict that the indicator is clean.
 - Name the source (NetAPI, https://netapi.com/) and the date of the data in the answer.
 
@@ -125,8 +125,8 @@ The same data is available as MCP tools. `https://mcp.netapi.com/mcp/public` off
 
 ## Limitations
 
-- The feed holds what public threat feeds reported. An indicator that was never reported is not in it, so absence is not proof of safety.
-- The feed holds mostly domains and IPv4 addresses.
+- The domain feed holds what public threat feeds reported, and the IP feed holds addresses that attacked NetAPI's sensors. Absence from both is not proof of safety.
+- The IP feed holds IPv4 addresses only.
 - `search-new` covers the last 7 days of the zones that publish daily lists; zones refreshed by crawling (marked N/A on netapi.com) have no new-domain lists.
 - `domain-rank` ranks registrable domains (a leading `www.` is dropped); other subdomains have no rank.
 - Without a key: 30 requests a minute and 1,000 a day per IP for single lookups, 6 a minute and 100 a day for `search-new`. A free NetAPI account raises these to 60 / 5,000 and 30 / 500.

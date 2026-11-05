@@ -27614,7 +27614,7 @@
     "source_type": "community",
     "source_repo": "heygen-com/hyperframes",
     "license": "Apache-2.0",
-    "license_source": "https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/LICENSE"
+    "license_source": "https://github.com/heygen-com/hyperframes/blob/33c17df5aeb7bc45f717e7091e81ea0e0ebe6e23/LICENSE"
   },
   {
     "id": "figma-automation",
@@ -36201,7 +36201,7 @@
     "source_type": "community",
     "source_repo": "heygen-com/hyperframes",
     "license": "Apache-2.0",
-    "license_source": "https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/LICENSE"
+    "license_source": "https://github.com/heygen-com/hyperframes/blob/33c17df5aeb7bc45f717e7091e81ea0e0ebe6e23/LICENSE"
   },
   {
     "id": "hyperframes-cli",
@@ -36227,7 +36227,7 @@
     "source_type": "community",
     "source_repo": "heygen-com/hyperframes",
     "license": "Apache-2.0",
-    "license_source": "https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/LICENSE"
+    "license_source": "https://github.com/heygen-com/hyperframes/blob/33c17df5aeb7bc45f717e7091e81ea0e0ebe6e23/LICENSE"
   },
   {
     "id": "hyperframes-registry",
@@ -36253,7 +36253,7 @@
     "source_type": "community",
     "source_repo": "heygen-com/hyperframes",
     "license": "Apache-2.0",
-    "license_source": "https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/LICENSE"
+    "license_source": "https://github.com/heygen-com/hyperframes/blob/33c17df5aeb7bc45f717e7091e81ea0e0ebe6e23/LICENSE"
   },
   {
     "id": "i-have-adhd",
@@ -42858,6 +42858,42 @@
     }
   },
   {
+    "id": "lurkapi-ad-research",
+    "path": "skills/lurkapi-ad-research",
+    "category": "marketing",
+    "name": "lurkapi-ad-research",
+    "description": "Tear down the ads a brand or market runs in the Meta, Google, LinkedIn and TikTok ad libraries via LurkAPI: live ads, long-running winners, angles, hooks, offers and tests.",
+    "risk": "critical",
+    "source": "https://github.com/mesmerlord/lurkapi-claude-plugin/tree/3bf0959a706d8e966cb372b2694f3dc4466250a3/skills/ad-research",
+    "date_added": "2026-11-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "mesmerlord/lurkapi-claude-plugin",
+    "license": "MIT",
+    "license_source": "https://github.com/mesmerlord/lurkapi-claude-plugin/blob/main/LICENSE",
+    "tags": [
+      "ads",
+      "ad-library",
+      "meta-ads",
+      "google-ads",
+      "linkedin-ads",
+      "tiktok-ads",
+      "competitive-intelligence",
+      "mcp"
+    ]
+  },
+  {
     "id": "m365-agents-dotnet",
     "path": "skills/m365-agents-dotnet",
     "category": "ai-agents",
@@ -44929,7 +44965,7 @@
     "source_type": "community",
     "source_repo": "heygen-com/hyperframes",
     "license": "Apache-2.0",
-    "license_source": "https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/LICENSE"
+    "license_source": "https://github.com/heygen-com/hyperframes/blob/33c17df5aeb7bc45f717e7091e81ea0e0ebe6e23/LICENSE"
   },
   {
     "id": "meeting-distiller-pro",
@@ -45537,6 +45573,44 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "minicut-film-studio",
+    "path": "skills/minicut-film-studio",
+    "category": "media",
+    "name": "minicut-film-studio",
+    "description": "Install and use the official MiniCut film studio skill, pinned by commit, to make multi-shot AI short films with the paid MiniCut CLI.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-11-04",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ]
+    },
+    "source_type": "official",
+    "source_repo": "lliu56/minicut-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/lliu56/minicut-skills/blob/6cb1a054b2cc5a8b66c47c02b802be9b6e4b5bbc/LICENSE",
+    "tags": [
+      "ai-video",
+      "short-film",
+      "storyboard",
+      "video-generation",
+      "seedance",
+      "kling",
+      "paid-api",
+      "minicut"
+    ]
   },
   {
     "id": "minimalism",
@@ -53309,9 +53383,9 @@
     "path": "skills/postel-writing",
     "category": "marketing",
     "name": "postel-writing",
-    "description": "Draft X (Twitter) or LinkedIn posts in the user's own voice, research high-performing posts, and schedule or publish them through the user's Postel account.",
+    "description": "Find posts going viral in the user's niche, write their own version in their voice for X (Twitter), LinkedIn, Bluesky or Mastodon, and schedule or publish it through the user's Postel account.",
     "risk": "critical",
-    "source": "https://github.com/robinfaraj/postel-mcp/tree/2d83f7b26a0950e2e16314a23423e3f0d416fa6a/skills/postel-writing",
+    "source": "https://github.com/robinfaraj/postel-mcp/tree/fe2c6756d1989490f6c2b168c5ef27ea0a052571/skills/postel-writing",
     "date_added": "2026-10-24",
     "plugin": {
       "targets": {
@@ -53328,10 +53402,13 @@
     "source_type": "official",
     "source_repo": "robinfaraj/postel-mcp",
     "license": "MIT",
-    "license_source": "https://github.com/robinfaraj/postel-mcp/blob/2d83f7b26a0950e2e16314a23423e3f0d416fa6a/LICENSE",
+    "license_source": "https://github.com/robinfaraj/postel-mcp/blob/fe2c6756d1989490f6c2b168c5ef27ea0a052571/LICENSE",
     "tags": [
       "linkedin",
       "twitter",
+      "bluesky",
+      "mastodon",
+      "viral-posts",
       "writing",
       "scheduling",
       "social-media",
@@ -57606,7 +57683,7 @@
     "source_type": "community",
     "source_repo": "heygen-com/hyperframes",
     "license": "Apache-2.0",
-    "license_source": "https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/LICENSE"
+    "license_source": "https://github.com/heygen-com/hyperframes/blob/33c17df5aeb7bc45f717e7091e81ea0e0ebe6e23/LICENSE"
   },
   {
     "id": "remove-animations",
@@ -63578,7 +63655,7 @@
     "source_type": "community",
     "source_repo": "heygen-com/hyperframes",
     "license": "Apache-2.0",
-    "license_source": "https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/LICENSE"
+    "license_source": "https://github.com/heygen-com/hyperframes/blob/33c17df5aeb7bc45f717e7091e81ea0e0ebe6e23/LICENSE"
   },
   {
     "id": "slo-implementation",
@@ -68632,6 +68709,35 @@
       "quantified-self",
       "productivity",
       "journaling"
+    ]
+  },
+  {
+    "id": "time-machine-recovery",
+    "path": "skills/time-machine-recovery",
+    "category": "development",
+    "name": "time-machine-recovery",
+    "description": "Diagnose failed or stalled macOS Time Machine backups and recover space on local APFS destinations that remain full after backup deletion.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-11-04",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "macos",
+      "backup",
+      "apfs",
+      "troubleshooting"
     ]
   },
   {

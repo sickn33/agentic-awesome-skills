@@ -1,8 +1,8 @@
 # Skill Catalog
 
-Generated at: 2026-11-04T05:06:21.000Z
+Generated at: 2026-11-05T10:58:50.000Z
 
-Total skills: 2923
+Total skills: 2926
 
 ## agent-behavior (5)
 
@@ -1437,7 +1437,7 @@ Total skills: 2923
 | `skill-porter` | Preview conservative tool-name translations and copy complete local skill bundles for manual adaptation to Google Antigravity. | critical | Pranav-Nexus/antigravity-skill-porter | antigravity, claude, skills, migration, agent | antigravity, claude, skills, migration, agent, skill, porter, preview, conservative, name, translations, copy |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (235)
+## development (236)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1661,6 +1661,7 @@ Total skills: 2923
 | `systems-programming-rust-project` | You are a Rust project architecture expert specializing in scaffolding production-ready Rust applications. Generate complete project structures with cargo to... | critical | community | programming, rust | programming, rust, architecture, specializing, scaffolding, applications, generate, complete, structures, cargo, tooling, proper |
 | `tdd` | Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants integration tests. | safe | mattpocock/skills | engineering, workflow, coding-agents | engineering, workflow, coding-agents, tdd, test, driven, development, user, wants, features, fix, bugs |
 | `technical-change-tracker` | Track code changes with structured JSON records, state machine enforcement, and AI session handoff for bot continuity | safe | Elkidogz/technical-change-skill | change-tracking, session-handoff, documentation, accessibility, state-machine | change-tracking, session-handoff, documentation, accessibility, state-machine, technical, change, tracker, track, code, changes, structured |
+| `time-machine-recovery` | Diagnose failed or stalled macOS Time Machine backups and recover space on local APFS destinations that remain full after backup deletion. | critical | self | macos, backup, apfs, troubleshooting | macos, backup, apfs, troubleshooting, time, machine, recovery, diagnose, failed, stalled, backups, recover |
 | `tmux` | Expert tmux session, window, and pane management for terminal multiplexing, persistent remote workflows, and shell scripting automation. | safe | community | tmux, terminal, multiplexer, sessions, shell, remote, automation | tmux, terminal, multiplexer, sessions, shell, remote, automation, session, window, pane, multiplexing, persistent |
 | `tokenleak` | Token-lean rules for coding agents: cut the context re-sent on every later call (big reads, noisy logs, re-reads, serial calls) without losing correctness. | safe | Pazificateur69/tokenleak | tokens, context, cost, efficiency, claude-code, codex | tokens, context, cost, efficiency, claude-code, codex, tokenleak, token, lean, rules, coding, agents |
 | `tree-ring-memory` | Use Tree Ring Memory for local-first AI-agent memory lifecycle work: recall, evidence, audit, forgetting, and consolidation without transcript dumping. | critical | TerminallyLazy/Tree-Ring-Memory | agent-memory, local-first, recall, privacy, codex, sqlite, cli | agent-memory, local-first, recall, privacy, codex, sqlite, cli, tree, ring, memory, local, first |
@@ -2231,7 +2232,7 @@ Total skills: 2923
 | `nap-consistency-checker` | NAP Consistency Checker. Use when working with canonical business name, address and phone plus listing records. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, nap, consistency, checker, working, canonical, business, name, address, phone, plus |
 | `review-response-generator` | Review Response Generator. Use when working with review text and verified business context. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, review, response, generator, working, text, verified, business, context |
 
-## marketing (120)
+## marketing (121)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2298,6 +2299,7 @@ Total skills: 2923
 | `linkedin-content-generator` | AI-powered LinkedIn content suite: generate posts, carousels, newsletters, and 30-day calendars with niche-specific SEO rules and a feedback-based personal m... | critical | sarveshtalele/linkedin-content-skill | linkedin, content-creation, social-media, marketing, newsletter, carousel, content-calendar, feedback-based, seo, copywriting | linkedin, content-creation, social-media, marketing, newsletter, carousel, content-calendar, feedback-based, seo, copywriting, content, generator |
 | `linkedin-post-writer` | Draft LinkedIn posts from 16 illustrative hook formulas mapped to engagement goals (comments, reposts, likes, saves), with optional formatting conventions an... | none | sergebulaev/linkedin-skills | linkedin, copywriting, hooks, social-media, personal-brand, content-marketing | linkedin, copywriting, hooks, social-media, personal-brand, content-marketing, post, writer, draft, posts, 16, illustrative |
 | `local-legal-seo-audit` | Audit and improve local SEO for law firms, attorneys, forensic experts and legal/professional services sites with local presence, focusing on GBP, directorie... | safe | original | local, legal, seo, audit | local, legal, seo, audit, improve, law, firms, attorneys, forensic, experts, professional, sites |
+| `lurkapi-ad-research` | Tear down the ads a brand or market runs in the Meta, Google, LinkedIn and TikTok ad libraries via LurkAPI: live ads, long-running winners, angles, hooks, of... | critical | mesmerlord/lurkapi-claude-plugin | ads, ad-library, meta-ads, google-ads, linkedin-ads, tiktok-ads, competitive-intelligence, mcp | ads, ad-library, meta-ads, google-ads, linkedin-ads, tiktok-ads, competitive-intelligence, mcp, lurkapi, ad, research, tear |
 | `mailchimp-automation` | Automate Mailchimp email marketing including campaigns, audiences, subscribers, segments, and analytics via Rube MCP (Composio). Always search tools first fo... | critical | community | mailchimp | mailchimp, automation, automate, email, marketing, including, campaigns, audiences, subscribers, segments, analytics, via |
 | `mailtrap-managing-contacts` | Manage Mailtrap contacts, lists, segments, custom fields, imports, CRM syncs, and campaign audiences through the UI or API. | critical | community | mailtrap, managing, contacts | mailtrap, managing, contacts, lists, segments, custom, fields, imports, crm, syncs, campaign, audiences |
 | `marketing-ideas` | Provide proven marketing strategies and growth ideas for SaaS and software products, prioritized using a marketing feasibility scoring system. | safe | community | marketing, ideas | marketing, ideas, provide, proven, growth, saas, software, products, prioritized, feasibility, scoring |
@@ -2318,7 +2320,7 @@ Total skills: 2923
 | `pitch-psychologist` | Structure pitches, decks, and talk tracks around audience beliefs, proof, and a clear decision when presentations need stronger progression. | safe | community | pitch, psychologist | pitch, psychologist, structure, pitches, decks, talk, tracks, around, audience, beliefs, proof, clear |
 | `popup-cro` | Create and optimize popups, modals, overlays, slide-ins, and banners to increase conversions without harming user experience or brand trust. | none | community | popup, cro | popup, cro, optimize, popups, modals, overlays, slide, ins, banners, increase, conversions, without |
 | `post` | Make share-post image sets that look native: Xiaohongshu carousels, X images, covers, App Store poster layouts, real screenshots and faithful app-UI mocks. U... | safe | jack-reson8/post-skill | social, image, xiaohongshu, carousel | social, image, xiaohongshu, carousel, post, share, sets, look, native, carousels, images, covers |
-| `postel-writing` | Draft X (Twitter) or LinkedIn posts in the user's own voice, research high-performing posts, and schedule or publish them through the user's Postel account. | critical | robinfaraj/postel-mcp | linkedin, twitter, writing, scheduling, social-media, mcp | linkedin, twitter, writing, scheduling, social-media, mcp, postel, draft, posts, user, own, voice |
+| `postel-writing` | Find posts going viral in the user's niche, write their own version in their voice for X (Twitter), LinkedIn, Bluesky or Mastodon, and schedule or publish it... | critical | robinfaraj/postel-mcp | linkedin, twitter, bluesky, mastodon, viral-posts, writing, scheduling, social-media, mcp | linkedin, twitter, bluesky, mastodon, viral-posts, writing, scheduling, social-media, mcp, postel, find, posts |
 | `power-user-cultivation` | When the user wants to identify and nurture developer advocates, build champion programs, or turn active users into contributors and evangelists. | safe | jonathimer/devmarketing-skills | power, user, cultivation | power, user, cultivation, wants, identify, nurture, developer, advocates, champion, programs, turn, active |
 | `price-psychology-strategist` | Design pricing presentation, anchors, and tiers when an offer needs clearer value and fairness without misleading comparisons. | safe | community | price, psychology, strategist | price, psychology, strategist, pricing, presentation, anchors, tiers, offer, clearer, value, fairness, without |
 | `pricing` | When the user wants help with pricing decisions, packaging, or monetization strategy. | safe | coreyhaines31/marketingskills | pricing | pricing, user, wants, decisions, packaging, monetization |
@@ -2372,7 +2374,7 @@ Total skills: 2923
 | `restosignals` | Find US restaurants and bars before they open, as scored leads fused from liquor-license, food-permit and business-filing records, via the RestoSignals MCP s... | safe | paperandbeyond23-gif/restosignals-mcp | mcp, restaurants, leads, public-records, liquor-license, prospecting | mcp, restaurants, leads, public-records, liquor-license, prospecting, restosignals, find, us, bars, before, open |
 | `serply-search-mcp` | Search Google, Bing, Google News and Google Scholar, and read public pages, with the Serply MCP server. Use when the user chooses Serply or its connected too... | safe | self | mcp, web-search, news, scholar, research, citations | mcp, web-search, news, scholar, research, citations, serply, search, google, bing, read, public |
 
-## media (53)
+## media (54)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2398,6 +2400,7 @@ Total skills: 2923
 | `macos-screen-recorder` | macOS screen recorder that captures the main display PLUS system audio via ScreenCaptureKit — no BlackHole/loopback driver, no sudo, just the standard Screen... | critical | connerkward/macos-screen-recorder-system-audio | macos, screen-recording, system-audio, screencapturekit, cli, swift | macos, screen-recording, system-audio, screencapturekit, cli, swift, screen, recorder, captures, main, display, plus |
 | `magic-animator` | AI-powered animation tool for creating motion in logos, UI, icons, and social media assets. | safe | community | magic, animator | magic, animator, ai, powered, animation, creating, motion, logos, ui, icons, social, media |
 | `md2video-audio` | Convert Markdown documents into narrated MP4 videos with synchronized visuals and voice narration. | critical | 70v-Yoyo/md2video-audio-skill | markdown, video, audio, text-to-speech, marp, presentation | markdown, video, audio, text-to-speech, marp, presentation, md2video, convert, documents, narrated, mp4, videos |
+| `minicut-film-studio` | Install and use the official MiniCut film studio skill, pinned by commit, to make multi-shot AI short films with the paid MiniCut CLI. | critical | lliu56/minicut-skills | ai-video, short-film, storyboard, video-generation, seedance, kling, paid-api, minicut | ai-video, short-film, storyboard, video-generation, seedance, kling, paid-api, minicut, film, studio, install, official |
 | `muapi-media` | Generate images and videos with MuAPI's schema-driven asynchronous media API while protecting keys, polling, and output downloads. | critical | self | muapi, image-generation, video-generation, media-api | muapi, image-generation, video-generation, media-api, media, generate, images, videos, schema, driven, asynchronous, api |
 | `music-generation-studio` | Install and use the official AI Music Generator package, pinned by digest, for paid hosted work on the Beatra service. | critical | beatra-ai/ai-music-generator-skill | music-generation, text-to-music, mcp, paid-api, beatra | music-generation, text-to-music, mcp, paid-api, beatra, music, generation, studio, install, official, ai, generator |
 | `nsfw-ai-spicyapi` | Generate adult (18+) images, image-to-video clips and image edits through the SpicyAPI API, with a cost quote before every paid run and adults-only / consent... | critical | Spicy-API/nsfw-ai-skill | image-generation, video-generation, image-to-video, adult-content, api | image-generation, video-generation, image-to-video, adult-content, api, nsfw, ai, spicyapi, generate, adult, 18, images |
