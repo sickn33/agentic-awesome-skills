@@ -17,7 +17,7 @@ function validateReleaseChangelog(section, version) {
     fail("use a valid release date.");
   }
 
-  const blocks = body.join("\n").trim().split(/^ {0,3}(#{1,6}(?:[ \t]+.*)?)[ \t]*$/m);
+  const blocks = body.join("\n").trim().split(/^(#{1,6}(?:[ \t]+.*)?)[ \t]*$/m);
   const summary = blocks[0].trim();
   if (!summary || /\n[ \t]*\n|^(?:[-+*>]|\d+[.)])[ \t]/m.test(summary)) {
     fail("start with one short summary paragraph.");
@@ -36,8 +36,12 @@ function validateReleaseChangelog(section, version) {
     if (index <= previous) {
       fail(`"${changelogSections[index]}" is duplicated or out of order.`);
     }
-    if (!blocks[i + 1].trimStart().match(/^- [^\s]/)) {
+    const entries = blocks[i + 1].replace(/^(?:[ \t]*\n)+/, "").trimEnd();
+    if (!/^- [^\s]/.test(entries)) {
       fail(`"${changelogSections[index]}" must start with a bullet entry.`);
+    }
+    if (entries.split("\n").some((line) => line.trim() && !/^(?:- \S| {2}|\t)/.test(line))) {
+      fail(`"${changelogSections[index]}" must contain bullet entries only. Indent any continuation lines.`);
     }
     previous = index;
   }

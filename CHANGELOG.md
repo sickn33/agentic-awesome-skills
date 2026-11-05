@@ -12,7 +12,8 @@ Release entry template
 Copy this structure above the latest release. Use the actual tag diff, lead
 with user-facing changes, and credit contributors with their GitHub handles
 and merged PR links. Write a short opening paragraph and keep at least one
-nonempty section. Omit sections with no entries and keep the order below.
+nonempty section. Use bullets for every section entry and indent continuation
+lines. Omit sections with no entries and keep the order below.
 
 ## [X.Y.Z] - YYYY-MM-DD - "Release title"
 
@@ -34,6 +35,37 @@ Summarize the most important change for users in one short paragraph.
 
 - Credit each contributor with their GitHub handle and merged PR link.
 -->
+
+## [20.6.0] - 2026-11-05 - "Film, Ad Research and Publishing"
+
+Add film, ad-library research and Time Machine recovery workflows; refresh HyperFrames, Postel and React dependencies.
+
+### New skills
+
+- Add Time Machine recovery guidance for macOS backup discovery and restoration.
+- Add MiniCut Film Studio with a pinned skill revision, retained MIT notice and explicit installation and paid-generation boundaries.
+- Add LurkAPI ad research across Meta, Google, LinkedIn and TikTok libraries, with credit budgets and limits on inferred performance.
+
+### Improvements
+
+- Refresh seven HyperFrames skills to upstream v0.9.15, including CLI scaffolding, billing, media credentials and project credit limits while retaining AAS safeguards.
+- Render Stageshow catalog demos without iframes and align the historical release archive with GitHub.
+- Update Postel for Bluesky and Mastodon drafts, approved media URLs and LinkedIn first comments; retain X/LinkedIn generation limits.
+- Clarify NetAPI's own IP sensor feed, 48-hour IP listing window and IPv4 coverage.
+
+### Security and distribution
+
+- Improve defensive Bash cleanup guidance and preserve interactive directory deletion after normalized path checks.
+- Align React and React DOM at 19.3.1 in the catalog app and Loki frontend example; update Stageshow's optional Portless launcher to 0.15.8.
+
+### Contributors
+
+- @lliu56 for MiniCut ([#2283](https://github.com/sickn33/agentic-awesome-skills/pull/2283), original [#2273](https://github.com/sickn33/agentic-awesome-skills/pull/2273)).
+- @mesmerlord for LurkAPI ([#2283](https://github.com/sickn33/agentic-awesome-skills/pull/2283), original [#2262](https://github.com/sickn33/agentic-awesome-skills/pull/2262)).
+- @robinsadeghpour for Postel ([#2283](https://github.com/sickn33/agentic-awesome-skills/pull/2283), original [#2261](https://github.com/sickn33/agentic-awesome-skills/pull/2261)).
+- @slavaolesik for NetAPI ([#2272](https://github.com/sickn33/agentic-awesome-skills/pull/2272)).
+- @ocofaigh for defensive Bash guidance ([#2283](https://github.com/sickn33/agentic-awesome-skills/pull/2283), original [#2271](https://github.com/sickn33/agentic-awesome-skills/pull/2271)).
+
 
 ## [20.5.0] - 2026-11-04 - "Connected Analytics and Design Workflows"
 

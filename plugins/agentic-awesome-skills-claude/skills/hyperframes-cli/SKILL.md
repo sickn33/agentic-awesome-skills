@@ -8,11 +8,11 @@ source_type: community
 source_repo: heygen-com/hyperframes
 author: HeyGen
 license: Apache-2.0
-license_source: https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/LICENSE
+license_source: https://github.com/heygen-com/hyperframes/blob/33c17df5aeb7bc45f717e7091e81ea0e0ebe6e23/LICENSE
 date_added: "2026-11-01"
 ---
 
-Modified by AAS on 2026-11-01 from [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes/tree/6b3e7a7a95e11d5d290123ea821b53109d6103c9/skills/hyperframes-cli) at `6b3e7a7a95e11d5d290123ea821b53109d6103c9`. Apache-2.0 license retained in LICENSE; operational boundaries and examples are AAS adaptations.
+Modified by AAS on 2026-11-05 from [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes/tree/33c17df5aeb7bc45f717e7091e81ea0e0ebe6e23/skills/hyperframes-cli) at `33c17df5aeb7bc45f717e7091e81ea0e0ebe6e23`. Apache-2.0 license retained in LICENSE; operational boundaries and examples are AAS adaptations.
 
 ## Operational boundaries (AAS adaptation)
 
@@ -20,7 +20,7 @@ These rules govern the upstream workflow and bundled references below. Work only
 
 Set `HYPERFRAMES_NO_TELEMETRY=1`, `HYPERFRAMES_SKIP_SKILLS=1` and `HYPERFRAMES_NO_UPDATE_CHECK=1` for CLI/helper invocations by default. Do not upgrade a working project pin automatically. Upstream analytics can link usage to an account and send email/username to PostHog; enable only when the user explicitly wants that. Feedback and issue reports are external messages and require a user request; telemetry consent alone is insufficient. Paid generation, cloud rendering/deployment, publishing, provider uploads, billing and avatar/voice recreation require authorization already covering that action and payer; ask only when it is missing. Honor the user's budget, disclose known costs and limitations, and never hide usage or infer unlimited permission from a host credential. Do not bypass a provider refusal. Obtain rights and consent for source footage, likeness and cloned voices; label recreated material accurately. Keep credentials in the existing secret store or ignored environment files, never chat, output or tracked files.
 
-**Plugin installs:** Before setup or freshness commands, follow the sibling `../hyperframes/references/plugin-installation.md` ([pinned upstream plugin rules](https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/skills/hyperframes/references/plugin-installation.md)) when this skill is inside a HyperFrames plugin.
+**Plugin installs:** Before setup or freshness commands, follow the sibling `../hyperframes/references/plugin-installation.md` ([pinned upstream plugin rules](https://github.com/heygen-com/hyperframes/blob/33c17df5aeb7bc45f717e7091e81ea0e0ebe6e23/skills/hyperframes/references/plugin-installation.md)) when this skill is inside a HyperFrames plugin.
 
 # HyperFrames CLI
 
@@ -30,7 +30,7 @@ Run `npx hyperframes <command>` unless the project gives a wrapper; then use the
 
 | Job | Commands |
 | --- | --- |
-| Start | `init <dir>` (blank; `--example <name>` only when asked), `capture <url>` |
+| Start | `init <dir> --skip-skills` (blank; `--example <name>` only when asked), `capture <url>` |
 | Read a project | `info`, `compositions`, `timeline --json`, `docs <topic>` |
 | Check it | `lint` while writing; `check --json` as the gate (lint, runtime, layout, contrast) |
 | Look at it | `snapshot` (`--at <t,…>`, `--range START,END`, `--composition <id>`, `--zoom`, `--angle`, `--against <video>`), `keyframes`, `compare`, `audio` |
@@ -39,7 +39,7 @@ Run `npx hyperframes <command>` unless the project gives a wrapper; then use the
 | Media and sound | `media-treatment`, `grade-compare`, `remove-background`, `tts`, `transcribe`, `beats`, `normalize-audio` (`/media-use`) |
 | Show and ship | `preview`, `present` (`/slideshow`), `render`, `publish`, `cloud`, `lambda`, `cloudrun` |
 | Desktop app | `open`, `catch-up` |
-| Upkeep | `doctor`, `browser`, `upgrade`, `skills`, `usage`, `clean`, `feedback` |
+| Upkeep | `doctor`, `browser`, `upgrade`, `usage`, `clean`, `feedback` |
 
 `validate`, `inspect` and `layout` are deprecated aliases of `check`; `events` is telemetry for skills' own scripts. Don't run them.
 

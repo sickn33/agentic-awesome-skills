@@ -31959,6 +31959,25 @@
       "runtime_files": []
     },
     {
+      "id": "lurkapi-ad-research",
+      "path": "skills/lurkapi-ad-research",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "m365-agents-dotnet",
       "path": "skills/m365-agents-dotnet",
       "targets": {
@@ -33854,6 +33873,31 @@
       "blocked_reasons": {
         "codex": [],
         "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "minicut-film-studio",
+      "path": "skills/minicut-film-studio",
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "target_specific_home_path"
+      ],
+      "blocked_reasons": {
+        "codex": [
+          "target_specific_home_path"
+        ],
+        "claude": [
+          "target_specific_home_path"
+        ]
       },
       "runtime_files": []
     },
@@ -50757,6 +50801,25 @@
       "runtime_files": []
     },
     {
+      "id": "time-machine-recovery",
+      "path": "skills/time-machine-recovery",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "time-tracking",
       "path": "skills/time-tracking",
       "targets": {
@@ -56036,14 +56099,14 @@
     }
   ],
   "summary": {
-    "total_skills": 2923,
+    "total_skills": 2926,
     "supported": {
-      "codex": 2838,
-      "claude": 2858
+      "codex": 2840,
+      "claude": 2860
     },
     "blocked": {
-      "codex": 85,
-      "claude": 65
+      "codex": 86,
+      "claude": 66
     },
     "manual_setup": 22
   }
