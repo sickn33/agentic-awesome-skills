@@ -30,6 +30,10 @@ npx hyperframes media-use generate --type video --first-frame assets/s03-first.p
 # pixels and seconds) blanks text in the guide, which HeyGen would copy. A guide with a cut inside is refused; pass
 # --allow-cuts only when you have looked at those frames and they are one shot
 npx hyperframes media-use generate --type video --reference assets/person.png --audio assets/s02-voice.m4a --motion assets/s02-original.mp4 --mask 110,615,390,165,0.4-2.0 --prompt "talks to camera, seated" --seconds 8 --aspect 9:16 --out assets/s02-person.mp4
+# Authorized lipsync: match a generated speaking shot to its finished voice
+npx hyperframes media-use generate --type lipsync --video assets/s02-person.mp4 --audio assets/s02-voice.mp3 --out assets/s02-lips.mp4
+# Authorized background removal to transparent WebM
+npx hyperframes media-use generate --type cutout --video assets/host.mp4 --out assets/host-cutout.webm
 # the same for a person who does not speak: no --audio, the guide clip carries the motion
 npx hyperframes media-use generate --type video --reference assets/person.png --motion assets/s05-original.mp4 --prompt "holds up a jar, smiles" --seconds 6 --aspect 9:16 --out assets/s05-person.mp4
 # a person in a photo speaking a script in a HeyGen voice

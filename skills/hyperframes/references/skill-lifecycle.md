@@ -11,7 +11,7 @@ For a plugin installation, follow [plugin execution rules](plugin-installation.m
 
 ## What `init` does
 
-`npx hyperframes init` installs the core set when it is missing and leaves every skill that is already installed as it is: it never refreshes, replaces or removes one. Updating is `npx hyperframes skills update`, run by you. Offline or rate-limited checks degrade gracefully and do not fail project scaffolding.
+`npx hyperframes init` installs the core set when it is missing and leaves every skill that is already installed as it is: it never refreshes, replaces or removes one. Standalone updates are user-managed; never run the upstream updater against AAS-owned trees. Offline or rate-limited checks degrade gracefully and do not fail project scaffolding.
 
 `--skip-skills` makes `init` leave skills alone. `HYPERFRAMES_SKIP_SKILLS=1` does the same for CI and tests.
 
