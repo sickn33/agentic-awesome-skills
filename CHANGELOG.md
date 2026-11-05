@@ -60,11 +60,11 @@ Add film, ad-library research and Time Machine recovery workflows; refresh Hyper
 
 ### Contributors
 
-- @lliu56 for MiniCut ([#2273](https://github.com/sickn33/agentic-awesome-skills/pull/2273)).
-- @mesmerlord for LurkAPI ([#2262](https://github.com/sickn33/agentic-awesome-skills/pull/2262)).
-- @robinsadeghpour for Postel ([#2261](https://github.com/sickn33/agentic-awesome-skills/pull/2261)).
+- @lliu56 for MiniCut ([#2283](https://github.com/sickn33/agentic-awesome-skills/pull/2283), original [#2273](https://github.com/sickn33/agentic-awesome-skills/pull/2273)).
+- @mesmerlord for LurkAPI ([#2283](https://github.com/sickn33/agentic-awesome-skills/pull/2283), original [#2262](https://github.com/sickn33/agentic-awesome-skills/pull/2262)).
+- @robinsadeghpour for Postel ([#2283](https://github.com/sickn33/agentic-awesome-skills/pull/2283), original [#2261](https://github.com/sickn33/agentic-awesome-skills/pull/2261)).
 - @slavaolesik for NetAPI ([#2272](https://github.com/sickn33/agentic-awesome-skills/pull/2272)).
-- @ocofaigh for defensive Bash guidance ([#2271](https://github.com/sickn33/agentic-awesome-skills/pull/2271)).
+- @ocofaigh for defensive Bash guidance ([#2283](https://github.com/sickn33/agentic-awesome-skills/pull/2283), original [#2271](https://github.com/sickn33/agentic-awesome-skills/pull/2271)).
 
 ---
 
