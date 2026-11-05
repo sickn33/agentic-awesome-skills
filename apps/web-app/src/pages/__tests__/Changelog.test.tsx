@@ -3,10 +3,16 @@ import { describe, expect, it } from 'vitest';
 import Changelog from '../Changelog';
 import archive from '../../data/releases.json';
 import { renderWithRouter } from '../../utils/testUtils';
+
+declare const __AAS_RELEASE_ENTRIES__: typeof archive.releases;
+const preparedEntries = typeof __AAS_RELEASE_ENTRIES__ === 'undefined' ? [] : __AAS_RELEASE_ENTRIES__;
+const latestRelease = preparedEntries[0] ?? archive.releases[0];
+const adjacentOlderRelease = preparedEntries[1] ?? archive.releases[preparedEntries.length ? 0 : 1];
 describe('Changelog', () => {
   it('shows original latest notes and allows opening the oldest release through search', () => {
     renderWithRouter(<Changelog />, {useProvider:false});
-    expect(screen.getByRole('article', {name:`Release ${archive.releases[0].tag}`})).toBeInTheDocument();
+    expect(screen.getByRole('article', {name:`Release ${latestRelease.tag}`})).toBeInTheDocument();
+    expect(screen.getByRole('link', {name:'View on GitHub'})).toHaveAttribute('href',latestRelease.url);
     const oldest=archive.releases.at(-1)!;
     fireEvent.change(screen.getByLabelText('Search releases'),{target:{value:oldest.tag}});
     const releaseHref = `/?version=${encodeURIComponent(oldest.tag)}`;
@@ -31,11 +37,11 @@ describe('Release navigation', () => {
     fireEvent.change(screen.getByLabelText('Search releases'), {target:{value:'no-such-version-zz'}});
     fireEvent.click(screen.getByRole('button', {name:'Clear filters'}));
     expect(screen.queryByText('No releases found.')).not.toBeInTheDocument();
-    expect(screen.getByRole('navigation', {name:'Release versions'}).querySelectorAll('a').length).toBe(Math.min(30,archive.releases.length));
+    expect(screen.getByRole('navigation', {name:'Release versions'}).querySelectorAll('a').length).toBe(Math.min(30,archive.releases.length + preparedEntries.length));
   });
   it('opens the adjacent older release', () => {
     renderWithRouter(<Changelog />, {useProvider:false});
-    fireEvent.click(screen.getByRole('link', {name:`Older release ${archive.releases[1].tag}`}));
-    expect(screen.getByRole('article', {name:`Release ${archive.releases[1].tag}`})).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('link', {name:`Older release ${adjacentOlderRelease.tag}`}));
+    expect(screen.getByRole('article', {name:`Release ${adjacentOlderRelease.tag}`})).toBeInTheDocument();
   });
 });
