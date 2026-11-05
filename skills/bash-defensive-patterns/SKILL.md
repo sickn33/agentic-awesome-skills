@@ -33,11 +33,14 @@ Comprehensive guidance for writing production-ready Bash scripts using defensive
 2. Enable strict mode and safe defaults from the start.
 3. Validate inputs, quote variables, and handle files safely.
 4. Add logging, error traps, and basic tests.
+5. Require explicit user approval before running destructive, irreversible, or high-impact operations.
 
 ## Safety
 
-- Avoid destructive commands without confirmation or dry-run flags.
-- Do not run scripts as root unless strictly required.
+- Require explicit user approval and confirmation before running destructive, irreversible, or high-impact operations.
+- Confirm the exact target before deleting resources or applying irreversible changes; ordinary requested edits remain within the user's authorized scope.
+- Provide dry-run flags and preview changes before executing modifying actions.
+- Do not run scripts or commands as root or with elevated privileges unless strictly authorized and necessary.
 
 Refer to `resources/implementation-playbook.md` for detailed patterns, checklists, and templates.
 
@@ -48,4 +51,5 @@ Refer to `resources/implementation-playbook.md` for detailed patterns, checklist
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.
 - Do not treat the output as a substitute for environment-specific validation, testing, or expert review.
+- Does not authorize destructive or production operations outside the user's explicit scope.
 - Stop and ask for clarification if required inputs, permissions, safety boundaries, or success criteria are missing.

@@ -224,6 +224,9 @@ Key source families include:
 
 ### Official Sources
 
+- **[lliu56/minicut-skills](https://github.com/lliu56/minicut-skills/tree/6cb1a054b2cc5a8b66c47c02b802be9b6e4b5bbc/skills/minicut-film-studio)**: Official MiniCut source for the `minicut-film-studio` skill - paid, hosted multi-shot AI film making through the MiniCut CLI, pinned to commit `6cb1a05`, with every paid job shown as a price first and run only on the user's yes (MIT skill file; the CLI it installs is proprietary).
+- **[mesmerlord/lurkapi-claude-plugin](https://github.com/mesmerlord/lurkapi-claude-plugin/tree/main/skills/ad-research)**: MIT official source for the `lurkapi-ad-research` skill - ad teardowns across the Meta, Google, LinkedIn and TikTok ad libraries (live ads, long-running winners, angles, hooks, offers) through the hosted LurkAPI API or MCP server with the user's own key; calls spend paid credits after 100 free.
+
 - **[fclairamb/solidping-plugin](https://github.com/fclairamb/solidping-plugin/tree/main/skills/solidping-monitoring)**: MIT official source for the `solidping` skill - uptime checks across 40+ types, results, incidents, diagnosis and status pages through the hosted SolidPing MCP server, with every write confirmed by the person first. SolidPing itself is AGPL-3.0.
 
 - **[Outreachgenie/outreachgenie-linkedin-mcp](https://github.com/Outreachgenie/outreachgenie-linkedin-mcp)**: MIT source for `outreachgenie-list-audit`, a read-only saved-list and template audit with local Python reports. Connected use requires an OutreachGenie workspace and compatible MCP host.
