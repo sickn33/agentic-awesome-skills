@@ -38,15 +38,18 @@ Summarize the most important change for users in one short paragraph.
 
 ## [20.6.0] - 2026-11-05 - "Film, Ad Research and Publishing"
 
-Add MiniCut film workflows and LurkAPI ad-library research, expand Postel publishing guidance and refresh React dependencies.
+Add film, ad-library research and Time Machine recovery workflows; refresh HyperFrames, Postel and React dependencies.
 
 ### New skills
 
+- Add Time Machine recovery guidance for macOS backup discovery and restoration.
 - Add MiniCut Film Studio with a pinned skill revision, retained MIT notice and explicit installation and paid-generation boundaries.
 - Add LurkAPI ad research across Meta, Google, LinkedIn and TikTok libraries, with credit budgets and limits on inferred performance.
 
 ### Improvements
 
+- Refresh seven HyperFrames skills to upstream v0.9.15, including CLI scaffolding, billing, media credentials and project credit limits while retaining AAS safeguards.
+- Render Stageshow catalog demos without iframes and align the historical release archive with GitHub.
 - Update Postel for Bluesky and Mastodon drafts, approved media URLs and LinkedIn first comments; retain X/LinkedIn generation limits.
 - Clarify NetAPI's own IP sensor feed, 48-hour IP listing window and IPv4 coverage.
 
