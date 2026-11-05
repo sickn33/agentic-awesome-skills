@@ -36,6 +36,35 @@ Summarize the most important change for users in one short paragraph.
 - Credit each contributor with their GitHub handle and merged PR link.
 -->
 
+## [20.6.0] - 2026-11-05 - "Film, Ad Research and Publishing"
+
+Add MiniCut film workflows and LurkAPI ad-library research, expand Postel publishing guidance and refresh React dependencies.
+
+### New skills
+
+- Add MiniCut Film Studio with a pinned skill revision, retained MIT notice and explicit installation and paid-generation boundaries.
+- Add LurkAPI ad research across Meta, Google, LinkedIn and TikTok libraries, with credit budgets and limits on inferred performance.
+
+### Improvements
+
+- Update Postel for Bluesky and Mastodon drafts, approved media URLs and LinkedIn first comments; retain X/LinkedIn generation limits.
+- Clarify NetAPI's own IP sensor feed, 48-hour IP listing window and IPv4 coverage.
+
+### Security and distribution
+
+- Improve defensive Bash cleanup guidance and preserve interactive directory deletion after normalized path checks.
+- Align React and React DOM at 19.3.1 in the catalog app and Loki frontend example; update Stageshow's optional Portless launcher to 0.15.8.
+
+### Contributors
+
+- @lliu56 for MiniCut ([#2273](https://github.com/sickn33/agentic-awesome-skills/pull/2273)).
+- @mesmerlord for LurkAPI ([#2262](https://github.com/sickn33/agentic-awesome-skills/pull/2262)).
+- @robinsadeghpour for Postel ([#2261](https://github.com/sickn33/agentic-awesome-skills/pull/2261)).
+- @slavaolesik for NetAPI ([#2272](https://github.com/sickn33/agentic-awesome-skills/pull/2272)).
+- @ocofaigh for defensive Bash guidance ([#2271](https://github.com/sickn33/agentic-awesome-skills/pull/2271)).
+
+---
+
 ## [20.5.0] - 2026-11-04 - "Connected Analytics and Design Workflows"
 
 ### New skills
