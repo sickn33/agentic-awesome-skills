@@ -378,6 +378,7 @@ Key source families include:
 - **[uiverify/uiverify](https://github.com/uiverify/uiverify)**: Source for `uiverify-triage-visual-changes`.
 - **[wassim-azi/agy-powerline](https://github.com/wassim-azi/agy-powerline)**: Source for `agy-powerline`.
 - **[webly-ai/webly-plugin](https://github.com/webly-ai/webly-plugin)**: Source for `webly`.
+- **[lliu56/minicut-skills](https://github.com/lliu56/minicut-skills/tree/6cb1a054b2cc5a8b66c47c02b802be9b6e4b5bbc/skills/minicut-film-studio)**: Official MiniCut source for the `minicut-film-studio` skill - paid, hosted multi-shot AI film making through the MiniCut CLI, pinned to commit `6cb1a05`, with every paid job shown as a price first and run only on the user's yes (MIT skill file; the CLI it installs is proprietary).
 
 </details>
 
