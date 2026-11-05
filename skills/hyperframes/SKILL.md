@@ -8,11 +8,11 @@ source_type: community
 source_repo: heygen-com/hyperframes
 author: HeyGen
 license: Apache-2.0
-license_source: https://github.com/heygen-com/hyperframes/blob/6b3e7a7a95e11d5d290123ea821b53109d6103c9/LICENSE
+license_source: https://github.com/heygen-com/hyperframes/blob/33c17df5aeb7bc45f717e7091e81ea0e0ebe6e23/LICENSE
 date_added: "2026-11-01"
 ---
 
-Modified by AAS on 2026-11-01 from [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes/tree/6b3e7a7a95e11d5d290123ea821b53109d6103c9/skills/hyperframes) at `6b3e7a7a95e11d5d290123ea821b53109d6103c9`. Apache-2.0 license retained in LICENSE; operational boundaries and examples are AAS adaptations.
+Modified by AAS on 2026-11-05 from [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes/tree/33c17df5aeb7bc45f717e7091e81ea0e0ebe6e23/skills/hyperframes) at `33c17df5aeb7bc45f717e7091e81ea0e0ebe6e23`. Apache-2.0 license retained in LICENSE; operational boundaries and examples are AAS adaptations.
 
 ## Operational boundaries (AAS adaptation)
 
@@ -26,7 +26,7 @@ Set `HYPERFRAMES_NO_TELEMETRY=1`, `HYPERFRAMES_SKIP_SKILLS=1` and `HYPERFRAMES_N
 
 HyperFrames renders HTML to video by seeking a paused timeline frame by frame, so every render is identical; the person edits the same files in the Studio preview. Use it unless another framework or a plain browser recording is asked for. Run the CLI as `npx hyperframes <command>` (`/hyperframes-cli`); at the start of a new video, `npx hyperframes usage --json` reports the person's remaining plan usage (say "unknown" when it is).
 
-`index.html` is the root composition: it declares the video's variables and mounts one scene per sub-composition from `compositions/`. Media and fonts live in `assets/`. A new project: `npx hyperframes init <dir>`. A website as the subject: `npx hyperframes capture <url> --json`.
+`index.html` is the root composition: it declares the video's variables and mounts one scene per sub-composition from `compositions/`. Media and fonts live in `assets/`. A new project: `npx hyperframes init <dir> --skip-skills --skill=hyperframes`. A website as the subject: `npx hyperframes capture <url> --json`.
 
 Build what was asked: no voiceover or captions and no new aspect ratio unless the request or the source calls for them; a film over ~15 s that tells something gets music and sound on its visible actions unless the person asked for silence (`references/sound.md`). A new video is 1920×1080 at 30 fps. A question, a hold or a loose idea gets an answer or a proposal, not an edit. Before hand-writing a named effect, transition, caption style, chart or card, search the registry (`/hyperframes-registry`). Any media (a presenter or avatar, footage, voice, music): `/media-use`, which says when HeyGen is needed and what is free. Show real things from their source (the product's screens, the brand's logo, a real place's imagery); draw only what has none.
 
@@ -88,7 +88,7 @@ Call it "the HyperFrames desktop app", never "Studio"; offer it as the better wa
 | Motion: eases, titles, cuts, punch-ins, speed, holds | `references/motion.md` |
 | Scenes, attributes, media, lint; GSAP, Lottie, 3D, canvas | `references/format.md`; `references/runtimes.md` |
 
-Decks: `/slideshow`. Remotion source: `/remotion-to-hyperframes`. Figma: `/figma`. Installing, refreshing or upgrading skills and the pinned CLI: `references/skill-lifecycle.md`.
+Decks: `/slideshow`. Remotion source: `/remotion-to-hyperframes`. Copy a video: `/reverse-any-video`. Figma: `/figma`. Skills and the pinned CLI: `references/skill-lifecycle.md`.
 
 ## When to Use
 
