@@ -66,7 +66,6 @@ Add film, ad-library research and Time Machine recovery workflows; refresh Hyper
 - @slavaolesik for NetAPI ([#2272](https://github.com/sickn33/agentic-awesome-skills/pull/2272)).
 - @ocofaigh for defensive Bash guidance ([#2283](https://github.com/sickn33/agentic-awesome-skills/pull/2283), original [#2271](https://github.com/sickn33/agentic-awesome-skills/pull/2271)).
 
----
 
 ## [20.5.0] - 2026-11-04 - "Connected Analytics and Design Workflows"
 
