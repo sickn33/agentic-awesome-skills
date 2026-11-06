@@ -389,8 +389,26 @@ function matchesInstallSelectors(skill, selectors) {
   );
 }
 
+function assertSafeInstallAncestors(rootPath) {
+  let current = path.parse(rootPath).root;
+  for (const part of path.relative(current, rootPath).split(path.sep).filter(Boolean)) {
+    current = path.join(current, part);
+    let stat;
+    try { stat = fs.lstatSync(current); }
+    catch (error) { if (error.code === "ENOENT") break; throw error; }
+    if (stat.isSymbolicLink()) {
+      // macOS /tmp and /var aliases are root-owned and not user-replaceable.
+      if (process.platform !== "darwin" || !["/tmp", "/var", "/etc"].includes(current)
+        || stat.uid !== 0) {
+        throw new Error(`Refusing unsafe install ancestor symlink: ${current}`);
+      }
+    }
+  }
+}
+
 function assertSafeDestinationPath(dest, destRoot) {
   const rootPath = path.resolve(destRoot);
+  assertSafeInstallAncestors(path.dirname(rootPath));
   const destPath = path.resolve(dest);
   const relative = path.relative(rootPath, destPath);
   if (relative.startsWith("..") || path.isAbsolute(relative)) {
@@ -1038,6 +1056,7 @@ function installForTarget(
   // Resolve all selection errors before creating or changing the target.
   const resolvedInstallEntries = installEntries || getInstallEntries(tempDir, selectors, requestedSkills);
 
+  assertSafeInstallAncestors(path.dirname(path.resolve(target.path)));
   if (fs.existsSync(target.path)) {
     ensureTargetIsDirectory(target.path);
     const targetStats = fs.lstatSync(target.path);
@@ -1128,6 +1147,7 @@ function getPostInstallMessages(targets, selectors = buildInstallSelectors({})) 
 }
 
 function buildDryRunTargetPlan(target, installEntries) {
+  assertSafeInstallAncestors(path.dirname(path.resolve(target.path)));
   const desiredEntries = uniqueValues(getManagedEntries(installEntries, target)).sort();
   const targetExists = fs.existsSync(target.path);
 
@@ -1389,6 +1409,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+  assertSafeInstallAncestors,
   copyRecursiveSync,
   replaceManagedEntry,
   getPostInstallMessages,

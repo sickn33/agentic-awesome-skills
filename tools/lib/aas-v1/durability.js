@@ -3,6 +3,7 @@
 const fs = require("node:fs");
 const fsp = require("node:fs/promises");
 const { spawnSync } = require("node:child_process");
+const { windowsPowerShell } = require("./windows-powershell");
 
 const WINDOWS_DIRECTORY_FLUSH_PATH_ENV = "AAS_WINDOWS_DIRECTORY_FLUSH_PATH";
 const WINDOWS_DIRECTORY_FLUSH_TIMEOUT_MS = 60_000;
@@ -68,10 +69,12 @@ function durabilityError(cause, details = {}) {
 
 function flushWindowsDirectory(directoryPath, cause) {
   if (process.platform !== "win32") throw cause;
-  const result = spawnSync("powershell.exe", [
+  const helper = windowsPowerShell();
+  const result = spawnSync(helper.executable, [
     "-NoProfile", "-NonInteractive", "-Command", WINDOWS_DIRECTORY_FLUSH,
   ], {
     encoding: "utf8",
+    cwd: helper.cwd,
     env: windowsFlushEnvironment(directoryPath),
     windowsHide: true,
     // Hosted Windows runners can take more than 15 seconds to cold-start
