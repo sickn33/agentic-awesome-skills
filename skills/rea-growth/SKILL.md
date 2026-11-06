@@ -285,6 +285,12 @@ badges, referrals).
   bottom thumbnails side by side, every post linked) + the CSVs.
 
 
+## Examples
+
+**Input:** “Analyze example.com's YouTube and LinkedIn content; content mode, approved cap $2, public evidence only.” Resolve official handles, sample the dated public posts in step 7, inspect available images and deliver `content.md`, `content.html` and source-linked CSVs. With fewer than 20 posts, report the sample without claiming a winning pattern. Treat the domain here as a placeholder, not an instruction to call a real service during installation.
+
+**Input:** “Explain how this competitor grew using these monthly traffic exports and public launch dates.” Use the supplied data, date every series and mark a temporal association as INFERRED rather than causal proof. If there are fewer than 12 months or five moves on a channel, list the observations without calculating a purported reliable correlation. Produce proposed plays for human review; do not publish campaigns, create accounts or spend without authorization.
+
 ## Limitations and provenance
 
 This is a locally adapted import of the canonical `skills/rea-growth/SKILL.md` at [the pinned upstream revision](https://github.com/superdesigndev/treg/tree/cf3955032ef8f15dfeff90a84ae24e31583e93e8/skills/rea-growth). The complete upstream license is retained in [LICENSE](LICENSE): Apache 2.0 **with additional terms**, including restrictions on hosted/managed/embedded services; it is not unmodified Apache-2.0 and is not relicensed under AAS's MIT license. Only client workflow documentation is imported, not the registry server. Review those terms before redistribution or service embedding.

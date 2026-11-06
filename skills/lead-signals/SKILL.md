@@ -110,6 +110,12 @@ Say once: outreach to EU and UK people needs a lawful basis, and suppression and
 come first. Then hand over the list; the user decides how to use it.
 
 
+## Examples
+
+**Input:** “Find business accounts discussing migration from our competitor in the last 30 days; approved research cap $0.50; no outreach or contact enrichment.” Search public posts for that topic, inspect a small result sample within the cap, deduplicate by company and rank only accounts matching the user's buyer criteria. Deliver a local table with company, dated signal, source URL, fit, why now and settled cost. Leave email blank because enrichment was not requested; report no matching evidence rather than inventing a lead. A later recurring run requires separate schedule and budget approval.
+
+**Input:** “Qualify these supplied company URLs.” Use the supplied public business records and evidence to explain keep/drop decisions. Do not expand into personal email/mobile discovery or install a scheduler.
+
 ## Limitations and provenance
 
 This is a locally adapted import of the canonical `skills/lead-signals/SKILL.md` at [the pinned upstream revision](https://github.com/superdesigndev/treg/tree/cf3955032ef8f15dfeff90a84ae24e31583e93e8/skills/lead-signals). The complete upstream license is retained in [LICENSE](LICENSE): Apache 2.0 **with additional terms**, including restrictions on hosted/managed/embedded services; it is not unmodified Apache-2.0 and is not relicensed under AAS's MIT license. Only client workflow documentation is imported, not the registry server. Review those terms before redistribution or service embedding.
