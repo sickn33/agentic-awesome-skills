@@ -1,13 +1,13 @@
 ---
 name: cloro-mcp
-description: "Get Google results with the AI Overview, and ChatGPT, Google AI Mode and Gemini answers with their cited sources, through cloro's hosted MCP server. Use when the user chooses cloro."
+description: "Get Google results with the AI Overview, and ChatGPT, Google AI Mode, Bing AI Mode and Gemini answers with their cited sources, through cloro's hosted MCP server. Use when the user chooses cloro."
 category: mcp
 risk: safe
 source: self
 source_type: self
 date_added: "2026-11-06"
 author: rbatista191
-tags: [mcp, ai-search, serp, geo, citations, chatgpt, gemini]
+tags: [mcp, ai-search, serp, geo, citations, chatgpt, gemini, bing]
 ---
 
 # cloro MCP
@@ -17,8 +17,8 @@ tags: [mcp, ai-search, serp, geo, citations, chatgpt, gemini]
 Use the cloro MCP tools to see what an AI assistant or Google shows for a prompt
 or query, from a chosen country: the answer text and the sources it cites. The
 tools return Google organic results with the AI Overview, and answers from
-ChatGPT, Google AI Mode and Gemini. Use the result to check if a brand, page or
-domain appears in an answer, and which sources an answer cites.
+ChatGPT, Google AI Mode, Bing AI Mode and Gemini. Use the result to check if a
+brand, page or domain appears in an answer, and which sources an answer cites.
 
 The server requires a cloro account. Each call uses credits from that account.
 The Free plan gives 500 credits a month.
@@ -30,8 +30,8 @@ answer comparison, not for general web research.
 ## When to Use This Skill
 
 - The user chooses cloro, or the cloro tools that are connected to the host.
-- The user wants to know what ChatGPT, Google AI Mode or Gemini answers for a
-  prompt, and which sources the answer cites.
+- The user wants to know what ChatGPT, Google AI Mode, Bing AI Mode or Gemini
+  answers for a prompt, and which sources the answer cites.
 - The user wants the Google results and the AI Overview for a query in a given
   country.
 - The user wants to compare an AI answer with the Google results for the same
@@ -60,6 +60,7 @@ Hosts can add a server prefix to the names.
 - `scrape_google`
 - `scrape_chatgpt`
 - `scrape_google_ai_mode`
+- `scrape_bing_aimode`
 - `scrape_gemini`
 - `resolve_google_redirect`
 - `list_countries`
@@ -76,8 +77,9 @@ settings.
 Get the prompt or query and the country. The country is an ISO 3166-1 alpha-2
 code, such as `US` or `DE`. If the user gives no country, ask. Do not guess,
 because answers and results change by country. Call `list_countries` with a
-`model` (`chatgpt`, `aimode`, `gemini`, `google` or `aioverview`) to check that
-an engine supports the country. `list_countries` costs no credits.
+`model` (`chatgpt`, `aimode`, `bing_aimode`, `gemini`, `google` or
+`aioverview`) to check that an engine supports the country. `list_countries`
+costs no credits.
 
 Use the words that a real user would type. One call gives one answer. AI answers
 change between runs, so say that one result is one sample.
@@ -89,6 +91,7 @@ change between runs, so say that one result is one sample.
 | `scrape_google` | `query`, `gl`, optional `include.aioverview: true` | 5, or 7 with the AI Overview |
 | `scrape_chatgpt` | `prompt`, `country` | 7 |
 | `scrape_google_ai_mode` | `prompt`, `gl` | 6 |
+| `scrape_bing_aimode` | `prompt`, `country` | 6 |
 | `scrape_gemini` | `prompt`, `country` | 6 |
 | `resolve_google_redirect` | `url` (a `redirectLink` value) | 1 |
 | `list_countries` | optional `model` | 0 |
@@ -110,11 +113,11 @@ cloro's async API instead of a loop of tool calls.
 
 ### 3. Read the result
 
-- AI answers (`scrape_chatgpt`, `scrape_google_ai_mode`, `scrape_gemini`): use
-  `text` for the answer and `sources` for the cited pages. Each source has
-  `position`, `label` and `url`. Count every item in `sources` as a cited source.
-  Do not filter on the `footnote` flag. `citationPills` can be empty. The ChatGPT
-  `model` field can be `null`.
+- AI answers (`scrape_chatgpt`, `scrape_google_ai_mode`, `scrape_bing_aimode`,
+  `scrape_gemini`): use `text` for the answer and `sources` for the cited pages.
+  Each source has `position`, `label` and `url`. Count every item in `sources`
+  as a cited source. Do not filter on the `footnote` flag. `citationPills` can
+  be empty. The ChatGPT `model` field can be `null`.
 - Google (`scrape_google`): `organicResults` has `position`, `title`, `link` and
   `snippet`. With `include.aioverview: true`, `aioverview` has `text` and
   `sources` when Google shows an AI Overview for the query. If `aioverview` is
