@@ -38,7 +38,7 @@ Summarize the most important change for users in one short paragraph.
 
 ## [20.7.0] - 2026-11-09 - "Interface Design and Connected Workflows"
 
-Add 28 skills for interface design, codebase refactoring, connected research and media workflows, bringing the catalog to 2,954 skills. Harden local runtime and viewer boundaries and clarify hosted-tool costs and documentation access.
+Add 29 skills for interface design, codebase refactoring, connected research and media workflows, bringing the catalog to 2,955 skills. Harden local runtime and viewer boundaries and clarify hosted-tool costs and documentation access.
 
 ### New skills
 
@@ -47,6 +47,8 @@ Add 28 skills for interface design, codebase refactoring, connected research and
 - Add `untangle-codebase` for explicitly requested structural refactoring with baseline checks and preserved user work.
 - Add `scrapingbee-cli` for authorized web extraction, `cloro-mcp` for search and public-web research, and `autorekt` for public market-data reads.
 - Add `imagera-media` and `sync-lipsync` for approved, cost-quoted media generation, and `deja-history` for local conversation recall with untrusted transcript boundaries.
+
+- Add `music-for-robots`, an optional creative exercise for audio-capable agents with verified track assets, source-attributed durations and explicit listening limitations.
 
 ### Improvements
 
@@ -66,6 +68,8 @@ Add 28 skills for interface design, codebase refactoring, connected research and
 - @scrapingbee-integrations for ScrapingBee ([#2302](https://github.com/sickn33/agentic-awesome-skills/pull/2302)), @rbatista191 for Cloro ([#2293](https://github.com/sickn33/agentic-awesome-skills/pull/2293)), and @Nictheboy for Autorekt ([#2289](https://github.com/sickn33/agentic-awesome-skills/pull/2289)).
 - @alexadams6ix for Imagera ([#2299](https://github.com/sickn33/agentic-awesome-skills/pull/2299)), @nachoiacovino for sync. labs ([#2287](https://github.com/sickn33/agentic-awesome-skills/pull/2287)), and @vshulcz for Deja ([#2288](https://github.com/sickn33/agentic-awesome-skills/pull/2288)).
 - @gjwang for BlockVectra guidance ([#2292](https://github.com/sickn33/agentic-awesome-skills/pull/2292)), @qangggggg for AccessLint ([#2300](https://github.com/sickn33/agentic-awesome-skills/pull/2300)), @phuryn for Staygreen ([#2301](https://github.com/sickn33/agentic-awesome-skills/pull/2301)), and @LoganOneal for the CrakSEO source listing ([#2298](https://github.com/sickn33/agentic-awesome-skills/pull/2298)).
+
+- @luchtan-GIT for the music-inspired creative exercise ([#2306](https://github.com/sickn33/agentic-awesome-skills/pull/2306)).
 
 ## [20.6.0] - 2026-11-05 - "Film, Ad Research and Publishing"
 
