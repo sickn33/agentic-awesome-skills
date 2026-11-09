@@ -37,7 +37,11 @@ regressions retain URL back/forward behavior and cover the new interactions.
 Browser testing also reproduced a pending-navigation race: an immediate shortcut
 returned to Skills while the URL still said Workflows. Compare a new filter/view
 state with the pending URL target, not only the last committed router snapshot;
-a deterministic delayed-router regression covers this case.
+a deterministic delayed-router regression covers this case. Mobile screenshots
+also exposed clipped shortlist text caused by conflicting button styles: hide the
+visual label in the existing icon treatment, retain the accessible name, and use
+44px touch controls. Local-save buttons now keep an explicit accessible name
+when their visual text is hidden.
 
 ## Editorial inventory and review
 

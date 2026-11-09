@@ -20,7 +20,7 @@ vi.mock('../../context/SkillContext', async (importOriginal) => {
 describe('pending catalog URL navigation', () => {
   it('replaces an in-flight view URL when the keyboard shortcut returns to search', () => {
     renderWithRouter(<Home />, { useProvider: false });
-    fireEvent.click(screen.getByRole('button', { name: 'Workflows', exact: true }));
+    fireEvent.click(screen.getByRole('button', { name: 'Workflows' }));
     expect(navigation.write.mock.lastCall?.[0].get('view')).toBe('workflows');
     fireEvent.keyDown(window, { key: 'k', metaKey: true });
     expect(screen.getByLabelText('Search skills')).toHaveFocus();
