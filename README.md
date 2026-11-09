@@ -224,6 +224,8 @@ Key source families include:
 
 ### Official Sources
 
+- **[phuryn/product-engineering](https://github.com/phuryn/product-engineering/tree/main/app-stack/skills/uptime-monitoring)**: Official Staygreen skill (`uptime-monitoring`) - content checks confirmed from a second location, heartbeats for scheduled jobs, certificate and domain expiry, status pages and a tested alert route, through the hosted Staygreen MCP server; the same steps work on a monitoring service the owner already uses (MIT).
+
 - **[CrakSEO/skills](https://github.com/CrakSEO/skills)**: External MIT collection for CrakSEO hosted MCP integrations covering SEO research, Search Console and URL indexing. Listed as an upstream resource; not bundled or connected by this repository.
 
 - **[superdesigndev/treg](https://github.com/superdesigndev/treg)**: Source for seven Treg client workflow skills: `treg`, `jev-memory`, `lead-signals`, `make-ugc`, `rea-growth`, `recruit` and `web-access`. Apache 2.0 with additional terms (LicenseRef-Treg), including hosted-service restrictions; complete custom notices retained in each bundle. AAS adaptations require explicit budgets, data-transfer and memory consent, and authorized business-contact/media use.
