@@ -511,7 +511,7 @@ function replaceManagedEntry(
   const stageRoot = fs.mkdtempSync(path.join(targetRoot, ".antigravity-stage-"));
   const stagedEntry = path.join(stageRoot, "entry");
   const backupEntry = path.join(stageRoot, "previous");
-  let movedPreviousEntry = false;
+  let preservePreviousEntry = false;
 
   try {
     copyRecursiveSync(
@@ -529,20 +529,32 @@ function replaceManagedEntry(
     if (fs.existsSync(dest)) {
       assertSafeDestinationPath(dest, targetRoot);
       fs.renameSync(dest, backupEntry);
-      movedPreviousEntry = true;
+      preservePreviousEntry = true;
     }
     fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.renameSync(stagedEntry, dest);
-    if (movedPreviousEntry) {
+    if (preservePreviousEntry) {
       fs.rmSync(backupEntry, { recursive: true, force: true });
+      preservePreviousEntry = false;
     }
   } catch (error) {
-    if (movedPreviousEntry && fs.existsSync(backupEntry) && !fs.existsSync(dest)) {
-      fs.renameSync(backupEntry, dest);
+    if (preservePreviousEntry) {
+      try {
+        // Even a dangling symlink belongs to the concurrent writer: do not replace it.
+        const destinationExists = fs.lstatSync(dest, { throwIfNoEntry: false });
+        if (destinationExists) throw new Error("destination is occupied");
+        fs.renameSync(backupEntry, dest);
+        preservePreviousEntry = false;
+      } catch (restoreError) {
+        throw new Error(
+          `${error.message}. Restore failed: ${restoreError.message}. Previous content retained at ${backupEntry}; recover it before retrying.`,
+          { cause: error },
+        );
+      }
     }
     throw error;
   } finally {
-    fs.rmSync(stageRoot, { recursive: true, force: true });
+    if (!preservePreviousEntry) fs.rmSync(stageRoot, { recursive: true, force: true });
   }
 }
 
