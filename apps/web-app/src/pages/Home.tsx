@@ -100,6 +100,9 @@ export function Home(): React.ReactElement {
   // can tell its own writes apart from browser navigation (back/forward) and
   // restore filters from the URL instead of letting them get overwritten back.
   const skipNextUrlSyncRef = useRef(false);
+  // History may already contain our write while React Router still exposes the
+  // previous params. Compare against the in-flight target on rapid changes.
+  const pendingUrlSyncRef = useRef<string | null>(null);
   // Latest committed URL. The state->URL effect compares against this ref
   // instead of subscribing to searchParams, so it never re-fires on
   // back/forward navigation and overwrites the restored URL with stale state.
@@ -148,7 +151,8 @@ export function Home(): React.ReactElement {
     if (sourceFilter !== 'all') next.set('source', sourceFilter);
     if (scopeFilter !== 'all') next.set('scope', scopeFilter);
     if (sortBy !== 'default') next.set('sort', sortBy);
-    if (next.toString() !== searchParamsRef.current.toString()) {
+    if (next.toString() !== (pendingUrlSyncRef.current ?? searchParamsRef.current.toString())) {
+      pendingUrlSyncRef.current = next.toString();
       skipNextUrlSyncRef.current = true;
       setSearchParamsRef.current(next, { replace: true });
     }
@@ -158,6 +162,7 @@ export function Home(): React.ReactElement {
   // manual address-bar edit. Without this, the state->URL effect would
   // immediately overwrite the restored URL with the stale in-memory filters.
   useEffect(() => {
+    pendingUrlSyncRef.current = null;
     if (skipNextUrlSyncRef.current) {
       skipNextUrlSyncRef.current = false;
       return;

@@ -34,6 +34,10 @@ that preserves the shortlist. Announce settled result counts and loading/search
 states, expose mobile category selection, and make the search keyboard shortcut
 return from Workflows or My collections before focusing the search field. Unit
 regressions retain URL back/forward behavior and cover the new interactions.
+Browser testing also reproduced a pending-navigation race: an immediate shortcut
+returned to Skills while the URL still said Workflows. Compare a new filter/view
+state with the pending URL target, not only the last committed router snapshot;
+a deterministic delayed-router regression covers this case.
 
 ## Editorial inventory and review
 
