@@ -38,6 +38,10 @@ Summarize the most important change for users in one short paragraph.
 
 ## [Unreleased]
 
+### Fixes
+
+- Keep guide source links pinned to the deployed commit without publishing stale update dates when a hosted build has no complete Git history.
+
 ### Improvements
 
 - Identify Agentic Awesome Skills and its former Antigravity name consistently in the homepage's initial HTML, visible content, README and discovery guides, with official setup, repository and license links.

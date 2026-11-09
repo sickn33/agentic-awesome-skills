@@ -3,6 +3,12 @@ import { buildSitemap, DEFAULT_TOP_SKILL_COUNT, generateSitemapXml, getSeoLandin
 import { getDocsMetadata } from './docs-metadata.js';
 
 describe('sitemap generation script helpers', () => {
+  it('omits an explicitly unavailable guide date instead of substituting the build date', () => {
+    const xml = generateSitemapXml({ baseUrl: 'https://example.com', paths: ['/docs/guide/', '/'], lastmod: '2099-01-01', modifiedByPath: { '/docs/guide/': null } });
+    const entries = xml.match(/<url>[\s\S]*?<\/url>/g);
+    expect(entries[0]).not.toContain('<lastmod>');
+    expect(entries[1]).toContain('<lastmod>2099-01-01</lastmod>');
+  });
   it('uses each guide Git date rather than the build date', () => {
     const metadata = getDocsMetadata();
     expect(metadata['getting-started'].commit).toMatch(/^[a-f0-9]{40}$/);

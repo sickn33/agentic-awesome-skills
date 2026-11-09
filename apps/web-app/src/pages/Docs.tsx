@@ -141,7 +141,7 @@ export default function Docs() {
         {doc ? <div className="docs-content" id="docs-content" tabIndex={-1}>
           <nav className="docs-breadcrumbs" aria-label="Breadcrumb"><Link to="/">Home</Link><span aria-hidden="true">/</span><Link to="/docs/">Documentation</Link><span aria-hidden="true">/</span><span aria-current="page">{doc.title}</span></nav>
           {metadata && <div className="docs-metadata">
-            <span>Updated <time dateTime={metadata.modified}>{metadata.modified.slice(0, 10)}</time></span>
+            {metadata.modified && <span>Updated <time dateTime={metadata.modified}>{metadata.modified.slice(0, 10)}</time></span>}
             <a href={`https://github.com/sickn33/agentic-awesome-skills/blob/${metadata.commit}/${metadata.sourcePath}`}>View source · {metadata.commit.slice(0, 7)}</a>
             <a href={`https://github.com/sickn33/agentic-awesome-skills/edit/main/${metadata.sourcePath}`}>Edit this page</a>
           </div>}
