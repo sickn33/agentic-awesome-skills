@@ -2,6 +2,7 @@
 
 const crypto = require("node:crypto");
 const { spawnSync } = require("node:child_process");
+const { windowsPowerShell } = require("../windows-powershell");
 const fs = require("node:fs");
 const fsp = require("node:fs/promises");
 const path = require("node:path");
@@ -26,8 +27,10 @@ function runWindowsAcl(script, filePath, options = {}) {
   const runner = options.runner || spawnSync;
   const securityModule = "$securityModule=Join-Path $PSHOME 'Modules\\Microsoft.PowerShell.Security\\Microsoft.PowerShell.Security.psd1';if(Test-Path -LiteralPath $securityModule){Import-Module -Name $securityModule -ErrorAction Stop}else{Import-Module Microsoft.PowerShell.Security -ErrorAction Stop}";
   const command = `${securityModule};${script}`;
-  const result = runner("powershell.exe", ["-NoProfile", "-NonInteractive", "-Command", command], {
+  const helper = windowsPowerShell({ ...process.env, ...(options.environment || {}) });
+  const result = runner(helper.executable, ["-NoProfile", "-NonInteractive", "-Command", command], {
     encoding: "utf8",
+    cwd: helper.cwd,
     windowsHide: true,
     timeout: 15000,
     maxBuffer: 64 * 1024,

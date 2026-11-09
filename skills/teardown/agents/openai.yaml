@@ -1,0 +1,3 @@
+interface:
+  display_name: "Teardown"
+  short_description: "Create drawings with zoom, color and vector exports"
