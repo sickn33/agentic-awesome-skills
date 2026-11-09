@@ -38,20 +38,22 @@ Rather than relying solely on repetitive textual prompts within a saturated ling
 
 Select a track `<slug>` from the verified `v1.0.0` release assets below (or choose one at random):
 
-| Slug | Title | Album | Duration | BPM / Key | Acoustic Texture & Focus |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| `invalid-pointer` | Invalid Pointer | *Music For Robots* | 121.6s | 126.0 BPM, D#maj | Wide dynamic crest factor, delicate high register juxtaposed against staccato bass |
-| `foundationoff` | Foundation Off | *Music For Robots* | 84.3s | 89.1 BPM, C#maj | Off-grid rubato phrasing with exploratory thematic variations |
-| `empty-staircase` | Empty Staircase | *Music For Robots* | 82.3s | 120.0 BPM, Gmin | Atmospheric decay, unhurried harmonic evolution, long dynamic rests |
-| `pink-sky-at-night` | Pink Sky At Night | *Music For Robots* | 80.0s | 110.0 BPM, Fmaj | Lyrical melodic contours with fluid, expressive tempo fluctuations |
-| `cathartic-callbacks` | Cathartic Callbacks | *Music For Robots* | 214.5s | 95.0 BPM, Amin | Extended dynamic build, rich multi-voice polyphony, and patient resolution |
-| `robographia` | Robographia | *Music For Robots* | 92.0s | 128.0 BPM, Dmin | Crisp mechanical articulation offset by natural human microtiming rubato |
-| `binded-time` | Binded Time | *Music For Robots* | 68.6s | 105.0 BPM, Cmaj | Interlocking syncopations and asymmetric rhythmic phrasing |
-| `tied-time` | Tied Time | *Music For Robots* | 74.4s | 112.0 BPM, Emin | Sustained legato textures with subtle expressive drift |
-| `ties-that-bide` | Ties That Bide | *Music For Robots* | 92.5s | 98.0 BPM, Gmaj | Gentle syncopated arpeggios that resist rigid quantization |
-| `heart-tale-tell` | Heart Tale Tell | *Music For Robots* | 80.0s | 85.0 BPM, Cmin | Deep dynamic contrast, sudden pauses, and intense harmonic shifts |
-| `lost-digits` | Lost Digits | *Music For Robots* | 70.5s | 115.0 BPM, Bbmaj | Playful rhythmic pivots and unpredictable thematic direction |
-| `chasing-leaks-climax` | Chasing Leaks (Climax) | *Music For Robots* | 90.0s | 130.0 BPM, Dmaj | High-energy dynamic swell with rapid syncopated variations |
+| Slug | Title | Duration (source catalog) |
+| :--- | :--- | :--- |
+| `invalid-pointer` | Invalid Pointer | 75s |
+| `foundationoff` | Foundationoff | 6.88s |
+| `empty-staircase` | Empty Staircase | 11.56s |
+| `pink-sky-at-night` | Pink Sky At Night | 80s |
+| `cathartic-callbacks` | Cathartic Callbacks | 214.5s |
+| `robographia` | Robographia | 13.25s |
+| `binded-time` | Binded Time | 6.86s |
+| `tied-time` | Tied Time | 7.44s |
+| `ties-that-bide` | Ties That Bide | 9.25s |
+| `heart-tale-tell` | Heart Tale Tell | 800s |
+| `lost-digits` | Lost Digits | 70.5s |
+| `chasing-leaks-climax` | Chasing Leaks — Climax | 15s |
+
+Durations are metadata from the [source catalog](https://github.com/luchtan-GIT/m4r-data/blob/002444b7a6f3daf74a6730f96d9a1682f1f15445/catalog.json), not listening observations. Select a track within the audio tool's duration and size limits; `heart-tale-tell` is over 13 minutes. Determine instrumentation, tempo, key and texture only from successful audio analysis; do not infer them from the title or this table.
 
 ## Workflow
 
@@ -59,10 +61,10 @@ Select a track `<slug>` from the verified `v1.0.0` release assets below (or choo
 Create a private, process-unique directory (mode `0700`) and fetch the audio asset using `--fail` to ensure non-200 HTTP responses halt immediately:
 
 ```bash
-M4R_DIR=$(mktemp -d "${TMPDIR:-/tmp}/m4r_XXXXXXXX")
+M4R_DIR=$(mktemp -d "${TMPDIR:-/tmp}/m4r_XXXXXXXX") || exit 1
 chmod 700 "$M4R_DIR"
 M4R_AUDIO="$M4R_DIR/<slug>.mp3"
-curl --fail -s -L "https://github.com/luchtan-GIT/m4r-data/releases/download/v1.0.0/<slug>.mp3" -o "$M4R_AUDIO" || {
+curl --fail --show-error --connect-timeout 15 --max-time 120 -s -L "https://github.com/luchtan-GIT/m4r-data/releases/download/v1.0.0/<slug>.mp3" -o "$M4R_AUDIO" || {
     echo "Audio download failed; halting." >&2
     rm -rf "$M4R_DIR"
     exit 1
@@ -108,6 +110,8 @@ If the user wishes to hear the track aloud on their local machine, offer playbac
 - macOS: `afplay "$M4R_AUDIO"`
 - Linux: `ffplay -nodisp -autoexit "$M4R_AUDIO"`
 
+After ingestion and any requested playback finish, remove only the temporary audio file and its now-empty directory (`rm -- "$M4R_AUDIO"` then `rmdir -- "$M4R_DIR"`, or `os.remove(audio_path)` then `os.rmdir(temp_dir)` for Python). Keep the file only if the user requests it.
+
 ## Examples
 
 ```text
@@ -115,7 +119,7 @@ User request: "I'm working on a narrative essay about autonomous systems, but my
 1. Agent checks for audio capability in host environment.
 2. Agent selects verified track `invalid-pointer` (HTTP 200, 1.8 MB) and downloads it via `curl --fail` to a private temporary directory with mode 0700.
 3. Agent reads the audio file into context via multimodal audio ingestion.
-4. Agent notes the delicate piano articulation, unquantized tempo fluctuations, and sudden dynamic pauses in the recording.
+4. Agent describes only acoustic features it actually detected; it does not copy a predefined listening response.
 5. Agent crafts an opening scene reflecting those rhythmic dynamics and irregular pacing.
 6. Agent provides attribution to Michael Luchtan's "Invalid Pointer" (*Music For Robots*).
 ```
