@@ -8,7 +8,7 @@ try {
  const pkg={name:'aas-cache-input-fixture',version:'1.0.0',private:true,packageManager:require(path.join(root,'package.json')).packageManager,scripts:{'app:ci:test':'echo test','app:ci:compile':'echo compile'}};
  write('package.json',JSON.stringify(pkg));write('package-lock.json',JSON.stringify({name:pkg.name,version:pkg.version,lockfileVersion:3,packages:{'':{name:pkg.name,version:pkg.version}}}));
  write('.gitignore','.turbo/\n');
- const files=['CHANGELOG.md','tools/scripts/release_changelog.cjs','docs/maintainers/maintenance-contract.md','docs/users/usage.md','docs/examples/workflows/mcp-contract/plan.json','docs/contributors/content-aliases.json','apps/web-app/src/demo.ts','apps/web-app/src/demo.test.ts','tools/lib/aas-v1/ontology.v1.json','data/catalog.json'];
+ const files=['CHANGELOG.md','tools/scripts/release_changelog.cjs','tools/scripts/seo-content.js','docs/maintainers/maintenance-contract.md','docs/users/usage.md','docs/examples/workflows/mcp-contract/plan.json','docs/contributors/content-aliases.json','apps/web-app/src/demo.ts','apps/web-app/src/demo.test.ts','tools/lib/aas-v1/ontology.v1.json','data/catalog.json'];
  for(const file of files)write(file,'original\n');
  const git=args=>execFileSync('git',args,{cwd:dir,stdio:'pipe'});
  git(['init']);git(['add','.']);
