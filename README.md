@@ -382,6 +382,7 @@ Key source families include:
 - **[sendblue-api/sendblue-cli](https://github.com/sendblue-api/sendblue-cli)**: Source for `sendblue/sendblue-cli`.
 - **[sfxmint/sfxmint-mcp](https://github.com/sfxmint/sfxmint-mcp)**: Source for `sfxmint`.
 - **[soundza/soundza-mcp](https://github.com/soundza/soundza-mcp)**: Source for `soundza`.
+- **[synchronicity-labs/skills](https://github.com/synchronicity-labs/skills)**: Source for `sync-lipsync`.
 - **[target1m/footval-mcp](https://github.com/target1m/footval-mcp)**: Source for `footval-follow-matches-and-tables`, `footval-scout-and-rank-players`, `footval-stats-and-transfer-news`, `footval-value-and-compare-players`.
 - **[uiverify/uiverify](https://github.com/uiverify/uiverify)**: Source for `uiverify-triage-visual-changes`.
 - **[wassim-azi/agy-powerline](https://github.com/wassim-azi/agy-powerline)**: Source for `agy-powerline`.
