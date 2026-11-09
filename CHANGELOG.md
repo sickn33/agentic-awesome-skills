@@ -52,7 +52,7 @@ Add 28 skills for interface design, codebase refactoring, connected research and
 
 - Clarify the documentation-only BlockVectra MCP connection and keep RPC/account operations outside the skill's scope.
 - Correct AccessLint description syntax and preserve Staygreen and CrakSEO upstream-resource credits through catalog regeneration.
-- Allow contributor preflight on branches behind main while retaining exact content, head and protected-policy checks.
+- Allow contributor preflight on branches behind main and bind copied skill licenses to the correct review tree, while retaining exact content, head and protected-policy checks.
 - Update the catalog app's Supabase client and synchronized subpackages to 2.118.0.
 
 ### Security and distribution
