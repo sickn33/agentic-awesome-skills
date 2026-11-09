@@ -147,7 +147,7 @@ test("Windows ACL runner passes paths out of the command and reports bounded dia
     return { status: 1, stdout: "", stderr: "Get-Acl failed\r\nwith details\u0000" };
   };
   assert.throws(
-    () => runWindowsAcl("$p=$env:AAS_WINDOWS_ACL_PATH", inspectedPath, { phase: "inspectAcl", runner }),
+    () => runWindowsAcl("$p=$env:AAS_WINDOWS_ACL_PATH", inspectedPath, { phase: "inspectAcl", runner, environment: { SystemRoot: String.raw`C:\Windows` } }),
     (error) => {
       assert.equal(error.code, "AAS_ADAPTER_WINDOWS_ACL_FAILED");
       assert.deepEqual(error.details, {
@@ -159,6 +159,8 @@ test("Windows ACL runner passes paths out of the command and reports bounded dia
       return true;
     },
   );
+  assert.equal(invocation[0], String.raw`C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`);
+  assert.equal(invocation[2].cwd, String.raw`C:\Windows\System32`);
   assert.deepEqual(invocation[1].slice(0, 3), ["-NoProfile", "-NonInteractive", "-Command"]);
   assert.match(invocation[1][3], /Microsoft\.PowerShell\.Security/);
   assert.match(invocation[1][3], /Import-Module/);

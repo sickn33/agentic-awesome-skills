@@ -599,8 +599,13 @@ export default function refreshSkillsPlugin() {
                 if (!safeRealPath) return next();
 
                 if (fs.statSync(safeRealPath).isFile()) {
+                    // Bundle files are untrusted data, including direct navigations.
+                    res.setHeader('X-Content-Type-Options', 'nosniff');
+                    res.setHeader('Content-Security-Policy', "sandbox; default-src 'none'");
                     const ext = path.extname(filePath).toLowerCase();
-                    res.setHeader('Content-Type', MIME_TYPES[ext] || 'application/octet-stream');
+                    const active = ['.html', '.htm', '.xhtml', '.svg', '.js', '.mjs', '.xml'].includes(ext);
+                    res.setHeader('Content-Type', active ? 'text/plain; charset=utf-8' : (MIME_TYPES[ext] || 'application/octet-stream'));
+                    if (active || !MIME_TYPES[ext]) res.setHeader('Content-Disposition', 'attachment');
                     fs.createReadStream(safeRealPath).pipe(res);
                 } else {
                     next();

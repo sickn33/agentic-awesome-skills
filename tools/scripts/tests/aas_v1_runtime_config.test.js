@@ -422,3 +422,31 @@ test("runtime archive entry budget admits catalog growth and rejects excess", ()
   entries.push(["package/skills/excess/SKILL.md", "x"]);
   assert.throws(() => core.cache.parsePackageArchive(tar(entries), { limits }), { code: "AAS_ARCHIVE_ENTRY_LIMIT" });
 });
+
+test("runtime promotion rejects pre-existing private descendants below a replaceable ancestor", { skip: process.platform === "win32" }, async (t) => {
+  const root = await temp(t);
+  const shared = path.join(root, "shared");
+  const cacheRoot = path.join(shared, "private", "cache");
+  await fsp.mkdir(path.join(cacheRoot, "runtimes", "14.6.0"), { recursive: true, mode: 0o700 });
+  await fsp.chmod(shared, 0o777);
+  const fixture = releaseFixture();
+  await assert.rejects(core.cache.installRuntimeFromRegistry({
+    cacheRoot, version: "14.6.0", expectedIntegrity: fixture.integrity, fetcher: fixture.fetcher,
+  }), error => error.code === "AAS_RUNTIME_DIRECTORY_UNSAFE");
+});
+
+test("runtime reuse and explicit status reject ancestry made replaceable after installation", { skip: process.platform === "win32" }, async (t) => {
+  const root = await temp(t);
+  const shared = path.join(root, "shared");
+  await fsp.mkdir(shared, { mode: 0o700 });
+  const cacheRoot = path.join(shared, "cache");
+  const fixture = releaseFixture();
+  await core.cache.installRuntimeFromRegistry({ cacheRoot, version: "14.6.0", expectedIntegrity: fixture.integrity, fetcher: fixture.fetcher });
+  await fsp.chmod(shared, 0o777);
+  const status = await core.cache.runtimeStatus({ cacheRoot, packageVersion: "14.6.0", integrity: fixture.integrity });
+  assert.equal(status.status, "invalid");
+  assert.equal(status.error.code, "AAS_RUNTIME_DIRECTORY_UNSAFE");
+  await assert.rejects(core.cache.installRuntimeFromRegistry({
+    cacheRoot, version: "14.6.0", expectedIntegrity: fixture.integrity, fetcher: fixture.fetcher,
+  }), error => error.code === "AAS_RUNTIME_EXISTING_INVALID");
+});
