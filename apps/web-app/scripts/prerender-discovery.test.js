@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { JSDOM } from 'jsdom';
 import { buildPluginsFallback, buildWorkbenchFallback, buildSkillMeta } from './prerender-routes.js';
 import { buildSkillDescription } from '../src/utils/skillDescription.js';
-import seoContent from '../../../tools/lib/seo-content.js';
+import seoContent from '../../../tools/scripts/seo-content.js';
 
 const base = 'https://example.com/catalog/';
 const bundles = [{ id: 'games', name: 'Games & tools', description: 'Design <safe> games.', skills: [{ id: 'game-development/game-design' }] }];

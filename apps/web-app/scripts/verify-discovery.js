@@ -1,4 +1,4 @@
-import seoContent from '../../../tools/lib/seo-content.js';
+import seoContent from '../../../tools/scripts/seo-content.js';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';

@@ -2,7 +2,7 @@
 
 const https = require('node:https');
 const http = require('node:http');
-const { assertPageContent, assertPluginsContent, assertWorkbenchContent } = require('../lib/seo-content');
+const { assertPageContent, assertPluginsContent, assertWorkbenchContent } = require('./seo-content');
 const fs = require('node:fs');
 const path = require('node:path');
 

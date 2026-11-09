@@ -155,6 +155,13 @@
   ],
   "packageManager": "npm@11.20.0",
   "devDependencies": {
+    "parse5": "8.0.1",
     "turbo": "2.11.7"
-  }
+  },
+  "bundleDependencies": [
+    "ajv",
+    "fast-uri",
+    "sanitize-filename",
+    "yaml"
+  ]
 }

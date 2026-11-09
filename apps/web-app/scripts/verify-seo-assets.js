@@ -1,4 +1,4 @@
-import seoContent from '../../../tools/lib/seo-content.js';
+import seoContent from '../../../tools/scripts/seo-content.js';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import os from 'node:os';

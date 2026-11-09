@@ -48,6 +48,8 @@ assert.notStrictEqual(readExpectedState().pluginCount, candidates.candidates.len
 assert.throws(() => assertLiveSeoDocuments({ ...documents, plugins: documents.plugins.replace(packBody(21), '') }, expected), /initial main content/);
 assert.throws(() => assertLiveSeoDocuments({ ...documents, plugins: documents.plugins.replace(packBody(21), `<body><script>${packBody(21)}</script><!--${packBody(21)}--></body>`) }, expected), /initial main content/);
 assert.throws(() => assertLiveSeoDocuments({ ...documents, plugins: documents.plugins.replace(packBody(21), packBody(20)) }, expected), /every pack/);
+assert.throws(() => assertLiveSeoDocuments({ ...documents, plugins: documents.plugins.replace('<main>', '<main hidden>') }, expected), /initial main content/);
+assert.throws(() => assertLiveSeoDocuments({ ...documents, plugins: documents.plugins.replace('href="/docs/plugins/"', 'data-href="/docs/plugins/"') }, expected), /must link to/);
 const good = (body) => ({ status: 200, body, url: 'https://aaskills.tech/' });
 const missing = { status: 404, body: '<meta name="robots" content="noindex, follow">' + page('Page not found'), url: 'https://aaskills.tech/missing/' };
 const discovery = {
