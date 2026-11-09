@@ -1,0 +1,23 @@
+"use strict";
+const test = require("node:test");
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const os = require("node:os");
+const path = require("node:path");
+const installer = require("../../bin/install");
+test("preview and apply reject a project ancestor link before touching a separate profile", t => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "aas-ancestor-"));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const project = path.join(root, "project"), profile = path.join(root, "profile");
+  const source = path.join(root, "source"), actual = path.join(profile, "skills");
+  fs.mkdirSync(project); fs.mkdirSync(actual, { recursive: true });
+  fs.mkdirSync(path.join(source, "skills", "demo"), { recursive: true });
+  fs.writeFileSync(path.join(source, "skills", "demo", "SKILL.md"), "# Demo\n");
+  fs.writeFileSync(path.join(actual, "keep.txt"), "unchanged");
+  fs.symlinkSync(profile, path.join(project, ".agents"), process.platform === "win32" ? "junction" : "dir");
+  const target = { name: "Test", path: path.join(project, ".agents", "skills") };
+  assert.throws(() => installer.buildDryRunTargetPlan(target, installer.getInstallEntries(source)), /ancestor symlink/);
+  assert.throws(() => installer.installForTarget(source, target), /ancestor symlink/);
+  assert.equal(fs.readFileSync(path.join(actual, "keep.txt"), "utf8"), "unchanged");
+  assert.equal(fs.existsSync(path.join(actual, "demo")), false);
+});
