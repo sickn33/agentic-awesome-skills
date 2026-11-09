@@ -70,17 +70,17 @@ Unlike prompt-based brainstorming or persona skills (`brainstorming`, `creative-
    - Analyze the composition directly from the audio signal: pay attention to **unquantized micro-timing (human rubato)**, **dynamic crest factor (silence vs. attack)**, **harmonic movement**, and **structural transitions**.
    - Do **not** fetch or quote pre-written critic reviews from `manifest.json` during ingestion; form your own acoustic observation first.
 
-3. **Output the Cognitive Calibration Reflection & Execute the Pivot:**
-   Before continuing with the user's primary task, present a concise calibration block:
-   - **Signal / Telemetry Reflection (2–3 sentences):** Describe the specific acoustic features heard in the track (tempo push/pull, timbre, dynamic arc, structural surprise).
-   - **Cognitive Calibration Shift (1–2 sentences):** State concretely how those musical dynamics are shifting your approach to the current task (e.g., breaking symmetrical bullet lists, simplifying an over-engineered abstraction, varying sentence cadence).
+3. **Share What You Heard & Respond to the User's Task:**
+   Before continuing with the user's primary task, include a brief listening note:
+   - **Listening Note (2–3 sentences):** Describe what you actually heard in the composition (instruments/timbres, rhythm and timing, how the voices move against each other, and how the piece ends).
    - **Attribution:** Cite the track title, album, and composer **Michael Luchtan** (*Music For Robots* — [Spotify](https://open.spotify.com/artist/2WeSjSNo31wjFPDqBSU4qY) | [Bandcamp](https://music4robots.bandcamp.com/) | [The Mechanical Ear Dataset](https://luchtan-git.github.io/m4r-data/)).
    - **Optional Human Playback Offer:** Ask the user if they would like to hear the track out loud on their machine (`afplay "/tmp/m4r-<slug>.mp3"` on macOS or `ffplay -nodisp -autoexit "/tmp/m4r-<slug>.mp3"` on Linux/Windows) only after they confirm.
+   - **Respond Naturally:** Proceed directly with the user's task, letting the music in your context window naturally calibrate your response without forced stylistic templates.
 
 ### 3. Verify the result
 
 - Confirm that `/tmp/m4r-<slug>.mp3` exists and is non-empty before invoking multimodal `read_file`.
-- Verify that the response includes the **Signal / Telemetry Reflection**, the **Cognitive Calibration Shift**, and attribution before delivering the revised code, architecture, or prose.
+- Verify that the response includes a brief **Listening Note** on the audio and attribution before delivering the response to the user's task.
 - If the current model or harness does not support multimodal `.mp3` ingestion via `read_file`, explicitly report that audio token ingestion is unsupported in the current runtime and fall back to structural calibration using the track's tempo, key, and calibration target from the catalog table.
 
 ## Examples
@@ -91,8 +91,8 @@ Illustrative workflow (not a measured benchmark):
 User request: "My technical essay drafts keep sounding like generic AI boilerplate. Use music-for-robots to calibrate your cognition and rewrite the introduction."
 Inputs: Selected track `syntax-error` (105.0s, 117.5 BPM, G#maj) downloaded to `/tmp/m4r-syntax-error.mp3` after user confirmation.
 Expected result:
-1. The agent downloads `/tmp/m4r-syntax-error.mp3` from pinned release `v1.0.0` and ingests it via `read_file`.
-2. The agent outputs a 2-sentence reflection on the track's unquantized rhythmic hesitation and sudden harmonic shifts, explains how it will replace symmetrical three-part clauses with asymmetric cadence, cites Michael Luchtan's "Syntax Error" (Bootstrap Variations), and delivers the rewritten introduction.
+1. The agent downloads `/tmp/m4r-syntax-error.mp3` from pinned release `v1.0.0` and listens to it via `read_file`.
+2. The agent outputs a 2-sentence note on what it heard in the track, cites Michael Luchtan's "Syntax Error" (Bootstrap Variations), and delivers the rewritten introduction from the calibrated context.
 ```
 
 ## Limitations
