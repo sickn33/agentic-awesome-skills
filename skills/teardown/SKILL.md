@@ -157,6 +157,6 @@ Design recipes are scoped guidance, not universal correctness proofs. Browser, a
 
 ## Source provenance
 
-Adapted from [jakubkrehel/skills](https://github.com/jakubkrehel/skills) at `60bf140e43c98b248e6594487384ec967e89d98a` under MIT; copyright retained in LICENSE. AAS adaptations add metadata, invocation scope, operational boundaries, examples and limitations. Support files retain upstream content.
+Adapted from [jakubkrehel/skills](https://github.com/jakubkrehel/skills) at `60bf140e43c98b248e6594487384ec967e89d98a` under MIT; copyright retained in LICENSE. AAS adaptations add metadata, invocation scope, operational boundaries, examples and limitations. Support files retain upstream content except the AAS viewer-check hardening: drawing IDs travel as CDP data arguments, screenshot IDs are validated, file URLs are encoded, and mixed-case script delimiters are covered by regression tests.
 
 The bundled model loader executes local model JavaScript; Node vm is not a security sandbox. Inspect and trust model scripts and configured paths before execution. Use a disposable directory for untrusted models; never execute downloaded models merely to inspect them. Building the viewer embeds locally installed third-party libraries/fonts: obtain them only when authorized and retain their licenses. Browser checks launch a separate temporary headless profile.

@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 const fs = require('node:fs'), os = require('node:os'), path = require('node:path'), {spawn} = require('node:child_process');
+const {pathToFileURL} = require('node:url');
 const {findChrome} = require('./commands.cjs');
 
 const TIMEOUT = 60000;
@@ -38,6 +39,29 @@ async function connect(profile) {
   return {send, on: listen => listeners.push(listen), close: () => socket.close()};
 }
 
+// Keep page data out of JavaScript source and screenshot paths.
+async function selectDrawing(cdp, id) {
+  if (typeof id !== 'string' || !/^[a-z]/.test(id) || /[^a-z0-9-]/.test(id)) throw Error('Drawing IDs must be safe slugs');
+  const subject = await cdp.send('Runtime.evaluate', {expression: "document.getElementById('subject')"});
+  if (subject.exceptionDetails || !subject.result?.objectId) throw Error('Drawing selector is unavailable');
+  try {
+    const result = await cdp.send('Runtime.callFunctionOn', {
+      objectId: subject.result.objectId,
+      functionDeclaration: `function (id) {
+        if (this.value !== id) {
+          this.value = id;
+          this.dispatchEvent(new Event('change'));
+        }
+      }`,
+      arguments: [{value: id}],
+      returnByValue: true
+    });
+    if (result.exceptionDetails) throw Error('Could not select drawing');
+  } finally {
+    await cdp.send('Runtime.releaseObject', {objectId: subject.result.objectId});
+  }
+}
+
 async function check(htmlPath, outDir, {dark = false} = {}) {
   const chrome = findChrome();
   if (!chrome) throw Error('Chrome or Chromium is required for the viewer check');
@@ -58,7 +82,7 @@ async function check(htmlPath, outDir, {dark = false} = {}) {
     await cdp.send('Network.enable');
     await cdp.send('Page.enable');
     await cdp.send('Emulation.setEmulatedMedia', {features: [{name: 'prefers-color-scheme', value: dark ? 'dark' : 'light'}]});
-    await cdp.send('Page.navigate', {url: 'file://' + page});
+    await cdp.send('Page.navigate', {url: pathToFileURL(page).href});
     const evaluate = async expression => (await cdp.send('Runtime.evaluate', {expression, returnByValue: true})).result.value;
     const settle = async () => {
       const start = Date.now();
@@ -74,7 +98,7 @@ async function check(htmlPath, outDir, {dark = false} = {}) {
     const drawings = await evaluate(`JSON.parse(document.getElementById('drawing-data').textContent).map(d => ({id: d.id, parts: d.parts.length}))`);
     const results = [];
     for (const d of drawings) {
-      await evaluate(`(() => { const s = document.getElementById('subject'); if (s.value !== ${JSON.stringify(d.id)}) { s.value = ${JSON.stringify(d.id)}; s.dispatchEvent(new Event('change')); } })()`);
+      await selectDrawing(cdp, d.id);
       const state = await settle();
       const ok = state.status === 'Drawing updated' && state.parts === d.parts;
       if (!ok) problems.push(`${d.id}: status "${state.status || state.message}", ${state.parts} of ${d.parts} parts drawn`);
@@ -109,3 +133,4 @@ if (require.main === module) {
   }
 }
 module.exports = check;
+module.exports.selectDrawing = selectDrawing;
