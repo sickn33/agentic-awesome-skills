@@ -6,6 +6,7 @@ import { packJourneys, packTitles } from '../data/packJourneys';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { buildPluginsMeta, toIndexableRoutePath } from '../utils/seo';
 import { releaseFileUrl } from '../utils/catalogRelease';
+import { skillCatalogId } from '../utils/releaseLinks.js';
 import './Plugins.css';
 
 const categoryLabels: Record<string, string> = { build: 'Development', design: 'Design & content', data: 'Data', agents: 'AI & automation', quality: 'Quality & security', growth: 'Growth' };
@@ -63,7 +64,7 @@ export function Plugins() {
         {active ? <article className="packs-detail" id="pack-detail" key={active.id} aria-labelledby="pack-detail-title">
           <header className="packs-detail-cover"><div className="packs-detail-meta"><FolderOpen size={28} aria-hidden="true"/><span>{active.skills.length} skills in this pack</span></div><h2 id="pack-detail-title" tabIndex={-1}>{packTitles[active.id] || active.name}</h2><p>{active.why}</p><Link className="packs-primary" to="/docs/plugins/">Installation guide</Link></header>
           <div className="packs-detail-body">
-            <section aria-labelledby="pack-contents-title"><h3 id="pack-contents-title">Included skills</h3><div className="packs-skills">{active.skills.map(id => <Link key={id} to={toIndexableRoutePath(`/skill/${encodeURIComponent(id)}`)}>{id}</Link>)}</div></section>
+            <section aria-labelledby="pack-contents-title"><h3 id="pack-contents-title">Included skills</h3><div className="packs-skills">{active.skills.map(id => <Link key={id} to={toIndexableRoutePath(`/skill/${encodeURIComponent(skillCatalogId(id))}`)}>{id}</Link>)}</div></section>
             <details className="packs-notes"><summary>Who it is for</summary><p>{active.audience}</p></details>
             <details className="packs-notes"><summary>A task to start with</summary>{active.defaultPrompts.map(prompt => <p key={prompt}>{prompt}</p>)}</details>
             {active.notFor.length > 0 && <details className="packs-notes"><summary>Scope & limits</summary><ul>{active.notFor.map(limit => <li key={limit}>{limit}</li>)}</ul></details>}

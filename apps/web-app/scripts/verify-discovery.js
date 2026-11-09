@@ -1,3 +1,4 @@
+import seoContent from '../../../tools/scripts/seo-content.js';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -27,3 +28,12 @@ assert.match(read('404.html'), /name="robots" content="noindex, follow"/);
 assert.match(read('404.html'), /<h1>Page not found<\/h1>/);
 assert.match(read('share/index.html'), /name="robots" content="noindex, follow"/, 'Shared selections must retain a non-indexable static entry route');
 console.log(`Discovery verified: ${skills.length} linked skills with initial HTML, visible FAQ answers and 404 document.`);
+
+const bundles = JSON.parse(fs.readFileSync(path.resolve(root, '../../data/editorial-bundles.json'), 'utf8')).bundles;
+const plugins = read('plugins/index.html');
+const canonicalRoot = new URL('..', plugins.match(/<link[^>]*rel="canonical"[^>]*href="([^"]+)"/)[1]).href;
+seoContent.assertPluginsContent(plugins, { pluginCount: bundles.length, baseUrl: canonicalRoot });
+seoContent.assertWorkbenchContent(read('workbench/index.html'), { baseUrl: canonicalRoot });
+const pluginSkillIds = [...plugins.matchAll(/href="[^"]*\/skill\/([^/"?#]+)\/"/g)].map((match) => decodeURIComponent(match[1]));
+for (const id of pluginSkillIds) assert.ok(linkedIds.has(id), `Pack links to missing catalog skill: ${id}`);
+console.log(`Discovery verified: ${bundles.length} packs with valid skill links and initial Workbench content.`);

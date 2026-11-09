@@ -118,13 +118,13 @@ const deps = {
       return "https://aaskills.tech/";
     if (url.endsWith("/skills.json")) return index;
     if (url.endsWith("/plugins"))
-      return "AAS Specialized Plugins | 1 AI coding workflow packs specialized plugin packs numberOfItems";
+      return "AAS Specialized Plugins | 1 AI coding workflow packs specialized plugin packs numberOfItems" + '<html><body><main><h1>AAS Packs</h1><p>Install related skills as one pack. Included skills. Using your pack.</p><section data-plugin-pack="example">Example</section><a href="/docs/plugins/">Install</a><a href="/core/">Catalog</a><a href="/skill/example/">Example</a></main></body></html>';
     if (url.endsWith("/llms.txt"))
       return "https://aaskills.tech/plugins Current release: V1.2.3. 1+";
     if (url.endsWith("/sitemap.xml")) return "https://aaskills.tech/plugins";
     if (url.endsWith("/robots.txt"))
       return "User-agent: GPTBot User-agent: OAI-SearchBot User-agent: ClaudeBot User-agent: PerplexityBot";
-    return '<meta name="description" content="Explore 1+ reusable skills">Agentic Awesome Skills | AI Skills &amp; AAS Core SoftwareSourceCode';
+    return '<meta name="description" content="Explore 1+ reusable skills">Agentic Awesome Skills | AI Skills &amp; AAS Core SoftwareSourceCode<html><body><main><h1>AAS</h1><a href="/core/">Catalog</a></main></body></html>';
   },
 };
 assert.throws(

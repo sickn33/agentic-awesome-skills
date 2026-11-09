@@ -1,3 +1,4 @@
+import { buildPluginsFallback, buildWorkbenchFallback } from './prerender-routes.js';
 import { describe, expect, it } from 'vitest';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -956,7 +957,7 @@ describe('seo assets verification helpers', () => {
     fs.mkdirSync(path.dirname(routeFile), { recursive: true });
     fs.writeFileSync(
       routeFile,
-      '<html><head><title>AAS Specialized Plugins | 15 AI coding workflow packs</title><meta name="description" content="Compare 15 specialized plugin packs." /><meta property="og:title" content="AAS Specialized Plugins | AI coding workflow packs" /><script type="application/ld+json">[{"@context":"https://schema.org","@type":"CollectionPage"},{"@context":"https://schema.org","@type":"Organization"}]</script></head></html>',
+      '<html><head><title>AAS Specialized Plugins | 15 AI coding workflow packs</title><meta name="description" content="Compare 15 specialized plugin packs." /><meta property="og:title" content="AAS Specialized Plugins | AI coding workflow packs" /><script type="application/ld+json">[{"@context":"https://schema.org","@type":"CollectionPage"},{"@context":"https://schema.org","@type":"Organization"}]</script></head><body>' + buildPluginsFallback({ bundles: [{ id: 'example', name: 'Example', description: 'An example pack', skills: [{ id: 'example' }] }], siteBaseUrl: FIXTURE_ROOT_URL }) + '</body></html>',
     );
 
     const xml = `
@@ -968,6 +969,9 @@ describe('seo assets verification helpers', () => {
 
     const report = analyzeSitemap(xml, { minSkillUrls: 0 });
     expect(() => assertPrerenderedPluginRoutes(report.pluginUrls, distDir, report.normalizedRootPath)).not.toThrow();
+    expect(() => assertPrerenderedPluginRoutes(report.pluginUrls.map((url) => url.replace(/\/$/, '')), distDir, report.normalizedRootPath)).not.toThrow();
+    fs.writeFileSync(routeFile, fs.readFileSync(routeFile, 'utf8').replace(/<body>[\s\S]*<\/body>/, '<body><div id="root"></div></body>'));
+    expect(() => assertPrerenderedPluginRoutes(report.pluginUrls, distDir, report.normalizedRootPath)).toThrow('initial main content');
   });
 
   it('validates the prerendered workbench route and its in-memory review promise', () => {
@@ -977,7 +981,7 @@ describe('seo assets verification helpers', () => {
     fs.mkdirSync(path.dirname(routeFile), { recursive: true });
     fs.writeFileSync(
       routeFile,
-      '<html><head><title>AAS Core Stack Review | Agentic Awesome Skills</title><meta name="description" content="Review an AAS Core stack and plan. Imports stay in memory and cannot install or apply changes." /></head></html>',
+      '<html><head><title>AAS Core Stack Review | Agentic Awesome Skills</title><meta name="description" content="Review an AAS Core stack and plan. Imports stay in memory and cannot install or apply changes." /></head><body>' + buildWorkbenchFallback({ siteBaseUrl: FIXTURE_ROOT_URL }) + '</body></html>',
     );
 
     const xml = `

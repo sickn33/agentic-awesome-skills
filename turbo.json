@@ -22,6 +22,7 @@
         "tools/scripts/release_changelog.cjs",
         "tools/lib/**",
         "tools/scripts/setup_web.js",
+        "tools/scripts/seo-content.js",
         "tools/scripts/web_ci.cjs"
       ],
       "env": [
@@ -63,6 +64,7 @@
         "tools/scripts/release_changelog.cjs",
         "tools/lib/**",
         "tools/scripts/setup_web.js",
+        "tools/scripts/seo-content.js",
         "tools/scripts/web_ci.cjs",
         "!apps/web-app/**/*.test.*",
         "!apps/web-app/src/**/__tests__/**",

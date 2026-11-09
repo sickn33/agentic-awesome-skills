@@ -29,3 +29,8 @@ export function skillSourcePath(path) {
   if (!/^skills\/[a-z0-9_-]+(?:\/[a-z0-9_-]+)*(?:\/SKILL\.md)?$/.test(normalized)) return '';
   return normalized.endsWith('/SKILL.md') ? normalized : `${normalized}/SKILL.md`;
 }
+
+// Catalog IDs are the unique skill-directory names, including for nested source paths.
+export function skillCatalogId(sourcePath) {
+  return sourcePath.split('/').filter(Boolean).at(-1) || '';
+}

@@ -1,3 +1,4 @@
+import { buildSkillDescription } from './skillDescription.js';
 import { buildFaqItems } from './catalogFaq.js';
 import type { SeoJsonLdValue, SeoMeta, TwitterCard, Skill } from '../types';
 import { getAbsolutePublicAssetUrl } from './publicAssetUrls';
@@ -413,7 +414,7 @@ export function buildHomeMeta(skillCount: number): SeoMeta {
 export function buildPluginsMeta(pluginCount: number): SeoMeta {
   const countLabel = pluginCount > 0 ? `${pluginCount.toLocaleString('en-US')} ` : '';
   const title = `AAS Specialized Plugins | ${countLabel}AI coding workflow packs`;
-  const description = `Compare ${countLabel}specialized plugin packs for web apps, security, data analytics, documents, DevOps, QA, OSS maintenance, mobile apps, automation, and agent or MCP systems.`;
+  const description = `Compare ${countLabel}specialized plugin packs for coding, design, data and automation. Explore included skills, scope and installation guides.`;
 
   return {
     title,
@@ -520,15 +521,12 @@ export function buildTopicLandingFallbackMeta(slug: string | undefined): SeoMeta
   };
 }
 
-export function buildSkillMeta(skill: Skill, isPriority = false, canonicalPath = '/'): SeoMeta {
+export function buildSkillMeta(skill: Skill, _isPriority = false, canonicalPath = '/'): SeoMeta {
   const safeName = skill.name || 'Unnamed skill';
-  const safeDescription = skill.description || 'Installable AI skill';
   const safeCategory = skill.category || 'Tools';
   const safeSource = skill.source || 'community contributors';
-  const added = skill.date_added ? `Added ${skill.date_added}. ` : '';
-  const trust = isPriority ? ` Prioritized in our catalog for quality and reuse. ` : ' ';
   const title = `${safeName} | Agentic Awesome Skills`;
-  const description = `${added}Use the @${safeName} skill for ${safeDescription} (${safeCategory}, ${safeSource}).${trust}Install and run quickly with your CLI workflow.`;
+  const description = buildSkillDescription(skill);
   return {
     title,
     description: description.trim(),
