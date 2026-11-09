@@ -51,7 +51,7 @@ describe('canonical specialized plugin definitions', () => {
     renderWithRouter(<Plugins />, { route: `/plugins?pack=${encodeURIComponent(plugin.id)}`, path: '/plugins', useProvider: false });
     const detail = within(screen.getByRole('article'));
     for (const id of plugin.skills) {
-      expect(detail.getByRole('link', { name: id })).toHaveAttribute('href', `/skill/${encodeURIComponent(id)}/`);
+      expect(detail.getByRole('link', { name: id })).toHaveAttribute('href', `/skill/${encodeURIComponent(id.split('/').at(-1)!)}/`);
     }
   });
 });

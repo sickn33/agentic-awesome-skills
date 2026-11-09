@@ -1,3 +1,4 @@
+import seoContent from '../../../tools/lib/seo-content.js';
 import fs from 'node:fs';
 import crypto from 'node:crypto';
 import os from 'node:os';
@@ -993,7 +994,9 @@ export function assertPrerenderedPluginRoutes(pluginUrls, distDir = 'dist', norm
       fs.existsSync(filePath),
       `Missing prerendered page for plugin route: ${parsed.pathname}. Expected ${filePath}.`,
     );
-    assertPluginsDiscoveryMeta(readFile(filePath, distDir));
+    const html = readFile(filePath, distDir);
+    assertPluginsDiscoveryMeta(html);
+    seoContent.assertPluginsContent(html, { baseUrl: pluginUrl.replace(/\/plugins\/?$/, '/') });
   }
 }
 
@@ -1006,6 +1009,7 @@ export function assertPrerenderedWorkbenchRoutes(workbenchUrls, distDir = 'dist'
       `Missing prerendered page for workbench route: ${parsed.pathname}. Expected ${filePath}.`,
     );
     const html = readFile(filePath, distDir);
+    seoContent.assertWorkbenchContent(html, { baseUrl: workbenchUrl.replace(/\/workbench\/?$/, '/') });
     assert(extractTitle(html).includes('AAS Core Stack Review'), 'Workbench prerender must expose its AAS Core review title.');
     assert(extractMetaContent(html, 'name', 'description')?.includes('Imports stay in memory'), 'Workbench prerender must describe in-memory review.');
   }

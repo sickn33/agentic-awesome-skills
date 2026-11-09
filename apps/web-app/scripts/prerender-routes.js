@@ -1,3 +1,5 @@
+import { skillCatalogId } from '../src/utils/releaseLinks.js';
+import { buildSkillDescription } from '../src/utils/skillDescription.js';
 import { buildFaqItems } from '../src/utils/catalogFaq.js';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -328,6 +330,21 @@ function buildHomeFallback({ landingPages, siteBaseUrl, skills }) {
   ].join('');
 }
 
+export function buildPluginsFallback({ bundles, siteBaseUrl }) {
+  const packs = bundles.map((bundle) => {
+    const skills = bundle.skills.map((skill) => ({
+      href: routeToUrl(`/skill/${encodeURIComponent(skillCatalogId(skill.id))}`, siteBaseUrl),
+      label: skill.id,
+    }));
+    return `<section data-plugin-pack="${escapeHtml(bundle.id)}"><h2>${escapeHtml(bundle.name)}</h2><p>${escapeHtml(bundle.description)}</p><p>Pack ID: <code>${escapeHtml(bundle.id)}</code></p><h3>Included skills</h3><ul>${buildStaticLinkList(skills)}</ul></section>`;
+  });
+  return `<main data-prerender-fallback="true"><h1>AAS Packs</h1><p>Install related skills as one pack.</p><p>${bundles.length.toLocaleString('en-US')} packs. Browse packs and their included skills.</p><a href="${escapeHtml(routeToUrl('/docs/plugins', siteBaseUrl))}">Installation guide</a>${packs.join('')}<section><h2>Using your pack</h2><p>Install it in a compatible agent, then give the agent a task. External tools and services need their own setup.</p><a href="${escapeHtml(routeToUrl('/aas-core', siteBaseUrl))}">Explore AAS Core</a><a href="${escapeHtml(routeToUrl('/core', siteBaseUrl))}">Browse all skills</a></section></main>`;
+}
+
+export function buildWorkbenchFallback({ siteBaseUrl }) {
+  return `<main data-prerender-fallback="true"><h1>Review what your agent selected.</h1><p>Review the exact skills, project profile and proposed changes saved by your agent. Import <code>aas-stack.json</code>, an immutable CLI plan, and optional selection evidence.</p><p>Imports stay in memory. Enable JavaScript to import and review artifacts in this browser.</p><section><h2>Need a stack to review?</h2><ol><li><a href="${escapeHtml(routeToUrl('/core', siteBaseUrl))}">Compare skills in the catalog</a> and copy an agent brief with your goal and target.</li><li>Give the brief to your coding agent with AAS MCP configured. Let it inspect your project and select exact IDs; review its choices before saving <code>aas-stack.json</code>.</li><li>Validate the manifest and generate a preview plan with the CLI, then import both files and optional <code>aas-selection-evidence.json</code>.</li></ol><a href="${escapeHtml(routeToUrl('/docs/aas-core', siteBaseUrl))}">Configuration and preview commands</a></section><section><h2>Review surface, not an installer</h2><p>This page cannot install, apply, share, or persist an imported artifact. Files are read only after you select them. Digests check artifact consistency, not author identity or skill suitability; catalog bytes are not downloaded.</p></section></main>`;
+}
+
 function buildTopicFallback({ page, landingPages, skills, siteBaseUrl }) {
   const curatedSkills = getCuratedSkillsForLandingPage(page, skills);
   const skillLinks = curatedSkills.map((skill) => ({
@@ -557,16 +574,12 @@ function buildHomeMeta({ catalogCount, imageUrl, canonicalUrl }) {
   };
 }
 
-function buildSkillMeta({ skill, isPriority, imageUrl, canonicalUrl }) {
+export function buildSkillMeta({ skill, imageUrl, canonicalUrl }) {
   const safeName = safeText(skill.name) || 'Unnamed skill';
-  const safeDescription = safeText(skill.description) || 'Installable AI skill';
   const safeCategory = safeText(skill.category) || 'Tools';
   const safeSource = safeText(skill.source) || 'community contributors';
-  const added = skill.date_added ? `Added ${skill.date_added}. ` : '';
-  const trust = isPriority ? ' Prioritized in our catalog for quality and reuse. ' : ' ';
-
   const title = `${safeName} | ${SITE_NAME}`;
-  const description = `${added}Use the @${safeName} skill for ${safeDescription} (${safeCategory}, ${safeSource}).${trust}Install and run quickly with your CLI workflow.`;
+  const description = buildSkillDescription(skill);
 
   return {
     title,
@@ -607,7 +620,7 @@ function buildSkillMeta({ skill, isPriority, imageUrl, canonicalUrl }) {
 
 function buildPluginsMeta({ pluginCount, imageUrl, canonicalUrl }) {
   const countLabel = pluginCount > 0 ? `${pluginCount.toLocaleString('en-US')} ` : '';
-  const description = `Compare ${countLabel}specialized plugin packs for web apps, security, data analytics, documents, DevOps, QA, OSS maintenance, mobile apps, automation, and agent or MCP systems.`;
+  const description = `Compare ${countLabel}specialized plugin packs for coding, design, data and automation. Explore included skills, scope and installation guides.`;
 
   return {
     title: `AAS Specialized Plugins | ${countLabel}AI coding workflow packs`,
@@ -1036,20 +1049,21 @@ function main() {
     }, fallback);
   }
 
+  const editorialBundles = JSON.parse(fs.readFileSync(path.join(ROOT_DIR, '../../data/editorial-bundles.json'), 'utf8')).bundles;
   const pluginsCanonical = routeToUrl('/plugins', siteBaseUrl);
   const pluginsMeta = buildPluginsMeta({
-    pluginCount: JSON.parse(fs.readFileSync(path.join(ROOT_DIR, '../../data/editorial-bundles.json'), 'utf8')).bundles.length,
+    pluginCount: editorialBundles.length,
     imageUrl: socialImage,
     canonicalUrl: pluginsCanonical,
   });
-  writePrerenderedRoute('/plugins', template, pluginsMeta);
+  writePrerenderedRoute('/plugins', template, pluginsMeta, buildPluginsFallback({ bundles: editorialBundles, siteBaseUrl }));
 
   const workbenchCanonical = routeToUrl('/workbench', siteBaseUrl);
   const workbenchMeta = buildWorkbenchMeta({
     imageUrl: socialImage,
     canonicalUrl: workbenchCanonical,
   });
-  writePrerenderedRoute('/workbench', template, workbenchMeta);
+  writePrerenderedRoute('/workbench', template, workbenchMeta, buildWorkbenchFallback({ siteBaseUrl }));
 
   for (const page of landingPages) {
     if (!page?.slug) {
@@ -1100,4 +1114,4 @@ function main() {
   }
 }
 
-main();
+if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) main();

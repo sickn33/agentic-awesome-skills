@@ -131,3 +131,38 @@ Discussion posts should:
 - Avoid cannibalization by giving each user doc a distinct primary intent.
 - Prefer honest comparisons over absolute claims.
 - Do not use SEM or paid language in discovery docs unless strategy changes later.
+
+## Technical discovery checks and measurement
+
+Keep an indexable page useful in its initial HTML. Plugins must expose every
+editorial pack and its real catalog links; Workbench must describe the review
+workflow and its in-memory, non-applying boundaries before JavaScript loads.
+Skill snippets use the skill's description without prepended dates or generic
+installation copy. The 160-character editorial budget is a readability choice,
+not a Google indexing requirement.
+
+`npm run app:build` checks generated discovery content, every skill's initial
+instructions, the directory, FAQ/content consistency and pack links. Run
+`npm run check:live-seo` after deployment: it also samples route families and
+requires actual HTTP 404 responses with `noindex` for missing routes. Passing
+these checks establishes technical evidence, not rankings or AI citations.
+
+For a visibility review, export dated daily data from Google Search Console and
+Bing Webmaster Tools for the exact `https://aaskills.tech/` property. Record the
+last complete date in each export and compare equal complete periods, normally
+28 days. Keep site-wide and page-level results separate, and distinguish Google
+Web, available AI reports, Bing Web/Chat and AI citations. A citation is not a
+visit. Preserve raw exports outside the repository; do not interpret an absent
+date as zero, an invalid chart date as a valid measurement, or a stale indexing
+report as proof of post-deployment recovery. Use `traffic:normalize` for existing
+snapshot formats rather than inventing another metric pipeline. Record access
+failures and unavailable field performance data as unknown.
+
+Google's [AI features guidance](https://developers.google.com/search/docs/appearance/ai-features)
+keeps ordinary SEO fundamentals relevant and requires no special AI markup.
+Its [documentation updates](https://developers.google.com/search/updates) state
+that `llms.txt` does not affect Google Search visibility and that FAQ rich results
+were retired in May 2026. Useful visible questions and answers can remain;
+`FAQPage`, `SearchAction`, or crawler allow directives are not evidence of ranking
+or citation gains. Never infer a penalty or causation from a release followed by
+short-term traffic movement.
