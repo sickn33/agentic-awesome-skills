@@ -50,4 +50,18 @@ describe('fresh docs provenance outside cached JavaScript', () => {
       expect(() => verifyDocsRuntime(dir, next)).toThrow(/prerendered guide provenance/);
     } finally { fs.rmSync(dir, { recursive: true, force: true }); }
   });
+
+  it('accepts an undated source and rejects a stale date added to its article', () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'aas-docs-undated-'));
+    const metadata = { usage: { commit: 'c'.repeat(40), sourcePath: 'docs/users/usage.md' } };
+    try {
+      const file = path.join(dir, 'docs/usage/index.html');
+      fs.mkdirSync(path.dirname(file), { recursive: true });
+      const article = { '@type': 'TechArticle', version: metadata.usage.commit };
+      fs.writeFileSync(file, renderDocsRuntime(metadata) + `<script type="application/ld+json">${JSON.stringify(article)}</script>`);
+      expect(verifyDocsRuntime(dir, metadata)).toBe(1);
+      fs.writeFileSync(file, renderDocsRuntime(metadata) + `<script type="application/ld+json">${JSON.stringify({ ...article, dateModified: '2020-01-01' })}</script>`);
+      expect(() => verifyDocsRuntime(dir, metadata)).toThrow(/prerendered guide provenance/);
+    } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+  });
 });

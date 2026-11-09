@@ -123,7 +123,9 @@ export function generateSitemapXml({ baseUrl, paths, lastmod = DEFAULT_LASTMOD, 
   const urlsXml = uniquePaths
     .map((pathName) => {
       const href = `${normalizedBase}${pathName}`;
-      return `  <url>\n    <loc>${escapeXml(href)}</loc>\n    <lastmod>${escapeXml(modifiedByPath[pathName] || lastmod)}</lastmod>\n    <changefreq>${pathName === '/' ? 'daily' : 'weekly'}</changefreq>\n    <priority>${pathName === '/' ? '1.0' : '0.7'}</priority>\n  </url>`;
+      const modified = Object.hasOwn(modifiedByPath, pathName) ? modifiedByPath[pathName] : lastmod;
+      const date = modified ? `\n    <lastmod>${escapeXml(modified)}</lastmod>` : '';
+      return `  <url>\n    <loc>${escapeXml(href)}</loc>${date}\n    <changefreq>${pathName === '/' ? 'daily' : 'weekly'}</changefreq>\n    <priority>${pathName === '/' ? '1.0' : '0.7'}</priority>\n  </url>`;
     })
     .join('\n');
 
@@ -144,7 +146,7 @@ export function buildSitemap(skills, topCount = TOP_SKILL_COUNT, baseUrl = SITE_
   const landingPaths = getSeoLandingPaths();
   return generateSitemapXml({
     baseUrl,
-    modifiedByPath: Object.fromEntries(Object.entries(getDocsMetadata()).map(([slug, meta]) => [toIndexableRoutePath(`/docs/${slug}/`), meta.modified.slice(0, 10)])),
+    modifiedByPath: Object.fromEntries(Object.entries(getDocsMetadata()).map(([slug, meta]) => [toIndexableRoutePath(`/docs/${slug}/`), meta.modified?.slice(0, 10) ?? null])),
     paths: [
       '/',
       toIndexableRoutePath('/core'),
