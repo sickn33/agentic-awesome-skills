@@ -36,6 +36,37 @@ Summarize the most important change for users in one short paragraph.
 - Credit each contributor with their GitHub handle and merged PR link.
 -->
 
+## [20.7.0] - 2026-11-09 - "Interface Design and Connected Workflows"
+
+Add 28 skills for interface design, codebase refactoring, connected research and media workflows, bringing the catalog to 2,954 skills. Harden local runtime and viewer boundaries and clarify hosted-tool costs and documentation access.
+
+### New skills
+
+- Add fourteen Jakub Krehel interface skills covering accessibility, colors, layout, typography, writing, UI polish, interaction review, design implementation, variants, state machines and exploded-view teardown drawings.
+- Add seven Treg workflows: `treg`, `jev-memory`, `lead-signals`, `make-ugc`, `rea-growth`, `recruit` and `web-access`, with explicit budgets, data-transfer boundaries and retained upstream license notices.
+- Add `untangle-codebase` for explicitly requested structural refactoring with baseline checks and preserved user work.
+- Add `scrapingbee-cli` for authorized web extraction, `cloro-mcp` for search and public-web research, and `autorekt` for public market-data reads.
+- Add `imagera-media` and `sync-lipsync` for approved, cost-quoted media generation, and `deja-history` for local conversation recall with untrusted transcript boundaries.
+
+### Improvements
+
+- Clarify the documentation-only BlockVectra MCP connection and keep RPC/account operations outside the skill's scope.
+- Correct AccessLint description syntax and preserve Staygreen and CrakSEO upstream-resource credits through catalog regeneration.
+- Allow contributor preflight on branches behind main while retaining exact content, head and protected-policy checks.
+- Update the catalog app's Supabase client and synchronized subpackages to 2.118.0.
+
+### Security and distribution
+
+- Harden runtime-cache ancestry checks, installer destination boundaries and Windows PowerShell resolution; serve active skill documents as inert downloads in the development catalog.
+- Pass teardown drawing identifiers as browser protocol data instead of interpolated JavaScript, encode local viewer URLs correctly and cover mixed-case script tags in the builder regression tests.
+
+### Contributors
+
+- @jakubkrehel for the interface collection ([#2291](https://github.com/sickn33/agentic-awesome-skills/pull/2291)), @superdesigndev for Treg ([#2296](https://github.com/sickn33/agentic-awesome-skills/pull/2296)), and @caldoai for codebase refactoring ([#2290](https://github.com/sickn33/agentic-awesome-skills/pull/2290)).
+- @scrapingbee-integrations for ScrapingBee ([#2302](https://github.com/sickn33/agentic-awesome-skills/pull/2302)), @rbatista191 for Cloro ([#2293](https://github.com/sickn33/agentic-awesome-skills/pull/2293)), and @Nictheboy for Autorekt ([#2289](https://github.com/sickn33/agentic-awesome-skills/pull/2289)).
+- @alexadams6ix for Imagera ([#2299](https://github.com/sickn33/agentic-awesome-skills/pull/2299)), @nachoiacovino for sync. labs ([#2287](https://github.com/sickn33/agentic-awesome-skills/pull/2287)), and @vshulcz for Deja ([#2288](https://github.com/sickn33/agentic-awesome-skills/pull/2288)).
+- @gjwang for BlockVectra guidance ([#2292](https://github.com/sickn33/agentic-awesome-skills/pull/2292)), @qangggggg for AccessLint ([#2300](https://github.com/sickn33/agentic-awesome-skills/pull/2300)), @phuryn for Staygreen ([#2301](https://github.com/sickn33/agentic-awesome-skills/pull/2301)), and @LoganOneal for the CrakSEO source listing ([#2298](https://github.com/sickn33/agentic-awesome-skills/pull/2298)).
+
 ## [20.6.0] - 2026-11-05 - "Film, Ad Research and Publishing"
 
 Add film, ad-library research and Time Machine recovery workflows; refresh HyperFrames, Postel and React dependencies.
