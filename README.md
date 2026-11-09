@@ -66,7 +66,6 @@ Help keep the catalog open, maintained, and available to the builders who use it
 | --- | --- |
 | [♥ Sponsor AAS](https://github.com/sponsors/sickn33) | Ongoing maintenance, reviews, and release work |
 | [Buy Me a Coffee](https://buymeacoffee.com/sickn33) | Small, direct contributions from the community |
-| [CrakSEO/skills](https://github.com/CrakSEO/skills) | Connect Claude/Cursor/Codex to CrakSEO remote MCP servers for keyword research, SERP, backlinks, rank tracking, site audit, local SEO, AI visibility, Search Console and URL indexing | Claude Code, Cursor, Codex | MIT |
 
 Every contribution helps us keep the skills curated, the tooling tested, and the catalog useful for the next project.
 
@@ -224,6 +223,8 @@ Key source families include:
 <summary><strong>Official Sources</strong></summary>
 
 ### Official Sources
+
+- **[CrakSEO/skills](https://github.com/CrakSEO/skills)**: External MIT collection for CrakSEO hosted MCP integrations covering SEO research, Search Console and URL indexing. Listed as an upstream resource; not bundled or connected by this repository.
 
 - **[superdesigndev/treg](https://github.com/superdesigndev/treg)**: Source for seven Treg client workflow skills: `treg`, `jev-memory`, `lead-signals`, `make-ugc`, `rea-growth`, `recruit` and `web-access`. Apache 2.0 with additional terms (LicenseRef-Treg), including hosted-service restrictions; complete custom notices retained in each bundle. AAS adaptations require explicit budgets, data-transfer and memory consent, and authorized business-contact/media use.
 
