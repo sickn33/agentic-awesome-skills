@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-05T10:58:50.000Z",
-  "total": 2926,
+  "generatedAt": "2026-11-09T15:25:43.000Z",
+  "total": 2955,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -563,7 +563,7 @@
       "id": "accesslint-diff",
       "canonical_id": "accesslint-diff",
       "name": "accesslint-diff",
-      "description": "Diff a live page's accessibility violations against a baseline — by default compares uncommitted changes (stash-based), or pass --branch [<name>] to diff against a branch. Reports only new violations introduced, violations fixed, and pre-existing count. Use `scan` for a full audit with no diffing.",
+      "description": "Diff a live page's accessibility violations against a baseline — by default compares uncommitted changes (stash-based), or pass --branch [name] to diff against a branch. Reports only new violations introduced, violations fixed, and pre-existing count. Use `scan` for a full audit with no diffing.",
       "category": "design",
       "risk": "safe",
       "source": "https://github.com/AccessLint/skills",
@@ -8322,6 +8322,39 @@
       "path": "skills/autonomous-agents/SKILL.md"
     },
     {
+      "id": "autorekt",
+      "canonical_id": "autorekt",
+      "name": "autorekt",
+      "description": "Read live market data with the autorekt CLI before answering questions about prices, market moves, liquidity, positioning, options or prediction-market odds",
+      "category": "data",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "market-data",
+        "finance",
+        "trading",
+        "macro",
+        "crypto",
+        "cli"
+      ],
+      "triggers": [
+        "market-data",
+        "finance",
+        "trading",
+        "macro",
+        "crypto",
+        "cli",
+        "autorekt",
+        "read",
+        "live",
+        "market",
+        "data",
+        "before"
+      ],
+      "path": "skills/autorekt/SKILL.md"
+    },
+    {
       "id": "avalonia-layout-zafiro",
       "canonical_id": "avalonia-layout-zafiro",
       "name": "avalonia-layout-zafiro",
@@ -13779,6 +13812,230 @@
       "path": "skills/behavioral-modes/SKILL.md"
     },
     {
+      "id": "better-accessibility",
+      "canonical_id": "better-accessibility",
+      "name": "better-accessibility",
+      "description": "Reviews and fixes keyboard and focus behavior, ARIA, accessible names, forms, screen-reader announcements, motion and zoom against WCAG 2.2.",
+      "category": "design",
+      "risk": "critical",
+      "source": "https://github.com/jakubkrehel/skills",
+      "source_type": "community",
+      "source_repo": "jakubkrehel/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/jakubkrehel/skills/blob/60bf140e43c98b248e6594487384ec967e89d98a/LICENSE",
+      "tags": [
+        "better",
+        "accessibility"
+      ],
+      "triggers": [
+        "better",
+        "accessibility",
+        "reviews",
+        "fixes",
+        "keyboard",
+        "behavior",
+        "aria",
+        "accessible",
+        "names",
+        "forms",
+        "screen",
+        "reader"
+      ],
+      "path": "skills/better-accessibility/SKILL.md"
+    },
+    {
+      "id": "better-colors",
+      "canonical_id": "better-colors",
+      "name": "better-colors",
+      "description": "Builds and checks color systems by generating palettes, naming semantic tokens, converting between formats and measuring contrast.",
+      "category": "design",
+      "risk": "critical",
+      "source": "https://github.com/jakubkrehel/skills",
+      "source_type": "community",
+      "source_repo": "jakubkrehel/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/jakubkrehel/skills/blob/60bf140e43c98b248e6594487384ec967e89d98a/LICENSE",
+      "tags": [
+        "better",
+        "colors"
+      ],
+      "triggers": [
+        "better",
+        "colors",
+        "checks",
+        "color",
+        "generating",
+        "palettes",
+        "naming",
+        "semantic",
+        "tokens",
+        "converting",
+        "between",
+        "formats"
+      ],
+      "path": "skills/better-colors/SKILL.md"
+    },
+    {
+      "id": "better-interface",
+      "canonical_id": "better-interface",
+      "name": "better-interface",
+      "description": "Reviews a screen, flow or whole interface across accessibility, layout, writing, typography, color and UI polish, and returns one ranked report.",
+      "category": "design",
+      "risk": "critical",
+      "source": "https://github.com/jakubkrehel/skills",
+      "source_type": "community",
+      "source_repo": "jakubkrehel/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/jakubkrehel/skills/blob/60bf140e43c98b248e6594487384ec967e89d98a/LICENSE",
+      "tags": [
+        "better",
+        "interface"
+      ],
+      "triggers": [
+        "better",
+        "interface",
+        "reviews",
+        "screen",
+        "flow",
+        "whole",
+        "accessibility",
+        "layout",
+        "writing",
+        "typography",
+        "color",
+        "ui"
+      ],
+      "path": "skills/better-interface/SKILL.md"
+    },
+    {
+      "id": "better-layout",
+      "canonical_id": "better-layout",
+      "name": "better-layout",
+      "description": "Sets grouping, alignment, reading order, responsive structure and room for translated text, so a layout holds up when it is resized, translated or mirrored.",
+      "category": "design",
+      "risk": "critical",
+      "source": "https://github.com/jakubkrehel/skills",
+      "source_type": "community",
+      "source_repo": "jakubkrehel/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/jakubkrehel/skills/blob/60bf140e43c98b248e6594487384ec967e89d98a/LICENSE",
+      "tags": [
+        "better",
+        "layout"
+      ],
+      "triggers": [
+        "better",
+        "layout",
+        "sets",
+        "grouping",
+        "alignment",
+        "reading",
+        "order",
+        "responsive",
+        "structure",
+        "room",
+        "translated",
+        "text"
+      ],
+      "path": "skills/better-layout/SKILL.md"
+    },
+    {
+      "id": "better-typography",
+      "canonical_id": "better-typography",
+      "name": "better-typography",
+      "description": "Sets and reviews how text renders, from the type scale and spacing to font features, wrapping, truncation and punctuation.",
+      "category": "design",
+      "risk": "critical",
+      "source": "https://github.com/jakubkrehel/skills",
+      "source_type": "community",
+      "source_repo": "jakubkrehel/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/jakubkrehel/skills/blob/60bf140e43c98b248e6594487384ec967e89d98a/LICENSE",
+      "tags": [
+        "better",
+        "typography"
+      ],
+      "triggers": [
+        "better",
+        "typography",
+        "sets",
+        "reviews",
+        "how",
+        "text",
+        "renders",
+        "type",
+        "scale",
+        "spacing",
+        "font",
+        "features"
+      ],
+      "path": "skills/better-typography/SKILL.md"
+    },
+    {
+      "id": "better-ui",
+      "canonical_id": "better-ui",
+      "name": "better-ui",
+      "description": "Polishes surfaces, icons and motion with exact values for border radius, optical alignment, shadows, icon states and animation.",
+      "category": "design",
+      "risk": "critical",
+      "source": "https://github.com/jakubkrehel/skills",
+      "source_type": "community",
+      "source_repo": "jakubkrehel/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/jakubkrehel/skills/blob/60bf140e43c98b248e6594487384ec967e89d98a/LICENSE",
+      "tags": [
+        "better",
+        "ui"
+      ],
+      "triggers": [
+        "better",
+        "ui",
+        "polishes",
+        "surfaces",
+        "icons",
+        "motion",
+        "exact",
+        "values",
+        "border",
+        "radius",
+        "optical",
+        "alignment"
+      ],
+      "path": "skills/better-ui/SKILL.md"
+    },
+    {
+      "id": "better-writing",
+      "canonical_id": "better-writing",
+      "name": "better-writing",
+      "description": "Writes and reviews interface copy, from labels and errors to empty states and confirmations, so it matches the product's voice and tells people what to do next.",
+      "category": "design",
+      "risk": "critical",
+      "source": "https://github.com/jakubkrehel/skills",
+      "source_type": "community",
+      "source_repo": "jakubkrehel/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/jakubkrehel/skills/blob/60bf140e43c98b248e6594487384ec967e89d98a/LICENSE",
+      "tags": [
+        "better",
+        "writing"
+      ],
+      "triggers": [
+        "better",
+        "writing",
+        "writes",
+        "reviews",
+        "interface",
+        "copy",
+        "labels",
+        "errors",
+        "empty",
+        "states",
+        "confirmations",
+        "so"
+      ],
+      "path": "skills/better-writing/SKILL.md"
+    },
+    {
       "id": "bevy-ecs-expert",
       "canonical_id": "bevy-ecs-expert",
       "name": "bevy-ecs-expert",
@@ -14752,6 +15009,37 @@
       "path": "skills/brave-man/SKILL.md"
     },
     {
+      "id": "break",
+      "canonical_id": "break",
+      "name": "break",
+      "description": "Renders a component you choose under every scenario that can reach it on a temporary page and stress tests it.",
+      "category": "design",
+      "risk": "critical",
+      "source": "https://github.com/jakubkrehel/skills",
+      "source_type": "community",
+      "source_repo": "jakubkrehel/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/jakubkrehel/skills/blob/60bf140e43c98b248e6594487384ec967e89d98a/LICENSE",
+      "tags": [
+        "break"
+      ],
+      "triggers": [
+        "break",
+        "renders",
+        "component",
+        "choose",
+        "under",
+        "every",
+        "scenario",
+        "reach",
+        "temporary",
+        "page",
+        "stress",
+        "tests"
+      ],
+      "path": "skills/break/SKILL.md"
+    },
+    {
       "id": "break-ai-fix-loops",
       "canonical_id": "break-ai-fix-loops",
       "name": "break-ai-fix-loops",
@@ -15663,6 +15951,35 @@
         "outcomes"
       ],
       "path": "skills/build/SKILL.md"
+    },
+    {
+      "id": "build-design",
+      "canonical_id": "build-design",
+      "name": "build-design",
+      "description": "Builds UI from a Figma file or a design image so it matches the design, using the project's existing tokens and components.",
+      "category": "design",
+      "risk": "critical",
+      "source": "https://github.com/jakubkrehel/skills",
+      "source_type": "community",
+      "source_repo": "jakubkrehel/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/jakubkrehel/skills/blob/60bf140e43c98b248e6594487384ec967e89d98a/LICENSE",
+      "tags": [
+        "build"
+      ],
+      "triggers": [
+        "build",
+        "ui",
+        "figma",
+        "file",
+        "image",
+        "so",
+        "matches",
+        "existing",
+        "tokens",
+        "components"
+      ],
+      "path": "skills/build-design/SKILL.md"
     },
     {
       "id": "build-ui",
@@ -18211,6 +18528,41 @@
         "dispatch"
       ],
       "path": "skills/cline-pilot/SKILL.md"
+    },
+    {
+      "id": "cloro-mcp",
+      "canonical_id": "cloro-mcp",
+      "name": "cloro-mcp",
+      "description": "Get Google results with the AI Overview, and ChatGPT, Google AI Mode, Bing AI Mode and Gemini answers with their cited sources, through cloro's hosted MCP server. Use when the user chooses cloro.",
+      "category": "mcp",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "mcp",
+        "ai-search",
+        "serp",
+        "geo",
+        "citations",
+        "chatgpt",
+        "gemini",
+        "bing"
+      ],
+      "triggers": [
+        "mcp",
+        "ai-search",
+        "serp",
+        "geo",
+        "citations",
+        "chatgpt",
+        "gemini",
+        "bing",
+        "cloro",
+        "get",
+        "google",
+        "results"
+      ],
+      "path": "skills/cloro-mcp/SKILL.md"
     },
     {
       "id": "close-automation",
@@ -25056,6 +25408,44 @@
       "path": "skills/dei-dashboard/SKILL.md"
     },
     {
+      "id": "deja-history",
+      "canonical_id": "deja-history",
+      "name": "deja-history",
+      "description": "Search this machine's past AI coding sessions across Claude Code, Codex, Cursor, Gemini CLI and thirty-nine other agents before editing, debugging, or denying something exists.",
+      "category": "workflow-automation",
+      "risk": "safe",
+      "source": "https://github.com/vshulcz/deja-vu/tree/8fbf4e8d71826a28db52be416349c682298bc9cf/claude-plugin/skills/deja-history",
+      "source_type": "official",
+      "source_repo": "vshulcz/deja-vu",
+      "license": "MIT",
+      "license_source": "https://github.com/vshulcz/deja-vu/blob/8fbf4e8d71826a28db52be416349c682298bc9cf/LICENSE",
+      "tags": [
+        "agent-memory",
+        "session-history",
+        "recall",
+        "claude-code",
+        "codex",
+        "cursor",
+        "mcp",
+        "cli"
+      ],
+      "triggers": [
+        "agent-memory",
+        "session-history",
+        "recall",
+        "claude-code",
+        "codex",
+        "cursor",
+        "mcp",
+        "cli",
+        "deja",
+        "history",
+        "search",
+        "machine"
+      ],
+      "path": "skills/deja-history/SKILL.md"
+    },
+    {
       "id": "delegate-setup",
       "canonical_id": "delegate-setup",
       "name": "delegate-setup",
@@ -31456,6 +31846,38 @@
         "id"
       ],
       "path": "skills/expense-management/SKILL.md"
+    },
+    {
+      "id": "explain-interface",
+      "canonical_id": "explain-interface",
+      "name": "explain-interface",
+      "description": "Explains how a website, a visual effect or an animation was built, from a live URL or a screenshot.",
+      "category": "design",
+      "risk": "critical",
+      "source": "https://github.com/jakubkrehel/skills",
+      "source_type": "community",
+      "source_repo": "jakubkrehel/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/jakubkrehel/skills/blob/60bf140e43c98b248e6594487384ec967e89d98a/LICENSE",
+      "tags": [
+        "explain",
+        "interface"
+      ],
+      "triggers": [
+        "explain",
+        "interface",
+        "explains",
+        "how",
+        "website",
+        "visual",
+        "effect",
+        "animation",
+        "was",
+        "built",
+        "live",
+        "url"
+      ],
+      "path": "skills/explain-interface/SKILL.md"
     },
     {
       "id": "explain-like-socrates",
@@ -43304,6 +43726,42 @@
       "path": "skills/imagen/SKILL.md"
     },
     {
+      "id": "imagera-media",
+      "canonical_id": "imagera-media",
+      "name": "imagera-media",
+      "description": "Generate or edit images, video clips, voiceovers and music through the hosted Imagera MCP server, quoting the credit cost and getting approval before each paid call.",
+      "category": "media",
+      "risk": "critical",
+      "source": "https://github.com/alexadams6ix/imagera-skills/blob/481a928012739ddc1fe382d09fcdcc3e839e016f/skills/imagera-media/SKILL.md",
+      "source_type": "official",
+      "source_repo": "alexadams6ix/imagera-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/alexadams6ix/imagera-skills/blob/481a928012739ddc1fe382d09fcdcc3e839e016f/LICENSE",
+      "tags": [
+        "image-generation",
+        "video-generation",
+        "text-to-speech",
+        "music-generation",
+        "mcp",
+        "media"
+      ],
+      "triggers": [
+        "image-generation",
+        "video-generation",
+        "text-to-speech",
+        "music-generation",
+        "mcp",
+        "media",
+        "imagera",
+        "generate",
+        "edit",
+        "images",
+        "video",
+        "clips"
+      ],
+      "path": "skills/imagera-media/SKILL.md"
+    },
+    {
       "id": "implement",
       "canonical_id": "implement",
       "name": "implement",
@@ -43933,6 +44391,37 @@
         "segments"
       ],
       "path": "skills/intercom-automation/SKILL.md"
+    },
+    {
+      "id": "interface-review",
+      "canonical_id": "interface-review",
+      "name": "interface-review",
+      "description": "Reviews a branch, pull request or uncommitted change for the interface problems it introduced or regressed, across accessibility, layout, writing, typography, color and UI.",
+      "category": "design",
+      "risk": "critical",
+      "source": "https://github.com/jakubkrehel/skills",
+      "source_type": "community",
+      "source_repo": "jakubkrehel/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/jakubkrehel/skills/blob/60bf140e43c98b248e6594487384ec967e89d98a/LICENSE",
+      "tags": [
+        "interface"
+      ],
+      "triggers": [
+        "interface",
+        "review",
+        "reviews",
+        "branch",
+        "pull",
+        "request",
+        "uncommitted",
+        "change",
+        "problems",
+        "introduced",
+        "regressed",
+        "accessibility"
+      ],
+      "path": "skills/interface-review/SKILL.md"
     },
     {
       "id": "intern-program",
@@ -45050,6 +45539,38 @@
         "webkit"
       ],
       "path": "skills/jet-browser/SKILL.md"
+    },
+    {
+      "id": "jev-memory",
+      "canonical_id": "jev-memory",
+      "name": "jev-memory",
+      "description": "Set up an explicitly requested Claude Code memory mod using Treg and Jev, with informed consent for prompt transmission, recurring charges and local preference storage.",
+      "category": "development",
+      "risk": "critical",
+      "source": "https://github.com/superdesigndev/treg",
+      "source_type": "official",
+      "source_repo": "superdesigndev/treg",
+      "license": "LicenseRef-Treg",
+      "license_source": "https://github.com/superdesigndev/treg/blob/cf3955032ef8f15dfeff90a84ae24e31583e93e8/LICENSE",
+      "tags": [
+        "jev",
+        "memory"
+      ],
+      "triggers": [
+        "jev",
+        "memory",
+        "set",
+        "up",
+        "explicitly",
+        "requested",
+        "claude",
+        "code",
+        "mod",
+        "treg",
+        "informed",
+        "consent"
+      ],
+      "path": "skills/jev-memory/SKILL.md"
     },
     {
       "id": "jev-social",
@@ -46919,6 +47440,38 @@
         "downloadable"
       ],
       "path": "skills/lead-magnets/SKILL.md"
+    },
+    {
+      "id": "lead-signals",
+      "canonical_id": "lead-signals",
+      "name": "lead-signals",
+      "description": "Find and qualify public buying signals through Treg, rank fitting business accounts and optionally enrich authorized business contact information.",
+      "category": "marketing",
+      "risk": "critical",
+      "source": "https://github.com/superdesigndev/treg",
+      "source_type": "official",
+      "source_repo": "superdesigndev/treg",
+      "license": "LicenseRef-Treg",
+      "license_source": "https://github.com/superdesigndev/treg/blob/cf3955032ef8f15dfeff90a84ae24e31583e93e8/LICENSE",
+      "tags": [
+        "lead",
+        "signals"
+      ],
+      "triggers": [
+        "lead",
+        "signals",
+        "find",
+        "qualify",
+        "public",
+        "buying",
+        "through",
+        "treg",
+        "rank",
+        "fitting",
+        "business",
+        "accounts"
+      ],
+      "path": "skills/lead-signals/SKILL.md"
     },
     {
       "id": "learn",
@@ -50637,6 +51190,38 @@
         "language"
       ],
       "path": "skills/make-automation/SKILL.md"
+    },
+    {
+      "id": "make-ugc",
+      "canonical_id": "make-ugc",
+      "name": "make-ugc",
+      "description": "Create original AI UGC-style product videos through Treg: research hooks, approve a licensed presenter and voice, generate clips, add captions and report costs.",
+      "category": "marketing",
+      "risk": "critical",
+      "source": "https://github.com/superdesigndev/treg",
+      "source_type": "official",
+      "source_repo": "superdesigndev/treg",
+      "license": "LicenseRef-Treg",
+      "license_source": "https://github.com/superdesigndev/treg/blob/cf3955032ef8f15dfeff90a84ae24e31583e93e8/LICENSE",
+      "tags": [
+        "make",
+        "ugc"
+      ],
+      "triggers": [
+        "make",
+        "ugc",
+        "original",
+        "ai",
+        "style",
+        "product",
+        "videos",
+        "through",
+        "treg",
+        "research",
+        "hooks",
+        "approve"
+      ],
+      "path": "skills/make-ugc/SKILL.md"
     },
     {
       "id": "makepad-2-0-animation",
@@ -54937,6 +55522,37 @@
         "neighbor"
       ],
       "path": "skills/multi-tenant-llm-hosting/SKILL.md"
+    },
+    {
+      "id": "music-for-robots",
+      "canonical_id": "music-for-robots",
+      "name": "music-for-robots",
+      "description": "Optional music-inspired creative exercise for multimodal agents. Ingests an unquantized acoustic MP3 composition by Michael Luchtan (Music For Robots) into a private temporary directory, analyzing microtiming and texture to inspire creative writing, brainstorming, or technical tasks.",
+      "category": "agent-orchestration",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "license": "MIT",
+      "tags": [
+        "music",
+        "for",
+        "robots"
+      ],
+      "triggers": [
+        "music",
+        "for",
+        "robots",
+        "optional",
+        "inspired",
+        "creative",
+        "exercise",
+        "multimodal",
+        "agents",
+        "ingests",
+        "unquantized",
+        "acoustic"
+      ],
+      "path": "skills/music-for-robots/SKILL.md"
     },
     {
       "id": "music-generation-studio",
@@ -65534,6 +66150,38 @@
       "path": "skills/re-create/SKILL.md"
     },
     {
+      "id": "rea-growth",
+      "canonical_id": "rea-growth",
+      "name": "rea-growth",
+      "description": "Analyze a company’s public growth and content through Treg, distinguish observations from hypotheses, and produce an evidence-linked playbook within an approved budget.",
+      "category": "marketing",
+      "risk": "critical",
+      "source": "https://github.com/superdesigndev/treg",
+      "source_type": "official",
+      "source_repo": "superdesigndev/treg",
+      "license": "LicenseRef-Treg",
+      "license_source": "https://github.com/superdesigndev/treg/blob/cf3955032ef8f15dfeff90a84ae24e31583e93e8/LICENSE",
+      "tags": [
+        "rea",
+        "growth"
+      ],
+      "triggers": [
+        "rea",
+        "growth",
+        "analyze",
+        "company",
+        "public",
+        "content",
+        "through",
+        "treg",
+        "distinguish",
+        "observations",
+        "hypotheses",
+        "produce"
+      ],
+      "path": "skills/rea-growth/SKILL.md"
+    },
+    {
       "id": "react-best-practices",
       "canonical_id": "react-best-practices",
       "name": "react-best-practices",
@@ -66107,6 +66755,37 @@
         "testing"
       ],
       "path": "skills/recon-scope-triage/SKILL.md"
+    },
+    {
+      "id": "recruit",
+      "canonical_id": "recruit",
+      "name": "recruit",
+      "description": "Turn a job description into an evidence-linked candidate shortlist through Treg, with job-related ranking and optional authorized business contact enrichment.",
+      "category": "business",
+      "risk": "critical",
+      "source": "https://github.com/superdesigndev/treg",
+      "source_type": "official",
+      "source_repo": "superdesigndev/treg",
+      "license": "LicenseRef-Treg",
+      "license_source": "https://github.com/superdesigndev/treg/blob/cf3955032ef8f15dfeff90a84ae24e31583e93e8/LICENSE",
+      "tags": [
+        "recruit"
+      ],
+      "triggers": [
+        "recruit",
+        "turn",
+        "job",
+        "description",
+        "evidence",
+        "linked",
+        "candidate",
+        "shortlist",
+        "through",
+        "treg",
+        "related",
+        "ranking"
+      ],
+      "path": "skills/recruit/SKILL.md"
     },
     {
       "id": "recruitment-pipeline",
@@ -69316,6 +69995,38 @@
         "evidence"
       ],
       "path": "skills/score-eval/SKILL.md"
+    },
+    {
+      "id": "scrapingbee-cli",
+      "canonical_id": "scrapingbee-cli",
+      "name": "scrapingbee-cli",
+      "description": "Fetch web pages, crawl sites and get Google, Amazon, Walmart and YouTube data as JSON with the ScrapingBee CLI. Use when a task needs content from a website that plain HTTP returns empty.",
+      "category": "data",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "web-scraping",
+        "crawling",
+        "serp",
+        "data-extraction",
+        "cli"
+      ],
+      "triggers": [
+        "web-scraping",
+        "crawling",
+        "serp",
+        "data-extraction",
+        "cli",
+        "scrapingbee",
+        "fetch",
+        "web",
+        "pages",
+        "crawl",
+        "sites",
+        "get"
+      ],
+      "path": "skills/scrapingbee-cli/SKILL.md"
     },
     {
       "id": "screen-adverse-media",
@@ -75604,6 +76315,38 @@
       "path": "skills/startup-metrics-framework/SKILL.md"
     },
     {
+      "id": "state-machine",
+      "canonical_id": "state-machine",
+      "name": "state-machine",
+      "description": "Renders every state of a component you choose on a throwaway page, with mock data and a switcher, so you can work on each state.",
+      "category": "design",
+      "risk": "critical",
+      "source": "https://github.com/jakubkrehel/skills",
+      "source_type": "community",
+      "source_repo": "jakubkrehel/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/jakubkrehel/skills/blob/60bf140e43c98b248e6594487384ec967e89d98a/LICENSE",
+      "tags": [
+        "state",
+        "machine"
+      ],
+      "triggers": [
+        "state",
+        "machine",
+        "renders",
+        "every",
+        "component",
+        "choose",
+        "throwaway",
+        "page",
+        "mock",
+        "data",
+        "switcher",
+        "so"
+      ],
+      "path": "skills/state-machine/SKILL.md"
+    },
+    {
       "id": "statsmodels",
       "canonical_id": "statsmodels",
       "name": "statsmodels",
@@ -77107,6 +77850,44 @@
       "path": "skills/sympy/SKILL.md"
     },
     {
+      "id": "sync-lipsync",
+      "canonical_id": "sync-lipsync",
+      "name": "sync-lipsync",
+      "description": "Lip-sync an existing video of a real person to new audio or a typed script with sync. labs through its hosted MCP server, quoting the cost and waiting for approval first.",
+      "category": "media",
+      "risk": "critical",
+      "source": "https://github.com/synchronicity-labs/skills/tree/77971a9580496fae54f506d11315f9d41db86aa8/skills/lipsync",
+      "source_type": "official",
+      "source_repo": "synchronicity-labs/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/synchronicity-labs/skills/blob/77971a9580496fae54f506d11315f9d41db86aa8/LICENSE",
+      "tags": [
+        "lipsync",
+        "lip-sync",
+        "video",
+        "voiceover",
+        "text-to-speech",
+        "mcp",
+        "paid-api",
+        "sync-labs"
+      ],
+      "triggers": [
+        "lipsync",
+        "lip-sync",
+        "video",
+        "voiceover",
+        "text-to-speech",
+        "mcp",
+        "paid-api",
+        "sync-labs",
+        "sync",
+        "lip",
+        "existing",
+        "real"
+      ],
+      "path": "skills/sync-lipsync/SKILL.md"
+    },
+    {
       "id": "syncbook-discovery",
       "canonical_id": "syncbook-discovery",
       "name": "syncbook-discovery",
@@ -78050,6 +78831,37 @@
         "stage"
       ],
       "path": "skills/team-composition-analysis/SKILL.md"
+    },
+    {
+      "id": "teardown",
+      "canonical_id": "teardown",
+      "name": "teardown",
+      "description": "Creates technical illustrations of physical objects and of how things work, such as display pixels or interface layers, with coherent views, fine linework and part fills.",
+      "category": "design",
+      "risk": "critical",
+      "source": "https://github.com/jakubkrehel/skills",
+      "source_type": "community",
+      "source_repo": "jakubkrehel/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/jakubkrehel/skills/blob/60bf140e43c98b248e6594487384ec967e89d98a/LICENSE",
+      "tags": [
+        "teardown"
+      ],
+      "triggers": [
+        "teardown",
+        "creates",
+        "technical",
+        "illustrations",
+        "physical",
+        "objects",
+        "how",
+        "things",
+        "work",
+        "such",
+        "display",
+        "pixels"
+      ],
+      "path": "skills/teardown/SKILL.md"
     },
     {
       "id": "tech-writing-proofread",
@@ -80493,6 +81305,37 @@
       "path": "skills/tree-ring-memory/SKILL.md"
     },
     {
+      "id": "treg",
+      "canonical_id": "treg",
+      "name": "treg",
+      "description": "Use the Treg CLI or MCP catalog to discover, price and call authorized external tools with team-scoped credentials and a user-approved budget.",
+      "category": "development",
+      "risk": "critical",
+      "source": "https://github.com/superdesigndev/treg",
+      "source_type": "official",
+      "source_repo": "superdesigndev/treg",
+      "license": "LicenseRef-Treg",
+      "license_source": "https://github.com/superdesigndev/treg/blob/cf3955032ef8f15dfeff90a84ae24e31583e93e8/LICENSE",
+      "tags": [
+        "treg"
+      ],
+      "triggers": [
+        "treg",
+        "cli",
+        "mcp",
+        "catalog",
+        "discover",
+        "price",
+        "call",
+        "authorized",
+        "external",
+        "team",
+        "scoped",
+        "credentials"
+      ],
+      "path": "skills/treg/SKILL.md"
+    },
+    {
       "id": "trello-automation",
       "canonical_id": "trello-automation",
       "name": "trello-automation",
@@ -82184,6 +83027,38 @@
       "path": "skills/unsplash-integration/SKILL.md"
     },
     {
+      "id": "untangle-codebase",
+      "canonical_id": "untangle-codebase",
+      "name": "untangle-codebase",
+      "description": "Untangle a whole codebase in one pass, so agents working in it read less per change, break less without noticing, and debug faster.",
+      "category": "development",
+      "risk": "critical",
+      "source": "https://github.com/caldoai/skills",
+      "source_type": "community",
+      "source_repo": "caldoai/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/caldoai/skills/blob/f3cf47774975a7d9fca45730babf4ff7ad765ada/LICENSE",
+      "tags": [
+        "untangle",
+        "codebase"
+      ],
+      "triggers": [
+        "untangle",
+        "codebase",
+        "whole",
+        "one",
+        "pass",
+        "so",
+        "agents",
+        "working",
+        "read",
+        "less",
+        "per",
+        "change"
+      ],
+      "path": "skills/untangle-codebase/SKILL.md"
+    },
+    {
       "id": "update-swiftui-apis",
       "canonical_id": "update-swiftui-apis",
       "name": "update-swiftui-apis",
@@ -83055,6 +83930,35 @@
         "168"
       ],
       "path": "skills/uxui-principles/SKILL.md"
+    },
+    {
+      "id": "variant",
+      "canonical_id": "variant",
+      "name": "variant",
+      "description": "Builds multiple variants of a component you're working on and helps you iterate and pick one.",
+      "category": "design",
+      "risk": "critical",
+      "source": "https://github.com/jakubkrehel/skills",
+      "source_type": "community",
+      "source_repo": "jakubkrehel/skills",
+      "license": "MIT",
+      "license_source": "https://github.com/jakubkrehel/skills/blob/60bf140e43c98b248e6594487384ec967e89d98a/LICENSE",
+      "tags": [
+        "variant"
+      ],
+      "triggers": [
+        "variant",
+        "multiple",
+        "variants",
+        "component",
+        "re",
+        "working",
+        "helps",
+        "iterate",
+        "pick",
+        "one"
+      ],
+      "path": "skills/variant/SKILL.md"
     },
     {
       "id": "variant-analysis",
@@ -84964,6 +85868,38 @@
         "agentic"
       ],
       "path": "skills/weaviate-cookbooks/SKILL.md"
+    },
+    {
+      "id": "web-access",
+      "canonical_id": "web-access",
+      "name": "web-access",
+      "description": "Use Treg for public web or platform data only when existing search, browser and connected tools cannot cover the task, with explicit cost and data boundaries.",
+      "category": "development",
+      "risk": "critical",
+      "source": "https://github.com/superdesigndev/treg",
+      "source_type": "official",
+      "source_repo": "superdesigndev/treg",
+      "license": "LicenseRef-Treg",
+      "license_source": "https://github.com/superdesigndev/treg/blob/cf3955032ef8f15dfeff90a84ae24e31583e93e8/LICENSE",
+      "tags": [
+        "web",
+        "access"
+      ],
+      "triggers": [
+        "web",
+        "access",
+        "treg",
+        "public",
+        "platform",
+        "data",
+        "existing",
+        "search",
+        "browser",
+        "connected",
+        "cannot",
+        "cover"
+      ],
+      "path": "skills/web-access/SKILL.md"
     },
     {
       "id": "web-artifacts-builder",
