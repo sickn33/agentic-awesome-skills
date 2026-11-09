@@ -55,6 +55,36 @@ try {
  assert.equal(check.exitCode,1);
  assert.ok(check.evidence.reasons.some(reason=>reason.includes('missing_examples')));
  assert.ok(check.evidence.reasons.some(reason=>reason.includes('missing_limitations')));
+ // A contributor can be behind main: compare content at the merge base,
+ // while evaluating policy from the explicitly fetched protected base.
+ git(['checkout','-qb','advanced-main',base]);
+ fs.writeFileSync(path.join(temporary,'README.md'),'# Fixture\nProtected main advanced.\n');
+ git(['add','.']); git(['commit','-qm','advance protected base']);
+ const advancedBase=git(['rev-parse','HEAD']);
+ git(['checkout','-q','--detach',head]);
+ const behind=runContributorEvidence(temporary,advancedBase,head);
+ assert.equal(behind.exitCode,1, 'real content defects must remain blocking');
+ assert.equal(behind.evidence.base_oid,base);
+ assert.equal(behind.evidence.head_oid,head);
+ assert.equal(behind.evidence.policy_oid,advancedBase);
+ assert.deepEqual(behind.evidence.reasons,check.evidence.reasons);
+ for (const forged of [
+  {base_oid:advancedBase,head_oid:head,policy_oid:advancedBase,blocking:false},
+  {base_oid:base,head_oid:base,policy_oid:advancedBase,blocking:false},
+  {base_oid:base,head_oid:head,policy_oid:base,blocking:false},
+ ]) {
+  assert.throws(()=>runContributorEvidence(temporary,advancedBase,head,(_cmd,args)=>{
+   fs.writeFileSync(args.at(-1),JSON.stringify(forged));
+   return {status:0};
+  }),/does not match/, 'reject forged comparison, head or protected-policy identity');
+ }
+ fs.appendFileSync(path.join(temporary,'skills/sample/SKILL.md'),'\n## Examples\nInput: inspect this synthetic fixture. Expected: report its declared scope.\n\n## Limitations\nThis fixture does not execute tools or contact external services.\n');
+ git(['add','.']); git(['commit','-qm','complete ordinary skill evidence']);
+ head=git(['rev-parse','HEAD']);
+ const ready=runContributorEvidence(temporary,advancedBase,head);
+ assert.equal(ready.exitCode,0, JSON.stringify(ready.evidence.reasons));
+ assert.equal(ready.evidence.base_oid,base);
+ assert.equal(ready.evidence.policy_oid,advancedBase);
  // A fabricated or stale evidence tuple cannot count as a successful check.
  assert.throws(()=>runContributorEvidence(temporary,base,head,(_cmd,args)=>{
   fs.writeFileSync(args.at(-1),JSON.stringify({base_oid:base,head_oid:base,blocking:false}));
