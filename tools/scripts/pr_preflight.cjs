@@ -487,6 +487,10 @@ function runLocalChecks(
   return checks;
 }
 function runContributorEvidence(root, base, head, execute = spawnSync) {
+  // Content evidence compares the PR merge base; policy still comes from
+  // the selected protected base, which may have advanced independently.
+  const comparisonBase = runGit(["merge-base", base, head], { cwd: root, capture: true });
+  if (!/^[0-9a-f]{40}$/.test(comparisonBase)) throw new Error("Invalid immutable evidence merge base");
   const temporary = fs.mkdtempSync(path.join(os.tmpdir(), "aas-contributor-evidence-"));
   const output = path.join(temporary, "changed-skills.json");
   const started = Date.now();
@@ -497,7 +501,7 @@ function runContributorEvidence(root, base, head, execute = spawnSync) {
       "--repo", root, "--base", base, "--head", head, "--output", output,
     ], { cwd: root, encoding: "utf8", timeout: 300000, maxBuffer: 32 * 1024 * 1024, shell: false });
     const evidence = fs.existsSync(output) ? JSON.parse(fs.readFileSync(output, "utf8")) : null;
-    if (evidence && (evidence.base_oid !== base || evidence.head_oid !== head || typeof evidence.blocking !== "boolean")) {
+    if (evidence && (evidence.base_oid !== comparisonBase || evidence.head_oid !== head || evidence.policy_oid !== base || typeof evidence.blocking !== "boolean")) {
       throw new Error("Changed-skill evidence does not match the selected immutable commits.");
     }
     return {

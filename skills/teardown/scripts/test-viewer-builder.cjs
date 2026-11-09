@@ -14,7 +14,7 @@ try {
     fs.mkdirSync(path.dirname(path.join(root, name)), {recursive: true});
     fs.writeFileSync(path.join(root, name), contents);
   }
-  const title = 'Fixture </script><script>unexpected()</script>';
+  const title = 'Fixture </script><script>unexpected()</script> </ScRiPt><SCRIPT>unexpected()</SCRIPT> </script\t\n ignored><script>unexpected()</script ignored>';
   const config = {
     dependencies: 'vendor',
     modelScripts: ['model.js'],
@@ -23,7 +23,13 @@ try {
   const configPath = path.join(root, 'drawing.json'), output = path.join(root, 'dist/index.html');
   fs.writeFileSync(configPath, JSON.stringify(config));
   build(configPath, output);
-  const html = fs.readFileSync(output, 'utf8'), scripts = [...html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g)];
+  // Inspect only this controlled template; this is not an HTML sanitizer.
+  const scriptElements = html => [...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script\b[^>]*>/gi)];
+  for (const ending of ['</script>', '</SCRIPT>', '</script ignored>', '</script\t\n ignored>']) {
+    const fixture = scriptElements('<script>first()' + ending + '<script>second()</script>');
+    assert.deepEqual(fixture.map(match => match[2]), ['first()', 'second()']);
+  }
+  const html = fs.readFileSync(output, 'utf8'), scripts = scriptElements(html);
   const data = JSON.parse(scripts.find(s => s[1].includes('id="drawing-data"'))[2]);
   assert.equal(data[0].title, title, 'Embedding must preserve text without creating script elements');
   const executable = scripts.filter(s => !s[1].includes('type='));
