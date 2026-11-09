@@ -224,6 +224,10 @@ Key source families include:
 
 ### Official Sources
 
+- **[phuryn/product-engineering](https://github.com/phuryn/product-engineering/tree/main/app-stack/skills/uptime-monitoring)**: Official Staygreen skill (`uptime-monitoring`) - content checks confirmed from a second location, heartbeats for scheduled jobs, certificate and domain expiry, status pages and a tested alert route, through the hosted Staygreen MCP server; the same steps work on a monitoring service the owner already uses (MIT).
+
+- **[CrakSEO/skills](https://github.com/CrakSEO/skills)**: External MIT collection for CrakSEO hosted MCP integrations covering SEO research, Search Console and URL indexing. Listed as an upstream resource; not bundled or connected by this repository.
+
 - **[superdesigndev/treg](https://github.com/superdesigndev/treg)**: Source for seven Treg client workflow skills: `treg`, `jev-memory`, `lead-signals`, `make-ugc`, `rea-growth`, `recruit` and `web-access`. Apache 2.0 with additional terms (LicenseRef-Treg), including hosted-service restrictions; complete custom notices retained in each bundle. AAS adaptations require explicit budgets, data-transfer and memory consent, and authorized business-contact/media use.
 
 - **[fclairamb/solidping-plugin](https://github.com/fclairamb/solidping-plugin/tree/main/skills/solidping-monitoring)**: MIT official source for the `solidping` skill - uptime checks across 40+ types, results, incidents, diagnosis and status pages through the hosted SolidPing MCP server, with every write confirmed by the person first. SolidPing itself is AGPL-3.0.
@@ -378,6 +382,7 @@ Key source families include:
 - **[sendblue-api/sendblue-cli](https://github.com/sendblue-api/sendblue-cli)**: Source for `sendblue/sendblue-cli`.
 - **[sfxmint/sfxmint-mcp](https://github.com/sfxmint/sfxmint-mcp)**: Source for `sfxmint`.
 - **[soundza/soundza-mcp](https://github.com/soundza/soundza-mcp)**: Source for `soundza`.
+- **[synchronicity-labs/skills](https://github.com/synchronicity-labs/skills)**: Source for `sync-lipsync`.
 - **[target1m/footval-mcp](https://github.com/target1m/footval-mcp)**: Source for `footval-follow-matches-and-tables`, `footval-scout-and-rank-players`, `footval-stats-and-transfer-news`, `footval-value-and-compare-players`.
 - **[uiverify/uiverify](https://github.com/uiverify/uiverify)**: Source for `uiverify-triage-visual-changes`.
 - **[wassim-azi/agy-powerline](https://github.com/wassim-azi/agy-powerline)**: Source for `agy-powerline`.

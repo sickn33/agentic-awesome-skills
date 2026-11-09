@@ -219,6 +219,16 @@ function isSkillContentRecord(record) {
     ));
 }
 
+function reviewedSkillIds(records) {
+  const paths = records.flatMap(record => record.status === "C"
+    ? [record.new_path] : [record.old_path, record.new_path]).filter(Boolean);
+  return [...new Set(paths.map(file => {
+    const match = typeof file === "string" && /^skills\/([a-z0-9][a-z0-9_-]*)\//.exec(file);
+    if (!match) throw new Error("Review receipts require canonical skill paths");
+    return match[1];
+  }))];
+}
+
 function assertValidSnapshot(snapshot, label) {
   if (!snapshot || typeof snapshot !== "object") {
     throw new Error(`${label} snapshot is missing.`);
@@ -1306,8 +1316,7 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
   const headSha = prDetails.headRefOid;
   const currentReviewedHeads = new Set(options.reviewedHeads || []);
   if (options.stateStore && approval.records.length && approval.records.every(isSkillContentRecord)) {
-    const skillIds = [...new Set(approval.records.flatMap(record => [record.old_path, record.new_path])
-      .filter(Boolean).map(file => file.split("/")[1]))];
+    const skillIds = reviewedSkillIds(approval.records);
     const content = fingerprint(projectRoot, headSha, options.evaluatorOid, skillIds);
     if (currentReviewedHeads.has(headSha) && options.reviewer && options.reviewEvidence) {
       options.stateStore.saveReview({ fingerprint: content, reviewedHead: headSha, outcome: "approved",
@@ -1552,6 +1561,7 @@ module.exports = {
   fetchPullRequestObjects,
   getRequiredCheckAliases,
   isSkillContentRecord,
+  reviewedSkillIds,
   gitCheckoutMain,
   gitPullMain,
   listActionRequiredRuns,
