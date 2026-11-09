@@ -8,7 +8,7 @@ Publishing a documentation site requires existing user authorization.
 
 ## Instructions
 
-Generate comprehensive documentation by analyzing the codebase and creating the following artifacts:
+Choose only the requested artifacts below after identifying the audience and source revision. The list is a menu, not a requirement to produce a full documentation platform.
 
 ### 1. **API Documentation**
 - Extract endpoint definitions, parameters, and responses from code
@@ -35,6 +35,7 @@ Generate comprehensive documentation by analyzing the codebase and creating the 
 - Include accessibility and localization notes
 
 ### 5. **Documentation Automation**
+Add or change automation only when it is part of the authorized task; reuse the existing project workflow.
 - Configure CI/CD pipelines for automatic doc generation
 - Set up documentation linting and validation
 - Implement documentation coverage checks
@@ -42,7 +43,7 @@ Generate comprehensive documentation by analyzing the codebase and creating the 
 
 ### Quality Standards
 
-Ensure all generated documentation:
+Validate these properties for the requested documentation and report unverified items explicitly:
 - Is accurate and synchronized with current code
 - Uses consistent terminology and formatting
 - Includes practical examples and use cases
