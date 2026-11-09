@@ -1,12 +1,12 @@
 # Agentic Awesome Skills
 
-> Agentic Awesome Skills is an independent, community-curated library of 2,926+ reusable SKILL.md playbooks for AI coding agents. AAS Core adds local catalog discovery, agent-owned selection, stack validation, and plan preview.
+> Agentic Awesome Skills is an independent, community-curated library of 2,955+ reusable SKILL.md playbooks for AI coding agents. AAS Core adds local catalog discovery, agent-owned selection, stack validation, and plan preview.
 
 ## Key Facts
 
-- Current release: V20.6.0.
-- Release boundary: V20.6.0 includes AAS Core under the Agent-First Preview; pin this exact version when configuring the local MCP.
-- Skill count: 2,926+.
+- Current release: V20.7.0.
+- Release boundary: V20.7.0 includes AAS Core under the Agent-First Preview; pin this exact version when configuring the local MCP.
+- Skill count: 2,955+.
 - Library: reusable agent instructions, distributed through the CLI and specialized plugins. AAS Core preview is the companion `aas` CLI and local `aas-mcp` stdio server for discovery, selection and plan review.
 - Agent tools: `search_skills`, `get_skill`, `compose_stack`, `inspect_stack`, `diff_stack`, `export_selection_evidence`, and `inspect_selection_evidence`.
 - Lifecycle: the client enumerates primary project capabilities, searches and compares candidates for each, covers every capability or reports a catalog gap, and chooses exact IDs. Core has no semantic policy favoring a small stack; each manifest has a technical maximum of 128 skills. Read-only `compose_stack` returns the manifest in memory, while a client or CLI persists `aas-stack.json` and optional `aas-selection-evidence.json` in an `artifact-dir` before CLI validation and immutable plan preview.
@@ -17,7 +17,7 @@
 - Evidence privacy: the sidecar records raw `search_skills` queries, so catalog queries must not contain secrets or private source text.
 - Preview boundary: planning may write an explicitly requested plan artifact but does not write target state; apply and recovery are not part of the supported preview path.
 - Supported real clients include Codex CLI and Claude Code; the catalog also serves Cursor, Gemini CLI, Antigravity, and other compatible hosts.
-- The 2,926+ skill catalog, specialized plugins, bundles, and workflows are supporting discovery and distribution surfaces.
+- The 2,955+ skill catalog, specialized plugins, bundles, and workflows are supporting discovery and distribution surfaces.
 - Repository: https://github.com/sickn33/agentic-awesome-skills
 - Hosted catalog and companion review surface: https://aaskills.tech/
 - Specialized plugin landing page: https://aaskills.tech/plugins

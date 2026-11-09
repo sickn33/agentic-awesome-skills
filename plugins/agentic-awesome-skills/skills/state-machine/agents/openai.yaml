@@ -1,0 +1,5 @@
+interface:
+  display_name: "State Machine"
+  short_description: "Every state of one component on a throwaway page, behind a switcher"
+policy:
+  allow_implicit_invocation: false
