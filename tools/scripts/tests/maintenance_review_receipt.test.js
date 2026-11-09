@@ -22,6 +22,9 @@ try {
   for(const file of ["tools/policy.json","schemas/schema.json","package.json","package-lock.json","AGENTS.md",".github/rules.md","docs/maintainers/rules.md","skills/antigravity-maintainer-batch-release/SKILL.md","skills/example/SKILL.md","skills/example/references/guide.md"]){fs.mkdirSync(path.dirname(path.join(root,file)),{recursive:true});fs.writeFileSync(path.join(root,file),"baseline\n");}
   git("add",".");git("commit","-qm","base");const base=git("rev-parse","HEAD");
   fs.appendFileSync(path.join(root,"skills/example/references/guide.md"),"reviewed\n");git("commit","-qam","skill");const head=git("rev-parse","HEAD");
+  for (const invalid of [undefined, null, [], [undefined], Array(1), [null], [{toString(){return "example";}}]]) {
+    assert.throws(()=>gitFingerprint(root,head,base,invalid),/Invalid reviewed skill set/);
+  }
   const first=gitFingerprint(root,head,base,["example"]);
   git("checkout","--detach",base);fs.writeFileSync(path.join(root,"CHANGELOG.md"),"unrelated\n");git("add",".");git("commit","-qm","base moves");const nextBase=git("rev-parse","HEAD");
   git("cherry-pick",head);const nextHead=git("rev-parse","HEAD");
