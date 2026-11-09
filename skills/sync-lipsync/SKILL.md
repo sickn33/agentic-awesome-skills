@@ -63,13 +63,13 @@ Check the source before anything is spent: the face should be clearly visible an
 1. **Voice.** For a script, call `voices_list`. Unless the user named a voice, suggest two or three that fit and use the chosen voice's `id` as `voiceId`.
 2. **Length.** When the speech and the video differ noticeably in length, ask how to handle it and pass `options.sync_mode`: `bounce` (default, play forward then in reverse), `loop`, `cut_off`, `silence` or `remap` (change the video speed to fit). If the audio exceeds the plan's length limit, offer `audio-trims_create`.
 3. **Speaker.** If more than one face is visible, ask who should speak. Leave `options.active_speaker_detection` unset unless the user picks someone.
-4. **Quote.** Call `generations_estimate-cost` with the model (`sync-3` unless the user chose another) and the speech's `audioDuration`, or the `script`. For a script, say the length is approximate and that speech synthesis is billed separately.
+4. **Quote.** Call `generations_estimate-cost` with the model (`sync-3` unless the user chose another) and the speech's `audioDuration`, or the `script`. For `cut_off` or `silence`, also pass `videoDuration` and `syncMode` so the estimate reflects the selected mode. For a script, say the length is approximate and that speech synthesis is billed separately.
 5. **Confirm.** Show the video, the speech, the voice, any sync mode and the estimate, and wait for the user's approval. Skip the wait only if the user already approved this exact request and cost.
 6. **Create.** Call `lipsync_create` once with the video, the speech (`audioAssetId`, `audioUrl`, or `script` with `voiceId`), the model, any `options`, a new `idempotencyKey`, and either the `projectId` from step 1 with `projectIntent: "explicit"` or a new random UUID as `projectCreationKey` plus a short `projectName`. Save the keys before calling. If the response is lost or times out, retry once with the same keys and inputs, which returns the original generation instead of charging twice.
 
 ### 3. Verify the result
 
-Call `generations_get` with the returned `id` and `wait: true`, repeating until the status is `COMPLETED`, `FAILED` or `REJECTED`. Most jobs take a few minutes. Give the exact `outputMediaUrl` unchanged. In a coding agent with a shell, offer to download it, for example `curl -L -o clip_lipsync.mp4 "<url>"`. On `FAILED` or `REJECTED`, report which input was rejected and why.
+Call `generations_get` with the returned `id` and `wait: true`, repeating within a bounded wait budget until the status is `COMPLETED`, `FAILED` or `REJECTED`. If the budget expires, report the job ID and pending state; do not create another generation. Most jobs take a few minutes. Give the exact `outputMediaUrl` unchanged. In a coding agent with a shell, offer to download it, for example `curl -L -o clip_lipsync.mp4 "<url>"`. On `FAILED` or `REJECTED`, report which input was rejected and why.
 
 ## Examples
 
