@@ -1,12 +1,14 @@
 # Agentic Awesome Skills vs Awesome Claude Skills
 
-If you are comparing **Agentic Awesome Skills** with **Awesome Claude Skills**, first decide whether you need complete catalog access with agent-owned reproducible selection or an editorial discovery list.
+**Agentic Awesome Skills provides installable skill instructions and tools for reviewing an agent's selection. VoltAgent Awesome Agent Skills provides a curated list of skill sources to explore.** Choose based on the task, the files you want to install and how you prefer to find them.
+
+This comparison is maintained by [Agentic Awesome Skills](https://aaskills.tech/), previously named **Antigravity Awesome Skills**. Use the linked repositories to inspect current content and licensing before choosing.
 
 For clarity: the repository many people still refer to as `awesome-claude-skills` now lives at [VoltAgent/awesome-agent-skills](https://github.com/VoltAgent/awesome-agent-skills).
 
 ## TL;DR
 
-- Choose **Agentic Awesome Skills** if you want AAS Core to turn an explicit project profile into an explainable, reviewable skill stack, with broad catalog and distribution support around it.
+- Choose **Agentic Awesome Skills** if you want your coding agent to search the catalog, choose skills for your project, and use AAS Core to record and validate that selection before installation.
 - Choose **VoltAgent Awesome Agent Skills** if you want a curated list with a strong official-team angle and a tighter scope.
 
 ## At-a-glance comparison

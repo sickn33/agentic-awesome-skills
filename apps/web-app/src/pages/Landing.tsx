@@ -7,6 +7,7 @@ import './LandingPolish.css';
 import { WorkflowDemo } from '../components/WorkflowDemo';
 import { buildLandingMeta } from '../utils/seo';
 import { usePageMeta } from '../hooks/usePageMeta';
+import projectIdentity from '../data/projectIdentity.json';
 
 export function Landing() {
   const { hash } = useLocation();
@@ -18,6 +19,17 @@ export function Landing() {
     <section className="brand-hero brand-wrap" aria-labelledby="hero-title">
       <div><h1 id="hero-title">Your agent.<br /><span className="hero-accent">The right skills.</span></h1><p>An open-source library of skills for coding agents.</p><div className="action-row"><Link className="brand-button" to="/docs/">Get started</Link><Link className="text-action" to="/plugins/">Browse packs</Link></div></div>
       <figure className="brand-video"><video controls playsInline preload="none" poster={`${import.meta.env.BASE_URL}videos/aas-introduction-v3-poster.jpg`} aria-label="AAS introduction video"><source src="https://aaskills.tech/videos/aas-introduction-v3.mp4" type="video/mp4" /><a href="https://aaskills.tech/videos/aas-introduction-v3.mp4">Watch the introduction</a></video><figcaption>AAS in 40 seconds</figcaption></figure>
+    </section>
+    <section className="home-identity brand-wrap" aria-labelledby="identity-title">
+      <h2 id="identity-title">About {projectIdentity.name}</h2>
+      <p>{projectIdentity.description}</p>
+      <p>{projectIdentity.licenseSummary}</p>
+      <p>{projectIdentity.nextStep}</p>
+      <nav aria-label="Project and installation">
+        {projectIdentity.links.map((link) => link.href.startsWith('/')
+          ? <Link key={link.href} to={link.href}>{link.label}</Link>
+          : <a key={link.href} href={link.href}>{link.label}</a>)}
+      </nav>
     </section>
     <div className="brand-wrap"><AgentSetup /></div>
     <section className="home-story brand-wrap" aria-labelledby="method-title">

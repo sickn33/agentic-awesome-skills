@@ -2,11 +2,15 @@
 
 If you are looking for the **best Claude Code skills on GitHub**, there is no single perfect repository for every user. The right choice depends on whether you want complete catalog access with Claude-owned selection, curated discovery, or official reference material.
 
+Start with the task you want Claude to complete. For a failing test, compare the debugging instructions, required tools, examples and limitations of candidate skills. Review their complete files before installation, then check whether Claude can reproduce the failure and verify its fix.
+
+This comparison is maintained by Agentic Awesome Skills. Browse the [official AAS catalog](https://aaskills.tech/core/) or follow [Claude Code setup](claude-code-skills.md) for a worked installation and review flow.
+
 ## Best for agent-selected project stacks
 
 ### 1. [sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills)
 
-Best for teams and individual developers who want Claude to inspect a project, search and read the complete catalog through a local read-only MCP, choose exact IDs, and produce a reviewable `aas-stack.json` before CLI validation and planning.
+An open-source library of reusable task instructions, previously named **Antigravity Awesome Skills**. AAS Core lets Claude search and read the catalog locally, choose exact skills for your project, and record a selection you can review before installation. The [setup guide](claude-code-skills.md) covers the first search, selection and preview.
 
 Choose this if you want:
 

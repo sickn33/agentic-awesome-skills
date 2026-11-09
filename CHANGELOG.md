@@ -36,6 +36,13 @@ Summarize the most important change for users in one short paragraph.
 - Credit each contributor with their GitHub handle and merged PR link.
 -->
 
+## [Unreleased]
+
+### Improvements
+
+- Identify Agentic Awesome Skills and its former Antigravity name consistently in the homepage's initial HTML, visible content, README and discovery guides, with official setup, repository and license links.
+- Introduce skill discovery with practical task examples and clearer setup paths; verify that the homepage's key facts remain readable without JavaScript.
+
 ## [20.7.0] - 2026-11-09 - "Interface Design and Connected Workflows"
 
 Add 29 skills for interface design, codebase refactoring, connected research and media workflows, bringing the catalog to 2,955 skills. Harden local runtime and viewer boundaries and clarify hosted-tool costs and documentation access.

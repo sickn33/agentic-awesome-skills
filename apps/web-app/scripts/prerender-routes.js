@@ -19,6 +19,7 @@ const PUBLIC_DIR = path.join(ROOT_DIR, 'public');
 const TEMPLATE_PATH = path.join(DIST_DIR, 'index.html');
 const SKILLS_PATH = path.join(PUBLIC_DIR, 'skills.json');
 const SEO_LANDING_PAGES_PATH = path.join(ROOT_DIR, 'src', 'data', 'seoLandingPages.json');
+const projectIdentity = JSON.parse(fs.readFileSync(path.join(ROOT_DIR, 'src/data/projectIdentity.json'), 'utf8'));
 
 const HOME_CATALOG_COUNT_FALLBACK = 1969;
 const PRERENDER_SOCIAL_IMAGE = 'social-card.png';
@@ -296,7 +297,7 @@ function buildPrerenderFallback({ heading, description, links }) {
   ].join('');
 }
 
-function buildLandingFallback({ siteBaseUrl, catalogCount }) {
+export function buildLandingFallback({ siteBaseUrl, catalogCount }) {
   const links = [
     { href: routeToUrl('/docs/codex-cli-skills', siteBaseUrl), label: 'Codex setup' },
     { href: routeToUrl('/docs/claude-code-skills', siteBaseUrl), label: 'Claude Code setup' },
@@ -305,7 +306,11 @@ function buildLandingFallback({ siteBaseUrl, catalogCount }) {
     { href: routeToUrl('/contribute', siteBaseUrl), label: 'Support and contribute' },
     { href: routeToUrl('/changelog', siteBaseUrl), label: 'Changelog' },
   ];
-  return `<main data-prerender-fallback="true"><h1>Agentic Awesome Skills</h1><h2>Reusable skills for your AI coding agent.</h2><p>Explore ${catalogCount.toLocaleString('en-US')} reusable SKILL.md playbooks for Claude Code, Codex, Cursor and other coding agents. AAS Core lets your agent inspect the catalog, record its selection and preview a plan locally.</p><section id="recorded-example"><h2>Recorded example · Preview only</h2><p>Review an MCP contract. The agent chooses exact IDs; Core records and validates the choice. Review the plan before any separate installation.</p></section><section id="get-started"><h2>Start with your agent</h2><nav>${buildStaticLinkList(links)}</nav></section></main>`;
+  const identityLinks = projectIdentity.links.map((link) => ({
+    ...link,
+    href: link.href.startsWith('/') ? routeToUrl(link.href, siteBaseUrl) : link.href,
+  }));
+  return `<main data-prerender-fallback="true"><h1>Agentic Awesome Skills</h1><section aria-labelledby="identity-title"><h2 id="identity-title">About ${escapeHtml(projectIdentity.name)}</h2><p>${escapeHtml(projectIdentity.description)}</p><p>${escapeHtml(projectIdentity.licenseSummary)}</p><p>${escapeHtml(projectIdentity.nextStep)}</p><nav aria-label="Project and installation"><ul>${buildStaticLinkList(identityLinks)}</ul></nav></section><h2>Reusable skills for your AI coding agent.</h2><p>Explore ${catalogCount.toLocaleString('en-US')} reusable SKILL.md playbooks for Claude Code, Codex, Cursor and other coding agents. AAS Core lets your agent inspect the catalog, record its selection and preview a plan locally.</p><section id="recorded-example"><h2>Recorded example · Preview only</h2><p>Review an MCP contract. The agent chooses exact IDs; Core records and validates the choice. Review the plan before any separate installation.</p></section><section id="get-started"><h2>Start with your agent</h2><nav>${buildStaticLinkList(links)}</nav></section></main>`;
 }
 
 function buildHomeFallback({ landingPages, siteBaseUrl, skills }) {
@@ -439,6 +444,7 @@ function buildLandingMeta({ catalogCount, imageUrl, canonicalUrl }) {
         '@context': 'https://schema.org',
         '@type': 'WebSite',
         name: SITE_NAME,
+        alternateName: projectIdentity.alternateName,
         url: catalogBaseUrl,
         sameAs: REPOSITORY_URL,
       },
@@ -446,6 +452,7 @@ function buildLandingMeta({ catalogCount, imageUrl, canonicalUrl }) {
         '@context': 'https://schema.org',
         '@type': 'SoftwareSourceCode',
         name: SITE_NAME,
+        alternateName: projectIdentity.alternateName,
         description,
         url: REPOSITORY_URL,
         sameAs: [...new Set([canonicalUrl, HOSTED_CATALOG_URL, 'https://www.npmjs.com/package/agentic-awesome-skills'])],

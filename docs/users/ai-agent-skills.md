@@ -1,10 +1,25 @@
 # AI Agent Skills
 
-If you are researching **AI agent skills** on GitHub, the useful first decision is whether you want agent-owned project selection with reproducible state or manual catalog browsing.
+**An AI agent skill is a reusable set of task instructions in a `SKILL.md` file**, often accompanied by examples, scripts or reference material. A coding agent reads the skill to follow a procedure, such as investigating a failing test or reviewing an API. You still review the instructions, any bundled files and the result.
 
-Agentic Awesome Skills is built around **AAS Core**: Codex or Claude inspects the project, searches and reads the complete local catalog, chooses exact skill IDs, and uses `compose_stack` to pin them in `aas-stack.json`. The CLI validates that agent-owned state and produces an immutable preview plan before any target change.
+[Agentic Awesome Skills](https://aaskills.tech/) (AAS), formerly **Antigravity Awesome Skills**, is an open-source library of these instructions for Codex, Claude Code, Cursor and other coding agents. Its canonical source is [sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills). Original code uses MIT; original written content uses CC BY 4.0, with imported skills retaining their own notices. See [sources and licenses](https://aaskills.tech/trust/).
 
-The catalog, plugins, bundles, workflows, and direct installer remain supporting content and distribution surfaces. AAS does not scan the repository, call a remote model, or write project files through MCP.
+## A practical first example
+
+For a failing test, inspect [`systematic-debugging`](../../skills/systematic-debugging/) and its bundled files, then use the [setup guide for your agent](#start-with-a-tool-specific-guide). Give the agent a concrete task:
+
+```text
+Investigate this failing test. Use the reviewed debugging skill to reproduce the
+failure, identify its cause, propose a minimal fix, and rerun the relevant tests.
+```
+
+The observable result is a reproduced failure, an explained change and test output. Installing a skill alone does not establish that the task succeeded.
+
+## How AAS Core helps
+
+For Codex and Claude Code, **AAS Core** lets your agent search and read the local catalog, choose skills for your project, and record its selection for review. Follow [Codex setup](codex-cli-skills.md) or [Claude Code setup](claude-code-skills.md) to connect it. For Cursor, follow the [direct installation guide](cursor-skills.md).
+
+The agent uses `compose_stack` to record exact IDs in `aas-stack.json`; the CLI validates that selection and previews a plan before any separate installation. AAS does not scan your repository, choose skills, call a remote model, or write project files through MCP.
 
 ## What to look for in an AI agent skill system
 

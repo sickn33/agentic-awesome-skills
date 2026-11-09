@@ -32,6 +32,7 @@ console.log(`Discovery verified: ${skills.length} linked skills with initial HTM
 const bundles = JSON.parse(fs.readFileSync(path.resolve(root, '../../data/editorial-bundles.json'), 'utf8')).bundles;
 const plugins = read('plugins/index.html');
 const canonicalRoot = new URL('..', plugins.match(/<link[^>]*rel="canonical"[^>]*href="([^"]+)"/)[1]).href;
+seoContent.assertLandingContent(read('index.html'), { baseUrl: canonicalRoot });
 seoContent.assertPluginsContent(plugins, { pluginCount: bundles.length, baseUrl: canonicalRoot });
 seoContent.assertWorkbenchContent(read('workbench/index.html'), { baseUrl: canonicalRoot });
 const pluginSkillIds = [...plugins.matchAll(/href="[^"]*\/skill\/([^/"?#]+)\/"/g)].map((match) => decodeURIComponent(match[1]));
