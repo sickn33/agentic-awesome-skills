@@ -2,6 +2,8 @@
   "schemaVersion": 1,
   "sections": {
     "official": [
+      "- **[superdesigndev/treg](https://github.com/superdesigndev/treg)**: Source for seven Treg client workflow skills: `treg`, `jev-memory`, `lead-signals`, `make-ugc`, `rea-growth`, `recruit` and `web-access`. Apache 2.0 with additional terms (LicenseRef-Treg), including hosted-service restrictions; complete custom notices retained in each bundle. AAS adaptations require explicit budgets, data-transfer and memory consent, and authorized business-contact/media use.",
+      "",
       "- **[fclairamb/solidping-plugin](https://github.com/fclairamb/solidping-plugin/tree/main/skills/solidping-monitoring)**: MIT official source for the `solidping` skill - uptime checks across 40+ types, results, incidents, diagnosis and status pages through the hosted SolidPing MCP server, with every write confirmed by the person first. SolidPing itself is AGPL-3.0.",
       "",
       "- **[Outreachgenie/outreachgenie-linkedin-mcp](https://github.com/Outreachgenie/outreachgenie-linkedin-mcp)**: MIT source for `outreachgenie-list-audit`, a read-only saved-list and template audit with local Python reports. Connected use requires an OutreachGenie workspace and compatible MCP host.",
@@ -411,7 +413,9 @@
       "- **[axelfreeman/marketing-mindset](https://github.com/axelfreeman/marketing-mindset)**: Source for the `marketing-mindset` skill - a marketer's decision framework for early-stage B2B and SaaS work: exchange checks, live-competitor benchmarking, pre-declared test volume floors, and channel kill rules (MIT).",
       "- **[mnemoverse/agent-memory-discipline](https://github.com/mnemoverse/agent-memory-discipline)**: Source for the `agent-memory-discipline` skill, with backend-neutral rules for when an agent recalls from long-term memory before acting and when it saves decisions, corrections and failures afterwards (CC0-1.0).",
       "- **[Search-3D/electron-drive-skill](https://github.com/Search-3D/electron-drive-skill)**: Source for the `electron-drive-skill` skill - launching and driving Electron apps under Playwright on a scratch profile (MIT).",
-      "- **[codegiveness/kernel-prompt](https://github.com/codegiveness/kernel-prompt)**: MIT source for the `kernel-prompt` skill - harness-neutral prompt design that asks one round of user-only decisions, then returns an improved prompt for another agent without performing the task."
+      "- **[codegiveness/kernel-prompt](https://github.com/codegiveness/kernel-prompt)**: MIT source for the `kernel-prompt` skill - harness-neutral prompt design that asks one round of user-only decisions, then returns an improved prompt for another agent without performing the task.",
+      "- **[caldoai/skills](https://github.com/caldoai/skills)**: MIT source for `untangle-codebase`, a decision-log-driven structural refactoring workflow.",
+      "- **[jakubkrehel/skills](https://github.com/jakubkrehel/skills)**: MIT source for 14 interface design, review, component exploration and technical illustration skills; full supporting files and copyright retained."
     ]
   }
 }

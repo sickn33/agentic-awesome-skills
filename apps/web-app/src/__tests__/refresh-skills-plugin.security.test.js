@@ -520,3 +520,37 @@ describe('refresh-skills plugin security', () => {
     }
   });
 });
+
+
+describe('skill asset response isolation', () => {
+  it.each(['html', 'svg', 'js', 'png'])('serves %s bundles with isolation headers', async (extension) => {
+    const { default: plugin } = await import('../../refresh-skills-plugin.js');
+    const handlers = [];
+    plugin().configureServer({ middlewares: { use(handler) {
+      if (typeof handler === 'function') handlers.push(handler);
+    } } });
+    const root = path.resolve(import.meta.dirname, '../../../..');
+    const file = path.join(root, 'skills/audit/demo.' + extension);
+    const exists = fs.existsSync.bind(fs);
+    const realpath = fs.realpathSync.native.bind(fs.realpathSync);
+    const stat = fs.statSync.bind(fs);
+    const pipe = vi.fn();
+    const spies = [
+      vi.spyOn(fs, 'existsSync').mockImplementation(p => p === file || exists(p)),
+      vi.spyOn(fs.realpathSync, 'native').mockImplementation(p => p === file ? file : realpath(p)),
+      vi.spyOn(fs, 'statSync').mockImplementation(p => p === file ? { isFile: () => true } : stat(p)),
+      vi.spyOn(fs, 'createReadStream').mockReturnValue({ pipe }),
+    ];
+    try {
+      const res = createResponse();
+      for (const handler of handlers) handler({ url: '/skills/audit/demo.' + extension }, res, () => {});
+      expect(pipe).toHaveBeenCalledWith(res);
+      expect(res.headers['X-Content-Type-Options']).toBe('nosniff');
+      expect(res.headers['Content-Security-Policy']).toBe("sandbox; default-src 'none'");
+      expect(res.headers['Content-Type']).toBe(extension === 'png' ? 'image/png' : 'text/plain; charset=utf-8');
+      expect(res.headers['Content-Disposition']).toBe(extension === 'png' ? undefined : 'attachment');
+    } finally {
+      spies.reverse().forEach(spy => spy.mockRestore());
+    }
+  });
+});
