@@ -2,6 +2,7 @@ import { buildSkillDescription } from './skillDescription.js';
 import { buildFaqItems } from './catalogFaq.js';
 import type { SeoJsonLdValue, SeoMeta, TwitterCard, Skill } from '../types';
 import { getAbsolutePublicAssetUrl } from './publicAssetUrls';
+import projectIdentity from '../data/projectIdentity.json';
 
 export const DEFAULT_TOP_SKILL_COUNT = 180;
 export const DEFAULT_SOCIAL_IMAGE = 'social-card.png';
@@ -123,6 +124,7 @@ function buildWebSiteSchema(canonicalUrl: string): Record<string, unknown> {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: SITE_NAME,
+    alternateName: projectIdentity.alternateName,
     url: getCatalogBaseUrl(canonicalUrl),
     sameAs: REPOSITORY_URL,
     inLanguage: 'en',
@@ -143,6 +145,7 @@ function buildSoftwareSourceCodeSchema(canonicalUrl: string, visibleCount: numbe
     '@context': 'https://schema.org',
     '@type': 'SoftwareSourceCode',
     name: SITE_NAME,
+    alternateName: projectIdentity.alternateName,
     description: `AAS Core preview is a local agent-first boundary for neutral catalog retrieval, exact agent-owned selection, validation, and planning backed by ${visibleCountLabel}.`,
     url: REPOSITORY_URL,
     sameAs: [

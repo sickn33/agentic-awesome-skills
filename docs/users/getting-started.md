@@ -1,6 +1,8 @@
 # Getting Started with AAS Core
 
-**New here? Start with AAS Core and let your agent choose a reviewable skill stack from the complete catalog.**
+**Start with one real task and reusable instructions your coding agent can follow.** Agentic Awesome Skills provides `SKILL.md` playbooks with examples and resources. AAS Core helps Codex or Claude find and read them, then record the skills it chooses for you to review.
+
+For example, ask your agent to investigate a failing test, explain the cause, propose a fix and rerun the relevant checks. Follow [Codex setup](codex-cli-skills.md) or [Claude Code setup](claude-code-skills.md) to connect Core first. If you use Cursor, start with its [direct installation guide](cursor-skills.md).
 
 > **Product boundary:** Codex or Claude owns skill selection. AAS Core provides complete local catalog access, reproducible composition, validation, and plan preview; apply and recovery remain experimental.
 

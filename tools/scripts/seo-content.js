@@ -52,6 +52,15 @@ function assertPluginsContent(html, { pluginCount, baseUrl } = {}) {
   assert(content.links.some((link) => link.pathname.includes('/skill/')), 'Plugins initial content must link to included skills');
 }
 
+function assertLandingContent(html, { baseUrl } = {}) {
+  const content = assertPageContent(html, 'Homepage', {
+    baseUrl,
+    requiredText: ['Agentic Awesome Skills', 'formerly Antigravity Awesome Skills', 'open-source library', 'SKILL.md', 'MIT', 'CC BY 4.0', 'imported skills retain their own licenses'],
+    linkPaths: ['/docs/getting-started/', '/trust/', '/docs/ai-agent-skills/'],
+  });
+  assert(content.links.some((link) => link.origin === 'https://github.com' && link.pathname === '/sickn33/agentic-awesome-skills'), 'Homepage initial content must link to the official repository');
+}
+
 function assertWorkbenchContent(html, { baseUrl } = {}) {
   assertPageContent(html, 'Workbench', {
     baseUrl, requiredText: ['aas-stack.json', 'aas-selection-evidence.json', 'Imports stay in memory', 'cannot install, apply, share, or persist'],
@@ -59,4 +68,4 @@ function assertWorkbenchContent(html, { baseUrl } = {}) {
   });
 }
 
-module.exports = { assertPageContent, assertPluginsContent, assertWorkbenchContent };
+module.exports = { assertPageContent, assertLandingContent, assertPluginsContent, assertWorkbenchContent };

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { JSDOM } from 'jsdom';
-import { buildPluginsFallback, buildWorkbenchFallback, buildSkillMeta } from './prerender-routes.js';
+import { buildLandingFallback, buildPluginsFallback, buildWorkbenchFallback, buildSkillMeta } from './prerender-routes.js';
 import { buildSkillDescription } from '../src/utils/skillDescription.js';
 import seoContent from '../../../tools/scripts/seo-content.js';
 
@@ -8,6 +8,17 @@ const base = 'https://example.com/catalog/';
 const bundles = [{ id: 'games', name: 'Games & tools', description: 'Design <safe> games.', skills: [{ id: 'game-development/game-design' }] }];
 
 describe('initial discovery content', () => {
+  it.each(['https://aaskills.tech/', base])('identifies the project and links setup and licenses under %s without JavaScript', (siteBaseUrl) => {
+    const html = `<body>${buildLandingFallback({ siteBaseUrl, catalogCount: 42 })}</body>`;
+    expect(() => seoContent.assertLandingContent(html, { baseUrl: siteBaseUrl })).not.toThrow();
+    const document = new JSDOM(html).window.document;
+    expect(document.querySelector('nav[aria-label="Project and installation"] a').href).toBe('https://github.com/sickn33/agentic-awesome-skills');
+    expect(document.body.textContent).toContain('42 reusable SKILL.md playbooks');
+    expect(() => seoContent.assertLandingContent(html.replace('CC BY 4.0', ''), { baseUrl: siteBaseUrl })).toThrow('CC BY 4.0');
+    expect(() => seoContent.assertLandingContent(html.replace('https://github.com/sickn33/agentic-awesome-skills', 'https://github.com/unrelated/repo'), { baseUrl: siteBaseUrl })).toThrow('official repository');
+    expect(() => seoContent.assertLandingContent(`<main><h1>AAS</h1><script>${JSON.stringify(html)}</script></main>`, { baseUrl: siteBaseUrl })).toThrow();
+  });
+
   it('renders every pack and links nested sources to actual catalog IDs', () => {
     const html = `<body>${buildPluginsFallback({ bundles, siteBaseUrl: base })}</body>`;
     const document = new JSDOM(html).window.document;
