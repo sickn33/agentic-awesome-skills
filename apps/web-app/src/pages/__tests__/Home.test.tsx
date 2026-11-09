@@ -242,7 +242,7 @@ describe('Home', () => {
     renderWithRouter(<Home />, { useProvider: false });
 
     await waitFor(() => {
-      expect(screen.getByText(/Unable to load skills/i)).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: /Unable to load skills/i })).toBeInTheDocument();
       expect(screen.getByText(/Non-JSON response/i)).toBeInTheDocument();
     });
 
@@ -335,6 +335,43 @@ describe('Home', () => {
         </MemoryRouter>
       );
     }
+
+    it('removes individual shared filters and clears all without deleting the shortlist', async () => {
+      const skill = createMockSkill({ id: 'react-safe', name: 'React', description: 'React components', category: 'frontend', risk: 'safe' });
+      renderCatalog(['/?q=react&category=frontend&risk=safe'], 0, [skill]);
+      fireEvent.click(screen.getByRole('button', { name: 'Add to shortlist' }));
+      expect(screen.getByRole('status')).toHaveTextContent('1 skill found.');
+      fireEvent.click(screen.getByRole('button', { name: 'Remove Risk: safe' }));
+      await waitFor(() => expect(screen.getByTestId('location')).not.toHaveTextContent('risk='));
+      expect(screen.getByLabelText('Search skills')).toHaveValue('react');
+      expect(screen.getByLabelText('Filter by category')).toHaveValue('frontend');
+      fireEvent.click(screen.getByRole('button', { name: 'Clear all filters' }));
+      await waitFor(() => expect(screen.getByTestId('location')).toHaveTextContent(/^\/$/));
+      expect(screen.queryByRole('group', { name: 'Active filters' })).not.toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'In shortlist' })).toBeInTheDocument();
+    });
+
+    it('announces settled search results and mobile category selection', async () => {
+      renderCatalog(['/'], 0, [createMockSkill({ name: 'React', category: 'frontend' }), createMockSkill({ id: 'python', name: 'Python', category: 'backend' })]);
+      const input = screen.getByLabelText('Search skills');
+      fireEvent.change(input, { target: { value: 'no-such-skill' } });
+      expect(screen.getByRole('status')).toHaveTextContent('Updating results');
+      expect(document.getElementById('catalog-results')).toHaveAttribute('aria-busy', 'true');
+      await waitFor(() => expect(screen.getByRole('status')).toHaveTextContent('0 skills found.'));
+      expect(document.getElementById('catalog-results')).toHaveAttribute('aria-busy', 'false');
+      const quickFilters = document.querySelector('.catalog-mobile-categories')!;
+      const frontend = Array.from(quickFilters.querySelectorAll('button')).find((button) => button.textContent === 'Frontend')!;
+      fireEvent.click(frontend);
+      expect(frontend).toHaveAttribute('aria-pressed', 'true');
+    });
+
+    it.each(['workflows', 'collections'])('focuses a visible search from %s with the keyboard shortcut', async (view) => {
+      renderCatalog([`/?view=${view}`]);
+      fireEvent.keyDown(window, { key: 'k', ctrlKey: true });
+      await waitFor(() => expect(screen.getByLabelText('Search skills')).toBeVisible());
+      expect(screen.getByLabelText('Search skills')).toHaveFocus();
+      await waitFor(() => expect(screen.getByTestId('location')).not.toHaveTextContent('view='));
+    });
 
     it('writes active filters and search into the URL as they change', async () => {
       renderCatalog(['/'], 0, [createMockSkill({ id: 'frontend-a', category: 'frontend', name: 'Frontend A' })]);

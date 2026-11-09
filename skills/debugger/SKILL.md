@@ -1,10 +1,6 @@
 ---
 name: debugger
-description: 'Debugging specialist for errors, test failures, and unexpected
-
-  behavior. Use proactively when encountering any issues.
-
-  '
+description: "Investigate a reproducible error or failing test, test root-cause hypotheses, implement a scoped fix when authorized, and report actual verification evidence."
 risk: safe
 source: community
 date_added: '2026-02-27'
@@ -17,8 +13,8 @@ date_added: '2026-02-27'
 
 ## Do not use this skill when
 
-- The task is unrelated to debugger
-- You need a different domain or tool outside this scope
+- There is no failure to investigate and the task is a general redesign.
+- You need incident-command authority or production access that has not been granted.
 
 ## Instructions
 
@@ -51,11 +47,13 @@ For each issue, provide:
 
 Focus on fixing the underlying issue, not just symptoms.
 
-## Example
+## Example: an empty result crashes a page
 
-**User request:**
+**Input:** a failing test, the stack trace and the component that reads `items[0].name`.
 
-> Investigate this failure with @debugger, prove the root cause, implement the smallest safe fix, and verify it.
+Reproduce with an empty fixture, compare the failure with a nonempty fixture and inspect whether an empty result is valid under the API contract. If it is valid, add the intended empty state and rerun both cases. If the API contract forbids it, investigate the producer instead of hiding the failure with a default value.
+
+**Deliverable:** the causal chain with file/line references, the focused change, the exact test command and its observed result. If the failure cannot be reproduced, report what was tried and the remaining hypotheses; do not present a plausible explanation as a confirmed root cause.
 
 ## Limitations
 - No local support scripts are bundled. Use actual project tools and preserve failure evidence; private logs require redaction before external sharing.

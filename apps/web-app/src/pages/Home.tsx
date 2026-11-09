@@ -94,11 +94,15 @@ export function Home(): React.ReactElement {
   const [syncing, setSyncing] = useState(false);
   const [syncMsg, setSyncMsg] = useState<SyncMessage | null>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+  const [searchFocusRequest, setSearchFocusRequest] = useState(0);
   const { ids: shortlistIds, toggle: toggleShortlist, clear: clearShortlist, addMany: addToShortlist } = useSkillShortlist();
   // Set right before writing the URL ourselves so the URL->state listener below
   // can tell its own writes apart from browser navigation (back/forward) and
   // restore filters from the URL instead of letting them get overwritten back.
   const skipNextUrlSyncRef = useRef(false);
+  // History may already contain our write while React Router still exposes the
+  // previous params. Compare against the in-flight target on rapid changes.
+  const pendingUrlSyncRef = useRef<string | null>(null);
   // Latest committed URL. The state->URL effect compares against this ref
   // instead of subscribing to searchParams, so it never re-fires on
   // back/forward navigation and overwrites the restored URL with stale state.
@@ -121,12 +125,18 @@ export function Home(): React.ReactElement {
     const handleSearchShortcut = (event: KeyboardEvent) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
         event.preventDefault();
-        searchInputRef.current?.focus();
+        setView('skills');
+        setSearchFocusRequest((request) => request + 1);
       }
     };
     window.addEventListener('keydown', handleSearchShortcut);
     return () => window.removeEventListener('keydown', handleSearchShortcut);
   }, []);
+
+  useEffect(() => {
+    // Wait for the Skills view to become visible before focusing its input.
+    if (searchFocusRequest > 0) searchInputRef.current?.focus();
+  }, [searchFocusRequest]);
 
   // State -> URL: keep the address bar shareable/bookmarkable as the user
   // changes filters. Uses replace so typing in search does not pollute history.
@@ -141,7 +151,8 @@ export function Home(): React.ReactElement {
     if (sourceFilter !== 'all') next.set('source', sourceFilter);
     if (scopeFilter !== 'all') next.set('scope', scopeFilter);
     if (sortBy !== 'default') next.set('sort', sortBy);
-    if (next.toString() !== searchParamsRef.current.toString()) {
+    if (next.toString() !== (pendingUrlSyncRef.current ?? searchParamsRef.current.toString())) {
+      pendingUrlSyncRef.current = next.toString();
       skipNextUrlSyncRef.current = true;
       setSearchParamsRef.current(next, { replace: true });
     }
@@ -151,6 +162,7 @@ export function Home(): React.ReactElement {
   // manual address-bar edit. Without this, the state->URL effect would
   // immediately overwrite the restored URL with the stale in-memory filters.
   useEffect(() => {
+    pendingUrlSyncRef.current = null;
     if (skipNextUrlSyncRef.current) {
       skipNextUrlSyncRef.current = false;
       return;
@@ -203,6 +215,17 @@ export function Home(): React.ReactElement {
     setSortBy('default');
   };
 
+  const activeFilters: { key: string; label: string; remove: () => void }[] = [];
+  if (search) activeFilters.push({ key: 'q', label: `Search: ${search}`, remove: () => setSearch('') });
+  if (matchMode !== 'all') activeFilters.push({ key: 'match', label: `Match: ${matchMode === 'any' ? 'Any word' : 'Approximate'}`, remove: () => setMatchMode('all') });
+  if (requiredTerms) activeFilters.push({ key: 'required', label: `Required: ${requiredTerms}`, remove: () => setRequiredTerms('') });
+  if (categoryFilter !== 'all') activeFilters.push({ key: 'category', label: `Category: ${labelCategory(categoryFilter)}`, remove: () => setCategoryFilter('all') });
+  if (riskFilter !== 'all') activeFilters.push({ key: 'risk', label: `Risk: ${riskFilter}`, remove: () => setRiskFilter('all') });
+  if (sourceFilter !== 'all') activeFilters.push({ key: 'source', label: `Source: ${sourceFilter}`, remove: () => setSourceFilter('all') });
+  if (scopeFilter !== 'all') activeFilters.push({ key: 'scope', label: 'My shortlist', remove: () => setScopeFilter('all') });
+  if (sortBy !== 'default') activeFilters.push({ key: 'sort', label: `Sort: ${{ stars: 'Community saves', newest: 'Newest', az: 'A to Z' }[sortBy]}`, remove: () => setSortBy('default') });
+  const resultsPending = loading || search !== debouncedSearch;
+
   const handleSync = async () => {
     setSyncing(true);
     setSyncMsg(null);
@@ -249,6 +272,8 @@ export function Home(): React.ReactElement {
             <input
               type="search"
               aria-label="Search skills"
+              aria-controls="catalog-results"
+              aria-describedby="catalog-search-status"
               placeholder="Search skills, tools, or workflows"
               maxLength={256}
               value={search}
@@ -303,6 +328,7 @@ export function Home(): React.ReactElement {
                 key={category}
                 type="button"
                 className={categoryFilter === category ? 'is-active' : ''}
+                aria-pressed={categoryFilter === category}
                 onClick={() => setCategoryFilter(category)}
               >
                 {labelCategory(category)}
@@ -341,6 +367,15 @@ export function Home(): React.ReactElement {
             </div>
 
           </div>
+          {activeFilters.length > 0 && <div className="catalog-active-filters" role="group" aria-label="Active filters">
+            {activeFilters.map((filter) => <button key={filter.key} type="button" aria-label={`Remove ${filter.label}`} title={filter.label} onClick={filter.remove}>
+              <span>{filter.label}</span><span aria-hidden="true">×</span>
+            </button>)}
+            <button type="button" className="catalog-active-filters__clear" onClick={clearFilters}>Clear all filters</button>
+          </div>}
+          <p id="catalog-search-status" className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+            {loading ? 'Loading skills…' : error && skills.length === 0 ? 'Unable to load skills.' : resultsPending ? 'Updating results…' : `${filteredSkills.length.toLocaleString('en-US')} ${filteredSkills.length === 1 ? 'skill' : 'skills'} found.`}
+          </p>
         </section>
 
         <div className="catalog-selection-bar" aria-label="Current selection">
@@ -352,7 +387,7 @@ export function Home(): React.ReactElement {
         <div hidden={activePanel !== 'shortlist-review'}><details className="platform-panel" id="shortlist-review"><summary>Review your shortlist <span>{shortlistIds.length} selected</span></summary><div className="platform-panel__body"><ShortlistReview suggestedGoal={discoveryGoal} skills={shortlistSkills} onRemove={toggleShortlist} onClear={clearShortlist} /></div></details></div>
 
 
-        <section className="catalog-results" aria-labelledby="catalog-results-title">
+        <section id="catalog-results" className="catalog-results" aria-labelledby="catalog-results-title" aria-busy={resultsPending}>
           <header>
             <div>
               <h2 id="catalog-results-title">{filteredSkills.length.toLocaleString('en-US')} {filteredSkills.length === 1 ? 'skill' : 'skills'}</h2>

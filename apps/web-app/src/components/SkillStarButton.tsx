@@ -43,6 +43,7 @@ export function SkillStarButton({
           </span>
         )}
         <button
+          aria-label={actionLabel}
           onClick={handleClick}
           className="flex items-center gap-1.5 rounded-full border border-amber-300/80 bg-amber-50 px-3 py-1 text-xs font-semibold text-amber-800 transition-colors hover:bg-amber-100 disabled:opacity-50 dark:border-amber-700/60 dark:bg-amber-900/20 dark:text-amber-400 dark:hover:bg-amber-900/35"
           disabled={hasSaved || isSaving}
@@ -68,6 +69,7 @@ export function SkillStarButton({
         </span>
       )}
       <button
+        aria-label={actionLabel}
         onClick={handleClick}
         className="flex items-center gap-1 rounded-md border border-slate-200 bg-slate-50 px-2.5 py-1.5 text-slate-600 transition-colors hover:border-amber-300 hover:bg-amber-50 hover:text-amber-700 disabled:opacity-50 dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300 dark:hover:border-amber-700/60 dark:hover:bg-amber-900/20 dark:hover:text-amber-400"
         disabled={hasSaved || isSaving}

@@ -70,13 +70,23 @@ async function readRegularFileNoFollow(absolutePath, relativePath, priorStat, li
   try {
     handle = await fsp.open(absolutePath, flags);
     const before = await handle.stat();
-    if (!before.isFile() || before.nlink !== 1 || before.dev !== priorStat.dev || before.ino !== priorStat.ino) {
+    if (!before.isFile() || before.nlink !== 1 || before.dev !== priorStat.dev || before.ino !== priorStat.ino
+      || before.size !== priorStat.size || before.mtimeMs !== priorStat.mtimeMs || before.ctimeMs !== priorStat.ctimeMs) {
       throw cacheError("AAS_CACHE_INPUT_CHANGED", `catalog input changed during validation: ${relativePath}`);
     }
     if (before.size > limits.maxFileBytes) throw cacheError("AAS_CACHE_FILE_LIMIT", `catalog asset exceeds the file-size limit: ${relativePath}`);
-    const bytes = await handle.readFile();
+    // readFile can follow a growing file beyond the validated size. Read only the
+    // declared bytes, handling short reads, then reject concurrent changes.
+    const bytes = Buffer.alloc(before.size);
+    let offset = 0;
+    while (offset < bytes.length) {
+      const { bytesRead } = await handle.read(bytes, offset, bytes.length - offset, offset);
+      if (bytesRead === 0) throw cacheError("AAS_CACHE_INPUT_CHANGED", `catalog input was truncated while being read: ${relativePath}`);
+      offset += bytesRead;
+    }
     const after = await handle.stat();
-    if (bytes.length !== before.size || after.size !== before.size || after.dev !== before.dev || after.ino !== before.ino) {
+    if (after.size !== before.size || after.dev !== before.dev || after.ino !== before.ino
+      || after.nlink !== 1 || after.mtimeMs !== before.mtimeMs || after.ctimeMs !== before.ctimeMs) {
       throw cacheError("AAS_CACHE_INPUT_CHANGED", `catalog input changed while being read: ${relativePath}`);
     }
     return bytes;

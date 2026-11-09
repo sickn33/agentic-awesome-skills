@@ -27,6 +27,12 @@ function tokenize(value) {
     const source = String(item ?? "");
     const whole = normalizeToken(source);
     if (whole) tokens.push(whole);
+    // Keep technical names (Next.js, .NET, CI/CD) inside prose as well as
+    // their individual components. A sentence's final dot is punctuation.
+    for (const piece of source.split(/[\s,:;()[\]{}!?"']+/)) {
+      const token = normalizeToken(piece.replace(/\.+$/, ""));
+      if (token && token !== whole) tokens.push(token);
+    }
     for (const piece of source.split(/[\s/.,:;()_-]+/)) {
       const token = normalizeToken(piece);
       if (token && token !== whole) tokens.push(token);

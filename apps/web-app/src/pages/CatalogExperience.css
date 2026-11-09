@@ -63,3 +63,7 @@
 .catalog-advanced:not([open]) { border-color: transparent; background: transparent; margin-block: 8px; }
 .catalog-advanced:not([open]) > summary { padding: 8px 0; min-height: 40px; }
 @media (max-width: 640px) { .catalog-views .catalog-directory-link { margin-left: 0; } }
+.catalog-active-filters { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; min-width: 0; }
+.catalog-active-filters button { display: inline-flex; align-items: center; gap: .65rem; min-height: 44px; max-width: 100%; padding: .45rem .75rem; border: 1px solid var(--stroke-strong); border-radius: var(--radius-sm); background: var(--surface-elevated); color: var(--text-primary); font: inherit; font-size: .8rem; cursor: pointer; }
+.catalog-active-filters button > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.catalog-active-filters .catalog-active-filters__clear { color: var(--accent-solid); background: transparent; }

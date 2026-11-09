@@ -2236,10 +2236,10 @@ textarea {
   }
 
   .skill-row__shortlist {
-    width: 38px;
-    min-width: 38px;
-    height: 38px;
-    min-height: 38px;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
     margin-bottom: 6px;
     padding: 0;
     overflow: hidden;
@@ -2261,9 +2261,9 @@ textarea {
 
   .skill-row__save button {
     justify-content: center;
-    width: 38px;
-    min-width: 38px;
-    height: 38px;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
     padding: 0 !important;
   }
 
