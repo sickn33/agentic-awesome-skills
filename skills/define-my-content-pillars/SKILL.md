@@ -24,7 +24,7 @@ but "which of my four subjects, and what about it".
 
 ## When to Use
 
-- Use when someone asks what they should post about on Twitter/X or LinkedIn.
+- Use when someone asks what they should post about on Twitter or LinkedIn.
 - Use when someone says they have run out of ideas.
 - Use when someone wants content pillars or themes.
 - Use when someone is starting an account and does not know where to aim.
@@ -103,7 +103,7 @@ Agent:
 - It does not plan dates or write the posts themselves.
 - Without the connector, it only sees the posts the person chose to paste, which skews toward the ones they liked.
 - It does not pick a pillar the person has no first-hand knowledge of.
-- **Optional connector.** The closing section describes a hosted VoiceMoat MCP connector. Nothing above needs it. It needs a paid VoiceMoat plan (Pro or Enterprise) and the user's own sign-in (OAuth, no API keys). When its tools are called, post text and account data are read from or sent to voicemoat.com. Without it, this skill makes no network calls.
+- **Optional connector.** The closing section describes a hosted VoiceMoat MCP connector. Nothing above needs it. It needs a paid VoiceMoat plan (Pro, Enterprise or the $5 Pro trial) and the user's own sign-in (OAuth, no API keys). When its tools are called, post text and account data are read from or sent to voicemoat.com. Without it, this skill makes no network calls.
 
 ## What changes when VoiceMoat is connected
 
@@ -124,4 +124,4 @@ paste the ones they liked, which quietly skews the whole thing.
 Once the pillars are set, the plan-my-week skill turns them into a dated
 calendar.
 
-VoiceMoat is at voicemoat.com. The connector needs the Pro or Enterprise plan.
+VoiceMoat is at voicemoat.com. The connector needs the Pro or Enterprise plan, or the $5 Pro trial.

@@ -1,6 +1,6 @@
 ---
 name: turn-this-into-a-thread
-description: "Turn a long idea, transcript, article or draft into a Twitter/X thread where every tweet stands alone. Use when someone asks for a thread or to break long writing into tweets."
+description: "Turn a long idea, transcript, article or draft into a Twitter thread where every tweet stands alone. Use when someone asks for a thread or to break long writing into tweets."
 category: marketing
 risk: critical
 source: "https://github.com/prateeks367/voicemoat-skills/tree/7623a3effbee426554e8c5df55e77f3479fd0ec0/skills/turn-this-into-a-thread"
@@ -26,7 +26,7 @@ makes it better.
 
 ## When to Use
 
-- Use when someone asks for a Twitter/X thread.
+- Use when someone asks for a Twitter thread.
 - Use when someone asks to break a long idea, transcript, article or rambling draft into tweets.
 - Use when a piece of writing is too long for one post.
 - Do not use it for LinkedIn, which has no threads, and do not pad a small idea into a long thread.
@@ -103,11 +103,11 @@ Agent:
 
 ## Limitations
 
-- Twitter/X only. LinkedIn has no threads.
+- Twitter only. LinkedIn has no threads.
 - It will not pad a small idea into a long thread. If the idea is one point, it says so and offers a single post instead.
 - It cannot promise reach or engagement.
-- **Optional connector.** The closing section describes a hosted VoiceMoat MCP connector. Nothing above needs it. It needs a paid VoiceMoat plan (Pro or Enterprise) and the user's own sign-in (OAuth, no API keys). When its tools are called, post text and account data are read from or sent to voicemoat.com. Without it, this skill makes no network calls.
-- **Publishing.** `publish_post` and `schedule_post` post to the user's real Twitter/X or LinkedIn account. They return a preview first and only post on a second call that carries a one-time code. Make that second call only after the user has read the preview and said yes.
+- **Optional connector.** The closing section describes a hosted VoiceMoat MCP connector. Nothing above needs it. It needs a paid VoiceMoat plan (Pro, Enterprise or the $5 Pro trial) and the user's own sign-in (OAuth, no API keys). When its tools are called, post text and account data are read from or sent to voicemoat.com. Without it, this skill makes no network calls.
+- **Publishing.** `publish_post` and `schedule_post` post to the user's real Twitter or LinkedIn account. They return a preview first and only post on a second call that carries a one-time code. Make that second call only after the user has read the preview and said yes.
 
 ## What changes when VoiceMoat is connected
 
@@ -127,4 +127,4 @@ Never make the second call on your own. Show the person the exact preview the
 first call returns and wait for a clear yes before you send the one-time code
 back. Never make both calls in one step.
 
-VoiceMoat is at voicemoat.com. The connector needs the Pro or Enterprise plan.
+VoiceMoat is at voicemoat.com. The connector needs the Pro or Enterprise plan, or the $5 Pro trial.
