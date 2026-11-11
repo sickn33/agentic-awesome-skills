@@ -12,6 +12,7 @@ const sanitizeFilename = require("sanitize-filename");
 const { resolveCommandInvocation } = require("./release_workflow.js");
 
 const { resolveBlobSizes } = require("../lib/git-blob-sizes");
+const { resolveCodexMarketplaceHotfix } = require("../lib/codex-marketplace-hotfix");
 const { resolveMirrorLockfileRepairs } = require("../lib/mirror-lockfile-repair");
 const { findProjectRoot } = require("../lib/project-root");
 const { parseRawDiff } = require("../lib/git-raw-diff");
@@ -345,6 +346,7 @@ function appendStepSummary(result) {
     `- Categories: ${result.categories.length > 0 ? result.categories.map((category) => `\`${category}\``).join(", ") : "\`none\`"}`,
     `- Changed files: ${result.changedFiles.length}`,
     `- Direct derived-file edits: ${derivedSummary}`,
+    `- Codex marketplace hotfix files verified: ${result.marketplaceHotfixPaths?.length || 0}`,
     `- Owner lockfile replicas verified: ${(result.mirrorLockfileRepairs || []).map(item => `\`${item.path}\``).join(", ") || "none"}`,
     `- \`validate:references\` required: ${result.requiresReferencesValidation ? "yes" : "no"}`,
     `- PR template checklist: ${result.prBody.hasQualityChecklist ? "present" : "missing"}`,
@@ -569,7 +571,8 @@ function main() {
   const mirrorLockfileRepairs = resolveMirrorLockfileRepairs(
     projectRoot, baseOid, headOid, changeRecords, pullRequest,
   );
-  const repairedPaths = new Set(mirrorLockfileRepairs.map(item => item.path));
+  const marketplaceHotfixPaths = resolveCodexMarketplaceHotfix(projectRoot, baseOid, headOid, pullRequest);
+  const repairedPaths = new Set([...mirrorLockfileRepairs.map(item => item.path), ...marketplaceHotfixPaths]);
   const directDerivedChanges = getDirectDerivedChanges(changedFiles, contract)
     .filter(file => !repairedPaths.has(file));
   const pullRequestBody = args.bodyFile ? fs.readFileSync(safeUserPath(args.bodyFile), "utf8") : (pullRequest?.body ?? null);
@@ -590,6 +593,7 @@ function main() {
     primaryCategory: classification.primaryCategory,
     directDerivedChanges,
     mirrorLockfileRepairs,
+    marketplaceHotfixPaths,
     requiresReferencesValidation: requiresReferencesValidation(
       changedFiles,
       contract,
