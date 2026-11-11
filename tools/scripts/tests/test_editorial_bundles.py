@@ -379,13 +379,18 @@ Keep this body byte-for-byte.
     def test_plugin_sync_prunes_stale_bundle_directories(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = pathlib.Path(temp_dir)
-            stale_plugin = root / "plugins" / "agentic-bundle-retired"
-            stale_plugin.mkdir(parents=True)
-            (stale_plugin / "marker.txt").write_text("stale", encoding="utf-8")
+            stale_plugins = [
+                root / "plugins" / name
+                for name in ("agentic-bundle-retired", "aasb-retired")
+            ]
+            for plugin in stale_plugins:
+                plugin.mkdir(parents=True)
+                (plugin / "marker.txt").write_text("stale", encoding="utf-8")
 
             editorial_bundles.sync_editorial_bundle_plugins(root, {}, [], {})
 
-            self.assertFalse(stale_plugin.exists())
+            for plugin in stale_plugins:
+                self.assertFalse(plugin.exists())
 
     def test_codex_bundle_plugin_names_keep_qualified_skill_names_valid(self):
         max_name_length = 64

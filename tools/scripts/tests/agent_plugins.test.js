@@ -29,9 +29,7 @@ const schema = readJson(
 );
 const validateManifest = new Ajv2020({ allErrors: true, strict: true }).compile(schema);
 
-const codexPluginPaths = new Set(
-  codexMarketplace.plugins.map((plugin) => normalizeRelativePath(plugin.source.path)),
-);
+const codexPluginNames = new Set(codexMarketplace.plugins.map((plugin) => plugin.name));
 const claudePluginPaths = new Set(
   claudeMarketplace.plugins.map((plugin) => normalizeRelativePath(plugin.source)),
 );
@@ -46,7 +44,7 @@ for (const bundle of bundles) {
   const portableSkillNames = bundle.skills.map((skill) => path.posix.basename(skill.id));
   const hasFlatSkills = new Set(portableSkillNames).size === portableSkillNames.length;
   const isCrossHostSafe =
-    codexPluginPaths.has(relativePluginPath) && claudePluginPaths.has(relativePluginPath);
+    codexPluginNames.has(`aasb-${bundle.id}`) && claudePluginPaths.has(relativePluginPath);
   const shouldBePortable = hasFlatSkills && isCrossHostSafe;
 
   if (!shouldBePortable) {

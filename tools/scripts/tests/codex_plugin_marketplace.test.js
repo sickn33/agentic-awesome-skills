@@ -102,7 +102,9 @@ for (const skill of compatibility) {
 
 for (const bundle of editorialBundles) {
   const bundlePluginName = `aasb-${bundle.id}`;
-  const bundlePluginPath = `agentic-bundle-${bundle.id}`;
+  const sharedBundleName = `agentic-bundle-${bundle.id}`;
+  const portableManifestPath = path.join(projectRoot, "plugins", sharedBundleName, "plugin.json");
+  const bundlePluginPath = fs.existsSync(portableManifestPath) ? bundlePluginName : sharedBundleName;
   const bundleEntry = marketplace.plugins.find((plugin) => plugin.name === bundlePluginName);
   const codexSupported = bundle.skills.every(
     (skill) => compatibilityById.get(skill.id)?.targets?.codex === "supported",
@@ -127,6 +129,19 @@ for (const bundle of editorialBundles) {
     bundle.group.replace(/^[^A-Za-z0-9]+/, "").trim(),
     `bundle plugin ${bundlePluginName} should derive its category from the bundle group`,
   );
+}
+
+for (const entry of marketplace.plugins) {
+  const source = path.join(projectRoot, entry.source.path);
+  assert.ok(
+    !fs.existsSync(path.join(source, "plugin.json")),
+    `Codex marketplace source must not have a root manifest that shadows the Codex manifest: ${entry.name}`,
+  );
+  const manifest = JSON.parse(fs.readFileSync(path.join(source, ".codex-plugin", "plugin.json"), "utf8"));
+  assert.strictEqual(manifest.name, entry.name, `Codex install name must match for ${entry.name}`);
+  assert.strictEqual(manifest.version, packageJson.version);
+  assert.strictEqual(manifest.skills, "./skills/");
+  assert.ok(fs.statSync(path.join(source, manifest.skills)).isDirectory());
 }
 
 console.log("ok");

@@ -10,6 +10,7 @@ import shutil
 import tempfile
 import time
 import uuid
+from collections.abc import Iterator
 from pathlib import Path
 from typing import Any, Callable
 
@@ -872,6 +873,46 @@ def _render_claude_marketplace(
     }
 
 
+def _codex_bundle_source_name(bundle_id: str, support: dict[str, Any]) -> str:
+    # Codex resolves a root plugin.json before .codex-plugin/plugin.json.
+    if support["agent_plugins"]:
+        return _bundle_codex_plugin_name(bundle_id)
+    return _bundle_plugin_name(bundle_id)
+
+
+def _bundle_plugin_packages(
+    bundles: list[dict[str, Any]],
+    bundle_support: dict[str, dict[str, Any]],
+) -> Iterator[tuple[str, dict[str, Any], set[str], bool]]:
+    for bundle in bundles:
+        bundle_id = bundle["id"]
+        support = bundle_support[bundle_id]
+        if not support["codex"] and not support["claude"]:
+            continue
+        targets = {target for target in ("agent_plugins", "codex", "claude") if support[target]}
+        yield _bundle_plugin_name(bundle_id), bundle, targets, support["agent_plugins"]
+        if support["agent_plugins"]:
+            yield _codex_bundle_source_name(bundle_id, support), bundle, {"codex"}, True
+
+
+def _generated_bundle_paths(plugins_root: Path) -> Iterator[Path]:
+    for pattern in ("agentic-bundle-*", "aasb-*"):
+        for candidate in plugins_root.glob(pattern):
+            if candidate.is_dir() or candidate.is_symlink():
+                yield candidate
+
+
+def _bundle_plugin_manifests(
+    metadata: dict[str, Any], bundle: dict[str, Any], targets: set[str]
+) -> Iterator[tuple[str, dict[str, Any]]]:
+    if "agent_plugins" in targets:
+        yield "plugin.json", _bundle_agent_plugin_manifest(metadata, bundle)
+    if "claude" in targets:
+        yield ".claude-plugin/plugin.json", _bundle_claude_plugin_manifest(metadata, bundle)
+    if "codex" in targets:
+        yield ".codex-plugin/plugin.json", _bundle_codex_plugin_manifest(metadata, bundle)
+
+
 def _render_codex_marketplace(
     bundles: list[dict[str, Any]],
     bundle_support: dict[str, dict[str, Any]],
@@ -892,14 +933,17 @@ def _render_codex_marketplace(
     ]
 
     for bundle in bundles:
-        if not bundle_support[bundle["id"]]["codex"]:
+        bundle_id = bundle["id"]
+        support = bundle_support[bundle_id]
+        if not support["codex"]:
             continue
+        source_name = _codex_bundle_source_name(bundle_id, support)
         plugins.append(
             {
-                "name": _bundle_codex_plugin_name(bundle["id"]),
+                "name": _bundle_codex_plugin_name(bundle_id),
                 "source": {
                     "source": "local",
-                    "path": f'./plugins/{_bundle_plugin_name(bundle["id"])}',
+                    "path": f"./plugins/{source_name}",
                 },
                 "policy": {
                     "installation": "AVAILABLE",
@@ -1165,88 +1209,36 @@ def check_editorial_bundle_plugins(
     _assert_skill_mirror_matches(root, codex_root / "skills", codex_skill_ids, "root Codex plugin")
     _assert_skill_mirror_matches(root, claude_root / "skills", claude_skill_ids, "root Claude plugin")
 
-    expected_bundle_names = {
-        _bundle_plugin_name(bundle["id"])
-        for bundle in bundles
-        if bundle_support[bundle["id"]]["codex"] or bundle_support[bundle["id"]]["claude"]
-    }
-    actual_bundle_names = {
-        path.name
-        for path in (root / "plugins").glob("agentic-bundle-*")
-        if path.is_dir()
-    }
+    packages = list(_bundle_plugin_packages(bundles, bundle_support))
+    expected_bundle_names = {name for name, *_ in packages}
+    actual_bundle_names = {path.name for path in _generated_bundle_paths(root / "plugins")}
     if actual_bundle_names != expected_bundle_names:
         missing = sorted(expected_bundle_names - actual_bundle_names)
         unexpected = sorted(actual_bundle_names - expected_bundle_names)
         detail = f"missing {missing[0]}" if missing else f"unexpected {unexpected[0]}"
         raise ValueError(f"Generated bundle plugin directories are out of sync: {detail}")
 
-    for bundle in bundles:
-        support = bundle_support[bundle["id"]]
-        if not support["codex"] and not support["claude"]:
-            continue
-        plugin_root = root / "plugins" / _bundle_plugin_name(bundle["id"])
+    for name, bundle, targets, portable_layout in packages:
+        plugin_root = root / "plugins" / name
         skill_ids = [skill["id"] for skill in bundle["skills"]]
         destination_ids = (
-            {
-                skill_id: _bundle_skill_destination_id(skill_id)
-                for skill_id in skill_ids
-            }
-            if support["agent_plugins"]
+            {skill_id: _bundle_skill_destination_id(skill_id) for skill_id in skill_ids}
+            if portable_layout
             else None
         )
+        label = f"bundle plugin {name}"
         _assert_skill_mirror_matches(
-            root,
-            plugin_root / "skills",
-            skill_ids,
-            f'bundle plugin {bundle["id"]}',
-            destination_ids,
-            support["agent_plugins"],
+            root, plugin_root / "skills", skill_ids, label, destination_ids, portable_layout
         )
 
-        manifest_specs = (
-            (
-                "agent_plugins",
-                plugin_root / "plugin.json",
-                _bundle_agent_plugin_manifest(metadata, bundle),
-            ),
-            (
-                "codex",
-                plugin_root / ".codex-plugin" / "plugin.json",
-                _bundle_codex_plugin_manifest(metadata, bundle),
-            ),
-            (
-                "claude",
-                plugin_root / ".claude-plugin" / "plugin.json",
-                _bundle_claude_plugin_manifest(metadata, bundle),
-            ),
-        )
         expected_manifest_paths: set[str] = set()
-        for target, manifest_path, expected_manifest in manifest_specs:
-            if support[target]:
-                expected_manifest_paths.add(manifest_path.relative_to(plugin_root).as_posix())
-                _assert_json_matches(
-                    manifest_path,
-                    expected_manifest,
-                    f'bundle {bundle["id"]} {target} manifest',
-                    root,
-                )
-            elif manifest_path.exists():
-                raise ValueError(
-                    f'Bundle {bundle["id"]} contains an unsupported {target} manifest: {manifest_path}'
-                )
+        for relative_path, manifest in _bundle_plugin_manifests(metadata, bundle, targets):
+            expected_manifest_paths.add(relative_path)
+            _assert_json_matches(plugin_root / relative_path, manifest, label, root)
         asset_sources = _bundle_asset_sources(root, bundle)
         expected_manifest_paths.update(asset_sources)
-        _assert_bundle_assets(
-            plugin_root,
-            asset_sources,
-            f'bundle plugin {bundle["id"]}',
-        )
-        _assert_plugin_metadata_layout(
-            plugin_root,
-            expected_manifest_paths,
-            f'bundle plugin {bundle["id"]}',
-        )
+        _assert_bundle_assets(plugin_root, asset_sources, label)
+        _assert_plugin_metadata_layout(plugin_root, expected_manifest_paths, label)
 
 
 def _remove_path(path: Path) -> None:
@@ -1339,13 +1331,11 @@ def _sync_bundle_plugin_directory(
     root: Path,
     metadata: dict[str, Any],
     bundle: dict[str, Any],
-    support: dict[str, Any],
+    name: str,
+    targets: set[str],
+    portable_layout: bool,
 ) -> None:
-    if not support["codex"] and not support["claude"]:
-        return
-
-    plugin_name = _bundle_plugin_name(bundle["id"])
-    plugin_root = root / "plugins" / plugin_name
+    plugin_root = root / "plugins" / name
 
     def populate_bundle_plugin(staging_root: Path) -> None:
         bundle_skills_root = staging_root / "skills"
@@ -1358,28 +1348,14 @@ def _sync_bundle_plugin_directory(
                 bundle_skills_root,
                 (
                     _bundle_skill_destination_id(skill["id"])
-                    if support["agent_plugins"]
+                    if portable_layout
                     else None
                 ),
-                support["agent_plugins"],
+                portable_layout,
             )
 
-        if support["agent_plugins"]:
-            _write_json(
-                staging_root / "plugin.json",
-                _bundle_agent_plugin_manifest(metadata, bundle),
-            )
-
-        if support["claude"]:
-            _write_json(
-                staging_root / ".claude-plugin" / "plugin.json",
-                _bundle_claude_plugin_manifest(metadata, bundle),
-            )
-        if support["codex"]:
-            _write_json(
-                staging_root / ".codex-plugin" / "plugin.json",
-                _bundle_codex_plugin_manifest(metadata, bundle),
-            )
+        for relative_path, manifest in _bundle_plugin_manifests(metadata, bundle, targets):
+            _write_json(staging_root / relative_path, manifest)
 
         for relative_path, source_path in _bundle_asset_sources(root, bundle).items():
             if source_path.is_symlink() or not source_path.is_file():
@@ -1398,13 +1374,10 @@ def sync_editorial_bundle_plugins(
     bundle_support: dict[str, dict[str, Any]],
 ) -> None:
     plugins_root = root / "plugins"
-    expected_plugin_names = {
-        _bundle_plugin_name(bundle["id"])
-        for bundle in bundles
-        if bundle_support[bundle["id"]]["codex"] or bundle_support[bundle["id"]]["claude"]
-    }
-    for bundle in bundles:
-        _sync_bundle_plugin_directory(root, metadata, bundle, bundle_support[bundle["id"]])
+    packages = list(_bundle_plugin_packages(bundles, bundle_support))
+    expected_plugin_names = {name for name, *_ in packages}
+    for name, bundle, targets, portable_layout in packages:
+        _sync_bundle_plugin_directory(root, metadata, bundle, name, targets, portable_layout)
 
     stale_plugin_roots = [
         plugins_root / "antigravity-awesome-skills",
@@ -1418,9 +1391,9 @@ def sync_editorial_bundle_plugins(
         if candidate.is_dir():
             _remove_tree(candidate)
 
-    for candidate in plugins_root.glob("agentic-bundle-*"):
-        if candidate.is_dir() and candidate.name not in expected_plugin_names:
-            _remove_tree(candidate)
+    for candidate in _generated_bundle_paths(plugins_root):
+        if candidate.name not in expected_plugin_names:
+            _remove_path(candidate)
 
 
 def load_editorial_bundles(root: Path) -> list[dict[str, Any]]:
