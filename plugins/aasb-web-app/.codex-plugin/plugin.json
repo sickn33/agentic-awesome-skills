@@ -1,0 +1,41 @@
+{
+  "name": "aasb-web-app",
+  "version": "20.7.0",
+  "description": "Install the \"AAS Web App Builder\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "web-app",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Web App Builder",
+    "shortDescription": "Web implementation, language guidance and browser verification.",
+    "longDescription": "Web implementation, language guidance and browser verification. Build web interfaces in JavaScript or TypeScript, connect APIs and verify accessible interface states in the browser. Recommended for: Frontend teams, Full-stack builders, Startup product engineers. Not for: Native mobile applications: use Mobile App Builder, Shared API contracts and backend platforms: use API Platform Builder. Covers Frontend Developer, Frontend Design, and 17 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Inspect this React/Next.js project and implement the requested user journey using its existing design system. Verify loading, empty, error and keyboard states in the browser; report checks actually run and remaining gaps.",
+      "Use this plugin to build a responsive landing page with forms, SEO, and accessibility checks.",
+      "Use this plugin to review this React component for performance, UX, accessibility, and maintainability.",
+      "Review this project for the added coverage: Implement the chosen UI from a concrete brief and existing project conventions; Design loading, empty, error and success states with accessible feedback; Connect client UI to APIs with explicit state, validation and error handling. Use only the relevant skills and existing stack. Report observed checks and limitations; prepare drafts before external or production actions."
+    ]
+  }
+}
