@@ -733,6 +733,7 @@ Key source families include:
 ### Additional Sources
 
 - **[agent-cards/skill](https://github.com/agent-cards/skill)**: Manage prepaid virtual Visa cards for AI agents. Create cards, check balances, view credentials, close cards, and get support via MCP tools.
+- [Claude to PDF](https://chromewebstore.google.com/detail/ndnjjjppaaiclfjlnopmnimhhiikkppk) - Export Claude.ai chats and artifacts to PDF, Markdown, and JSON with math and syntax formatting.
 
 </details>
 
