@@ -1,0 +1,41 @@
+{
+  "name": "aasb-aas-documents-presentations",
+  "version": "20.7.0",
+  "description": "Install the \"AAS Documents & Presentations\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-documents-presentations",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Documents & Presentations",
+    "shortDescription": "Create, edit, convert, and automate DOCX, XLSX, PPTX, PDF, Google Docs, Sheets, and Slides deliverables.",
+    "longDescription": "Create, edit, convert, and automate DOCX, XLSX, PPTX, PDF, Google Docs, Sheets, and Slides deliverables. Coauthor and edit content, produce editable office files and PDFs, and review both source content and rendered output. Recommended for: Operators producing reports, Analysts packaging findings, Teams automating office documents. Not for: A live Google Workspace connection included with installation, Dashboard pipelines and data platforms: use Data Engineering Platform. Covers Office Productivity, PDF Conversion Router, and 5 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use the supplied source material and template to produce the requested editable document, workbook, presentation or PDF. Confirm available format libraries first; check text, tables, formulas or citations as applicable and inspect the rendered output. Google Workspace operations require a separately configured authorized connector.",
+      "Use this plugin to inspect this spreadsheet for formula and formatting issues.",
+      "Use this plugin to convert this PDF content into an editable presentation outline.",
+      "Review this project for the added coverage: Develop document structure through drafting and reader review; Edit supplied content for clarity, consistency and supported claims. Use only the relevant skills and existing stack. Report observed checks and limitations; prepare drafts before external or production actions."
+    ]
+  }
+}
