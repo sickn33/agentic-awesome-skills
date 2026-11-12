@@ -98,7 +98,7 @@ If your host supports MCP tool filtering, scope this skill to: `get_odds`, `get_
 3. Current line — `get_odds` (defaults to `bookmaker=pinnacle`, 1 credit; `all` or a comma-separated list is still 1 credit; default is main lines, `is_main=true`)
 4. How it got there — `get_odds_history` for past snapshots up to a `limit`, each with its own timestamp
 5. What the public is doing — `get_splits` for the consensus split plus a per-bookmaker breakdown
-6. NFL/NCAAF/NBA/NCAAB/NHL/MLB player props — `get_player_props` for mains + live box progress. Catalog: https://lumify.ai/docs/player-props.md. Other sports return HTTP 400.
+6. NFL/NCAAF/NBA/NCAAB/NHL/MLB/soccer player props — `get_player_props` for mains + live box progress. Catalog: https://lumify.ai/docs/player-props.md. Other sports return HTTP 400.
 
 ### 4. Verify the result
 
@@ -120,7 +120,7 @@ Expected result: Agent finds the event id via query_events, calls estimate_cost,
 ## Limitations
 
 - `get_splits` is populated for MLB, NBA, NHL, and NFL; other sports may report unavailable
-- `get_player_props` is NFL/NCAAF/NBA/NCAAB/NHL/MLB only; `get_odds` stays moneyline/spread/totals and never returns props
+- `get_player_props` is NFL/NCAAF/NBA/NCAAB/NHL/MLB/soccer only; `get_odds` stays moneyline/spread/totals and never returns props
 - Exhausted credits return HTTP 402 / `insufficient_credits` — treat as a hard stop, not a retry condition
 - A zero-credit / unavailable response is not evidence of an error; do not infer a flat line or no movement from it
 
