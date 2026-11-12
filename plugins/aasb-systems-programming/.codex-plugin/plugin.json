@@ -1,0 +1,38 @@
+{
+  "name": "aasb-systems-programming",
+  "version": "20.7.0",
+  "description": "Install the \"Systems Programming\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "systems-programming",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Systems Programming",
+    "shortDescription": "Backend & Languages · 5 curated skills",
+    "longDescription": "For low-level and performance-critical code. Not for: Use a different pack when the project does not match this domain.. Covers Rust Pro, Go Concurrency Patterns, and 3 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Backend & Languages",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use the Systems Programming pack for this project. Select only relevant skills, inspect the existing stack, and report observed checks and limitations. Prepare drafts before external actions."
+    ]
+  }
+}

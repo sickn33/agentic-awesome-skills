@@ -1,0 +1,41 @@
+{
+  "name": "aasb-aas-api-platform-builder",
+  "version": "20.7.0",
+  "description": "Install the \"AAS Backend & API Platform\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-api-platform-builder",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Backend & API Platform",
+    "shortDescription": "Backend service design and cross-stack API lifecycle.",
+    "longDescription": "Backend service design and cross-stack API lifecycle. Design backend services and API contracts, integrate databases, authentication and payments, and validate consumers, performance and safe migration. Recommended for: Backend teams, Platform teams, Full-stack teams designing shared APIs. Not for: Python syntax and framework-specific implementation: use Python Development., Frontend visual design and browser interface implementation: use Web App Builder.. Covers API Design Principles, API Patterns, and 17 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Review these API requirements and the existing service. Define the contract, authentication and resource authorization, pagination and errors; implement the requested endpoint and update its documentation. Plan load and observability checks suitable for the expected workload.",
+      "Use this plugin to review this API for versioning, endpoint design, security, and load-test gaps.",
+      "Use this plugin to turn these product requirements into API endpoints and a contract-first implementation plan.",
+      "Review this project for the added coverage: Trace contract changes across clients and services and expose missed consumers; Implement replay-safe bounded retries that respect provider wait hints; Plan consumer migration and verified removal of obsolete API behavior. Use only the relevant skills and existing stack. Report observed checks and limitations; prepare drafts before external or production actions."
+    ]
+  }
+}

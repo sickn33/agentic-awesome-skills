@@ -1,0 +1,41 @@
+{
+  "name": "aasb-aas-python-api-builder",
+  "version": "20.7.0",
+  "description": "Install the \"AAS Python Development\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-python-api-builder",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Python Development",
+    "shortDescription": "Python language and framework implementation.",
+    "longDescription": "Python language and framework implementation. Implement and test Python code, async workflows and FastAPI or Django services with schema validation and bounded external API retries. Recommended for: Python backend teams, FastAPI and Django builders, API maintainers. Not for: Cross-stack architecture and API lifecycle decisions: use Backend & API Platform., Production deployment without a separate explicit authorization.. Covers Python Pro, Python Patterns, and 11 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins - Next Wave",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Inspect this Python service and use its existing FastAPI or Django stack. Implement the requested endpoint with Pydantic or framework-native validation, authentication boundaries, error responses and tests. Update the API contract and report the checks actually run.",
+      "Use this plugin to review this Django API for structure, performance, OpenAPI coverage, and test coverage.",
+      "Use this plugin to refactor this Python service toward clearer API and async patterns.",
+      "Review this project for the added coverage: Apply authorization, validation and security checks to service boundaries; Review analytical query performance without changing metric semantics; Implement replay-safe bounded retries that respect provider wait hints. Use only the relevant skills and existing stack. Report observed checks and limitations; prepare drafts before external or production actions."
+    ]
+  }
+}

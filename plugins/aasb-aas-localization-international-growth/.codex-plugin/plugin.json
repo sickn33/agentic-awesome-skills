@@ -1,0 +1,41 @@
+{
+  "name": "aasb-aas-localization-international-growth",
+  "version": "20.7.0",
+  "description": "Install the \"AAS Localization & International Growth\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-localization-international-growth",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Localization & International Growth",
+    "shortDescription": "Grow internationally with i18n, hreflang, multilingual SEO, content, copy, schema, analytics, and market research.",
+    "longDescription": "Grow internationally with i18n, hreflang, multilingual SEO, content, copy, schema, analytics, and market research. Prepare locale-aware interfaces and edited content, refresh verified market claims, and check language, routing and international SEO. Recommended for: Growth teams, International SEO teams, Product teams localizing UI. Not for: Certified legal translation, General acquisition planning without localization needs: use Marketing, SEO & Growth. Covers I18n Localization, SEO Hreflang, and 10 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins - Next Wave",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Review the supplied target markets, source content and locale implementation. Prepare the relevant translation structure, locale routing, hreflang and content changes; check language consistency and technical links. Flag cultural or linguistic judgments requiring a native reviewer and any separately configured research tools.",
+      "Use this plugin to audit this site for i18n, localized content, schema, analytics, and market research gaps.",
+      "Use this plugin to create a market-localized content plan with copy, SEO, and measurement.",
+      "Review this project for the added coverage: Edit supplied content for clarity, consistency and supported claims; Refresh verified locale-specific claims without inventing freshness signals. Use only the relevant skills and existing stack. Report observed checks and limitations; prepare drafts before external or production actions."
+    ]
+  }
+}
