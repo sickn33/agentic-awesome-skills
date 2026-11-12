@@ -6,6 +6,9 @@ For example, ask your agent to investigate a failing test, explain the cause, pr
 
 > **Product boundary:** Codex or Claude owns skill selection. AAS Core provides complete local catalog access, reproducible composition, validation, and plan preview; apply and recovery remain experimental.
 
+> [!IMPORTANT]
+> **npm publishing paused.** Publishing new AAS versions to npm is paused while the maintainer account is locked. Use GitHub for current skills and updates. [Install or update without npm](#install-and-update-without-npm).
+
 ## Your first result
 
 Choose [Codex](codex-cli-skills.md) or [Claude Code](claude-code-skills.md), then follow the six numbered steps in that guide. Already connected? Start at step 3 to verify the connection before selecting skills.
@@ -52,68 +55,46 @@ A useful first result is one reviewed selection applied to a real task, with an 
 Don't panic about the size of the repository. You don't need everything at once.
 We have curated **Starter Packs** to get you running immediately.
 
-On the direct-install path, you install the library once (npx or clone); Starter Packs are curated lists to help you **pick which skills to use** by role (e.g. Web Wizard, Hacker Pack)—they are not a different way to install.
+Starter Packs group skills by role to help you choose a focused set to install.
 
 If you prefer a packaged install for **Claude Code**, **Codex**, or another Agent Plugins-compatible client, use the plugin distributions described in [plugins.md](plugins.md).
 
-### 1. Install Skills Directly
+### Install and update without npm
 
-**Option A — npx (easiest):**
+#### Install one skill from GitHub
 
-```bash
-npx agentic-awesome-skills --antigravity --skills brainstorming,systematic-debugging --dry-run
+Install [GitHub CLI](https://cli.github.com/) and sign in with `gh auth login`. Use a version with `gh skill install` available. These commands preview and install the `brainstorming` skill for Codex:
+
+```sh
+gh skill preview sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md@v20.7.0
+gh skill install sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md --agent codex --scope user --pin v20.7.0
 ```
 
-Antigravity installs to `~/.agents/skills`. Because that host may load enough
-installed instructions to exhaust its context or enter a truncation crash loop,
-the bare command and `--antigravity` now require `--skills`, a metadata filter,
-or the explicit `--all` override. Use `--cursor`, `--claude`, `--gemini`,
-`--codex`, `--kiro`, or `--agy` for other tool paths, or `--path <dir>` for a
-custom location. Run `npx agentic-awesome-skills --help` for details.
-The 20.7.0 installer requires Git 2.25+ and retrieves a shallow, sparse canonical skill tree after matching the release commit to npm metadata. Complete skill bundles remain available; plugin mirrors and app assets are omitted. The release-pinned commands below use this installer.
+Use the exact path to the skill's `SKILL.md` on GitHub. Review its instructions and supporting files before activating it. Change `--agent` to your host, such as `claude-code`, `cursor`, or `gemini-cli`. Run `gh skill install --help` for the complete list. Use `--scope project` from your project for a project-level install, or `--dir <directory>` for a custom path. With Antigravity, start with a small selection to avoid context overload.
 
-For Antigravity, ask a Codex or Claude agent with the read-only AAS Core MCP
-configured to inspect the project, search the complete catalog, and choose exact
-skill IDs. AAS MCP does not install them; after selection, have the agent run the
-preview command above, show you the plan, and repeat it without `--dry-run` only
-after review. Other direct-install targets keep the legacy-compatible complete
-catalog behavior when no selector is supplied and print a risk summary before
-writing. Installed text is not automatically executed, but it can influence an
-agent when loaded, so review an exact set first:
+#### Update a skill or switch from npm
 
-```bash
-npx agentic-awesome-skills audit --skills brainstorming,backend-dev-guidelines
-npx agentic-awesome-skills --skills brainstorming,backend-dev-guidelines --dry-run
+Find the new tag in [GitHub Releases](https://github.com/sickn33/agentic-awesome-skills/releases/latest). Preview at the new tag, then repeat the install with that tag and the same destination. GitHub CLI skips pinned skills during `gh skill update`, so use the install command to change the pin.
+
+For a skill previously installed with npm, point `--dir` at the existing skill root. Back up any local changes outside the agent's skill directory before approving an overwrite. If the terminal cannot prompt, add `--force` only after you have reviewed the replacement and confirmed the destination. A separate skill directory can be used to stage a copy before replacing the installed one.
+
+#### Download the repository or update a Git clone
+
+For a specific release, open [GitHub Releases](https://github.com/sickn33/agentic-awesome-skills/releases/latest) and download **Source code (zip)**. Extract it outside the agent's skill directory. Copy only the reviewed skill folders from `skills/` into your agent's skill directory, keeping each folder and its support files together. To update, download the new release and replace the selected folders after backing up local changes. If you already cloned a release tag, use a separate checkout for the new tag or download its ZIP.
+
+For a checkout that follows the latest accepted source changes on `main`, use Git:
+
+```sh
+git clone --depth 1 --branch main https://github.com/sickn33/agentic-awesome-skills.git ./agentic-awesome-skills
 ```
 
-Use `npx agentic-awesome-skills --antigravity --all` only when you deliberately
-accept the full catalog's context, truncation, and crash-loop risk.
+Update that checkout from its parent directory:
 
-You can also ask your agent to read the selected `SKILL.md` and every bundled
-file before installation. The static audit reports risky capabilities; it does
-not prove that a skill is safe. See [Security, trust, and antivirus alerts](security-and-antivirus.md).
-
-If npm returns 404, check the package name, exact version and registry access. Keep the reviewed release pin; do not replace it with a moving GitHub source as a shortcut.
-
-**Option B — git clone:**
-
-```bash
-# Review outside any active agent skill directory.
-git clone --depth 1 --branch v20.7.0 https://github.com/sickn33/agentic-awesome-skills.git ./aas-review-v20.7.0
-git -C ./aas-review-v20.7.0 rev-parse HEAD
+```sh
+git -C ./agentic-awesome-skills pull --ff-only
 ```
 
-Inspect the selected trees before activation. The Git tag and npm `gitHead` must agree with the release provenance; use the direct installer for its destination and update checks.
-
-**Option C — one exact skill with GitHub CLI (preview):**
-
-```bash
-gh skill preview sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md
-gh skill install sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md \
-  --agent github-copilot --scope user --pin v20.7.0
-```
-
-GitHub CLI skill support is currently in preview. In this large repository, use an exact `SKILL.md` path to avoid ambiguous canonical/plugin mirrors and unnecessary full-tree discovery. Avoid `--all` unless you intentionally want every discovered skill.
+Review the changes before copying updated skill folders into your agent's directory. Updating the checkout updates the repository files. Skills copied elsewhere are updated when you replace those copies.
 
 ### 2. Pick Your Persona
 
@@ -229,10 +210,10 @@ A: Follow the recovery steps in [windows-truncation-recovery.md](windows-truncat
 A: Use the activation flow in [agent-overload-recovery.md](agent-overload-recovery.md). It shows how to run `scripts/activate-skills.sh` from a cloned repo so you can keep the full library archived and activate only the bundles or skills you need in the live Antigravity directory.
 
 **Q: What if `agy` does not show installed skills when I type `/`?**
-A: The Antigravity CLI reads skill directories from `~/.gemini/antigravity-cli/skills/<skill>/SKILL.md`. Run `npx agentic-awesome-skills --agy`, restart `agy`, then open `/skills` or type a specific slash command such as `/brainstorming`.
+A: The Antigravity CLI reads skill directories from `~/.gemini/antigravity-cli/skills/<skill>/SKILL.md`. Install your selected skills with `--agent antigravity-cli` in the [GitHub CLI command](#install-one-skill-from-github). Restart `agy`, then open `/skills` or type a specific slash command such as `/brainstorming`.
 
 **Q: What if OpenCode or another `.agents/skills` host becomes unstable with a full install?**
-A: Start with a reduced install instead of copying the whole library. For example: `npx agentic-awesome-skills --path .agents/skills --category development,backend --risk safe,none`. You can narrow further with `--tags` and use a trailing `-` to exclude values such as `typescript-`. To manage a reproducible exact set, first preview it with `npx agentic-awesome-skills@20.7.0 --path .agents/skills --release 20.7.0 --skills frontend-design,backend-dev-guidelines --dry-run`, then remove `--dry-run` only after reviewing the plan. Default and `--release` installs verify the cloned commit against the exact npm release's immutable `gitHead`; `--tag` is an explicit mutable-ref escape hatch and is not release-identity verified.
+A: Choose a small set from the catalog, then use the [GitHub CLI command](#install-one-skill-from-github) for each exact skill. Keep the same release tag for the entire set.
 
 **Q: Is this free?**
 A: Yes. Original code and tooling are MIT-licensed, and original documentation/non-code written content is CC BY 4.0. See [../../LICENSE](../../LICENSE) and [../../LICENSE-CONTENT](../../LICENSE-CONTENT).

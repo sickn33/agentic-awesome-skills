@@ -1,0 +1,41 @@
+{
+  "name": "aasb-aas-security-engineer",
+  "version": "20.7.0",
+  "description": "Install the \"AAS Security Engineer\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-security-engineer",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Security Engineer",
+    "shortDescription": "Run authorized security testing, audit, vulnerability validation, web testing, and hardening workflows.",
+    "longDescription": "Run authorized security testing, audit, vulnerability validation, web testing, and hardening workflows. Map threats and agent-skill risks, assess explicitly authorized targets, and produce reproducible findings, remediation priorities and retest steps. Recommended for: Authorized security teams, Maintainers validating reported findings, Cloud and app security reviewers. Not for: Targets without explicit authorization, Routine defensive feature implementation: use Secure App Builder. Covers Ethical Hacking Methodology, Burp Suite Testing, and 10 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Review the supplied assets, written authorization and permitted scope. Prepare a security assessment plan and report template. Before any active test, confirm the exact target, command and expected effect; record findings with evidence and retest steps.",
+      "Use this plugin to validate this vulnerability report and separate confirmed risk from false positives.",
+      "Use this plugin to review this system for web, API, cloud, and SAST coverage gaps.",
+      "Review this project for the added coverage: Map trust boundaries, threats and mitigations before active assessment; Inspect agent skill instructions and bundled files for unsafe authority or data flows. Use only the relevant skills and existing stack. Report observed checks and limitations; prepare drafts before external or production actions."
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "name": "aasb-skill-author",
+  "version": "20.7.0",
+  "description": "Install the \"Skill Author\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "skill-author",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Skill Author",
+    "shortDescription": "Maintainer & OSS · 6 curated skills",
+    "longDescription": "For creating and maintaining high-quality SKILL.md assets. Not for: Use a different pack when the project does not match this domain.. Covers Skill Creator, Effective Agent Skills, and 4 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Maintainer & OSS",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use the Skill Author pack for this project. Select only relevant skills, inspect the existing stack, and report observed checks and limitations. Prepare drafts before external actions."
+    ]
+  }
+}

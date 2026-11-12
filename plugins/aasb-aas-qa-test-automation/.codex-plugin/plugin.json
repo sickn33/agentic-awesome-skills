@@ -1,0 +1,41 @@
+{
+  "name": "aasb-aas-qa-test-automation",
+  "version": "20.7.0",
+  "description": "Install the \"AAS QA & Test Automation\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-qa-test-automation",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS QA & Test Automation",
+    "shortDescription": "Plan test strategy, automate browser checks, debug failures, stabilize suites, and verify accessibility regressions.",
+    "longDescription": "Plan test strategy, automate browser checks, debug failures, stabilize suites, and verify accessibility regressions. Reproduce failures, test provider and consumer contracts and add meaningful unit, async, Python and browser regression coverage. Recommended for: QA engineers, Frontend and full-stack teams, Maintainers fixing flaky CI. Not for: Visual direction and branding: use Product Design Studio, Claiming coverage from tests that were not executed. Covers Test Driven Development, Systematic Debugging, and 12 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Start from this failure or critical user journey. Reproduce it, choose the existing test framework, and add the smallest meaningful regression coverage. Report the original failure, checks run and remaining blind spots; add load or screen-reader testing only when relevant.",
+      "Use this plugin to stabilize this flaky Playwright suite and explain the root cause.",
+      "Use this plugin to add regression coverage for this bug with the smallest useful test.",
+      "Review this project for the added coverage: Write isolated unit tests and correctly await asynchronous outcomes; Trace contract changes across clients and services and expose missed consumers; Build Python fixtures, parametrized cases and async regression tests. Use only the relevant skills and existing stack. Report observed checks and limitations; prepare drafts before external or production actions."
+    ]
+  }
+}

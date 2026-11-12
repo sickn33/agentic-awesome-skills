@@ -1,0 +1,41 @@
+{
+  "name": "aasb-aas-data-analytics",
+  "version": "20.7.0",
+  "description": "Install the \"AAS Data Analytics & Business Intelligence\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-data-analytics",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Data Analytics & Business Intelligence",
+    "shortDescription": "Business intelligence, metric definitions and analytical evidence.",
+    "longDescription": "Business intelligence, metric definitions and analytical evidence. Validate business metrics and data, analyze SQL and experiments, and explain dashboards, market sizing and financial models with traceable assumptions. Recommended for: Product analysts, Data-informed product teams, Founders measuring funnels. Not for: Production ingestion and orchestration: use Data Engineering Platform, Creating evidence when source data or definitions are unavailable. Covers Analytics Tracking, Analytics Product, and 14 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Inspect the supplied dataset and business question. Check missing values, duplicates, join cardinality and metric definitions before writing SQL or building a dashboard. Deliver the analysis, validation results and decision limits; propose tracking only if the task requires it.",
+      "Use this plugin to review this SQL model and propose safer metrics and joins.",
+      "Use this plugin to design an A/B test and the KPI dashboard needed to read it.",
+      "Review this project for the added coverage: Review analytical query performance without changing metric semantics; Explain verified analytical results with context, uncertainty and clear visuals. Use only the relevant skills and existing stack. Report observed checks and limitations; prepare drafts before external or production actions."
+    ]
+  }
+}

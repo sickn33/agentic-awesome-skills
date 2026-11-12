@@ -6,6 +6,9 @@ AAS Core lets Codex and Claude search and read the complete local AAS catalog, p
 
 The primary durable artifact is [`aas-stack.json`](#the-stack-manifest). It records the exact skill IDs chosen by the coding agent; it is not the output of a Core ranking system. An audit-enabled flow can also persist a separate canonical `aas-selection-evidence.json` sidecar. The local MCP is a read-only catalog, composition, and evidence boundary; a client or the `aas` CLI performs persistence, the CLI validates and plans, and Workbench is a browser-local review surface.
 
+> [!IMPORTANT]
+> **npm publishing paused.** The npm commands below describe the versioned Core setup. The current release is available on GitHub, and its Core runtime package is unavailable from npm. To install or update the skills themselves, follow the [GitHub installation guide](getting-started.md#install-and-update-without-npm).
+
 ## How it works
 
 ```text

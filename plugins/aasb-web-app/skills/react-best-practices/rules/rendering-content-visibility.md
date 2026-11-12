@@ -1,0 +1,40 @@
+---
+title: CSS content-visibility for Long Lists
+impact: HIGH
+impactDescription: faster initial render
+tags: rendering, css, content-visibility, long-lists
+---
+
+## CSS content-visibility for Long Lists
+
+Apply `content-visibility: auto` to defer off-screen rendering.
+
+**CSS:**
+
+```css
+.message-item {
+  content-visibility: auto;
+  contain-intrinsic-size: 0 80px;
+}
+```
+
+**Example:**
+
+```tsx
+function MessageList({ messages }: { messages: Message[] }) {
+  return (
+    <div className="overflow-y-auto h-screen">
+      {messages.map(msg => (
+        <div key={msg.id} className="message-item">
+          <Avatar user={msg.author} />
+          <div>{msg.content}</div>
+        </div>
+      ))}
+    </div>
+  )
+}
+```
+
+The browser can skip eligible off-screen layout and paint; measure the benefit for the actual list.
+
+Illustrative item counts and speedups are not measured guarantees. Verify intrinsic sizing, scrolling, focus, find-in-page and assistive technology behavior; this does not reduce mounted React component count.

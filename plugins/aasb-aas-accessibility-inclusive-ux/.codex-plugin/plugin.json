@@ -1,0 +1,41 @@
+{
+  "name": "aasb-aas-accessibility-inclusive-ux",
+  "version": "20.7.0",
+  "description": "Install the \"AAS Accessibility & Inclusive UX\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-accessibility-inclusive-ux",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Accessibility & Inclusive UX",
+    "shortDescription": "Audit, test, and fix accessible product experiences across WCAG, automated scans, screen readers, contrast, and browser QA.",
+    "longDescription": "Audit, test, and fix accessible product experiences across WCAG, automated scans, screen readers, contrast, and browser QA. Find and fix barriers across interface states using WCAG criteria, keyboard, automated and screen-reader checks. Recommended for: Frontend teams, Product designers, QA teams. Not for: Legal accessibility certification, Automated scans as a substitute for all manual testing. Covers Accesslint Audit, Accesslint Scan, and 8 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Audit this page or component using the available browser and source. Record reproducible keyboard, focus, label, contrast and motion issues; implement the agreed fixes and retest. Distinguish automated results from screen-reader checks actually performed.",
+      "Use this plugin to create an accessibility regression plan with automated scans, screen-reader checks, and Playwright coverage.",
+      "Use this plugin to review this UI for contrast, keyboard, focus, labels, motion, and semantic HTML.",
+      "Review this project for the added coverage: Map accessibility findings to criteria and verify fixes manually and with tools; Design loading, empty, error and success states with accessible feedback. Use only the relevant skills and existing stack. Report observed checks and limitations; prepare drafts before external or production actions."
+    ]
+  }
+}

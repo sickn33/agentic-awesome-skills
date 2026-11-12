@@ -1,0 +1,41 @@
+{
+  "name": "aasb-aas-secure-app-builder",
+  "version": "20.7.0",
+  "description": "Install the \"AAS Secure App Builder\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-secure-app-builder",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Secure App Builder",
+    "shortDescription": "Build application features with auth, access control, API security, PCI, SAST, and defensive review baked in.",
+    "longDescription": "Build application features with auth, access control, API security, PCI, SAST, and defensive review baked in. Translate threats into security requirements and implement authentication, access control and data protection with negative tests. Recommended for: Application developers, Product engineering teams, Security-conscious backend and frontend builders. Not for: Offensive security assessment: use Security Engineer, Formal compliance certification or legal advice. Covers API Security Best Practices, Auth Implementation Patterns, and 10 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Inspect this feature and trace untrusted input, authentication, authorization and sensitive data. Implement the requested defensive controls, add negative tests for bypasses, and report residual risks. Use PCI or Django guidance only when the project requires it.",
+      "Use this plugin to design a secure API feature with validation, authorization, and auditability.",
+      "Use this plugin to harden this payment, authentication, or user-data flow before release.",
+      "Review this project for the added coverage: Turn identified threats into testable security requirements; Map trust boundaries, threats and mitigations before active assessment. Use only the relevant skills and existing stack. Report observed checks and limitations; prepare drafts before external or production actions."
+    ]
+  }
+}

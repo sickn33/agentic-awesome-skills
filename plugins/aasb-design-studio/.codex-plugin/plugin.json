@@ -1,0 +1,41 @@
+{
+  "name": "aasb-design-studio",
+  "version": "20.7.0",
+  "description": "Install the \"AAS Product Design Studio\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "design-studio",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Product Design Studio",
+    "shortDescription": "Product visual direction, creative production and design review.",
+    "longDescription": "Product visual direction, creative production and design review. Turn a visual brief into design rules, creative assets, edited content and responsive interface states before implementation. Recommended for: Product designers, Frontend teams, Founders polishing a product surface. Not for: Application feature implementation: use Web App Builder or Mobile App Builder., Unlicensed asset reuse or publication without authorization.. Covers UI UX Pro Max, High End Visual Design, and 15 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Review this product brief and existing interface. Propose a visual direction, implement one representative responsive screen, and check typography, spacing, contrast and motion. Add 3D or custom artwork only if the brief calls for it.",
+      "Use this plugin to design a responsive accessible product screen and handoff notes for implementation.",
+      "Use this plugin to improve the visual polish, motion, and accessibility of this interface.",
+      "Review this project for the added coverage: Record visual decisions and reusable interface rules in a design document; Translate a supplied screenshot into an interface with explicit assumptions; Design loading, empty, error and success states with accessible feedback. Use only the relevant skills and existing stack. Report observed checks and limitations; prepare drafts before external or production actions."
+    ]
+  }
+}
