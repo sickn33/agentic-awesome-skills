@@ -32286,6 +32286,25 @@
       "runtime_files": []
     },
     {
+      "id": "lumify-odds",
+      "path": "skills/lumify-odds",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "lurkapi-ad-research",
       "path": "skills/lurkapi-ad-research",
       "targets": {
@@ -44511,6 +44530,25 @@
       "runtime_files": []
     },
     {
+      "id": "scrapely-scrape",
+      "path": "skills/scrapely-scrape",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "scrapingbee-cli",
       "path": "skills/scrapingbee-cli",
       "targets": {
@@ -56654,10 +56692,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2955,
+    "total_skills": 2957,
     "supported": {
-      "codex": 2868,
-      "claude": 2889
+      "codex": 2870,
+      "claude": 2891
     },
     "blocked": {
       "codex": 87,

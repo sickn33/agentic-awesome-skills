@@ -1,6 +1,6 @@
 ---
 name: core-components
-description: "Core component library and design system patterns. Use when building UI, using design tokens, or working with the component library."
+description: "Adapt an existing project component library and design tokens to a UI change; inspect real exports, preserve native behavior, and verify accessibility."
 risk: none
 source: community
 date_added: "2026-02-27"
@@ -14,7 +14,7 @@ Inspect the actual project component exports, token definitions and framework fi
 
 ## Design Tokens
 
-**NEVER hard-code values. Always use design tokens.**
+Prefer the project's existing semantic tokens. If no token expresses the requirement, document the exception or propose a scoped token addition; do not invent token names or change the whole design system.
 
 ### Spacing Tokens
 
@@ -223,10 +223,10 @@ const MyScreen = () => (
 <Box padding="$4" backgroundColor="$backgroundPrimary">
 
 
-// WRONG - Raw platform components
+// Native components: valid when the project has no equivalent primitive
 import { View, Text } from 'react-native';
 
-// CORRECT - Core components
+// Project primitives: use only if these exports exist and preserve behavior
 import { Box, Text } from 'components/core';
 
 
@@ -264,10 +264,19 @@ const Card = ({ padding = '$4', variant = 'elevated', children }: CardProps) => 
 
 - **react-ui-patterns**: Use core components for UI states
 - **testing-patterns**: Mock core components in tests
-- **storybook**: Document component variants
+- Existing project Storybook, if configured: document component variants; no `storybook` skill or setup is bundled here.
 
 ## When to Use
-This skill is applicable to execute the workflow or actions described in the overview.
+Use when implementing or adjusting UI in a repository with an existing component library or token system. For the specific ChrisWiles showcase conventions, inspect `code-showcase-core-components`; the two entries overlap and do not provide two different component libraries.
+
+## Worked example: adapt a settings form
+
+Given a request to add an email field to an existing settings screen:
+
+1. Inspect the screen, component exports, token definitions and an existing validated field.
+2. Reuse the actual input API and semantic spacing/color tokens. The `onChangeText` and `$4` examples above apply only if the project defines them.
+3. Preserve the visible label, error association, keyboard focus and submit behavior. Check light/dark contrast using the rendered result.
+4. Return the changed file paths, the existing components reused and the checks actually run. If the project has no such library, state that prerequisite instead of fabricating `components/core` imports.
 
 ## Limitations
 - Use this skill only when the task clearly matches the scope described above.

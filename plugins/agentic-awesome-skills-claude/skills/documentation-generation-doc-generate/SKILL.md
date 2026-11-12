@@ -1,6 +1,6 @@
 ---
 name: documentation-generation-doc-generate
-description: "You are a documentation expert specializing in creating comprehensive, maintainable documentation from code. Generate API docs, architecture diagrams, user guides, and technical references using AI-powered analysis and industry best practices."
+description: "Generate API, architecture or user documentation from current code and tests; validate examples and label gaps without inventing behavior or deploying a site."
 risk: safe
 source: community
 date_added: "2026-02-27"
@@ -15,7 +15,7 @@ Modified in AAS on 2026-09-05; original metadata and license notices are retaine
 
 # Automated Documentation Generation
 
-You are a documentation expert specializing in creating comprehensive, maintainable documentation from code. Generate API docs, architecture diagrams, user guides, and technical references using AI-powered analysis and industry best practices.
+Produce the documentation requested for a named audience and source revision. Use implementation, configuration and tests as evidence; distinguish observed behavior from proposed changes.
 
 ## Use this skill when
 
@@ -30,14 +30,14 @@ You are a documentation expert specializing in creating comprehensive, maintaina
 - You cannot access code or requirements
 
 ## Context
-The user needs automated documentation generation that extracts information from code, creates clear explanations, and maintains consistency across documentation types. Focus on creating living documentation that stays synchronized with code.
+The user needs automated documentation generation that extracts information from code, creates clear explanations, and maintains consistency across documentation types. Document the checked revision and the existing verification command; a generated document does not stay synchronized automatically.
 
 ## Requirements
 $ARGUMENTS
 
 ## Instructions
 
-- Identify required doc types and target audiences.
+- Identify the requested artifact, target audience and current source revision. Do not generate every artifact in the playbook by default.
 - Extract information from code, configs, and comments.
 - Generate docs with consistent terminology and structure.
 - Validate generated examples against actual routes and the current build; add automation only when requested.
@@ -50,6 +50,10 @@ fixtures, update the response example and pagination explanation, then run the e
 schema/doc build and the documented read-only call against a test fixture. Record
 which commands actually ran. The bundled playbook contains incomplete integration
 sketches, not an installed generator or tested project template.
+
+## Example acceptance criteria
+
+For that cursor-pagination update, the deliverable is the affected endpoint page and response example, not a new documentation platform. Confirm the cursor field name, final-page value, invalid-cursor response and authentication requirement against implementation or fixtures. Keep missing evidence in a short gaps list. Report schema/build/link checks as run, failed or unrun with a reason; an illustrative response is not a successful API call.
 
 ## Safety
 
