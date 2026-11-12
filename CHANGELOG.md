@@ -36,30 +36,16 @@ Summarize the most important change for users in one short paragraph.
 - Credit each contributor with their GitHub handle and merged PR link.
 -->
 
-## [20.8.0] - 2026-11-12 - "Sports Data and Better Discovery"
+## [Unreleased]
 
-Add two catalog skills for authorized scraping and read-only sports-market data, bringing the catalog to 2,957 skills. Improve skill discovery, installation recovery and hosted catalog distribution.
+### Fixes
 
-### New skills
-
-- Add `scrapely-scrape` for approved Scrape.ly Actor runs with item and charge limits, and `lumify-odds` for sportsbook odds, line movement, betting splits and player props without placing bets.
+- Keep guide source links pinned to the deployed commit without publishing stale update dates when a hosted build has no complete Git history.
 
 ### Improvements
 
-- Make skill discovery pages crawlable, clarify Agentic Awesome Skills identity and setup guides, and keep key homepage facts available without JavaScript.
-- Preserve installer backups and improve catalog discovery; keep hosted guide dates tied to verified deployed commits.
-- Correct VoiceMoat trial access and Style and Stance scoring across eight skills while retaining preview and explicit confirmation before publishing.
-
-### Security and distribution
-
-- Direct CLI installation and updates to GitHub while npm publishing is paused.
-- Refresh official Codex marketplace references and separate plugin bundles from portable manifests.
-- Update the catalog app's `react-router` dependency to 8.5.0.
-
-### Contributors
-
-- @alexrosuleks for Scrape.ly ([#2323](https://github.com/sickn33/agentic-awesome-skills/pull/2323)), @lumifyai for Lumify Odds ([#2313](https://github.com/sickn33/agentic-awesome-skills/pull/2313)), and @prateeks367 for VoiceMoat corrections ([#2314](https://github.com/sickn33/agentic-awesome-skills/pull/2314)).
-- @snyk-bot for the React Router update ([#2315](https://github.com/sickn33/agentic-awesome-skills/pull/2315)).
+- Identify Agentic Awesome Skills and its former Antigravity name consistently in the homepage's initial HTML, visible content, README and discovery guides, with official setup, repository and license links.
+- Introduce skill discovery with practical task examples and clearer setup paths; verify that the homepage's key facts remain readable without JavaScript.
 
 ## [20.7.0] - 2026-11-09 - "Interface Design and Connected Workflows"
 
