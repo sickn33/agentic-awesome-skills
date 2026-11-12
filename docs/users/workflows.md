@@ -2,6 +2,8 @@
 
 > Workflow playbooks to orchestrate multiple skills with less friction.
 
+> **npm publishing paused.** For current skills, use the [GitHub installation and update guide](getting-started.md#install-and-update-without-npm). npm commands require a version already published to npm.
+
 ## What Is a Workflow?
 
 A workflow is a guided, step-by-step execution path that combines multiple skills for one concrete outcome.

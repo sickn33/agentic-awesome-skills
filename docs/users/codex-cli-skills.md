@@ -2,6 +2,9 @@
 
 Connect Codex to the local AAS catalog, ask it to inspect your project and choose skills, then review a validated selection before installing anything. You do not need to copy the whole library into your project first.
 
+> [!IMPORTANT]
+> **npm publishing paused.** The npm commands below describe the versioned Core setup. The current release is available on GitHub, and its Core runtime package is unavailable from npm. To install or update the skills themselves, follow the [GitHub installation guide](getting-started.md#install-and-update-without-npm).
+
 ## Track your progress
 
 - [ ] Steps 1–2: preview and approve the exact configuration; save the runtime integrity.

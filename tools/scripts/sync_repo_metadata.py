@@ -157,6 +157,14 @@ def count_documented_bundles(content: str) -> int:
     return len(re.findall(r'^### .*".*" Pack$', content, flags=re.MULTILINE))
 
 
+def sync_github_skill_release_pins(content: str, version: str) -> str:
+    return re.sub(
+        r"(--pin v|/SKILL\.md@v)" + VERSION_TOKEN_PATTERN,
+        rf"\g<1>{version}",
+        content,
+    )
+
+
 def sync_readme_copy(content: str, metadata: dict) -> str:
     version = metadata["version"]
     release_status = core_release_status(metadata)
@@ -268,7 +276,7 @@ def sync_readme_copy(content: str, metadata: dict) -> str:
         content,
     )
 
-    return content
+    return sync_github_skill_release_pins(content, version)
 
 
 def sync_getting_started(content: str, metadata: dict) -> str:
@@ -298,11 +306,7 @@ def sync_getting_started(content: str, metadata: dict) -> str:
         rf"\g<1>v{version}",
         content,
     )
-    content = re.sub(
-        r"(--pin )v" + VERSION_TOKEN_PATTERN,
-        rf"\g<1>v{version}",
-        content,
-    )
+    content = sync_github_skill_release_pins(content, version)
     content = re.sub(
         r"(agentic-awesome-skills@)" + VERSION_TOKEN_PATTERN,
         rf"\g<1>{version}",

@@ -2,6 +2,8 @@
 
 > **Recommended path:** let Codex or Claude inspect the project, search and read the complete AAS catalog, and choose the exact skills. AAS Core records and validates that agent-owned selection.
 
+> **npm publishing paused.** For current skills, use the [GitHub installation and update guide](getting-started.md#install-and-update-without-npm). npm commands require a version already published to npm.
+
 ## Primary workflow: agent-first composition
 
 After configuring the local AAS MCP, ask your agent to inspect the repository and choose a stack for the outcome you want:
