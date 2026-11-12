@@ -4,6 +4,8 @@ If you are evaluating **Gemini CLI skills** on GitHub, this repository is a stro
 
 Agentic Awesome Skills supports Gemini CLI through the `.gemini/skills/` path and combines general engineering playbooks with specialized skills for AI systems, integrations, infrastructure, testing, product, and growth.
 
+> **npm publishing paused.** For current skills, use the [GitHub installation and update guide](getting-started.md#install-and-update-without-npm). npm commands require a version already published to npm.
+
 ## How to use Agentic Awesome Skills with Gemini CLI
 
 Install into the Gemini skills path, then ask Gemini to apply one skill at a time to a specific task. This works best when you keep the active set small and choose a clear workflow-oriented skill for the job in front of you.
