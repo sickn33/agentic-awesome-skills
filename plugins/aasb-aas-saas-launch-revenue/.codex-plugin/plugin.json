@@ -1,0 +1,41 @@
+{
+  "name": "aasb-aas-saas-launch-revenue",
+  "version": "20.7.0",
+  "description": "Install the \"AAS SaaS Launch & Revenue\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-saas-launch-revenue",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS SaaS Launch & Revenue",
+    "shortDescription": "Launch, price, monetize, measure, and grow SaaS products from MVP to revenue loops.",
+    "longDescription": "Launch, price, monetize, measure, and grow SaaS products from MVP to revenue loops. Connect product positioning, MVP scope, usage pricing, payments and activation into a concrete launch-readiness review. Recommended for: Founders, Product teams, Growth-minded builders. Not for: Acquisition content as the main task: use Marketing, SEO & Growth, Guaranteed revenue or fabricated customer validation. Covers SaaS Mvp Launcher, Micro SaaS Launcher, and 15 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Review this SaaS product, audience and stage. Produce a launch-readiness plan covering MVP scope, pricing, payment failure cases and lifecycle assets. Use supplied evidence for revenue assumptions and separate implementation, launch preparation and actions requiring publication approval.",
+      "Use this plugin to review this pricing page and activation funnel for revenue opportunities.",
+      "Use this plugin to build a launch checklist with referral, email, analytics, and Stripe readiness.",
+      "Review this project for the added coverage: Model usage meters, unit economics and cost limits with verified inputs; Review activation journeys while preserving verification and consent controls; Capture verified audience, product and positioning inputs for channel work. Use only the relevant skills and existing stack. Report observed checks and limitations; prepare drafts before external or production actions."
+    ]
+  }
+}

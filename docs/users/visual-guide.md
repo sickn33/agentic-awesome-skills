@@ -4,6 +4,8 @@ This guide shows the primary AAS Core workflow and the supporting catalog and di
 
 ---
 
+> **npm publishing paused.** For current skills, use the [GitHub installation and update guide](getting-started.md#install-and-update-without-npm). npm commands require a version already published to npm.
+
 ## The Big Picture
 
 ```

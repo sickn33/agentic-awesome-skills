@@ -1,0 +1,38 @@
+{
+  "name": "aasb-indie-game-dev",
+  "version": "20.7.0",
+  "description": "Install the \"Indie Game Dev\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "indie-game-dev",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Indie Game Dev",
+    "shortDescription": "Game Development · 7 curated skills",
+    "longDescription": "For building games with AI assistants. Not for: Use a different pack when the project does not match this domain.. Covers Game Design, 2d Games, and 5 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Game Development",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use the Indie Game Dev pack for this project. Select only relevant skills, inspect the existing stack, and report observed checks and limitations. Prepare drafts before external actions."
+    ]
+  }
+}

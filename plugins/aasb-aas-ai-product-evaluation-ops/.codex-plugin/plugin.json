@@ -1,0 +1,41 @@
+{
+  "name": "aasb-aas-ai-product-evaluation-ops",
+  "version": "20.7.0",
+  "description": "Install the \"AAS AI Product & Evaluation Ops\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-ai-product-evaluation-ops",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS AI Product & Evaluation Ops",
+    "shortDescription": "Define, evaluate, instrument, and improve AI product features with metrics, tracing, experiments, and model evals.",
+    "longDescription": "Define, evaluate, instrument, and improve AI product features with metrics, tracing, experiments, and model evals. Define AI feature success criteria, inspect instruction trust boundaries, calibrate judge rubrics and produce an evidence-based error report. Recommended for: AI PMs, Founders building AI features, LLM product teams. Not for: MCP server or agent implementation as the main task: use Agent & MCP Builder, Evaluation scores without a named dataset, procedure and observed run. Covers AI Wrapper Product, Agent Evaluation, and 11 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Review this AI feature and its intended users. Define success and failure criteria, representative examples, an evaluation rubric and a process for investigating errors. Use only available observations for conclusions and distinguish a proposed evaluation from one actually run.",
+      "Use this plugin to review this AI feature for product risk, context limits, eval coverage, and KPI gaps.",
+      "Use this plugin to design a dashboard and feedback loop for improving this LLM workflow.",
+      "Review this project for the added coverage: Design judge rubrics, position swaps and human-calibrated evaluation; Inspect agent skill instructions and bundled files for unsafe authority or data flows; Report observed agent results, limitations and reproduction evidence. Use only the relevant skills and existing stack. Report observed checks and limitations; prepare drafts before external or production actions."
+    ]
+  }
+}
