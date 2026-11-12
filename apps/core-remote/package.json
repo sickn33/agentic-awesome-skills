@@ -1,0 +1,14 @@
+{
+  "name": "aas-core-remote",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "node build.cjs",
+    "test": "node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12",
+    "wrangler": "4.155.0"
+  }
+}
