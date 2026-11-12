@@ -1,0 +1,38 @@
+{
+  "name": "aasb-odoo-erp",
+  "version": "20.7.0",
+  "description": "Install the \"Odoo ERP\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "odoo-erp",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Odoo ERP",
+    "shortDescription": "Specialized Packs · 7 curated skills",
+    "longDescription": "For teams building or operating around Odoo-based business systems. Not for: Use a different pack when the project does not match this domain.. Covers Odoo Module Developer, Odoo Orm Expert, and 5 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Packs",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use the Odoo ERP pack for this project. Select only relevant skills, inspect the existing stack, and report observed checks and limitations. Prepare drafts before external actions."
+    ]
+  }
+}

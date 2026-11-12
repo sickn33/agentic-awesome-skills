@@ -20,7 +20,7 @@
       "name": "aasb-essentials",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-essentials"
+        "path": "./plugins/aasb-essentials"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -32,7 +32,7 @@
       "name": "aasb-indie-game-dev",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-indie-game-dev"
+        "path": "./plugins/aasb-indie-game-dev"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -44,7 +44,7 @@
       "name": "aasb-systems-programming",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-systems-programming"
+        "path": "./plugins/aasb-systems-programming"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -56,7 +56,7 @@
       "name": "aasb-web-app",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-web-app"
+        "path": "./plugins/aasb-web-app"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -68,7 +68,7 @@
       "name": "aasb-design-studio",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-design-studio"
+        "path": "./plugins/aasb-design-studio"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -80,7 +80,7 @@
       "name": "aasb-aas-security-engineer",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-security-engineer"
+        "path": "./plugins/aasb-aas-security-engineer"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -92,7 +92,7 @@
       "name": "aasb-aas-secure-app-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-secure-app-builder"
+        "path": "./plugins/aasb-aas-secure-app-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -104,7 +104,7 @@
       "name": "aasb-aas-documents-presentations",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-documents-presentations"
+        "path": "./plugins/aasb-aas-documents-presentations"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -116,7 +116,7 @@
       "name": "aasb-aas-data-analytics",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-data-analytics"
+        "path": "./plugins/aasb-aas-data-analytics"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -128,7 +128,7 @@
       "name": "aasb-aas-agent-mcp-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-agent-mcp-builder"
+        "path": "./plugins/aasb-aas-agent-mcp-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -140,7 +140,7 @@
       "name": "aasb-aas-qa-test-automation",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-qa-test-automation"
+        "path": "./plugins/aasb-aas-qa-test-automation"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -152,7 +152,7 @@
       "name": "aasb-aas-devops-cloud",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-devops-cloud"
+        "path": "./plugins/aasb-aas-devops-cloud"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -164,7 +164,7 @@
       "name": "aasb-aas-marketing-seo-growth",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-marketing-seo-growth"
+        "path": "./plugins/aasb-aas-marketing-seo-growth"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -176,7 +176,7 @@
       "name": "aasb-aas-automation-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-automation-builder"
+        "path": "./plugins/aasb-aas-automation-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -188,7 +188,7 @@
       "name": "aasb-aas-observability-ir",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-observability-ir"
+        "path": "./plugins/aasb-aas-observability-ir"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -200,7 +200,7 @@
       "name": "aasb-aas-python-api-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-python-api-builder"
+        "path": "./plugins/aasb-aas-python-api-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -212,7 +212,7 @@
       "name": "aasb-aas-mobile-app-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-mobile-app-builder"
+        "path": "./plugins/aasb-aas-mobile-app-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -224,7 +224,7 @@
       "name": "aasb-architecture-design",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-architecture-design"
+        "path": "./plugins/aasb-architecture-design"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -236,7 +236,7 @@
       "name": "aasb-commerce-payments",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-commerce-payments"
+        "path": "./plugins/aasb-commerce-payments"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -248,7 +248,7 @@
       "name": "aasb-odoo-erp",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-odoo-erp"
+        "path": "./plugins/aasb-odoo-erp"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -260,7 +260,7 @@
       "name": "aasb-makepad-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-makepad-builder"
+        "path": "./plugins/aasb-makepad-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -272,7 +272,7 @@
       "name": "aasb-oss-maintainer",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-oss-maintainer"
+        "path": "./plugins/aasb-oss-maintainer"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -284,7 +284,7 @@
       "name": "aasb-skill-author",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-skill-author"
+        "path": "./plugins/aasb-skill-author"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -296,7 +296,7 @@
       "name": "aasb-aas-accessibility-inclusive-ux",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-accessibility-inclusive-ux"
+        "path": "./plugins/aasb-aas-accessibility-inclusive-ux"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -308,7 +308,7 @@
       "name": "aasb-aas-api-platform-builder",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-api-platform-builder"
+        "path": "./plugins/aasb-aas-api-platform-builder"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -320,7 +320,7 @@
       "name": "aasb-aas-saas-launch-revenue",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-saas-launch-revenue"
+        "path": "./plugins/aasb-aas-saas-launch-revenue"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -332,7 +332,7 @@
       "name": "aasb-aas-ai-product-evaluation-ops",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-ai-product-evaluation-ops"
+        "path": "./plugins/aasb-aas-ai-product-evaluation-ops"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -344,7 +344,7 @@
       "name": "aasb-aas-data-engineering-platform",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-data-engineering-platform"
+        "path": "./plugins/aasb-aas-data-engineering-platform"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -356,7 +356,7 @@
       "name": "aasb-aas-privacy-compliance-engineering",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-privacy-compliance-engineering"
+        "path": "./plugins/aasb-aas-privacy-compliance-engineering"
       },
       "policy": {
         "installation": "AVAILABLE",
@@ -368,7 +368,7 @@
       "name": "aasb-aas-localization-international-growth",
       "source": {
         "source": "local",
-        "path": "./plugins/agentic-bundle-aas-localization-international-growth"
+        "path": "./plugins/aasb-aas-localization-international-growth"
       },
       "policy": {
         "installation": "AVAILABLE",

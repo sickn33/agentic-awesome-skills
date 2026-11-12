@@ -1,0 +1,38 @@
+{
+  "name": "aasb-architecture-design",
+  "version": "20.7.0",
+  "description": "Install the \"Architecture & Domain Modeling\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "architecture-design",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Architecture & Domain Modeling",
+    "shortDescription": "System architecture and domain modeling.",
+    "longDescription": "System architecture and domain modeling. Model system boundaries and architecture decisions using domain-driven design, CQRS, event sourcing and distributed workflow patterns. Not for: Framework-specific implementation or authorized deployment.. Covers Senior Architect, Architecture Patterns, and 11 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Packs",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use the Architecture & Design pack for this project. Select only relevant skills, inspect the existing stack, and report observed checks and limitations. Prepare drafts before external actions."
+    ]
+  }
+}

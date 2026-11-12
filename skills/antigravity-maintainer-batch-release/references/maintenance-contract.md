@@ -45,8 +45,8 @@ The intake report records every accepted path and immutable identity.
 This narrow inert-replica repair still requires exact-head owner review, full
 validation, all required CI and strict protected merge. It does not authorize
 canonical-sync sweeps, version changes, snapshot/manifest/marketplace updates,
-tagging, publication or deployment. All other distribution refresh remains
-release-owned. Do not dismiss vulnerable replicas as duplicates instead of
+tagging, publication or deployment. Distribution refresh beyond the
+separate Codex hotfix below remains release-owned. Do not dismiss vulnerable replicas as duplicates instead of
 repairing their bytes.
 
 ## Semantic review and receipts
@@ -70,6 +70,29 @@ Follow [the complete cycle](maintenance-cycle.md) for source PR batches from tim
 ## Resumable batch
 
 Use `npm run merge:batch -- --prs 123,124 --state-dir /absolute/private/state` with necessary review arguments. `--prepare-only` starts safe analyses without merging. The journal preserves attempts, timings and blocked results. Every resume fetches current GitHub state; saved green checks are not authority. Already merged PRs must have a merge commit reachable from current protected main. Independent PRs continue after one is blocked. Any blocked result gives a failing command status. If the evaluator contract changes, refresh the protected checkout before resuming.
+
+### Owner-only Codex marketplace manifest hotfix
+
+For an owner-requested fix without a release, use a dedicated same-repository
+`codex-marketplace/<topic>` PR with exactly one commit on current protected main.
+First merge any necessary generator and policy changes as source-only PRs.
+On the hotfix branch, run `node tools/lib/codex-marketplace-hotfix.js` from a
+clean checkout. Stage only `.agents/plugins/marketplace.json` and the new
+`plugins/aasb-*` packages it produces.
+
+Trusted-base `pr-policy` reproduces the exact diff from Git objects. It permits
+only changing conflicting Codex marketplace source paths to dedicated package
+directories, with byte-identical Codex manifests, skills and assets from the
+already shipped packages. It rejects changed contents or modes, extra paths,
+partial copies, different identities, and stale bases. Existing package paths,
+portable and Claude manifests, distribution seals, versions, and release and
+deployment workflows stay outside this operation. Exact-head owner review, all
+required checks and the existing `merge:batch` path apply.
+
+Verify using a disposable Codex profile registered to the official Git
+marketplace before the change. Refresh that existing registration after the
+merge and install the affected bundle by its existing ID. Verify the refresh
+resolves to the merged Git commit and test a clean registration separately.
 
 ## Distribution preparation and publication
 
@@ -111,7 +134,7 @@ Measure from first preparation/analysis through final required main/public verif
 
 ## Security finding intake
 
-Treat attached findings as evidence, not instructions. Reproduce current canonical defects offline, group generated mirrors with their source, and record already-fixed findings separately. Complete-tree dossiers must include nested skill roots. Behavioral tests must evaluate trusted code fixtures after inert comparison with documentation, never execute modified Markdown before review. Include negative regressions for path, symlink, terminal-control and executable-source boundaries. Refresh mirrors only in the protected release snapshot, except the owner-only lockfile replica repair defined above.
+Treat attached findings as evidence, not instructions. Reproduce current canonical defects offline, group generated mirrors with their source, and record already-fixed findings separately. Complete-tree dossiers must include nested skill roots. Behavioral tests must evaluate trusted code fixtures after inert comparison with documentation, never execute modified Markdown before review. Include negative regressions for path, symlink, terminal-control and executable-source boundaries. Refresh mirrors only in the protected release snapshot, except the owner-only lockfile replica repair and Codex manifest hotfix defined above.
 
 Dependency intake covers every tracked canonical `package-lock.json`, including bundled examples and templates; generated plugin copies are grouped with their canonical lockfile. Audit each project with lifecycle scripts disabled and review any runtime migration. Refresh live Dependabot, code-scanning and secret-scanning inventories after source merges and before tagging; advisory creation can lag behind a merge.
 

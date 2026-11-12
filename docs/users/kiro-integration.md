@@ -1,5 +1,7 @@
 # Kiro CLI Integration Guide
 
+> **npm publishing paused.** For current skills, use the [GitHub installation and update guide](getting-started.md#install-and-update-without-npm). npm commands require a version already published to npm.
+
 ## Overview
 
 This guide explains how to use Agentic Awesome Skills with **Kiro CLI**, AWS's agentic AI-powered coding assistant.

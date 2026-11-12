@@ -1,0 +1,41 @@
+{
+  "name": "aasb-aas-marketing-seo-growth",
+  "version": "20.7.0",
+  "description": "Install the \"AAS Marketing, SEO & Growth\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "aas-marketing-seo-growth",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "AAS Marketing, SEO & Growth",
+    "shortDescription": "Plan, write, measure, test, and improve content, SEO, email, and acquisition workflows.",
+    "longDescription": "Plan, write, measure, test, and improve content, SEO, email, and acquisition workflows. Capture product and audience context, prioritize content and create edited acquisition assets grounded in verified search and product evidence. Recommended for: Founders, Growth teams, Content and SEO operators. Not for: Pricing and product activation strategy: use SaaS Launch & Revenue, Guaranteed rankings, traffic or conversion gains. Covers Content Creator, SEO Audit, and 15 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Specialized Product Plugins - Next Wave",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Review the supplied audience, offer, site and available acquisition evidence. Identify the main bottleneck, prepare the relevant SEO, content or email deliverable, and explain how to validate it. Separate observed facts from assumptions and leave publication or sending to an explicitly authorized step.",
+      "Use this plugin to create a growth experiment backlog with measurement and email follow-up.",
+      "Use this plugin to plan a programmatic SEO cluster and the tracking needed to evaluate it.",
+      "Review this project for the added coverage: Capture verified audience, product and positioning inputs for channel work; Edit supplied content for clarity, consistency and supported claims; Prioritize audience-relevant content and define an editorial plan. Use only the relevant skills and existing stack. Report observed checks and limitations; prepare drafts before external or production actions."
+    ]
+  }
+}
