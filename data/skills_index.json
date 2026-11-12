@@ -16525,7 +16525,7 @@
     "path": "skills/code-documentation-doc-generate",
     "category": "development",
     "name": "code-documentation-doc-generate",
-    "description": "You are a documentation expert specializing in creating comprehensive, maintainable documentation from code. Generate API docs, architecture diagrams, user guides, and technical references using AI-powered analysis and industry best practices.",
+    "description": "Compatibility alias of documentation-generation-doc-generate. Generate scoped documentation from verified source while preserving existing callers of this ID.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
@@ -16744,7 +16744,7 @@
     "path": "skills/code-review-excellence",
     "category": "development",
     "name": "code-review-excellence",
-    "description": "Transform code reviews from gatekeeping to knowledge sharing through constructive feedback, systematic analysis, and collaborative improvement.",
+    "description": "Review a defined code diff for correctness, security, performance and maintainability; report evidence-backed findings with severity and actionable feedback.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
@@ -16819,7 +16819,7 @@
     "path": "skills/code-showcase-core-components",
     "category": "development",
     "name": "code-showcase-core-components",
-    "description": "Core component library and design system patterns. Use when building UI, using design tokens, or working with the component library.",
+    "description": "Apply the ChrisWiles code-showcase component and token conventions when the target project actually uses that API; examples require local adaptation.",
     "risk": "none",
     "source": "https://github.com/ChrisWiles/claude-code-showcase/tree/main/.claude/skills/core-components",
     "date_added": "2026-07-01",
@@ -16838,7 +16838,7 @@
     "source_type": "community",
     "source_repo": "ChrisWiles/claude-code-showcase",
     "license": "MIT",
-    "license_source": "https://github.com/ChrisWiles/claude-code-showcase/blob/main/LICENSE"
+    "license_source": "https://github.com/ChrisWiles/claude-code-showcase/blob/main/README.md#license"
   },
   {
     "id": "code-showcase-react-ui-patterns",
@@ -19170,7 +19170,7 @@
     "path": "skills/core-components",
     "category": "web-development",
     "name": "core-components",
-    "description": "Core component library and design system patterns. Use when building UI, using design tokens, or working with the component library.",
+    "description": "Adapt an existing project component library and design tokens to a UI change; inspect real exports, preserve native behavior, and verify accessibility.",
     "risk": "none",
     "source": "community",
     "date_added": "2026-02-27",
@@ -21710,7 +21710,7 @@
     "path": "skills/debugger",
     "category": "development-and-testing",
     "name": "debugger",
-    "description": "Debugging specialist for errors, test failures, and unexpected\nbehavior. Use proactively when encountering any issues.\n",
+    "description": "Investigate a reproducible error or failing test, test root-cause hypotheses, implement a scoped fix when authorized, and report actual verification evidence.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
@@ -24180,7 +24180,7 @@
     "path": "skills/documentation-generation-doc-generate",
     "category": "content",
     "name": "documentation-generation-doc-generate",
-    "description": "You are a documentation expert specializing in creating comprehensive, maintainable documentation from code. Generate API docs, architecture diagrams, user guides, and technical references using AI-powered analysis and industry best practices.",
+    "description": "Generate API, architecture or user documentation from current code and tests; validate examples and label gaps without inventing behavior or deploying a site.",
     "risk": "safe",
     "source": "community",
     "date_added": "2026-02-27",
@@ -31339,7 +31339,7 @@
     "path": "skills/get-seen-in-replies",
     "category": "marketing",
     "name": "get-seen-in-replies",
-    "description": "Write a reply to someone else's tweet that is worth reading on its own. Use when someone asks what to reply, wants to grow by replying on Twitter/X, or says their replies go nowhere.",
+    "description": "Write a reply to someone else's tweet that is worth reading on its own. Use when someone asks what to reply, wants to grow by replying on Twitter, or says their replies go nowhere.",
     "risk": "safe",
     "source": "https://github.com/prateeks367/voicemoat-skills/tree/7623a3effbee426554e8c5df55e77f3479fd0ec0/skills/get-seen-in-replies",
     "date_added": "2026-10-04",
@@ -43307,6 +43307,43 @@
       "devtools",
       "vercel",
       "favicon"
+    ]
+  },
+  {
+    "id": "lumify-odds",
+    "path": "skills/lumify-odds",
+    "category": "data",
+    "name": "lumify-odds",
+    "description": "Lumify's hosted sports MCP/REST API for sportsbook odds, line-movement history, public betting splits, and player props across MLB, NFL, NBA, NHL, soccer, tennis, NCAAF, NCAAB. Read-only market data.",
+    "risk": "safe",
+    "source": "https://github.com/lumifyai/sports-intelligence-skills/tree/694da3d0d1efc32da1425a9a931c812957b3c1b6/skills/lumify-odds",
+    "date_added": "2026-11-09",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "lumifyai/sports-intelligence-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/lumifyai/sports-intelligence-skills/blob/694da3d0d1efc32da1425a9a931c812957b3c1b6/LICENSE",
+    "tags": [
+      "sports",
+      "odds",
+      "betting",
+      "sportsbook",
+      "line-movement",
+      "betting-splits",
+      "mcp",
+      "api",
+      "agent"
     ]
   },
   {
@@ -58496,7 +58533,7 @@
     "path": "skills/repurpose-into-a-post",
     "category": "marketing",
     "name": "repurpose-into-a-post",
-    "description": "Turn an article, newsletter, transcript or video into a Twitter/X or LinkedIn post that stands on its own. Use when someone wants to repurpose, share or promote content they already made.",
+    "description": "Turn an article, newsletter, transcript or video into a Twitter or LinkedIn post that stands on its own. Use when someone wants to repurpose, share or promote content they already made.",
     "risk": "critical",
     "source": "https://github.com/prateeks367/voicemoat-skills/tree/7623a3effbee426554e8c5df55e77f3479fd0ec0/skills/repurpose-into-a-post",
     "date_added": "2026-10-04",
@@ -60050,7 +60087,7 @@
     "path": "skills/same-idea-both-platforms",
     "category": "marketing",
     "name": "same-idea-both-platforms",
-    "description": "Write one idea as a Twitter/X post and a LinkedIn post that read as written separately, not pasted twice. Use when someone wants to cross-post or adapt a post for the other platform.",
+    "description": "Write one idea as a Twitter post and a LinkedIn post that read as written separately, not pasted twice. Use when someone wants to cross-post or adapt a post for the other platform.",
     "risk": "critical",
     "source": "https://github.com/prateeks367/voicemoat-skills/tree/7623a3effbee426554e8c5df55e77f3479fd0ec0/skills/same-idea-both-platforms",
     "date_added": "2026-10-04",
@@ -60565,6 +60602,38 @@
     },
     "source_type": "official",
     "source_repo": "neondatabase/agent-skills"
+  },
+  {
+    "id": "scrapely-scrape",
+    "path": "skills/scrapely-scrape",
+    "category": "data",
+    "name": "scrapely-scrape",
+    "description": "Collect web data with ready-made Scrape.ly scrapers: Google Maps places, Amazon products, LinkedIn jobs, reviews, social posts. Use when the user wants structured data from a site.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-11-11",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "MIT",
+    "license_source": "https://github.com/scrapely-app/scrapely-mcp/blob/7de533859cc09a0f3395c81d81fdd2da04590686/LICENSE",
+    "tags": [
+      "web-scraping",
+      "data-extraction",
+      "google-maps",
+      "lead-generation",
+      "api"
+    ]
   },
   {
     "id": "scrapingbee-cli",
@@ -70565,7 +70634,7 @@
     "path": "skills/turn-this-into-a-thread",
     "category": "marketing",
     "name": "turn-this-into-a-thread",
-    "description": "Turn a long idea, transcript, article or draft into a Twitter/X thread where every tweet stands alone. Use when someone asks for a thread or to break long writing into tweets.",
+    "description": "Turn a long idea, transcript, article or draft into a Twitter thread where every tweet stands alone. Use when someone asks for a thread or to break long writing into tweets.",
     "risk": "critical",
     "source": "https://github.com/prateeks367/voicemoat-skills/tree/7623a3effbee426554e8c5df55e77f3479fd0ec0/skills/turn-this-into-a-thread",
     "date_added": "2026-10-04",
@@ -75137,7 +75206,7 @@
     "path": "skills/why-did-this-post-flop",
     "category": "marketing",
     "name": "why-did-this-post-flop",
-    "description": "Diagnose why one Twitter/X or LinkedIn post underperformed: not seen, seen and skipped, or read and ignored. Use when someone asks why a post did badly or got no engagement.",
+    "description": "Diagnose why one Twitter or LinkedIn post underperformed: not seen, seen and skipped, or read and ignored. Use when someone asks why a post did badly or got no engagement.",
     "risk": "safe",
     "source": "https://github.com/prateeks367/voicemoat-skills/tree/7623a3effbee426554e8c5df55e77f3479fd0ec0/skills/why-did-this-post-flop",
     "date_added": "2026-10-04",
@@ -76054,7 +76123,7 @@
     "path": "skills/write-in-my-voice",
     "category": "marketing",
     "name": "write-in-my-voice",
-    "description": "Draft a Twitter/X or LinkedIn post that sounds like the person asking, from posts they already wrote. Use when someone asks for a post or rewrite in their voice, or asks if text sounds like them.",
+    "description": "Draft a Twitter or LinkedIn post that sounds like the person asking, from posts they already wrote. Use when someone asks for a post or rewrite in their voice, or asks if text sounds like them.",
     "risk": "critical",
     "source": "https://github.com/prateeks367/voicemoat-skills/tree/7623a3effbee426554e8c5df55e77f3479fd0ec0/skills/write-in-my-voice",
     "date_added": "2026-10-04",

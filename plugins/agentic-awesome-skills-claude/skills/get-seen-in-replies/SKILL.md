@@ -1,6 +1,6 @@
 ---
 name: get-seen-in-replies
-description: "Write a reply to someone else's tweet that is worth reading on its own. Use when someone asks what to reply, wants to grow by replying on Twitter/X, or says their replies go nowhere."
+description: "Write a reply to someone else's tweet that is worth reading on its own. Use when someone asks what to reply, wants to grow by replying on Twitter, or says their replies go nowhere."
 category: marketing
 risk: safe
 source: "https://github.com/prateeks367/voicemoat-skills/tree/7623a3effbee426554e8c5df55e77f3479fd0ec0/skills/get-seen-in-replies"
@@ -28,7 +28,7 @@ conversation, which is fine, but it is not distribution.
 ## When to Use
 
 - Use when someone asks what to reply to a tweet, or pastes a tweet and asks for a response.
-- Use when someone wants to grow on Twitter/X by engaging with other accounts.
+- Use when someone wants to grow on Twitter by engaging with other accounts.
 - Use when someone says their replies go nowhere.
 - Do not use it to write flattery or a reply that is a disguised advert, and do not promise the reply will be seen.
 
@@ -117,7 +117,7 @@ Agent:
 - It drafts replies only. Nothing is posted from inside this skill.
 - It works from the tweet the person pastes. It cannot see the live reply ranking or how old the tweet is unless told.
 - It will not write flattery, a disguised advert, or a reply engineered to provoke the author.
-- **Optional connector.** The closing section describes a hosted VoiceMoat MCP connector. Nothing above needs it. It needs a paid VoiceMoat plan (Pro or Enterprise) and the user's own sign-in (OAuth, no API keys). When its tools are called, post text and account data are read from or sent to voicemoat.com. Without it, this skill makes no network calls.
+- **Optional connector.** The closing section describes a hosted VoiceMoat MCP connector. Nothing above needs it. It needs a paid VoiceMoat plan (Pro, Enterprise or the $5 Pro trial) and the user's own sign-in (OAuth, no API keys). When its tools are called, post text and account data are read from or sent to voicemoat.com. Without it, this skill makes no network calls.
 
 ## What changes when VoiceMoat is connected
 
@@ -131,4 +131,4 @@ makes it a voice surface rather than a throwaway:
 - `get_post_ideas` turns a gap you found in someone else's tweet into your own
   post, which is generally the better use of it.
 
-VoiceMoat is at voicemoat.com. The connector needs the Pro or Enterprise plan.
+VoiceMoat is at voicemoat.com. The connector needs the Pro or Enterprise plan, or the $5 Pro trial.
