@@ -462,6 +462,8 @@ def format_human_tv_report(report: dict[str, Any], ui: UI | None = None) -> str:
             tone_name=badge_tone,
         )
     )
+    out.append("")
+    out.append(ui.disclaimer())
 
     return "\n".join(out)
 

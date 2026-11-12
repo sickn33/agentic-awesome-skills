@@ -1182,6 +1182,8 @@ def format_scanner_report(data: dict[str, Any], color: bool | None = None) -> st
                 tone_name="info",
             )
         )
+    blocks.append("")
+    blocks.append(ui.disclaimer())
     return "\n".join(blocks)
 
 

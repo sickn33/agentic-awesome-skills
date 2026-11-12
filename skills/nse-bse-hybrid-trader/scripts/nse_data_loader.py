@@ -954,6 +954,8 @@ def format_human_report(data: dict[str, Any], color: bool | None = None) -> str:
         elif news.get("error"):
             blocks.append(ui.callout("News Warning", [str(news["error"])], tone_name="warn"))
 
+    blocks.append("")
+    blocks.append(ui.disclaimer())
     return "\n".join(blocks)
 
 

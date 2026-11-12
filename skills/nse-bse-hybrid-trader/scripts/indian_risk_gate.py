@@ -643,6 +643,9 @@ def format_human_verdict(res: dict[str, Any], color: bool | None = None) -> str:
             )
         )
 
+    blocks.append("")
+    blocks.append(ui.disclaimer())
+
     return "\n".join(blocks)
 
 

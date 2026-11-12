@@ -1,32 +1,21 @@
 ---
 name: nse-bse-hybrid-trader
-description: "Institutional Indian stock market (NSE/BSE) trading intelligence with multi-timeframe confluence, 2026 statutory tax math, 10,000-path Monte Carlo validation, and paper-first execution gating."
-category: finance
-risk: critical
-source: "https://github.com/aryanpardeshi11/indian-day-trader-skill"
-source_type: "self"
-date_added: "2026-11-13"
-author: "aryanpardeshi11"
-tags: [finance, trading, nse, bse, indian-stock-market, risk-management, monte-carlo, paper-trading]
+description: >-
+  Institutional-grade Indian stock market (NSE/BSE) intraday, swing, and F&O analysis
+  and deterministic execution engine. Use whenever the user asks to analyze an Indian
+  stock or index (NIFTY, BANKNIFTY, FINNIFTY, SENSEX, or NSE/BSE tickers), evaluate
+  intraday/swing setups (ORB, VWAP, RSI Divergence, Fibonacci), calculate exact INR
+  position sizes with STT/GST/SEBI/stamp duty taxes, run Monte Carlo historical intraday
+  simulations, or stage paper/live orders across major Indian brokers (Zerodha Kite,
+  Angel One SmartAPI, Upstox, Dhan, Fyers, Groww, Kotak Neo, ICICI Breeze, Shoonya).
 ---
 
 # NSE/BSE Hybrid Trader
-
-## Overview
 
 A decoupled trading intelligence and execution skill for Indian equities and derivatives. The LLM performs
 probabilistic technical and market-structure reasoning (`nse-trading-skills` synthesis), while deterministic Python
 scripts enforce INR sizing, broker-accurate brokerage & Indian statutory tax math, 10,000-path Monte Carlo
 simulation, and multi-broker paper/live execution gating (`day-trader-skill` architecture).
-
-## When to Use
-
-- When analyzing Indian equities or indices (`NIFTY`, `BANKNIFTY`, `FINNIFTY`, `SENSEX`, or NSE/BSE tickers) across multi-timeframe technical confluence (Weekly/Daily/15m/5m).
-- When evaluating intraday or swing setups with 15m Opening Range Breakout (ORB), Anchored VWAP, RSI Divergence, or Fibonacci Golden Pocket.
-- When calculating exact INR position sizing, capital allocation, and 2026 Indian statutory charges (STT, GST, SEBI fee, NSE transaction charges, stamp duty, DP charges).
-- When validating trade coordinates against a 10,000-path historical Monte Carlo simulation before risking capital.
-- When staging or closing paper trades in a local SQLite ledger (`--paper` default) or executing confirmed live orders across 9 Indian brokers.
-- Do NOT use for cryptocurrency, foreign FX, or commodity markets outside NSE/BSE.
 
 ## Supported Indian Brokers
 
@@ -46,7 +35,7 @@ Select any broker via `--broker <name>` (or set `"default_broker"` in
 Inspect fee profiles, endpoints, and required `.env` keys anytime with:
 
 ```bash
-python skills/nse-bse-hybrid-trader/scripts/broker_bridge.py brokers
+python .agents/skills/nse-bse-hybrid-trader/scripts/broker_bridge.py brokers
 ```
 
 ## Configuration & References
@@ -61,7 +50,7 @@ python skills/nse-bse-hybrid-trader/scripts/broker_bridge.py brokers
 ## Core 5-Step Operational Pipeline (+ Optional Discovery & Post-Entry Alerts)
 
 Never rely on mental math for position sizing, tax drag, or probability estimation. Run this sequence from
-`skills/nse-bse-hybrid-trader/` (or pass the script paths from workspace root).
+`.agents/skills/nse-bse-hybrid-trader/` (or pass the script paths from workspace root).
 
 - **Display vs Pipeline Mode:** Omitting `--json` renders colored Unicode/ASCII terminal tables, visual progress bars,
   Indian INR lakh/crore formatting, and plain-English beginner guides via [nse_ui.py](./scripts/nse_ui.py). Keep
@@ -75,13 +64,13 @@ entering a trade:
 
 ```bash
 # Scan NIFTY 50 daily swing setups (auto-filters Trade-to-Trade BE/BZ scrips & checks F&O ban)
-python skills/nse-bse-hybrid-trader/scripts/nse_scanner.py daily --pool nifty50 --setup all --min-turnover-cr 20
+python .agents/skills/nse-bse-hybrid-trader/scripts/nse_scanner.py daily --pool nifty50 --setup all --min-turnover-cr 20
 
 # Intraday 15m Opening Range Breakout + Anchored VWAP scan (run after 09:30 IST)
-python skills/nse-bse-hybrid-trader/scripts/nse_scanner.py orb --pool nifty50
+python .agents/skills/nse-bse-hybrid-trader/scripts/nse_scanner.py orb --pool nifty50
 
 # Check Indian news, earnings, SEBI/RBI/BSE regulatory RSS & NSE F&O ban list
-python skills/nse-bse-hybrid-trader/scripts/nse_news.py --tickers "<TICKER>" --all --hours 72
+python .agents/skills/nse-bse-hybrid-trader/scripts/nse_news.py --tickers "<TICKER>" --all --hours 72
 ```
 
 - **Headlines are leads, not facts:** Treat `nse_news.py` output as warning flags; verify material corporate filings,
@@ -95,7 +84,7 @@ Bollinger Bands, ATR(14), Fibonacci retracements/extensions, RVOL, and a 0-6 Con
 include Indian RSS news & automatic NSE `fo_secban.csv` F&O ban detection):
 
 ```bash
-python skills/nse-bse-hybrid-trader/scripts/nse_data_loader.py --symbol "<TICKER>" --with-news --json
+python .agents/skills/nse-bse-hybrid-trader/scripts/nse_data_loader.py --symbol "<TICKER>" --with-news --json
 ```
 
 Apply the guardrails in [indian_market_rules.md](./references/indian_market_rules.md) and frameworks in
@@ -116,7 +105,7 @@ sessions (truncated strictly at `15:15 IST`, conservative stop-first check, 1-ti
 (`--mode SWING`), plus historical 15m ORB replay (pass `--broker <BROKER>` for broker-specific fee drag):
 
 ```bash
-python skills/nse-bse-hybrid-trader/scripts/nse_timemachine.py --symbol "<TICKER>.NS" --entry <ENTRY> --stop <STOP> --target <TARGET_1> --mode <INTRADAY|SWING> --broker <BROKER> --write --json
+python .agents/skills/nse-bse-hybrid-trader/scripts/nse_timemachine.py --symbol "<TICKER>.NS" --entry <ENTRY> --stop <STOP> --target <TARGET_1> --mode <INTRADAY|SWING> --broker <BROKER> --write --json
 ```
 
 - **Gate Requirement:** Require positive tax-adjusted Expectancy (`avg_net_r > 0`) plus clearing the active probability
@@ -134,7 +123,7 @@ Rs. 10/order on Kotak Neo vs percentage/capped plans on Angel One/Groww/ICICI Br
 rates, NSE Transaction Fee, SEBI Fee, Stamp Duty, DP charge, 18% GST), and verify all hard circuit breakers:
 
 ```bash
-python skills/nse-bse-hybrid-trader/scripts/indian_risk_gate.py --broker <BROKER> --symbol "<TICKER>" --capital <CAPITAL_INR> --risk-pct <RISK_PCT> --entry <ENTRY> --stop <STOP> --target <TARGET_1> --segment <EQ_INTRADAY|EQ_DELIVERY|FNO_FUT|FNO_OPT> --timemachine-json skills/nse-bse-hybrid-trader/state/timemachine_result.json --write --json
+python .agents/skills/nse-bse-hybrid-trader/scripts/indian_risk_gate.py --broker <BROKER> --symbol "<TICKER>" --capital <CAPITAL_INR> --risk-pct <RISK_PCT> --entry <ENTRY> --stop <STOP> --target <TARGET_1> --segment <EQ_INTRADAY|EQ_DELIVERY|FNO_FUT|FNO_OPT> --timemachine-json .agents/skills/nse-bse-hybrid-trader/state/timemachine_result.json --write --json
 ```
 
 - **Hard Circuit Breakers:** Max risk/trade `1.0%` default (`2.0%` hard ceiling), tax-inclusive sizing, min net R:R
@@ -150,7 +139,7 @@ Only after Steps 3 and 4 return `PASS`:
    supports `.json`, `.json.gz`, and `.csv`):
 
    ```bash
-   python skills/nse-bse-hybrid-trader/scripts/broker_bridge.py sync-scrip --broker <BROKER>
+   python .agents/skills/nse-bse-hybrid-trader/scripts/broker_bridge.py sync-scrip --broker <BROKER>
    ```
 
    *(Pass `--offline <path>` for custom/exported CSV or JSON masters, e.g. Kotak Neo / ICICI Breeze / Shoonya.)*
@@ -158,7 +147,7 @@ Only after Steps 3 and 4 return `PASS`:
    tick slippage:
 
    ```bash
-   python skills/nse-bse-hybrid-trader/scripts/broker_bridge.py stage --broker <BROKER> --symbol "<TICKER>" --segment <SEGMENT> --entry <ENTRY> --stop <STOP> --target <TARGET_1> --risk-json skills/nse-bse-hybrid-trader/state/risk_verdict.json --paper
+   python .agents/skills/nse-bse-hybrid-trader/scripts/broker_bridge.py stage --broker <BROKER> --symbol "<TICKER>" --segment <SEGMENT> --entry <ENTRY> --stop <STOP> --target <TARGET_1> --risk-json .agents/skills/nse-bse-hybrid-trader/state/risk_verdict.json --paper
    ```
 
 3. **Live Multi-Broker Dispatch (`--live`):** Requires open IST execution window, resolved token (for `angel_one`,
@@ -171,8 +160,8 @@ Only after Steps 3 and 4 return `PASS`:
    `state/paper_trades.db` + IST session bells (`09:15`, `09:30`, `14:30`, `15:10`) and run `check` or `watch`:
 
    ```bash
-   python skills/nse-bse-hybrid-trader/scripts/nse_alerts.py add --from-ledger --ist-bell
-   python skills/nse-bse-hybrid-trader/scripts/nse_alerts.py watch --interval 30 --until 15:15 --beep
+   python .agents/skills/nse-bse-hybrid-trader/scripts/nse_alerts.py add --from-ledger --ist-bell
+   python .agents/skills/nse-bse-hybrid-trader/scripts/nse_alerts.py watch --interval 30 --until 15:15 --beep
    ```
 
 ## Required Output Format
@@ -191,19 +180,15 @@ of plain text) organized into these 4 blocks:
    % & Net EV, and an unmistakable Verdict (`PASS` / `BLOCK` / `NO-TRADE`).
 4. **Actionable Execution Ticket:** Clean ready-to-run `broker_bridge.py` CLI command (`--paper` default), broker-native
    payload, non-bracket SL/GTT reminder when applicable, and optional `nse_alerts.py` stop/target/15:10 IST setup.
+5. **Mandatory SEBI Regulatory Disclaimer & Risk Warning:** Every final response, report, and script output MUST conclude with the prominent disclaimer that the author/skill is NOT a SEBI-registered Research Analyst (RA) or Investment Advisor (IA), that all scans, indicators, and simulations are educational tools only, that capital is at risk, and that the user must independently verify orders on their broker terminal.
 
-## Limitations
+## What It Never Does
 
-- **What It Never Does:**
-  - Never places a live order automatically or from a scheduled/background run (`--paper` is always the default).
-  - Never overrides a `BLOCK` verdict from `indian_risk_gate.py` or a `NO-TRADE` verdict from `nse_timemachine.py`.
-  - Never asks for, stores, or echoes broker API keys, MPINs, or TOTP secrets in chat (keys stay in local `.env`).
-  - Never relies on mental math for INR position sizing, statutory taxes, or win-rate estimation.
-  - Never treats a historical Time Machine simulation or stop-loss level as a guaranteed fill or prediction.
-- **Operational Boundaries:**
-  - Standard equities and equity derivatives on NSE and BSE only. Does not support MCX commodities or global forex.
-  - Depends on Yahoo Finance chart APIs for unofficial free candle feeds (rate limits may apply under rapid repeated requests; verify critical fills directly on broker terminal).
-  - Attached stop-loss and target triggers on non-bracket live orders are stripped by design (`_strip_attached_fields()`) for brokers without bracket API support. Separate GTT/SL orders must be placed directly with the broker.
+- Never places a live order automatically or from a scheduled/background run (`--paper` is always the default).
+- Never overrides a `BLOCK` verdict from `indian_risk_gate.py` or a `NO-TRADE` verdict from `nse_timemachine.py`.
+- Never asks for, stores, or echoes broker API keys, MPINs, or TOTP secrets in chat (keys stay in local `.env`).
+- Never relies on mental math for INR position sizing, statutory taxes, or win-rate estimation.
+- Never treats a historical Time Machine simulation or stop-loss level as a guaranteed fill or prediction.
 
 ## Safety, Code Review & Risk Disclaimer
 

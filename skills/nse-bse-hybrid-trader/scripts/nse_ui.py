@@ -407,6 +407,16 @@ class UI:
         out.append(bot)
         return "\n".join(out)
 
+    def disclaimer(self) -> str:
+        """Render mandatory Indian regulatory & financial risk disclaimer."""
+        items = [
+            "NOT SEBI REGISTERED: The author/skill is NOT a SEBI-registered Research Analyst (RA) or Investment Advisor (IA).",
+            "EDUCATIONAL ONLY: All technical scans, calculations, indicators, and simulations are educational tools only. Nothing here is investment advice, financial tips, or trading recommendations.",
+            "CAPITAL AT RISK: Trading Indian equities, intraday, and derivatives (F&O) carries substantial risk of capital loss. Never risk money you cannot afford to lose.",
+            "VERIFY INDEPENDENTLY: Always verify live prices, margins, circuit bands, and orders directly on your SEBI-registered broker terminal before trading. Trade strictly at your own risk.",
+        ]
+        return self.callout("MANDATORY REGULATORY DISCLAIMER & FINANCIAL RISK NOTICE", items, tone_name="warn")
+
     def kv_table(
         self,
         rows: list[tuple[str, str, str] | tuple[str, str]],

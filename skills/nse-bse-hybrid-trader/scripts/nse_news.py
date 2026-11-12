@@ -709,6 +709,8 @@ def format_news_report(data: dict[str, Any], color: bool | None = None) -> str:
 
     blocks.append("")
     blocks.append("  " + ui.dim(f"Note: {data.get('note', '')}"))
+    blocks.append("")
+    blocks.append(ui.disclaimer())
     return "\n".join(blocks)
 
 

@@ -2141,7 +2141,11 @@ def main(argv: list[str] | None = None, default_broker: str = "angel_one") -> in
     if getattr(args, "json", False):
         print(json.dumps(out, indent=2))
     else:
-        safe_print(format_broker_output(args.command, out))
+        rendered = format_broker_output(args.command, out)
+        safe_print(rendered)
+        ui = UI(color=None)
+        safe_print("")
+        safe_print(ui.disclaimer())
     return 0
 
 

@@ -679,6 +679,9 @@ def format_human_tm(res: dict[str, Any], color: bool | None = None) -> str:
             )
         )
 
+    blocks.append("")
+    blocks.append(ui.disclaimer())
+
     return "\n".join(blocks)
 
 

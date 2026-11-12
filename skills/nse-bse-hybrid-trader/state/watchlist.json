@@ -1,0 +1,36 @@
+{
+  "mode": "orb",
+  "pool": "nifty50",
+  "or_minutes": 15,
+  "ist_timestamp": "2026-11-11T16:06:07+05:30",
+  "session_phase": "POST_MARKET",
+  "scanned": 50,
+  "stage1_candidates": 41,
+  "truncated_confirm": 0,
+  "failed_count": 0,
+  "skipped_t2t_count": 0,
+  "warnings": [],
+  "hits": [
+    {
+      "symbol": "HDFCLIFE",
+      "yahoo": "HDFCLIFE.NS",
+      "name": "HDFC Life Insurance Company Ltd.",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 1100,
+      "in_fno_ban": false,
+      "ltp": 571.65,
+      "pct_change": 1.11,
+      "orh": 575.7,
+      "orl": 569.75,
+      "orb_range_pct": 1.04,
+      "trigger_time_ist": "11:15",
+      "trigger_close": 575.9,
+      "trigger_rvol": 0.36,
+      "anchored_vwap": 574.75,
+      "above_vwap": false,
+      "session_turnover_cr": 107.59
+    }
+  ],
+  "note": "ORB hits confirm a 5m close > ORH only; check news, R:R after taxes, and Time Machine before staging."
+}
