@@ -57,6 +57,12 @@ Add two catalog skills for approved scraping and read-only sports-market data, b
 - Direct CLI installation and updates to GitHub while npm publishing is paused.
 - Refresh official Codex marketplace references and separate plugin bundles from portable manifests.
 - Update the catalog app's React Router dependency to 8.5.0.
+- After this release, [AAS Core for ChatGPT](https://chatgpt.com/plugins/plugin_asdk_app_6ae34d602f74819183e75f3190913fd3)
+  began serving the 20.8.0 read-only catalog of 2,957 skills. The hosted catalog now updates
+  automatically with stable AAS releases ([#2325](https://github.com/sickn33/agentic-awesome-skills/pull/2325)).
+  The [AAS Core website](https://aaskills.tech/aas-core/) provides dedicated
+  [privacy](https://aaskills.tech/plugins/aas-core/privacy/),
+  [terms](https://aaskills.tech/plugins/aas-core/terms/), and [support](https://aaskills.tech/plugins/aas-core/support/) pages.
 
 ### Contributors
 
