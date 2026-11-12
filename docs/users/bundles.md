@@ -8,8 +8,6 @@
 
 > **Plugin compatibility:** root plugins and bundle plugins only publish plugin-safe skills. `Agent Plugins 1.0 portable` means the bundle also has a standard root `plugin.json` and a flat, directly discoverable `skills/` layout. If a bundle shows `pending hardening` or `pending flat skill layout`, its skills still exist in the repository but AAS does not claim that packaging target yet. `Requires manual setup` means the bundle is installable, but one or more included skills need an explicit setup step before first use.
 
-> **npm publishing paused.** For current skills, use the [GitHub installation and update guide](getting-started.md#install-and-update-without-npm). npm commands require a version already published to npm.
-
 ## Quick Start
 
 1. **Install the repository or bundle plugin:**
@@ -749,4 +747,4 @@ Found a skill that should be in a bundle? Or want to create a new bundle? [Open 
 
 ---
 
-_Last updated: June 2026 | Total Skills: 2,955+ | Total Bundles: 30_
+_Last updated: June 2026 | Total Skills: 2,957+ | Total Bundles: 30_

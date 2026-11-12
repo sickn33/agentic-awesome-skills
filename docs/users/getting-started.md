@@ -26,7 +26,7 @@ Keep the runtime integrity returned during configuration. Stop at any failed che
 
 For a complete setup through your first skill selection and installation preview, follow [Codex setup](codex-cli-skills.md) or [Claude Code setup](claude-code-skills.md).
 
-In release 20.7.0, `aas stack install-preview --manifest <file> --destination <skill-directory>` prepares a direct-installer dry run from the agent-selected IDs. It does not execute installation or choose skills; destination names must satisfy the installer's filename restrictions. See [the manifest handoff](aas-core.md#use-the-reviewed-selection).
+In release 20.8.0, `aas stack install-preview --manifest <file> --destination <skill-directory>` prepares a direct-installer dry run from the agent-selected IDs. It does not execute installation or choose skills; destination names must satisfy the installer's filename restrictions. See [the manifest handoff](aas-core.md#use-the-reviewed-selection).
 
 AAS Core is the primary product path. Codex or Claude inspects your project, searches and reads the complete catalog through the local read-only AAS MCP, chooses the exact skill IDs, and uses `compose_stack` to propose an `aas-stack.json`. You review those IDs before using the `aas` CLI to validate the manifest and preview a plan.
 
@@ -66,8 +66,8 @@ If you prefer a packaged install for **Claude Code**, **Codex**, or another Agen
 Install [GitHub CLI](https://cli.github.com/) and sign in with `gh auth login`. Use a version with `gh skill install` available. These commands preview and install the `brainstorming` skill for Codex:
 
 ```sh
-gh skill preview sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md@v20.7.0
-gh skill install sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md --agent codex --scope user --pin v20.7.0
+gh skill preview sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md@v20.8.0
+gh skill install sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md --agent codex --scope user --pin v20.8.0
 ```
 
 Use the exact path to the skill's `SKILL.md` on GitHub. Review its instructions and supporting files before activating it. Change `--agent` to your host, such as `claude-code`, `cursor`, or `gemini-cli`. Run `gh skill install --help` for the complete list. Use `--scope project` from your project for a project-level install, or `--dir <directory>` for a custom path. With Antigravity, start with a small selection to avoid context overload.
