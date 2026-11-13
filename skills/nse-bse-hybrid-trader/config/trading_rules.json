@@ -1,0 +1,289 @@
+{
+  "version": "1.1.0",
+  "currency": "INR",
+  "capital_inr": 50000.0,
+  "default_broker": "angel_one",
+  "risk": {
+    "default_risk_per_trade_pct": 1.0,
+    "hard_max_risk_per_trade_pct": 2.0,
+    "max_daily_drawdown_pct": 3.0,
+    "min_net_rr": 1.5,
+    "timemachine_gate_mode": "r_breakeven",
+    "min_timemachine_target_prob_pct": 55.0,
+    "max_open_trades_per_day": 5,
+    "max_single_stock_allocation_pct": 100.0,
+    "default_slippage_ticks": 1
+  },
+  "segment_leverage": {
+    "EQ_INTRADAY": 5.0,
+    "EQ_DELIVERY": 1.0,
+    "FNO_FUT": 1.0,
+    "FNO_OPT": 1.0
+  },
+  "session_ist": {
+    "timezone": "Asia/Kolkata",
+    "utc_offset_minutes": 330,
+    "pre_open_start": "09:00",
+    "market_open": "09:15",
+    "opening_range_end": "09:30",
+    "no_new_intraday_before": "09:30",
+    "no_new_intraday_after": "14:30",
+    "force_squareoff_ist": "15:10",
+    "sim_cutoff_ist": "15:15",
+    "market_close": "15:30",
+    "tick_size_inr": 0.05,
+    "circuit_proximity_block_pct": 1.0
+  },
+  "timemachine": {
+    "replays": 10000,
+    "seed": 19,
+    "slot_window": 2,
+    "min_full_sessions": 20,
+    "many_neither_warning_pct": 40.0,
+    "default_swing_horizon_days": 10
+  },
+  "charges": {
+    "gst_rate": 0.18,
+    "sebi_turnover_rate": 0.000001,
+    "segments": {
+      "EQ_INTRADAY": {
+        "brokerage_flat_inr": 20.0,
+        "brokerage_pct": 0.0003,
+        "brokerage_mode": "min_flat_or_pct",
+        "brokerage_min_inr": 0.0,
+        "stt_buy_rate": 0.0,
+        "stt_sell_rate": 0.00025,
+        "exchange_txn_rate": 0.0000307,
+        "stamp_duty_buy_rate": 0.00003,
+        "dp_charge_sell_inr": 0.0
+      },
+      "EQ_DELIVERY": {
+        "brokerage_flat_inr": 0.0,
+        "brokerage_pct": 0.0,
+        "brokerage_mode": "flat",
+        "brokerage_min_inr": 0.0,
+        "stt_buy_rate": 0.001,
+        "stt_sell_rate": 0.001,
+        "exchange_txn_rate": 0.0000307,
+        "stamp_duty_buy_rate": 0.00015,
+        "dp_charge_sell_inr": 15.34
+      },
+      "FNO_FUT": {
+        "brokerage_flat_inr": 20.0,
+        "brokerage_pct": 0.0,
+        "brokerage_mode": "flat",
+        "brokerage_min_inr": 0.0,
+        "stt_buy_rate": 0.0,
+        "stt_sell_rate": 0.0005,
+        "exchange_txn_rate": 0.0000183,
+        "stamp_duty_buy_rate": 0.00002,
+        "dp_charge_sell_inr": 0.0
+      },
+      "FNO_OPT": {
+        "brokerage_flat_inr": 20.0,
+        "brokerage_pct": 0.0,
+        "brokerage_mode": "flat",
+        "brokerage_min_inr": 0.0,
+        "stt_buy_rate": 0.0,
+        "stt_sell_rate": 0.0015,
+        "exchange_txn_rate": 0.0003553,
+        "stamp_duty_buy_rate": 0.00003,
+        "dp_charge_sell_inr": 0.0
+      }
+    }
+  },
+  "angel_one": {
+    "scrip_master_url": "https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json",
+    "base_url": "https://apiconnect.angelone.in",
+    "default_exchange": "NSE"
+  },
+  "brokers": {
+    "angel_one": {
+      "display_name": "Angel One SmartAPI",
+      "base_url": "https://apiconnect.angelone.in",
+      "order_url": "https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/placeOrder",
+      "scrip_master_url": "https://margincalculator.angelbroking.com/OpenAPI_File/files/OpenAPIScripMaster.json",
+      "scrip_format": "angel_json",
+      "requires_token_lookup": true,
+      "env_vars": ["ANGEL_API_KEY", "ANGEL_CLIENT_CODE", "ANGEL_MPIN", "ANGEL_TOTP_SECRET"],
+      "brokerage": {
+        "EQ_INTRADAY": {"brokerage_mode": "min_flat_or_pct", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.001, "brokerage_min_inr": 5.0},
+        "EQ_DELIVERY": {"brokerage_mode": "min_flat_or_pct", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.001, "brokerage_min_inr": 5.0, "dp_charge_sell_inr": 23.6},
+        "FNO_FUT": {"brokerage_mode": "flat", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0},
+        "FNO_OPT": {"brokerage_mode": "flat", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0}
+      }
+    },
+    "zerodha": {
+      "display_name": "Zerodha Kite Connect v3",
+      "base_url": "https://api.kite.trade",
+      "order_url": "https://api.kite.trade/orders/regular",
+      "scrip_master_url": "https://api.kite.trade/instruments",
+      "scrip_format": "zerodha_csv",
+      "requires_token_lookup": false,
+      "env_vars": ["ZERODHA_API_KEY", "ZERODHA_ACCESS_TOKEN"],
+      "brokerage": {
+        "EQ_INTRADAY": {"brokerage_mode": "min_flat_or_pct", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.0003, "brokerage_min_inr": 0.0},
+        "EQ_DELIVERY": {"brokerage_mode": "flat", "brokerage_flat_inr": 0.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0, "dp_charge_sell_inr": 15.34},
+        "FNO_FUT": {"brokerage_mode": "min_flat_or_pct", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.0003, "brokerage_min_inr": 0.0},
+        "FNO_OPT": {"brokerage_mode": "flat", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0}
+      }
+    },
+    "upstox": {
+      "display_name": "Upstox API v3",
+      "base_url": "https://api-hft.upstox.com",
+      "order_url": "https://api-hft.upstox.com/v3/order/place",
+      "scrip_master_url": "https://assets.upstox.com/market-quote/instruments/exchange/complete.json.gz",
+      "scrip_format": "upstox_json_gz",
+      "requires_token_lookup": true,
+      "env_vars": ["UPSTOX_ACCESS_TOKEN"],
+      "brokerage": {
+        "EQ_INTRADAY": {"brokerage_mode": "min_flat_or_pct", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.001, "brokerage_min_inr": 0.0},
+        "EQ_DELIVERY": {"brokerage_mode": "flat", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0, "dp_charge_sell_inr": 21.83},
+        "FNO_FUT": {"brokerage_mode": "min_flat_or_pct", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.0005, "brokerage_min_inr": 0.0},
+        "FNO_OPT": {"brokerage_mode": "flat", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0}
+      }
+    },
+    "dhan": {
+      "display_name": "DhanHQ API v2",
+      "base_url": "https://api.dhan.co",
+      "order_url": "https://api.dhan.co/v2/orders",
+      "scrip_master_url": "https://images.dhan.co/api-data/api-scrip-master.csv",
+      "scrip_format": "dhan_csv",
+      "requires_token_lookup": true,
+      "env_vars": ["DHAN_CLIENT_ID", "DHAN_ACCESS_TOKEN"],
+      "brokerage": {
+        "EQ_INTRADAY": {"brokerage_mode": "min_flat_or_pct", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.0003, "brokerage_min_inr": 0.0},
+        "EQ_DELIVERY": {"brokerage_mode": "flat", "brokerage_flat_inr": 0.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0, "dp_charge_sell_inr": 14.75},
+        "FNO_FUT": {"brokerage_mode": "flat", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0},
+        "FNO_OPT": {"brokerage_mode": "flat", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0}
+      }
+    },
+    "fyers": {
+      "display_name": "Fyers API v3",
+      "base_url": "https://api-t1.fyers.in",
+      "order_url": "https://api-t1.fyers.in/api/v3/orders/sync",
+      "scrip_master_url": "https://public.fyers.in/sym_details/NSE_CM.csv",
+      "scrip_master_urls": [
+        "https://public.fyers.in/sym_details/NSE_CM.csv",
+        "https://public.fyers.in/sym_details/NSE_FO.csv",
+        "https://public.fyers.in/sym_details/BSE_CM.csv"
+      ],
+      "scrip_format": "fyers_csv",
+      "requires_token_lookup": false,
+      "env_vars": ["FYERS_APP_ID", "FYERS_ACCESS_TOKEN"],
+      "brokerage": {
+        "EQ_INTRADAY": {"brokerage_mode": "min_flat_or_pct", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.0003, "brokerage_min_inr": 0.0},
+        "EQ_DELIVERY": {"brokerage_mode": "min_flat_or_pct", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.003, "brokerage_min_inr": 0.0, "dp_charge_sell_inr": 14.75},
+        "FNO_FUT": {"brokerage_mode": "min_flat_or_pct", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.0003, "brokerage_min_inr": 0.0},
+        "FNO_OPT": {"brokerage_mode": "flat", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0}
+      }
+    },
+    "groww": {
+      "display_name": "Groww Trading API v1",
+      "base_url": "https://api.groww.in",
+      "order_url": "https://api.groww.in/v1/order/create",
+      "scrip_master_url": "https://growwapi-assets.groww.in/instruments/instrument.csv",
+      "scrip_format": "groww_csv",
+      "requires_token_lookup": false,
+      "env_vars": ["GROWW_ACCESS_TOKEN"],
+      "brokerage": {
+        "EQ_INTRADAY": {"brokerage_mode": "min_flat_or_pct", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.001, "brokerage_min_inr": 0.0},
+        "EQ_DELIVERY": {"brokerage_mode": "min_flat_or_pct", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.001, "brokerage_min_inr": 0.0, "dp_charge_sell_inr": 19.47},
+        "FNO_FUT": {"brokerage_mode": "flat", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0},
+        "FNO_OPT": {"brokerage_mode": "flat", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0}
+      }
+    },
+    "kotak_neo": {
+      "display_name": "Kotak Neo Trade API (Trade Free Plan)",
+      "base_url": "https://gw-napi.kotaksecurities.com",
+      "order_path": "/quick/order/rule/ms/place",
+      "scrip_master_url": "",
+      "scrip_format": "generic_csv_or_json",
+      "requires_token_lookup": false,
+      "env_vars": ["KOTAK_ACCESS_TOKEN", "KOTAK_SID", "KOTAK_BASE_URL"],
+      "brokerage": {
+        "EQ_INTRADAY": {"brokerage_mode": "min_flat_or_pct", "brokerage_flat_inr": 10.0, "brokerage_pct": 0.0005, "brokerage_min_inr": 0.0},
+        "EQ_DELIVERY": {"brokerage_mode": "pct", "brokerage_flat_inr": 0.0, "brokerage_pct": 0.002, "brokerage_min_inr": 0.0, "dp_charge_sell_inr": 15.34},
+        "FNO_FUT": {"brokerage_mode": "flat", "brokerage_flat_inr": 10.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0},
+        "FNO_OPT": {"brokerage_mode": "flat", "brokerage_flat_inr": 10.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0}
+      }
+    },
+    "icici_breeze": {
+      "display_name": "ICICI Direct Breeze API v1",
+      "base_url": "https://api.icicidirect.com",
+      "order_url": "https://api.icicidirect.com/breezeapi/api/v1/order",
+      "scrip_master_url": "",
+      "scrip_format": "generic_csv_or_json",
+      "requires_token_lookup": false,
+      "env_vars": ["ICICI_API_KEY", "ICICI_SECRET_KEY", "ICICI_SESSION_TOKEN"],
+      "brokerage": {
+        "EQ_INTRADAY": {"brokerage_mode": "pct", "brokerage_flat_inr": 0.0, "brokerage_pct": 0.00025, "brokerage_min_inr": 0.0},
+        "EQ_DELIVERY": {"brokerage_mode": "pct", "brokerage_flat_inr": 0.0, "brokerage_pct": 0.0025, "brokerage_min_inr": 0.0, "dp_charge_sell_inr": 23.6},
+        "FNO_FUT": {"brokerage_mode": "pct", "brokerage_flat_inr": 0.0, "brokerage_pct": 0.00025, "brokerage_min_inr": 0.0},
+        "FNO_OPT": {"brokerage_mode": "flat", "brokerage_flat_inr": 20.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0}
+      }
+    },
+    "shoonya": {
+      "display_name": "Finvasia Shoonya Noren API",
+      "base_url": "https://api.shoonya.com",
+      "order_url": "https://api.shoonya.com/NorenWClientAPI/PlaceOrder",
+      "scrip_master_url": "",
+      "scrip_format": "generic_csv_or_json",
+      "requires_token_lookup": false,
+      "env_vars": ["SHOONYA_USER_ID", "SHOONYA_SESSION_TOKEN"],
+      "brokerage": {
+        "EQ_INTRADAY": {"brokerage_mode": "flat", "brokerage_flat_inr": 0.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0},
+        "EQ_DELIVERY": {"brokerage_mode": "flat", "brokerage_flat_inr": 0.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0, "dp_charge_sell_inr": 10.62},
+        "FNO_FUT": {"brokerage_mode": "flat", "brokerage_flat_inr": 0.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0},
+        "FNO_OPT": {"brokerage_mode": "flat", "brokerage_flat_inr": 0.0, "brokerage_pct": 0.0, "brokerage_min_inr": 0.0}
+      }
+    }
+  },
+  "feeds": {
+    "google_news_india_rss": "https://news.google.com/rss/search?q={query}&hl=en-IN&gl=IN&ceid=IN:en",
+    "yahoo_rss": "https://feeds.finance.yahoo.com/rss/2.0/headline?s={symbol}&region=IN&lang=en-IN",
+    "et_stocks_rss": "https://economictimes.indiatimes.com/markets/stocks/rssfeeds/2146842.cms",
+    "et_markets_rss": "https://economictimes.indiatimes.com/markets/rssfeeds/1977021501.cms",
+    "livemint_markets_rss": "https://www.livemint.com/rss/markets",
+    "sebi_rss": "https://www.sebi.gov.in/sebirss.xml",
+    "rbi_press_rss": "https://rbi.org.in/pressreleases_rss.xml",
+    "bse_notices_rss": "https://www.bseindia.com/data/xml/notices.xml",
+    "nse_fno_ban_csv": "https://nsearchives.nseindia.com/content/fo/fo_secban.csv",
+    "nse_fno_lots_csv": "https://nsearchives.nseindia.com/content/fo/fo_mktlots.csv",
+    "nse_equity_list_csv": "https://nsearchives.nseindia.com/content/equities/EQUITY_L.csv",
+    "nifty_indices_csv": {
+      "nifty50": "https://www.niftyindices.com/IndexConstituent/ind_nifty50list.csv",
+      "niftynext50": "https://www.niftyindices.com/IndexConstituent/ind_niftynext50list.csv",
+      "niftybank": "https://www.niftyindices.com/IndexConstituent/ind_niftybanklist.csv",
+      "nifty200": "https://www.niftyindices.com/IndexConstituent/ind_nifty200list.csv",
+      "nifty500": "https://www.niftyindices.com/IndexConstituent/ind_nifty500list.csv"
+    }
+  },
+  "scanner": {
+    "default_pool": "nifty50",
+    "default_min_price_inr": 50.0,
+    "default_min_volume": 100000,
+    "default_min_turnover_cr": 10.0,
+    "default_or_minutes": 15,
+    "max_confirm_charts": 100,
+    "spark_batch_size": 20,
+    "parallel_workers": 8,
+    "exclude_t2t_series": ["BE", "BZ"]
+  },
+  "news": {
+    "default_hours": 72,
+    "keep_days": 30,
+    "move_alert_pct": 3.0,
+    "max_items_per_ticker": 10
+  },
+  "alerts": {
+    "default_poll_sec": 30,
+    "default_flat_reminder_ist": "15:10",
+    "bell_schedule_ist": [
+      {"id": "nse-open-bell", "at": "09:15", "label": "NSE/BSE Regular Session Open"},
+      {"id": "nse-or-complete", "at": "09:30", "label": "15m Opening Range Complete (ORH/ORL Fixed)"},
+      {"id": "nse-hazard-lock", "at": "14:30", "label": "Intraday Hazard Window: No New Entries"},
+      {"id": "nse-flatten-warning", "at": "15:10", "label": "Flatten Intraday Positions Before Broker Square-Off"}
+    ]
+  }
+}

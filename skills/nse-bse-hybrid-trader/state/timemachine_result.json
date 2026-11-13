@@ -1,0 +1,48 @@
+{
+  "verdict": "NO-TRADE",
+  "gate_mode": "r_breakeven",
+  "broker": "zerodha",
+  "symbol": "SUZLON",
+  "yahoo_symbol": "SUZLON.NS",
+  "mode": "SWING",
+  "segment": "EQ_DELIVERY",
+  "side": "buy",
+  "planned_entry": 54.8,
+  "effective_entry_with_slippage": 54.85,
+  "slippage_ticks": 1,
+  "stop": 50.0,
+  "target": 62.0,
+  "r_at_target": 1.4742,
+  "replays": 10000,
+  "seed": 19,
+  "p_target_pct": 8.98,
+  "p_stop_pct": 24.31,
+  "p_neither_pct": 66.71,
+  "target_first_resolved_pct": 26.98,
+  "breakeven_prob_gross_pct": 40.42,
+  "breakeven_prob_net_pct": 42.74,
+  "strict_prob_floor_pct": 55.0,
+  "passes_r_breakeven": false,
+  "passes_strict_55": false,
+  "p_green_pct": 44.39,
+  "avg_gross_r": -0.0622,
+  "estimated_tax_drag_r": 0.0574,
+  "avg_net_r": -0.1196,
+  "sample_qty_for_ev": 103,
+  "estimated_charges_inr": 28.67,
+  "net_ev_inr": -59.75,
+  "median_close": 54.4,
+  "p5_close": 48.25,
+  "p95_close": 61.6,
+  "context": {
+    "daily_bars_in_pool": 493,
+    "swing_horizon_days": 10
+  },
+  "warnings": [
+    "HIGH_UNRESOLVED_RATE: 66.7% of paths remained open at cutoff without hitting target or stop"
+  ],
+  "fail_reasons": [
+    "Target-First resolved probability 26.98% < 42.74% (r_breakeven)",
+    "Tax-adjusted Expected Value -0.1196R <= 0"
+  ]
+}

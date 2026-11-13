@@ -1,0 +1,51 @@
+# SYMBOL|NAME|SERIES|FNO|LOT_SIZE|INDUSTRY
+ADANIENT|Adani Enterprises Ltd.|EQ|Y|309|Metals & Mining
+ADANIPORTS|Adani Ports and Special Economic Zone Ltd.|EQ|Y|475|Services
+APOLLOHOSP|Apollo Hospitals Enterprise Ltd.|EQ|Y|125|Healthcare
+ASIANPAINT|Asian Paints Ltd.|EQ|Y|250|Consumer Durables
+AXISBANK|Axis Bank Ltd.|EQ|Y|625|Financial Services
+BSE|BSE Ltd.|EQ|Y|200|Financial Services
+BAJAJ-AUTO|Bajaj Auto Ltd.|EQ|Y|75|Automobile and Auto Components
+BAJFINANCE|Bajaj Finance Ltd.|EQ|Y|750|Financial Services
+BAJAJFINSV|Bajaj Finserv Ltd.|EQ|Y|300|Financial Services
+BEL|Bharat Electronics Ltd.|EQ|Y|1425|Capital Goods
+BHARTIARTL|Bharti Airtel Ltd.|EQ|Y|475|Telecommunication
+CIPLA|Cipla Ltd.|EQ|Y|425|Healthcare
+COALINDIA|Coal India Ltd.|EQ|Y|1350|Oil Gas & Consumable Fuels
+DRREDDY|Dr. Reddy's Laboratories Ltd.|EQ|Y|625|Healthcare
+EICHERMOT|Eicher Motors Ltd.|EQ|Y|100|Automobile and Auto Components
+ETERNAL|Eternal Ltd.|EQ|Y|2425|Consumer Services
+GRASIM|Grasim Industries Ltd.|EQ|Y|250|Construction Materials
+HCLTECH|HCL Technologies Ltd.|EQ|Y|400|Information Technology
+HDFCBANK|HDFC Bank Ltd.|EQ|Y|650|Financial Services
+HDFCLIFE|HDFC Life Insurance Company Ltd.|EQ|Y|1100|Financial Services
+HINDALCO|Hindalco Industries Ltd.|EQ|Y|700|Metals & Mining
+HINDUNILVR|Hindustan Unilever Ltd.|EQ|Y|300|Fast Moving Consumer Goods
+ICICIBANK|ICICI Bank Ltd.|EQ|Y|700|Financial Services
+ITC|ITC Ltd.|EQ|Y|1725|Fast Moving Consumer Goods
+INFY|Infosys Ltd.|EQ|Y|400|Information Technology
+INDIGO|InterGlobe Aviation Ltd.|EQ|Y|150|Services
+JSWSTEEL|JSW Steel Ltd.|EQ|Y|675|Metals & Mining
+JIOFIN|Jio Financial Services Ltd.|EQ|Y|2350|Financial Services
+KOTAKBANK|Kotak Mahindra Bank Ltd.|EQ|Y|2000|Financial Services
+LT|Larsen & Toubro Ltd.|EQ|Y|175|Construction
+M&M|Mahindra & Mahindra Ltd.|EQ|Y|200|Automobile and Auto Components
+MARUTI|Maruti Suzuki India Ltd.|EQ|Y|50|Automobile and Auto Components
+MAXHEALTH|Max Healthcare Institute Ltd.|EQ|Y|525|Healthcare
+NTPC|NTPC Ltd.|EQ|Y|1500|Power
+NESTLEIND|Nestle India Ltd.|EQ|Y|500|Fast Moving Consumer Goods
+ONGC|Oil & Natural Gas Corporation Ltd.|EQ|Y|2250|Oil Gas & Consumable Fuels
+POWERGRID|Power Grid Corporation of India Ltd.|EQ|Y|1900|Power
+RELIANCE|Reliance Industries Ltd.|EQ|Y|500|Oil Gas & Consumable Fuels
+SBILIFE|SBI Life Insurance Company Ltd.|EQ|Y|375|Financial Services
+SHRIRAMFIN|Shriram Finance Ltd.|EQ|Y|825|Financial Services
+SBIN|State Bank of India|EQ|Y|750|Financial Services
+SUNPHARMA|Sun Pharmaceutical Industries Ltd.|EQ|Y|350|Healthcare
+TCS|Tata Consultancy Services Ltd.|EQ|Y|225|Information Technology
+TATACONSUM|Tata Consumer Products Ltd.|EQ|Y|550|Fast Moving Consumer Goods
+TMPV|Tata Motors Passenger Vehicles Ltd.|EQ|Y|1600|Automobile and Auto Components
+TATASTEEL|Tata Steel Ltd.|EQ|Y|2750|Metals & Mining
+TECHM|Tech Mahindra Ltd.|EQ|Y|600|Information Technology
+TITAN|Titan Company Ltd.|EQ|Y|175|Consumer Durables
+TRENT|Trent Ltd.|EQ|Y|225|Consumer Services
+ULTRACEMCO|UltraTech Cement Ltd.|EQ|Y|50|Construction Materials

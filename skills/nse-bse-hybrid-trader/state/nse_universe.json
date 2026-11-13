@@ -1,0 +1,511 @@
+{
+  "pool": "nifty50",
+  "source": "ind_nifty50list.csv",
+  "count": 50,
+  "fno_ban_symbols": [
+    "KAYNES"
+  ],
+  "updated_ist": "2026-11-11T16:06:04+05:30",
+  "symbols": [
+    {
+      "symbol": "ADANIENT",
+      "yahoo": "ADANIENT.NS",
+      "name": "Adani Enterprises Ltd.",
+      "industry": "Metals & Mining",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 309,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "ADANIPORTS",
+      "yahoo": "ADANIPORTS.NS",
+      "name": "Adani Ports and Special Economic Zone Ltd.",
+      "industry": "Services",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 475,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "APOLLOHOSP",
+      "yahoo": "APOLLOHOSP.NS",
+      "name": "Apollo Hospitals Enterprise Ltd.",
+      "industry": "Healthcare",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 125,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "ASIANPAINT",
+      "yahoo": "ASIANPAINT.NS",
+      "name": "Asian Paints Ltd.",
+      "industry": "Consumer Durables",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 250,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "AXISBANK",
+      "yahoo": "AXISBANK.NS",
+      "name": "Axis Bank Ltd.",
+      "industry": "Financial Services",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 625,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "BSE",
+      "yahoo": "BSE.NS",
+      "name": "BSE Ltd.",
+      "industry": "Financial Services",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 200,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "BAJAJ-AUTO",
+      "yahoo": "BAJAJ-AUTO.NS",
+      "name": "Bajaj Auto Ltd.",
+      "industry": "Automobile and Auto Components",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 75,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "BAJFINANCE",
+      "yahoo": "BAJFINANCE.NS",
+      "name": "Bajaj Finance Ltd.",
+      "industry": "Financial Services",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 750,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "BAJAJFINSV",
+      "yahoo": "BAJAJFINSV.NS",
+      "name": "Bajaj Finserv Ltd.",
+      "industry": "Financial Services",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 300,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "BEL",
+      "yahoo": "BEL.NS",
+      "name": "Bharat Electronics Ltd.",
+      "industry": "Capital Goods",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 1425,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "BHARTIARTL",
+      "yahoo": "BHARTIARTL.NS",
+      "name": "Bharti Airtel Ltd.",
+      "industry": "Telecommunication",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 475,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "CIPLA",
+      "yahoo": "CIPLA.NS",
+      "name": "Cipla Ltd.",
+      "industry": "Healthcare",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 425,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "COALINDIA",
+      "yahoo": "COALINDIA.NS",
+      "name": "Coal India Ltd.",
+      "industry": "Oil Gas & Consumable Fuels",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 1350,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "DRREDDY",
+      "yahoo": "DRREDDY.NS",
+      "name": "Dr. Reddy's Laboratories Ltd.",
+      "industry": "Healthcare",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 625,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "EICHERMOT",
+      "yahoo": "EICHERMOT.NS",
+      "name": "Eicher Motors Ltd.",
+      "industry": "Automobile and Auto Components",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 100,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "ETERNAL",
+      "yahoo": "ETERNAL.NS",
+      "name": "Eternal Ltd.",
+      "industry": "Consumer Services",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 2425,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "GRASIM",
+      "yahoo": "GRASIM.NS",
+      "name": "Grasim Industries Ltd.",
+      "industry": "Construction Materials",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 250,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "HCLTECH",
+      "yahoo": "HCLTECH.NS",
+      "name": "HCL Technologies Ltd.",
+      "industry": "Information Technology",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 400,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "HDFCBANK",
+      "yahoo": "HDFCBANK.NS",
+      "name": "HDFC Bank Ltd.",
+      "industry": "Financial Services",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 650,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "HDFCLIFE",
+      "yahoo": "HDFCLIFE.NS",
+      "name": "HDFC Life Insurance Company Ltd.",
+      "industry": "Financial Services",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 1100,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "HINDALCO",
+      "yahoo": "HINDALCO.NS",
+      "name": "Hindalco Industries Ltd.",
+      "industry": "Metals & Mining",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 700,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "HINDUNILVR",
+      "yahoo": "HINDUNILVR.NS",
+      "name": "Hindustan Unilever Ltd.",
+      "industry": "Fast Moving Consumer Goods",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 300,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "ICICIBANK",
+      "yahoo": "ICICIBANK.NS",
+      "name": "ICICI Bank Ltd.",
+      "industry": "Financial Services",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 700,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "ITC",
+      "yahoo": "ITC.NS",
+      "name": "ITC Ltd.",
+      "industry": "Fast Moving Consumer Goods",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 1725,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "INFY",
+      "yahoo": "INFY.NS",
+      "name": "Infosys Ltd.",
+      "industry": "Information Technology",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 400,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "INDIGO",
+      "yahoo": "INDIGO.NS",
+      "name": "InterGlobe Aviation Ltd.",
+      "industry": "Services",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 150,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "JSWSTEEL",
+      "yahoo": "JSWSTEEL.NS",
+      "name": "JSW Steel Ltd.",
+      "industry": "Metals & Mining",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 675,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "JIOFIN",
+      "yahoo": "JIOFIN.NS",
+      "name": "Jio Financial Services Ltd.",
+      "industry": "Financial Services",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 2350,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "KOTAKBANK",
+      "yahoo": "KOTAKBANK.NS",
+      "name": "Kotak Mahindra Bank Ltd.",
+      "industry": "Financial Services",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 2000,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "LT",
+      "yahoo": "LT.NS",
+      "name": "Larsen & Toubro Ltd.",
+      "industry": "Construction",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 175,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "M&M",
+      "yahoo": "M&M.NS",
+      "name": "Mahindra & Mahindra Ltd.",
+      "industry": "Automobile and Auto Components",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 200,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "MARUTI",
+      "yahoo": "MARUTI.NS",
+      "name": "Maruti Suzuki India Ltd.",
+      "industry": "Automobile and Auto Components",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 50,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "MAXHEALTH",
+      "yahoo": "MAXHEALTH.NS",
+      "name": "Max Healthcare Institute Ltd.",
+      "industry": "Healthcare",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 525,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "NTPC",
+      "yahoo": "NTPC.NS",
+      "name": "NTPC Ltd.",
+      "industry": "Power",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 1500,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "NESTLEIND",
+      "yahoo": "NESTLEIND.NS",
+      "name": "Nestle India Ltd.",
+      "industry": "Fast Moving Consumer Goods",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 500,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "ONGC",
+      "yahoo": "ONGC.NS",
+      "name": "Oil & Natural Gas Corporation Ltd.",
+      "industry": "Oil Gas & Consumable Fuels",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 2250,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "POWERGRID",
+      "yahoo": "POWERGRID.NS",
+      "name": "Power Grid Corporation of India Ltd.",
+      "industry": "Power",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 1900,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "RELIANCE",
+      "yahoo": "RELIANCE.NS",
+      "name": "Reliance Industries Ltd.",
+      "industry": "Oil Gas & Consumable Fuels",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 500,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "SBILIFE",
+      "yahoo": "SBILIFE.NS",
+      "name": "SBI Life Insurance Company Ltd.",
+      "industry": "Financial Services",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 375,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "SHRIRAMFIN",
+      "yahoo": "SHRIRAMFIN.NS",
+      "name": "Shriram Finance Ltd.",
+      "industry": "Financial Services",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 825,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "SBIN",
+      "yahoo": "SBIN.NS",
+      "name": "State Bank of India",
+      "industry": "Financial Services",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 750,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "SUNPHARMA",
+      "yahoo": "SUNPHARMA.NS",
+      "name": "Sun Pharmaceutical Industries Ltd.",
+      "industry": "Healthcare",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 350,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "TCS",
+      "yahoo": "TCS.NS",
+      "name": "Tata Consultancy Services Ltd.",
+      "industry": "Information Technology",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 225,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "TATACONSUM",
+      "yahoo": "TATACONSUM.NS",
+      "name": "Tata Consumer Products Ltd.",
+      "industry": "Fast Moving Consumer Goods",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 550,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "TMPV",
+      "yahoo": "TMPV.NS",
+      "name": "Tata Motors Passenger Vehicles Ltd.",
+      "industry": "Automobile and Auto Components",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 1600,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "TATASTEEL",
+      "yahoo": "TATASTEEL.NS",
+      "name": "Tata Steel Ltd.",
+      "industry": "Metals & Mining",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 2750,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "TECHM",
+      "yahoo": "TECHM.NS",
+      "name": "Tech Mahindra Ltd.",
+      "industry": "Information Technology",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 600,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "TITAN",
+      "yahoo": "TITAN.NS",
+      "name": "Titan Company Ltd.",
+      "industry": "Consumer Durables",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 175,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "TRENT",
+      "yahoo": "TRENT.NS",
+      "name": "Trent Ltd.",
+      "industry": "Consumer Services",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 225,
+      "in_fno_ban": false
+    },
+    {
+      "symbol": "ULTRACEMCO",
+      "yahoo": "ULTRACEMCO.NS",
+      "name": "UltraTech Cement Ltd.",
+      "industry": "Construction Materials",
+      "series": "EQ",
+      "is_fno": true,
+      "lot_size": 50,
+      "in_fno_ban": false
+    }
+  ]
+}
