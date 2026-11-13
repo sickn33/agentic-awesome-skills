@@ -33,8 +33,23 @@ IST_TZ = datetime.timezone(IST_OFFSET, name="IST")
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 SKILL_DIR = SCRIPT_DIR.parent
-CONFIG_DIR = SKILL_DIR / "config"
-DEFAULT_STATE_DIR = SKILL_DIR / "state"
+
+def _find_dir(sub: str) -> Path:
+    candidates = [
+        SCRIPT_DIR / sub,
+        SKILL_DIR / sub,
+        Path.home() / ".agents" / "skills" / "nse-bse-hybrid-trader" / sub,
+        Path.home() / ".gemini" / "config" / "skills" / "nse-bse-hybrid-trader" / sub,
+        Path(r"C:\Users\My PC\Documents\vs-projects\skilld-antii\.agents\skills\nse-bse-hybrid-trader") / sub,
+        Path(r"C:\Users\My PC\Documents\indian-day-trader-skill") / sub,
+    ]
+    for c in candidates:
+        if c.is_dir():
+            return c
+    return SKILL_DIR / sub
+
+CONFIG_DIR = _find_dir("config")
+DEFAULT_STATE_DIR = _find_dir("state")
 
 INDEX_ALIASES = {
     "NIFTY": ("^NSEI", "NSE", "NIFTY"),

@@ -12,6 +12,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import time
 import urllib.error
 import urllib.request
 from typing import Any
@@ -248,9 +249,36 @@ def fetch_tv_technicals(
     symbols: list[str],
     timeframe: str = "1d",
     requested_indicators: list[str] | None = None,
-    timeout: float = 10.0,
+    timeout: float = 20.0,
 ) -> list[dict[str, Any]]:
-    """Query TradingView's India scanner cloud API in a single HTTP request (zero local math)."""
+    """Query TradingView's India scanner cloud API with auto-chunking (zero local math)."""
+    if not symbols:
+        return []
+
+    # Chunk in batches of 20 to prevent cloud read timeouts on large watchlists
+    chunk_size = 20
+    if len(symbols) > chunk_size:
+        all_results: list[dict[str, Any]] = []
+        for i in range(0, len(symbols), chunk_size):
+            chunk = symbols[i : i + chunk_size]
+            res = _fetch_tv_technicals_single_batch(
+                chunk, timeframe=timeframe, requested_indicators=requested_indicators, timeout=timeout
+            )
+            all_results.extend(res)
+        return all_results
+
+    return _fetch_tv_technicals_single_batch(
+        symbols, timeframe=timeframe, requested_indicators=requested_indicators, timeout=timeout
+    )
+
+
+def _fetch_tv_technicals_single_batch(
+    symbols: list[str],
+    timeframe: str = "1d",
+    requested_indicators: list[str] | None = None,
+    timeout: float = 20.0,
+) -> list[dict[str, Any]]:
+    """Execute single HTTP batch request to TradingView scanner with retry on timeout."""
     tf_clean = (timeframe or "1d").lower().strip()
     suffix = TIMEFRAME_SUFFIXES.get(tf_clean, "")
 
@@ -298,11 +326,22 @@ def fetch_tv_technicals(
         },
     )
 
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            data = json.loads(resp.read().decode("utf-8"))
-    except urllib.error.URLError as e:
-        raise RuntimeError(f"TradingView cloud scanner request failed: {e}") from e
+    data: dict[str, Any] = {}
+    last_err: Exception | None = None
+    for attempt in range(2):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+            last_err = None
+            break
+        except (TimeoutError, urllib.error.URLError, OSError) as e:
+            last_err = e
+            if attempt == 0:
+                time.sleep(1.0)
+                continue
+
+    if last_err is not None:
+        raise RuntimeError(f"TradingView cloud scanner request failed: {last_err}") from last_err
 
     results: list[dict[str, Any]] = []
     for item in data.get("data", []):
@@ -451,17 +490,23 @@ def format_human_tv_report(report: dict[str, Any], ui: UI | None = None) -> str:
     )
 
     out.append("")
-    out.append(
-        ui.callout(
-            "TradingView Cloud Stance Takeaway",
-            [
-                f"Overall consensus is {stance} on the {tf} timeframe.",
-                "TradingView computes these values across thousands of historical bars on its cloud servers.",
-                "Combine this cloud momentum check with the local Risk Gate before sizing real capital.",
-            ],
-            tone_name=badge_tone,
-        )
+    # Extract indicator values for comprehensive decision brief
+    ema200_val = indicators.get("EMA200", {}).get("value")
+    vwap_val = indicators.get("VWAP", {}).get("value")
+    rsi_val = indicators.get("RSI", {}).get("value")
+    adx_val = indicators.get("ADX", {}).get("value")
+    atr_val = indicators.get("ATR", {}).get("value")
+    brief = ui.decision_brief(
+        symbol=ticker,
+        ltp=close or 0.0,
+        score=score,
+        ema200=ema200_val,
+        vwap=vwap_val,
+        rsi=rsi_val,
+        adx=adx_val,
+        atr=atr_val,
     )
+    out.append(brief)
     out.append("")
     out.append(ui.disclaimer())
 

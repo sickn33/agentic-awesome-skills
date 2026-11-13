@@ -77,7 +77,21 @@ $SKILL     = Join-Path $SkillRoot "scripts"
 $STATE_DIR = Join-Path $SkillRoot "state"
 $env:PYTHONPATH = $SKILL
 
-$SymbolNS  = if ($Symbol -match '\.NS$|\.BO$') { $Symbol } else { "$Symbol.NS" }
+$SymbolNS = if ($Symbol -match '\^') {
+    $Symbol
+} elseif ($Symbol -match '^(NIFTY|NIFTY50)$') {
+    "^NSEI"
+} elseif ($Symbol -match '^BANKNIFTY$') {
+    "^NSEBANK"
+} elseif ($Symbol -match '^FINNIFTY$') {
+    "NIFTY_FIN_SERVICE.NS"
+} elseif ($Symbol -match '^SENSEX$') {
+    "^BSESN"
+} elseif ($Symbol -match '\.NS$|\.BO$') {
+    $Symbol
+} else {
+    "$Symbol.NS"
+}
 $TM_JSON   = Join-Path $STATE_DIR "timemachine_result.json"
 $RISK_JSON = Join-Path $STATE_DIR "risk_verdict.json"
 

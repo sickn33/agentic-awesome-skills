@@ -183,8 +183,10 @@ def print_skill_menu() -> None:
 
 def execute_skill_direct(skill_num: int, symbol: str) -> None:
     """Execute a single skill directly using its Python module API without subprocess quirks."""
-    norm_symbol = symbol.upper().replace(".NS", "").replace(".BO", "")
-    full_symbol = f"{norm_symbol}.NS"
+    import nse_common
+    sym_info = nse_common.normalize_symbol(symbol)
+    norm_symbol = sym_info["base"]
+    full_symbol = sym_info["yahoo"]
     ui = UI(color=None)
 
     if skill_num == 1:  # Clock

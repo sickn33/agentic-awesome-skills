@@ -643,6 +643,24 @@ def format_human_verdict(res: dict[str, Any], color: bool | None = None) -> str:
             )
         )
 
+    # Append decision brief conclusion
+    blocks.append("")
+    brief = ui.decision_brief(
+        symbol=str(res.get("symbol", "STOCK")),
+        ltp=float(res.get("entry") or 0.0),
+        verdict=f"RISK GATE {verdict}",
+        entry=float(res.get("entry") or 0.0),
+        stop=float(res.get("stop") or 0.0),
+        target=float(res.get("target") or 0.0),
+        segment=str(res.get("segment", "EQ_DELIVERY")),
+        summary_note=(
+            f"Risk Gate {verdict} for {res.get('symbol')}. "
+            f"Net P&L at Target: Rs.{res.get('net_profit_at_target_inr', 0):,.2f} vs "
+            f"Max Loss if Stopped: Rs.{res.get('net_loss_at_stop_inr', 0):,.2f}. "
+            f"Tax Breakeven Move: Rs.{res.get('breakeven_move_inr', 0):.2f}/unit."
+        ),
+    )
+    blocks.append(brief)
     blocks.append("")
     blocks.append(ui.disclaimer())
 

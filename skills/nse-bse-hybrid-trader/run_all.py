@@ -75,8 +75,10 @@ def run_all(
     circuit_band: str | None = None,
     delivery_pct: str | None = None,
 ) -> int:
-    norm_symbol = symbol.upper().replace(".NS", "").replace(".BO", "")
-    full_symbol = f"{norm_symbol}.NS" if exchange.upper() == "NSE" else f"{norm_symbol}.BO"
+    import nse_common
+    sym_info = nse_common.normalize_symbol(symbol)
+    norm_symbol = sym_info["base"]
+    full_symbol = sym_info["yahoo"]
     has_coords = (entry is not None) and (stop is not None) and (target is not None)
     ui = UI(color=None)
 

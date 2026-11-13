@@ -407,6 +407,134 @@ class UI:
         out.append(bot)
         return "\n".join(out)
 
+    def decision_brief(
+        self,
+        symbol: str,
+        ltp: float,
+        verdict: str | None = None,
+        score: float | None = None,
+        ema200: float | None = None,
+        vwap: float | None = None,
+        rsi: float | None = None,
+        adx: float | None = None,
+        atr: float | None = None,
+        entry: float | None = None,
+        stop: float | None = None,
+        target: float | None = None,
+        segment: str = "EQ_DELIVERY",
+        summary_note: str | None = None,
+    ) -> str:
+        """Render a comprehensive structured decision brief for user decision-making."""
+        clean_sym = symbol.upper().replace(".NS", "").replace(".BO", "").replace("^NSEI", "NIFTY").replace("^NSEBANK", "BANKNIFTY")
+        atr_val = atr if (atr and atr > 0) else (ltp * 0.02)
+        e_val = entry if (entry and entry > 0) else ltp
+        s_val = stop if (stop and stop > 0) else (ltp - (1.5 * atr_val))
+        t_val = target if (target and target > 0) else (ltp + (2.5 * atr_val))
+
+        # 1. Institutional Spine (200 EMA)
+        if ema200 and ema200 > 0:
+            spine_desc = "BULLISH (Above 200 EMA)" if ltp >= ema200 else "BEARISH (Below 200 EMA)"
+            spine_val = f"Rs. {ema200:,.2f}"
+        else:
+            spine_desc = "Reference Trend Baseline"
+            spine_val = "N/A"
+
+        # 2. Session Control (VWAP)
+        if vwap and vwap > 0:
+            vwap_desc = "BUYER CONTROL (Above VWAP)" if ltp >= vwap else "SELLER PRESSURE (Below VWAP)"
+            vwap_val = f"Rs. {vwap:,.2f}"
+        else:
+            vwap_desc = "Intraday Average Benchmark"
+            vwap_val = "N/A"
+
+        # 3. RSI
+        if rsi is not None:
+            rsi_desc = "STRONG (+) Momentum" if rsi >= 60 else ("WEAK (-) Momentum" if rsi <= 40 else "NEUTRAL / Consolidating")
+            rsi_val = f"{rsi:.1f}"
+        else:
+            rsi_desc = "Momentum Gauge"
+            rsi_val = "N/A"
+
+        # 4. ADX
+        if adx is not None:
+            adx_desc = "CONFIRMED TREND (ADX > 25)" if adx >= 25 else "WEAK / SIDEWAYS CHOP (ADX < 25)"
+            adx_val = f"{adx:.1f}"
+        else:
+            adx_desc = "Trend Strength"
+            adx_val = "N/A"
+
+        # Inferred Final Action Badge
+        if verdict:
+            action_badge = verdict.upper()
+            action_tone = "good" if "BUY" in action_badge or "PASS" in action_badge else ("bad" if "SELL" in action_badge or "BLOCK" in action_badge else "warn")
+        elif score is not None:
+            if score >= 0.20:
+                action_badge = "BUY / LONG SETUP"
+                action_tone = "good"
+            elif score <= -0.20:
+                action_badge = "SELL / SHORT SETUP"
+                action_tone = "bad"
+            else:
+                action_badge = "NEUTRAL / WAIT"
+                action_tone = "warn"
+        else:
+            action_badge = "BUY / LONG SETUP" if (ema200 and ltp > ema200) else "ANALYZE SETUP"
+            action_tone = "info"
+
+        # Timing & Timeframe
+        if segment == "EQ_INTRADAY":
+            tf_desc = "Intraday (Must exit before 15:15 IST)"
+        elif segment == "FNO_OPT":
+            tf_desc = "Options Momentum (15m to 1 Day — Watch Theta!)"
+        elif segment == "FNO_FUT":
+            tf_desc = "Futures Swing (1 to 5 Days)"
+        else:
+            tf_desc = "Delivery Swing (1 to 3 Weeks)"
+
+        risk_pct = (abs(e_val - s_val) / e_val * 100.0) if e_val > 0 else 0.0
+        reward_pct = (abs(t_val - e_val) / e_val * 100.0) if e_val > 0 else 0.0
+        rr_ratio = (reward_pct / risk_pct) if risk_pct > 0 else 1.5
+
+        dec_rows = [
+            ["1. Institutional Spine (200 EMA)", spine_val, spine_desc],
+            ["2. Session Control (Intraday VWAP)", vwap_val, vwap_desc],
+            ["3. Relative Strength (RSI 14)", rsi_val, rsi_desc],
+            ["4. Trend Strength Power (ADX 14)", adx_val, adx_desc],
+            ["5. Volatility Buffer (Daily ATR)", f"Rs. {atr_val:,.2f}", f"Normal expected daily swing: +/- Rs.{atr_val:,.2f}"],
+            ["6. Planned Entry & Timing", f"Rs. {e_val:,.2f}", tf_desc],
+            ["7. Structural Stop-Loss", f"Rs. {s_val:,.2f}", f"Risk: {risk_pct:.1f}% (Volatility-safe stop)"],
+            ["8. Calculated Target", f"Rs. {t_val:,.2f}", f"Reward: {reward_pct:.1f}% (Net R:R 1:{rr_ratio:.1f})"],
+        ]
+
+        takeaway = summary_note or (
+            f"{clean_sym} evaluated at Rs.{ltp:,.2f}. Review the confluence of 200 EMA, VWAP, and ADX before placing orders. "
+            f"Ensure risk per trade does not exceed your account limit."
+        )
+
+        blocks = [
+            self.banner(
+                title=f"FINAL ACTIONABLE TRADE DECISION & CONCLUSION  •  {clean_sym}",
+                subtitle="Synthesized conclusion for user decision-making across all active indicators",
+                badge=action_badge,
+                badge_tone=action_tone,
+            ),
+            "",
+            self.table(
+                headers=["Decision Checkpoint", "Key Technical Value", "Trader Interpretation & Verdict"],
+                rows=dec_rows,
+                alignments=["left", "left", "left"],
+                nowrap_cols={0, 1},
+            ),
+            "",
+            self.callout(
+                f"Strategic Takeaway for {clean_sym}",
+                [takeaway, "Rule: Always confirm live order tickets on your SEBI-registered broker terminal before placing orders."],
+                tone_name="info",
+            )
+        ]
+        return "\n".join(blocks)
+
+
     def disclaimer(self) -> str:
         """Render mandatory Indian regulatory & financial risk disclaimer."""
         items = [
@@ -500,7 +628,9 @@ class UI:
             empty_w = sum(widths) + (3 * (ncols - 1))
             out.append(vt + " " + pad_vis(self.dim("(No rows)"), empty_w, "center") + " " + vt)
         else:
-            for r in rows:
+            for r_idx, r in enumerate(rows):
+                if r_idx > 0:
+                    out.append(_border(self.lm, self.xm, self.rm))
                 wrapped_cols: list[list[str]] = []
                 max_h = 1
                 for i in range(ncols):

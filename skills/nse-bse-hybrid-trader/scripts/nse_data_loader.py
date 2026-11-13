@@ -954,6 +954,27 @@ def format_human_report(data: dict[str, Any], color: bool | None = None) -> str:
         elif news.get("error"):
             blocks.append(ui.callout("News Warning", [str(news["error"])], tone_name="warn"))
 
+    # Append synthesized conclusion brief for user decision making
+    blocks.append("")
+    brief = ui.decision_brief(
+        symbol=s.get("base", "STOCK"),
+        ltp=float(ltp_val or 0.0),
+        verdict=f"{bias} ({score}/{out_of})",
+        ema200=float(d.get("ema200") or 0.0),
+        vwap=float(intra.get("vwap") or 0.0),
+        rsi=float(d.get("rsi14") or 50.0),
+        adx=float(d.get("adx", {}).get("adx") if isinstance(d.get("adx"), dict) else (d.get("adx") or 20.0)),
+        atr=float(d.get("atr14") or (float(ltp_val or 0.0) * 0.02)),
+        entry=entry_v,
+        stop=stop_v,
+        target=t1_v,
+        segment="EQ_DELIVERY" if s.get("exchange") != "NSI" else "EQ_INTRADAY",
+        summary_note=(
+            f"{s.get('base', 'Ticker')} shows {bias} structure with a {score}/{out_of} confluence rating. "
+            f"Key triggers: {reasons_str}."
+        ),
+    )
+    blocks.append(brief)
     blocks.append("")
     blocks.append(ui.disclaimer())
     return "\n".join(blocks)
