@@ -2,7 +2,7 @@
 name: datacircle
 description: "Every plan of every GTM API on datacircle.dev, as one file you download and query. Use the file to compare or price a GTM API."
 category: data
-risk: critical
+risk: safe
 source: self
 source_type: self
 date_added: "2026-10-10"
