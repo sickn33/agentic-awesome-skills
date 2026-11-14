@@ -1,21 +1,28 @@
 ---
 name: nse-bse-hybrid-trader
-description: >-
-  Institutional-grade Indian stock market (NSE/BSE) intraday, swing, and F&O analysis
-  and deterministic execution engine. Use whenever the user asks to analyze an Indian
-  stock or index (NIFTY, BANKNIFTY, FINNIFTY, SENSEX, or NSE/BSE tickers), evaluate
-  intraday/swing setups (ORB, VWAP, RSI Divergence, Fibonacci), calculate exact INR
-  position sizes with STT/GST/SEBI/stamp duty taxes, run Monte Carlo historical intraday
-  simulations, or stage paper/live orders across major Indian brokers (Zerodha Kite,
-  Angel One SmartAPI, Upstox, Dhan, Fyers, Groww, Kotak Neo, ICICI Breeze, Shoonya).
+description: "Indian stock market (NSE/BSE) intraday, swing, and F&O analysis with deterministic 2026 tax sizing, Monte Carlo simulations, option Greeks, and safe paper-order staging across 9 brokers."
+category: finance
+risk: safe
+source: community
+date_added: "2026-11-14"
+license: MIT
 ---
 
 # NSE/BSE Hybrid Trader
 
-A decoupled trading intelligence and execution skill for Indian equities and derivatives. The LLM performs
+A decoupled trading intelligence and simulation skill for Indian equities and derivatives (NSE & BSE). The LLM performs
 probabilistic technical and market-structure reasoning (`nse-trading-skills` synthesis), while deterministic Python
 scripts enforce INR sizing, broker-accurate brokerage & Indian statutory tax math, 10,000-path Monte Carlo
-simulation, and multi-broker paper/live execution gating (`day-trader-skill` architecture).
+simulation, and multi-broker paper staging with preview payloads (`day-trader-skill` architecture).
+
+## When to Use
+
+- Use when analyzing Indian equities or indices (`NIFTY`, `BANKNIFTY`, `FINNIFTY`, `SENSEX`, or NSE/BSE stocks) across intraday or swing horizons.
+- Use to calculate exact INR position sizes factoring 2026 Indian statutory charges (STT, GST, SEBI fees, Stamp Duty, Exchange transaction fees).
+- Use to run 10,000-path Monte Carlo probability simulations (`Target-First %`, Expected Value, and Drawdown distribution).
+- Use to inspect real-time option chains, Black-Scholes Greeks ($\Delta, \Gamma, \nu, \Theta$), and Max Pain strike analysis.
+- Use to monitor institutional sector rotation and market breadth across all 9 major NSE sectoral indices.
+- Use to stage risk-gated paper trading orders into a local SQLite ledger across 9 Indian broker profiles with preview payloads.
 
 ## Supported Indian Brokers
 

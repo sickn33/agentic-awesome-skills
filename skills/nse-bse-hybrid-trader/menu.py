@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-NSE/BSE Interactive Skill Selector & Indicator Menu (`menu.py`).
+NSE/BSE Interactive Skill Selector & Custom Pipeline Curator (`menu.py`).
 Standard library only. Allows users to:
   1. Interactively choose which pipeline modules/skills to run
-  2. Interactively select technical indicators from TradingView Cloud Scanner
-  3. View ready-to-run CLI commands or execute them immediately
-  4. Display quick references & guides for all Indian trader skills
+  2. Multi-Select Custom Pipeline: Curate specific sub-modules to run sequentially
+  3. Watchlist Opportunity Scanner: Automatic Entry, SL, Target & Holding Timeframe
+  4. Query custom technical indicators from TradingView Cloud Scanner (0% CPU)
+  5. Print quick references & command cheat sheet
 """
 from __future__ import annotations
 
@@ -25,7 +26,9 @@ if SKILL_DIR not in sys.path:
     sys.path.insert(0, SKILL_DIR)
 
 from nse_ui import UI, safe_print
+import nse_common
 import tv_indicators
+import scan_watchlist
 
 # Available skill modules in the Indian Day Trader Suite
 AVAILABLE_SKILLS = [
@@ -90,6 +93,20 @@ AVAILABLE_SKILLS = [
         "name": "Price Alerts & Live Watch Monitor",
         "script": "nse_alerts.py watch",
         "desc": "Monitors target, stop loss, and 15:10 IST square-off alerts with terminal audio beeps.",
+        "default": False,
+    },
+    {
+        "id": "option_chain",
+        "name": "Live Option Chain, Greeks & Max Pain Engine",
+        "script": "nse_option_chain.py",
+        "desc": "Real-time option chain for NIFTY, BANKNIFTY, F&O stocks with PCR, Max Pain, and Black-Scholes Greeks.",
+        "default": False,
+    },
+    {
+        "id": "sector_heatmap",
+        "name": "Sector Rotation & Market Breadth Heatmap",
+        "script": "nse_sector_scanner.py",
+        "desc": "Relative Strength (RS) scanner comparing NIFTY BANK, IT, AUTO, METAL against NIFTY 50 benchmark.",
         "default": False,
     },
 ]
@@ -183,7 +200,6 @@ def print_skill_menu() -> None:
 
 def execute_skill_direct(skill_num: int, symbol: str) -> None:
     """Execute a single skill directly using its Python module API without subprocess quirks."""
-    import nse_common
     sym_info = nse_common.normalize_symbol(symbol)
     norm_symbol = sym_info["base"]
     full_symbol = sym_info["yahoo"]
@@ -225,6 +241,308 @@ def execute_skill_direct(skill_num: int, symbol: str) -> None:
     elif skill_num == 9:  # Alerts quote
         import nse_alerts
         nse_alerts.main(["quote", full_symbol])
+    elif skill_num == 10:  # Option Chain & Greeks
+        import nse_option_chain
+        nse_option_chain.main([norm_symbol])
+    elif skill_num == 11:  # Sector Heatmap
+        import nse_sector_scanner
+        nse_sector_scanner.main([])
+
+
+
+def print_trade_decision_brief(symbol: str) -> None:
+    """Print comprehensive structured conclusion analyzing each decision factor."""
+    ui = UI(color=None)
+    sym_info = nse_common.normalize_symbol(symbol)
+    norm_symbol = sym_info["base"]
+    
+    try:
+        res = tv_indicators.fetch_tv_technicals(
+            [norm_symbol], 
+            requested_indicators=["RSI", "MACD", "EMA20", "EMA50", "EMA200", "ADX", "ATR", "VWAP", "PIVOT_R1", "PIVOT_S1"]
+        )
+        if not res:
+            return
+        data = res[0]
+        ltp = float(data.get("close") or 0.0)
+        rec = data.get("recommendation", {})
+        score = float(rec.get("score") or 0.0)
+        inds = data.get("indicators", {})
+        rsi = float(inds.get("RSI", {}).get("value") or 50.0)
+        adx = float(inds.get("ADX", {}).get("value") or 20.0)
+        ema20 = float(inds.get("EMA20", {}).get("value") or ltp)
+        ema50 = float(inds.get("EMA50", {}).get("value") or ltp)
+        ema200 = float(inds.get("EMA200", {}).get("value") or ltp)
+        vwap = float(inds.get("VWAP", {}).get("value") or ltp)
+        atr = float(inds.get("ATR", {}).get("value") or (ltp * 0.02))
+
+        # Decision synthesis
+        trend_status = "BULLISH (Above 200 EMA)" if ltp >= ema200 else "BEARISH (Below 200 EMA)"
+        control_status = "BUYER CONTROL (Above VWAP)" if ltp >= vwap else "SELLER PRESSURE (Below VWAP)"
+        momentum_status = "STRONG (+)" if rsi >= 60 else ("WEAK (-)" if rsi <= 40 else "NEUTRAL (Chop)")
+        trend_power = "CONFIRMED TREND (ADX > 25)" if adx >= 25 else "WEAK / SIDEWAYS CHOP (ADX < 25)"
+
+        if score >= 0.20 or (ltp > ema200 and rsi > 55 and ltp > vwap):
+            final_action = "BUY / LONG SETUP"
+            action_tone = "good"
+            entry_zone = f"Rs. {ltp:,.2f}"
+            sl_val = nse_common.round_tick(max(ltp - (1.5 * atr), ema50 * 0.98))
+            tgt_val = nse_common.round_tick(ltp + (2.5 * atr))
+            timeframe_rec = "Delivery Swing (1 to 3 Weeks) or Intraday until 15:15 IST"
+            verdict_summary = (
+                f"{norm_symbol} exhibits institutional buyer sponsorship across both Daily trend and intraday VWAP. "
+                f"Holding above the EMA 200 spine with RSI={rsi:.1f} gives high probability of upward continuation."
+            )
+        elif score <= -0.20 or (ltp < ema200 and rsi < 45 and ltp < vwap):
+            final_action = "SELL / SHORT SETUP"
+            action_tone = "bad"
+            entry_zone = f"Rs. {ltp:,.2f}"
+            sl_val = nse_common.round_tick(ltp + (1.5 * atr))
+            tgt_val = nse_common.round_tick(max(0.05, ltp - (2.5 * atr)))
+            timeframe_rec = "Intraday Short (Exit by 15:15 IST) or Futures Swing"
+            verdict_summary = (
+                f"{norm_symbol} is trading in distribution territory below both its 200 EMA spine and session VWAP. "
+                f"Sellers dominate rallies; avoid holding unhedged delivery longs."
+            )
+        else:
+            final_action = "NO-TRADE / WAIT FOR BREAKOUT"
+            action_tone = "warn"
+            entry_zone = "Wait for breakout above " + f"Rs. {max(ema20, vwap):,.2f}"
+            sl_val = nse_common.round_tick(min(ltp - atr, ema50))
+            tgt_val = nse_common.round_tick(ltp + (2.0 * atr))
+            timeframe_rec = "Watchlist only — do not allocate capital yet"
+            verdict_summary = (
+                f"{norm_symbol} is currently compressing in a consolidation squeeze. Indicators show mixed signals. "
+                f"Conserve risk capital until price resolves decisively above VWAP/EMAs with volume."
+            )
+
+        dec_rows = [
+            ["1. Institutional Spine (200 EMA)", f"Rs. {ema200:,.2f}", trend_status],
+            ["2. Session Control (Intraday VWAP)", f"Rs. {vwap:,.2f}", control_status],
+            ["3. Relative Strength (RSI 14)", f"{rsi:.1f}", momentum_status],
+            ["4. Trend Strength Power (ADX 14)", f"{adx:.1f}", trend_power],
+            ["5. Volatility Buffer (Daily ATR)", f"Rs. {atr:,.2f}", f"Normal expected daily swing: +/- Rs.{atr:,.2f}"],
+            ["6. Planned Entry & Timing", entry_zone, timeframe_rec],
+            ["7. Structural Stop-Loss", f"Rs. {sl_val:,.2f}", f"Risk: {abs(ltp - sl_val)/ltp*100:.1f}% (Sized using ATR cushion)"],
+            ["8. Calculated Target", f"Rs. {tgt_val:,.2f}", f"Reward: {abs(tgt_val - ltp)/ltp*100:.1f}% (Minimum 1:1.6 to 1:2.0 R:R)"],
+        ]
+
+        safe_print("")
+        safe_print(ui.banner(
+            title=f"FINAL ACTIONABLE TRADE DECISION & CONCLUSION  •  {norm_symbol}",
+            subtitle=f"Synthesized conclusion for user decision-making across all active indicators",
+            badge=final_action,
+            badge_tone=action_tone,
+        ))
+        safe_print("")
+        safe_print(ui.table(
+            headers=["Decision Checkpoint", "Key Technical Value", "Trader Interpretation & Verdict"],
+            rows=dec_rows,
+            alignments=["left", "left", "left"],
+            nowrap_cols={0, 1},
+        ))
+        safe_print("")
+        safe_print(ui.callout(
+            f"Strategic Takeaway for {norm_symbol}",
+            [verdict_summary, "Rule: Always confirm live order tickets on your SEBI-registered broker terminal before placing orders."],
+            tone_name="info",
+        ))
+    except Exception as exc:
+        safe_print(ui.yellow(f"  [Decision synthesis note: {exc}]"))
+
+
+def curate_custom_pipeline() -> None:
+    """Allow user to select multiple sub-modules and run their tailored pipeline."""
+    ui = UI(color=None)
+    safe_print("")
+    safe_print(ui.bold(ui.yellow("── MULTI-SELECT CUSTOM PIPELINE BUILDER ─────────────────────────────────")))
+    safe_print("  Choose which sub-modules you want to include in your customized run:")
+    for i, s in enumerate(AVAILABLE_SKILLS, 1):
+        safe_print(f"    [{i}] {s['name']}")
+    safe_print("")
+
+    try:
+        choices_raw = input("  Enter module numbers separated by spaces (e.g. 1 3 6 7): ").strip()
+        if not choices_raw:
+            safe_print(ui.yellow("No modules selected. Returning to main menu."))
+            return
+        selected_indices = [int(x) for x in choices_raw.split() if x.isdigit() and 1 <= int(x) <= len(AVAILABLE_SKILLS)]
+        if not selected_indices:
+            safe_print(ui.red("Invalid selections."))
+            return
+
+        sym = input("  Enter Stock / Index Symbol (e.g. SUZLON, RELIANCE, NIFTY): ").strip().upper()
+        if not sym:
+            return
+
+        safe_print("")
+        safe_print(ui.bold(ui.green(f"  Executing Curated Pipeline for {sym} ({len(selected_indices)} modules)...")))
+        for idx in selected_indices:
+            s_obj = AVAILABLE_SKILLS[idx - 1]
+            safe_print(ui.bold(ui.cyan(f"\n>> Running [{idx}] {s_obj['name']}...")))
+            try:
+                execute_skill_direct(idx, sym)
+            except Exception as exc:
+                safe_print(ui.red(f"Error in {s_obj['name']}: {exc}"))
+
+        # Render comprehensive decision-making conclusion
+        print_trade_decision_brief(sym)
+
+    except (KeyboardInterrupt, EOFError):
+        safe_print("\nCancelled.")
+    input("\nPress Enter to return to menu...")
+
+
+def interactive_watchlist_scanner() -> None:
+    """Launch the Watchlist Opportunity & Trade Setup Scanner from menu."""
+    ui = UI(color=None)
+    safe_print("")
+    safe_print(ui.bold(ui.yellow("── WATCHLIST OPPORTUNITY SCANNER (AUTO SL, TARGET & TIMEFRAME) ─────────")))
+    safe_print("  Scan options:")
+    safe_print("    [1] Scan Built-in NIFTY 50 Pool")
+    safe_print("    [2] Scan Built-in NIFTY BANK Pool")
+    safe_print("    [3] Scan Custom Watchlist Text File")
+    safe_print("    [4] Enter Custom Stock Symbols Manually")
+    safe_print("")
+
+    try:
+        opt = input("  Select source (1-4): ").strip()
+        pool_arg = None
+        file_arg = None
+        syms_arg = None
+
+        if opt == "1":
+            pool_arg = "nifty50"
+        elif opt == "2":
+            pool_arg = "niftybank"
+        elif opt == "3":
+            file_arg = input("  Enter path to watchlist text file: ").strip()
+        elif opt == "4":
+            raw_s = input("  Enter symbols separated by space (e.g. RELIANCE TCS SUZLON): ").strip().upper()
+            syms_arg = raw_s.split() if raw_s else ["RELIANCE", "SUZLON"]
+        else:
+            safe_print(ui.yellow("Invalid choice."))
+            return
+
+        safe_print("\n  Select Trading Segment:")
+        safe_print("    [1] EQ_DELIVERY (Swing 1 to 3 Weeks, ATR Trend Targets)")
+        safe_print("    [2] EQ_INTRADAY (Day Trading 15m to 3 Hours, Exit by 15:15 IST)")
+        safe_print("    [3] FNO_FUT     (Futures Swing 1 to 5 Days)")
+        safe_print("    [4] FNO_OPT     (Options Momentum Scalp 15m to 1 Day)")
+        seg_opt = input("  Choice (1-4, Default: 1): ").strip()
+        seg_map = {"1": "EQ_DELIVERY", "2": "EQ_INTRADAY", "3": "FNO_FUT", "4": "FNO_OPT"}
+        segment = seg_map.get(seg_opt, "EQ_DELIVERY")
+
+        tf_default = "15m" if segment in ("EQ_INTRADAY", "FNO_OPT") else "1d"
+        tf = input(f"  Timeframe (15m, 1h, 1d, 1w) [Default: {tf_default}]: ").strip().lower() or tf_default
+
+        filter_in = input("  Filter stance (BUY / SELL / ALL) [Default: ALL]: ").strip().upper() or "ALL"
+
+        symbols = scan_watchlist.load_symbols_from_source(symbols_arg=syms_arg, file_path=file_arg, pool=pool_arg)
+        if not symbols:
+            safe_print(ui.red("No symbols found to scan."))
+            return
+
+        opps = scan_watchlist.scan_watchlist_opportunities(
+            symbols=symbols,
+            segment=segment,
+            timeframe=tf,
+            filter_stance=None if filter_in == "ALL" else filter_in,
+        )
+        safe_print(scan_watchlist.format_scanner_table(opps, segment=segment))
+
+    except (KeyboardInterrupt, EOFError):
+        safe_print("\nCancelled.")
+    input("\nPress Enter to return to menu...")
+
+
+def interactive_custom_trade_sizer() -> None:
+    """Guided Custom Trade Sizer & 2026 Risk Gate across all segments."""
+    ui = UI(color=None)
+    safe_print("")
+    safe_print(ui.bold(ui.yellow("── CUSTOM TRADE SIZER & 2026 RISK GATE (ALL SEGMENTS) ──────────────────")))
+    safe_print("  Choose how you want to provide trade coordinates:")
+    safe_print("    [1] Paste One-Line Command String (e.g. --symbol NIFTY26NOV25600CE --segment FNO_OPT ...)")
+    safe_print("    [2] Step-by-Step Interactive Prompts (Guided Q&A)")
+    safe_print("")
+
+    import shlex
+    import indian_risk_gate
+
+    try:
+        mode_choice = input("  Choice (1 or 2, Default: 1): ").strip() or "1"
+        if mode_choice == "1":
+            safe_print("\n  Paste your parameter string below and press Enter:")
+            safe_print(ui.dim("  Example: --symbol NIFTY26NOV25600CE --segment FNO_OPT --entry 65 --stop 45 --target 105 --lot-size 25 --capital 100000 --risk-pct 1.0 --broker zerodha"))
+            cmd_line = input("  >> ").strip()
+            if not cmd_line:
+                safe_print(ui.yellow("No input provided."))
+                return
+            cleaned = cmd_line.replace("`", " ").replace("\\", " ")
+            argv = shlex.split(cleaned)
+            if argv and argv[0].endswith(".py"):
+                argv = argv[1:]
+            elif argv and argv[0].lower() in ("python", "python3"):
+                argv = [a for a in argv[1:] if not a.endswith(".py")]
+
+            safe_print(ui.cyan("\nExecuting Custom Risk Gate Calculation...\n"))
+            indian_risk_gate.main(argv)
+        else:
+            safe_print("\n  Select Segment:")
+            safe_print("    [1] EQ_DELIVERY (Equity Delivery / Swing)")
+            safe_print("    [2] EQ_INTRADAY (Equity Day Trading / MIS)")
+            safe_print("    [3] FNO_FUT     (Futures Contract)")
+            safe_print("    [4] FNO_OPT     (Options Contract CE/PE)")
+            seg_map = {"1": "EQ_DELIVERY", "2": "EQ_INTRADAY", "3": "FNO_FUT", "4": "FNO_OPT"}
+            seg_choice = input("  Choice (1-4, Default: 1): ").strip() or "1"
+            segment = seg_map.get(seg_choice, "EQ_DELIVERY")
+
+            sym = input("  Symbol (e.g. SUZLON, RELIANCE, NIFTY26NOV25600CE): ").strip().upper()
+            if not sym:
+                safe_print(ui.red("Symbol is required."))
+                return
+
+            entry_str = input("  Planned Entry Price (INR): ").strip()
+            stop_str = input("  Stop Loss Price (INR): ").strip()
+            target_str = input("  Target Price (INR): ").strip()
+            if not (entry_str and stop_str and target_str):
+                safe_print(ui.red("Entry, Stop, and Target are all required."))
+                return
+
+            default_lot = 1
+            if "NIFTY" in sym and "BANK" not in sym:
+                default_lot = 25
+            elif "BANKNIFTY" in sym:
+                default_lot = 15
+            elif "FINNIFTY" in sym:
+                default_lot = 25
+            elif "SENSEX" in sym:
+                default_lot = 10
+
+            lot_str = input(f"  Lot Size [Default: {default_lot}]: ").strip() or str(default_lot)
+            cap_str = input("  Account Capital INR [Default: 100000]: ").strip() or "100000"
+            risk_str = input("  Max Capital Risk % (0.5 to 2.0) [Default: 1.0]: ").strip() or "1.0"
+            broker_str = input("  Broker (zerodha, angel_one, upstox, dhan, groww) [Default: zerodha]: ").strip().lower() or "zerodha"
+
+            argv = [
+                "--symbol", sym,
+                "--segment", segment,
+                "--entry", entry_str,
+                "--stop", stop_str,
+                "--target", target_str,
+                "--lot-size", lot_str,
+                "--capital", cap_str,
+                "--risk-pct", risk_str,
+                "--broker", broker_str,
+            ]
+            safe_print(ui.cyan("\nExecuting Custom Risk Gate Calculation...\n"))
+            indian_risk_gate.main(argv)
+
+    except (KeyboardInterrupt, EOFError):
+        safe_print("\nCancelled.")
+    except Exception as exc:
+        safe_print(ui.red(f"\nError processing custom trade: {exc}"))
+    input("\nPress Enter to return to menu...")
 
 
 def interactive_menu() -> None:
@@ -237,14 +555,19 @@ def interactive_menu() -> None:
 
         safe_print(ui.bold("  Menu Options:"))
         safe_print("    [1] Run All Skills (Full End-to-End Pipeline with Auto/Custom Coords)")
-        safe_print("    [2] Run Specific Skill Script")
-        safe_print("    [3] Run TradingView Indicator Query with Custom Indicators")
-        safe_print("    [4] Print Command Line Reference & Cheat Sheet")
+        safe_print("    [2] Curate Custom Pipeline (Multi-Select Sub-Modules to Run in Sequence)")
+        safe_print("    [3] Watchlist Opportunity Scanner (Auto Entry, Stop, Target, Timeframe & Setup)")
+        safe_print("    [4] Custom Trade Sizer & 2026 Risk Gate (All Segments: EQ, Intraday, Futures, Options)")
+        safe_print("    [5] Live NSE Option Chain, Greeks & Max Pain Engine (PCR, Max Pain, Black-Scholes)")
+        safe_print("    [6] Sector Rotation & Market Breadth Heatmap Scanner (Leaderboards & A/D Breadth)")
+        safe_print("    [7] Run Specific Single Skill Script (1-11)")
+        safe_print("    [8] Run TradingView Indicator Query with Custom Indicators")
+        safe_print("    [9] Print Command Line Reference & Cheat Sheet")
         safe_print("    [Q] Quit")
         safe_print("")
 
         try:
-            choice = input("  Select an option (1-4 or Q): ").strip().upper()
+            choice = input("  Select an option (1-9 or Q): ").strip().upper()
         except (KeyboardInterrupt, EOFError):
             safe_print("\nExiting.")
             break
@@ -273,7 +596,33 @@ def interactive_menu() -> None:
             input("\nPress Enter to return to menu...")
 
         elif choice == "2":
-            safe_print("\nSelect skill number to run (1-9):")
+            curate_custom_pipeline()
+
+        elif choice == "3":
+            interactive_watchlist_scanner()
+
+        elif choice == "4":
+            interactive_custom_trade_sizer()
+
+        elif choice == "5":
+            try:
+                sym = input("  Enter Index or F&O Symbol (NIFTY, BANKNIFTY, FINNIFTY, RELIANCE) [Default: NIFTY]: ").strip().upper() or "NIFTY"
+                import nse_option_chain
+                nse_option_chain.analyze_option_chain(symbol=sym)
+            except Exception as exc:
+                safe_print(ui.red(f"Error executing Option Chain: {exc}"))
+            input("\nPress Enter to return to menu...")
+
+        elif choice == "6":
+            try:
+                import nse_sector_scanner
+                nse_sector_scanner.scan_sectors()
+            except Exception as exc:
+                safe_print(ui.red(f"Error executing Sector Scanner: {exc}"))
+            input("\nPress Enter to return to menu...")
+
+        elif choice == "7":
+            safe_print("\nSelect skill number to run (1-11):")
             for i, s in enumerate(AVAILABLE_SKILLS, 1):
                 safe_print(f"  [{i}] {s['name']} (`{s['script']}`)")
             try:
@@ -283,14 +632,14 @@ def interactive_menu() -> None:
                     continue
                 num = int(s_idx)
                 sym = "NIFTY"
-                if num not in (1, 5, 8):
-                    sym = input("  Enter Symbol (e.g. SUZLON, NYKAA): ").strip().upper() or "SUZLON"
+                if num not in (1, 5, 8, 11):
+                    sym = input("  Enter Symbol (e.g. SUZLON, NYKAA, NIFTY): ").strip().upper() or "SUZLON"
                 execute_skill_direct(num, sym)
             except Exception as exc:
                 safe_print(ui.red(f"Error: {exc}"))
             input("\nPress Enter to return to menu...")
 
-        elif choice == "3":
+        elif choice == "8":
             try:
                 sym = input("  Enter Symbol (e.g. SUZLON, NYKAA): ").strip().upper()
                 if not sym:
@@ -306,7 +655,7 @@ def interactive_menu() -> None:
                 safe_print(ui.red(f"Error: {exc}"))
             input("\nPress Enter to return to menu...")
 
-        elif choice == "4":
+        elif choice == "9":
             safe_print("\n" + ui.bold(ui.yellow("=" * 80)))
             safe_print(ui.bold(ui.yellow("   NSE/BSE HYBRID TRADER -- QUICK COMMAND REFERENCE")))
             safe_print(ui.bold(ui.yellow("=" * 80)))
@@ -315,6 +664,11 @@ def interactive_menu() -> None:
     python run_all.py SUZLON
     python run_all.py NYKAA --entry 360 --stop 345 --target 390
     .\\trade.ps1 SUZLON -Entry 54.81 -Stop 50.0 -Target 62.0
+
+  Watchlist Opportunity Scanner (Dynamic Entry, SL, Target & Timeframe):
+    python scan_watchlist.py --pool nifty50 --segment EQ_DELIVERY
+    python scan_watchlist.py --pool niftybank --segment EQ_INTRADAY --timeframe 15m
+    python scan_watchlist.py --file my_stocks.txt --segment FNO_OPT
 
   TradingView Cloud Indicators (Zero Local Compute):
     python scripts/tv_indicators.py --symbol SUZLON --indicators RSI MACD ADX VWAP EMA200
@@ -340,12 +694,20 @@ def interactive_menu() -> None:
   Market Clock & Alerts:
     python scripts/nse_alerts.py clock
     python scripts/nse_alerts.py watch --interval 30 --until 15:15 --beep
+
+  Option Chain, Greeks & Max Pain Analytics:
+    python scripts/nse_option_chain.py NIFTY
+    python scripts/nse_option_chain.py BANKNIFTY --expiry-days 3
+    python scripts/nse_option_chain.py RELIANCE
+
+  Sector Rotation & Market Breadth Heatmap Scanner:
+    python scripts/nse_sector_scanner.py
 """)
             safe_print(ui.disclaimer())
             input("\nPress Enter to return to menu...")
 
         else:
-            safe_print(ui.yellow("Invalid choice. Please select 1, 2, 3, 4, or Q."))
+            safe_print(ui.yellow("Invalid choice. Please select 1-9 or Q."))
 
 
 def main(argv: list[str] | None = None) -> int:

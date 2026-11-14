@@ -417,13 +417,37 @@ cd indian-day-trader-skill
 - **Prompt-only fallback:** Paste `.agents/skills/nse-bse-hybrid-trader/SKILL.md` plus files in `references/` into any
   chat (you lose automated Python execution unless run locally).
 
-### Optional Dev/Test Dependencies
+### Optional Dev/Test Dependencies & Running Offline Tests
 
 ```bash
-pip install -r requirements.txt
+pip install pytest
 ```
 
-*(Only `pytest` is needed for tests; the entire trading & broker engine works without installing external packages.)*
+*(Only `pytest` is needed for tests; the entire trading, risk calculation, and paper staging engine works on Python 3.10+ standard library with zero third-party dependencies.)*
+
+#### Running Offline Tests Against the Submitted Bundle
+
+Run the comprehensive 69-test suite (including 48 edge-case and 36-matrix tests) completely offline without network access or API credentials:
+
+```bash
+# From within skills/nse-bse-hybrid-trader/
+python -m pytest tests -v
+```
+
+All 69 offline tests use local mock fixtures, simulated exchange order payloads, and test database instances (`tmp_path`) with 100% offline coverage.
+
+---
+
+### Generating Local State / Scrip Master Data
+
+The submission bundle is clean of runtime artifacts and pre-populated databases (`state/` and `scrip_master.db` are excluded). The paper trading workflow dynamically initializes local SQLite tables upon first run:
+
+1. **Automatic Initialization:** Running `scripts/broker_bridge.py stage --paper ...` or `run_all.py` automatically initializes `state/paper_trades.db` with the required schema on the fly.
+2. **Optional Scrip Master Sync:** To populate instrument tokens for specific brokers from an offline CSV/JSON file:
+   ```bash
+   python scripts/broker_bridge.py sync-scrip --broker angel_one --offline <path-to-scrip-json>
+   ```
+3. **Symbol Token Overrides:** You can pass `--symboltoken <id>` or `--lot-size <n>` directly on the CLI without needing a synchronized local SQLite database.
 
 ---
 

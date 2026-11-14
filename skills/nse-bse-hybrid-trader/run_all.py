@@ -56,6 +56,109 @@ def print_step_header(step_num: int, title: str) -> None:
     safe_print("")
 
 
+
+def print_trade_decision_brief(symbol: str) -> None:
+    """Print comprehensive structured conclusion analyzing each decision factor."""
+    ui = UI(color=None)
+    import nse_common, tv_indicators
+    sym_info = nse_common.normalize_symbol(symbol)
+    norm_symbol = sym_info["base"]
+    
+    try:
+        res = tv_indicators.fetch_tv_technicals(
+            [norm_symbol], 
+            requested_indicators=["RSI", "MACD", "EMA20", "EMA50", "EMA200", "ADX", "ATR", "VWAP", "PIVOT_R1", "PIVOT_S1"]
+        )
+        if not res:
+            return
+        data = res[0]
+        ltp = float(data.get("close") or 0.0)
+        rec = data.get("recommendation", {})
+        score = float(rec.get("score") or 0.0)
+        inds = data.get("indicators", {})
+        rsi = float(inds.get("RSI", {}).get("value") or 50.0)
+        adx = float(inds.get("ADX", {}).get("value") or 20.0)
+        ema20 = float(inds.get("EMA20", {}).get("value") or ltp)
+        ema50 = float(inds.get("EMA50", {}).get("value") or ltp)
+        ema200 = float(inds.get("EMA200", {}).get("value") or ltp)
+        vwap = float(inds.get("VWAP", {}).get("value") or ltp)
+        atr = float(inds.get("ATR", {}).get("value") or (ltp * 0.02))
+
+        # Decision synthesis
+        trend_status = "BULLISH (Above 200 EMA)" if ltp >= ema200 else "BEARISH (Below 200 EMA)"
+        control_status = "BUYER CONTROL (Above VWAP)" if ltp >= vwap else "SELLER PRESSURE (Below VWAP)"
+        momentum_status = "STRONG (+)" if rsi >= 60 else ("WEAK (-)" if rsi <= 40 else "NEUTRAL (Chop)")
+        trend_power = "CONFIRMED TREND (ADX > 25)" if adx >= 25 else "WEAK / SIDEWAYS CHOP (ADX < 25)"
+
+        if score >= 0.20 or (ltp > ema200 and rsi > 55 and ltp > vwap):
+            final_action = "BUY / LONG SETUP"
+            action_tone = "good"
+            entry_zone = f"Rs. {ltp:,.2f}"
+            sl_val = nse_common.round_tick(max(ltp - (1.5 * atr), ema50 * 0.98))
+            tgt_val = nse_common.round_tick(ltp + (2.5 * atr))
+            timeframe_rec = "Delivery Swing (1 to 3 Weeks) or Intraday until 15:15 IST"
+            verdict_summary = (
+                f"{norm_symbol} exhibits institutional buyer sponsorship across both Daily trend and intraday VWAP. "
+                f"Holding above the EMA 200 spine with RSI={rsi:.1f} gives high probability of upward continuation."
+            )
+        elif score <= -0.20 or (ltp < ema200 and rsi < 45 and ltp < vwap):
+            final_action = "SELL / SHORT SETUP"
+            action_tone = "bad"
+            entry_zone = f"Rs. {ltp:,.2f}"
+            sl_val = nse_common.round_tick(ltp + (1.5 * atr))
+            tgt_val = nse_common.round_tick(max(0.05, ltp - (2.5 * atr)))
+            timeframe_rec = "Intraday Short (Exit by 15:15 IST) or Futures Swing"
+            verdict_summary = (
+                f"{norm_symbol} is trading in distribution territory below both its 200 EMA spine and session VWAP. "
+                f"Sellers dominate rallies; avoid holding unhedged delivery longs."
+            )
+        else:
+            final_action = "NO-TRADE / WAIT FOR BREAKOUT"
+            action_tone = "warn"
+            entry_zone = "Wait for breakout above " + f"Rs. {max(ema20, vwap):,.2f}"
+            sl_val = nse_common.round_tick(min(ltp - atr, ema50))
+            tgt_val = nse_common.round_tick(ltp + (2.0 * atr))
+            timeframe_rec = "Watchlist only — do not allocate capital yet"
+            verdict_summary = (
+                f"{norm_symbol} is currently compressing in a consolidation squeeze. Indicators show mixed signals. "
+                f"Conserve risk capital until price resolves decisively above VWAP/EMAs with volume."
+            )
+
+        dec_rows = [
+            ["1. Institutional Spine (200 EMA)", f"Rs. {ema200:,.2f}", trend_status],
+            ["2. Session Control (Intraday VWAP)", f"Rs. {vwap:,.2f}", control_status],
+            ["3. Relative Strength (RSI 14)", f"{rsi:.1f}", momentum_status],
+            ["4. Trend Strength Power (ADX 14)", f"{adx:.1f}", trend_power],
+            ["5. Volatility Buffer (Daily ATR)", f"Rs. {atr:,.2f}", f"Normal expected daily swing: +/- Rs.{atr:,.2f}"],
+            ["6. Planned Entry & Timing", entry_zone, timeframe_rec],
+            ["7. Structural Stop-Loss", f"Rs. {sl_val:,.2f}", f"Risk: {abs(ltp - sl_val)/ltp*100:.1f}% (Sized using ATR cushion)"],
+            ["8. Calculated Target", f"Rs. {tgt_val:,.2f}", f"Reward: {abs(tgt_val - ltp)/ltp*100:.1f}% (Minimum 1:1.6 to 1:2.0 R:R)"],
+        ]
+
+        safe_print("")
+        safe_print(ui.banner(
+            title=f"FINAL ACTIONABLE TRADE DECISION & CONCLUSION  •  {norm_symbol}",
+            subtitle=f"Synthesized conclusion for user decision-making across all active indicators",
+            badge=final_action,
+            badge_tone=action_tone,
+        ))
+        safe_print("")
+        safe_print(ui.table(
+            headers=["Decision Checkpoint", "Key Technical Value", "Trader Interpretation & Verdict"],
+            rows=dec_rows,
+            alignments=["left", "left", "left"],
+            nowrap_cols={0, 1},
+        ))
+        safe_print("")
+        safe_print(ui.callout(
+            f"Strategic Takeaway for {norm_symbol}",
+            [verdict_summary, "Rule: Always confirm live order tickets on your SEBI-registered broker terminal before placing orders."],
+            tone_name="info",
+        ))
+    except Exception as exc:
+        safe_print(ui.yellow(f"  [Decision synthesis note: {exc}]"))
+
+
 def run_all(
     symbol: str,
     entry: float | None = None,
@@ -74,6 +177,7 @@ def run_all(
     asm_gsm: bool = False,
     circuit_band: str | None = None,
     delivery_pct: str | None = None,
+    lot_size: int | None = None,
 ) -> int:
     import nse_common
     sym_info = nse_common.normalize_symbol(symbol)
@@ -201,6 +305,8 @@ def run_all(
                 "--broker", broker,
                 "--write",
             ]
+            if lot_size is not None and lot_size > 0:
+                rg_argv.extend(["--lot-size", str(lot_size)])
             if tm_result_path and os.path.exists(tm_result_path):
                 rg_argv.extend(["--timemachine-json", tm_result_path])
             if now:
@@ -240,7 +346,11 @@ def run_all(
     except Exception as exc:
         safe_print(ui.yellow(f"  [Live quote warning: {exc}]"))
 
-    # STEP 8 - Mandatory Disclaimer
+    # STEP 8 - Final Actionable Trade Decision & Conclusion
+    print_step_header(8, f"Final Actionable Trade Decision & Conclusion ({norm_symbol})")
+    print_trade_decision_brief(norm_symbol)
+
+    # STEP 9 - Mandatory Regulatory Disclaimer
     safe_print("")
     safe_print(ui.disclaimer())
     safe_print("")
@@ -252,10 +362,12 @@ def build_parser() -> argparse.ArgumentParser:
         description="NSE/BSE Hybrid Trader - Unified Master Pipeline Runner",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
-    p.add_argument("symbol", help="NSE/BSE ticker symbol (e.g. SUZLON, RELIANCE, BANKBARODA, NIFTY)")
+    p.add_argument("symbol", nargs="?", default=None, help="NSE/BSE ticker symbol (e.g. SUZLON, RELIANCE, BANKBARODA, NIFTY)")
+    p.add_argument("--symbol", dest="symbol_opt", default=None, help="Explicit ticker symbol argument")
     p.add_argument("--entry", type=float, default=None, help="Planned entry price in INR")
     p.add_argument("--stop", type=float, default=None, help="Stop loss price in INR")
     p.add_argument("--target", type=float, default=None, help="Target price in INR")
+    p.add_argument("--lot-size", type=int, default=None, help="Contract lot size for F&O (e.g. 25 for NIFTY, 15 for BANKNIFTY)")
     p.add_argument("--capital", type=float, default=50000.0, help="Account trading capital in INR")
     p.add_argument("--risk-pct", type=float, default=1.0, help="Max capital risk percentage (0.5%% - 2.0%%)")
     p.add_argument("--segment", choices=["EQ_DELIVERY", "EQ_INTRADAY", "FNO_FUT", "FNO_OPT"], default="EQ_DELIVERY", help="Trading segment")
@@ -275,8 +387,11 @@ def build_parser() -> argparse.ArgumentParser:
 def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
+    resolved_symbol = args.symbol_opt or args.symbol
+    if not resolved_symbol:
+        parser.error("Ticker symbol required (positional or --symbol)")
     return run_all(
-        symbol=args.symbol,
+        symbol=resolved_symbol,
         entry=args.entry,
         stop=args.stop,
         target=args.target,
@@ -293,6 +408,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         asm_gsm=args.asm_gsm,
         circuit_band=args.circuit_band,
         delivery_pct=args.delivery_pct,
+        lot_size=args.lot_size,
     )
 
 

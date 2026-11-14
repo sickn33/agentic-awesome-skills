@@ -59,6 +59,8 @@ apps/web-app/public/skills.json
 apps/web-app/public/api/info.json
 
 skills/spline-3d-integration/*.zip
+skills/nse-bse-hybrid-trader/state/
+skills/nse-bse-hybrid-trader/*.db
 
 # Temporary plugin staging directories
 plugins/.antigravity-awesome-skills.staging-*/

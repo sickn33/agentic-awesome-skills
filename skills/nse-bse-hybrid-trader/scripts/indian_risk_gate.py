@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Deterministic Indian Position Sizing, Statutory Tax Engine & Hard Risk Gate.
-Standard library only. Emits PASS or BLOCK with SHA-256 order fingerprint.
+Standard library only. Emits PASS or BLOCK with unkeyed SHA-256 integrity checksum.
 
 Usage:
     python scripts/indian_risk_gate.py --capital 50000 --risk-pct 1.0 --entry 785 --stop 778 --target 798 --segment EQ_INTRADAY
@@ -174,6 +174,11 @@ def _read_daily_ledger_state(date_str: str, state_dir: Path) -> tuple[float, flo
 
 
 def compute_verdict_fingerprint(payload: dict[str, Any]) -> str:
+    """
+    Compute an unkeyed SHA-256 integrity checksum over the normalized trade parameters.
+    Note: This is an unkeyed content checksum to detect accidental tampering or coordinate
+    drift between pipeline stages, not a cryptographic digital signature.
+    """
     core = {
         "symbol": payload["symbol"],
         "segment": payload["segment"],

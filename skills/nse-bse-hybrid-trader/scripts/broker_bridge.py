@@ -1442,6 +1442,13 @@ def stage_or_execute_order(
             raise NSETraderError(
                 f"SIDE_MISMATCH: Risk verdict side {risk_verdict.get('side')!r} != {side!r}"
             )
+        # Fresh risk evaluation check: ensure saved verdict is from today's session
+        verdict_date = str(risk_verdict.get("trade_date") or "")
+        today_date = str(session_info.get("date") or "")
+        if verdict_date and today_date and verdict_date != today_date:
+            raise NSETraderError(
+                f"STALE_RISK_VERDICT: Risk verdict date ({verdict_date}) is not from current session ({today_date})"
+            )
         entry_r = round_tick(entry, tick)
         stop_r = round_tick(stop, tick, mode="down" if side == "buy" else "up")
         target_r = round_tick(target, tick)
@@ -1475,7 +1482,12 @@ def stage_or_execute_order(
         )
         if risk_verdict["verdict"] != "PASS":
             raise NSETraderError(f"RISK_GATE_BLOCKED: {'; '.join(risk_verdict['blocks'])}")
-        final_qty = int(qty or risk_verdict["qty"])
+        approved_qty = int(risk_verdict["qty"])
+        if qty is not None and int(qty) != approved_qty:
+            raise NSETraderError(
+                f"QTY_MISMATCH: Requested quantity {qty} differs from approved risk gate quantity {approved_qty}"
+            )
+        final_qty = approved_qty
         max_risk_inr = float(risk_verdict["net_loss_at_stop_inr"])
         fp = risk_verdict["fingerprint"]
 
@@ -1497,33 +1509,11 @@ def stage_or_execute_order(
     )
 
     if live:
-        if confirm_phrase != "CONFIRM LIVE":
-            raise NSETraderError('LIVE_BLOCKED: Live execution requires exact --confirm "CONFIRM LIVE"')
-        if segment == "EQ_INTRADAY" and not session_info["intraday_entry_allowed"]:
-            raise NSETraderError(
-                f"LIVE_BLOCKED: Intraday entries disallowed during {session_info['phase']} ({session_info['time_ist']} IST)"
-            )
-        if not session_info["is_market_open"]:
-            raise NSETraderError(f"LIVE_BLOCKED: Market closed ({session_info['phase']} {session_info['ist_timestamp']})")
-        requires_token = bool(b_cfg.get("requires_token_lookup", BROKER_DEFAULTS[broker_key]["requires_token_lookup"]))
-        if requires_token and resolved_token == "UNSYNCED":  # noqa: S105 - placeholder sentinel
-            raise NSETraderError(
-                f"LIVE_BLOCKED: {broker_key} requires symboltoken/instrument_token; run `sync-scrip --broker {broker_key}` or pass --symboltoken"
-            )
-        if segment.startswith("FNO") and not scrip and resolved_token == "UNSYNCED":  # noqa: S105 - placeholder sentinel
-            raise NSETraderError(
-                f"LIVE_BLOCKED: F&O contract resolution missing for {broker_key}; sync scrip master or pass --symboltoken"
-            )
-        broker_res = _place_live_broker_order(broker_key, payload, rules)
-        return {
-            "mode": "LIVE",
-            "broker": broker_key,
-            "status": "DISPATCHED",
-            "fingerprint": fp,
-            "session": session_info,
-            "payload": payload,
-            "broker_response": broker_res,
-        }
+        raise NSETraderError(
+            "LIVE_BLOCKED: Live broker order dispatch has been disabled in this skill bundle for regulatory "
+            "and account safety. Use paper trading (--paper) to simulate bracket execution and inspect "
+            "order payloads safely as previews."
+        )
 
     slip_ticks = int(slippage_ticks if slippage_ticks is not None else rules["risk"]["default_slippage_ticks"])
     slip_amt = slip_ticks * tick
@@ -1731,8 +1721,8 @@ def build_parser(default_broker: str = "angel_one") -> argparse.ArgumentParser:
     sp_st.add_argument("--non-robo", action="store_true", help="Use NORMAL intraday order instead of ROBO/BO bracket")
     sp_st.add_argument("--slippage-ticks", type=int, default=None)
     sp_st.add_argument("--paper", action="store_true", default=True, help="Log to local SQLite paper ledger (default)")
-    sp_st.add_argument("--live", action="store_true", help="Dispatch live order via selected broker REST API")
-    sp_st.add_argument("--confirm", default="", help='Must equal "CONFIRM LIVE" when --live is passed')
+    sp_st.add_argument("--live", action="store_true", help="Deprecated: Live execution is disabled in this submission (rejects with error)")
+    sp_st.add_argument("--confirm", default="", help='Deprecated: Live execution is disabled')
     sp_st.add_argument("--now", default=None)
     sp_st.add_argument("--state-dir", default=None)
     sp_st.add_argument("--json", action="store_true")
