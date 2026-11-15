@@ -47,7 +47,9 @@ and older embedded-client package have separate version histories. Installing a
 skill does not upgrade an existing global binary. For one-shot use, substitute
 `npx @aomi-labs/cli@latest` for `aomi`.
 
-The default backend is `https://chat.aomi.dev`. Account authorization and the
+Use the production backend `https://aomi.chat`. For an existing CLI installation,
+set `aomi config set-backend https://aomi.chat` and update any
+`AOMI_BACKEND_URL` or `--backend-url` override. Account authorization and the
 RPC or designated wallet signer are separate boundaries. Keep credentials
 opaque and use only the existing signer authorized by the user.
 
@@ -92,10 +94,11 @@ command after explicit approval, using that exact Commit ID.
 When the user requests hosted MCP setup, connect each resource separately:
 
 ```bash
-codex mcp add aomi-agent --url https://chat.aomi.dev/v1/agent/mcp
-codex mcp add aomi-pipeline --url https://chat.aomi.dev/v1/pipeline/mcp
+codex mcp add aomi-agent --url https://aomi.chat/v1/agent/mcp
+codex mcp add aomi-pipeline --url https://aomi.chat/v1/pipeline/mcp
 ```
 
+When changing an existing MCP connection to the new host, authorize it again.
 Each OAuth grant must have the exact connected resource URL as its audience.
 Agent, Pipeline, REST and guest tokens are not interchangeable. Codex derives
 `resource` from the URL; omit `--oauth-resource` to avoid sending it twice.
