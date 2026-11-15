@@ -38,6 +38,36 @@ Summarize the most important change for users in one short paragraph.
 
 ## [Unreleased]
 
+## [20.9.0] - 2026-11-15 - "Creative Hooks, Code Review, and Freelance Scope"
+
+Add three skills for creative testing, code review, and freelance change orders, bringing the catalog to 2,960 skills.
+
+### New skills
+
+- Add `creative-psychology-hooks` to develop and grade ad hooks across mechanisms, emotional tones, and audience moments.
+- Add `ai-code-review-triage` to review AI-authored changes through evidence-based defect checks, product context, and human sign-off.
+- Add `no-free-work` to assess client requests against agreed deliverables and draft a reply and, where needed, a priced change order.
+
+### Improvements
+
+- Update the Aomi CLI and hosted MCP URLs to `aomi.chat`, retaining transaction signing and OAuth approval.
+- Add Taskhold and No Stairs Please to the README's upstream sources.
+- Automate deployment of the hosted AAS Core catalog from verified stable releases.
+
+### Security and distribution
+
+- Patch Hono and its Node server adapter in the local AAS MCP plugin and update its MCP SDK to 1.32.2.
+- Update Stageshow's optional Portless launcher to 0.15.11 while preserving the direct Vite fallback.
+
+### Contributors
+
+- @aditya-marble for Creative Psychology Hooks ([#2337](https://github.com/sickn33/agentic-awesome-skills/pull/2337)).
+- @laulauraluo for AI Code Review Triage ([#2342](https://github.com/sickn33/agentic-awesome-skills/pull/2342)).
+- @merabtinenadirb-png for No Free Work ([#2330](https://github.com/sickn33/agentic-awesome-skills/pull/2330)).
+- @CeciliaZ030 for the Aomi endpoint migration ([#2332](https://github.com/sickn33/agentic-awesome-skills/pull/2332)).
+- @jakemarsh for the Taskhold listing ([#2331](https://github.com/sickn33/agentic-awesome-skills/pull/2331)).
+- @ratacat for the No Stairs Please listing ([#2344](https://github.com/sickn33/agentic-awesome-skills/pull/2344)).
+
 ## [20.8.0] - 2026-11-12 - "Sports Data and Better Discovery"
 
 Add two catalog skills for approved scraping and read-only sports-market data, bringing the catalog to 2,957 skills. Improve skill discovery, installation recovery and hosted catalog distribution.
