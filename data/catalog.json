@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-12T17:38:22.000Z",
-  "total": 2957,
+  "generatedAt": "2026-11-15T18:34:37.000Z",
+  "total": 2960,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -2774,6 +2774,39 @@
         "merge"
       ],
       "path": "skills/ai-code-generation-guardrails/SKILL.md"
+    },
+    {
+      "id": "ai-code-review-triage",
+      "canonical_id": "ai-code-review-triage",
+      "name": "ai-code-review-triage",
+      "description": "Review AI-authored pull requests when line-by-line reading no longer scales; separate defect detection, product-context checks, and scoped human sign-off.",
+      "category": "development",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "license": "MIT",
+      "license_source": "https://github.com/laulauraluo/ai-code-review-triage/blob/91a1c77ceab95c1c3f45680debcc29de2d684206/LICENSE",
+      "tags": [
+        "code-review",
+        "pull-requests",
+        "ai-agents",
+        "approval"
+      ],
+      "triggers": [
+        "code-review",
+        "pull-requests",
+        "ai-agents",
+        "approval",
+        "ai",
+        "code",
+        "review",
+        "triage",
+        "authored",
+        "pull",
+        "requests",
+        "line"
+      ],
+      "path": "skills/ai-code-review-triage/SKILL.md"
     },
     {
       "id": "ai-coding-agent-guardrails",
@@ -22589,6 +22622,43 @@
         "redirects"
       ],
       "path": "skills/create-pr/SKILL.md"
+    },
+    {
+      "id": "creative-psychology-hooks",
+      "canonical_id": "creative-psychology-hooks",
+      "name": "creative-psychology-hooks",
+      "description": "Generate and grade ad hooks, angles and video openers with a creative psychology framework when paid social ideas need a clear mechanism instead of generic brainstorming.",
+      "category": "marketing",
+      "risk": "safe",
+      "source": "https://github.com/gomarble-ai/marketing-agent/tree/3e58349a6d29076c474a3c3b32b5afe2a3b8cdcd/skills/creative-psychology-hooks",
+      "source_type": "community",
+      "source_repo": "gomarble-ai/marketing-agent",
+      "license": "MIT",
+      "license_source": "https://github.com/gomarble-ai/marketing-agent/blob/3e58349a6d29076c474a3c3b32b5afe2a3b8cdcd/LICENSE",
+      "tags": [
+        "ads",
+        "creative-strategy",
+        "hooks",
+        "copywriting",
+        "meta-ads",
+        "tiktok-ads",
+        "marketing"
+      ],
+      "triggers": [
+        "ads",
+        "creative-strategy",
+        "hooks",
+        "copywriting",
+        "meta-ads",
+        "tiktok-ads",
+        "marketing",
+        "creative",
+        "psychology",
+        "generate",
+        "grade",
+        "ad"
+      ],
+      "path": "skills/creative-psychology-hooks/SKILL.md"
     },
     {
       "id": "cred-omega",
@@ -57045,6 +57115,42 @@
         "files"
       ],
       "path": "skills/nika/SKILL.md"
+    },
+    {
+      "id": "no-free-work",
+      "canonical_id": "no-free-work",
+      "name": "no-free-work",
+      "description": "Classify a client request against the agreed scope, then draft the reply and a priced change order. Use for scope creep, extra requests, or 'should I charge for this'.",
+      "category": "business",
+      "risk": "none",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "merabtinenadirb-png/no-free-work",
+      "license": "MIT",
+      "license_source": "https://github.com/merabtinenadirb-png/no-free-work/blob/main/LICENSE",
+      "tags": [
+        "freelance",
+        "scope-creep",
+        "client-communication",
+        "change-order",
+        "pricing",
+        "agency"
+      ],
+      "triggers": [
+        "freelance",
+        "scope-creep",
+        "client-communication",
+        "change-order",
+        "pricing",
+        "agency",
+        "no",
+        "free",
+        "work",
+        "classify",
+        "client",
+        "request"
+      ],
+      "path": "skills/no-free-work/SKILL.md"
     },
     {
       "id": "noaa-radar-satellite-fetching",

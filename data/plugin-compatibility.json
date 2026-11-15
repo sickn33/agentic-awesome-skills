@@ -1754,6 +1754,25 @@
       "runtime_files": []
     },
     {
+      "id": "ai-code-review-triage",
+      "path": "skills/ai-code-review-triage",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ai-coding-agent-guardrails",
       "path": "skills/ai-coding-agent-guardrails",
       "targets": {
@@ -14381,6 +14400,25 @@
     {
       "id": "create-pr",
       "path": "skills/create-pr",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "creative-psychology-hooks",
+      "path": "skills/creative-psychology-hooks",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -36375,6 +36413,25 @@
       "runtime_files": []
     },
     {
+      "id": "no-free-work",
+      "path": "skills/no-free-work",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "noaa-radar-satellite-fetching",
       "path": "skills/noaa-radar-satellite-fetching",
       "targets": {
@@ -56692,10 +56749,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2957,
+    "total_skills": 2960,
     "supported": {
-      "codex": 2870,
-      "claude": 2891
+      "codex": 2873,
+      "claude": 2894
     },
     "blocked": {
       "codex": 87,
