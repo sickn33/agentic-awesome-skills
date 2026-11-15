@@ -1,0 +1,15 @@
+'use strict';
+const assert=require('node:assert/strict');
+const {plan}=require('../pr_metadata_plan.cjs');
+const check=(name,conclusion='success',id=1)=>({name,conclusion,status:'completed',id,app:{id:15368},created_at:`2026-10-31T00:00:0${id}Z`});
+const good=[check('source-validation'),check('artifact-preview')];
+assert.equal(plan(good,[]),'reuse');
+assert.equal(plan([],[]),'run');
+assert.equal(plan([check('source-validation','skipped'),check('artifact-preview','skipped')],[]),'run');
+assert.equal(plan([], [{id:1,path:'.github/workflows/ci.yml',status:'in_progress'}]),'wait');
+assert.equal(plan([{...good[0],status:'in_progress'},good[1]],[]),'wait');
+for(const state of ['failure','cancelled','timed_out'])assert.throws(()=>plan([check('source-validation',state),good[1]],[]),/failed/);
+assert.throws(()=>plan([...good,check('source-validation','failure',2)],[]),/failed/);
+assert.equal(plan(good.map(c=>({...c,app:{id:7}})),[]),'run','another app cannot provide reusable evidence');
+assert.equal(plan([good[0]],[]),'run','missing preview is not complete technical proof');
+console.log('Metadata corrections execute missing checks, retain valid checks and never hide failed/pending checks');

@@ -1,12 +1,14 @@
 # Best Cursor Skills on GitHub
 
-If you are searching for the **best Cursor skills on GitHub**, the best option depends on whether you want an agent-composed project stack, a broad direct distribution, a curated discovery list, or a smaller community collection. Cursor does not yet have a native AAS Core adapter, so its current AAS path is direct distribution rather than the Codex/Claude Core workflow.
+If you are searching for the **best Cursor skills on GitHub**, compare reusable instructions for a task you actually need: implementing a component, debugging a failure or adding tests. Check each skill's requirements, examples, license and bundled files before installing it.
+
+This comparison is maintained by Agentic Awesome Skills. Browse the [official AAS catalog](https://aaskills.tech/core/) and follow [Cursor setup](cursor-skills.md) for installation and example prompts. Cursor currently uses AAS direct distribution; the native AAS Core setup guides cover Codex and Claude Code.
 
 ## Broadest AAS direct distribution for Cursor
 
 ### 1. [sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills)
 
-Best for developers who want the AAS catalog delivered into Cursor across frontend, backend, testing, infra, product, and growth work while treating AAS Core as the repository's primary product for supported agent clients.
+An open-source library of reusable task instructions, previously named **Antigravity Awesome Skills**. Choose skills for your Cursor task, inspect their files, and use the dedicated `--cursor` install target. For example, the [Cursor guide](cursor-skills.md#best-starter-skills-for-cursor) links frontend and testing skills with example prompts.
 
 Choose this if you want:
 

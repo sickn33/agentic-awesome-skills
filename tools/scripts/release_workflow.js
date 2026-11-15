@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const { spawnSync } = require("child_process");
 
+const { validateReleaseChangelog } = require("./release_changelog.cjs");
 const { findProjectRoot } = require("../lib/project-root");
 const {
   extractChangelogSection,
@@ -13,12 +14,19 @@ const {
 
 function parseArgs(argv) {
   const [command, version, ...rest] = argv;
-  if (rest.length && (rest.length !== 2 || rest[0] !== '--state-dir' || !rest[1])) throw Error('Use --state-dir /absolute/private/cycle');
-  return {
-    command,
-    version: version || null,
-    stateDir: rest[1],
-  };
+  if (command === 'publish' && rest.length === 1 && rest[0] === '--skip-npm') {
+    return { command, version: version || null, stateDir: undefined, skipNpm: true };
+  }
+  const options = {command, version: version || null, stateDir: undefined};
+  for(let i=0;i<rest.length;i+=2) {
+    const key=rest[i],value=rest[i+1];
+    if(!value || value.startsWith('--') || !['--state-dir','--candidate-dir'].includes(key)
+       || (key==='--candidate-dir' && !['prepare','rehearse'].includes(command))) throw Error('Use --state-dir /absolute/private/cycle and optional --candidate-dir /absolute/private/candidate');
+    const field=key==='--state-dir'?'stateDir':'candidateDir';
+    if(options[field]) throw Error('Duplicate '+key);
+    options[field]=value;
+  }
+  return options;
 }
 
 function isRegularFile(filePath) {
@@ -66,6 +74,7 @@ function runCommand(command, args, cwd, options = {}) {
   const result = spawnSync(invocation.command, invocation.args, {
     cwd,
     encoding: "utf8",
+    env: options.env || process.env,
     stdio: options.capture ? ["ignore", "pipe", "pipe"] : "inherit",
     shell: false,
   });
@@ -118,6 +127,143 @@ function githubReleaseExists(projectRoot, tagName) {
     stdio: "ignore",
   });
   return result.status === 0;
+}
+
+const NPM_PUBLICATION_WORKFLOW = ".github/workflows/publish-npm.yml";
+
+function npmPublicationTitle(version, commit) {
+  return `Publish npm v${version} at ${commit}`;
+}
+
+function npmPublicationRuns(projectRoot, version, commit, dependencies = {}) {
+  const execute = dependencies.runCommand || runCommand;
+  const payload = JSON.parse(execute(
+    "gh",
+    [
+      "api",
+      "--method",
+      "GET",
+      "repos/{owner}/{repo}/actions/workflows/publish-npm.yml/runs",
+      "-f",
+      "event=workflow_dispatch",
+      "-f",
+      "branch=main",
+      "-f",
+      "per_page=100",
+    ],
+    projectRoot,
+    { capture: true },
+  ));
+  if (!Array.isArray(payload.workflow_runs)) {
+    throw new Error("npm publication response is malformed.");
+  }
+  return payload.workflow_runs.filter(run => (
+    run.display_title === npmPublicationTitle(version, commit)
+    && run.path === NPM_PUBLICATION_WORKFLOW
+    && run.event === "workflow_dispatch"
+    && run.head_branch === "main"
+  )).sort((left, right) => right.id - left.id);
+}
+
+function requireSuccessfulNpmPublication(projectRoot, version, commit, dependencies = {}) {
+  const repository = JSON.parse((dependencies.runCommand || runCommand)(
+    "gh",
+    ["repo", "view", "--json", "nameWithOwner"],
+    projectRoot,
+    { capture: true },
+  )).nameWithOwner;
+  const successful = npmPublicationRuns(projectRoot, version, commit, dependencies).filter(run => (
+    run.repository?.full_name === repository
+    && run.head_repository?.full_name === repository
+    && run.status === "completed"
+    && run.conclusion === "success"
+    && Number.isSafeInteger(run.id)
+    && run.id > 0
+  ));
+  if (!successful.length) {
+    throw new Error(`Refusing to create GitHub Release v${version}: npm publication has not succeeded for ${commit}.`);
+  }
+  return successful[0];
+}
+
+function dispatchNpmPublication(projectRoot, version, commit, dependencies = {}) {
+  try {
+    return requireSuccessfulNpmPublication(projectRoot, version, commit, dependencies);
+  } catch (error) {
+    if (!/npm publication has not succeeded/u.test(error.message)) throw error;
+  }
+
+  const execute = dependencies.runCommand || runCommand;
+  const sleep = dependencies.sleep || (ms => Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, ms));
+  const now = dependencies.now || Date.now;
+  const timeoutMs = dependencies.timeoutMs || 45 * 60 * 1000;
+  const intervalMs = dependencies.intervalMs || 15_000;
+  const tag = `v${version}`;
+  const started = now();
+  execute(
+    "gh",
+    ["workflow", "run", "publish-npm.yml", "--ref", "main", "-f", `tag=${tag}`, "-f", `commit=${commit}`],
+    projectRoot,
+  );
+  while (now() - started <= timeoutMs) {
+    try {
+      return requireSuccessfulNpmPublication(projectRoot, version, commit, dependencies);
+    } catch (error) {
+      if (!/npm publication has not succeeded/u.test(error.message)) throw error;
+    }
+    sleep(intervalMs);
+  }
+  throw new Error(`Timed out waiting for npm publication of v${version} at ${commit}.`);
+}
+
+function distributionCandidateRuns(projectRoot, commit, dependencies = {}) {
+  const execute = dependencies.runCommand || runCommand;
+  const payload = JSON.parse(execute(
+    "gh",
+    [
+      "api",
+      "--method",
+      "GET",
+      "repos/{owner}/{repo}/actions/workflows/distribution-candidate.yml/runs",
+      "-f",
+      `head_sha=${commit}`,
+      "-f",
+      "per_page=100",
+    ],
+    projectRoot,
+    { capture: true },
+  ));
+  if (!Array.isArray(payload.workflow_runs)) {
+    throw new Error("Distribution candidate response is malformed.");
+  }
+  return payload.workflow_runs;
+}
+
+function requireSuccessfulDistributionCandidate(projectRoot, version, commit, dependencies = {}) {
+  const tag = `v${version}`;
+  const execute = dependencies.runCommand || runCommand;
+  const repository = JSON.parse(execute(
+    "gh",
+    ["repo", "view", "--json", "nameWithOwner"],
+    projectRoot,
+    { capture: true },
+  )).nameWithOwner;
+  const successful = distributionCandidateRuns(projectRoot, commit, dependencies).filter((run) => (
+    run.head_sha === commit
+    && run.repository?.full_name === repository
+    && run.head_repository?.full_name === repository
+    && run.path === ".github/workflows/distribution-candidate.yml"
+    && ["push", "workflow_dispatch"].includes(run.event)
+    && run.head_branch === tag
+    && run.status === "completed"
+    && run.conclusion === "success"
+    && Number.isSafeInteger(run.id)
+    && run.id > 0
+  )).sort((left, right) => right.id - left.id);
+  if (!successful.length) {
+    throw new Error(`Refusing to create GitHub Release ${tag}: no successful immutable distribution candidate exists for ${commit}.`);
+  }
+  return successful[0];
 }
 
 function localTagTarget(projectRoot, tagName) {
@@ -263,10 +409,21 @@ function writeReleaseNotes(projectRoot, version, sectionContent) {
 }
 
 function runReleaseSuite(projectRoot) {
-  // Source changes have already passed their protected component checks. Full
-  // runtime/web/platform validation executes once on the immutable tag candidate.
   for (const script of ["sync:release-state", "validate:references", "security:docs", "plugin-compat:check", "bundles:check", "check:aas-v1-catalog"])
     runCommand("npm", ["run", script], projectRoot);
+}
+
+function runPreparedReleaseTestSuite(projectRoot, options = {}) {
+  const temporary = fs.mkdtempSync(path.join(require("os").tmpdir(), "aas-release-tests-"));
+  try {
+    (options.runReleaseSuite || runReleaseSuite)(projectRoot);
+    (options.pack || require("./distribution_pack.cjs").pack)(projectRoot, temporary);
+    (options.run || runCommand)(process.execPath, ["tools/scripts/release_parallel_checks.cjs"], projectRoot, {
+      env: { ...(options.env || process.env), AAS_TEST_CANDIDATE_TARBALL: path.join(temporary, "package.tgz") },
+    });
+  } finally {
+    fs.rmSync(temporary, { recursive: true, force: true });
+  }
 }
 
 function runReleasePreflight(projectRoot, dependencies = {}) {
@@ -314,18 +471,31 @@ function stageReleaseFiles(projectRoot, contract) {
 // Prepare only: settle HEAD-dependent generated metadata before publishing a branch.
 function convergePreparedRelease(projectRoot, contract, options = {}) {
   const run = options.runCommand || runCommand;
-  run("npm", ["run", "sync:release-state"], projectRoot);
-  stageReleaseFiles(projectRoot, contract);
-  const changed = run("git", ["diff", "--cached", "--name-only"], projectRoot, { capture: true });
-  if (changed) {
-    // No remote branch or tag exists yet. Preserve the author date so doc lastmods settle.
-    run("git", ["commit", "--amend", "--no-edit"], projectRoot);
+  // Docs lastmod comes from Git committer dates, not filesystem mtimes.
+  // Freeze the candidate committer timestamp so amendments cannot move the
+  // generated dates (including when preparation crosses midnight).
+  const committerDate = run("git", ["show", "-s", "--format=%cI", "HEAD"], projectRoot, { capture: true });
+  const amendmentEnv = { ...process.env, GIT_COMMITTER_DATE: committerDate };
+  let amendments = 0;
+  for (let pass = 0; pass < 3; pass += 1) {
+    run("npm", ["run", "sync:release-state"], projectRoot);
+    stageReleaseFiles(projectRoot, contract);
+    const changed = run("git", ["diff", "--cached", "--name-only"], projectRoot, { capture: true });
+    if (changed) {
+      if (amendments === 2) {
+        throw new Error("Prepared release has generated or unmanaged drift; refusing to push.");
+      }
+      run("git", ["commit", "--amend", "--no-edit"], projectRoot, { env: amendmentEnv });
+      amendments += 1;
+      continue;
+    }
+    if (amendments > 0) break;
   }
-  run("npm", ["run", "sync:release-state"], projectRoot);
   ensureCleanWorkingTree(projectRoot, "Prepared release has generated or unmanaged drift; refusing to push.");
 }
 
-function prepareRelease(projectRoot, version, stateDir) {
+function prepareRelease(projectRoot, version, stateDir, options = {}) {
+  if (options.localOnly && options.candidateDir) throw Error("Local-only rehearsal cannot promote or push a retained candidate");
   if (!version) {
     throw new Error("Usage: npm run release:prepare -- X.Y.Z");
   }
@@ -333,11 +503,31 @@ function prepareRelease(projectRoot, version, stateDir) {
 
   ensureOnMain(projectRoot);
   ensureCleanWorkingTree(projectRoot, "release:prepare requires a clean tracked working tree.");
-  ensureTagMissing(projectRoot, `v${version}`);
-  ensureChangelogSection(projectRoot, version);
+  const releaseNotes = ensureChangelogSection(projectRoot, version);
+  validateReleaseChangelog(releaseNotes, version);
+  require("./release_resources.cjs").checkSpace();
+  if (options.localOnly !== true) ensureTagMissing(projectRoot, `v${version}`);
+  require("./release_credits.cjs").validateCredits(projectRoot, releaseNotes);
   const cycleGate = require('./release_cycle_gate.cjs');
-  const cycleProof = cycleGate.prepareProof(projectRoot, version, stateDir);
+  if (options.localOnly === true && runCommand("git", ["remote"], projectRoot, { capture: true }))
+    throw Error("Local rehearsal must have no remote destinations");
+  const cycleProof = options.localOnly === true && options.cycleProof
+    ? cycleGate.validateProof(options.cycleProof, version, cycleGate.dependencies(projectRoot))
+    : cycleGate.prepareProof(projectRoot, version, stateDir);
   const releaseBranch = `release/v${version}`;
+  if (options.candidateDir) {
+    const merger=require("./merge_batch.cjs");
+    merger.ensureTrustedMain(projectRoot);
+    merger.assertEffectiveMainProtection(projectRoot,"sickn33/agentic-awesome-skills");
+    const source=runCommand('git',['rev-parse','HEAD'],projectRoot,{capture:true});
+    const receipt=require('./release_candidate_receipt.cjs').load(projectRoot,options.candidateDir,source,version,runCommand);
+    const recorded=JSON.parse(runCommand('git',['show',`${receipt.commit}:${cycleGate.FILE}`],projectRoot,{capture:true}));
+    if(JSON.stringify(recorded)!==JSON.stringify(cycleProof)) throw Error('Candidate cycle proof changed; rehearse again');
+    runCommand('git',['switch','-c',releaseBranch,receipt.commit],projectRoot);
+    require('./distribution_snapshot.cjs').verify(projectRoot);
+    ensureCleanWorkingTree(projectRoot,'Promoted candidate is not clean');
+    return pushPreparedRelease(projectRoot,version,releaseBranch);
+  }
   runCommand("git", ["switch", "-c", releaseBranch], projectRoot);
 
   fs.writeFileSync(path.join(projectRoot, cycleGate.FILE), JSON.stringify(cycleProof, null, 2) + '\n');
@@ -358,8 +548,6 @@ function prepareRelease(projectRoot, version, stateDir) {
   // Volatile metadata is an input to catalog timestamps. Refresh it before the
   // canonical release sync so the tagged tree is exactly what publish CI will
   // regenerate and verify.
-  runReleaseSuite(projectRoot);
-
   const refreshedReleaseNotes = ensureChangelogSection(projectRoot, version);
   const notesPath = writeReleaseNotes(projectRoot, version, refreshedReleaseNotes);
   const contract = loadWorkflowContract(projectRoot);
@@ -376,8 +564,22 @@ function prepareRelease(projectRoot, version, stateDir) {
   convergePreparedRelease(projectRoot, contract);
   require("./distribution_snapshot.cjs").seal(projectRoot);
   runCommand("git", ["add", "data/distribution-snapshot.json"], projectRoot);
-  runCommand("git", ["commit", "--amend", "--no-edit"], projectRoot);
+  const sealedDate = runCommand("git", ["show", "-s", "--format=%cI", "HEAD"], projectRoot, { capture: true });
+  runCommand("git", ["commit", "--amend", "--no-edit"], projectRoot, {
+    env: { ...process.env, GIT_COMMITTER_DATE: sealedDate },
+  });
   require("./distribution_snapshot.cjs").verify(projectRoot);
+  // Test the final sealed commit, not a predecessor amended after testing.
+  runPreparedReleaseTestSuite(projectRoot);
+  ensureCleanWorkingTree(projectRoot, "Release tests changed the sealed candidate; refusing to push.");
+  require("./distribution_snapshot.cjs").verify(projectRoot);
+  if (options.localOnly === true) {
+    console.log(`[release] Rehearsal passed for v${version}; no push, tag, PR or publication.`);
+    return { version, commit: runCommand("git", ["rev-parse", "HEAD"], projectRoot, { capture: true }) };
+  }
+  return pushPreparedRelease(projectRoot,version,releaseBranch);
+}
+function pushPreparedRelease(projectRoot,version,releaseBranch) {
   runCommand("git", ["push", "-u", "origin", releaseBranch], projectRoot);
   runCommand(
     "gh",
@@ -405,11 +607,36 @@ function prepareRelease(projectRoot, version, stateDir) {
   );
 
   console.log(`[release] Prepared v${version}.`);
-  console.log(`[release] Notes file: ${notesPath}`);
+
   console.log(`[release] Next step: merge ${releaseBranch}, update local main, then run npm run release:publish -- ${version}`);
 }
 
-function publishRelease(projectRoot, version) {
+function githubReleaseTitle(tag, section) {
+  const heading = section.split(/\r?\n/, 1)[0];
+  const title = /^## \[[^\]]+\] - \d{4}-\d{2}-\d{2} - "([^"]+)"$/.exec(heading)?.[1];
+  return title ? `${tag} "${title}"` : tag;
+}
+
+function releaseNotesForPublication(section, skipNpm) {
+  return skipNpm ? `> **npm unavailable:** This version is not published to npm; package distribution and full release alignment remain incomplete.\n\n${section}` : section;
+}
+
+function requireSkippedNpmDisclosure(body) {
+  if (typeof body !== 'string' || !body.includes('This version is not published to npm; package distribution and full release alignment remain incomplete.')) {
+    throw new Error('Existing GitHub Release does not disclose that npm publication and full release alignment are incomplete.');
+  }
+}
+
+function publishNpmUnlessSkipped(projectRoot, version, headCommit, skipNpm, dependencies = {}) {
+  if (skipNpm) return false;
+  if (dependencies.dispatch) dependencies.dispatch(projectRoot, version, headCommit);
+  else dispatchNpmPublication(projectRoot, version, headCommit);
+  if (dependencies.verify) dependencies.verify(projectRoot, version, headCommit);
+  else requireSuccessfulNpmPublication(projectRoot, version, headCommit);
+  return true;
+}
+
+function publishRelease(projectRoot, version, { skipNpm = false } = {}) {
   if (!version) {
     throw new Error("Usage: npm run release:publish -- X.Y.Z");
   }
@@ -439,7 +666,8 @@ function publishRelease(projectRoot, version) {
   }
   require("./distribution_snapshot.cjs").verify(projectRoot);
 
-  const notesPath = writeReleaseNotes(projectRoot, version, ensureChangelogSection(projectRoot, version));
+  const section = ensureChangelogSection(projectRoot, version);
+  const notesPath = writeReleaseNotes(projectRoot, version, releaseNotesForPublication(section, skipNpm));
 
   const existingLocalTarget = localTagTarget(projectRoot, tagName);
   if (existingLocalTarget && existingLocalTarget !== headCommit) {
@@ -457,15 +685,21 @@ function publishRelease(projectRoot, version) {
     runCommand("git", ["push", "origin", tagName], projectRoot);
   }
 
+  requireSuccessfulDistributionCandidate(projectRoot, version, headCommit);
+  publishNpmUnlessSkipped(projectRoot, version, headCommit, skipNpm);
   if (githubReleaseExists(projectRoot, tagName)) {
-    console.log(`[release] ${tagName} is already published.`);
+    if (skipNpm) {
+      const existing = JSON.parse(runCommand('gh', ['release', 'view', tagName, '--json', 'body'], projectRoot, { capture: true }));
+      requireSkippedNpmDisclosure(existing.body);
+    }
+    console.log(`[release] ${tagName} already has a GitHub Release; verify its notes and npm status.`);
     return;
   }
-  const releaseArgs = ["release", "create", tagName, "--title", tagName, "--notes-file", notesPath];
+  const releaseArgs = ["release", "create", tagName, "--title", githubReleaseTitle(tagName, section), "--notes-file", notesPath];
   if (isPrereleaseVersion(version)) releaseArgs.push("--prerelease");
   runCommand("gh", releaseArgs, projectRoot);
 
-  console.log(`[release] Published ${tagName}.`);
+  console.log(skipNpm ? `[release] ${tagName} GitHub Release created without npm; full release alignment is incomplete.` : `[release] Published ${tagName}.`);
 }
 
 function main() {
@@ -477,28 +711,45 @@ function main() {
     return;
   }
 
+  if (args.command === "rehearse") {
+    require("./release_rehearsal.cjs").rehearse(projectRoot, args.version, args.stateDir, {candidateDir: args.candidateDir});
+    return;
+  }
+
   if (args.command === "prepare") {
-    prepareRelease(projectRoot, args.version, args.stateDir);
+    prepareRelease(projectRoot, args.version, args.stateDir, {candidateDir: args.candidateDir});
     return;
   }
 
   if (args.command === "publish") {
-    publishRelease(projectRoot, args.version);
+    publishRelease(projectRoot, args.version, { skipNpm: args.skipNpm });
     return;
   }
 
   throw new Error(
-    "Usage: node tools/scripts/release_workflow.js <preflight|prepare|publish> [X.Y.Z]",
+    "Usage: node tools/scripts/release_workflow.js <preflight|rehearse|prepare|publish> [X.Y.Z]",
   );
 }
 
 
 module.exports = {
+  parseArgs,
+  publishNpmUnlessSkipped,
+  githubReleaseTitle,
+  releaseNotesForPublication,
+  requireSkippedNpmDisclosure,
+  prepareRelease,
   runReleasePreflight,
+  runPreparedReleaseTestSuite,
   convergePreparedRelease,
   localTagTarget,
   remoteTagTarget,
   isPrereleaseVersion,
+  dispatchNpmPublication,
+  npmPublicationRuns,
+  npmPublicationTitle,
+  requireSuccessfulNpmPublication,
+  requireSuccessfulDistributionCandidate,
   resolveCommandInvocation,
   runCommand,
   selectMergedReleaseCandidate,

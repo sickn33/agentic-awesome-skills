@@ -1,0 +1,61 @@
+name: Reproducible bug
+description: Report a reproducible skill, installer, catalog or documentation problem.
+title: "[BUG] "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: For setup questions use Discussions Q&A. Report vulnerabilities privately through SECURITY.md. Do not include secrets or private transcripts.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options: [Skill behavior, Installation or runtime, Catalog or documentation, Contribution checks]
+    validations:
+      required: true
+  - type: input
+    id: affected
+    attributes:
+      label: Skill ID or affected path
+      description: Give the skill ID/path, URL or command. Use N/A only for repository-wide failures.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: AAS version or commit
+      description: Identify the installed release, catalog revision or source commit; say unknown if unavailable.
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, agent/host and version; include Node/Python version for installer or contribution checks.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Exact prompt/input or command, prerequisites and steps. Use synthetic or redacted data.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed result
+      description: Include redacted output or errors, and whether current main was also inspected.
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Related issues, screenshots, source links or workaround.

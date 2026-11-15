@@ -36,7 +36,7 @@ class ValidateSkillsStrictTests(unittest.TestCase):
         )
 
     def test_empty_and_template_descriptions_fail_in_both_modes(self):
-        for description in ["", "   ", "One sentence - what this skill does and when to invoke it",
+        for description in ["", "   ", "Replace with the concrete task and when to invoke it, under 200 characters", "One sentence - what this skill does and when to invoke it",
                             "  ONE SENTENCE — what this skill does and when to invoke it.  "]:
             for strict in [False, True]:
                 with self.subTest(description=description, strict=strict), tempfile.TemporaryDirectory() as temp_dir:

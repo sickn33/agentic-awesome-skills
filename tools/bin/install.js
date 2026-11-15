@@ -389,8 +389,26 @@ function matchesInstallSelectors(skill, selectors) {
   );
 }
 
+function assertSafeInstallAncestors(rootPath) {
+  let current = path.parse(rootPath).root;
+  for (const part of path.relative(current, rootPath).split(path.sep).filter(Boolean)) {
+    current = path.join(current, part);
+    let stat;
+    try { stat = fs.lstatSync(current); }
+    catch (error) { if (error.code === "ENOENT") break; throw error; }
+    if (stat.isSymbolicLink()) {
+      // macOS /tmp and /var aliases are root-owned and not user-replaceable.
+      if (process.platform !== "darwin" || !["/tmp", "/var", "/etc"].includes(current)
+        || stat.uid !== 0) {
+        throw new Error(`Refusing unsafe install ancestor symlink: ${current}`);
+      }
+    }
+  }
+}
+
 function assertSafeDestinationPath(dest, destRoot) {
   const rootPath = path.resolve(destRoot);
+  assertSafeInstallAncestors(path.dirname(rootPath));
   const destPath = path.resolve(dest);
   const relative = path.relative(rootPath, destPath);
   if (relative.startsWith("..") || path.isAbsolute(relative)) {
@@ -493,7 +511,7 @@ function replaceManagedEntry(
   const stageRoot = fs.mkdtempSync(path.join(targetRoot, ".antigravity-stage-"));
   const stagedEntry = path.join(stageRoot, "entry");
   const backupEntry = path.join(stageRoot, "previous");
-  let movedPreviousEntry = false;
+  let preservePreviousEntry = false;
 
   try {
     copyRecursiveSync(
@@ -511,20 +529,32 @@ function replaceManagedEntry(
     if (fs.existsSync(dest)) {
       assertSafeDestinationPath(dest, targetRoot);
       fs.renameSync(dest, backupEntry);
-      movedPreviousEntry = true;
+      preservePreviousEntry = true;
     }
     fs.mkdirSync(path.dirname(dest), { recursive: true });
     fs.renameSync(stagedEntry, dest);
-    if (movedPreviousEntry) {
+    if (preservePreviousEntry) {
       fs.rmSync(backupEntry, { recursive: true, force: true });
+      preservePreviousEntry = false;
     }
   } catch (error) {
-    if (movedPreviousEntry && fs.existsSync(backupEntry) && !fs.existsSync(dest)) {
-      fs.renameSync(backupEntry, dest);
+    if (preservePreviousEntry) {
+      try {
+        // Even a dangling symlink belongs to the concurrent writer: do not replace it.
+        const destinationExists = fs.lstatSync(dest, { throwIfNoEntry: false });
+        if (destinationExists) throw new Error("destination is occupied");
+        fs.renameSync(backupEntry, dest);
+        preservePreviousEntry = false;
+      } catch (restoreError) {
+        throw new Error(
+          `${error.message}. Restore failed: ${restoreError.message}. Previous content retained at ${backupEntry}; recover it before retrying.`,
+          { cause: error },
+        );
+      }
     }
     throw error;
   } finally {
-    fs.rmSync(stageRoot, { recursive: true, force: true });
+    if (!preservePreviousEntry) fs.rmSync(stageRoot, { recursive: true, force: true });
   }
 }
 
@@ -1038,6 +1068,7 @@ function installForTarget(
   // Resolve all selection errors before creating or changing the target.
   const resolvedInstallEntries = installEntries || getInstallEntries(tempDir, selectors, requestedSkills);
 
+  assertSafeInstallAncestors(path.dirname(path.resolve(target.path)));
   if (fs.existsSync(target.path)) {
     ensureTargetIsDirectory(target.path);
     const targetStats = fs.lstatSync(target.path);
@@ -1128,6 +1159,7 @@ function getPostInstallMessages(targets, selectors = buildInstallSelectors({})) 
 }
 
 function buildDryRunTargetPlan(target, installEntries) {
+  assertSafeInstallAncestors(path.dirname(path.resolve(target.path)));
   const desiredEntries = uniqueValues(getManagedEntries(installEntries, target)).sort();
   const targetExists = fs.existsSync(target.path);
 
@@ -1389,6 +1421,7 @@ if (require.main === module) {
 }
 
 module.exports = {
+  assertSafeInstallAncestors,
   copyRecursiveSync,
   replaceManagedEntry,
   getPostInstallMessages,

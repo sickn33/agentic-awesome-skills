@@ -2,6 +2,8 @@
 
 > **Recommended path:** let Codex or Claude inspect the project, search and read the complete AAS catalog, and choose the exact skills. AAS Core records and validates that agent-owned selection.
 
+> **npm publishing paused.** For current skills, use the [GitHub installation and update guide](getting-started.md#install-and-update-without-npm). npm commands require a version already published to npm.
+
 ## Primary workflow: agent-first composition
 
 After configuring the local AAS MCP, ask your agent to inspect the repository and choose a stack for the outcome you want:
@@ -39,7 +41,7 @@ If you came in through a **Claude Code** or **Codex** plugin instead of AAS Core
 
 When you ran `npx agentic-awesome-skills` or cloned the repository, you:
 
-✅ **Downloaded 2,750+ skill files** to your computer (default: `~/.agents/skills/`; or a custom path like `~/.agent/skills/` if you used `--path`)
+✅ **Downloaded 2,957+ skill files** to your computer (default: `~/.agents/skills/`; or a custom path like `~/.agent/skills/` if you used `--path`)
 ✅ **Made them available** to your AI assistant
 ❌ **Did NOT enable them all automatically** (they're just sitting there, waiting)
 
@@ -231,7 +233,7 @@ Let's actually use a skill right now. Follow these steps:
 
 ## Direct-install Step 5: Pick Skills Manually
 
-Don't try to use all 2,750+ skills at once. Here's a sensible approach:
+Don't try to use all 2,957+ skills at once. Here's a sensible approach:
 
 If you want a tool-specific starting point before choosing skills, use:
 
@@ -362,7 +364,7 @@ Usually no, but if your AI doesn't recognize a skill:
 
 ### "Can I load all skills into the model at once?"
 
-No. Even though you have 2,750+ skills installed locally, you should **not** concatenate every `SKILL.md` into a single system prompt or context block.
+No. Even though you have 2,957+ skills installed locally, you should **not** concatenate every `SKILL.md` into a single system prompt or context block.
 
 The intended pattern is:
 

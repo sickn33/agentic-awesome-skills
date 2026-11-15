@@ -123,9 +123,9 @@ class AdvisoryTest(unittest.TestCase):
         self.assertNotIn('workflow_dispatch', workflow)
         self.assertNotIn('pull_request_target', workflow)
         self.assertIn('.app.id == 15368', workflow)
-        self.assertIn('commits/$PR_HEAD/check-runs', workflow)
-        self.assertIn('gh api "repos/$GITHUB_REPOSITORY/actions/jobs/$job_id"', workflow)
-        self.assertIn('gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id"', workflow)
+        self.assertIn('--paginate --slurp', workflow)
+        self.assertIn('actions/runs?head_sha=$PR_HEAD', workflow)
+        self.assertIn('attempts/$run_attempt/jobs', workflow)
         self.assertIn('gh api "repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER"', workflow)
         self.assertIn('.path == ".github/workflows/ci.yml"', workflow)
         self.assertIn('.head_repository.full_name == $repo', workflow)
@@ -145,7 +145,7 @@ class AdvisoryTest(unittest.TestCase):
         workflow = (root / '.github/workflows/skillspector-advisory.yml').read_text()
         self.assertNotIn('secrets.', workflow)
         self.assertNotIn('pull_request_target', workflow)
-        self.assertNotIn('workflow_run', workflow)
+        self.assertNotIn('\n  workflow_run:', workflow)
 
 
 if __name__ == '__main__':

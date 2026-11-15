@@ -118,13 +118,13 @@ const deps = {
       return "https://aaskills.tech/";
     if (url.endsWith("/skills.json")) return index;
     if (url.endsWith("/plugins"))
-      return "AAS Specialized Plugins | 1 AI coding workflow packs specialized plugin packs numberOfItems";
+      return "AAS Specialized Plugins | 1 AI coding workflow packs specialized plugin packs numberOfItems" + '<html><body><main><h1>AAS Packs</h1><p>Install related skills as one pack. Included skills. Using your pack.</p><section data-plugin-pack="example">Example</section><a href="/docs/plugins/">Install</a><a href="/core/">Catalog</a><a href="/skill/example/">Example</a></main></body></html>';
     if (url.endsWith("/llms.txt"))
       return "https://aaskills.tech/plugins Current release: V1.2.3. 1+";
     if (url.endsWith("/sitemap.xml")) return "https://aaskills.tech/plugins";
     if (url.endsWith("/robots.txt"))
       return "User-agent: GPTBot User-agent: OAI-SearchBot User-agent: ClaudeBot User-agent: PerplexityBot";
-    return '<meta name="description" content="Explore 1+ reusable skills">AAS Core | Your agent chooses. You stay in control. SoftwareSourceCode';
+    return '<meta name="description" content="Explore 1+ reusable skills">Agentic Awesome Skills | AI Skills &amp; AAS Core SoftwareSourceCode<html><body><main><h1>AAS</h1><a href="/core/">Catalog</a></main></body></html>';
   },
 };
 assert.throws(
@@ -223,6 +223,23 @@ assert.equal(verifyTagExecutionProvenance("owner/repo", version, sha, endpoint =
     ),
     /exact released head/,
   );
+  const skipDeps={...deps,hostProof:()=>assert.fail('excluded host invoked'),fetch:async url=>{if(new URL(url).hostname === 'registry.npmjs.org')assert.fail('excluded npm queried');return deps.fetch(url);},run:(cmd,args)=>{
+    const value=JSON.parse(deps.run(cmd,args));
+    if(args.at(-1).includes('releases/tags/'))value.body=require('../release_workflow.js').releaseNotesForPublication('notes',true);
+    return JSON.stringify(value);
+  }};
+  result=await verifyRelease({version,target:'github-site'},skipDeps);
+  assert.equal(result.complete,true,JSON.stringify(result));
+  assert.equal(result.fullDistributionComplete,false);
+  assert.equal(result.personalEnvironmentUpdated,false);
+  assert.equal(result.checks.find(c=>c.component==='npm').status,'not-requested');
+  drift=true;
+  assert.equal((await verifyRelease({version,target:'github-site'},skipDeps)).complete,false,'candidate drift still blocks github-site');
+  drift=false;latestFailed=true;
+  assert.equal((await verifyRelease({version,target:'github-site'},skipDeps)).complete,false,'CI failures still block github-site');
+  latestFailed=false;
+  assert.equal((await verifyRelease({version,target:'github-site'},deps)).complete,false,'missing disclosure blocks github-site');
+  await assert.rejects(()=>verifyRelease({version,target:'invalid'},deps),/Unknown publication target/);
   console.log("release verification regressions passed");
 })().catch((error) => {
   console.error(error);

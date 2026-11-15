@@ -6,6 +6,8 @@
 
 On unreleased `main`, `aas stack install-preview --manifest <file> --destination <skill-directory>` prepares a direct-installer dry run from the agent-selected IDs. It does not execute installation or choose skills; destination names must satisfy the installer's filename restrictions. See [the manifest handoff](aas-core.md#use-the-reviewed-selection).
 
+> **npm publishing paused.** For current skills, use the [GitHub installation and update guide](getting-started.md#install-and-update-without-npm). npm commands require a version already published to npm.
+
 ## General Questions
 
 ### What is AAS Core?
@@ -177,7 +179,7 @@ It depends on how you install:
 - **Using a manual clone or custom workspace path**:
   `.agent/skills/` is still a good universal workspace convention for Antigravity/custom setups.
 
-If npm returns 404, check the package name, exact release and registry access. Preserve the reviewed release pin rather than switching to a moving GitHub source.
+An npm command for a GitHub-only release can return 404. For current skills, use the exact GitHub release tag in the [installation guide](getting-started.md#install-and-update-without-npm).
 
 **Using git clone:**
 

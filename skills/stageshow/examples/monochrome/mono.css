@@ -1,0 +1,98 @@
+.mn .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+/* The fade: a mask on a wrapper, so the windows keep their shadows and the
+   row dissolves into whatever ground it sits on */
+.mn-fade {
+  position: absolute;
+  inset: 0;
+  -webkit-mask-image: linear-gradient(#000 55%, transparent 96%);
+  mask-image: linear-gradient(#000 55%, transparent 96%);
+}
+
+/* Three at one height and top, whole across, centered */
+.mn-row {
+  position: absolute;
+  top: 36px;
+  left: 50%;
+  display: grid;
+  grid-template-columns: repeat(3, 212px);
+  gap: 20px;
+  translate: -50% 0;
+}
+
+.mn-win {
+  height: 320px;
+  /* One treatment for every customer */
+  filter: grayscale(1) contrast(1.05);
+}
+
+.mn-site {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-content: start;
+  gap: 10px;
+  height: 100%;
+  padding: 14px 18px;
+  background: var(--ss-surface);
+}
+
+.mn-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.mn-head {
+  white-space: normal;
+  text-wrap: balance;
+  color: var(--ss-text-strong);
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+}
+
+.mn-cta {
+  width: 84px;
+  height: 26px;
+  margin-top: 4px;
+  border-radius: 7px;
+  background: var(--mn-hue);
+}
+
+.mn-hero {
+  height: 90px;
+  margin-top: 8px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--mn-hue), color-mix(in srgb, var(--mn-hue) 40%, #fff));
+}
+
+/* Narrow: two sites, both whole, the third left out */
+.mn .ss-stage[data-layout='compact'] .mn-row {
+  grid-template-columns: repeat(2, 155px);
+  gap: 16px;
+}
+
+.mn .ss-stage[data-layout='compact'] .mn-win:nth-child(3) {
+  display: none;
+}
+
+.mn .ss-stage[data-layout='compact'] .mn-site {
+  padding: 12px 14px;
+}
+
+.mn .ss-stage[data-layout='compact'] .mn-head {
+  font-size: 14px;
+}
+
+.mn .ss-stage[data-layout='compact'] .mn-head {
+  font-size: 13px;
+}
+
+.mn-site > .ss-bar {
+  max-width: 100%;
+}

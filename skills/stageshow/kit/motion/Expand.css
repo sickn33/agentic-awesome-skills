@@ -1,0 +1,80 @@
+/* Expand */
+
+@layer stageshow {
+  .ss-expand {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  .ss-expand__content {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* Launching an app, as iOS zooms one out of a notification or an icon: the
+     whole app, laid out full size, is scaled down onto the closed thing and
+     grows to fill the screen. It stays on its own layer for good, so its text
+     never re-snaps when the zoom ends. The window takes the app's surface as it
+     leaves the face, and gives it back as it lands on it closing */
+  .ss-expand[data-launch] {
+    transform-origin: 0 0;
+    will-change: transform;
+    background-color: transparent;
+    transition:
+      transform var(--ss-expand-ms) var(--ss-expand-ease),
+      clip-path var(--ss-expand-ms) var(--ss-expand-ease),
+      background-color calc(var(--ss-expand-ms) * 0.25) ease calc(var(--ss-expand-ms) * 0.7);
+  }
+
+  /* Opening, the app's surface rises from the first frame as the face fades,
+     one crossfade, so the window is never a see-through frame of content */
+  .ss-expand[data-launch][data-open] {
+    background-color: var(--ss-expand-bg, var(--ss-surface));
+    transition:
+      transform var(--ss-expand-ms) var(--ss-expand-ease),
+      clip-path var(--ss-expand-ms) var(--ss-expand-ease),
+      background-color calc(var(--ss-expand-ms) * 0.4) ease;
+  }
+
+  /* The app's content waits for its window: it fades in once the window has
+     grown a third of the way, never floating over the wallpaper while the
+     window is still the size of the face. Closing, it holds until the window
+     is nearly the face again */
+  .ss-expand[data-launch] > .ss-expand__content {
+    opacity: 0;
+    transition: opacity calc(var(--ss-expand-ms) * 0.25) ease calc(var(--ss-expand-ms) * 0.6);
+  }
+
+  .ss-expand[data-launch][data-open] > .ss-expand__content {
+    opacity: 1;
+    transition: opacity calc(var(--ss-expand-ms) * 0.4) ease calc(var(--ss-expand-ms) * 0.3);
+  }
+
+  /* The closed thing's own face, drawn at its own size and scaled with the
+     window: it blows up and fades as the app grows out of it, and comes back as
+     the window lands on it */
+  .ss-expand__face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 0 0;
+    pointer-events: none;
+    transition: opacity calc(var(--ss-expand-ms) * 0.3) ease calc(var(--ss-expand-ms) * 0.65);
+  }
+
+  /* It is placed by the closed thing's measured box, so that box is all it
+     takes: margins it has where it lives (a notification's side margins) would
+     shift it off the original the moment it takes over */
+  .ss-expand__face > * {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+
+  .ss-expand[data-open] > .ss-expand__face {
+    opacity: 0;
+    transition: opacity calc(var(--ss-expand-ms) * 0.4) ease;
+  }
+}

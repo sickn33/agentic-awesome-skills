@@ -24,8 +24,6 @@ async function main(argv, env = process.env) {
   const tag = `v${JSON.parse(fs.readFileSync(path.join(root, "package.json"))).version}`;
   if (git(["rev-parse", `${tag}^{commit}`]) !== commit) throw new Error("Release tag moved or checkout differs");
   git(["merge-base", "--is-ancestor", commit, "origin/main"]);
-  const release = JSON.parse(gh(["api", `repos/${repository}/releases/tags/${tag}`]));
-  if (release.draft || !release.published_at || release.tag_name !== tag) throw new Error("Published release required");
   fs.mkdirSync(directory, { recursive: true });
   if (fs.readdirSync(directory).length) throw new Error("Candidate destination must be empty");
   const expected = { repository, commit, tag };

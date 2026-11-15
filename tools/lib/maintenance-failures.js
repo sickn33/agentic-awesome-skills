@@ -1,6 +1,8 @@
 "use strict";
 // Failure handling is deliberately conservative: retries are only for reads.
 const ACTIONS = {
+  SUBMISSION_INCOMPLETE: "Ask the author to complete the three evidence sections with truthful scoped results; fix the PR body and resume. No content repair or paid test is required merely to fill the form.",
+  DRAFT_PR: "Keep draft feedback open; the author must mark the PR ready before a protected merge.",
   PR_NOT_OPEN: 'Refresh PR state and exclude closed PRs from preparation. For a merged PR, resume merge to verify ancestry without another write; do not repeat its content review.',
   REVIEW_REQUIRED: 'Review this exact full head and complete changed bundle/code, then supply --reviewed-head. This does not waive any required checks or protection.',
   POLICY_BLOCKED: 'Repair the source or use a separately reviewed protected-base policy change; an attestation alone cannot authorize this contributor change.',

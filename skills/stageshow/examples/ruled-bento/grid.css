@@ -1,0 +1,541 @@
+/* All rules belong to this example, including its responsive variants. */
+.ruled-bento {
+  /* Halite's features section: a ruled grid on dark. Everything nests under
+     &. One rounded container; the rules are the container's own
+     color showing through 1px gaps between the cells. Each picture is its own
+     Stage at 1:1, pinned to its cell's bottom and cropped by the cell. */
+    --pad: 28px;
+    --ground: #08090a;
+    --cell: #0c0d0f;
+    --rule: #1d1e22;
+    --panel: #131417;
+    --panel-edge: #232429;
+    --ink: #f2f3f5;
+    --ink-2: #8b8f98;
+    --ink-3: #5c5f67;
+    --accent: #f5a524;
+    container-type: inline-size;
+    /* No padding of its own: on a page, the grid spans the content column */
+    box-sizing: border-box;
+    background: transparent;
+    font-family: var(--rb-font, inherit);
+    -webkit-font-smoothing: antialiased;
+
+  & .rb-grid {
+    display: grid;
+    gap: 1px;
+    max-width: 984px;
+    margin: 0 auto;
+    overflow: hidden;
+    box-sizing: border-box;
+    border: 1px solid var(--rule);
+    border-radius: 18px;
+    background: var(--rule);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 420px 250px 320px 350px 270px;
+    grid-template-areas: 'hero' 'stat' 'map' 'restore' 'orm';
+  }
+
+  /* A docs column or a tablet: the hero across, a pair, then two bands */
+  @container (min-width: 600px) {
+    & .rb-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: 390px 320px 300px 250px;
+      grid-template-areas: 'hero hero' 'stat map' 'restore restore' 'orm orm';
+    }
+  }
+
+  /* A homepage: 2 + 1, 1 + 2, then the full-width band */
+  @container (min-width: 900px) {
+    & .rb-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: 390px 320px 220px;
+      grid-template-areas: 'hero hero stat' 'map restore restore' 'orm orm orm';
+    }
+  }
+
+  @container (max-width: 599px) {
+    & .rb-grid {
+      --pad: 24px;
+    }
+  }
+
+  /* ---- The cell: one frame for all five ---- */
+
+  & .rb-cell {
+    position: relative;
+    overflow: hidden;
+    background: var(--cell);
+  }
+
+  & .rb-cell--hero { grid-area: hero; }
+  & .rb-cell--stat { grid-area: stat; }
+  & .rb-cell--map { grid-area: map; }
+  & .rb-cell--restore { grid-area: restore; }
+  & .rb-cell--orm { grid-area: orm; }
+
+  & .rb-copy {
+    position: relative;
+    z-index: 1;
+    max-width: 400px;
+    margin: 0;
+    padding: 26px var(--pad) 0;
+    font-size: 17px;
+    line-height: 24px;
+    letter-spacing: -0.012em;
+    color: var(--ink-2);
+    text-wrap: pretty;
+  }
+
+  & .rb-copy b {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  & .rb-cell--hero .rb-copy,
+  & .rb-cell--restore .rb-copy {
+    max-width: 470px;
+  }
+
+  & .rb-cell--orm .rb-copy {
+    max-width: 760px;
+  }
+
+  /* ---- Pictures: pinned to the cell's bottom ---- */
+
+  & .rb-picture {
+    position: absolute;
+    bottom: 0;
+  }
+
+  & .rb-picture--hero,
+  & .rb-picture--restore,
+  & .rb-picture--map {
+    left: 0;
+    width: 100%;
+  }
+
+  & .rb-picture--orm {
+    /* Half the cell: the band spans the grid, which is the container less nothing on a page */
+    --half: min(50cqw, 492px);
+    left: 50%;
+    /* The rows drift, so they soften into the cell at both sides */
+    -webkit-mask-image: linear-gradient(90deg, transparent calc(50% - var(--half)), #000 calc(50% - var(--half) + 72px), #000 calc(50% + var(--half) - 72px), transparent calc(50% + var(--half)));
+    mask-image: linear-gradient(90deg, transparent calc(50% - var(--half)), #000 calc(50% - var(--half) + 72px), #000 calc(50% + var(--half) - 72px), transparent calc(50% + var(--half)));
+    width: 1200px;
+    margin-left: -600px;
+  }
+
+  & .rb-stage .ss-stage {
+    overflow: hidden;
+    background: transparent;
+  }
+
+  /* ---- Create (hero): the one window ---- */
+
+  & .rb-term {
+    position: absolute;
+    top: 18px;
+    left: var(--pad);
+    width: calc(100% + 40px);
+    height: 330px;
+    --ss-term-bg: #141518;
+    --ss-term-path: var(--ink-3);
+    --ss-term-sigil: var(--accent);
+    --ss-term-dim: #6a6d75;
+    --ss-term-ok: #5fd49a;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+      0 24px 48px -16px rgba(0, 0, 0, 0.7);
+  }
+
+  & .rb-term__body {
+    gap: 6px;
+    padding: 8px 20px 20px;
+    font-size: 13px;
+    line-height: 20px;
+    color: #c9cbd1;
+  }
+
+
+  /* Output arrives line by line, once */
+  & .rb-out {
+    opacity: 0;
+    transform: translateY(4px);
+    will-change: transform;
+    transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition-delay: calc(var(--i) * 0.42s + 0.1s);
+  }
+
+  & .rb-term[data-on] .rb-out {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* The ready line waits for the bar */
+  & .rb-ready { transition-delay: 1.9s; }
+  & .rb-url { transition-delay: 2.15s; }
+  & .rb-term .rb-out.ss-term__prompt { transition-delay: 2.4s; }
+
+  & .rb-migrate {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: calc(var(--rb-picture-width) - var(--pad) - 60px);
+    white-space: nowrap;
+  }
+
+  & .rb-meter {
+    position: relative;
+    width: 220px;
+    flex: 0 1 220px;
+    min-width: 30px;
+    height: 6px;
+    overflow: hidden;
+    border-radius: 3px;
+    background: #24262b;
+  }
+
+  & .rb-term[data-layout='compact'] .rb-meter {
+    flex-basis: 120px;
+  }
+
+  /* The kit Meter in the terminal's accent, filling in step with the count */
+  & .rb-meter .ss-meter__fill {
+    background: var(--accent);
+    transition-duration: 1s;
+  }
+
+  & .rb-count {
+    flex: none;
+    font-variant-numeric: tabular-nums;
+  }
+
+  & .rb-count .ss-count {
+    display: inline-block;
+    min-width: 2ch;
+    text-align: right;
+  }
+
+  /* ---- Reads (stat) ---- */
+
+  & .rb-stat {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    height: 100%;
+    padding: 26px var(--pad) 30px;
+  }
+
+  & .rb-stat-lead {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 17px;
+    line-height: 24px;
+    letter-spacing: -0.012em;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  & .rb-bolt {
+    color: var(--accent);
+  }
+
+  & .rb-stat-number {
+    display: block;
+    margin-top: auto;
+    font-size: 84px;
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: -0.045em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  & .rb-stat-unit {
+    margin-left: 4px;
+    font-size: 40px;
+    letter-spacing: -0.02em;
+    color: var(--ink-2);
+  }
+
+  & .rb-stat-label {
+    max-width: 230px;
+    margin-top: 14px;
+    font-size: 15px;
+    line-height: 21px;
+    color: var(--ink-2);
+    text-wrap: pretty;
+  }
+
+  /* ---- Regions (diagram) ---- */
+
+  & .rb-map {
+    position: absolute;
+    inset: 0;
+    /* A dot field for ground, fading out toward the stage's edges */
+    background-image: radial-gradient(circle at center, #23252a 1px, transparent 1.4px);
+    background-size: 12px 12px;
+    background-position: 4px 2px;
+    -webkit-mask-image: radial-gradient(70% 80% at 50% 55%, #000 45%, transparent 100%);
+    mask-image: radial-gradient(70% 80% at 50% 55%, #000 45%, transparent 100%);
+  }
+
+  & .rb-map__lines {
+    position: absolute;
+    inset: 0;
+    overflow: visible;
+  }
+
+  & .rb-arc {
+    fill: none;
+    stroke: #2b2d33;
+    stroke-width: 1;
+  }
+
+  & .rb-arc--lit {
+    stroke: var(--accent);
+    stroke-width: 1.25;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 0.9s cubic-bezier(0.45, 0, 0.2, 1);
+    transition-delay: calc(var(--i) * 0.09s);
+  }
+
+  & .rb-map[data-on] .rb-arc--lit {
+    stroke-dashoffset: 0;
+  }
+
+  & .rb-node {
+    position: absolute;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 24px;
+    padding: 0 9px 0 8px;
+    border-radius: 12px;
+    background: var(--panel);
+    box-shadow: inset 0 0 0 1px var(--panel-edge);
+    font: 500 11px/1 var(--ss-mono);
+    color: #b4b7be;
+    /* Centered on its point by the dot, not the pill */
+    transform: translate(-14px, -50%);
+  }
+
+  & .rb-node__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    background: #3a3c43;
+    transition: background-color 0.25s ease;
+    transition-delay: calc(var(--i) * 0.09s + 0.75s);
+  }
+
+  & .rb-map[data-on] .rb-node__dot {
+    background: var(--accent);
+  }
+
+  & .rb-node[data-primary] {
+    color: var(--ink);
+    box-shadow: inset 0 0 0 1px #3a3328;
+  }
+
+  & .rb-node[data-primary] .rb-node__dot {
+    background: var(--accent);
+    box-shadow: 0 0 0 3px rgba(245, 165, 36, 0.22);
+  }
+
+  /* ---- Restore (component) ---- */
+
+  & .rb-restore {
+    position: absolute;
+    top: 6px;
+    left: var(--pad);
+    box-sizing: border-box;
+    width: calc(100% + 40px);
+    height: 250px;
+    padding: 20px 22px;
+    border-radius: 14px;
+    background: var(--panel);
+    box-shadow: inset 0 0 0 1px var(--panel-edge);
+  }
+
+  & .rb-restore[data-layout='compact'] {
+    padding: 18px;
+  }
+
+  & .rb-restore__head {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    justify-content: start;
+    gap: 4px 14px;
+  }
+
+  & .rb-restore[data-layout='compact'] .rb-restore__head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  & .rb-restore__label {
+    font-size: 13px;
+    color: var(--ink-2);
+  }
+
+  & .rb-restore__time {
+    font: 500 20px/26px var(--ss-mono);
+    letter-spacing: -0.02em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The time turns as the handle lands, not before */
+  & .rb-restore[data-on] .ss-states__item[data-on] {
+    transition-delay: 0.95s, 0.95s, 0.95s;
+  }
+
+  & .rb-restore[data-on] .ss-states__item:not([data-on]) {
+    transition-delay: 0.85s, 0.85s, 1s;
+  }
+
+  & .rb-track {
+    --gutter: 3px;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
+    align-items: end;
+    gap: var(--gutter);
+    height: 84px;
+    margin-top: 52px;
+    /* The handle travels along this, in cells */
+    --cell-w: calc((100% + var(--gutter)) / var(--n));
+  }
+
+  & .rb-restore .rb-track {
+    /* Stop the track short of the crop so its end reads as now */
+    margin-right: calc(var(--pad) + 40px);
+  }
+
+  & .rb-track__bar {
+    border-radius: 2px;
+    background: #34363d;
+    transition: background-color 0.4s ease 0.6s;
+  }
+
+  /* Everything after the restore point dims once the handle passes it */
+  & .rb-restore[data-on] .rb-track__bar[data-after] {
+    background: #1e1f23;
+  }
+
+  & .rb-event {
+    position: absolute;
+    top: -22px;
+    bottom: 0;
+    left: calc(var(--cell-w) * (var(--drop) + 1.5) - var(--gutter) / 2);
+    width: 2px;
+    margin-left: -1px;
+    border-radius: 1px;
+    background: #f0605a;
+  }
+
+  & .rb-event__tag {
+    position: absolute;
+    top: -26px;
+    left: 8px;
+    height: 20px;
+    padding: 0 7px;
+    border-radius: 6px;
+    background: #3a1a1a;
+    font: 500 11px/20px var(--ss-mono);
+    color: #f6918c;
+    white-space: nowrap;
+  }
+
+  & .rb-restore[data-layout="wide"] .rb-event__tag { left: auto; right: 8px; }
+
+  /* The handle: starts at now, slides back to just before the drop */
+  & .rb-handle {
+    position: absolute;
+    top: -14px;
+    bottom: -6px;
+    left: 100%;
+    width: 2px;
+    margin-left: -1px;
+    border-radius: 1px;
+    background: var(--accent);
+    will-change: transform;
+    transition: left 1s cubic-bezier(0.45, 0, 0.15, 1) 0.1s;
+  }
+
+  & .rb-handle::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    width: 12px;
+    height: 12px;
+    margin-left: -6px;
+    border-radius: 6px;
+    background: var(--accent);
+    box-shadow: 0 0 0 3px var(--panel);
+  }
+
+  & .rb-restore[data-on] .rb-handle {
+    left: calc(var(--cell-w) * var(--drop) - var(--gutter) / 2);
+  }
+
+  & .rb-axis {
+    position: relative;
+    height: 14px;
+    margin-top: 10px;
+    font: 11px/14px var(--ss-mono);
+    color: var(--ink-3);
+  }
+
+  & .rb-restore .rb-axis {
+    margin-right: calc(var(--pad) + 40px);
+  }
+
+  & .rb-axis span {
+    position: absolute;
+    left: calc((100% + 3px) / var(--n) * var(--at));
+  }
+
+  /* ---- Drivers (collection) ---- */
+
+  & .rb-rows {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding-top: 14px;
+  }
+
+  & .rb-row {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    transform: translateX(var(--off));
+    will-change: transform;
+    transition: transform 2.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  & .rb-rows[data-on] .rb-row {
+    transform: translateX(calc(var(--off) + var(--dir) * 56px));
+  }
+
+  & .rb-chip {
+    display: inline-flex;
+    align-items: center;
+    flex: none;
+    height: 40px;
+    padding: 0 16px;
+    border-radius: 10px;
+    background: var(--panel);
+    box-shadow: inset 0 0 0 1px var(--panel-edge);
+    font: 500 13px/1 var(--ss-mono);
+    color: #b4b7be;
+    white-space: nowrap;
+  }
+}

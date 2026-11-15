@@ -280,8 +280,6 @@ export function SkillDetail(): React.ReactElement {
   return (
     <div className="skill-detail">
       <div className="skill-detail__hero">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-teal-300/20 blur-3xl dark:bg-teal-500/20" />
-        <div className="pointer-events-none absolute -bottom-24 -left-20 h-56 w-56 rounded-full bg-slate-300/20 blur-3xl dark:bg-slate-600/20" />
 
         <Link
           to={backToCatalog}
@@ -293,8 +291,8 @@ export function SkillDetail(): React.ReactElement {
 
         <div className="skill-detail__summary">
           <div className="flex-1">
-            <div className="mb-2 flex flex-wrap items-center gap-2">
-              <span className="rounded-full bg-teal-100 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-teal-700 dark:bg-teal-900/50 dark:text-teal-300">
+            <div className="skill-detail__meta">
+              <span className="rounded-full bg-teal-100 px-2.5 py-0.5 text-xs font-medium text-teal-700 dark:bg-teal-900/50 dark:text-teal-300">
                 {skill.category}
               </span>
               {skill.source && (
@@ -308,7 +306,7 @@ export function SkillDetail(): React.ReactElement {
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-3">
+            <div className="skill-detail__title">
               <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
                 @{skill.name}
               </h1>
@@ -319,7 +317,7 @@ export function SkillDetail(): React.ReactElement {
             </p>
           </div>
 
-          <div className="flex flex-col gap-2 sm:flex-row">
+          <div className="skill-detail__actions">
             <button
               type="button"
               onClick={() => skill && toggleShortlist(skill.id)}
@@ -352,7 +350,7 @@ export function SkillDetail(): React.ReactElement {
 
         <div className="skill-detail__install-and-context">
           <div className="mb-4 border border-slate-300 bg-slate-50/70 p-4 dark:border-slate-700 dark:bg-slate-900">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
               Canonical skill ID
             </p>
             <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
@@ -399,7 +397,7 @@ export function SkillDetail(): React.ReactElement {
         <article className="skill-detail__article">
           {frontmatterRows.length > 0 && (
             <div className="mb-6">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500 dark:text-slate-400">
+              <p className="mb-2 text-xs font-medium text-slate-500 dark:text-slate-400">
                 Skill Metadata
               </p>
               <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-700">

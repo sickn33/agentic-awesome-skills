@@ -49,7 +49,7 @@ README_TAGLINE_RE = re.compile(
     re.MULTILINE,
 )
 README_TITLE_RE = re.compile(
-    r"^# (?:🌌 Agentic Awesome Skills: .*|AAS Core — Agentic Awesome Skills)$",
+    r"^# (?:🌌 Agentic Awesome Skills: .*|AAS Core — Agentic Awesome Skills|Agentic Awesome Skills — AI Skills & AAS Core)$",
     re.MULTILINE,
 )
 README_RELEASE_RE = re.compile(
@@ -94,9 +94,8 @@ BUNDLES_FOOTER_RE = re.compile(
 
 def build_about_description(metadata: dict) -> str:
     return (
-        "AAS Core is the local, agent-first control plane for complete catalog discovery, agent-owned selection, "
-        f"stack validation, and planning, backed by {metadata['total_skills_label']} agentic skills. "
-        "Includes CLI, local MCP, catalog, plugins, and Workbench."
+        f"{metadata['total_skills_label']} reusable AI agent skills for Claude Code, Codex, Cursor and Gemini CLI. "
+        "AAS Core adds local catalog discovery, agent-owned selection and plan preview. CLI, MCP and plugins."
     )
 
 
@@ -158,13 +157,21 @@ def count_documented_bundles(content: str) -> int:
     return len(re.findall(r'^### .*".*" Pack$', content, flags=re.MULTILINE))
 
 
+def sync_github_skill_release_pins(content: str, version: str) -> str:
+    return re.sub(
+        r"(--pin v|/SKILL\.md@v)" + VERSION_TOKEN_PATTERN,
+        rf"\g<1>{version}",
+        content,
+    )
+
+
 def sync_readme_copy(content: str, metadata: dict) -> str:
     version = metadata["version"]
     release_status = core_release_status(metadata)
     replacements = [
         (
             README_TITLE_RE,
-            "# AAS Core — Agentic Awesome Skills",
+            "# Agentic Awesome Skills — AI Skills & AAS Core",
         ),
         (
             README_TAGLINE_RE,
@@ -269,7 +276,7 @@ def sync_readme_copy(content: str, metadata: dict) -> str:
         content,
     )
 
-    return content
+    return sync_github_skill_release_pins(content, version)
 
 
 def sync_getting_started(content: str, metadata: dict) -> str:
@@ -277,6 +284,46 @@ def sync_getting_started(content: str, metadata: dict) -> str:
         content,
         GETTING_STARTED_TITLE_RE,
         "# Getting Started with AAS Core",
+    )
+    version = metadata["version"]
+    content = re.sub(
+        r"In release " + VERSION_TOKEN_PATTERN,
+        f"In release {version}",
+        content,
+    )
+    content = re.sub(
+        r"The " + VERSION_TOKEN_PATTERN + r" installer requires",
+        f"The {version} installer requires",
+        content,
+    )
+    content = re.sub(
+        r"(--branch )v" + VERSION_TOKEN_PATTERN,
+        rf"\g<1>v{version}",
+        content,
+    )
+    content = re.sub(
+        r"(aas-review-)v" + VERSION_TOKEN_PATTERN,
+        rf"\g<1>v{version}",
+        content,
+    )
+    content = sync_github_skill_release_pins(content, version)
+    content = re.sub(
+        r"(agentic-awesome-skills@)" + VERSION_TOKEN_PATTERN,
+        rf"\g<1>{version}",
+        content,
+    )
+    content = re.sub(
+        r"(--release )" + VERSION_TOKEN_PATTERN,
+        rf"\g<1>{version}",
+        content,
+    )
+    content = re.sub(
+        r"^For this published release, the commit is `[0-9a-f]{40}`\. "
+        r"Inspect the selected trees before activation; use the direct installer for its destination and update checks\.$",
+        "Inspect the selected trees before activation. The Git tag and npm `gitHead` must agree with the release provenance; "
+        "use the direct installer for its destination and update checks.",
+        content,
+        flags=re.MULTILINE,
     )
     return content
 

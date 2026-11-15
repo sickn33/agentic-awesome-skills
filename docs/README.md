@@ -37,6 +37,8 @@ Current operational guidance lives in `users/`, `contributors/`, and the current
 
 ## Maintainers
 
+- [Contribution intake and author feedback](maintainers/contribution-intake.md) — readiness, bundle escalation and measurement
+
 - [150-skill static review and repairs](maintainers/skill-review-150-2026-10-23.md) — exact cohort, findings and limitations
 
 - [Catalog audit batches](maintainers/catalog-audit-batches-2026-10-23.md) — bounded queue and truthful progress tracking
@@ -68,3 +70,5 @@ Current operational guidance lives in `users/`, `contributors/`, and the current
 - [Plugin consolidation review](maintainers/plugin-offer-consolidation-2026-10-13.md): preservation, migration and validation scope.
 
 - [Maintainer flow and recovery](maintainers/maintainer-flow.md): batch coordination, source credits, preflight, dossiers, and release verification.
+
+- [CI audit improvements](maintainers/ci-audit-improvements.md): measured scheduling, cache and evidence changes.

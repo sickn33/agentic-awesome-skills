@@ -1,0 +1,24 @@
+{
+  "name": "aas-core",
+  "account_id": "514e6b4c4bbd786d8d472242f6cc6c8d",
+  "main": "dist/worker.mjs",
+  "compatibility_date": "2026-10-29",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "preview_urls": false,
+  "assets": {
+    "directory": "dist/assets",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+  },
+  "observability": { "enabled": false },
+  "durable_objects": {
+    "bindings": [
+      { "name": "SESSIONS", "class_name": "CoreSession" },
+      { "name": "GUARD", "class_name": "QuotaGuard" },
+    ],
+  },
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["CoreSession", "QuotaGuard"] },
+  ],
+}

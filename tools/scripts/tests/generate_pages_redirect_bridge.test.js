@@ -60,6 +60,13 @@ try {
     `${current}aas-core/`,
     `${current}teams/`,
     `${current}trust/`,
+    `${current}sponsors/`,
+    `${current}contribute/`,
+    `${current}changelog/`,
+    `${current}plugins/aas-core/`,
+    `${current}plugins/aas-core/privacy/`,
+    `${current}plugins/aas-core/terms/`,
+    `${current}plugins/aas-core/support/`,
     `${current}docs/`,
     `${current}docs/getting-started/`,
   ];
@@ -115,8 +122,15 @@ try {
   const legacySitemapSource = fs.readFileSync(path.join(outputOne, 'antigravity-awesome-skills/sitemap.xml'), 'utf8');
   assert.strictEqual((legacySitemapSource.match(/<loc>/g) || []).length, 4, 'legacy sitemap stays on the curated source sitemap');
   assert(!legacySitemapSource.includes('/skill/catalog-only/'), 'catalog-only redirects must not expand crawler discovery');
-  assert(!manifest.redirects.some(({ to }) => /\/(teams|trust|aas-core)\/$/.test(to)), 'new informational pages have no legacy routes');
+  assert(!manifest.redirects.some(({ to }) => /\/(teams|trust|sponsors|contribute|changelog|aas-core)\/$/.test(to)), 'new informational pages have no legacy routes');
   assert(!legacySitemapSource.includes('/teams/') && !legacySitemapSource.includes('/trust/'));
+  assert(!manifest.redirects.some(({ to }) => to.includes('/plugins/aas-core/')),
+    'new plugin informational pages must not expand legacy redirects');
+  assert(!legacySitemapSource.includes('/plugins/aas-core/'));
+  fs.writeFileSync(sitemapPath, sitemap([...locations, `${current}plugins/unexpected/`]), 'utf8');
+  assert.throws(() => generateBridge(bridgeOptions(path.join(fixtureRoot, '.codex', 'unexpected-route'))),
+    /does not match locked expectation/, 'unknown routes must still trip the curated route-count gate');
+  fs.writeFileSync(sitemapPath, sitemap(locations), 'utf8');
   assert(!legacySitemapSource.includes('/docs/'), 'first-party docs must stay out of the legacy bridge');
 
   const outputTwo = path.join(fixtureRoot, '.codex', 'bridge-two');

@@ -75,7 +75,7 @@ Then run `/tokenwise:install` and follow the guided prompts.
 
 - Treat reported costs as estimates until reconciled with actual provider usage and current pricing; no billing-error bound is established by this catalog entry
 - A/B test mode costs extra tokens (one task × N tiers) — intentional one-time validation
-- Anthropic-only by design (use LiteLLM or OpenRouter for cross-vendor)
+- Anthropic-only by design (use LiteLLM, OpenRouter, or [Bifrost](https://github.com/maximhq/bifrost) for cross-vendor)
 - Verify the selected model in actual execution evidence; do not assume a model parameter or an installer probe guarantees that a specific client build honored routing
 
 ## Source

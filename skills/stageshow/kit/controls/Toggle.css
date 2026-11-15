@@ -1,0 +1,46 @@
+/* Toggle */
+
+@layer stageshow {
+  .ss-toggle {
+    position: relative;
+    display: inline-block;
+    flex-shrink: 0;
+    width: 30px;
+    height: 18px;
+    border-radius: 9px;
+    background: var(--ss-ink-5);
+    transition: background-color 0.2s ease;
+  }
+
+  .ss-toggle[data-on] {
+    background: var(--ss-accent);
+  }
+
+  .ss-toggle__knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    /* Light and tight: a heavy shadow grays the track beside the knob, so
+       the accent reads as see-through */
+    box-shadow: 0 0.5px 1.5px rgba(0, 0, 0, 0.14), 0 0 0 0.5px rgba(0, 0, 0, 0.04);
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .ss-toggle[data-on] .ss-toggle__knob {
+    transform: translateX(12px);
+  }
+
+  .ss-stage[data-palette="mono"][data-theme="dark"] .ss-toggle[data-on] .ss-toggle__knob {
+    background: #111;
+  }
+
+  /* On blueprint the accent is white, so the knob takes the ground */
+  .ss-stage[data-theme="blueprint"] .ss-toggle[data-on] .ss-toggle__knob {
+    background: var(--ss-well);
+    box-shadow: none;
+  }
+}

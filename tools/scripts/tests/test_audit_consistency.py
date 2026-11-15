@@ -69,7 +69,7 @@ class AuditConsistencyTests(unittest.TestCase):
         (root / "apps" / "web-app" / "public" / "skills.json").write_text(manifest, encoding="utf-8")
         (root / "README.md").write_text(
             f"""<!-- registry-sync: version=8.4.0; skills={total_skills}; stars=26132; updated_at=2026-03-21T00:00:00+00:00 -->
-# AAS Core — Agentic Awesome Skills
+# Agentic Awesome Skills — AI Skills & AAS Core
 
 > **Local, agent-owned skill stacks for coding agents—from complete catalog access to a reproducible, reviewable plan.**
 

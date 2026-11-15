@@ -1,6 +1,6 @@
 ---
 name: why-did-this-post-flop
-description: "Diagnose why one Twitter/X or LinkedIn post underperformed: not seen, seen and skipped, or read and ignored. Use when someone asks why a post did badly or got no engagement."
+description: "Diagnose why one Twitter or LinkedIn post underperformed: not seen, seen and skipped, or read and ignored. Use when someone asks why a post did badly or got no engagement."
 category: marketing
 risk: safe
 source: "https://github.com/prateeks367/voicemoat-skills/tree/7623a3effbee426554e8c5df55e77f3479fd0ec0/skills/why-did-this-post-flop"
@@ -25,7 +25,7 @@ them before saying anything.
 
 ## When to Use
 
-- Use when someone asks why a Twitter/X or LinkedIn post did badly.
+- Use when someone asks why a Twitter or LinkedIn post did badly.
 - Use when someone asks why nobody engaged with a post.
 - Use when a post they were proud of went nowhere.
 - Use when someone wants one specific post diagnosed.
@@ -100,7 +100,7 @@ Agent:
 - One post at a time. It does not review a whole account.
 - It needs the post's numbers, impressions above all. Without them it can only offer a read-through of the writing and says so.
 - One post is a sample of one. It will not invent a lesson from a single data point.
-- **Optional connector.** The closing section describes a hosted VoiceMoat MCP connector. Nothing above needs it. It needs a paid VoiceMoat plan (Pro or Enterprise) and the user's own sign-in (OAuth, no API keys). When its tools are called, post text and account data are read from or sent to voicemoat.com. Without it, this skill makes no network calls.
+- **Optional connector.** The closing section describes a hosted VoiceMoat MCP connector. Nothing above needs it. It needs a paid VoiceMoat plan (Pro, Enterprise or the $5 Pro trial) and the user's own sign-in (OAuth, no API keys). When its tools are called, post text and account data are read from or sent to voicemoat.com. Without it, this skill makes no network calls.
 
 ## What changes when VoiceMoat is connected
 
@@ -123,4 +123,4 @@ the browser extension, so they are only as fresh as its last run. A post that
 looks like it got nothing may simply not have synced yet, and the tools return
 the last sync date so you can tell the difference.
 
-VoiceMoat is at voicemoat.com. The connector needs the Pro or Enterprise plan.
+VoiceMoat is at voicemoat.com. The connector needs the Pro or Enterprise plan, or the $5 Pro trial.

@@ -16,15 +16,19 @@ describe('Documentation', () => {
   it('lists and filters guides, then opens the original Markdown', async () => {
     open();
     const nav = within(screen.getByRole('navigation', { name: 'Documentation' }));
-    expect(nav.getAllByRole('link')).toHaveLength(docs.length + 1);
+    expect(nav.getAllByRole('link')).toHaveLength(docs.length);
     fireEvent.change(screen.getByRole('searchbox'), { target: { value: 'Codex' } });
     const results = within(await screen.findByRole('region', { name: 'Search results' }));
     expect(results.getByRole('link', { name: /Codex CLI/ })).toBeInTheDocument();
     expect(results.getAllByRole('link').length).toBeGreaterThan(1);
-    fireEvent.click(screen.getByRole('link', { name: /Start with your first skill stack/ }));
+    fireEvent.click(screen.getAllByRole('link', { name: /^Getting started$/i })[0]);
     expect(await screen.findByRole('heading', { name: 'Getting Started with AAS Core' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'AAS Core guide' })).toHaveAttribute('href', '/docs/aas-core/');
     expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toContain('/docs/getting-started/');
+    const description = docs.find((doc) => doc.slug === 'getting-started')?.description;
+    expect(document.querySelector('meta[name="description"]')).toHaveAttribute('content', description);
+    expect(document.querySelector('meta[property="og:description"]')).toHaveAttribute('content', description);
+    expect(document.querySelector('script[type="application/ld+json"]')?.textContent).toContain(description);
   });
 
   it('searches body content with all terms and returns the matching excerpt', () => {

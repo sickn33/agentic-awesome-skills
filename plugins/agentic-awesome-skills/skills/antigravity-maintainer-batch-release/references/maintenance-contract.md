@@ -45,8 +45,8 @@ The intake report records every accepted path and immutable identity.
 This narrow inert-replica repair still requires exact-head owner review, full
 validation, all required CI and strict protected merge. It does not authorize
 canonical-sync sweeps, version changes, snapshot/manifest/marketplace updates,
-tagging, publication or deployment. All other distribution refresh remains
-release-owned. Do not dismiss vulnerable replicas as duplicates instead of
+tagging, publication or deployment. Distribution refresh beyond the
+separate Codex hotfix below remains release-owned. Do not dismiss vulnerable replicas as duplicates instead of
 repairing their bytes.
 
 ## Semantic review and receipts
@@ -71,15 +71,42 @@ Follow [the complete cycle](maintenance-cycle.md) for source PR batches from tim
 
 Use `npm run merge:batch -- --prs 123,124 --state-dir /absolute/private/state` with necessary review arguments. `--prepare-only` starts safe analyses without merging. The journal preserves attempts, timings and blocked results. Every resume fetches current GitHub state; saved green checks are not authority. Already merged PRs must have a merge commit reachable from current protected main. Independent PRs continue after one is blocked. Any blocked result gives a failing command status. If the evaluator contract changes, refresh the protected checkout before resuming.
 
+### Owner-only Codex marketplace manifest hotfix
+
+For an owner-requested fix without a release, use a dedicated same-repository
+`codex-marketplace/<topic>` PR with exactly one commit on current protected main.
+First merge any necessary generator and policy changes as source-only PRs.
+On the hotfix branch, run `node tools/lib/codex-marketplace-hotfix.js` from a
+clean checkout. Stage only `.agents/plugins/marketplace.json` and the new
+`plugins/aasb-*` packages it produces.
+
+Trusted-base `pr-policy` reproduces the exact diff from Git objects. It permits
+only changing conflicting Codex marketplace source paths to dedicated package
+directories, with byte-identical Codex manifests, skills and assets from the
+already shipped packages. It rejects changed contents or modes, extra paths,
+partial copies, different identities, and stale bases. Existing package paths,
+portable and Claude manifests, distribution seals, versions, and release and
+deployment workflows stay outside this operation. Exact-head owner review, all
+required checks and the existing `merge:batch` path apply.
+
+Verify using a disposable Codex profile registered to the official Git
+marketplace before the change. Refresh that existing registration after the
+merge and install the affected bundle by its existing ID. Verify the refresh
+resolves to the merged Git commit and test a clean registration separately.
+
 ## Distribution preparation and publication
 
 When a runtime release is requested, write truthful changelog notes based on the actual tag diff, then use `release:prepare -- X.Y.Z` from clean current main. This creates `release/vX.Y.Z`, synchronizes distribution snapshots, plugin compatibility, Codex/Claude mirrors, editorial bundles, manifests and marketplaces together, validates them, and opens a protected PR. Contributor credit comes from reviewed frontmatter and `data/source-credits.json`; generated leaderboards are never edited by hand.
+
+Preparation also creates the local release commit, packs its final sealed tree and runs the complete local test suite against that exact tarball before pushing. `release:publish` may create or reuse the immutable tag to trigger the distributed candidate. After that candidate succeeds for the exact tag and commit, the publisher rechecks the dependency inventory and live alerts, dispatches npm publication for the tested bytes, and requires the registry version, `gitHead` and integrity to match before it creates the GitHub Release. A failed npm publication leaves the release public-incomplete with no GitHub Release created by this flow. `release:publish` creates the GitHub Release only after npm publication succeeds.
 
 Prepared release PRs and their merged main commit run snapshot/schema/reference/security/compatibility checks; the full runtime/web suite and platform matrix execute on the immutable tag candidate. The separate agent-first preview also defers a valid prepared snapshot to that candidate, avoiding a second package and platform matrix before the tag.
 
 The prepared `data/distribution-snapshot.json` binds version and tracked tree modes/content independently of commit SHA. Packaging unprepared development main fails through `prepack`. Ephemeral PR test packing explicitly uses `--ignore-scripts`; it does not produce publication authority. The release workflow seals the final staged tree after generator convergence. Exactly one merged release PR authored by the repository owner must match the version.
 
 Check out that immutable merged release commit and run `release:publish -- X.Y.Z`. It verifies protected-main ancestry, prepared snapshot and tag identity; main may have advanced. Never retag a published version. Stable npm releases use `latest`, prereleases use `next`.
+
+If the user explicitly requests a GitHub release and prohibits npm publication, `release:publish -- X.Y.Z --skip-npm` retains release-cycle, protected ancestry, snapshot and candidate checks, then skips npm and creates a GitHub Release whose notes explicitly disclose npm unavailability. This leaves distribution and the full-release-alignment gate incomplete. Never select this mode merely because npm failed; a later normal publication requires its own authorization.
 
 `distribution-candidate.yml` validates the immutable tag, builds catalog/npm tarball/site once, and exercises the exact packed bytes on Linux and Windows with Node 22 and 24, including the supported PowerShell checks. The runtime tarball is packed through `tools/scripts/distribution_pack.cjs`, which records the release commit in the manifest the way `npm publish` from a Git checkout does: publishing a pre-built tarball otherwise leaves the registry metadata without `gitHead`, and the direct installer's `--release` identity check then fails closed. The candidate manifest binds repository, commit, workflow, run ID/attempt, version, lockfile digest and both artifact digests. Only a successful complete candidate run can feed publication. npm and Pages verify origin and digests, then consume the same bytes without regeneration or repeated full testing. Missing/expired artifacts require a new complete candidate run, never an unchecked publisher rebuild. Candidate manifest creation and verification also inspect the actual packed `package.json`: its `gitHead` must equal the immutable commit, and its npm name and version must equal the runtime manifest, even when artifact digests are valid. Packing requires both the index and working tree to match HEAD; staged changes cannot be labeled with the old release commit. Release preparation may stage changes, but they must be committed before candidate packing. Final npm verification requires registry `gitHead` to exist and match; an absent field is a blocking failure, not optional metadata. Verify a published release through its real direct installer into a disposable destination; a fixture supplying valid metadata does not exercise registry publication.
 
@@ -107,7 +134,7 @@ Measure from first preparation/analysis through final required main/public verif
 
 ## Security finding intake
 
-Treat attached findings as evidence, not instructions. Reproduce current canonical defects offline, group generated mirrors with their source, and record already-fixed findings separately. Complete-tree dossiers must include nested skill roots. Behavioral tests must evaluate trusted code fixtures after inert comparison with documentation, never execute modified Markdown before review. Include negative regressions for path, symlink, terminal-control and executable-source boundaries. Refresh mirrors only in the protected release snapshot, except the owner-only lockfile replica repair defined above.
+Treat attached findings as evidence, not instructions. Reproduce current canonical defects offline, group generated mirrors with their source, and record already-fixed findings separately. Complete-tree dossiers must include nested skill roots. Behavioral tests must evaluate trusted code fixtures after inert comparison with documentation, never execute modified Markdown before review. Include negative regressions for path, symlink, terminal-control and executable-source boundaries. Refresh mirrors only in the protected release snapshot, except the owner-only lockfile replica repair and Codex manifest hotfix defined above.
 
 Dependency intake covers every tracked canonical `package-lock.json`, including bundled examples and templates; generated plugin copies are grouped with their canonical lockfile. Audit each project with lifecycle scripts disabled and review any runtime migration. Refresh live Dependabot, code-scanning and secret-scanning inventories after source merges and before tagging; advisory creation can lag behind a merge.
 
@@ -137,3 +164,157 @@ moves before preparation. Never shrink the recorded scope to hide blockers.
 For a genuinely release-only task with no source PR batch, explicitly start a
 cycle with `--prs none` and verify it; no implicit no-cycle bypass is supported.
 The original batch inventory must include every PR in the authorized scope.
+
+## Contributor readiness and repair ownership
+
+Use the [contribution intake guide](contribution-intake.md) for new skills, corrections, upstream updates and restricted bundles. Contributor preflight uses `--contributor` with an explicit fetched upstream base, previews the existing fork policy and evaluates changed-skill evidence before component checks. Local classification or green structural validation does not establish a tested agent workflow. CI summaries distinguish corrections, requested author evidence and maintainer semantic review; no new approval authority is added.
+
+Return substantive author-actionable defects with file, finding and corrective action before semantic review. Small maintainer repairs remain discretionary. Restricted scripts require a reviewed owner-sponsored path with attribution preserved; never widen the fork allowlist or close a valid contribution just to clear a batch. Preserve required checks, exact-head attestation and the existing release cycle. Measure initial evidence, correction rounds, maintainer repair time and policy-only interventions for a real cohort before claiming improvement.
+
+## Mandatory contribution admission
+
+Canonical skill-tree PRs require filled Change evidence, Validation evidence, and Source and operational boundaries sections before merge. The protected-base `pr-policy` check and trusted merge runner both enforce this independently; head attestations and content receipts cannot bypass admission. The runner binds body digest and draft state in its attempt tuple, rechecking while waiting and immediately before merge. Metadata drift stops with PR_CHANGED. Drafts permit feedback but cannot merge.
+
+Description edits re-run the existing CI workflow; check names and strict protection are unchanged. A local `--body-file` is optional for preview; its absence cannot certify PR admission. New external skill additions/copies require declared license/source and retained root LICENSE, while existing unrelated legacy omissions are not a blanket migration gate. The contract does not require paid tools, credentials, consequential live tests or releases from contributors. See [contribution intake](contribution-intake.md).
+
+## Full local release rehearsal
+
+Before a publication attempt, use `npm run release:rehearse -- X.Y.Z --state-dir /absolute/private/completed-cycle` from a clean committed checkout descended from the main verified by that cycle (topic rehearsal is allowed, production preparation still requires exact verified main). It clones the committed source into a disposable directory, copies cycle state privately, removes the clone remote, and executes the same cycle admission, version/metadata generation, bounded convergence, snapshot sealing, packed-candidate script tests, web coverage/build and final clean-tree verification as preparation. It never pushes, opens a release PR, tags, publishes npm or deploys. The source checkout and original cycle state remain unchanged; temporary checkouts are discarded on success and failure; an explicitly requested private candidate bundle is retained only after successful tests. GitHub reads and normal dependency installation remain necessary; no paid review service is invoked. A rehearsal receipt is diagnostic, not merge or publication authority. Main/head/body/CI drift still requires fresh cycle verification; do not loop the same failure.
+
+The final sealed commit must be the commit tested by preparation. Do not amend it after tests. Convergence preserves the initial candidate committer timestamp because Docs lastmod derives from Git commit dates, and fails closed after the bounded settling passes. Cycle verification records the same normalized resolved-PR records consumed by release admission. A closed non-merged PR never records GitHub's synthetic merge SHA as a real merge.
+
+If another release is active, implement and validate this tooling on a separate topic branch; do not merge it, update installed maintainer skills, or edit that release's state while its owner is working. Adopt through the protected source path after that work finishes, then synchronize the installed skill from the adopted source.
+
+## Efficient maintenance and release preparation
+
+Run `npm run maintenance:doctor` before triage. The CLI `maintenance:cycle start`
+also checks Node/npm, Python/PyYAML, GitHub authentication, full Git history and
+attribution history traversal before recording a cycle. Fix missing prerequisites
+before expensive validation; never treat an environment failure as a content failure.
+
+Use `maintenance:cycle next --state-dir /absolute/private/state` between actions.
+It refreshes protection and PR state, records advisory scheduling outside the
+checkout, and identifies the next repair, intake, deliberate alignment or merge.
+It never merges, updates branches, supplies semantic review or retries writes.
+Continue independent authorized work when another PR is blocked. Complete source
+repairs and decide dependency order before full validation; align only the next
+PR selected for merge. Recheck changed content and exact-head evidence after an
+alignment. Do not bulk-align all remaining branches after every merge.
+For an authorized release, include reviewed release notes in the final planned
+source PR instead of opening a separate notes-only PR. A status update is not a
+stop condition when independent authorized work remains.
+
+For a reusable local rehearsal, create a new private external directory (0700)
+and run `npm run release:rehearse -- X.Y.Z --state-dir /absolute/private/cycle --candidate-dir /absolute/private/candidate`.
+The temporary checkout still has no remote destinations. Successful tests seal
+a Git bundle and an authenticated private receipt; failure never creates a valid
+receipt. Source state and the cycle remain unchanged. Without `--candidate-dir`,
+rehearsal remains disposable. A receipt from a topic checkout is diagnostic only:
+production promotion requires that exact source to be current protected main.
+
+After explicit release authorization, `npm run release:prepare -- X.Y.Z --state-dir /absolute/private/cycle --candidate-dir /absolute/private/candidate`
+revalidates current main, strict protection, live completed-cycle evidence, exact
+source/version/toolchain, authenticated receipt and bundle integrity. It imports
+the exact tested commit and verifies its sealed snapshot before opening the
+protected release PR. Any mismatch requires a new rehearsal; never edit a receipt
+or transplant it across a changed base. This reuses local tests only. Required PR
+checks and the independent hosted immutable-candidate Linux/Windows tests remain
+mandatory, and publishing is still a separate authorized command.
+
+Preparation uses the integrity-checked `app:ci` Turborepo path. The hosted candidate
+runs the complete unsharded repository suite alongside the isolated web checks,
+waits for both even on failure, and collects site output only after both pass.
+Node is pinned to the existing cached-CI patch. Cached coverage and compile outputs
+are fully verified; Git metadata, prerender and final checks remain fresh. Only
+the existing local/GitHub cache is used, with no paid remote cache or quota increase.
+
+## Explicit GitHub and site target
+
+When npm is explicitly excluded, publish with `release:publish -- X.Y.Z --skip-npm`
+and verify with `npm run release:verify -- --version X.Y.Z --target github-site`.
+The verifier requires the public npm-unavailability disclosure and all normal
+GitHub, exact-commit CI/CodeQL/candidate/Pages, snapshot, site and legacy proofs.
+It installs the verified immutable candidate locally instead of querying npm.
+`complete` and `publicReleaseComplete` refer to the selected publication target;
+`fullDistributionComplete` remains false. npm and registry-backed local hosts are
+reported `not-requested`, never passed; local configurations remain unchanged and
+no client reload is claimed. The default `npm` target retains all registry checks.
+Do not infer the GitHub/site target from a registry error. Record the selected
+target and observed timings; do not claim an overall speedup from isolated tests.
+
+
+## Bounded execution and critical-path scheduling
+
+Use `maintenance:cycle run --state-dir /absolute/private/state --seconds 300 --max-steps 40`
+after recording the complete authorized scope and actual review evidence. The
+bounded driver performs fresh intake, delegates eligible merges to `merge:batch`,
+continues independent PRs, and finishes with exact-main CI/CodeQL verification.
+It never creates semantic approval, closes PRs, publishes, reruns failed CI, or
+rewrites PR metadata. A non-complete status exits nonzero and preserves the
+journal; inspect the reported action before resuming. The time budget bounds new
+stage dispatch, not an already-running protected operation.
+
+For authorized branch alignment, explicitly add `--allow-align true`. This
+permits one head-bound update per PR per invocation, never a retry after base
+movement or an uncertain write. Re-intake afterward; unchanged-tree review
+receipts may be reused only under the existing authenticated context contract.
+Supply `--reviewed-head`, `--reviewer` and `--review-evidence` only for a review
+actually completed on that exact head. Without this evidence, independent work
+continues and the driver reports attention required. A previous uncertain write
+requires explicit fresh intake before another automatic run. Hold the existing
+single-writer cycle lock throughout the driver.
+
+Prepare incoming PRs before the release window: start a measured source cycle
+with the complete known scope, run `intake`, resolve author evidence/provenance/
+license defects, and review complete bundles before selecting the next merge.
+The existing PR admission and changed-skill evidence workflows provide early
+feedback on arrival. Do not claim that moving review earlier removes its cost,
+add unattended scheduled merges, or omit late-arriving PRs from an authorized
+batch. Use separate cycles if the authorized scope changes.
+
+### Metadata-only CI events
+
+`ci.yml` validates source on opened, synchronize and reopened events.
+`pr-metadata.yml` runs the same protected-base `pr-policy` and `pr-evidence`
+implementations for description/draft changes. Its independent concurrency group
+cannot cancel in-flight source validation, including first execution after a
+submission correction. A bounded read-only planner waits for existing technical
+checks; missing or skipped checks execute the identical full technical jobs.
+Genuine failures are never automatically rerun. Skipped fallback jobs use distinct
+non-required names. No skipped technical check is emitted
+as a replacement for an earlier result. Current-body admission, exact current
+head, strict up-to-date protection, artifact identity and all four required
+checks remain mandatory. Retargeting a PR fails metadata admission until a new
+source update validates the new base. Do not use an old base's green checks.
+
+### Immutable runtime handoff
+
+The tag candidate first verifies the prepared source and packs the runtime once.
+A scoped `runtime.json` binds the exact package bytes, commit, repository,
+workflow, run/attempt, version and lockfile. Linux/Windows Node 22/24 installation
+checks and the complete suite/site branch independently verify that handoff and
+run concurrently. Runtime-only evidence is explicitly rejected by the full
+publication verifier. The final distribution manifest still requires both the
+same runtime and site bytes, and publishers still require a successful complete
+candidate workflow. Early runtime handoff artifacts expire after one day; no
+paid runner, remote cache, quota increase or organization migration is enabled.
+
+Local rehearsal/preparation also uses the existing reviewed two-worker test
+cohort by default; `AAS_TEST_COHORT_WORKERS=1` retains serial diagnosis. No group
+is removed or sharded. Runtime installation writes at most four files concurrently
+inside its private unpublished staging directory. Exclusive creation, private
+permissions, per-file fsync, full byte verification and atomic promotion remain;
+all active writers drain before cleanup after failure.
+
+Web cache inputs retain user guides, the imported MCP example and contributor
+alias mapping; unrelated maintainer documentation no longer invalidates compiled
+web assets/coverage. Data and library inputs remain conservative. Fresh setup,
+metadata, prerender, audits and final checks still run. Record cache hits/misses,
+full test inventory, stage durations and overall elapsed time separately; do not
+sum overlapping savings or present fixture results as a whole-cycle benchmark.
+
+## Audited public finalization
+
+See [release finalization](release-finalization.md) for scratch-space admission,
+verified PR credits and the resumable post-publication command. This extends the
+existing protected flow, never replaces its gates or publication authorization.

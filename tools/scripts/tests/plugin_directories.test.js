@@ -100,7 +100,8 @@ for (const entry of fs.readdirSync(pluginsRoot, { withFileTypes: true })) {
   }
 
   const relativePluginPath = normalizeRelativePath(path.join("plugins", entry.name));
-  if (entry.name.startsWith("agentic-bundle-") || entry.name === "agentic-awesome-skills" || entry.name === "agentic-awesome-skills-claude") {
+  if (entry.name.startsWith("agentic-bundle-") || entry.name.startsWith("aasb-") ||
+      entry.name === "agentic-awesome-skills" || entry.name === "agentic-awesome-skills-claude") {
     assert.ok(
       knownPluginPaths.has(relativePluginPath),
       `generated plugin directory should be represented in a marketplace: ${relativePluginPath}`,

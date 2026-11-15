@@ -953,3 +953,15 @@ assert.equal(mergeBatch.isSkillContentRecord({status:"C",old_path:"skills/exampl
 assert.equal(mergeBatch.isSkillContentRecord({status:"C",old_path:"plugins/bundle/skills/example/SKILL.md",new_path:"skills/new-example/SKILL.md"}),true);
 assert.equal(mergeBatch.isSkillContentRecord({status:"R",old_path:"skills/example/SKILL.md",new_path:"docs/example.md"}),true);
 assert.equal(mergeBatch.isSkillContentRecord({status:"D",old_path:"skills/example/SKILL.md",new_path:null}),true);
+
+// Copied licenses bind the destination tree, not the unchanged root LICENSE.
+assert.deepEqual(mergeBatch.reviewedSkillIds([
+  {status:"A",old_path:null,new_path:"skills/deja-history/SKILL.md"},
+  {status:"C",old_path:"LICENSE",new_path:"skills/deja-history/LICENSE"},
+]),["deja-history"]);
+assert.deepEqual(mergeBatch.reviewedSkillIds([{status:"C",old_path:"skills/origin/LICENSE",new_path:"skills/destination/LICENSE"}]),["destination"]);
+assert.deepEqual(mergeBatch.reviewedSkillIds([{status:"C",old_path:"plugins/bundle/skills/origin/LICENSE",new_path:"skills/destination/LICENSE"}]),["destination"]);
+assert.deepEqual(mergeBatch.reviewedSkillIds([{status:"R",old_path:"skills/before/SKILL.md",new_path:"skills/after/SKILL.md"}]),["before","after"]);
+assert.deepEqual(mergeBatch.reviewedSkillIds([{status:"D",old_path:"skills/removed/SKILL.md",new_path:null}]),["removed"]);
+assert.throws(()=>mergeBatch.reviewedSkillIds([{status:"M",old_path:"LICENSE",new_path:"LICENSE"}]),/canonical skill paths/);
+assert.throws(()=>mergeBatch.reviewedSkillIds([{status:"R",old_path:"skills/before/SKILL.md",new_path:"docs/after.md"}]),/canonical skill paths/);

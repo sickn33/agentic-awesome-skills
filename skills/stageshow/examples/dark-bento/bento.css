@@ -1,0 +1,218 @@
+/* All rules belong to this example, including its responsive variants. */
+.db-card {
+  /* The card is the stage. One gutter for every edge something sits near:
+     the window's top, and the satellite's left and bottom. */
+  & .ss-stage {
+    --gutter: 22px;
+    /* One cool neutral family throughout: card, window, sidebar, satellite */
+    --ss-well: #111113;
+    --ss-canvas: #151517;
+    --ss-surface: #1b1b1e;
+    --ss-chrome: #1b1b1e;
+    overflow: hidden;
+    border-radius: 18px;
+    background:
+      radial-gradient(120% 90% at 70% -10%, rgba(255, 255, 255, 0.06), transparent 60%),
+      var(--ss-well);
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+
+  /* Pinned top-left, a gutter from the top; runs about a third past the right
+     and off the bottom. The left inset leaves room for the satellite. */
+  .db-window {
+    position: absolute;
+    top: var(--gutter);
+    left: 88px;
+    width: 400px;
+    height: 300px;
+    background: var(--ss-surface);
+    border-radius: 12px;
+    box-shadow: var(--ss-shadow-hero);
+  }
+
+  .db-window .ss-window__body {
+    display: flex;
+  }
+
+  .db-sidebar {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    gap: 4px;
+    width: 92px;
+    padding: 14px 8px;
+    border-right: 1px solid var(--ss-line);
+    background: var(--ss-canvas);
+  }
+
+  .db-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 22px;
+    padding: 0 4px;
+  }
+
+  .db-main {
+    flex: 1;
+    min-width: 0;
+    padding: 16px 16px 0;
+  }
+
+  .db-header {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .db-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 2px;
+  }
+
+  .db-title {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+    white-space: nowrap;
+    color: var(--ss-text-strong);
+  }
+
+  /* ---- Album art: grayscale only, a little light in each so it reads as
+     a printed sleeve rather than a gray box ---- */
+
+  .db-art {
+    display: block;
+    flex-shrink: 0;
+    border-radius: 4px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+
+  .db-art--1 { background: radial-gradient(circle at 30% 30%, #6a6a6e, #2a2a2d 70%); }
+  .db-art--2 { background: linear-gradient(160deg, #3c3c40 0%, #1f1f22 100%); }
+  .db-art--3 { background: radial-gradient(circle at 50% 120%, #d9d9dc 0%, #8a8a8e 28%, #2c2c30 70%); }
+  .db-art--4 { background: linear-gradient(200deg, #55555a, #232326 60%); }
+  .db-art--5 { background: radial-gradient(circle at 75% 25%, #4a4a4e, #1d1d20 65%); }
+
+  /* The playlist cover: four sleeves, the way a shared mix shows its parts */
+  .db-art--cover {
+    width: 48px;
+    height: 48px;
+    border-radius: 6px;
+    background:
+      radial-gradient(circle at 50% 120%, #d9d9dc 0%, #8a8a8e 28%, #2c2c30 70%) 0 0 / 50% 50% no-repeat,
+      radial-gradient(circle at 30% 30%, #6a6a6e, #2a2a2d 70%) 100% 0 / 50% 50% no-repeat,
+      linear-gradient(200deg, #55555a, #232326 60%) 0 100% / 50% 50% no-repeat,
+      radial-gradient(circle at 75% 25%, #4a4a4e, #1d1d20 65%) 100% 100% / 50% 50% no-repeat;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), 0 6px 14px -6px rgba(0, 0, 0, 0.6);
+  }
+
+  .db-art--tiny { width: 12px; height: 12px; border-radius: 3px; }
+  .db-art--row { width: 26px; height: 26px; }
+  .db-art--detail { width: 32px; height: 32px; border-radius: 6px; }
+
+  /* ---- Faces: who the playlist is shared with ---- */
+
+  .db-people {
+    display: flex;
+  }
+
+  /* Four people as gray photos; the kit's Avatar takes the shape and centering */
+  .db-pile .ss-facepile__face:nth-child(1) .ss-avatar { background: linear-gradient(160deg, #f2f2f3, #b9b9bd); }
+  .db-pile .ss-facepile__face:nth-child(2) .ss-avatar { background: linear-gradient(160deg, #8e8e93, #5a5a5f); }
+  .db-pile .ss-facepile__face:nth-child(3) .ss-avatar { background: linear-gradient(160deg, #5e5e63, #3a3a3e); }
+  .db-pile .ss-facepile__face:nth-child(4) .ss-avatar { background: linear-gradient(160deg, #3e3e42, #2a2a2e); }
+
+  .db-face.ss-avatar {
+    background: linear-gradient(160deg, #f2f2f3, #b9b9bd) !important;
+    color: #111113;
+    font-weight: 600;
+  }
+
+  /* The new row's art carries a small badge of who added it */
+  .db-row-art {
+    position: relative;
+    flex-shrink: 0;
+  }
+
+  .db-face--row {
+    position: absolute;
+    right: -5px;
+    bottom: -5px;
+    box-shadow: 0 0 0 2px #29292c;
+  }
+
+
+
+  /* ---- Track list ---- */
+
+  .db-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .db-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 38px;
+    margin: 0 -8px;
+    padding: 0 8px;
+    border-radius: 8px;
+  }
+
+  .db-row[data-new] {
+    background: #29292c;
+  }
+
+  .db-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* ---- Satellite: the song that was just added. Straddles the window's
+     left edge over the sidebar, ends a gutter short of the sidebar divider
+     (88 + 92 = 180), and sits a level above the window. ---- */
+
+  .db-detail {
+    position: absolute;
+    left: var(--gutter);
+    bottom: var(--gutter);
+    width: 136px;
+    padding: 12px;
+    border-radius: 12px;
+    background: #222225;
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.09),
+      0 1px 0 0 rgba(255, 255, 255, 0.05) inset,
+      0 24px 48px -12px rgba(0, 0, 0, 0.8),
+      0 6px 14px -6px rgba(0, 0, 0, 0.6);
+  }
+
+  .db-detail-track {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ss-line);
+  }
+
+  .db-detail-by {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 10px;
+  }
+
+  .db-by {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--ss-text);
+  }
+}

@@ -36,7 +36,11 @@ function fuzzyMatch(needle: string, haystack: string): boolean {
  * Neither mode ranks results or uses risk/source metadata to decide eligibility. */
 export function matchCatalogSkill(skill: Skill, query: string, mode: SearchMode, required = ''): { matches: boolean; explanation: string } {
   const fields = [skill.id, skill.name, skill.description, skill.category, ...(skill.tags || [])].map((field) => String(field || ''));
-  const tokens = new Set(fields.flatMap((field) => [token(field), ...field.split(/[\s/.,:;()_-]+/).map(token)]).filter(Boolean));
+  const tokens = new Set(fields.flatMap((field) => [
+    token(field),
+    ...field.split(/[\s,:;()[\]{}!?"']+/).map((piece) => token(piece.replace(/\.+$/, ''))),
+    ...field.split(/[\s/.,:;()_-]+/).map(token),
+  ]).filter(Boolean));
   const requiredTerms = terms(required);
   if ((required.trim() && !requiredTerms.length) || !requiredTerms.every((term) => tokens.has(term))) return { matches: false, explanation: '' };
   const queryTerms = mode === 'fuzzy' ? query.trim().toLowerCase().split(/\s+/).filter(Boolean) : terms(query);

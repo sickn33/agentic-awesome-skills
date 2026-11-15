@@ -1,0 +1,618 @@
+/* All rules belong to this example, including its responsive variants. */
+.kite-bento {
+  /* Kite's features section. Everything nests under .kite-bento so another
+     demo on the page can't restyle it. The grid is the page's (container
+     queries on the section); each picture is its own Stage at 1:1, pinned to
+     its tile's bottom and cropped by the tile. */
+    --pad: 28px;
+    --gap: 14px;
+    --tile: #f3f3f4;
+    --ink: #1d1d1f;
+    --ink-2: #6e6e73;
+    --accent: #3d5afe;
+    container-type: inline-size;
+    /* No padding of its own: on a page, the tiles span the content column */
+    box-sizing: border-box;
+    background: #fff;
+    font-family: var(--kb-font, inherit);
+    -webkit-font-smoothing: antialiased;
+
+  & .kb-grid {
+    display: grid;
+    gap: var(--gap);
+    max-width: 984px;
+    margin: 0 auto;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 410px 300px 320px 320px 320px;
+    grid-template-areas: 'hero' 'stat' 'card' 'approve' 'code';
+  }
+
+  /* The column of a docs page, a tablet: the hero across the top, then pairs */
+  @container (min-width: 600px) {
+    & .kb-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: 380px 320px 320px;
+      grid-template-areas: 'hero hero' 'stat card' 'approve code';
+    }
+  }
+
+  /* A homepage: hero and strip */
+  @container (min-width: 900px) {
+    & .kb-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: 380px 320px;
+      grid-template-areas: 'hero hero stat' 'card approve code';
+    }
+  }
+
+  @container (max-width: 599px) {
+    & .kb-grid {
+      --pad: 24px;
+    }
+  }
+
+  /* ---- The tile: one frame for all five ---- */
+
+  & .kb-tile {
+    position: relative;
+    overflow: hidden;
+    border-radius: 22px;
+    background: var(--tile);
+  }
+
+  & .kb-tile--hero { grid-area: hero; }
+  & .kb-tile--stat { grid-area: stat; }
+  & .kb-tile--card { grid-area: card; }
+  & .kb-tile--approve { grid-area: approve; }
+  & .kb-tile--code { grid-area: code; }
+
+  /* Run-in copy: the bold lead and its gray continuation at one size */
+  & .kb-copy {
+    position: relative;
+    z-index: 1;
+    max-width: 380px;
+    margin: 0;
+    padding: 24px var(--pad) 0;
+    font-size: 17px;
+    line-height: 24px;
+    letter-spacing: -0.012em;
+    color: var(--ink-2);
+    text-wrap: pretty;
+  }
+
+  & .kb-copy b {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  & .kb-tile--hero .kb-copy {
+    max-width: 460px;
+  }
+
+  /* ---- Pictures: pinned to the tile's bottom, cropped by the tile ---- */
+
+  & .kb-picture {
+    position: absolute;
+    bottom: 0;
+  }
+
+  /* The measured Stage reaches the tile edge, where the crop belongs. */
+  & .kb-picture--hero,
+  & .kb-picture--aligned {
+    left: 0;
+    width: 100%;
+  }
+
+  /* The small pictures are centered compositions, wider than any tile so the
+     tile's sides crop only empty ground */
+  & .kb-picture--small {
+    left: 50%;
+    width: 360px;
+    margin-left: -180px;
+  }
+
+  & .kb-stage .ss-stage {
+    overflow: hidden;
+    background: transparent;
+  }
+
+  /* ---- Receipts (hero) ---- */
+
+  & .kb-window {
+    position: absolute;
+    /* One gutter above and to the left: a corner bleed */
+    top: var(--pad);
+    left: var(--pad);
+    width: max(780px, calc(100% + var(--pad)));
+    height: 380px;
+    --ss-canvas: #fff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 10px 30px -10px rgba(30, 30, 60, 0.18), 0 2px 6px rgba(0, 0, 0, 0.04);
+  }
+
+  & .kb-window--compact {
+    top: 24px;
+    left: 24px;
+    width: calc(100% + 24px);
+    height: 340px;
+  }
+
+  & .kb-side {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 6px 12px;
+  }
+
+  & .kb-logo {
+    display: grid;
+    place-items: center;
+    width: 22px;
+    height: 22px;
+    margin: 4px 0 12px 8px;
+    border-radius: 7px;
+    background: var(--accent);
+    color: #fff;
+  }
+
+  & .kb-nav {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    height: 30px;
+    padding: 0 8px;
+    border-radius: 7px;
+  }
+
+  & .kb-nav[data-active] {
+    background: rgba(0, 0, 0, 0.045);
+  }
+
+  & .kb-ledger {
+    padding: 8px 20px 0;
+  }
+
+  & .kb-window--compact .kb-ledger {
+    width: calc(100% - 54px);
+    padding: 6px 18px 0;
+  }
+
+  & .kb-tools {
+    display: flex;
+    gap: 6px;
+  }
+
+  & .kb-row {
+    display: grid;
+    grid-template-columns: 26px 136px 118px 60px minmax(0, 1fr);
+    align-items: center;
+    gap: 14px;
+    height: 52px;
+    padding: 0 12px;
+    margin: 0 -12px;
+    border-radius: 12px;
+  }
+
+  & .kb-row + .kb-row {
+    box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.045);
+  }
+
+  & .kb-row[data-real] {
+    background: #f5f6ff;
+    box-shadow: none;
+  }
+
+  & .kb-row[data-real] + .kb-row {
+    box-shadow: none;
+  }
+
+  & .kb-row-rest {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-left: 18px;
+  }
+
+  & .kb-window--compact .kb-row {
+    grid-template-columns: minmax(0, 1fr) 116px;
+    gap: 10px;
+  }
+
+  & .kb-window--compact .kb-slot {
+    justify-self: end;
+  }
+
+  & .kb-window--compact .kb-row > :nth-child(4),
+  & .kb-window--compact .kb-row > :nth-child(5),
+  & .kb-window--compact .kb-row > :first-child {
+    display: none;
+  }
+
+  & .kb-row-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  & .kb-row-amount {
+    justify-self: end;
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+
+  & .kb-slot {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* The receipt: a slip that drops onto its charge from up and to the right */
+  & .kb-receipt {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    box-sizing: border-box;
+    width: 22px;
+    height: 28px;
+    padding: 5px 3px;
+    border-radius: 4px;
+    background: #fff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.06);
+    opacity: 0;
+    transform: translate(46px, -54px) rotate(9deg) scale(1.5);
+    will-change: transform;
+    transition: transform 0.9s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s ease, box-shadow 0.9s ease;
+  }
+
+  & .kb-slot[data-on] .kb-receipt {
+    opacity: 1;
+    transform: none;
+  }
+
+  & .kb-receipt .ss-bar {
+    max-width: 100%;
+  }
+
+  /* The status turns as the slip lands, not before */
+  & .kb-slot[data-on] .ss-states__item[data-on] {
+    transition-delay: 0.62s, 0.62s, 0.62s;
+  }
+
+  & .kb-slot[data-on] .ss-states__item:not([data-on]) {
+    /* opacity, filter, then the margin reset once it's gone, as the kit times it */
+    transition-delay: 0.55s, 0.55s, 0.7s;
+  }
+
+  & .kb-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 22px;
+    padding: 0 9px;
+    border-radius: 11px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  & .kb-pill[data-tone='warning'] {
+    background: #fdf1e2;
+    color: #a4570c;
+  }
+
+  & .kb-pill[data-tone='success'] {
+    background: #e6f6ec;
+    color: #177a3e;
+  }
+
+  /* ---- Close (stat): the one dark tile ---- */
+
+  & .kb-tile--stat {
+    background: #121214;
+  }
+
+  & .kb-stat {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    height: 100%;
+    padding: 24px var(--pad) 28px;
+  }
+
+  & .kb-stat-lead {
+    font-size: 17px;
+    line-height: 24px;
+    letter-spacing: -0.012em;
+    font-weight: 600;
+    color: #f5f5f7;
+  }
+
+  & .kb-stat-number {
+    display: block;
+    margin-top: auto;
+    font-size: 76px;
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+  }
+
+  & .kb-stat-unit {
+    font-size: 40px;
+    letter-spacing: -0.025em;
+  }
+
+  & .kb-stat-label {
+    max-width: 240px;
+    margin-top: 12px;
+    font-size: 15px;
+    line-height: 21px;
+    color: #a1a1a6;
+    text-wrap: pretty;
+  }
+
+  /* ---- Cards (object) ---- */
+
+  & .kb-card {
+    position: absolute;
+    top: 62px;
+    left: 50px;
+    box-sizing: border-box;
+    width: 260px;
+    height: 164px;
+    padding: 18px 20px;
+    overflow: hidden;
+    border-radius: 12px;
+    background:
+      radial-gradient(120% 140% at 0% 0%, rgba(255, 255, 255, 0.16), transparent 55%),
+      linear-gradient(140deg, #3550f0 0%, #2437b8 55%, #1a2788 100%);
+    box-shadow: 0 0 0 1px rgba(18, 26, 90, 0.25), 0 22px 40px -14px rgba(28, 40, 140, 0.45), 0 6px 12px -6px rgba(0, 0, 0, 0.2);
+    color: #fff;
+    transform: translateY(46px);
+    will-change: transform;
+    transition: transform 1s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  & .kb-card[data-on] {
+    transform: none;
+  }
+
+  /* A sheen crosses once as it rises */
+  & .kb-card::after {
+    content: '';
+    position: absolute;
+    inset: -40%;
+    background: linear-gradient(105deg, transparent 40%, rgba(255, 255, 255, 0.16) 50%, transparent 60%);
+    transform: translateX(-60%);
+    transition: transform 1.6s cubic-bezier(0.45, 0, 0.1, 1) 0.15s;
+  }
+
+  & .kb-card[data-on]::after {
+    transform: translateX(60%);
+  }
+
+  & .kb-card-mark {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  & .kb-card-chip {
+    display: block;
+    margin: 14px 0 0;
+  }
+
+  & .kb-card-name,
+  & .kb-card-last {
+    position: absolute;
+    top: 104px;
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  & .kb-card-name { left: 20px; }
+
+  & .kb-card-last {
+    right: 20px;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- Approvals (component) ---- */
+
+  & .kb-request {
+    position: absolute;
+    top: 16px;
+    left: var(--pad);
+    box-sizing: border-box;
+    width: calc(100% - 2 * var(--pad));
+    height: 210px;
+    padding: 18px;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 10px 26px -10px rgba(30, 30, 60, 0.2);
+  }
+
+  & .kb-request-who {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 11px;
+  }
+
+  & .kb-request-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  & .kb-request-name {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 19px;
+    color: var(--ink);
+  }
+
+  & .kb-request-what {
+    font-size: 13px;
+    line-height: 18px;
+    color: var(--ink-2);
+  }
+
+  & .kb-request-amount {
+    align-self: start;
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 19px;
+    color: var(--ink);
+  }
+
+  & .kb-request-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 18px;
+  }
+
+  & .kb-request-budget {
+    display: grid;
+    gap: 8px;
+    margin-top: 18px;
+    padding-top: 16px;
+    box-shadow: inset 0 1px 0 rgba(0, 0, 0, 0.05);
+  }
+
+  /* The kit's Meter, quiet: a pale fill, as filler */
+  & .kb-request-budget .kb-meter {
+    background: #ededf0;
+  }
+
+  & .kb-request-budget .kb-meter .ss-meter__fill {
+    background: #c9cfef;
+  }
+
+  & .kb-btn {
+    display: grid;
+    place-items: center;
+    height: 42px;
+    border-radius: 12px;
+    background: #f2f2f4;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  & .kb-btn--primary {
+    background: var(--accent);
+    color: #fff;
+    will-change: transform;
+    transition: background-color 0.2s ease;
+  }
+
+  & .kb-btn--primary[data-on] {
+    background: #22b05c;
+    animation: kb-press 0.36s ease-out;
+  }
+
+  & .kb-btn .ss-states__item {
+    gap: 6px;
+  }
+
+  /* ---- Coding (diagram) ---- */
+
+  & .kb-merchants {
+    position: absolute;
+    top: 16px;
+    left: var(--pad);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  & .kb-merchant {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    /* One width, so the three lines leave from one edge and bend on one column */
+    width: 112px;
+    box-sizing: border-box;
+    height: 36px;
+    padding: 0 12px 0 8px;
+    border-radius: 11px;
+    background: #fff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05), 0 2px 6px -2px rgba(0, 0, 0, 0.08);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  & .kb-merchant-icon {
+    display: block;
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    border-radius: 5px;
+    /* Notion's tile is white like the pill: a hairline keeps its edge */
+    box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.1);
+  }
+
+  & .kb-account {
+    position: absolute;
+    top: 58px;
+    /* Room between the columns, so the three lines bend, merge and run level
+       into the account rather than knotting at its edge */
+    right: var(--pad);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    box-sizing: border-box;
+    height: 52px;
+    padding: 0 14px;
+    line-height: 18px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 2px 6px -2px rgba(0, 0, 0, 0.08);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    transition: box-shadow 0.3s ease 0.9s;
+  }
+
+  & .kb-account[data-on] {
+    box-shadow: 0 0 0 1.5px var(--accent), 0 6px 16px -6px rgba(61, 90, 254, 0.4);
+  }
+
+  & .kb-account-code {
+    font-family: var(--ss-mono);
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 14px;
+    color: var(--ink-2);
+  }
+
+  & .kb-line {
+    --ss-accent: var(--accent);
+  }
+
+  & .kb-line--1 path { transition-delay: 0.09s; }
+  & .kb-line--2 path { transition-delay: 0.18s; }
+
+  & .kb-tick {
+    flex: none;
+  }
+
+
+}
+
+@keyframes kb-press {
+  0% { transform: scale(1); }
+  35% { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}

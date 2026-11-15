@@ -1,0 +1,155 @@
+/* A specimen sheet: an even grid of tiles, one part each. Not a composition to copy. */
+.ct .ss-stage {
+  background: var(--ss-well);
+}
+
+.ct-grid {
+  position: absolute;
+  inset: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.ct-tile {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--ss-raised);
+  box-shadow: var(--ss-shadow-card), 0 0 0 1px var(--ss-line-faint);
+}
+
+.ct-name {
+  font: 500 10.5px/14px ui-monospace, 'SF Mono', monospace;
+  color: var(--ss-text-faint);
+}
+
+.ct-body {
+  display: grid;
+  flex: 1;
+  align-content: center;
+  gap: 14px;
+  min-height: 0;
+}
+
+.ct-switch {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12.5px;
+  color: var(--ss-text-strong);
+}
+
+.ct-code {
+  margin: 0 -16px;
+}
+
+.ct-cols {
+  display: grid;
+  /* Fixed equal columns: sized by content, they'd shift as the card changes column */
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.ct-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 10px;
+  background: var(--ss-ink-1);
+}
+
+.ct-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 8px;
+  height: 50px;
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--ss-surface);
+  box-shadow: var(--ss-shadow-card), 0 0 0 1px var(--ss-line-faint);
+}
+
+.ct-card .ss-badge {
+  height: 14px;
+  padding: 0 5px;
+  font-size: 9px;
+}
+
+.ct-carry {
+  position: absolute;
+  z-index: 10;
+  isolation: isolate;
+}
+
+/* The whole card tilts and lifts, contents and all: a surface that tilts
+   under level text reads as a bug. It keeps its own layer from the start
+   (will-change), so its text never hops onto the pixel grid as it lands */
+.ct-carry .ct-card {
+  background: var(--ss-surface);
+  box-shadow: var(--ss-shadow-float), 0 0 0 1px var(--ss-line-faint);
+  transform: rotate(-2deg);
+  transform-origin: 72% 24%;
+  will-change: transform;
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+}
+
+.ct-carry[data-settle] .ct-card {
+  box-shadow: var(--ss-shadow-card), 0 0 0 1px var(--ss-line-faint);
+  transform: none;
+}
+
+.ct-list {
+  height: 140px;
+}
+
+.ct-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 28px;
+  font-size: 12.5px;
+  color: var(--ss-text-strong);
+}
+
+.ct-rest {
+  position: absolute;
+  right: 40px;
+  bottom: 40px;
+}
+
+.ct-fade {
+  transition: opacity 0.2s ease;
+}
+
+.ct-fade[data-out] {
+  opacity: 0;
+}
+
+/* The card returning to A fades in as its slot opens, not after */
+.ct-fade-in {
+  animation: ct-in 0.45s ease-out both;
+}
+
+@keyframes ct-in {
+  from { opacity: 0; }
+}
+
+/* Keep specimen labels at their authored size on a narrow host. */
+.ct .ss-stage[data-layout="compact"] .ct-grid {
+  inset: 16px;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: repeat(6, 200px);
+}
+
+.ct .ss-stage[data-layout="compact"] .ct-code-focus {
+  width: max-content;
+  max-width: 100%;
+}

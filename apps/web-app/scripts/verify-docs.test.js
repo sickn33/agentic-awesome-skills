@@ -30,4 +30,28 @@ describe('Documentation link verification', () => {
       fs.rmSync(root, { recursive: true, force: true });
     }
   });
+
+  it('requires source identity, allows absent dates, and rejects malformed dates', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'aas-docs-date-'));
+    try {
+      fs.mkdirSync(path.join(root, 'apps/web-app/src/data'), { recursive: true });
+      fs.mkdirSync(path.join(root, 'docs/users'), { recursive: true });
+      fs.mkdirSync(path.join(root, 'dist/docs/sample'), { recursive: true });
+      fs.writeFileSync(path.join(root, 'apps/web-app/src/data/docs.json'), JSON.stringify([{ slug: 'sample' }]));
+      fs.writeFileSync(path.join(root, 'apps/web-app/src/data/docs-social.json'), '[]');
+      fs.writeFileSync(path.join(root, 'docs/users/sample.md'), '# Sample\n');
+      for (const [fields, invalid] of [
+        [{ version: 'a'.repeat(40) }, false],
+        [{ version: 'a'.repeat(40), dateModified: '2026-01-01' }, false],
+        [{ version: 'a'.repeat(40), dateModified: '' }, true],
+        [{ version: 'a'.repeat(40), dateModified: 'not a date' }, true],
+        [{ dateModified: '2026-01-01' }, true],
+      ]) {
+        const article = { '@type': 'TechArticle', ...fields };
+        fs.writeFileSync(path.join(root, 'dist/docs/sample/index.html'), `<h1 id="sample">Sample</h1><script type="application/ld+json">${JSON.stringify(article)}</script>`);
+        const result = verifyDocs({ root, dist: path.join(root, 'dist') });
+        expect(result.issues.some(issue => issue.includes('article source metadata'))).toBe(invalid);
+      }
+    } finally { fs.rmSync(root, { recursive: true, force: true }); }
+  });
 });

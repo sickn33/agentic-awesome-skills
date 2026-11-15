@@ -95,7 +95,8 @@ export function verifyDocs({ root = repoRoot, dist = path.join(appRoot, 'dist') 
       const expected = inspectMarkdown(fs.readFileSync(path.join(root, 'docs/users', `${slug.slice(0, -1)}.md`), 'utf8')).ids;
       for (const id of expected) if (!ids.includes(id)) issues.push(`/docs/${slug}: source heading missing from static HTML: ${id}`);
       const article = html.jsonLd.find((entry) => [entry['@type']].flat().includes('TechArticle'));
-      if (!article || !/^[a-f0-9]{40}$/.test(article.version || '') || Number.isNaN(Date.parse(article.dateModified))) issues.push(`/docs/${slug}: missing article source metadata`);
+      if (!article || !/^[a-f0-9]{40}$/.test(article.version || '')
+        || (Object.hasOwn(article, 'dateModified') && Number.isNaN(Date.parse(article.dateModified)))) issues.push(`/docs/${slug}: missing or invalid article source metadata`);
     }
     if (!html.jsonLd.some((entry) => entry['@type'] === 'BreadcrumbList')) issues.push(`/docs/${slug}: missing breadcrumb metadata`);
     for (const src of [...html.images, html.social].filter(Boolean)) {

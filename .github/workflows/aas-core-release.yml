@@ -1,0 +1,85 @@
+name: AAS Core catalog deploy
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Published stable AAS tag (for example v20.7.0)
+        required: true
+        type: string
+      deploy:
+        description: Deploy after validation
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+concurrency:
+  group: aas-core-cloudflare-production
+  cancel-in-progress: false
+
+jobs:
+  catalog:
+    if: >-
+      github.repository == 'sickn33/agentic-awesome-skills' &&
+      ((github.event_name == 'release' && !github.event.release.prerelease &&
+      !github.event.release.draft && startsWith(github.ref, 'refs/tags/v')) ||
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
+        with:
+          node-version: 24.22.1
+      - name: Verify and build the published catalog
+        env:
+          TAG: ${{ github.event.release.tag_name || inputs.tag }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          [[ "$TAG" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]
+          gh api "repos/$GITHUB_REPOSITORY/releases/tags/$TAG" |
+            jq -e --arg tag "$TAG" '.tag_name == $tag and .draft == false and .prerelease == false'
+          commit="$(git rev-parse --verify "refs/tags/$TAG^{commit}")"
+          git merge-base --is-ancestor "$commit" origin/main
+          if [[ "$GITHUB_EVENT_NAME" == release ]]; then
+            test "$commit" = "$GITHUB_SHA"
+          fi
+          candidate="$RUNNER_TEMP/aas-core-candidate"
+          git worktree add --detach "$candidate" "$commit"
+          git archive HEAD apps/core-remote | tar -x -C "$candidate"
+          cd "$candidate"
+          test "$(node -p 'require("./package.json").version')" = "${TAG#v}"
+          npm ci --ignore-scripts --audit=false
+          cd apps/core-remote
+          npm ci --ignore-scripts --audit=false
+          AAS_EXPECTED_VERSION="${TAG#v}" npm run build
+          npm test
+          ./node_modules/.bin/wrangler deploy --dry-run --outdir "$RUNNER_TEMP/aas-core-dry-run"
+          cat dist/build-receipt.json
+      - name: Deploy only the current stable release to AAS Core Free
+        if: >-
+          (github.event_name == 'release' && vars.AAS_CORE_AUTO_DEPLOY == 'true') ||
+          (github.event_name == 'workflow_dispatch' && inputs.deploy)
+        env:
+          TAG: ${{ github.event.release.tag_name || inputs.tag }}
+          GH_TOKEN: ${{ github.token }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.AAS_CORE_CLOUDFLARE_API_TOKEN }}
+          WRANGLER_SEND_METRICS: 'false'
+        run: |
+          set -euo pipefail
+          test -n "$CLOUDFLARE_API_TOKEN"
+          latest="$(gh api "repos/$GITHUB_REPOSITORY/releases/latest" --jq .tag_name)"
+          if [[ "$TAG" != "$latest" ]]; then
+            echo "::notice::AAS Core deploy skipped: $TAG is no longer the latest stable release."
+            exit 0
+          fi
+          cd "$RUNNER_TEMP/aas-core-candidate/apps/core-remote"
+          node deploy.cjs

@@ -2,21 +2,25 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { describe, expect, it } from 'vitest';
 import { Landing } from '../Landing';
+import { CoreRecordedExample } from '../CoreRecordedExample';
 import stack from '../../../../../docs/examples/workflows/mcp-contract/aas-stack.json';
 import plan from '../../../../../docs/examples/workflows/mcp-contract/plan.json';
+import projectIdentity from '../../data/projectIdentity.json';
 
-const mount = () => render(<MemoryRouter><Landing /></MemoryRouter>);
+const mount = () => render(<MemoryRouter><CoreRecordedExample /></MemoryRouter>);
 describe('Core product homepage', () => {
-  it('leads with Core, one setup action, and a recorded example rather than catalog controls', () => {
-    mount();
-    expect(screen.getByRole('heading', { level: 1, name: 'AAS Core' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'Get started with Core' })).toHaveAttribute('href', '#get-started');
-    expect(screen.getByRole('link', { name: 'See an example' })).toHaveAttribute('href', '#recorded-example');
+  it('introduces the skill library with catalog and Core setup entry points', () => {
+    render(<MemoryRouter><Landing /></MemoryRouter>);
+    expect(screen.getByRole('heading', { level: 1, name: /Your agent.*The right skills/i })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Get started' })).toHaveAttribute('href', '/docs/');
+    expect(screen.getByRole('link', { name: 'Browse packs' })).toHaveAttribute('href', '/plugins/');
+    expect(screen.getByRole('link', { name: 'Contribute to AAS' })).toHaveAttribute('href', '/contribute/');
     expect(screen.queryByRole('searchbox')).not.toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /^Codex setup/ })).toHaveAttribute('href', '/docs/codex-cli-skills/');
-    expect(screen.getByRole('link', { name: /^Claude Code setup/ })).toHaveAttribute('href', '/docs/claude-code-skills/');
-    expect(screen.getByRole('tab', { name: /3 Plan preview/ })).toHaveAttribute('aria-selected', 'true');
     expect(document.title).toContain('AAS Core');
+    expect(screen.getByText(projectIdentity.description)).toBeVisible();
+    expect(screen.getByText(projectIdentity.licenseSummary)).toBeVisible();
+    expect(screen.getByRole('link', { name: 'Official GitHub repository' })).toHaveAttribute('href', 'https://github.com/sickn33/agentic-awesome-skills');
+    expect(screen.getByRole('link', { name: 'Installation guides' })).toHaveAttribute('href', '/docs/getting-started/');
   });
   it('shows all exact recorded IDs and renders the real artifact, including its historical version', () => {
     mount();

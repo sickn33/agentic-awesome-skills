@@ -1,0 +1,289 @@
+/* The Dynamic Island example. Island units are screen points. */
+.di {
+  --di-wall: radial-gradient(80% 40% at 70% 0%, rgba(176, 210, 255, 0.45), rgba(176, 210, 255, 0) 70%),
+    linear-gradient(178deg, #8fb3e6 0%, #5a7fc2 26%, #34508f 52%, #1d2b56 78%, #121a33 100%);
+
+  .ss-stage {
+    overflow: hidden;
+    /* A calm, cool ground: pale at the top, a breath of blue low behind the phone */
+    background:
+      radial-gradient(70% 60% at 50% 100%, rgba(120, 156, 222, 0.3), rgba(120, 156, 222, 0) 70%),
+      linear-gradient(180deg, #f4f6f9 0%, #e9edf3 100%);
+  }
+
+  .di-device {
+    position: absolute;
+    filter: drop-shadow(0 40px 50px rgba(30, 45, 90, 0.2)) drop-shadow(0 10px 16px rgba(30, 45, 90, 0.1));
+  }
+
+  .di-lock .ss-lock__date, .di-lock .ss-lock__clock {
+    transition: opacity .18s ease, filter .18s ease;
+  }
+  /* The expanded activity covers the clock; clear it before the edge passes. */
+  .di-lock[data-obscured] .ss-lock__date, .di-lock[data-obscured] .ss-lock__clock {
+    opacity: 0;
+    filter: blur(6px);
+  }
+
+  .di-hit {
+    position: absolute;
+    z-index: 7;
+  }
+
+  /* ---- The island ---- */
+
+  .di-island {
+    --di-tint: #5fe08a;
+    --di-accent: #4cd57c;
+    --di-accent-ink: #0b2a16;
+    --di-timer: #ff9f0a;
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    pointer-events: none;
+    /* The press: the whole island squeezes in a touch under the finger */
+    transform-origin: 201px 33px;
+    /* Kept on its own layer for good, so the text rests exactly as it moved */
+    will-change: transform, scale;
+    transition: scale 0.22s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .di-island[data-press] {
+    scale: 0.965;
+  }
+
+  .di-island__defs {
+    position: absolute;
+  }
+
+  .di-island__shapes {
+    position: absolute;
+    inset: 0;
+  }
+
+  .di-island__shape,
+  .di-island__bud {
+    position: absolute;
+    background: #000;
+    will-change: left, width, height;
+  }
+
+  .di-island__shape {
+    transition-property: left, top, width, height, border-radius;
+  }
+
+  .di-island__bud {
+    border-radius: 50%;
+    scale: 0.4;
+    transition-property: left, scale;
+    transition-duration: 0.6s;
+  }
+
+  .di-island__bud[data-on] {
+    scale: 1;
+  }
+
+  /* Content: out fast and blurred, in sharpening once the shape is mostly there */
+  .di-item {
+    position: absolute;
+    color: var(--di-tint);
+    opacity: 0;
+    scale: 0.88;
+    filter: blur(8px);
+    will-change: transform, filter, opacity;
+    transition:
+      opacity 0.12s ease-in,
+      scale 0.14s ease-in,
+      filter 0.12s ease-in;
+  }
+
+  .di-item[data-on] {
+    opacity: 1;
+    scale: 1;
+    filter: blur(0);
+    transition:
+      opacity 0.24s ease-out 0.16s,
+      scale 0.4s cubic-bezier(0.25, 1, 0.5, 1) 0.16s,
+      filter 0.26s ease-out 0.16s;
+  }
+
+  .di-trail[data-on],
+  .di-body[data-on] {
+    transition-delay: 0.2s;
+  }
+
+  .di-timer[data-on] {
+    transition-delay: 0.45s;
+  }
+
+  .di-lead {
+    display: grid;
+    width: 22px;
+    height: 22px;
+  }
+
+  .di-trail {
+    display: flex;
+    align-items: center;
+    height: 37px;
+    font-size: 15.5px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .di-timer {
+    display: grid;
+    width: 24px;
+    height: 24px;
+    color: var(--di-timer);
+  }
+
+  .di-timer__arc {
+    transform: rotate(-90deg);
+    transform-origin: 12px 12px;
+    /* Filling runs the timer down; the reset happens unseen, with no transition */
+    transition: none;
+  }
+
+  .di-timer__arc[data-run] {
+    transition: stroke-dashoffset 3.6s linear 0.3s;
+  }
+
+  .di-body {
+    display: flex;
+    flex-direction: column;
+    padding: 22px 26px 20px 28px;
+    color: #fff;
+    scale: 0.94;
+    transform-origin: 50% 20%;
+  }
+
+  .di-body__top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+
+  .di-body__words {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .di-body__label {
+    white-space: nowrap;
+    font-size: 17px;
+    font-weight: 500;
+    color: #9d9fa6;
+  }
+
+  .di-body__eta {
+    font-size: 38px;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .di-body__badge {
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: var(--di-accent);
+    color: var(--di-accent-ink);
+  }
+
+  /* The route: a dim track, the traveled part in the accent, the bag riding
+     the head of it in a small disc, home a ring at the end */
+  .di-track {
+    position: relative;
+    height: 6px;
+    margin: 16px 0 0;
+    border-radius: 3px;
+    background: #26282b;
+  }
+
+  .di-track__fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: calc(var(--p) * 100%);
+    border-radius: inherit;
+    background: var(--di-accent);
+    transition: width 1.4s cubic-bezier(0.45, 0, 0.1, 1);
+  }
+
+  .di-track__rider {
+    position: absolute;
+    top: 50%;
+    left: calc(var(--p) * 100%);
+    display: grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #fff;
+    color: var(--di-accent-ink);
+    box-shadow: 0 0 0 3px #000;
+    translate: -50% -50%;
+    will-change: transform;
+    transition: left 1.4s cubic-bezier(0.45, 0, 0.1, 1);
+  }
+
+  .di-track__end {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #000;
+    box-shadow: inset 0 0 0 3px var(--di-accent);
+    translate: 0 -50%;
+  }
+
+  .di-body__foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 16px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #9d9fa6;
+  }
+
+  .di-body__order {
+    padding: 3px 8px;
+    border-radius: 6px;
+    box-shadow: inset 0 0 0 1.5px #44464b;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .di-item,
+    .di-item[data-on] {
+      filter: none;
+      scale: 1;
+    }
+  }
+
+  /* With an activity showing, iOS makes room: the signal bars give way */
+  .ss-phone__signal {
+    transition: opacity 0.2s ease;
+  }
+
+  .ss-phone__screen:has(.di-island:not([data-mode="idle"])) .ss-phone__signal {
+    opacity: 0;
+  }
+& .ss-stage[data-layout='compact'] {
+  --gutter: 16px;
+}
+}
+
+/* Phone layout: the phone fills the column, one 16px gutter each side */

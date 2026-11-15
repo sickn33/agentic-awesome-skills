@@ -1,0 +1,26 @@
+@property --ed-top { syntax: '<length>'; inherits: false; initial-value: 0px; }
+@property --ed-bottom { syntax: '<length>'; inherits: false; initial-value: 0px; }
+.tc-lessons .ed-button { padding: 5px 12px; border-radius: 6px; background: #efefef; color: #333; font: 500 13px/28px var(--ss-font); }
+.tc-lessons .ed-label-window { display: block; width: 88px; height: 28px; overflow: hidden; }
+.tc-lessons .ed-button[data-good] .ed-label-window { mask-image: linear-gradient(transparent, #000 6px, #000 calc(100% - 6px), transparent); }
+.tc-lessons .ed-label-track { display: flex; flex-direction: column; text-align: center; transform: translate3d(0,0,0); will-change: transform; transition: transform .48s cubic-bezier(.25,1,.5,1); }
+.tc-lessons .ed-label-track > span { height: 28px; flex: none; }
+.tc-lessons .ed-button[data-changed] .ed-label-track { transform: translate3d(0,-28px,0); }
+.tc-lessons .ed-pair[data-viewport] figure { height: 218px; }
+.tc-lessons .ed-pair[data-viewport] .tc-visual { height: 172px; }
+.tc-lessons .ed-files { width: 248px; color: #555; font: 12px/20px var(--ss-font); }
+.tc-lessons .ed-files-heading { display: flex; justify-content: space-between; align-items: baseline; padding-bottom: 12px; font-weight: 550; color: #333; }
+.tc-lessons .ed-files-heading > span { font-size: 11px; font-weight: 400; color: #999; }
+.tc-lessons .ed-viewport { position: relative; height: 96px; overflow: hidden; }
+.tc-lessons .ed-file-track { will-change: transform; transition: transform .8s cubic-bezier(.4,0,.2,1); }
+.tc-lessons .ed-file { height: 32px; display: flex; justify-content: space-between; align-items: center; }
+.tc-lessons .ed-file > span:last-child { color: #999; font-size: 11px; font-variant-numeric: tabular-nums; }
+/* The mask is activated by the scroll state, not merely by overflow. Its
+   resting 8px boundary sits outside the first/last row's visible letter ink. */
+.tc-lessons .ed-files[data-good] .ed-viewport { mask-image: linear-gradient(transparent, #000 var(--ed-top, 0px), #000 calc(100% - var(--ed-bottom, 0px)), transparent); transition: --ed-top .15s ease, --ed-bottom .15s ease; }
+.tc-lessons .ed-files[data-good] .ed-viewport[data-top] { --ed-top: 8px; }
+.tc-lessons .ed-files[data-good] .ed-viewport[data-bottom] { --ed-bottom: 8px; }
+.tc-lessons [data-still] :is(.ed-label-track, .ed-file-track) { transition: none; }
+@media (prefers-reduced-motion: reduce) {
+  .tc-lessons :is(.ed-label-track, .ed-file-track) { transition: none; }
+}

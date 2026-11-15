@@ -1,0 +1,66 @@
+/* Chip */
+
+@layer stageshow {
+  /* Small boxes with text keep a layer of their own. Pushed by a row opening
+     above them, or carried along by anything that moves by layout, their text
+     would step whole pixels while the fill glides, and hop about inside it */
+  .ss-chip {
+    will-change: transform;
+  }
+
+  .ss-chip-slot {
+    display: inline-flex;
+    flex: none;
+    overflow: hidden;
+    border-radius: var(--ss-radius-pill);
+    opacity: 0;
+    /* Closing, it fades first and the gap closes behind it, so the narrowing
+       edge never slices a visible chip */
+    transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s, margin 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) 0.1s, opacity 0.14s ease;
+  }
+
+  /* Opening, it shows once the slot is nearly its width, so the edge never
+     slices a visible chip */
+  .ss-chip-slot[data-show] {
+    opacity: 1;
+    transition: width 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), margin 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.22s ease 0.16s;
+  }
+
+  .ss-chip-slot > .ss-chip {
+    flex: none;
+  }
+
+  .ss-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 24px;
+    padding: 0 10px;
+    border-radius: var(--ss-radius-pill);
+    background: var(--ss-accent-soft);
+    color: var(--ss-text-strong);
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  /* The x's round hover sits as far from the end as the label from the start, optically */
+  .ss-chip[data-removable] {
+    padding-right: 4px;
+  }
+
+  .ss-chip__x {
+    display: inline-grid;
+    place-items: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    color: var(--ss-text);
+    transition: background-color 0.15s ease;
+  }
+
+  .ss-chip__x[data-hover] {
+    background: var(--ss-ink-2);
+    transition-duration: 0s;
+  }
+}

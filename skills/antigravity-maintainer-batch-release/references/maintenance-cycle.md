@@ -11,7 +11,7 @@ to freshly fetched `origin/main`. Create a private external state directory (mod
 0700). Start the clock before content triage/review, not when CI begins. The start
 command rejects a dirty, topic-branch, stale or wrong-repository checkout. Use the
 same directory through completion. If there are no source PRs, record audit time
-separately; this source-batch runner requires a nonempty exact PR list:
+separately; record an explicit empty cycle with `--prs none`; otherwise use the exact PR list:
 
 ```sh
 npm run maintenance:cycle -- start --state-dir /absolute/private/state --prs 123,124
@@ -174,3 +174,24 @@ moves before preparation. Never shrink the recorded scope to hide blockers.
 For a genuinely release-only task with no source PR batch, explicitly start a
 cycle with `--prs none` and verify it; no implicit no-cycle bypass is supported.
 The original batch inventory must include every PR in the authorized scope.
+
+Use `maintenance:cycle next` for fresh advisory scheduling and `maintenance:doctor` for early environment checks. Follow the efficient preparation and explicit publication-target sections of the maintenance contract. Finish repairs before full checks, align only the next merge, and include release notes in the final planned source PR.
+
+
+## Execute a bounded continuation
+
+After real review, use `npm run maintenance:cycle -- run --state-dir /absolute/private/state --seconds 300 --max-steps 40`.
+The driver keeps the same journal and sole merge authority, continues independent
+PRs, and waits in bounded read intervals for final exact-main verification.
+Review/repair blockers remain explicit. Add `--allow-align true` only when branch
+alignment is authorized; it never retries the same PR update within the run.
+See the maintenance contract for uncertain writes, exact-head review arguments,
+metadata event isolation, early contributor intake and immutable runtime handoff.
+
+For a prepared PR whose checks are missing or pending, the coordinator reads
+exact-head pull-request runs awaiting approval. It prefers independently ready
+work, then delegates the waiting fork to the existing merge gate, which alone
+revalidates protected-base policy, workflow identity, current admission, review
+and strict protection before approving runs and waiting for all required checks.
+The scheduling hint grants no authority. Failed checks, uncertain writes and
+ordinary in-progress CI retain their existing stop/wait behavior.

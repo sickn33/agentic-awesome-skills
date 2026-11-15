@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "Vercel Engineering",
+  "date": "January 2026",
+  "abstract": "Historical Vercel guidance adapted for this catalog: 45 workload-dependent rules in 8 categories, with local correctness and safety qualifications. Not application benchmark evidence.",
+  "references": [
+    "https://react.dev",
+    "https://nextjs.org",
+    "https://swr.vercel.app",
+    "https://github.com/shuding/better-all",
+    "https://github.com/isaacs/node-lru-cache",
+    "https://vercel.com/blog/how-we-optimized-package-imports-in-next-js",
+    "https://vercel.com/blog/how-we-made-the-vercel-dashboard-twice-as-fast"
+  ]
+}

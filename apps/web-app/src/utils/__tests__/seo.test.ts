@@ -97,7 +97,8 @@ describe('SEO helpers', () => {
     const meta = buildSkillMeta(skill, true, '/skill/react-patterns');
 
     expect(meta.title).toContain('react-patterns');
-    expect(meta.description).toContain('Added 2026-03-01.');
+    expect(meta.description).toBe('Learn practical React patterns.');
+    expect(meta.ogDescription).toBe(meta.description);
     expect(meta.canonicalPath).toBe('/skill/react-patterns');
     expect(meta.ogTitle).toContain('@react-patterns');
     expect(meta.ogImage).toBe(DEFAULT_SOCIAL_IMAGE);
@@ -141,7 +142,7 @@ describe('SEO helpers', () => {
     const meta = buildSkillMeta(partialSkill, false, '/skill/partial');
 
     expect(meta.title).toContain('Unnamed skill');
-    expect(meta.description).toContain('Installable AI skill');
+    expect(meta.description).toBe('Explore partial: reusable instructions for AI coding agents.');
     expect(meta.ogTitle).toContain('Unnamed skill');
   });
 

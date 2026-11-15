@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const fs = require("fs");
+const { evaluateAdmission, admissionMessage, bodyDigest } = require("../lib/contribution-admission");
 const { resolveLicenseContents } = require("../lib/skill-license");
 const os = require("os");
 const path = require("path");
@@ -48,6 +49,7 @@ const MAX_EVIDENCE_BYTES = 8 * 1024 * 1024;
 const APPROVAL_WORKFLOW_PATHS = new Set([
   ".github/workflows/actionlint.yml",
   ".github/workflows/ci.yml",
+  ".github/workflows/pr-metadata.yml",
   ".github/workflows/codeql.yml",
   ".github/workflows/dependency-review.yml",
   // Runs with `contents: read`, no secrets and SHA-pinned actions; it is the
@@ -215,6 +217,16 @@ function isSkillContentRecord(record) {
       filePath.startsWith("skills/")
       || ["canonical_skill", "skill_support"].includes(classifyPathPolicy(filePath).kind)
     ));
+}
+
+function reviewedSkillIds(records) {
+  const paths = records.flatMap(record => record.status === "C"
+    ? [record.new_path] : [record.old_path, record.new_path]).filter(Boolean);
+  return [...new Set(paths.map(file => {
+    const match = typeof file === "string" && /^skills\/([a-z0-9][a-z0-9_-]*)\//.exec(file);
+    if (!match) throw new Error("Review receipts require canonical skill paths");
+    return match[1];
+  }))];
 }
 
 function assertValidSnapshot(snapshot, label) {
@@ -612,6 +624,7 @@ function loadPullRequestDetails(projectRoot, repoSlug, prNumber) {
   const details = runGhJson(projectRoot, ["pr", "view", String(prNumber)], {
     jsonFields: [
       "body",
+      "isDraft",
       "state",
       "mergeCommit",
       "autoMergeRequest",
@@ -640,6 +653,8 @@ function pullRequestTuple(prDetails) {
     throw new Error(`PR #${number || "<unknown>"} must target main.`);
   }
   return {
+    bodyDigest: bodyDigest(prDetails?.body),
+    draft: Boolean(prDetails?.isDraft),
     baseOid: assertFullSha(prDetails?.baseRefOid, `PR #${number} base SHA`),
     headOid: assertFullSha(prDetails?.headRefOid, `PR #${number} head SHA`),
   };
@@ -693,7 +708,18 @@ function assertUnchangedTuple(prDetails, expected, phase, prNumber) {
       `received ${actual.baseOid}/${actual.headOid}. Rerun merge:batch.`,
     );
   }
+  if ((expected.bodyDigest !== undefined && actual.bodyDigest !== expected.bodyDigest)
+      || (expected.draft !== undefined && actual.draft !== expected.draft)) {
+    throw failure("PR_CHANGED", `PR #${prNumber} description or draft state changed ${phase}; refresh admission before merging.`);
+  }
   return actual;
+}
+
+function assertSubmissionReady(records, details) {
+  const admission = evaluateAdmission(records, details.body);
+  if (admission.blocking) throw failure("SUBMISSION_INCOMPLETE", admissionMessage(admission));
+  if (details.isDraft) throw failure("DRAFT_PR", "Draft PRs may receive feedback but cannot merge; ask the author to mark it ready.");
+  return admission;
 }
 
 function validateEffectiveMainProtection(protection, rulesets = []) {
@@ -1286,11 +1312,11 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
     excludedRunIds: [],
     dependencies: options.approvalDependencies,
   });
+  assertSubmissionReady(approval.records, prDetails);
   const headSha = prDetails.headRefOid;
   const currentReviewedHeads = new Set(options.reviewedHeads || []);
   if (options.stateStore && approval.records.length && approval.records.every(isSkillContentRecord)) {
-    const skillIds = [...new Set(approval.records.flatMap(record => [record.old_path, record.new_path])
-      .filter(Boolean).map(file => file.split("/")[1]))];
+    const skillIds = reviewedSkillIds(approval.records);
     const content = fingerprint(projectRoot, headSha, options.evaluatorOid, skillIds);
     if (currentReviewedHeads.has(headSha) && options.reviewer && options.reviewEvidence) {
       options.stateStore.saveReview({ fingerprint: content, reviewedHead: headSha, outcome: "approved",
@@ -1378,8 +1404,9 @@ function prepareBatch(projectRoot, repoSlug, prNumbers, options, dependencies = 
   const load = dependencies.load || loadPullRequestDetails;
   const approve = dependencies.approve || approveActionRequiredRuns;
   return prNumbers.map((prNumber) => {
+    let details;
     try {
-    const details = load(projectRoot, repoSlug, prNumber);
+    details = load(projectRoot, repoSlug, prNumber);
     if(details.state!=="OPEN") throw failure("PR_NOT_OPEN", `PR #${prNumber} is ${details.state || "unknown"}; intake requires an OPEN PR before analysis or review.`);
     if (mergeableIsConflict(details)) throw new Error(`PR #${prNumber} has conflicts`);
     if (String(details.mergeStateStatus).toUpperCase() === "BEHIND") throw new Error(`PR #${prNumber} is BEHIND main; align the observed head once before checks`);
@@ -1387,10 +1414,11 @@ function prepareBatch(projectRoot, repoSlug, prNumbers, options, dependencies = 
       dryRun: options.dryRun, evaluatorOid: options.evaluatorOid,
       reviewedHeads: options.reviewedHeads, dependencies: options.approvalDependencies,
     });
+    assertSubmissionReady(approval.records, details);
     return { prNumber, merged: false, approvedRuns: approval.approvedRuns.map((run) => run.id),
       headSha: details.headRefOid, prepared: true, reviewAttested: (options.reviewedHeads || []).includes(details.headRefOid) };
     } catch (error) {
-      return { prNumber, merged: false, status: "blocked", reason: error.message, ...describeFailure(error) };
+      return { prNumber, headSha: details?.headRefOid, merged: false, status: "blocked", reason: error.message, ...describeFailure(error) };
     }
   });
 }
@@ -1521,6 +1549,7 @@ module.exports = {
   assertEffectiveMainProtection,
   assertFullSha,
   assertUnchangedTuple,
+  assertSubmissionReady,
   assertPendingPullRequest,
   buildSquashMergeBody,
   buildSquashMergeSubject,
@@ -1532,6 +1561,7 @@ module.exports = {
   fetchPullRequestObjects,
   getRequiredCheckAliases,
   isSkillContentRecord,
+  reviewedSkillIds,
   gitCheckoutMain,
   gitPullMain,
   listActionRequiredRuns,

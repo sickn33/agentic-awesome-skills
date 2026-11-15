@@ -1,0 +1,111 @@
+.ac .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+/* Pinned top and sides, off the bottom just under the composer */
+.ac-win {
+  position: absolute;
+  top: 28px;
+  left: 56px;
+  width: 528px;
+  height: 420px;
+}
+
+.ac-body {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  height: 100%;
+  /* The composer ends 28px above the stage's edge: the window runs off
+     below it, never at it */
+  padding: 16px 20px 56px;
+  background: var(--ss-surface);
+}
+
+/* The thread sits at the bottom, over the composer, the way chat apps
+   anchor it; older content goes up out of the window */
+.ac-thread {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 14px;
+  min-height: 0;
+  padding-bottom: 20px;
+  overflow: hidden;
+}
+
+.ac-turn--past {
+  display: grid;
+  gap: 8px;
+}
+
+.ac-past-q {
+  justify-self: end;
+}
+
+.ac-q {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ac-q .ss-text {
+  max-width: 76%;
+  white-space: normal;
+  text-wrap: pretty;
+  padding: 8px 14px;
+  border-radius: 16px;
+  background: var(--ss-ink-1);
+  color: var(--ss-text-strong);
+  font-size: 13px;
+}
+
+.ac-a {
+  display: grid;
+  gap: 10px;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.ac-a[data-on] {
+  opacity: 1;
+}
+
+.ac-thinking {
+  color: var(--ss-text);
+  font-size: 13px;
+}
+
+.ac-stream {
+  color: var(--ss-text-strong);
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.ac-sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  opacity: 0;
+  translate: 0 4px;
+  transition: opacity 0.35s ease, translate 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ac-sources[data-on] {
+  opacity: 1;
+  translate: 0 0;
+}
+
+.ac-source {
+  padding: 4px 10px;
+  border-radius: 999px;
+  box-shadow: inset 0 0 0 1px var(--ss-line);
+  color: var(--ss-text);
+  font-size: 11px;
+}
+
+/* Narrow: a gutter each side, the window full width of the stage */
+.ac .ss-stage[data-layout='compact'] .ac-win {
+  left: 16px;
+  width: 326px;
+  height: 520px;
+}

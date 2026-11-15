@@ -13,7 +13,7 @@ function git(root, args) {
 }
 function fingerprint(root, head, protectedBase, skillIds) {
   if (![head, protectedBase].every(s => /^[a-f0-9]{40}$/.test(s))) throw new Error("Full immutable heads required");
-  if (!skillIds.length || skillIds.some(s => !/^[a-z0-9][a-z0-9_-]*$/.test(s))) throw new Error("Invalid reviewed skill set");
+  if (!Array.isArray(skillIds) || !skillIds.length || Array.from(skillIds).some(s => typeof s !== "string" || !/^[a-z0-9][a-z0-9_-]*$/.test(s))) throw new Error("Invalid reviewed skill set");
   const skills = [...new Set(skillIds)].sort().map(id => ({ id, tree: git(root, ["ls-tree", head, "--", `skills/${id}`]) || "absent" }));
   // The Git tree binds all nested bytes and modes. The protected context binds
   // evaluators, dependencies, schemas and operational instructions, not only text.

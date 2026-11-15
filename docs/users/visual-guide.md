@@ -4,6 +4,8 @@ This guide shows the primary AAS Core workflow and the supporting catalog and di
 
 ---
 
+> **npm publishing paused.** For current skills, use the [GitHub installation and update guide](getting-started.md#install-and-update-without-npm). npm commands require a version already published to npm.
+
 ## The Big Picture
 
 ```
@@ -40,7 +42,7 @@ agentic-awesome-skills/
 ├── 📄 CONTRIBUTING.md                  ← Contributor workflow
 ├── 📄 CATALOG.md                       ← Full generated catalog
 │
-├── 📁 skills/                          ← 2,750+ skills live here
+├── 📁 skills/                          ← 2,957+ skills live here
 │   │
 │   ├── 📁 brainstorming/
 │   │   └── 📄 SKILL.md                 ← Skill definition
@@ -53,7 +55,7 @@ agentic-awesome-skills/
 │   │   └── 📁 2d-games/
 │   │       └── 📄 SKILL.md             ← Nested skills also supported
 │   │
-│   └── ... (2,750+ total)
+│   └── ... (2,957+ total)
 │
 ├── 📁 apps/
 │   └── 📁 web-app/                     ← Interactive browser
@@ -106,7 +108,7 @@ agentic-awesome-skills/
 
 ```
                     ┌─────────────────────────┐
-                    │  2,750+ SKILLS          │
+                    │  2,957+ SKILLS          │
                     └────────────┬────────────┘
                                  │
         ┌────────────────────────┼────────────────────────┐
@@ -207,7 +209,7 @@ If you want a workspace-style manual install instead, cloning into `.agent/skill
 │   ├── 📁 brainstorming/                 │
 │   ├── 📁 stripe-integration/            │
 │   ├── 📁 react-best-practices/          │
-│   └── ... (2,750+ total)                │
+│   └── ... (2,957+ total)                │
 └─────────────────────────────────────────┘
 ```
 

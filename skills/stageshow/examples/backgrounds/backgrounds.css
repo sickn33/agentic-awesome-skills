@@ -1,0 +1,81 @@
+.bg-gallery {
+  container-type: inline-size;
+  color: #242831;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+
+  & .bg-intro { max-width: 480px; margin: 0 0 28px; }
+  & .bg-intro h1 { margin: 0 0 10px; font-size: 26px; line-height: 32px; font-weight: 600; letter-spacing: -.035em; }
+  & .bg-intro p { margin: 0; color: #72747c; font-size: 14px; line-height: 21px; text-wrap: pretty; }
+  & .bg-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 30px 20px; }
+  @container (min-width: 640px) { & .bg-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  & .bg-study { min-width: 0; }
+  & .bg-picture { overflow: hidden; border-radius: 14px; }
+  & .bg-study h2 { margin: 13px 0 5px; font-size: 14px; line-height: 20px; font-weight: 600; letter-spacing: -.015em; }
+  & .bg-study > p { max-width: 350px; margin: 0; font-size: 12px; line-height: 18px; color: #72747c; text-wrap: pretty; }
+  & .ss-stage { background: transparent; }
+  & .bg-ground { position: absolute; inset: 0; display: grid; place-items: center; overflow: hidden; }
+  & .bg-ground--tint { background: #dfe2f4; }
+  & .bg-ground--field { background: linear-gradient(110deg, #ebaa91 0 32%, #d9e5e8 32% 100%); }
+  & .bg-ground--light { background: radial-gradient(ellipse at 0% 0%, #b6cebc, transparent 62%), radial-gradient(ellipse at 100% 100%, #e8b9a3, transparent 65%), #f5efdb; }
+  & .bg-ground--grid { background-color: #e6eef5; background-image: linear-gradient(#4a789915 1px, transparent 1px), linear-gradient(90deg, #4a789915 1px, transparent 1px); background-size: 24px 24px; background-position: center; }
+  & .bg-ground--architecture { background: #e9e6dc; }
+  & .bg-lines { position: absolute; inset: 0; fill: none; stroke: #919c8c; stroke-width: .8; opacity: .5; }
+  & .bg-ground--dark { background: radial-gradient(ellipse at 20% 0%, #454b50, transparent 75%), #191d21; }
+  & .bg-ground--paper { background: repeating-linear-gradient(0deg, #a9936506 0 1px, transparent 1px 4px), repeating-linear-gradient(92deg, #ffffff18 0 1px, transparent 1px 7px), #eee6d3; }
+  & .bg-ground--graphic { background: #d9e5e8; }
+  & .bg-geometry { position: absolute; inset: 0; overflow: hidden; }
+  & .bg-geometry > span { position: absolute; width: 260px; height: 260px; right: -100px; top: -155px; border: 36px solid #263a42; border-radius: 50%; box-sizing: border-box; }
+  & .bg-geometry > i { position: absolute; width: 260px; height: 260px; left: -125px; bottom: -170px; border-radius: 50%; background: #d1a23f; }
+
+  /* A dot grid that fades toward the edges, so the card sits in a clear middle */
+  & .bg-ground--dots { background: #f4f4f2; }
+  & .bg-ground--dots::before { content: ''; position: absolute; inset: 0; background-image: radial-gradient(circle, #9a9a94 1px, transparent 1.4px); background-size: 16px 16px; background-position: center; mask-image: radial-gradient(ellipse 75% 80% at 50% 50%, #000 30%, transparent 85%); opacity: .7; }
+  & .bg-ground--halftone { background: #f2ede4; }
+  & .bg-halftone { position: absolute; inset: 0; fill: #d4673f; }
+  & .bg-ground--blueprint { background-color: #1d3f72; background-image: linear-gradient(#ffffff2e 1px, transparent 1px), linear-gradient(90deg, #ffffff2e 1px, transparent 1px), linear-gradient(#ffffff12 1px, transparent 1px), linear-gradient(90deg, #ffffff12 1px, transparent 1px); background-size: 80px 80px, 80px 80px, 16px 16px, 16px 16px; background-position: center; }
+  & .bg-ground--grain { background: linear-gradient(160deg, #f6c7a8 0%, #d9a3c4 55%, #a9a7dc 100%); }
+  & .bg-grain { position: absolute; inset: 0; opacity: .7; mix-blend-mode: soft-light; }
+  & .bg-ground--conic { background: conic-gradient(from 160deg at 104% -12%, #ffcf70, #ff7f6e, #c86fd8, #6f8ff0, #6fd6c8, #ffcf70); }
+  & .bg-ground--stripes { background: repeating-linear-gradient(135deg, #1f2a3a10 0 1px, transparent 1px 7px), #eef0ec; }
+
+  & .bg-ground--diagonal { background: linear-gradient(130deg, #6253e6 0%, #aa51d2 32%, #e96d94 68%, #ffa36e 100%); }
+  & .bg-ground--radial { background: radial-gradient(ellipse 110% 130% at 4% 7%, #fff2a0 0%, #ffd162 24%, #ff9557 48%, #ee587a 74%, #b83f78 100%); }
+  & .bg-ground--mesh { background: radial-gradient(ellipse 85% 90% at 3% 10%, #b4efb4 0%, #7ad8c8 32%, transparent 74%), radial-gradient(ellipse 90% 100% at 100% 90%, #bba0ed 0%, #9981df 38%, transparent 76%), linear-gradient(135deg, #78cfdc, #5c8ed3 58%, #7270c3); }
+  & .bg-ground--night { background: radial-gradient(ellipse 95% 100% at 0% 100%, #187f83 0%, #173d57 42%, transparent 78%), radial-gradient(ellipse 95% 110% at 100% 0%, #a84179 0%, #532858 40%, transparent 78%), #171a34; }
+  & .bg-ground--bands { background: linear-gradient(122deg, #1c315f 0% 47%, #3d74bd 47% 82%, #cbdfee 82% 100%); }
+  & .bg-ground--spectrum { background: linear-gradient(112deg, #17a99c 0%, #369bbd 20%, #6268cf 42%, #aa60c6 63%, #eb7f9c 83%, #f5af69 100%); }
+
+  /* Above any texture the ground draws */
+  & .bg-digest { position: relative; z-index: 1; width: 232px; box-sizing: border-box; padding: 16px; border-radius: 12px; color: #323840; background: #fff; box-shadow: 0 1px 1px #1c25320a, 0 8px 24px -12px #24344235; }
+  & .bg-digest-heading { display: flex; align-items: center; gap: 10px; }
+  & .bg-digest-icon { display: grid; place-items: center; flex: none; width: 34px; height: 34px; border-radius: 9px; color: #687086; background: #f0f2f7; }
+  & .bg-digest-heading > div { display: flex; flex-direction: column; gap: 4px; }
+  & .bg-digest-heading strong { font-size: 14px; line-height: 17px; font-weight: 600; letter-spacing: -.025em; }
+  & .bg-digest-heading > div > span { font-size: 10px; line-height: 13px; color: #787f89; }
+  & .bg-digest-recipient { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 19px; padding-bottom: 14px; border-bottom: 1px solid #edf0f2; font-size: 11px; line-height: 16px; }
+  & .bg-digest-recipient > span { color: #7c838c; }
+  & .bg-digest-recipient > strong { display: flex; align-items: center; gap: 6px; font-weight: 500; }
+  & .bg-digest-count { display: inline-grid; place-items: center; width: 17px; height: 17px; border-radius: 5px; font-size: 10px; color: #6b7280; background: #f1f3f5; }
+  & .bg-digest-footer { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 13px; font-size: 10px; line-height: 14px; }
+  & .bg-digest-footer > span { display: flex; align-items: center; gap: 5px; }
+  & .bg-digest-footer > span > i { width: 5px; height: 5px; border-radius: 50%; background: #42a47d; }
+  & .bg-digest-button { padding: 5px 7px; border-radius: 5px; background: #f2f4f6; color: #525d6b; font-weight: 500; }
+  & .bg-ground--dark .bg-digest { background: linear-gradient(145deg, #3c4248, #30353b); color: #f0f2f3; box-shadow: inset 0 1px 0 #ffffff26, inset 0 0 0 1px #ffffff0b, 0 16px 28px -14px #000b; }
+  & .bg-ground--dark .bg-digest-icon { color: #c6ced8; background: #ffffff0d; }
+  & .bg-ground--dark .bg-digest-heading > div > span,
+  & .bg-ground--dark .bg-digest-recipient > span { color: #b0b8c1; }
+  & .bg-ground--dark .bg-digest-recipient { border-color: #ffffff13; }
+  & .bg-ground--dark .bg-digest-count,
+  & .bg-ground--dark .bg-digest-button { color: #cbd2d9; background: #ffffff0c; }
+  & .bg-ground--paper .bg-digest { background: #fffdf8; box-shadow: 0 1px 2px #6e502b17, 0 12px 24px -15px #6e502b50; }
+  & .bg-ground--night .bg-digest { box-shadow: 0 1px 0 #ffffff80, 0 18px 32px -14px #080e2ba6; }
+  & .bg-ground--bands .bg-digest { background: #f1f6ffb8; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: #243348; box-shadow: inset 0 1px 0 #ffffffb3, inset 0 0 0 1px #ffffff4d, 0 12px 28px -14px #10254c66; }
+  & .bg-ground--bands .bg-digest-icon,
+  & .bg-ground--bands .bg-digest-button,
+  & .bg-ground--bands .bg-digest-count { color: #44566d; background: #ffffff4d; }
+  & .bg-ground--bands .bg-digest-heading > div > span,
+  & .bg-ground--bands .bg-digest-recipient > span { color: #3b5068; }
+  & .bg-ground--bands .bg-digest-recipient { border-color: #344b6a26; }
+  & .bg-ground--blueprint .bg-digest { box-shadow: 0 1px 0 #ffffff40, 0 18px 32px -14px #04122ca6; }
+}

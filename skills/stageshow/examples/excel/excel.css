@@ -1,0 +1,596 @@
+/* Excel for Mac, light. Grays are the kit's neutral family; the one accent is
+   Excel's green, on the selection and the active tab. Chart bars keep
+   Office's own series blue, since that is what a chart in Excel looks like. */
+
+.xl-stage .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+  border-radius: 14px;
+  --xl-green: var(--ss-accent);
+  --xl-grid: #e3e3e3;
+  --xl-head: #f4f4f4;
+  --xl-head-sel: #e2e2e2;
+  --xl-ribbon: #f7f7f7;
+  --xl-series: #4472c4;
+  --xl-ink: #262628;
+  --xl-soft: #6b6b6e;
+}
+
+.xl-window {
+  position: absolute;
+  left: 36px;
+  top: 36px;
+  width: 880px;
+  height: 540px;
+  box-shadow: var(--ss-shadow-hero);
+  font-family: var(--ss-font);
+}
+
+.xl-window[data-layout="compact"] {
+  left: 18px;
+  top: 18px;
+  width: 460px;
+  height: 460px;
+}
+
+.xl-window .ss-window__bar {
+  position: relative;
+  background: var(--xl-ribbon);
+  border-bottom: 0;
+}
+
+.xl-window .ss-window__body {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+/* Title bar */
+.xl-quick {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: 16px;
+}
+
+.xl-autosave {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--xl-soft);
+}
+
+.xl-switch {
+  position: relative;
+  width: 24px;
+  height: 14px;
+  border-radius: 7px;
+  background: #d6d6d8;
+}
+
+.xl-switch::after {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 2px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.xl-doc {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--xl-ink);
+}
+
+.xl-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 200px;
+  height: 24px;
+  padding: 0 10px;
+  margin-right: 40px;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--ss-line);
+}
+
+/* Ribbon */
+.xl-tabs {
+  display: flex;
+  flex-shrink: 0;
+  gap: 18px;
+  height: 30px;
+  padding: 0 16px;
+  background: var(--xl-ribbon);
+}
+
+.xl-tab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  color: var(--xl-soft);
+  white-space: nowrap;
+}
+
+.xl-tab[data-active] {
+  color: var(--xl-ink);
+  font-weight: 600;
+}
+
+.xl-tab[data-active]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 3px;
+  height: 2px;
+  border-radius: 1px;
+  background: var(--xl-green);
+}
+
+.xl-ribbon {
+  display: flex;
+  flex-shrink: 0;
+  align-items: stretch;
+  height: 64px;
+  padding: 6px 10px;
+  background: var(--xl-ribbon);
+  border-bottom: 1px solid var(--xl-grid);
+}
+
+.xl-window[data-layout="compact"] .xl-ribbon {
+  height: 56px;
+}
+
+.xl-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  border-right: 1px solid #e2e2e2;
+}
+
+.xl-group:first-child {
+  padding-left: 6px;
+}
+
+.xl-big {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.xl-big-label {
+  font-size: 11px;
+  color: var(--xl-soft);
+}
+
+.xl-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.xl-font {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 8px;
+}
+
+.xl-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.xl-field {
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 20px;
+  padding: 0 6px 0 7px;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 0 0 0 1px #dcdcdc;
+  font-size: 11px;
+  color: var(--xl-ink);
+}
+
+.xl-caret {
+  flex-shrink: 0;
+  color: #8a8a8d;
+}
+
+.xl-glyph {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  font-size: 12px;
+  line-height: 1;
+  color: #4a4a4d;
+}
+
+.xl-sep {
+  width: 1px;
+  height: 12px;
+  background: #e0e0e0;
+}
+
+.xl-grid2 {
+  display: grid;
+  grid-template-columns: repeat(3, 14px);
+  gap: 10px 10px;
+  align-content: center;
+}
+
+.xl-editing {
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 5px;
+}
+
+.xl-autosum {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 6px 0 4px;
+  margin-left: -4px;
+  border-radius: 5px;
+  font-size: 11px;
+  color: var(--xl-ink);
+  transition: background 0.12s ease;
+}
+
+.xl-autosum[data-hover] {
+  background: #e6e6e6;
+}
+
+.xl-autosum[data-pressed] {
+  background: #dadada;
+}
+
+.xl-sigma {
+  font-size: 16px;
+  line-height: 1;
+  font-weight: 500;
+  color: var(--xl-ink);
+}
+
+.xl-quiet {
+  gap: 7px;
+}
+
+/* Formula bar */
+.xl-fbar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 10px;
+  height: 30px;
+  padding: 0 10px;
+  border-bottom: 1px solid var(--xl-grid);
+  background: #fff;
+}
+
+.xl-window[data-layout="compact"] .xl-fbar {
+  height: 28px;
+}
+
+.xl-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 78px;
+  height: 20px;
+  padding: 0 6px 0 7px;
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px #dcdcdc;
+  font-size: 11px;
+  color: var(--xl-ink);
+  white-space: nowrap;
+}
+
+.xl-fx-icons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 4px;
+  font-size: 11px;
+  color: #a6a6a9;
+}
+
+.xl-fx {
+  font-style: italic;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 13px;
+  color: #6b6b6e;
+}
+
+.xl-formula {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 20px;
+  padding-left: 10px;
+  border-left: 1px solid var(--xl-grid);
+  font-size: 12px;
+  color: var(--xl-ink);
+  white-space: nowrap;
+}
+
+/* The sheet */
+.xl-sheet {
+  position: relative;
+  display: grid;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  font-size: 12px;
+  color: var(--xl-ink);
+}
+
+.xl-corner,
+.xl-colhead,
+.xl-rowhead {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--xl-head);
+  border-right: 1px solid var(--xl-grid);
+  border-bottom: 1px solid var(--xl-grid);
+  font-size: 11px;
+  color: #77777a;
+  transition: background 0.1s ease, color 0.1s ease;
+}
+
+.xl-colhead[data-sel],
+.xl-rowhead[data-sel] {
+  background: var(--xl-head-sel);
+  color: var(--xl-green);
+  font-weight: 600;
+}
+
+.xl-colhead[data-sel] {
+  box-shadow: inset 0 -2px 0 var(--xl-green);
+}
+
+.xl-rowhead[data-sel] {
+  box-shadow: inset -2px 0 0 var(--xl-green);
+}
+
+.xl-cell {
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  border-right: 1px solid var(--xl-grid);
+  border-bottom: 1px solid var(--xl-grid);
+  white-space: nowrap;
+  overflow: hidden;
+  transition: background 0.1s ease;
+}
+
+.xl-num {
+  justify-content: flex-end;
+  font-variant-numeric: tabular-nums;
+}
+
+.xl-cell[data-row] {
+  justify-content: flex-start;
+}
+
+.xl-num[data-row] {
+  justify-content: flex-end;
+}
+
+.xl-cell[data-sel] {
+  background: #e6efe9;
+}
+
+.xl-bold {
+  font-weight: 700;
+}
+
+.xl-total {
+  font-weight: 700;
+  position: relative;
+  top: 3px;
+  opacity: 0;
+  /* Rises by top, not a transform, so the figure lands without a hop */
+  transition: opacity 0.25s ease, top 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.xl-total[data-show] {
+  opacity: 1;
+  top: 0;
+}
+
+.xl-selection {
+  position: absolute;
+  box-shadow: inset 0 0 0 2px var(--xl-green);
+  pointer-events: none;
+  transition: top 0.1s ease-out, height 0.1s ease-out;
+}
+
+.xl-handle {
+  position: absolute;
+  right: -3px;
+  bottom: -3px;
+  width: 6px;
+  height: 6px;
+  background: var(--xl-green);
+  box-shadow: 0 0 0 1px #fff;
+}
+
+/* The chart object, floating over the sheet as Excel draws it */
+.xl-chart {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  padding: 12px 16px 14px;
+  background: #fff;
+  box-shadow: 0 0 0 1px #d4d4d4;
+  color: #595959;
+}
+
+.xl-chart-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.xl-chart-title {
+  font-size: 13px;
+  color: #404040;
+}
+
+.xl-chart-total {
+  font-size: 11px;
+  color: #7a7a7d;
+  white-space: nowrap;
+  position: relative;
+  top: 3px;
+  opacity: 0;
+  transition: opacity 0.4s ease, top 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.xl-chart-value {
+  display: inline-grid;
+  font-weight: 600;
+  color: #262628;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.xl-chart-value > * {
+  grid-area: 1 / 1;
+}
+
+.xl-chart-value-size {
+  visibility: hidden;
+}
+
+.xl-chart-total[data-show] {
+  opacity: 1;
+  top: 0;
+}
+
+.xl-plot {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.xl-axis {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.xl-axis span {
+  position: absolute;
+  right: auto;
+  left: 0;
+  transform: translateY(50%);
+  font-size: 9px;
+  line-height: 1;
+  color: #8a8a8d;
+  font-variant-numeric: tabular-nums;
+}
+
+.xl-bars {
+  position: relative;
+}
+
+.xl-gridline {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e6e6e6;
+}
+
+.xl-chart-svg {
+  position: relative;
+}
+
+.xl-chart-svg .ss-chart__bar {
+  fill: var(--xl-series);
+}
+
+.xl-label {
+  position: absolute;
+  /* Centered by a fixed translate; it rises by margin, so the label never
+     ends a transform transition */
+  transform: translateX(-50%);
+  margin-top: 4px;
+  font-size: 10px;
+  line-height: 1.3;
+  color: #404040;
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+  transition: opacity 0.4s ease, margin-top 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.xl-label[data-show] {
+  opacity: 1;
+  margin-top: 0;
+}
+
+.xl-cats {
+  position: relative;
+  align-self: flex-end;
+  height: 14px;
+  margin-top: 6px;
+}
+
+.xl-cats span {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  font-size: 10px;
+  line-height: 1.3;
+  color: #6b6b6e;
+  white-space: nowrap;
+}
+
+.xl-window[data-layout="compact"] .xl-chart {
+  padding: 10px 12px 12px;
+}
+
+.xl-window[data-layout="compact"] .xl-chart-head {
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 10px;
+}
+
+.xl-window[data-layout="compact"] .xl-cats span,
+.xl-window[data-layout="compact"] .xl-label {
+  font-size: 8.5px;
+}
+
+/* Swap clamps the incoming text to the old box's width (max-width: 100%),
+   which cuts a longer formula; let it measure at its own width. */
+.xl-formula .ss-swap__in,
+.xl-formula .ss-swap__out {
+  max-width: none;
+}

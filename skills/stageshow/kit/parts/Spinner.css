@@ -1,0 +1,12 @@
+/* Spinner */
+
+@layer stageshow {
+  .ss-spinner {
+    flex: none;
+    animation: ss-spin 0.8s linear infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ss-spinner { animation: none; }
+  }
+}

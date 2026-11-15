@@ -4,6 +4,7 @@ const sha='a'.repeat(40), repo='sickn33/agentic-awesome-skills';
 const pr={number:1,state:'closed',merged:false,base:{ref:'main',repo:{full_name:repo}},head:{sha},closed_at:'2026-10-22T12:00:00Z'};
 const comment={user:{login:'sickn33',type:'User'},body:`${gate.MARKER}${sha} -->\nSuperseded by the reviewed owner consolidation #123.`,created_at:'2026-10-22T11:00:00Z',updated_at:'2026-10-22T11:00:00Z'};
 assert.doesNotThrow(()=>gate.resolvedPull(pr,[comment],()=>{}));
+assert.strictEqual(gate.resolvedPull({...pr,merge_commit_sha:'f'.repeat(40)},[comment],()=>{}).merge,null,'closed non-merged PRs never publish GitHub merge_commit_sha as a merge');
 for(const comments of [[],[{...comment,body:'<!-- nested <!-- prefix -->'+comment.body}],[{...comment,updated_at:'2026-10-22T13:00:00Z'}],[{...comment,user:{login:'contributor'}}],[{...comment,body:'Unbound reason that cannot authorize closure'}],[{...comment,created_at:'2026-10-22T13:00:00Z'}],[{...comment,body:`${gate.MARKER}${'b'.repeat(40)} -->\nWrong head rationale with enough text.`}]]) assert.throws(()=>gate.resolvedPull(pr,comments,()=>{}),/rationale/);
 assert.throws(()=>gate.resolvedPull({...pr,state:'open'},[comment],()=>{}),/still open/);
 assert.throws(()=>gate.resolvedPull({...pr,merged:true,merge_commit_sha:sha},[],()=>{throw Error('not ancestor');}),/not ancestor/);

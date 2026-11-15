@@ -1,0 +1,27 @@
+requirements-writing pack — content licence
+============================================
+
+This pack is derived from:
+    Requirements Writing Guidance: EARS syntax and requirement quality
+    Original synthesis (methods cited: EARS by Mavin et al.; quality characteristics per NASA public-domain guidance), 2026
+
+Source licence: Original guidance (CC BY 4.0); cited methods not reproduced  (tier 2 — see ../../docs/SOURCE-VETTING.md)
+No source-material download link is published (see ../../docs/LICENSING.md).
+
+This pack is ORIGINAL guidance authored by JG Systems Consulting Ltd.,
+synthesising widely-taught requirements-engineering practice in its own words. It is
+licensed under the Creative Commons Attribution 4.0 International License (CC BY 4.0)
+<https://creativecommons.org/licenses/by/4.0/>.
+
+It CITES its methods rather than reproducing them:
+  - The EARS (Easy Approach to Requirements Syntax) patterns are credited to
+    Alistair Mavin et al. (2009) and are described here in original wording, not copied
+    from the IEEE conference paper.
+  - Requirement quality and verification guidance aligns with NASA public-domain
+    systems-engineering guidance (NPR 7123.1 / NASA SE Handbook).
+  - This pack is NOT a reproduction of ISO/IEC/IEEE 29148, the INCOSE Guide for Writing
+    Requirements, or any other copyrighted standard. For the authoritative text, consult
+    those sources directly.
+
+NOTE: This file governs the CONTENT of this pack. The repository tooling is licensed
+separately under MIT (see ../../LICENSE).

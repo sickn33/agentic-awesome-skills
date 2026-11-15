@@ -1,30 +1,30 @@
 ---
 name: code-showcase-core-components
-description: Core component library and design system patterns. Use when building UI, using design tokens, or working with the component library.
+description: "Apply the ChrisWiles code-showcase component and token conventions when the target project actually uses that API; examples require local adaptation."
 risk: none
 source: https://github.com/ChrisWiles/claude-code-showcase/tree/main/.claude/skills/core-components
 source_repo: ChrisWiles/claude-code-showcase
 source_type: community
 date_added: 2026-07-01
 license: MIT
-license_source: https://github.com/ChrisWiles/claude-code-showcase/blob/main/LICENSE
+license_source: https://github.com/ChrisWiles/claude-code-showcase/blob/main/README.md#license
 ---
 
 # Core Components
 ## When to Use
 
-Use this skill when you need core component library and design system patterns. Use when building UI, using design tokens, or working with the component library.
+Use when maintaining a project that follows the ChrisWiles showcase component conventions. For a different or unknown library, start with `core-components` and map its examples to the actual project API; do not install both expecting additional components.
 
 
 This entry describes the upstream project's component API/token names, not a bundled component library or universal React Native API. Verify actual exports, tokens and props in the target repository before using snippets. CardProps/variantStyles, handlers and imported components are illustrative dependencies; token use alone does not prove contrast, labeling or behavior.
 
 ## Design System Overview
 
-Use components from your core library instead of raw platform components. This ensures consistent styling and behavior.
+Reuse verified project primitives when they provide the required semantics and behavior. Native components remain appropriate when no equivalent primitive exists; token use alone does not establish accessibility.
 
 ## Design Tokens
 
-**NEVER hard-code values. Always use design tokens.**
+Prefer the project's existing semantic tokens. If no token expresses the requirement, document the exception or propose a scoped token addition; do not invent token names or change the whole design system.
 
 ### Spacing Tokens
 
@@ -233,10 +233,10 @@ const MyScreen = () => (
 <Box padding="$4" backgroundColor="$backgroundPrimary">
 
 
-// WRONG - Raw platform components
+// Native components: valid when the project has no equivalent primitive
 import { View, Text } from 'react-native';
 
-// CORRECT - Core components
+// Project primitives: use only if these exports exist and preserve behavior
 import { Box, Text } from 'components/core';
 
 
@@ -274,7 +274,16 @@ const Card = ({ padding = '$4', variant = 'elevated', children }: CardProps) => 
 
 - **react-ui-patterns**: Use core components for UI states
 - **testing-patterns**: Mock core components in tests
-- **storybook**: Document component variants
+- Existing project Storybook, if configured: document component variants; no `storybook` skill or setup is bundled here.
+
+## Worked example: adapt a settings form
+
+Given a request to add an email field to an existing settings screen:
+
+1. Inspect the screen, component exports, token definitions and an existing validated field.
+2. Reuse the actual input API and semantic spacing/color tokens. The `onChangeText` and `$4` examples above apply only if the project defines them.
+3. Preserve the visible label, error association, keyboard focus and submit behavior. Check light/dark contrast using the rendered result.
+4. Return the changed file paths, the existing components reused and the checks actually run. If the project has no such library, state that prerequisite instead of fabricating `components/core` imports.
 
 ## Limitations
 

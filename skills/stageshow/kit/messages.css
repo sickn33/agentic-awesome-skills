@@ -1,0 +1,462 @@
+/* Messages (messages.tsx): Thread, Bubble, Stamp, Receipt and the chat look. */
+
+@layer stageshow {
+  .ss-thread {
+    --ss-thread-size: 15px;
+    --ss-me: #0a84ff;
+    --ss-me-text: #fff;
+    --ss-them: #e9e9eb;
+    --ss-them-text: #000;
+    /* One curve for everything that scrolls, so the thread moves as one */
+    --ss-scroll: 0.55s cubic-bezier(0.25, 1, 0.5, 1);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 3px;
+    /* Never grows past the room it's given: a full conversation overflows its
+       top (under the header) instead of pushing the composer and keyboard down */
+    min-height: 0;
+    /* Clips only what scrolls off the top: a bubble forming out of the composer
+       below, or a tail or badge at the sides, stays visible */
+    clip-path: inset(0 -100vw -100vh -100vw);
+    font-size: var(--ss-thread-size);
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  /* Inside a phone, messages are at true iOS size */
+  .ss-phone__content .ss-thread {
+    --ss-thread-size: 17px;
+  }
+
+  /* Inside a phone the stamps and receipts scale with the bubbles: a phone
+     keeps them readable (iOS draws them at 11pt, which under a 300px phone
+     falls below 10px on the page) */
+  .ss-phone__content .ss-stamp,
+  .ss-phone__content .ss-receipt {
+    font-size: 14px;
+  }
+
+  .ss-thread[data-app="sms"] {
+    --ss-me: #34c759;
+  }
+
+  .ss-stage[data-theme="dark"] .ss-thread,
+  .ss-phone[data-dark] .ss-thread {
+    --ss-them: #26252a;
+    --ss-them-text: #fff;
+  }
+
+  /* Rows glide on top, each on a layer it keeps, so a bubble and its words
+     move as one picture (alone, the words step whole pixels inside the
+     gliding bubble). top is set (not auto) because auto can't be animated */
+  .ss-bubble-row {
+    position: relative;
+    top: 0;
+    will-change: transform;
+    display: flex;
+    flex: none;
+    transition: top var(--ss-scroll);
+  }
+
+  .ss-bubble-row[data-from="me"] {
+    justify-content: flex-end;
+  }
+
+  /* A gap between runs, a hairline within one */
+  .ss-bubble-row[data-from="me"] + .ss-bubble-row[data-from="them"],
+  .ss-bubble-row[data-from="them"] + .ss-bubble-row[data-from="me"] {
+    margin-top: 8px;
+  }
+
+  .ss-bubble {
+    position: relative;
+    max-width: 75%;
+    padding: 0.42em 0.76em;
+    top: 0;
+    left: 0;
+    border-radius: 1.06em;
+    isolation: isolate;
+    color: var(--t);
+    overflow-wrap: break-word;
+    transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1), height 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* The fill is its own layer, so it can grow from the tail corner while the
+     text only rises and fades: text that ends a scale hops as it lands */
+  .ss-bubble::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: var(--b);
+    transform-origin: inherit;
+    transition: opacity 0.3s ease 0.06s;
+  }
+
+  /* A received bubble in a group chat carries the speaker's avatar beside
+     it, sat on the bubble's bottom edge as Messages draws it */
+  .ss-bubble-row[data-avatar] {
+    align-items: flex-end;
+  }
+
+  .ss-bubble__avatar {
+    display: inline-flex;
+    flex: none;
+    margin-right: 8px;
+    transition: margin-bottom 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Beside a reacted bubble the avatar stays on the bubble's bottom edge,
+     not on the room the reaction opened under it */
+  .ss-bubble-row:has(.ss-bubble[data-tapback]) .ss-bubble__avatar {
+    margin-bottom: 21px;
+  }
+
+  /* A reaction: the emoji in a small white pill on the bubble's bottom
+     corner, on the tail's side, overlapping the edge the way every chat app
+     draws one. The bubble makes room below it. It pops in from nothing. */
+  .ss-bubble[data-tapback] {
+    margin-bottom: 21px;
+  }
+
+  /* The room under the bubble opens on the same clock as the reaction
+     growing out of its edge, so the thread moves with it, not after it; it
+     closes only once the reaction has gone */
+  .ss-bubble {
+    transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1), height 0.35s cubic-bezier(0.22, 1, 0.36, 1), margin-bottom 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.12s;
+  }
+
+  .ss-bubble[data-tapback] {
+    transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1), height 0.35s cubic-bezier(0.22, 1, 0.36, 1), margin-bottom 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* A true circle, overlapping only the bubble's bottom padding (6px), never
+     its last line of words; the emoji is centered in it */
+  .ss-tapback {
+    position: absolute;
+    bottom: -17px;
+    left: 8px;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    border-radius: 50%;
+    background: var(--ss-thread-ground, #fff);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 0 0 0.5px rgba(0, 0, 0, 0.05);
+    font-size: 13px;
+    line-height: 1;
+    pointer-events: none;
+    transform-origin: 50% 50%;
+    transform: scale(0);
+    transition: transform 0.45s cubic-bezier(0.22, 1.4, 0.36, 1), opacity 0.1s ease;
+  }
+
+  .ss-bubble-row[data-from="me"] .ss-tapback {
+    left: auto;
+    right: 8px;
+  }
+
+  .ss-stage[data-theme="dark"] .ss-tapback {
+    background: var(--ss-thread-ground, #2c2c2e);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  }
+
+  .ss-tapback[data-show] {
+    transform: scale(1);
+  }
+
+  .ss-tapback:not([data-show]) {
+    opacity: 0;
+    transform: scale(0.5);
+    transition: transform 0.16s ease, opacity 0.14s ease;
+  }
+
+  .ss-tapback__emoji {
+    display: block;
+    width: 1em;
+    height: 1em;
+    line-height: 1;
+    text-align: center;
+  }
+
+  /* Only arrivals rise in from their tail corner */
+  .ss-bubble[data-arrived] {
+    animation: ss-bubble-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .ss-bubble[data-arrived]::before {
+    animation: ss-bubble-fill 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* A bubble with an origin forms out of the composer instead (in messages.tsx) */
+  .ss-bubble[data-arrived][data-source],
+  .ss-bubble[data-arrived][data-source]::before {
+    animation: none;
+  }
+
+  /* In flight from the composer: words only, the fill comes in as it travels */
+  .ss-bubble[data-flying]::before {
+    opacity: 0;
+    transition: none;
+  }
+
+  /* Its tail grows in once it has landed */
+  .ss-bubble[data-arrived][data-source][data-tail] > .ss-bubble__tail {
+    animation-delay: 0.32s;
+  }
+
+  [data-from="me"] > .ss-bubble {
+    --b: var(--ss-me);
+    --t: var(--ss-me-text);
+    transform-origin: 100% 100%;
+  }
+
+  [data-from="them"] > .ss-bubble {
+    --b: var(--ss-them);
+    --t: var(--ss-them-text);
+    transform-origin: 0 100%;
+  }
+
+  @keyframes ss-bubble-in {
+    from {
+      opacity: 0;
+      top: 6px;
+    }
+  }
+
+  @keyframes ss-bubble-fill {
+    from {
+      transform: scale(0.8);
+    }
+  }
+
+  /* The morph clips its own text while the box grows, but only on the sides
+     that grow: the tail, just outside the tail corner, stays where it is */
+  [data-from="them"] > .ss-bubble[style*="width"] {
+    clip-path: inset(0 0 -1em -1em);
+  }
+
+  [data-from="me"] > .ss-bubble[style*="width"] {
+    clip-path: inset(0 -1em -1em 0);
+  }
+
+  .ss-bubble__text {
+    display: block;
+  }
+
+  /* An arriving bubble brings its words with it, from the first frame. Words
+     growing out of the typing dots fade in while the box grows, never after it,
+     so there is no empty pill */
+  .ss-bubble[data-grew] > .ss-bubble__text {
+    animation: ss-fade-in 0.28s ease both;
+  }
+
+  .ss-bubble__tail {
+    position: absolute;
+    bottom: 0;
+    width: 1.06em;
+    height: 0.94em;
+    fill: var(--b);
+    pointer-events: none;
+    /* Retracted into the bubble's corner unless this bubble closes its run */
+    opacity: 0;
+    transform: scale(0.2);
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.18s ease;
+  }
+
+  .ss-bubble[data-tail] > .ss-bubble__tail {
+    opacity: 1;
+    transform: none;
+  }
+
+  [data-from="me"] > .ss-bubble > .ss-bubble__tail {
+    right: -0.36em;
+    transform-origin: 15% 85%;
+  }
+
+  [data-from="them"] > .ss-bubble > .ss-bubble__tail {
+    left: -0.36em;
+    transform-origin: 85% 85%;
+  }
+
+  /* An arriving bubble's tail grows out once the bubble has nearly landed.
+     Backwards fill only, so the transition above still runs when it retracts */
+  .ss-bubble[data-arrived][data-tail] > .ss-bubble__tail {
+    animation: ss-tail-in 0.32s cubic-bezier(0.25, 1, 0.5, 1) 0.2s backwards;
+  }
+
+  @keyframes ss-tail-in {
+    from { opacity: 0; transform: scale(0.2); }
+  }
+
+  .ss-bubble__bar {
+    display: inline-block;
+    height: 0.4em;
+    border-radius: 0.2em;
+    background: currentColor;
+    opacity: 0.35;
+    vertical-align: middle;
+  }
+
+  /* Exactly one line tall (0.84em of padding + 1.3em of line), so a one-line
+     reply grows only sideways and nothing above it moves */
+  .ss-bubble[data-typing] {
+    padding: 0.84em 0.8em;
+  }
+
+  .ss-bubble__dots {
+    display: flex;
+    gap: 0.24em;
+  }
+
+  .ss-bubble__dots i {
+    width: 0.46em;
+    height: 0.46em;
+    border-radius: 50%;
+    background: #8e8e93;
+    animation: ss-typing 1.2s ease-in-out infinite;
+  }
+
+  .ss-bubble__dots i:nth-child(2) {
+    animation-delay: 0.16s;
+  }
+
+  .ss-bubble__dots i:nth-child(3) {
+    animation-delay: 0.32s;
+  }
+
+  @keyframes ss-typing {
+    0%, 60%, 100% {
+      opacity: 0.4;
+      transform: none;
+    }
+    30% {
+      opacity: 1;
+      transform: translateY(-0.12em);
+    }
+  }
+
+  /* Stamps glide with the thread like the bubbles do (the receipt's own
+     transition below includes top too) */
+  .ss-stamp {
+    position: relative;
+    top: 0;
+    will-change: transform;
+    transition: top var(--ss-scroll);
+  }
+
+  .ss-stamp {
+    flex: none;
+    margin: 10px 0 6px;
+    color: #8e8e93;
+    font-size: 0.7em;
+    font-weight: 500;
+    text-align: center;
+  }
+
+  .ss-receipt {
+    display: grid;
+    flex: none;
+    grid-template-rows: 0fr;
+    justify-items: end;
+    color: #8e8e93;
+    font-size: 0.66em;
+    font-weight: 500;
+    position: relative;
+    top: 0;
+    will-change: transform;
+    transition: top var(--ss-scroll), grid-template-rows var(--ss-scroll), opacity 0.25s ease;
+    opacity: 0;
+  }
+
+  /* Delivered to Read: the old word lifts out as the new one rises in, the two
+     overlapping so there is never an empty moment, pinned to the right edge */
+  .ss-receipt .ss-roll[data-variant='fade'] .ss-roll__item[data-out] {
+    animation: ss-receipt-out 0.3s ease both;
+  }
+
+  .ss-receipt .ss-roll[data-variant='fade'] .ss-roll__char {
+    animation: ss-receipt-in 0.4s cubic-bezier(0.25, 1, 0.5, 1) 0.08s both;
+  }
+
+  .ss-receipt .ss-roll[data-variant='fade'] .ss-roll__mid {
+    transition-duration: 0.45s;
+  }
+
+  @keyframes ss-receipt-out {
+    to { opacity: 0; filter: blur(1.5px); transform: translateY(-0.5em); }
+  }
+
+  @keyframes ss-receipt-in {
+    from { opacity: 0; filter: blur(1.5px); transform: translateY(0.5em); }
+  }
+
+  .ss-receipt > span {
+    min-height: 0;
+    overflow: hidden;
+    padding-right: 0.3em;
+  }
+
+  .ss-receipt[data-show] {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  /* Chat: the AI-app look. The person's turn is a quiet bubble on the right; the
+     reply is plain text across the column, with no bubble and no tail */
+  .ss-thread[data-app="chat"] {
+    --ss-me: var(--ss-ink-1);
+    --ss-me-text: var(--ss-text-strong);
+    gap: 18px;
+    line-height: 1.55;
+  }
+
+  .ss-thread[data-app="chat"] .ss-bubble {
+    border-radius: 1.2em;
+    padding: 0.5em 0.9em;
+  }
+
+  .ss-thread[data-app="chat"] .ss-bubble__tail {
+    display: none;
+  }
+
+  /* The fill is the bubble's own layer (::before), so the reply clears that,
+     not just its background */
+  .ss-thread[data-app="chat"] [data-from="them"] > .ss-bubble {
+    --b: transparent;
+    /* Plain text has no box to ease: it takes its height as words stream in,
+       or the thread chases a lagging box and the text spills past it */
+    transition: none;
+    max-width: 100%;
+    padding: 0;
+    border-radius: 0;
+    background: none;
+    color: var(--ss-text);
+  }
+
+  .ss-thread[data-app="chat"] .ss-bubble-row + .ss-bubble-row {
+    margin-top: 0;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ss-bubble,
+    .ss-bubble__text {
+      animation-duration: 0.01s;
+    }
+
+    .ss-bubble__dots i {
+      animation: none;
+      opacity: 0.6;
+    }
+
+    .ss-bubble-row,
+    .ss-bubble {
+      transition-duration: 0.01s;
+    }
+  }
+}

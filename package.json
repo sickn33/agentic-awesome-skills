@@ -1,11 +1,11 @@
 {
   "name": "agentic-awesome-skills",
-  "version": "20.0.0",
+  "version": "20.8.0",
   "aasCore": {
     "includedFromMajor": 15,
     "status": "agent-first-preview"
   },
-  "description": "AAS Core: complete local skill discovery, agent-owned selection, stack validation, and planning, backed by 2,750+ agentic skills.",
+  "description": "AAS Core: complete local skill discovery, agent-owned selection, stack validation, and planning, backed by 2,957+ agentic skills.",
   "license": "MIT",
   "scripts": {
     "validate": "node tools/scripts/run-python.js tools/scripts/validate_skills.py",
@@ -61,6 +61,7 @@
     "pr:decision": "node tools/scripts/pr_decision_manifest.cjs",
     "merge:batch": "node tools/scripts/merge_batch.cjs",
     "release:preflight": "node tools/scripts/release_workflow.js preflight",
+    "release:rehearse": "node tools/scripts/release_workflow.js rehearse",
     "release:prepare": "node tools/scripts/release_workflow.js prepare",
     "release:publish": "node tools/scripts/release_workflow.js publish",
     "test": "node tools/scripts/tests/run-test-suite.js",
@@ -93,7 +94,15 @@
     "prepack": "node tools/scripts/distribution_snapshot.cjs verify",
     "distribution:verify": "node tools/scripts/distribution_snapshot.cjs verify",
     "maintenance:measure": "node tools/scripts/maintenance_measure.cjs",
-    "maintenance:cycle": "node tools/scripts/maintenance_cycle.cjs"
+    "maintenance:doctor": "node tools/scripts/maintenance_doctor.cjs",
+    "maintenance:cycle": "node tools/scripts/maintenance_cycle.cjs",
+    "app:ci": "node tools/scripts/web_ci.cjs",
+    "app:ci:test": "node tools/scripts/web_ci.cjs cacheable test",
+    "app:ci:compile": "node tools/scripts/web_ci.cjs cacheable compile",
+    "maintenance:quick-check": "node tools/scripts/maintenance_quick_check.cjs",
+    "registry:preview": "node tools/scripts/run-python.js tools/scripts/preview_registry.py",
+    "release:finalize": "node tools/scripts/release_finalize.cjs",
+    "maintenance:activity": "node tools/scripts/maintenance_activity.cjs"
   },
   "dependencies": {
     "ajv": "^8.20.0",
@@ -143,5 +152,16 @@
     "antigravity",
     "agentic-skills",
     "ai-coding"
+  ],
+  "packageManager": "npm@11.20.0",
+  "devDependencies": {
+    "parse5": "8.0.1",
+    "turbo": "2.11.7"
+  },
+  "bundleDependencies": [
+    "ajv",
+    "fast-uri",
+    "sanitize-filename",
+    "yaml"
   ]
 }

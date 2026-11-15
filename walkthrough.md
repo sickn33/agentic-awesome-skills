@@ -911,3 +911,11 @@ Verified the proposed redesign against protected main `71b1c1a9e2e85e492bc647aea
 Local measurement on macOS with Node 26.7.0: the unchanged base's 152-file suite passed in 151.199 seconds. The proposed editorial checks passed three times in 1.251, 1.244 and 1.246 seconds against that same base. This compares local check workloads only, with one baseline execution; it does not measure the complete maintenance or distribution cycle.
 
 The full requested migration remains incomplete: build-once publishers, release-only snapshots, persistent coordinator/receipt storage and independent catalog distribution must still be integrated and exercised. No runtime release, catalog publication or installed maintainer-skill update is claimed. See [component validation](docs/maintainers/component-validation.md) for the implemented boundary.
+
+## 2026-11-09 — Teardown viewer verification hardening
+
+- Replaced interpolated browser JavaScript with a static CDP function and separate drawing-ID arguments; reject unsafe IDs before screenshot paths are constructed.
+- Encode local page URLs with `pathToFileURL`, including paths containing spaces, `#` and `?`.
+- Expand the embedded-script regression to mixed-case delimiters; this extractor checks the controlled generated template and is not an HTML sanitizer.
+- Added deterministic regression coverage for selection, unchanged selection, data transport, invalid IDs and browser exceptions. Browser rendering and visual quality remain separate checks.
+- Keep the upstream MIT notice and declare AAS support-script adaptations in the canonical skill. Release generation owns plugin mirrors.

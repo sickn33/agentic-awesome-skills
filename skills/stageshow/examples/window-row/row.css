@@ -1,0 +1,63 @@
+/* Three windows at one height and top, one 20px gap. The middle one is
+   centered; the outer two run off both sides by about a third. */
+.wr .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+.wr-win {
+  position: absolute;
+  top: 32px;
+  width: 300px;
+  height: 340px;
+}
+
+.wr-win--hero {
+  left: 210px;
+  z-index: 1;
+  box-shadow: var(--ss-shadow-hero);
+}
+
+.wr-win--left {
+  left: -110px;
+}
+
+.wr-win--right {
+  left: 530px;
+}
+
+.wr-body {
+  display: grid;
+  gap: 12px;
+  padding: 18px 20px 0;
+}
+
+
+.wr-label {
+  color: var(--ss-text);
+  font-size: 13px;
+  transition: color 0.3s ease;
+}
+
+.wr-step[data-on] .wr-label,
+.wr-step[data-next] .wr-label {
+  color: var(--ss-text-strong);
+}
+
+.wr-foot {
+  margin-top: 6px;
+  padding-top: 16px;
+  border-top: 1px solid var(--ss-line);
+}
+
+/* Narrow: no room for a row. The neighbors would be slivers, so the hero
+   stands alone, a gutter in from each side, and runs off the bottom */
+.wr .ss-stage[data-layout='compact'] .wr-win--left,
+.wr .ss-stage[data-layout='compact'] .wr-win--right {
+  display: none;
+}
+
+.wr .ss-stage[data-layout='compact'] .wr-win--hero {
+  left: 16px;
+  width: 326px;
+}

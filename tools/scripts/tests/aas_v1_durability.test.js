@@ -10,6 +10,8 @@ const DURABILITY_MODULE = path.join(__dirname, "../../lib/aas-v1/durability.js")
 function loadWithWindowsHelperResult(result) {
   const platformDescriptor = Object.getOwnPropertyDescriptor(process, "platform");
   const originalSpawnSync = childProcess.spawnSync;
+  const systemRoot = process.env.SystemRoot;
+  process.env.SystemRoot = String.raw`C:\Windows`;
   const invocations = [];
   Object.defineProperty(process, "platform", { ...platformDescriptor, value: "win32" });
   childProcess.spawnSync = (...invocation) => {
@@ -24,6 +26,7 @@ function loadWithWindowsHelperResult(result) {
     restore() {
       delete require.cache[require.resolve(DURABILITY_MODULE)];
       childProcess.spawnSync = originalSpawnSync;
+      if (systemRoot === undefined) delete process.env.SystemRoot; else process.env.SystemRoot = systemRoot;
       Object.defineProperty(process, "platform", platformDescriptor);
     },
   };
@@ -53,6 +56,8 @@ test("Windows directory-flush failures expose only a structured native phase and
       },
     );
     assert.equal(loaded.invocations.length, 1);
+    assert.equal(loaded.invocations[0][0], String.raw`C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe`);
+    assert.equal(loaded.invocations[0][2].cwd, String.raw`C:\Windows\System32`);
     const [, helperArguments, helperOptions] = loaded.invocations[0];
     assert.ok(!helperArguments.includes(directoryPath));
     assert.equal(helperOptions.env.AAS_WINDOWS_DIRECTORY_FLUSH_PATH, directoryPath);

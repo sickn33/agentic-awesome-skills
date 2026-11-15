@@ -1,0 +1,102 @@
+/* Avatar */
+
+@layer stageshow {
+  /* Small boxes with text keep a layer of their own. Pushed by a row opening
+     above them, or carried along by anything that moves by layout, their text
+     would step whole pixels while the fill glides, and hop about inside it */
+  .ss-avatar {
+    will-change: transform;
+  }
+
+  .ss-avatar {
+    display: inline-grid;
+    flex-shrink: 0;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 50%;
+    /* Opaque: avatars overlap in a pile, and a translucent fill onion-skins */
+    background: var(--ss-fill, var(--ss-ink-3));
+    color: var(--ss-text-strong);
+    font-weight: 600;
+    line-height: 1;
+    transition: background 0.3s ease, color 0.3s ease;
+  }
+
+  .ss-avatar[data-tone="accent"] {
+    background: var(--ss-accent);
+    color: #fff;
+  }
+
+  /* The iOS contact monogram: Apple's gray-blue, lighter at the top */
+  .ss-avatar[data-tone="ios"] {
+    background: linear-gradient(180deg, #a5abb8, #858a96);
+    color: #fff;
+    font-family: ui-rounded, 'SF Pro Rounded', -apple-system, system-ui, sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .ss-avatar[data-tone="success"] {
+    background: var(--ss-success);
+    color: #fff;
+  }
+
+  /* The line box trimmed to cap height and baseline, so a capital centers on
+     its own ink in any font (a plain line box drops system-ui caps ~7% low) */
+  .ss-avatar__initial {
+    display: block;
+    text-box: trim-both cap alphabetic;
+  }
+
+  .ss-avatar img {
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    object-fit: cover;
+  }
+
+  /* A ring with a gap cut from whatever the avatar sits on (the gap is the
+     surface color, so set --ss-ring-bg on a tinted row) */
+  .ss-avatar[data-ring] {
+    box-shadow: 0 0 0 1.5px var(--ss-ring-bg, var(--ss-surface)), 0 0 0 3px var(--ss-ring, var(--ss-ink-3));
+    transition: box-shadow 0.35s ease;
+  }
+
+  .ss-avatar[data-ring="confirmed"] { --ss-ring: var(--ss-success); }
+
+  .ss-avatar[data-ring="declined"] { --ss-ring: var(--ss-danger); }
+
+  /* Waiting: the quiet ring, with an accent arc traveling round it (a
+     person being asked, a call ringing). It turns smoothly at a steady
+     pace; the arc fades out as the ring settles to confirmed or declined */
+  .ss-avatar[data-ring] {
+    position: relative;
+    overflow: visible;
+  }
+
+  .ss-avatar[data-ring]::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, transparent 0 62%, var(--ss-accent) 100%);
+    -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
+    mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    animation: ss-avatar-wait 1.1s linear infinite;
+    pointer-events: none;
+  }
+
+  .ss-avatar[data-ring="waiting"]::after {
+    opacity: 1;
+  }
+
+  @keyframes ss-avatar-wait {
+    to { transform: rotate(1turn); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ss-avatar[data-ring]::after { animation: none; }
+  }
+}

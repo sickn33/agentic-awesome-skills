@@ -1,0 +1,39 @@
+/* Slot */
+
+@layer stageshow {
+  .ss-slot {
+    flex-shrink: 0;
+    border-radius: var(--ss-radius-md);
+    transition: height 0.45s cubic-bezier(0.45, 0, 0.2, 1), margin-top 0.45s cubic-bezier(0.45, 0, 0.2, 1);
+  }
+
+  /* The dashed mark is drawn at the slot's full height and only fades: a
+     dashed border on a box whose height animates re-lays its dashes every
+     frame, and they flicker. It fades in as the slot finishes opening (the
+     clip only guards the last few pixels), and leaves first when it closes. */
+  .ss-slot {
+    position: relative;
+  }
+
+  .ss-slot__clip {
+    position: absolute;
+    inset: 0;
+    overflow: clip;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+
+  .ss-slot__mark {
+    position: absolute;
+    inset: 0 0 auto;
+    border: 1.5px dashed var(--ss-ink-5);
+    border-radius: inherit;
+    opacity: 0;
+    transition: opacity 0.15s ease-out;
+  }
+
+  .ss-slot[data-open][data-dashed] .ss-slot__mark {
+    opacity: 1;
+    transition: opacity 0.16s ease-out 0.3s;
+  }
+}

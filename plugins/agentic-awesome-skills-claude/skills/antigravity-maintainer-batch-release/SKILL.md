@@ -18,10 +18,14 @@ Use for AAS maintainer sweeps, PR repairs and merge batches, runtime/catalog rel
 2. For a source PR batch, inventory its PR numbers, start `npm run maintenance:cycle -- start` on clean current main before content analysis/review, and follow the [complete cycle](references/maintenance-cycle.md). The runner measures source maintenance without a release; finish it before release preparation. For a release-only task or a sweep with no PRs, start an explicit empty cycle with `--prs none` and verify it before preparation. Triage the full authorized scope. Repair source PRs, run the component plan, review the entire tracked `skills/<skill-id>/**` subtree, and inspect relevant advisories. Do not substitute a heuristic score for semantic review.
 3. Use `maintenance:cycle merge`, which delegates to `merge:batch`, or invoke `npm run merge:batch` directly when no source cycle applies. These share the sole merge authority; do not run both for the same merge. Keep strict protected main and admin enforcement. Safe analysis may precede review; merge still requires current checks and either real Tessl review or exact-head maintainer attestation. Private signed receipts may reuse unchanged content/context review. Preserve owner-only sensitive-change and protected-base fork-ledger restrictions.
 4. Use guided intake to collect all blockers, then resume with a private external `--state-dir`. Record each blocker once; after two equivalent unproductive checks, continue independent work. Re-fetch PR state and protection every time. Continue independent PRs after a blocked PR; report failures. Follow the cycle reference’s deterministic failure codes and bounded read retries. Never repeat a write with an unknown outcome, steal an active state lock, or reuse stale CI evidence. Do not rewrite PR metadata, automatically retry base drift, or use GitHub auto-merge.
-5. Ordinary source merges generate ephemeral validation state only. Tracked distribution snapshots and contributor credits refresh in the protected release PR; no ordinary canonical-sync PR is required. An explicitly requested no-release dependency repair may synchronize only the existing regular lockfile replicas verified by the trusted-base owner-only contract; every other generated path stays release-owned.
-6. When authorized, use `release:prepare` and `release:publish`. Prepare already validates; do not duplicate its suite with diagnostic preflight. Merge the prepared release PR through protection. The immutable candidate is built once, checked on supported platforms, and consumed unchanged by npm/Pages. Main may advance while the released commit remains protected ancestry.
+5. Ordinary source merges generate ephemeral validation state only. Tracked distribution snapshots and contributor credits refresh in the protected release PR; no ordinary canonical-sync PR is required. The trusted-base owner-only contract permits narrow no-release lockfile replica repairs and Codex marketplace manifest hotfixes. Other generated paths stay release-owned.
+6. Before an authorized publication attempt, run `release:rehearse -- X.Y.Z --state-dir /absolute/private/completed-cycle` on a clean committed descendant of verified main (including a topic branch for diagnosis). This runs the shared local candidate pipeline in a disposable clone without pushing, tagging, publishing or modifying the source/cycle state; see the full local rehearsal contract. A passing rehearsal does not authorize publication. Use the private `--candidate-dir` receipt/promotion flow in the contract to preserve the tested commit and avoid repeating local preparation when its exact source and toolchain remain current. When authorized, use `release:prepare` and `release:publish`. Preparation creates the local release commit, packs its exact sealed tree, runs the complete test suite against that candidate, and pushes only if it passes; do not duplicate its suite with diagnostic preflight. Merge the prepared release PR through protection. Create or reuse the tag, wait for the immutable candidate, then publish and verify the exact npm bytes. Create the GitHub Release only after npm succeeds; Pages then consumes the same tested bytes unchanged. Main may advance while the released commit remains protected ancestry.
 7. For compatible catalog-only publication, use the independent catalog workflow and immutable revision/SRI. Preserve offline operation, rollback and agent-owned selection. Do not bump or republish runtime just to update catalog data.
-8. Finish a source batch with `maintenance:cycle verify` on exact main CI/CodeQL after all other source-cycle actions. Without publication, stop there: public distribution snapshots intentionally remain at the last release. For releases, complete the full-release-alignment gate in the contract, including actual public bytes and live surfaces. Report personal MCP configuration and session reload separately. Update installed maintainer skills from the adopted canonical source, preserving unrelated installations.
+8. Finish a source batch with `maintenance:cycle verify` on exact main CI/CodeQL after all other source-cycle actions. Outside the owner-only exceptions, public distribution snapshots remain at the last release. For releases, complete the full-release-alignment gate in the contract, including actual public bytes and live surfaces. Report personal MCP configuration and session reload separately. Update installed maintainer skills from the adopted canonical source, preserving unrelated installations.
+
+Use the release entry template at the top of the repository's `CHANGELOG.md` for new runtime releases. Preparation and rehearsal validate the target entry before creating a release branch. GitHub publication and the site build use the same changelog entry.
+
+When the user explicitly requests a GitHub release while prohibiting npm publication, `release:publish -- X.Y.Z --skip-npm` performs the same release admission and candidate checks, creates or verifies the tag, skips npm and creates a GitHub Release whose notes explicitly disclose npm unavailability. Verify this explicitly selected target with `release:verify -- --version X.Y.Z --target github-site`. GitHub/site completion is distinct from full npm distribution; excluded npm and local hosts are never reported passed. All applicable public alignment gates remain required. Never infer this mode from a failed npm attempt. A later normal publication still requires explicit authorization.
 
 ## Examples
 
@@ -41,7 +45,7 @@ Use real IDs, paths and a full immutable SHA. The state directory must already e
 
 ## Validation
 
-Read [component validation](references/component-validation.md) and the [maintenance contract](references/maintenance-contract.md) for exact checks, release proof, catalog compatibility and timing methodology. Required checks remain `pr-policy`, `pr-evidence`, `source-validation`, `artifact-preview`. Unknown/shared/policy changes receive full validation.
+Read [component validation](references/component-validation.md) and the [maintenance contract](references/maintenance-contract.md) for exact checks, release proof, catalog compatibility and timing methodology. Required checks remain `pr-policy`, `pr-evidence`, `source-validation`, `artifact-preview`. Unknown/shared/policy changes receive full validation. CI may overlap only the full plan’s complete unsharded script suite and isolated web coverage/build after successful prerequisites, as defined in the component guide; every ordered result remains mandatory. Blob-filtered checkouts retain full history and fetch required bytes on demand. Pinned Turborepo may reuse complete web coverage/typecheck/compile results through the existing free GitHub cache quota; current-commit metadata, prerender, final verification and the complete repository script suite remain fresh. Pin the same exact Node patch in cached CI jobs and scope persisted caches by the stable userland/toolchain identity, never by a cloud kernel. Follow the component guide for inputs, output-integrity checks, cache trust and diagnostic HIT/MISS receipts. No paid CI or remote cache is activated. The complete unsharded script suite may schedule its six reviewed isolated groups with two workers, then run every remaining group sequentially; failures drain active children and fail closed. Follow the component guide and retain the full inventory digest.
 
 ## Limitations
 
@@ -81,3 +85,49 @@ moves before preparation. Never shrink the recorded scope to hide blockers.
 For a genuinely release-only task with no source PR batch, explicitly start a
 cycle with `--prs none` and verify it; no implicit no-cycle bypass is supported.
 The original batch inventory must include every PR in the authorized scope.
+
+## Contributor readiness
+
+Follow [contribution intake](references/contribution-intake.md) for author evidence, initial corrections and restricted bundles. Reuse the existing contributor preflight and Actions summaries; they do not authorize approval or merge. Request substantive author-actionable repairs before semantic review, distinguish actual task tests from structural/source/protocol checks, and retain exact-head review. Measure real external PR outcomes before claiming lower maintenance cost.
+
+When checking PR evidence, parse template comments without concatenating visible fragments; an unfinished comment is not author evidence. Keep this parser separate from escaping untrusted report output.
+
+Mandatory admission for canonical skill-tree PRs is enforced by protected-base pr-policy and by the current-body merge check. Require the three filled evidence sections, accept brief scoped results and explained unrun tests, and return author-actionable corrections. Do not waive this with an owner attestation or cached semantic receipt. Description/draft drift stops the merge attempt; drafts remain available for feedback. New external imports must retain license provenance and a root LICENSE, without forcing unrelated legacy cleanup. Follow the admission details in the bundled contribution intake guide.
+
+Use `maintenance:doctor` before triage and `maintenance:cycle next` between stages. Continue independent authorized work, complete repairs before full validation, align only the next merge, and include release notes in the final planned source PR. Follow the maintenance contract for authenticated candidate promotion, cached release web checks and the explicit GitHub/site verification target.
+
+
+Use bounded `maintenance:cycle run` to execute already-authorized deterministic
+continuations through the sole merge authority. Actual exact-head review remains
+required. Explicit `--allow-align true` permits one observed-head update per PR;
+never retry uncertain writes or invent review. Read the contract for separate
+metadata admission, early PR readiness, runtime-first candidate scheduling and
+bounded durable installation. Preserve every check and measure the actual cycle.
+
+For fork CI awaiting approval, the coordinator delegates to the same protected
+merge gate before waiting for checks; it never approves runs directly. See the
+cycle reference for exact-head scheduling and failure boundaries.
+
+For measured CI optimization, run the scoped `maintenance:quick-check` before
+pushing and retain complete protected preflight afterward. Follow the component
+reference for bounded cache persistence, per-command timing and preview runtime
+scheduling. SkillSpector must select evidence by upstream CI run provenance before
+check name; metadata checks cannot substitute for scanner evidence. Keep private
+benchmark timings distinct from actual whole-cycle savings. No paid service,
+quota increase, privileged fork trigger or reduced test coverage is authorized.
+
+For reviewed upstream source repins, bind the complete immutable skill tree in the protected source-exception ledger; changing any bundled byte invalidates it. Review CDN script integrity in bundled HTML fixtures without executing the fixture or suppressing a real finding. See the [dated maintenance report](references/2026-11-02-maintenance.md) for evidence and scope.
+
+Follow [measured release finalization](references/release-finalization.md) after an
+explicitly authorized GitHub/site publication. Use the resumable finalizer instead
+of manually omitting Pages/legacy stages; preserve exact-run identity, no-drift
+proof, complete hosted verification and unknown-write stops. Preparation checks
+scratch capacity and verifies external PR contributor mentions before generating
+version surfaces. Do not narrow cache inputs or shard additional tests without
+negative invalidation and complete inventory evidence.
+
+For precise contribution readiness, use the bundled intake guide and contributor
+worked examples. Report all already-known author corrections before expensive
+review. Checklist-only evidence and untouched field scaffolding do not establish
+admission. Keep small fixes proportional; never require paid/live consequential
+tests or treat a heuristic quality score as review authority.

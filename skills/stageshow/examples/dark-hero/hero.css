@@ -1,0 +1,238 @@
+.dh .ss-stage {
+  overflow: hidden;
+  background: #09090b;
+}
+
+/* The window inset top and left, off the right and the bottom */
+.dh-win {
+  position: absolute;
+  top: 48px;
+  left: 48px;
+  /* Off the right by a little: the columns end inside the stage, so only
+     the window's empty margin is cut */
+  width: 744px;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.06), 0 0 0 1px rgb(255 255 255 / 0.06);
+}
+
+.dh .ss-stage[data-layout='compact'] .dh-win {
+  left: 16px;
+  width: 326px;
+}
+
+.dh-side {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding: 14px 10px;
+}
+
+.dh-nav {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: var(--ss-radius-sm);
+}
+
+.dh-nav[data-active] {
+  background: var(--ss-ink-1);
+}
+
+.dh-body {
+  min-height: 460px;
+  padding: 22px 66px 0 26px;
+  background: var(--ss-surface);
+}
+
+.dh .ss-stage[data-layout='compact'] .dh-body {
+  padding: 18px 16px 0;
+}
+
+.dh-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.dh-title {
+  margin: 0;
+  color: var(--ss-text-strong);
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.dh-proj {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ss-text);
+  font-size: 12px;
+}
+
+.dh-list {
+  border-top: 1px solid var(--ss-line-faint);
+}
+
+.dh-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 92px 36px;
+  align-items: center;
+  gap: 16px;
+  height: 62px;
+  border-bottom: 1px solid var(--ss-line-faint);
+  white-space: nowrap;
+}
+
+.dh .ss-stage[data-layout='compact'] .dh-row {
+  grid-template-columns: minmax(0, 1fr) 84px 28px;
+  gap: 10px;
+}
+
+.dh-lines {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 6px;
+  min-width: 0;
+}
+
+.dh-msg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  color: var(--ss-text-strong);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.dh-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 16px;
+  color: var(--ss-text);
+  font-size: 12px;
+}
+
+/* 12px icons in a 16px line: whole pixels, no half-pixel hop as rows move */
+.dh-meta__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.dh-meta svg {
+  color: var(--ss-icon-faint);
+}
+
+.dh-when {
+  color: var(--ss-text-faint);
+}
+
+.dh .ss-stage[data-layout='compact'] .dh-when {
+  display: none;
+}
+
+/* Current moves to the new row once it's Ready: one fades out, one in */
+.dh-current {
+  padding: 1px 7px;
+  border: 1px solid var(--ss-line);
+  border-radius: var(--ss-radius-pill);
+  color: var(--ss-text);
+  font-size: 10.5px;
+  font-weight: 500;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  /* Its row is pushed down as the new deploy opens above: a layer of its
+     own keeps the word from stepping inside its outline */
+  will-change: transform;
+}
+
+.dh-current[data-on] {
+  opacity: 1;
+}
+
+.dh .ss-stage[data-layout='compact'] .dh-current {
+  display: none;
+}
+
+.dh-badge {
+  justify-self: start;
+}
+
+
+.dh-badge .ss-spinner {
+  flex-shrink: 0;
+}
+
+.dh-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+/* The old row's Ready is quiet, so the new one leads */
+.dh-badge--old {
+  color: var(--ss-text);
+}
+
+.dh-time {
+  justify-self: end;
+  color: var(--ss-text);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+}
+
+.dh-row--filler > .ss-bar:last-child {
+  justify-self: end;
+}
+
+/* Filler lines never run past their column */
+.dh-lines .ss-bar {
+  max-width: 100%;
+}
+
+.dh-mark {
+  display: grid;
+  place-items: center;
+  width: 8px;
+  height: 8px;
+}
+
+.dh-mark > * {
+  grid-area: 1 / 1;
+  transition: opacity 0.2s ease;
+}
+
+.dh-mark[data-ready] .ss-spinner,
+.dh-mark:not([data-ready]) .dh-dot {
+  opacity: 0;
+}
+
+/* The words stack left-aligned in one cell whose width eases. The cell
+   never clips: the word that would be cut is already gone */
+.dh-label {
+  display: grid;
+  justify-items: start;
+  transition: width 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.dh-word {
+  grid-area: 1 / 1;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.14s ease;
+}
+
+.dh-word[data-on] {
+  opacity: 1;
+  transition: opacity 0.2s ease 0.12s;
+}
+
+/* Shorter: the old word leaves, then the edge comes in */
+.dh-label[data-shrink] {
+  transition-delay: 0.1s;
+}

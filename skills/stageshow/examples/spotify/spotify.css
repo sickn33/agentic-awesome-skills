@@ -1,0 +1,709 @@
+/* Spotify desktop, dark. One neutral family (Spotify's pure grays on black),
+   one accent (Spotify green) on the thing being played. */
+
+.spt-stage .ss-stage {
+  --gutter: 32px;
+  --spt-black: #000;
+  --spt-panel: #121212;
+  --spt-hover: #1f1f1f;
+  --spt-selected: #2a2a2a;
+  --spt-white: #fff;
+  --spt-grey: #b3b3b3;
+  --spt-dim: #7a7a7a;
+  --spt-green: #1ed760;
+  --ss-icon: #b3b3b3;
+  --ss-icon-faint: #7a7a7a;
+  overflow: hidden;
+  border-radius: 16px;
+  background:
+    radial-gradient(90% 70% at 30% 0%, rgba(255, 255, 255, 0.07), transparent 70%),
+    #18181a;
+}
+
+.spt-stage .ss-stage[data-layout='compact'] {
+  --gutter: 20px;
+}
+
+/* Pinned top-left a gutter in, a real window edge a gutter from the bottom
+   (the player bar is the payoff, so the bottom stays in view), and about a
+   seventh of it runs off the right, where only filler lives. */
+.spt-window {
+  position: absolute;
+  top: var(--gutter);
+  left: var(--gutter);
+  width: 920px;
+  height: calc(600px - var(--gutter) * 2);
+  background: var(--spt-black);
+  box-shadow: var(--ss-shadow-hero);
+}
+
+.spt-window[data-layout='compact'] {
+  width: 520px;
+  height: calc(520px - var(--gutter) * 2);
+}
+
+/* ---- Title bar: Spotify's own, black, no divider ---- */
+
+.spt-window > .ss-window__bar {
+  position: relative;
+  background: var(--spt-black);
+  border-bottom: 0;
+  color: var(--spt-grey);
+}
+
+.spt-nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: 14px;
+  color: var(--spt-grey);
+}
+
+.spt-faint {
+  color: #555;
+}
+
+.spt-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transform: translate(-50%, -50%);
+}
+
+.spt-window[data-layout='compact'] .spt-center {
+  left: 205px;
+  transform: translate(0, -50%);
+}
+
+.spt-home {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #1f1f1f;
+  color: var(--spt-white);
+}
+
+.spt-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  padding: 0 14px 0 12px;
+  border-radius: 14px;
+  background: #1f1f1f;
+  color: var(--spt-grey);
+}
+
+
+.spt-me {
+  width: 22px;
+  height: 22px;
+  margin-right: 4px;
+  border-radius: 50%;
+  background: linear-gradient(150deg, #8d8d93, #4a4a4f);
+  box-shadow: 0 0 0 3px #1f1f1f;
+}
+
+/* ---- Body: two panels over the player bar ---- */
+
+.spt-window > .ss-window__body {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+  background: var(--spt-black);
+}
+
+.spt-panels {
+  display: flex;
+  flex: 1;
+  gap: 8px;
+  min-height: 0;
+  padding: 0 8px;
+}
+
+.spt-library,
+.spt-main {
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--spt-panel);
+}
+
+.spt-library {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  width: 248px;
+  padding: 16px 8px 0;
+}
+
+.spt-window[data-layout='compact'] .spt-library {
+  width: 64px;
+  align-items: center;
+}
+
+.spt-lib-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 24px;
+  padding: 0 8px;
+  color: var(--spt-grey);
+}
+
+.spt-lib-head--rail {
+  padding: 0;
+}
+
+.spt-lib-title {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--spt-white);
+}
+
+.spt-spacer {
+  flex: 1;
+}
+
+.spt-chips {
+  display: flex;
+  gap: 8px;
+  padding: 16px 8px 12px;
+}
+
+.spt-lib-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.spt-window[data-layout='compact'] .spt-lib-list {
+  margin-top: 14px;
+}
+
+.spt-lib-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 56px;
+  padding: 0 8px;
+  border-radius: 6px;
+}
+
+.spt-window[data-layout='compact'] .spt-lib-row {
+  padding: 0 4px;
+}
+
+.spt-lib-row[data-on] {
+  background: var(--spt-selected);
+}
+
+.spt-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+/* ---- Album art: muted sleeves, each with a little light in it ---- */
+
+.spt-art {
+  display: block;
+  flex-shrink: 0;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.spt-art--1 { background: radial-gradient(circle at 30% 30%, #8a7a6c, #3a322c 70%); }
+.spt-art--2 { background: linear-gradient(170deg, #5f7f91 0%, #2b3d48 60%, #1b252c 100%); }
+.spt-art--3 { background: radial-gradient(circle at 70% 75%, #b9a37a, #5a4c36 45%, #2a241c 80%); }
+.spt-art--4 { background: radial-gradient(circle at 50% 115%, #e3a0b8 0%, #8e5a7c 30%, #33243f 70%); }
+.spt-art--5 { background: linear-gradient(200deg, #6f8a6f, #2c382d 65%); }
+.spt-art--6 { background: radial-gradient(circle at 25% 80%, #7b7b9c, #2d2d3d 70%); }
+.spt-art--7 { background: radial-gradient(circle at 60% 120%, #7b88c9 0%, #3c4380 35%, #191c38 75%); }
+.spt-art--8 { background: linear-gradient(150deg, #9a6f5c, #3d2a23 70%); }
+
+.spt-art--lib { width: 40px; height: 40px; }
+.spt-art--row { width: 32px; height: 32px; }
+.spt-art--now { width: 48px; height: 48px; }
+
+.spt-art--cover {
+  width: 88px;
+  height: 88px;
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.spt-window[data-layout='compact'] .spt-art--cover {
+  width: 72px;
+  height: 72px;
+}
+
+/* ---- The playlist ---- */
+
+.spt-main {
+  flex: 1;
+  min-width: 0;
+  /* Spotify tints the top of a playlist with its cover's color */
+  background:
+    linear-gradient(180deg, #2d3366 0, #1d2140 150px, var(--spt-panel) 260px),
+    var(--spt-panel);
+}
+
+.spt-header {
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+  padding: 20px 24px 16px;
+}
+
+.spt-window[data-layout='compact'] .spt-header {
+  gap: 14px;
+  padding: 18px 16px 16px;
+}
+
+.spt-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 4px;
+}
+
+.spt-title {
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  white-space: nowrap;
+  color: var(--spt-white);
+}
+
+.spt-window[data-layout='compact'] .spt-title {
+  font-size: 22px;
+}
+
+.spt-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spt-meta-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(150deg, #8d8d93, #4a4a4f);
+}
+
+.spt-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 0 24px 12px;
+  color: var(--spt-dim);
+}
+
+.spt-window[data-layout='compact'] .spt-actions {
+  gap: 18px;
+  padding: 0 16px 10px;
+}
+
+.spt-bigplay {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--spt-green);
+  color: #000;
+}
+
+.spt-window[data-layout='compact'] .spt-bigplay {
+  width: 38px;
+  height: 38px;
+}
+
+.spt-faint-icon {
+  color: var(--ss-icon-faint);
+}
+
+.spt-more {
+  display: flex;
+  gap: 3px;
+}
+
+.spt-more i {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--ss-icon-faint);
+}
+
+/* One column template for every row, so numbers, art and bars line up */
+.spt-tracks {
+  display: flex;
+  flex-direction: column;
+  padding: 0 16px;
+}
+
+.spt-window[data-layout='compact'] .spt-tracks {
+  padding: 0 8px;
+}
+
+.spt-row {
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) 190px 56px;
+  align-items: center;
+  gap: 16px;
+  height: 46px;
+  padding: 0 16px 0 12px;
+  border-radius: 6px;
+  transition: background-color 150ms ease;
+}
+
+.spt-window[data-layout='compact'] .spt-row {
+  grid-template-columns: 20px minmax(0, 1fr) 40px;
+  gap: 12px;
+  height: 46px;
+  padding: 0 10px;
+}
+
+.spt-row--head {
+  height: 30px;
+  margin-bottom: 6px;
+  border-radius: 0;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.spt-row[data-hover]:not(.spt-row--head) {
+  background: var(--spt-hover);
+}
+
+.spt-row[data-selected] {
+  background: var(--spt-selected);
+}
+
+.spt-row[data-selected][data-hover] {
+  background: #303030;
+}
+
+.spt-num {
+  position: relative;
+  display: grid;
+  place-items: center end;
+  height: 16px;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+  line-height: 16px;
+  color: var(--spt-grey);
+}
+
+.spt-num__n {
+  transition: opacity 200ms ease;
+}
+
+.spt-row[data-playing] .spt-num__n {
+  opacity: 0;
+}
+
+.spt-song {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.spt-song-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.spt-song-title {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+  color: var(--spt-white);
+  /* Distant hues switch quickly */
+  transition: color 200ms ease;
+}
+
+.spt-row[data-playing] .spt-song-title {
+  color: var(--spt-green);
+}
+
+.spt-song-artist {
+  font-size: 12px;
+  line-height: 1.3;
+  white-space: nowrap;
+  color: var(--spt-grey);
+}
+
+.spt-dur {
+  justify-self: end;
+}
+
+.spt-time {
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: var(--spt-grey);
+}
+
+/* The playing indicator: four green bars in the number's place */
+.spt-eq {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 2px;
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.spt-row[data-playing] .spt-eq {
+  opacity: 1;
+}
+
+.spt-eq i {
+  width: 2.5px;
+  height: 14px;
+  border-radius: 1px;
+  background: var(--spt-green);
+  transform-origin: bottom;
+  animation: spt-eq 900ms ease-in-out infinite alternate;
+}
+
+.spt-eq i:nth-child(1) { animation-delay: -200ms; }
+.spt-eq i:nth-child(2) { animation-delay: -650ms; animation-duration: 760ms; }
+.spt-eq i:nth-child(3) { animation-delay: -420ms; animation-duration: 1040ms; }
+.spt-eq i:nth-child(4) { animation-delay: -80ms; animation-duration: 820ms; }
+
+@keyframes spt-eq {
+  0% { transform: scaleY(0.25); }
+  50% { transform: scaleY(0.9); }
+  100% { transform: scaleY(0.45); }
+}
+
+/* ---- The player bar ---- */
+
+.spt-player {
+  display: grid;
+  flex-shrink: 0;
+  grid-template-columns: 30% 40% 30%;
+  align-items: center;
+  height: 80px;
+  padding: 0 8px;
+}
+
+.spt-now {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding-left: 8px;
+}
+
+.spt-now-art {
+  display: block;
+  width: 48px;
+  height: 48px;
+}
+
+.spt-now-art {
+  display: grid;
+}
+
+.spt-now-art > *,
+.spt-now-song {
+  grid-area: 1 / 1;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.spt-now-art > .is-on,
+.spt-now-song[data-on] {
+  opacity: 1;
+}
+
+.spt-now-text {
+  display: grid;
+  min-width: 0;
+}
+
+.spt-now-song {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.spt-now-title {
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: nowrap;
+  color: var(--spt-white);
+}
+
+.spt-now-artist {
+  font-size: 12px;
+  line-height: 1.3;
+  white-space: nowrap;
+  color: var(--spt-grey);
+}
+
+.spt-transport {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.spt-controls {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  color: var(--spt-grey);
+}
+
+.spt-window[data-layout='compact'] .spt-controls {
+  gap: 14px;
+}
+
+.spt-playbtn {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--spt-white);
+  color: #000;
+}
+
+.spt-progress {
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr) 36px;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 0 4px;
+}
+
+.spt-t {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.3;
+  color: var(--spt-grey);
+}
+
+.spt-t--start {
+  text-align: right;
+}
+
+.spt-track {
+  position: relative;
+  height: 4px;
+  border-radius: 2px;
+  background: #4d4d4d;
+}
+
+.spt-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: 2px;
+  background: var(--spt-white);
+  /* Each tick is a second: a linear second keeps it moving without steps */
+  transition: clip-path 1000ms linear, background-color 150ms ease;
+}
+
+.spt-track[data-hover] .spt-fill {
+  background: var(--spt-green);
+}
+
+/* The handle rides the fill's end; it shows only while hovered */
+.spt-knob {
+  position: absolute;
+  inset: 0;
+  transition: transform 1000ms linear;
+  pointer-events: none;
+}
+
+.spt-knob i {
+  position: absolute;
+  top: 50%;
+  left: -6px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--spt-white);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transform: translateY(-50%) scale(0.6);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.spt-track[data-hover] .spt-knob i {
+  opacity: 1;
+  transform: translateY(-50%) scale(1);
+}
+
+.spt-extras[hidden] {
+  display: none;
+}
+
+.spt-extras {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 16px;
+  padding-right: 16px;
+}
+
+.spt-volume {
+  width: 90px;
+  height: 4px;
+  border-radius: 2px;
+  background: #4d4d4d;
+}
+
+.spt-volume span {
+  display: block;
+  width: 70%;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--spt-white);
+}
+
+/* A true crossfade for the player's swaps: the incoming song starts showing
+   at once while the old one fades, so the bar never sits empty between them */
+.spt-player .ss-swap__in {
+  animation-name: spt-swap-in;
+}
+
+@keyframes spt-swap-in {
+  0% { opacity: 0; filter: blur(2px); }
+  40% { opacity: 0.85; filter: blur(0.5px); }
+  100% { opacity: 1; filter: none; }
+}
+
+/* The box eases to the new title's width; let the text show past it while
+   it does, rather than being sliced mid-word */
+.spt-player .ss-swap {
+  overflow: visible;
+}
+
+/* The poster keeps the equaliser's shape rather than four even bars */
+@media (prefers-reduced-motion: reduce) {
+  .spt-eq i { animation: none !important; }
+  .spt-eq i:nth-child(1) { transform: scaleY(0.45); }
+  .spt-eq i:nth-child(2) { transform: scaleY(0.85); }
+  .spt-eq i:nth-child(3) { transform: scaleY(0.6); }
+  .spt-eq i:nth-child(4) { transform: scaleY(0.3); }
+}

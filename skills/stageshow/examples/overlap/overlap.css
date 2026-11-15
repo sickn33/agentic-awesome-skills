@@ -1,0 +1,134 @@
+.ov .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+/* The back window: pinned top, off the bottom, a gutter on the right */
+.ov-win {
+  position: absolute;
+  top: 32px;
+  left: 120px;
+  width: 480px;
+  height: 420px;
+}
+
+.ov-app {
+  display: grid;
+  grid-template-columns: var(--ov-side) 1fr;
+  height: 100%;
+  background: var(--ss-surface);
+}
+
+.ov-side {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  padding: 18px 16px;
+  border-right: 1px solid var(--ss-line);
+  background: var(--ss-well);
+}
+
+.ov-main {
+  display: grid;
+  align-content: start;
+  padding: 18px 24px;
+}
+
+.ov-title {
+  margin-bottom: 10px;
+  color: var(--ss-text-strong);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.ov-row {
+  height: 52px;
+  border-radius: 0;
+  border-bottom: 1px solid var(--ss-line-faint);
+}
+
+.ov-amount {
+  color: var(--ss-text-strong);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.ov-who {
+  color: var(--ss-text);
+  font-size: 11px;
+}
+
+/* The front card: a level above the window, on the stage's 32px gutter, its
+   right edge 24px short of the sidebar's line (120 + 150 = 270) so a strip
+   of sidebar shows */
+.ov-card {
+  position: absolute;
+  top: 112px;
+  left: 32px;
+  width: 214px;
+  display: grid;
+  gap: 4px;
+  padding: 18px 18px 20px;
+  border-radius: 12px;
+  background: var(--ss-surface);
+  box-shadow: var(--ss-shadow-satellite);
+}
+
+.ov-product {
+  color: var(--ss-text);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.ov-price {
+  margin-bottom: 12px;
+  color: var(--ss-text-strong);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.ov-per {
+  color: var(--ss-text);
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.ov-fields {
+  display: grid;
+  gap: 8px;
+}
+
+.ov-pay {
+  display: grid;
+  place-items: center;
+  height: 36px;
+  margin-top: 12px;
+  border-radius: 8px;
+  background: var(--ss-accent);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* Narrow: the window moves in, a narrower sidebar, and the card's right edge
+   stops 24px short of its line (90 + 120 = 210) */
+.ov .ss-stage[data-layout='compact'] .ov-win {
+  left: 90px;
+  width: 280px;
+}
+
+.ov .ss-stage[data-layout='compact'] .ov-main {
+  padding: 18px 28px 18px 16px;
+}
+
+.ov .ss-stage[data-layout='compact'] .ov-card {
+  left: 16px;
+  width: 170px;
+  padding: 16px 14px 16px;
+}
+
+.ov .ss-stage[data-layout='compact'] .ov-price {
+  font-size: 19px;
+}

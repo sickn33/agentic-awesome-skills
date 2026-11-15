@@ -1,5 +1,7 @@
 # Kiro CLI Integration Guide
 
+> **npm publishing paused.** For current skills, use the [GitHub installation and update guide](getting-started.md#install-and-update-without-npm). npm commands require a version already published to npm.
+
 ## Overview
 
 This guide explains how to use Agentic Awesome Skills with **Kiro CLI**, AWS's agentic AI-powered coding assistant.
@@ -18,7 +20,7 @@ Kiro is AWS's agentic AI IDE that combines:
 
 Kiro's agentic capabilities are enhanced by skills that provide:
 
-- **Domain expertise** across 2,750+ specialized areas
+- **Domain expertise** across 2,957+ specialized areas
 - **Best practices** from Anthropic, OpenAI, Google, Microsoft, and AWS
 - **Workflow automation** for common development tasks
 - **AWS-specific patterns** for serverless, infrastructure, and cloud architecture

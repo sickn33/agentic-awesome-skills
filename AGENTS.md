@@ -15,7 +15,7 @@ This repository publishes an installable library of agent skills and plugin bund
 - `npm run app:dev`: start the local Vite catalog app.
 - `npm run app:build`: build and prerender the catalog app.
 
-Before PRs, run `npm run pr:preflight -- --base origin/main --head HEAD` from the clean committed source head. It runs the component policy in an isolated checkout; unknown and policy changes require the full suite.
+For ordinary external contributions, fetch the official upstream and run `npm run pr:preflight -- --contributor --base upstream/main --head HEAD`. For maintainer topic PRs, run `npm run pr:preflight -- --base origin/main --head HEAD` from the clean committed source head. It runs the component policy in an isolated checkout; unknown and policy changes require the full suite.
 
 ## Coding Style & Naming Conventions
 
@@ -43,7 +43,7 @@ Every command, script, reviewer, or gate described as mandatory must exist on th
 
 For every repository maintenance sweep, PR merge batch, maintainer-side PR repair, canonical synchronization, combined Security/Quality cleanup and merge, or tag/release request, **always invoke and follow the `antigravity-maintainer-batch-release` skill before triage or mutation**. If the client has not installed or discovered that skill, read and follow the repository-canonical copy at `skills/antigravity-maintainer-batch-release/SKILL.md`. This is a hard gate, including when the user asks for direct merges or a direct update to `main`; do not substitute a generic Git or GitHub workflow.
 
-Treat `main` as pull-request-only; use `npm run merge:batch` with strict protection and no admin bypass. Follow [the maintenance contract](docs/maintainers/maintenance-contract.md) for resumable review, release-only snapshots, immutable artifact publication and independent catalog revisions. Ordinary merges generate ephemeral validation data; general tracked distribution refresh belongs to protected release PRs. The maintenance contract defines a narrow owner-only exception for byte-identical canonical lockfile replicas during an explicitly requested no-release dependency-security repair; all checks and strict protection remain required.
+Treat `main` as pull-request-only; use `npm run merge:batch` with strict protection and no admin bypass. Follow [the maintenance contract](docs/maintainers/maintenance-contract.md) for resumable review, release-only snapshots, immutable artifact publication and independent catalog revisions. Ordinary merges generate ephemeral validation data; general tracked distribution refresh belongs to protected release PRs. The maintenance contract defines narrow owner-only exceptions for byte-identical lockfile replica repairs and Codex marketplace manifest hotfixes; all checks and strict protection remain required.
 
 Every stable or prerelease version must finish with the full-release-alignment gate. Verify the immutable released commit and public bytes even if main advances. Report personal MCP host updates and actual session reload separately. Only authorized existing host entries may be changed.
 
@@ -106,3 +106,17 @@ moves before preparation. Never shrink the recorded scope to hide blockers.
 For a genuinely release-only task with no source PR batch, explicitly start a
 cycle with `--prs none` and verify it; no implicit no-cycle bypass is supported.
 The original batch inventory must include every PR in the authorized scope.
+
+For contribution readiness, follow `docs/maintainers/contribution-intake.md`. Ask authors to resolve substantive reproducible submission defects and provide truthful scoped evidence; retain complete-tree exact-head semantic review. Restricted bundles need a reviewed maintainer path, not relaxed fork policy.
+
+Canonical skill-tree PRs must pass mandatory evidence admission in `pr-policy` and current-body revalidation in `merge:batch`. Body/draft drift stops an active merge; content attestations cannot waive incomplete evidence. Keep author requirements proportionate and free of mandatory paid tools or unsafe live tests.
+
+For release process repairs, validate the full shared candidate path through `npm run release:rehearse -- X.Y.Z --state-dir /absolute/private/completed-cycle`. Keep changes in an isolated topic checkout while another release is active; do not modify its source, state or installed skill. Rehearsal never grants publication authority.
+
+For efficient cycles, follow the maintenance contract’s environment doctor, advisory `maintenance:cycle next`, private candidate rehearsal/promotion and explicit `github-site` verification target. Preserve all exact-head checks; never treat excluded npm or local hosts as passed.
+
+
+For bounded deterministic continuation, use `maintenance:cycle run` under the
+current maintenance contract. Keep semantic review explicit and preserve sole
+merge authority. PR metadata checks must not cancel source validation; runtime
+handoff evidence never replaces the full successful publication candidate.

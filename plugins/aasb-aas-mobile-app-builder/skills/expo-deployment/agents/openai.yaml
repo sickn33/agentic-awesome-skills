@@ -1,0 +1,4 @@
+interface:
+  display_name: "Expo Deployment"
+  short_description: "Deploy Expo apps to TestFlight, App Store, Play Store, EAS Hosting, and API routes"
+  default_prompt: "Use $expo-deployment when preparing production EAS builds, store submissions, web deploys, TestFlight distribution, app-store metadata, version management, or deployment workflows for an Expo app."

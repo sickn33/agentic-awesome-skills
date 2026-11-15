@@ -25,3 +25,11 @@ describe('explicit catalog search', () => {
     expect(categoryFacet('constructor')).toBe('constructor');
   });
 });
+
+
+it.each(['Next.js', 'Node.js', 'CI/CD', '.NET', 'C++', 'C#'])('finds literal technical name %s inside prose', (name) => {
+  const skill = createMockSkill({ id: 'example', name: 'Example', description: `Build (${name}), safely.` });
+  expect(matchCatalogSkill(skill, name, 'all', name).matches).toBe(true);
+  expect(matchCatalogSkill(skill, name, 'any').matches).toBe(true);
+  expect(matchCatalogSkill({ ...skill, description: `Use ${name}.` }, name, 'all').matches).toBe(true);
+});

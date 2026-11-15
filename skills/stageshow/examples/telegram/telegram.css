@@ -1,0 +1,422 @@
+/* Telegram for iOS (the current glass design), default Day theme. Everything
+   is nested under .tg so it can share a page with other demos. Inside the
+   phone, 1px is 1pt. */
+.tg {
+  --tg-blue: #3e88f7;
+  --tg-out: #e7fdd5;
+  --tg-out-meta: #4fa84a;
+  --tg-in-meta: #a2acb4;
+  --tg-ink: #000;
+  /* UIKit-quick: off the tap fast, long soft settle */
+  --tg-ui: cubic-bezier(0.3, 0.75, 0.1, 1);
+
+  .ss-stage {
+    overflow: hidden;
+    background: #eef0ec;
+  }
+
+  /* Runs off the top: the composer and the newest messages are the story,
+     the header is filler. 340 wide is 715 tall; 30 from the sides and the
+     bottom, so 225 runs past the top */
+  .tg-phone {
+    position: absolute;
+    top: -225px;
+    left: 30px;
+  }
+
+  .ss-phone__content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ---- Wallpaper: the default green gradient with a doodle pattern. It
+     runs under the status bar: the content box starts at the screen's top,
+     its 62pt padding is the status bar ---- */
+  .ss-phone__screen {
+    background:
+      radial-gradient(60% 45% at 12% 8%, #e4e2b8 0%, transparent 70%),
+      radial-gradient(70% 50% at 92% 30%, #a7c98f 0%, transparent 70%),
+      radial-gradient(70% 50% at 10% 70%, #8fbf8e 0%, transparent 70%),
+      radial-gradient(70% 45% at 90% 96%, #d9dc97 0%, transparent 70%),
+      #b9cf9c;
+  }
+
+  .tg-paper {
+    position: absolute;
+    inset: 0;
+    background: url('data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240" fill="none" stroke="%2324452f" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpath transform="translate(22 24) rotate(-20) scale(.8)" d="M-15 6 15-6 7 22 1 12Z M1 12 15-6"/%3E%3Cpath transform="translate(78 16) rotate(10) scale(.8)" d="M-9-2c0-5 7-7 9-2 2-5 9-3 9 2 0 6-9 11-9 11s-9-5-9-11Z"/%3E%3Cpath transform="translate(134 30) rotate(0) scale(.8)" d="M0-11l3.5 7 7.5 1-5.5 5 1.5 7.5-7-3.5-7 3.5 1.5-7.5-5.5-5 7.5-1Z"/%3E%3Cpath transform="translate(196 18) rotate(-12) scale(.8)" d="M4 9V-7l10-3V6 M4 9a3.5 3 0 1 1-7 0 3.5 3 0 1 1 7 0Z M14 6a3.5 3 0 1 1-7 0 3.5 3 0 1 1 7 0Z"/%3E%3Cpath transform="translate(228 62) rotate(25) scale(.8)" d="M-21 0c4-6 10-6 14 0s10 6 14 0 10-6 14 0"/%3E%3Cpath transform="translate(40 72) rotate(0) scale(.8)" d="M-11 7h22a7 7 0 0 0 0-14 9 9 0 0 0-17-2 6 6 0 0 0-5 16Z"/%3E%3Cpath transform="translate(104 66) rotate(-15) scale(.8)" d="M-9 0a9 9 0 1 0 18 0 9 9 0 1 0-18 0Z M-2.5 0a2.5 2.5 0 1 0 5 0 2.5 2.5 0 1 0-5 0Z"/%3E%3Cpath transform="translate(168 76) rotate(30) scale(.8)" d="M0-8l8 14h-16Z"/%3E%3Cpath transform="translate(210 118) rotate(0) scale(.8)" d="M-3-10c6 0 10 4 10 10s-4 10-10 10c4-3 5-6 5-10s-1-7-5-10Z"/%3E%3Cpath transform="translate(16 128) rotate(40) scale(.8)" d="M-9-5h18v14h-18Z M-5-5v-4h10v4"/%3E%3Cpath transform="translate(66 120) rotate(-8) scale(.8)" d="M-8 0l6 6 12-14"/%3E%3Cpath transform="translate(124 118) rotate(12) scale(.8)" d="M-11 5c0-6 5-10 11-10s11 4 11 10 M-5 5v-4 M5 5v-4"/%3E%3Cpath transform="translate(178 150) rotate(-25) scale(.8)" d="M-8 6c3-3 3-7 0-10m8 13c6-6 6-14 0-20m8 26c9-9 9-23 0-32"/%3E%3Cpath transform="translate(36 180) rotate(10) scale(.8)" d="M-12 0h24M0-12v24"/%3E%3Cpath transform="translate(92 170) rotate(0) scale(.8)" d="M-6-10h12l-2 20h-8Z M6-6h3a3 3 0 0 1 0 6h-3"/%3E%3Cpath transform="translate(146 196) rotate(-10) scale(.8)" d="M-15 6 15-6 7 22 1 12Z M1 12 15-6"/%3E%3Cpath transform="translate(206 206) rotate(20) scale(.8)" d="M-9-2c0-5 7-7 9-2 2-5 9-3 9 2 0 6-9 11-9 11s-9-5-9-11Z"/%3E%3Cpath transform="translate(62 222) rotate(-30) scale(.8)" d="M0-11l3.5 7 7.5 1-5.5 5 1.5 7.5-7-3.5-7 3.5 1.5-7.5-5.5-5 7.5-1Z"/%3E%3Cpath transform="translate(118 234) rotate(0) scale(.8)" d="M4 9V-7l10-3V6 M4 9a3.5 3 0 1 1-7 0 3.5 3 0 1 1 7 0Z M14 6a3.5 3 0 1 1-7 0 3.5 3 0 1 1 7 0Z"/%3E%3Cpath transform="translate(232 170) rotate(0) scale(.8)" d="M-21 0c4-6 10-6 14 0s10 6 14 0 10-6 14 0"/%3E%3Cpath transform="translate(78 256) rotate(10) scale(.8)" d="M-9-2c0-5 7-7 9-2 2-5 9-3 9 2 0 6-9 11-9 11s-9-5-9-11Z"/%3E%3Cpath transform="translate(196 258) rotate(-12) scale(.8)" d="M4 9V-7l10-3V6 M4 9a3.5 3 0 1 1-7 0 3.5 3 0 1 1 7 0Z M14 6a3.5 3 0 1 1-7 0 3.5 3 0 1 1 7 0Z"/%3E%3Cpath transform="translate(-12 62) rotate(25) scale(.8)" d="M-21 0c4-6 10-6 14 0s10 6 14 0 10-6 14 0"/%3E%3Cpath transform="translate(256 128) rotate(40) scale(.8)" d="M-9-5h18v14h-18Z M-5-5v-4h10v4"/%3E%3Cpath transform="translate(62 -18) rotate(-30) scale(.8)" d="M0-11l3.5 7 7.5 1-5.5 5 1.5 7.5-7-3.5-7 3.5 1.5-7.5-5.5-5 7.5-1Z"/%3E%3Cpath transform="translate(118 -6) rotate(0) scale(.8)" d="M4 9V-7l10-3V6 M4 9a3.5 3 0 1 1-7 0 3.5 3 0 1 1 7 0Z M14 6a3.5 3 0 1 1-7 0 3.5 3 0 1 1 7 0Z"/%3E%3Cpath transform="translate(-8 170) rotate(0) scale(.8)" d="M-21 0c4-6 10-6 14 0s10 6 14 0 10-6 14 0"/%3E%3C/svg%3E') 0 0 / 240px 240px;
+    /* One opaque ink, faded as a whole layer, so joins never darken */
+    opacity: 0.13;
+    pointer-events: none;
+  }
+
+  /* ---- Header: floating glass, back, the name pill, the avatar ---- */
+  .tg-glass {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(14px) saturate(1.6);
+    box-shadow:
+      0 0 0 0.5px rgba(0, 0, 0, 0.06),
+      0 4px 14px -4px rgba(30, 50, 30, 0.18);
+  }
+
+  .tg-head {
+    position: absolute;
+    top: 66px;
+    right: 16px;
+    left: 16px;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 48px;
+  }
+
+  .tg-back {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    color: #1c1c1e;
+  }
+
+  .tg-title {
+    position: absolute;
+    left: 50%;
+    display: grid;
+    justify-items: center;
+    gap: 1px;
+    min-width: 128px;
+    padding: 6px 22px 7px;
+    border-radius: 24px;
+    transform: translateX(-50%);
+  }
+
+  .tg-name {
+    color: var(--tg-ink);
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 20px;
+  }
+
+  .tg-status {
+    color: var(--tg-blue);
+    font-size: 13px;
+    line-height: 16px;
+  }
+
+  /* Telegram's peach gradient on the kit's Avatar */
+  .tg-avatar {
+    font-weight: 600;
+  }
+
+  /* ---- The thread: Telegram's bubbles, restyled from the kit's ---- */
+  .tg-thread {
+    --ss-me: var(--tg-out);
+    --ss-me-text: var(--tg-ink);
+    --ss-them: #fff;
+    --ss-them-text: var(--tg-ink);
+    /* Above the composer, so a sent message's words lift out over the field */
+    position: relative;
+    z-index: 2;
+    flex: 1;
+    gap: 4px;
+    padding: 64px 10px 10px;
+  }
+
+  .ss-bubble {
+    max-width: 82%;
+    padding: 6px 10px 6px 12px;
+    border-radius: 18px;
+    line-height: 22px;
+    letter-spacing: -0.02em;
+  }
+
+  /* Tails are the kit's, drawn a little tighter, as Telegram's corner is */
+  .ss-bubble__tail {
+    width: 15px;
+    height: 14px;
+  }
+
+  [data-from='me'] > .ss-bubble > .ss-bubble__tail {
+    right: -5px;
+  }
+
+  [data-from='them'] > .ss-bubble > .ss-bubble__tail {
+    left: -5px;
+  }
+
+  .ss-bubble-row[data-from='me'] + .ss-bubble-row[data-from='them'],
+  .ss-bubble-row[data-from='them'] + .ss-bubble-row[data-from='me'] {
+    margin-top: 6px;
+  }
+
+  /* Time and ticks sit inside the bubble, low on the last line */
+  .tg-meta {
+    position: relative;
+    top: 5px;
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    margin-left: 10px;
+    color: var(--tg-in-meta);
+    font-size: 12px;
+    letter-spacing: 0;
+    line-height: 1;
+    white-space: nowrap;
+  }
+
+  [data-from='me'] .tg-meta {
+    color: var(--tg-out-meta);
+  }
+
+  .tg-ticks {
+    flex: none;
+    margin-right: -2px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.35;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    overflow: visible;
+  }
+
+  .tg-ticks__clock {
+    transform-origin: 6px 5.5px;
+    transition: opacity 0.2s ease, transform 0.3s var(--tg-ui);
+  }
+
+  .tg-ticks__one,
+  .tg-ticks__two {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .tg-ticks:not([data-state='clock']) .tg-ticks__clock {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  .tg-ticks:not([data-state='clock']) .tg-ticks__one,
+  .tg-ticks[data-state='read'] .tg-ticks__two {
+    stroke-dashoffset: 0;
+  }
+
+  /* A photo fills its bubble; the time rides on it in a dark pill */
+  .tg-photo > .ss-bubble {
+    padding: 2px;
+    --b: #fff;
+  }
+
+  .tg-photo .ss-bubble__text {
+    position: relative;
+  }
+
+  .tg-photo__img {
+    display: block;
+    width: 252px;
+    height: 168px;
+    object-fit: cover;
+    object-position: center 40%;
+    border-radius: 16px;
+  }
+
+  .tg-photo__time,
+  .tg-big__time {
+    position: absolute;
+    right: 8px;
+    bottom: 8px;
+    padding: 2px 7px;
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.32);
+    color: #fff;
+    font-size: 12px;
+    line-height: 16px;
+    letter-spacing: 0;
+  }
+
+  /* A lone emoji is the message: big, no bubble, its time in a pill */
+  .tg-big > .ss-bubble {
+    --b: transparent;
+    margin-left: 6px;
+    padding: 0 0 4px;
+  }
+
+  .tg-big .ss-bubble__tail {
+    display: none;
+  }
+
+  .tg-big .ss-bubble__text {
+    position: relative;
+    width: 112px;
+  }
+
+  .tg-emoji {
+    display: block;
+    font-size: 84px;
+    line-height: 100px;
+    text-align: center;
+    will-change: transform;
+    transform-origin: 50% 80%;
+    animation: tg-emoji 1.6s cubic-bezier(0.25, 0.8, 0.25, 1) both;
+  }
+
+  .tg-big__time {
+    right: -46px;
+    bottom: 2px;
+    background: rgba(40, 70, 40, 0.3);
+  }
+
+  /* The date: a small tinted pill in the middle of the wallpaper */
+  .tg-date {
+    align-self: center;
+    margin: 8px 0;
+    padding: 3px 10px;
+    border-radius: 12px;
+    background: rgba(40, 70, 40, 0.28);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    line-height: 16px;
+  }
+
+  /* ---- The composer: attach, the field, mic or send ---- */
+  .tg-compose {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 12px 40px;
+  }
+
+  .tg-round {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    color: #6d7279;
+  }
+
+  .tg-field {
+    position: relative;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    min-width: 0;
+    height: 44px;
+    padding: 0 10px 0 16px;
+    border-radius: 22px;
+    font-size: 17px;
+    letter-spacing: -0.02em;
+  }
+
+  .tg-field__text {
+    flex: 1;
+    min-width: 0;
+    color: var(--tg-ink);
+    white-space: nowrap;
+  }
+
+  .tg-caret {
+    display: inline-block;
+    width: 2px;
+    height: 21px;
+    margin-left: 1px;
+    border-radius: 1px;
+    background: var(--tg-blue);
+    vertical-align: -4px;
+  }
+
+  .tg-field__ph {
+    position: absolute;
+    left: 16px;
+    color: #a2a6ab;
+    pointer-events: none;
+    /* Comes back once the sent words have lifted clear of the field */
+    transition: opacity 0.2s ease 0.3s;
+  }
+
+  .tg-field__ph[data-hide] {
+    opacity: 0;
+    transition: opacity 0.12s ease;
+  }
+
+  .tg-field__icon {
+    display: grid;
+    flex: none;
+    place-items: center;
+    color: #8a8f95;
+  }
+
+  /* Mic and send share one place: the mic shrinks away as send grows in */
+  .tg-action {
+    position: relative;
+    display: grid;
+    flex: none;
+    width: 44px;
+    height: 44px;
+
+    > * {
+      grid-area: 1 / 1;
+    }
+  }
+
+  .tg-mic {
+    transition: opacity 0.18s ease, transform 0.3s var(--tg-ui);
+  }
+
+  .tg-mic[data-off] {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+
+  .tg-send {
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: var(--tg-blue);
+    color: #fff;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: opacity 0.18s ease, transform 0.3s var(--tg-ui);
+  }
+
+  .tg-send[data-on] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* A lone emoji arrives as Telegram's animated ones do: it grows in, then
+   waves twice and settles */
+@keyframes tg-emoji {
+  0% {
+    transform: scale(0.55);
+  }
+  30% {
+    transform: scale(1);
+  }
+  45% {
+    transform: rotate(-9deg);
+  }
+  60% {
+    transform: rotate(7deg);
+  }
+  75% {
+    transform: rotate(-4deg);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tg .tg-emoji {
+    animation: none;
+  }
+}

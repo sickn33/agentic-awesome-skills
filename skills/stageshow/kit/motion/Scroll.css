@@ -1,0 +1,49 @@
+/* Scroll */
+
+@layer stageshow {
+  .ss-scroll {
+    overflow: hidden;
+  }
+
+  /* Only once it has scrolled: both edges soften over the rows passing them */
+  .ss-scroll[data-scrolled] {
+    mask-image: linear-gradient(to bottom, transparent, #000 18px, #000 calc(100% - 18px), transparent);
+  }
+
+  /* Scroll: the overlay bar shows while scrolling and fades once it rests */
+  .ss-scroller {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .ss-scroller > .ss-scroll {
+    flex: 1;
+    min-height: 0;
+  }
+
+  .ss-scroller__thumb {
+    position: absolute;
+    top: 0;
+    right: 2px;
+    width: 6px;
+    height: var(--ss-thumb-h, 0);
+    border-radius: 3px;
+    background: var(--ss-ink-5);
+    transform: translateY(var(--ss-thumb-y, 0));
+    opacity: 0;
+    transition: opacity 0.5s ease 0.6s;
+    pointer-events: none;
+  }
+
+  .ss-scroller[data-scrolling] .ss-scroller__thumb,
+  .ss-scroller[data-bar="always"] .ss-scroller__thumb {
+    opacity: 1;
+    transition: opacity 0.15s ease;
+  }
+
+  .ss-stage[data-theme="dark"] .ss-scroller__thumb {
+    background: rgba(255, 255, 255, 0.28);
+  }
+}

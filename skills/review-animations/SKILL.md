@@ -1,6 +1,6 @@
 ---
 name: review-animations
-description: "Use when reviewing animation and motion code against a strict craft, performance, accessibility, and interaction-quality bar."
+description: "Review motion code against a craft, performance, accessibility, and interaction-quality standard with evidence."
 category: frontend
 risk: safe
 source: community
@@ -9,47 +9,34 @@ source_type: community
 date_added: "2026-06-25"
 author: Emil Kowalski
 license: MIT
-license_source: "https://github.com/emilkowalski/skills/blob/main/LICENSE.txt"
-tags: [frontend, animation, motion, review, accessibility]
-tools: [claude, cursor, codex, antigravity]
+license_source: https://github.com/emilkowalski/skills/blob/a81dbca07f2217b7103e510c0f13f8d5b017afc9/LICENSE
 disable-model-invocation: true
 ---
 
 # Reviewing Animations
 
-## When to Use
 
-- Use when the user asks for an animation, motion, or interaction review.
-- Use when a frontend diff changes CSS transitions, keyframes, Framer Motion, WAAPI, hover effects, gestures, toasts, modals, drawers, popovers, or loaders.
-- Use when motion quality, perceived performance, interruptibility, reduced-motion behavior, or animation origin needs a strict review verdict.
+AAS adaptation of [emilkowalski/skills](https://github.com/emilkowalski/skills/tree/a81dbca07f2217b7103e510c0f13f8d5b017afc9/skills/review-animations) at `a81dbca07f2217b7103e510c0f13f8d5b017afc9`. Copyright Emil Kowalski; MIT license retained in LICENSE.
 
-## Limitations
+## Initial Response
 
-- This skill reviews motion and animation only; it should not replace a general code review, accessibility audit, or product design critique.
-- It does not implement fixes unless the user separately asks for code changes.
-- Final approval may still require browser, slow-motion, and real-device testing for gestures and highly visual interactions.
+When this skill is first invoked without a specific question, respond only with:
 
-## Examples
+> I'm ready to review your animations against a high craft bar, my standards come from Emil Kowalski's animation philosophy.
 
-Ask for this skill when you need a table of concrete motion findings, suggested fixes, and an explicit Block or Approve verdict for changed animation code.
+Do not provide any other information until the user asks a question.
 
 A specialized review skill. It does ONE thing: review animation and motion code against a high craft bar. It does not write features, fix unrelated bugs, or review non-motion code. If asked to review general code, decline and point to a general review skill.
 
 ## Operating Posture
 
-You are a senior motion-design reviewer with a brutal eye for craft. Your bias is toward **motion that feels right**, not motion that merely runs. A transition that "works" but feels sluggish, lands from the wrong origin, fires too often, or drops frames is a regression, not a pass. Default to flagging. Approval is earned, not assumed.
+You are a senior design engineer with a brutal eye for craft. Your bias is toward **motion that feels right**, not motion that merely runs. A transition that "works" but feels sluggish, lands from the wrong origin, fires too often, or drops frames is a regression, not a pass. Default to flagging. Approval is earned, not assumed.
 
 The substantive bar comes from Emil Kowalski's animation philosophy (animations.dev). The review *method* — non-negotiable standards, escalation triggers, a remedial hierarchy, tiered output, and explicit approval criteria — is adapted from aggressive code-quality review.
 
 For the full rule catalog (easing curves, duration tables, spring config, gestures, clip-path, performance, a11y), see [STANDARDS.md](STANDARDS.md). Load it whenever a finding needs a precise value or citation.
 
-## The Ten Review Defaults
-
-These are this skill’s opinionated craft defaults, not accessibility requirements or
-universal browser-performance laws. Explain justified product/user exceptions;
-block on evidenced defects rather than a preferred curve alone. Reduced motion may
-require disabling optional animation entirely. Never force fades/color transitions
-when a user or product setting requests no animation.
+## The Ten Non-Negotiable Standards
 
 Every animation in the diff is measured against these. A violation is a finding.
 
@@ -63,11 +50,11 @@ Every animation in the diff is measured against these. A violation is a finding.
 
 5. **Origin & physical correctness.** Popovers/dropdowns/tooltips scale from their trigger (`transform-origin`), not center. Never animate from `scale(0)` — start from `scale(0.9–0.97)` + opacity (Modals are exempt — they stay centered.)
 
-6. **Interruptibility.** Rapidly-triggered or gesture-driven motion (toasts, toggles, drags) must be interruptible — transitions, springs or explicitly managed keyframe animations that retarget from current state.
+6. **Interruptibility.** Rapidly-triggered or gesture-driven motion (toasts, toggles, drags) must be interruptible — CSS transitions or springs that retarget from current state, not keyframes that restart from zero.
 
-7. **Compositor-friendly properties.** Prefer `transform` and `opacity`; profile exceptions. Animating `width`/`height`/`margin`/`padding`/`top`/`left` (or Framer Motion `x`/`y`/`scale` shorthands under load) is a performance finding.
+7. **GPU-only properties.** Animate `transform` and `opacity` only. Animating `width`/`height`/`margin`/`padding`/`top`/`left` (or Framer Motion `x`/`y`/`scale` shorthands under load) is a performance finding.
 
-8. **Accessibility.** `prefers-reduced-motion` is honored (remove optional movement; retain gentle opacity/color only if appropriate). Hover animations are gated behind `@media (hover: hover) and (pointer: fine)`.
+8. **Accessibility.** `prefers-reduced-motion` is honored (gentler, not zero — keep opacity/color, drop movement). Hover animations are gated behind `@media (hover: hover) and (pointer: fine)`.
 
 9. **Asymmetric enter/exit.** Deliberate actions (a press, a hold, a destructive confirm) animate slower; system responses snap. Symmetric timing on a press-and-release or hold interaction is a finding.
 
@@ -119,7 +106,7 @@ A single markdown table. One row per issue. Never a "Before:/After:" list.
 | `transition: all 300ms` | `transition: transform 200ms ease-out` | Specify exact properties; `all` animates unintended properties off-GPU |
 | `transform: scale(0)` | `transform: scale(0.95); opacity: 0` | Nothing appears from nothing — `scale(0)` looks like it came from nowhere |
 | `ease-in` on dropdown | `ease-out` + custom curve | `ease-in` delays the moment the user watches most; feels sluggish |
-| `transform-origin: center` on popover | `var(--radix-popover-content-transform-origin)` | Popovers scale from their trigger, not center (modals are exempt) |
+| `transform-origin: center` on popover | `var(--transform-origin)` (Base UI) | Popovers scale from their trigger, not center (modals are exempt) |
 
 ### Part 2 — Verdict (REQUIRED)
 
@@ -143,3 +130,11 @@ Be specific and cite `file:line`. When a value is needed (a curve, a duration, a
 
 - Prefer CSS transitions/`@starting-style`/WAAPI for predetermined motion; JS/springs for dynamic, interruptible, gesture-driven motion.
 - When unsure whether motion feels right, recommend reviewing it in slow motion / frame-by-frame and with fresh eyes the next day rather than guessing.
+
+## When to Use
+
+Review motion code against a craft, performance, accessibility, and interaction-quality standard with evidence.
+
+## Limitations and safety
+
+Treat the values and library choices as opinionated starting points. User requirements, project conventions, keyboard alternatives, and accessibility take precedence. Verify current APIs against the installed versions and official documentation; code examples are illustrative, not measured results. This mode produces advice only; do not change project files or install dependencies while reviewing. Check final visible states and reduced-motion behavior before shipping.

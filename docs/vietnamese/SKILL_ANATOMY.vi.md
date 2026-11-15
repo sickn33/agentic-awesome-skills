@@ -1,3 +1,5 @@
+> Current contribution requirements: [canonical English source](../contributors/skill-anatomy.md). This translation may lag; use the canonical source for submission and license requirements.
+
 # Cấu trúc của một Skill - Hiểu về Hệ thống
 
 **Bạn muốn hiểu cách các skill (kỹ năng) hoạt động bên trong?** Hướng dẫn này sẽ phân tích chi tiết từng phần của một file skill.

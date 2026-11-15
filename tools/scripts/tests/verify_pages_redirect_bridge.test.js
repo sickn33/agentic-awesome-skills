@@ -77,6 +77,18 @@ async function run() {
     fetchImpl,
   });
   assert.strictEqual(live.checked_redirects, manifest.route_count);
+  let temporaryFailure = true, manifests = 0;
+  const retried = await verifyLiveDeployment({deploymentRoot,
+    liveRoot:'https://example.github.io/',liveMode:'all',sleep:async()=>{},
+    fetchImpl:async(url,init)=>{
+      if(String(url).endsWith('redirect-manifest.json')) manifests++;
+      if(temporaryFailure && String(url).includes('/skill/')) {temporaryFailure=false;return new Response('CDN transient',{status:503});}
+      return fetchImpl(url,init);
+    }});
+  assert.equal(retried.checked_redirects,manifest.route_count);
+  assert.equal(retried.attempts.length,2);
+  assert.equal(manifests,2,'retry must restart full manifest, webmaster and route verification');
+
 
   await assert.rejects(() => verifyLiveDeployment({
     deploymentRoot,

@@ -4,6 +4,8 @@ AAS ships first-class plugin distributions for **Claude Code** and **Codex**, pl
 
 This page explains how plugins fit beneath **AAS Core**, the orchestration layer for Codex and Claude Code. Plugins and direct installs deliver skill payloads; Core exposes the complete catalog and validates, records, and plans the exact stack chosen by the agent.
 
+> **npm publishing paused.** For current skills, use the [GitHub installation and update guide](getting-started.md#install-and-update-without-npm). npm commands require a version already published to npm.
+
 ## What a plugin is in this repo
 
 In Agentic Awesome Skills, a plugin is a packaged, installable distribution of skills plus the metadata a host tool needs to expose that distribution through its plugin or marketplace flow.

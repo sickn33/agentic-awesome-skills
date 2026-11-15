@@ -1,0 +1,211 @@
+/* Row */
+
+@layer stageshow {
+  /* A grid: the lead sits in the first row beside the title and subtitle
+     and is centered on exactly those two lines, whatever their size; any
+     further lines (preview bars) go under the text, not under the lead */
+  .ss-row {
+    --ss-row-pad: 12px;
+    /* The type scale: desktop sizes by default, iOS sizes on a phone screen */
+    --ss-row-title: 12px;
+    --ss-row-subtitle: 11.5px;
+    --ss-row-meta: 11px;
+    --ss-row-line: 16px;
+    --ss-row-line-2: 16px;
+    --ss-row-gap: 2px;
+    --ss-row-dot: 6px;
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    column-gap: 10px;
+    padding: var(--ss-row-pad) var(--ss-row-pad);
+    border-radius: var(--ss-radius-lg);
+    will-change: transform;
+    transition: background 0.2s ease;
+  }
+
+  /* An unread dot hangs in the margin, 7px left of the lead (below): it
+     never moves the row. The list needs a few px of its own padding for the
+     dot to sit in. A product that reserves a dot column on every row (Mail,
+     Messages) pads the whole list; never only the unread rows */
+
+  .ss-row[data-selected],
+  .ss-row[data-hover] {
+    background: var(--ss-ink-1);
+  }
+
+  /* The lead and the dot sit on the name and its line, not the middle of
+     the row: a row that runs to three or four lines keeps them up with the
+     name, the way Mail does */
+  .ss-row[data-lead] {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  /* Anything else in the row (a toggle, a chevron, a badge) trails on the
+     first line's row, at the end, centered on the pair */
+  .ss-row > :not(.ss-row__lead):not(.ss-row__body):not(.ss-row__dot):not(.ss-row__preview) {
+    grid-row: 1;
+    align-self: center;
+    justify-self: end;
+  }
+
+  /* The dot takes the first cell as its box, so its middle is the lead's */
+  .ss-row__dot {
+    position: absolute;
+    /* Both lines named: an open end would run the box to the row's bottom */
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+    z-index: 1;
+    /* 7px clear of the lead, whatever size the dot is */
+    left: calc(-7px - var(--ss-row-dot));
+    top: calc(50% - 3px);
+    width: var(--ss-row-dot);
+    height: var(--ss-row-dot);
+    margin-top: calc(3px - var(--ss-row-dot) / 2);
+    border-radius: 50%;
+    background: var(--ss-accent);
+  }
+
+  /* On a phone the row is an iOS list row: 17pt name, 15pt lines, a 10pt dot */
+  .ss-phone__screen .ss-row {
+    --ss-row-title: 17px;
+    --ss-row-subtitle: 15px;
+    --ss-row-meta: 15px;
+    --ss-row-line: 22px;
+    --ss-row-line-2: 20px;
+    --ss-row-gap: 0px;
+    --ss-row-dot: 10px;
+  }
+
+  .ss-row__lead {
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  /* The two lines are one item: 2px between 16px line boxes gives the ink
+     4 to 6px of air; the row's padding carries the rest. A title on its own
+     is one line: the row is the title plus its padding, with no second line
+     reserved (a file list, a settings list), so one-line rows don't read fat */
+  .ss-row__body {
+    grid-row: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--ss-row-gap);
+    min-width: 0;
+    justify-content: center;
+  }
+
+  /* With a subtitle or preview lines the body holds the two-line pitch even
+     when a line is a bar or shorter type, so rows in one list line up */
+  .ss-row:has(.ss-row__subtitle, .ss-row__preview) .ss-row__body {
+    min-height: calc(var(--ss-row-line) + var(--ss-row-line-2) + var(--ss-row-gap));
+  }
+
+  .ss-row__head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: var(--ss-row-line);
+  }
+
+  .ss-row__title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--ss-row-title);
+    font-weight: 600;
+    line-height: var(--ss-row-line);
+    color: var(--ss-text-strong);
+  }
+
+  .ss-row__meta {
+    flex: none;
+    font-size: var(--ss-row-meta);
+    line-height: var(--ss-row-line);
+    color: var(--ss-text-faint);
+  }
+
+  .ss-row__subtitle {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: var(--ss-row-subtitle);
+    line-height: var(--ss-row-line-2);
+    color: var(--ss-text);
+  }
+
+  /* A bar standing in for a line keeps the line's pitch: 6px bar, 5px each side */
+  /* Preview lines: under the subtitle, in the text column, at its pitch */
+  .ss-row__preview {
+    grid-row: 2;
+    display: grid;
+    justify-items: start;
+    row-gap: calc(var(--ss-row-line-2) - 6px);
+    padding-top: calc((var(--ss-row-line-2) - 6px) / 2);
+  }
+
+  /* Real preview text: two lines at the subtitle's size, then an ellipsis */
+  .ss-row__preview[data-text] {
+    display: -webkit-box;
+    overflow: hidden;
+    padding-top: 0;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    font-size: var(--ss-row-subtitle);
+    line-height: var(--ss-row-line-2);
+    color: var(--ss-text);
+  }
+
+  .ss-row[data-lead] .ss-row__preview {
+    grid-column: 2;
+  }
+
+  .ss-row__preview > .ss-bar {
+    display: block;
+  }
+
+  /* With preview lines the lead and the dot sit a little lower: centered on
+     the name, the subtitle and the first preview line, where Mail puts a
+     contact photo, neither hugging the name nor sunk to the row's middle */
+  .ss-row:has(.ss-row__preview) .ss-row__lead,
+  .ss-row:has(.ss-row__preview) .ss-row__dot {
+    grid-row: 1 / 3;
+    align-self: start;
+  }
+
+  /* One height for both, so a product that raises the lead (Mail centers
+     it on the sender and subject) carries the dot with it by setting
+     --ss-row-lead-h alone */
+  .ss-row:has(.ss-row__preview) {
+    --ss-row-lead-h: calc(var(--ss-row-line) + var(--ss-row-line-2) * 2 + var(--ss-row-gap));
+  }
+
+  .ss-row:has(.ss-row__preview) .ss-row__lead {
+    height: var(--ss-row-lead-h);
+  }
+
+  .ss-row:has(.ss-row__preview) .ss-row__dot {
+    top: calc(var(--ss-row-lead-h) / 2 - 3px);
+  }
+
+  .ss-row__title > .ss-bar {
+    display: block;
+    margin: calc((var(--ss-row-line) - 6px) / 2) 0;
+  }
+
+  .ss-row__subtitle > .ss-bar {
+    display: block;
+    margin: calc((var(--ss-row-line-2) - 6px) / 2) 0;
+  }
+
+  .ss-row__meta > .ss-bar {
+    display: block;
+    margin: calc((var(--ss-row-line) - 6px) / 2) 0;
+  }
+}

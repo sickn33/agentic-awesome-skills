@@ -1,0 +1,534 @@
+/* All rules belong to this example, including its responsive variants. */
+.staggered-bento {
+  /* Wayline's features section: a staggered pair on white. Everything nests
+     under &. Two columns of rounded tiles on a gap, tall and
+     short alternating so the rows never line up across the columns. Each
+     picture is its own Stage at 1:1, pinned to its tile's bottom. */
+    --pad: 30px;
+    --gap: 18px;
+    --tile: #f5f5f7;
+    --ink: #1d1d1f;
+    --ink-2: #6e6e73;
+    --accent: #f2643b;
+    --short: 310px;
+    --tall: 518px;
+    container-type: inline-size;
+    /* No padding of its own: on a page, the tiles span the content column */
+    box-sizing: border-box;
+    background: #fff;
+    font-family: var(--sg-font, inherit);
+    -webkit-font-smoothing: antialiased;
+
+  & .sg-grid {
+    display: grid;
+    gap: var(--gap);
+    max-width: 984px;
+    margin: 0 auto;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* Narrow: one column, the tiles in reading order, hero first */
+  & .sg-col {
+    display: contents;
+  }
+
+  & .sg-tile--coast { order: 1; height: 460px; }
+  & .sg-tile--private { order: 2; height: 230px; }
+  & .sg-tile--stat { order: 3; height: 250px; }
+  & .sg-tile--voice { order: 4; height: 310px; }
+  & .sg-tile--book { order: 5; height: 300px; }
+  & .sg-tile--day { order: 6; height: 500px; }
+
+  /* Two columns: tall, short, short on the left; short, short, tall on the right */
+  @container (min-width: 600px) {
+    & .sg-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    & .sg-col {
+      display: flex;
+      flex-direction: column;
+      gap: var(--gap);
+    }
+
+    & .sg-tile { height: var(--short); }
+    & .sg-tile--coast,
+    & .sg-tile--day { height: var(--tall); }
+  }
+
+  @container (min-width: 900px) {
+    & .sg-grid {
+      --pad: 36px;
+      --gap: 20px;
+      --short: 320px;
+      --tall: 560px;
+    }
+  }
+
+  @container (max-width: 599px) {
+    & .sg-grid {
+      --pad: 26px;
+    }
+  }
+
+  /* ---- The tile: one frame for all six ---- */
+
+  & .sg-tile {
+    position: relative;
+    overflow: hidden;
+    border-radius: 28px;
+    background: var(--tile);
+  }
+
+  & .sg-copy {
+    position: relative;
+    z-index: 1;
+    max-width: 380px;
+    margin: 0;
+    padding: 30px var(--pad) 0;
+    font-size: 19px;
+    line-height: 26px;
+    letter-spacing: -0.016em;
+    font-weight: 500;
+    color: var(--ink-2);
+    text-wrap: pretty;
+  }
+
+  & .sg-copy b {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* Over the photo's sky */
+  & .sg-tile[data-photo] .sg-copy {
+    color: rgba(255, 255, 255, 0.72);
+  }
+
+  & .sg-tile[data-photo] .sg-copy b {
+    color: #fff;
+  }
+
+  /* ---- Pictures: pinned to the tile's bottom ---- */
+
+  & .sg-picture {
+    position: absolute;
+    bottom: 0;
+  }
+
+  & .sg-picture--coast {
+    left: 50%;
+    width: 600px;
+    margin-left: -300px;
+  }
+
+  & .sg-picture--small,
+  & .sg-picture--phone {
+    left: 0;
+    width: 100%;
+  }
+
+  & .sg-stage .ss-stage {
+    overflow: hidden;
+    background: transparent;
+  }
+
+  /* ---- Coast (the still hero picture) ---- */
+
+  & .sg-art {
+    position: absolute;
+    inset: 0;
+  }
+
+  & .sg-art__svg {
+    position: absolute;
+    inset: 0;
+    display: block;
+  }
+
+  /* One column: the copy wraps to more lines, so the drawn takes sit lower
+     (their bottoms are open water and more tiles, which can go) */
+  @container (max-width: 599px) {
+    & .sg-picture--coast {
+      bottom: -40px;
+    }
+  }
+
+  /* The tile's ground matches the picture's top, so nothing shows round it */
+  & .sg-tile--coast:has([data-art='azulejo']) { background: #1f3f8f; }
+
+  /* ---- Private (statement) ---- */
+
+  & .sg-statement {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-sizing: border-box;
+    height: 100%;
+    padding: 30px var(--pad) 32px;
+  }
+
+  & .sg-lock {
+    color: #0a7cff;
+  }
+
+  & .sg-statement__text {
+    max-width: 340px;
+    margin: 0;
+    font-size: 30px;
+    line-height: 34px;
+    letter-spacing: -0.024em;
+    font-weight: 600;
+    color: #a1a1a6;
+    text-wrap: balance;
+  }
+
+  & .sg-statement__text b {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  /* ---- Distance (stat) ---- */
+
+  & .sg-stat {
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    height: 100%;
+    padding: 30px var(--pad) 32px;
+  }
+
+  & .sg-stat-lead {
+    font-size: 19px;
+    line-height: 26px;
+    letter-spacing: -0.016em;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  & .sg-stat-number {
+    display: block;
+    margin-top: auto;
+    font-size: 60px;
+    line-height: 1;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+
+  /* The exact final text sets the slot, so adding digits never kicks the unit
+     sideways. Its settled size and alignment remain the same as plain text. */
+  & .sg-stat-value {
+    display: inline-grid;
+    text-align: right;
+  }
+
+  & .sg-stat-value > * { grid-area: 1 / 1; }
+  & .sg-stat-sizer { visibility: hidden; }
+
+  & .sg-stat-unit {
+    margin-left: 6px;
+    font-size: 32px;
+    letter-spacing: -0.02em;
+  }
+
+  & .sg-stat-label {
+    max-width: 260px;
+    margin-top: 12px;
+    font-size: 15px;
+    line-height: 21px;
+    color: var(--ink-2);
+    text-wrap: pretty;
+  }
+
+  /* ---- Voice (component) ---- */
+
+  & .sg-note {
+    position: absolute;
+    top: 16px;
+    left: var(--pad);
+    box-sizing: border-box;
+    width: calc(100% - var(--pad) * 2);
+    height: 200px;
+    padding: 14px 14px 0;
+    /* A fragment with no chrome of its own: it dissolves where the tile crops it */
+    -webkit-mask-image: linear-gradient(180deg, #000 150px, transparent 200px);
+    mask-image: linear-gradient(180deg, #000 150px, transparent 200px);
+    border-radius: 26px;
+    background: #fff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.04), 0 14px 34px -14px rgba(40, 30, 20, 0.24), 0 2px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  & .sg-recorder {
+    display: grid;
+    grid-template-columns: 48px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 14px;
+    padding-right: 8px;
+  }
+
+  & .sg-transcript {
+    margin: 16px 6px 0;
+    font-size: 15px;
+    line-height: 21px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+  }
+
+  & .sg-transcript-rest {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin: 12px 6px 0;
+  }
+
+  & .sg-transcript-rest span {
+    height: 7px;
+    border-radius: 4px;
+    background: #ececf0;
+  }
+
+  & .sg-rec {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
+    background: #ff3b30;
+  }
+
+  & .sg-rec__stop {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    background: #fff;
+  }
+
+  & .sg-wave {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    height: 30px;
+  }
+
+  & .sg-wave__bar {
+    flex: 1;
+    height: calc(var(--h) * 100%);
+    min-height: 3px;
+    border-radius: 2px;
+    background: #1d1d1f;
+    transform: scaleY(0.12);
+    will-change: transform;
+    transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transition-delay: calc(var(--i) * 40ms);
+  }
+
+  & .sg-note[data-on] .sg-wave__bar {
+    transform: none;
+  }
+
+  & .sg-rec__time {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- Book (object) ---- */
+
+  & .sg-books {
+    position: absolute;
+    inset: 0;
+  }
+
+  & .sg-book {
+    position: absolute;
+    box-sizing: border-box;
+    border-radius: 4px 8px 8px 4px;
+    will-change: transform;
+    transition: transform 1.1s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  & .sg-book--back {
+    top: 34px;
+    left: calc(var(--pad) + 86px);
+    width: 150px;
+    height: 196px;
+    background: linear-gradient(90deg, #c9b590 0, #dccaa6 12px, #e4d4b2 100%);
+    box-shadow: 0 0 0 1px rgba(80, 60, 30, 0.12), 0 14px 26px -12px rgba(60, 40, 20, 0.35);
+    transform: translateY(70px);
+    transition-delay: 0.08s;
+  }
+
+  & .sg-book--front {
+    top: 22px;
+    left: var(--pad);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 160px;
+    height: 210px;
+    /* Centered on the cover, not the spine */
+    padding: 52px 0 0 14px;
+    background:
+      repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.03) 0 1px, transparent 1px 3px),
+      repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.05) 0 1px, transparent 1px 3px),
+      linear-gradient(160deg, #3b6b5c 0%, #2c5548 60%, #234539 100%);
+    box-shadow: 0 0 0 1px rgba(20, 40, 30, 0.3), 0 22px 36px -14px rgba(20, 40, 30, 0.55), 0 4px 10px -4px rgba(0, 0, 0, 0.2);
+    color: #e8d3a0;
+    transform: translateY(60px);
+  }
+
+  & .sg-books[data-on] .sg-book {
+    transform: none;
+  }
+
+  & .sg-book__spine {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 14px;
+    border-radius: 4px 0 0 4px;
+    background: linear-gradient(90deg, rgba(0, 0, 0, 0.28), rgba(0, 0, 0, 0.06) 70%, rgba(255, 255, 255, 0.08));
+  }
+
+  & .sg-book__title {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    /* Tracking adds space after the last letter too; take it back so the
+       word centers on its ink */
+    margin-right: -0.24em;
+  }
+
+  & .sg-book__by {
+    margin-top: 8px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    margin-right: -0.08em;
+    color: #c9b98e;
+  }
+
+  /* ---- Day (the one phone) ---- */
+
+  & .sg-phone {
+    position: absolute;
+    top: 26px;
+    left: var(--pad);
+    will-change: transform;
+  }
+
+  /* Keep the clock legible inside the smallest, guttered phone. */
+  @container (max-width: 340px) {
+    & .sg-phone .ss-phone__time { font-size: 19px; }
+  }
+
+  & .sg-page {
+    position: absolute;
+    inset: 0;
+    padding: 64px 24px 0;
+    background: #fff;
+  }
+
+  & .sg-page__head {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0 0 16px;
+  }
+
+  & .sg-page__eyebrow {
+    font-size: 19px;
+    font-weight: 600;
+    color: var(--accent);
+  }
+
+  & .sg-page__title {
+    font-size: 34px;
+    line-height: 40px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+
+  & .sg-mapcard {
+    overflow: hidden;
+    height: 190px;
+    border-radius: 20px;
+  }
+
+  & .sg-mapcard svg {
+    display: block;
+  }
+
+  & .sg-route {
+    /* A gap longer than the path, so no zero-length dash leaves a round cap behind */
+    stroke-dasharray: 1 2;
+    stroke-dashoffset: 1.5;
+    transition: stroke-dashoffset 1.4s cubic-bezier(0.45, 0, 0.2, 1) 0.1s;
+  }
+
+  & .sg-phone[data-on] .sg-route {
+    stroke-dashoffset: 0;
+  }
+
+  & .sg-route__end {
+    opacity: 0;
+    transition: opacity 0.3s ease 1.4s;
+  }
+
+  & .sg-phone[data-on] .sg-route__end {
+    opacity: 1;
+  }
+
+  & .sg-thumbs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  & .sg-thumb {
+    height: 108px;
+    border-radius: 14px;
+  }
+
+  /* Three small photos: a green hill, a yellow palace wall, a mossy wood */
+  & .sg-thumb--a {
+    background:
+      radial-gradient(120% 70% at 30% 100%, #3d6b45 40%, transparent 41%),
+      radial-gradient(90% 60% at 80% 100%, #567f4c 45%, transparent 46%),
+      linear-gradient(180deg, #a9c8de 0%, #dfe9e6 70%);
+  }
+
+  & .sg-thumb--b {
+    background:
+      linear-gradient(180deg, transparent 0 34%, #e8b64c 34% 100%),
+      repeating-linear-gradient(90deg, transparent 0 14px, rgba(120, 70, 10, 0.25) 14px 20px),
+      linear-gradient(180deg, #8fb6d6 0%, #cfe0ea 100%);
+  }
+
+  & .sg-thumb--c {
+    background:
+      radial-gradient(60% 40% at 50% 20%, #c7d79a 0%, transparent 70%),
+      linear-gradient(180deg, #4b6b3a 0%, #2e4a2a 60%, #1d3020 100%);
+  }
+
+  & .sg-lines {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  & .sg-lines span {
+    height: 8px;
+    border-radius: 4px;
+    background: #e8e8ed;
+  }
+}

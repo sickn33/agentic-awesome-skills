@@ -1,0 +1,4 @@
+interface:
+  display_name: "Expo API Routes"
+  short_description: "Create Expo Router API routes for server-side secrets, validation, webhooks, proxies, and EAS Hosting"
+  default_prompt: "Use $expo-api-routes to design, implement, test, and deploy Expo Router API routes, especially when secrets or server-side validation must stay out of the client."

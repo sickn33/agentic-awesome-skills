@@ -1,0 +1,352 @@
+/* All rules belong to this example, including its responsive variants. */
+.sb {
+  & .ss-stage {
+    --ss-accent: #5b5bd6;
+    --ss-accent-2: #5b5bd6;
+    --ss-accent-soft: rgba(91, 91, 214, 0.1);
+    --gutter: 36px;
+    /* Arrivals are already moving on their first frame; travel eases out of rest */
+    --sb-arrive: cubic-bezier(0.25, 0.8, 0.25, 1);
+    --sb-travel: cubic-bezier(0.45, 0, 0.1, 1);
+    overflow: hidden;
+    border-radius: 16px;
+    background: #f5f6fa;
+    font: 12px/1.4 var(--ss-font);
+    color: var(--ss-text-strong);
+  }
+
+  .sb-wash {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(55% 70% at 0% 100%, rgba(91, 91, 214, 0.13), transparent 70%),
+      radial-gradient(40% 50% at 100% 0%, rgba(91, 91, 214, 0.07), transparent 70%);
+  }
+
+  .sb-strong { font-weight: 600; }
+  .sb-muted { color: var(--ss-text); }
+
+  /* ---- The dashboard: pinned top and left of center, off the right and bottom ---- */
+
+  .sb-window {
+    position: absolute;
+    top: var(--gutter);
+    left: 196px;
+    width: 560px;
+    height: 440px;
+    background: var(--ss-surface);
+    border-radius: 10px;
+    box-shadow: var(--ss-shadow-hero);
+  }
+
+  .sb-scenes {
+    display: grid;
+    height: 100%;
+  }
+
+  /* Two companies on the same product, stacked: the scene change is a crossfade
+     of everything below the browser chrome, which stays put */
+  .sb-scene {
+    display: flex;
+    grid-area: 1 / 1;
+    min-height: 0;
+    opacity: 0;
+    transition: opacity 0.45s ease 0.1s;
+  }
+
+  /* The incoming scene leads, so the window is never half empty mid-change */
+  .sb-scene[data-on] {
+    opacity: 1;
+    transition: opacity 0.45s ease;
+  }
+
+  .sb-side {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    gap: 4px;
+    width: 150px;
+    padding: 16px 10px;
+    border-right: 1px solid var(--ss-line);
+    background: var(--ss-canvas);
+  }
+
+  .sb-org {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 26px;
+    margin-bottom: 10px;
+    padding: 0 6px;
+    font-size: 12.5px;
+  }
+
+  .sb-tile {
+    display: grid;
+    flex-shrink: 0;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    background: #23304d;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .sb-tile[data-scene='1'] { background: #e8833a; }
+
+  .sb-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 26px;
+    padding: 0 6px;
+    border-radius: 6px;
+  }
+
+  .sb-nav[data-on] { background: var(--ss-ink-2); }
+
+  .sb-main {
+    flex: 1;
+    min-width: 0;
+    /* The window runs 36px past the stage's right edge: the content stops a
+       gutter short of what is visible, not of the window */
+    padding: 18px calc(22px + 36px) 18px 22px;
+  }
+
+  .sb-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+
+  .sb-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .sb-mrr {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+    padding: 14px 16px;
+    border: 1px solid var(--ss-line);
+    border-radius: 10px;
+  }
+
+  .sb-mrr__text {
+    display: grid;
+    gap: 2px;
+  }
+
+  .sb-mrr__value {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- Subscribers: newest on top ---- */
+
+  .sb-row {
+    display: grid;
+    flex-shrink: 0;
+    grid-template-columns: 22px minmax(0, 1fr) 44px 52px;
+    align-items: center;
+    gap: 10px;
+    height: 42px;
+    padding: 0 4px;
+    border-bottom: 1px solid var(--ss-line);
+    /* Pushed down as each new row opens: a layer keeps the text with its box */
+    will-change: transform;
+  }
+
+  .sb-row--old {
+    grid-template-columns: 22px minmax(0, 1fr) 52px;
+  }
+
+  /* The kit's Avatar in the product's soft tints */
+  .sb-av {
+    background: #e7e4fb;
+    color: #4b45b8;
+    font-size: 10.5px;
+    font-weight: 600;
+  }
+
+  .sb-av[data-i='1'] { background: #dff1ea; color: #23744f; }
+  .sb-av[data-scene='1'] { background: #fde9da; color: #b05a1c; }
+
+  .sb-name { font-weight: 500; }
+  .sb-plan { color: var(--ss-text); }
+
+  /* The row's words arrive with the chip; the pill is the chip itself, so it
+     shows the instant the flying one is gone, with no fade between them */
+  .sb-row > :not(.sb-pill) {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  .sb-row[data-landed] > :not(.sb-pill) {
+    opacity: 1;
+    transition: opacity 0.45s ease 0.05s;
+  }
+
+  .sb-row--old > * { opacity: 1 !important; }
+
+  .sb-pill {
+    justify-self: end;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: var(--ss-accent-soft);
+    color: var(--ss-accent);
+    font-size: 11.5px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    visibility: hidden;
+  }
+
+  .sb-row[data-landed] > .sb-pill { visibility: visible; }
+
+  /* In flight it lifts off the page: a white chip with the same words. Over
+     the last of its flight it lowers into the soft pill (fill eases to the
+     tint, the lift and ring fade), so it lands already looking like the row's
+     pill and the handover is invisible */
+  .sb-pill--chip {
+    display: inline-block;
+    visibility: visible;
+    background: #fff;
+    box-shadow: 0 0 0 1px rgba(91, 91, 214, 0.18), 0 6px 16px -4px rgba(50, 50, 93, 0.3);
+  }
+
+  .ss-fly[data-go] .sb-pill--chip {
+    /* The tint over the row's white, as one opaque color */
+    background: #efeffb;
+    box-shadow: 0 0 0 1px rgba(91, 91, 214, 0), 0 0 0 -4px rgba(50, 50, 93, 0);
+    transition: background-color 0.35s ease 0.5s, box-shadow 0.35s ease 0.5s;
+  }
+
+  /* ---- The checkout: straddles the dashboard's sidebar ---- */
+
+  .sb-checkout {
+    position: absolute;
+    top: 148px;
+    left: var(--gutter);
+    display: grid;
+    gap: 14px;
+    width: 236px;
+    padding: 18px;
+    border-radius: 12px;
+    background: var(--ss-surface);
+    box-shadow: var(--ss-shadow-satellite);
+    opacity: 0;
+    transform: translateX(-14px);
+    will-change: transform;
+    transition: opacity 0.22s ease, transform 0.4s var(--sb-travel);
+  }
+
+  .sb-checkout[data-in] {
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.6s ease 0.28s, transform 0.9s var(--sb-arrive) 0.28s;
+  }
+
+  .sb-checkout__head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12.5px;
+  }
+
+  .sb-price {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    font-size: 24px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  .sb-price .sb-muted {
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .sb-fields {
+    display: grid;
+    border: 1px solid var(--ss-line-strong, rgba(0, 0, 0, 0.1));
+    border-radius: 8px;
+  }
+
+  .sb-field {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 34px;
+    padding: 0 10px;
+  }
+
+  .sb-field + .sb-field { border-top: 1px solid var(--ss-line); }
+
+  .sb-pay {
+    display: grid;
+    place-items: center;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--ss-accent);
+    color: #fff;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+  }
+
+  .sb-pay[data-state='paid'],
+  .sb-pay[data-state='done'] { background: #1f9d55; }
+
+  .sb-done {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .sb-head-tile { display: none; }
+
+  /* ---- Compact (below 600): the dashboard on top, the checkout over its
+     filler rows at the bottom, so the chip flies up into the list ---- */
+
+  & .ss-stage[data-layout='compact'] {
+    --gutter: 24px;
+  }
+
+  [data-layout='compact'] .sb-window {
+    left: 48px;
+    width: 334px;
+    height: 460px;
+  }
+
+  [data-layout='compact'] .sb-side { display: none; }
+  [data-layout='compact'] .sb-head-tile { display: grid; }
+
+  [data-layout='compact'] .sb-main {
+    padding: 16px calc(18px + 24px) 16px 18px;
+  }
+
+  [data-layout='compact'] .sb-checkout {
+    /* One gutter above the stage's bottom edge, like the left */
+    top: auto;
+    bottom: var(--gutter);
+    gap: 12px;
+    width: 196px;
+    padding: 16px;
+  }
+
+  [data-layout='compact'] .sb-fields { display: none; }
+}

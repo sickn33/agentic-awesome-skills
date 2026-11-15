@@ -1,0 +1,256 @@
+/* The cursor (cursor.tsx): glyphs, the five styles, press, idle, ripples. */
+
+@layer stageshow {
+  .ss-cursor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    pointer-events: none;
+    will-change: transform;
+    transition: opacity 0.25s ease;
+  }
+
+  /* Sat still too long while the script plays: it steps out of the shot, and
+     comes back the moment it moves */
+  .ss-cursor[data-idle] {
+    opacity: 0;
+    transition-duration: 0.6s;
+  }
+
+  .ss-cursor__press {
+    display: grid;
+    /* The glyphs' hotspots meet at 0,0; pressing keeps that contact fixed. */
+    transform-origin: 0 0;
+    /* Lets go softly, as a finger lifting */
+    transition: transform 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .ss-cursor[data-pressed="true"] .ss-cursor__press {
+    transform: scale(0.9);
+    transition: transform 0.08s ease-out;
+  }
+
+  .ss-cursor__glyph {
+    grid-area: 1 / 1;
+    transform: scale(0);
+    opacity: 0;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  .ss-cursor__glyph[data-active="true"] {
+    transform: scale(var(--ss-cursor-size, 1));
+    opacity: 1;
+  }
+
+  /* Into and out of a resize cursor, the arrow and the triangles cross over
+     rather than pop: neither shrinks to nothing, and the ease is softer */
+  .ss-cursor__glyph[data-glyph^="resize"] {
+    transform: scale(calc(var(--ss-cursor-size, 1) * 0.5));
+  }
+
+  .ss-cursor[data-kind^="resize"] .ss-cursor__glyph:not([data-active="true"]) {
+    transform: scale(calc(var(--ss-cursor-size, 1) * 0.6));
+  }
+
+  .ss-cursor[data-kind^="resize"] .ss-cursor__glyph,
+  .ss-cursor__glyph[data-glyph^="resize"] {
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.2s ease;
+  }
+
+  .ss-cursor__glyph[data-glyph^="resize"][data-active="true"] {
+    transform: scale(var(--ss-cursor-size, 1));
+  }
+
+  /* What it was leaves quickly, so no ghost of it trails the new shape */
+  .ss-cursor[data-kind^="resize"] .ss-cursor__glyph:not([data-active="true"]),
+  .ss-cursor:not([data-kind^="resize"]) .ss-cursor__glyph[data-glyph^="resize"] {
+    transition: transform 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.1s ease;
+  }
+
+  /* The open and closed hand are one hand: between them it closes and opens in
+     place, and the press dip shows the grip, never one hand fading out as the
+     other grows in */
+  .ss-cursor:is([data-kind="open"], [data-kind="grab"]) .ss-cursor__glyph:is([data-glyph="open"], [data-glyph="grab"]) {
+    transform: scale(var(--ss-cursor-size, 1));
+    transition: opacity 0.08s linear;
+  }
+
+  .ss-cursor[data-style="large"] {
+    --ss-cursor-size: 1.5;
+  }
+
+  /* The I-beam marks a text line, so it stays near the text's size */
+  .ss-cursor[data-style="large"] .ss-cursor__glyph[data-glyph="ibeam"] {
+    --ss-cursor-size: 1.15;
+  }
+
+  /* Gestural: a soft dot, no cursor kinds. Shrinks on press, fills while held. */
+  .ss-cursor__dot {
+    display: block;
+    width: 22px;
+    height: 22px;
+    margin: -11px 0 0 -11px;
+    /* Glass, like the iPadOS pointer: no outline, a translucent tint that
+       blurs and lifts what's under it, a soft top highlight and a faint shadow.
+       The blur goes while pressed (below): the dot then sits on the thing
+       being pressed (a checkbox, a row's words) and a blur smears it */
+    border-radius: 50%;
+    background: rgba(118, 118, 128, 0.26);
+    backdrop-filter: blur(5px) saturate(1.8) brightness(1.04);
+    box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.4),
+      inset 0 -1px 1px rgba(0, 0, 0, 0.05),
+      0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: background 0.15s ease;
+  }
+
+  /* Over text the glass circle narrows into an I-beam bar, as the iPad pointer does */
+  .ss-cursor__dot {
+    transition: background 0.15s ease, width 0.2s cubic-bezier(0.22, 1, 0.36, 1), height 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+      margin 0.2s cubic-bezier(0.22, 1, 0.36, 1), border-radius 0.2s ease;
+  }
+
+  .ss-cursor[data-style="circle"][data-kind="ibeam"] .ss-cursor__dot {
+    width: 4px;
+    height: 20px;
+    margin: -10px 0 0 -2px;
+    border-radius: 2px;
+    background: rgba(60, 60, 67, 0.55);
+  }
+
+  .ss-stage[data-theme='dark'] .ss-cursor__dot {
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow:
+      inset 0 1px 1px rgba(255, 255, 255, 0.3),
+      0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .ss-cursor[data-style="circle"][data-pressed="true"] .ss-cursor__press {
+    transform: scale(0.8);
+  }
+
+  .ss-cursor[data-style="circle"][data-pressed="true"] .ss-cursor__dot {
+    backdrop-filter: none;
+    background: rgba(118, 118, 128, 0.22);
+  }
+
+  .ss-stage[data-theme='dark'] .ss-cursor[data-style="circle"][data-pressed="true"] .ss-cursor__dot {
+    background: rgba(255, 255, 255, 0.18);
+  }
+
+  .ss-cursor[data-style="circle"][data-pressed="true"] .ss-cursor__dot,
+  .ss-cursor[data-style="circle"][data-kind="grab"] .ss-cursor__dot {
+    background: rgba(118, 118, 128, 0.4);
+  }
+
+  /* Touch: nothing between taps. A press lands a soft dot that fades as the
+     finger lifts; a drag keeps it while held (the kind is grab then). */
+  .ss-cursor[data-style="touch"] .ss-cursor__dot {
+    width: 34px;
+    height: 34px;
+    margin: -17px 0 0 -17px;
+    background: rgba(118, 118, 128, 0.14);
+    /* A finger, not glass: no backdrop blur, which smears the checkbox or
+       row it presses */
+    backdrop-filter: none;
+    /* Not there until it touches: the script shows it just before a press
+       or a swipe and lets it go after the lift */
+    opacity: 0;
+    transform: scale(0.7);
+    transition: opacity 0.4s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* The trail a finger leaves while it swipes: one soft streak from where
+     it was a few frames ago to where it is, fading toward its tail. The
+     script sizes and turns it each frame; it fades once the finger lifts */
+  .ss-cursor__streak {
+    position: absolute;
+    left: 0;
+    top: -13px;
+    width: 0;
+    height: 26px;
+    border-radius: 13px;
+    background: linear-gradient(to right, rgba(118, 118, 128, 0), rgba(118, 118, 128, 0.16));
+    transform-origin: 100% 50%;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.16s ease;
+  }
+
+  .ss-cursor[data-swiping] .ss-cursor__streak {
+    opacity: 1;
+    transition: none;
+  }
+
+  .ss-cursor[data-style="touch"][data-touching] .ss-cursor__dot {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 0.14s ease, transform 0.16s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .ss-cursor[data-style="touch"][data-pressed="true"] .ss-cursor__dot,
+  .ss-cursor[data-style="touch"][data-swiping] .ss-cursor__dot {
+    background: rgba(118, 118, 128, 0.22);
+    transform: scale(0.82);
+    transition: background 0.08s ease, transform 0.1s ease-out;
+  }
+
+  .ss-cursor__glyph svg {
+    display: block;
+    filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+  }
+
+  /* Arrow cursor: one solid, rounded arrowhead */
+  .ss-cursor__arrow path {
+    fill: var(--ss-cursor-ink, #111);
+    stroke: var(--ss-cursor-ink, #111);
+    stroke-width: 2.4;
+    stroke-linejoin: round;
+  }
+
+  .ss-cursor__arrow {
+    display: block;
+    filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.18));
+  }
+
+  .ss-stage[data-theme="dark"] .ss-cursor__arrow,
+  .ss-stage[data-theme="blueprint"] .ss-cursor__arrow {
+    --ss-cursor-ink: #fff;
+  }
+
+  /* Line cursors (I-beam, crosshair) invert on a dark surface, as macOS's do */
+  .ss-stage[data-theme="dark"] .ss-cursor,
+  .ss-stage[data-theme="blueprint"] .ss-cursor {
+    --ss-cursor-line: #fff;
+    --ss-cursor-edge: rgba(0, 0, 0, 0.75);
+  }
+
+  /* Ripple clicks: a ring spreads from the point and fades */
+  .ss-ripple {
+    position: absolute;
+    z-index: 99;
+    width: 36px;
+    height: 36px;
+    margin: -18px 0 0 -18px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ss-accent);
+    background: color-mix(in srgb, var(--ss-accent) 10%, transparent);
+    pointer-events: none;
+    animation: ss-ripple 0.55s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+  }
+
+  @keyframes ss-ripple {
+    from { transform: scale(0.2); opacity: 1; }
+    to { transform: scale(1); opacity: 0; }
+  }
+
+  .ss-stage[data-palette="mono"] .ss-ripple {
+    border-color: var(--ss-text-strong);
+    background: transparent;
+  }
+
+  .ss-stage[data-hit] :is(.ss-cursor, .ss-cursor *) {
+    pointer-events: none !important;
+  }
+}

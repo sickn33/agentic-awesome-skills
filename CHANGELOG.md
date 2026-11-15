@@ -7,6 +7,323 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+<!--
+Release entry template
+Copy this structure above the latest release. Use the actual tag diff, lead
+with user-facing changes, and credit contributors with their GitHub handles
+and merged PR links. Write a short opening paragraph and keep at least one
+nonempty section. Use bullets for every section entry and indent continuation
+lines. Omit sections with no entries and keep the order below.
+
+## [X.Y.Z] - YYYY-MM-DD - "Release title"
+
+Summarize the most important change for users in one short paragraph.
+
+### New skills
+
+- Describe the new catalog skills and what they enable.
+
+### Improvements
+
+- Describe changes to existing skills, Core, or the site.
+
+### Security and distribution
+
+- Describe security fixes, compatibility changes, or distribution updates.
+
+### Contributors
+
+- Credit each contributor with their GitHub handle and merged PR link.
+-->
+
+## [Unreleased]
+
+## [20.8.0] - 2026-11-12 - "Sports Data and Better Discovery"
+
+Add two catalog skills for approved scraping and read-only sports-market data, bringing the catalog to 2,957 skills. Improve skill discovery, installation recovery and hosted catalog distribution.
+
+### New skills
+
+- Add `scrapely-scrape` for approved Scrape.ly Actor runs with item and charge limits, and `lumify-odds` for sportsbook odds, line movement, betting splits and player props without placing bets.
+
+### Improvements
+
+- Make skill discovery pages crawlable, identify Agentic Awesome Skills consistently, and keep key homepage facts available without JavaScript.
+- Preserve installer backups and improve catalog discovery; keep hosted guide dates tied to verified deployed commits.
+- Correct VoiceMoat trial access and Style and Stance scoring across eight skills while retaining preview and explicit confirmation before publishing.
+
+### Security and distribution
+
+- Direct CLI installation and updates to GitHub while npm publishing is paused.
+- Refresh official Codex marketplace references and separate plugin bundles from portable manifests.
+- Update the catalog app's React Router dependency to 8.5.0.
+- After this release, [AAS Core for ChatGPT](https://chatgpt.com/plugins/plugin_asdk_app_6ae34d602f74819183e75f3190913fd3)
+  began serving the 20.8.0 read-only catalog of 2,957 skills. The hosted catalog now updates
+  automatically with stable AAS releases ([#2325](https://github.com/sickn33/agentic-awesome-skills/pull/2325)).
+  The [AAS Core website](https://aaskills.tech/aas-core/) provides dedicated
+  [privacy](https://aaskills.tech/plugins/aas-core/privacy/),
+  [terms](https://aaskills.tech/plugins/aas-core/terms/), and [support](https://aaskills.tech/plugins/aas-core/support/) pages.
+
+### Contributors
+
+- @alexrosuleks for Scrape.ly ([#2323](https://github.com/sickn33/agentic-awesome-skills/pull/2323)), @lumifyai for Lumify Odds ([#2313](https://github.com/sickn33/agentic-awesome-skills/pull/2313)), and @prateeks367 for VoiceMoat corrections ([#2314](https://github.com/sickn33/agentic-awesome-skills/pull/2314)).
+
+## [20.7.0] - 2026-11-09 - "Interface Design and Connected Workflows"
+
+Add 29 skills for interface design, codebase refactoring, connected research and media workflows, bringing the catalog to 2,955 skills. Harden local runtime and viewer boundaries and clarify hosted-tool costs and documentation access.
+
+### New skills
+
+- Add fourteen Jakub Krehel interface skills covering accessibility, colors, layout, typography, writing, UI polish, interaction review, design implementation, variants, state machines and exploded-view teardown drawings.
+- Add seven Treg workflows: `treg`, `jev-memory`, `lead-signals`, `make-ugc`, `rea-growth`, `recruit` and `web-access`, with explicit budgets, data-transfer boundaries and retained upstream license notices.
+- Add `untangle-codebase` for explicitly requested structural refactoring with baseline checks and preserved user work.
+- Add `scrapingbee-cli` for authorized web extraction, `cloro-mcp` for search and public-web research, and `autorekt` for public market-data reads.
+- Add `imagera-media` and `sync-lipsync` for approved, cost-quoted media generation, and `deja-history` for local conversation recall with untrusted transcript boundaries.
+
+- Add `music-for-robots`, an optional creative exercise for audio-capable agents with verified track assets, source-attributed durations and explicit listening limitations.
+
+### Improvements
+
+- Clarify the documentation-only BlockVectra MCP connection and keep RPC/account operations outside the skill's scope.
+- Correct AccessLint description syntax and preserve Staygreen and CrakSEO upstream-resource credits through catalog regeneration.
+- Allow contributor preflight on branches behind main and bind copied skill licenses to the correct review tree, while retaining exact content, head and protected-policy checks.
+- Update the catalog app's Supabase client and synchronized subpackages to 2.118.0.
+
+### Security and distribution
+
+- Harden runtime-cache ancestry checks, installer destination boundaries and Windows PowerShell resolution; serve active skill documents as inert downloads in the development catalog.
+- Pass teardown drawing identifiers as browser protocol data instead of interpolated JavaScript, encode local viewer URLs correctly and cover mixed-case script tags in the builder regression tests.
+
+### Contributors
+
+- @jakubkrehel for the interface collection ([#2291](https://github.com/sickn33/agentic-awesome-skills/pull/2291)), @superdesigndev for Treg ([#2296](https://github.com/sickn33/agentic-awesome-skills/pull/2296)), and @caldoai for codebase refactoring ([#2290](https://github.com/sickn33/agentic-awesome-skills/pull/2290)).
+- @scrapingbee-integrations for ScrapingBee ([#2302](https://github.com/sickn33/agentic-awesome-skills/pull/2302)), @rbatista191 for Cloro ([#2293](https://github.com/sickn33/agentic-awesome-skills/pull/2293)), and @Nictheboy for Autorekt ([#2289](https://github.com/sickn33/agentic-awesome-skills/pull/2289)).
+- @alexadams6ix for Imagera ([#2299](https://github.com/sickn33/agentic-awesome-skills/pull/2299)), @nachoiacovino for sync. labs ([#2287](https://github.com/sickn33/agentic-awesome-skills/pull/2287)), and @vshulcz for Deja ([#2288](https://github.com/sickn33/agentic-awesome-skills/pull/2288)).
+- @gjwang for BlockVectra guidance ([#2292](https://github.com/sickn33/agentic-awesome-skills/pull/2292)), @qangggggg for AccessLint ([#2300](https://github.com/sickn33/agentic-awesome-skills/pull/2300)), @phuryn for Staygreen ([#2301](https://github.com/sickn33/agentic-awesome-skills/pull/2301)), and @LoganOneal for the CrakSEO source listing ([#2298](https://github.com/sickn33/agentic-awesome-skills/pull/2298)).
+
+- @luchtan-GIT for the music-inspired creative exercise ([#2306](https://github.com/sickn33/agentic-awesome-skills/pull/2306)).
+
+## [20.6.0] - 2026-11-05 - "Film, Ad Research and Publishing"
+
+Add film, ad-library research and Time Machine recovery workflows; refresh HyperFrames, Postel and React dependencies.
+
+### New skills
+
+- Add Time Machine recovery guidance for macOS backup discovery and restoration.
+- Add MiniCut Film Studio with a pinned skill revision, retained MIT notice and explicit installation and paid-generation boundaries.
+- Add LurkAPI ad research across Meta, Google, LinkedIn and TikTok libraries, with credit budgets and limits on inferred performance.
+
+### Improvements
+
+- Refresh seven HyperFrames skills to upstream v0.9.15, including CLI scaffolding, billing, media credentials and project credit limits while retaining AAS safeguards.
+- Render Stageshow catalog demos without iframes and align the historical release archive with GitHub.
+- Update Postel for Bluesky and Mastodon drafts, approved media URLs and LinkedIn first comments; retain X/LinkedIn generation limits.
+- Clarify NetAPI's own IP sensor feed, 48-hour IP listing window and IPv4 coverage.
+
+### Security and distribution
+
+- Improve defensive Bash cleanup guidance and preserve interactive directory deletion after normalized path checks.
+- Align React and React DOM at 19.3.1 in the catalog app and Loki frontend example; update Stageshow's optional Portless launcher to 0.15.8.
+
+### Contributors
+
+- @lliu56 for MiniCut ([#2283](https://github.com/sickn33/agentic-awesome-skills/pull/2283), original [#2273](https://github.com/sickn33/agentic-awesome-skills/pull/2273)).
+- @mesmerlord for LurkAPI ([#2283](https://github.com/sickn33/agentic-awesome-skills/pull/2283), original [#2262](https://github.com/sickn33/agentic-awesome-skills/pull/2262)).
+- @robinsadeghpour for Postel ([#2283](https://github.com/sickn33/agentic-awesome-skills/pull/2283), original [#2261](https://github.com/sickn33/agentic-awesome-skills/pull/2261)).
+- @slavaolesik for NetAPI ([#2272](https://github.com/sickn33/agentic-awesome-skills/pull/2272)).
+- @ocofaigh for defensive Bash guidance ([#2283](https://github.com/sickn33/agentic-awesome-skills/pull/2283), original [#2271](https://github.com/sickn33/agentic-awesome-skills/pull/2271)).
+
+
+## [20.5.0] - 2026-11-04 - "Connected Analytics and Design Workflows"
+
+### New skills
+
+- Add Bowmark for live website data and Coupler.io for cross-channel marketing analytics.
+- Add Sequenzy for email campaign operations and Nano settlement verification for sellers.
+- Add ELAYA Figma and landing-page design workflows.
+
+### Improvements
+
+- Refresh Pixeltable, Datacircle and Career Ops. Preserve responsive images in Unslop snapshots.
+- Add a contribution hub and release archive to the hosted catalog.
+- Update the catalog's list rendering dependency and the Remotion fixture's Zod pin.
+
+- Update Stageshow’s icons and local playground launcher. Portless runs on Node 24 and later on macOS and Linux. The launcher uses Vite directly on Windows and on Node 20–23.
+
+### Contributors
+
+- @dhyabi2 for Nano settlement verification ([#2244](https://github.com/sickn33/agentic-awesome-skills/pull/2244)).
+- @polnikale for Sequenzy ([#2246](https://github.com/sickn33/agentic-awesome-skills/pull/2246)).
+- @pierrebrunelle for Pixeltable ([#2248](https://github.com/sickn33/agentic-awesome-skills/pull/2248)).
+- @Metroxe for Bowmark ([#2252](https://github.com/sickn33/agentic-awesome-skills/pull/2252)).
+- @waynehamadi for Datacircle ([#2253](https://github.com/sickn33/agentic-awesome-skills/pull/2253)).
+- @zeeshangulzar for Coupler.io ([#2254](https://github.com/sickn33/agentic-awesome-skills/pull/2254)).
+- @santifer for Career Ops ([#2255](https://github.com/sickn33/agentic-awesome-skills/pull/2255)).
+
+---
+
+## [20.4.0] - 2026-11-02 - "Design, Motion & Production Tools"
+
+> Adds **33** catalog skills, bringing the release catalog to **2,917** skills. GitHub and the hosted catalog are the publication targets; npm publication is intentionally excluded because account access is unavailable.
+
+### Added
+
+- **Design and motion:** `animate`, `animate-expo`, `animation-performance`, `animation-vocabulary`, `apple-design`, `ask-sonner`, `break-ui`, `emil-ui-prototype`, `find-animation-opportunities`, `improve-animations`, `mobile-native`, `pick-ui-library`, `remove-animations` and `write-swift` from Emil Kowalski's collection; plus `unslop-ui`, `stageshow` and `mobbin`.
+- **Creative production:** `figma`, `hyperframes`, `hyperframes-cli`, `hyperframes-registry`, `media-use`, `remotion-to-hyperframes`, `reverse-any-video` and `slideshow` from HeyGen, plus `sfxmint`.
+- **Development and research:** `desearch-mcp`, `logbrew-debug-production`, `mac-api-connection-diagnostics`, `blockvectra-docs`, `ponder`, `lightweight-charts-react-components` and `show-the-change`.
+
+### Changed
+
+- Refresh Openhook for private agent channels, keeping peer messages outside the local approval boundary.
+- Update Datacircle's comparison schema and examples, and Arcmira's disclosed default search window.
+- Document Mercury's skill directory in the setup table.
+- Improve catalog preparation, preview scheduling, cache retention and CI evidence selection while retaining protected checks and complete semantic review.
+
+### Security and distribution
+
+- Apply the reviewed dependency and documentation repairs since 20.3.0, including the HyperFrames/Remotion fixture dependency pins and integrity checks for their pinned GSAP script.
+- Keep generated catalog/plugin snapshots aligned through the protected release preparation flow. npm is excluded from this GitHub/site release and is not reported as published.
+
+### Thanks
+
+Thanks to the contributors whose pull requests are included in this release:
+
+- @liaujianjie — add mobbin skill for real app UI references ([#2217](https://github.com/sickn33/agentic-awesome-skills/pull/2217)).
+- @LydiaTools — add show-the-change for non-programmer acceptance ([#2218](https://github.com/sickn33/agentic-awesome-skills/pull/2218)).
+- @waynehamadi — Update Datacircle's skill ([#2219](https://github.com/sickn33/agentic-awesome-skills/pull/2219)).
+- @berkantay — refresh Openhook for private agent channels ([#2232](https://github.com/sickn33/agentic-awesome-skills/pull/2232)).
+- @Whq02 — add Mercury CLI to Choose Your Tool ([#2220](https://github.com/sickn33/agentic-awesome-skills/pull/2220)).
+- @ukorvl — add lightweight-charts-react-components skill ([#2221](https://github.com/sickn33/agentic-awesome-skills/pull/2221)).
+- @Quinnod345 — add ponder skill for convergent multi-pass review ([#2236](https://github.com/sickn33/agentic-awesome-skills/pull/2236)).
+- @gjwang — add source-cited BlockVectra documentation skill ([#2233](https://github.com/sickn33/agentic-awesome-skills/pull/2233)).
+- @seifip — add Mac API connection diagnostics skill ([#2234](https://github.com/sickn33/agentic-awesome-skills/pull/2234)).
+- @zealous1 — use a 90-day default for Arcmira quote search ([#2235](https://github.com/sickn33/agentic-awesome-skills/pull/2235)).
+- @furkanerday — add logbrew-debug-production skill (official, LogBrew production debugging) ([#2238](https://github.com/sickn33/agentic-awesome-skills/pull/2238)).
+- @Chkhikvadze — add desearch-mcp for Desearch MCP search and research ([#2213](https://github.com/sickn33/agentic-awesome-skills/pull/2213)).
+- @flreey — add sfxmint skill (official, CC0 sound effects for apps and games) ([#2211](https://github.com/sickn33/agentic-awesome-skills/pull/2211)).
+
+Thanks also to @emilkowalski, @heygen-com, @benjitaylor and @heydamir for the upstream design, motion and creative-production collections imported in this release. Individual source notices and bundled licenses retain attribution.
+
+---
+
+## [20.3.0] - 2026-10-31 - "New Skills And Reviewed Updates"
+
+> Adds **7** reviewed catalog skills and updates existing workflows. This GitHub release is not published to npm because npm publication is unavailable; npm distribution and full release alignment remain incomplete.
+
+### Added
+
+- **tweetapi** — look up public X profiles, posts and related data through a read-only API or hosted MCP service.
+- **harvey-specter** — prepare negotiations and difficult conversations with evidence and clear boundaries.
+- **ios-flows** and **ios-review** — plan iPhone app flows and review screens for usability and accessibility, adapted from UXKIN.
+- **keepmacawake** — manage an explicitly authorized Keep Mac Awake session for long-running Mac tasks.
+- **requirements-writing** — write and review verifiable requirements with EARS patterns and traceability.
+- **zambo** — connect to Zambo's remote MCP tools with explicit consent, data-handling boundaries and receipt verification.
+
+### Changed
+
+- **aomi-transact**, **firecrawl-scraper**, **datacircle** and **satori** — refresh setup, source references and guidance, with clearer limits on claims and external services.
+- Add AAS Core remote plugin and policy pages, and restore crawlable skill content for catalog search.
+- Improve CI reuse and release candidate validation while keeping the protected review and merge gates.
+
+### Security and distribution
+
+- Update the web app's vulnerable `minimatch` dependency and the WhatsApp boilerplate's `follow-redirects` dependency. The release snapshot propagates the WhatsApp fix to the two plugin mirrors.
+- Remove automatic retries from the WhatsApp sending example; retries of non-idempotent sends require application-specific delivery safeguards.
+- The GitHub tag and release provide the reviewed source snapshot. npm publication was explicitly skipped, so `agentic-awesome-skills@20.3.0` is not available from npm as part of this release.
+
+### Thanks
+
+Thanks to **@restocked** and TweetAPI, **@YannisKiefer**, **@ronaldmanlupig30-web** and UXKIN, **@keepmacawake**, **@jgsystemsconsulting**, and **@zambodotdev** for the new skills; and to **@CeciliaZ030**, **@JuampiHernandez**, **@waynehamadi**, and **@MetcalfSolutions** for the reviewed updates.
+
+---
+
+## [20.2.0] - 2026-10-29 - "Reviewed Skills And A Clean Release Path"
+
+> Installable catalog update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related assistants. Adds **5** reviewed skills, refreshes two existing workflows, and fixes the three canonical dependency alerts before publication; regenerated plugin copies are verified in the release alignment gate.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@20.2.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **bifrost-gateway** - run and configure Bifrost as a self-hosted OpenAI-compatible gateway, with fallbacks, virtual-key budgets, caching, observability, MCP routing, and explicit credential and public-exposure boundaries.
+- **comment-to-dm-cta** - plan an Instagram comment-to-DM CTA locally, then require explicit confirmation before creating or changing the automation through CommentKeyword.
+- **landing-page**, **web-design-system**, and **web-review** - adaptive UXKIN-derived workflows for truthful landing-page copy, a documented design system, and a prioritized rendered-page review. The optional UXKIN MCP path requires a user-selected account and plan.
+
+### Changed
+
+- **cloudish** - synchronize the official 0.1.6 workflow with server-side builds, verified log checks, custom domains, replicas, instance sizing, OIDC sign-in, credit operations, and retained MIT notice.
+- **datacircle** - refresh the GTM API-plan model, cached API coverage, search and SERP rows, pricing semantics, and query examples against the current public skill.
+- **animated GitHub profile and Satori updates remain on their prior reviewed catalog versions** - the proposed updates were not shipped because their exact-head content did not meet current structural, safety, provenance, or license-notice gates.
+
+### Security and reliability
+
+- Fix Dependabot's `qs` denial-of-service advisory in the three canonical Loki, Telegram, and WhatsApp boilerplate lockfiles by moving from **6.16.0** to **6.16.1**. The protected release snapshot propagates the patched lockfiles into both plugin mirrors.
+- Add retained MIT notices for imported skill bundles and replace Bifrost's secret-shaped examples with process-environment reads so the trusted SEC009 gate passes without weakening the scanner.
+- Encode the two `pentest-tools` XSS reference payload archives as explicit UTF-8 Base64 companions so Windows Defender does not quarantine raw test markup during clone. The Markdown entrypoints retain authorization, data-minimization, and decoding boundaries, and a regression verifies byte-exact round trips.
+- Complete two protected maintenance cycles: merge **#2164** and **#2172**, and close the remaining batch PRs with exact-head owner rationale where superseded or not admissible. Protected-main CI, CodeQL, required merge gates, and the release-cycle barrier are green on the verified source commit.
+
+### Upgrade notes
+
+- Run `npx agentic-awesome-skills@20.2.0` or update an existing pinned installation to receive the five new skills, refreshed Cloudish and Datacircle content, and the patched boilerplate lockfiles.
+- Existing projects install only the skills they select. Re-select or refresh a stack to receive catalog changes.
+- The optional CommentKeyword, UXKIN, Cloudish, and Bifrost workflows use external services with their own account, credential, data-transfer, cost, and confirmation boundaries.
+
+### Thanks
+
+Thanks to **@commentkeyword** for `comment-to-dm-cta`, **@Swpn0neel** for `bifrost-gateway`, **@ronaldmanlupig30-web** and UXKIN for the three website-workflow adaptations, **@waynehamadi** for the Datacircle refresh, and **@javierluraschi** plus the Cloudish team for the official upstream synchronization. Thanks also to **@MetcalfSolutions** and **@shivamnamdev** for their submissions; those updates remain available for a corrected resubmission.
+
+---
+
+## [20.1.0] - 2026-10-27 - "122 Reviewed Skills And A Clear Maintenance Queue"
+
+> Installable skill library update for Claude Code, Cursor, Codex CLI, Gemini CLI, Antigravity, and related AI coding assistants. Adds **122** catalog skills, ships **2,872** total entrypoints, and clears the open PR, issue, Dependabot, CodeQL, and secret-scanning queues before release preparation.
+
+### Start here
+
+- Install: `npx agentic-awesome-skills@20.1.0`
+- [Choose your tool](README.md#choose-your-tool)
+- [Best skills by tool](README.md#best-skills-by-tool)
+- [Bundles](docs/users/bundles.md)
+- [Workflows](docs/users/workflows.md)
+
+### Added
+
+- **100seotools suite** - add **100** focused SEO workflows and selector across 15 reviewed PRs: selector; AI content generation; metadata and structured data; keyword research; content writing and gaps; keyword placement, metadata and readability; on-page structure and internal linking; metadata audit; technical SEO; utility metadata, redirects and robots; converters and previews; SEO performance; backlink and link building; competitor analysis; and local SEO.
+- **perq** - find verified free AI credits, free tiers, startup programs and student perks, with vendor links and last-verified dates.
+- **webly** - publish a website or share files at a live URL, claim the site and publish only drafts that the person approves.
+- **pro-launch** and **pro-motion** - build a product through taste-led phase gates, then plan and render an audio-first launch or promo film.
+- **skill-skill**, **renhua**, **post**, and **postel-writing** - author and audit skills, write Chinese social copy in a human voice, produce native share-post image sets, and draft or schedule X and LinkedIn posts through Postel.
+- **onboard**, **doom-pay**, **restosignals**, **syncbook-discovery**, **memory-handoff**, **bluebook-writing**, **soundza**, and **netapi** - inspect mixed project materials read-only; create and verify self-custodial checkout links; research restaurant openings; prepare collaborator profiles and drafts; maintain cross-CLI handoffs; write accessible design readings; add free sound assets; and enrich domain or IP indicators.
+
+### Changed
+
+- **onboard** - synchronize to upstream v3.2.1 and bundle both read-only helpers. Git calls use argv arrays and disable `fsmonitor`; traversal skips symlinks and secret-named files, with bounded depth, reads, output and timeouts.
+- **datacircle** - refresh the API-plan catalog, item and pricing semantics, currency calculations, provider coverage, trust boundaries and purchase/contact limits.
+- **llm-gateway** and **llm-caching** - document Bifrost as an open-source gateway option, with pinned local-container setup, virtual-key enforcement prerequisites, semantic-cache isolation and authentication limits.
+- **pixeltable** - synchronize the upstream 0.7.20 guidance, including hosted configuration, exit codes and `next:` confirmations, feedback previews and explicit `--send` approval, secret rejection and destructive-action gates.
+- Update **@modelcontextprotocol/sdk** to **1.32.1** and **express-rate-limit** to **8.7.1** in the affected canonical plugin and bundled example, with their lockfiles.
+
+### Maintenance and security
+
+- Resolve all **13** PRs recorded in the maintenance cycle: merge **11**, close **#2143** through owner replacement **#2150**, and supersede generated-mirror-only PR **#2146** with canonical PR **#2148**. Every closure carries an exact-head owner rationale.
+- Close **#828**, **#845**, **#1149**, and **#1734** as duplicate or unsupported CorpusIQ submissions without a reviewable skill tree, tracked license or canonical `SKILL.md`; close **#2136** as an unfilled bug template with no reproduction.
+- Record a successful maintenance cycle over **62 min 46 s**, bound to protected-main CI and CodeQL. The release preparation begins only after the open PR and issue queues, plus Dependabot, CodeQL and secret-scanning alerts, are empty.
+- Apply the normal protected lanes throughout: exact-head semantic review, component validation, strict up-to-date branch protection, guarded `merge:batch`, and the scripted release flow.
+
+### Review scope
+
+Every canonical skill tree in the maintenance batch was reviewed at its exact submitted content or an identical owner replacement. Validation, reference validation, documentation security, warning budget, source credits, catalog integrity and changed-skill evidence passed or the required CI gate passed on the exact rebased head. Live hosted services, paid runs, destructive commands and native client reloads were not executed as part of static skill review. The broader catalog audit remains unfinished.
+
+### Thanks
+
+Thanks to **@WHOISABHISHEKADHIKARI** for the 100seotools batches, **@f-o-x11** for `perq`, **@tokifyi** for `webly`, **@jack-reson8** for the four creative-product skills, **@doomsday-network** for `doom-pay`, **@Keviniscool-boy** for `onboard`, **@pierrebrunelle** for `pixeltable`, **@waynehamadi** for `datacircle`, **@Swpn0neel** for the Bifrost guidance, **@paperandbeyond23-gif** for `restosignals`, **@theguysaccount** for `syncbook-discovery`, **@WyattAu** for `memory-handoff`, **@TobeMagic** for `bluebook-writing`, **@vfseanm** for `soundza`, and **@slavaolesik** for `netapi`, along with **@robinsadeghpour** for `postel-writing` and the upstream authors whose licensed material is included.
+
 ## [20.0.0] - 2026-10-24 - "The Full-Catalog Review"
 
 > Our most significant catalog quality milestone yet: **2,750 skill entrypoints**, a completed individual-review inventory, and corrections across more than **2,000 skill bundles**. AAS 20 brings the entire catalog onto a documented review baseline.

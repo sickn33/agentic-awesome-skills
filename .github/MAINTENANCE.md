@@ -10,7 +10,7 @@ Mandatory tools must exist on the current task base. Never import missing proced
 
 - Main is PR-only with strict protection and administrator enforcement. `merge:batch` is the only fork-run approval and merge authority. No admin bypass or auto-merge.
 - Review complete `skills/<skill-id>/**` trees. Safe analysis can precede review; merge requires real Tessl review or exact-head maintainer attestation. Private authenticated receipts reuse only unchanged content and context.
-- Source PRs exclude generated snapshots. Main CI validates ephemeral state; distribution snapshots, general mirrors and generated contributor credits refresh only in the release PR. The contract separately permits strictly verified existing lockfile replicas for an owner-requested no-release security repair; all other generated paths remain forbidden.
+- Source PRs exclude generated snapshots. Main CI validates ephemeral state; distribution snapshots, general mirrors and generated contributor credits refresh only in the release PR. The contract separately permits strictly verified owner-only lockfile replica repairs and Codex marketplace manifest hotfixes.
 - Unknown/policy/shared changes receive full checks. Missing or skipped required evidence cannot pass.
 - Use the scripted protected release path, build the immutable candidate once, publish its exact tested bytes, and run the mandatory full-release-alignment gate. Main may advance beyond the released commit.
 - Catalog-only revisions are independently pinned and compatible with an explicit runtime; no runtime bump is required.
@@ -46,3 +46,19 @@ moves before preparation. Never shrink the recorded scope to hide blockers.
 For a genuinely release-only task with no source PR batch, explicitly start a
 cycle with `--prs none` and verify it; no implicit no-cycle bypass is supported.
 The original batch inventory must include every PR in the authorized scope.
+
+Contribution readiness and author correction ownership follow [contribution intake](../docs/maintainers/contribution-intake.md). Local preview and CI summaries remain advisory to protected merge authority.
+
+Canonical skill-tree PRs must pass mandatory evidence admission in `pr-policy` and current-body revalidation in `merge:batch`. Body/draft drift stops an active merge; content attestations cannot waive incomplete evidence. Keep author requirements proportionate and free of mandatory paid tools or unsafe live tests.
+
+Use `release:rehearse` with a completed cycle bound to an ancestor of the rehearsed source for the full disposable local candidate proof before publication. Rehearsal has no remote write or publication authority; see the maintenance contract. Keep concurrent release tooling repairs isolated until the active release finishes.
+
+Web CI uses pinned Turborepo with local caching persisted within the existing free GitHub cache quota. Follow the component guide for fresh current-commit finalization, input invalidation, output integrity and branch-scoped cache trust. Repository script tests and protected merge authority remain uncached.
+
+For efficient cycles, follow the maintenance contract’s environment doctor, advisory `maintenance:cycle next`, private candidate rehearsal/promotion and explicit `github-site` verification target. Preserve all exact-head checks; never treat excluded npm or local hosts as passed.
+
+
+For bounded deterministic continuation, use `maintenance:cycle run` under the
+current maintenance contract. Keep semantic review explicit and preserve sole
+merge authority. PR metadata checks must not cancel source validation; runtime
+handoff evidence never replaces the full successful publication candidate.

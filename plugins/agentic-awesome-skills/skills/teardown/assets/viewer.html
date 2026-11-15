@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#ffffff">
+<title>Technical drawing</title>
+<script>__THEME_SCRIPT__</script>
+<style>
+@font-face {
+  font-family: Inter;
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url(data:font/woff2;base64,__INTER_FONT__) format("woff2");
+}
+
+[hidden] { display: none !important; }
+* { box-sizing: border-box; }
+
+:root {
+  color-scheme: light;
+  --page: #fff; --surface: #fff; --text: #292929; --muted: #737373;
+  --border: #e4e4e4; --control-border: #8a8a8a; --hover: #f5f5f5; --action: #f3f3f3;
+  --accent: #292929; --on-accent: #fff; --focus: #536dcc; --error: #b44343;
+  --scrollbar: #b0b0b0; --bar: rgb(20 20 20 / .9); --shadow: 0 8px 30px #0000000c;
+  font-family: Inter, Arial, sans-serif;
+  font-optical-sizing: auto;
+  color: var(--text);
+  background: var(--page);
+}
+:root[data-theme=dark] {
+  color-scheme: dark;
+  --page: #191919; --surface: #242424; --text: #ededed; --muted: #ababab;
+  --border: #444; --control-border: #777; --hover: #333; --action: #383838;
+  --accent: #ddd; --on-accent: #191919; --focus: #91a7ff; --error: #f08b8b;
+  --scrollbar: #666; --bar: rgb(45 45 45 / .94); --shadow: 0 8px 30px #00000040;
+}
+
+body { margin: 0; overflow: hidden; }
+button, input, select { font: inherit; color: inherit; }
+button, select { cursor: pointer; }
+button { border: 0; background: none; }
+button:disabled { opacity: .3; cursor: default; }
+button svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 1.5; fill: none; }
+button:focus-visible, input:focus-visible, select:focus-visible, #viewport:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+
+#viewport {
+  height: calc(100dvh - 100px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar) var(--page);
+}
+#viewport[data-pannable] { cursor: grab; user-select: none; }
+#viewport[data-panning] { cursor: grabbing; }
+#stage {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  min-width: 100%;
+  min-height: 100%;
+}
+#viewport[aria-busy=true] #stage:not(:has(#drawing > svg:not(#selection)))::after {
+  content: 'Drawing\2026';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font: 13px/1 Inter, Arial, sans-serif;
+}
+#drawing { flex: none; position: relative; }
+#drawing > svg { display: block; width: 100%; height: 100%; }
+#drawing [data-item] { cursor: pointer; }
+#drawing[data-playing] :is([data-annotations], #selection) { display: none; }
+#drawing [data-leaving] { pointer-events: none; animation: annotation-leave .2s ease-out forwards; }
+@keyframes annotation-leave { to { opacity: 0; } }
+#drawing :is(#paper, [fill="white"], [fill="#fff"], [fill="#ffffff"]) { fill: var(--page); }
+#drawing [data-line-role] { stroke: var(--drawing-ink); }
+#drawing [data-ink-fill] { fill: var(--drawing-ink); }
+:root[data-theme=dark] #drawing [data-line-role] { stroke: color-mix(in srgb, var(--drawing-ink), white 60%); }
+:root[data-theme=dark] #drawing [data-ink-fill] { fill: color-mix(in srgb, var(--drawing-ink), white 60%); }
+#drawing [data-annotation] { font-family: var(--annotation-font, Inter, Arial, sans-serif); }
+#drawing [data-filled=paper] { fill: var(--page); stroke: var(--page); }
+#drawing [data-filled=tint] { --tint: color-mix(in srgb, var(--drawing-ink) 18%, var(--page)); fill: var(--tint); stroke: var(--tint); cursor: pointer; }
+:root[data-theme=dark] #drawing [data-filled=tint] { --tint: color-mix(in srgb, color-mix(in srgb, var(--drawing-ink), white 60%) 24%, var(--page)); }
+#selection { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
+#selection-box { stroke: var(--focus); }
+
+.controls {
+  position: fixed;
+  bottom: max(24px, env(safe-area-inset-bottom));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  padding: 5px;
+  background: var(--bar);
+  border: 0;
+  border-radius: 9999px;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / .1), 0 8px 24px rgb(0 0 0 / .25);
+  color: rgb(255 255 255 / .6);
+  font: 13px/1 Inter, Arial, sans-serif;
+  user-select: none;
+  color-scheme: dark;
+}
+.group { display: flex; align-items: center; gap: 2px; flex: none; }
+.divider { height: 16px; width: 1px; flex: none; background: rgb(255 255 255 / .12); margin: 0 5px; }
+.controls select {
+  appearance: none;
+  border: 0;
+  background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='m3 4.5 3 3 3-3' stroke='white' stroke-opacity='.6' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 11px center;
+  background-size: 12px;
+  height: 36px;
+  padding: 0 29px 0 14px;
+  border-radius: 9999px;
+  color: rgb(255 255 255 / .85);
+}
+.controls select option { background: #292929; color: white; }
+.controls button {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  min-width: 36px;
+  padding: 0 11px;
+  border-radius: 9999px;
+}
+.controls .zoom-button { font-size: 20px; font-weight: 300; padding: 0 7px; }
+.controls output { font-size: 11px; font-variant-numeric: tabular-nums; color: rgb(255 255 255 / .6); min-width: 39px; text-align: center; }
+.controls :is(button, select):focus-visible { outline: 2px solid rgb(255 255 255 / .7); outline-offset: -2px; }
+.controls #color-toggle { gap: 8px; }
+.controls #download-toggle { width: 38px; padding: 0; margin-right: 1px; }
+.controls .selectors { flex-shrink: 1; min-width: 0; max-width: 100%; }
+.controls #subject { flex: 0 1 auto; min-width: 0; text-overflow: ellipsis; }
+.controls #view { flex: none; display: flex; gap: 2px; }
+.controls #view button { gap: 6px; }
+.controls #view svg { display: none; }
+.controls #view [aria-checked=true],
+.controls button[aria-pressed=true],
+body:has(#color-panel:popover-open) #color-toggle,
+body:has(#settings-panel:popover-open) #settings-toggle,
+body:has(#parts-panel:popover-open) #parts-toggle,
+body:has(#download-panel:popover-open) #download-toggle { background: rgb(255 255 255 / .14); color: white; }
+.color-dot { width: 14px; height: 14px; background: #202020; border-radius: 50%; box-shadow: 0 0 0 1px rgb(255 255 255 / .35); }
+.sun-icon { display: none; }
+:root[data-theme=dark] .moon-icon { display: none; }
+:root[data-theme=dark] .sun-icon { display: block; }
+
+[popover] {
+  position: fixed;
+  inset: auto 16px var(--popup-bottom, 84px) auto;
+  width: 278px;
+  max-width: calc(100vw - 24px);
+  max-height: calc(100dvh - var(--popup-bottom, 84px) - 16px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  margin: 0;
+  padding: 17px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  font-size: 13px;
+}
+[popover]::backdrop { background: transparent; }
+.panel-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; font-weight: 500; }
+.panel-divider { border: 0; border-top: 1px solid var(--border); margin: 16px 0; }
+.close { font-size: 20px; line-height: 1; width: 26px; height: 26px; border-radius: 4px; color: var(--muted); }
+.field { display: grid; gap: 8px; margin-bottom: 16px; }
+.field label { font-size: 11px; color: var(--muted); }
+.field select { width: 100%; border: 1px solid var(--control-border); background: var(--surface); border-radius: 6px; padding: 8px; font-size: 12px; }
+.field input[type=range] { width: 100%; accent-color: var(--accent); min-height: 24px; margin: 0; }
+.field .field-title { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.field output { font-size: 11px; font-variant-numeric: tabular-nums; color: var(--muted); }
+.appearance-field { margin-bottom: 0; }
+.check-field { display: flex; align-items: center; gap: 8px; min-height: 32px; font-size: 12px; font-weight: 500; cursor: pointer; }
+.check-field input { accent-color: var(--accent); margin: 0; width: 15px; height: 15px; }
+.action-row { display: flex; gap: 8px; margin-top: 12px; }
+.action-row button { padding: 9px 10px; background: var(--action); border-radius: 7px; font-size: 12px; flex: 1; }
+.action-row button[aria-pressed=true] { background: var(--accent); color: var(--on-accent); }
+.export-choice { display: flex; width: 100%; align-items: center; justify-content: space-between; border-radius: 6px; padding: 11px 8px; text-align: left; }
+.export-choice strong { font-size: 12px; font-weight: 500; }
+.export-choice span { font-size: 11px; color: var(--muted); }
+.hue {
+  appearance: none;
+  -webkit-appearance: none;
+  display: block;
+  width: 100%;
+  height: 32px;
+  margin: 0;
+  border-radius: 9999px;
+  box-shadow: inset 0 0 0 1px rgb(0 0 0 / .1);
+  cursor: ew-resize;
+}
+.hue::-webkit-slider-thumb { -webkit-appearance: none; width: 20px; height: 20px; border: 4px solid #fff; border-radius: 50%; background: transparent; box-shadow: 0 0 0 1px rgb(0 0 0 / .25); }
+.hue::-moz-range-thumb { width: 12px; height: 12px; border: 4px solid #fff; border-radius: 50%; background: transparent; box-shadow: 0 0 0 1px rgb(0 0 0 / .25); }
+
+#message {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: var(--popup-bottom, 84px);
+  margin: 0;
+  background: var(--surface);
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 12px;
+  max-width: calc(100vw - 32px);
+  box-shadow: var(--shadow);
+}
+#message:empty { display: none; }
+
+@media (hover: hover) {
+  button:not(:disabled):hover { background-color: var(--hover); }
+  .controls button:not(:disabled):hover, .controls select:hover { background-color: rgb(255 255 255 / .08); color: rgb(255 255 255 / .85); }
+}
+
+@media (max-width: 740px) {
+  #stage { padding: 12px; }
+  [popover] { padding: 16px; }
+  .controls { bottom: max(16px, env(safe-area-inset-bottom)); flex-wrap: wrap; justify-content: center; padding: 6px; }
+  .controls select { font-size: 12px; padding-left: 12px; padding-right: 27px; height: 34px; }
+  .controls button { min-width: 32px; padding: 0 9px; height: 34px; font-size: 12px; }
+  .controls output { min-width: 38px; }
+  .controls #color-toggle .color-label { display: none; }
+  .controls #download-toggle { width: 34px; }
+  .divider { margin: 0 4px; }
+}
+
+@media (max-width: 640px) {
+  .controls { width: 300px; max-width: calc(100vw - 16px); padding: 8px; row-gap: 3px; }
+  .controls button { min-width: 30px; padding: 0 6px; }
+  .controls .selectors { flex-basis: 100%; justify-content: center; margin-bottom: 2px; }
+  .controls .select-divider, .controls #color-toggle { display: none; }
+  .controls #view svg { display: block; }
+  .controls :is(.view-label, #zoom-level) { position: absolute; width: 1px; min-width: 0; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+  .divider { margin: 0 2px; }
+}
+</style>
+</head>
+<body>
+<main id="viewport" aria-label="Drawing. Use arrow keys to scroll, plus or minus to zoom, and zero to fit." tabindex="0"><div id="stage"><div id="drawing"><svg id="selection" aria-hidden="true" hidden><rect id="selection-box" rx="1" fill="none" stroke-width=".2" stroke-dasharray="1 1"/></svg></div></div></main>
+<div class="controls" id="controls" aria-label="Drawing controls">
+<div class="group selectors"><label class="sr-only" for="subject">Drawing</label><select id="subject"></select><div id="view" class="segmented" role="radiogroup" aria-label="View"><button role="radio" data-view="exploded" aria-checked="true"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 7V3h4m6 0h4v4m0 6v4h-4m-6 0H3v-4"/></svg><span class="view-label">Exploded</span></button><button role="radio" data-view="assembled" aria-checked="false" tabindex="-1"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 3v4H3m14 0h-4V3m0 14v-4h4M3 13h4v4"/></svg><span class="view-label">Assembled</span></button></div><button id="theme-toggle" aria-label="Dark mode" aria-pressed="false" title="Switch to dark mode"><svg class="moon-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M16.7 12.6A7.2 7.2 0 0 1 7.4 3.3a7.2 7.2 0 1 0 9.3 9.3Z"/></svg><svg class="sun-icon" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.2"/><path d="M10 1.5v1.7m0 13.6v1.7M1.5 10h1.7m13.6 0h1.7M4 4l1.2 1.2m9.6 9.6L16 16M4 16l1.2-1.2m9.6-9.6L16 4"/></svg></button></div>
+<div class="divider select-divider" aria-hidden="true"></div>
+<div class="group zoom"><button class="zoom-button" id="zoom-out" aria-label="Zoom out">−</button><output id="zoom-level" aria-live="polite" aria-label="Zoom relative to fit">100%</output><button class="zoom-button" id="zoom-in" aria-label="Zoom in">+</button></div>
+<div class="divider" aria-hidden="true"></div>
+<button id="color-toggle" popovertarget="color-panel" aria-label="Change colors"><span class="color-dot" id="color-dot"></span><span class="color-label">Color</span></button>
+<button id="settings-toggle" popovertarget="settings-panel" aria-label="Drawing settings"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M3 5h14M3 10h14M3 15h14M7 3v4m6 1v4m-5 1v4"/></svg></button>
+<button id="parts-toggle" popovertarget="parts-panel" aria-label="Select a part"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m10 2 7 4v8l-7 4-7-4V6l7-4Zm0 8 7-4M3 6l7 4v8"/></svg></button>
+<button id="download-toggle" popovertarget="download-panel" aria-label="Download drawing"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 3v10m-4-4 4 4 4-4M4 14v3h12v-3"/></svg></button>
+<button id="reset-drawing" aria-label="Reset drawing"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M4 9.5a6 6 0 1 1 1.8 4.3M4 4.5v5h5"/></svg></button>
+</div>
+<div id="color-panel" popover="auto" aria-label="Drawing colors">
+<div class="panel-heading">Color<button class="close" popovertarget="color-panel" popovertargetaction="hide" aria-label="Close color controls">×</button></div>
+<div class="field"><label for="color-target">Apply to</label><select id="color-target"><option value="all">All parts</option></select></div>
+<input id="hue" class="hue" type="range" min="0" max="360" step="1" aria-label="Line hue">
+<label class="check-field"><input id="fill" type="checkbox">Fill</label>
+<div class="action-row"><button id="reset-colors">Reset</button></div>
+</div>
+<div id="settings-panel" popover="auto" aria-label="Drawing settings">
+<div class="panel-heading">Drawing<button class="close" popovertarget="settings-panel" popovertargetaction="hide" aria-label="Close drawing settings">×</button></div>
+<div class="field"><label for="linework">Linework</label><select id="linework"><option value="technical">Technical</option><option value="patent">Fine patent</option><option value="service">Service manual</option></select></div>
+<label class="check-field"><input id="annotate" type="checkbox">Annotations</label>
+<div class="field" id="spacing-field"><div class="field-title"><label for="explosion">Part spacing</label><output id="explosion-value" for="explosion">100%</output></div><input id="explosion" type="range" min="0" max="150" value="100" step="5"></div>
+<hr class="panel-divider" id="parameter-divider"><div id="parameters"></div>
+<button id="reset-parameters" class="export-choice">Reset dimensions</button>
+<hr class="panel-divider">
+<div class="field appearance-field"><label for="appearance">Appearance</label><select id="appearance"><option value="system">System</option><option value="light">Light</option><option value="dark">Dark</option></select></div>
+</div>
+<div id="parts-panel" popover="auto" aria-label="Part controls">
+<div class="panel-heading">Parts<button class="close" popovertarget="parts-panel" popovertargetaction="hide" aria-label="Close part controls">×</button></div>
+<div class="field"><label for="part-target">Selected part</label><select id="part-target"><option value="all">All parts</option></select></div>
+<div class="action-row"><button id="isolate-part" aria-pressed="false" disabled>Isolate</button><button id="show-all">Show all</button></div>
+<div class="action-row"><button id="color-part" disabled>Color part</button><button id="download-part" disabled>Save part SVG</button></div>
+</div>
+<div id="download-panel" popover="auto" aria-label="Download formats"><div class="panel-heading">Download<button class="close" popovertarget="download-panel" popovertargetaction="hide" aria-label="Close download controls">×</button></div><label class="check-field"><input id="tight-crop" type="checkbox">Crop to drawing</label><label class="check-field"><input id="transparent" type="checkbox">Transparent background</label><hr class="panel-divider"><button class="export-choice" data-format="svg" aria-label="Download SVG"><strong>SVG</strong><span>Editable vector</span></button><button class="export-choice" data-format="png" aria-label="Download PNG"><strong>PNG</strong><span>300 dpi</span></button><button class="export-choice" data-format="pdf" aria-label="Download PDF"><strong>PDF</strong><span id="pdf-size">A3 vector</span></button></div>
+<p id="message" role="status"></p><p id="render-status" class="sr-only" role="status"></p>
+<noscript>JavaScript is needed for this drawing viewer.</noscript>
+<script type="text/plain" id="inter-license">__INTER_LICENSE__</script>
+<script id="drawing-data" type="application/json">__DRAWING_DATA__</script>
+<script>__JSPDF__</script>
+<script>__SVG2PDF__</script>
+<script>__SHEET_SCRIPT__</script>
+<script id="drawing-worker" type="application/json">__WORKER_SOURCE__</script>
+<script>__EXPORT_SCRIPT__</script>
+<script>__RENDER_QUEUE_SCRIPT__</script>
+<script>__FLIPBOOK_SCRIPT__</script>
+<script>__VIEWER_SCRIPT__</script>
+</body></html>

@@ -1,5 +1,5 @@
-.shared-selection { max-width: 1120px; margin: 0 auto; padding: 2rem 0; }
-.shared-selection h1 { margin: 1.5rem 0 1rem; font-size: var(--page-title-size); line-height: var(--page-title-leading); letter-spacing: var(--page-title-tracking); }
+.shared-selection { max-width: 1120px; margin: 0 auto; padding: 32px 24px; }
+.shared-selection h1 { margin: 1.5rem 0 1rem; font-weight: 500; font-size: var(--page-title-size); line-height: var(--page-title-leading); letter-spacing: var(--page-title-tracking); }
 .shared-selection > p { color: var(--text-muted); margin: 1rem 0; }
 .shared-selection__actions { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; margin: 1.5rem 0; }
 .shared-selection__actions button { padding: .7rem 1rem; border: 1px solid var(--stroke-strong); border-radius: .5rem; background: var(--surface-card); color: var(--text-primary); }

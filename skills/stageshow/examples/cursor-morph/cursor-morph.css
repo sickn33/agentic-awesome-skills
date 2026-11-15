@@ -1,0 +1,52 @@
+.cm-stage .ss-stage { background: var(--ss-well); border-radius: 16px; }
+/* Cursor styles share one moving outline. */
+.cm-frame {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+}
+
+.cm-seg.ss-seg {
+  width: 400px;
+  padding: 3px;
+  border-radius: 12px;
+}
+
+.cm-stage [data-layout="compact"] .cm-seg.ss-seg {
+  width: 318px;
+}
+
+.cm-seg .ss-seg__thumb {
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc((100% - 6px) / var(--n));
+  border-radius: 9px;
+}
+
+.cm-seg .ss-seg__option {
+  height: 40px;
+  font-size: 14px;
+}
+
+/* This demo draws its own cursor (cursor-morph.tsx) inside the kit's, which
+   still moves and presses it; the kit's glyphs stay hidden */
+.cm-stage .ss-cursor__press {
+  visibility: hidden;
+}
+
+.cm-morph {
+  position: absolute;
+  top: -16px;
+  left: -16px;
+  overflow: visible;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.28));
+  transform-origin: 16px 16px;
+  transition: scale 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cm-stage .ss-cursor[data-pressed="true"] .cm-morph {
+  scale: 0.86;
+  transition: scale 0.08s ease-out;
+}

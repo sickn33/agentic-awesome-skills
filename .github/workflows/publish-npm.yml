@@ -1,9 +1,8 @@
-# Publish agentic-awesome-skills to npm on release.
+# Publish the tested bytes for an immutable AAS release tag.
 # Requires NPM_TOKEN secret (npm → Access Tokens → Granular token with Publish).
-# Before creating a Release: bump package.json "version" (npm forbids republishing the same version).
-# Release tag (e.g. v4.6.1) should match package.json version.
 
 name: Publish to npm
+run-name: Publish npm ${{ inputs.tag }} at ${{ inputs.commit }}
 
 permissions:
   contents: read
@@ -12,13 +11,23 @@ permissions:
   issues: read
 
 on:
-  release:
-    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Immutable release tag
+        required: true
+        type: string
+      commit:
+        description: Full release commit SHA
+        required: true
+        type: string
 
 jobs:
   publish:
-    if: startsWith(github.event.release.tag_name, 'v')
     runs-on: ubuntu-latest
+    concurrency:
+      group: publish-npm-${{ inputs.tag }}
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
@@ -29,12 +38,16 @@ jobs:
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
-          RELEASE_TAG: ${{ github.event.release.tag_name }}
+          RELEASE_TAG: ${{ inputs.tag }}
+          RELEASE_COMMIT: ${{ inputs.commit }}
         run: |
-          test "$GITHUB_EVENT_NAME" = "release"
-          test -n "$RELEASE_TAG"
+          test "$GITHUB_EVENT_NAME" = "workflow_dispatch"
+          test "$GITHUB_REF" = "refs/heads/main"
+          [[ "$RELEASE_TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]
+          [[ "$RELEASE_COMMIT" =~ ^[a-f0-9]{40}$ ]]
           git fetch --force origin main "refs/tags/$RELEASE_TAG:refs/tags/$RELEASE_TAG"
           tag_commit="$(git rev-list -n1 "$RELEASE_TAG")"
+          test "$tag_commit" = "$RELEASE_COMMIT"
           main_commit="$(git rev-parse origin/main)"
           git merge-base --is-ancestor "$tag_commit" "$main_commit"
           tag_version="$(git show "$RELEASE_TAG:package.json" | node -e 'let s=""; process.stdin.on("data",c=>s+=c); process.stdin.on("end",()=>process.stdout.write(JSON.parse(s).version))')"
@@ -53,15 +66,19 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: node tools/scripts/distribution_fetch.cjs "$RUNNER_TEMP/distribution"
 
-      - name: Publish
+      - name: Publish exact candidate and verify registry bytes
         shell: bash
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_CONFIG_CACHE: ${{ runner.temp }}/npm-cache
         run: |
           version="$(node -p "require('./package.json').version")"
           node -e "const v=process.argv[1]; const semver=/^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)(?:-[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?(?:\\+[0-9A-Za-z-]+(?:\\.[0-9A-Za-z-]+)*)?$/; if (!semver.test(v)) process.exit(1)" "$version"
-          if [[ "$version" == *-* ]]; then
-            npm publish "$RUNNER_TEMP/distribution/package.tgz" --ignore-scripts --tag next
+          candidate="$RUNNER_TEMP/distribution/package.tgz"
+          if npm view "agentic-awesome-skills@$version" version --json --cache "$NPM_CONFIG_CACHE" >/dev/null 2>&1; then
+            node tools/scripts/verify_npm_candidate.cjs "$version" "$RELEASE_COMMIT" "$candidate"
           else
-            npm publish "$RUNNER_TEMP/distribution/package.tgz" --ignore-scripts --tag latest
+            if [[ "$version" == *-* ]]; then tag=next; else tag=latest; fi
+            npm publish "$candidate" --ignore-scripts --tag "$tag"
+            node tools/scripts/verify_npm_candidate.cjs "$version" "$RELEASE_COMMIT" "$candidate" --wait-until-published
           fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

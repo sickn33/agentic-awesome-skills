@@ -1,0 +1,76 @@
+.ro .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+/* Pinned top and sides, off the bottom just past the last row */
+.ro-win {
+  position: absolute;
+  top: 28px;
+  left: 60px;
+  width: 400px;
+  height: 360px;
+}
+
+.ro-list {
+  position: relative;
+  margin: 12px 14px;
+}
+
+/* Each row sits at its slot by a transform and glides between slots */
+.ro-slot {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 48px;
+  will-change: transform;
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Lifted: on the cursor, no lag; above the rest, a touch larger, a lift
+   shadow. The scale and shadow ease in; the position never does */
+.ro-slot[data-lifted] {
+  z-index: 2;
+  transition: none;
+}
+
+.ro-row {
+  height: 44px;
+  /* The 16px ring sits 14px from the top, the bottom and the left; the
+     grip's dots mirror it on the right */
+  padding: 0 14px;
+  border-radius: 10px;
+  background: var(--ss-surface);
+  transition: box-shadow 0.25s ease, scale 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.ro-slot[data-lifted] .ro-row {
+  scale: 1.02;
+  box-shadow: var(--ss-shadow-lift);
+}
+
+.ro-label {
+  color: var(--ss-text-strong);
+  font-size: 13px;
+}
+
+.ro-grip {
+  display: grid;
+  place-items: center;
+  /* The dots' ink sits as far from the row's right edge as the ring's
+     ink does from its left */
+  width: 16px;
+  margin-right: -4px;
+  /* No taller than the row's content box, or the grid track grows and
+     everything in the row sits low */
+  height: 24px;
+  color: var(--ss-text);
+  opacity: 0.6;
+}
+
+/* Narrow: a gutter each side */
+.ro .ss-stage[data-layout='compact'] .ro-win {
+  left: 16px;
+  width: 326px;
+}

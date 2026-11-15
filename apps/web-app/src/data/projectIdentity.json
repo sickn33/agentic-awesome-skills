@@ -1,0 +1,13 @@
+{
+  "name": "Agentic Awesome Skills",
+  "alternateName": "Antigravity Awesome Skills",
+  "description": "Agentic Awesome Skills (AAS), formerly Antigravity Awesome Skills, is an open-source library of reusable SKILL.md instructions for Codex, Claude Code, Cursor and other coding agents.",
+  "licenseSummary": "Original code and tooling use MIT. Original written content uses CC BY 4.0; imported skills retain their own licenses and attribution requirements.",
+  "nextStep": "Choose a skill or a pack, inspect its files, and follow the setup guide for your agent.",
+  "links": [
+    { "label": "Official GitHub repository", "href": "https://github.com/sickn33/agentic-awesome-skills" },
+    { "label": "Installation guides", "href": "/docs/getting-started/" },
+    { "label": "Sources and licenses", "href": "/trust/" },
+    { "label": "What are AI agent skills?", "href": "/docs/ai-agent-skills/" }
+  ]
+}

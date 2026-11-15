@@ -1,0 +1,135 @@
+.pr .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+/* One window, inset at the top, off the bottom */
+.pr-win {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  width: 580px;
+  translate: -50% 0;
+}
+
+.pr .ss-stage[data-layout='compact'] .pr-win {
+  top: 16px;
+  width: 326px;
+}
+
+.pr-doc {
+  min-height: 440px;
+  padding: 34px 44px 0;
+  background: var(--ss-surface);
+}
+
+.pr .ss-stage[data-layout='compact'] .pr-doc {
+  padding: 24px 22px 0;
+}
+
+.pr-title {
+  margin: 0 0 18px;
+  color: var(--ss-text-strong);
+  font-size: 24px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.pr-lines {
+  display: grid;
+  gap: 11px;
+  margin: 6px 0;
+}
+
+.pr-p {
+  margin: 16px 0 18px;
+  color: var(--ss-text-strong);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+/* Maya's selection: her color sweeps across the sentence under her cursor.
+   The same duration and curve as her cursor's move (.pr-peer), so the
+   highlight's edge is always at the tip; a quicker sweep runs ahead of her */
+.pr-sel {
+  border-radius: 2px;
+  background-image: linear-gradient(color-mix(in srgb, var(--who) 22%, transparent), color-mix(in srgb, var(--who) 22%, transparent));
+  background-repeat: no-repeat;
+  background-size: 0% 100%;
+  /* A deselect is instant, as in the app; only selecting sweeps */
+  transition: none;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+.pr-sel[data-on] {
+  background-size: 100% 100%;
+  transition: background-size 0.95s cubic-bezier(0.45, 0, 0.25, 1);
+}
+
+.pr-anchor {
+  display: inline-block;
+  width: 0;
+  height: 1em;
+  vertical-align: -0.15em;
+}
+
+.pr-typed {
+  color: var(--ss-text-strong);
+}
+
+.pr-caret {
+  display: inline-block;
+  width: 2px;
+  height: 1.15em;
+  margin: 0 -2px 0 0;
+  vertical-align: -0.2em;
+  background: var(--who);
+  opacity: 0;
+}
+
+.pr-caret[data-on] {
+  opacity: 1;
+}
+
+/* A teammate's cursor: their color, their name riding below the tip. It
+   eases like a hand; the tip is the point */
+.pr-peer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  pointer-events: none;
+  will-change: transform;
+  transition: transform 0.95s cubic-bezier(0.45, 0, 0.25, 1);
+}
+
+.pr-peer[data-slow] {
+  transition-duration: 1.1s;
+}
+
+.pr-peer svg {
+  display: block;
+  margin: -1.5px 0 0 -1.5px;
+  filter: drop-shadow(0 1px 1.5px rgb(0 0 0 / 0.2));
+}
+
+.pr-flag {
+  position: absolute;
+  top: 16px;
+  left: 11px;
+  padding: 3px 7px;
+  border-radius: 6px;
+  background: var(--who);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+/* One color per person: the pile's faces match the cursors. Ana is in the
+   doc but not in shot, so her face stays quiet */
+.pr-pile .ss-facepile__face:nth-child(1) .ss-avatar { background: #d1478a !important; }
+.pr-pile .ss-facepile__face:nth-child(2) .ss-avatar { background: #2f9e8f !important; }
+.pr-pile .ss-facepile__face:nth-child(3) .ss-avatar { background: var(--ss-ink-3) !important; color: var(--ss-text) !important; }

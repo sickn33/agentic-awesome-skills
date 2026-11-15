@@ -1,0 +1,434 @@
+/* All rules belong to this example, including its responsive variants. */
+.fx {
+  & .ss-stage {
+    --ss-accent: #ff5a1f;
+    --ss-accent-2: #ff8a3d;
+    --ss-accent-soft: rgba(255, 90, 31, 0.12);
+    /* The card opening: quick off the tap, long soft settle, as iOS does */
+    --fx-open: cubic-bezier(0.3, 0.75, 0.1, 1);
+    overflow: hidden;
+    border-radius: 14px;
+    background: #f4f3f1;
+  }
+
+  .fx-wash {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(60% 50% at 50% 0%, rgba(255, 120, 60, 0.16), transparent 70%),
+      radial-gradient(70% 60% at 50% 100%, rgba(255, 150, 90, 0.1), transparent 70%);
+  }
+
+  /* Pinned, bottom bleed: inset one gutter from the top, centered, runs off the bottom */
+  .fx-phone {
+    position: absolute;
+    top: 48px;
+    left: 50px;
+  }
+
+  .fx-phone .ss-phone__status {
+    transition: color 0.35s ease;
+  }
+
+  .fx-phone[data-open] .ss-phone__status {
+    color: #fff;
+  }
+
+  /* ---- List ---- */
+
+  .fx-list {
+    position: absolute;
+    inset: 0;
+    background: #f2f2f7;
+    /* Recedes by dimming only: a scale would land its text with a hop */
+    transition: opacity 0.6s ease;
+  }
+
+  .fx-list[data-back] {
+    opacity: 0.55;
+  }
+
+  .fx-head {
+    position: absolute;
+    top: 66px;
+    right: 20px;
+    left: 20px;
+    display: grid;
+    gap: 10px;
+  }
+
+  .fx-head__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .fx-title {
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 41px;
+    color: #000;
+  }
+
+  .fx-card,
+  .fx-slot {
+    position: absolute;
+    left: 16px;
+    width: calc(100% - 32px);
+    height: 132px;
+    border-radius: 22px;
+  }
+
+  .fx-card {
+    overflow: hidden;
+  }
+
+  .fx-card__text,
+  .fx-hero__text {
+    position: absolute;
+    bottom: 18px;
+    left: 20px;
+    display: grid;
+    gap: 7px;
+    justify-items: start;
+  }
+
+  .fx-line {
+    display: block;
+    border-radius: 4px;
+    background: #fff;
+  }
+
+  /* Workout art: soft, photographic light in one warm family */
+  .fx-art--tempo {
+    background:
+      radial-gradient(70% 90% at 85% 15%, #ffb071 0%, transparent 60%),
+      radial-gradient(80% 80% at 10% 100%, #c2361a 0%, transparent 70%),
+      linear-gradient(160deg, #ff7a3d 0%, #e9461f 55%, #a8301a 100%);
+  }
+
+  .fx-art--sage {
+    background:
+      radial-gradient(70% 90% at 80% 10%, #c9d3b8 0%, transparent 60%),
+      linear-gradient(160deg, #9aa88a 0%, #6e7d61 60%, #56634b 100%);
+  }
+
+  .fx-art--slate {
+    background:
+      radial-gradient(70% 90% at 85% 10%, #b9bfcb 0%, transparent 60%),
+      linear-gradient(160deg, #8d93a1 0%, #646a78 60%, #4c515d 100%);
+  }
+
+  .fx-art--sand {
+    background:
+      radial-gradient(70% 90% at 85% 10%, #e6d6be 0%, transparent 60%),
+      linear-gradient(160deg, #c8b293 0%, #a48d6d 60%, #85704f 100%);
+  }
+
+  .fx-tabs {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: flex;
+    justify-content: space-around;
+    height: 83px;
+    padding: 10px 24px 0;
+    border-top: 0.5px solid rgba(0, 0, 0, 0.1);
+    background: rgba(249, 249, 249, 0.94);
+  }
+
+  .fx-tab {
+    display: grid;
+    gap: 6px;
+    justify-items: center;
+  }
+
+  .fx-tab__icon {
+    width: 26px;
+    height: 22px;
+    border-radius: 7px;
+    background: #c4c4c7;
+  }
+
+  .fx-tab__label {
+    width: 36px;
+    height: 6px;
+    border-radius: 3px;
+    background: #d6d6d9;
+  }
+
+  .fx-tab[data-on] .fx-tab__icon {
+    background: var(--ss-accent);
+  }
+
+  /* ---- The card that becomes the detail ---- */
+
+  /* Press and expansion have separate owners: Expand's inline clip transition
+     must not replace the card's transform feedback. */
+  .fx-press {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.2s ease;
+    will-change: transform;
+  }
+
+  .fx-detail {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+  }
+
+  /* iOS cards give a little under the finger */
+  .fx-phone:has(.fx-slot[data-pressed]) .fx-press {
+    transform: scale(0.97);
+  }
+
+  .fx-detail__inner {
+    /* Expand carries the card; this kept layer reveals the header from its foot. */
+    position: relative;
+    background: #fff;
+    min-height: 100%;
+    will-change: transform;
+    transition: transform 0.62s var(--fx-open), background-color 0.18s ease-out;
+  }
+
+  /* Closing, the clip and the screen shrink from different heights, so the
+     body would show in the card for half the move: it and its ground fade out
+     first, and the card lands as only its art. Opening reveals it as before */
+  .fx-detail:not([data-open]) .fx-detail__inner {
+    background-color: transparent;
+    /* The body has gone before the list shows through, so no ghost of it */
+    transition: transform 0.62s var(--fx-open), background-color 0.16s ease-out 0.08s;
+  }
+
+  .fx-detail:not([data-open]) .fx-body {
+    opacity: 0;
+    transition: opacity 0.08s ease-out;
+  }
+
+  .fx-hero {
+    position: relative;
+    /* Its own rounded foot, moving with the card's clip, so the art lands as
+       the card's shape rather than a flat bottom inside the rounded one */
+    transition: clip-path 0.62s var(--fx-open);
+    height: 300px;
+  }
+
+  .fx-hero__text {
+    bottom: 20px;
+    gap: 6px;
+    will-change: transform;
+    transition: transform 0.62s var(--fx-open);
+  }
+
+  .fx-hero__eyebrow {
+    width: 46px;
+    height: 7px;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.55);
+  }
+
+  .fx-hero__title {
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 31px;
+    letter-spacing: -0.02em;
+    color: #fff;
+  }
+
+  .fx-hero__sub {
+    /* One item with the title: 4 to 6px of ink between the lines */
+    margin-top: -4px;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 20px;
+    color: rgba(255, 255, 255, 0.85);
+  }
+
+  .fx-close {
+    position: absolute;
+    top: 62px;
+    right: 20px;
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(40, 20, 10, 0.32);
+    color: #fff;
+    opacity: 0;
+    transition: opacity 0.3s ease, transform 0.15s ease;
+  }
+
+  .fx-detail[data-open] .fx-close {
+    opacity: 1;
+    transition-delay: 0.25s, 0s;
+  }
+
+  .fx-close[data-pressed] {
+    transform: scale(0.9);
+  }
+
+  .fx-body {
+    display: grid;
+    gap: 22px;
+    padding: 24px 20px 0;
+  }
+
+  /* The body needs no fade: the opening card reveals it, full, as it grows */
+
+  /* The about block and the running timer share one fixed lane */
+  .fx-panel {
+    display: grid;
+    height: 150px;
+  }
+
+  .fx-about,
+  .fx-timer {
+    grid-area: 1 / 1;
+    will-change: transform;
+    transition: opacity 0.35s ease, transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  }
+
+  .fx-about {
+    display: grid;
+    align-content: start;
+    gap: 26px;
+  }
+
+  .fx-about[data-hide] {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  .fx-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    padding-bottom: 20px;
+    border-bottom: 0.5px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .fx-stat {
+    display: grid;
+    gap: 9px;
+    justify-items: start;
+  }
+
+  .fx-desc {
+    display: grid;
+    gap: 11px;
+  }
+
+  .fx-timer {
+    display: grid;
+    align-content: start;
+    gap: 4px;
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  .fx-timer[data-show] {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.12s;
+  }
+
+  .fx-timer__label {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 20px;
+    color: var(--ss-accent);
+  }
+
+  .fx-timer__time {
+    font-size: 72px;
+    font-weight: 600;
+    line-height: 86px;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    color: #000;
+    transition: color 0.3s ease;
+  }
+
+  .fx-timer__time[data-paused] {
+    color: #8e8e93;
+  }
+
+  .fx-meter {
+    height: 8px;
+    margin-top: 10px;
+    border-radius: 4px;
+    background: #ececf0;
+  }
+
+  .fx-start {
+    display: grid;
+    place-items: center;
+    height: 54px;
+    position: relative;
+    isolation: isolate;
+    border-radius: 16px;
+    color: #fff;
+    font-size: 17px;
+    font-weight: 600;
+    transition: color 0.2s ease;
+  }
+
+  /* Its fill gives under the finger; the label holds still (a label that ends
+     a scale hops as it lands) */
+  .fx-start::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background-color: var(--fx-start-fill, var(--ss-accent));
+    transition: background-color 0.2s ease, transform 0.15s ease;
+  }
+
+  .fx-start[data-phase='running'] {
+    --fx-start-fill: #f2f2f7;
+    color: #000;
+  }
+
+  .fx-start[data-pressed]::before {
+    transform: scale(0.97);
+  }
+
+  .fx-intervals {
+    display: grid;
+    gap: 18px;
+    padding-top: 4px;
+  }
+
+  .fx-interval {
+    display: grid;
+    grid-template-columns: 10px 1fr auto;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .fx-interval__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #d1d1d6;
+  }
+
+  .fx-interval__dot[data-i='0'] {
+    background: var(--ss-accent);
+  }
+
+  & .ss-stage[data-layout='compact'] .fx-phone { top: 16px; left: 16px; }
+
+  .fx-card__title {
+    display: block;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 16px;
+    letter-spacing: -0.01em;
+    color: #fff;
+  }
+}

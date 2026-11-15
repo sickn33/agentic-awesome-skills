@@ -67,7 +67,7 @@ function verifyFile(root, version, ref) {
   else proof=JSON.parse(fs.readFileSync(path.join(root,FILE),'utf8'));
   return validateProof(proof,version,dependencies(root,ref || 'HEAD'));
 }
-module.exports={FILE,MARKER,closureComment,resolvedPull,validateProof,prepareProof,verifyFile};
+module.exports={dependencies,FILE,MARKER,closureComment,resolvedPull,validateProof,prepareProof,verifyFile};
 if(require.main===module) {
   try { verifyFile(process.cwd(),process.argv[2],process.argv[3]); }
   catch(e) {console.error(e.message);process.exitCode=1;}

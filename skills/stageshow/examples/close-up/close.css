@@ -1,0 +1,51 @@
+.cu .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+/* The whole window at 1.4x, inset 18px top and sides, running off the
+   bottom: the subject row is whole across, label and toggle */
+.cu-zoom {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  transform: scale(1.4);
+  transform-origin: 0 0;
+}
+
+.cu-win {
+  width: 260px;
+  height: 240px;
+}
+
+.cu-list {
+  padding: 6px 16px;
+}
+
+.cu-row {
+  padding: 12px 0;
+  border-top: 1px solid var(--ss-line);
+  border-radius: 0;
+}
+
+.cu-row:first-child {
+  border-top: 0;
+}
+
+.cu-title {
+  color: var(--ss-text-strong);
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.cu-sub {
+  color: var(--ss-text);
+  font-size: 11px;
+}
+
+/* Narrow: a touch less zoom, so the row stays whole across with the same
+   inset each side */
+.cu .ss-stage[data-layout='compact'] .cu-zoom {
+  left: 12px;
+  transform: scale(1.3);
+}

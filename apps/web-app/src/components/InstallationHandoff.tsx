@@ -16,7 +16,8 @@ export function InstallationHandoff({ ids, version, packageName }: Props): React
   return <section className="installation-handoff">
     <button type="button" aria-expanded={open} onClick={() => setOpen(!open)}>Prepare installation preview</button>
     {open ? <div>
-      <p>Use these {ids.length} exact IDs from AAS {version}. Run the preview in your project, inspect the changes, and remove <code>--dry-run</code> only when you approve installation.</p>
+      <p><strong>npm publishing is paused.</strong> Use the <a href="https://github.com/sickn33/agentic-awesome-skills/blob/main/docs/users/getting-started.md#install-and-update-without-npm">GitHub installation and update guide</a> for current skills.</p>
+      <p>This preview command requires AAS {version} to be available on npm. For a published version, use these {ids.length} exact IDs. Run the preview in your project, inspect the changes, and remove <code>--dry-run</code> only when you approve installation.</p>
       <p>The direct installer produces its own preview; it does not apply a Core plan. Confirm the directory your agent uses and any prerequisites before proceeding.</p>
       <label htmlFor={`${id}-directory`}>Skill directory<input id={`${id}-directory`} value={destination} placeholder="For example: .agents/skills or .claude/skills" onChange={(event) => { setDestination(event.target.value); setMessage(''); }} /></label>
       <label htmlFor={`${id}-shell`}>Terminal<select id={`${id}-shell`} value={shell} onChange={(event) => { setShell(event.target.value as CommandShell); setMessage(''); }}><option value="posix">macOS / Linux · bash or zsh</option><option value="powershell">Windows · PowerShell</option></select></label>

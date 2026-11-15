@@ -1,0 +1,676 @@
+/* Linear as it looks after its 2026 refresh: light, near-grayscale chrome in
+   one neutral family (the cool blue cast is gone), a dimmed sidebar that is
+   also the window frame, and the content in an inset white panel with a
+   hairline edge. Color is left only where Linear itself keeps it: the status
+   circles, label dots, avatars, and the indigo accent on the person the story
+   is about.
+
+   Every color is a token here, so the dark theme is one block below
+   (`theme="dark"`, or film.mjs --dark). */
+.ln-stage .ss-stage {
+  --gutter: 30px;
+  --ss-well: #ececeb;
+  --ss-canvas: #f5f5f4;
+  --ss-chrome: #f5f5f4;
+  --ss-surface: #fdfdfc;
+  --ss-raised: #ffffff;
+  --ss-line: #e6e6e4;
+  --ss-text: #6c6c69;
+  --ss-text-strong: #1d1d1c;
+  --ss-text-faint: #a2a29e;
+  --ss-icon: #7a7a76;
+  --ss-icon-faint: #b9b9b5;
+  --ss-accent-soft: rgba(94, 106, 210, 0.16);
+
+  --ln-nav-text: #5c5c59;
+  --ln-nav-active: #e9e9e7;
+  --ln-row-hover: #f3f3f2;
+  --ln-tile: #1d1d1c;
+  --ln-tile-text: #fdfdfc;
+  --ln-team-tile: #e4e4e2;
+  --ln-team-text: #4a4a47;
+  --ln-tab-active: #efefee;
+  --ln-chip-line: #e3e3e1;
+  --ln-pri-off: #cfcfcc;
+  --ln-pri-on: #6c6c69;
+  --ln-ring-todo: #a8a8a4;
+  --ln-ring-backlog: #b4b4b0;
+  --ln-progress: #e5b400;
+  --ln-done: #5e6ad2;
+  --ln-done-mark: #fdfdfc;
+  --ln-unassigned: #b0b0ac;
+  --ln-scrim: rgba(28, 28, 26, 0.06);
+  --ln-cmd-line: #ececea;
+  --ln-cmd-active: #f1f1f0;
+  --ln-cmd-text: #3a3a38;
+  --ln-cmd-chip: #f1f1f0;
+  --ln-cmd-chip-title: #3a3a38;
+  --ln-key-line: #e3e3e1;
+  --ln-key-active: #e6e6e4;
+  --ln-caret: #1d1d1c;
+  --ln-cmd-shadow: 0 0 0 1px rgba(0, 0, 0, 0.07), 0 24px 56px -16px rgba(0, 0, 0, 0.16), 0 8px 18px -8px rgba(0, 0, 0, 0.08);
+  --ln-panel-shadow: 0 0 0 1px var(--ss-line), 0 1px 2px rgba(0, 0, 0, 0.03);
+
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--ss-well);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+}
+
+/* The same scene in Linear's refreshed dark theme: warm-neutral grays, no
+   blue cast, depth from lighter surfaces. */
+.ln-stage .ss-stage[data-theme="dark"] {
+  --ss-well: #0b0b0b;
+  --ss-canvas: #0e0e0e;
+  --ss-chrome: #0e0e0e;
+  --ss-surface: #121212;
+  --ss-raised: #1c1c1c;
+  --ss-line: #222221;
+  --ss-text: #8d8d8a;
+  --ss-text-strong: #ededec;
+  --ss-text-faint: #636361;
+  --ss-icon: #8d8d8a;
+  --ss-icon-faint: #4d4d4b;
+  --ss-accent-soft: rgba(94, 106, 210, 0.24);
+
+  --ln-nav-text: #a3a3a0;
+  --ln-nav-active: #1c1c1c;
+  --ln-row-hover: #191919;
+  --ln-tile: #ededec;
+  --ln-tile-text: #0e0e0e;
+  --ln-team-tile: #262626;
+  --ln-team-text: #c4c4c1;
+  --ln-tab-active: #1f1f1f;
+  --ln-chip-line: #2a2a29;
+  --ln-pri-off: #444442;
+  --ln-pri-on: #a3a3a0;
+  --ln-ring-todo: #a8a8a5;
+  --ln-ring-backlog: #696967;
+  --ln-progress: #f0bf00;
+  --ln-done: #5e6ad2;
+  --ln-done-mark: #121212;
+  --ln-unassigned: #696967;
+  --ln-scrim: rgba(0, 0, 0, 0.28);
+  --ln-cmd-line: #2a2a29;
+  --ln-cmd-active: #2a2a29;
+  --ln-cmd-text: #d2d2cf;
+  --ln-cmd-chip: #282827;
+  --ln-cmd-chip-title: #c8c8c5;
+  --ln-key-line: #333332;
+  --ln-key-active: #3a3a39;
+  --ln-caret: #ededec;
+  --ln-cmd-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 24px 60px -12px rgba(0, 0, 0, 0.7), 0 8px 20px -8px rgba(0, 0, 0, 0.5);
+  --ln-panel-shadow: 0 0 0 1px var(--ss-line);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.ln-icon {
+  flex-shrink: 0;
+  color: var(--ss-icon);
+}
+
+/* ---- Window: pinned a gutter in, runs off the bottom ---- */
+
+.ln-window {
+  position: absolute;
+  top: var(--gutter);
+  left: var(--gutter);
+  width: 860px;
+  height: 500px;
+  background: var(--ss-canvas);
+  box-shadow: var(--ss-shadow-hero);
+}
+
+[data-layout="compact"] .ln-window {
+  top: 16px;
+  left: 16px;
+  width: 388px;
+  height: 360px;
+}
+
+/* Without the sidebar there is no frame around the panel: the whole window
+   is the content surface */
+.ln-window:not([data-kind="sidebar"]),
+.ln-window:not([data-kind="sidebar"]) .ss-window__bar {
+  background: var(--ss-surface);
+}
+
+.ln-window .ss-window__side {
+  border-right: 0;
+}
+
+/* Linear's content sits in an inset panel inside the frame */
+.ln-window[data-kind="sidebar"] .ss-window__main {
+  margin: 8px 8px 0 0;
+  border-radius: 10px 10px 0 0;
+  /* The edge is a shadow, so the panel's own box meets the sidebar exactly */
+  box-shadow: var(--ln-panel-shadow);
+  overflow: hidden;
+}
+
+.ln-window .ss-window__bar {
+  gap: 10px;
+  background: transparent;
+}
+
+/* ---- Sidebar: dimmed, so the list leads ---- */
+
+.ln-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 2px 10px 0;
+}
+
+.ln-workspace {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 28px;
+  padding: 0 6px;
+}
+
+.ln-workspace__tile,
+.ln-team__tile {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  background: var(--ln-tile);
+  color: var(--ln-tile-text);
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* Team icons lost their colored backgrounds in the refresh */
+.ln-team__tile {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  background: var(--ln-team-tile);
+  color: var(--ln-team-text);
+  font-size: 9.5px;
+}
+
+.ln-compose {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 12px;
+  background: var(--ss-surface);
+  box-shadow: 0 0 0 1px var(--ss-line);
+}
+
+.ln-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ln-section {
+  display: flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 8px;
+}
+
+.ln-nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 6px;
+}
+
+.ln-nav[data-active] {
+  background: var(--ln-nav-active);
+}
+
+.ln-nav__label,
+.ln-team__name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ss-text-strong);
+}
+
+.ln-team__name {
+  color: var(--ln-nav-text);
+}
+
+.ln-team {
+  gap: 9px;
+}
+
+.ln-team .ln-icon {
+  margin-left: -3px;
+}
+
+.ln-sub {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-left: 14px;
+}
+
+.ln-icon--on {
+  color: var(--ss-text-strong);
+}
+
+/* ---- Header ---- */
+
+.ln-crumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 2px;
+}
+
+[data-layout="compact"] .ln-crumbs {
+  margin-left: 12px;
+}
+
+.ln-crumbs__team {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ss-text-strong);
+}
+
+/* Compact, rounded tabs that don't span the bar */
+.ln-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 10px;
+}
+
+.ln-tab {
+  display: flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 12px;
+  box-shadow: inset 0 0 0 1px var(--ss-line);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ss-text-strong);
+}
+
+.ln-tab[data-active] {
+  background: var(--ln-tab-active);
+  box-shadow: none;
+}
+
+.ln-tools {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ln-tool {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-width: 26px;
+  height: 26px;
+  border-radius: 13px;
+}
+
+.ln-tool--display {
+  padding: 0 10px;
+  box-shadow: inset 0 0 0 1px var(--ss-line);
+}
+
+[data-layout="compact"] .ln-tool--display {
+  padding: 0;
+}
+
+/* ---- List ---- */
+
+.ln-list {
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+}
+
+/* One column template, so ids, circles, avatars and dates line up */
+.ln-row {
+  display: grid;
+  grid-template-columns: 14px 54px 14px minmax(0, 1fr) 96px 18px 44px;
+  align-items: center;
+  column-gap: 12px;
+  height: 38px;
+  padding: 0 12px;
+  border-radius: 6px;
+  transition: background-color 0.18s ease;
+}
+
+[data-layout="compact"] .ln-row {
+  grid-template-columns: 14px 54px 14px minmax(0, 1fr) 18px;
+}
+
+.ln-row[data-focus] {
+  background: var(--ln-row-hover);
+  transition-duration: 0.06s;
+}
+
+.ln-id {
+  display: flex;
+  align-items: center;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ss-text);
+}
+
+.ln-title {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.ln-title__text {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ss-text-strong);
+}
+
+.ln-labels {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.ln-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 9px 0 8px;
+  border-radius: 11px;
+  box-shadow: inset 0 0 0 1px var(--ln-chip-line);
+}
+
+.ln-chip__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.ln-chip__dot[data-tone="0"] { background: #eb5757; }
+.ln-chip__dot[data-tone="1"] { background: #bb87fc; }
+.ln-chip__dot[data-tone="2"] { background: #4ea7fc; }
+
+.ln-date {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Priority bars */
+.ln-pri rect {
+  fill: var(--ln-pri-off);
+}
+
+.ln-pri rect[data-on] {
+  fill: var(--ln-pri-on);
+}
+
+.ln-pri[data-urgent] > rect:first-child {
+  fill: var(--ln-pri-on);
+}
+
+.ln-pri[data-urgent] .ln-pri__mark {
+  fill: var(--ss-surface);
+}
+
+/* Status circles */
+.ln-status {
+  overflow: visible;
+}
+
+.ln-status[data-status="backlog"] circle {
+  stroke: var(--ln-ring-backlog);
+}
+
+.ln-status[data-status="done"] circle {
+  fill: var(--ln-done);
+}
+
+.ln-status[data-status="done"] path {
+  stroke: var(--ln-done-mark);
+}
+
+.ln-status__ring {
+  stroke: var(--ln-ring-todo);
+  transition: stroke 0.25s ease;
+}
+
+.ln-status__pie {
+  stroke: var(--ln-progress);
+  stroke-dasharray: 0 100;
+  transition: stroke-dasharray 0.7s cubic-bezier(0.45, 0, 0.1, 1);
+}
+
+.ln-status[data-status="progress"] .ln-status__ring {
+  stroke: var(--ln-progress);
+}
+
+.ln-status[data-status="progress"] .ln-status__pie {
+  stroke-dasharray: 50 100;
+}
+
+/* Assignee */
+.ln-who {
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+}
+
+.ln-unassigned {
+  overflow: visible;
+}
+
+.ln-unassigned circle:first-child {
+  stroke: var(--ln-unassigned);
+}
+
+.ln-unassigned circle:not(:first-child),
+.ln-unassigned path {
+  fill: var(--ln-unassigned);
+}
+
+.ln-avatar[data-face="0"] { background: #c08a6a; color: #fff; }
+.ln-avatar[data-face="1"] { background: #6f8fae; color: #fff; }
+.ln-avatar[data-face="2"] { background: #8d7fae; color: #fff; }
+
+/* The unassigned mark and the avatar share one slot and crossfade; the
+   avatar's disc grows a touch as it arrives while its initial only fades
+   (a letter that ends a scale hops as it lands) */
+.ln-who__swap {
+  display: grid;
+  width: 18px;
+  height: 18px;
+}
+
+.ln-who__swap > * {
+  grid-area: 1 / 1;
+  transition: opacity 0.35s ease, scale 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.ln-who__me {
+  position: relative;
+  isolation: isolate;
+  opacity: 0;
+  background: none;
+}
+
+.ln-who__me::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--ss-accent);
+  scale: 0.6;
+  transition: scale 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.ln-who__swap[data-assigned] .ln-who__me {
+  opacity: 1;
+}
+
+.ln-who__swap[data-assigned] .ln-who__me::before {
+  scale: 1;
+}
+
+.ln-who__swap[data-assigned] .ln-unassigned {
+  opacity: 0;
+  scale: 0.8;
+}
+
+/* ---- Command menu ---- */
+
+.ln-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: var(--ln-scrim);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.ln-scrim[data-show] {
+  opacity: 1;
+}
+
+.ln-cmd {
+  top: 128px;
+  left: 190px;
+  width: 560px;
+  padding: 0;
+  border-radius: 12px;
+  --ss-popover-bg: var(--ss-raised);
+  --ss-popover-shadow: var(--ln-cmd-shadow);
+}
+
+[data-layout="compact"] .ln-cmd {
+  top: 66px;
+  left: 30px;
+  width: 360px;
+}
+
+.ln-cmd__context {
+  display: flex;
+  padding: 14px 16px 0;
+}
+
+.ln-cmd__chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 22px;
+  padding: 0 8px;
+  border-radius: 6px;
+  background: var(--ln-cmd-chip);
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--ss-text);
+}
+
+.ln-cmd__chip-title {
+  color: var(--ln-cmd-chip-title);
+}
+
+/* The menu's input is the menu's own line, not a field: no box, no ring */
+.ln-cmd__field .ss-field__box,
+.ln-cmd__field[data-focused] .ss-field__box {
+  height: 50px;
+  padding: 0 18px;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  border-bottom: 1px solid var(--ln-cmd-line);
+  font-size: 15px;
+}
+
+.ln-cmd__field .ss-field__caret {
+  height: 18px;
+  background: var(--ln-caret);
+}
+
+.ln-cmd__list {
+  padding: 6px 6px 8px;
+}
+
+/* Rows ride up as the ones above collapse: a kept layer, so their text
+   moves with the box instead of snapping to whole pixels inside it */
+.ln-cmd__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 40px;
+  padding: 0 12px;
+  border-radius: 7px;
+  font-size: 13.5px;
+  color: var(--ln-cmd-text);
+  transition: background-color 0.12s ease;
+  will-change: transform;
+}
+
+.ln-cmd__item[data-active] {
+  background: var(--ln-cmd-active);
+  color: var(--ss-text-strong);
+}
+
+.ln-cmd__icon {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  color: var(--ss-icon);
+}
+
+.ln-cmd__item[data-active] .ln-cmd__icon {
+  color: var(--ss-text-strong);
+}
+
+.ln-cmd__label {
+  flex: 1;
+}
+
+.ln-cmd__key {
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 1px var(--ln-key-line);
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ss-text);
+}
+
+.ln-cmd__item[data-active] .ln-cmd__key {
+  box-shadow: inset 0 0 0 1px var(--ln-key-active);
+}
+
+.ln-st {
+  display: grid;
+  width: 14px;
+  height: 14px;
+}
+
+/* Compact: the menu has to fit the shorter stage, a gutter from its bottom */
+[data-layout="compact"] .ln-cmd__item {
+  height: 36px;
+}
+
+[data-layout="compact"] .ln-cmd__field .ss-field__box {
+  height: 46px;
+}

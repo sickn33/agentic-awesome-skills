@@ -38,3 +38,10 @@ Calibrate raw finding counts against the repository's own corpus shape before tr
 When a real executable defect is confirmed, fix it in the source skill with the normal validation and PR path, and treat the scanner as advisory input. A near-total reduction in headline findings after calibration is expected and is not an unexplained gap.
 
 The official skill-content review remains Tessl or exact-head maintainer attestation.
+
+Evidence selection first identifies the newest exact-head upstream `ci.yml` run,
+then its unique current-attempt `pr-evidence` job and GitHub Actions check. Lists
+are paginated. Same-named metadata checks are not eligible. Live PR identity,
+current attempt and newest-run selection must still match before scanning.
+Failures are printed to the log and summary; no automatic retry of failed CI
+or privileged completion-event trigger is introduced.

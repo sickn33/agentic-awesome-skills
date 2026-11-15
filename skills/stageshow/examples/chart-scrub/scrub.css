@@ -1,0 +1,92 @@
+.cs .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+/* One window, inset at the top and running off the bottom */
+.cs-win {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  width: 560px;
+  translate: -50% 0;
+}
+
+.cs .ss-stage[data-layout='compact'] .cs-win {
+  top: 16px;
+  width: 326px;
+}
+
+.cs-body {
+  display: grid;
+  gap: 18px;
+  /* Taller than the stage leaves room for, so the window runs off the bottom */
+  min-height: 420px;
+  align-content: start;
+  padding: 26px 34px 60px;
+  background: var(--ss-surface);
+}
+
+.cs .ss-stage[data-layout='compact'] .cs-body {
+  padding: 22px 23px 60px;
+}
+
+.cs-head {
+  display: grid;
+  gap: 6px;
+}
+
+.cs-label {
+  color: var(--ss-text);
+  font-size: 13px;
+}
+
+.cs-value {
+  color: var(--ss-text-strong);
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* The day under the pointer: a hairline and a dot, jumping day to day */
+.cs-plot {
+  position: relative;
+}
+
+.cs-hair {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  margin-left: -0.5px;
+  background: var(--ss-line);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.cs-dot {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  margin: -4.5px 0 0 -4.5px;
+  border: 2px solid var(--ss-surface);
+  border-radius: 50%;
+  background: var(--ss-accent);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.18);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.cs-hair[data-on],
+.cs-dot[data-on] {
+  opacity: 1;
+}
+
+.cs-axis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -8px;
+  color: var(--ss-text-faint);
+  font-size: 11px;
+}

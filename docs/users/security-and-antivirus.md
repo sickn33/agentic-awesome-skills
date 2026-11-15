@@ -1,5 +1,7 @@
 # Security, Trust, and Antivirus Alerts
 
+> **npm publishing paused.** For current skills, use the [GitHub installation and update guide](getting-started.md#install-and-update-without-npm). npm commands require a version already published to npm.
+
 ## The trust boundary
 
 A skill is instruction content, not an executable process. Copying a `SKILL.md`

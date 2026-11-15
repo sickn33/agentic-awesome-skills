@@ -1,0 +1,94 @@
+/* Check */
+
+@layer stageshow {
+  .ss-check {
+    display: inline-grid;
+    flex-shrink: 0;
+    place-items: center;
+  }
+
+  .ss-check svg {
+    overflow: visible;
+  }
+
+  .ss-check__ring {
+    fill: none;
+    stroke: var(--ss-ink-4);
+    stroke-width: 1.5;
+    transition: opacity 0.2s ease;
+  }
+
+  /* Pending: an arc turning inside the ring */
+  .ss-check__arc {
+    fill: none;
+    stroke: var(--ss-text-strong);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-dasharray: 0.28 1;
+    opacity: 0;
+    transform-origin: 8px 8px;
+    animation: ss-spin 0.8s linear infinite;
+    transition: opacity 0.18s ease;
+  }
+
+  .ss-check[data-pending] .ss-check__arc {
+    opacity: 1;
+  }
+
+  /* Done: a solid disc grows from the center over the ring, then the tick
+     draws on it. No frame is a half-faded fill under a fading spinner. */
+  .ss-check__fill {
+    fill: var(--ss-success);
+    opacity: 0;
+    transform: scale(0.35);
+    transform-origin: 8px 8px;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+
+  .ss-check[data-on] .ss-check__fill {
+    opacity: 1;
+    transform: scale(1);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0s;
+  }
+
+  /* The arc gets out of the way as the disc starts */
+  .ss-check[data-on] .ss-check__arc {
+    transition-duration: 0.08s;
+  }
+
+  .ss-check[data-on] .ss-check__ring {
+    opacity: 0;
+  }
+
+  .ss-check__tick {
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  /* On blueprint the disc is white, so the tick takes the ground */
+  .ss-stage[data-theme="blueprint"] .ss-check__tick {
+    stroke: var(--ss-well);
+  }
+
+  /* The tick draws in once the disc is mostly there, and fades out intact */
+  .ss-check[data-on] .ss-check__tick {
+    stroke-dashoffset: 0;
+    opacity: 1;
+    transition: stroke-dashoffset 0.32s cubic-bezier(0.65, 0, 0.35, 1) 0.16s, opacity 0.01s 0.16s;
+  }
+
+  .ss-stage[data-palette="mono"][data-theme="dark"] .ss-check__tick {
+    stroke: #111;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ss-check__arc { animation: none; }
+  }
+}

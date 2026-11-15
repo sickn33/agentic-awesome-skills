@@ -1,0 +1,40 @@
+/* Segmented */
+
+@layer stageshow {
+  .ss-seg {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(var(--n), 1fr);
+    padding: 2px;
+    border-radius: var(--ss-radius-md);
+    background: var(--ss-ink-2);
+  }
+
+  .ss-seg__thumb {
+    position: absolute;
+    top: 2px;
+    bottom: 2px;
+    left: 2px;
+    width: calc((100% - 4px) / var(--n));
+    border-radius: var(--ss-radius-sm);
+    background: var(--ss-raised);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08), 0 0 0 0.5px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .ss-seg__option {
+    position: relative;
+    display: grid;
+    place-items: center;
+    height: var(--ss-row);
+    padding: 0 10px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--ss-text);
+    transition: color 0.2s ease;
+  }
+
+  .ss-seg__option[data-on] {
+    color: var(--ss-text-strong);
+  }
+}

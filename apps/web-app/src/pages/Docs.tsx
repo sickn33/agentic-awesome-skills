@@ -1,3 +1,4 @@
+import { GuideStart } from '../components/GuideStart';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useParams } from 'react-router';
 import Markdown from 'react-markdown';
@@ -81,7 +82,7 @@ export default function Docs() {
   const missing = Boolean(slug && !doc);
   usePageMeta({
     title: `${missing ? 'Page not found' : doc?.title || 'Documentation'} | Agentic Awesome Skills`,
-    description: doc ? `${doc.title}: guides and reference for Agentic Awesome Skills.` : 'Learn AAS Core, install skills, configure integrations, and follow practical workflows.',
+    description: doc ? doc.description : 'Find Agentic Awesome Skills setup guides, agent integrations, security guidance, and practical workflows. Learn how to discover, select, and use reusable skills.',
     canonicalPath: slug ? `/docs/${slug}/` : '/docs/',
     ogImage: doc && socialGuides.includes(doc.slug) ? `social/docs/${doc.slug}.png` : undefined,
     robots: missing ? 'noindex, follow' : 'index, follow',
@@ -90,6 +91,7 @@ export default function Docs() {
       '@type': doc ? ['WebPage', 'TechArticle'] : 'WebPage',
       name: doc?.title || 'Documentation',
       headline: doc?.title || 'Documentation',
+      description: doc ? doc.description : 'Find Agentic Awesome Skills setup guides, agent integrations, security guidance, and practical workflows. Learn how to discover, select, and use reusable skills.',
       url: canonical,
       mainEntityOfPage: canonical,
       ...(metadata ? { dateModified: metadata.modified, version: metadata.commit } : {}),
@@ -111,11 +113,12 @@ export default function Docs() {
     }
   }, [hash, pathname, content]);
   if (missing) return <NotFound />;
+  if (!slug) return <GuideStart />;
   return (
     <div className="docs-page">
       <a className="docs-skip" href={`${pathname}#docs-content`}>Skip documentation navigation</a>
       <header className="docs-header">
-        <Link to="/docs/" className="docs-eyebrow">AAS / DOCUMENTATION</Link>
+        <Link to="/docs/" className="docs-eyebrow">AAS / Documentation</Link>
         {doc ? <p className="docs-title">{doc.title}</p> : <h1>A guide for every next step.</h1>}
         <p>{doc ? doc.group : 'Start with AAS Core, explore integrations, and put your skills to work.'}</p>
       </header>
@@ -138,7 +141,7 @@ export default function Docs() {
         {doc ? <div className="docs-content" id="docs-content" tabIndex={-1}>
           <nav className="docs-breadcrumbs" aria-label="Breadcrumb"><Link to="/">Home</Link><span aria-hidden="true">/</span><Link to="/docs/">Documentation</Link><span aria-hidden="true">/</span><span aria-current="page">{doc.title}</span></nav>
           {metadata && <div className="docs-metadata">
-            <span>Updated <time dateTime={metadata.modified}>{metadata.modified.slice(0, 10)}</time></span>
+            {metadata.modified && <span>Updated <time dateTime={metadata.modified}>{metadata.modified.slice(0, 10)}</time></span>}
             <a href={`https://github.com/sickn33/agentic-awesome-skills/blob/${metadata.commit}/${metadata.sourcePath}`}>View source · {metadata.commit.slice(0, 7)}</a>
             <a href={`https://github.com/sickn33/agentic-awesome-skills/edit/main/${metadata.sourcePath}`}>Edit this page</a>
           </div>}
@@ -155,7 +158,7 @@ export default function Docs() {
             {index < docs.length - 1 && <Link to={`/docs/${docs[index + 1].slug}/`}>{docs[index + 1].title} →</Link>}
           </nav>
         </div> : <div className="docs-content" id="docs-content" tabIndex={-1}>
-          <Link className="docs-start" to="/docs/getting-started/"><span>NEW TO AAS?</span><h2>Start with your first skill stack →</h2><p>Set up AAS Core and review the skills your agent selects for your project.</p></Link>
+          <Link className="docs-start" to="/docs/getting-started/"><span>New to AAS?</span><h2>Start with your first skill stack →</h2><p>Set up AAS Core and review the skills your agent selects for your project.</p></Link>
           <section className="docs-audiences" aria-label="Documentation by audience">
             <h2>Find your path</h2>
             <div className="docs-grid">

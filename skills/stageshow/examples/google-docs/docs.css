@@ -1,0 +1,564 @@
+/* Google Docs, in its Material 3 colors. One cool gray family throughout. */
+
+.gd-stage .ss-stage {
+  overflow: hidden;
+  background: #e9edf2;
+  border-radius: 14px;
+  --gd-ink: #1f1f1f;
+  --gd-icon: #444746;
+  --gd-muted: #5e5e5e;
+  --gd-blue: #0b57d0;
+  --gd-surface: #f9fbfd;
+  --gd-pill: #edf2fa;
+  --gd-line: #e1e3e1;
+  --ss-font: "Google Sans", Roboto, system-ui, -apple-system, sans-serif;
+}
+
+.gd-window {
+  position: absolute;
+  left: 40px;
+  top: 40px;
+  width: 860px;
+  height: 700px;
+  box-shadow: var(--ss-shadow-hero);
+  background: var(--gd-surface);
+}
+
+.gd-window[data-layout="compact"] {
+  left: 20px;
+  top: 20px;
+  width: 420px;
+  height: 560px;
+}
+
+.gd-window .ss-window__body {
+  display: flex;
+  flex-direction: column;
+}
+
+.gd-sym {
+  display: block;
+  flex-shrink: 0;
+  color: var(--gd-icon);
+}
+
+/* ---- Header ---- */
+
+.gd-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 64px;
+  padding: 0 16px 0 14px;
+  background: var(--gd-surface);
+}
+
+.gd-mark {
+  flex-shrink: 0;
+  /* The glyph's page is narrower than its square box: trim the box's side
+     air so the gap to the title stays as it was */
+  margin: 0 1px 0 -1px;
+}
+
+.gd-titleblock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.gd-titlerow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gd-title {
+  font-size: 17px;
+  line-height: 24px;
+  color: var(--gd-ink);
+}
+
+.gd-title-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.gd-menus {
+  display: flex;
+  gap: 2px;
+  margin-left: -6px;
+  font-size: 13px;
+  line-height: 22px;
+  color: var(--gd-ink);
+}
+
+.gd-menus span {
+  padding: 0 6px;
+}
+
+.gd-header__right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-left: auto;
+}
+
+.gd-share {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 18px;
+  border-radius: 18px;
+  background: #c2e7ff;
+  color: #001d35;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.gd-share .gd-sym {
+  color: #001d35;
+}
+
+[data-layout="compact"] .gd-share {
+  padding: 0 10px;
+}
+
+.gd-av {
+  font-weight: 500;
+}
+
+.gd-av--me {
+  background: #7b5ba6;
+  color: #fff;
+}
+
+.gd-av--them {
+  background: #12866b;
+  color: #fff;
+}
+
+.gd-presence {
+  box-shadow: 0 0 0 2px var(--gd-surface), 0 0 0 4px #12866b;
+}
+
+/* ---- Toolbar ---- */
+
+.gd-toolbar-wrap {
+  padding: 0 8px 8px;
+}
+
+.gd-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  height: 40px;
+  padding: 0 14px;
+  border-radius: 20px;
+  background: var(--gd-pill);
+}
+
+.gd-sep {
+  width: 1px;
+  height: 20px;
+  background: #c7c7c7;
+}
+
+.gd-drop {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.gd-toolbar__end {
+  margin-left: auto;
+}
+
+/* ---- Canvas, page ---- */
+
+.gd-canvas {
+  position: relative;
+  flex: 1;
+  background: var(--gd-surface);
+  border-top: 1px solid var(--gd-line);
+}
+
+.gd-outline {
+  position: absolute;
+  left: 22px;
+  top: 22px;
+}
+
+.gd-page {
+  position: absolute;
+  left: 72px;
+  top: 16px;
+  width: 500px;
+  bottom: 0;
+  padding: 40px 60px 0;
+  background: #fff;
+  box-shadow: 0 0 0 1px #dadce0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #000;
+}
+
+[data-layout="compact"] .gd-page {
+  left: 12px;
+  top: 12px;
+  width: 396px;
+  padding: 28px 54px 0 24px;
+}
+
+.gd-h1 {
+  margin: 0 0 18px;
+  font-size: 26px;
+  line-height: 32px;
+  font-weight: 400;
+}
+
+[data-layout="compact"] .gd-h1 {
+  font-size: 19px;
+  line-height: 24px;
+}
+
+.gd-subtitle {
+  display: block;
+  margin: 12px 0 22px;
+}
+
+.gd-para {
+  margin: 0 0 26px;
+  font-size: 14px;
+  line-height: 23px;
+}
+
+[data-layout="compact"] .gd-para {
+  font-size: 12.5px;
+  line-height: 20px;
+}
+
+.gd-anchor {
+  display: inline-block;
+  width: 0;
+  height: 1em;
+  vertical-align: baseline;
+}
+
+.gd-sel {
+  border-radius: 1px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  background: transparent;
+  transition: background-color 0.35s ease;
+}
+
+.gd-sel[data-hl="select"] {
+  background: #c3d7f7;
+  transition: none;
+}
+
+.gd-sel[data-hl="comment"] {
+  background: #fcdd84;
+}
+
+.gd-heading {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.gd-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  margin-bottom: 24px;
+}
+
+/* ---- Margin buttons ---- */
+
+.gd-margin {
+  position: absolute;
+  left: 528px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3), 0 2px 6px 2px rgba(60, 64, 67, 0.15);
+  opacity: 0;
+  transform: scale(0.9);
+  transform-origin: 50% 50%;
+  transition: opacity 0.18s ease, transform 0.22s cubic-bezier(0.25, 0.8, 0.25, 1);
+  pointer-events: none;
+}
+
+[data-layout="compact"] .gd-margin {
+  left: 360px;
+}
+
+.gd-margin[data-show] {
+  opacity: 1;
+  transform: none;
+}
+
+.gd-margin__btn {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  transition: background-color 0.15s ease;
+}
+
+.gd-margin__btn[data-hover] {
+  background: #e9eef6;
+}
+
+.gd-margin__btn[data-pressed] {
+  background: #dfe5ee;
+}
+
+/* ---- Comment card ---- */
+
+.gd-card {
+  position: absolute;
+  left: 596px;
+  width: 240px;
+  padding: 16px 16px 14px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3), 0 4px 8px 3px rgba(60, 64, 67, 0.15);
+  opacity: 0;
+  /* Travels by margin pairs, not transform, so its text lands without a hop */
+  margin-inline: -10px 10px;
+  transition: opacity 0.5s ease, margin 0.8s cubic-bezier(0.25, 0.8, 0.25, 1);
+  font-size: 13px;
+  line-height: 19px;
+  color: var(--gd-ink);
+}
+
+[data-layout="compact"] .gd-card {
+  left: 124px;
+  width: 256px;
+  padding: 14px 14px 12px;
+  font-size: 12.5px;
+  line-height: 18px;
+  margin: -8px 0 8px;
+}
+
+.gd-card[data-show] {
+  opacity: 1;
+  margin: 0;
+}
+
+.gd-card[data-state="resolved"] {
+  margin: 0 -14px 0 14px;
+  transition: opacity 0.4s ease, margin 0.6s cubic-bezier(0.45, 0, 0.1, 1);
+}
+
+.gd-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gd-who {
+  flex: 1;
+  min-width: 0;
+}
+
+.gd-name {
+  font-weight: 500;
+  font-size: 13px;
+  line-height: 18px;
+}
+
+.gd-time {
+  font-size: 12px;
+  line-height: 17px;
+  color: var(--gd-muted);
+}
+
+[data-layout="compact"] .gd-name {
+  font-size: 12px;
+}
+
+[data-layout="compact"] .gd-time {
+  font-size: 11px;
+}
+
+.gd-acts {
+  display: flex;
+  gap: 2px;
+  margin-right: -6px;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.15s;
+}
+
+.gd-acts[data-on] {
+  opacity: 1;
+}
+
+.gd-icon-btn {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  transition: background-color 0.15s ease;
+}
+
+.gd-icon-btn[data-hover] {
+  background: #e9eef6;
+}
+
+.gd-icon-btn[data-pressed] {
+  background: #dfe5ee;
+}
+
+
+
+/* The text keeps its place from draft to posted: only the field's ring and
+   padding-free outline come and go around it. */
+.gd-body {
+  padding: 0;
+}
+
+.gd-field {
+  position: relative;
+  min-height: 19px;
+  margin: 10px 0 2px;
+}
+
+.gd-field[data-on] {
+  margin: 10px 0 10px;
+}
+
+.gd-field__ring {
+  position: absolute;
+  inset: -7px -8px;
+  border-radius: 6px;
+  box-shadow: inset 0 0 0 2px var(--gd-blue);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.gd-field[data-on] .gd-field__ring {
+  opacity: 1;
+}
+
+.gd-field__ph {
+  position: absolute;
+  inset: 0 0 auto 3px;
+  color: var(--gd-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.12s ease;
+}
+
+.gd-field:not([data-empty]) .gd-field__ph,
+.gd-field:not([data-on]) .gd-field__ph {
+  opacity: 0;
+}
+
+.gd-field__text {
+  position: relative;
+}
+
+.gd-caret {
+  display: inline-block;
+  width: 1.5px;
+  height: 15px;
+  margin-left: 1px;
+  vertical-align: -3px;
+  background: var(--gd-ink);
+  opacity: 0;
+}
+
+.gd-caret[data-on] {
+  opacity: 1;
+}
+
+.gd-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  padding-top: 6px;
+}
+
+.gd-btn {
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 14px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+[data-layout="compact"] .gd-btn {
+  height: 28px;
+  padding: 0 10px;
+  font-size: 12px;
+}
+
+.gd-btn--text {
+  color: var(--gd-blue);
+}
+
+.gd-btn--fill {
+  background: #e3e3e3;
+  color: #8f8f8f;
+}
+
+.gd-btn--fill[data-ready] {
+  background: var(--gd-blue);
+  color: #fff;
+}
+
+.gd-btn--fill[data-ready][data-hover] {
+  background: #0a4fbd;
+}
+
+.gd-btn--fill[data-pressed] {
+  background: #08439f;
+}
+
+.gd-reply {
+  padding-top: 12px;
+  margin-top: 2px;
+  border-top: 1px solid var(--gd-line);
+}
+
+.gd-reply__text {
+  padding-top: 8px;
+}
+
+.gd-replybox {
+  margin-top: 12px;
+  padding: 0 12px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  border: 1px solid #c4c7c5;
+  border-radius: 17px;
+  color: var(--gd-muted);
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-layout="compact"] .gd-replybox {
+  height: 30px;
+  font-size: 11px;
+}
+
+.gd-rest {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+}

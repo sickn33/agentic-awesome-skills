@@ -4,6 +4,8 @@ If you searched for **Cursor skills** on GitHub, this repository is built to be 
 
 Agentic Awesome Skills supports Cursor through the `.cursor/skills/` path and keeps the entry point simple: install once, then invoke the skills you need in chat.
 
+> **npm publishing paused.** For current skills, use the [GitHub installation and update guide](getting-started.md#install-and-update-without-npm). npm commands require a version already published to npm.
+
 ## How to use Agentic Awesome Skills with Cursor
 
 Install the library into Cursor's skills directory, then call skills directly in chat with `@skill-name`. Cursor works especially well when you combine planning, implementation, and validation skills inside one conversation.

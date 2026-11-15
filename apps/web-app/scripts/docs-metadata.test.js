@@ -44,7 +44,7 @@ function commitFile(dir, relativePath, contents, subject, date) {
 }
 
 describe('canonical-sync version metadata', () => {
-  it('uses versioned sitemap dates when Vercel has no Git checkout', () => {
+  it('keeps the source identity without borrowing stale sitemap dates when Git is absent', () => {
     const previousGitDir = process.env.GIT_DIR;
     const previousCommit = process.env.VERCEL_GIT_COMMIT_SHA;
     try {
@@ -52,7 +52,9 @@ describe('canonical-sync version metadata', () => {
       process.env.VERCEL_GIT_COMMIT_SHA = '0123456789abcdef0123456789abcdef01234567';
       const metadata = getDocsMetadata();
       expect(metadata['getting-started'].commit).toBe(process.env.VERCEL_GIT_COMMIT_SHA);
-      expect(metadata['getting-started'].modified).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      expect(Object.values(metadata).every(entry => !Object.hasOwn(entry, 'modified'))).toBe(true);
+      process.env.VERCEL_GIT_COMMIT_SHA = 'main';
+      expect(() => getDocsMetadata()).toThrow(/Invalid Git commit identity/);
     } finally {
       if (previousGitDir === undefined) delete process.env.GIT_DIR;
       else process.env.GIT_DIR = previousGitDir;
@@ -66,6 +68,26 @@ describe('canonical-sync version metadata', () => {
     expect(isCanonicalSyncSubject('chore: sync repo state [ci skip]')).toBe(true);
     expect(isCanonicalSyncSubject('fix: align AAS Core public narrative')).toBe(false);
     expect(isCanonicalSyncSubject('')).toBe(false);
+  });
+
+  it('does not treat a shallow boundary as the update date of every guide', () => {
+    const dir = initRepo();
+    const clone = fs.mkdtempSync(path.join(os.tmpdir(), 'aas-docs-shallow-'));
+    const previousGitDir = process.env.GIT_DIR;
+    try {
+      commitFile(dir, 'README.md', 'first\n', 'docs: first', '2026-01-01T00:00:00Z');
+      commitFile(dir, 'README.md', 'second\n', 'docs: second', '2026-02-02T00:00:00Z');
+      git(dir, ['clone', '-q', '--depth=1', `file://${dir}`, clone]);
+      process.env.GIT_DIR = path.join(clone, '.git');
+      const metadata = getDocsMetadata();
+      expect(metadata['getting-started'].commit).toBe(git(clone, ['rev-parse', 'HEAD']).trim());
+      expect(Object.values(metadata).every(entry => !Object.hasOwn(entry, 'modified'))).toBe(true);
+    } finally {
+      if (previousGitDir === undefined) delete process.env.GIT_DIR;
+      else process.env.GIT_DIR = previousGitDir;
+      fs.rmSync(dir, { recursive: true, force: true });
+      fs.rmSync(clone, { recursive: true, force: true });
+    }
   });
 
   it('covers the sync subjects the canonical lane emits', () => {

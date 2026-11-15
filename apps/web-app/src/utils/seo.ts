@@ -1,5 +1,8 @@
+import { buildSkillDescription } from './skillDescription.js';
+import { buildFaqItems } from './catalogFaq.js';
 import type { SeoJsonLdValue, SeoMeta, TwitterCard, Skill } from '../types';
 import { getAbsolutePublicAssetUrl } from './publicAssetUrls';
+import projectIdentity from '../data/projectIdentity.json';
 
 export const DEFAULT_TOP_SKILL_COUNT = 180;
 export const DEFAULT_SOCIAL_IMAGE = 'social-card.png';
@@ -35,38 +38,6 @@ export interface SeoLandingPage {
   sections: SeoLandingPageSection[];
   links: SeoLandingPageLink[];
 }
-const FAQ_ITEMS = [
-  {
-    question: 'What is Agentic Awesome Skills?',
-    answer: (countLabel: string) =>
-      `Agentic Awesome Skills is built around AAS Core, a local agent-first preview boundary for neutral catalog retrieval, exact agent-owned selection, validation, and planning. AAS Core is backed by an evidence-rich catalog of ${countLabel} reusable SKILL.md playbooks.`,
-  },
-  {
-    question: 'How do I use AAS Core preview?',
-    answer:
-      'Configure the local stdio MCP with the AAS CLI, let the agent search and inspect the complete catalog, choose exact skill IDs itself, then validate the schema 2 aas-stack.json with its project profile and preview the immutable plan in the CLI. Apply and recovery are outside the non-applying preview path.',
-  },
-  {
-    question: 'Is Agentic Awesome Skills a GitHub repository?',
-    answer:
-      'Yes. The GitHub repository at https://github.com/sickn33/agentic-awesome-skills is the canonical source for AAS Core, its CLI and local MCP, the skill catalog, plugins, and documentation. The hosted site is a companion catalog and local artifact-review surface.',
-  },
-  {
-    question: 'What are AAS specialized plugins?',
-    answer:
-      'AAS specialized plugins are focused, domain-specific distributions of the skill library. They package relevant skills for web apps, security, data analytics, documents, DevOps, QA, OSS maintenance, and agent or MCP work so users can start with the right surface instead of activating the entire catalog.',
-  },
-  {
-    question: 'What is the difference between skills and MCP tools?',
-    answer:
-      'Skills are reusable playbooks that tell an AI assistant how to execute a workflow. MCP tools expose external systems or callable actions. Skills guide behavior, context, constraints, and output quality; MCP tools provide the external capabilities an assistant may need while following those instructions.',
-  },
-  {
-    question: 'How are plugins, bundles, and workflows different?',
-    answer:
-      'Plugins are installable packaging surfaces, bundles are curated skill recommendations, and workflows are ordered execution playbooks. Start with a plugin when the domain is clear, use bundles to compare adjacent skills, and use workflows when sequencing planning, coding, testing, auditing, or release work matters.',
-  },
-] as const;
 
 export function getCatalogCountLabel(skillCount = 0): string {
   const visibleCount = skillCount > 0 ? skillCount : HOME_CATALOG_COUNT_FALLBACK;
@@ -75,10 +46,7 @@ export function getCatalogCountLabel(skillCount = 0): string {
 
 function getResolvedHomeFaqItems(skillCount = 0): Array<{ question: string; answer: string }> {
   const countLabel = getCatalogCountLabel(skillCount);
-  return FAQ_ITEMS.map((item) => ({
-    question: item.question,
-    answer: typeof item.answer === 'function' ? item.answer(countLabel) : item.answer,
-  }));
+  return buildFaqItems(countLabel);
 }
 
 export function toCanonicalPath(pathname: string): string {
@@ -156,6 +124,7 @@ function buildWebSiteSchema(canonicalUrl: string): Record<string, unknown> {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: SITE_NAME,
+    alternateName: projectIdentity.alternateName,
     url: getCatalogBaseUrl(canonicalUrl),
     sameAs: REPOSITORY_URL,
     inLanguage: 'en',
@@ -176,6 +145,7 @@ function buildSoftwareSourceCodeSchema(canonicalUrl: string, visibleCount: numbe
     '@context': 'https://schema.org',
     '@type': 'SoftwareSourceCode',
     name: SITE_NAME,
+    alternateName: projectIdentity.alternateName,
     description: `AAS Core preview is a local agent-first boundary for neutral catalog retrieval, exact agent-owned selection, validation, and planning backed by ${visibleCountLabel}.`,
     url: REPOSITORY_URL,
     sameAs: [
@@ -380,8 +350,8 @@ export function isTopSkill(skillId: string, skills: ReadonlyArray<Skill>, limit 
 export function buildLandingMeta(skillCount = 0): SeoMeta {
   const visibleCount = Math.max(skillCount, 0);
   const countLabel = getCatalogCountLabel(visibleCount);
-  const title = 'AAS Core | Your agent chooses. You stay in control.';
-  const description = `AAS Core records and validates your agent’s skill selection and previews a plan before project changes.${visibleCount > 0 ? ` Explore ${countLabel} reusable skills in the catalog.` : ''}`;
+  const title = 'Agentic Awesome Skills | AI Skills & AAS Core';
+  const description = `Explore ${countLabel} reusable skills for Claude Code, Codex and Cursor. AAS Core records your agent’s catalog selection and previews a plan locally.`;
   return {
     title,
     description,
@@ -447,7 +417,7 @@ export function buildHomeMeta(skillCount: number): SeoMeta {
 export function buildPluginsMeta(pluginCount: number): SeoMeta {
   const countLabel = pluginCount > 0 ? `${pluginCount.toLocaleString('en-US')} ` : '';
   const title = `AAS Specialized Plugins | ${countLabel}AI coding workflow packs`;
-  const description = `Compare ${countLabel}specialized plugin packs for web apps, security, data analytics, documents, DevOps, QA, OSS maintenance, mobile apps, automation, and agent or MCP systems.`;
+  const description = `Compare ${countLabel}specialized plugin packs for coding, design, data and automation. Explore included skills, scope and installation guides.`;
 
   return {
     title,
@@ -554,15 +524,12 @@ export function buildTopicLandingFallbackMeta(slug: string | undefined): SeoMeta
   };
 }
 
-export function buildSkillMeta(skill: Skill, isPriority = false, canonicalPath = '/'): SeoMeta {
+export function buildSkillMeta(skill: Skill, _isPriority = false, canonicalPath = '/'): SeoMeta {
   const safeName = skill.name || 'Unnamed skill';
-  const safeDescription = skill.description || 'Installable AI skill';
   const safeCategory = skill.category || 'Tools';
   const safeSource = skill.source || 'community contributors';
-  const added = skill.date_added ? `Added ${skill.date_added}. ` : '';
-  const trust = isPriority ? ` Prioritized in our catalog for quality and reuse. ` : ' ';
   const title = `${safeName} | Agentic Awesome Skills`;
-  const description = `${added}Use the @${safeName} skill for ${safeDescription} (${safeCategory}, ${safeSource}).${trust}Install and run quickly with your CLI workflow.`;
+  const description = buildSkillDescription(skill);
   return {
     title,
     description: description.trim(),

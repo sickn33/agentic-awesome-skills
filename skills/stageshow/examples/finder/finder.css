@@ -1,0 +1,376 @@
+/* Finder, list view. Corner bleed: the window sits one gutter in from the
+   top and left and runs off the right and bottom. */
+
+.fq .ss-stage {
+  overflow: hidden;
+  border-radius: 14px;
+  background: var(--ss-well);
+}
+
+.fq-window {
+  position: absolute;
+  background: var(--ss-surface);
+  box-shadow: var(--ss-shadow-hero);
+}
+
+/* ---- Toolbar ---- */
+
+.fq-lead {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fq-nav {
+  display: flex;
+  gap: 2px;
+  color: var(--ss-icon);
+}
+
+.fq-nav-off {
+  color: var(--ss-icon-faint);
+}
+
+.fq-heading {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ss-text-strong);
+}
+
+.fq-tools {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: var(--ss-icon);
+}
+
+.fq-views {
+  display: flex;
+  gap: 2px;
+}
+
+.fq-view {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 22px;
+  border-radius: 6px;
+}
+
+.fq-view[data-on] {
+  background: var(--ss-ink-2);
+  color: var(--ss-text-strong);
+}
+
+/* ---- Sidebar ---- */
+
+.fq-side {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 6px 10px 0;
+}
+
+.fq-side__label {
+  margin: 10px 8px 8px;
+}
+
+.fq-side__label:first-child {
+  margin-top: 4px;
+}
+
+.fq-side__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 26px;
+  padding: 0 8px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  color: var(--ss-text-strong);
+  transition: background-color 0.12s ease, color 0.12s ease;
+}
+
+.fq-side__icon {
+  display: grid;
+  place-items: center;
+  width: 16px;
+  color: var(--ss-icon);
+  transition: color 0.12s ease;
+}
+
+.fq-side__item[data-current] {
+  background: var(--ss-ink-3);
+}
+
+/* Lit while a drag is over it */
+.fq-side__item[data-over] {
+  background: var(--ss-accent);
+  color: #fff;
+}
+
+.fq-side__item[data-over] .fq-side__icon {
+  color: #fff;
+}
+
+/* ---- List ---- */
+
+.fq-body {
+  overflow: hidden;
+}
+
+.fq-list {
+  padding-top: 2px;
+  font-size: 12.5px;
+}
+
+.fq-head,
+.fq-row {
+  display: grid;
+  grid-template-columns: var(--cols);
+  align-items: center;
+  margin: 0 8px;
+}
+
+.fq-head {
+  height: 28px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ss-text);
+}
+
+.fq-head > span,
+.fq-row > * {
+  padding-left: 10px;
+}
+
+.fq-head > span + span {
+  border-left: 1px solid var(--ss-line);
+  line-height: 14px;
+}
+
+.fq-row > .ss-bar {
+  margin-left: 10px;
+  padding: 0;
+}
+
+.fq-rows {
+  position: relative;
+}
+
+.fq-stripes {
+  position: absolute;
+  inset: 0 8px auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.fq-stripes > span {
+  height: 24px;
+  border-radius: 5px;
+}
+
+.fq-stripes > span:nth-child(even) {
+  background: #f6f6f7;
+}
+
+.fq-row {
+  position: relative;
+  height: 24px;
+  border-radius: 5px;
+  color: var(--ss-text-strong);
+}
+
+.fq-row[data-sel] {
+  background: var(--ss-accent);
+  color: #fff;
+}
+
+.fq-row[data-sel] .ss-bar {
+  background: rgba(255, 255, 255, 0.45) !important;
+}
+
+.fq-name {
+  min-width: 0;
+}
+
+.fq-name__drag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 100%;
+  vertical-align: middle;
+}
+
+.fq-name__text {
+  white-space: nowrap;
+}
+
+.fq-blank {
+  height: 64px;
+}
+
+/* ---- File icons ---- */
+
+.fq-folder {
+  flex-shrink: 0;
+  color: #4fa6ea;
+  fill: #8ccaf6;
+}
+
+.fq-doc {
+  flex-shrink: 0;
+  color: #a9a9ae;
+  fill: #fff;
+}
+
+.fq-thumb {
+  display: block;
+  flex-shrink: 0;
+  width: 16px;
+  height: 12px;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px #fff, 0 0 0 1.5px rgba(0, 0, 0, 0.14);
+}
+
+.fq-photo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ---- Quick Look: zooms out of the thumbnail and back into it ---- */
+
+.fq-ql {
+  position: absolute;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #f4f4f5;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.18), 0 24px 56px -12px rgba(30, 30, 60, 0.38), 0 10px 22px -10px rgba(0, 0, 0, 0.22);
+  opacity: 0;
+  pointer-events: none;
+  --fq-close: 0.34s cubic-bezier(0.4, 0, 0.2, 1);
+  --fq-open: 0.46s cubic-bezier(0.3, 0.75, 0.1, 1);
+  transition:
+    left var(--fq-close), top var(--fq-close), width var(--fq-close), height var(--fq-close), border-radius var(--fq-close),
+    opacity 0.2s ease-in 0.14s;
+}
+
+.fq-ql[data-open] {
+  opacity: 1;
+  transition:
+    left var(--fq-open), top var(--fq-open), width var(--fq-open), height var(--fq-open), border-radius var(--fq-open),
+    opacity 0.24s ease-out;
+}
+
+/* The bar shrinks with the window; its words fade out first and back in as
+   the zoom lands, so they're never seen squeezed */
+.fq-ql__bar > * {
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.fq-ql[data-open] .fq-ql__bar > * {
+  opacity: 1;
+  transition: opacity 0.2s ease 0.26s;
+}
+
+.fq-ql__bar {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 10px;
+  height: 38px;
+  overflow: hidden;
+  padding: 0 14px;
+  color: var(--ss-icon);
+  transition: height var(--fq-close);
+}
+
+.fq-ql[data-open] .fq-ql__bar {
+  transition: height var(--fq-open);
+}
+
+.fq-ql__btns {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fq-ql__title {
+  flex: 1;
+  text-align: center;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ss-text-strong);
+}
+
+.fq-ql__right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.fq-ql__open {
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: var(--ss-ink-2);
+  font-size: 11.5px;
+  line-height: 1.3;
+  color: var(--ss-text-strong);
+}
+
+.fq-ql__photo {
+  flex: 1;
+  min-height: 0;
+}
+
+/* ---- The drag image: the icon and its name on a selection pill ---- */
+
+.fq-drag {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 30;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.fq-drag[data-show] {
+  opacity: 0.82;
+}
+
+.fq-drag__inner {
+  display: flex;
+  height: 24px;
+  align-items: center;
+  /* 1px gap + the pill's 6px padding puts the name exactly over the row's
+     name (7px after the thumbnail), so the pickup never doubles the text */
+  gap: 1px;
+  font-size: 12.5px;
+}
+
+.fq-drag[data-dropped] {
+  opacity: 0;
+  transition: opacity 0.22s ease-in;
+}
+
+.fq-drag[data-dropped] .fq-drag__inner {
+  transform: scale(0.5);
+  transition: transform 0.24s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.fq-drag__name {
+  padding: 1px 6px;
+  border-radius: 4px;
+  background: var(--ss-accent);
+  color: #fff;
+  white-space: nowrap;
+  line-height: 1.35;
+}

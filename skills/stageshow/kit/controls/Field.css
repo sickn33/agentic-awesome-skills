@@ -1,0 +1,201 @@
+/* Field */
+
+@layer stageshow {
+  /* The box never grows past the width it was given: a chip opening, or any
+     content, clips inside the text area instead of pushing the trailing
+     control and the box edge out into whatever sits next to the field */
+  .ss-field {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 6px;
+  }
+
+  .ss-field__label {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: var(--ss-text-strong);
+  }
+
+  /* The ring is a shadow, so focusing never moves the text */
+  .ss-field__box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: var(--ss-control);
+    padding: 0 11px;
+    border-radius: var(--ss-radius-md);
+    background: var(--ss-surface);
+    box-shadow: inset 0 0 0 1px var(--ss-ink-4), 0 0 0 0 transparent;
+    font-size: 13px;
+    color: var(--ss-text-strong);
+    transition: box-shadow 0.2s ease, padding 0.35s cubic-bezier(0.45, 0, 0.1, 1);
+  }
+
+  /* A chip sits the same distance from every edge of the field: the box gives
+     up its left padding to the chip's own, at the same pace, so the text
+     inside never moves while the chip opens around it */
+  .ss-field__box:has(.ss-field__value[data-chip]) {
+    padding-left: calc((var(--ss-control) - 24px) / 2);
+  }
+
+  .ss-field[data-focused] .ss-field__box {
+    box-shadow: inset 0 0 0 1px var(--ss-accent), 0 0 0 3px var(--ss-accent-soft);
+  }
+
+  .ss-field[data-status="error"] .ss-field__box {
+    box-shadow: inset 0 0 0 1px var(--ss-danger), 0 0 0 3px var(--ss-danger-soft);
+  }
+
+  .ss-field__text {
+    position: relative;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+    white-space: pre;
+  }
+
+  /* Leaves the moment the first character lands; fades back when emptied */
+  .ss-field__placeholder {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    color: var(--ss-text-faint);
+    translate: 0 -50%;
+    transition: opacity 0.2s ease;
+  }
+
+  .ss-field[data-filled] .ss-field__placeholder {
+    opacity: 0;
+    transition: none;
+  }
+
+  .ss-field__value[data-password] {
+    letter-spacing: 1.5px;
+  }
+
+  /* Committed as a chip in place: the text never swaps or changes weight; the
+     surface fades in around it, the padding opens it out, and the x grows in
+     beside it. Cleared, the whole chip fades holding its text. */
+  .ss-field__value {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    height: 24px;
+    padding: 0;
+    border-radius: var(--ss-radius-pill);
+    background-color: transparent;
+    /* Released once it has faded: out of sight, so nothing needs to move */
+    transition: none;
+  }
+
+  /* Centered on the cap height, not the line box (which reads low) or the
+     x-height (which reads high once the words have ascenders: an email, a
+     name). Cap to baseline is what a real text field centers. The
+     placeholder is centered the same way, so they share a line. */
+  .ss-field__chars,
+  .ss-field__placeholder {
+    line-height: 1;
+    text-box: trim-both cap alphabetic;
+  }
+
+  .ss-field__chars {
+    display: block;
+  }
+
+  .ss-field__value[data-chip] {
+    padding: 0 calc(11px - (var(--ss-control) - 24px) / 2);
+    background-color: var(--ss-chip-bg, var(--ss-accent-soft));
+    color: var(--ss-chip-text, var(--ss-text-strong));
+    transition:
+      padding 0.35s cubic-bezier(0.45, 0, 0.1, 1),
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+
+  .ss-field__value[data-chip][data-removable] {
+    padding-right: 4px;
+  }
+
+  .ss-field__value[data-leaving] {
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  /* The placeholder waits for a cleared chip to finish fading, never crossing it */
+  .ss-field:has(.ss-field__value[data-leaving]) .ss-field__placeholder {
+    opacity: 0;
+    transition: none;
+  }
+
+  .ss-field__x {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    /* Always whole: it slides out from under the text's end by margin, so its
+       icon is never sliced while the chip opens */
+    width: 16px;
+    height: 16px;
+    margin-left: -16px;
+    border-radius: 50%;
+    color: inherit;
+    opacity: 0;
+    transition: background-color 0.15s ease;
+  }
+
+  .ss-field__value[data-chip] .ss-field__x {
+    margin-left: 4px;
+    opacity: 0.75;
+    transition:
+      margin 0.35s cubic-bezier(0.45, 0, 0.1, 1),
+      opacity 0.25s ease 0.12s,
+      background-color 0.15s ease;
+  }
+
+  .ss-field__x[data-hover] {
+    opacity: 1;
+    background-color: var(--ss-ink-2);
+    transition-duration: 0s;
+  }
+
+  .ss-field__value[data-chip] + .ss-field__caret {
+    margin-left: 6px;
+  }
+
+  /* Solid while typing (each keystroke remounts it), blinking once it rests */
+  .ss-field__caret {
+    flex-shrink: 0;
+    transition: margin 0.35s cubic-bezier(0.45, 0, 0.1, 1);
+    width: 1.5px;
+    height: 16px;
+    margin-left: 1px;
+    border-radius: 1px;
+    background: var(--ss-accent);
+    animation: ss-caret 1.06s steps(1) 0.5s infinite;
+  }
+
+  @keyframes ss-caret {
+    50% { opacity: 0; }
+  }
+
+  .ss-field__ok {
+    flex-shrink: 0;
+  }
+
+  .ss-field__ok path {
+    fill: none;
+    stroke: var(--ss-success);
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1;
+    /* Drawn at rest, so a still (animations off) still shows it */
+    animation: ss-draw 0.35s cubic-bezier(0.65, 0, 0.35, 1) both;
+  }
+
+  @keyframes ss-draw {
+    from { stroke-dashoffset: 1; }
+  }
+}

@@ -1,0 +1,491 @@
+/* Gmail's look, on one cool blue-gray family: the #f6f8fc canvas, a white
+   rounded list panel, the pale blue Compose button and Inbox pill. */
+
+.gm .ss-stage,
+.gm.ss-stage {
+  --gutter: 32px;
+  --gm-canvas: #f6f8fc;
+  --gm-ink: #1f1f1f;
+  --gm-icon: #444746;
+  --gm-read: #f2f6fc;
+  --ss-canvas: var(--gm-canvas);
+  --ss-icon: var(--gm-icon);
+  overflow: hidden;
+  border-radius: 16px;
+  background: #e3e9f2;
+  font-family: 'Google Sans', Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* ---- Window: pinned with a gutter on three sides, bleeding off the bottom ---- */
+
+.gm-window {
+  position: absolute;
+  top: var(--gutter);
+  left: 40px;
+  width: 680px;
+  height: 480px;
+  box-shadow: var(--ss-shadow-hero);
+}
+
+.gm-window .ss-window__bar {
+  background: #fff;
+}
+
+.gm-window .ss-window__body {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  flex: 1;
+  background: var(--gm-canvas);
+}
+
+.gm-sym {
+  display: block;
+  flex-shrink: 0;
+  color: var(--gm-icon);
+}
+
+/* ---- Header ---- */
+
+.gm-head {
+  display: flex;
+  align-items: center;
+  height: 56px;
+  padding: 0 14px 0 8px;
+  flex-shrink: 0;
+}
+
+.gm-head__brand {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 168px;
+  flex-shrink: 0;
+}
+
+.gm-round {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+}
+
+.gm-mark {
+  display: block;
+  margin-left: 4px;
+}
+
+.gm-wordmark {
+  font-size: 19px;
+  line-height: 1;
+  color: var(--gm-icon);
+  letter-spacing: -0.2px;
+}
+
+.gm-search {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  max-width: 340px;
+  height: 36px;
+  padding: 0 8px 0 14px;
+  border-radius: 18px;
+  background: #e9eef6;
+}
+
+.gm-search__hint {
+  flex: 1;
+  font-size: 13px;
+  color: var(--gm-icon);
+}
+
+.gm-search__tune {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+}
+
+.gm-head__end {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.gm-avatar {
+  background: #7b5ea7;
+  color: #fff;
+}
+
+/* ---- Main: nav and the list panel ---- */
+
+.gm-main {
+  display: grid;
+  grid-template-columns: 176px minmax(0, 1fr);
+  flex: 1;
+  min-height: 0;
+  padding-right: 14px;
+}
+
+.gm-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-top: 2px;
+}
+
+.gm-compose {
+  display: inline-flex;
+  align-self: flex-start;
+  align-items: center;
+  gap: 12px;
+  height: 46px;
+  margin: 0 0 12px 8px;
+  padding: 0 20px 0 16px;
+  border-radius: 14px;
+  background: #c2e7ff;
+}
+
+.gm-compose .gm-sym {
+  color: #001d35;
+}
+
+.gm-compose__label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #001d35;
+}
+
+.gm-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 30px;
+  margin-right: 12px;
+  padding: 0 14px 0 22px;
+  border-radius: 0 15px 15px 0;
+}
+
+.gm-item[data-active] {
+  background: #d3e3fd;
+}
+
+.gm-item[data-active] .gm-sym {
+  color: #041e49;
+}
+
+.gm-item__label {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: #041e49;
+}
+
+.gm-item__count {
+  font-size: 12px;
+  font-weight: 600;
+  color: #041e49;
+  font-variant-numeric: tabular-nums;
+}
+
+.gm-panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  border-radius: 16px 16px 0 0;
+  background: #fff;
+  overflow: hidden;
+}
+
+.gm-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 44px;
+  padding: 0 14px 0 20px;
+  flex-shrink: 0;
+}
+
+.gm-tools__group {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.gm-tools__drop {
+  margin-left: -16px;
+}
+
+.gm-tools__pager {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.gm-tools__pager .ss-bar {
+  margin-right: 4px;
+}
+
+/* ---- Rows ---- */
+
+.gm-list {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Room for the lifted row's shadow inside the fold's clip */
+.gm-fold .ss-collapse__inner {
+  overflow-clip-margin: 6px;
+}
+
+.gm-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 52px 116px minmax(0, 1fr) 56px;
+  align-items: center;
+  height: 40px;
+  padding: 0 16px 0 20px;
+  background: var(--gm-read);
+  box-shadow: inset 0 -1px 0 #eceff3;
+  transition: box-shadow 0.12s ease;
+}
+
+.gm-row[data-unread] {
+  background: #fff;
+}
+
+/* Gmail's hover: the row lifts on a soft shadow, edge to edge */
+.gm-row[data-hover] {
+  z-index: 2;
+  box-shadow: inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 1px 2px 0 rgba(60, 64, 67, 0.3), 0 1px 3px 1px rgba(60, 64, 67, 0.15);
+}
+
+.gm-row__icons {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gm-row__icons .gm-sym {
+  color: #c4c7c5;
+}
+
+.gm-row__from {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+  font-size: 13px;
+  color: var(--gm-ink);
+}
+
+.gm-row[data-unread] .ss-text.gm-row__from {
+  font-weight: 600;
+}
+
+.gm-row__text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+  font-size: 13px;
+}
+
+.gm-row__text .ss-bar {
+  flex-shrink: 0;
+}
+
+.gm-row__subject {
+  font-weight: 600;
+  color: var(--gm-ink);
+}
+
+.gm-row__dash {
+  color: #5e5e5e;
+  margin-left: -2px;
+}
+
+.gm-row__date {
+  display: flex;
+  justify-content: flex-end;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gm-ink);
+  transition: opacity 0.12s ease;
+}
+
+.gm-row[data-hover] .gm-row__date {
+  opacity: 0;
+}
+
+/* Hover actions cover the date and the end of the snippet */
+.gm-actions {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding-left: 18px;
+  background: linear-gradient(to right, transparent, #fff 18px);
+  opacity: 0;
+  transition: opacity 0.12s ease;
+}
+
+.gm-row:not([data-unread]) .gm-actions {
+  background: linear-gradient(to right, transparent, var(--gm-read) 18px);
+}
+
+.gm-row[data-hover] .gm-actions {
+  opacity: 1;
+}
+
+.gm-act {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  transition: background 0.12s ease;
+}
+
+.gm-act[data-hover] {
+  background: #e8eaed;
+}
+
+.gm-act[data-pressed] {
+  background: #dadce0;
+}
+
+/* ---- Tooltip and toast ---- */
+
+/* Gmail's tooltip: the kit's, in Gmail's gray and corner */
+.gm .ss-tooltip.gm-tip {
+  border-radius: 4px;
+  background: #3c4043;
+}
+
+/* Gmail's snackbar sits at the bottom left of the viewport: here, one gutter
+   above the stage's bottom edge, where the browser runs out of shot */
+.gm .ss-toast.gm-toast {
+  position: absolute;
+  left: 56px;
+  bottom: var(--gutter);
+  z-index: 25;
+  gap: 18px;
+  padding: 0 8px 0 16px;
+  height: 44px;
+  border-radius: 8px;
+  background: #303030;
+  font-size: 13px;
+  --ss-toast-rise: 28px;
+  transition: opacity 0.5s cubic-bezier(0.25, 0.8, 0.25, 1), margin 0.9s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.gm .gm-toast .ss-toast__action {
+  margin-left: 0;
+  color: #a8c7fa;
+}
+
+.gm-toast__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gm-toast__undo {
+  padding: 6px 8px;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.gm-toast__x {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+}
+
+.gm-toast__x .gm-sym {
+  color: #c7c7c7;
+}
+
+/* ---- Compact: a collapsed nav rail and a tighter row ---- */
+
+.gm .ss-stage[data-layout='compact'],
+.gm.ss-stage[data-layout='compact'] {
+  --gutter: 20px;
+}
+
+.gm-window[data-layout='compact'] {
+  left: 20px;
+  width: 400px;
+  height: 380px;
+}
+
+.gm-window[data-layout='compact'] .gm-head__brand {
+  width: auto;
+  margin-right: 12px;
+}
+
+.gm-window[data-layout='compact'] .gm-search {
+  display: none;
+}
+
+.gm-window[data-layout='compact'] .gm-main {
+  grid-template-columns: 64px minmax(0, 1fr);
+  padding-right: 10px;
+}
+
+.gm-window[data-layout='compact'] .gm-compose {
+  gap: 0;
+  width: 46px;
+  padding: 0;
+  justify-content: center;
+}
+
+.gm-window[data-layout='compact'] .gm-compose__label,
+.gm-window[data-layout='compact'] .gm-item .ss-bar,
+.gm-window[data-layout='compact'] .gm-item__label,
+.gm-window[data-layout='compact'] .gm-item__count {
+  display: none;
+}
+
+.gm-window[data-layout='compact'] .gm-item {
+  justify-content: center;
+  width: 46px;
+  margin: 0 0 2px 8px;
+  padding: 0;
+  border-radius: 15px;
+}
+
+.gm-window[data-layout='compact'] .gm-row {
+  grid-template-columns: 28px 82px minmax(0, 1fr) 52px;
+  padding: 0 10px 0 14px;
+}
+
+.gm-window[data-layout='compact'] .gm-row__icons .gm-sym:last-child {
+  display: none;
+}
+
+.gm-window[data-layout='compact'] .gm-actions {
+  right: 4px;
+}
+
+.gm-window[data-layout='compact'] .gm-tools {
+  padding: 0 10px 0 14px;
+}
+
+.gm .ss-stage[data-layout='compact'] .gm-toast,
+.gm.ss-stage[data-layout='compact'] .gm-toast {
+  left: 32px;
+}
+
+.gm-window[data-layout='compact'] .gm-row__snippet,
+.gm-window[data-layout='compact'] .gm-row__dash {
+  display: none;
+}

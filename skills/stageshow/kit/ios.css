@@ -1,0 +1,177 @@
+/* The iOS keyboard (ios.tsx). */
+
+@layer stageshow {
+  /* ---- iOS keyboard (ios.tsx) ----
+     iOS 27, at true points inside a Phone. Measured from iOS 27 screenshots:
+     keys 31.8 × 41.6 with 5.8 gaps on a 52.6 row pitch, special keys the
+     letters' color, a 123 / space / return row of 88 / 182 / 88. */
+  .ss-kb {
+    --ss-kb-sheet: #e3e4e9;
+    --ss-kb-key: #fff;
+    --ss-kb-down: #c4c6cd;
+    --ss-kb-ink: #000;
+    --ss-kb-faint: #3c3c43;
+    /* Nearly the screen's full width: 3pt in from each edge */
+    position: relative;
+    flex: none;
+    margin: 0 3px 4px;
+    padding: 0 3px 0;
+    border-radius: 28px 28px 52px 52px;
+    background: color-mix(in srgb, var(--ss-kb-sheet) 94%, transparent);
+    box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.7), 0 -0.5px 0 rgba(0, 0, 0, 0.06);
+    color: var(--ss-kb-ink);
+    font-family: -apple-system, 'SF Pro Text', system-ui, sans-serif;
+    user-select: none;
+  }
+
+  .ss-kb[data-dark] {
+    --ss-kb-sheet: #2a2a2c;
+    --ss-kb-key: #4a4a4c;
+    --ss-kb-down: #6b6b6e;
+    --ss-kb-ink: #fff;
+    --ss-kb-faint: #ebebf5;
+    box-shadow: inset 0 0.5px 0 rgba(255, 255, 255, 0.1);
+  }
+
+  .ss-kb__suggest {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+    height: 50px;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+    text-align: center;
+  }
+
+  .ss-kb__suggest span + span {
+    border-left: 1px solid color-mix(in srgb, var(--ss-kb-faint) 22%, transparent);
+  }
+
+  .ss-kb__row {
+    /* One key: ten keys and nine gaps fill the row, on every row */
+    --k: calc((100% - 54px) / 10);
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    height: 42.5px;
+    margin-bottom: 11px;
+  }
+
+  .ss-kb__key {
+    position: relative;
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: var(--k);
+    border-radius: 8.5px;
+    background: var(--ss-kb-key);
+    font-size: 23px;
+    line-height: 1;
+    transition: background-color 0.12s ease;
+  }
+
+  .ss-kb[data-dark] .ss-kb__key {
+    font-weight: 400;
+  }
+
+  .ss-kb__key[data-down] {
+    background: var(--ss-kb-down);
+    transition: none;
+  }
+
+  /* Letters show their callout instead of darkening */
+  .ss-kb__row:not(.ss-kb__row--bottom) .ss-kb__key:not(.ss-kb__key--wide)[data-down] {
+    background: var(--ss-kb-key);
+  }
+
+  .ss-kb__key--wide {
+    width: calc(var(--k) * 1.36);
+  }
+
+  .ss-kb__row[data-row="2"] > .ss-kb__key--wide:first-child {
+    margin-right: 7.2px;
+  }
+
+  .ss-kb__row[data-row="2"] > .ss-kb__key--wide:last-child {
+    margin-left: 7.2px;
+  }
+
+  .ss-kb__key--mode {
+    width: calc(var(--k) * 2.78);
+    font-size: 17px;
+  }
+
+  .ss-kb__key--space {
+    flex: 1;
+    width: auto;
+  }
+
+  /* The magnified letter that rises out of a pressed key */
+  .ss-kb__callout {
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    display: grid;
+    place-items: center;
+    width: 145%;
+    height: 54px;
+    padding-bottom: 6px;
+    border-radius: 12px;
+    background: var(--ss-kb-key);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.16);
+    font-size: 34px;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  /* Joins the balloon to its key, over the balloon's shadow */
+  .ss-kb__callout::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    /* The key's own width (the balloon is 145% of it) */
+    width: 69%;
+    height: 14px;
+    margin-top: -4px;
+    background: var(--ss-kb-key);
+    transform: translateX(-50%);
+  }
+
+  .ss-kb__row:first-of-type .ss-kb__key:first-child .ss-kb__callout,
+  .ss-kb__row[data-row="0"] .ss-kb__key:first-child .ss-kb__callout {
+    left: 0;
+    transform: none;
+  }
+
+  .ss-kb__row[data-row="0"] .ss-kb__key:first-child .ss-kb__callout::after {
+    left: 0;
+    transform: none;
+  }
+
+  .ss-kb__row[data-row="0"] .ss-kb__key:last-child .ss-kb__callout {
+    left: auto;
+    right: 0;
+    transform: none;
+  }
+
+  .ss-kb__row[data-row="0"] .ss-kb__key:last-child .ss-kb__callout::after {
+    left: auto;
+    right: 0;
+    transform: none;
+  }
+
+  .ss-kb__row--bottom {
+    margin-bottom: 0;
+  }
+
+  .ss-kb__below {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 72px;
+    padding: 0 22px 6px;
+    color: var(--ss-kb-faint);
+  }
+}

@@ -1,0 +1,138 @@
+.te .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+/* One window, inset at the top, off the bottom just under the total */
+.te-win {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  width: 580px;
+  translate: -50% 0;
+}
+
+.te .ss-stage[data-layout='compact'] .te-win {
+  top: 16px;
+  width: 326px;
+}
+
+.te-body {
+  min-height: 400px;
+  padding: 10px 24px 0;
+  background: var(--ss-surface);
+}
+
+.te-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 112px 92px 64px;
+  align-items: center;
+  gap: 16px;
+  height: 44px;
+  border-bottom: 1px solid var(--ss-line-faint);
+  color: var(--ss-text-strong);
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.te .ss-stage[data-layout='compact'] .te-row {
+  grid-template-columns: minmax(0, 1fr) 96px 72px;
+  gap: 10px;
+}
+
+.te .ss-stage[data-layout='compact'] .te-due {
+  display: none;
+}
+
+.te .ss-stage[data-layout='compact'] .te-body {
+  padding: 10px 14px 0;
+}
+
+.te-row--head {
+  height: 36px;
+  color: var(--ss-text);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.te-row--foot {
+  border-bottom: 0;
+  font-weight: 600;
+}
+
+.te-who {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.te-num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.te-due {
+  color: var(--ss-text);
+}
+
+/* The edited cell: the ring is drawn inside it, so the value never moves */
+.te-cell {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 32px;
+}
+
+.te-ring {
+  position: absolute;
+  inset: 0 -8px;
+  border-radius: var(--ss-radius-sm);
+  box-shadow: inset 0 0 0 1.5px var(--ss-accent), 0 0 0 3px var(--ss-accent-soft);
+  background: var(--ss-surface);
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.te-cell[data-edit] .te-ring {
+  opacity: 1;
+}
+
+/* One wash on commit, then gone */
+.te-cell::before {
+  content: '';
+  position: absolute;
+  inset: -6px -8px;
+  border-radius: var(--ss-radius-sm);
+  background: var(--ss-accent-soft);
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+
+.te-cell[data-wash]::before {
+  opacity: 1;
+  transition-duration: 0.1s;
+}
+
+.te-text {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.te-sel[data-on] {
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--ss-accent) 24%, transparent);
+}
+
+.te-caret {
+  width: 1.5px;
+  height: 16px;
+  margin-left: 1px;
+  margin-right: -2.5px;
+  background: var(--ss-accent);
+  animation: ss-caret 1.06s steps(1) 0.5s infinite;
+}
+
+.te-caret[data-hide] {
+  visibility: hidden;
+}

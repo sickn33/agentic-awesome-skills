@@ -1,0 +1,612 @@
+/* Window chrome (window.tsx): browser, app and sidebar app, plus the Bar and
+   Text placeholders. */
+
+@layer stageshow {
+  /* Drawn: lights and fields are outlines, not fills */
+  .ss-stage[data-theme="blueprint"] .ss-window__dot {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--ss-line);
+  }
+
+  .ss-stage[data-theme="blueprint"] .ss-window__url {
+    background: transparent;
+    box-shadow: inset 0 0 0 1px var(--ss-line-faint);
+  }
+
+  /* Traffic lights go gray too */
+  .ss-stage[data-palette="mono"] .ss-window__dot {
+    background: var(--ss-ink-5);
+    box-shadow: none;
+  }
+
+  :where(.ss-window) {
+    position: relative;
+    /* Where the lights sit: their center's distance from the window's top
+       (and from its left edge), their size, and the floating sidebar's
+       inset. lightsSize, barSize and sidebarStyle set these */
+    --ss-lights-y: 19px;
+    --ss-dot: 9px;
+    --ss-side-inset: 0px;
+  }
+
+  .ss-window {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--ss-canvas);
+    border-radius: var(--ss-radius-window);
+    box-shadow: var(--ss-shadow-window);
+  }
+
+  .ss-window__bar {
+    /* A fixed height, so the traffic lights sit in the same place whether the
+       bar holds an address, a title or nothing. */
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 6px;
+    height: 38px;
+    /* The lights sit as far from the left edge as from the top: (38 - 9) / 2 */
+    padding: 0 calc(var(--ss-lights-y) - var(--ss-dot) / 2);
+    background: var(--ss-chrome);
+    border-bottom: 1px solid var(--ss-line);
+  }
+
+  .ss-window__lights {
+    display: flex;
+    flex-shrink: 0;
+    /* macOS proportions: 12pt lights, 8pt apart */
+    gap: 6px;
+  }
+
+  .ss-window__dot {
+    width: var(--ss-dot);
+    height: var(--ss-dot);
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 0.5px rgba(0, 0, 0, 0.12);
+  }
+
+  .ss-window__dot:nth-child(1) { background: #ff5f57; }
+
+  .ss-window__dot:nth-child(2) { background: #febc2e; }
+
+  .ss-window__dot:nth-child(3) { background: #28c840; }
+
+  .ss-window__url {
+    flex: 1;
+    min-width: 0;
+    margin-left: 8px;
+    padding: 4px 10px;
+    overflow: hidden;
+    background: var(--ss-ink-1);
+    border-radius: 6px;
+    /* Chrome type is the browser's, never the page's: small and quiet, whatever
+       size the page inside sets */
+    color: var(--ss-text-faint);
+    font-size: 10.5px;
+    line-height: 1.4;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  /* urlShape="pill": the round address field of current Safari and Chrome */
+  .ss-window[data-url-shape="pill"] .ss-window__url {
+    padding-inline: 12px;
+    border-radius: 999px;
+  }
+
+  .ss-window__title {
+    flex: 1;
+    /* Optically centered: offsets the three dots on the left */
+    margin-right: 36px;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ss-text-strong);
+  }
+
+  .ss-window__body {
+    position: relative;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .ss-window__spacer {
+    flex: 1;
+  }
+
+  /* lights="grey": quiet lights for any chrome */
+  .ss-window[data-lights="grey"] .ss-window__dot {
+    background: rgba(186, 200, 218, 0.5);
+    box-shadow: none;
+  }
+
+  /* lights="white": translucent white lights remain distinct over a strong
+     color field, where gray lights can lose contrast. */
+  .ss-window[data-lights="white"] .ss-window__dot {
+    background: rgba(255, 255, 255, 0.5);
+    box-shadow: none;
+  }
+
+  /* chrome="glass": a frosted frame that takes
+     the color behind it, no bar fill or rule, the address centered on the
+     window, and the page a white card inset in the frame. Nested radii: the
+     frame's 12 is the card's 6 plus the 6 inset */
+  .ss-window[data-chrome="glass"] {
+    background: rgba(248, 250, 253, 0.45);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-radius: 12px;
+    box-shadow:
+      0 0 0 1px rgba(229, 237, 245, 0.5),
+      0 15px 35px rgba(23, 23, 23, 0.08);
+  }
+
+  .ss-window[data-chrome="glass"] > .ss-window__bar {
+    display: grid;
+    grid-template-columns: 1fr minmax(0, 262px) 1fr;
+    gap: 12px;
+    height: 35px;
+    padding: 0 20px;
+    background: none;
+    border: 0;
+  }
+
+  .ss-window[data-chrome="glass"] .ss-window__lights {
+    gap: 4px;
+  }
+
+  .ss-window[data-chrome="glass"] .ss-window__dot {
+    width: 8px;
+    height: 8px;
+  }
+
+  .ss-window[data-chrome="glass"] .ss-window__url {
+    display: flex;
+    grid-column: 2;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 20px;
+    margin: 0;
+    padding: 0 8px;
+    background: rgba(255, 255, 255, 0.38);
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1px rgba(229, 237, 245, 0.5);
+    color: #50617a;
+    font-size: 10px;
+  }
+
+  .ss-window__lock {
+    flex-shrink: 0;
+    color: #667691;
+  }
+
+  .ss-window__url-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ss-window[data-chrome="glass"] .ss-window__end {
+    display: flex;
+    grid-column: 3;
+    justify-content: flex-end;
+    gap: 6px;
+  }
+
+  /* The page is white, not the canvas tone: the step from frosted frame to
+     clean white page is what draws the card */
+  .ss-window[data-chrome="glass"] > .ss-window__body {
+    margin: 0 6px 6px;
+    overflow: hidden;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 3px 6px rgba(23, 23, 23, 0.06);
+  }
+
+  /* chrome="card": one white card. Pale dots and a wide pale address bar,
+     no bar fill and no rule, so the page runs straight up into the chrome;
+     the long, soft shadow lifts it */
+  .ss-window[data-chrome="card"] {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow:
+      0 50px 100px -20px rgba(50, 50, 93, 0.25),
+      0 30px 60px -30px rgba(0, 0, 0, 0.3);
+  }
+
+  .ss-window[data-chrome="card"] > .ss-window__bar {
+    gap: 14px;
+    height: 44px;
+    padding: 0 16px;
+    background: none;
+    border: 0;
+  }
+
+  .ss-window[data-chrome="card"]:not([data-lights="color"]) .ss-window__dot {
+    background: #ecf2f7;
+    box-shadow: none;
+  }
+
+  .ss-window[data-chrome="card"] .ss-window__url {
+    flex: 1;
+    height: 24px;
+    margin: 0;
+    padding: 0 10px;
+    background: #ecf2f7;
+    border-radius: 4px;
+    box-shadow: none;
+    color: #425466;
+    font-size: 12px;
+    font-weight: 300;
+    line-height: 24px;
+  }
+
+  .ss-window[data-chrome="card"] .ss-window__end:empty {
+    display: none;
+  }
+
+  .ss-window[data-chrome="card"] > .ss-window__body {
+    background: #fff;
+  }
+
+  /* chrome="hairline": a short bar over a 1px rule, tiny dots, the address
+     as bare centered text */
+  .ss-window[data-chrome="hairline"] {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow:
+      0 0 0 1px rgba(0, 0, 0, 0.06),
+      0 12px 28px -12px rgba(50, 50, 93, 0.2);
+  }
+
+  .ss-window[data-chrome="hairline"] > .ss-window__bar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    height: 20px;
+    padding: 0 8px;
+    background: none;
+    border: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  .ss-window[data-chrome="hairline"] .ss-window__lights {
+    gap: 3px;
+  }
+
+  .ss-window[data-chrome="hairline"] .ss-window__dot {
+    width: 5px;
+    height: 5px;
+  }
+
+  .ss-window[data-chrome="hairline"]:not([data-lights="color"]) .ss-window__dot {
+    background: #e3e8ee;
+    box-shadow: none;
+  }
+
+  .ss-window[data-chrome="hairline"] .ss-window__url {
+    grid-column: 2;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    background: none;
+    box-shadow: none;
+    color: #8792a2;
+    font-size: 9px;
+  }
+
+  .ss-window[data-chrome="hairline"] .ss-window__end {
+    grid-column: 3;
+    justify-self: end;
+  }
+
+  /* chrome="terminal": one dark surface. The bar is the same color as the
+     body with no rule, the title dim and centered on the window; a hairline
+     light edge keeps the frame from melting into a dark stage */
+  .ss-window[data-chrome="terminal"] {
+    --ss-term-bg: #17171a;
+    background: var(--ss-term-bg);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.07),
+      var(--ss-shadow-hero, var(--ss-shadow-window));
+  }
+
+  .ss-window[data-chrome="terminal"] > .ss-window__bar {
+    position: relative;
+    background: none;
+    border: 0;
+  }
+
+  .ss-window[data-chrome="terminal"][data-lights="grey"] .ss-window__dot {
+    background: rgba(255, 255, 255, 0.16);
+    box-shadow: none;
+  }
+
+  .ss-term__title {
+    position: absolute;
+    left: 50%;
+    translate: -50% 0;
+    color: rgba(255, 255, 255, 0.42);
+    font-size: 11px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  /* Mono at a size that reads, lines with room: output a step dimmer than
+     what was typed, so the command is what the eye finds */
+  .ss-term {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 4px 16px 16px;
+    overflow: hidden;
+    color: #9d9da6;
+    font: 11.5px/1.65 var(--ss-mono);
+    font-variant-ligatures: none;
+  }
+
+  .ss-term > * + .ss-term__prompt {
+    margin-top: 8px;
+  }
+
+  .ss-term__line,
+  .ss-term > div,
+  .ss-term > p {
+    margin: 0;
+    white-space: pre;
+  }
+
+  /* Terminal colors are tokens with these defaults: set --ss-term-path,
+     --ss-term-sigil, --ss-term-ok, --ss-term-err or --ss-term-dim on the
+     window (or any parent) to match a product's accent */
+  .ss-term__path {
+    color: var(--ss-term-path, #6f8ccf);
+  }
+
+  .ss-term__sigil {
+    margin: 0 7px;
+    color: var(--ss-term-sigil, #6ee7a8);
+  }
+
+  .ss-term__cmd {
+    color: #f1f1f3;
+  }
+
+  /* Status color, sparingly: a pass, a failure, a dim aside */
+  .ss-term .ok { color: var(--ss-term-ok, #6ee7a8); }
+  .ss-term .err { color: var(--ss-term-err, #f87171); }
+  .ss-term .dim { color: var(--ss-term-dim, #63636b); }
+
+  .ss-term__caret {
+    display: inline-block;
+    width: 0.6em;
+    height: 1.2em;
+    margin-left: 1px;
+    vertical-align: -0.22em;
+    background: #e8e8ec;
+    animation: ss-term-blink 1.06s steps(1) infinite;
+  }
+
+  .ss-term__caret[data-still] {
+    animation: none;
+  }
+
+  @keyframes ss-term-blink {
+    50% { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ss-term__caret { animation: none; }
+  }
+
+  /* With toolbar controls the bar becomes a unified toolbar, as in Notes or
+     Finder: the title goes left beside the lights and the controls go right. */
+  .ss-window__title[data-toolbar] {
+    margin: 0 0 0 14px;
+    text-align: left;
+  }
+
+  .ss-window__nav {
+    display: flex;
+    flex-shrink: 0;
+    gap: 6px;
+    margin-left: 10px;
+    color: var(--ss-text-faint);
+  }
+
+  .ss-window__nav + .ss-window__url {
+    margin-left: 4px;
+  }
+
+  /* Browser with tabs: the strip holds the lights at the same 38px height; the
+     active tab is the toolbar's color and joins it, the strip sits a step back. */
+  .ss-window__tabs {
+    display: flex;
+    flex-shrink: 0;
+    align-items: flex-end;
+    gap: 2px;
+    height: 38px;
+    padding: 0 calc(var(--ss-lights-y) - var(--ss-dot) / 2);
+    background: var(--ss-canvas);
+  }
+
+  .ss-window__tabs .ss-window__lights {
+    align-self: center;
+    margin-right: 14px;
+  }
+
+  .ss-window__tab {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    width: 140px;
+    min-width: 0;
+    height: 30px;
+    padding: 0 12px;
+    border-radius: 8px 8px 0 0;
+    font-size: 11px;
+    color: var(--ss-text-faint);
+  }
+
+  .ss-window__tab[data-active] {
+    background: var(--ss-chrome);
+    color: var(--ss-text-strong);
+  }
+
+  .ss-window__tab-label {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .ss-window__favicon {
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    background: var(--ss-ink-4);
+  }
+
+  .ss-window__tab[data-active] .ss-window__favicon {
+    background: var(--ss-accent);
+  }
+
+  [data-kind="tabs"] > .ss-window__bar .ss-window__url {
+    margin-left: 0;
+  }
+
+  [data-kind="tabs"] > .ss-window__bar .ss-window__nav {
+    margin-left: 0;
+  }
+
+  /* Sidebar app: the sidebar runs the full height, the lights sit in its top
+     38px at the same spot as every other chrome, and the content column has
+     its own bar with a left-aligned title. */
+  .ss-window[data-kind="sidebar"] {
+    flex-direction: row;
+  }
+
+  .ss-window__side {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    background: var(--ss-canvas);
+    border-right: 1px solid var(--ss-line);
+  }
+
+  .ss-window__side-top {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    /* Centers the lights --ss-lights-y down from the window's top, as far in
+       from its left edge, inside a floating panel too */
+    height: calc((var(--ss-lights-y) - var(--ss-side-inset)) * 2);
+    padding: 0 calc(var(--ss-lights-y) - var(--ss-side-inset) - var(--ss-dot) / 2);
+  }
+
+  .ss-window__main {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    background: var(--ss-surface);
+  }
+
+  .ss-window__main > .ss-window__bar {
+    padding: 0 16px;
+  }
+
+  .ss-window__heading {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ss-text-strong);
+  }
+
+  .ss-bar {
+    display: block;
+    flex-shrink: 0;
+  }
+
+  /* A line gives way in a row too narrow for it, never past its container
+     (Bar shrink, on by default for lines). Where it fits, nothing changes */
+  .ss-bar[data-shrink] {
+    flex-shrink: 1;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  /* lightsSize="large": macOS 26's 12pt lights, 8pt apart */
+  .ss-window[data-lights-size="large"] {
+    --ss-dot: 12px;
+  }
+
+  .ss-window[data-lights-size="large"] .ss-window__lights {
+    gap: 8px;
+  }
+
+  /* barSize="tall": a 64px icon-and-label toolbar with no fill or rule.
+     Controls are 32px at the top, so they center 26px down, with their
+     labels under them; the lights and the title sit level with them */
+  .ss-window[data-bar="tall"] {
+    --ss-lights-y: 26px;
+  }
+
+  .ss-window[data-bar="tall"] > .ss-window__bar,
+  .ss-window[data-bar="tall"] .ss-window__main > .ss-window__bar {
+    align-items: flex-start;
+    height: 64px;
+    padding-top: 10px;
+    background: none;
+    border-bottom: 0;
+  }
+
+  .ss-window[data-bar="tall"] > .ss-window__bar > .ss-window__lights {
+    margin-top: calc(16px - var(--ss-dot) / 2);
+  }
+
+  /* The address field is shorter than a control: center it on their row */
+  .ss-window[data-bar="tall"] .ss-window__url {
+    margin-top: 5px;
+  }
+
+  .ss-window[data-bar="tall"] .ss-window__title,
+  .ss-window[data-bar="tall"] .ss-window__heading {
+    line-height: 32px;
+  }
+
+  /* sidebarStyle="floating": macOS 26's sidebar, a rounded panel inset on
+     the top, left and bottom with a faint edge and shadow. Nested radii: the
+     window's 24 is the panel's 16 plus the 8 inset */
+  .ss-window[data-side="floating"] {
+    --ss-side-inset: 8px;
+    border-radius: 24px;
+    background: var(--ss-surface);
+  }
+
+  .ss-window[data-side="floating"] > .ss-window__side {
+    position: relative;
+    z-index: 1;
+    margin: var(--ss-side-inset) 0 var(--ss-side-inset) var(--ss-side-inset);
+    border-right: 0;
+    border-radius: 16px;
+    box-shadow:
+      0 0 0 0.5px rgba(0, 0, 0, 0.07),
+      inset 0 0.5px 0 rgba(255, 255, 255, 1),
+      0 3px 14px rgba(20, 35, 70, 0.07);
+  }
+
+  .ss-stage[data-theme="dark"] .ss-window[data-side="floating"] > .ss-window__side {
+    background: var(--ss-raised);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.08),
+      0 3px 14px rgba(0, 0, 0, 0.3);
+  }
+
+  .ss-text {
+    white-space: nowrap;
+  }
+
+  .ss-text[data-wrap] {
+    white-space: normal;
+  }
+}

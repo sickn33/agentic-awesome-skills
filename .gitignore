@@ -1,5 +1,6 @@
 .env.local
 node_modules/
+/.venv/
 __pycache__/
 .ruff_cache/
 .worktrees/
@@ -63,3 +64,7 @@ skills/spline-3d-integration/*.zip
 plugins/.antigravity-awesome-skills.staging-*/
 .vercel
 assets/star-banner.svg
+
+# Local Turborepo artifacts (never publication inputs)
+.turbo/
+apps/web-app/.ci-cache/

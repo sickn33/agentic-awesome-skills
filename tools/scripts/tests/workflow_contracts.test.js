@@ -141,8 +141,20 @@ const publishWorkflow = fs.readFileSync(
 assert.match(publishWorkflow, /name: Verify protected release provenance/);
 assert.match(publishWorkflow, /git merge-base --is-ancestor "\$tag_commit" "\$main_commit"/);
 assert.match(publishWorkflow, /ref: main/);
-assert.doesNotMatch(publishWorkflow, /workflow_dispatch/);
+assert.match(publishWorkflow, /workflow_dispatch:/);
+assert.doesNotMatch(publishWorkflow, /release:\s*\n\s+types:/);
+assert.match(publishWorkflow, /test "\$tag_commit" = "\$RELEASE_COMMIT"/);
 assert.match(publishWorkflow, /distribution_fetch\.cjs/);
+assert.match(publishWorkflow, /verify_npm_candidate\.cjs/);
+const releaseWorkflow = fs.readFileSync(path.join(repositoryRoot, "tools/scripts/release_workflow.js"), "utf8");
+assert.match(releaseWorkflow, /runPreparedReleaseTestSuite\(projectRoot\)/);
+assert.match(releaseWorkflow, /requireSuccessfulDistributionCandidate\(projectRoot, version, headCommit\)/);
+assert.match(releaseWorkflow, /requireSuccessfulDistributionCandidate\(projectRoot, version, headCommit\);\s*publishNpmUnlessSkipped\(projectRoot, version, headCommit, skipNpm\)/);
+assert.match(releaseWorkflow, /releaseNotesForPublication\(section, skipNpm\)/);
+assert.match(releaseWorkflow, /dispatchNpmPublication\(projectRoot, version, headCommit\)/);
+assert.match(releaseWorkflow, /requireSuccessfulNpmPublication\(projectRoot, version, headCommit\)/);
+assert.match(detailedContract, /Preparation also creates the local release commit, packs its final sealed tree and runs the complete local test suite/);
+assert.match(detailedContract, /creates the GitHub Release only after npm publication succeeds/);
 
 const pagesWorkflow = fs.readFileSync(
   path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "pages.yml"),
@@ -152,6 +164,19 @@ assert.match(pagesWorkflow, /deployment_target/);
 assert.match(pagesWorkflow, /distribution_fetch\.cjs/);
 assert.match(pagesWorkflow, /\.draft == false/);
 assert.doesNotMatch(pagesWorkflow, /npm run app:build|npm run test/);
+
+const siteWorkflow = fs.readFileSync(path.join(repositoryRoot, ".github/workflows/pages-site.yml"), "utf8");
+assert.match(siteWorkflow, /workflow_dispatch:\s+inputs:\s+expected_sha:/);
+assert.match(siteWorkflow, /group: pages\b/);
+assert.match(siteWorkflow, /test "\$GITHUB_REF" = refs\/heads\/main/);
+assert.match(siteWorkflow, /test "\$GITHUB_REF_PROTECTED" = true/);
+assert.match(siteWorkflow, /test "\$EXPECTED_SHA" = "\$GITHUB_SHA"/);
+assert.match(siteWorkflow, /proofForRuns\(runs, process\.env\.GITHUB_SHA\)/);
+assert.match(siteWorkflow, /Validate protected source diff with ephemeral snapshots/);
+assert.match(siteWorkflow, /npm --prefix apps\/web-app run verify:seo/);
+assert.match(siteWorkflow, /deploy:\s+needs: build/);
+assert.doesNotMatch(siteWorkflow, /git (tag|push)|gh release create|npm publish/);
+
 
 const ciWorkflow = fs.readFileSync(
   path.resolve(__dirname, "..", "..", "..", ".github", "workflows", "ci.yml"),

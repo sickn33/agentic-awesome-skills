@@ -2,6 +2,9 @@
 
 Connect Claude Code to the local AAS catalog, ask it to inspect your project and choose skills, then review a validated selection before installing anything. You do not need to copy the whole library into your project first.
 
+> [!IMPORTANT]
+> **npm publishing paused.** The npm commands below describe the versioned Core setup. The current release is available on GitHub, and its Core runtime package is unavailable from npm. To install or update the skills themselves, follow the [GitHub installation guide](getting-started.md#install-and-update-without-npm).
+
 ## Track your progress
 
 - [ ] Steps 1–2: preview and approve the exact configuration; save the runtime integrity.
@@ -33,8 +36,8 @@ AAS_CACHE="$HOME/.cache/aas"
 AAS_BACKUP="$HOME/.aas-mcp-backups"
 mkdir -p "$(dirname "$AAS_CONFIG")"
 
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@20.0.0 -- aas mcp configure \
-  --host claude --scope user --version 20.0.0 \
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@20.8.0 -- aas mcp configure \
+  --host claude --scope user --version 20.8.0 \
   --config "$AAS_CONFIG" --cache-root "$AAS_CACHE" \
   --backup-dir "$AAS_BACKUP"
 ```
@@ -49,8 +52,8 @@ Replace the placeholder with the preview's actual `approvalDigest`, then run the
 <!-- aas-agent-setup:claude:approve -->
 ```bash
 AAS_APPROVAL="PASTE_THE_PREVIEW_APPROVAL_DIGEST"
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@20.0.0 -- aas mcp configure \
-  --host claude --scope user --version 20.0.0 \
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@20.8.0 -- aas mcp configure \
+  --host claude --scope user --version 20.8.0 \
   --config "$AAS_CONFIG" --cache-root "$AAS_CACHE" \
   --backup-dir "$AAS_BACKUP" \
   --approve "$AAS_APPROVAL"
@@ -106,9 +109,9 @@ In the same terminal, replace the integrity placeholder with `runtime.integrity`
 AAS_PROJECT="$PWD"
 AAS_INTEGRITY="PASTE_RUNTIME_INTEGRITY_FROM_CONFIGURATION"
 
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@20.0.0 -- aas stack validate --manifest "$AAS_PROJECT/aas-stack.json"
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@20.8.0 -- aas stack validate --manifest "$AAS_PROJECT/aas-stack.json"
 
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@20.0.0 -- aas stack plan \
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@20.8.0 -- aas stack plan \
   --manifest "$AAS_PROJECT/aas-stack.json" \
   --target claude:project --target-root "$AAS_PROJECT" \
   --cache-root "$AAS_CACHE" --runtime-integrity "$AAS_INTEGRITY" \
@@ -124,7 +127,7 @@ Prepare the separate direct-installer dry run from the exact selected IDs:
 
 <!-- aas-agent-setup:claude:install -->
 ```bash
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@20.0.0 -- aas stack install-preview \
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@20.8.0 -- aas stack install-preview \
   --manifest "$AAS_PROJECT/aas-stack.json" --cache-root "$AAS_CACHE" \
   --destination "$AAS_PROJECT/.claude/skills"
 ```

@@ -1,0 +1,12 @@
+#!/bin/sh
+# Opt-in per checkout: git config core.hooksPath .githooks
+# No network, installation, approval or merge authority.
+set -eu
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$local_sha" in 0000000000000000000000000000000000000000) continue ;; esac
+  case "$remote_sha" in
+    0000000000000000000000000000000000000000) base=origin/main ;;
+    *) base="$remote_sha" ;;
+  esac
+  node tools/scripts/maintenance_quick_check.cjs --base "$base" --head "$local_sha"
+done

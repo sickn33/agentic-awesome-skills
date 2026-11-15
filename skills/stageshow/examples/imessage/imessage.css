@@ -1,0 +1,253 @@
+/* Stage: a quiet cool well with a faint blue wash; the phone is pinned one
+   gutter from the top, centered, and runs off the bottom through the keyboard */
+.im .ss-stage {
+  --im-blue: #0a84ff;
+  --im-grey: #8e8e93;
+  /* UIKit-quick: off the tap fast, long soft settle */
+  --im-ui: cubic-bezier(0.3, 0.75, 0.1, 1);
+  overflow: hidden;
+  border-radius: 14px;
+  background: #f1f3f6;
+}
+
+.im-wash {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(70% 45% at 50% 0%, rgba(10, 132, 255, 0.1), transparent 70%),
+    radial-gradient(60% 40% at 50% 100%, rgba(10, 132, 255, 0.06), transparent 70%);
+}
+
+.im-phone {
+  position: absolute;
+  top: 40px;
+  left: 50%;
+  translate: -50% 0;
+}
+
+.im-phone .ss-phone__screen {
+  background: #fff;
+}
+
+/* ---- App column: header, thread, compose bar, keyboard (in iOS points) ---- */
+
+.im-app {
+  position: absolute;
+  inset: 54px 0 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.im-head {
+  position: relative;
+  display: flex;
+  flex: none;
+  justify-content: center;
+  z-index: 3;
+  /* Clear of the island above, room under the name below: the bar sizes to
+     its content, never a fixed height the name can overrun */
+  padding: 16px 0 12px;
+  background: #f7f7f8;
+  border-bottom: 0.5px solid #d8d8dc;
+}
+
+/* The bar runs up behind the status bar, as iOS's navigation bar does */
+.im-head::before {
+  content: '';
+  position: absolute;
+  inset: -54px 0 100%;
+  background: inherit;
+}
+
+.im-back,
+.im-video {
+  position: absolute;
+  top: 24px;
+  color: var(--im-blue);
+  display: grid;
+  place-items: center;
+}
+
+.im-back {
+  left: 8px;
+}
+
+.im-video {
+  right: 18px;
+  top: 26px;
+}
+
+.im-contact {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+
+/* The kit's iOS contact avatar, at Messages' lighter weight */
+.im-avatar {
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.im-name {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  color: #000;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 18px;
+}
+
+.im-name svg {
+  color: #b4b4b9;
+}
+
+.im-thread {
+  flex: 1;
+  /* Older messages pass under the translucent bar instead of being cut */
+  overflow: visible;
+  padding: 0 18px 10px 16px;
+}
+
+.im-thread .ss-stamp {
+  margin: 14px 0 8px;
+  font-weight: 400;
+}
+
+.im-thread .ss-stamp b {
+  font-weight: 600;
+}
+
+.im-receipt {
+  padding-top: 2px;
+}
+
+/* ---- Compose bar ---- */
+
+.im-compose {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 12px 8px 10px;
+}
+
+.im-plus {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #eeeef0;
+  color: #85858b;
+}
+
+.im-field {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  height: 36px;
+  padding: 0 4px 0 14px;
+  border: 1px solid #d4d4d8;
+  border-radius: 18px;
+}
+
+.im-field__text {
+  position: relative;
+  display: flex;
+  flex: 1;
+  align-items: center;
+  font-size: 17px;
+  letter-spacing: -0.01em;
+  white-space: pre;
+}
+
+.im-field__ph {
+  color: #c2c2c6;
+}
+
+.im-caret {
+  display: block;
+  width: 2px;
+  height: 21px;
+  margin: 0 1px;
+  border-radius: 1px;
+  background: var(--im-blue);
+  animation: im-blink 1.05s steps(1) infinite;
+}
+
+.im-field__ph {
+  margin-left: -4px;
+}
+
+.im-caret[data-solid] {
+  animation: none;
+}
+
+@keyframes im-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.im-mic,
+.im-send {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  transition:
+    transform 0.28s var(--im-ui),
+    opacity 0.18s ease;
+}
+
+.im-mic {
+  color: #9a9aa0;
+}
+
+.im-mic[data-off] {
+  transform: scale(0.6);
+  opacity: 0;
+}
+
+.im-send {
+  background: var(--im-blue);
+  color: #fff;
+  transform: scale(0.5);
+  opacity: 0;
+}
+
+.im-send[data-on] {
+  transform: none;
+  opacity: 1;
+}
+
+/* The press pop: the letter enlarged in a balloon above the key */
+@keyframes im-pop {
+  0%,
+  65% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .im-caret {
+    animation: none;
+  }
+}
+
+/* The placeholder returns once the sent words have lifted out of the field */
+.im-field__ph {
+  animation: ss-fade-in 0.2s ease 0.3s both;
+}

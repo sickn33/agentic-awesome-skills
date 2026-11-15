@@ -1,0 +1,60 @@
+.cc .ss-stage {
+  overflow: hidden;
+  background: var(--ss-well);
+}
+
+/* Pinned top-left, off the bottom; its top-right corner at (412, 56) */
+.cc-win {
+  position: absolute;
+  top: 56px;
+  left: 40px;
+  width: 372px;
+  height: 340px;
+}
+
+.cc-list {
+  display: grid;
+  padding: 8px;
+  background: var(--ss-surface);
+  height: 100%;
+  align-content: start;
+}
+
+/* The chip: its center on the window's corner, a level above */
+.cc-chip {
+  position: absolute;
+  top: 56px;
+  left: 412px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px 6px 6px;
+  border-radius: 999px;
+  background: var(--ss-raised, var(--ss-surface));
+  box-shadow: var(--ss-shadow-satellite);
+  opacity: 0;
+  translate: -50% calc(-50% + 8px);
+  transition: opacity 0.4s ease, translate 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cc-chip[data-on] {
+  opacity: 1;
+  translate: -50% -50%;
+}
+
+.cc-chip__text {
+  color: var(--ss-text-strong);
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Narrow: the window narrower, its corner pulled in so the chip stays whole */
+.cc .ss-stage[data-layout='compact'] .cc-win {
+  left: 16px;
+  width: 240px;
+}
+
+.cc .ss-stage[data-layout='compact'] .cc-chip {
+  left: 256px;
+}

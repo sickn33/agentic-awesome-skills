@@ -1,0 +1,49 @@
+/* States */
+
+@layer stageshow {
+  .ss-states {
+    display: inline-grid;
+    align-items: center;
+    justify-items: center;
+  }
+
+  /* The old state hands off to the new one: it's mostly gone as the new one
+     starts, so they never read as two labels, but the control is never empty */
+  .ss-states__item {
+    display: inline-flex;
+    grid-area: 1 / 1;
+    align-items: center;
+    gap: 6px;
+    /* The item keeps the line box the plain label would have had: its text
+       inherits the line-height of the spot it sits in, so a Roll or any
+       other part that clips to its line (Roll's clip-path does) has a line
+       to show in. A zero line box here once sized the item to its glyphs,
+       which also clipped a Roll inside it to nothing and left a text-only
+       States no height at all. A small line under a name sets its own
+       line-height, as Row's subtitle does */
+    opacity: 0;
+    filter: blur(2px);
+    /* Transform travel leaves the grid's baseline in place. Moving margins
+       let the hidden first item shift the incoming label and adjacent text. */
+    will-change: transform;
+    transform: translate3d(0, 4px, 0);
+    transition: opacity 0.15s ease, filter 0.15s ease, transform 0s 0.15s;
+  }
+
+  .ss-states__item[data-on] {
+    opacity: 1;
+    filter: none;
+    transform: translate3d(0, 0, 0);
+    transition: opacity 0.25s ease-out 0.07s, filter 0.25s ease-out 0.07s, transform 0.3s cubic-bezier(0.22, 1, 0.36, 1) 0.07s;
+  }
+
+  .ss-states[data-align="start"] { justify-items: start; }
+
+  .ss-states[data-align="end"] { justify-items: end; }
+
+  .ss-states[data-reduced] > .ss-states__item {
+    transform: translate3d(0, 0, 0);
+    filter: none;
+    transition: opacity 0.12s ease;
+  }
+}

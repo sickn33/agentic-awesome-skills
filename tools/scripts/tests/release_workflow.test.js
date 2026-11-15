@@ -5,6 +5,58 @@ const path = require("path");
 const { spawnSync } = require("child_process");
 
 const release = require("../release_workflow.js");
+const { validateReleaseChangelog } = require("../release_changelog.cjs");
+
+assert.strictEqual(release.parseArgs(["publish", "20.3.0", "--skip-npm"]).skipNpm, true);
+assert.strictEqual(release.parseArgs(["publish", "20.3.0"]).skipNpm, undefined);
+assert.throws(() => release.parseArgs(["prepare", "20.3.0", "--skip-npm"]), /state-dir/);
+assert.throws(() => release.parseArgs(["publish", "20.3.0", "--skip-npm", "--state-dir", "/tmp/x"]), /state-dir/);
+assert.match(release.releaseNotesForPublication("notes", true), /not published to npm/);
+assert.strictEqual(release.releaseNotesForPublication("notes", false), "notes");
+release.requireSkippedNpmDisclosure(release.releaseNotesForPublication("notes", true));
+assert.throws(() => release.requireSkippedNpmDisclosure("notes"), /does not disclose/);
+const changelogVersion = "99.0.0-rc.1";
+const heading = `## [${changelogVersion}] - 2026-11-05 - "Release title"`;
+const summary = "Explore the catalog updates.";
+const newSkills = "### New skills\n\n- Add a catalog skill.";
+const contributors = "### Contributors\n\n- Credit a contributor.";
+const entry = [heading, summary, newSkills, contributors].join("\n\n");
+const oldEntry = "## [98.0.0] - 2026-11-01\n\n### Added\n\n- Legacy formatting.";
+const { extractChangelogSection } = require("../../lib/workflow-contract");
+const changelog = fs.readFileSync(path.join(__dirname, "../../../CHANGELOG.md"), "utf8");
+const template = changelog.match(/^## \[X\.Y\.Z\] - YYYY-MM-DD[\s\S]*?(?=^-->)/m)[0];
+validateReleaseChangelog(template.replace("X.Y.Z", changelogVersion).replace("YYYY-MM-DD", "2026-11-05"), changelogVersion);
+
+assert.strictEqual(release.githubReleaseTitle(`v${changelogVersion}`, entry), `v${changelogVersion} "Release title"`);
+assert.strictEqual(release.githubReleaseTitle("v98.0.0", oldEntry), "v98.0.0");
+const extractedEntry = extractChangelogSection(`${entry}\n\n${oldEntry}\n`, changelogVersion);
+validateReleaseChangelog(extractedEntry, changelogVersion);
+validateReleaseChangelog(entry.replaceAll("\n", "\r\n"), changelogVersion);
+assert.strictEqual(release.releaseNotesForPublication(extractedEntry, false), `${entry}\n`);
+
+for (const [invalid, expected] of [
+  [entry.replace(' - "Release title"', ""), /use the heading/],
+  [entry.replace("2026-11-05", "2026-02-30"), /valid release date/],
+  [entry.replace(summary, ""), /summary paragraph/],
+  [[heading, summary].join("\n\n"), /at least one section/],
+  [entry.replace("### New skills", "### Added"), /unexpected heading/],
+  [[heading, summary, contributors, newSkills].join("\n\n"), /out of order/],
+  [`${entry}\n\n${contributors}`, /duplicated/],
+  [entry.replace("- Add a catalog skill.", ""), /must start with a bullet/],
+  [entry.replace("- Add a catalog skill.", "- Add a catalog skill.\n\nA stray paragraph."), /bullet entries only/],
+]) {
+  assert.throws(() => validateReleaseChangelog(invalid, changelogVersion), expected);
+}
+
+const publicationCalls = [];
+const publicationDependencies = {
+  dispatch: (...args) => publicationCalls.push(["dispatch", ...args]),
+  verify: (...args) => publicationCalls.push(["verify", ...args]),
+};
+assert.strictEqual(release.publishNpmUnlessSkipped("/repo", "20.3.0", "commit", true, publicationDependencies), false);
+assert.deepStrictEqual(publicationCalls, []);
+assert.strictEqual(release.publishNpmUnlessSkipped("/repo", "20.3.0", "commit", false, publicationDependencies), true);
+assert.deepStrictEqual(publicationCalls.map(([call]) => call), ["dispatch", "verify"]);
 
 assert.strictEqual(release.isPrereleaseVersion("15.0.0-rc.1"), true);
 assert.strictEqual(release.isPrereleaseVersion("15.0.0"), false);
@@ -56,6 +108,138 @@ assert.throws(
 assert.throws(
   () => release.selectMergedReleaseCandidate([{ ...candidate, author: { login: "collaborator" } }], "1.2.3", releaseIdentity),
   /found 0/,
+);
+
+const candidateRun = {
+  id: 42,
+  run_attempt: 1,
+  head_sha: "c".repeat(40),
+  repository: { full_name: "owner/repo" },
+  head_repository: { full_name: "owner/repo" },
+  path: ".github/workflows/distribution-candidate.yml",
+  event: "push",
+  head_branch: "v1.2.3",
+  status: "completed",
+  conclusion: "success",
+};
+function candidateProofDependencies(runs) {
+  return {
+    runCommand(command, args) {
+      if (command === "gh" && args[0] === "repo") {
+        return JSON.stringify({ nameWithOwner: "owner/repo" });
+      }
+      if (command === "gh" && args[0] === "api") {
+        return JSON.stringify({ workflow_runs: runs });
+      }
+      throw new Error(`Unexpected command: ${command} ${args.join(" ")}`);
+    },
+  };
+}
+assert.strictEqual(
+  release.requireSuccessfulDistributionCandidate(
+    "/fixture",
+    "1.2.3",
+    candidateRun.head_sha,
+    candidateProofDependencies([candidateRun]),
+  ).id,
+  candidateRun.id,
+);
+for (const override of [
+  { head_sha: "d".repeat(40) },
+  { head_branch: "main" },
+  { repository: { full_name: "attacker/repo" } },
+  { head_repository: { full_name: "attacker/repo" } },
+  { path: ".github/workflows/ci.yml" },
+  { event: "pull_request" },
+  { status: "in_progress" },
+  { conclusion: "failure" },
+]) {
+  assert.throws(
+    () => release.requireSuccessfulDistributionCandidate(
+      "/fixture",
+      "1.2.3",
+      candidateRun.head_sha,
+      candidateProofDependencies([{ ...candidateRun, ...override }]),
+    ),
+    /no successful immutable distribution candidate/,
+  );
+}
+
+const npmRun = {
+  id: 73,
+  repository: { full_name: "owner/repo" },
+  head_repository: { full_name: "owner/repo" },
+  path: ".github/workflows/publish-npm.yml",
+  event: "workflow_dispatch",
+  head_branch: "main",
+  display_title: release.npmPublicationTitle("1.2.3", candidateRun.head_sha),
+  status: "completed",
+  conclusion: "success",
+};
+function npmProofDependencies(runs) {
+  return {
+    runCommand(command, args) {
+      if (command === "gh" && args[0] === "repo") {
+        return JSON.stringify({ nameWithOwner: "owner/repo" });
+      }
+      if (command === "gh" && args[0] === "api") {
+        return JSON.stringify({ workflow_runs: runs });
+      }
+      throw new Error(`Unexpected command: ${command} ${args.join(" ")}`);
+    },
+  };
+}
+assert.strictEqual(
+  release.requireSuccessfulNpmPublication(
+    "/fixture",
+    "1.2.3",
+    candidateRun.head_sha,
+    npmProofDependencies([npmRun]),
+  ).id,
+  npmRun.id,
+);
+for (const override of [
+  { repository: { full_name: "attacker/repo" } },
+  { head_repository: { full_name: "attacker/repo" } },
+  { path: ".github/workflows/ci.yml" },
+  { event: "release" },
+  { head_branch: "release/v1.2.3" },
+  { display_title: release.npmPublicationTitle("9.9.9", candidateRun.head_sha) },
+  { status: "in_progress" },
+  { conclusion: "failure" },
+]) {
+  assert.throws(
+    () => release.requireSuccessfulNpmPublication(
+      "/fixture",
+      "1.2.3",
+      candidateRun.head_sha,
+      npmProofDependencies([{ ...npmRun, ...override }]),
+    ),
+    /npm publication has not succeeded/,
+  );
+}
+
+assert.throws(()=>release.prepareRelease('/fixture','1.2.3','/state',{localOnly:true,candidateDir:'/candidate'}),/Local-only/);
+let preparedSuite = null;
+release.runPreparedReleaseTestSuite("/fixture", {
+  pack(root, destination) {
+    preparedSuite = { ...preparedSuite, packedRoot: root, destination };
+  },
+  runReleaseSuite(root) {
+    preparedSuite = { ...preparedSuite, suiteRoot: root };
+  },
+  run(command, args, cwd, options) {
+    preparedSuite = { ...preparedSuite, command, args, cwd, env: options.env };
+  },
+});
+assert.deepStrictEqual(preparedSuite.args, ["tools/scripts/release_parallel_checks.cjs"]);
+assert.strictEqual(preparedSuite.command, process.execPath);
+assert.strictEqual(preparedSuite.packedRoot, "/fixture");
+assert.strictEqual(preparedSuite.suiteRoot, "/fixture");
+assert.strictEqual(preparedSuite.cwd, "/fixture");
+assert.strictEqual(
+  preparedSuite.env.AAS_TEST_CANDIDATE_TARBALL,
+  path.join(preparedSuite.destination, "package.tgz"),
 );
 
 const root = fs.mkdtempSync(path.join(os.tmpdir(), "release-workflow-"));
@@ -199,6 +383,35 @@ release.convergePreparedRelease(stable, convergenceContract, { runCommand: fixtu
 assert.notStrictEqual(git(stable, "rev-parse", "HEAD"), initial);
 assert.strictEqual(fs.readFileSync(path.join(stable, "sitemap.xml"), "utf8"), "2026-10-13\n");
 assert.strictEqual(git(stable, "status", "--porcelain"), "");
+const twoStamp = convergenceFixture("two-stamp-generator");
+let twoStampGeneration = 0;
+release.convergePreparedRelease(twoStamp, convergenceContract, {
+  runCommand: fixtureRunner(cwd => {
+    const stamps = ["2026-10-13\n", "2026-10-14\n"];
+    fs.writeFileSync(path.join(cwd, "sitemap.xml"), stamps[Math.min(twoStampGeneration++, stamps.length - 1)]);
+  }),
+});
+assert.strictEqual(twoStampGeneration, 3);
+assert.strictEqual(fs.readFileSync(path.join(twoStamp, "sitemap.xml"), "utf8"), "2026-10-14\n");
+assert.strictEqual(git(twoStamp, "status", "--porcelain"), "");
+const firstPassAmend = git(twoStamp, "rev-parse", "HEAD");
+release.convergePreparedRelease(twoStamp, convergenceContract, { runCommand: fixtureRunner(() => {}) });
+assert.strictEqual(git(twoStamp, "rev-parse", "HEAD"), firstPassAmend, "no amendment after two stable passes");
+const committer = convergenceFixture("committer-date-generator");
+const committerBefore = git(committer, "show", "-s", "--format=%cI", "HEAD");
+let committerPasses = 0;
+release.convergePreparedRelease(committer, convergenceContract, {
+  runCommand(command, args, cwd, options = {}) {
+    if (command === "npm") {
+      committerPasses += 1;
+      fs.writeFileSync(path.join(cwd, "sitemap.xml"), git(cwd, "log", "-1", "--format=%cI", "--", "guide.md") + "\n");
+      return "";
+    }
+    return release.runCommand(command, args, cwd, options);
+  },
+});
+assert.equal(git(committer, "show", "-s", "--format=%cI", "HEAD"), committerBefore);
+assert.equal(committerPasses, 2, "Git committer-date metadata converges without moving time");
 const settled = git(stable, "rev-parse", "HEAD");
 release.convergePreparedRelease(stable, convergenceContract, { runCommand: fixtureRunner(() => {}) });
 assert.strictEqual(git(stable, "rev-parse", "HEAD"), settled, "no amendment when already stable");
@@ -209,9 +422,12 @@ assert.throws(() => release.convergePreparedRelease(missing, { ...convergenceCon
 const moving = convergenceFixture("moving-generator");
 let generation = 0;
 assert.throws(() => release.convergePreparedRelease(moving, convergenceContract, {
-  runCommand: fixtureRunner(cwd => fs.writeFileSync(path.join(cwd, "sitemap.xml"), `generation ${++generation}\n`)),
+  runCommand: fixtureRunner(cwd => {
+    const stamps = ["2026-10-13\n", "2026-10-14\n", "2026-10-15\n"];
+    fs.writeFileSync(path.join(cwd, "sitemap.xml"), stamps[Math.min(generation++, stamps.length - 1)]);
+  }),
 }), /drift/);
-assert.strictEqual(generation, 2, "persistent drift is not retried or published");
+assert.strictEqual(generation, 3, "a third changed pass fails closed after two settling amendments");
 
 fs.rmSync(root, { recursive: true, force: true });
 console.log("Release workflow tests passed.");
@@ -229,4 +445,23 @@ console.log("Release workflow tests passed.");
  assert.equal(cleaned,true);assert.equal(fs.readFileSync(path.join(root,'snapshot.txt'),'utf8'),'old');assert.equal(git(root,'status','--porcelain'),'');
  assert.throws(()=>release.runReleasePreflight(root,{...deps,suite:()=>{throw Error('validation failed');}}),/validation failed/);
  fs.rmSync(root,{recursive:true,force:true});
+}
+
+// Preparation rejects a malformed target entry while the source checkout is untouched.
+{
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "release-changelog-source-"));
+  try {
+    git(root, "init", "-b", "main");
+    git(root, "config", "user.name", "Tests");
+    git(root, "config", "user.email", "tests@example.com");
+    fs.writeFileSync(path.join(root, "CHANGELOG.md"), entry.replace("### New skills", "### Added"));
+    git(root, "add", "CHANGELOG.md");
+    git(root, "commit", "-m", "fixture");
+
+    assert.throws(() => release.prepareRelease(root, changelogVersion, "/unused-state"), /unexpected heading "### Added"/);
+    assert.strictEqual(git(root, "branch", "--list"), "* main");
+    assert.strictEqual(git(root, "status", "--porcelain"), "");
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
 }

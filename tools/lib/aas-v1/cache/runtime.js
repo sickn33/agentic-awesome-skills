@@ -22,7 +22,9 @@ const { REGISTRY_ORIGIN, fetchBytes, verifySri } = require("./update");
 
 const MAX_RUNTIME_IDENTITY_BYTES = 4 * 1024 * 1024;
 const RUNTIME_ARCHIVE_LIMITS = Object.freeze({
-  maxEntries: 10000,
+  // The bundled catalog exceeds 10,000 files; keep a finite entry budget
+  // alongside the unchanged expanded-byte and compression limits.
+  maxEntries: 20000,
   maxSingleFileBytes: 32 * 1024 * 1024,
   maxExpandedTotalBytes: 160 * 1024 * 1024,
   maxCompressionRatio: 128,
@@ -200,6 +202,10 @@ async function ensureRealDirectory(directoryPath, created, cacheRoot) {
   if (resolved !== boundary && !resolved.startsWith(`${boundary}${path.sep}`)) {
     throw cacheError("AAS_RUNTIME_DIRECTORY_UNSAFE", "runtime cache path escaped the configured cache root");
   }
+  // Validate the entire cache path on creation and reuse alike.
+  const parent = path.dirname(resolved);
+  if (resolved === boundary) await assertSafeCacheAncestorChain(parent);
+  else await ensureRealDirectory(parent, created, boundary);
   try {
     const stat = await fsp.lstat(resolved);
     if (!stat.isDirectory() || stat.isSymbolicLink() || privateModeUnsafe(stat) || ownershipUnsafe(stat)) {
@@ -207,12 +213,6 @@ async function ensureRealDirectory(directoryPath, created, cacheRoot) {
     }
   } catch (error) {
     if (error.code !== "ENOENT") throw error;
-    const parent = path.dirname(resolved);
-    if (resolved === boundary) {
-      await assertSafeCacheAncestorChain(parent);
-    } else {
-      await ensureRealDirectory(parent, created, boundary);
-    }
     try {
       await fsp.mkdir(resolved, { mode: 0o700 });
       created.push(resolved);
@@ -275,6 +275,21 @@ async function writeExclusive(filePath, bytes, { sync = true } = {}) {
   } finally { await handle.close(); }
 }
 
+async function writeRuntimeAssets(stagePath, records, write = writeExclusive) {
+  // Directories already exist in the private unpublished staging tree. Keep
+  // exclusive creation, permissions and fsync for every byte; drain writers
+  // before promotion or cleanup, including on error.
+  let next = 0, failed = false, firstError;
+  await Promise.all(Array.from({ length: Math.min(4, records.length) }, async () => {
+    while (!failed && next < records.length) {
+      const record = records[next++];
+      try { await write(path.join(stagePath, ...record.path.split("/")), record.bytes); }
+      catch (error) { if (!failed) { failed = true; firstError = error; } }
+    }
+  }));
+  if (failed) throw firstError || new Error("Runtime asset write failed");
+}
+
 async function readRuntimeAsset(targetPath, record) {
   const absolute = path.join(targetPath, ...record.path.split("/"));
   const stat = await fsp.lstat(absolute);
@@ -318,6 +333,7 @@ async function runtimeStatus({ cacheRoot, packageVersion, integrity, closureDige
   try {
     const stat = await fsp.lstat(targetPath);
     if (!stat.isDirectory() || stat.isSymbolicLink()) throw cacheError("AAS_RUNTIME_TARGET_INVALID", "runtime cache target is not a real directory");
+    await assertSafeCacheAncestorChain(targetPath);
     const identityPath = path.join(targetPath, RUNTIME_IDENTITY_FILE);
     const identityStat = await fsp.lstat(identityPath);
     if (!identityStat.isFile() || identityStat.isSymbolicLink() || identityStat.nlink !== 1 || identityStat.size > MAX_RUNTIME_IDENTITY_BYTES) {
@@ -389,8 +405,8 @@ async function promoteRuntime({ cacheRoot, release, parsed }) {
         cursor = path.join(cursor, segment);
         if (!directories.has(cursor)) { await fsp.mkdir(cursor, { mode: 0o700 }); directories.add(cursor); }
       }
-      await writeExclusive(path.join(stagePath, ...segments), record.bytes);
     }
+    await writeRuntimeAssets(stagePath, scanned.records);
     const identity = validateRuntimeIdentity({
       schemaVersion: 1,
       package: CATALOG_PACKAGE,
@@ -458,4 +474,5 @@ module.exports = {
   runtimeStatus,
   resolveUniqueRuntime,
   validateRuntimeIdentity,
+  writeRuntimeAssets,
 };

@@ -1,0 +1,50 @@
+name: Concrete improvement or skill proposal
+description: Propose a scoped improvement, new skill or bundle needing maintainer guidance.
+title: "[REQ] "
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: Small fixes can go directly to a PR. Use Discussions Ideas for brainstorming. A product listing alone is not a skill contribution.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Contribution type
+      options: [New skill, Improve an existing skill, Upstream update, Bundle with scripts or restricted files, Repository improvement]
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and concrete user task
+      description: Who needs this, with what input, and what result should the skill produce?
+    validations:
+      required: true
+  - type: textarea
+    id: existing
+    attributes:
+      label: Existing coverage
+      description: Name related skills or proposals you checked. Explain the gap or why an existing skill should be extended.
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Proposed scope and success criteria
+      description: For scripts/shared bundles, list files, dependencies and why they are needed. Do not rename restricted files to bypass fork intake.
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Source, license and affiliation
+      description: Repository/source URL, upstream revision if known, license/retained notices, and your relationship to the project. Original work may be described as such.
+    validations:
+      required: true
+  - type: textarea
+    id: boundaries
+    attributes:
+      label: Operational requirements and validation
+      description: Required tools/accounts, costs, data sent externally, writes, and how to check the proposal. Say what is unknown.
+    validations:
+      required: true

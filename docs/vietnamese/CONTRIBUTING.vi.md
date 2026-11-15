@@ -1,3 +1,5 @@
+> Quy trình đóng góp hiện hành nằm ở bản tiếng Anh; các bước dịch bên dưới có thể chưa cập nhật. [Current canonical source](../../CONTRIBUTING.md)
+
 # 🤝 Hướng dẫn Đóng góp
 
 **Cảm ơn bạn đã muốn làm cho repository này trở nên tốt hơn!** Hướng dẫn này sẽ chỉ cho bạn chính xác cách thức đóng góp, ngay cả khi bạn là người mới đối với mã nguồn mở.  

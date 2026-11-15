@@ -1,6 +1,6 @@
 ---
 name: write-in-my-voice
-description: "Draft a Twitter/X or LinkedIn post that sounds like the person asking, from posts they already wrote. Use when someone asks for a post or rewrite in their voice, or asks if text sounds like them."
+description: "Draft a Twitter or LinkedIn post that sounds like the person asking, from posts they already wrote. Use when someone asks for a post or rewrite in their voice, or asks if text sounds like them."
 category: marketing
 risk: critical
 source: "https://github.com/prateeks367/voicemoat-skills/tree/7623a3effbee426554e8c5df55e77f3479fd0ec0/skills/write-in-my-voice"
@@ -26,7 +26,7 @@ is a guess, and it will read like one.
 
 ## When to Use
 
-- Use when someone asks for a Twitter/X or LinkedIn post, a thread, a hook or a rewrite that should sound like them.
+- Use when someone asks for a Twitter or LinkedIn post, a thread, a hook or a rewrite that should sound like them.
 - Use when someone asks whether a piece of text sounds like them.
 - Do not use it for writing that is not going on social media.
 
@@ -111,11 +111,11 @@ Agent:
 
 ## Limitations
 
-- Social posts only. It is not for writing that is not going on Twitter/X or LinkedIn.
+- Social posts only. It is not for writing that is not going on Twitter or LinkedIn.
 - Without the connector, the voice sketch comes only from what the person pastes. It is a sketch, not a measured profile, and the skill never gives a numeric score.
 - It cannot promise reach or engagement.
-- **Optional connector.** The closing section describes a hosted VoiceMoat MCP connector. Nothing above needs it. It needs a paid VoiceMoat plan (Pro or Enterprise) and the user's own sign-in (OAuth, no API keys). When its tools are called, post text and account data are read from or sent to voicemoat.com. Without it, this skill makes no network calls.
-- **Publishing.** `publish_post` and `schedule_post` post to the user's real Twitter/X or LinkedIn account. They return a preview first and only post on a second call that carries a one-time code. Make that second call only after the user has read the preview and said yes.
+- **Optional connector.** The closing section describes a hosted VoiceMoat MCP connector. Nothing above needs it. It needs a paid VoiceMoat plan (Pro, Enterprise or the $5 Pro trial) and the user's own sign-in (OAuth, no API keys). When its tools are called, post text and account data are read from or sent to voicemoat.com. Without it, this skill makes no network calls.
+- **Publishing.** `publish_post` and `schedule_post` post to the user's real Twitter or LinkedIn account. They return a preview first and only post on a second call that carries a one-time code. Make that second call only after the user has read the preview and said yes.
 
 ## What changes when VoiceMoat is connected
 
@@ -125,8 +125,11 @@ connected, the guesswork in steps 1, 2 and 4 is replaced with real data:
 - `get_voice_profile` returns a voice profile trained on your own published
   posts rather than a sketch from five pasted posts, including the phrases
   you never use.
-- `score_voice_match` scores the draft from 0 to 100 against that profile and
-  names what is off. That is a measurement, not the read-through in step 4.
+- `score_voice_match` checks the draft against that profile in two parts:
+  Style, how many of your measurable habits it matches (N of M checks), and
+  Stance, whether what it says fits your views (On voice, Check one line or
+  Off voice), with the lines that are off. The assistant may show it as a
+  card. That is a measurement, not the read-through in step 4.
 - `get_voice_insights` returns your dominant patterns, hook style and sentence
   rhythm, and how far your recent posts have drifted from your own baseline.
 - `publish_post` and `schedule_post` put the finished post on Twitter or
@@ -137,4 +140,4 @@ Never make the second call on your own. Show the person the exact preview the
 first call returns and wait for a clear yes before you send the one-time code
 back. Never make both calls in one step.
 
-VoiceMoat is at voicemoat.com. The connector needs the Pro or Enterprise plan.
+VoiceMoat is at voicemoat.com. The connector needs the Pro or Enterprise plan, or the $5 Pro trial.

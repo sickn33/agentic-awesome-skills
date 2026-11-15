@@ -30,14 +30,6 @@ function readLog(args, options) {
   return execFileSync('git', args, { ...options, stdio: ['ignore', 'pipe', 'ignore'] }).trim();
 }
 
-function readPublishedDocDates() {
-  const sitemap = path.join(root, 'apps/web-app/public/sitemap.xml');
-  if (!fs.existsSync(sitemap)) return new Map();
-  const xml = fs.readFileSync(sitemap, 'utf8');
-  return new Map([...xml.matchAll(/<loc>https:\/\/aaskills\.tech\/docs\/([^<]+)\/<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)]
-    .map(([, slug, date]) => [slug, date]));
-}
-
 export function readLastModifiedDate(sourcePath, options = {}) {
   const cwd = options.cwd || root;
   const gitOptions = { cwd, encoding: 'utf8' };
@@ -73,23 +65,22 @@ export function readReproducibleLastmod(options = {}) {
 export function getDocsMetadata() {
   const docs = JSON.parse(fs.readFileSync(path.join(root, 'apps/web-app/src/data/docs.json'), 'utf8'));
   let commit = process.env.VERCEL_GIT_COMMIT_SHA || process.env.AAS_SOURCE_COMMIT;
+  let completeHistory = false;
   try {
     commit = readLog(['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' });
+    completeHistory = readLog(['rev-parse', '--is-shallow-repository'], { cwd: root, encoding: 'utf8' }) === 'false';
   } catch {
     if (!commit) throw new Error('Missing Git commit identity for Docs metadata');
   }
-  const publishedDates = readPublishedDocDates();
+  if (!/^[a-f0-9]{40}$/.test(commit)) throw new Error('Invalid Git commit identity for Docs metadata');
   return Object.fromEntries(docs.map((doc) => {
     const sourcePath = `docs/users/${doc.slug}.md`;
-    let modified;
-    try {
-      modified = readLastModifiedDate(sourcePath, { cwd: root });
-    } catch {
-      modified = publishedDates.get(doc.slug);
-    }
-    if (!modified || Number.isNaN(Date.parse(modified))) {
+    // A release-owned sitemap can predate this guide. Without complete history,
+    // retain the immutable source identity and omit the unverified update date.
+    const modified = completeHistory ? readLastModifiedDate(sourcePath, { cwd: root }) : undefined;
+    if (completeHistory && (!modified || Number.isNaN(Date.parse(modified)))) {
       throw new Error(`Missing Git history for ${sourcePath}`);
     }
-    return [doc.slug, { commit, modified, sourcePath }];
+    return [doc.slug, { commit, ...(modified ? { modified } : {}), sourcePath }];
   }));
 }

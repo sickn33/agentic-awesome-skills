@@ -1,0 +1,195 @@
+.tc-lessons .cp-pair { color: #444; font: 400 12px/18px var(--ss-font); }
+.tc-lessons .cp-pair figure { height: 302px; }
+.tc-lessons .cp-pair .tc-visual { height: 252px; }
+.tc-lessons .cp-pair h3 { margin: 0; color: #222; font: 550 14px/20px var(--ss-font); }
+.tc-lessons .cp-pair p { margin: 3px 0 0; color: #888; font: 400 12px/18px var(--ss-font); }
+.tc-lessons .cp-file { flex: none; color: #999; }
+.tc-lessons .cp-file path { fill: none; stroke: currentColor; stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; }
+.tc-lessons .cp-action { display: inline-flex; justify-content: center; align-items: center; flex: none; min-height: 30px; padding: 5px 10px; border-radius: 5px; color: #fff; background: #333; font: 500 11px/20px var(--ss-font); white-space: nowrap; }
+
+.tc-lessons .cp-frame { position: relative; width: 320px; height: 252px; overflow: hidden; background: #f4f4f4; }
+.tc-lessons .cp-export-window { position: absolute; left: 6px; top: 8px; width: 308px; border: 1px solid #e4e4e4; border-radius: 9px; background: #fff; box-shadow: 0 4px 14px #0000000b; }
+.tc-lessons .cp-window-bar { position: relative; display: grid; place-items: center; height: 30px; border-bottom: 1px solid #eee; color: #888; font-size: 10px; }
+.tc-lessons .cp-window-dots { position: absolute; top: 12px; left: 11px; display: flex; gap: 4px; }
+.tc-lessons .cp-window-dots i { width: 6px; height: 6px; border-radius: 50%; background: #d8d8d8; }
+.tc-lessons .cp-export-heading { display: flex; align-items: baseline; justify-content: space-between; padding: 15px 14px 9px; }
+.tc-lessons .cp-export-heading strong { font-weight: 550; color: #333; }
+.tc-lessons .cp-export-heading > span { color: #999; font-size: 10px; }
+.tc-lessons .cp-export-row { display: flex; align-items: center; gap: 9px; margin: 0 14px; padding: 9px 0; border-bottom: 1px solid #f1f1f1; }
+.tc-lessons .cp-export-row small { display: block; color: #999; font-size: 10px; line-height: 14px; }
+.tc-lessons .cp-ready { margin-left: auto; color: #888; font-size: 10px; }
+.tc-lessons .cp-export-status { position: absolute; top: 53px; left: 186px; width: 146px; padding: 10px 11px 10px 27px; border-radius: 7px; background: #fff; color: #555; box-shadow: 0 3px 12px #0000001c, 0 0 0 1px #e8e8e8; font-size: 11px; line-height: 16px; }
+.tc-lessons .cp-export-status small { display: block; color: #999; font-size: 10px; }
+.tc-lessons .cp-status-dot { position: absolute; left: 12px; top: 15px; width: 6px; height: 6px; border-radius: 50%; background: #65947a; }
+.tc-lessons .cp-frame[data-good] .cp-export-window { left: 22px; top: 78px; width: 276px; }
+.tc-lessons .cp-frame[data-good] .cp-export-status { top: 16px; left: 150px; width: 146px; }
+
+.tc-lessons .cp-anatomy { width: 284px; padding: 16px; border: 1px solid #e9e9e9; border-radius: 8px; background: #fff; }
+.tc-lessons .cp-project-head { display: flex; align-items: center; gap: 12px; }
+.tc-lessons .cp-project-icon { display: grid; place-items: center; flex: none; width: 26px; height: 26px; border-radius: 5px; background: #f2f2f2; }
+.tc-lessons .cp-project-head h3, .tc-lessons .cp-project-head p { font-size: 12px; font-weight: 400; color: #777; line-height: 18px; }
+.tc-lessons .cp-project-rows { display: grid; gap: 10px; margin: 18px 0; color: #777; }
+.tc-lessons .cp-project-rows > div { display: flex; align-items: center; gap: 15px; }
+.tc-lessons .cp-project-rows > div:last-child { padding-left: 7px; gap: 31px; }
+.tc-lessons .cp-project-rows small { font-size: 12px; color: #777; }
+.tc-lessons .cp-project-foot { display: flex; flex-direction: column; align-items: center; gap: 7px; color: #777; font-size: 12px; }
+.tc-lessons .cp-anatomy[data-good] .cp-project-head { align-items: flex-start; gap: 10px; }
+.tc-lessons .cp-anatomy[data-good] .cp-project-head h3 { font-size: 14px; line-height: 20px; font-weight: 550; color: #333; }
+.tc-lessons .cp-anatomy[data-good] .cp-project-head p { margin-top: 2px; color: #999; font-size: 11px; line-height: 16px; }
+.tc-lessons .cp-anatomy[data-good] .cp-project-rows { gap: 0; margin: 16px 0 12px; }
+.tc-lessons .cp-anatomy[data-good] .cp-project-rows > div { justify-content: space-between; height: 30px; padding: 0; gap: 12px; }
+.tc-lessons .cp-anatomy[data-good] .cp-project-rows small { color: #999; font-size: 10px; }
+.tc-lessons .cp-anatomy[data-good] .cp-project-foot { flex-direction: row; justify-content: space-between; padding-top: 12px; border-top: 1px solid #eee; font-size: 10px; color: #999; }
+
+.tc-lessons .cp-plan { width: 284px; padding: 14px; border: 2px solid #7598cb; border-radius: 10px; background: #fff; box-shadow: 0 6px 15px #3d69a22e; }
+.tc-lessons .cp-plan-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 7px 9px; border: 1px solid #9eb7db; border-radius: 6px; background: #f0f5fd; }
+.tc-lessons .cp-plan-head h3 { color: #426da9; }
+.tc-lessons .cp-plan-badge { padding: 2px 7px; border-radius: 4px; color: #fff; background: #4c76b4; font-size: 10px; font-weight: 500; }
+.tc-lessons .cp-plan-price { display: flex; align-items: baseline; gap: 5px; margin-top: 12px; padding: 9px; border: 1px solid #9eb7db; border-radius: 6px; color: #426da9; }
+.tc-lessons .cp-plan-price strong { font-size: 24px; font-weight: 550; line-height: 28px; }
+.tc-lessons .cp-plan-price > span { font-size: 11px; }
+.tc-lessons .cp-plan-seats { display: flex; justify-content: space-between; gap: 12px; margin: 10px 0; padding: 7px 9px; border: 1px solid #9eb7db; border-radius: 5px; color: #426da9; font-size: 10px; font-weight: 500; }
+.tc-lessons .cp-plan > .cp-action { width: 100%; background: #4c76b4; box-shadow: 0 3px 7px #3d69a244; }
+.tc-lessons .cp-plan[data-good] { padding: 18px; border: 1px solid #e9e9e9; border-radius: 8px; box-shadow: none; }
+.tc-lessons .cp-plan[data-good] .cp-plan-head { padding: 0; border: 0; border-radius: 0; background: none; }
+.tc-lessons .cp-plan[data-good] .cp-plan-head h3 { color: #333; }
+.tc-lessons .cp-plan[data-good] .cp-plan-badge { background: #eef3ef; color: #698471; font-weight: 400; }
+.tc-lessons .cp-plan[data-good] .cp-plan-price { margin-top: 18px; padding: 0; border: 0; color: #333; }
+.tc-lessons .cp-plan[data-good] .cp-plan-price > span { color: #999; }
+.tc-lessons .cp-plan[data-good] .cp-plan-seats { margin: 16px 0; padding: 0; border: 0; color: #888; font-weight: 400; }
+.tc-lessons .cp-plan[data-good] > .cp-action { background: #333; box-shadow: none; }
+
+.tc-lessons .cp-tasks { width: 300px; height: 206px; }
+.tc-lessons .cp-task-design { width: 600px; padding: 24px; border: 1px solid #e9e9e9; border-radius: 12px; background: #fff; transform: scale(.5); transform-origin: top left; }
+.tc-lessons .cp-task-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 18px; }
+.tc-lessons .cp-task-head > span { color: #999; font-size: 11px; }
+.tc-lessons .cp-task-columns, .tc-lessons .cp-task-row { display: grid; grid-template-columns: 2fr 1fr 1.1fr 1fr; align-items: center; gap: 10px; }
+.tc-lessons .cp-task-columns { color: #999; font-size: 10px; line-height: 24px; }
+.tc-lessons .cp-task-row { height: 44px; border-top: 1px solid #eee; }
+.tc-lessons .cp-task-owner, .tc-lessons .cp-task-due, .tc-lessons .cp-task-status { color: #999; font-size: 11px; }
+.tc-lessons .cp-tasks[data-good] .cp-task-design { width: 300px; padding: 16px; border-radius: 8px; transform: none; }
+.tc-lessons .cp-tasks[data-good] .cp-task-head { margin-bottom: 10px; }
+.tc-lessons .cp-tasks[data-good] .cp-task-columns { display: none; }
+.tc-lessons .cp-tasks[data-good] .cp-task-row { grid-template-columns: auto 1fr auto; grid-template-rows: 18px 16px; height: auto; min-height: 49px; gap: 0 6px; padding: 8px 0; }
+.tc-lessons .cp-tasks[data-good] .cp-task-name { grid-column: 1 / 3; grid-row: 1; }
+.tc-lessons .cp-tasks[data-good] .cp-task-owner { grid-column: 1; grid-row: 2; font-size: 10px; }
+.tc-lessons .cp-tasks[data-good] .cp-task-due { grid-column: 2; grid-row: 2; font-size: 10px; }
+.tc-lessons .cp-tasks[data-good] .cp-task-due::before { content: '· '; }
+.tc-lessons .cp-tasks[data-good] .cp-task-status { grid-column: 3; grid-row: 1 / 3; font-size: 10px; }
+
+.tc-lessons .cp-symbol { display: block; flex: none; color: inherit; }
+.tc-lessons .cp-symbol path { fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.tc-lessons .cp-edges { position: relative; width: 320px; height: 252px; }
+.tc-lessons .cp-sync-panel { position: absolute; left: 18px; top: 24px; width: 264px; padding: 16px; border: 1px solid #e5e5e5; border-radius: 9px; background: #fff; }
+.tc-lessons .cp-sync-panel h3 { margin-bottom: 14px; }
+.tc-lessons .cp-sync-panel > div { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0; }
+.tc-lessons .cp-sync-panel small { color: #888; font-size: 10px; }
+.tc-lessons .cp-sync-status { position: absolute; left: 156px; top: 161px; display: flex; align-items: center; gap: 7px; padding: 11px 12px; border: 1px solid #e5e5e5; border-radius: 7px; background: #fff; box-shadow: 0 3px 8px #00000008; font-size: 11px; white-space: nowrap; }
+.tc-lessons .cp-sync-status .cp-symbol { width: 15px; height: 15px; color: #698471; }
+.tc-lessons .cp-edges[data-good] .cp-sync-status { top: 176px; }
+
+.tc-lessons .cp-nesting { width: 284px; padding: 12px 12px 3px; border-radius: 20px; background: #eaeaea; }
+.tc-lessons .cp-preferences { padding: 14px 14px 4px; border-radius: 8px; background: #fff; }
+.tc-lessons .cp-preferences h3 { margin-bottom: 12px; }
+.tc-lessons .cp-preference-row { display: flex; justify-content: space-between; align-items: center; height: 33px; gap: 12px; }
+.tc-lessons .cp-preference-row small { color: #888; font-size: 10px; }
+.tc-lessons .cp-toggle { width: 26px; height: 16px; padding: 2px; border-radius: 10px; background: #6e8474; }
+.tc-lessons .cp-toggle i { display: block; width: 12px; height: 12px; margin-left: 10px; border-radius: 50%; background: #fff; }
+.tc-lessons .cp-preferences > .cp-action { width: 100%; margin-top: 12px; }
+.tc-lessons .cp-nesting[data-good] { padding: 12px; }
+.tc-lessons .cp-nesting[data-good] .cp-preferences { padding: 14px; }
+
+.tc-lessons .cp-controls-study { width: 284px; padding: 18px; border: 1px solid #e9e9e9; border-radius: 8px; background: #fff; }
+.tc-lessons .cp-controls-study h3 { margin-bottom: 16px; }
+.tc-lessons .cp-search-control { display: flex; align-items: flex-start; gap: 8px; height: 36px; padding: 5px 10px 11px; border: 1px solid #e2e2e2; border-radius: 5px; color: #777; line-height: 18px; }
+.tc-lessons .cp-search-control .cp-symbol { margin-top: 4px; }
+.tc-lessons .cp-control-actions { display: flex; gap: 14px; margin-top: 12px; align-items: center; }
+.tc-lessons .cp-export-control, .tc-lessons .cp-preview-control { display: flex; gap: 7px; align-items: flex-start; height: 34px; padding: 5px 10px 11px; border-radius: 5px; background: #333; color: #fff; font-size: 11px; line-height: 18px; white-space: nowrap; }
+.tc-lessons .cp-export-control .cp-symbol, .tc-lessons .cp-preview-control .cp-symbol { width: 16px; height: 16px; margin-top: 4px; }
+.tc-lessons .cp-preview-control { padding-inline: 0; color: #555; background: none; }
+.tc-lessons .cp-controls-study[data-good] .cp-search-control, .tc-lessons .cp-controls-study[data-good] .cp-export-control, .tc-lessons .cp-controls-study[data-good] .cp-preview-control { align-items: center; padding-block: 0; }
+.tc-lessons .cp-controls-study[data-good] .cp-symbol { margin-top: 0; }
+
+.tc-lessons .cp-density { width: 284px; padding: 16px; border: 1px solid #e9e9e9; border-radius: 8px; background: #fff; }
+.tc-lessons .cp-density-head { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
+.tc-lessons .cp-density-head > span { color: #888; font-size: 10px; }
+.tc-lessons .cp-appointment { display: grid; grid-template-columns: 63px 1fr; gap: 12px; padding-block: 5px; }
+.tc-lessons .cp-appointment time { color: #888; font-size: 10px; line-height: 18px; }
+.tc-lessons .cp-appointment strong { display: block; font-weight: 450; }
+.tc-lessons .cp-appointment small { display: block; margin-top: 10px; color: #888; font-size: 10px; line-height: 16px; }
+.tc-lessons .cp-density[data-good] .cp-appointment { padding-block: 8px; }
+.tc-lessons .cp-density[data-good] .cp-appointment small { margin-top: 1px; }
+
+.tc-lessons .cp-contrast-ground { display: grid; place-items: center; width: 320px; height: 244px; background: #e9edef; }
+.tc-lessons .cp-contrast-panel { width: 274px; padding: 18px; border: 1px solid #e4e8ea; border-radius: 8px; background: #e6eaec; color: #a4adb3; }
+.tc-lessons .cp-contrast-panel h3 { color: inherit; }
+.tc-lessons .cp-contrast-panel p { color: #aeb7bd; }
+.tc-lessons .cp-access-row { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; margin: 18px 0; font-size: 11px; }
+.tc-lessons .cp-access-row > span:last-child { font-size: 10px; }
+.tc-lessons .cp-contrast-panel .cp-action { gap: 7px; width: 100%; background: #c6cfd5; color: #eef1f3; }
+.tc-lessons .cp-contrast-panel .cp-symbol { width: 15px; height: 15px; }
+.tc-lessons .cp-contrast-ground[data-good] .cp-contrast-panel { background: #fff; color: #444; border-color: #d9dfe2; }
+.tc-lessons .cp-contrast-ground[data-good] .cp-contrast-panel p { color: #777; }
+.tc-lessons .cp-contrast-ground[data-good] .cp-action { color: #fff; background: #333; }
+
+.tc-lessons .cp-icon-list { width: 284px; padding: 16px; border: 1px solid #e9e9e9; border-radius: 8px; background: #fff; }
+.tc-lessons .cp-icon-list h3 { margin-bottom: 12px; }
+.tc-lessons .cp-icon-row { display: flex; align-items: center; gap: 9px; height: 38px; }
+.tc-lessons .cp-icon-row small { margin-left: auto; color: #888; font-size: 10px; }
+.tc-lessons .cp-icon-slot { display: grid; place-items: center; width: 22px; height: 22px; color: #777; }
+.tc-lessons .cp-icon-inbox .cp-symbol { width: 17px; height: 17px; }
+.tc-lessons .cp-icon-inbox .cp-symbol path { fill: currentColor; stroke: none; fill-rule: evenodd; }
+.tc-lessons .cp-icon-folder .cp-symbol { width: 14px; height: 14px; }
+.tc-lessons .cp-icon-folder .cp-symbol path { stroke-width: 1; }
+.tc-lessons .cp-icon-archive .cp-symbol { width: 22px; height: 22px; }
+.tc-lessons .cp-icon-archive .cp-symbol path { stroke-width: 2.2; }
+.tc-lessons .cp-icon-list[data-good] .cp-symbol { width: 18px; height: 18px; }
+.tc-lessons .cp-icon-list[data-good] .cp-symbol path { fill: none; stroke: currentColor; stroke-width: 1.5; }
+
+.tc-lessons .cp-decoration { width: 284px; padding: 18px; border-radius: 9px; background: radial-gradient(ellipse at 95% 10%, #e4d9ff 0, transparent 65%), linear-gradient(130deg, #f5e9f4, #e6f0ff); box-shadow: 0 0 24px #9284c52e; }
+.tc-lessons .cp-decoration h3 { color: #7567a6; }
+.tc-lessons .cp-activity-total { display: flex; align-items: baseline; gap: 8px; margin-top: 13px; color: #7964b1; }
+.tc-lessons .cp-activity-total strong { font-size: 26px; font-weight: 550; line-height: 30px; }
+.tc-lessons .cp-activity-total > span { font-size: 11px; }
+.tc-lessons .cp-decoration p { color: #9887b8; font-size: 10px; line-height: 16px; }
+.tc-lessons .cp-activity-chart { display: flex; align-items: flex-end; gap: 12px; height: 70px; margin-top: 3px; }
+.tc-lessons .cp-activity-chart > div { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.tc-lessons .cp-activity-chart i { display: block; width: 100%; border-radius: 3px 3px 0 0; background: linear-gradient(0deg, #cba4df, #9e9bdd); box-shadow: 0 0 10px #b292d46b; }
+.tc-lessons .cp-activity-chart span { color: #9385ac; font-size: 9px; line-height: 14px; }
+.tc-lessons .cp-report-link { display: flex; align-items: center; gap: 5px; width: max-content; margin-top: 12px; color: #7e5caf; font-size: 11px; }
+.tc-lessons .cp-report-link .cp-symbol { width: 14px; height: 14px; }
+.tc-lessons .cp-decoration[data-good] { background: #fff; box-shadow: 0 0 0 1px #e9e9e9; }
+.tc-lessons .cp-decoration[data-good] h3, .tc-lessons .cp-decoration[data-good] .cp-activity-total { color: #333; }
+.tc-lessons .cp-decoration[data-good] p, .tc-lessons .cp-decoration[data-good] .cp-activity-chart span { color: #888; }
+.tc-lessons .cp-decoration[data-good] .cp-activity-chart i { background: #dedede; box-shadow: none; }
+.tc-lessons .cp-decoration[data-good] .cp-activity-chart > div:last-child i { background: #777; }
+.tc-lessons .cp-decoration[data-good] .cp-report-link { color: #555; }
+
+.tc-lessons .cp-product { width: 284px; border: 1px solid #e5e5e5; border-radius: 8px; background: #fff; overflow: hidden; }
+.tc-lessons .cp-product-top { position: relative; display: flex; align-items: center; justify-content: center; height: 36px; border-bottom: 1px solid #e9e9e9; background: #f6f6f6; }
+.tc-lessons .cp-product-top h3 { font-size: 11px; font-weight: 450; }
+.tc-lessons .cp-product-top .cp-window-dots { top: 15px; left: 12px; }
+.tc-lessons .cp-document { display: flex; align-items: center; justify-content: center; gap: 7px; height: 32px; margin: 10px 12px; border: 1px solid #e6e6e6; border-radius: 5px; background: #fafafa; font-size: 11px; }
+.tc-lessons .cp-document .cp-file { width: 12px; height: 14px; }
+.tc-lessons .cp-permission { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; gap: 9px; padding: 10px 12px 18px; }
+.tc-lessons .cp-permission > span:first-child { padding: 4px 8px; border-radius: 12px; background: #f2f2f2; font-size: 11px; }
+.tc-lessons .cp-permission > span:last-child { display: flex; align-items: center; gap: 2px; font-size: 10px; }
+.tc-lessons .cp-permission .cp-symbol { width: 14px; height: 14px; }
+.tc-lessons .cp-product-footer { display: flex; justify-content: flex-end; padding: 8px 12px; border-top: 1px solid #e9e9e9; background: #f6f6f6; }
+.tc-lessons .cp-product-footer .cp-action { gap: 6px; }
+.tc-lessons .cp-product-footer .cp-symbol { width: 14px; height: 14px; }
+.tc-lessons .cp-product[data-good] { padding: 18px; }
+.tc-lessons .cp-product[data-good] .cp-product-top { justify-content: flex-start; height: auto; border: 0; background: none; }
+.tc-lessons .cp-product[data-good] .cp-product-top h3 { font-size: 14px; font-weight: 550; }
+.tc-lessons .cp-product[data-good] .cp-window-dots { display: none; }
+.tc-lessons .cp-product[data-good] .cp-document { justify-content: flex-start; height: 35px; margin: 12px 0; padding: 0; border: 0; background: none; font-size: 12px; }
+.tc-lessons .cp-product[data-good] .cp-document .cp-file { width: 16px; height: 18px; }
+.tc-lessons .cp-product[data-good] .cp-permission { flex-wrap: nowrap; justify-content: space-between; gap: 10px; padding: 0 0 18px; }
+.tc-lessons .cp-product[data-good] .cp-permission > span:first-child { padding: 0; border-radius: 0; background: none; }
+.tc-lessons .cp-product[data-good] .cp-product-footer { padding: 0; border: 0; background: none; }
+.tc-lessons .cp-product[data-good] .cp-product-footer .cp-action { width: 100%; }
+
+/* Unread gutter: an inbox with two unread rows */
+.tc-lessons .cp-inbox { width: 100%; padding: 12px 8px; background: #fff; border-radius: 10px; }
+.tc-lessons .cp-inbox[data-shove] .ss-row[data-unread] { padding-left: 20px; }
+.tc-lessons .cp-inbox h3 { margin: 0 0 6px; padding-left: 12px; font: 600 13px/18px var(--ss-font); color: #2b3238; }

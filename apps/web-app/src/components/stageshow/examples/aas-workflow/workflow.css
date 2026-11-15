@@ -1,0 +1,294 @@
+.aw {
+  font-family: Outfit, sans-serif;
+}
+.aw .ss-stage {
+  overflow: hidden;
+  background: #000;
+}
+.aw .aw-win {
+  position: absolute;
+  top: 18px;
+  left: 16px;
+  width: 608px;
+  height: 480px;
+  --ss-surface: #111b1b;
+  --ss-raised: #1d2b2a;
+  --ss-line: #2e4140;
+  --ss-text-strong: #eef7f5;
+  --ss-text: #b4b4b4;
+}
+.aw .aw-label {
+  font-size: 11px;
+  color: #b4b4b4;
+}
+.aw .aw-layout {
+  display: grid;
+  grid-template-columns: 224px 1fr;
+  height: 100%;
+  background: #111a1a;
+}
+.aw .aw-file {
+  padding: 20px 16px;
+  border-right: 1px solid #2e4140;
+  background: #172323;
+}
+.aw .aw-file-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 12px monospace;
+  color: #dcdcdc;
+  margin-bottom: 16px;
+}
+.aw .aw-file-name > span {
+  font: 24px Outfit;
+  color: #64eee7;
+}
+.aw .aw-paper {
+  padding: 20px 18px 38px;
+  background: #e2e2e2;
+  color: #313131;
+  border-radius: 3px;
+  box-shadow: 5px 5px 0 #888888;
+  transform: translateY(4px);
+  transition:
+    transform 0.65s,
+    box-shadow 0.65s;
+}
+.aw [data-step='1'] .aw-paper {
+  transform: translateY(-2px);
+  box-shadow: 5px 8px 0 #888888;
+}
+.aw .aw-paper-label {
+  font-size: 9px;
+  letter-spacing: 0.12em;
+}
+.aw .aw-paper h3 {
+  font-size: 24px;
+  letter-spacing: -0.04em;
+  margin: 10px 0 22px;
+}
+.aw .aw-method {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 21px;
+}
+.aw .aw-method strong {
+  font-size: 11px;
+  font-weight: 500;
+  margin-bottom: 3px;
+}
+.aw .aw-method .ss-bar {
+  background: #66666640;
+  height: 4px;
+}
+.aw .aw-agent {
+  padding: 24px 22px;
+}
+.aw .aw-request {
+  font-size: 16px;
+  line-height: 1.4;
+  background: #263635;
+  padding: 14px 16px;
+  border-radius: 14px 14px 3px 14px;
+  margin-bottom: 15px;
+  color: #f2f8f6;
+}
+.aw .aw-attachment {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #d1d1d1;
+  font: 12px monospace;
+  opacity: 0.25;
+  transform: translateY(8px);
+  transition:
+    opacity 0.6s,
+    transform 0.6s;
+}
+.aw .aw-attachment[data-on='true'] {
+  opacity: 1;
+  transform: none;
+}
+.aw .aw-file-icon {
+  font: 22px Outfit;
+}
+.aw .aw-check {
+  margin-left: auto;
+  font: 14px Outfit;
+  opacity: 0;
+  transition: opacity 0.6s;
+}
+.aw .aw-attachment[data-on='true'] .aw-check {
+  opacity: 1;
+}
+.aw .aw-progress {
+  margin: 14px 0;
+}
+.aw .aw-dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid #727272;
+  transition:
+    background 0.5s,
+    border-color 0.5s;
+}
+.aw .aw-dot[data-done='true'] {
+  background: #64eee7;
+  border-color: #64eee7;
+}
+.aw .aw-diff {
+  background: #121212;
+  border: 1px solid #3d3d3d;
+  border-radius: 6px;
+  padding: 10px;
+  opacity: 0.2;
+  transition: opacity 0.6s;
+}
+.aw .aw-diff[data-on='true'] {
+  opacity: 1;
+}
+.aw .aw-diff-line {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  height: 19px;
+  color: #b2b2b2;
+  background: #44444455;
+  padding: 0 7px;
+  transform: translateX(8px);
+  transition: transform 0.5s;
+}
+.aw .aw-diff[data-on='true'] .aw-diff-line {
+  transform: none;
+}
+.aw .aw-diff-line .ss-bar {
+  background: #b2b2b270;
+  height: 4px;
+}
+.aw .aw-removed {
+  background: #723b3b33;
+  color: #c77d7d;
+  margin-bottom: 3px;
+}
+.aw .aw-removed .ss-bar {
+  background: #c77d7d60;
+}
+.aw .aw-review {
+  display: flex;
+  justify-content: space-between;
+  color: #dadada;
+  font-size: 12px;
+  margin-top: 15px;
+  opacity: 0;
+  transform: translateY(6px);
+  transition:
+    opacity 0.6s,
+    transform 0.6s;
+}
+.aw .aw-review[data-on='true'] {
+  opacity: 1;
+  transform: none;
+}
+.aw .ss-stage[data-layout='compact'] .aw-win {
+  left: 0;
+  top: 0;
+  width: 358px;
+  height: 430px;
+}
+.aw .ss-stage[data-layout='compact'] .aw-layout {
+  grid-template-columns: 1fr;
+}
+.aw .ss-stage[data-layout='compact'] .aw-file {
+  display: none;
+}
+.aw .ss-stage[data-layout='compact'] .aw-agent {
+  padding: 16px 22px;
+}
+.aw .ss-stage[data-layout='compact'] .aw-request {
+  font-size: 17px;
+  margin-bottom: 10px;
+}
+.aw .ss-stage[data-layout='compact'] .aw-progress {
+  margin: 7px 0;
+}
+.aw .ss-stage[data-layout='compact'] .aw-diff-line {
+  height: 15px;
+}
+.aw .ss-stage[data-layout='compact'] .aw-review {
+  margin-top: 10px;
+}
+
+.aw .aw-progress {
+  margin: 12px 0;
+}
+.aw .aw-diff-line {
+  height: 16px;
+}
+.aw .aw-paper {
+  padding-bottom: 48px;
+}
+.aw .ss-stage[data-layout='compact'] .aw-agent {
+  padding-top: 12px;
+}
+.aw .ss-stage[data-layout='compact'] .aw-request {
+  padding: 10px 14px;
+}
+.aw .ss-stage[data-layout='compact'] .aw-diff {
+  padding: 7px;
+}
+.aw .ss-stage[data-layout='compact'] .aw-diff-line {
+  height: 13px;
+}
+.aw .aw-attachment,
+.aw .aw-diff-line,
+.aw .aw-review {
+  will-change: transform;
+}
+.aw .ss-stage[data-layout='compact'] .aw-diff {
+  padding: 12px 7px;
+}
+
+.aw .aw-agent {
+  transition: opacity 0.55s;
+}
+.aw .aw-layout[data-step='4'] .aw-agent {
+  opacity: 0.5;
+}
+
+.aw .aw-diff-line {
+  color: #7ac4a2;
+  background: #274e3c55;
+}
+.aw .aw-removed {
+  background: #723b3b33;
+  color: #c77d7d;
+}
+.aw .aw-win {
+  --ss-surface: #141414;
+  --ss-raised: #242424;
+  --ss-line: #383838;
+  --ss-text-strong: #f4f4f4;
+  --ss-text: #bdbdbd;
+}
+.aw .aw-layout {
+  background: #141414;
+}
+.aw .aw-file {
+  background: #1c1c1c;
+  border-color: #383838;
+}
+.aw .aw-request {
+  background: #292929;
+  color: #f4f4f4;
+}
+.aw .aw-diff {
+  background: #101010;
+  border-color: #383838;
+}
+.aw .aw-label {
+  color: #aaa;
+}

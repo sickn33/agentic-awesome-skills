@@ -3,7 +3,7 @@
 const assert = require("node:assert/strict");
 const test = require("node:test");
 const { searchSkills, normalizeSearchInput } = require("../../lib/aas-v1/search");
-const { normalizeToken, normalizeCategory } = require("../../lib/aas-v1/normalize");
+const { normalizeToken, normalizeCategory, tokenize } = require("../../lib/aas-v1/normalize");
 const { loadBundledCatalog } = require("../../lib/aas-v1/catalog");
 const { McpServer } = require("../../lib/aas-v1/mcp");
 const core = require("../../lib/aas-v1");
@@ -99,4 +99,18 @@ test("MCP preserves explicit query options in server-owned evidence trace", asyn
   const bad = await server.handle({ jsonrpc: "2.0", id: 3, method: "tools/call", params: { name: "search_skills", arguments: { tags: ["x".repeat(65)] } } });
   assert.equal(bad.result.isError, true);
   assert.deepEqual(server.selectionTrace.at(-1).input, { inputValid: false });
+});
+
+
+test("literal technical names survive punctuation in indexed descriptions", () => {
+  const skills = ["Next.js", "Node.js", "CI/CD", ".NET", "C++", "C#"].map((name, i) => ({
+    id: `technical-${i}`, name, category: "test", description: `Build (${name}), safely.`,
+    searchTokens: tokenize(`Build (${name}), safely.`), tags: [], triggers: [],
+  }));
+  for (const skill of skills) {
+    const found = searchSkills({ skills }, { query: skill.name, matchMode: "all", requiredTerms: [skill.name] });
+    assert.deepEqual(found.results.map((result) => result.id), [skill.id]);
+  }
+  assert.ok(tokenize("Use Next.js.").includes("next.js"));
+  assert.ok(tokenize("A CI/CD pipeline").includes("ci-cd"));
 });
