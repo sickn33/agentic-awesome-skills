@@ -11,6 +11,10 @@ This README tracks `main`. Features listed under [Unreleased](CHANGELOG.md#unrel
 
 This is an independent community project, not affiliated with or endorsed by Google. Google, Antigravity, Gemini, and related names describe compatibility and install targets. The GitHub repository is canonical; the [hosted catalog](https://aaskills.tech/) and browser-local Workbench are companion discovery and review surfaces.
 
+⭐ Star this repository to support Agentic Awesome Skills. It helps our skills catalog reach more developers and stay visible on GitHub.
+
+<img src="assets/agentic-awesome-skills-star-button.gif" alt="Star the repo" width="600" />
+
 [![GitHub stars](https://img.shields.io/badge/⭐%2048%2C000%2B%20Stars-gold?style=for-the-badge)](https://github.com/sickn33/agentic-awesome-skills/stargazers)
 [![Follow @AASkills_ on X](https://img.shields.io/badge/Follow-%40AASkills__-black?style=for-the-badge&logo=x)](https://x.com/AASkills_)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
