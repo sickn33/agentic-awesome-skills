@@ -19,7 +19,7 @@ Adapted from [benjitaylor/skills](https://github.com/benjitaylor/skills/tree/802
 
 Use for a requested illustrated product interface or animated walkthrough built in React. For general frontend implementation use a broader frontend design skill.
 
-For the local examples, follow the [playground setup](README.md). On macOS or Linux with Node 24 or later, the launcher serves the playground through Portless on local HTTP. On Windows or Node 20–23, open the local address printed by Vite.
+For the local examples, follow the [playground setup](README.md). On macOS or Linux with Node 24 or later, the launcher serves the playground through Portless on local HTTP. On Windows or Node 20–23, open the local address printed by Vite. If the macOS or Linux launcher reports that Portless is unavailable, run `npm install --include=optional` from the Stageshow folder to restore the pinned launcher. Use the local URL printed by `npm run dev` when filming an example.
 
 ## Limitations and safety
 
