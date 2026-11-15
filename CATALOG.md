@@ -1,8 +1,8 @@
 # Skill Catalog
 
-Generated at: 2026-11-12T17:38:22.000Z
+Generated at: 2026-11-15T18:34:37.000Z
 
-Total skills: 2957
+Total skills: 2960
 
 ## agent-behavior (5)
 
@@ -574,7 +574,7 @@ Total skills: 2957
 | `reverse-browser-automation` | Automate browsers (Playwright) and Windows desktop applications (UI automation) for reverse-engineering evidence collection, UI-driven workflows, and network... | offensive | zhaoxuya520/reverse-skill | reverse, browser | reverse, browser, automation, automate, browsers, playwright, windows, desktop, applications, ui, engineering, evidence |
 | `skyvern-browser-automation` | AI-powered browser automation — navigate sites, fill forms, extract structured data, log in with stored credentials, and build reusable workflows. | safe | Skyvern-AI/skyvern | browser-automation, mcp, web-scraping, form-filling, ai-agents, workflow-automation | browser-automation, mcp, web-scraping, form-filling, ai-agents, workflow-automation, skyvern, browser, automation, ai, powered, navigate |
 
-## business (182)
+## business (183)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -658,6 +658,7 @@ Total skills: 2957
 | `moatmri` | Analyze AI disruption pressure across a business, map competitive exposure, and produce a 90-day defensive action plan. | safe | community | moatmri | moatmri, analyze, ai, disruption, pressure, business, map, competitive, exposure, produce, 90, day |
 | `monetization` | Estrategia e implementacao de monetizacao para produtos digitais - Stripe, subscriptions, pricing experiments, freemium, upgrade flows, churn prevention, rev... | critical | community | monetization, stripe, saas, pricing, subscriptions | monetization, stripe, saas, pricing, subscriptions, estrategia, implementacao, de, monetizacao, para, produtos, digitais |
 | `monthly-closing-statements` | Monthly closing register: period dates, cash/bank/party/inventory/TDS reconciliation flags, profit, receivables, payables, working capital, open adjustments ... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, accounting, audit, finance, database, csv, notion, sql, closing | sme, accounting, audit, finance, database, csv, notion, sql, closing, monthly, statements, register |
+| `no-free-work` | Classify a client request against the agreed scope, then draft the reply and a priced change order. Use for scope creep, extra requests, or 'should I charge ... | none | merabtinenadirb-png/no-free-work | freelance, scope-creep, client-communication, change-order, pricing, agency | freelance, scope-creep, client-communication, change-order, pricing, agency, no, free, work, classify, client, request |
 | `notification-reminder-hub` | Notification register: title, type, priority, recipient and department, message, linked record, trigger module, scheduled and sent dates and status. Use for ... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, analyze | sme, business, operations, database, csv, notion, sql, analyze, notification, reminder, hub, register |
 | `notion-manual-import` | Notion Manual Import: the Notion step for any module - CSV, property mapping, import steps and verification for the field list the active module confirmed. U... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | notion, csv, import, manual, operations, template, helper | notion, csv, import, manual, operations, template, helper, step, any, module, property, mapping |
 | `notion-template-business` | Expert in building and selling Notion templates as a business - not just making templates, but building a sustainable digital product business. Covers templa... | critical | vibeship-spawner-skills (Apache 2.0) | notion, business | notion, business, building, selling, just, making, sustainable, digital, product, covers, pricing, marketplaces |
@@ -1457,13 +1458,14 @@ Total skills: 2957
 | `skill-porter` | Preview conservative tool-name translations and copy complete local skill bundles for manual adaptation to Google Antigravity. | critical | Pranav-Nexus/antigravity-skill-porter | antigravity, claude, skills, migration, agent | antigravity, claude, skills, migration, agent, skill, porter, preview, conservative, name, translations, copy |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (240)
+## development (241)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `agent-harness-fault-injection` | Use when an agent workflow needs deterministic recovery evidence for sandbox, MCP/tool, worker, checkpoint, memory, or orchestration failures. | safe | self | agent-harness, fault-injection, recovery, state-machine, mcp, multi-agent | agent-harness, fault-injection, recovery, state-machine, mcp, multi-agent, agent, harness, fault, injection, deterministic, evidence |
 | `agents-md` | Create, revise, or audit AGENTS.md files from repository evidence, verified commands, and correctly scoped instructions without overwriting maintainer intent. | critical | community | agents, md | agents, md, revise, audit, files, repository, evidence, verified, commands, correctly, scoped, instructions |
 | `agenttrace-session-audit` | Audit local AI coding-agent sessions with agenttrace for cost, tool failures, latency, anomalies, health, diffs, and CI gates. | safe | luoyuctl/agenttrace | ai-coding, observability, cost-tracking, session-analysis | ai-coding, observability, cost-tracking, session-analysis, agenttrace, session, audit, local, ai, coding, agent, sessions |
+| `ai-code-review-triage` | Review AI-authored pull requests when line-by-line reading no longer scales; separate defect detection, product-context checks, and scoped human sign-off. | safe | self | code-review, pull-requests, ai-agents, approval | code-review, pull-requests, ai-agents, approval, ai, code, review, triage, authored, pull, requests, line |
 | `animated-github-profile` | Build high-impact, animated GitHub profile READMEs that play like mini-movies using pure SVG, CSS, and SMIL animations. Covers dark/light theme switching, sw... | safe | self | github, profile-readme, svg-animation, smil, css-animation, portfolio | github, profile-readme, svg-animation, smil, css-animation, portfolio, animated, profile, high, impact, readmes, play |
 | `api-contract-testing` | Design and review API contract tests across providers and consumers. Use for schema changes, compatibility regressions and client integration failures. | safe | self | api, contracts, testing, compatibility | api, contracts, testing, compatibility, contract, review, tests, providers, consumers, schema, changes, regressions |
 | `api-endpoint-builder` | Builds reviewable REST API endpoint scaffolds with validation, error handling, authentication, and documentation. Follows best practices for security and sca... | critical | community | api, endpoint, builder | api, endpoint, builder, reviewable, rest, scaffolds, validation, error, handling, authentication, documentation, follows |
@@ -2256,7 +2258,7 @@ Total skills: 2957
 | `nap-consistency-checker` | NAP Consistency Checker. Use when working with canonical business name, address and phone plus listing records. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, nap, consistency, checker, working, canonical, business, name, address, phone, plus |
 | `review-response-generator` | Review Response Generator. Use when working with review text and verified business context. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, review, response, generator, working, text, verified, business, context |
 
-## marketing (124)
+## marketing (125)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2287,6 +2289,7 @@ Total skills: 2957
 | `copy-editing` | You are an expert copy editor specializing in marketing and conversion copy. Your goal is to systematically improve existing copy through focused editing pas... | none | community | copy, editing | copy, editing, editor, specializing, marketing, conversion, goal, systematically, improve, existing, through, passes |
 | `copywriting` | Write rigorous, conversion-focused marketing copy for landing pages and emails. Enforces brief confirmation and strict no-fabrication rules. | none | community | copywriting | copywriting, write, rigorous, conversion, marketing, copy, landing, pages, emails, enforces, brief, confirmation |
 | `coupler-marketing-analytics` | Analyze cross-channel marketing performance from live Coupler.io data through its hosted MCP server: channel and campaign comparison, ROI, anomalies and budg... | critical | coupler-io/skills | marketing, analytics, ppc, google-ads, meta-ads, ga4, mcp, reporting | marketing, analytics, ppc, google-ads, meta-ads, ga4, mcp, reporting, coupler, analyze, cross, channel |
+| `creative-psychology-hooks` | Generate and grade ad hooks, angles and video openers with a creative psychology framework when paid social ideas need a clear mechanism instead of generic b... | safe | gomarble-ai/marketing-agent | ads, creative-strategy, hooks, copywriting, meta-ads, tiktok-ads, marketing | ads, creative-strategy, hooks, copywriting, meta-ads, tiktok-ads, marketing, creative, psychology, generate, grade, ad |
 | `cro` | When the user wants to optimize, improve, or increase conversions on any marketing page or form — including homepage, landing pages, pricing pages, feature p... | safe | coreyhaines31/marketingskills | cro | cro, user, wants, optimize, improve, increase, conversions, any, marketing, page, form, including |
 | `customer-psychographic-profiler` | Build an evidence-grounded customer profile of motivations, fears, identity, and trust barriers before positioning, copywriting, or funnel design. | safe | community | customer, psychographic, profiler | customer, psychographic, profiler, evidence, grounded, profile, motivations, fears, identity, trust, barriers, before |
 | `customer-research` | When the user wants to conduct, analyze, or synthesize customer research. | critical | coreyhaines31/marketingskills | customer, research | customer, research, user, wants, conduct, analyze, synthesize |

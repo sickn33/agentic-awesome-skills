@@ -2301,6 +2301,37 @@
     ]
   },
   {
+    "id": "ai-code-review-triage",
+    "path": "skills/ai-code-review-triage",
+    "category": "development",
+    "name": "ai-code-review-triage",
+    "description": "Review AI-authored pull requests when line-by-line reading no longer scales; separate defect detection, product-context checks, and scoped human sign-off.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-11-14",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "MIT",
+    "license_source": "https://github.com/laulauraluo/ai-code-review-triage/blob/91a1c77ceab95c1c3f45680debcc29de2d684206/LICENSE",
+    "tags": [
+      "code-review",
+      "pull-requests",
+      "ai-agents",
+      "approval"
+    ]
+  },
+  {
     "id": "ai-coding-agent-guardrails",
     "path": "skills/ai-coding-agent-guardrails",
     "category": "security",
@@ -19471,6 +19502,41 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "creative-psychology-hooks",
+    "path": "skills/creative-psychology-hooks",
+    "category": "marketing",
+    "name": "creative-psychology-hooks",
+    "description": "Generate and grade ad hooks, angles and video openers with a creative psychology framework when paid social ideas need a clear mechanism instead of generic brainstorming.",
+    "risk": "safe",
+    "source": "https://github.com/gomarble-ai/marketing-agent/tree/3e58349a6d29076c474a3c3b32b5afe2a3b8cdcd/skills/creative-psychology-hooks",
+    "date_added": "2026-11-14",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "gomarble-ai/marketing-agent",
+    "license": "MIT",
+    "license_source": "https://github.com/gomarble-ai/marketing-agent/blob/3e58349a6d29076c474a3c3b32b5afe2a3b8cdcd/LICENSE",
+    "tags": [
+      "ads",
+      "creative-strategy",
+      "hooks",
+      "copywriting",
+      "meta-ads",
+      "tiktok-ads",
+      "marketing"
+    ]
   },
   {
     "id": "cred-omega",
@@ -49055,6 +49121,40 @@
     "source_repo": "supernovae-st/nika-agents",
     "license": "MIT",
     "license_source": "https://github.com/supernovae-st/nika-agents/blob/main/LICENSE"
+  },
+  {
+    "id": "no-free-work",
+    "path": "skills/no-free-work",
+    "category": "business",
+    "name": "no-free-work",
+    "description": "Classify a client request against the agreed scope, then draft the reply and a priced change order. Use for scope creep, extra requests, or 'should I charge for this'.",
+    "risk": "none",
+    "source": "community",
+    "date_added": "2026-11-12",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "merabtinenadirb-png/no-free-work",
+    "license": "MIT",
+    "license_source": "https://github.com/merabtinenadirb-png/no-free-work/blob/main/LICENSE",
+    "tags": [
+      "freelance",
+      "scope-creep",
+      "client-communication",
+      "change-order",
+      "pricing",
+      "agency"
+    ]
   },
   {
     "id": "noaa-radar-satellite-fetching",
