@@ -720,7 +720,7 @@ Key source families include:
 ### Additional Sources
 
 - **[agent-cards/skill](https://github.com/agent-cards/skill)**: Manage prepaid virtual Visa cards for AI agents. Create cards, check balances, view credentials, close cards, and get support via MCP tools.
-- **[No Stairs Please MCP](https://nostairsplease.com/mcp)**: Public remote MCP server for searching 6,500+ independent live-music venues, load-in accessibility, sound specs, and drive-time tour routes across the US and Canada.
+- **[No Stairs Please MCP](https://nostairsplease.com/mcp)**: Hosted MCP for finding independent live-music venues, checking room and sound details, and planning tour routes. Connect a No Stairs Please account to access your plan’s venue details and manage saved Favorites.
 
 </details>
 
