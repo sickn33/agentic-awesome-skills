@@ -5,7 +5,8 @@ category: development
 risk: none
 source: self
 source_type: self
-license: MIT
+license: CC-BY-3.0
+license_source: https://github.com/google/eng-practices/blob/master/LICENSE
 date_added: "2026-11-16"
 author: instax-dutta
 tags: [code-review, pull-request, changelist, engineering-practices, communication, review-etiquette]
@@ -146,5 +147,12 @@ private customer data from a diff into the review body.
 - Upstream skill repository, including the full reviewer guide, developer guide
   and emergency policy:
   <https://github.com/instax-dutta/google-code-review>
+
+This skill text is a derivative of Google's eng-practices documentation and is
+distributed under CC BY 3.0, the same license as the source. It condenses and
+restructures the original into reviewer and author modes and adds worked examples,
+limitations and safety notes; the practices themselves are unchanged. The
+attribution and full license text are in the `LICENSE` file next to this file.
+
 - Pair with a testing or CI skill when the question is whether the change is
   correct rather than whether it should land.

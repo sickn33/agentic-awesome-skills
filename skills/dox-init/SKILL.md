@@ -51,25 +51,49 @@ one containing the DOX marker is kept as-is, one without it is copied to
 
 ## How It Works
 
-### 1. Install the root contract
+### 1. Inspect the existing root file first
 
-Download the official contract into the project root and review it before use:
+Nothing is downloaded into the project root until the current file has been read.
+Check in this order:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/agent0ai/dox/main/AGENTS.md -o AGENTS.md
+test -f AGENTS.md && grep -q "DOX framework" AGENTS.md; echo "marker:$?"
 ```
 
-If the existing root file already contains the DOX framework marker, stop
-overwriting and keep the user's customisations. If it exists without the marker,
-back it up first.
+- No `AGENTS.md`: continue to step 2.
+- `AGENTS.md` contains the DOX marker (`grep` exit 0): stop. Report that the tree
+  is already installed and keep the user's customisations. Do not fetch, do not
+  overwrite.
+- `AGENTS.md` exists without the marker: copy it to `AGENTS.md.bak` and tell the
+  user before going further.
 
-### 2. Scan the real structure
+### 2. Download to a temporary path, review, then install
+
+Fetch the contract beside the project, not over the existing file, and read it:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/agent0ai/dox/main/AGENTS.md -o AGENTS.md.incoming
+```
+
+Review the incoming file, then install it with a move, which only replaces the
+root file once the download has succeeded. On a project with no existing
+`AGENTS.md`, this is safe as-is; where one existed, the `AGENTS.md.bak` copy from
+step 1 is the recovery path.
+
+```bash
+mv AGENTS.md.incoming AGENTS.md
+```
+
+If the download fails, delete the partial file and stop: never leave a truncated
+contract in place of a working one.
+
+### 3. Scan the real structure
 
 List source directories, configs, docs, assets and tests. Ignore generated and
 vendored paths: `node_modules`, `.git`, `dist`, `build`, `venv`, `.venv`,
 `__pycache__`, `coverage` and lockfiles.
 
-### 3. Build the tree
+### 4. Build the tree
 
 Create a child `AGENTS.md` only where a folder has its own purpose, rules,
 workflow or responsibility. Empty or trivial folders get nothing.
@@ -91,12 +115,12 @@ and Verification empty when no standards or checks exist rather than inventing
 them; avoid duplicating rules unless each scope needs its own copy; nest only
 where complexity earns it.
 
-### 4. Fill the root index
+### 5. Fill the root index
 
 Replace the placeholder line in the root `AGENTS.md` with the actual top-level
 index of child files.
 
-### 5. Report
+### 6. Report
 
 List every file created with its path and scope, plus every folder intentionally
 skipped and why. State plainly that files already present were left untouched.
