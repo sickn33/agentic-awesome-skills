@@ -32,7 +32,7 @@ export function GuidedDiscovery({ onWorkflow }: { onWorkflow: (id: string) => vo
         <h3>Your next steps</h3>
         <ol>
           <li><Link to={`/docs/${agent}/`}>Read the {agents.find((entry) => entry.id === agent)!.name} setup guide</Link></li>
-          <li>Inspect <Link to={`/plugins/#${pack.id}`}>{pack.name}</Link>: {pack.why}</li>
+          <li>Inspect <Link to={`/plugins/?pack=${pack.id}`}>{pack.name}</Link>: {pack.why}</li>
           {workflow && <li>Explore the <button className="platform-text-button" type="button" onClick={() => onWorkflow(workflow.id)}>{workflow.name}</button> workflow below, then review individual candidates.</li>}
           <li><Link to={`/core/?category=${path.category}`}>Browse the relevant catalog category</Link> and choose a few skills to compare.</li>
         </ol>
