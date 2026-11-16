@@ -155,6 +155,60 @@ describe('useSkillStars', () => {
   });
 
   describe('LocalStorage error handling', () => {
+    it('does not replace malformed saved data when saving another skill', async () => {
+      const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      localStorage.setItem(STORAGE_KEY, '{"existing":true');
+      const { result } = renderHook(() => useSkillStars('new-skill'));
+      vi.mocked(localStorage.setItem).mockClear();
+
+      await act(async () => { await result.current.handleSaveClick(); });
+      warning.mockRestore();
+
+      expect(localStorage.setItem).not.toHaveBeenCalled();
+      expect(localStorage.getItem(STORAGE_KEY)).toBe('{"existing":true');
+      expect(result.current.hasSaved).toBe(false);
+    });
+
+    it.each([STORAGE_KEY, LEGACY_STORAGE_KEY])('preserves saved records when reading %s fails, then retries safely', async (failingKey) => {
+      const saved = JSON.stringify({ existing: true });
+      const legacy = JSON.stringify({ legacy: true });
+      localStorage.setItem(STORAGE_KEY, saved);
+      localStorage.setItem(LEGACY_STORAGE_KEY, legacy);
+      const { result } = renderHook(() => useSkillStars('new-skill'));
+      vi.mocked(localStorage.setItem).mockClear();
+      const read = vi.mocked(localStorage.getItem).getMockImplementation()!;
+      const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+      await vi.mocked(localStorage.getItem).withImplementation((key) => {
+        if (key === failingKey) throw new DOMException('Storage read denied', 'SecurityError');
+        return read(key);
+      }, async () => {
+        await act(async () => { await result.current.handleSaveClick(); });
+      });
+      warning.mockRestore();
+
+      expect(localStorage.setItem).not.toHaveBeenCalled();
+      expect(result.current.hasSaved).toBe(false);
+      expect(localStorage.getItem(STORAGE_KEY)).toBe(saved);
+      expect(localStorage.getItem(LEGACY_STORAGE_KEY)).toBe(legacy);
+      await act(async () => { await result.current.handleSaveClick(); });
+      expect(JSON.parse(localStorage.getItem(STORAGE_KEY)!)).toEqual({ existing: true, legacy: true, 'new-skill': true });
+      expect(result.current.hasSaved).toBe(true);
+    });
+
+    it('preserves the last known saved state when a storage refresh cannot read it', () => {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ existing: true }));
+      const { result } = renderHook(() => useSkillStars('existing'));
+      const warning = vi.spyOn(console, 'warn').mockImplementation(() => {});
+      vi.mocked(localStorage.getItem).mockImplementationOnce(() => null)
+        .mockImplementationOnce(() => { throw new Error('Read failed'); });
+
+      act(() => { window.dispatchEvent(new StorageEvent('storage', { key: STORAGE_KEY })); });
+
+      warning.mockRestore();
+      expect(result.current.hasSaved).toBe(true);
+    });
+
     it('should handle setItem errors gracefully', async () => {
       const consoleSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
