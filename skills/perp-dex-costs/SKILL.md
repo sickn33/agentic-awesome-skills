@@ -37,9 +37,13 @@ Unlike skills that prepare or sign swaps on spot DEXs, this skill only reads dat
 
 ## How It Works
 
-### 1. Establish the inputs
+### 1. Pick the endpoint, then ask only for its inputs
 
-Ask for, or infer from the request, the base asset (`BTC`, `ETH`, `SOL`, `XRP`, `BNB`, `DOGE`, `HYPE`, `SUI`, `LINK`, `AAVE`, `ENA`, `LTC`) and the order size in USD notional. For funding trades, also the size per leg and the holding days (default 7). If the size is missing, ask; do not assume one.
+Choose the endpoint from the table in step 2 by what the user asks, then collect only what that endpoint needs:
+
+- `pair` (base asset: `BTC`, `ETH`, `SOL`, `XRP`, `BNB`, `DOGE`, `HYPE`, `SUI`, `LINK`, `AAVE`, `ENA`, `LTC`) for `best_venue`, `trading_cost`, `funding_rates`, `depth` and `delta_neutral`.
+- Order size in USD notional for `best_venue` and `trading_cost`; size per leg and holding days (default 7) for `delta_neutral`. Never assume a size for a cost calculation: if it is missing, ask.
+- `list_venues` and `live_airdrops` need nothing; `changes` takes optional `days`; `signup_link` takes `venue`.
 
 ### 2. Call the matching endpoint
 
