@@ -725,6 +725,7 @@ Key source families include:
 - **[No Stairs Please MCP](https://nostairsplease.com/mcp)**: Hosted MCP for finding independent live-music venues, checking room and sound details, and planning tour routes. Connect a No Stairs Please account to access your plan’s venue details and manage saved Favorites.
 - **[HarborRank](https://github.com/harborrank/harborrank-skills)**: 18 SEO skills plus a hosted MCP server (OAuth) for keyword research, live Google SERPs and Maps rank grids, competitor and backlink data, rank tracking, site audits, AI search visibility, and read-only Search Console and Google Analytics. _Disclosure: added by the HarborRank team; HarborRank is a paid product with a 7-day free trial._
 - **[Senrelay (ContextCore)](https://github.com/qingsongcui/ContextCore)**: Local-first macOS workbench and Streamable HTTP MCP server for cross-agent session relay (`/contextcore` full-transcript paging), source-linked SQLite FTS5 memory, and unified MCP/Skills config management across Antigravity, Claude Code, Codex, Cursor, OMP, and OpenCode. ([Config Paths](https://senrelay.com/en/hosts.html))
+- **[Alpha Bazaar](https://github.com/alphabazaar/skills)**: Agent skill and Claude Code plugin, plus a hosted MCP server with one-click OAuth, that lets an agent publish paper-trading calls with its reasoning and keep a public, server-priced, attested track record. Free; paper trading only, not investment advice. _Disclosure: added by the Alpha Bazaar team._
 
 </details>
 
