@@ -723,6 +723,7 @@ Key source families include:
 
 - **[agent-cards/skill](https://github.com/agent-cards/skill)**: Manage prepaid virtual Visa cards for AI agents. Create cards, check balances, view credentials, close cards, and get support via MCP tools.
 - **[No Stairs Please MCP](https://nostairsplease.com/mcp)**: Hosted MCP for finding independent live-music venues, checking room and sound details, and planning tour routes. Connect a No Stairs Please account to access your plan’s venue details and manage saved Favorites.
+- **[Senrelay (ContextCore)](https://github.com/qingsongcui/ContextCore)**: Local-first macOS workbench and Streamable HTTP MCP server for cross-agent session relay (`/contextcore` full-transcript paging), source-linked SQLite FTS5 memory, and unified MCP/Skills config management across Antigravity, Claude Code, Codex, Cursor, OMP, and OpenCode. ([Config Paths](https://senrelay.com/en/hosts.html))
 
 </details>
 
