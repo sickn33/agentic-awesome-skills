@@ -6,7 +6,8 @@ afterEach(() => window.history.replaceState({}, '', '/'));
 it('preserves the old Core overview URL and presents the reduced navigation', async () => {
   window.history.replaceState({}, '', '/aas-core/');
   vi.clearAllMocks(); const { container } = render(<App />);
-  await screen.findByRole('heading', { level: 1, name: 'AAS Core' });
+  // Loading the lazy route can take longer than the default query timeout on CI.
+  await screen.findByRole('heading', { level: 1, name: 'AAS Core' }, { timeout: 4000 });
   expect(window.location.pathname).toBe('/aas-core/');
   expect(within(screen.getByRole('navigation', { name: 'Primary navigation' })).getAllByRole('link').map((link) => link.textContent)).toEqual(['Core', 'Packs', 'Docs', 'Contribute', 'Changelog']);
   expect(screen.getByText('Find skills for this project.')).toBeInTheDocument();
