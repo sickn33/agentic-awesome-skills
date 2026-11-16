@@ -153,6 +153,8 @@ Choose a focused plugin for the domain you are working in. These packages are av
 
 Browse the [plugin roadmap](docs/users/specialized-plugin-roadmap.md), [live plugin catalog](https://aaskills.tech/plugins), or generated [`plugins/`](plugins/) tree for the full set.
 
+[Raven](https://github.com/EverMind-AI/Raven) 0.2.6 or later imports a portable bundle from a clone of this repository, for example `raven agent-plugins import plugins/agentic-bundle-essentials`.
+
 ## Bundles & Workflows
 
 Bundles suggest related skills; workflows describe the order to use them. They are guidance for selecting and running skills, not additional packages to install.
