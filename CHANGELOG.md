@@ -38,6 +38,36 @@ Summarize the most important change for users in one short paragraph.
 
 ## [Unreleased]
 
+## [20.10.0] - 2026-11-16 - "Quantum Circuits, Browser Sessions, and MCP Workflows"
+
+Add 21 skills for local quantum simulation, hosted browser sessions, connected workflows, and product and engineering tasks, bringing the catalog to 2,981 skills.
+
+### New skills
+
+- Add PennyLane for differentiable quantum circuits, variational workflows, and local simulation.
+- Add No Obvious Questions to resolve routine questions from available context and preserve approval boundaries.
+- Add SpecStream Browser Sessions for hosted Chromium with approved domains, bounded billing, and explicit cleanup.
+- Add the Piloterr, Autom, CaptureKit, ChartQuery, HuntAPI, Veille, and Asin MCP guides for structured web data, search, page capture, visual assets, media, validation, and Amazon price tracking.
+- Add Perp DEX Costs to compare reported fees, slippage, and funding through read-only market data.
+- Add ten guides for design tokens, idea audits, DOX project instructions, LLM fine-tuning, product comparisons, Google-style code review, market validation, pitch review, 3D scroll pages, and model ablation.
+
+### Improvements
+
+- Keep saved skills intact when browser storage reads fail.
+- Open the recommended plugin pack directly from guided discovery.
+- Add HarborRank and Senrelay to the README's additional sources.
+
+### Contributors
+
+- @RabbitDesigns22 for No Obvious Questions ([#2350](https://github.com/sickn33/agentic-awesome-skills/pull/2350)).
+- @nazmulislam-lab for PennyLane ([#2352](https://github.com/sickn33/agentic-awesome-skills/pull/2352)).
+- @Specstreamai for SpecStream Browser Sessions ([#2355](https://github.com/sickn33/agentic-awesome-skills/pull/2355)).
+- @josselinlbe for the MCP guides ([#2356](https://github.com/sickn33/agentic-awesome-skills/pull/2356), [#2357](https://github.com/sickn33/agentic-awesome-skills/pull/2357), [#2358](https://github.com/sickn33/agentic-awesome-skills/pull/2358), [#2359](https://github.com/sickn33/agentic-awesome-skills/pull/2359), [#2360](https://github.com/sickn33/agentic-awesome-skills/pull/2360), [#2361](https://github.com/sickn33/agentic-awesome-skills/pull/2361), and [#2362](https://github.com/sickn33/agentic-awesome-skills/pull/2362)).
+- @dineroenlamesa for Perp DEX Costs ([#2363](https://github.com/sickn33/agentic-awesome-skills/pull/2363)).
+- @instax-dutta for ten catalog skills ([#2348](https://github.com/sickn33/agentic-awesome-skills/pull/2348)).
+- @jhuang-tt for two catalog-site fixes ([#2353](https://github.com/sickn33/agentic-awesome-skills/pull/2353) and [#2354](https://github.com/sickn33/agentic-awesome-skills/pull/2354)).
+- @winsley-jeune and @qingsongcui for the upstream listings ([#2346](https://github.com/sickn33/agentic-awesome-skills/pull/2346) and [#2349](https://github.com/sickn33/agentic-awesome-skills/pull/2349)).
+
 ## [20.9.0] - 2026-11-15 - "Creative Hooks, Code Review, and Freelance Scope"
 
 Add three skills for creative testing, code review, and freelance change orders, bringing the catalog to 2,960 skills.
