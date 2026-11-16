@@ -2,7 +2,7 @@
 name: huntapi-mcp
 description: "Read media metadata, or download video and audio the user has the rights to, from public media URLs through HuntAPI's MCP server and its async jobs. Use when the user chooses HuntAPI."
 category: mcp
-risk: safe
+risk: critical
 source: self
 source_type: self
 date_added: "2026-11-16"
@@ -76,8 +76,9 @@ host's MCP settings.
 Get the media URL. If the user only needs facts about the media, use
 `media_metadata` and stop there. It costs 1 credit and downloads nothing.
 
-Before a download, confirm that the user owns the media or that its licence or
-the platform's terms allow it. If that is unclear, ask. Do not download content
+Before starting a remote download job, confirm the user wants that URL processed
+and understands the credit charge. Confirm that the user owns the media or
+that its licence or the platform terms allow downloading it. Do not download content
 to get around a paywall, a private setting or a platform's download controls.
 
 ### 2. Start the download
@@ -107,7 +108,8 @@ until it reaches a final status (`CompletedJob`, `Error`, `NotFound` or
 `BadRequest`) or the timeout ends. If it says the job is still running, long
 media can take hours; call `wait_for_job` again, or call `jobs` with the
 `id` to see the progress (0 to 100) once. Do not start a second download of the
-same URL while the first job runs.
+same URL while the first job runs. If the start request times out or its
+outcome is unclear, inspect the account's jobs before another request.
 
 ### 4. Report the result
 

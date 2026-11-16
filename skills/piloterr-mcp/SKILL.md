@@ -78,9 +78,11 @@ Endpoints come in pairs for many sites: `<site>_search` returns a list, and
 `<site>_product`, `<site>_property` or `<site>_..._info` returns one item. Pick
 the one that matches the user's request.
 
-For a generic page, use `website_crawler` (HTTP fetch, no JavaScript) first. Its
-description says to switch to `website_rendering` or `website_webunlocker` when
-JavaScript or an anti-bot page blocks the plain fetch.
+For a public page, start with `website_crawler` (HTTP fetch without JavaScript).
+Use `website_rendering` if the page needs JavaScript to display content the user
+is authorized to access. If the site requires authentication or restricts
+automated access, stop and explain the limitation. Leave `website_webunlocker`
+out of this workflow.
 
 ### 2. Read the parameters
 
