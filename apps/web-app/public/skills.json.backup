@@ -6381,6 +6381,37 @@
     }
   },
   {
+    "id": "asin-mcp",
+    "path": "skills/asin-mcp",
+    "category": "mcp",
+    "name": "asin-mcp",
+    "description": "Find Amazon ASINs, read current offers and price history, and manage a price watchlist with target-price alerts through Asin's MCP server. Use when the user chooses Asin.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "mcp",
+      "amazon",
+      "price-tracking",
+      "price-history",
+      "ecommerce",
+      "alerts"
+    ]
+  },
+  {
     "id": "ask-copilot",
     "path": "skills/ask-copilot",
     "category": "development",
@@ -7168,6 +7199,38 @@
       "browser-automation",
       "decision-support",
       "chinese"
+    ]
+  },
+  {
+    "id": "autom-mcp",
+    "path": "skills/autom-mcp",
+    "category": "mcp",
+    "name": "autom-mcp",
+    "description": "Get Google, Bing, Brave, DuckDuckGo and Yahoo results as JSON (web, news, maps, shopping, jobs, images, AI Mode) through Autom's MCP server. Use when the user chooses Autom.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "mcp",
+      "serp",
+      "web-search",
+      "google",
+      "bing",
+      "brave",
+      "seo"
     ]
   },
   {
@@ -12766,6 +12829,39 @@
     }
   },
   {
+    "id": "brand-vibes",
+    "path": "skills/brand-vibes",
+    "category": "design",
+    "name": "brand-vibes",
+    "description": "Apply a company's design language to a site from 66 brand profiles, or extract a brand's DNA into semantic tokens for Tailwind, CSS variables or shadcn.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "MIT",
+    "tags": [
+      "design-system",
+      "brand",
+      "tailwind",
+      "css-variables",
+      "shadcn",
+      "typography",
+      "tokens"
+    ]
+  },
+  {
     "id": "brave-man",
     "path": "skills/brave-man",
     "category": "ai-ml",
@@ -14573,6 +14669,37 @@
     ]
   },
   {
+    "id": "capturekit-mcp",
+    "path": "skills/capturekit-mcp",
+    "category": "mcp",
+    "name": "capturekit-mcp",
+    "description": "Take page screenshots or PDFs, extract page content, metadata and links, or get a page summary through CaptureKit's MCP server. Use when the user chooses CaptureKit.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "mcp",
+      "screenshot",
+      "pdf",
+      "web-content",
+      "metadata",
+      "web-scraping"
+    ]
+  },
+  {
     "id": "card-based-design",
     "path": "skills/design-it/card-based-design",
     "category": "design-it",
@@ -14995,6 +15122,38 @@
     "source_repo": "jonathimer/devmarketing-skills",
     "license": "MIT",
     "license_source": "https://github.com/jonathimer/devmarketing-skills/blob/main/LICENSE"
+  },
+  {
+    "id": "chartquery-mcp",
+    "path": "skills/chartquery-mcp",
+    "category": "mcp",
+    "name": "chartquery-mcp",
+    "description": "Render Chart.js charts, Mermaid and other diagrams, QR codes, barcodes and thermal printer labels (ZPL, TSC, EPL) as images through ChartQuery's MCP server. Use when the user chooses ChartQuery.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "mcp",
+      "charts",
+      "diagrams",
+      "qr-code",
+      "barcode",
+      "zpl",
+      "labels"
+    ]
   },
   {
     "id": "chat-widget",
@@ -20790,6 +20949,38 @@
     ]
   },
   {
+    "id": "darpa-audit",
+    "path": "skills/darpa-audit",
+    "category": "business",
+    "name": "darpa-audit",
+    "description": "Stress-test a startup or product idea against the Heilmeier Catechism before you build: 5 forcing prompts, assumption labels, and a SURVIVES or DOES NOT SURVIVE verdict.",
+    "risk": "none",
+    "source": "self",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "MIT",
+    "tags": [
+      "idea-validation",
+      "heilmeier-catechism",
+      "startup",
+      "product-strategy",
+      "decision-making",
+      "pre-build"
+    ]
+  },
+  {
     "id": "dart",
     "path": "skills/super-code/dart",
     "category": "super-code",
@@ -24644,6 +24835,38 @@
     "license_source": "https://github.com/addyosmani/agent-skills/blob/main/LICENSE"
   },
   {
+    "id": "dox-init",
+    "path": "skills/dox-init",
+    "category": "agent-orchestration",
+    "name": "dox-init",
+    "description": "Initialize a DOX AGENTS.md tree in a project: fetch the DOX contract, scan the real structure, then write nested AGENTS.md files with purpose, ownership and child indexes.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "MIT",
+    "tags": [
+      "agents-md",
+      "dox",
+      "documentation",
+      "project-scaffolding",
+      "coding-agents",
+      "context"
+    ]
+  },
+  {
     "id": "draft-my-comments",
     "path": "skills/draft-my-comments",
     "category": "marketing",
@@ -28325,6 +28548,40 @@
     ]
   },
   {
+    "id": "finetune-llm",
+    "path": "skills/finetune-llm",
+    "category": "engineering",
+    "name": "finetune-llm",
+    "description": "Fine-tune or post-train an LLM against measured VRAM budgets: probe the GPU, pick the engine, hash the data, smoke test, train instrumented, verify with a neutral evaluator.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "MIT",
+    "tags": [
+      "fine-tuning",
+      "lora",
+      "qlora",
+      "unsloth",
+      "trl",
+      "vram",
+      "gpu",
+      "evaluation"
+    ]
+  },
+  {
     "id": "finishing-a-development-branch",
     "path": "skills/finishing-a-development-branch",
     "category": "workflow",
@@ -28642,6 +28899,38 @@
     "source_repo": "ibelick/ui-skills",
     "license": "MIT",
     "license_source": "https://github.com/ibelick/ui-skills/blob/main/LICENSE"
+  },
+  {
+    "id": "flash-compare",
+    "path": "skills/flash-compare",
+    "category": "research",
+    "name": "flash-compare",
+    "description": "Compare products before buying: check OEM specs against owner reports, load tests and verified reviews, then keep at most two and reject the rest with one-line causes.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "MIT",
+    "tags": [
+      "product-comparison",
+      "buying-guide",
+      "reviews",
+      "reddit",
+      "evidence",
+      "research"
+    ]
   },
   {
     "id": "flat-design",
@@ -32588,6 +32877,39 @@
     "license": "Apache-2.0"
   },
   {
+    "id": "google-code-review",
+    "path": "skills/google-code-review",
+    "category": "development",
+    "name": "google-code-review",
+    "description": "Review code or prepare a change for review using Google's engineering practices: reviewer and author modes, severity labels, CL descriptions, review speed and pushback.",
+    "risk": "none",
+    "source": "self",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "CC-BY-3.0",
+    "license_source": "https://github.com/google/eng-practices/blob/master/LICENSE",
+    "tags": [
+      "code-review",
+      "pull-request",
+      "changelist",
+      "engineering-practices",
+      "communication",
+      "review-etiquette"
+    ]
+  },
+  {
     "id": "google-docs-automation",
     "path": "skills/google-docs-automation",
     "category": "automation",
@@ -36510,6 +36832,37 @@
     "source_repo": "elementalsouls/Claude-BugHunter",
     "license": "MIT",
     "license_source": "https://github.com/elementalsouls/Claude-BugHunter/blob/main/LICENSE"
+  },
+  {
+    "id": "huntapi-mcp",
+    "path": "skills/huntapi-mcp",
+    "category": "mcp",
+    "name": "huntapi-mcp",
+    "description": "Read media metadata, or download video and audio the user has the rights to, from public media URLs through HuntAPI's MCP server and its async jobs. Use when the user chooses HuntAPI.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "mcp",
+      "media",
+      "video",
+      "audio",
+      "metadata",
+      "async-jobs"
+    ]
   },
   {
     "id": "hybrid-cloud-architect",
@@ -44536,6 +44889,38 @@
     }
   },
   {
+    "id": "market-validator",
+    "path": "skills/market-validator",
+    "category": "research",
+    "name": "market-validator",
+    "description": "Validate a product idea against real user complaints from Reddit, X, G2, Quora, Hacker News, Product Hunt and YouTube, then score demand, competition gap and reachability.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "MIT",
+    "tags": [
+      "idea-validation",
+      "market-research",
+      "voice-of-customer",
+      "reddit",
+      "competitive-analysis",
+      "evidence"
+    ]
+  },
+  {
     "id": "marketing-ideas",
     "path": "skills/marketing-ideas",
     "category": "marketing",
@@ -45088,6 +45473,38 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "master-pitcher",
+    "path": "skills/master-pitcher",
+    "category": "business",
+    "name": "master-pitcher",
+    "description": "Audit, draft or roast a pitch deck against a VC's 3-minute scan: 18 checks across 6 dimensions, a score out of 18, ranked fixes and placement violations.",
+    "risk": "none",
+    "source": "self",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "MIT",
+    "tags": [
+      "pitch-deck",
+      "fundraising",
+      "venture-capital",
+      "storytelling",
+      "review",
+      "founder"
+    ]
   },
   {
     "id": "matematico-tao",
@@ -49157,6 +49574,36 @@
     ]
   },
   {
+    "id": "no-obvious-questions",
+    "path": "skills/no-obvious-questions",
+    "category": "productivity",
+    "name": "no-obvious-questions",
+    "description": "Filter every question before asking the user: skip ones answerable from context, tools, common sense or prior authorization; send the rest once, with a recommendation.",
+    "risk": "none",
+    "source": "self",
+    "date_added": "2026-11-15",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "questions",
+      "autonomy",
+      "communication",
+      "agent-behavior",
+      "productivity"
+    ]
+  },
+  {
     "id": "noaa-radar-satellite-fetching",
     "path": "skills/noaa-radar-satellite-fetching",
     "category": "data",
@@ -52593,6 +53040,37 @@
     "license_source": "https://github.com/BagelHole/DevOps-Security-Agent-Skills/blob/main/LICENSE"
   },
   {
+    "id": "pennylane",
+    "path": "skills/pennylane",
+    "category": "development",
+    "name": "pennylane",
+    "description": "Write, simulate and train PennyLane quantum circuits: QNodes, devices, templates, measurements, autodiff with NumPy/JAX/PyTorch, gradients, shots and noise.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-11-15",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "pennylane",
+      "quantum-computing",
+      "quantum-machine-learning",
+      "variational-circuits",
+      "autodiff",
+      "python"
+    ]
+  },
+  {
     "id": "pentest-checklist",
     "path": "skills/pentest-checklist",
     "category": "security",
@@ -52952,6 +53430,38 @@
     "license_source": "https://github.com/mskadu/opencode-agent-skills/blob/main/LICENSE"
   },
   {
+    "id": "perp-dex-costs",
+    "path": "skills/perp-dex-costs",
+    "category": "finance",
+    "name": "perp-dex-costs",
+    "description": "Before a perpetual futures trade, find which perp DEX is cheapest now for the size (fees plus slippage on the live book) and compare funding across 25+ venues.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "crypto",
+      "defi",
+      "perpetuals",
+      "perp-dex",
+      "funding-rates",
+      "trading-costs",
+      "market-data"
+    ]
+  },
+  {
     "id": "perq",
     "path": "skills/perq",
     "category": "research",
@@ -53279,6 +53789,37 @@
       "nat-traversal",
       "overlay-network",
       "agent-apps"
+    ]
+  },
+  {
+    "id": "piloterr-mcp",
+    "path": "skills/piloterr-mcp",
+    "category": "mcp",
+    "name": "piloterr-mcp",
+    "description": "Get structured JSON from 391 Piloterr scraping endpoints (Amazon, LinkedIn, Zillow, Crunchbase, Google...) through Piloterr's MCP server. Use when the user chooses Piloterr.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "mcp",
+      "web-scraping",
+      "structured-data",
+      "ecommerce",
+      "real-estate",
+      "jobs"
     ]
   },
   {
@@ -60877,6 +61418,38 @@
     ]
   },
   {
+    "id": "scroll-3d-world",
+    "path": "skills/scroll-3d-world",
+    "category": "frontend",
+    "name": "scroll-3d-world",
+    "description": "Build a scroll-scrubbed Three.js fly-through landing page: one continuous camera path through diorama scenes, with no AI video, no seams and no render credits.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "MIT",
+    "tags": [
+      "threejs",
+      "landing-page",
+      "scroll-animation",
+      "webgl",
+      "diorama",
+      "camera-path"
+    ]
+  },
+  {
     "id": "scroll-experience",
     "path": "skills/scroll-experience",
     "category": "front-end",
@@ -65447,6 +66020,37 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "specstream-browser-sessions",
+    "path": "skills/specstream-browser-sessions",
+    "category": "browser-automation",
+    "name": "specstream-browser-sessions",
+    "description": "Open, drive and release a hosted SpecStream browser session over CDP (Playwright, Puppeteer) or one REST action at a time, with domain limits and per-second billing.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-11-13",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "browser-automation",
+      "cdp",
+      "playwright",
+      "puppeteer",
+      "hosted-browser",
+      "api"
+    ]
   },
   {
     "id": "speed",
@@ -72952,6 +73556,37 @@
     }
   },
   {
+    "id": "veille-mcp",
+    "path": "skills/veille-mcp",
+    "category": "mcp",
+    "name": "veille-mcp",
+    "description": "Check emails, domains, phone numbers and IPs for fraud signals, and validate EU VAT numbers and IBANs, through Veille's MCP server. Use when the user chooses Veille.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "mcp",
+      "fraud-prevention",
+      "email-validation",
+      "vat",
+      "iban",
+      "ip-reputation"
+    ]
+  },
+  {
     "id": "vendor-contractor-management",
     "path": "skills/vendor-contractor-management",
     "category": "business",
@@ -73298,6 +73933,38 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "vibe-abliteration",
+    "path": "skills/vibe-abliteration",
+    "category": "engineering",
+    "name": "vibe-abliteration",
+    "description": "Run Heretic directional abliteration to reduce a model's refusals: set up, optimize, read the Pareto front, verify the export, then save or upload with a proper model card.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "MIT",
+    "tags": [
+      "abliteration",
+      "heretic",
+      "model-editing",
+      "refusal-removal",
+      "optuna",
+      "model-cards"
+    ]
   },
   {
     "id": "vibe-code-auditor",
