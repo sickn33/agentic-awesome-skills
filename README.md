@@ -212,6 +212,8 @@ Key source families include:
 
 ### Official Sources
 
+- **[callforme-tel/callforme](https://github.com/callforme-tel/callforme/tree/main/skills/callforme)**: Official CallForMe skill (`callforme`) - let your agent phone a business for you: plan the call, place it, answer the business's questions mid-call, and read back the answers and transcript, through the hosted CallForMe MCP server (MIT).
+
 - **[phuryn/product-engineering](https://github.com/phuryn/product-engineering/tree/main/app-stack/skills/uptime-monitoring)**: Official Staygreen skill (`uptime-monitoring`) - content checks confirmed from a second location, heartbeats for scheduled jobs, certificate and domain expiry, status pages and a tested alert route, through the hosted Staygreen MCP server; the same steps work on a monitoring service the owner already uses (MIT).
 
 - **[CrakSEO/skills](https://github.com/CrakSEO/skills)**: External MIT collection for CrakSEO hosted MCP integrations covering SEO research, Search Console and URL indexing. Listed as an upstream resource; not bundled or connected by this repository.
