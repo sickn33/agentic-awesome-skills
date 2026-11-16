@@ -4683,6 +4683,25 @@
       "runtime_files": []
     },
     {
+      "id": "asin-mcp",
+      "path": "skills/asin-mcp",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "ask-copilot",
       "path": "skills/ask-copilot",
       "targets": {
@@ -5203,6 +5222,25 @@
     {
       "id": "auto-research",
       "path": "skills/auto-research",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "autom-mcp",
+      "path": "skills/autom-mcp",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -9551,6 +9589,25 @@
       "runtime_files": []
     },
     {
+      "id": "brand-vibes",
+      "path": "skills/brand-vibes",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "brave-man",
       "path": "skills/brave-man",
       "targets": {
@@ -10748,6 +10805,25 @@
       "runtime_files": []
     },
     {
+      "id": "capturekit-mcp",
+      "path": "skills/capturekit-mcp",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "career-ops",
       "path": "skills/career-ops",
       "targets": {
@@ -11054,6 +11130,25 @@
     {
       "id": "changelog-updates",
       "path": "skills/changelog-updates",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "chartquery-mcp",
+      "path": "skills/chartquery-mcp",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -15183,6 +15278,25 @@
       "runtime_files": []
     },
     {
+      "id": "darpa-audit",
+      "path": "skills/darpa-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "dast-scanning",
       "path": "skills/dast-scanning",
       "targets": {
@@ -18879,6 +18993,25 @@
       "runtime_files": []
     },
     {
+      "id": "dox-init",
+      "path": "skills/dox-init",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "draft-my-comments",
       "path": "skills/draft-my-comments",
       "targets": {
@@ -21481,6 +21614,25 @@
       "runtime_files": []
     },
     {
+      "id": "finetune-llm",
+      "path": "skills/finetune-llm",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "finishing-a-development-branch",
       "path": "skills/finishing-a-development-branch",
       "targets": {
@@ -21711,6 +21863,25 @@
     {
       "id": "fixing-motion-performance",
       "path": "skills/fixing-motion-performance",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "flash-compare",
+      "path": "skills/flash-compare",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -24610,6 +24781,25 @@
       "runtime_files": []
     },
     {
+      "id": "google-code-review",
+      "path": "skills/google-code-review",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "google-docs-automation",
       "path": "skills/google-docs-automation",
       "targets": {
@@ -27459,6 +27649,25 @@
     {
       "id": "hunt-xxe",
       "path": "skills/hunt-xxe",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "huntapi-mcp",
+      "path": "skills/huntapi-mcp",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -33229,6 +33438,25 @@
       "runtime_files": []
     },
     {
+      "id": "market-validator",
+      "path": "skills/market-validator",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "marketing-ideas",
       "path": "skills/marketing-ideas",
       "targets": {
@@ -33535,6 +33763,25 @@
     {
       "id": "marlin-bed-leveling",
       "path": "skills/marlin-bed-leveling",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "master-pitcher",
+      "path": "skills/master-pitcher",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -36432,6 +36679,25 @@
       "runtime_files": []
     },
     {
+      "id": "no-obvious-questions",
+      "path": "skills/no-obvious-questions",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "noaa-radar-satellite-fetching",
       "path": "skills/noaa-radar-satellite-fetching",
       "targets": {
@@ -38916,6 +39182,25 @@
       "runtime_files": []
     },
     {
+      "id": "pennylane",
+      "path": "skills/pennylane",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "pentest-checklist",
       "path": "skills/pentest-checklist",
       "targets": {
@@ -39201,6 +39486,25 @@
       "runtime_files": []
     },
     {
+      "id": "perp-dex-costs",
+      "path": "skills/perp-dex-costs",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "perq",
       "path": "skills/perq",
       "targets": {
@@ -39393,6 +39697,25 @@
     {
       "id": "pilot-protocol",
       "path": "skills/pilot-protocol",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "piloterr-mcp",
+      "path": "skills/piloterr-mcp",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -44707,6 +45030,25 @@
       "runtime_files": []
     },
     {
+      "id": "scroll-3d-world",
+      "path": "skills/scroll-3d-world",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "scroll-experience",
       "path": "skills/scroll-experience",
       "targets": {
@@ -48119,6 +48461,25 @@
     {
       "id": "speckit-updater",
       "path": "skills/speckit-updater",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "specstream-browser-sessions",
+      "path": "skills/specstream-browser-sessions",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -53702,6 +54063,25 @@
       "runtime_files": []
     },
     {
+      "id": "veille-mcp",
+      "path": "skills/veille-mcp",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "vendor-contractor-management",
       "path": "skills/vendor-contractor-management",
       "targets": {
@@ -53951,6 +54331,25 @@
     {
       "id": "vexor-cli",
       "path": "skills/vexor-cli",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "vibe-abliteration",
+      "path": "skills/vibe-abliteration",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -56749,10 +57148,10 @@
     }
   ],
   "summary": {
-    "total_skills": 2960,
+    "total_skills": 2981,
     "supported": {
-      "codex": 2873,
-      "claude": 2894
+      "codex": 2894,
+      "claude": 2915
     },
     "blocked": {
       "codex": 87,
