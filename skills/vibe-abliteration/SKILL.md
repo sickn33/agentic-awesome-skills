@@ -118,8 +118,9 @@ not a capability test.
 ### 6. Document
 
 Record the base model, tool version, trial index and parameters, KL divergence and
-refusal score. Upload with the model card and the tags that make the change
-discoverable.
+refusal score. Save locally by default. Upload only after the user explicitly authorizes
+publication of that artifact to the named repository and visibility. Include the
+model card and publish only if the base model terms permit redistribution.
 
 ## Examples
 
