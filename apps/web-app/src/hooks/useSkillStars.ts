@@ -17,7 +17,7 @@ interface UseSkillStarsReturn {
 /**
  * Safely parse localStorage data with error handling
  */
-function parseStoredStars(storageKey: string): UserStars {
+function parseStoredStars(storageKey: string): UserStars | null {
   try {
     const stored = localStorage.getItem(storageKey);
     if (!stored) return {};
@@ -29,14 +29,18 @@ function parseStoredStars(storageKey: string): UserStars {
     );
   } catch (error) {
     console.warn(`Failed to parse ${storageKey} from localStorage:`, error);
-    return {};
+    return null;
   }
 }
 
-function getUserStarsFromStorage(): UserStars {
+function getUserStarsFromStorage(): UserStars | null {
+  const legacy = parseStoredStars(LEGACY_STORAGE_KEY);
+  const current = parseStoredStars(STORAGE_KEY);
+  // An unreadable record is not empty storage; never persist an incomplete merge.
+  if (legacy === null || current === null) return null;
   return {
-    ...parseStoredStars(LEGACY_STORAGE_KEY),
-    ...parseStoredStars(STORAGE_KEY),
+    ...legacy,
+    ...current,
   };
 }
 
@@ -58,7 +62,7 @@ function saveUserStarsToStorage(stars: UserStars): boolean {
  * Hook to manage local skill saves in the browser.
  */
 export function useSkillStars(skillId: string | undefined): UseSkillStarsReturn {
-  const [userStars, setUserStars] = useState<UserStars>(() => getUserStarsFromStorage());
+  const [userStars, setUserStars] = useState<UserStars>(() => getUserStarsFromStorage() ?? {});
   const [isSaving, setIsSaving] = useState<boolean>(false);
   const hasSaved = Boolean(skillId && userStars[skillId]);
 
@@ -68,7 +72,8 @@ export function useSkillStars(skillId: string | undefined): UseSkillStarsReturn 
         const key = (event as StorageEvent).key;
         if (key && key !== STORAGE_KEY && key !== LEGACY_STORAGE_KEY) return;
       }
-      setUserStars(getUserStarsFromStorage());
+      const storedStars = getUserStarsFromStorage();
+      if (storedStars !== null) setUserStars(storedStars);
     };
 
     window.addEventListener(CHANGE_EVENT, sync);
@@ -86,6 +91,7 @@ export function useSkillStars(skillId: string | undefined): UseSkillStarsReturn 
     if (!skillId || isSaving) return;
 
     const storedStars = getUserStarsFromStorage();
+    if (storedStars === null) return;
     if (storedStars[skillId]) {
       setUserStars(storedStars);
       return;
