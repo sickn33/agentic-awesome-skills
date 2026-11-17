@@ -37,6 +37,8 @@ On the first catalog command, `pxt` auto-spawns a daemon at `127.0.0.1:22089` (~
 
 The daemon reads `config.toml` and the environment once, at startup, and local services start with the daemon's copy. When either has changed since (a new `OPENAI_API_KEY` exported, an edited `config.toml`), every command answers 409 (`the daemon started with a different environment` / `configuration has changed since the daemon started`). A daemon restart followed by `pxt service restart NAME` lets services pick it up. Inspect affected services and obtain authorization for any interruption before restarting. A route whose provider key is missing answers with `error_code` `MISSING_CREDENTIALS`.
 
+The daemon identity also fingerprints installed package metadata, so after `pip install` / uninstall that changes site-packages the client replaces the daemon without a manual `pxt daemon restart` (still restart after env or `config.toml` edits).
+
 ## Command categories
 
 | Category | Commands |

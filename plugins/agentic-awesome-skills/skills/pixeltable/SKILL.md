@@ -11,7 +11,7 @@ author: pierrebrunelle
 tags: [pixeltable, multimodal, embeddings, rag, computed-columns, vector-search]
 tools: [claude, cursor, gemini]
 license: Apache-2.0
-license_source: "https://github.com/pixeltable/pixeltable-skill/blob/9296e22ad083307ac983217eef8e62f488409c67/LICENSE"
+license_source: "https://github.com/pixeltable/pixeltable-skill/blob/5e642cbe3bbe0cb8b82d9aa721714140522bd29c/LICENSE"
 ---
 
 # Pixeltable
@@ -20,7 +20,7 @@ license_source: "https://github.com/pixeltable/pixeltable-skill/blob/9296e22ad08
 
 Pixeltable is the backend for a multimodal app: one application file (`app.py`) declares `TableModel` tables and `FastAPIRouter` routes. `pxt schema update` creates the tables. `pxt service update` starts HTTP. Insert a row, or POST after the service is up, and computed columns run.
 
-Use computed columns instead of LangChain, pandas-as-store, or a separate vector database. This skill is adapted from the Apache-2.0 Pixeltable skill at `pixeltable/pixeltable-skill` (`skills/pixeltable-skill/`, version 2.14.0, commit `9296e22ad083307ac983217eef8e62f488409c67`).
+Use computed columns instead of LangChain, pandas-as-store, or a separate vector database. This skill is adapted from the Apache-2.0 Pixeltable skill at `pixeltable/pixeltable-skill` (`skills/pixeltable-skill/`, version 2.14.1, commit `5e642cbe3bbe0cb8b82d9aa721714140522bd29c`).
 
 CLI table paths use `/` only (`my_app/docs`). A dotted path (`my_app.docs`) is a Python SDK convenience (`pxt.get_table('my_app.docs')`).
 
@@ -188,7 +188,7 @@ Types are non-nullable by default. Optional is `T | None`. Do not use `pxt.Requi
 
 ## Limitations
 
-- This is an upstream API snapshot of pixeltable-skill 2.14.0 at commit `9296e22ad083307ac983217eef8e62f488409c67`, checked against Pixeltable main `2eca8e44e31dc4ad6eee2c602615cb35e5d89dcc` (latest tag `v0.7.22`). It still records the 0.7.11 PXT-1429 observation below. Installed help and current official docs take precedence; service logs, Cloud keys and retry policies may differ.
+- This is an upstream API snapshot of pixeltable-skill 2.14.1 at commit `5e642cbe3bbe0cb8b82d9aa721714140522bd29c`, checked against Pixeltable main `890b85ab903f077a810b5a88504c08cbbad5a590` (latest tag `v0.7.24`). It still records the 0.7.11 PXT-1429 observation below. Installed help and current official docs take precedence; service logs, Cloud keys and retry policies may differ.
 
 - This skill does not replace environment-specific validation, testing, or expert review. Stop and ask when the catalog target, Cloud organization, or permission to change data is missing.
 - Requires Python 3.11 or newer. HTTP serving requires `a separately installed and reviewed Pixeltable runtime with the serve extra`.

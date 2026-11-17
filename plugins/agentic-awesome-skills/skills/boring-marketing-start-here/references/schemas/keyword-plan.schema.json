@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/boringmarketer/boring-marketing-skills/blob/main/skills/start-here/references/schemas/keyword-plan.schema.json",
+  "title": "Keyword Plan",
+  "description": "Structured keyword plan produced by /keyword-research. Contains prioritized keyword clusters, individual target keywords with metrics, and a content roadmap. Consumed by /seo-content for article production and by /start-here for content gap analysis.",
+  "type": "object",
+  "required": [
+    "brand_name",
+    "created_date",
+    "seed_keywords",
+    "clusters"
+  ],
+  "properties": {
+    "brand_name": {
+      "type": "string",
+      "description": "The brand or business this keyword plan belongs to.",
+      "minLength": 1
+    },
+    "created_date": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date when this plan was created or last updated."
+    },
+    "updated_by": {
+      "type": "string",
+      "description": "The skill that last wrote this file, e.g. '/keyword-research'."
+    },
+    "niche": {
+      "type": "string",
+      "description": "The market niche or industry this plan targets, e.g. 'freelance consulting' or 'B2B SaaS email marketing'."
+    },
+    "seed_keywords": {
+      "type": "array",
+      "description": "The initial seed keywords used to generate the plan. These are the starting points from which clusters were expanded.",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "clusters": {
+      "type": "array",
+      "description": "Keyword clusters grouped by topic or intent. Each cluster represents a content pillar or theme.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["cluster_name", "priority", "keywords"],
+        "properties": {
+          "cluster_name": {
+            "type": "string",
+            "description": "Human-readable name for this cluster, e.g. 'Cold Email Templates' or 'Freelance Pricing'."
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["high", "medium", "low"],
+            "description": "Strategic priority based on search volume, difficulty, and business relevance."
+          },
+          "intent": {
+            "type": "string",
+            "enum": ["informational", "commercial", "transactional", "navigational", "mixed"],
+            "description": "Dominant search intent for keywords in this cluster."
+          },
+          "pillar_topic": {
+            "type": "string",
+            "description": "The recommended pillar article topic for this cluster, e.g. 'The Complete Guide to Cold Email for Freelancers'."
+          },
+          "content_type": {
+            "type": "string",
+            "description": "Recommended content format for this cluster, e.g. 'long-form guide', 'listicle', 'comparison post', 'how-to tutorial'."
+          },
+          "estimated_total_volume": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Combined monthly search volume across all keywords in this cluster."
+          },
+          "keywords": {
+            "type": "array",
+            "description": "Individual keywords within this cluster, ordered by opportunity score.",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["keyword"],
+              "properties": {
+                "keyword": {
+                  "type": "string",
+                  "description": "The target keyword phrase."
+                },
+                "monthly_volume": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Estimated monthly search volume."
+                },
+                "difficulty": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100,
+                  "description": "Ranking difficulty score from 0 (easiest) to 100 (hardest)."
+                },
+                "opportunity_score": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 10,
+                  "description": "Composite opportunity rating (0-10) factoring volume, difficulty, and intent alignment."
+                },
+                "intent": {
+                  "type": "string",
+                  "enum": ["informational", "commercial", "transactional", "navigational"],
+                  "description": "Search intent for this specific keyword."
+                },
+                "serp_features": {
+                  "type": "array",
+                  "description": "SERP features present for this keyword, e.g. featured snippet, PAA, video carousel.",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "notes": {
+                  "type": "string",
+                  "description": "Any additional context, e.g. 'Strong featured snippet opportunity' or 'Competitor X ranks #1'."
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "notes": {
+            "type": "string",
+            "description": "Strategic notes about this cluster, e.g. 'Low competition, high commercial intent -- prioritize for Q1'."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "competitor_gaps": {
+      "type": "array",
+      "description": "Keywords where competitors rank but the brand does not. Useful for content gap strategy.",
+      "items": {
+        "type": "object",
+        "required": ["keyword", "competitor"],
+        "properties": {
+          "keyword": {
+            "type": "string",
+            "description": "The keyword the competitor ranks for."
+          },
+          "competitor": {
+            "type": "string",
+            "description": "The competitor domain or name."
+          },
+          "competitor_position": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "The competitor's ranking position for this keyword."
+          },
+          "monthly_volume": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Estimated monthly search volume."
+          },
+          "opportunity": {
+            "type": "string",
+            "description": "Why this gap matters and how to exploit it."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "content_roadmap": {
+      "type": "array",
+      "description": "Ordered list of recommended content pieces to produce, derived from cluster priorities.",
+      "items": {
+        "type": "object",
+        "required": ["title", "target_keyword"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Recommended article title."
+          },
+          "target_keyword": {
+            "type": "string",
+            "description": "Primary keyword this content targets."
+          },
+          "cluster_ref": {
+            "type": "string",
+            "description": "Name of the cluster this content belongs to."
+          },
+          "content_type": {
+            "type": "string",
+            "description": "Recommended format, e.g. 'pillar guide', 'how-to', 'listicle', 'comparison'."
+          },
+          "estimated_word_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Recommended word count based on SERP analysis."
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["high", "medium", "low"],
+            "description": "Production priority."
+          },
+          "status": {
+            "type": "string",
+            "enum": ["planned", "in-progress", "published", "needs-refresh"],
+            "description": "Current status of this content piece."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "positioning_ref": {
+      "type": "string",
+      "description": "Path to the positioning file used to align keyword strategy, typically './brand/positioning.md'."
+    },
+    "audience_ref": {
+      "type": "string",
+      "description": "Path to the audience file used for intent analysis, typically './brand/audience.md'."
+    }
+  },
+  "additionalProperties": false
+}

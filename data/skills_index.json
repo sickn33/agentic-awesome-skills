@@ -12517,6 +12517,838 @@
     ]
   },
   {
+    "id": "boring-marketing-ads-incrementality-check",
+    "path": "skills/boring-marketing-ads-incrementality-check",
+    "category": "marketing",
+    "name": "boring-marketing-ads-incrementality-check",
+    "description": "Design a matched ad pause test using call or sales logs.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/ads-incrementality-check",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-ai-search",
+    "path": "skills/boring-marketing-ai-search",
+    "category": "marketing",
+    "name": "boring-marketing-ai-search",
+    "description": "Audit and improve a brand's citations in AI search results.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/ai-search",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-audience-research",
+    "path": "skills/boring-marketing-audience-research",
+    "category": "marketing",
+    "name": "boring-marketing-audience-research",
+    "description": "Mine public conversations for audience segments and verbatim customer language.",
+    "risk": "safe",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/audience-research",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-brand-voice",
+    "path": "skills/boring-marketing-brand-voice",
+    "category": "marketing",
+    "name": "boring-marketing-brand-voice",
+    "description": "Extract a brand voice profile with evidence and observable writing checks.",
+    "risk": "safe",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/brand-voice",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-competitive-intel",
+    "path": "skills/boring-marketing-competitive-intel",
+    "category": "marketing",
+    "name": "boring-marketing-competitive-intel",
+    "description": "Compare competitor positioning, offers, ads and public customer feedback.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/competitive-intel",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-content-atomizer",
+    "path": "skills/boring-marketing-content-atomizer",
+    "category": "marketing",
+    "name": "boring-marketing-content-atomizer",
+    "description": "Adapt an existing asset into native social drafts for the brand's priority channels.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/content-atomizer",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-creative",
+    "path": "skills/boring-marketing-creative",
+    "category": "marketing",
+    "name": "boring-marketing-creative",
+    "description": "Plan and produce campaign visuals, product media and short advertising videos.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/creative",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-direct-response-copy",
+    "path": "skills/boring-marketing-direct-response-copy",
+    "category": "marketing",
+    "name": "boring-marketing-direct-response-copy",
+    "description": "Draft conversion copy from customer language, evidence and offer constraints.",
+    "risk": "safe",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/direct-response-copy",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-email-sequences",
+    "path": "skills/boring-marketing-email-sequences",
+    "category": "marketing",
+    "name": "boring-marketing-email-sequences",
+    "description": "Draft lifecycle and sales email sequences with send timing and delivery checks.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/email-sequences",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-find-local-clients",
+    "path": "skills/boring-marketing-find-local-clients",
+    "category": "marketing",
+    "name": "boring-marketing-find-local-clients",
+    "description": "Build a ranked list of local businesses from public search and directory evidence.",
+    "risk": "safe",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/find-local-clients",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-first-screen-check",
+    "path": "skills/boring-marketing-first-screen-check",
+    "category": "marketing",
+    "name": "boring-marketing-first-screen-check",
+    "description": "Audit what a mobile visitor sees on an ad destination or business homepage.",
+    "risk": "safe",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/first-screen-check",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-google-ads-tracking",
+    "path": "skills/boring-marketing-google-ads-tracking",
+    "category": "marketing",
+    "name": "boring-marketing-google-ads-tracking",
+    "description": "Audit Google Ads lead signals and plan or verify tracking corrections.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/google-ads-tracking",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-google-business-profile",
+    "path": "skills/boring-marketing-google-business-profile",
+    "category": "marketing",
+    "name": "boring-marketing-google-business-profile",
+    "description": "Audit a Google Business Profile against nearby competitors and draft profile posts.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/google-business-profile",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-keyword-research",
+    "path": "skills/boring-marketing-keyword-research",
+    "category": "marketing",
+    "name": "boring-marketing-keyword-research",
+    "description": "Organize search queries into topic families, intent and prioritized content briefs.",
+    "risk": "safe",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/keyword-research",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-landing-page",
+    "path": "skills/boring-marketing-landing-page",
+    "category": "marketing",
+    "name": "boring-marketing-landing-page",
+    "description": "Build or audit a mobile-first offer page with message match and conversion checks.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/landing-page",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-lead-magnet",
+    "path": "skills/boring-marketing-lead-magnet",
+    "category": "marketing",
+    "name": "boring-marketing-lead-magnet",
+    "description": "Research and prototype a useful opt-in resource, quiz or calculator.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/lead-magnet",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-local-seo-plan",
+    "path": "skills/boring-marketing-local-seo-plan",
+    "category": "marketing",
+    "name": "boring-marketing-local-seo-plan",
+    "description": "Prioritize local SEO fixes, service coverage and location page decisions.",
+    "risk": "safe",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/local-seo-plan",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-long-form-article",
+    "path": "skills/boring-marketing-long-form-article",
+    "category": "marketing",
+    "name": "boring-marketing-long-form-article",
+    "description": "Research and draft a long-form guide with sourced facts and platform-specific edits.",
+    "risk": "safe",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/long-form-article",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-meta-ads",
+    "path": "skills/boring-marketing-meta-ads",
+    "category": "marketing",
+    "name": "boring-marketing-meta-ads",
+    "description": "Run account preflight, create paused Meta campaigns, and verify pixel and Conversions API events. Use for Facebook Ads API launches, permission errors, and tracking audits.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/meta-ads",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-newsletter",
+    "path": "skills/boring-marketing-newsletter",
+    "category": "marketing",
+    "name": "boring-marketing-newsletter",
+    "description": "Plan and draft newsletter editions with a clear editorial angle and sourced material.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/newsletter",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-paid-ads",
+    "path": "skills/boring-marketing-paid-ads",
+    "category": "marketing",
+    "name": "boring-marketing-paid-ads",
+    "description": "Turn an ad matrix into campaign drafts, creative briefs and a measurement plan.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/paid-ads",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-performance-review",
+    "path": "skills/boring-marketing-performance-review",
+    "category": "marketing",
+    "name": "boring-marketing-performance-review",
+    "description": "Analyze campaign data to identify a measurable bottleneck and rank next tests.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/performance-review",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-pitch-the-fix",
+    "path": "skills/boring-marketing-pitch-the-fix",
+    "category": "marketing",
+    "name": "boring-marketing-pitch-the-fix",
+    "description": "Draft a targeted prospect email around one observable business problem and a proposed fix.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/pitch-the-fix",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-positioning-angles",
+    "path": "skills/boring-marketing-positioning-angles",
+    "category": "marketing",
+    "name": "boring-marketing-positioning-angles",
+    "description": "Build positioning options and an ad matrix from customer and competitive research.",
+    "risk": "safe",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/positioning-angles",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-programmatic-seo",
+    "path": "skills/boring-marketing-programmatic-seo",
+    "category": "marketing",
+    "name": "boring-marketing-programmatic-seo",
+    "description": "Validate a dataset and build templated SEO pages with genuinely distinct information.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/programmatic-seo",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-reviews",
+    "path": "skills/boring-marketing-reviews",
+    "category": "marketing",
+    "name": "boring-marketing-reviews",
+    "description": "Assess review coverage, draft owner replies and plan compliant review requests.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/reviews",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-seo-content",
+    "path": "skills/boring-marketing-seo-content",
+    "category": "marketing",
+    "name": "boring-marketing-seo-content",
+    "description": "Draft or refresh search content using intent, firsthand evidence and citation gaps.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/seo-content",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-service-area-pages",
+    "path": "skills/boring-marketing-service-area-pages",
+    "category": "marketing",
+    "name": "boring-marketing-service-area-pages",
+    "description": "Create distinct local service pages backed by credible evidence for each location.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/service-area-pages",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-site-audit",
+    "path": "skills/boring-marketing-site-audit",
+    "category": "marketing",
+    "name": "boring-marketing-site-audit",
+    "description": "Crawl a site and prioritize technical SEO fixes. Use to check robots.txt, sitemaps, noindex, duplicate pages, broken links, metadata, page speed, and AI crawler access.",
+    "risk": "safe",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/site-audit",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-social-content",
+    "path": "skills/boring-marketing-social-content",
+    "category": "marketing",
+    "name": "boring-marketing-social-content",
+    "description": "Draft original X and LinkedIn posts grounded in a brand's past posts and real numbers.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/social-content",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-speed-to-lead",
+    "path": "skills/boring-marketing-speed-to-lead",
+    "category": "marketing",
+    "name": "boring-marketing-speed-to-lead",
+    "description": "Analyze missed calls and response time, then design a follow-up workflow.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/speed-to-lead",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
+    "id": "boring-marketing-start-here",
+    "path": "skills/boring-marketing-start-here",
+    "category": "marketing",
+    "name": "boring-marketing-start-here",
+    "description": "Build project marketing context from business evidence and route work to a matching skill.",
+    "risk": "critical",
+    "source": "https://github.com/boringmarketer/boring-marketing-skills/tree/7c6678c857fe514f79396ea607aa2a56ea82e676/skills/start-here",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "boringmarketer/boring-marketing-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/boringmarketer/boring-marketing-skills/blob/7c6678c857fe514f79396ea607aa2a56ea82e676/LICENSE"
+  },
+  {
     "id": "bounce-rate-estimator",
     "path": "skills/bounce-rate-estimator",
     "category": "seo performance",
@@ -25185,6 +26017,41 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "e2e",
+    "path": "skills/e2e",
+    "category": "testing",
+    "name": "e2e",
+    "description": "Write, run and debug e2e tests for web and iOS/Android apps that mix plain-language agent steps with exact assertions, replaying cached agent steps without model calls.",
+    "risk": "critical",
+    "source": "https://github.com/e2e-inc/e2e/tree/e693cdcf0baee66dead26fa2e51a6693266b4b8f/skills/e2e",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "e2e-inc/e2e",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/e2e-inc/e2e/blob/e693cdcf0baee66dead26fa2e51a6693266b4b8f/LICENSE",
+    "tags": [
+      "e2e",
+      "end-to-end-testing",
+      "mobile-testing",
+      "ios",
+      "android",
+      "playwright",
+      "agentic-testing"
+    ]
   },
   {
     "id": "e2e-testing",
@@ -47259,6 +48126,36 @@
     ]
   },
   {
+    "id": "modern-java-guidance",
+    "path": "skills/modern-java-guidance",
+    "category": "development",
+    "name": "modern-java-guidance",
+    "description": "Guides agents to write Java 17/21+ and Spring Boot 3.x+ code with version detection and the mjg CLI scanner instead of Java 8 and Boot 2.x patterns.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-11-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "java",
+      "spring-boot",
+      "java-21",
+      "spring-security",
+      "cli"
+    ]
+  },
+  {
     "id": "modern-javascript-patterns",
     "path": "skills/modern-javascript-patterns",
     "category": "development",
@@ -53919,7 +54816,7 @@
     "source_type": "official",
     "source_repo": "pixeltable/pixeltable-skill",
     "license": "Apache-2.0",
-    "license_source": "https://github.com/pixeltable/pixeltable-skill/blob/9296e22ad083307ac983217eef8e62f488409c67/LICENSE",
+    "license_source": "https://github.com/pixeltable/pixeltable-skill/blob/5e642cbe3bbe0cb8b82d9aa721714140522bd29c/LICENSE",
     "tags": [
       "pixeltable",
       "multimodal",
@@ -74047,6 +74944,41 @@
     "license_source": "https://github.com/amElnagdy/delegate-skills/blob/master/LICENSE"
   },
   {
+    "id": "vibe-shield",
+    "path": "skills/vibe-shield",
+    "category": "development",
+    "name": "vibe-shield",
+    "description": "Audit Next.js, React, Express, Hono, Supabase SQL, Stripe webhooks, and SKILL.md or MCP configs across 92 static security and prompt-injection rules.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-11-17",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "MIT",
+    "license_source": "https://github.com/avivgerz-hue/vibe-shield/blob/81cc23361ab7f147487ea68ba17bd6f23cbbade7/LICENSE",
+    "tags": [
+      "security",
+      "static-analysis",
+      "mcp",
+      "owasp",
+      "cwe",
+      "supabase",
+      "nextjs",
+      "prompt-injection"
+    ]
+  },
+  {
     "id": "vibecode-production-qa-validator",
     "path": "skills/vibecode-production-qa-validator",
     "category": "devops",
@@ -76772,6 +77704,40 @@
       "recruiting",
       "talent-marketplace",
       "mcp"
+    ]
+  },
+  {
+    "id": "worktable-mcp",
+    "path": "skills/worktable-mcp",
+    "category": "mcp",
+    "name": "worktable-mcp",
+    "description": "Find, cite and update Docs, Records, HTML Docs, annotations and threads in a Worktable workspace through Worktable's MCP server. Use when the user chooses Worktable.",
+    "risk": "critical",
+    "source": "https://github.com/worktable/worktable-plugin/tree/6841f2727e1fc004e02305d99690759d54f20884",
+    "date_added": "2026-11-16",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "worktable/worktable-plugin",
+    "license": "MIT",
+    "license_source": "https://github.com/worktable/worktable-plugin/blob/6841f2727e1fc004e02305d99690759d54f20884/LICENSE",
+    "tags": [
+      "mcp",
+      "workspace",
+      "documents",
+      "records",
+      "collaboration",
+      "knowledge-base"
     ]
   },
   {
