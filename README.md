@@ -721,6 +721,7 @@ Key source families include:
 
 ### Additional Sources
 
+- **[Product Metrics](https://github.com/product-metrics/skills)**: 116 ecommerce advertising skills and a hosted OAuth MCP server for server-side tracking, profit bidding, product segmentation and campaign planning across Google Ads, Meta and ChatGPT Ads. Connect your Product Metrics account, or create one when you sign in. Connecting data is free; paid product features use a subscription. Added by the Product Metrics team.
 - **[agent-cards/skill](https://github.com/agent-cards/skill)**: Manage prepaid virtual Visa cards for AI agents. Create cards, check balances, view credentials, close cards, and get support via MCP tools.
 - **[No Stairs Please MCP](https://nostairsplease.com/mcp)**: Hosted MCP for finding independent live-music venues, checking room and sound details, and planning tour routes. Connect a No Stairs Please account to access your plan’s venue details and manage saved Favorites.
 - **[HarborRank](https://github.com/harborrank/harborrank-skills)**: 18 SEO skills plus a hosted MCP server (OAuth) for keyword research, live Google SERPs and Maps rank grids, competitor and backlink data, rank tracking, site audits, AI search visibility, and read-only Search Console and Google Analytics. _Disclosure: added by the HarborRank team; HarborRank is a paid product with a 7-day free trial._
