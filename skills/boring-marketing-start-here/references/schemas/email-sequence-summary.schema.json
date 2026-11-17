@@ -1,0 +1,199 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/boringmarketer/boring-marketing-skills/blob/main/skills/start-here/references/schemas/email-sequence-summary.schema.json",
+  "title": "Email Sequence Summary",
+  "description": "Structured metadata for an email sequence produced by /email-sequences. Contains sequence type, email count, subject lines, timing, and CTA data. Designed for downstream automation -- feeding sequence data to an ESP (Mailchimp, Kit, HubSpot) for automated deployment.",
+  "type": "object",
+  "required": [
+    "sequence_name",
+    "sequence_type",
+    "email_count",
+    "created_date",
+    "emails"
+  ],
+  "properties": {
+    "sequence_name": {
+      "type": "string",
+      "description": "Human-readable name for this sequence, e.g. 'Cold Email Kit Welcome Sequence'.",
+      "minLength": 1
+    },
+    "sequence_type": {
+      "type": "string",
+      "enum": ["welcome", "nurture", "launch", "sales", "re-engagement", "post-purchase", "onboarding", "cart-abandonment", "webinar", "custom"],
+      "description": "The type of email sequence."
+    },
+    "email_count": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Total number of emails in the sequence."
+    },
+    "created_date": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date when this sequence was created."
+    },
+    "created_by": {
+      "type": "string",
+      "description": "The skill that created this sequence, typically '/email-sequences'."
+    },
+    "campaign_ref": {
+      "type": "string",
+      "description": "Path to the campaign directory this sequence belongs to, e.g. './campaigns/cold-email-kit-welcome/'."
+    },
+    "trigger": {
+      "type": "object",
+      "description": "What triggers the sequence to start for a subscriber.",
+      "properties": {
+        "event": {
+          "type": "string",
+          "description": "The triggering event, e.g. 'lead magnet download', 'purchase', 'tag added', 'list signup'."
+        },
+        "source": {
+          "type": "string",
+          "description": "Where the subscriber comes from, e.g. 'landing page', 'blog opt-in', 'checkout'."
+        },
+        "segment": {
+          "type": "string",
+          "description": "Audience segment this sequence targets, e.g. 'new subscribers', 'trial users', 'past customers'."
+        }
+      },
+      "additionalProperties": false
+    },
+    "total_duration_days": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Total duration of the sequence from first email to last, in days."
+    },
+    "voice_profile_ref": {
+      "type": "string",
+      "description": "Path to the voice profile used, typically './brand/voice-profile.md'."
+    },
+    "positioning_angle": {
+      "type": "string",
+      "description": "The positioning angle driving this sequence, e.g. 'The Anti-Course Course'."
+    },
+    "emails": {
+      "type": "array",
+      "description": "Metadata for each email in the sequence, in send order.",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["email_number", "purpose", "subject_lines", "send_day"],
+        "properties": {
+          "email_number": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Position in the sequence (1-indexed)."
+          },
+          "purpose": {
+            "type": "string",
+            "description": "The strategic purpose of this email, e.g. 'Deliver lead magnet', 'Build trust with proof', 'Overcome objections'."
+          },
+          "subject_lines": {
+            "type": "array",
+            "description": "Subject line variants for A/B testing. First is the recommended winner.",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "required": ["text"],
+              "properties": {
+                "text": {
+                  "type": "string",
+                  "description": "The subject line text."
+                },
+                "variant_label": {
+                  "type": "string",
+                  "description": "Label for this variant, e.g. 'A', 'B', 'C' or 'curiosity', 'proof', 'direct'."
+                },
+                "rationale": {
+                  "type": "string",
+                  "description": "Why this subject line should work, e.g. 'Curiosity gap + specificity'."
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "send_day": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Day to send relative to sequence start (Day 0 = trigger day)."
+          },
+          "send_time": {
+            "type": "string",
+            "description": "Recommended send time, e.g. '7:00 AM', '10:00 AM local time'."
+          },
+          "cta": {
+            "type": "object",
+            "description": "Primary call-to-action for this email.",
+            "properties": {
+              "text": {
+                "type": "string",
+                "description": "CTA button or link text, e.g. 'Download the Kit', 'Read the Case Study'."
+              },
+              "url_placeholder": {
+                "type": "string",
+                "description": "Placeholder URL for the CTA destination, e.g. '{lead_magnet_url}', '{case_study_url}'."
+              },
+              "type": {
+                "type": "string",
+                "enum": ["download", "read", "watch", "reply", "buy", "book", "join", "custom"],
+                "description": "Type of action the CTA drives."
+              }
+            },
+            "additionalProperties": false
+          },
+          "file_path": {
+            "type": "string",
+            "description": "Relative path to the full email file, e.g. './campaigns/welcome/emails/01-delivery.md'."
+          },
+          "estimated_word_count": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Approximate word count of the email body."
+          },
+          "tags_to_apply": {
+            "type": "array",
+            "description": "Subscriber tags to apply when this email is opened or clicked. For ESP automation.",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "performance_targets": {
+      "type": "object",
+      "description": "Expected performance benchmarks for this sequence type.",
+      "properties": {
+        "open_rate": {
+          "type": "string",
+          "description": "Target open rate, e.g. '40-55%' for welcome sequences."
+        },
+        "click_rate": {
+          "type": "string",
+          "description": "Target click rate, e.g. '8-15%'."
+        },
+        "conversion_rate": {
+          "type": "string",
+          "description": "Target conversion rate for the sequence goal, e.g. '3-5% to paid'."
+        },
+        "unsubscribe_rate": {
+          "type": "string",
+          "description": "Acceptable unsubscribe rate, e.g. 'Under 1% per email'."
+        }
+      },
+      "additionalProperties": false
+    },
+    "esp_compatibility": {
+      "type": "array",
+      "description": "Email service providers this sequence has been formatted for.",
+      "items": {
+        "type": "string",
+        "enum": ["mailchimp", "convertkit", "hubspot", "beehiiv", "activecampaign", "drip", "generic"],
+        "description": "ESP name or 'generic' for platform-agnostic format."
+      }
+    }
+  },
+  "additionalProperties": false
+}
