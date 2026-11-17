@@ -212,6 +212,9 @@ Key source families include:
 
 ### Official Sources
 
+- **[e2e-inc/e2e](https://github.com/e2e-inc/e2e)** — Apache-2.0 guides for browser and mobile end-to-end tests. Remote model use requires approval for the provider and test data.
+- **[Worktable](https://github.com/worktable/worktable-plugin)** — MIT guidance for searching and updating a Worktable workspace through its OAuth MCP server.
+
 - **[phuryn/product-engineering](https://github.com/phuryn/product-engineering/tree/main/app-stack/skills/uptime-monitoring)**: Official Staygreen skill (`uptime-monitoring`) - content checks confirmed from a second location, heartbeats for scheduled jobs, certificate and domain expiry, status pages and a tested alert route, through the hosted Staygreen MCP server; the same steps work on a monitoring service the owner already uses (MIT).
 
 - **[CrakSEO/skills](https://github.com/CrakSEO/skills)**: External MIT collection for CrakSEO hosted MCP integrations covering SEO research, Search Console and URL indexing. Listed as an upstream resource; not bundled or connected by this repository.
@@ -720,6 +723,13 @@ Key source families include:
 - **[leonardomso/33-js-concepts](https://github.com/leonardomso/33-js-concepts)**: Inspiration for JavaScript Mastery.
 
 ### Additional Sources
+
+- **[Product Metrics](https://github.com/product-metrics/skills)** — MIT skills for conversion tracking and profit-based advertising. The hosted OAuth MCP requires an account and some features require a subscription. Submitted by the Product Metrics team.
+- **[Fair Value Calculator](https://github.com/petz00711/fair-value-calculator-mcp)** — CC BY 4.0 skill for model-based stock valuation and comparisons. The hosted MCP uses OAuth and offers limited free access and a paid subscription. Submitted by a member of the Fair Value Calculator team.
+- **[PersonaXpand](https://github.com/hayat-nextoriainfotech/social-media-skills)** — MIT skills for drafting replies, triaging messages, and planning posts from supplied text. Sending or posting requires the hosted connector and approval of the exact text. Submitted by the Nextoria team.
+- **[Levea](https://github.com/brajendrak00068/agentic-ai-video-production)** — MIT skills for cloud video editing, captioning, reframing, and export. Connected editing sends media to the hosted service and needs OAuth or an API key. Submitted by the upstream repository owner.
+- **[Revenue Skills](https://github.com/moonetix/revenue-skills)** — MIT guidance on webhook design, ledgers, refunds, and payout safeguards. Review implementation and test against authorized fixtures. Submitted by the upstream maintainers.
+- **[CallForMe](https://github.com/callforme-tel/callforme)** — MIT skill for planning phone calls to businesses and reviewing the result. Dialing requires user approval, a connected account, and prepaid credit. Submitted by the CallForMe developer.
 
 - **[agent-cards/skill](https://github.com/agent-cards/skill)**: Manage prepaid virtual Visa cards for AI agents. Create cards, check balances, view credentials, close cards, and get support via MCP tools.
 - **[No Stairs Please MCP](https://nostairsplease.com/mcp)**: Hosted MCP for finding independent live-music venues, checking room and sound details, and planning tour routes. Connect a No Stairs Please account to access your plan’s venue details and manage saved Favorites.

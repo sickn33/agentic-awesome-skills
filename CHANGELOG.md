@@ -38,6 +38,37 @@ Summarize the most important change for users in one short paragraph.
 
 ## [Unreleased]
 
+## [20.11.0] - 2026-11-17 - "Marketing Workflows, Modern Java, and App Testing"
+
+Add 36 skills for marketing workflows, modern Java and Spring, end-to-end testing, defensive code review, and connected workspaces, bringing the catalog to 3,017 skills.
+
+### New skills
+
+- Add the Boring Marketing Skills pack for positioning, creative development, campaigns, research, and technical SEO.
+- Add Modern Java Guidance for version-aware Java and Spring Boot patterns.
+- Add e2e for browser and mobile application tests, Vibe Shield for defensive static review, and Worktable MCP for authorized workspace search and updates.
+
+### Improvements
+
+- Update Pixeltable guidance for Gemini video generation and daemon package detection.
+- Restore persistent catalog discovery links and improve metadata and indexing notifications.
+- Add external resources for MCP write safety, ASO, advertising, social publishing, video editing, payment design, valuation, and approved business calls.
+
+### Security and distribution
+
+- Prevent the Meta Ads preflight from printing a malformed account identifier.
+- Handle both legacy HTML comment endings when reading embedded JSON-LD.
+
+### Contributors
+
+- @papadveeb for Alpha Bazaar ([#2368](https://github.com/sickn33/agentic-awesome-skills/pull/2368)).
+- @rafe-walker for MCP Write Safety ([#2375](https://github.com/sickn33/agentic-awesome-skills/pull/2375)).
+- @wkd09 for Modern Java Guidance ([#2387](https://github.com/sickn33/agentic-awesome-skills/pull/2387)).
+- @pierrebrunelle for Pixeltable ([#2369](https://github.com/sickn33/agentic-awesome-skills/pull/2369)).
+- @KKitar for ASOScan ([#2377](https://github.com/sickn33/agentic-awesome-skills/pull/2377)).
+- @avivgerz-hue, @kacperkapusciak, and @obkaro for the skill submissions adapted in this batch.
+- @berend-vrakking, @petz00711, @hayat-nextoriainfotech, @brajendrak00068, @moonetix, and @jakemarsh for the external-source submissions adapted in this batch.
+
 ## [20.10.0] - 2026-11-16 - "Quantum Circuits, Browser Sessions, and MCP Workflows"
 
 Add 21 skills for local quantum simulation, hosted browser sessions, connected workflows, and product and engineering tasks, bringing the catalog to 2,981 skills.
