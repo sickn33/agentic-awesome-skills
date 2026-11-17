@@ -212,6 +212,8 @@ Key source families include:
 
 ### Official Sources
 
+- **[hayat-nextoriainfotech/social-media-skills](https://github.com/hayat-nextoriainfotech/social-media-skills)**: Official PersonaXpand skills (`reply-in-my-voice`, `inbox-triage`, `voice-profile`, `auto-reply-rules`, `post-everywhere`, `week-planner`, `weekly-report`, `sounds-human`) - draft replies to comments and DMs in the owner's voice, sort an inbox, and write, plan and report on posts from pasted text with no account; flags complaints, never invents facts, never denies being AI, and an optional PersonaXpand MCP connector sends or posts only after the user approves the exact text (MIT).
+
 - **[phuryn/product-engineering](https://github.com/phuryn/product-engineering/tree/main/app-stack/skills/uptime-monitoring)**: Official Staygreen skill (`uptime-monitoring`) - content checks confirmed from a second location, heartbeats for scheduled jobs, certificate and domain expiry, status pages and a tested alert route, through the hosted Staygreen MCP server; the same steps work on a monitoring service the owner already uses (MIT).
 
 - **[CrakSEO/skills](https://github.com/CrakSEO/skills)**: External MIT collection for CrakSEO hosted MCP integrations covering SEO research, Search Console and URL indexing. Listed as an upstream resource; not bundled or connected by this repository.
