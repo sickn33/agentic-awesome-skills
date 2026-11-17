@@ -1,9 +1,10 @@
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { MemoryRouter, Routes, Route, useLocation, useNavigate } from 'react-router';
 import { Home } from '../Home';
 import { render, renderWithRouter } from '../../utils/testUtils';
 import { createMockSkill } from '../../factories/skill';
+import { seoLandingPages } from '../../data/seoLandingPages';
 import { useSkills } from '../../context/SkillContext';
 
 // Mock useSkills hook
@@ -69,6 +70,19 @@ describe('Home', () => {
       expect(virtuosoGridMock).toHaveBeenCalledWith(
         expect.objectContaining({ useWindowScroll: true }),
       );
+    });
+
+    it('keeps directory and topic links visible even with no matching catalog results', () => {
+      (useSkills as Mock).mockReturnValue({ skills: [], stars: {}, loading: false, error: null });
+      renderWithRouter(<Home />, { useProvider: false });
+      const hubs = screen.getByRole('navigation', { name: 'Catalog hubs' });
+      expect(hubs).toBeVisible();
+      expect(within(hubs).getByRole('link', { name: 'Browse all skills A–Z' })).toHaveAttribute('href', '/directory/');
+      for (const page of seoLandingPages) {
+        expect(within(hubs).getByRole('link', { name: page.h1 })).toHaveAttribute('href', `/topics/${encodeURIComponent(page.slug)}/`);
+      }
+      fireEvent.click(screen.getByRole('button', { name: 'My collections' }));
+      expect(hubs).toBeVisible();
     });
 
     it('should set homepage SEO metadata', async () => {

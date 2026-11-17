@@ -1,0 +1,141 @@
+<!doctype html>
+<!--
+  Footage ad starter: 1080x1920, one master for Reels, TikTok and Shorts, 16 seconds.
+  Cuts real or generated clips together: a hook clip with a native text box on screen at frame 0,
+  the body with word-by-word captions, a proof clip with a real review card over it, and an end
+  card on a full-frame real photo of the product. Text never sits on a bare gradient.
+  Copy into a HyperFrames project as index.html (see modes/motion-ads.md), then:
+  1. Put the clips in assets/clips/ (normalized to 1080x1920, 30 fps, H.264, see the mode) and a
+     real 9:16 photo of the product in use in assets/end.jpg. Fonts go in assets/fonts/; fix the
+     @font-face lines.
+  2. Replace every [bracketed] line. Captions come from `hyperframes transcribe` word timings:
+     chunks of 2 to 4 words, each held for its words, and wordStarts in the script lighting each
+     word as it is spoken. All times are absolute seconds.
+  3. Hook variants: render once per opening with
+     --variables '{"hookClip":"assets/clips/hook-b.mp4","hookText":"[Second opening line]"}'
+  4. Keep text inside x 120 to 888, y 288 to 1248, and left of x 780 below y 840.
+  Patterns kept on purpose: every timed element is a top-level .clip with absolute times, hidden
+  starting states in gsap.set outside the timeline, one tween per element, sound kept on the
+  <video> that carries speech and muted on b-roll.
+-->
+<html lang="en" data-composition-variables='[
+  {"id":"hookClip","type":"string","label":"Hook clip","default":"assets/clips/hook-a.mp4"},
+  {"id":"hookText","type":"string","label":"Hook text","default":"[I was about to throw it away]"}
+]'>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js" integrity="sha384-XmJ9SoHtVOHoQUcKvFAzVXwdkKo1Ie3bhmSoIAkcdsHGaIrVJIkmozyq0FJeb/Ly" crossorigin="anonymous"></script>
+    <style>
+      @font-face { font-family: "Brand Display"; src: url("assets/fonts/display-900.woff2") format("woff2"); font-weight: 900; font-style: normal; }
+      @font-face { font-family: "Brand Text"; src: url("assets/fonts/text-500.woff2") format("woff2"); font-weight: 500; font-style: normal; }
+      @font-face { font-family: "Brand Text"; src: url("assets/fonts/text-700.woff2") format("woff2"); font-weight: 700; font-style: normal; }
+
+      :root { --ink: #111111; --paper: #ffffff; --accent: #f2c230; --brand: #1d3a2e; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      video.clip { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; object-fit: cover; }
+
+      /* Hook: a native text box, already on screen at frame 0. */
+      #hook-box { position: absolute; left: 120px; top: 300px; width: 768px; text-align: center; }
+      #hook-text { display: inline; padding: 10px 18px; line-height: 1.5; border-radius: 14px;
+        background: var(--paper); color: var(--ink); font-family: "Brand Text", sans-serif; font-weight: 700; font-size: 58px;
+        -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+
+      /* Captions: phrase chunks of 2 to 4 words on a dark box, each word lighting up as it is spoken. */
+      .cap { position: absolute; left: 120px; top: 1040px; width: 660px; text-align: center; }
+      .cap span.box { display: inline; padding: 6px 14px; line-height: 1.45; border-radius: 12px; background: rgba(0, 0, 0, 0.72);
+        font-family: "Brand Text", sans-serif; font-weight: 700; font-size: 64px; color: #ffffff;
+        -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+      .cap .w { color: #ffffff; }
+
+      /* Review card over the proof footage: real words, real name, real source. */
+      #review { position: absolute; left: 120px; top: 760px; width: 660px; padding: 40px 44px 36px; border-radius: 28px;
+        background: rgba(255, 255, 255, 0.96); box-shadow: 0 30px 70px rgba(0, 0, 0, 0.35); }
+      .stars { font-family: "Brand Text", sans-serif; font-weight: 700; font-size: 44px; letter-spacing: 6px; color: #a86f00; }
+      .quote { margin-top: 14px; font-family: "Brand Text", sans-serif; font-weight: 700; font-size: 50px; line-height: 1.2; color: var(--ink); }
+      .quote mark { background: none; color: inherit; box-shadow: inset 0 -16px 0 var(--accent); }
+      .attr { margin-top: 22px; font-family: "Brand Text", sans-serif; font-weight: 500; font-size: 32px; color: #444; }
+
+      /* End card: a real photo of the product fills the frame; the words sit in the safe band. */
+      #end { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      #end-photo { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px; object-fit: cover; }
+      #end-shade { position: absolute; left: 0; top: 0; width: 1080px; height: 1920px;
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 38%, rgba(0, 0, 0, 0.72) 58%, rgba(0, 0, 0, 0.82) 100%); }
+      #end-offer { position: absolute; left: 120px; top: 900px; width: 660px; font-family: "Brand Display", serif; font-weight: 900;
+        font-size: 84px; line-height: 1.05; color: var(--paper); }
+      #end-terms { position: absolute; left: 120px; top: 1100px; width: 660px; font-family: "Brand Text", sans-serif; font-weight: 500;
+        font-size: 36px; color: var(--paper); opacity: 0.9; }
+      #end-cta { position: absolute; left: 120px; top: 1150px; width: 560px; height: 96px; border-radius: 48px; background: var(--accent);
+        display: flex; align-items: center; justify-content: center; font-family: "Brand Text", sans-serif; font-weight: 700; font-size: 42px; color: var(--ink); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="16" data-width="1080" data-height="1920">
+      <!-- 1. Hook clip: a face or hands with the product in frame from the first frame. Speech kept. -->
+      <video id="v-hook" class="clip" src="assets/clips/hook-a.mp4" data-start="0" data-duration="3.2" data-media-start="0" data-has-audio="true" playsinline></video>
+      <!-- 2. Body: the product in use. Speech kept. Trim with data-media-start. -->
+      <video id="v-body" class="clip" src="assets/clips/body.mp4" data-start="3.2" data-duration="6.8" data-media-start="0" data-has-audio="true" playsinline></video>
+      <!-- 3. Proof: the result, silent b-roll under the review card. -->
+      <video id="v-proof" class="clip" src="assets/clips/result.mp4" data-start="10" data-duration="3.5" data-media-start="0" muted playsinline></video>
+
+      <div id="hook-box" class="clip" data-start="0" data-duration="3.2"><span id="hook-text">[I was about to throw it away]</span></div>
+      <!-- Reply-to-comment opening instead: swap the hook box for a bubble like
+           <div class="clip" ...><div class="bubble"><small>Reply to [name]'s comment</small>[The comment, as written]</div></div>
+           and blur the commenter's name unless they agree. -->
+
+      <!-- Captions: replace with the transcript's words and times. A chunk stays up for its words
+           (at least about 1.1 s); each word lights up at its own start time in the script below. -->
+      <div id="cap-1" class="clip cap" data-start="3.25" data-duration="1.55"><span class="box"><span id="w1" class="w">[Then</span> <span id="w2" class="w">I</span> <span id="w3" class="w">tried</span> <span id="w4" class="w">this.]</span></span></div>
+      <div id="cap-2" class="clip cap" data-start="4.8" data-duration="1.6"><span class="box"><span id="w5" class="w">[It</span> <span id="w6" class="w">takes</span> <span id="w7" class="w">ten</span> <span id="w8" class="w">seconds]</span></span></div>
+      <div id="cap-3" class="clip cap" data-start="6.4" data-duration="3.5"><span class="box"><span id="w9" class="w">[and</span> <span id="w10" class="w">it's</span> <span id="w11" class="w">actually</span> <span id="w12" class="w">good.]</span></span></div>
+
+      <div id="review-wrap" class="clip" data-start="10.1" data-duration="3.4">
+        <div id="review">
+          <!-- Verbatim review only. Stars only if the review had them. -->
+          <div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <div class="quote">"[Review words,] <mark>[key phrase]</mark> [verbatim.]"</div>
+          <div class="attr">[First name, last initial] &middot; [Google review]</div>
+        </div>
+      </div>
+
+      <section id="end" class="clip" data-start="13.5" data-duration="2.5">
+        <!-- A real photo of the product in use, 9:16. Not a packshot on a flat color. -->
+        <img id="end-photo" src="assets/end.jpg" alt="" data-layout-ignore />
+        <div id="end-shade" data-layout-ignore></div>
+        <div id="end-offer">[The offer, in six words]</div>
+        <div id="end-terms">[The terms, plainly.]</div>
+        <div id="end-cta">[Call to action]</div>
+      </section>
+    </div>
+
+    <script>
+      // Hook variants: swap the clip and line from --variables before the timeline is built.
+      const vars = (window.__hyperframes && window.__hyperframes.getVariables && window.__hyperframes.getVariables()) || {};
+      if (vars.hookClip) document.getElementById("v-hook").setAttribute("src", vars.hookClip);
+      if (vars.hookText) document.getElementById("hook-text").textContent = vars.hookText;
+
+      window.__timelines = window.__timelines || {};
+      gsap.set("#review", { opacity: 0, y: 80 });
+      gsap.set("#end-photo", { scale: 1.04 });
+      gsap.set(["#end-offer", "#end-terms"], { opacity: 0, y: 30 });
+      gsap.set("#end-cta", { opacity: 0, y: 40 });
+
+      const tl = gsap.timeline({ paused: true });
+      // The spoken word lights up: one tween per word, at the word's start time from the transcript.
+      const wordStarts = [3.25, 3.6, 3.9, 4.35, 4.8, 5.3, 5.8, 6.4, 7.1, 7.7, 8.1, 8.6];
+      wordStarts.forEach((t, i) => tl.to("#w" + (i + 1), { color: "#f2c230", duration: 0.08, ease: "none" }, t));
+      // The proof card rises over the footage and holds long enough to read.
+      tl.to("#review", { opacity: 1, y: 0, duration: 0.45, ease: "power3.out" }, 10.15);
+      // End card: product photo settles, then offer, terms and CTA; held over 2 seconds.
+      tl.to("#end-photo", { scale: 1, duration: 2.5, ease: "power1.out" }, 13.5);
+      tl.to("#end-offer", { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" }, 13.55);
+      tl.to("#end-terms", { opacity: 0.9, y: 0, duration: 0.3, ease: "power2.out" }, 13.65);
+      tl.to("#end-cta", { opacity: 1, y: 0, duration: 0.35, ease: "power3.out" }, 13.7);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>

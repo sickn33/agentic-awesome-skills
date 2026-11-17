@@ -15,6 +15,10 @@ describe('Core product homepage', () => {
     expect(screen.getByRole('link', { name: 'Get started' })).toHaveAttribute('href', '/docs/');
     expect(screen.getByRole('link', { name: 'Browse packs' })).toHaveAttribute('href', '/plugins/');
     expect(screen.getByRole('link', { name: 'Contribute to AAS' })).toHaveAttribute('href', '/contribute/');
+    expect(screen.getByRole('link', { name: 'Browse skills' })).toHaveAttribute('href', '/core/');
+    expect(screen.getByRole('link', { name: 'Explore the skill catalog' })).toHaveAttribute('href', '/core/');
+    expect(screen.getByRole('link', { name: 'Browse all skills A–Z' })).toHaveAttribute('href', '/directory/');
+    expect(screen.getByText(/reusable AI agent skills for Claude Code, Codex, Cursor/)).toBeVisible();
     expect(screen.queryByRole('searchbox')).not.toBeInTheDocument();
     expect(document.title).toContain('AAS Core');
     expect(screen.getByText(projectIdentity.description)).toBeVisible();

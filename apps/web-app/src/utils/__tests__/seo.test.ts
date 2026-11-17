@@ -4,6 +4,7 @@ import {
   DEFAULT_TOP_SKILL_COUNT,
   DEFAULT_SOCIAL_IMAGE,
   buildHomeMeta,
+  buildPluginsMeta,
   buildLandingMeta,
   buildSkillFallbackMeta,
   buildSkillMeta,
@@ -30,6 +31,22 @@ function createSkill(overrides: Record<string, unknown> = {}) {
 }
 
 describe('SEO helpers', () => {
+  it.each(['https://example.com', 'https://example.com/catalog'])('keeps nested route site identity and search at %s', (base) => {
+    const routes = [
+      ['/core/', buildHomeMeta(2981)],
+      ['/plugins/', buildPluginsMeta(5)],
+      [`/topics/${seoLandingPages[0].slug}/`, buildTopicLandingMeta(seoLandingPages[0])],
+      ['/skill/skill-alpha/', buildSkillMeta(createSkill())],
+    ] as const;
+    for (const [route, meta] of routes) {
+      if (typeof meta.jsonLd !== 'function') throw new Error('Missing structured data');
+      const entries = meta.jsonLd(`${base}${route}`) as Record<string, any>[];
+      const site = entries.find((entry) => entry['@type'] === 'WebSite');
+      expect(site?.url).toBe(`${base}/`);
+      expect(site?.potentialAction.target).toBe(`${base}/core/?q={search_term_string}`);
+    }
+  });
+
   it('keeps hydrated priority metadata aligned with the curated sitemap scope', () => {
     expect(DEFAULT_TOP_SKILL_COUNT).toBe(180);
   });

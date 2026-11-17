@@ -5,19 +5,20 @@ import { HomeSupporters } from '../components/HomeSupporters';
 import './Landing.css';
 import './LandingPolish.css';
 import { WorkflowDemo } from '../components/WorkflowDemo';
-import { buildLandingMeta } from '../utils/seo';
+import { buildLandingMeta, getCatalogCountLabel } from '../utils/seo';
 import { usePageMeta } from '../hooks/usePageMeta';
 import projectIdentity from '../data/projectIdentity.json';
 
 export function Landing() {
   const { hash } = useLocation();
-  usePageMeta(buildLandingMeta(typeof __CATALOG_COUNT__ === 'number' ? __CATALOG_COUNT__ : 0));
+  const catalogCount = typeof __CATALOG_COUNT__ === 'number' ? __CATALOG_COUNT__ : 0;
+  usePageMeta(buildLandingMeta(catalogCount));
   if (hash === '#recorded-example' || hash === '#get-started') {
     return <Navigate replace to={hash === '#recorded-example' ? '/aas-core/#recorded-example' : '/aas-core/#connect'} />;
   }
   return <div className="brand-home">
     <section className="brand-hero brand-wrap" aria-labelledby="hero-title">
-      <div><h1 id="hero-title">Your agent.<br /><span className="hero-accent">The right skills.</span></h1><p>An open-source library of skills for coding agents.</p><div className="action-row"><Link className="brand-button" to="/docs/">Get started</Link><Link className="text-action" to="/plugins/">Browse packs</Link></div></div>
+      <div><h1 id="hero-title">Your agent.<br /><span className="hero-accent">The right skills.</span></h1><p>Explore {getCatalogCountLabel(catalogCount)} reusable AI agent skills for Claude Code, Codex, Cursor and other coding agents.</p><div className="action-row"><Link className="brand-button" to="/core/">Browse skills</Link><Link className="text-action" to="/docs/">Get started</Link><Link className="text-action" to="/plugins/">Browse packs</Link></div></div>
       <figure className="brand-video"><video controls playsInline preload="none" poster={`${import.meta.env.BASE_URL}videos/aas-introduction-v3-poster.jpg`} aria-label="AAS introduction video"><source src="https://aaskills.tech/videos/aas-introduction-v3.mp4" type="video/mp4" /><a href="https://aaskills.tech/videos/aas-introduction-v3.mp4">Watch the introduction</a></video><figcaption>AAS in 40 seconds</figcaption></figure>
     </section>
     <section className="home-identity brand-wrap" aria-labelledby="identity-title">

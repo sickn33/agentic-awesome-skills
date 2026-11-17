@@ -1,0 +1,271 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/boringmarketer/boring-marketing-skills/blob/main/skills/start-here/references/schemas/voice-profile.schema.json",
+  "title": "Brand Voice Profile",
+  "description": "Structured voice profile for a brand, written by /brand-voice and consumed by all content-producing skills. Validates the structured data that accompanies ./brand/voice-profile.md.",
+  "type": "object",
+  "required": [
+    "brand_name",
+    "tone",
+    "vocabulary",
+    "personality_traits",
+    "examples"
+  ],
+  "properties": {
+    "brand_name": {
+      "type": "string",
+      "description": "The brand or business name this voice profile belongs to.",
+      "minLength": 1
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date when this profile was last written or updated."
+    },
+    "updated_by": {
+      "type": "string",
+      "description": "The skill that last wrote this file, e.g. '/brand-voice'."
+    },
+    "tone": {
+      "type": "object",
+      "description": "The brand's tonal positioning across multiple spectrums.",
+      "required": ["spectrum"],
+      "properties": {
+        "spectrum": {
+          "type": "array",
+          "description": "Array of tonal dimensions. Each dimension is a slider between two poles with the brand's position marked.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["dimension", "left_pole", "right_pole", "position"],
+            "properties": {
+              "dimension": {
+                "type": "string",
+                "description": "Name of this tonal dimension, e.g. 'Formality', 'Energy', 'Humor'."
+              },
+              "left_pole": {
+                "type": "string",
+                "description": "The label for the left end of the spectrum, e.g. 'Casual'."
+              },
+              "right_pole": {
+                "type": "string",
+                "description": "The label for the right end of the spectrum, e.g. 'Formal'."
+              },
+              "position": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 10,
+                "description": "Where the brand sits on this spectrum. 1 = fully left pole, 10 = fully right pole."
+              },
+              "notes": {
+                "type": "string",
+                "description": "Optional context about this dimension, e.g. 'More formal in sales pages, casual in emails'."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "summary": {
+          "type": "string",
+          "description": "A one-sentence natural-language summary of the overall tone, e.g. 'Conversational but sharp, with dry humor and zero fluff.'"
+        }
+      },
+      "additionalProperties": false
+    },
+    "vocabulary": {
+      "type": "object",
+      "description": "Words and phrases the brand embraces or avoids.",
+      "required": ["preferred", "avoid"],
+      "properties": {
+        "preferred": {
+          "type": "array",
+          "description": "Words, phrases, or patterns the brand actively uses.",
+          "items": {
+            "type": "object",
+            "required": ["term"],
+            "properties": {
+              "term": {
+                "type": "string",
+                "description": "The word or phrase."
+              },
+              "context": {
+                "type": "string",
+                "description": "When or how to use this term, e.g. 'Use in CTAs' or 'Only in casual contexts'."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "avoid": {
+          "type": "array",
+          "description": "Words, phrases, or patterns the brand never uses.",
+          "items": {
+            "type": "object",
+            "required": ["term"],
+            "properties": {
+              "term": {
+                "type": "string",
+                "description": "The word or phrase to avoid."
+              },
+              "reason": {
+                "type": "string",
+                "description": "Why this term is avoided, e.g. 'Sounds corporate' or 'Overused in our niche'."
+              },
+              "alternative": {
+                "type": "string",
+                "description": "What to use instead, if applicable."
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "personality_traits": {
+      "type": "array",
+      "description": "3-7 adjectives or short phrases that define the brand's personality. Ordered by prominence.",
+      "minItems": 1,
+      "maxItems": 10,
+      "items": {
+        "type": "string"
+      }
+    },
+    "examples": {
+      "type": "object",
+      "description": "Concrete examples of on-brand and off-brand writing to calibrate content-producing skills.",
+      "required": ["on_brand", "off_brand"],
+      "properties": {
+        "on_brand": {
+          "type": "array",
+          "description": "Samples of writing that nail this brand's voice. At least 2 recommended.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["text"],
+            "properties": {
+              "text": {
+                "type": "string",
+                "description": "The example text."
+              },
+              "source": {
+                "type": "string",
+                "description": "Where this came from, e.g. 'Homepage hero', 'Email subject line', 'User-provided'."
+              },
+              "why": {
+                "type": "string",
+                "description": "What makes this on-brand."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "off_brand": {
+          "type": "array",
+          "description": "Samples of writing that violate this brand's voice. Useful for calibration.",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["text"],
+            "properties": {
+              "text": {
+                "type": "string",
+                "description": "The example text."
+              },
+              "source": {
+                "type": "string",
+                "description": "Where this came from or was fabricated as an anti-example."
+              },
+              "why": {
+                "type": "string",
+                "description": "What makes this off-brand."
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "platform_adaptations": {
+      "type": "object",
+      "description": "How the voice shifts across platforms. Keys are platform names, values describe adaptations.",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "tone_shift": {
+            "type": "string",
+            "description": "How the tone changes on this platform, e.g. 'More casual, shorter sentences'."
+          },
+          "format_preferences": {
+            "type": "string",
+            "description": "Structural preferences, e.g. 'Use line breaks between every sentence on LinkedIn'."
+          },
+          "length": {
+            "type": "string",
+            "description": "Typical content length, e.g. 'Under 280 chars' or '800-1200 words'."
+          },
+          "dos": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Platform-specific things to do."
+          },
+          "donts": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Platform-specific things to avoid."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "audience_awareness": {
+      "type": "object",
+      "description": "How voice-aware the brand is of its audience's sophistication and expectations.",
+      "properties": {
+        "sophistication_level": {
+          "type": "string",
+          "enum": ["beginner", "intermediate", "advanced", "mixed"],
+          "description": "How technical or experienced the primary audience is."
+        },
+        "jargon_tolerance": {
+          "type": "string",
+          "enum": ["none", "light", "moderate", "heavy"],
+          "description": "How much industry jargon the audience expects or tolerates."
+        },
+        "reading_level": {
+          "type": "string",
+          "description": "Target reading level, e.g. '8th grade' or 'professional'."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Additional context about audience expectations around voice."
+        }
+      },
+      "additionalProperties": false
+    },
+    "signature_phrases": {
+      "type": "array",
+      "description": "Recurring phrases, taglines, or verbal tics that make the brand recognizable. These can be woven into content when natural.",
+      "items": {
+        "type": "object",
+        "required": ["phrase"],
+        "properties": {
+          "phrase": {
+            "type": "string",
+            "description": "The signature phrase or tagline."
+          },
+          "usage": {
+            "type": "string",
+            "description": "When to use this, e.g. 'Email sign-offs', 'Opening hooks', 'Everywhere'."
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}
