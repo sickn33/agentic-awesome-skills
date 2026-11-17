@@ -21,6 +21,8 @@ Python 3 standard library only. Exit 0 on success, 1 if the page could not be re
 import argparse
 import difflib
 import json
+import ipaddress
+import socket
 import re
 import sys
 import urllib.error
@@ -43,26 +45,43 @@ WIDGETS = {
 PHONE_RE = re.compile(r"(?:\+?1[\s.-]?)?\(?\b([2-9]\d{2})\)?[\s.-]?(\d{3})[\s.-]?(\d{4})\b")
 
 
+def public_origin(url):
+    parsed = urllib.parse.urlsplit(url)
+    if parsed.scheme not in {"http", "https"} or not parsed.hostname or parsed.username or parsed.password:
+        raise ValueError("expected a public HTTP(S) URL without credentials")
+    port = parsed.port or (443 if parsed.scheme == "https" else 80)
+    addresses = socket.getaddrinfo(parsed.hostname, port, type=socket.SOCK_STREAM)
+    if any(not ipaddress.ip_address(address[4][0]).is_global for address in addresses):
+        raise ValueError("URL resolves to a non-public address")
+    return parsed.scheme, parsed.hostname, port
+
+
 class Recorder(urllib.request.HTTPRedirectHandler):
-    def __init__(self):
+    def __init__(self, origin=None):
         self.hops = []
+        self.origin = origin
 
     def redirect_request(self, req, fp, code, msg, headers, newurl):
+        origin = public_origin(newurl)
+        if self.origin and origin != self.origin:
+            raise ValueError("image redirected outside the audited origin")
         self.hops.append((code, req.full_url, newurl))
         return super().redirect_request(req, fp, code, msg, headers, newurl)
 
 
-def fetch(url, method="GET", timeout=25):
-    rec = Recorder()
+def fetch(url, method="GET", timeout=25, origin=None):
+    if public_origin(url) != origin and origin is not None:
+        raise ValueError("image is outside the audited origin")
+    rec = Recorder(origin)
     opener = urllib.request.build_opener(rec)
     req = urllib.request.Request(url, method=method, headers={"User-Agent": UA,
                                  "Accept-Language": "en-US,en;q=0.9"})
     try:
         with opener.open(req, timeout=timeout) as r:
-            body = r.read() if method == "GET" else b""
+            body = r.read(2 * 1024 * 1024) if method == "GET" else b""
             return r.status, r.geturl(), dict(r.headers), body, rec.hops
     except urllib.error.HTTPError as e:
-        return e.code, e.geturl() or url, dict(e.headers or {}), e.read() or b"", rec.hops
+        return e.code, e.geturl() or url, dict(e.headers or {}), e.read(2 * 1024 * 1024) or b"", rec.hops
 
 
 class Page(HTMLParser):
@@ -130,13 +149,11 @@ class Page(HTMLParser):
         self.words.extend(data.split())
 
 
-def image_kb(url):
-    _, _, h, _, _ = fetch(url, method="HEAD", timeout=15)
-    n = h.get("Content-Length") or h.get("content-length")
-    if not n:  # chunked responses report no length; download and count
-        _, _, _, body, _ = fetch(url, timeout=30)
-        n = len(body)
-    return f"{int(n) // 1024} KB"
+def image_kb(url, origin):
+    _, _, headers, _, _ = fetch(url, method="HEAD", timeout=15, origin=origin)
+    size = headers.get("Content-Length") or headers.get("content-length")
+    return f"{int(size) // 1024} KB" if size else "size unavailable"
+
 
 
 def first_pos(words, phrase):
@@ -236,13 +253,14 @@ def main(argv=None):
         print("- none")
 
     print("\n## First images (weight from the server's Content-Length)")
+    origin = public_origin(final)
     seen = 0
     for src, pos in p.imgs:
         if seen >= 5:
             break
         absu = urllib.parse.urljoin(final, src)
         try:
-            size = image_kb(absu)
+            size = image_kb(absu, origin)
         except Exception:
             size = "could not check"
         where = "preloaded" if pos < 0 else f"word {pos}"

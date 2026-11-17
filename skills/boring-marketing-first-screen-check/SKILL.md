@@ -36,7 +36,7 @@ Audit what a mobile visitor sees on an ad destination or business homepage.
 
 ## Limitations
 
-Report the viewport and loading conditions. Results can vary by device, geography and consent state.
+Report the viewport and loading conditions. Results can vary by device, geography and consent state. The helper reads public HTTP(S) pages and checks image sizes on the final page's origin; use the authorized browser to inspect other assets.
 
 ## Operational boundaries
 
