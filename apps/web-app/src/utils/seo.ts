@@ -89,10 +89,11 @@ export function getAbsoluteAssetUrl(assetPath: string): string {
 function getCatalogBaseUrl(canonicalUrl: string): string {
   try {
     const parsed = new URL(canonicalUrl);
-    const strippedSkillPath = parsed.pathname
-      .replace(/\/skill\/[^/]+\/?$/, '/')
-      .replace(/\/core\/?$/, '/');
-    const normalizedPath = strippedSkillPath.endsWith('/') ? strippedSkillPath : `${strippedSkillPath}/`;
+    // Strip the application route while preserving a deployment subdirectory.
+    const sitePath = parsed.pathname
+      .replace(/\/(?:skill|topics)\/[^/]+\/?$/, '/')
+      .replace(/\/(?:core|plugins|workbench)\/?$/, '/');
+    const normalizedPath = sitePath.endsWith('/') ? sitePath : `${sitePath}/`;
     const normalizedCatalog = normalizedPath === '' ? '/' : normalizedPath;
     return `${parsed.origin}${normalizedCatalog}`;
   } catch {
@@ -510,13 +511,14 @@ export function buildTopicLandingMeta(page: SeoLandingPage, featuredSkills: Read
 
 export function buildTopicLandingFallbackMeta(slug: string | undefined): SeoMeta {
   const safeSlug = encodeURIComponent((slug || 'topic').trim() || 'topic');
-  const title = `Topic guide loading | ${SITE_NAME}`;
-  const description = 'This Agentic Awesome Skills topic guide is loading from the hosted catalog.';
+  const title = `Topic guide not found | ${SITE_NAME}`;
+  const description = 'This topic guide does not exist. Browse the catalog to find available skills and guides.';
 
   return {
     title,
     description,
     canonicalPath: `${TOPIC_ROUTE_PREFIX}/${safeSlug}`,
+    robots: 'noindex, follow',
     ogTitle: title,
     ogDescription: description,
     ogImage: DEFAULT_SOCIAL_IMAGE,
@@ -580,6 +582,15 @@ export function buildSkillMeta(skill: Skill, _isPriority = false, canonicalPath 
       buildOrganizationSchema(),
       buildWebSiteSchema(canonicalUrl),
     ],
+  };
+}
+
+export function buildSkillNotFoundMeta(skillId: string): SeoMeta {
+  return {
+    title: `Skill not found | ${SITE_NAME}`,
+    description: 'This skill does not exist in the catalog. Browse available skills to find an alternative.',
+    canonicalPath: `/skill/${encodeURIComponent(skillId || 'skill')}`,
+    robots: 'noindex, follow',
   };
 }
 

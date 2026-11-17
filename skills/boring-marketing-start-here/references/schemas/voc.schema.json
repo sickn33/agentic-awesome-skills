@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/boringmarketer/boring-marketing-skills/blob/main/skills/start-here/references/schemas/voc.schema.json",
+  "title": "Voice of Customer",
+  "description": "Verbatim customer language bank, written by /audience-research to ./brand/voc.md (this schema validates the optional structured mirror). Quoted (never paraphrased) by /direct-response-copy, /positioning-angles, /lead-magnet, and /email-sequences. Every entry carries the verbatim quote, a source URL, and a date. No invented quotes: an empty array beats a fabricated entry.",
+  "type": "object",
+  "required": ["brand_name", "updated", "pains", "desires", "objections", "vocabulary"],
+  "properties": {
+    "brand_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The brand this VoC bank belongs to."
+    },
+    "updated": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date of the last research pass."
+    },
+    "pains": {
+      "type": "array",
+      "description": "What customers complain about, in their own words.",
+      "items": { "$ref": "#/$defs/entry" }
+    },
+    "desires": {
+      "type": "array",
+      "description": "Outcomes customers say they want, in their own words.",
+      "items": { "$ref": "#/$defs/entry" }
+    },
+    "objections": {
+      "type": "array",
+      "description": "Why customers say they don't buy / don't trust the category, in their own words.",
+      "items": { "$ref": "#/$defs/entry" }
+    },
+    "switching_triggers": {
+      "type": "array",
+      "description": "What finally made customers switch (or leave a competitor), in their own words, mostly mined from competitor 1-star reviews. IDs use the VOC-S prefix.",
+      "items": { "$ref": "#/$defs/entry" }
+    },
+    "vocabulary": {
+      "type": "array",
+      "description": "Community shorthand, jargon, and phrasing to reuse as-is in copy.",
+      "items": { "$ref": "#/$defs/entry" }
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "required": ["quote", "source_url", "date"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^VOC-[A-Z][0-9]+$",
+          "description": "Optional stable citation ID, e.g. 'VOC-P01' (P=pain, D=desire, O=objection, S=switching trigger, V=vocabulary). Downstream files cite these IDs. Never renumber existing ones."
+        },
+        "intensity": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Optional emotional intensity of the quote, 1 (mild) to 5 (raw), as rated at mining time."
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "The verbatim customer language. Exact words, original spelling and punctuation."
+        },
+        "source_url": {
+          "type": "string",
+          "description": "URL where the quote was found (review, Reddit thread, G2 page, community post)."
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "ISO 8601 date the quote was posted (or, if unknown, when it was collected)."
+        },
+        "source_type": {
+          "type": "string",
+          "description": "Optional: where it came from, e.g. 'reddit', 'g2', 'app-store-review', 'community', 'support-ticket'."
+        },
+        "theme": {
+          "type": "string",
+          "description": "Optional: short tag grouping related entries, e.g. 'pricing', 'time-cost', 'trust'."
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

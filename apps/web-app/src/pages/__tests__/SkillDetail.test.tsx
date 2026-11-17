@@ -36,6 +36,33 @@ describe('SkillDetail', () => {
     window.history.pushState({}, '', '/');
   });
 
+  it('excludes a confirmed missing skill and restores indexing after navigation to a real skill', async () => {
+    const skill = createMockSkill({ id: 'test-skill' });
+    (useSkills as Mock).mockReturnValue({ skills: [skill], stars: {}, loading: false, error: null });
+    global.fetch = vi.fn().mockResolvedValue({ ok: true, text: async () => '# Instructions' });
+    const router = createMemoryRouter([{ path: '/skill/:id', element: <SkillDetail /> }], {
+      initialEntries: ['/skill/not-real'],
+    });
+    render(<RouterProvider router={router} />);
+    expect(screen.getByText('Skill not found in registry.')).toBeInTheDocument();
+    expect(document.querySelector('meta[name="robots"]')).toHaveAttribute('content', 'noindex, follow');
+    expect(document.querySelector('script[data-seo-jsonld="true"]')).toBeNull();
+    await act(() => router.navigate('/skill/test-skill'));
+    await screen.findByTestId('markdown-content');
+    expect(document.querySelector('meta[name="robots"]')?.getAttribute('content')).toMatch(/^index, follow/);
+    expect(document.querySelector('link[rel="canonical"]')?.getAttribute('href')).toContain('/skill/test-skill/');
+  });
+
+  it('does not exclude a valid URL on a temporary catalog failure and offers a retry', () => {
+    const refreshSkills = vi.fn();
+    (useSkills as Mock).mockReturnValue({ skills: [], stars: {}, loading: false, error: 'Network unavailable', refreshSkills });
+    renderWithRouter(<SkillDetail />, { route: '/skill/test-skill', path: '/skill/:id', useProvider: false });
+    expect(screen.queryByText('Skill not found in registry.')).not.toBeInTheDocument();
+    expect(document.querySelector('meta[name="robots"]')?.getAttribute('content')).toMatch(/^index, follow/);
+    fireEvent.click(screen.getByRole('button', { name: 'Retry loading catalog' }));
+    expect(refreshSkills).toHaveBeenCalledOnce();
+  });
+
   it('shows instructions before related topics and copies the original file without prompt context', async () => {
     const skill = createMockSkill({ id: 'test-skill', category: 'frontend' });
     const original = '---\nname: test-skill\n---\n# Instructions\nRead this first.';
@@ -266,7 +293,7 @@ describe('SkillDetail', () => {
       await waitFor(() => {
         expect(screen.getByText(/Error Loading Skill/i)).toBeInTheDocument();
         expect(screen.getByText(/Skill not found in registry/i)).toBeInTheDocument();
-        expect(document.title).toContain('nonexistent');
+        expect(document.title).toContain('Skill not found');
       });
     });
   });

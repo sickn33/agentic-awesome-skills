@@ -166,3 +166,31 @@ were retired in May 2026. Useful visible questions and answers can remain;
 `FAQPage`, `SearchAction`, or crawler allow directives are not evidence of ranking
 or citation gains. Never infer a penalty or causation from a release followed by
 short-term traffic movement.
+
+## Notify search engines after verified changes
+
+Preserve established URLs, canonical targets, crawlable links and useful initial
+HTML when editing the site. Check both initial HTML and hydrated metadata:
+missing routes must remain excluded, while a temporary catalog request failure
+must not mark a valid skill as missing. Sitemap `lastmod` is optional; emit it
+only from verified page-specific history, never from the build date or an
+unrelated repository commit.
+
+The public ownership proof for IndexNow is
+`apps/web-app/public/indexnow-key.txt`, served at
+`https://aaskills.tech/indexnow-key.txt`. This protocol key is deliberately public;
+it is not a private account credential. After a successful production deployment,
+verify that URL returns HTTP 200 and exactly the tracked key bytes. Submit only
+canonical public URLs actually added, changed or removed by the deployment to
+`https://api.indexnow.org/indexnow` as JSON containing `host: "aaskills.tech"`,
+`key` (the file contents), `keyLocation` (the public URL above), and `urlList`.
+Do not submit preview domains, private URLs, unchanged catalog history, or
+repeated batches just because indexing is pending. This is an explicit maintainer
+notification; builds and page visits do not send it automatically.
+
+Record the response and submitted URLs privately. Check Bing's IndexNow report
+for receipt; acceptance is not proof of crawling, indexing, rankings or AI
+citations. See the [official setup and limits](https://www.bing.com/indexnow/getstarted).
+For Google, request indexing of a small set of materially changed priority pages
+in Search Console after checking the live page. Avoid repeated requests for the
+same unchanged URL; retain the existing sitemap and compare complete periods.
