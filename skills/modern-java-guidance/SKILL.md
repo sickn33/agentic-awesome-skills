@@ -34,7 +34,8 @@ Prevents AI coding agents from defaulting to Java 8 and Spring Boot 2.x legacy p
 Inspect `pom.xml`, `build.gradle(.kts)`, `gradle/libs.versions.toml`, or `.java-version` (or run `mjg detect .` if installed).
 
 - **Java <= 11 or Spring Boot 2.x**: Preserve existing language/framework idioms; do not emit Java 17/21 syntax or `jakarta.*` unless explicitly asked to migrate.
-- **Java 17+ / Spring Boot 3.x+**: Apply modern replacements (`record`, `sealed interface`, `SecurityFilterChain` Lambda DSL, `RestClient` / `@HttpExchange`, `jakarta.*`, constructor injection, `java.time`).
+- **Java 17+ / Spring Boot 3.0–3.1**: Apply modern replacements (`record`, `sealed interface`, `SecurityFilterChain` Lambda DSL with CSRF enabled by default, `jakarta.*`, constructor injection, `java.time`). Keep `WebClient` or `RestTemplate` (`RestClient` requires Boot 3.2+).
+- **Spring Boot 3.2+**: Prefer `RestClient` / `@HttpExchange` over `RestTemplate`.
 - **Java 21+**: Prefer Pattern Matching for `switch`, `SequencedCollection.getLast()`, and `Executors.newVirtualThreadPerTaskExecutor()` for blocking I/O.
 
 ### 2. Perform the task
@@ -50,7 +51,7 @@ Run `mjg check src/` (if installed) and the project's build/test command (`./mvn
 ```text
 User request: Add a Spring Security configuration for a Spring Boot 3.3 + Java 21 REST API.
 Inputs: pom.xml specifying spring-boot-starter-parent 3.3.4 and java.version 21.
-Expected result: Generates a @Bean SecurityFilterChain using Lambda DSL (authorizeHttpRequests, requestMatchers, AbstractHttpConfigurer::disable) without WebSecurityConfigurerAdapter or antMatchers(), and passes `mjg check` with 0 findings.
+Expected result: Generates a @Bean SecurityFilterChain using Lambda DSL (authorizeHttpRequests, requestMatchers) with CSRF protection preserved by default, without WebSecurityConfigurerAdapter or antMatchers(), and passes `mjg check` with 0 findings.
 ```
 
 ## Limitations

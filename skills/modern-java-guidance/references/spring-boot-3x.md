@@ -3,6 +3,7 @@
 ## 1. Spring Security 6 (`SecurityFilterChain` + Lambda DSL)
 
 Never extend `WebSecurityConfigurerAdapter` or call `.antMatchers()` / `.authorizeRequests()` / `.csrf().disable()`.
+Keep CSRF protection enabled by default. Only disable CSRF for stateless APIs using an authentication model where browsers do not attach credentials automatically (such as `Authorization: Bearer <JWT>`, **not** HTTP Basic or cookie-backed sessions).
 
 ```java
 import org.springframework.context.annotation.Bean;
@@ -16,10 +17,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
+    // Default: CSRF protection stays enabled (safe even if HTTP Basic or cookies are used)
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-            .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/actuator/health", "/api/public/**").permitAll()
@@ -28,6 +29,10 @@ public class SecurityConfig {
             .httpBasic(Customizer.withDefaults())
             .build();
     }
+
+    // Only disable CSRF when using non-browser-attached credentials (e.g., Bearer JWT):
+    // http.csrf(AbstractHttpConfigurer::disable)
+    //     .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
 }
 ```
 
