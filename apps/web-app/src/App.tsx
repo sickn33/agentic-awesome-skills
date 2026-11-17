@@ -35,6 +35,7 @@ function CoreRoute(): React.ReactElement {
 function PrimaryNavigation(): React.ReactElement {
   const { pathname } = useLocation();
   const entries = [
+    { label: 'Catalog', href: '/core/', active: /^\/(core|directory|skill|topics)(\/|$)/.test(pathname) },
     { label: 'Core', href: '/aas-core/', active: pathname.startsWith('/aas-core') },
     { label: 'Packs', href: '/plugins/', active: pathname.startsWith('/plugins') },
     { label: 'Docs', href: '/docs/', active: /^\/(docs|workbench)(\/|$)/.test(pathname) },
@@ -52,7 +53,7 @@ function App(): React.ReactElement {
       <div className="app-shell min-h-screen bg-[var(--surface-canvas)] text-[var(--text-primary)]">
         <header className="app-header">
           <div className="app-header__inner">
-            <Link to="/" className="brand-link" aria-label="AAS Core home">
+            <Link to="/" className="brand-link" aria-label="Agentic Awesome Skills home">
               <img
                 src={logoSrc}
                 alt="AAS"
@@ -79,7 +80,7 @@ function App(): React.ReactElement {
               <details className="mobile-nav">
                 <summary aria-label="Open navigation">Menu</summary>
                 <nav aria-label="Mobile navigation">
-                  <Link to="/">Overview</Link><Link to="/aas-core/">Core</Link><Link to="/plugins/">Packs</Link>
+                  <Link to="/">Overview</Link><Link to="/core/">Catalog</Link><Link to="/directory/">All skills A–Z</Link><Link to="/aas-core/">Core</Link><Link to="/plugins/">Packs</Link>
                   <Link to="/docs/">Docs</Link>
                   <Link to="/sponsors/">Sponsors</Link><Link to="/contribute/">Contribute</Link><Link to="/changelog/">Changelog</Link>
                   <a href="https://github.com/sickn33/agentic-awesome-skills" target="_blank" rel="noreferrer">View on GitHub</a>
@@ -128,6 +129,7 @@ function App(): React.ReactElement {
         <footer className="app-footer">
           <p>Independent, community-curated project. Review skills before use.</p>
           <nav aria-label="Footer navigation">
+            <Link to="/core/">Skill catalog</Link><Link to="/directory/">All skills A–Z</Link>
             <Link to="/sponsors/">Sponsors</Link><Link to="/contribute/">Contribute</Link><Link to="/changelog/">Changelog</Link>
             <Link to="/trust/">Trust & transparency</Link>
             <a href="https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md">Privacy</a>

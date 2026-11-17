@@ -5,7 +5,7 @@ import { Icon } from '../components/ui/Icon';
 import { useSkills } from '../context/SkillContext';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useSkillShortlist } from '../hooks/useSkillShortlist';
-import { buildSkillFallbackMeta, buildSkillMeta, selectTopSkills, toIndexableRoutePath } from '../utils/seo';
+import { buildSkillFallbackMeta, buildSkillNotFoundMeta, buildSkillMeta, selectTopSkills, toIndexableRoutePath } from '../utils/seo';
 import { getSkillMarkdownCandidateUrls } from '../utils/publicAssetUrls';
 import { getRelatedSeoLandingPagesForSkill } from '../data/seoLandingPages';
 import { getSkillHeadings, remarkSkillHeadings, skillMarkdownUrl } from '../utils/skillMarkdown';
@@ -89,7 +89,7 @@ export function SkillDetail(): React.ReactElement {
   const { id } = useParams<RouteParams>();
   const location = useLocation();
   const backToCatalog = catalogReturnTo(location.state);
-  const { skills, stars, loading: contextLoading } = useSkills();
+  const { skills, stars, loading: contextLoading, error: catalogError, refreshSkills } = useSkills();
   const [content, setContent] = useState('');
   const [contentLoading, setContentLoading] = useState(true);
   const [copied, setCopied] = useState(false);
@@ -120,11 +120,13 @@ export function SkillDetail(): React.ReactElement {
   usePageMeta(
     useMemo(() => {
       if (!skill) {
-        return buildSkillFallbackMeta(id || 'skill');
+        return !contextLoading && !catalogError
+          ? buildSkillNotFoundMeta(id || 'skill')
+          : buildSkillFallbackMeta(id || 'skill');
       }
 
       return buildSkillMeta(skill, isPriority, canonicalPath);
-    }, [id, skill, isPriority, canonicalPath])
+    }, [id, skill, isPriority, canonicalPath, contextLoading, catalogError])
   );
 
   const communityCount = useMemo(() => (id ? stars[id] || 0 : 0), [stars, id]);
@@ -235,7 +237,12 @@ export function SkillDetail(): React.ReactElement {
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(99,102,241,0.12),transparent_52%)] dark:bg-[radial-gradient(circle_at_top,rgba(99,102,241,0.22),transparent_55%)]" />
         <div className="relative">
           <h2 className="mb-2 text-xl font-bold text-slate-900 dark:text-slate-100">Error Loading Skill</h2>
-          <p className="text-slate-600 dark:text-slate-400">Skill not found in registry.</p>
+          <p className="text-slate-600 dark:text-slate-400">{catalogError ? 'The catalog could not be loaded. Please try again.' : 'Skill not found in registry.'}</p>
+          {catalogError && (
+            <button type="button" onClick={() => void refreshSkills()} className="mt-5 inline-flex rounded-full bg-teal-600 px-4 py-2 text-sm font-semibold text-white">
+              Retry loading catalog
+            </button>
+          )}
           <Link
             to={backToCatalog}
             className="mt-5 inline-flex items-center rounded-full border border-slate-300/80 px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:border-teal-300 hover:text-teal-600 dark:border-slate-700 dark:text-slate-300 dark:hover:border-teal-500 dark:hover:text-teal-300"

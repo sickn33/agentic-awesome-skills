@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/boringmarketer/boring-marketing-skills/blob/main/skills/start-here/references/schemas/brand-manifest.schema.json",
+  "title": "Brand Manifest (brand.yaml)",
+  "description": "Validates the parsed contents of ./brand/brand.yaml (or ./brands/<slug>/brand.yaml): brand identity, file inventory with last-updated timestamps and owning skills, and active campaigns. Created by /start-here; every skill that writes a profile file updates its files entry in the same operation. brand_context.py uses the timestamps for freshness flags (falling back to file mtime when the manifest is absent).",
+  "type": "object",
+  "required": [
+    "brand",
+    "files"
+  ],
+  "properties": {
+    "brand": {
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-readable brand name."
+        },
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$",
+          "description": "Kebab-case slug; matches the ./brands/<slug>/ directory name in agency mode."
+        },
+        "url": {
+          "type": "string",
+          "description": "Primary website URL."
+        },
+        "created": {
+          "type": "string",
+          "format": "date",
+          "description": "ISO 8601 date the brand profile was first created."
+        },
+        "updated": {
+          "type": "string",
+          "format": "date",
+          "description": "ISO 8601 date of the most recent write to any profile file."
+        },
+        "category": {
+          "type": "string",
+          "description": "What the business is, in plain words: 'plumber', 'B2B SaaS for dentists', 'newsletter'."
+        },
+        "depth": {
+          "type": "string",
+          "enum": [
+            "lite",
+            "deep"
+          ],
+          "description": "lite = the ~3 minute first run (site + reviews); deep = the four-agent foundation."
+        },
+        "phone": {
+          "type": "string",
+          "description": "Main phone number as shown on the site (local businesses)."
+        },
+        "city": {
+          "type": "string",
+          "description": "Home town or city (local businesses)."
+        },
+        "service_area": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Towns or areas served (local businesses)."
+        },
+        "services": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Main services or products, in the business's own words."
+        },
+        "rating": {
+          "type": "string",
+          "description": "Review rating and count as seen, with source and date, e.g. '4.8 (212 Google reviews, seen 2026-11-13)'."
+        }
+      },
+      "additionalProperties": false
+    },
+    "files": {
+      "type": "object",
+      "description": "Inventory of brand-memory files, keyed by filename (e.g. 'voice-profile.md' or user-authored 'preferences.md').",
+      "examples": [
+        {
+          "preferences.md": {
+            "updated": "2026-09-02",
+            "owner": "start-here"
+          }
+        }
+      ],
+      "additionalProperties": {
+        "type": "object",
+        "required": [
+          "updated"
+        ],
+        "properties": {
+          "updated": {
+            "type": "string",
+            "format": "date",
+            "description": "ISO 8601 date this file was last written."
+          },
+          "owner": {
+            "type": "string",
+            "description": "The skill that owns (creates/maintains) this file, e.g. 'brand-voice'."
+          },
+          "notes": {
+            "type": "string",
+            "description": "Optional free-text note, e.g. 'partial: voice only, no platform adaptations yet'."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "campaigns": {
+      "type": "array",
+      "description": "Campaigns this brand is running or has run.",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "status"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Kebab-case campaign name, matching its ./campaigns/<name>/ directory."
+          },
+          "path": {
+            "type": "string",
+            "description": "Path to the campaign directory, e.g. './campaigns/spring-launch/'."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "planning",
+              "active",
+              "complete"
+            ],
+            "description": "Current campaign status."
+          },
+          "started": {
+            "type": "string",
+            "format": "date",
+            "description": "ISO 8601 start date."
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

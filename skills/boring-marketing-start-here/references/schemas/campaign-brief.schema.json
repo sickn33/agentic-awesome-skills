@@ -1,0 +1,240 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/boringmarketer/boring-marketing-skills/blob/main/skills/start-here/references/schemas/campaign-brief.schema.json",
+  "title": "Campaign Brief",
+  "description": "Structured metadata for a marketing campaign. Each campaign directory (./campaigns/{name}/) should have a brief.md and may optionally include a brief.json validated against this schema.",
+  "type": "object",
+  "required": [
+    "campaign_name",
+    "goal",
+    "created_date",
+    "status"
+  ],
+  "properties": {
+    "campaign_name": {
+      "type": "string",
+      "description": "Human-readable campaign name, e.g. 'Spring Product Launch 2026'.",
+      "minLength": 1
+    },
+    "slug": {
+      "type": "string",
+      "description": "Kebab-case directory name for this campaign, e.g. 'spring-launch-2026'. Must match the directory name under ./campaigns/.",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "goal": {
+      "type": "string",
+      "description": "What success looks like for this campaign. Should include a measurable target when possible, e.g. 'Generate 500 email signups from organic LinkedIn content in 30 days'.",
+      "minLength": 1
+    },
+    "created_date": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date when the campaign was created."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["planning", "active", "complete"],
+      "description": "Current lifecycle stage of the campaign."
+    },
+    "angle_used": {
+      "type": "object",
+      "description": "The positioning angle driving this campaign. References ./brand/positioning.md.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Short name for the angle, e.g. 'The Anti-Course Course'."
+        },
+        "description": {
+          "type": "string",
+          "description": "One-paragraph explanation of the angle and why it was chosen for this campaign."
+        },
+        "positioning_ref": {
+          "type": "string",
+          "description": "Path to the positioning file this angle comes from, e.g. './brand/positioning.md'."
+        }
+      },
+      "additionalProperties": false
+    },
+    "audience_segment": {
+      "type": "object",
+      "description": "The target audience for this campaign. References ./brand/audience.md.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Segment name, e.g. 'Burned-out freelancers looking to productize'."
+        },
+        "description": {
+          "type": "string",
+          "description": "Detailed description of this audience segment."
+        },
+        "audience_ref": {
+          "type": "string",
+          "description": "Path to the audience file, e.g. './brand/audience.md'."
+        }
+      },
+      "additionalProperties": false
+    },
+    "timeline": {
+      "type": "object",
+      "description": "Campaign start and end dates.",
+      "properties": {
+        "start_date": {
+          "type": "string",
+          "format": "date",
+          "description": "When the campaign goes live."
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date",
+          "description": "When the campaign ends or is evaluated."
+        }
+      },
+      "additionalProperties": false
+    },
+    "channels": {
+      "type": "array",
+      "description": "Marketing channels this campaign will use.",
+      "items": {
+        "type": "string",
+        "enum": [
+          "email",
+          "linkedin",
+          "twitter",
+          "instagram",
+          "facebook",
+          "youtube",
+          "tiktok",
+          "blog",
+          "seo",
+          "paid-search",
+          "paid-social",
+          "podcast",
+          "webinar",
+          "landing-page",
+          "direct-mail",
+          "other"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "assets": {
+      "type": "array",
+      "description": "Assets created for or used by this campaign.",
+      "items": {
+        "type": "object",
+        "required": ["type", "path", "status"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "The kind of asset.",
+            "enum": [
+              "email",
+              "email-sequence",
+              "social-post",
+              "social-carousel",
+              "ad-creative",
+              "ad-copy",
+              "landing-page",
+              "blog-post",
+              "lead-magnet",
+              "image",
+              "video",
+              "pdf",
+              "other"
+            ]
+          },
+          "name": {
+            "type": "string",
+            "description": "Human-readable name for this asset, e.g. 'Welcome Email #3 - Value Story'."
+          },
+          "path": {
+            "type": "string",
+            "description": "Relative path from the project root to the asset file, e.g. './campaigns/spring-launch/emails/03-value-story.md'."
+          },
+          "status": {
+            "type": "string",
+            "enum": ["draft", "review", "approved", "live", "retired"],
+            "description": "Current state of this asset."
+          },
+          "created_date": {
+            "type": "string",
+            "format": "date",
+            "description": "When this asset was created."
+          },
+          "notes": {
+            "type": "string",
+            "description": "Any additional context about this asset."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "voice_profile_ref": {
+      "type": "string",
+      "description": "Path to the voice profile used for this campaign, typically './brand/voice-profile.md'. Can be overridden per-campaign if a different voice is needed."
+    },
+    "positioning_ref": {
+      "type": "string",
+      "description": "Path to the positioning file, typically './brand/positioning.md'."
+    },
+    "voice_notes": {
+      "type": "string",
+      "description": "Campaign-specific voice adjustments. E.g., 'More urgent tone for flash sale. Shorter sentences. More exclamation points than usual.'"
+    },
+    "results": {
+      "type": "object",
+      "description": "Performance data for the campaign. Filled in during or after the campaign runs.",
+      "properties": {
+        "summary": {
+          "type": "string",
+          "description": "One-paragraph summary of how the campaign performed."
+        },
+        "metrics": {
+          "type": "array",
+          "description": "Key performance metrics.",
+          "items": {
+            "type": "object",
+            "required": ["metric", "value"],
+            "properties": {
+              "metric": {
+                "type": "string",
+                "description": "Name of the metric, e.g. 'Open Rate', 'CTR', 'Signups', 'Revenue'."
+              },
+              "value": {
+                "type": "string",
+                "description": "The metric value, e.g. '42%', '1,247', '$12,500'."
+              },
+              "target": {
+                "type": "string",
+                "description": "What the target was, if set, e.g. '500 signups'."
+              },
+              "notes": {
+                "type": "string",
+                "description": "Context about this metric."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "learnings": {
+          "type": "array",
+          "description": "What was learned from this campaign. These should also be appended to ./brand/learnings.md.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "recorded_date": {
+          "type": "string",
+          "format": "date",
+          "description": "When results were recorded."
+        }
+      },
+      "additionalProperties": false
+    },
+    "created_by": {
+      "type": "string",
+      "description": "The skill that created this brief, e.g. '/email-sequences' or '/lead-magnet'."
+    }
+  },
+  "additionalProperties": false
+}

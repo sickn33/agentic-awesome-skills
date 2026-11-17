@@ -8,6 +8,8 @@
     { "label": "Official GitHub repository", "href": "https://github.com/sickn33/agentic-awesome-skills" },
     { "label": "Installation guides", "href": "/docs/getting-started/" },
     { "label": "Sources and licenses", "href": "/trust/" },
-    { "label": "What are AI agent skills?", "href": "/docs/ai-agent-skills/" }
+    { "label": "What are AI agent skills?", "href": "/docs/ai-agent-skills/" },
+    { "label": "Explore the skill catalog", "href": "/core/" },
+    { "label": "Browse all skills A–Z", "href": "/directory/" }
   ]
 }
