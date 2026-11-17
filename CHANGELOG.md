@@ -58,6 +58,7 @@ Add 36 skills for marketing workflows, modern Java and Spring, end-to-end testin
 
 - Prevent the Meta Ads preflight from printing a malformed account identifier.
 - Handle both legacy HTML comment endings when reading embedded JSON-LD.
+- Disable repeated extended glob groups in the web build and test toolchain to address GHSA-fc5q-39xc-vjpf.
 
 ### Contributors
 
