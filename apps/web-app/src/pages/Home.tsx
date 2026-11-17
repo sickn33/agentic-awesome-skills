@@ -16,6 +16,7 @@ import { useSkills } from '../context/SkillContext';
 import { usePageMeta } from '../hooks/usePageMeta';
 import { useSkillShortlist } from '../hooks/useSkillShortlist';
 import type { CategoryStats, SyncMessage } from '../types';
+import { seoLandingPages } from '../data/seoLandingPages';
 import { buildHomeMeta, getHomeFaqItems, toIndexableRoutePath } from '../utils/seo';
 
 const syncFeatureEnabled = (
@@ -446,6 +447,16 @@ export function Home(): React.ReactElement {
           <SkillCollections shortlistIds={shortlistIds} availableIds={skills.map((skill) => skill.id)} onAdd={addToShortlist} standalone />
         </div>
       </div>
+      <nav className="platform-panel platform-panel__body catalog-discovery" aria-label="Catalog hubs">
+        <h2>Browse skills and setup guides</h2>
+        <p>Explore every skill in the directory, or start with a guide for your coding agent.</p>
+        <ul>
+          <li><Link to="/directory/">Browse all skills A–Z</Link></li>
+          <li><Link to="/workbench/">Review an AAS stack and plan</Link></li>
+          <li><Link to="/plugins/">Compare specialized plugin packs</Link></li>
+          {seoLandingPages.map((page) => <li key={page.slug}><Link to={`/topics/${encodeURIComponent(page.slug)}/`}>{page.h1}</Link></li>)}
+        </ul>
+      </nav>
       <section className="platform-panel platform-panel__body" aria-label="Catalog questions">{getHomeFaqItems(skills.length).map((item) => <div key={item.question}><h2>{item.question}</h2><p>{item.answer}</p></div>)}</section>
     </div>
   );
