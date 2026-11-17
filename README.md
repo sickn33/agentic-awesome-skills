@@ -212,6 +212,8 @@ Key source families include:
 
 ### Official Sources
 
+- **[brajendrak00068/agentic-ai-video-production](https://github.com/brajendrak00068/agentic-ai-video-production/tree/main/skills/levea-ai-video-editor)**: Official Levea AI Video Editor skill (`levea-ai-video-editor`) - turn natural-language prompts or long recordings into finished videos with viral clips, 280+ animated caption templates, 9:16 speaker reframing, silence cleanup, B-roll, motion graphics, and cloud MP4 export through the hosted Levea MCP server (MIT).
+
 - **[phuryn/product-engineering](https://github.com/phuryn/product-engineering/tree/main/app-stack/skills/uptime-monitoring)**: Official Staygreen skill (`uptime-monitoring`) - content checks confirmed from a second location, heartbeats for scheduled jobs, certificate and domain expiry, status pages and a tested alert route, through the hosted Staygreen MCP server; the same steps work on a monitoring service the owner already uses (MIT).
 
 - **[CrakSEO/skills](https://github.com/CrakSEO/skills)**: External MIT collection for CrakSEO hosted MCP integrations covering SEO research, Search Console and URL indexing. Listed as an upstream resource; not bundled or connected by this repository.
