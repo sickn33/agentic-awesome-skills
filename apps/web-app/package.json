@@ -63,7 +63,8 @@
     "typescript-eslint": "^8.65.0",
     "vite": "^8.0.16",
     "vitest": "^5.0.5",
-    "@modelcontextprotocol/ext-apps": "2.0.3"
+    "@modelcontextprotocol/ext-apps": "2.0.3",
+    "picomatch": "file:./vendor/aas-picomatch"
   },
   "overrides": {
     "brace-expansion": "^5.0.12",
@@ -72,7 +73,8 @@
     "ip-address": "^10.7.1",
     "minimatch": "11.0.1",
     "proxy-addr": "^2.0.8",
-    "source-map-js": "^1.2.2"
+    "source-map-js": "^1.2.2",
+    "picomatch": "$picomatch"
   },
   "engines": {
     "node": "^22.22.2 || ^24.15.0 || >=26.0.0"

@@ -1,0 +1,12 @@
+{
+  "license": "MIT",
+  "main": "index.js",
+  "engines": {
+    "node": ">=12"
+  },
+  "sideEffects": false,
+  "name": "@aas/picomatch-guarded",
+  "version": "4.0.7",
+  "description": "AAS web-tooling fork of Picomatch 4.0.7 with repeated extended glob groups disabled.",
+  "private": true
+}
