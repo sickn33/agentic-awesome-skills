@@ -1,0 +1,53 @@
+{
+  "_comment": "Sample config for a local service lead ad (Hartline Plumbing, Dallas TX, a sample business). Copy it, fill it in, keep real copies out of git: they carry account ids. Budgets are in MINOR currency units (cents): 3000 = $30.00/day.",
+
+  "ad_account_id": "act_123",
+  "page_id": "1234567890",
+
+  "campaign": {
+    "name": "Hartline | Dallas 20mi | Leads | 2026-11",
+    "objective": "OUTCOME_LEADS",
+    "special_ad_categories": []
+  },
+
+  "adset": {
+    "name": "Dallas +20mi | Broad",
+    "daily_budget": 3000,
+    "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+    "optimization_goal": "OFFSITE_CONVERSIONS",
+    "pixel_id": "1234567890",
+    "custom_event_type": "LEAD",
+    "targeting": {
+      "geo_locations": {
+        "custom_locations": [
+          { "latitude": 32.7767, "longitude": -96.7970, "radius": 20, "distance_unit": "mile" }
+        ]
+      },
+      "age_min": 18,
+      "age_max": 65,
+      "genders": [1, 2],
+      "targeting_automation": { "advantage_audience": 1 }
+    }
+  },
+
+  "creative": {
+    "image_dir": "./creative-out",
+    "link": "https://hartlineplumbing.com/water-heater-replacement/",
+    "utm": {
+      "utm_source": "facebook",
+      "utm_medium": "paid",
+      "utm_campaign": "dallas-water-heater-2026-11"
+    },
+    "message": "No hot water this morning? Same-day water heater replacement across Dallas, with the price in writing before we start.",
+    "headline": "Water heater out? Same-day fix",
+    "description": "Licensed Dallas plumbers",
+    "call_to_action": "GET_QUOTE"
+  },
+
+  "copy_guards": [
+    {
+      "name": "earnings claim, for hiring (Employment) and financing ads; delete this guard for a normal lead ad that shows a price",
+      "pattern": "\\$\\s?\\d|\\b\\d+\\s?(k|dollars|usd)\\b|\\bper hour\\b|/hr\\b"
+    }
+  ]
+}
