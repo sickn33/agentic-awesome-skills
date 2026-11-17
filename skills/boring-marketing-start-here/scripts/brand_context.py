@@ -33,6 +33,7 @@ from pathlib import Path
 TOKEN_FILES = {"brand-manifest": "brand.yaml", "preferences": "preferences.md"}
 
 FRESH_DAYS = 7
+SKILL_PREFIX = "boring-marketing-"
 DATE_FLAG_DAYS = 30
 STALE_NOTE_DAYS = 90
 
@@ -46,8 +47,7 @@ def parse_args(argv):
                "Exit code is 0 unless arguments are invalid.",
     )
     p.add_argument("--for", dest="skill_name", metavar="SKILL",
-                   help="skill name; SKILL.md is located at ../../skills/<SKILL>/SKILL.md "
-                        "relative to this script")
+                   help="upstream or AAS skill ID in the installed sibling folders")
     p.add_argument("--skill-file", metavar="PATH",
                    help="explicit path to a SKILL.md (overrides --for lookup)")
     p.add_argument("--brand", metavar="SLUG",
@@ -74,11 +74,12 @@ def resolve_brand_dir(root: Path, brand_slug):
 def locate_skill_file(args) -> Path:
     if args.skill_file:
         return Path(args.skill_file)
-    root = Path(__file__).resolve().parent.parent.parent
-    path = root / "skills" / args.skill_name / "SKILL.md"
-    # Repo layout keeps skills under <root>/skills; a copy installed beside its sibling
-    # skill folders resolves them one level up, so fall back to <root>/<skill>.
-    return path if path.is_file() else root / args.skill_name / "SKILL.md"
+    name = args.skill_name.removeprefix(SKILL_PREFIX)
+    if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", name):
+        raise ValueError("invalid skill identifier")
+    skills_dir = Path(__file__).resolve().parents[2]
+    return skills_dir / (SKILL_PREFIX + name) / "SKILL.md"
+
 
 
 def extract_frontmatter(text: str):
@@ -253,8 +254,13 @@ def main(argv=None):
               file=sys.stderr)
         return 2
 
-    skill_file = locate_skill_file(args)
-    skill_label = args.skill_name or skill_file.parent.name
+    try:
+        skill_file = locate_skill_file(args)
+    except ValueError as error:
+        print(f"error: {error}", file=sys.stderr)
+        return 2
+    # Existing brand memory records use the upstream IDs.
+    skill_label = (args.skill_name or skill_file.parent.name).removeprefix(SKILL_PREFIX)
     if not skill_file.is_file():
         print(f"error: skill file not found: {skill_file}", file=sys.stderr)
         return 2
@@ -288,7 +294,7 @@ def main(argv=None):
         if mine:
             print(f"## checks.md ({len(mine)} yes/no checks from the user's own edits: "
                   "answer each against your draft before handing it over, fix every no, "
-                  "never show the list; see start-here/references/taste-loop.md)")
+                  "never show the list; see boring-marketing-start-here/references/taste-loop.md)")
             print()
             print("\n".join(mine))
             print()
