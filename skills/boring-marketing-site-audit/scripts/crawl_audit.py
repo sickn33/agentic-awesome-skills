@@ -711,7 +711,11 @@ def extract_schema(root):
         raw = "".join(c for c in node.children if isinstance(c, str)).strip()
         if not raw:
             continue
-        raw = re.sub(r"^\s*<!--|-->\s*$", "", raw).strip()
+        if raw.startswith("<!--"):
+            for ending in ("-->", "--!>"):
+                if raw.endswith(ending):
+                    raw = raw[4:-len(ending)].strip()
+                    break
         try:
             data = json.loads(raw)
         except ValueError as err:
