@@ -20,3 +20,18 @@ describe('web tooling glob matcher', () => {
     expect(match('src/ui/Panel.tsx')).toBe(false);
   });
 });
+
+describe('bracket-aware glob unescaping', () => {
+  const { removeBackslashes } = require('picomatch/lib/utils.js');
+
+  it('unescapes ordinary characters and keeps bracket expressions intact', () => {
+    expect(removeBackslashes(String.raw`folder\ name/[a\-z]/next\ file`)).toBe(
+      String.raw`folder name/[a\-z]/next file`,
+    );
+  });
+
+  it('handles unmatched brackets, line endings, and the final backslash', () => {
+    expect(removeBackslashes('first\\[second\\\nlast\\')).toBe('first[second\\\nlast\\');
+    expect(removeBackslashes('[a\n]')).toBe('[a\n]');
+  });
+});

@@ -99,7 +99,6 @@ module.exports = {
   REGEX_SPECIAL_CHARS: /[-*+?.^${}(|)[\]]/,
   REGEX_SPECIAL_CHARS_BACKREF: /(\\?)((\W)(\3*))/g,
   REGEX_SPECIAL_CHARS_GLOBAL: /([-*+?.^${}(|)[\]])/g,
-  REGEX_REMOVE_BACKSLASH: /(?:\[.*?[^\\]\]|\\(?=.))/g,
 
   // Replace globs with equivalent patterns to reduce parsing time.
   REPLACEMENTS: {
