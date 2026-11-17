@@ -3,6 +3,16 @@ import { buildSitemap, DEFAULT_TOP_SKILL_COUNT, generateSitemapXml, getSeoLandin
 import { getDocsMetadata } from './docs-metadata.js';
 
 describe('sitemap generation script helpers', () => {
+  it('does not advertise a build or repository date as every page last modification', () => {
+    const xml = generateSitemapXml({ baseUrl: 'https://example.com', paths: ['/', '/core/', '/skill/example/'] });
+    expect(xml).not.toContain('<lastmod>');
+    expect(xml.match(/<loc>/g)).toHaveLength(3);
+    const built = buildSitemap([{ id: 'example', stars: 1 }], 1);
+    const skill = built.match(/<url>\s*<loc>https:\/\/aaskills\.tech\/skill\/example\/<\/loc>[\s\S]*?<\/url>/)?.[0];
+    expect(skill).toBeDefined();
+    expect(skill).not.toContain('<lastmod>');
+  });
+
   it('omits an explicitly unavailable guide date instead of substituting the build date', () => {
     const xml = generateSitemapXml({ baseUrl: 'https://example.com', paths: ['/docs/guide/', '/'], lastmod: '2099-01-01', modifiedByPath: { '/docs/guide/': null } });
     const entries = xml.match(/<url>[\s\S]*?<\/url>/g);

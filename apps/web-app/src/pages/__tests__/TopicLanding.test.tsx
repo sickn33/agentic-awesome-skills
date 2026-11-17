@@ -65,7 +65,9 @@ describe('TopicLanding', () => {
     expect(screen.getByText(/Topic guide not found/i)).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(document.title).toContain('Topic guide loading');
+      expect(document.title).toContain('Topic guide not found');
+      expect(document.querySelector('meta[name="robots"]')).toHaveAttribute('content', 'noindex, follow');
+      expect(document.querySelector('script[data-seo-jsonld="true"]')).toBeNull();
     });
   });
 });
