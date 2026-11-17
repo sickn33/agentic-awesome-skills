@@ -1,0 +1,228 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/boringmarketer/boring-marketing-skills/blob/main/skills/start-here/references/schemas/ad-matrix.schema.json",
+  "title": "Ad Testing Matrix (v3 shared contract)",
+  "description": "THE shared ad-matrix contract (the contract every ads skill shares). /positioning-angles WRITES ./campaigns/<name>/ad-matrix.{md,json}; /creative and /paid-ads READ it and name assets by cell ID (e.g. MA-H2-B-9x16-v1.mp4); /performance-review maps results back to cells. 4 hooks (H1-H4, taxonomy: direct/question/proof/contrarian) x 3 formats (A=static, B=video, C=carousel) = 12 cells with IDs MA-H{1-4}-{A-C}.",
+  "type": "object",
+  "required": ["matrix_name", "created_date", "hooks", "formats", "cells"],
+  "properties": {
+    "matrix_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-readable name for this test matrix, e.g. 'Spring Launch Ad Matrix'."
+    },
+    "created_date": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date when this matrix was created."
+    },
+    "created_by": {
+      "type": "string",
+      "description": "The skill that created this matrix. Normally 'positioning-angles' (the writer of record)."
+    },
+    "campaign_ref": {
+      "type": "string",
+      "description": "Path to the campaign this matrix belongs to, e.g. './campaigns/spring-launch/'."
+    },
+    "positioning_angle": {
+      "type": "string",
+      "description": "The positioning angle being tested across all cells."
+    },
+    "target_audience": {
+      "type": "string",
+      "description": "The audience segment these ads target."
+    },
+    "destination_url": {
+      "type": "string",
+      "description": "Landing page URL (or placeholder) all ads drive to."
+    },
+    "hooks": {
+      "type": "array",
+      "description": "The four hook rows. One hook per taxonomy class is the default discipline; deviate only with a reason in notes.",
+      "minItems": 1,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["hook_id", "taxonomy", "hook_text"],
+        "properties": {
+          "hook_id": {
+            "type": "string",
+            "pattern": "^H[1-4]$",
+            "description": "Row identifier: H1, H2, H3, or H4."
+          },
+          "taxonomy": {
+            "type": "string",
+            "enum": ["direct", "question", "proof", "contrarian"],
+            "description": "Hook class. direct = plain benefit claim; question = opens a loop the ad answers; proof = specific result/evidence leads; contrarian = challenges the category's accepted advice."
+          },
+          "hook_text": {
+            "type": "string",
+            "description": "The actual hook copy or headline."
+          },
+          "psychology": {
+            "type": "string",
+            "description": "The persuasion principle at work, e.g. 'loss aversion', 'authority + specificity'."
+          },
+          "voc_ref": {
+            "type": "string",
+            "description": "Optional pointer to the voc.md quote this hook is built from."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "formats": {
+      "type": "array",
+      "description": "The three format columns: A=static, B=video, C=carousel.",
+      "minItems": 1,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "required": ["format_id", "format"],
+        "properties": {
+          "format_id": {
+            "type": "string",
+            "pattern": "^[A-C]$",
+            "description": "Column identifier: A, B, or C."
+          },
+          "format": {
+            "type": "string",
+            "enum": ["static", "video", "carousel"],
+            "description": "Creative format. Canonical mapping: A=static, B=video, C=carousel."
+          },
+          "platform": {
+            "type": "string",
+            "description": "Primary platform this format is optimized for, e.g. 'Meta', 'LinkedIn', 'TikTok'."
+          },
+          "dimensions": {
+            "type": "string",
+            "description": "Primary aspect/dimensions, e.g. '1080x1080', '9x16'. Per-asset variants live in the asset filename (MA-H2-B-9x16-v1.mp4)."
+          },
+          "specs": {
+            "type": "string",
+            "description": "Format-specific requirements, e.g. 'max 30 seconds', '2-10 cards'."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "cells": {
+      "type": "array",
+      "description": "The ad variants: one cell per hook x format intersection, up to 12.",
+      "minItems": 1,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "required": ["cell_id", "hook_id", "format_id"],
+        "properties": {
+          "cell_id": {
+            "type": "string",
+            "pattern": "^MA-H[1-4]-[A-C]$",
+            "description": "Unique cell ID, e.g. 'MA-H2-B'. Asset files are named from this: MA-H2-B-9x16-v1.mp4."
+          },
+          "hook_id": {
+            "type": "string",
+            "pattern": "^H[1-4]$",
+            "description": "Reference to the hook row used in this cell."
+          },
+          "format_id": {
+            "type": "string",
+            "pattern": "^[A-C]$",
+            "description": "Reference to the format column used in this cell."
+          },
+          "headline": {
+            "type": "string",
+            "description": "Ad headline text for this variant."
+          },
+          "body_copy": {
+            "type": "string",
+            "description": "Ad body copy for this variant."
+          },
+          "cta_text": {
+            "type": "string",
+            "description": "Call-to-action text, e.g. 'Download free'."
+          },
+          "creative_prompt": {
+            "type": "string",
+            "description": "Generation prompt for the creative (image, video, or carousel concept), consumed by /creative."
+          },
+          "asset_paths": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Paths to generated assets, named by cell ID (e.g. './campaigns/spring-launch/ads/MA-H2-B-9x16-v1.mp4')."
+          },
+          "status": {
+            "type": "string",
+            "enum": ["planned", "copy-ready", "creative-ready", "live", "paused", "completed"],
+            "description": "Current production status of this cell."
+          },
+          "results": {
+            "type": "object",
+            "description": "Performance data mapped back to this cell by /performance-review. All fields optional; record what the platform actually reported.",
+            "properties": {
+              "spend": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Total spend on this cell, in account currency."
+              },
+              "impressions": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Total impressions served."
+              },
+              "clicks": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Total clicks."
+              },
+              "conversions": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Total conversions (as defined by the campaign goal)."
+              },
+              "notes": {
+                "type": "string",
+                "description": "Performance observations, e.g. 'killed at 48h, CTR ~0.4%'."
+              }
+            },
+            "additionalProperties": false
+          },
+          "notes": {
+            "type": "string",
+            "description": "Any additional notes about this cell."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "test_plan": {
+      "type": "object",
+      "description": "How to run the test systematically.",
+      "properties": {
+        "budget": {
+          "type": "string",
+          "description": "Recommended total test budget, e.g. '$50/cell'."
+        },
+        "duration_days": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Recommended test duration in days."
+        },
+        "success_metric": {
+          "type": "string",
+          "description": "Primary metric to judge winners, e.g. 'CPA'."
+        },
+        "kill_criteria": {
+          "type": "string",
+          "description": "When to kill underperformers."
+        },
+        "scale_criteria": {
+          "type": "string",
+          "description": "When to scale winners."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
