@@ -1,6 +1,6 @@
 ---
 name: boring-marketing-meta-ads
-description: "Prepare Meta ad campaigns and verify account permissions and conversion tracking."
+description: "Run account preflight, create paused Meta campaigns, and verify pixel and Conversions API events. Use for Facebook Ads API launches, permission errors, and tracking audits."
 when_to_use: set up the meta ads api, launch facebook ads from code, create a meta campaign, meta ads permission error, system user token, is my facebook pixel working, conversions api setup, meta test events, special ad category, hiring ad on facebook, facebook ad image got cropped, instant form lead ads, meta ads preflight
 argument-hint: "[campaign config path] | preflight | launch | verify-tracking"
 metadata:

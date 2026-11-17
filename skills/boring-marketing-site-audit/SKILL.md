@@ -1,6 +1,6 @@
 ---
 name: boring-marketing-site-audit
-description: "Inspect crawlability, indexability, metadata and page structure for a ranked SEO audit."
+description: "Crawl a site and prioritize technical SEO fixes. Use to check robots.txt, sitemaps, noindex, duplicate pages, broken links, metadata, page speed, and AI crawler access."
 when_to_use: technical seo audit, site audit, crawl my site, check my robots.txt, is google indexing my pages, why aren't my pages indexed, are AI crawlers blocked, is GPTBot blocked, broken links on my site, core web vitals, page speed check, check my sitemap, noindex check, duplicate pages on my site, technical seo health check, re-audit my site, what changed since the last audit
 argument-hint: "[site URL] [quick | re-audit]"
 metadata:
