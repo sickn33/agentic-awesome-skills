@@ -67,3 +67,7 @@
 .catalog-active-filters button { display: inline-flex; align-items: center; gap: .65rem; min-height: 44px; max-width: 100%; padding: .45rem .75rem; border: 1px solid var(--stroke-strong); border-radius: var(--radius-sm); background: var(--surface-elevated); color: var(--text-primary); font: inherit; font-size: .8rem; cursor: pointer; }
 .catalog-active-filters button > span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .catalog-active-filters .catalog-active-filters__clear { color: var(--accent-solid); background: transparent; }
+
+.catalog-layout > .platform-panel { grid-column: 1 / -1; }
+.catalog-discovery ul { display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; padding-left: 1.25rem; }
+.catalog-discovery a { text-decoration: underline; text-underline-offset: 0.2em; }
