@@ -32,7 +32,7 @@ if (!AD_ACCOUNT) {
   process.exit(2);
 }
 if (!AD_ACCOUNT.startsWith('act_')) {
-  console.error(`\n  META_AD_ACCOUNT_ID must start with "act_": got "${AD_ACCOUNT}".\n`);
+  console.error('\n  META_AD_ACCOUNT_ID must start with "act_".\n');
   process.exit(2);
 }
 
