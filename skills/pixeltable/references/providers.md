@@ -10,7 +10,7 @@ Keys come from the environment or [config](https://docs.pixeltable.com/platform/
 |----------|--------|-----------|---------|
 | OpenAI | `openai` | `chat_completions`, `responses`, `embeddings`, `speech`, `transcriptions`, `translations`, `image_generations`, `image_edits`, `image_variations`, `moderations`, `decisions` (0.7.22+; requires `openai>=3.32` and `model`), `invoke_tools` | chat: `.choices[0].message.content`; Responses: `.output_text`; Decisions: `.answers` in question order |
 | Anthropic | `anthropic` | `messages`, `invoke_tools` | `.content[0].text` |
-| Gemini | `gemini` | `generate_content`, `embed_content`, `generate_images`, `generate_videos`, `generate_speech`, `transcribe`, `invoke_tools` | content: Json; generation/transcription returns typed Image, Video, Audio, or String |
+| Gemini | `gemini` | `generate_content`, `embed_content`, `generate_images`, `generate_video`, `generate_speech`, `transcribe`, `invoke_tools` | content: Json; generation/transcription returns typed Image, Video, Audio, or String |
 | Bedrock | `bedrock` | `converse`, `invoke_model`, `embed`, `invoke_tools` | `.output.message.content[0].text` |
 | Groq | `groq` | `chat_completions`, `invoke_tools` | `.choices[0].message.content` |
 | Together | `together` | `chat_completions`, `completions`, `embeddings`, `image_generations` | `.choices[0].message.content` |
@@ -57,6 +57,7 @@ embed_fn = embeddings.using(model='text-embedding-3-small')
 ```
 
 - **Model argument.** `model=` on most. `model_id=` on `bedrock` and `huggingface`, `model_name=` on `twelvelabs`, `repo_id=` + `repo_filename=` (or `model_path=`) on `llama_cpp`, `app=` on `fal`, `ref=` on `replicate`.
+- **Gemini video.** Video generation uses Omni models via `generate_video` (e.g. `model='gemini-omni-1.1-flash'`).
 - **Other request parameters** go in one dict, never as top-level keywords: `model_kwargs={...}` on OpenAI, Anthropic, Groq, Together, Mistral, Nebius, Fireworks, DeepSeek, OpenRouter, Fabric, llama.cpp, and RunwayML (`temperature`, `response_format`, OpenAI's `max_tokens`). Gemini takes `config=`, Bedrock `converse` takes `inference_config=`, Ollama takes `options=`, vLLM takes `sampling_params=`. An unknown top-level keyword fails signature binding.
 - **Anthropic `messages` requires `max_tokens=`** as a top-level argument: `messages(messages=[...], model=..., max_tokens=1024)`.
 - **Images** go in an OpenAI chat message as `{'type': 'image_url', 'image_url': t.image}` (the column; Pixeltable serializes it). The API form `{'url': ...}` also works. `url` can be an image column or a URL string such as `t.image.fileurl`. OpenAI fetches a URL itself, so that URL must be publicly accessible (0.7.22+). `openai.vision` is deprecated.
