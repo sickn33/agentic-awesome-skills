@@ -77,7 +77,7 @@
   {
     "path": "/trust/",
     "title": "Trust & transparency",
-    "description": "Understand AAS sources, licenses, privacy, review boundaries, and security reporting.",
+    "description": "Understand AAS sources, licenses, browser data and analytics. Review skill safety boundaries, third-party services, and ways to report security issues privately.",
     "intro": "Know what you are adopting.",
     "lede": "AAS is an independent, community-curated project. Inspect the source and decide whether each skill fits your environment.",
     "sections": [
