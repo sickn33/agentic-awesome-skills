@@ -1,0 +1,259 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/boringmarketer/boring-marketing-skills/blob/main/skills/start-here/references/schemas/content-brief.schema.json",
+  "title": "Content Brief",
+  "description": "Structured brief for an individual content piece, produced by /keyword-research and consumed by /seo-content. Contains target keyword, SERP analysis data, recommended structure, and writing guidelines. Enables automated handoff from keyword planning to content production.",
+  "type": "object",
+  "required": [
+    "title",
+    "target_keyword",
+    "created_date",
+    "content_type"
+  ],
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Recommended article title, e.g. 'The Complete Guide to Cold Email for Freelancers'.",
+      "minLength": 1
+    },
+    "target_keyword": {
+      "type": "string",
+      "description": "Primary keyword this content targets, e.g. 'cold email template freelancer'.",
+      "minLength": 1
+    },
+    "secondary_keywords": {
+      "type": "array",
+      "description": "Secondary and related keywords to incorporate naturally throughout the content.",
+      "items": {
+        "type": "string"
+      }
+    },
+    "created_date": {
+      "type": "string",
+      "format": "date",
+      "description": "ISO 8601 date when this brief was created."
+    },
+    "created_by": {
+      "type": "string",
+      "description": "The skill that created this brief, typically '/keyword-research'."
+    },
+    "cluster_ref": {
+      "type": "string",
+      "description": "Name of the keyword cluster this brief belongs to, e.g. 'Cold Email Templates'."
+    },
+    "content_type": {
+      "type": "string",
+      "enum": ["pillar-guide", "how-to", "listicle", "comparison", "case-study", "tutorial", "roundup", "opinion", "news", "review", "custom"],
+      "description": "The recommended content format based on SERP analysis."
+    },
+    "search_intent": {
+      "type": "string",
+      "enum": ["informational", "commercial", "transactional", "navigational"],
+      "description": "Dominant search intent for the target keyword."
+    },
+    "keyword_metrics": {
+      "type": "object",
+      "description": "Search metrics for the target keyword.",
+      "properties": {
+        "monthly_volume": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Estimated monthly search volume."
+        },
+        "difficulty": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Ranking difficulty score (0-100)."
+        },
+        "cpc": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Cost per click in USD, indicating commercial value."
+        },
+        "trend": {
+          "type": "string",
+          "enum": ["rising", "stable", "declining"],
+          "description": "Search volume trend direction."
+        }
+      },
+      "additionalProperties": false
+    },
+    "serp_analysis": {
+      "type": "object",
+      "description": "Analysis of the current SERP landscape for the target keyword.",
+      "properties": {
+        "top_results": {
+          "type": "array",
+          "description": "Summary of the top-ranking pages for this keyword.",
+          "items": {
+            "type": "object",
+            "required": ["position", "title", "url"],
+            "properties": {
+              "position": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Ranking position (1-10)."
+              },
+              "title": {
+                "type": "string",
+                "description": "Page title as shown in SERP."
+              },
+              "url": {
+                "type": "string",
+                "description": "URL of the ranking page."
+              },
+              "word_count": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Approximate word count of the ranking page."
+              },
+              "content_type": {
+                "type": "string",
+                "description": "Content format of the ranking page, e.g. 'listicle', 'guide', 'tool page'."
+              },
+              "strengths": {
+                "type": "string",
+                "description": "What this page does well."
+              },
+              "weaknesses": {
+                "type": "string",
+                "description": "Gaps or weaknesses to exploit."
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "serp_features": {
+          "type": "array",
+          "description": "SERP features present on the results page.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "people_also_ask": {
+          "type": "array",
+          "description": "Questions from the People Also Ask section. These should be addressed in the content.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "content_gap": {
+          "type": "string",
+          "description": "What existing top results fail to cover. This is the primary differentiation opportunity."
+        }
+      },
+      "additionalProperties": false
+    },
+    "recommended_structure": {
+      "type": "object",
+      "description": "Recommended article structure based on SERP analysis and content type.",
+      "properties": {
+        "target_word_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Recommended word count based on top-ranking content analysis."
+        },
+        "outline": {
+          "type": "array",
+          "description": "Recommended H2/H3 outline for the article.",
+          "items": {
+            "type": "object",
+            "required": ["heading"],
+            "properties": {
+              "heading": {
+                "type": "string",
+                "description": "Section heading text."
+              },
+              "level": {
+                "type": "string",
+                "enum": ["h2", "h3"],
+                "description": "Heading level."
+              },
+              "guidance": {
+                "type": "string",
+                "description": "What this section should cover and why."
+              },
+              "keywords_to_include": {
+                "type": "array",
+                "description": "Secondary keywords to work into this section.",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "must_include": {
+          "type": "array",
+          "description": "Elements the content must include to compete, e.g. 'real examples', 'downloadable template', 'comparison table'.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "differentiation_angle": {
+          "type": "string",
+          "description": "How to make this content stand out from existing top results."
+        }
+      },
+      "additionalProperties": false
+    },
+    "voice_notes": {
+      "type": "string",
+      "description": "Content-specific voice guidance. References the brand voice profile but may include adjustments, e.g. 'More authoritative than usual -- this is a definitive guide'."
+    },
+    "internal_links": {
+      "type": "array",
+      "description": "Recommended internal links to other content or pages.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "anchor_text": {
+            "type": "string",
+            "description": "Suggested anchor text for the link."
+          },
+          "target_path": {
+            "type": "string",
+            "description": "Path or URL to link to."
+          },
+          "context": {
+            "type": "string",
+            "description": "Where in the article to place this link."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "cta": {
+      "type": "object",
+      "description": "Primary call-to-action for this content piece.",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["lead-magnet", "newsletter", "product", "consultation", "trial", "custom"],
+          "description": "Type of CTA."
+        },
+        "text": {
+          "type": "string",
+          "description": "CTA copy, e.g. 'Download the Cold Email Template Kit'."
+        },
+        "placement": {
+          "type": "string",
+          "description": "Where to place the CTA, e.g. 'After intro + end of article' or 'Inline after section 3'."
+        }
+      },
+      "additionalProperties": false
+    },
+    "status": {
+      "type": "string",
+      "enum": ["brief-ready", "writing", "review", "published", "needs-refresh"],
+      "description": "Current status of this content piece."
+    },
+    "output_path": {
+      "type": "string",
+      "description": "Path where the finished content will be written, e.g. './campaigns/content/cold-email-template-freelancer.md'."
+    }
+  },
+  "additionalProperties": false
+}
