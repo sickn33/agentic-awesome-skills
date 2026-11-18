@@ -368,7 +368,8 @@ function copyTree(source, destination) {
     } else {
       fs.copyFileSync(path.join(source, ...entry.path.split("/")), output, fs.constants.COPYFILE_EXCL);
       fs.chmodSync(output, 0o600);
-      const descriptor = fs.openSync(output, fs.constants.O_RDONLY | (fs.constants.O_NOFOLLOW || 0));
+      // FlushFileBuffers requires a writable handle on Windows.
+      const descriptor = fs.openSync(output, fs.constants.O_RDWR | (fs.constants.O_NOFOLLOW || 0));
       try { fs.fsyncSync(descriptor); } finally { fs.closeSync(descriptor); }
     }
   }
