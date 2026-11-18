@@ -49,6 +49,15 @@ assert.notStrictEqual(
   path.resolve(process.cwd(), process.cwd().slice(1), '.agents', 'skills'),
 );
 assert.strictEqual(installer.resolveDir('/tmp/aas-absolute-target'), path.resolve('/tmp/aas-absolute-target'));
+const installerHome = process.env.HOME || process.env.USERPROFILE || '';
+if (installerHome) {
+  assert.strictEqual(installer.resolveDir('~'), path.resolve(installerHome));
+  assert.strictEqual(installer.resolveDir('~/aas-tilde-target'), path.resolve(installerHome, 'aas-tilde-target'));
+  if (process.platform === 'win32') {
+    assert.strictEqual(installer.resolveDir('~\\aas-tilde-target'), path.resolve(installerHome, 'aas-tilde-target'));
+  }
+}
+assert.strictEqual(installer.resolveDir('~other/skills'), path.resolve('~other/skills'));
 assert.strictEqual(installer.resolveDir(null), null);
 assert.strictEqual(installer.resolveDir(''), null);
 // Traversal is normalized away instead of being re-joined against cwd.

@@ -20,7 +20,8 @@ const EXACT_VERSION_PATTERN = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9
 
 function resolveDir(p) {
   if (!p) return null;
-  const s = p.replace(/^~($|\/)/, HOME + "$1");
+  const homePrefix = process.platform === "win32" ? /^~(?=$|[\\/])/ : /^~(?=$|\/)/;
+  const s = p.replace(homePrefix, () => HOME);
   // Resolve the path exactly once. For relative input the resolved path
   // already contains the working directory, so joining the extracted
   // segments against cwd again would duplicate it.

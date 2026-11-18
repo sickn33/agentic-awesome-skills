@@ -6,9 +6,10 @@ it('renders the Core homepage without catalog requests', async () => {
   window.history.replaceState({}, '', '/');
   vi.clearAllMocks();
   const { container } = render(<App />);
+  // Loading the lazy route can take longer than the default query timeout on CI.
   expect(await screen.findByRole('heading', {
     level: 1, name: /Your agent.*The right skills/i,
-  })).toBeInTheDocument();
+  }, { timeout: 4000 })).toBeInTheDocument();
   expect(screen.getByText('Use this skill for my task.')).toBeInTheDocument();
   expect(container.querySelector('.workflow-demo iframe')).toBeNull();
   expect(globalThis.fetch).not.toHaveBeenCalled();

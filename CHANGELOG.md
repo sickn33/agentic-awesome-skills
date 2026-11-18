@@ -38,6 +38,30 @@ Summarize the most important change for users in one short paragraph.
 
 ## [Unreleased]
 
+## [21.0.0] - 2026-11-18 - "50K on GitHub and 3,000+ Skills"
+
+GitHub's public counter now shows 50k stars, and Agentic Awesome Skills includes 3,022 catalog skills for Claude Code, Cursor, Codex CLI, Gemini CLI, and other coding assistants. Thank you to everyone who starred the repository, contributed a skill, or helped improve a release.
+
+### New skills
+
+- Share a local app for an approval-gated review with qURL and verify that the share is removed afterwards.
+- Audit Supabase Edge Function caller authorization, service credentials, and webhook signatures.
+- Inspect frontend code for contrast and design issues with Unslop UI Audit, and exercise disposable local apps across viewport sizes with Ghost-QA.
+- Compare carbon-credit quotes and verify Carbonmark retirement certificates. Paid retirement requires explicit approval of the maximum spend.
+
+### Improvements
+
+- Resolve home-relative installer paths that use Windows backslashes.
+- Keep transaction copies durable on Windows by opening the new file with the access required for flushing.
+
+### Contributors
+
+- @justin-layerv for qURL Private Review ([#2394](https://github.com/sickn33/agentic-awesome-skills/pull/2394)).
+- @getshipready for Supabase Edge Function Caller Auth ([#2395](https://github.com/sickn33/agentic-awesome-skills/pull/2395)).
+- @avivgerz-hue for Unslop UI Audit ([#2396](https://github.com/sickn33/agentic-awesome-skills/pull/2396)) and Ghost-QA ([#2397](https://github.com/sickn33/agentic-awesome-skills/pull/2397)).
+- @drewesoa for Carbonmark Carbon Retirement ([#2404](https://github.com/sickn33/agentic-awesome-skills/pull/2404)).
+- @KatkamKoushik for the Windows reports ([#2400](https://github.com/sickn33/agentic-awesome-skills/discussions/2400) and [#2401](https://github.com/sickn33/agentic-awesome-skills/discussions/2401)).
+
 ## [20.11.0] - 2026-11-17 - "Marketing Workflows, Modern Java, and App Testing"
 
 Add 36 skills for marketing workflows, modern Java and Spring, end-to-end testing, defensive code review, and connected workspaces, bringing the catalog to 3,017 skills.
