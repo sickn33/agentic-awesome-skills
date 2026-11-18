@@ -60,7 +60,7 @@ import { withSupabase } from "npm:@supabase/server@1";
 export default {
   fetch: withSupabase({ auth: "user" }, async (_req, ctx) => {
     // ctx.supabase is scoped to the caller's RLS; ctx.userClaims has the user id
-    return Response.json({ id: ctx.userClaims?.id });
+    return Response.json({ id: ctx.userClaims?.sub });
   }),
 };
 ```
@@ -102,7 +102,7 @@ Expected result (illustrative): table row "generate-image | signed-in user | no 
 
 ## Safety and side effects
 
-Reads repository files and proposes patches. It does not deploy, set secrets, rotate keys or call live endpoints; those are done by the human after reviewing the patch. Redact any secret found in code to its first 6 characters and recommend rotation.
+Reads repository files and proposes patches. It does not deploy, set secrets, rotate keys or call live endpoints; those are done by the human after reviewing the patch. Redact secret values entirely. Name the affected file and setting and recommend rotation.
 
 ## Sources and related skills
 
