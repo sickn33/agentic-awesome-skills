@@ -15532,6 +15532,37 @@
     ]
   },
   {
+    "id": "carbonmark-carbon-retirement",
+    "path": "skills/carbonmark-carbon-retirement",
+    "category": "api-integration",
+    "name": "carbonmark-carbon-retirement",
+    "description": "Price and retire verified carbon credits on Base through Carbonmark's x402 API. Use when a user asks to offset emissions or buy and retire carbon credits.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-11-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "carbon-credits",
+      "carbon-retirement",
+      "climate",
+      "x402",
+      "base",
+      "usdc"
+    ]
+  },
+  {
     "id": "card-based-design",
     "path": "skills/design-it/card-based-design",
     "category": "design-it",
@@ -32727,6 +32758,39 @@
     "source_repo": "zhaoxuya520/reverse-skill",
     "license": "MIT",
     "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
+    "id": "ghost-qa",
+    "path": "skills/ghost-qa",
+    "category": "testing",
+    "name": "ghost-qa",
+    "description": "Run autonomous headless Playwright browser QA across Desktop, Tablet, and Mobile viewports to catch hydration, layout, overflow, and a11y bugs.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-11-14",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "testing",
+      "playwright",
+      "qa",
+      "browser-automation",
+      "accessibility",
+      "frontend",
+      "e2e",
+      "mcp"
+    ]
   },
   {
     "id": "git-advanced-workflows",
@@ -58204,6 +58268,35 @@
     ]
   },
   {
+    "id": "qurl-private-review",
+    "path": "skills/qurl-private-review",
+    "category": "development",
+    "name": "qurl-private-review",
+    "description": "Share one local web app with an approved browser reviewer through qURL, check the app loads, and delete the share when the review ends.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-11-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "localhost",
+      "private-preview",
+      "browser-review",
+      "qurl"
+    ]
+  },
+  {
     "id": "radar-satellite-analysis",
     "path": "skills/radar-satellite-analysis",
     "category": "analysis",
@@ -68256,6 +68349,37 @@
     }
   },
   {
+    "id": "supabase-edge-function-caller-auth",
+    "path": "skills/supabase-edge-function-caller-auth",
+    "category": "security",
+    "name": "supabase-edge-function-caller-auth",
+    "description": "Audit and fix who can call each Supabase Edge Function: verify_jwt settings, withSupabase auth modes, role checks, webhook signatures and CORS, especially in Lovable/Bolt SPAs.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-11-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "supabase",
+      "edge-functions",
+      "jwt",
+      "auth",
+      "lovable",
+      "security"
+    ]
+  },
+  {
     "id": "supabase-postgres-best-practices",
     "path": "skills/supabase-postgres-best-practices",
     "category": "database",
@@ -73412,6 +73536,36 @@
     "source_repo": "heydamir/unslop",
     "license": "CC-BY-4.0",
     "license_source": "https://github.com/heydamir/unslop/blob/a6f121eee5f29c2f74976b75456feae8b66afb3a/LICENSE"
+  },
+  {
+    "id": "unslop-ui-audit",
+    "path": "skills/unslop-ui-audit",
+    "category": "frontend",
+    "name": "unslop-ui-audit",
+    "description": "Use the Unslop UI design linter for static frontend diagnostics, contrast checks, and reviewing design presets.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-11-14",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "ui",
+      "accessibility",
+      "design-system",
+      "frontend",
+      "css"
+    ]
   },
   {
     "id": "unsloth-finetuning",

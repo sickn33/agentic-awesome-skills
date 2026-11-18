@@ -11432,6 +11432,25 @@
       "runtime_files": []
     },
     {
+      "id": "carbonmark-carbon-retirement",
+      "path": "skills/carbonmark-carbon-retirement",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "career-ops",
       "path": "skills/career-ops",
       "targets": {
@@ -24631,6 +24650,25 @@
     {
       "id": "ghidra-reverse",
       "path": "skills/ghidra-reverse",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "ghost-qa",
+      "path": "skills/ghost-qa",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -42835,6 +42873,25 @@
       "runtime_files": []
     },
     {
+      "id": "qurl-private-review",
+      "path": "skills/qurl-private-review",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "radar-satellite-analysis",
       "path": "skills/radar-satellite-analysis",
       "targets": {
@@ -50098,6 +50155,25 @@
       "runtime_files": []
     },
     {
+      "id": "supabase-edge-function-caller-auth",
+      "path": "skills/supabase-edge-function-caller-auth",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "supabase-postgres-best-practices",
       "path": "skills/supabase-postgres-best-practices",
       "targets": {
@@ -53977,6 +54053,25 @@
       "runtime_files": []
     },
     {
+      "id": "unslop-ui-audit",
+      "path": "skills/unslop-ui-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "unsloth-finetuning",
       "path": "skills/unsloth-finetuning",
       "targets": {
@@ -57832,10 +57927,10 @@
     }
   ],
   "summary": {
-    "total_skills": 3017,
+    "total_skills": 3022,
     "supported": {
-      "codex": 2930,
-      "claude": 2951
+      "codex": 2935,
+      "claude": 2956
     },
     "blocked": {
       "codex": 87,

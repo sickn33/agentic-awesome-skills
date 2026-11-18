@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-17T21:14:19.000Z",
+  "generatedAt": "2026-11-18T21:51:20.000Z",
   "bundles": {
     "core-dev": {
       "description": "Core development skills across languages, frameworks, and backend/frontend fundamentals.",
@@ -164,6 +164,7 @@
         "bullmq-specialist",
         "bun-development",
         "buywhere-product-catalog",
+        "carbonmark-carbon-retirement",
         "cc-skill-backend-patterns",
         "cc-skill-coding-standards",
         "cc-skill-frontend-patterns",
@@ -276,6 +277,7 @@
         "gemini-live-api-dev",
         "gemini-omni-flash-api",
         "get-seen-in-replies",
+        "ghost-qa",
         "github",
         "glasser",
         "go-concurrency-patterns",
@@ -533,6 +535,7 @@
         "ui-ux-pro-max",
         "uniprot-database",
         "unship",
+        "unslop-ui-audit",
         "upstash-ratelimit",
         "us-property-data",
         "us-watchlist-alerts",
@@ -813,6 +816,7 @@
         "stellar-asset-clawback-compliance",
         "stellar-multisig-threshold-coordinator",
         "stride-analysis-patterns",
+        "supabase-edge-function-caller-auth",
         "supply-chain-risk-auditor",
         "supply-chain-security",
         "thick-client",
@@ -2254,6 +2258,7 @@
         "frontend-mobile-development-component-scaffold",
         "frontend-mobile-security-xss-scan",
         "game-development/mobile-games",
+        "ghost-qa",
         "ios-debugger-agent",
         "ios-developer",
         "ios-flows",

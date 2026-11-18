@@ -1,8 +1,8 @@
 # Skill Catalog
 
-Generated at: 2026-11-17T21:14:19.000Z
+Generated at: 2026-11-18T21:51:20.000Z
 
-Total skills: 3017
+Total skills: 3022
 
 ## agent-behavior (5)
 
@@ -313,7 +313,7 @@ Total skills: 3017
 | `10-andruia-skill-smith` | Usar para crear o mejorar una skill de Andru.ia: define entradas y resultados, redacta SKILL.md con ejemplos y límites, valida la estructura y prepara una PR. | safe | personal | 10, andruia, skill, smith | 10, andruia, skill, smith, usar, para, crear, mejorar, una, de, andru, ia |
 | `20-andruia-niche-intelligence` | Usar tras definir el sector de un proyecto: prepara un dossier en español con contexto, normas aplicables, patrones UX y riesgos, distinguiendo fuentes verif... | safe | personal | 20, andruia, niche, intelligence | 20, andruia, niche, intelligence, usar, tras, definir, el, sector, de, un, proyecto |
 
-## api-integration (44)
+## api-integration (45)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -321,6 +321,7 @@ Total skills: 3017
 | `adhx` | Fetch any X/Twitter post as clean LLM-friendly JSON. Converts x.com, twitter.com, or adhx.com links into structured data with full article content, author in... | safe | community | adhx | adhx, fetch, any, twitter, post, clean, llm, friendly, json, converts, com, links |
 | `aident-loadout` | Run multi-step work across apps the user connected in Aident Loadout: live action schemas, connection checks, cost preflight, and approval before side effects. | critical | Aident-AI/aident-skill | mcp, integrations, oauth, vault, audit, agent-tools | mcp, integrations, oauth, vault, audit, agent-tools, aident, loadout, run, multi, step, work |
 | `algolia-search` | Expert patterns for Algolia search implementation, indexing strategies, React InstantSearch, and relevance tuning | critical | vibeship-spawner-skills (Apache 2.0) | algolia, search | algolia, search, indexing, react, instantsearch, relevance, tuning |
+| `carbonmark-carbon-retirement` | Price and retire verified carbon credits on Base through Carbonmark's x402 API. Use when a user asks to offset emissions or buy and retire carbon credits. | critical | self | carbon-credits, carbon-retirement, climate, x402, base, usdc | carbon-credits, carbon-retirement, climate, x402, base, usdc, carbonmark, carbon, retirement, price, retire, verified |
 | `connection-auth-rules` | Build a Connection Auth Rules for a Monte Carlo connection type. Fetches live connector schemas and transform steps from the apollo-agent repo. | critical | monte-carlo-data/mc-agent-toolkit | connection, auth, rules | connection, auth, rules, monte, carlo, type, fetches, live, connector, schemas, transform, steps |
 | `curlshot` | Capture web page screenshots, PDFs and scrolling videos, or render HTML/Markdown to images, with the hosted CurlShot API. | safe | SergiuPogor/curlshot-mcp | screenshot, pdf, html-to-image, headless-browser, api, mcp | screenshot, pdf, html-to-image, headless-browser, api, mcp, curlshot, capture, web, page, screenshots, pdfs |
 | `daily` | Documentation and capabilities reference for Daily | safe | community | daily | daily, documentation, capabilities, reference |
@@ -1463,7 +1464,7 @@ Total skills: 3017
 | `skill-porter` | Preview conservative tool-name translations and copy complete local skill bundles for manual adaptation to Google Antigravity. | critical | Pranav-Nexus/antigravity-skill-porter | antigravity, claude, skills, migration, agent | antigravity, claude, skills, migration, agent, skill, porter, preview, conservative, name, translations, copy |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (245)
+## development (246)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1664,6 +1665,7 @@ Total skills: 3017
 | `python-performance-optimization` | Profile and optimize Python code using cProfile, memory profilers, and performance best practices. Use when debugging slow Python code, optimizing bottleneck... | safe | community | python, performance, optimization | python, performance, optimization, profile, optimize, code, cprofile, memory, profilers, debugging, slow, optimizing |
 | `python-pptx-generator` | Generate complete Python scripts that build polished PowerPoint decks with python-pptx and real slide content. | safe | self | python, powerpoint, python-pptx, presentations, slide-decks | python, powerpoint, python-pptx, presentations, slide-decks, pptx, generator, generate, complete, scripts, polished, decks |
 | `python-testing-patterns` | Implement comprehensive testing strategies with pytest, fixtures, mocking, and test-driven development. Use when writing Python tests, setting up test suites... | safe | community | python | python, testing, pytest, fixtures, mocking, test, driven, development, writing, tests, setting, up |
+| `qurl-private-review` | Share one local web app with an approved browser reviewer through qURL, check the app loads, and delete the share when the review ends. | critical | self | localhost, private-preview, browser-review, qurl | localhost, private-preview, browser-review, qurl, private, review, share, one, local, web, app, approved |
 | `rayden-code` | Generate React code with Rayden UI components using correct props, tokens, and premium layout patterns | safe | https://github.com/playbookTV/rayden-ui-design-skill | react, tailwind, design-system, ui, components, vibe-coding, rayden, rayna-ui, code-generation | react, tailwind, design-system, ui, components, vibe-coding, rayden, rayna-ui, code-generation, code, generate, correct |
 | `re-create` | Completely delete and rewrite a file or module from scratch when structural rot makes patching impossible. | critical | community | re, create | re, create, completely, delete, rewrite, file, module, scratch, structural, rot, makes, patching |
 | `repo-foundation` | Implement features, fixes, modules, contract migrations, and resumed work while preserving user edits and authorized public contracts. | critical | Natchannnn/repository-engineering-skills | repository-engineering, feature-development, contract-migration, continuity | repository-engineering, feature-development, contract-migration, continuity, repo, foundation, features, fixes, modules, contract, migrations, resumed |
@@ -2031,7 +2033,7 @@ Total skills: 3017
 | `ui-ux-pro-max` | Comprehensive design guide for web and mobile applications. Use when designing new UI components or pages, choosing color palettes and typography, or reviewi... | critical | community | ui, ux, max | ui, ux, max, pro, web, mobile, applications, designing, new, components, pages, choosing |
 | `web-performance-optimization` | Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance | critical | community | web, performance, optimization | web, performance, optimization, optimize, website, application, including, loading, speed, core, vitals, bundle |
 
-## frontend (64)
+## frontend (65)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2093,6 +2095,7 @@ Total skills: 3017
 | `tastegate` | Build or fix a frontend so it looks designed, not AI-generated, then prove it in a real browser: renders at phone and desktop width and fails on overlap, low... | safe | stas4000/tastegate | frontend, design, ui, browser-testing, quality-gate | frontend, design, ui, browser-testing, quality-gate, tastegate, fix, so, looks, designed, ai, generated |
 | `ui-from-screenshot` | Turn a screenshot or mockup into matching UI with the project's own components, then compare the result side by side with the image and fix the differences. | safe | uxkin/agent | ui, frontend, screenshot, mockup, implementation | ui, frontend, screenshot, mockup, implementation, turn, matching, own, components, then, compare, result |
 | `ui-states` | Design and build the UI states agents forget: first use, empty, loading, error, offline, no results, long content, permission denied and success. | safe | uxkin/agent | ui, ux, edge-cases, states, frontend, quality | ui, ux, edge-cases, states, frontend, quality, agents, forget, first, empty, loading, error |
+| `unslop-ui-audit` | Use the Unslop UI design linter for static frontend diagnostics, contrast checks, and reviewing design presets. | critical | self | ui, accessibility, design-system, frontend, css | ui, accessibility, design-system, frontend, css, unslop, audit, linter, static, diagnostics, contrast, checks |
 | `uxkin-research` | Research how real products handle a screen, flow or visual style before designing it: search UXKIN's real iOS screens, user journeys and website design syste... | safe | uxkin/agent | ui, ux, design, research, mcp, design-system | ui, ux, design, research, mcp, design-system, uxkin, how, real, products, handle, screen |
 | `web-design-system` | Choose a design direction for a website from real sites and write it down as a DESIGN.md: colors with roles, type, spacing, radius, shadows and components, i... | safe | uxkin/agent | design-system, design-md, ui, frontend, tailwind, theming | design-system, design-md, ui, frontend, tailwind, theming, web, choose, direction, website, real, sites |
 | `web-review` | Review a website or landing page and list what to fix, most important first: message, generic AI look, consistency, copy, mobile, accessibility, speed and mi... | safe | uxkin/agent | ui, ux, review, accessibility, web-design, audit | ui, ux, review, accessibility, web-design, audit, web, website, landing, page, list, what |
@@ -2960,7 +2963,7 @@ Total skills: 3017
 | `statsmodels` | Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistic... | safe | community | statsmodels | statsmodels, python, premier, library, statistical, modeling, providing, estimation, inference, diagnostics, wide, range |
 | `sympy` | SymPy is a Python library for symbolic mathematics that enables exact computation using mathematical symbols rather than numerical approximations. | safe | https://github.com/sympy/sympy | sympy | sympy, python, library, symbolic, mathematics, enables, exact, computation, mathematical, symbols, rather, than |
 
-## security (268)
+## security (269)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -3199,6 +3202,7 @@ Total skills: 3017
 | `ssh-penetration-testing` | Conduct comprehensive SSH security assessments including enumeration, credential attacks, vulnerability exploitation, tunneling techniques, and post-exploita... | offensive | community | ssh, penetration | ssh, penetration, testing, conduct, security, assessments, including, enumeration, credential, attacks, vulnerability, exploitation |
 | `ssl-tls-management` | Manage SSL/TLS certificates with Let's Encrypt and internal PKI. Configure secure HTTPS, certificate renewal, and cipher suites. Use when implementing secure... | critical | BagelHole/DevOps-Security-Agent-Skills | ssl, tls | ssl, tls, certificates, let, encrypt, internal, pki, configure, secure, https, certificate, renewal |
 | `stride-analysis-patterns` | Apply STRIDE methodology to systematically identify threats. Use when analyzing system security, conducting threat modeling sessions, or creating security do... | safe | community | stride | stride, analysis, apply, methodology, systematically, identify, threats, analyzing, security, conducting, threat, modeling |
+| `supabase-edge-function-caller-auth` | Audit and fix who can call each Supabase Edge Function: verify_jwt settings, withSupabase auth modes, role checks, webhook signatures and CORS, especially in... | safe | self | supabase, edge-functions, jwt, auth, lovable, security | supabase, edge-functions, jwt, auth, lovable, security, edge, function, caller, audit, fix, who |
 | `supply-chain-attack-recon` | Authorized read-only review of public software supply-chain exposure | offensive | elementalsouls/Claude-BugHunter | supply, chain, attack, recon | supply, chain, attack, recon, authorized, read, review, public, software, exposure |
 | `supply-chain-attack-response` | Detect, respond to, and prevent software supply chain attacks on package registries, container images, and CI/CD pipelines with lockfile auditing, provenance... | offensive | BagelHole/DevOps-Security-Agent-Skills | supply, chain, attack, response | supply, chain, attack, response, detect, respond, prevent, software, attacks, package, registries, container |
 | `supply-chain-risk-auditor` | Identifies dependencies at heightened risk of exploitation or takeover. Use when assessing supply chain attack surface, evaluating dependency health, or scop... | critical | community | supply, chain, risk, auditor | supply, chain, risk, auditor, identifies, dependencies, heightened, exploitation, takeover, assessing, attack, surface |
@@ -3383,7 +3387,7 @@ Total skills: 3017
 | `test-automator` | Master AI-powered test automation with modern frameworks, self-healing tests, and comprehensive quality engineering. Build scalable testing strategies with a... | critical | community | automator | automator, test, ai, powered, automation, frameworks, self, healing, tests, quality, engineering, scalable |
 | `webapp-testing` | To test local web applications, write native Python Playwright scripts. | critical | community | webapp | webapp, testing, test, local, web, applications, write, native, python, playwright, scripts |
 
-## testing (51)
+## testing (52)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -3402,6 +3406,7 @@ Total skills: 3017
 | `cypress-skill` | Generates production-grade Cypress E2E and component tests in JavaScript or TypeScript. Supports local execution and TestMu AI cloud. Use when the user asks ... | critical | LambdaTest/agent-skills | cypress, skill | cypress, skill, generates, grade, e2e, component, tests, javascript, typescript, supports, local, execution |
 | `e2e` | Write, run and debug e2e tests for web and iOS/Android apps that mix plain-language agent steps with exact assertions, replaying cached agent steps without m... | critical | e2e-inc/e2e | e2e, end-to-end-testing, mobile-testing, ios, android, playwright, agentic-testing | e2e, end-to-end-testing, mobile-testing, ios, android, playwright, agentic-testing, write, run, debug, tests, web |
 | `electron-drive-skill` | Launch the project's Electron app on a scratch profile and drive it: click, type, screenshot, run renderer or main-process code, read logs. Use to verify UI ... | critical | Search-3D/electron-drive-skill | electron, playwright, desktop, e2e, testing, automation | electron, playwright, desktop, e2e, testing, automation, drive, skill, launch, app, scratch, profile |
+| `ghost-qa` | Run autonomous headless Playwright browser QA across Desktop, Tablet, and Mobile viewports to catch hydration, layout, overflow, and a11y bugs. | critical | self | testing, playwright, qa, browser-automation, accessibility, frontend, e2e, mcp | testing, playwright, qa, browser-automation, accessibility, frontend, e2e, mcp, ghost, run, autonomous, headless |
 | `huggingface-community-evals` | Curated upstream guidance for Huggingface Community Evals; use when the workflow matches the user goal. | unknown | huggingface/skills | huggingface, community, evals | huggingface, community, evals, curated, upstream, guidance, matches, user, goal |
 | `hyperexecute-skill` | Operates HyperExecute end-to-end for TestMu AI/LambdaTest cloud test execution: analyze projects, create YAML, validate locally, run CLI jobs, debug failures... | critical | LambdaTest/agent-skills | hyperexecute, skill | hyperexecute, skill, operates, testmu, ai, lambdatest, cloud, test, execution, analyze, yaml, validate |
 | `junit-5-skill` | Generates production-grade JUnit 5 unit and integration tests in Java. Covers assertions, parameterized tests, lifecycle hooks, mocking with Mockito, and nes... | critical | LambdaTest/agent-skills | junit, 5, skill | junit, 5, skill, generates, grade, unit, integration, tests, java, covers, assertions, parameterized |

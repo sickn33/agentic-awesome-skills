@@ -1,109 +1,74 @@
 {
   "schemaVersion": 1,
   "repository": "sickn33/agentic-awesome-skills",
-  "version": "20.11.0",
-  "main": "47a4bca02875cfde33a03162bbeed2511d90376d",
+  "version": "21.0.0",
+  "main": "3fc872a077fe1bbfcafd1059f44f0c1275d55a58",
   "prs": [
-    2388,
-    2387,
-    2386,
-    2385,
-    2384,
-    2383,
-    2378,
-    2377,
-    2375,
-    2374,
-    2373,
-    2371,
-    2370,
-    2369
+    2394,
+    2395,
+    2396,
+    2397,
+    2402,
+    2403,
+    2404,
+    2405,
+    2406
   ],
   "pulls": [
     {
-      "number": 2388,
-      "head": "ad79bd7d6ed391545c37a8689a98adea7055b5c8",
+      "number": 2394,
+      "head": "b7b8c807a8d57106afffaa151a997fc7b822ef22",
+      "merge": "5a28537c2f1018ab9c6734bd45da4e571d3c038f",
+      "closedAt": "2026-11-18T21:16:42Z"
+    },
+    {
+      "number": 2395,
+      "head": "4072abc69996f6237661a265fb65774a9f0cb23b",
+      "merge": "8fd48e718e38d26d66ff75e6f5dcaefb2bd44e78",
+      "closedAt": "2026-11-18T21:22:16Z"
+    },
+    {
+      "number": 2396,
+      "head": "5b7b85ce667c7e439b612cf1100a0fe152630362",
+      "merge": "7d25247c2bb4a611d2fae5040c72a598ea521eb5",
+      "closedAt": "2026-11-18T21:25:28Z"
+    },
+    {
+      "number": 2397,
+      "head": "5ec95b8ca9f7c6d8dd72187847cd87d34f5acfe5",
+      "merge": "14cdc0a997462bea4844b4db9ce1951d0c07ce9f",
+      "closedAt": "2026-11-18T21:28:05Z"
+    },
+    {
+      "number": 2402,
+      "head": "6d5e398c3ba1db1f3b8b2d9a460ee5a30c4dbaad",
       "merge": null,
-      "closedAt": "2026-11-17T19:51:49Z"
+      "closedAt": "2026-11-18T21:13:40Z"
     },
     {
-      "number": 2387,
-      "head": "735b5bc8f3c7187213080fb6af843db0947877c8",
-      "merge": "7936c9340ef787e4087f998817b8047930cc7720",
-      "closedAt": "2026-11-17T20:02:04Z"
-    },
-    {
-      "number": 2386,
-      "head": "097782d7e1162932c9c49345bd6556be356a7a2a",
+      "number": 2403,
+      "head": "bd70cc843f0723b481473ff725b23f1d5b87e077",
       "merge": null,
-      "closedAt": "2026-11-17T20:31:21Z"
+      "closedAt": "2026-11-18T21:13:32Z"
     },
     {
-      "number": 2385,
-      "head": "18afc3d69e9f6cdcd2ab88e836a993d350a05375",
+      "number": 2404,
+      "head": "2d3e46a650556387457baad1070017df090a3b07",
+      "merge": "6fca762f8a81bfafa11a0e8ced775f993e0c421a",
+      "closedAt": "2026-11-18T21:30:58Z"
+    },
+    {
+      "number": 2405,
+      "head": "93ca1560ea0107138974b8d1ade332e9d6a80efe",
       "merge": null,
-      "closedAt": "2026-11-17T20:31:25Z"
+      "closedAt": "2026-11-18T21:13:36Z"
     },
     {
-      "number": 2384,
-      "head": "1d5f0a293af6f281a8fead35a4122959fbfc7f84",
-      "merge": null,
-      "closedAt": "2026-11-17T20:31:29Z"
-    },
-    {
-      "number": 2383,
-      "head": "042ea1c539a7030b66ef50923d2593a330114218",
-      "merge": null,
-      "closedAt": "2026-11-17T20:32:14Z"
-    },
-    {
-      "number": 2378,
-      "head": "6720dbfe7b46afd18506cffd58db4227b47ebc24",
-      "merge": null,
-      "closedAt": "2026-11-17T20:32:18Z"
-    },
-    {
-      "number": 2377,
-      "head": "808fe248ca0d1f1409d160ec4484d6f700c73a76",
-      "merge": "8ea9804cc8da2333a2ae9f839c171f438b989640",
-      "closedAt": "2026-11-17T20:13:28Z"
-    },
-    {
-      "number": 2375,
-      "head": "278b4c59ebb850125e875d4668d5192841cd0b4e",
-      "merge": "bdb0cdfc521663157133f85861c65be37fe514c9",
-      "closedAt": "2026-11-17T19:56:33Z"
-    },
-    {
-      "number": 2374,
-      "head": "647a17bef8f855909072e220cbd94208b414c54b",
-      "merge": null,
-      "closedAt": "2026-11-17T20:32:22Z"
-    },
-    {
-      "number": 2373,
-      "head": "b3a1a5f24ddeedae86c54085e34c819368ee1f1f",
-      "merge": null,
-      "closedAt": "2026-11-17T20:32:25Z"
-    },
-    {
-      "number": 2371,
-      "head": "e16f231eb6452df014d08c90f372030aecd41ae5",
-      "merge": null,
-      "closedAt": "2026-11-17T20:32:29Z"
-    },
-    {
-      "number": 2370,
-      "head": "b021676f315b957af6c371d1ad0485d1cda37c08",
-      "merge": null,
-      "closedAt": "2026-11-17T20:32:33Z"
-    },
-    {
-      "number": 2369,
-      "head": "98500fba00dc326edc5ddc859daf3827a1f971a4",
-      "merge": "c3543db7a978580372795a0b0ab2372dc8df2691",
-      "closedAt": "2026-11-17T20:07:03Z"
+      "number": 2406,
+      "head": "725832428fe829f98eb8d31212350aa1ea5520b7",
+      "merge": "3fc872a077fe1bbfcafd1059f44f0c1275d55a58",
+      "closedAt": "2026-11-18T21:44:53Z"
     }
   ],
-  "completedAt": "2026-11-17T21:13:36.845Z"
+  "completedAt": "2026-11-18T21:50:36.887Z"
 }
