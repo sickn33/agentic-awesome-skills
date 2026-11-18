@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-17T21:14:19.000Z",
-  "total": 3017,
+  "generatedAt": "2026-11-18T21:51:20.000Z",
+  "total": 3022,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -18180,6 +18180,39 @@
         "extract"
       ],
       "path": "skills/capturekit-mcp/SKILL.md"
+    },
+    {
+      "id": "carbonmark-carbon-retirement",
+      "canonical_id": "carbonmark-carbon-retirement",
+      "name": "carbonmark-carbon-retirement",
+      "description": "Price and retire verified carbon credits on Base through Carbonmark's x402 API. Use when a user asks to offset emissions or buy and retire carbon credits.",
+      "category": "api-integration",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "carbon-credits",
+        "carbon-retirement",
+        "climate",
+        "x402",
+        "base",
+        "usdc"
+      ],
+      "triggers": [
+        "carbon-credits",
+        "carbon-retirement",
+        "climate",
+        "x402",
+        "base",
+        "usdc",
+        "carbonmark",
+        "carbon",
+        "retirement",
+        "price",
+        "retire",
+        "verified"
+      ],
+      "path": "skills/carbonmark-carbon-retirement/SKILL.md"
     },
     {
       "id": "career-ops",
@@ -38933,6 +38966,41 @@
         "optional"
       ],
       "path": "skills/ghidra-reverse/SKILL.md"
+    },
+    {
+      "id": "ghost-qa",
+      "canonical_id": "ghost-qa",
+      "name": "ghost-qa",
+      "description": "Run autonomous headless Playwright browser QA across Desktop, Tablet, and Mobile viewports to catch hydration, layout, overflow, and a11y bugs.",
+      "category": "testing",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "testing",
+        "playwright",
+        "qa",
+        "browser-automation",
+        "accessibility",
+        "frontend",
+        "e2e",
+        "mcp"
+      ],
+      "triggers": [
+        "testing",
+        "playwright",
+        "qa",
+        "browser-automation",
+        "accessibility",
+        "frontend",
+        "e2e",
+        "mcp",
+        "ghost",
+        "run",
+        "autonomous",
+        "headless"
+      ],
+      "path": "skills/ghost-qa/SKILL.md"
     },
     {
       "id": "git-advanced-workflows",
@@ -67557,6 +67625,37 @@
       "path": "skills/quit-sponsor/SKILL.md"
     },
     {
+      "id": "qurl-private-review",
+      "canonical_id": "qurl-private-review",
+      "name": "qurl-private-review",
+      "description": "Share one local web app with an approved browser reviewer through qURL, check the app loads, and delete the share when the review ends.",
+      "category": "development",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "localhost",
+        "private-preview",
+        "browser-review",
+        "qurl"
+      ],
+      "triggers": [
+        "localhost",
+        "private-preview",
+        "browser-review",
+        "qurl",
+        "private",
+        "review",
+        "share",
+        "one",
+        "local",
+        "web",
+        "app",
+        "approved"
+      ],
+      "path": "skills/qurl-private-review/SKILL.md"
+    },
+    {
       "id": "radar-satellite-analysis",
       "canonical_id": "radar-satellite-analysis",
       "name": "radar-satellite-analysis",
@@ -78951,6 +79050,39 @@
       "path": "skills/supabase-automation/SKILL.md"
     },
     {
+      "id": "supabase-edge-function-caller-auth",
+      "canonical_id": "supabase-edge-function-caller-auth",
+      "name": "supabase-edge-function-caller-auth",
+      "description": "Audit and fix who can call each Supabase Edge Function: verify_jwt settings, withSupabase auth modes, role checks, webhook signatures and CORS, especially in Lovable/Bolt SPAs.",
+      "category": "security",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "supabase",
+        "edge-functions",
+        "jwt",
+        "auth",
+        "lovable",
+        "security"
+      ],
+      "triggers": [
+        "supabase",
+        "edge-functions",
+        "jwt",
+        "auth",
+        "lovable",
+        "security",
+        "edge",
+        "function",
+        "caller",
+        "audit",
+        "fix",
+        "who"
+      ],
+      "path": "skills/supabase-edge-function-caller-auth/SKILL.md"
+    },
+    {
       "id": "supabase-postgres-best-practices",
       "canonical_id": "supabase-postgres-best-practices",
       "name": "supabase-postgres-best-practices",
@@ -84938,6 +85070,38 @@
         "structured"
       ],
       "path": "skills/unslop-ui/SKILL.md"
+    },
+    {
+      "id": "unslop-ui-audit",
+      "canonical_id": "unslop-ui-audit",
+      "name": "unslop-ui-audit",
+      "description": "Use the Unslop UI design linter for static frontend diagnostics, contrast checks, and reviewing design presets.",
+      "category": "frontend",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "ui",
+        "accessibility",
+        "design-system",
+        "frontend",
+        "css"
+      ],
+      "triggers": [
+        "ui",
+        "accessibility",
+        "design-system",
+        "frontend",
+        "css",
+        "unslop",
+        "audit",
+        "linter",
+        "static",
+        "diagnostics",
+        "contrast",
+        "checks"
+      ],
+      "path": "skills/unslop-ui-audit/SKILL.md"
     },
     {
       "id": "unsloth-finetuning",

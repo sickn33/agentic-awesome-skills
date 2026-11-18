@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-17T21:14:19.000Z",
+  "generatedAt": "2026-11-18T21:51:20.000Z",
   "aliases": {
     "20-andruia-intelligence": "20-andruia-niche-intelligence",
     "accessibility-compliance-audit": "accessibility-compliance-accessibility-audit",
@@ -283,6 +283,7 @@
     "startup-business-opportunity": "startup-business-analyst-market-opportunity",
     "stellar-asset-compliance": "stellar-asset-clawback-compliance",
     "stellar-multisig-coordinator": "stellar-multisig-threshold-coordinator",
+    "supabase-edge-auth": "supabase-edge-function-caller-auth",
     "supabase-postgres-practices": "supabase-postgres-best-practices",
     "bash": "super-code/bash",
     "c": "super-code/c",
