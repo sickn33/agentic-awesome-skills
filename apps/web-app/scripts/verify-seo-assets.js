@@ -238,14 +238,14 @@ function extractMetaContent(htmlText, selectorType, selectorValue) {
 }
 
 function extractCanonicalHrefs(htmlText) {
-  const document = new JSDOM(String(htmlText ?? '')).window.document;
+  const document = typeof htmlText === 'string' ? JSDOM.fragment(htmlText) : htmlText;
   return [...document.querySelectorAll('link')]
     .filter((element) => (element.getAttribute('rel') || '').split(/\s+/).some((token) => token.toLowerCase() === 'canonical'))
     .map((element) => element.getAttribute('href')?.trim());
 }
 
 function extractExactMetaContents(htmlText, selectorType, selectorValue) {
-  const document = new JSDOM(String(htmlText ?? '')).window.document;
+  const document = typeof htmlText === 'string' ? JSDOM.fragment(htmlText) : htmlText;
   return [...document.querySelectorAll('meta')]
     .filter((element) => element.getAttribute(selectorType) === selectorValue)
     .map((element) => element.getAttribute('content')?.trim());
@@ -425,7 +425,7 @@ export function assertSitemap(urlText, { minSkillUrls = 1, requireHostedUrl = fa
 
 function extractJsonLdEntries(htmlText) {
   const entries = [];
-  const document = new JSDOM(String(htmlText ?? '')).window.document;
+  const document = typeof htmlText === 'string' ? JSDOM.fragment(htmlText) : htmlText;
   const scripts = [...document.querySelectorAll('script')].filter(
     (element) => (element.getAttribute('type') || '').trim().toLowerCase() === 'application/ld+json',
   );
@@ -719,23 +719,23 @@ export function assertPrerenderedRouteIdentities(routeUrls, distDir = 'dist', no
     );
     const filePath = safeUserPath(routePathToDistFile(parsed.pathname, normalizedRootPath), distDir);
     assert(fs.existsSync(filePath), `Missing prerendered page for sitemap route: ${parsed.pathname}. Expected ${filePath}.`);
-    const html = readFile(filePath, distDir);
-    const canonicalHrefs = extractCanonicalHrefs(html);
+    const document = JSDOM.fragment(readFile(filePath, distDir));
+    const canonicalHrefs = extractCanonicalHrefs(document);
     assert(canonicalHrefs.length === 1, `${routeUrl} must expose exactly one rel="canonical" link; got ${canonicalHrefs.length}.`);
     const canonical = canonicalHrefs[0];
     assert(
       canonical === routeUrl,
       `${routeUrl} must set rel="canonical" to exactly ${routeUrl}; got ${canonical || 'missing'}.`,
     );
-    assertExactMetaContent(html, 'property', 'og:url', routeUrl, routeUrl);
+    assertExactMetaContent(document, 'property', 'og:url', routeUrl, routeUrl);
     const docsSlug = parsed.pathname.slice(expectedRootPath.length).match(/^docs\/([^/]+)\/$/)?.[1];
     const socialImageUrl = docsSlug && DOCS_SOCIAL_GUIDES.includes(docsSlug)
       ? `${identityContext.catalogBaseUrl}/social/docs/${docsSlug}.png`
       : identityContext.socialImageUrl;
-    assertExactMetaContent(html, 'property', 'og:image', socialImageUrl, routeUrl);
-    assertExactMetaContent(html, 'name', 'twitter:image', socialImageUrl, routeUrl);
-    assertPrimaryRouteJsonLdIdentity(html, routeUrl);
-    assertJsonLdIdentityUrls(html, identityContext, routeUrl);
+    assertExactMetaContent(document, 'property', 'og:image', socialImageUrl, routeUrl);
+    assertExactMetaContent(document, 'name', 'twitter:image', socialImageUrl, routeUrl);
+    assertPrimaryRouteJsonLdIdentity(document, routeUrl);
+    assertJsonLdIdentityUrls(document, identityContext, routeUrl);
   }
 }
 
