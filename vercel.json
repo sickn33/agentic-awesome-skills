@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "npm ci && npm ci --prefix apps/web-app",
-  "buildCommand": "npm run app:build",
+  "installCommand": "npm ci && npm ci --prefix apps/web-app && python3 -m venv node_modules/.aas-build-python && node_modules/.aas-build-python/bin/python -m pip install --disable-pip-version-check --only-binary=:all: PyYAML==6.0.3",
+  "buildCommand": "ANTIGRAVITY_PYTHON=./node_modules/.aas-build-python/bin/python npm run index && npm run app:build",
   "outputDirectory": "apps/web-app/dist",
   "routes": [
     {
