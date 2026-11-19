@@ -49,7 +49,7 @@ Task: Implement [Feature Name] inside the existing repository.
 
 5. Verification Criteria:
    - Run `npx tsc --noEmit` and confirm 0 TypeScript errors.
-   - Verify keyboard operability: Tab key enters interactive elements; Enter/Space triggers actions; Escape closes overlays.
+   - Verify keyboard operability: Tab key enters interactive elements; Enter/Space triggers actions; Escape closes overlays (modal dialogs trap focus; popovers and menus do NOT trap focus).
 ```
 
 ---
@@ -113,9 +113,10 @@ Architectural Invariants:
 3. Validation & Recovery:
    - Validate form fields inline using schema constraints.
    - Show field-level validation errors on blur or submit.
-   - Provide explicit network-error simulation with a "Retry Submission" button.
+   - Provide network-error simulation with a "Retry Submission" button.
+   - Preserve draft form values in transient memory; never persist unencrypted sensitive payment or credential tokens in `localStorage` or `sessionStorage`.
 4. Accessibility:
-   - Preserve focus order when transitioning between wizard steps.
+   - Preserve natural document Tab navigation (do NOT trap keyboard focus inside in-page forms); advance focus programmatically to step heading or first input upon transition.
    - Ensure all form inputs have associated `<label>` elements and visible focus rings.
 ```
 

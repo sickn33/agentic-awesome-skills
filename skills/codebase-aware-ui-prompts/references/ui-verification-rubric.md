@@ -13,7 +13,9 @@ Tier 2: Static Code & Type Compilation (TypeScript strict mode, Zero any, Valid 
    ↓
 Tier 3: Component Behavior & State Completeness (Loading skeleton, Empty fallback, Error banner)
    ↓
-Tier 4: Accessibility Conformance (WCAG 2.2 Level AA, Keyboard focus rings, ARIA descriptors)
+Tier 4A: Automated Accessibility Scans (Axe-core rule audit, contrast calculations, ARIA syntax)
+   ↓
+Tier 4B: Manual & Semantic Conformance (WCAG 2.2 Level AA, keyboard navigation, screen readers)
    ↓
 Tier 5: Runtime Browser & Responsive Validation (375px/768px/1280px, No layout shift, Zero console errors)
 ```
@@ -23,7 +25,8 @@ Tier 5: Runtime Browser & Responsive Validation (375px/768px/1280px, No layout s
 | **Tier 1: Prompt Structure** | Checks that discovery findings, target paths, state checklist, and token invariants are specified. | Code review / AST inspection | All 7 discovery items present; no conflicting packages requested; mock data tagged `[MOCK_DATA]`. |
 | **Tier 2: Type Compilation** | Verifies strict TypeScript type-checking without runtime type holes. | `npx tsc --noEmit` | Exit code 0; 0 type errors; props extend `React.HTMLAttributes`; no untyped `any`. |
 | **Tier 3: Component States** | Verifies rendering of all applicable interaction and async states. | Storybook / React Testing Library | Loading skeleton renders during fetch; empty state displays when array is `[]`; error callout renders on rejection. |
-| **Tier 4: Accessibility** | Evaluates compliance with W3C WCAG 2.2 Level AA standards. | `@axe-core/playwright` / DevTools | Color contrast ≥ 4.5:1 (normal text); touch target ≥ 24px (mobile 44px); focus visible on Tab navigation; 0 axe violations. |
+| **Tier 4A: Automated A11y Scans** | Checks programmatic ARIA syntax, color contrast, and label associations. *(Note: Automated rule audits evaluate computable syntax and contrast only).* | `@axe-core/playwright` / Lighthouse | Zero automated axe violations across `wcag2a`, `wcag2aa`, `wcag21aa`, `wcag22aa`; color contrast ≥ 4.5:1. |
+| **Tier 4B: Semantic Conformance** | Evaluates behavioral WCAG 2.2 Level AA criteria: keyboard flow, screen reader clarity, no traps. | Keyboard testing / Screen Reader (NVDA, VoiceOver) | Full keyboard operability; zero keyboard traps in in-page forms (WCAG 2.1.2); modal-only focus containment; clear status announcements. |
 | **Tier 5: Browser Runtime** | Verifies layout stability, responsive reflow, and runtime console hygiene. | Playwright E2E / Chromium engine | Viewports (375px, 768px, 1280px) show no horizontal overflow; zero unhandled JS exceptions; CLS < 0.1. |
 
 ---
@@ -45,10 +48,14 @@ Before accepting AI-generated UI code into an existing repository, verify these 
 - [ ] Error banner provides human-readable diagnostic text and an immediate retry trigger.
 - [ ] All mock or sample records carry explicit `isMock: true` or `[MOCK_DATA]` labels.
 
-### Accessibility Criteria (WCAG 2.2)
+### Accessibility Criteria (WCAG 2.2 AA)
 - [ ] All form fields have programmatically associated `<label>` elements via `htmlFor` / `id`.
 - [ ] Validation errors are linked to their respective input fields via `aria-describedby` and marked with `aria-invalid="true"`.
-- [ ] Modals and sheets trap keyboard focus, support `Escape` key closing, and return focus to the trigger upon unmount.
+- [ ] Modal dialogs and sheets trap keyboard focus, set `aria-modal="true"`, support `Escape` key closing, and return focus to the trigger upon unmount.
+- [ ] In-page multi-step forms do NOT trap keyboard focus; document Tab order is preserved, and focus programmatically advances to the active step's heading or first interactive input.
+- [ ] Non-modal popovers and menus do NOT trap keyboard focus; menus support Arrow-key navigation and Tab exits cleanly to the next document element.
+- [ ] Automated accessibility scan (`axe-core`) passes with zero computable rule violations.
+- [ ] Manual keyboard audit confirms full operability without mouse and absence of keyboard traps across all interactive paths.
 - [ ] Interactive elements have minimum target sizes: 24×24px desktop, 44×44px mobile.
 
 ---
@@ -68,7 +75,10 @@ import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
 test.describe('Component Accessibility & Keyboard Navigation', () => {
-  test('Passes automated WCAG 2.2 Level AA accessibility scans', async ({ page }) => {
+  // CRITICAL DISTINCTION: Automated Axe scans evaluate computable syntactic and structural rules only.
+  // Zero Axe violations is a necessary baseline, but does NOT constitute verified WCAG 2.2 AA conformance.
+  // Full conformance requires manual evaluation of screen reader announcements, cognitive flow, reading order, and focus management.
+  test('Tier 4A: Zero automated rule violations (Axe-core rule audit)', async ({ page }) => {
     await page.goto('/components/feature-showcase');
 
     const accessibilityScanResults = await new AxeBuilder({ page })
@@ -78,7 +88,7 @@ test.describe('Component Accessibility & Keyboard Navigation', () => {
     expect(accessibilityScanResults.violations).toEqual([]);
   });
 
-  test('Operable strictly via keyboard navigation', async ({ page }) => {
+  test('Tier 4B: Operable strictly via keyboard navigation without traps', async ({ page }) => {
     await page.goto('/components/feature-showcase');
 
     // Tab into the interactive control
@@ -89,11 +99,11 @@ test.describe('Component Accessibility & Keyboard Navigation', () => {
     // Verify focus ring styling is active
     await expect(firstInteractive).toHaveCSS('outline-style', /(solid|auto)/);
 
-    // Press Escape to verify overlay dismissal if dialog/menu is open
-    const dialog = page.locator('[role="dialog"]');
-    if (await dialog.isVisible()) {
+    // If a modal dialog is open, verify focus containment and Escape dismissal
+    const modalDialog = page.locator('[role="dialog"][aria-modal="true"]');
+    if (await modalDialog.isVisible()) {
       await page.keyboard.press('Escape');
-      await expect(dialog).toBeHidden();
+      await expect(modalDialog).toBeHidden();
     }
   });
 });

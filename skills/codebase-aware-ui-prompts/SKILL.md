@@ -80,8 +80,9 @@ Do not demand that every component implement all interaction states. Apply state
 - **Interactive Triggers (Button, Tab, Toggle)**: Default, Hover, Focus-Visible, Active/Pressed, Disabled, Loading/Spinner. (Empty and Error do not apply).
 - **Data Displays & Collections (Table, Grid, List)**: Default, Loading (Layout-matching skeleton), Empty (System empty vs Filter empty), Error (Fetch failed + Retry CTA), Partial/Truncated.
 - **Form Controls & Inputs (Input, Select, Textarea)**: Default, Hover, Focus-Visible, Filled/Valid, Disabled, Read-only, Validation Error (with `aria-invalid` and `aria-describedby`).
-- **Overlays & Dialogs (Modal, Sheet, Popover)**: Closed, Opening, Opened (Focus trapped), Closing, Dismissed via Escape/Backdrop.
-- **Multi-Step & Async Flows (Checkout, Uploader)**: Step In-Progress, Step Completed, Validation Blocked, Async Submitting, Network Offline, Final Success.
+- **Modal Overlays (Modal Dialog, Sheet Drawer)**: Closed, Opening, Opened (Focus trapped within modal container), Closing, Dismissed via Escape/Backdrop, Focus restored to trigger on close.
+- **Popovers & Menus**: Closed, Opening, Opened (No focus trap; focus remains in document flow; light dismiss via Escape or click-outside; Arrow key navigation for menus).
+- **Multi-Step & Async Flows (Checkout, Uploader)**: Step In-Progress, Step Completed, Validation Blocked, Async Submitting, Network Offline, Final Success. (Natural Tab navigation preserved; no focus trapping in in-page forms).
 
 *See [references/ui-state-matrix.md](references/ui-state-matrix.md) for visual specifications and WCAG 2.2 accessibility attributes.*
 
@@ -94,7 +95,7 @@ Evaluate UI implementations across five independent tiers rather than relying so
 1. **Tier 1: Prompt Structural Completeness**: Discovery findings documented, no competing packages, token re-use enforced, mock data labeled.
 2. **Tier 2: Static Code & Type Compilation**: `npx tsc --noEmit` exits with code 0; props extend standard HTML attributes; zero untyped `any`.
 3. **Tier 3: Component Behavior & States**: Applicable interaction states (skeletons, empty illustrations, error banners) render under appropriate conditions.
-4. **Tier 4: Accessibility Conformance**: WCAG 2.2 Level AA compliance; minimum 4.5:1 text contrast; 24px/44px touch targets; visible `:focus-visible` rings; zero automated axe-core violations.
+4. **Tier 4: Accessibility Verification (Automated + Semantic)**: Zero automated axe-core rule violations (syntax, labels, contrast ≥ 4.5:1); manual evaluation for WCAG 2.2 Level AA behavioral criteria (keyboard navigation without traps, screen reader clarity, modal-only focus containment).
 5. **Tier 5: Runtime Browser Validation**: Responsive across 375px, 768px, and 1280px without horizontal overflow; no unhandled console exceptions; CLS < 0.1.
 
 *See [references/ui-verification-rubric.md](references/ui-verification-rubric.md) for evaluation rubrics and Playwright test fixtures.*
@@ -122,30 +123,31 @@ Task: Implement a Real-Time Incident Telemetry Drawer in `@/components/incidents
 3. Interaction States:
    - Loading: Render 4 shimmer skeleton rows while incident details load (`aria-busy="true"`).
    - Error: If fetch fails, show a high-contrast alert banner with a "Retry Connection" button (`role="alert"`).
-   - Keyboard Focus: Focus must be trapped inside the drawer; pressing `Escape` must trigger `onClose()`.
+   - Keyboard Focus: Focus must be trapped inside the drawer while open (`aria-modal="true"`); pressing `Escape` must trigger `onClose()`, and focus must return to the trigger upon closing.
 ```
 
 ### Example 2: Incomplete Requirements with Visible Assumptions (Greenfield Specification)
 
 ```markdown
-Task: Create an Analytics Export Modal.
+User Feature Request: "Add an export option for our analytics reports."
 
-[CONFIRMED CONSTRAINTS]
-- Target Stack: React 19 + Tailwind CSS v3.4 + Radix UI Dialog.
-- Reused Tokens: `bg-background`, `border-border`, `text-foreground`.
-- Export Formats: CSV and JSON.
+[CONFIRMED PRODUCT REQUIREMENT]
+- Product Goal: Provide users with an interface action to export analytics report data from the dashboard.
 
 [WORKING ASSUMPTIONS - REQUIRE USER VALIDATION]
-- Assumption A: Date range defaults to "Last 30 Days" if unselected.
-- Assumption B: Large exports (> 10,000 rows) trigger an asynchronous email delivery flow rather than direct browser download.
-- Assumption C: User possesses standard read-only export permissions; no enterprise role-based access control (RBAC) gating applied.
+- Assumption A (Presentation Pattern): Deliver the feature as a modal dialog (`@/components/ui/dialog`) triggered from the analytics header, rather than a dedicated export page or dropdown action.
+- Assumption B (Technology Foundation): Assume target stack is React 19 + Tailwind CSS v3.4 + Radix UI Dialog, using semantic tokens (`bg-background`, `border-border`, `text-foreground`).
+- Assumption C (Export Formats): Provide CSV and JSON export options (PDF / Excel generation deferred until user confirms server capacity).
+- Assumption D (Date Range): Default export date range to "Last 30 Days" if no custom filter is active.
+- Assumption E (Delivery Mechanism): Exports < 10,000 rows download directly in-browser; exports >= 10,000 rows trigger an asynchronous background job with email delivery to avoid browser timeout.
+- Assumption F (Permissions): User possesses standard report export permissions; advanced role-based access control (RBAC) restrictions are not yet specified.
 
 Implementation Directive:
-- Implement the modal UI honoring confirmed constraints.
-- Render an informational badge labeled "[MOCK_SPEC: Async Email Flow]" next to large export options to clearly demarcate unconfirmed assumptions.
+- Structure the prompt to flag unconfirmed technical stack and product assumptions to the product owner before merging.
+- Render an informational badge labeled "[WORKING_ASSUMPTION: Async Email Flow]" next to large export options so unverified behavior is immediately recognizable in review.
 ```
 
-### Example 3: Accessible Multi-Step Form with Error Recovery (Full-Stack Builder)
+### Example 3: Accessible Multi-Step Form with Privacy-Conscious Recovery (Full-Stack Builder)
 
 ```markdown
 Build a 3-step Vendor Onboarding Flow (`/onboarding/vendor`):
@@ -154,10 +156,10 @@ Build a 3-step Vendor Onboarding Flow (`/onboarding/vendor`):
 - Step 3: Compliance Certification & Document Upload.
 
 State & Accessibility Architecture:
-- Step Progress: Render `<ol role="list">` with `aria-current="step"` on the active step.
-- Validation: Validate on field blur. When invalid, mark `<input aria-invalid="true" aria-describedby="[field]-error">` and display inline error message.
-- Keyboard Trap: Ensure `Enter` key submits the current step; `Tab` loops strictly within active form controls.
-- Network Failure Recovery: If submission times out, persist entered values in `sessionStorage`, show a contextual recovery banner with "Retry Submission", and prevent data loss.
+- Step Progress: Render `<ol role="list">` with `aria-current="step"` on the active step indicator.
+- Validation: Validate on field blur. When invalid, mark `<input aria-invalid="true" aria-describedby="[field]-error">` and display an inline error message.
+- Keyboard Navigation: Preserve natural document Tab flow (do NOT trap keyboard focus inside in-page forms). When the user advances to the next step, programmatically shift focus to the first interactive input or step heading. `Enter` submits the active step's primary action.
+- Privacy-Conscious Failure Recovery: If submission times out or fails, retain uncommitted form state in transient component memory during the active session. Never persist sensitive banking credentials (IBAN, routing, tax IDs) to unencrypted browser storage (`sessionStorage` or `localStorage`). Mask displayed account numbers, render a contextual error banner with "Retry Submission", and require session re-authentication if the auth token expires.
 - Synthetic Evidence: Label all mock banking verification tokens with `[MOCK_DATA]`.
 ```
 

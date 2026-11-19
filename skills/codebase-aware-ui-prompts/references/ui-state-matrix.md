@@ -13,8 +13,11 @@ This matrix defines the **applicable interaction states by component archetype**
 | **Interactive Triggers**<br>(Button, IconButton, Tab, Segmented Control) | • Default<br>• Hover<br>• Focus-Visible<br>• Active / Pressed<br>• Disabled<br>• Loading / Spinner | • Empty<br>• Error (handled by enclosing form/toast) | `disabled`, `aria-disabled="true"`, `aria-busy="true"`, `:focus-visible` ring |
 | **Data Displays & Collections**<br>(Data Table, Metric Grid, Card Feed, List) | • Default (Populated)<br>• Loading (Skeleton matching dimensions)<br>• Empty (Zero records in system)<br>• Filtered-Empty (0 search results)<br>• Error (Fetch failed + Retry CTA)<br>• Partial / Degraded | • Active / Pressed<br>• Hover (unless interactive rows)<br>• Disabled | `aria-busy="true"`, `role="status"` on empty, `role="alert"` on fetch error |
 | **Input & Form Controls**<br>(Text Input, Select, Textarea, Combobox) | • Default (Empty/Placeholder)<br>• Hover<br>• Focus-Visible<br>• Filled / Valid<br>• Disabled<br>• Read-Only<br>• Validation Error (inline message) | • Loading Skeleton (form fields remain visible)<br>• Empty State Illustration | `aria-invalid="true"`, `aria-describedby="[id]"`, `aria-required="true"`, `aria-disabled="true"` |
-| **Overlays & Dialogs**<br>(Modal Dialog, Sheet Drawer, Popover, Menu) | • Closed / Exited<br>• Opening / Enter Transition<br>• Opened (Focus Trapped)<br>• Closing / Exit Transition<br>• Dismissed via Escape key / Backdrop | • Disabled overlay root<br>• Empty overlay (must not mount blank) | `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, `aria-describedby`, focus trap |
-| **Multi-Step & Async Flows**<br>(Checkout Wizard, Multi-File Uploader) | • Step In-Progress<br>• Step Completed<br>• Validation Blocked<br>• Async Submitting<br>• Network Error / Offline<br>• Final Success / Receipt | • Read-only wizard | `aria-current="step"`, `role="progressbar"`, `aria-valuenow`, `role="alert"` |
+| **Modal Overlays**<br>(Modal Dialog, Sheet Drawer) | • Closed / Exited<br>• Opening / Enter Transition<br>• Opened (Focus Trapped within modal)<br>• Closing / Exit Transition<br>• Dismissed via Escape key / Backdrop click | • Disabled overlay root<br>• Empty overlay (must not mount blank) | `role="dialog"`, `aria-modal="true"`, `aria-labelledby`, `aria-describedby`, focus trap within modal container, focus restored to trigger on close |
+| **Non-Modal Dialogs**<br>(Floating Inspector, Docked Panel, Chat Window) | • Closed / Minimized<br>• Opened (Page remains interactive; no focus trap)<br>• Resized / Dragged<br>• Dismissed via Close CTA or Escape | • Focus trap (must NOT trap focus)<br>• Modal backdrop / `inert` document | `role="dialog"`, `aria-modal="false"` (or omitted), `aria-labelledby`, no focus trap (allows Tab to exit into background document) |
+| **Popovers & Disclosures**<br>(Context Card, Tooltip-Popover, Date Picker Popup) | • Closed<br>• Opened (Light dismiss on click-outside or Escape)<br>• Closing | • Focus trap (must NOT trap focus)<br>• `aria-modal="true"`<br>• Blocking backdrop | Native HTML `popover="auto"` or `aria-expanded` + `aria-controls` on trigger; no focus trap; Escape key closes and returns focus to trigger |
+| **Dropdown & Context Menus**<br>(Action Menu, Select Options, Context Menu) | • Closed<br>• Opened<br>• Focused item (Active descendant or roving tabindex)<br>• Submenu opened<br>• Dismissed via Escape, Tab, or item activation | • Focus trap (Tab exits menu naturally)<br>• `aria-modal="true"` | `role="menu"`, items `role="menuitem"`, Arrow Up/Down navigation, Home/End keys, Tab exits and closes menu, Escape closes and focuses trigger |
+| **Multi-Step Forms & Async Flows**<br>(Onboarding Wizard, Multi-Step Checkout, File Uploader) | • Step In-Progress<br>• Step Completed<br>• Validation Blocked<br>• Async Submitting<br>• Network Error / Offline<br>• Final Success / Receipt | • Keyboard focus trap (in-page forms must NEVER trap focus)<br>• Read-only wizard | `aria-current="step"`, `role="progressbar"`, programmatic focus shift to first interactive input of new step, transient in-memory recovery (no sensitive data in `sessionStorage`) |
 
 ---
 
@@ -106,3 +109,46 @@ When a network fetch or data mutation fails:
 - Explain what happened in human-readable terms.
 - Provide an immediate "Retry" button that re-executes the fetch handler.
 - Keep previous cached data visible where possible (stale-while-revalidate), rather than replacing the screen with a blank error page.
+
+### F. Overlay & Disclosure Semantics: Modal vs Non-Modal vs Popover vs Menu
+Never treat all floating panels identically. Applying `aria-modal="true"` or keyboard traps to popovers or dropdown menus breaks standard keyboard navigation:
+
+1. **Modal Dialogs & Modal Sheets (`role="dialog"`, `aria-modal="true"`)**:
+   - **When to use**: Blocking flows requiring explicit user completion or dismissal before returning to the underlying page (e.g., confirmations, destructive actions, checkout modals).
+   - **Focus Containment**: Focus MUST be trapped within the dialog container while mounted (`Tab` cycles through dialog controls only).
+   - **Background Inertness**: The rest of the document must be marked `inert` or `aria-hidden="true"`.
+   - **Dismissal & Restoration**: Pressing `Escape` or clicking the backdrop dismisses the dialog. Focus MUST be programmatically restored to the trigger element that opened it.
+
+2. **Non-Modal Dialogs (`role="dialog"`, `aria-modal="false"`)**:
+   - **When to use**: Floating palettes, docked video players, floating inspectors, or scratchpads where the user needs to interact with both the dialog and background page content simultaneously.
+   - **Focus Containment**: Focus MUST NOT be trapped. Pressing `Tab` must allow the user to navigate out of the dialog into the rest of the document.
+   - **Dismissal**: Provide an explicit close button. Do NOT mark the background document `inert`.
+
+3. **Popovers & Disclosures (`popover="auto"` or `aria-expanded` + `aria-controls`)**:
+   - **When to use**: Rich tooltips, contextual info cards, filter flyouts, date picker popups.
+   - **Focus Containment**: Focus is NOT trapped. Popovers rely on native "light dismiss" (closing on click-outside or `Escape`).
+   - **Semantics**: Do not use `role="dialog"` or `aria-modal="true"`. Use native HTML `popover="auto"` or pair the trigger's `aria-expanded="true|false"` with `aria-controls="[popover-id]"`.
+
+4. **Dropdown & Context Menus (`role="menu"`, `role="menuitem"`)**:
+   - **When to use**: Action menus, navigation dropdowns, context menus.
+   - **Keyboard Navigation**: Use roving `tabindex` or `aria-activedescendant`. Arrow keys (`ArrowUp` / `ArrowDown`) navigate between menu items.
+   - **Tab Key Handling**: The `Tab` key MUST NOT cycle within the menu; pressing `Tab` immediately closes the menu and advances focus to the next sequential interactive element in the document.
+   - **Dismissal**: `Escape` closes the menu and returns focus to the menu trigger button.
+
+### G. In-Page Multi-Step Form Navigation & Privacy-Conscious Recovery
+
+1. **No Focus Traps in In-Page Forms (WCAG 2.1.2)**:
+   - In-page multi-step forms live in the regular document flow and MUST NOT trap keyboard focus. Users must remain free to Tab to page headers, skip links, main navigation, and help resources.
+   - **Step Transitions**: When advancing from Step $N$ to Step $N+1$, programmatically move focus to the step heading (`<h2 tabIndex={-1}>`) or the first interactive input of the new step:
+   ```tsx
+   // Focus management upon step transition
+   const stepHeaderRef = useRef<HTMLHeadingElement>(null);
+   useEffect(() => {
+     stepHeaderRef.current?.focus();
+   }, [currentStep]);
+   ```
+
+2. **Privacy-Conscious Form Recovery**:
+   - **Zero Sensitive Data in Web Storage**: Never write unencrypted sensitive financial or personal data (IBANs, routing numbers, credit card numbers, tax IDs, passwords) to `localStorage` or `sessionStorage`. Both storage APIs are accessible to any running script and vulnerable to XSS.
+   - **Transient In-Memory State**: Maintain form drafts in React component state or context memory during the active user session.
+   - **Network Timeout & Error Recovery**: If an API submission times out, keep the in-memory draft intact, mask displayed sensitive fields (e.g. `•••• •••• •••• 1234`), render a contextual banner with a "Retry Submission" button, and prompt for re-authentication if the user session has expired.
