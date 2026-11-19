@@ -6,7 +6,7 @@ The public catalog is a static Vite application served from Vercel. The reposito
 
 Use a Vercel preview deployment to review a candidate before production promotion. Protect preview deployments with Vercel Deployment Protection or the project's current equivalent; verify authentication does not block the production hostname. The Vercel project settings are managed in the dashboard and should be reviewed by an owner.
 
-Vercel builds the catalog from the skill sources and pack definitions in its Git checkout. The commands in `vercel.json` install the index generator's pinned Python dependency in the build workspace and refresh the index before Vite copies and prerenders assets. The generated registry files committed for distribution remain release-owned. To reproduce a build failure, run the Vercel install and build commands in a disposable checkout of the affected SHA.
+Vercel builds the catalog from the skill sources and pack definitions in its Git checkout. The commands in `vercel.json` install the index generator's pinned Python dependency in the build workspace and refresh the index before Vite copies and prerenders assets. The generated registry files committed for distribution remain release-owned. The public sitemap lists every active skill once. The legacy redirect site keeps its ranked 180-skill sitemap while generating redirects for every current skill. To reproduce a build failure, run the Vercel install and build commands in a disposable checkout of the affected SHA.
 
 ## Incident response
 

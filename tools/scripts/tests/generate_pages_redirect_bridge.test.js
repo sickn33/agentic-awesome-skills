@@ -269,6 +269,19 @@ try {
   assert.strictEqual(missingOutput.status, 1);
   assert.match(missingOutput.stderr, /--output is required/);
 
+  const expandedIds = Array.from({ length: 182 }, (_, index) => `active-${index}`);
+  writeSkills(skillsIndexPath, expandedIds);
+  const expandedUrls = [current, ...expandedIds.map(id => `${current}skill/${id}/`)];
+  const expandedOptions = bridgeOptions(path.join(fixtureRoot, '.codex', 'expanded'), {
+    expectedRoutes: 181, expectedSkills: expandedIds.length,
+  });
+  fs.writeFileSync(sitemapPath, sitemap(expandedUrls.slice(0, -1)));
+  assert.throws(() => generateBridge(expandedOptions), /must include every current skill/);
+  fs.writeFileSync(sitemapPath, sitemap(expandedUrls));
+  const expanded = generateBridge(expandedOptions);
+  assert.strictEqual(expanded.legacy_sitemap_route_count, 181);
+  assert.strictEqual(expanded.route_count, 183);
+
   const productionOutputRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'pages-redirect-production-'));
   try {
     const productionOutput = path.join(productionOutputRoot, 'bridge');
