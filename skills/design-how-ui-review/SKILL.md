@@ -33,6 +33,10 @@ Use for a screen, prototype or short flow that needs a pre-ship review. For toke
 
 A scoped audit gives no accessibility certification. Stay read-only on real accounts. Use a test environment for write paths, and keep captured private data out of the report.
 
+## Bundled resources
+
+Use the [bundled review criteria](references/criteria.md) for the visual, interaction, accessibility and responsive checks.
+
 ## Source
 
 Adapted from [design.how](https://github.com/arla6ka/design.how/tree/1ce5304466db2ba47a7a7524603e86df77c702bd/skills/ui-review) by Arlan Marat. See [MIT license](LICENSE).

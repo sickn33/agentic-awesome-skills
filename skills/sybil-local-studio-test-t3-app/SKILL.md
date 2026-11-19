@@ -32,6 +32,10 @@ Use when verifying browser pairing or web and desktop UI in a local T3 Code-deri
 
 Requires the T3 Browser panel and a compatible checkout. Production user state and external sharing are outside routine verification. Use the mobile skill for device testing.
 
+## Bundled resources
+
+Use the [bundled SQLite fixture guide](references/sqlite-fixtures.md) when inspecting or seeding worktree-local state. The installed `agents/openai.yaml` contains the app-facing metadata. The T3 Code checkout, its Browser panel and its normal dev runner are the target environment.
+
 ## Source
 
 Adapted from the [pinned skill tree](https://github.com/sybil-solutions/local-studio/tree/f65c8af78582f741b62546c93d7c66439f0cd5b1/.agents/skills/test-t3-app). See the [MIT license](LICENSE).

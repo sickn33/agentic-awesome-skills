@@ -32,6 +32,10 @@ On a danger alert, `#ad2139` matches both `--badge-brand` and `--text-danger` in
 
 This is a report. Do not edit files or create tokens. A missing theme or unresolved computed style lowers confidence and must appear in the result.
 
+## Bundled resources
+
+Apply the bundled [mapping rules](references/mapping-rules.md). Use the glossary in the installed `design-how-build-design-system` sibling when available.
+
 ## Source
 
 Adapted from [design.how](https://github.com/arla6ka/design.how/tree/1ce5304466db2ba47a7a7524603e86df77c702bd/skills/token-mapping) by Arlan Marat. See [MIT license](LICENSE).

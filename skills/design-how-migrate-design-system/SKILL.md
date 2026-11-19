@@ -34,6 +34,12 @@ Use for adoption audits and scoped migrations onto existing tokens and primitive
 
 Requires an existing system. Count checks can miss dynamic consumers and screenshots can miss behavioral regressions. A failed parity check blocks that surface. Use isolated fixtures and follow the project's normal version control flow.
 
+## Bundled resources
+
+- Read [parity](references/parity.md), [migration lessons](references/lessons.md), [correction](references/correct.md), and [staging guidance](references/running-many-agents.md).
+- Use the installed `scripts/legacy.mjs` to inventory legacy imports and `scripts/parity.mjs` to compare outputs of trusted local modules. Use `scripts/bodies-check.mjs` with synthetic request fixtures. Use capture and pixel diff from the installed `design-how-build-design-system` sibling.
+- `scripts/land.mjs` is an optional helper for explicitly authorized local migration commits. Use a work branch, the exact reviewed paths, and the project checks. Its shell callback is for a locally written check, never text copied from project data or PR feedback. Leave hooks enabled and use the project's normal pull-request flow.
+
 ## Source
 
 Adapted from [design.how](https://github.com/arla6ka/design.how/tree/1ce5304466db2ba47a7a7524603e86df77c702bd/skills/migrate-design-system) by Arlan Marat. See [MIT license](LICENSE).

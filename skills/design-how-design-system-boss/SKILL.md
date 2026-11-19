@@ -42,6 +42,10 @@ Use when an existing app has broad UI drift and the user has not named a single 
 
 Requires an existing UI. A broad cleanup request carries no permission for a whole-app migration, external pushes or deployment.
 
+## Bundled resources
+
+Read a bundled playbook before routing: [build](playbooks/build.md), [migrate](playbooks/migrate.md), [component](playbooks/component.md), or [review](playbooks/review.md). Playbooks refer to the AAS sibling IDs installed with the Design.how pack. For shared definitions and taste settings, use the copies shipped with `design-how-build-design-system`. Use delegation only when the current host and user authorize it.
+
 ## Source
 
 Adapted from [design.how](https://github.com/arla6ka/design.how/tree/1ce5304466db2ba47a7a7524603e86df77c702bd/skills/design-system-boss) by Arlan Marat. See [MIT license](LICENSE).

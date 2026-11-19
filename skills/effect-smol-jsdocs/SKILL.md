@@ -30,6 +30,10 @@ Document a public combinator with one runnable error-handling example and a veri
 
 Requires the relevant Effect workspace and its versioned tools. Use local project policy and authorized fixtures. Results cover only the checked packages and environments.
 
+## Bundled resources
+
+Use the bundled local references for the applicable branch of the workflow: [categories](categories.md), [declarations](declarations.md), [examples](examples.md). Run commands against the target Effect workspace.
+
 ## Source
 
 Adapted from the [pinned skill tree](https://github.com/sybil-solutions/local-studio/tree/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/.agents/skills/jsdocs). See the [MIT license](LICENSE).

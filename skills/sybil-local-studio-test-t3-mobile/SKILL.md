@@ -33,6 +33,18 @@ Use when the changed behavior must be verified on the native iOS or Android clie
 
 Requires a compatible dev client and Device panel. A browser pass does not establish native behavior. Do not use real user state or expose the fixture endpoint beyond the approved target.
 
+## Bundled resources
+
+Resolve `SKILL_DIR` to the directory of this installed skill, independent of the project working directory.
+
+Use the [bundled SQLite fixture guide](references/sqlite-fixtures.md) for synthetic data. From the target T3 Code checkout, invoke the installed helper with the currently approved fixture and the Device panel's returned command and arguments:
+
+```sh
+bash "$SKILL_DIR/scripts/pair-client.sh" "$server_port" "$base_dir" "$mobile_origin" "$agent_device_command" "${agent_device_target_args[@]}"
+```
+
+It mints a short-lived pairing credential and opens the test client's pairing route. Use the target checkout's native-client helper to build the app. The bundled `agents/openai.yaml` describes the skill in the client.
+
 ## Source
 
 Adapted from the [pinned skill tree](https://github.com/sybil-solutions/local-studio/tree/f65c8af78582f741b62546c93d7c66439f0cd5b1/.agents/skills/test-t3-mobile). See the [MIT license](LICENSE).
