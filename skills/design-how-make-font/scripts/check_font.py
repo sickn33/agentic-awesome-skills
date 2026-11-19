@@ -28,6 +28,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+from urllib.parse import urlsplit
 
 sys.dont_write_bytecode = True  # keep the skill folder free of __pycache__
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -235,10 +236,24 @@ def gate_validity(G, path, f):
         G.add("validity", "fontbakery", None, "not installed, not run (pip install fontbakery)")
 
 
+def is_ofl_url(value):
+    try:
+        url = urlsplit(value)
+    except ValueError:
+        return False
+    if url.scheme not in {"http", "https"}:
+        return False
+    host = url.netloc.lower()
+    if host in {"openfontlicense.org", "www.openfontlicense.org"}:
+        return True
+    return host == "scripts.sil.org" and url.path.rstrip("/") == "/OFL"
+
+
 def gate_licence(G, f, base, family, package):
     names = {r.nameID: r.toUnicode() for r in f["name"].names if r.platformID == 3}
     G.add("licence", "OFL notice in name 13", "Open Font License" in names.get(13, ""), names.get(13, "")[:60])
-    G.add("licence", "OFL URL in name 14", "openfontlicense.org" in names.get(14, "") or "scripts.sil.org/OFL" in names.get(14, ""), names.get(14, ""))
+    license_url = names.get(14, "")
+    G.add("licence", "OFL URL in name 14", is_ofl_url(license_url), license_url)
     G.add("licence", "no trademark record (name 7)", 7 not in names, names.get(7, ""))
     bnames = {r.nameID: r.toUnicode() for r in base["name"].names if r.platformID == 3}
     base_fam = (bnames.get(16) or bnames.get(1) or "").strip()

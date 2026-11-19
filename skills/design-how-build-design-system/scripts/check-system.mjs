@@ -369,10 +369,11 @@ function jsxTags(code, mask) {
 }
 
 const attr = (tag, name) => tag.attrs.find((a) => a.name === name);
+const escapeRegExp = (text) => text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 // Where an opening tag's element ends: the index of its matching </Name>, or -1 when it closes itself or never closes.
 function closingTag(code, tags, t) {
   if (code.slice(t.end - 2, t.end) === "/>") return -1;
-  const esc = t.name.replace(/[.$]/g, "\\$&");
+  const esc = escapeRegExp(t.name);
   const events = tags.filter((u) => u.name === t.name && u.pos > t.pos && code.slice(u.end - 2, u.end) !== "/>").map((u) => [u.pos, 1]);
   for (const m of code.slice(t.end).matchAll(new RegExp(`</${esc}\\s*>`, "g"))) events.push([t.end + m.index, -1]);
   events.sort((a, b) => a[0] - b[0]);
@@ -965,7 +966,7 @@ function checkFile(cfg, rel, report, stockLines) {
         if (/=\s*$/.test(inner.slice(0, m.index))) continue;
         if (!(lit(a) || lit(b)) || !(lit(a) || a.trim().startsWith("<")) || !(lit(b) || b.trim().startsWith("<"))) continue;
         const cond = m[1].replace(/^!\s*/, ""), last = cond.split(".").pop();
-        const state = ["disabled", "loading", "pending", "isLoading", "isPending", "busy", "aria-busy", "aria-disabled"].map((n) => attr(t, n)).filter((x) => x && x.expr).some((x) => new RegExp(`(^|[^\\w$.])${cond.replace(/[.$]/g, "\\$&")}(?![\\w$])`).test(x.value));
+        const state = ["disabled", "loading", "pending", "isLoading", "isPending", "busy", "aria-busy", "aria-disabled"].map((n) => attr(t, n)).filter((x) => x && x.expr).some((x) => new RegExp(`(^|[^\\w$.])${escapeRegExp(cond)}(?![\\w$])`).test(x.value));
         if (state || /(load|sav|pend|submit|busy|send|delet|creat|updat|process|progress|work)/i.test(last))
           hit(t.pos + (t.end - t.pos) + m.index, "trap/loading-label-swap", `<${t.name}> label swaps on ${cond}: ${a.trim().slice(0, 30)} / ${b.trim().slice(0, 30)}`);
       }
@@ -1319,7 +1320,7 @@ function ratchetCompare(old, now) {
 const ratchetCounts = (findings) => { const c = {}; for (const f of findings) if (!f.warn) c[f.rule] = (c[f.rule] || 0) + 1; return c; };
 // Findings as a Markdown table, for a job summary.
 function summaryMarkdown(title, list, extra = []) {
-  const cell = (x) => String(x).replace(/\|/g, "\\|").replace(/\r?\n/g, " ");
+  const cell = (x) => String(x).replace(/[\\|]/g, "\\$&").replace(/\r\n?|\n/g, " ");
   const rows = list.map((f) => `| \`${cell(f.file)}\` | ${f.line} | \`${f.rule}\` | ${cell(shown(f))} | ${cell(fixFor(f.rule))} |`);
   return `### ${title}\n\n${rows.length ? `| File | Line | Rule | Found | Fix |\n|---|---|---|---|---|\n${rows.join("\n")}\n` : "Nothing found.\n"}${extra.length ? `\n${extra.map((e) => `- ${cell(e)}`).join("\n")}\n` : ""}\n`;
 }
@@ -1493,12 +1494,16 @@ function unitTests() {
     t("traps.md ids", ids.length > 0 && !dup.length, dup.length ? `listed twice: ${dup.join(", ")}` : `${ids.length} trap ids, each once`);
   } else console.log("self-test: no references/traps.md beside this script, so the duplicate trap id check is skipped");
   t("rules explained", Object.keys(RULES).every((r) => WHY[r]), `${Object.keys(RULES).filter((r) => !WHY[r]).join(", ") || "every rule has a why"}`);
+  const regexText = String.raw`form.State$\[label]`;
+  t("literal regex text", new RegExp(`^${escapeRegExp(regexText)}$`).test(regexText), escapeRegExp(regexText));
   const rc = ratchetCompare({ "rule/a": 3, "rule/b": 2, "rule/d": 1 }, { "rule/a": 4, "rule/b": 1, "rule/c": 1 });
   t("ratchet compare", JSON.stringify(rc.rose.map((x) => x[0])) === '["rule/a","rule/c"]' && JSON.stringify(rc.fell.map((x) => x[0])) === '["rule/b","rule/d"]' && JSON.stringify(rc.next) === '{"rule/a":3,"rule/b":1}', JSON.stringify(rc));
   const ex = expiredRows({ "a.tsx": { "rule/raw-value": { "#fff": { count: 1, removeBy: "2000-01-01" }, "#000": { count: 1, removeBy: "2999-01-01" }, "#111": 2 } }, "b.tsx": { "rule/css-px": 3 } }, "2026-01-01");
   t("removeBy expiry", ex.length === 1 && ex[0].key === "#fff" && capOf({ count: 2 }) === 2 && capOf(3) === 3, JSON.stringify(ex));
   const md = summaryMarkdown("t", [{ file: "a|b.tsx", line: 2, rule: "rule/raw-value", detail: "#fff", nearest: "--bg (deltaE 0.0)" }]);
   t("summary markdown", md.includes("| `a\\|b.tsx` | 2 | `rule/raw-value` | #fff (nearest token --bg (deltaE 0.0)) |"), md.split("\n")[4] || md);
+  const mdEscaped = summaryMarkdown("t", [{ file: "a.tsx", line: 2, rule: "rule/raw-value", detail: String.raw`a\|b` }]);
+  t("summary escapes preceding backslashes", mdEscaped.includes(String.raw`a\\\|b`), mdEscaped.split("\n")[4]);
   const lintDir = realpathSync(mkdtempSync(join(tmpdir(), "check-system-lint-")));
   try {
     writeFileSync(join(lintDir, "xlint.config.mjs"), "export default [];\n");

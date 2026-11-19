@@ -40,7 +40,7 @@ Use Python in a project-local environment with FontTools, Brotli, uharfbuzz, num
 
 1. Run `scripts/measure_font.py` or `scripts/measure_image.py` for the permitted aggregate inputs. Use `scripts/make_targets.py` to build the targets and `scripts/find_foundation.py` to shortlist allowed base fonts.
 2. Run `scripts/fit_font.py` and `scripts/space_font.py` on the approved base. Pass input and output paths explicitly. Review the fit and spacing logs.
-3. Use `scripts/package.py`, `scripts/check_font.py`, `scripts/font_book.py`, and `scripts/render_book.mjs` for the package, verification and type specimen. Start each CLI with its help before assembling the pipeline.
+3. Use `scripts/package.py`, `scripts/check_font.py`, `scripts/font_book.py`, and `scripts/render_book.mjs` for the package, verification and type specimen. Start each CLI with its help before assembling the pipeline. The license check accepts HTTP(S) URLs on the OFL site and the legacy SIL OFL page.
 4. The bundle includes [measuring](references/measuring.md), [foundation](references/foundation.md), [fitting](references/fitting.md), [spacing](references/spacing.md), [licensing](references/licensing.md), [checks](references/checks.md), and [font book](references/font-book.md) instructions.
 
 ## Source
