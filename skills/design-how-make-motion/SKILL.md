@@ -34,6 +34,12 @@ Use for a feature demo, launch video or explainer built around product screens, 
 
 Needs a working renderer and user-approved tooling, inputs and licenses. If rendering is unavailable, deliver the timing sheet and storyboard with the missing verification named. Keep the files local unless publication was requested.
 
+## Bundled resources
+
+Copy the complete `template/` into a fresh project directory. Rename `gitignore.template` to `.gitignore` in the copy. Install its pinned dependencies from that copy with `npm ci`. Node, FFmpeg and Chromium are needed as described in the bundled [render pipeline](references/pipeline.md). Retain the MIT notice when redistributing the template. The original example composition is a runnable fixture. Follow [story](references/story.md), [theme](references/theme.md), [motion](references/motion.md), [audio](references/sound.md), and [review](references/review.md) for the production steps.
+
+Run `npm run typecheck` and `npm run stills -- example` from the copied template before authoring. Use the bundled audio and review commands on your composition. Match Remotion's current licensing to the project and use only authorized brand inputs.
+
 ## Source
 
 Adapted from [design.how](https://github.com/arla6ka/design.how/tree/1ce5304466db2ba47a7a7524603e86df77c702bd/skills/make-motion) by Arlan Marat. See [MIT license](LICENSE).

@@ -35,6 +35,15 @@ Use when a local vLLM, SGLang, llama.cpp, MLX or comparable server misses a thro
 
 Results depend on the tested model, accelerator and load. Use fixed timeouts and local logs. Starting jobs or changing profiles requires the authorized test environment. Publication, external endpoints and model downloads need separate scope.
 
+## Bundled resources
+
+Resolve `SKILL_DIR` to the directory of this installed skill, independent of the project working directory.
+
+- Calculate throughput and memory estimates locally with `python3 "$SKILL_DIR/scripts/ceiling.py" "$SKILL_DIR/examples/ceiling-ornith-b390.json"`. These values describe the included example.
+- Copy [the existing-server fixture](examples/config-existing-server.json) into the experiment directory, set a project-owned loopback URL and the model, then use `python3 "$SKILL_DIR/scripts/bench.py" run config.json`. You can run `bash "$SKILL_DIR/scripts/queue.sh" ctl-a cand ctl-b` on Linux with `flock` from a run directory containing the corresponding configs.
+- The [Docker example](examples/config-sglang-docker.json) is a template. Substitute reviewed launch and stop arguments and a disposable unique container before use. The harness executes those arrays. Use explicit `["bash", "/absolute/installed/skill/scripts/mem.sh", "your-container"]` for an authorized memory probe. Do not elevate permissions or touch an unrelated server.
+- Use the included [ceilings](references/ceilings.md), [method](references/methodology.md), [levers](references/levers.md), [platform notes](references/gotchas.md), and [qualification](references/publishing.md).
+
 ## Source
 
 Adapted from the [pinned skill tree](https://github.com/sybil-solutions/inference-optimisation-skill/tree/fda968e7fc1996aa23c67139c755fe541c9d4be0/skills/inference-optimisation). See the [MIT license](LICENSE).

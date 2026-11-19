@@ -33,6 +33,10 @@ Use for the vgpu TypeScript library and its WebGPU rendering or compute paths. U
 
 Use installed package docs or the official documentation. API paths vary by release. Keep testing local and get authorization before adding dependencies or external GPU infrastructure.
 
+## Bundled resources
+
+The complete vgpu 0.3.1 [reference index](reference-index.md) and docs are included. For that API version, start with [getting started](references/guides/getting-started.docs.md), then pick the [performance model](references/guides/performance-model.docs.md), [browser testing](references/guides/browser-testing.docs.md), or [shader workflow](references/guides/shader-workflow.docs.md) as needed. For a different vgpu version, use its installed package types as the authority for version-specific calls. Examples in the references show optional CLI and MCP setup. Use version-matched tools already available to the project and get explicit approval for any connector or global configuration changes.
+
 ## Source
 
 Adapted from the [pinned skill tree](https://github.com/vercel-labs/vgpu/tree/61779b7d15cc40a0058e4ade0457b8dbf717319e/skills/vgpu). See the [MIT license](LICENSE).

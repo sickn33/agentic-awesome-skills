@@ -34,6 +34,15 @@ Use when the user wants an original font family informed by proportions visible 
 
 Use references only for aggregate measurements. Copying outlines, per-glyph metrics or kerning from a reference is outside the workflow. Tool installation and font downloads require the user's approved environment.
 
+## Bundled resources
+
+Use Python in a project-local environment with FontTools, Brotli, uharfbuzz, numpy and Pillow. The optional PDF step uses Node, Playwright and Chromium. Resolve script files from the installed skill and send outputs to the project workspace.
+
+1. Run `scripts/measure_font.py` or `scripts/measure_image.py` for the permitted aggregate inputs. Use `scripts/make_targets.py` to build the targets and `scripts/find_foundation.py` to shortlist allowed base fonts.
+2. Run `scripts/fit_font.py` and `scripts/space_font.py` on the approved base. Pass input and output paths explicitly. Review the fit and spacing logs.
+3. Use `scripts/package.py`, `scripts/check_font.py`, `scripts/font_book.py`, and `scripts/render_book.mjs` for the package, verification and type specimen. Start each CLI with its help before assembling the pipeline.
+4. The bundle includes [measuring](references/measuring.md), [foundation](references/foundation.md), [fitting](references/fitting.md), [spacing](references/spacing.md), [licensing](references/licensing.md), [checks](references/checks.md), and [font book](references/font-book.md) instructions.
+
 ## Source
 
 Adapted from [design.how](https://github.com/arla6ka/design.how/tree/1ce5304466db2ba47a7a7524603e86df77c702bd/skills/make-font) by Arlan Marat. See [MIT license](LICENSE).

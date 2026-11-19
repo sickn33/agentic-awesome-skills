@@ -1,0 +1,72 @@
+{
+  "name": "ctl-a",
+  "base_url": "http://127.0.0.1:8000",
+  "model": "my-model",
+  "launch": [
+    "docker",
+    "run",
+    "-d",
+    "--name",
+    "replace-with-your-unique-container-name",
+    "--memory",
+    "46g",
+    "--memory-swap",
+    "46g",
+    "--device",
+    "/dev/dri",
+    "--shm-size",
+    "2g",
+    "-p",
+    "127.0.0.1:8000:8000",
+    "-v",
+    "/path/to/weights:/models:ro",
+    "-v",
+    "/path/to/persistent-cache:/root/.cache",
+    "my-engine-image@sha256:...",
+    "python3",
+    "-m",
+    "sglang.launch_server",
+    "--model-path",
+    "/models",
+    "--served-model-name",
+    "my-model",
+    "--host",
+    "0.0.0.0",
+    "--port",
+    "8000",
+    "--context-length",
+    "262144",
+    "--max-running-requests",
+    "4",
+    "--chunked-prefill-size",
+    "4096",
+    "--speculative-algorithm",
+    "NEXTN",
+    "--speculative-num-steps",
+    "1",
+    "--speculative-eagle-topk",
+    "1",
+    "--speculative-num-draft-tokens",
+    "2"
+  ],
+  "stop": [
+    "docker",
+    "stop",
+    "-t",
+    "60",
+    "replace-with-your-unique-container-name"
+  ],
+  "health_timeout_s": 900,
+  "concurrency": 4,
+  "prefill_lengths": [
+    4096,
+    32768
+  ],
+  "extra_body": {
+    "chat_template_kwargs": {
+      "enable_thinking": false
+    }
+  },
+  "temperature": 0.6,
+  "require_ac": true
+}

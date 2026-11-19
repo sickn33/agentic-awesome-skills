@@ -33,6 +33,12 @@ Use for a product mark, wordmark, app icon or identity direction. Establish inte
 
 Visual comparison is scoped to the references reviewed. It provides no trademark clearance. Work with original shapes and assets the user can use. Do not trace third-party logos.
 
+## Bundled resources
+
+The bundle includes [measurement](references/measuring.md), [similarity checks](references/distance.md), [construction](references/building.md), [source rules](references/sources.md), and [the logo book](references/logo-book.md). Follow the original-asset boundary above wherever a recipe describes tracing. Use `scripts/trace_ref.py` only for artwork the user owns or has permission to reproduce.
+
+With Python, numpy, scipy, scikit-image, Pillow, skia-pathops, FontTools, uharfbuzz and resvg-py, use `scripts/measure_logo.py`, `scripts/build_logo.py` and `scripts/check_logo.py` with project-local inputs and outputs. Use the bundled `scripts/calibration.json` with the checker. Use `scripts/logo_book.py`, `scripts/render_book.mjs`, and `scripts/package_logo.py` for the specimen and assets. The render step uses Node, Playwright and Chromium. Optional web-image and font fetches use public sources and require authorized inputs. Keep source notices.
+
 ## Source
 
 Adapted from [design.how](https://github.com/arla6ka/design.how/tree/1ce5304466db2ba47a7a7524603e86df77c702bd/skills/make-logo) by Arlan Marat. See [MIT license](LICENSE).

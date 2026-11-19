@@ -1,0 +1,41 @@
+{
+ "note": "Default weights and limit for distance.py, fitted by calibrate.py on 98 flat logo references from two public Are.na channels (2026-11-15). No reference data is kept here. The limit is set so 10% of references reach it against their nearest other reference.",
+ "references": 98,
+ "different_pairs": 4752,
+ "fused": {
+  "weights": [
+   8.0572,
+   -9.1729,
+   6.3101,
+   -4.8029
+  ],
+  "features": [
+   "overlap",
+   "edges/100",
+   "hash"
+  ],
+  "limit": 0.8125,
+  "held_out_caught": {
+   "turned 4\u00b0": 1.0,
+   "thicker": 0.98,
+   "thinner": 0.939,
+   "stretched 10%": 0.98,
+   "mirrored": 1.0,
+   "part cut away": 1.0,
+   "part added": 1.0,
+   "three at once": 0.939
+  },
+  "false_alarm": "share of references whose nearest other reference reaches the limit",
+  "nearest_median": 0.4579,
+  "in_sample_caught": {
+   "turned 4\u00b0": 0.969,
+   "thicker": 0.918,
+   "thinner": 0.918,
+   "stretched 10%": 0.969,
+   "mirrored": 0.98,
+   "part cut away": 0.939,
+   "part added": 0.969,
+   "three at once": 0.806
+  }
+ }
+}

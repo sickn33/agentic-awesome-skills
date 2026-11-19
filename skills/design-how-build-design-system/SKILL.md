@@ -34,6 +34,14 @@ Use when an existing app needs tokens, component contracts, or a first design-sy
 
 A screenshot checks a rendered state. It cannot establish event or accessibility parity by itself. Use the app's own tools and disposable fixtures. Confirm scope before deleting public exports or rolling the system out widely.
 
+## Bundled resources
+
+Resolve `SKILL_DIR` to the directory of this installed skill, independent of the project working directory.
+
+- Use [tokens](references/tokens.md), [components](references/components.md), [glossary](references/glossary.md), [taste](references/taste.md), and [traps](references/traps.md) for inventory and design decisions.
+- Run `node "$SKILL_DIR/scripts/check-system.mjs" --self-test` for the bundled checker fixtures. Use `--help` for scanning the target project and configuring rules. If installing the checker into the target repository, copy it together with its `oklch.mjs` dependency.
+- Use `scripts/capture.mjs` and `scripts/pixdiff.mjs` for before/after images. Use Node and Playwright with a supported Chromium or Chrome. Read the help and use disposable local fixtures with the bundled guard. Never name a real write endpoint as a read procedure. Select a writable output directory in the project workspace.
+
 ## Source
 
 Adapted from [design.how](https://github.com/arla6ka/design.how/tree/1ce5304466db2ba47a7a7524603e86df77c702bd/skills/build-design-system) by Arlan Marat. See [MIT license](LICENSE).

@@ -33,6 +33,10 @@ Use for one existing component whose consumers need a dependable entry. Read its
 
 Covers a single component. Missing examples, tests or behavior stay visible as gaps. Component fixes require a separately scoped implementation change.
 
+## Bundled resources
+
+Use the bundled [component-entry format](references/doc-format.md) for the anatomy, usage and behavior table.
+
 ## Source
 
 Adapted from [design.how](https://github.com/arla6ka/design.how/tree/1ce5304466db2ba47a7a7524603e86df77c702bd/skills/component-docs) by Arlan Marat. See [MIT license](LICENSE).
