@@ -39,7 +39,7 @@ A screenshot checks a rendered state. It cannot establish event or accessibility
 Resolve `SKILL_DIR` to the directory of this installed skill, independent of the project working directory.
 
 - Use [tokens](references/tokens.md), [components](references/components.md), [glossary](references/glossary.md), [taste](references/taste.md), and [traps](references/traps.md) for inventory and design decisions.
-- Run `node "$SKILL_DIR/scripts/check-system.mjs" --self-test` for the bundled checker fixtures. Use `--help` for scanning the target project and configuring rules. If installing the checker into the target repository, copy it together with its `oklch.mjs` dependency.
+- Run `node "$SKILL_DIR/scripts/check-system.mjs" --self-test` for the bundled checker fixtures. Use `--help` for scanning the target project and configuring rules. If installing the checker into the target repository, copy it together with its `oklch.mjs` dependency. The checker matches JSX names literally and keeps pipes and backslashes in reported values inside their Markdown table cells.
 - Use `scripts/capture.mjs` and `scripts/pixdiff.mjs` for before/after images. Use Node and Playwright with a supported Chromium or Chrome. Read the help and use disposable local fixtures with the bundled guard. Never name a real write endpoint as a read procedure. Select a writable output directory in the project workspace.
 
 ## Source
