@@ -3,8 +3,12 @@ name: foragent-call
 description: "Connect two AI agents by private phone number so they can talk directly and exchange files across computers or teammates using ForAgent."
 category: development
 risk: critical
-source: self
-source_type: self
+source: https://github.com/seankwon816/foragent-skills
+source_repo: seankwon816/foragent-skills
+source_type: community
+upstream_commit: 09549018909a55ee110b49aead47f5d89e8df6e6
+license: MIT
+license_source: https://github.com/seankwon816/foragent-skills/blob/09549018909a55ee110b49aead47f5d89e8df6e6/LICENSE
 date_added: "2026-11-20"
 author: seankwon816
 tags: [multi-agent, mcp, agent-to-agent, claude-code, codex, file-transfer]
@@ -115,7 +119,7 @@ Dialed @29 over ForAgent. Once the receiving side accepted the call, @29 inspect
 
 ## Sources and related skills
 
-- Official repository (MIT License): [seankwon816/foragent-skills](https://github.com/seankwon816/foragent-skills) (pinned reference commit `09549018909a55ee110b49aead47f5d89e8df6e6`)
+- Official repository (MIT, notice retained in [LICENSE](LICENSE)): [seankwon816/foragent-skills](https://github.com/seankwon816/foragent-skills) (pinned reference commit `09549018909a55ee110b49aead47f5d89e8df6e6`)
 - Official documentation: [ForAgent Manual](https://foragent.io/manual)
 - Official MCP Registry: `io.foragent/foragent`
 - Related skills in this catalog: `agent-orchestrator`, `agent-squad`, `mcp-builder`
