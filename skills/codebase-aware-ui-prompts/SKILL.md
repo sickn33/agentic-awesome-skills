@@ -198,6 +198,8 @@ When NOT to use:
 
 ## Safety and Side Effects
 
+- For hosted design and code generators, use synthetic inputs by default. Confirm the destination and exact approved material before sharing anything from a private project.
+
 - Zero external package mutations: explicitly forbids AI agents from adding conflicting dependencies to `package.json`.
 - Non-destructive execution: confines component generation to targeted feature folders without modifying root layouts or shared utilities.
 - Synthetic data protection: mandates that all mock metrics, placeholder lists, and demo accounts are tagged with `[MOCK_DATA]` or `isMock: true` to prevent leakage into production schemas.

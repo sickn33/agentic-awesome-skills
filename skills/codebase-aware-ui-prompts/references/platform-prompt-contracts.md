@@ -2,6 +2,11 @@
 
 AI design tools and coding agents operate under fundamentally different execution boundaries, context windows, and file permissions. This document specifies the exact prompt contracts tailored for **Repository-Bound AI Agents (Cursor, Claude Code, Antigravity CLI)**, **Isolated Component Generators (v0.dev)**, **Full-Stack Application Builders (Lovable, Bolt.new)**, and **Design-to-Code Generators (Google Stitch)**.
 
+Before moving from a local codebase to a hosted generator, confirm the user
+approves the destination and the exact material to share. Use synthetic content
+and a minimal implementation description by default. Exclude secrets, private
+source, internal endpoints, user data, and unapproved screenshots from prompts.
+
 ---
 
 ## 1. Comparison of Platform Execution Models

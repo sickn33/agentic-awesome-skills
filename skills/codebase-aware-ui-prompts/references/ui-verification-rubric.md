@@ -69,6 +69,10 @@ npx tsc --noEmit --project tsconfig.json
 ```
 
 ### B. Playwright Automated Accessibility & Keyboard Focus Audit
+
+The example fixture has an "Open settings" button and a modal named "Settings".
+When the modal opens, focus moves to its first button, "Cancel". The last
+focusable button is "Save". Adapt these selectors to the verified component.
 ```typescript
 // e2e/component-a11y.spec.ts
 import { test, expect } from '@playwright/test';
@@ -88,23 +92,29 @@ test.describe('Component Accessibility & Keyboard Navigation', () => {
     expect(accessibilityScanResults.violations).toEqual([]);
   });
 
-  test('Tier 4B: Operable strictly via keyboard navigation without traps', async ({ page }) => {
+  test('Tier 4B: Modal opens from the keyboard, contains focus and restores it', async ({ page }) => {
     await page.goto('/components/feature-showcase');
 
-    // Tab into the interactive control
+    const trigger = page.getByRole('button', { name: 'Open settings' });
+    await trigger.focus();
+    await expect(trigger).toBeFocused();
+    await page.keyboard.press('Enter');
+
+    const modal = page.getByRole('dialog', { name: 'Settings' });
+    await expect(modal).toBeVisible();
+    await expect(modal).toHaveAttribute('aria-modal', 'true');
+
+    const firstButton = modal.getByRole('button', { name: 'Cancel' });
+    const lastButton = modal.getByRole('button', { name: 'Save' });
+    await expect(firstButton).toBeFocused();
+    await page.keyboard.press('Shift+Tab');
+    await expect(lastButton).toBeFocused();
     await page.keyboard.press('Tab');
-    const firstInteractive = page.locator(':focus');
-    await expect(firstInteractive).toBeVisible();
+    await expect(firstButton).toBeFocused();
 
-    // Verify focus ring styling is active
-    await expect(firstInteractive).toHaveCSS('outline-style', /(solid|auto)/);
-
-    // If a modal dialog is open, verify focus containment and Escape dismissal
-    const modalDialog = page.locator('[role="dialog"][aria-modal="true"]');
-    if (await modalDialog.isVisible()) {
-      await page.keyboard.press('Escape');
-      await expect(modalDialog).toBeHidden();
-    }
+    await page.keyboard.press('Escape');
+    await expect(modal).toBeHidden();
+    await expect(trigger).toBeFocused();
   });
 });
 ```
