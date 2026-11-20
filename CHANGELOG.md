@@ -38,6 +38,40 @@ Summarize the most important change for users in one short paragraph.
 
 ## [Unreleased]
 
+## [21.1.0] - 2026-11-20 - "Design Systems, Motion, and Agent Workflows"
+
+Add 33 skills for design systems, creative production, local inference, engineering and connected workflows, bringing the catalog to 3,055 skills. The public sitemap now lists every active skill.
+
+### New skills
+
+- Add nine design.how skills for building and migrating design systems, mapping tokens, documenting components, reviewing rendered UI, fitting open fonts, and creating logos and product motion.
+- Add eighteen skills from the Sybil Solutions inventory for local inference, T3 Code workflows, Effect package development and maintenance, and Vercel WebGPU.
+- Add Cinematic UI/UX for scroll-driven motion and Codebase-Aware UI Prompts for adapting implementation briefs to an existing project.
+- Add a YouTube transcript and channel-data workflow, a public hiring-feeds research skill, user-confirmed ForAgent calls and file transfers, and Punchtape for verification in an authorized local project.
+
+### Improvements
+
+- Include every active catalog skill in the public sitemap and build Vercel previews from the deployed source.
+- Add a Next.js App Router code review playbook that follows a change from the route through data reads, writes and cache refresh.
+- Correct shell, YAML, Terraform and Python examples in deployment pipeline, on-call and Azure Queue guidance.
+- Make the documentation security tests use the configured Python interpreter, including on Windows.
+
+### Security and distribution
+
+- Refresh the Vite lockfiles for the web catalog, Loki Mode frontend sample and Stageshow to address GHSA-p4f5-76q4-ffq7.
+- Refresh React Router and React Virtuoso in the web catalog, Axios in the WhatsApp example, Express Rate Limit in the Loki Mode backend example, and Portless in Stageshow.
+- Harden the imported design and font checks and package the design.how and Sybil Solutions supporting resources with their skills.
+
+### Contributors
+
+- @arla6ka for the design.how collection ([#2411](https://github.com/sickn33/agentic-awesome-skills/pull/2411) and [#2414](https://github.com/sickn33/agentic-awesome-skills/pull/2414)).
+- @sybil-solutions and the original Effect and Vercel authors for the imported workflows ([#2412](https://github.com/sickn33/agentic-awesome-skills/pull/2412) and [#2414](https://github.com/sickn33/agentic-awesome-skills/pull/2414)).
+- @KatkamKoushik for the cinematic motion and UI prompt skills ([#2420](https://github.com/sickn33/agentic-awesome-skills/pull/2420) and [#2421](https://github.com/sickn33/agentic-awesome-skills/pull/2421)), the documentation fixes ([#2418](https://github.com/sickn33/agentic-awesome-skills/pull/2418), [#2419](https://github.com/sickn33/agentic-awesome-skills/pull/2419) and [#2422](https://github.com/sickn33/agentic-awesome-skills/pull/2422)), and the [Python](https://github.com/sickn33/agentic-awesome-skills/issues/2423) and [Vite](https://github.com/sickn33/agentic-awesome-skills/discussions/2424) reports.
+- @yan0lovesha for B2B Hiring Intent Radar ([#2410](https://github.com/sickn33/agentic-awesome-skills/pull/2410)).
+- @pushkarsingh32 for GetYouTubeTranscript ([#2432](https://github.com/sickn33/agentic-awesome-skills/pull/2432)).
+- @seankwon816 for ForAgent Call ([#2431](https://github.com/sickn33/agentic-awesome-skills/pull/2431)).
+- @neurophant for Punchtape ([#2438](https://github.com/sickn33/agentic-awesome-skills/pull/2438)).
+
 ## [21.0.0] - 2026-11-18 - "50K on GitHub and 3,000+ Skills"
 
 GitHub's public counter now shows 50k stars, and Agentic Awesome Skills includes 3,022 catalog skills for Claude Code, Cursor, Codex CLI, Gemini CLI, and other coding assistants. Thank you to everyone who starred the repository, contributed a skill, or helped improve a release.
