@@ -119,7 +119,7 @@ spec:
 
 ### 2. Blue-Green Deployment
 
-```yaml
+```bash
 # Blue (current)
 kubectl apply -f blue-deployment.yaml
 kubectl patch service my-app --type merge -p '{"spec":{"selector":{"app":"my-app","version":"blue"}}}'
