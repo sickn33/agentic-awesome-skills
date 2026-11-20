@@ -375,6 +375,30 @@
         "authentication": "ON_INSTALL"
       },
       "category": "Specialized Product Plugins - Next Wave"
+    },
+    {
+      "name": "aasb-design-how",
+      "source": {
+        "source": "local",
+        "path": "./plugins/aasb-design-how"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Design"
+    },
+    {
+      "name": "aasb-sybil-solutions",
+      "source": {
+        "source": "local",
+        "path": "./plugins/aasb-sybil-solutions"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Development"
     }
   ]
 }

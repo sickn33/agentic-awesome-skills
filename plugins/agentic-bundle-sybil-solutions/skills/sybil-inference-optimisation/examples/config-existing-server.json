@@ -1,0 +1,8 @@
+{
+  "name": "llamacpp-baseline",
+  "base_url": "http://127.0.0.1:8080",
+  "model": "default",
+  "concurrency": 2,
+  "prefill_lengths": [4096, 16384],
+  "temperature": 0.6
+}

@@ -1,0 +1,33 @@
+{
+  "name": "make-motion",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "stills": "node --experimental-strip-types scripts/render.mjs stills",
+    "review": "node --experimental-strip-types scripts/render.mjs review",
+    "master": "node --experimental-strip-types scripts/render.mjs master",
+    "x": "node --experimental-strip-types scripts/render.mjs x",
+    "jumps": "node --experimental-strip-types scripts/render.mjs jumps",
+    "audio": "node --experimental-strip-types audio/render.mjs",
+    "audio:check": "node --experimental-strip-types audio/check.mjs",
+    "typecheck": "tsc --noEmit",
+    "energy": "node --experimental-strip-types scripts/render.mjs energy",
+    "theme": "node scripts/theme-from-site.mjs"
+  },
+  "dependencies": {
+    "@remotion/bundler": "4.0.545",
+    "@remotion/cli": "4.0.545",
+    "@remotion/renderer": "4.0.545",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "remotion": "4.0.545"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "typescript": "5.9.3"
+  },
+  "engines": {
+    "node": ">=22.6"
+  }
+}

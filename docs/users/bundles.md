@@ -655,6 +655,57 @@ _Growth, content, and product teams expanding sites and products across language
 - [`copy-editing`](../../skills/copy-editing/): Edit supplied content for clarity, consistency and supported claims.
 - [`seo-content-refresher`](../../skills/seo-content-refresher/): Refresh verified locale-specific claims without inventing freshness signals.
 
+
+---
+
+## 🎨 Design
+
+### 🎨 Design-system workflows and creative tools
+
+_For teams building UI systems, fonts, product videos and original logos._
+
+**Plugin status:** Codex plugin-safe · Claude plugin-safe · Agent Plugins 1.0 portable
+
+- [`design-how-build-design-system`](../../skills/design-how-build-design-system/): Extract semantic tokens and reusable components from an existing app, check behavior and visual parity, and validate one pilot flow.
+- [`design-how-component-docs`](../../skills/design-how-component-docs/): Write one component entry from implementation, stories and real call sites, including states, behavior and usage constraints.
+- [`design-how-design-system-boss`](../../skills/design-how-design-system-boss/): Route a whole-app UI consistency request to a design-system build or adoption audit, then verify a representative flow.
+- [`design-how-make-font`](../../skills/design-how-make-font/): Fit a modifiable open typeface to aggregate reference measurements, then verify glyph coverage, spacing and web distribution.
+- [`design-how-make-logo`](../../skills/design-how-make-logo/): Develop original mark and wordmark directions from a brief, compare legibility and similarity, and prepare a reviewed asset package.
+- [`design-how-make-motion`](../../skills/design-how-make-motion/): Turn an approved product story into a short motion video with a timing sheet, review cuts and measured export checks.
+- [`design-how-migrate-design-system`](../../skills/design-how-migrate-design-system/): Audit or replace legacy UI with an existing design system in bounded waves while preserving route behavior and rendering.
+- [`design-how-token-mapping`](../../skills/design-how-token-mapping/): Produce a read-only mapping from hardcoded styling to semantic design tokens with exact, near, ambiguous and missing matches.
+- [`design-how-ui-review`](../../skills/design-how-ui-review/): Review a rendered screen or flow and rank reproducible usability, accessibility and responsive defects with evidence.
+
+
+---
+
+## 🛠️ Development
+
+### 🛠️ Local inference, T3 Code, Effect and vgpu
+
+_For developers benchmarking local models or working in compatible T3 Code, Effect and WebGPU projects._
+
+**Plugin status:** Codex plugin-safe · Claude plugin-safe · Agent Plugins 1.0 portable
+
+- [`effect-smol-ai-docs`](../../skills/effect-smol-ai-docs/): Update Effect AI documentation sources and verify generated LLMS.md, examples and coverage.
+- [`effect-smol-bundle-analysis`](../../skills/effect-smol-bundle-analysis/): Compare Effect bundle fixtures across revisions and identify verified changes in bytes and composition.
+- [`effect-smol-changesets`](../../skills/effect-smol-changesets/): Audit Effect package changes for consumer-visible impacts and record the appropriate changeset and migration notes.
+- [`effect-smol-ci-maintenance`](../../skills/effect-smol-ci-maintenance/): Review or update Effect GitHub Actions with a job-by-job trigger, revision, permission and artifact trust inventory.
+- [`effect-smol-dependency-maintenance`](../../skills/effect-smol-dependency-maintenance/): Synchronize Effect workspace dependency changes across manifests, lockfile and the affected validation matrix.
+- [`effect-smol-effect-development`](../../skills/effect-smol-effect-development/): Implement or review Effect integrations using targeted repository API guidance and version-matched runtime or type checks.
+- [`effect-smol-jsdocs`](../../skills/effect-smol-jsdocs/): Write or review Effect public JSDoc against declaration, implementation, call-site and doctest evidence.
+- [`effect-smol-migration-guidance`](../../skills/effect-smol-migration-guidance/): Keep Effect v3-to-v4 migration annotations and generated guidance aligned with verified public API replacements.
+- [`effect-smol-package-development`](../../skills/effect-smol-package-development/): Create or move an Effect workspace package while checking registration, exports, generated barrels and packed contents.
+- [`effect-smol-performance-analysis`](../../skills/effect-smol-performance-analysis/): Compare Effect runtime performance or TypeScript checker cost with matched fixtures and repeatable measurements.
+- [`effect-smol-test-development`](../../skills/effect-smol-test-development/): Add focused Vitest and Tstyche coverage for Effect runtime behavior and public type inference.
+- [`effect-smol-vendored-assets`](../../skills/effect-smol-vendored-assets/): Refresh Effect vendored assets with pinned sources, retained notices, deterministic generation and verified consumer impact.
+- [`sybil-glm53-offload-setup`](../../skills/sybil-glm53-offload-setup/): Select, verify and benchmark a GLM-5.3-Flash EXL3 offload mode on a single supported Linux NVIDIA host.
+- [`sybil-inference-optimisation`](../../skills/sybil-inference-optimisation/): Benchmark and tune local LLM serving against a measured ceiling with controlled comparisons, resource limits and quality gates.
+- [`sybil-local-studio-contribution-triage`](../../skills/sybil-local-studio-contribution-triage/): Evaluate PR eligibility from pinned T3 Code policy and immutable submission evidence before any authorised moderation.
+- [`sybil-local-studio-test-t3-app`](../../skills/sybil-local-studio-test-t3-app/): Verify a T3 Code web or desktop flow through its Browser panel against isolated checkout state.
+- [`sybil-local-studio-test-t3-mobile`](../../skills/sybil-local-studio-test-t3-mobile/): Verify the native T3 Code client through its Device panel, an isolated backend and the returned target-specific controls.
+- [`vercel-vgpu`](../../skills/vercel-vgpu/): Build and profile WGSL shaders and WebGPU passes using the installed vgpu package and version-matched documentation.
+
 ## 📚 How to Use Bundles
 
 ### 1) Pick by immediate goal
@@ -747,4 +798,4 @@ Found a skill that should be in a bundle? Or want to create a new bundle? [Open 
 
 ---
 
-_Last updated: June 2026 | Total Skills: 3,022+ | Total Bundles: 30_
+_Last updated: June 2026 | Total Skills: 3,055+ | Total Bundles: 32_

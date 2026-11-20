@@ -1,0 +1,38 @@
+{
+  "name": "aasb-sybil-solutions",
+  "version": "21.1.0",
+  "description": "Install the \"Sybil Solutions\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "sybil-solutions",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Sybil Solutions",
+    "shortDescription": "Development · 18 curated skills",
+    "longDescription": "For developers benchmarking local models or working in compatible T3 Code, Effect and WebGPU projects. Not for: Use another pack when the project does not match these tools.. Covers Effect Smol AI Docs, Effect Smol Bundle Analysis, and 16 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Development",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use the relevant Sybil Solutions skill and its local resources. Run checks in the project workspace and report observed results."
+    ]
+  }
+}

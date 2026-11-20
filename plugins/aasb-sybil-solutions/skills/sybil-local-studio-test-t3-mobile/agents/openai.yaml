@@ -1,0 +1,4 @@
+interface:
+  display_name: "Test T3 Mobile"
+  short_description: "Test iOS and Android in T3's Device panel"
+  default_prompt: "Use $sybil-local-studio-test-t3-mobile to verify the affected native mobile flow through T3's Device panel and AgentDevice."

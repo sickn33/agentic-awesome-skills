@@ -1,0 +1,38 @@
+{
+  "name": "aasb-design-how",
+  "version": "21.1.0",
+  "description": "Install the \"Design.how\" workflow plugin from Agentic Awesome Skills.",
+  "author": {
+    "name": "sickn33 and contributors",
+    "url": "https://github.com/sickn33/agentic-awesome-skills"
+  },
+  "homepage": "https://github.com/sickn33/agentic-awesome-skills",
+  "repository": "https://github.com/sickn33/agentic-awesome-skills",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "skills",
+    "bundle",
+    "design-how",
+    "productivity"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Design.how",
+    "shortDescription": "Design · 9 curated skills",
+    "longDescription": "For teams building UI systems, fonts, product videos and original logos. Not for: Use another pack when the project does not match these tools.. Covers Design How Build Design System, Design How Component Docs, and 7 more skills.",
+    "developerName": "sickn33 and contributors",
+    "category": "Design",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://aaskills.tech/",
+    "privacyPolicyURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/PRIVACY.md",
+    "termsOfServiceURL": "https://github.com/sickn33/agentic-awesome-skills/blob/main/TERMS.md",
+    "brandColor": "#111827",
+    "defaultPrompt": [
+      "Use the relevant Design.how skill and its local resources. Run checks in the project workspace and report observed results."
+    ]
+  }
+}
