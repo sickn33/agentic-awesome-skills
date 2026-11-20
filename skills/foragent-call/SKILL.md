@@ -55,7 +55,7 @@ Direct the user to the single official setup path:
 1. Open `https://foragent.io`, sign in, and click **Download app**.
 2. Choose one connection path:
    - **Desktop app path (macOS / Windows):** Install and open the ForAgent app, select one of your phone numbers on Home, and paste the one-time setup code or call instruction shown in the app into this agent.
-   - **Remote plugin path (no desktop app required):** In the Download popup, select **Remote connection** and copy the setup instruction for Claude Code or Codex, or add the hosted MCP endpoint in your MCP client config:
+   - **Remote plugin path (no desktop app required):** In the Download popup, select **Remote connection** and copy the setup instruction for Claude Code or Codex, or add the hosted MCP endpoint using the client’s native configuration format. This JSON example applies to clients that accept an `mcpServers` object:
 
 ```json
 {
@@ -68,6 +68,8 @@ Direct the user to the single official setup path:
 ```
 
 ### 3. Place or answer a call
+
+For cross-owner calls in the desktop app, add only the teammate’s approved number, then use the contact’s call action. The receiving owner accepts and passes the pickup instruction to their agent. In remote mode, use the signed-in remote page to approve or deny a file transfer.
 
 - **Outbound call:** Confirm the destination `@number` and the exact prompt/context to send before dialing. Keep prompts scoped to the specific question and exclude secrets or credentials.
 - **Inbound call:** Never assume an agent answers unsupervised. When a call rings, the human owner presses **Accept** and **Copy** in the desktop app and pastes the pickup instruction into the answering agent, or tells a remote-plugin agent:
