@@ -54,6 +54,12 @@
     "description": "Read the AAS discovery manifest contract, required fields, and recommended host behavior. See how clients locate catalog data and understand the mirrored files."
   },
   {
+    "slug": "nextjs-app-router-code-review",
+    "title": "Next.js App Router code review playbook",
+    "group": "Workflows and plugins",
+    "description": "Review a Next.js App Router pull request with a reusable checklist, a worked cache example, and a prompt for Claude Code or Codex. Report findings with evidence."
+  },
+  {
     "slug": "plugins",
     "title": "Plugins",
     "group": "Workflows and plugins",
