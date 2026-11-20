@@ -7,7 +7,7 @@ AAS Core lets Codex and Claude search and read the complete local AAS catalog, p
 The primary durable artifact is [`aas-stack.json`](#the-stack-manifest). It records the exact skill IDs chosen by the coding agent; it is not the output of a Core ranking system. An audit-enabled flow can also persist a separate canonical `aas-selection-evidence.json` sidecar. The local MCP is a read-only catalog, composition, and evidence boundary; a client or the `aas` CLI performs persistence, the CLI validates and plans, and Workbench is a browser-local review surface.
 
 > [!IMPORTANT]
-> **npm publishing paused.** The npm commands below describe the versioned Core setup. The current release is available on GitHub, and its Core runtime package is unavailable from npm. To install or update the skills themselves, follow the [GitHub installation guide](getting-started.md#install-and-update-without-npm).
+> **npm publishing paused.** To install or update skill files from the current release, use the [GitHub installation guide](getting-started.md#install-and-update-without-npm). For local MCP, the examples use `agentic-awesome-skills@18.8.0` and its bundled catalog. Keep that version throughout setup, selection and planning.
 
 ## How it works
 
@@ -36,7 +36,7 @@ For independent catalog updates, explicit offline pins and rollback, see [catalo
 > **Release boundary:** AAS Core landed after release 14.6.0. Use an exact Core-capable release rather than an unreviewed moving tag.
 
 ```bash
-npm exec --yes --ignore-scripts --package=agentic-awesome-skills@21.1.0 -- aas mcp configure \
+npm exec --yes --ignore-scripts --package=agentic-awesome-skills@18.8.0 -- aas mcp configure \
   --host codex \
   --scope user \
   --config /absolute/path/to/codex/config.toml \
@@ -337,7 +337,7 @@ Direct installs, specialized plugins, bundles, workflows, and the legacy install
 
 | Surface | Current status |
 | --- | --- |
-| Published package | Current npm release; AAS Core status is `agent-first-preview` |
+| Runtime distribution | GitHub carries the current release. The local setup example above pins the separately published npm package. AAS Core status is `agent-first-preview`. |
 | Catalog search and inspection | Supported preview; local and read-only |
 | Agent-owned composition | Supported preview; Core validates IDs and structure, not semantic suitability |
 | Stack validation and plan preview | Supported preview; no target skill changes |

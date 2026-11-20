@@ -55,7 +55,7 @@ def core_release_status(metadata: dict) -> str:
     )
 
 
-def core_release_boundary(metadata: dict) -> str:
+def core_release_boundary(metadata: dict, npm_setup_version: str) -> str:
     version = metadata["version"]
     if not metadata["core_included"]:
         return (
@@ -63,8 +63,10 @@ def core_release_boundary(metadata: dict) -> str:
             "whose notes explicitly state that it includes Core."
         )
     return (
-        f"Release boundary: V{version} includes AAS Core under the Agent-First Preview; pin this exact "
-        "version when configuring the local MCP."
+        f"Release boundary: GitHub V{version} includes AAS Core under the Agent-First Preview. "
+        f"New npm publications are paused. The local MCP setup guides use the published "
+        f"agentic-awesome-skills@{npm_setup_version} runtime and its bundled catalog. "
+        "For current skill files, follow https://aaskills.tech/docs/getting-started/#install-and-update-without-npm"
     )
 
 

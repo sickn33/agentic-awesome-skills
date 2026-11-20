@@ -20,6 +20,11 @@ from update_readme import (
 )
 
 
+# npm setup examples advance only after that exact version is available in the registry.
+NPM_SETUP_VERSION = json.loads(
+    (Path(__file__).resolve().parents[1] / "config" / "npm-core-setup.json").read_text(encoding="utf-8")
+)["version"]
+
 ABOUT_DESCRIPTION_RE = re.compile(r'"description"\s*:\s*"([^"]*)"')
 GITHUB_HOMEPAGE_URL = "https://aaskills.tech/"
 RECOMMENDED_TOPICS = [
@@ -329,7 +334,7 @@ def sync_getting_started(content: str, metadata: dict) -> str:
 
 
 def render_agent_setup_block(host: str, version: str, phase: str) -> str:
-    """One command source for both agent guides; sync keeps release pins aligned."""
+    """Render the same published package and runtime pins for both agent guides."""
     if host not in {"codex", "claude"}:
         raise ValueError("Unsupported setup host")
     prefix = f"npm exec --yes --ignore-scripts --package=agentic-awesome-skills@{version} --"
@@ -358,29 +363,34 @@ def render_agent_setup_block(host: str, version: str, phase: str) -> str:
         command = (f'{prefix} aas stack install-preview \\\n'
                    '  --manifest "$AAS_PROJECT/aas-stack.json" --cache-root "$AAS_CACHE" \\\n'
                    f'  --destination "$AAS_PROJECT/{".agents" if host == "codex" else ".claude"}/skills"')
+    elif phase == 'direct':
+        command = f'{prefix} agentic-awesome-skills --release {version} --{host} --dry-run'
     else:
         raise ValueError("Unsupported setup phase")
     return '```bash\n' + command + '\n```'
 
 
+def sync_npm_setup_pins(content: str) -> str:
+    return re.sub(
+        r"((?:--package=|For local MCP, the examples use `)agentic-awesome-skills@)" + VERSION_TOKEN_PATTERN,
+        lambda match: match[1] + NPM_SETUP_VERSION,
+        content,
+    )
+
+
 def sync_agent_setup_guide(content: str, metadata: dict) -> str:
     pattern = re.compile(
-        r'(<!-- aas-agent-setup:(codex|claude):(preview|approve|plan|install) -->)'
+        r'(<!-- aas-agent-setup:(codex|claude):(preview|approve|plan|install|direct) -->)'
         r'.*?(<!-- /aas-agent-setup -->)', re.DOTALL,
     )
     return pattern.sub(lambda match: match[1] + '\n' + render_agent_setup_block(
-        match[2], metadata['version'], match[3],
-    ) + '\n' + match[4], content)
+        match[2], NPM_SETUP_VERSION, match[3],
+    ) + '\n' + match[4], sync_npm_setup_pins(content))
 
 
 def sync_aas_core_guide(content: str, metadata: dict) -> str:
     if metadata["core_included"]:
-        content = re.sub(
-            r"--package=agentic-awesome-skills@(?:X\.Y\.Z|[^\s\\]+)",
-            f"--package=agentic-awesome-skills@{metadata['version']}",
-            content,
-            count=1,
-        )
+        content = sync_npm_setup_pins(content)
     return content.replace(
         "searchable, readable, selectable, and usable",
         "searchable, readable, and available for agent selection",
@@ -406,7 +416,7 @@ def sync_llms_text(content: str, metadata: dict) -> str:
         content,
         [
             (r"(?m)^- Current release: V[^\n]+$", f"- Current release: V{metadata['version']}."),
-            (r"Release boundary: .*", core_release_boundary(metadata)),
+            (r"Release boundary: .*", core_release_boundary(metadata, NPM_SETUP_VERSION)),
             (r"\d[\d,]*\+ agentic SKILL\.md playbooks", f"{skill_label} agentic SKILL.md playbooks"),
             (r"Skill count: \d[\d,]*\+\.", f"Skill count: {skill_label}."),
             (r"\d[\d,]*\+ reusable SKILL\.md playbooks", f"{skill_label} reusable SKILL.md playbooks"),
