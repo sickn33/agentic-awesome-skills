@@ -9,7 +9,7 @@
     "start": "node dist/index.js"
   },
   "dependencies": {
-    "axios": "^1.7.0",
+    "axios": "^1.21.1",
     "dotenv": "^16.4.0",
     "express": "^4.22.3"
   },
