@@ -73,7 +73,7 @@ These checks describe the intended implementation in the references. Validate th
 - **1. Rules-of-Hooks Compliance (`lenis-scroll-systems.md`)**: Decoupled conditional nesting checks into an outer `LenisProvider` wrapper and inner `InnerLenisProvider`, preventing conditional hook execution.
 - **2. Controller Ownership (`lenis-scroll-systems.md`)**: Enforced true singleton ownership via `globalActiveLenisController`, preventing competing controllers across multiple mounts.
 - **3. Symmetric Teardown (`lenis-scroll-systems.md`)**: Extracted `teardownInstance()` to symmetrically remove ticker callbacks, destroy instances, and reset tokens before reinitializing on reduced-motion changes.
-- **4. Instant Native Fallback (`lenis-scroll-systems.md`)**: Defaulted `behavior` to `'auto'` (instant scroll) when reduced motion is active, avoiding unwanted smooth-scroll delays.
+- **4. Instant Native Fallback (`lenis-scroll-systems.md`)**: Uses instant native scrolling for reduced motion and completion-coordinated anchor focus.
 - **5. React 19 Inert Compatibility (`gsap-engineering.md`)**: Converted `inert={!isOpen ? '' : undefined}` to boolean `inert={!isOpen}`, matching `@types/react: ^19.0.0`.
 - **6. Destination Route Verification (`page-transitions.md`)**: Replaced arbitrary 50ms timers with explicit route comparison via `RouteListener`, verifying current URL matches intended target before lowering curtain.
 - **7. Error State Preservation (`page-transitions.md`)**: Preserved `FAILED_FALLBACK` state during timeout curtain lowering (`isError = true`), keeping the retry banner and controls active.
@@ -87,7 +87,7 @@ These checks describe the intended implementation in the references. Validate th
 - **15. Realistic Navigation E2E Tests (`qa-and-validation.md`)**: Specified assertions for navigation completion: link click &rarr; URL update &rarr; curtain clearance &rarr; destination `<main>` keyboard focus.
 
 ### Group B: Scroll, Transition & Lifecycle Issues (16–27)
-- **16. GSAP Ticker Setting Preservation (`lenis-scroll-systems.md`)**: Restores standard GSAP ticker lag smoothing defaults (`500, 33`) on provider unmount without guessing private properties.
+- **16. GSAP Ticker Setting Preservation (`lenis-scroll-systems.md`)**: Preserves the application’s existing GSAP ticker lag-smoothing settings.
 - **17. Scroll-Lock Synchronized Reinitialization (`lenis-scroll-systems.md`)**: When Lenis is recreated, immediately checks `lockCountRef.current > 0` and stops the new instance if locked.
 - **18. Anchor Completion-Coordinated Focus (`lenis-scroll-systems.md`)**: Moves keyboard focus and updates browser history strictly upon scroll completion callback (`onComplete`).
 - **19. Resilient Native Selector Fallback (`lenis-scroll-systems.md`)**: Wrapped `document.querySelector` in `try...catch` and falls back to `document.getElementById` for invalid selector strings.

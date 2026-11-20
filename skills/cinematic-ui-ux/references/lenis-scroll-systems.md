@@ -114,9 +114,6 @@ function InnerLenisProvider({ children }: { children: React.ReactNode }) {
       // Coordinate with GSAP ScrollTrigger updates
       instance.on('scroll', ScrollTrigger.update);
 
-      // Disable GSAP lag smoothing during active scrub
-      gsap.ticker.lagSmoothing(0);
-
       const tickerCb = (time: number) => {
         instance.raf(time * 1000);
       };
@@ -135,9 +132,6 @@ function InnerLenisProvider({ children }: { children: React.ReactNode }) {
       mediaQuery.removeEventListener('change', handleMotionChange);
       teardownInstance();
 
-      // Restore standard GSAP ticker lag smoothing defaults
-      gsap.ticker.lagSmoothing(500, 33);
-
       // Clean up body styles if unmounting while locked
       if (lockCountRef.current > 0) {
         document.body.style.overflow = previousOverflowRef.current;
@@ -147,7 +141,7 @@ function InnerLenisProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  // 2. scrollTo Implementation with Instant Native Fallback under Reduced Motion
+  // 2. Use an instant native fallback when reduced motion or a completion callback applies.
   const scrollTo = useCallback(
     (
       target: string | HTMLElement,
@@ -181,7 +175,7 @@ function InnerLenisProvider({ children }: { children: React.ReactNode }) {
           const top = element.getBoundingClientRect().top + window.scrollY + (options?.offset ?? 0);
           window.scrollTo({
             top,
-            behavior: isReduced || options?.immediate ? 'auto' : 'smooth',
+            behavior: isReduced || options?.immediate || options?.onComplete ? 'instant' : 'smooth',
           });
           if (options?.onComplete) {
             requestAnimationFrame(() => options.onComplete?.());
