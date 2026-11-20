@@ -405,6 +405,7 @@ Key source families include:
 - **[Reak-Z/mcd-secret-menu-lab](https://github.com/Reak-Z/mcd-secret-menu-lab)**: MIT community recipe-planning workflow for McDonald's China using an authorized MCP connection and explicit account-action boundaries.
 
 - **[Kadajett/cockney](https://github.com/Kadajett/cockney)**: MIT source for the `cockney` skill - terse Cockney-voiced replies and the smallest correct change (reuse, stdlib before dependencies, no speculative abstraction), switching to plain English for security and destructive-action warnings.
+- **[neurophant/punchtape](https://github.com/neurophant/punchtape)**: MIT source for the `punchtape` skill - work under the punchtape arbiter: the human's words in demands.md are the law of the task, checks run beside the code, the machine runs every check itself and done is its sealed verdict, never the agent's announcement.
 - **[estevecastells/awesome-copilot](https://github.com/estevecastells/awesome-copilot)**: MIT source for the `invokely-statistics` skill - find official statistical figures, series, comparisons and place rankings through the Invokely MCP server, and report each value with its period, unit and source citation. The originating contribution is open and unmerged upstream.
 - **[morluto/rea](https://github.com/morluto/rea)**: MIT source for the `reverse-engineer-anything` skill - evidence-led native, managed, JavaScript/Electron, packaged, and browser investigations with explicit provider limits.
 
