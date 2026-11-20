@@ -606,16 +606,24 @@ assert.match(securityAntivirusGuide, /does not itself run/i);
 assert.match(securityAntivirusGuide, /does not prove safety/i);
 assert.match(securityAntivirusGuide, /evidence of execution/i);
 
+function runSlidesPython(scriptName, argument) {
+  const runner = path.join(repoRoot, 'tools', 'scripts', 'run-python.js');
+  const script = path.join(repoRoot, 'skills', '2slides-ppt-generator', 'scripts', scriptName);
+  return spawnSync(process.execPath, [runner, '-B', script, argument], {
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      ANTIGRAVITY_PYTHON: process.env.ANTIGRAVITY_PYTHON || process.env.npm_config_python || process.env.PYTHON || '',
+    },
+  });
+}
+
 const slidesBytecodeDirectory = path.join(repoRoot, 'skills', '2slides-ppt-generator', 'scripts', '__pycache__');
 const slidesBytecodeBefore = fs.existsSync(slidesBytecodeDirectory)
   ? fs.readdirSync(slidesBytecodeDirectory).sort()
   : [];
 for (const scriptName of ['generate_slides.py', 'create_pdf_slides.py']) {
-  const helpRun = spawnSync(
-    process.env.PYTHON || 'python3',
-    ['-B', path.join(repoRoot, 'skills', '2slides-ppt-generator', 'scripts', scriptName), '--help'],
-    { encoding: 'utf8' },
-  );
+  const helpRun = runSlidesPython(scriptName, '--help');
   assert.strictEqual(
     helpRun.status,
     0,
@@ -623,11 +631,7 @@ for (const scriptName of ['generate_slides.py', 'create_pdf_slides.py']) {
   );
 }
 
-const voiceListRun = spawnSync(
-  process.env.PYTHON || 'python3',
-  ['-B', path.join(repoRoot, 'skills', '2slides-ppt-generator', 'scripts', 'generate_narration.py'), '--list-voices'],
-  { encoding: 'utf8' },
-);
+const voiceListRun = runSlidesPython('generate_narration.py', '--list-voices');
 assert.strictEqual(
   voiceListRun.status,
   0,
