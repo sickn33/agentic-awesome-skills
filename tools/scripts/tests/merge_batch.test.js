@@ -125,13 +125,20 @@ function evidenceSnapshot(overrides = {}) {
 {
   const skippedReview = makeCheckRun("Skill Review / review", "completed", "skipped", "2026-04-01T10:00:00Z", 10);
   const manualReview = makeCheckRun("Skill Review / manual-review-required", "completed", "success", "2026-04-01T10:01:00Z", 11);
+  const headRefOid = "a".repeat(40);
+  const lockfile = "skills/stageshow/package-lock.json";
+  const hasSkillChanges = mergeBatch.isSkillContentRecord({
+    status: "M", old_path: lockfile, new_path: lockfile,
+  });
+  assert.equal(hasSkillChanges, true, "nested lockfiles are skill-tree changes");
+  const pull = { hasSkillChanges, headRefOid };
   const withoutAttestation = mergeBatch.getRequiredCheckAliases(
-    { hasSkillChanges: true },
-    { allowManualReview: false },
+    pull,
+    new Set(["b".repeat(40)]),
   ).at(-1);
   const withAttestation = mergeBatch.getRequiredCheckAliases(
-    { hasSkillChanges: true },
-    { allowManualReview: true },
+    pull,
+    new Set([headRefOid]),
   ).at(-1);
 
   assert.deepStrictEqual(
