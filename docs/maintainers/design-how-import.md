@@ -4,4 +4,6 @@ Nine guides are adapted from [design.how by Arlan Marat](https://github.com/arla
 
 The `design-how-` prefix keeps the collection's routing unambiguous alongside existing AAS skills, including `ui-review`. The six design-system guides cover routing, building, migration, token audits, component documentation and rendered UI review. The three creative guides cover open-font fitting, product motion and original logo design.
 
-The AAS editions carry the workflow and examples in Markdown. They use the project's authorized browser, editor or renderer. The upstream helper scripts, Remotion template, site, vault and system libraries are available from the original project. The logo workflow uses original geometry and excludes third-party tracing.
+The `design-how` editorial pack groups all nine skills. Their installed directories carry the upstream playbooks, design checks, capture tools, migration scripts, font and logo pipelines, and the full Remotion example and template. Resolve shared tools and references through the named installed siblings, such as the build skill's screenshot guard. The logo workflow uses original geometry and permits tracing only with rights to the source artwork.
+
+The motion template includes a lockfile and uses Remotion 4.0.545. Use its normal Node, Chromium and FFmpeg dependencies. Font and logo helpers use the documented Python and browser tooling.

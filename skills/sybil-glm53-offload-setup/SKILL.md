@@ -34,6 +34,12 @@ Use when bringing up the pinned glm-flash-lite recipe on a user-owned Linux host
 
 This is a single-host GLM-5.3-Flash recipe. It gives no measured guarantee on different drivers or hardware. It uses an existing approved runtime and storage. Disk formatting, RAID changes, privileged configuration and network exposure are outside this workflow.
 
+## Bundled resources
+
+Use the bundled [installation recipe](docs/setup.md) for pinned image and weight revisions, local preflight, store verification, container launch and score collection. [Tier architecture](docs/how-it-works.md), [troubleshooting](docs/troubleshooting.md), and [measured results](docs/results.md) are included. The benchmarks run against a compatible local server. The published container and model checkpoint are normal runtime dependencies.
+
+Pass the installed `bench/sweep.py` and `bench/score_ref_panel.py` explicit loopback URLs and a workspace output path. The [reference panel](reference/glm-5.3-flash-exl3-ref-panel.json) and `bench/stream_rate.py` are included. Use `docker/preflight.py` on an existing Linux scratch filesystem when checking direct I/O.
+
 ## Source
 
 Adapted from the [pinned skill tree](https://github.com/sybil-solutions/glm-flash-lite/tree/6fe077da79a4d6fc842cf9f50cb703e4409924ca/skills/glm53-offload-setup). See the [MIT license](LICENSE).
