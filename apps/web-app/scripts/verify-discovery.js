@@ -6,6 +6,10 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (file) => fs.readFileSync(path.join(root, 'dist', file), 'utf8');
 const skills = JSON.parse(read('skills.json'));
+const sitemapSkillIds = [...read('sitemap.xml').matchAll(/<loc>[^<]*\/skill\/([^/?#<]+)\/<\/loc>/g)]
+  .map(match => decodeURIComponent(match[1]));
+assert.deepEqual(sitemapSkillIds.sort(), skills.map(skill => skill.id).sort(),
+  'Sitemap must list every active catalog skill exactly once and exclude retired entries');
 const directory = read('directory/index.html');
 const catalog = read('core/index.html');
 assert.match(catalog, /href="[^"]*\/directory\/"/, 'Catalog must link to the complete directory');

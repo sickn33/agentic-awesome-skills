@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { buildSitemap, DEFAULT_TOP_SKILL_COUNT, generateSitemapXml, getSeoLandingPaths, selectTopSkillEntries } from './generate-sitemap.js';
+import { buildSitemap, generateSitemapXml, getSeoLandingPaths, selectTopSkillEntries } from './generate-sitemap.js';
 import { getDocsMetadata } from './docs-metadata.js';
 
 describe('sitemap generation script helpers', () => {
@@ -109,17 +109,10 @@ describe('sitemap generation script helpers', () => {
     );
   });
 
-  it('keeps the default public sitemap skill count reproducible', () => {
-    const catalog = Array.from({ length: DEFAULT_TOP_SKILL_COUNT + 1 }, (_, index) => ({
-      id: `skill-${String(index).padStart(2, '0')}`,
-      stars: DEFAULT_TOP_SKILL_COUNT + 1 - index,
-    }));
-
+  it('includes every active skill by default, including entries beyond the old cutoff', () => {
+    const catalog = Array.from({ length: 301 }, (_, index) => ({ id: `skill-${index}` }));
     const xml = buildSitemap(catalog, undefined, 'https://example.com');
-    const skillRoutes = xml.match(/https:\/\/example\.com\/skill\//g) || [];
-
-    expect(skillRoutes).toHaveLength(180);
-    expect(xml).toContain('https://example.com/skill/skill-179/</loc>');
-    expect(xml).not.toContain('https://example.com/skill/skill-180/</loc>');
+    const ids = [...xml.matchAll(/<loc>https:\/\/example\.com\/skill\/([^/]+)\/<\/loc>/g)].map(match => match[1]);
+    expect(ids.sort()).toEqual(catalog.map(skill => skill.id).sort());
   });
 });
