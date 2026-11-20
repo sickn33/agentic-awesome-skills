@@ -1,6 +1,6 @@
-# Production Implementation: Luxury Banarasi Saree Campaign
+# Integration Example: Luxury Banarasi Saree Campaign
 
-Complete, runnable Next.js 15 + React 19 luxury saree experience using **pause controller registration**, **authenticity-preserving soft sheen**, **explicit mock metadata disclaimers**, and an **actionable conversion CTA**.
+Illustrative Next.js 15 + React 19 luxury saree experience using **pause controller registration**, **authenticity-preserving soft sheen**, **explicit mock metadata disclaimers**, and an **actionable conversion CTA**.
 
 ```tsx
 // components/couture/saree-campaign.tsx

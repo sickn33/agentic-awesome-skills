@@ -1,6 +1,6 @@
-# Production Implementation: Cinematic Studio Portfolio
+# Integration Example: Cinematic Studio Portfolio
 
-Complete, runnable Next.js 15 + React 19 project showcase with **Lenis-coordinated smooth scroll**, **scoped GSAP card queries**, **compositor-only background crossfades**, **aligned 1024px breakpoints**, **accessible vertical stack for mobile AND reduced-motion desktop**, and **declarative `<TransitionLink>` integration**.
+Illustrative Next.js 15 + React 19 project showcase with **Lenis-coordinated smooth scroll**, **scoped GSAP card queries**, **compositor-only background crossfades**, **aligned 1024px breakpoints**, **accessible vertical stack for mobile AND reduced-motion desktop**, and **declarative `<TransitionLink>` integration**.
 
 ```tsx
 // components/portfolio/horizontal-portfolio.tsx

@@ -1,6 +1,6 @@
-# Production Implementation: Luxury Timepiece Story
+# Integration Example: Luxury Timepiece Story
 
-Complete, runnable Next.js 15 + React 19 scroll-driven product deconstruction with **pause-controller-registered rotation**, **typed audio status**, **page visibility suspension**, and **safe AudioContext lifecycle cleanup**.
+Illustrative Next.js 15 + React 19 scroll-driven product deconstruction with **pause-controller-registered rotation**, **typed audio status**, **page visibility suspension**, and **safe AudioContext lifecycle cleanup**.
 
 ```tsx
 // components/product/timepiece-story.tsx

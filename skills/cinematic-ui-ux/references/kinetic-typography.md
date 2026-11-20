@@ -1,11 +1,11 @@
 # Kinetic Typography & Editorial Motion
 
-Techniques for editorial and high-fashion typographic choreography that remain 100% accessible to screen readers, support international scripts, maintain natural line wrapping, and synchronize with font loading.
+Techniques for editorial and high-fashion typographic choreography that include a screen-reader label and synchronize with font loading. Verify segmentation, visible spacing, wrapping, and screen-reader output in each supported locale.
 
 ---
 
 ## 1. International Script Splitting via `Intl.Segmenter`
-Splits text into words while maintaining whitespace integrity:
+Splits text into animation units. This example filters whitespace and adds layout gaps, which can change typography in scripts that do not use spaces or around punctuation. Preserve separators and inline layout when required:
 
 ```typescript
 // lib/motion/typography.ts

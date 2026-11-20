@@ -1,6 +1,6 @@
-# Production Implementation: Scroll-Driven Longform Editorial
+# Integration Example: Scroll-Driven Longform Editorial
 
-Complete, runnable Next.js 15 + React 19 component for an immersive magazine layout with **compositor-friendly `scaleX` reading progress active in reduced motion**, **native scrollTo fallback when Lenis is disabled**, **React ref chapter tracking**, and **accessible video with live reduced-motion preference monitoring and self-contained captions**.
+Illustrative Next.js 15 + React 19 component for an immersive magazine layout with **compositor-friendly `scaleX` reading progress active in reduced motion**, **native scrollTo fallback when Lenis is disabled**, **React ref chapter tracking**, and **accessible video with live reduced-motion preference monitoring and self-contained captions**.
 
 ```tsx
 // components/editorial/scroll-editorial.tsx

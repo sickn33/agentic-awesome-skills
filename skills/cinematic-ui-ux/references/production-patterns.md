@@ -78,7 +78,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 ---
 
-## 3. Verified Dependencies (`package.json`)
+## 3. Example Dependencies (`package.json`)
+
+Use supported patched versions and the target project’s dependency manager and lockfile.
+
 ```json
 {
   "name": "cinematic-motion-suite",

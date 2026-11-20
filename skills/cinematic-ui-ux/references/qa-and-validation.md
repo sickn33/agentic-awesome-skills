@@ -21,7 +21,7 @@ test.describe('Cinematic Motion & Accessibility Acceptance Suite', () => {
     await expect(segment).toHaveCSS('opacity', '1');
   });
 
-  test('Curtain transition performs complete lifecycle: lock -> navigate -> focus', async ({ page }) => {
+  test('Archive navigation clears the curtain and focuses the destination', async ({ page }) => {
     await page.goto('/');
 
     const curtain = page.locator('[data-transition-curtain="true"].transition-curtain');
@@ -51,10 +51,11 @@ test.describe('Cinematic Motion & Accessibility Acceptance Suite', () => {
     const firstLink = nav.locator('a').first();
     await expect(firstLink).toBeFocused();
 
-    // Tab through menu items and test wrap-around
+    // Verify wrap-around at both boundaries.
+    await page.keyboard.press('Shift+Tab');
+    await expect(nav.locator('a').last()).toBeFocused();
     await page.keyboard.press('Tab');
-    const secondLink = nav.locator('a').nth(1);
-    await expect(secondLink).toBeFocused();
+    await expect(firstLink).toBeFocused();
 
     // Press Escape to close
     await page.keyboard.press('Escape');
