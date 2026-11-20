@@ -1,6 +1,6 @@
 # Production Architecture & Reusable MotionProvider
 
-Complete runnable `MotionProvider` unifying Decorative Motion Pausing, Lenis Smooth Scroll, Route Page Transitions (with Suspense), Reduced Motion, and CustomEase registration into a single plug-and-play provider.
+Example `MotionProvider` composing the reference providers for decorative motion, smooth scrolling and route transitions. Resolve the referenced components in the target app, then validate focus, reduced motion and cleanup in a browser.
 
 ---
 

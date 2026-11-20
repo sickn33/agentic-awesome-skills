@@ -1,6 +1,6 @@
 # Quality Assurance, Acceptance Criteria & Illustrative Automated Testing
 
-Measurable criteria, complete runnable application fixture specifications, and automated Playwright test suites asserting actual navigation completion, focus management, and error recovery.
+Measurable criteria, an application fixture outline, and illustrative Playwright checks for navigation and focus.
 
 ---
 
@@ -27,21 +27,14 @@ test.describe('Cinematic Motion & Accessibility Acceptance Suite', () => {
     const curtain = page.locator('[data-transition-curtain="true"].transition-curtain');
     await expect(curtain).toHaveCSS('pointer-events', 'none');
 
-    // Click transition link to archive
-    const navLink = page.locator('a[href="/archive"]').first();
-    if (await navLink.count() > 0) {
-      await navLink.click();
+    const navLink = page.getByRole('link', { name: 'Archive', exact: true });
+    await expect(navLink).toBeVisible();
+    await navLink.click();
 
-      // Verify URL changed
-      await expect(page).toHaveURL(/\/archive/);
-
-      // Verify curtain is cleared and restored to non-blocking pointer events
-      await expect(curtain).toHaveCSS('pointer-events', 'none', { timeout: 6000 });
-
-      // Verify keyboard focus is shifted to destination <main> landmark
-      const main = page.locator('main');
-      await expect(main).toBeFocused();
-    }
+    await expect(page).toHaveURL(/\/archive(?:[?#].*)?$/);
+    await expect(curtain).toHaveAttribute('aria-hidden', 'true', { timeout: 6000 });
+    await expect(page.locator('#app-root')).not.toHaveAttribute('inert');
+    await expect(page.getByRole('main')).toBeFocused();
   });
 
   test('Accessible menu implements dynamic keyboard focus trap and returns focus on close', async ({ page }) => {
@@ -92,8 +85,15 @@ test.describe('Cinematic Motion & Accessibility Acceptance Suite', () => {
 
 ---
 
-## 2. Complete Runnable Application Fixture Specification
-To run the full suite in a pristine Next.js 15 environment:
+## 2. Application Fixture Outline
+
+Assemble this fixture in a project before running the tests. The reference
+bundle contains illustrative snippets. It does not include a configured Next.js
+application, Playwright runner, or working asset set.
+
+Render a link with accessible name "Archive" on the home page and a `main`
+landmark on the archive page. Keep the transition curtain and `#app-root`
+behavior aligned with the documented providers.
 
 ```text
 cinematic-app/
@@ -125,7 +125,7 @@ cinematic-app/
 └── playwright.config.ts
 ```
 
-### Verification Commands
+### Verification Commands for the Assembled Fixture
 ```bash
 # 1. Install dependencies
 pnpm install

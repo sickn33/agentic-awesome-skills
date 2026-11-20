@@ -32,9 +32,9 @@ To prevent duplication and context bloat across agent interactions, adhere stric
 
 ## 2. Permitted Animation Properties & Exception Policy
 
-### Rule 1: Zero-Cost Compositor Properties (Preferred Default)
-- **`transform`** (`translate3d`, `scale`, `rotate`, `skew`): 100% hardware-accelerated.
-- **`opacity`**: Hardware-composited with zero CPU paint or geometry reflow.
+### Rule 1: Prefer Compositor-Friendly Properties
+- **`transform`** (`translate3d`, `scale`, `rotate`, `skew`): Prefer for movement and scale. Verify layer promotion and frame cost on the target browser.
+- **`opacity`**: Prefer for fades. Profile paint and compositing when combined with other effects.
 
 ### Rule 2: Permitted Exceptions (Restricted & Scoped)
 - **`clip-path`**: Permitted strictly for route transition curtains and editorial image reveals where overflow geometry is fixed.
@@ -49,7 +49,7 @@ To prevent duplication and context bloat across agent interactions, adhere stric
 2. **5-Act Storyboard**: Map narrative beats (Hero → Discovery → Immersion → Climax → Conversion) with clear exit criteria.
 3. **Motion Tokenization**: Register CustomEase curves (`ease-couture`, `ease-cinematic-out`) with native cubic-bezier fallbacks.
 4. **Implementation**: Assemble components using shared `MotionProvider`, `LenisProvider`, and `TransitionProvider`.
-5. **Accessibility & Vestibular Safety**: Implement `prefers-reduced-motion` alternates, decoupled decorative pause, and keyboard traps.
+5. **Accessibility & Vestibular Safety**: Implement `prefers-reduced-motion` alternates, decoupled decorative pause, and focus containment for modal dialogs.
 6. **Performance & VRAM Profiling**: Audit P95 frame times (< 16.6ms), frame drop rate (< 5%), and device VRAM budgets.
 7. **Automated Verification**: Run Playwright end-to-end tests validating navigation lifecycles, focus traps, and teardowns.
 
@@ -65,9 +65,9 @@ To prevent duplication and context bloat across agent interactions, adhere stric
 
 ---
 
-## 5. Consolidated 47-Defect Audit & Verification Register
+## 5. Implementation Review Register
 
-All 47 demonstrable defects, risks, and verification gaps identified in static code auditing are addressed in Version 2.3.0:
+These checks describe the intended implementation in the references. Validate their behavior in the target application and browser:
 
 ### Group A: Release-Blocking & High-Priority Problems (1–15)
 - **1. Rules-of-Hooks Compliance (`lenis-scroll-systems.md`)**: Decoupled conditional nesting checks into an outer `LenisProvider` wrapper and inner `InnerLenisProvider`, preventing conditional hook execution.
@@ -83,8 +83,8 @@ All 47 demonstrable defects, risks, and verification gaps identified in static c
 - **11. Multi-State Scrubbing Pipeline (`cinematic-media.md`)**: Modeled states: `'IDLE' | 'LOADING' | 'PARTIAL_READY' | 'READY' | 'TIMEOUT_DEGRADED' | 'FAILED'`. Prevents false ready states on zero-frame timeouts.
 - **12. Decoded Source-Image Memory Budget (`cinematic-media.md`)**: Added decoded memory calculation (`W * H * 4`). Evicts distant decoded frames when exceeding `memoryBudgetMB`.
 - **13. Wired Decorative Pause Controller (`motion-accessibility.md`)**: Wired `registerDecorativeTween`, `registerVideo`, and `registerAudioContext` directly into example timelines and players.
-- **14. Application Fixture Specification (`qa-and-validation.md`)**: Supplied a complete runnable project structure with verified dependencies (`next: ^15.0.0`, `react: ^19.0.0`).
-- **15. Realistic Navigation E2E Tests (`qa-and-validation.md`)**: Asserted real navigation completion: link click &rarr; URL update &rarr; curtain clearance &rarr; destination `<main>` keyboard focus.
+- **14. Application Fixture Specification (`qa-and-validation.md`)**: Outlined a project structure and suggested dependencies (`next: ^15.0.0`, `react: ^19.0.0`).
+- **15. Realistic Navigation E2E Tests (`qa-and-validation.md`)**: Specified assertions for navigation completion: link click &rarr; URL update &rarr; curtain clearance &rarr; destination `<main>` keyboard focus.
 
 ### Group B: Scroll, Transition & Lifecycle Issues (16–27)
 - **16. GSAP Ticker Setting Preservation (`lenis-scroll-systems.md`)**: Restores standard GSAP ticker lag smoothing defaults (`500, 33`) on provider unmount without guessing private properties.
