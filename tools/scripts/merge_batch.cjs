@@ -793,7 +793,7 @@ function assertEffectiveMainProtection(projectRoot, repoSlug, dependencies = {})
   validateEffectiveMainProtection(state?.protection, state?.rulesets);
 }
 
-function getRequiredCheckAliases(prDetails, options = {}) {
+function getRequiredCheckAliases(prDetails, reviewedHeads) {
   const aliases = REQUIRED_CHECKS.map(([, value]) => value);
   if (prDetails.hasSkillChanges) {
     aliases.push({
@@ -801,7 +801,7 @@ function getRequiredCheckAliases(prDetails, options = {}) {
       aliases: SKILL_REVIEW_REQUIRED,
       appId: GITHUB_ACTIONS_APP_ID,
       acceptedConclusions: ["success"],
-      alternatives: options.allowManualReview
+      alternatives: reviewedHeads?.has(prDetails.headRefOid)
         ? [{
             aliases: MANUAL_REVIEW_REQUIRED,
             appId: GITHUB_ACTIONS_APP_ID,
@@ -1344,10 +1344,7 @@ async function mergePullRequest(projectRoot, repoSlug, prNumber, options) {
     );
   }
 
-  const requiredCheckAliases = getRequiredCheckAliases(prDetails, {
-    allowManualReview: approval.policy.requiresHumanReview &&
-      currentReviewedHeads.has(headSha),
-  });
+  const requiredCheckAliases = getRequiredCheckAliases(prDetails, currentReviewedHeads);
   if (!options.dryRun) {
     await waitForRequiredChecks(projectRoot, repoSlug, headSha, requiredCheckAliases, options.pollSeconds, 180, () => {
       const current = loadPullRequestDetails(projectRoot, repoSlug, prNumber);
