@@ -1,74 +1,137 @@
 {
   "schemaVersion": 1,
   "repository": "sickn33/agentic-awesome-skills",
-  "version": "21.0.0",
-  "main": "3fc872a077fe1bbfcafd1059f44f0c1275d55a58",
+  "version": "21.1.0",
+  "main": "0ad8b698f4a81fca148cf5b2951472c7c5345a4a",
   "prs": [
-    2394,
-    2395,
-    2396,
-    2397,
-    2402,
-    2403,
-    2404,
-    2405,
-    2406
+    2408,
+    2409,
+    2410,
+    2413,
+    2418,
+    2419,
+    2420,
+    2421,
+    2422,
+    2425,
+    2426,
+    2427,
+    2428,
+    2429,
+    2430,
+    2431,
+    2432,
+    2438
   ],
   "pulls": [
     {
-      "number": 2394,
-      "head": "b7b8c807a8d57106afffaa151a997fc7b822ef22",
-      "merge": "5a28537c2f1018ab9c6734bd45da4e571d3c038f",
-      "closedAt": "2026-11-18T21:16:42Z"
-    },
-    {
-      "number": 2395,
-      "head": "4072abc69996f6237661a265fb65774a9f0cb23b",
-      "merge": "8fd48e718e38d26d66ff75e6f5dcaefb2bd44e78",
-      "closedAt": "2026-11-18T21:22:16Z"
-    },
-    {
-      "number": 2396,
-      "head": "5b7b85ce667c7e439b612cf1100a0fe152630362",
-      "merge": "7d25247c2bb4a611d2fae5040c72a598ea521eb5",
-      "closedAt": "2026-11-18T21:25:28Z"
-    },
-    {
-      "number": 2397,
-      "head": "5ec95b8ca9f7c6d8dd72187847cd87d34f5acfe5",
-      "merge": "14cdc0a997462bea4844b4db9ce1951d0c07ce9f",
-      "closedAt": "2026-11-18T21:28:05Z"
-    },
-    {
-      "number": 2402,
-      "head": "6d5e398c3ba1db1f3b8b2d9a460ee5a30c4dbaad",
+      "number": 2408,
+      "head": "5859465142df7041ac463ded61d2933fab60917a",
       "merge": null,
-      "closedAt": "2026-11-18T21:13:40Z"
+      "closedAt": "2026-11-20T17:30:59Z"
     },
     {
-      "number": 2403,
-      "head": "bd70cc843f0723b481473ff725b23f1d5b87e077",
+      "number": 2409,
+      "head": "7a6eec6d8e4cc400f1e1a2936e4d3f9254481e57",
+      "merge": "9657318e438b2dee933b3b72b72dc9cab5e55ed0",
+      "closedAt": "2026-11-20T17:30:53Z"
+    },
+    {
+      "number": 2410,
+      "head": "33e3c471963b71ed9e5b254d5c22afd4f7588241",
+      "merge": "6c52e23df7d9fbf0624c2d89d9eba4aad203cc57",
+      "closedAt": "2026-11-20T17:07:40Z"
+    },
+    {
+      "number": 2413,
+      "head": "cf5331313ed05ab8fe1bc5b7daba2155a90b21f4",
+      "merge": "0ad8b698f4a81fca148cf5b2951472c7c5345a4a",
+      "closedAt": "2026-11-20T17:39:04Z"
+    },
+    {
+      "number": 2418,
+      "head": "d2dc245e7a1d8937153d4a9f5654676e51a46ff3",
+      "merge": "ad5ca0602a4832a236a053151719fbb6a2a35607",
+      "closedAt": "2026-11-20T16:54:12Z"
+    },
+    {
+      "number": 2419,
+      "head": "1985406633cf40d0b82065e7ac7d11035ef8ee5b",
+      "merge": "ae6bc695b38b433d485cef291a3a58218c3eb133",
+      "closedAt": "2026-11-20T16:51:20Z"
+    },
+    {
+      "number": 2420,
+      "head": "cf6dcbb8603859aac9116332cf2dc90cae8993d1",
+      "merge": "df634787df0bc38d2bb17ef08a5bd5797341dce5",
+      "closedAt": "2026-11-20T17:23:41Z"
+    },
+    {
+      "number": 2421,
+      "head": "88758c3fb5d7d6be9607a6a0c9976e5b1fc6af42",
+      "merge": "5f831b11c4ad2e5652568e4809b780f4cffcfc40",
+      "closedAt": "2026-11-20T17:25:56Z"
+    },
+    {
+      "number": 2422,
+      "head": "76ee8b26ac7dcdb07eda8e1607f2e4901d45674b",
+      "merge": "a7208c8566046b5950c4fab26226b497869bb251",
+      "closedAt": "2026-11-20T16:48:40Z"
+    },
+    {
+      "number": 2425,
+      "head": "340fbfae79f85db87845d12b948d457dbf924e38",
       "merge": null,
-      "closedAt": "2026-11-18T21:13:32Z"
+      "closedAt": "2026-11-20T16:58:12Z"
     },
     {
-      "number": 2404,
-      "head": "2d3e46a650556387457baad1070017df090a3b07",
-      "merge": "6fca762f8a81bfafa11a0e8ced775f993e0c421a",
-      "closedAt": "2026-11-18T21:30:58Z"
-    },
-    {
-      "number": 2405,
-      "head": "93ca1560ea0107138974b8d1ade332e9d6a80efe",
+      "number": 2426,
+      "head": "db5d8fc9fb2de16b5020e23c19ddf9ec3eee260a",
       "merge": null,
-      "closedAt": "2026-11-18T21:13:36Z"
+      "closedAt": "2026-11-20T16:58:16Z"
     },
     {
-      "number": 2406,
-      "head": "725832428fe829f98eb8d31212350aa1ea5520b7",
-      "merge": "3fc872a077fe1bbfcafd1059f44f0c1275d55a58",
-      "closedAt": "2026-11-18T21:44:53Z"
+      "number": 2427,
+      "head": "3f6ce40403e1b4afc98e95e37d415b848628914d",
+      "merge": null,
+      "closedAt": "2026-11-20T17:31:02Z"
+    },
+    {
+      "number": 2428,
+      "head": "c21d4323628cdef59fb2d4c1ece5bb2836410e59",
+      "merge": null,
+      "closedAt": "2026-11-20T16:58:20Z"
+    },
+    {
+      "number": 2429,
+      "head": "8003f3a02fe4a3a420ec4736a8c507c47edf8c4c",
+      "merge": null,
+      "closedAt": "2026-11-20T17:31:06Z"
+    },
+    {
+      "number": 2430,
+      "head": "9fdc9822c2d4e95577d84db208b7f16da630ed49",
+      "merge": null,
+      "closedAt": "2026-11-20T17:31:09Z"
+    },
+    {
+      "number": 2431,
+      "head": "5fdf3d85923519a4a29dac45710bcb3c563eb84c",
+      "merge": "85b5732dfe6f061298703483819360a40b1f4192",
+      "closedAt": "2026-11-20T17:14:15Z"
+    },
+    {
+      "number": 2432,
+      "head": "794d7fffe4d551d5d564a9eee59a0077c4858a2d",
+      "merge": "390d3ec156c2f5e9d70cbfc843dcdce236215678",
+      "closedAt": "2026-11-20T16:56:40Z"
+    },
+    {
+      "number": 2438,
+      "head": "fc4dc08bad94db660a21b571f1ae68e67a21e941",
+      "merge": "9094c03c8e3e96a5cd0b579acff63cce5b4f5307",
+      "closedAt": "2026-11-20T17:21:25Z"
     }
   ],
-  "completedAt": "2026-11-18T21:50:36.887Z"
+  "completedAt": "2026-11-20T17:43:21.865Z"
 }

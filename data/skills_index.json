@@ -11060,6 +11060,43 @@
     }
   },
   {
+    "id": "b2b-hiring-intent-radar",
+    "path": "skills/b2b-hiring-intent-radar",
+    "category": "marketing",
+    "name": "b2b-hiring-intent-radar",
+    "description": "Query public read-only ATS feeds across 9 platforms to extract company tech-stack signals, disclosed salary bands, and B2B hiring intent.",
+    "risk": "safe",
+    "source": "https://github.com/yan0lovesha/hiring-intent-mcp",
+    "date_added": "2026-11-18",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "yan0lovesha/hiring-intent-mcp",
+    "license": "MIT",
+    "license_source": "https://github.com/yan0lovesha/hiring-intent-mcp/blob/e81b043512714fe88d2c4570fbb9681931d51393/LICENSE",
+    "tags": [
+      "b2b",
+      "hiring-intent",
+      "tech-stack",
+      "ats",
+      "greenhouse",
+      "ashby",
+      "lever",
+      "sales-research",
+      "mcp"
+    ]
+  },
+  {
     "id": "babysit-pr",
     "path": "skills/babysit-pr",
     "category": "code-quality",
@@ -16231,6 +16268,30 @@
     }
   },
   {
+    "id": "cinematic-ui-ux",
+    "path": "skills/cinematic-ui-ux",
+    "category": "frontend",
+    "name": "cinematic-ui-ux",
+    "description": "Build high-performance cinematic web experiences with GSAP 3.12+, Lenis smooth scroll, canvas frame scrubbing, kinetic typography, and WCAG 2.2 motion accessibility.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "MIT"
+  },
+  {
     "id": "circleci",
     "path": "skills/circleci",
     "category": "devops",
@@ -18040,6 +18101,30 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "codebase-aware-ui-prompts",
+    "path": "skills/codebase-aware-ui-prompts",
+    "category": "design",
+    "name": "codebase-aware-ui-prompts",
+    "description": "Transform product requirements into precise, architecture-preserving UI implementation prompts for Cursor, Claude Code, v0, Lovable, and Stitch without duplicating packages or breaking design tokens.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "MIT"
   },
   {
     "id": "codebase-cleanup-deps-audit",
@@ -23637,6 +23722,240 @@
     ]
   },
   {
+    "id": "design-how-build-design-system",
+    "path": "skills/design-how-build-design-system",
+    "category": "design",
+    "name": "design-how-build-design-system",
+    "description": "Extract semantic tokens and reusable components from an existing app, check behavior and visual parity, and validate one pilot flow.",
+    "risk": "critical",
+    "source": "https://github.com/arla6ka/design.how/tree/1ce5304466db2ba47a7a7524603e86df77c702bd/skills/build-design-system",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "arla6ka/design.how",
+    "license": "MIT",
+    "license_source": "https://github.com/arla6ka/design.how/blob/1ce5304466db2ba47a7a7524603e86df77c702bd/LICENSE"
+  },
+  {
+    "id": "design-how-component-docs",
+    "path": "skills/design-how-component-docs",
+    "category": "design",
+    "name": "design-how-component-docs",
+    "description": "Write one component entry from implementation, stories and real call sites, including states, behavior and usage constraints.",
+    "risk": "critical",
+    "source": "https://github.com/arla6ka/design.how/tree/1ce5304466db2ba47a7a7524603e86df77c702bd/skills/component-docs",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "arla6ka/design.how",
+    "license": "MIT",
+    "license_source": "https://github.com/arla6ka/design.how/blob/1ce5304466db2ba47a7a7524603e86df77c702bd/LICENSE"
+  },
+  {
+    "id": "design-how-design-system-boss",
+    "path": "skills/design-how-design-system-boss",
+    "category": "design",
+    "name": "design-how-design-system-boss",
+    "description": "Route a whole-app UI consistency request to a design-system build or adoption audit, then verify a representative flow.",
+    "risk": "critical",
+    "source": "https://github.com/arla6ka/design.how/tree/1ce5304466db2ba47a7a7524603e86df77c702bd/skills/design-system-boss",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "arla6ka/design.how",
+    "license": "MIT",
+    "license_source": "https://github.com/arla6ka/design.how/blob/1ce5304466db2ba47a7a7524603e86df77c702bd/LICENSE"
+  },
+  {
+    "id": "design-how-make-font",
+    "path": "skills/design-how-make-font",
+    "category": "design",
+    "name": "design-how-make-font",
+    "description": "Fit a modifiable open typeface to aggregate reference measurements, then verify glyph coverage, spacing and web distribution.",
+    "risk": "critical",
+    "source": "https://github.com/arla6ka/design.how/tree/1ce5304466db2ba47a7a7524603e86df77c702bd/skills/make-font",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "arla6ka/design.how",
+    "license": "MIT",
+    "license_source": "https://github.com/arla6ka/design.how/blob/1ce5304466db2ba47a7a7524603e86df77c702bd/LICENSE"
+  },
+  {
+    "id": "design-how-make-logo",
+    "path": "skills/design-how-make-logo",
+    "category": "design",
+    "name": "design-how-make-logo",
+    "description": "Develop original mark and wordmark directions from a brief, compare legibility and similarity, and prepare a reviewed asset package.",
+    "risk": "critical",
+    "source": "https://github.com/arla6ka/design.how/tree/1ce5304466db2ba47a7a7524603e86df77c702bd/skills/make-logo",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "arla6ka/design.how",
+    "license": "MIT",
+    "license_source": "https://github.com/arla6ka/design.how/blob/1ce5304466db2ba47a7a7524603e86df77c702bd/LICENSE"
+  },
+  {
+    "id": "design-how-make-motion",
+    "path": "skills/design-how-make-motion",
+    "category": "design",
+    "name": "design-how-make-motion",
+    "description": "Turn an approved product story into a short motion video with a timing sheet, review cuts and measured export checks.",
+    "risk": "critical",
+    "source": "https://github.com/arla6ka/design.how/tree/1ce5304466db2ba47a7a7524603e86df77c702bd/skills/make-motion",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "arla6ka/design.how",
+    "license": "MIT",
+    "license_source": "https://github.com/arla6ka/design.how/blob/1ce5304466db2ba47a7a7524603e86df77c702bd/LICENSE"
+  },
+  {
+    "id": "design-how-migrate-design-system",
+    "path": "skills/design-how-migrate-design-system",
+    "category": "design",
+    "name": "design-how-migrate-design-system",
+    "description": "Audit or replace legacy UI with an existing design system in bounded waves while preserving route behavior and rendering.",
+    "risk": "critical",
+    "source": "https://github.com/arla6ka/design.how/tree/1ce5304466db2ba47a7a7524603e86df77c702bd/skills/migrate-design-system",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "arla6ka/design.how",
+    "license": "MIT",
+    "license_source": "https://github.com/arla6ka/design.how/blob/1ce5304466db2ba47a7a7524603e86df77c702bd/LICENSE"
+  },
+  {
+    "id": "design-how-token-mapping",
+    "path": "skills/design-how-token-mapping",
+    "category": "design",
+    "name": "design-how-token-mapping",
+    "description": "Produce a read-only mapping from hardcoded styling to semantic design tokens with exact, near, ambiguous and missing matches.",
+    "risk": "safe",
+    "source": "https://github.com/arla6ka/design.how/tree/1ce5304466db2ba47a7a7524603e86df77c702bd/skills/token-mapping",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "arla6ka/design.how",
+    "license": "MIT",
+    "license_source": "https://github.com/arla6ka/design.how/blob/1ce5304466db2ba47a7a7524603e86df77c702bd/LICENSE"
+  },
+  {
+    "id": "design-how-ui-review",
+    "path": "skills/design-how-ui-review",
+    "category": "design",
+    "name": "design-how-ui-review",
+    "description": "Review a rendered screen or flow and rank reproducible usability, accessibility and responsive defects with evidence.",
+    "risk": "safe",
+    "source": "https://github.com/arla6ka/design.how/tree/1ce5304466db2ba47a7a7524603e86df77c702bd/skills/ui-review",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "arla6ka/design.how",
+    "license": "MIT",
+    "license_source": "https://github.com/arla6ka/design.how/blob/1ce5304466db2ba47a7a7524603e86df77c702bd/LICENSE"
+  },
+  {
     "id": "design-it",
     "path": "skills/design-it",
     "category": "frontend",
@@ -26449,6 +26768,318 @@
     "source_repo": "zhaoxuya520/reverse-skill",
     "license": "MIT",
     "license_source": "https://github.com/zhaoxuya520/reverse-skill/blob/main/LICENSE"
+  },
+  {
+    "id": "effect-smol-ai-docs",
+    "path": "skills/effect-smol-ai-docs",
+    "category": "development",
+    "name": "effect-smol-ai-docs",
+    "description": "Update Effect AI documentation sources and verify generated LLMS.md, examples and coverage.",
+    "risk": "critical",
+    "source": "https://github.com/sybil-solutions/local-studio/tree/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/.agents/skills/ai-docs",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sybil-solutions/local-studio",
+    "license": "MIT",
+    "license_source": "https://github.com/sybil-solutions/local-studio/blob/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/LICENSE"
+  },
+  {
+    "id": "effect-smol-bundle-analysis",
+    "path": "skills/effect-smol-bundle-analysis",
+    "category": "development",
+    "name": "effect-smol-bundle-analysis",
+    "description": "Compare Effect bundle fixtures across revisions and identify verified changes in bytes and composition.",
+    "risk": "critical",
+    "source": "https://github.com/sybil-solutions/local-studio/tree/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/.agents/skills/bundle-analysis",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sybil-solutions/local-studio",
+    "license": "MIT",
+    "license_source": "https://github.com/sybil-solutions/local-studio/blob/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/LICENSE"
+  },
+  {
+    "id": "effect-smol-changesets",
+    "path": "skills/effect-smol-changesets",
+    "category": "development",
+    "name": "effect-smol-changesets",
+    "description": "Audit Effect package changes for consumer-visible impacts and record the appropriate changeset and migration notes.",
+    "risk": "critical",
+    "source": "https://github.com/sybil-solutions/local-studio/tree/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/.agents/skills/changesets",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sybil-solutions/local-studio",
+    "license": "MIT",
+    "license_source": "https://github.com/sybil-solutions/local-studio/blob/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/LICENSE"
+  },
+  {
+    "id": "effect-smol-ci-maintenance",
+    "path": "skills/effect-smol-ci-maintenance",
+    "category": "development",
+    "name": "effect-smol-ci-maintenance",
+    "description": "Review or update Effect GitHub Actions with a job-by-job trigger, revision, permission and artifact trust inventory.",
+    "risk": "critical",
+    "source": "https://github.com/sybil-solutions/local-studio/tree/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/.agents/skills/ci-maintenance",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sybil-solutions/local-studio",
+    "license": "MIT",
+    "license_source": "https://github.com/sybil-solutions/local-studio/blob/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/LICENSE"
+  },
+  {
+    "id": "effect-smol-dependency-maintenance",
+    "path": "skills/effect-smol-dependency-maintenance",
+    "category": "development",
+    "name": "effect-smol-dependency-maintenance",
+    "description": "Synchronize Effect workspace dependency changes across manifests, lockfile and the affected validation matrix.",
+    "risk": "critical",
+    "source": "https://github.com/sybil-solutions/local-studio/tree/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/.agents/skills/dependency-maintenance",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sybil-solutions/local-studio",
+    "license": "MIT",
+    "license_source": "https://github.com/sybil-solutions/local-studio/blob/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/LICENSE"
+  },
+  {
+    "id": "effect-smol-effect-development",
+    "path": "skills/effect-smol-effect-development",
+    "category": "development",
+    "name": "effect-smol-effect-development",
+    "description": "Implement or review Effect integrations using targeted repository API guidance and version-matched runtime or type checks.",
+    "risk": "critical",
+    "source": "https://github.com/sybil-solutions/local-studio/tree/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/.agents/skills/effect-development",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sybil-solutions/local-studio",
+    "license": "MIT",
+    "license_source": "https://github.com/sybil-solutions/local-studio/blob/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/LICENSE"
+  },
+  {
+    "id": "effect-smol-jsdocs",
+    "path": "skills/effect-smol-jsdocs",
+    "category": "development",
+    "name": "effect-smol-jsdocs",
+    "description": "Write or review Effect public JSDoc against declaration, implementation, call-site and doctest evidence.",
+    "risk": "critical",
+    "source": "https://github.com/sybil-solutions/local-studio/tree/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/.agents/skills/jsdocs",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sybil-solutions/local-studio",
+    "license": "MIT",
+    "license_source": "https://github.com/sybil-solutions/local-studio/blob/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/LICENSE"
+  },
+  {
+    "id": "effect-smol-migration-guidance",
+    "path": "skills/effect-smol-migration-guidance",
+    "category": "development",
+    "name": "effect-smol-migration-guidance",
+    "description": "Keep Effect v3-to-v4 migration annotations and generated guidance aligned with verified public API replacements.",
+    "risk": "critical",
+    "source": "https://github.com/sybil-solutions/local-studio/tree/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/.agents/skills/migration-guidance",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sybil-solutions/local-studio",
+    "license": "MIT",
+    "license_source": "https://github.com/sybil-solutions/local-studio/blob/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/LICENSE"
+  },
+  {
+    "id": "effect-smol-package-development",
+    "path": "skills/effect-smol-package-development",
+    "category": "development",
+    "name": "effect-smol-package-development",
+    "description": "Create or move an Effect workspace package while checking registration, exports, generated barrels and packed contents.",
+    "risk": "critical",
+    "source": "https://github.com/sybil-solutions/local-studio/tree/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/.agents/skills/package-development",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sybil-solutions/local-studio",
+    "license": "MIT",
+    "license_source": "https://github.com/sybil-solutions/local-studio/blob/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/LICENSE"
+  },
+  {
+    "id": "effect-smol-performance-analysis",
+    "path": "skills/effect-smol-performance-analysis",
+    "category": "development",
+    "name": "effect-smol-performance-analysis",
+    "description": "Compare Effect runtime performance or TypeScript checker cost with matched fixtures and repeatable measurements.",
+    "risk": "safe",
+    "source": "https://github.com/sybil-solutions/local-studio/tree/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/.agents/skills/performance-analysis",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sybil-solutions/local-studio",
+    "license": "MIT",
+    "license_source": "https://github.com/sybil-solutions/local-studio/blob/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/LICENSE"
+  },
+  {
+    "id": "effect-smol-test-development",
+    "path": "skills/effect-smol-test-development",
+    "category": "development",
+    "name": "effect-smol-test-development",
+    "description": "Add focused Vitest and Tstyche coverage for Effect runtime behavior and public type inference.",
+    "risk": "critical",
+    "source": "https://github.com/sybil-solutions/local-studio/tree/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/.agents/skills/test-development",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sybil-solutions/local-studio",
+    "license": "MIT",
+    "license_source": "https://github.com/sybil-solutions/local-studio/blob/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/LICENSE"
+  },
+  {
+    "id": "effect-smol-vendored-assets",
+    "path": "skills/effect-smol-vendored-assets",
+    "category": "development",
+    "name": "effect-smol-vendored-assets",
+    "description": "Refresh Effect vendored assets with pinned sources, retained notices, deterministic generation and verified consumer impact.",
+    "risk": "critical",
+    "source": "https://github.com/sybil-solutions/local-studio/tree/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/.agents/skills/vendored-assets",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sybil-solutions/local-studio",
+    "license": "MIT",
+    "license_source": "https://github.com/sybil-solutions/local-studio/blob/f65c8af78582f741b62546c93d7c66439f0cd5b1/.repos/effect-smol/LICENSE"
   },
   {
     "id": "effective-agent-skills",
@@ -30155,6 +30786,40 @@
     ]
   },
   {
+    "id": "foragent-call",
+    "path": "skills/foragent-call",
+    "category": "development",
+    "name": "foragent-call",
+    "description": "Connect two AI agents by private phone number so they can talk directly and exchange files across computers or teammates using ForAgent.",
+    "risk": "critical",
+    "source": "https://github.com/seankwon816/foragent-skills",
+    "date_added": "2026-11-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "seankwon816/foragent-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/seankwon816/foragent-skills/blob/09549018909a55ee110b49aead47f5d89e8df6e6/LICENSE",
+    "tags": [
+      "multi-agent",
+      "mcp",
+      "agent-to-agent",
+      "claude-code",
+      "codex",
+      "file-transfer"
+    ]
+  },
+  {
     "id": "form-cro",
     "path": "skills/form-cro",
     "category": "marketing",
@@ -32617,6 +33282,42 @@
       "replies",
       "engagement",
       "social-media"
+    ]
+  },
+  {
+    "id": "getyoutubetranscript",
+    "path": "skills/getyoutubetranscript",
+    "category": "api-integration",
+    "name": "getyoutubetranscript",
+    "description": "Fetch YouTube transcripts in any caption language a video has, search YouTube, and list channel videos, Shorts, live streams, posts and playlists via the GetYouTubeTranscript API.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-11-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "tubeagentkit/youtube-transcript-skills",
+    "license": "MIT",
+    "license_source": "https://github.com/tubeagentkit/youtube-transcript-skills/blob/main/LICENSE",
+    "tags": [
+      "youtube",
+      "transcripts",
+      "captions",
+      "subtitles",
+      "video-search",
+      "channels",
+      "playlists",
+      "api"
     ]
   },
   {
@@ -57604,6 +58305,39 @@
     "license": "Unknown"
   },
   {
+    "id": "punchtape",
+    "path": "skills/punchtape",
+    "category": "development",
+    "name": "punchtape",
+    "description": "Use a user-authorized punchtape zone to verify agreed project checks and record a machine verdict.",
+    "risk": "critical",
+    "source": "https://github.com/neurophant/punchtape",
+    "date_added": "2026-11-20",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "neurophant/punchtape",
+    "license": "MIT",
+    "license_source": "https://github.com/neurophant/punchtape/blob/5aa248589b52de4f9930406849106d4100c940eb/LICENSE",
+    "tags": [
+      "verification",
+      "ai-agents",
+      "task-management",
+      "arbiter",
+      "testing"
+    ]
+  },
+  {
     "id": "puppeteer-skill",
     "path": "skills/puppeteer-skill",
     "category": "browser-automation",
@@ -68824,6 +69558,136 @@
     "source_type": "self"
   },
   {
+    "id": "sybil-glm53-offload-setup",
+    "path": "skills/sybil-glm53-offload-setup",
+    "category": "ai-ml",
+    "name": "sybil-glm53-offload-setup",
+    "description": "Select, verify and benchmark a GLM-5.3-Flash EXL3 offload mode on a single supported Linux NVIDIA host.",
+    "risk": "critical",
+    "source": "https://github.com/sybil-solutions/glm-flash-lite/tree/6fe077da79a4d6fc842cf9f50cb703e4409924ca/skills/glm53-offload-setup",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sybil-solutions/glm-flash-lite",
+    "license": "MIT",
+    "license_source": "https://github.com/sybil-solutions/glm-flash-lite/blob/6fe077da79a4d6fc842cf9f50cb703e4409924ca/LICENSE"
+  },
+  {
+    "id": "sybil-inference-optimisation",
+    "path": "skills/sybil-inference-optimisation",
+    "category": "ai-ml",
+    "name": "sybil-inference-optimisation",
+    "description": "Benchmark and tune local LLM serving against a measured ceiling with controlled comparisons, resource limits and quality gates.",
+    "risk": "critical",
+    "source": "https://github.com/sybil-solutions/inference-optimisation-skill/tree/fda968e7fc1996aa23c67139c755fe541c9d4be0/skills/inference-optimisation",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sybil-solutions/inference-optimisation-skill",
+    "license": "MIT",
+    "license_source": "https://github.com/sybil-solutions/inference-optimisation-skill/blob/fda968e7fc1996aa23c67139c755fe541c9d4be0/LICENSE"
+  },
+  {
+    "id": "sybil-local-studio-contribution-triage",
+    "path": "skills/sybil-local-studio-contribution-triage",
+    "category": "development",
+    "name": "sybil-local-studio-contribution-triage",
+    "description": "Evaluate PR eligibility from pinned T3 Code policy and immutable submission evidence before any authorised moderation.",
+    "risk": "critical",
+    "source": "https://github.com/sybil-solutions/local-studio/tree/f65c8af78582f741b62546c93d7c66439f0cd5b1/.agents/skills/contribution-triage",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sybil-solutions/local-studio",
+    "license": "MIT",
+    "license_source": "https://github.com/sybil-solutions/local-studio/blob/f65c8af78582f741b62546c93d7c66439f0cd5b1/LICENSE"
+  },
+  {
+    "id": "sybil-local-studio-test-t3-app",
+    "path": "skills/sybil-local-studio-test-t3-app",
+    "category": "development",
+    "name": "sybil-local-studio-test-t3-app",
+    "description": "Verify a T3 Code web or desktop flow through its Browser panel against isolated checkout state.",
+    "risk": "critical",
+    "source": "https://github.com/sybil-solutions/local-studio/tree/f65c8af78582f741b62546c93d7c66439f0cd5b1/.agents/skills/test-t3-app",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sybil-solutions/local-studio",
+    "license": "MIT",
+    "license_source": "https://github.com/sybil-solutions/local-studio/blob/f65c8af78582f741b62546c93d7c66439f0cd5b1/LICENSE"
+  },
+  {
+    "id": "sybil-local-studio-test-t3-mobile",
+    "path": "skills/sybil-local-studio-test-t3-mobile",
+    "category": "development",
+    "name": "sybil-local-studio-test-t3-mobile",
+    "description": "Verify the native T3 Code client through its Device panel, an isolated backend and the returned target-specific controls.",
+    "risk": "critical",
+    "source": "https://github.com/sybil-solutions/local-studio/tree/f65c8af78582f741b62546c93d7c66439f0cd5b1/.agents/skills/test-t3-mobile",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "sybil-solutions/local-studio",
+    "license": "MIT",
+    "license_source": "https://github.com/sybil-solutions/local-studio/blob/f65c8af78582f741b62546c93d7c66439f0cd5b1/LICENSE"
+  },
+  {
     "id": "sympy",
     "path": "skills/sympy",
     "category": "science",
@@ -74854,6 +75718,32 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "vercel-vgpu",
+    "path": "skills/vercel-vgpu",
+    "category": "development",
+    "name": "vercel-vgpu",
+    "description": "Build and profile WGSL shaders and WebGPU passes using the installed vgpu package and version-matched documentation.",
+    "risk": "critical",
+    "source": "https://github.com/vercel-labs/vgpu/tree/61779b7d15cc40a0058e4ade0457b8dbf717319e/skills/vgpu",
+    "date_added": "2026-11-19",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "vercel-labs/vgpu",
+    "license": "MIT",
+    "license_source": "https://github.com/vercel-labs/vgpu/blob/61779b7d15cc40a0058e4ade0457b8dbf717319e/LICENSE"
   },
   {
     "id": "verification-before-completion",
