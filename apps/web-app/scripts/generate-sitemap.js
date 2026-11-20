@@ -14,15 +14,6 @@ const NORMALIZED_BASE_PATH = BASE_PATH && BASE_PATH !== '/' ? BASE_PATH : '';
 const DEFAULT_SITE_URL = 'https://aaskills.tech';
 
 const SITE_URL = (process.env.SEO_SITE_URL || process.env.WEBSITE_BASE_URL || DEFAULT_SITE_URL).replace(/\/$/, '');
-// Keep this curated: broad enough to form a crawlable catalog, well below the
-// full library so thin/low-signal detail pages are not mass-submitted.
-export const DEFAULT_TOP_SKILL_COUNT = 180;
-const TOP_SKILL_COUNT = Number.parseInt(process.env.TOP_SKILL_COUNT || String(DEFAULT_TOP_SKILL_COUNT), 10);
-
-function getTopSkillCount() {
-  return Number.isFinite(TOP_SKILL_COUNT) ? Math.max(TOP_SKILL_COUNT, 0) : DEFAULT_TOP_SKILL_COUNT;
-}
-
 function escapeXml(text) {
   return String(text)
     .replace(/&/g, '&amp;')
@@ -53,7 +44,7 @@ function toIndexableRoutePath(pathName) {
   return withLeadingSlash.endsWith('/') ? withLeadingSlash : `${withLeadingSlash}/`;
 }
 
-export function selectTopSkillEntries(skills, topCount = TOP_SKILL_COUNT) {
+export function selectTopSkillEntries(skills, topCount = skills?.length) {
   const max = Math.max(Number.parseInt(topCount, 10) || 0, 0);
   if (!Array.isArray(skills) || max === 0) {
     return [];
@@ -140,7 +131,7 @@ function readSkillsCatalog() {
   return JSON.parse(raw);
 }
 
-export function buildSitemap(skills, topCount = TOP_SKILL_COUNT, baseUrl = SITE_URL) {
+export function buildSitemap(skills, topCount = skills?.length, baseUrl = SITE_URL) {
   const topSkillPaths = selectTopSkillEntries(skills, topCount);
   const landingPaths = getSeoLandingPaths();
   return generateSitemapXml({
@@ -162,7 +153,7 @@ export function buildSitemap(skills, topCount = TOP_SKILL_COUNT, baseUrl = SITE_
 
 function writeSitemap() {
   const skills = readSkillsCatalog();
-  const xml = buildSitemap(skills, getTopSkillCount(), SITE_URL);
+  const xml = buildSitemap(skills);
   fs.writeFileSync(OUTPUT_PATH, xml, 'utf-8');
   console.log(`sitemap.xml generated at ${OUTPUT_PATH}`);
 }

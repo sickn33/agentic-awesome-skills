@@ -14,6 +14,7 @@ const BING_VERIFICATION_TOKEN = 'CAC904EB0D2DD1B22B5F2BC540CAD654';
 const DEFAULT_CURRENT_BASE = 'https://aaskills.tech/';
 const DEFAULT_LEGACY_BASE = 'https://sickn33.github.io/antigravity-awesome-skills/';
 const DEFAULT_EXPECTED_ROUTES = 188;
+const LEGACY_SITEMAP_SKILL_COUNT = 180;
 // These first-party pages were introduced after the legacy catalog moved.
 // Keep this list exact so an unexpected route still fails the curated lock.
 const NEW_INFORMATION_ROUTES = new Set([
@@ -259,9 +260,17 @@ function generateBridge(options) {
     }
     return { currentUrl, relativeRoute };
   });
+  // Release snapshots can contain either the former shortlist or the complete
+  // ranked catalog. Keep the legacy sitemap shortlist for both input formats.
+  const skillRoutes = sitemapRoutes.filter(({ relativeRoute }) => relativeRoute.startsWith('skill/'));
+  if (skillRoutes.length > LEGACY_SITEMAP_SKILL_COUNT && skillRoutes.length !== skillIds.length) {
+    throw new Error('Expanded sitemap must include every current skill');
+  }
+  const legacySkillRoutes = new Set(skillRoutes.slice(0, LEGACY_SITEMAP_SKILL_COUNT));
   // First-party docs and new informational pages have no legacy routes to migrate.
   const bridgeSitemapRoutes = sitemapRoutes.filter(
-    ({ relativeRoute }) => relativeRoute !== 'docs' && !relativeRoute.startsWith('docs/') && !NEW_INFORMATION_ROUTES.has(relativeRoute),
+    (route) => route.relativeRoute.startsWith('skill/') ? legacySkillRoutes.has(route) :
+      route.relativeRoute !== 'docs' && !route.relativeRoute.startsWith('docs/') && !NEW_INFORMATION_ROUTES.has(route.relativeRoute),
   );
   if (bridgeSitemapRoutes.length !== expectedRoutes) {
     throw new Error(`sitemap route count ${bridgeSitemapRoutes.length} does not match locked expectation ${expectedRoutes}`);
