@@ -35,27 +35,31 @@ Configure effective alerting and on-call management for production systems.
 ```yaml
 # Severity levels
 critical:
-  - Service completely down
-  - Data loss imminent
-  - Security breach
+  triggers:
+    - Service completely down
+    - Data loss imminent
+    - Security breach
   response: Immediate page, wake people up
 
 high:
-  - Service degraded significantly
-  - Error rate above SLO
-  - Capacity near limit
+  triggers:
+    - Service degraded significantly
+    - Error rate above SLO
+    - Capacity near limit
   response: Page during business hours, notify after hours
 
 medium:
-  - Performance degradation
-  - Non-critical component failure
-  - Warning thresholds exceeded
+  triggers:
+    - Performance degradation
+    - Non-critical component failure
+    - Warning thresholds exceeded
   response: Notify via Slack, review next business day
 
 low:
-  - Informational alerts
-  - Capacity planning triggers
-  - Routine maintenance needed
+  triggers:
+    - Informational alerts
+    - Capacity planning triggers
+    - Routine maintenance needed
   response: Email notification, weekly review
 ```
 
@@ -220,7 +224,7 @@ inhibit_rules:
 
 ### Service Configuration
 
-```yaml
+```hcl
 # Terraform example
 resource "pagerduty_service" "myapp" {
   name                    = "MyApp Production"
@@ -269,7 +273,7 @@ resource "pagerduty_escalation_policy" "default" {
 
 ### Schedule Configuration
 
-```yaml
+```hcl
 resource "pagerduty_schedule" "primary" {
   name      = "Primary On-Call"
   time_zone = "America/New_York"
@@ -392,7 +396,7 @@ on_call_guidelines:
   
   responsibilities:
     - Monitor alerts during shift
-    - Respond within SLA (critical: 5min, high: 15min)
+    - "Respond within SLA (critical: 5min, high: 15min)"
     - Document incidents
     - Handoff unresolved issues
     
