@@ -65,17 +65,21 @@ def broken_links(path):
 
 
 class DocumentationConsistency(unittest.TestCase):
-    def test_current_onboarding_release_pins_agree(self):
-        # Keep historical guides outside this explicitly current onboarding set.
-        expected = json.loads((ROOT / 'package.json').read_text())['version']
-        pins = re.compile(r'(?:agentic-awesome-skills@|--release |--version |--pin v|--branch v)([0-9]+\.[0-9]+\.[0-9]+)')
-        for name in ('getting-started.md', 'codex-cli-skills.md', 'claude-code-skills.md'):
+    def test_onboarding_pins_match_their_distribution_channel(self):
+        github = json.loads((ROOT / 'package.json').read_text())['version']
+        npm = json.loads((ROOT / 'tools/config/npm-core-setup.json').read_text())['version']
+        version = r'([0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z.-]+)?)'
+        github_pins = re.compile(r'(?:SKILL\.md@v|--pin v|--branch v)' + version)
+        npm_pins = re.compile(r'(?:agentic-awesome-skills@|--release |--version )' + version)
+        for name in ('getting-started.md', 'aas-core.md', 'codex-cli-skills.md', 'claude-code-skills.md'):
             content = (ROOT / 'docs/users' / name).read_text()
-            versions = pins.findall(content)
-            self.assertTrue(versions, name)
-            self.assertEqual(set(versions), {expected}, name)
-        # Exercise stale and mixed examples rather than silently matching only latest.
-        self.assertEqual(pins.findall('agentic-awesome-skills@1.2.3 --release 4.5.6'), ['1.2.3', '4.5.6'])
+            source_examples = set(github_pins.findall(content))
+            runtime_examples = set(npm_pins.findall(content))
+            if name == 'getting-started.md' or source_examples:
+                self.assertEqual(source_examples, {github}, name)
+            if name != 'getting-started.md' or runtime_examples:
+                self.assertEqual(runtime_examples, {npm}, name)
+        self.assertEqual(npm_pins.findall('agentic-awesome-skills@1.2.3 --release 4.5.6'), ['1.2.3', '4.5.6'])
 
     def test_link_parser_rejects_missing_files_and_anchors(self):
         import tempfile
