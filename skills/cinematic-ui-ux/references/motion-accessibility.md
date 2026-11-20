@@ -52,8 +52,6 @@ export function MotionPauseProvider({ children }: { children: React.ReactNode })
     videosRef.current.forEach((v) => {
       if (isPaused) {
         if (!v.paused) v.pause();
-      } else {
-        if (v.paused) v.play().catch(() => {});
       }
     });
 
@@ -61,8 +59,6 @@ export function MotionPauseProvider({ children }: { children: React.ReactNode })
     audioContextsRef.current.forEach((ctx) => {
       if (isPaused) {
         if (ctx.state === 'running') ctx.suspend().catch(() => {});
-      } else {
-        if (ctx.state === 'suspended') ctx.resume().catch(() => {});
       }
     });
 
@@ -126,13 +122,15 @@ export function useDecorativeMotionPause() {
 ```
 
 ```css
-/* Global CSS animation pause cascade */
-html[data-motion-paused="true"] * {
+/* Mark only decorative CSS animation elements. */
+html[data-motion-paused="true"] [data-decorative-motion] {
   animation-play-state: paused !important;
 }
 ```
 
 ---
+
+After lifting decorative pause, let the media component decide whether to resume based on its playback controls, visibility and motion preference.
 
 ## 2. WCAG 2.2 Conformance Matrix & Specific Criteria
 Adheres to official W3C Web Content Accessibility Guidelines:

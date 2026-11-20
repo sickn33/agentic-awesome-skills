@@ -18,6 +18,7 @@ type AudioState = 'UNINITIALIZED' | 'RUNNING' | 'SUSPENDED' | 'BLOCKED' | 'ERROR
 export function TimepieceStory() {
   const containerRef = useRef<HTMLDivElement>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
+  const unregisterAudioRef = useRef<(() => void) | null>(null);
   const [isAudioMuted, setIsAudioMuted] = useState(true);
   const [audioStatus, setAudioStatus] = useState<AudioState>('UNINITIALIZED');
   const isAudioMutedRef = useRef(true);
@@ -26,10 +27,11 @@ export function TimepieceStory() {
     isAudioMutedRef.current = isAudioMuted;
   }, [isAudioMuted]);
 
-  const { registerDecorativeTween, registerAudioContext } = useDecorativeMotionPause();
+  const { isPaused, registerDecorativeTween, registerAudioContext } = useDecorativeMotionPause();
 
   const toggleAudio = useCallback(async () => {
     if (isAudioMuted) {
+      if (isPaused) return;
       try {
         if (!audioContextRef.current) {
           const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
@@ -39,7 +41,7 @@ export function TimepieceStory() {
           }
           const ctx = new AudioCtx();
           audioContextRef.current = ctx;
-          registerAudioContext(ctx);
+          unregisterAudioRef.current = registerAudioContext(ctx);
         }
 
         if (audioContextRef.current.state === 'suspended') {
@@ -59,7 +61,7 @@ export function TimepieceStory() {
         setAudioStatus('SUSPENDED');
       }
     }
-  }, [isAudioMuted, registerAudioContext]);
+  }, [isAudioMuted, isPaused, registerAudioContext]);
 
   useEffect(() => {
     const handleVisibilityChange = async () => {
@@ -72,7 +74,7 @@ export function TimepieceStory() {
           setAudioStatus('SUSPENDED');
         }
       } else {
-        if (!isAudioMutedRef.current && ctx.state === 'suspended') {
+        if (!isPaused && !isAudioMutedRef.current && ctx.state === 'suspended') {
           await ctx.resume().catch(() => {});
           setAudioStatus('RUNNING');
         }
@@ -81,10 +83,11 @@ export function TimepieceStory() {
 
     document.addEventListener('visibilitychange', handleVisibilityChange);
     return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
-  }, []);
+  }, [isPaused]);
 
   useEffect(() => {
     return () => {
+      unregisterAudioRef.current?.();
       if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
         audioContextRef.current.close().catch(() => {});
         audioContextRef.current = null;

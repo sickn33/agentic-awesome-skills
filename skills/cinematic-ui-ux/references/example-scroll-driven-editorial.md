@@ -49,14 +49,14 @@ export function ScrollEditorial() {
 
   // Consume shared application-wide Lenis context (includes instant fallback under reduced motion)
   const { scrollTo } = useLenisContext();
-  const { registerVideo } = useDecorativeMotionPause();
+  const { isPaused, registerVideo } = useDecorativeMotionPause();
 
   // Video IntersectionObserver with Dynamic Reduced-Motion Monitoring
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    registerVideo(video);
+    const unregisterVideo = registerVideo(video);
 
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -71,7 +71,7 @@ export function ScrollEditorial() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            if (!motionQuery.matches) {
+            if (!motionQuery.matches && !isPaused) {
               video.play().catch(() => {});
             }
           } else {
@@ -87,9 +87,10 @@ export function ScrollEditorial() {
     observer.observe(video);
     return () => {
       observer.disconnect();
+      unregisterVideo();
       motionQuery.removeEventListener('change', handleMotionChange);
     };
-  }, [registerVideo]);
+  }, [isPaused, registerVideo]);
 
   // Track Reading Progress via GPU Compositor (scaleX)
   // ACTIVE UNIVERSALLY across normal and reduced motion

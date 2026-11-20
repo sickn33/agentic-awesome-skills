@@ -21,7 +21,7 @@ $$\text{VRAM Total (Bytes)} = \left[\text{Width} \times \text{Height} \times \te
 ---
 
 ## 2. Frame Timing & Dropped Frame Harness (P95 & Jank Metrics)
-Uses `requestVideoFrameCallback` where available, combining RAF intervals with long-task observations:
+Samples animation-frame intervals and observes long tasks where supported. Treat intervals above 20 ms as slow-frame indicators. Measure presented video frames separately.
 
 ```typescript
 // lib/motion/frame-monitor.ts
@@ -29,14 +29,14 @@ Uses `requestVideoFrameCallback` where available, combining RAF intervals with l
 export interface FrameAuditResult {
   fps: number;
   p95FrameTimeMs: number;
-  droppedFramesPercent: number;
-  longTasksCount: number;
+  slowFramesPercent: number;
+  longTasksCount: number | null;
 }
 
-export function startFrameAudit(durationMs = 3000): Promise<FrameAuditResult> {
+export function startFrameAudit(durationMs = 3000): Promise<FrameAuditResult | null> {
   return new Promise((resolve) => {
     if (typeof window === 'undefined') {
-      resolve({ fps: 60, p95FrameTimeMs: 16.6, droppedFramesPercent: 0, longTasksCount: 0 });
+      resolve(null);
       return;
     }
 
@@ -53,7 +53,10 @@ export function startFrameAudit(durationMs = 3000): Promise<FrameAuditResult> {
         }
       });
       observer.observe({ entryTypes: ['longtask'] });
-    } catch {}
+    } catch {
+      observer?.disconnect();
+      observer = null;
+    }
 
     const onFrame = (now: number) => {
       const delta = now - lastTime;
@@ -69,19 +72,23 @@ export function startFrameAudit(durationMs = 3000): Promise<FrameAuditResult> {
       observer?.disconnect();
 
       frameTimes.sort((a, b) => a - b);
-      const p95Index = Math.floor(frameTimes.length * 0.95);
-      const p95FrameTimeMs = frameTimes[p95Index] || 16.6;
+      if (frameTimes.length === 0) {
+        resolve(null);
+        return;
+      }
+      const p95Index = Math.ceil(frameTimes.length * 0.95) - 1;
+      const p95FrameTimeMs = frameTimes[p95Index];
 
-      const droppedCount = frameTimes.filter((t) => t > 20).length;
-      const droppedFramesPercent = (droppedCount / Math.max(frameTimes.length, 1)) * 100;
+      const slowFrameCount = frameTimes.filter((t) => t > 20).length;
+      const slowFramesPercent = (slowFrameCount / Math.max(frameTimes.length, 1)) * 100;
       const averageDelta = frameTimes.reduce((a, b) => a + b, 0) / Math.max(frameTimes.length, 1);
       const fps = Math.round(1000 / Math.max(averageDelta, 1));
 
       resolve({
         fps,
         p95FrameTimeMs,
-        droppedFramesPercent,
-        longTasksCount,
+        slowFramesPercent,
+        longTasksCount: observer ? longTasksCount : null,
       });
     }, durationMs);
   });
