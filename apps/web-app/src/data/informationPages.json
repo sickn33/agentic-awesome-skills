@@ -533,6 +533,10 @@
           {
             "label": "Core guide",
             "href": "/docs/aas-core/"
+          },
+          {
+            "label": "Explore the remote MCP plugin",
+            "href": "/plugins/aas-core/"
           }
         ]
       }

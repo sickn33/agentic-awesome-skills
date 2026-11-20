@@ -11,6 +11,8 @@ For example, ask your agent to investigate a failing test, explain the cause, pr
 
 ## Your first result
 
+If you are evaluating skills with colleagues, [run a small team pilot](https://aaskills.tech/teams/) with one shared workflow and agree on what a successful result looks like.
+
 Choose [Codex](codex-cli-skills.md) or [Claude Code](claude-code-skills.md), then follow the six numbered steps in that guide. Already connected? Start at step 3 to verify the connection before selecting skills.
 
 | Stage | Ready to continue when |

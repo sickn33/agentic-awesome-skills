@@ -5,7 +5,7 @@
 ## Key Facts
 
 - Current release: V21.1.0.
-- Release boundary: V21.1.0 includes AAS Core under the Agent-First Preview; pin this exact version when configuring the local MCP.
+- Release boundary: GitHub V21.1.0 includes AAS Core under the Agent-First Preview. New npm publications are paused. The local MCP setup guides use the published agentic-awesome-skills@18.8.0 runtime and its bundled catalog. For current skill files, follow https://aaskills.tech/docs/getting-started/#install-and-update-without-npm
 - Skill count: 3,055+.
 - Library: reusable agent instructions, distributed through the CLI and specialized plugins. AAS Core preview is the companion `aas` CLI and local `aas-mcp` stdio server for discovery, selection and plan review.
 - Agent tools: `search_skills`, `get_skill`, `compose_stack`, `inspect_stack`, `diff_stack`, `export_selection_evidence`, and `inspect_selection_evidence`.

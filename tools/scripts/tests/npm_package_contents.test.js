@@ -141,6 +141,8 @@ assert.strictEqual(
   "published package must declare ajv as a runtime dependency for v1 schema validation",
 );
 
+const { version: npmSetupVersion } = require("../../config/npm-core-setup.json");
+assert.match(npmSetupVersion, /^\d+\.\d+\.\d+$/);
 const coreGuide = fs.readFileSync(path.join(repoRoot, "docs", "users", "aas-core.md"), "utf8");
 const readme = fs.readFileSync(path.join(repoRoot, "README.md"), "utf8");
 assert.strictEqual(
@@ -157,7 +159,7 @@ assert.ok(
   "published README must not direct package readers to moving main-branch Core instructions",
 );
 assert.ok(
-  coreGuide.includes(`--package=agentic-awesome-skills@${packageJson.version}`),
+  coreGuide.includes(`--package=agentic-awesome-skills@${npmSetupVersion}`),
   "AAS Core onboarding must pin the exact published package version",
 );
 assert.ok(

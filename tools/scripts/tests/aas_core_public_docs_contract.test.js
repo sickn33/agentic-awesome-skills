@@ -6,7 +6,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const repoRoot = path.resolve(__dirname, "../../..");
-const packageJson = JSON.parse(fs.readFileSync(path.join(repoRoot, "package.json"), "utf8"));
+const { version: npmSetupVersion } = require("../../config/npm-core-setup.json");
 
 const publicRoots = [
   "README.md",
@@ -82,8 +82,12 @@ const coreGuide = fs.readFileSync(path.join(repoRoot, "docs/users/aas-core.md"),
 const usageGuide = fs.readFileSync(path.join(repoRoot, "docs/users/usage.md"), "utf8");
 const readme = fs.readFileSync(path.join(repoRoot, "README.md"), "utf8");
 const validityBoundary = /Structural and identity validity does not certify semantic fit, compatibility, setup correctness, operational safety, or safety to apply\./;
-assert.match(coreGuide, new RegExp(`--package=agentic-awesome-skills@${packageJson.version.replaceAll(".", "\\.")}`));
-assert.doesNotMatch(coreGuide, /--package=agentic-awesome-skills@(?:X\.Y\.Z|latest)\b/);
+for (const slug of ["aas-core", "codex-cli-skills", "claude-code-skills"]) {
+  const guide = fs.readFileSync(path.join(repoRoot, "docs/users", slug + ".md"), "utf8");
+  assert.ok(guide.includes("For local MCP, the examples use `agentic-awesome-skills@" + npmSetupVersion + "`"));
+  const packagePins = [...guide.matchAll(/--package=agentic-awesome-skills@(\S+)/g)].map((match) => match[1]);
+  assert.deepEqual([...new Set(packagePins)], [npmSetupVersion], slug + " must use the published npm setup pin");
+}
 assert.match(coreGuide, validityBoundary);
 assert.match(readme, validityBoundary);
 assert.doesNotMatch(coreGuide, /selectable, and usable/i);

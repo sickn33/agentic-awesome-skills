@@ -36,22 +36,23 @@ class SyncRepoMetadataTests(unittest.TestCase):
         for host in ["codex", "claude"]:
             content = "Introduction\n" + "\n".join(
                 f"<!-- aas-agent-setup:{host}:{phase} -->\nold command\n<!-- /aas-agent-setup -->"
-                for phase in ["preview", "approve", "plan", "install"]
+                for phase in ["preview", "approve", "plan", "install", "direct"]
             ) + "\nClosing text"
             updated = sync_repo_metadata.sync_agent_setup_guide(content, {"version": "19.5.0"})
             self.assertTrue(updated.startswith("Introduction\n"))
             self.assertTrue(updated.endswith("\nClosing text"))
             self.assertNotIn("old command", updated)
-            self.assertIn(f"--host {host} --scope user --version 19.5.0", updated)
+            npm_version = sync_repo_metadata.NPM_SETUP_VERSION
+            self.assertIn(f"--host {host} --scope user --version {npm_version}", updated)
             self.assertIn(f"--target {host}:project", updated)
             self.assertIn('--backup-dir "$AAS_BACKUP"', updated)
             destination = ".agents" if host == "codex" else ".claude"
             self.assertIn(f"--destination \"$AAS_PROJECT/{destination}/skills\"", updated)
             self.assertEqual(sync_repo_metadata.sync_agent_setup_guide(updated, {"version": "19.5.0"}), updated)
             upgraded = sync_repo_metadata.sync_agent_setup_guide(updated, {"version": "20.0.0"})
-            self.assertNotIn("19.5.0", upgraded)
-            self.assertIn("--package=agentic-awesome-skills@20.0.0", upgraded)
-            self.assertIn("--version 20.0.0", upgraded)
+            self.assertEqual(upgraded, updated)
+            self.assertIn(f"--package=agentic-awesome-skills@{npm_version}", upgraded)
+            self.assertIn(f"--release {npm_version} --{host} --dry-run", upgraded)
             self.assertNotIn(" stack apply", upgraded)
 
     def test_agent_setup_sync_matches_both_committed_guides(self):
@@ -59,7 +60,7 @@ class SyncRepoMetadataTests(unittest.TestCase):
         for slug in ["codex-cli-skills", "claude-code-skills"]:
             content = (REPO_ROOT / "docs" / "users" / f"{slug}.md").read_text()
             self.assertEqual(sync_repo_metadata.sync_agent_setup_guide(content, metadata), content)
-            self.assertEqual(content.count("<!-- /aas-agent-setup -->"), 4)
+            self.assertEqual(content.count("<!-- /aas-agent-setup -->"), 5)
 
     def test_sync_curated_docs_updates_counts_and_versions(self):
         metadata = {
@@ -194,7 +195,7 @@ The 1,273+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflow
             self.assertNotIn("1111111111111111111111111111111111111111", getting_started)
             self.assertIn("Git tag and npm `gitHead` must agree", getting_started)
             aas_core = (root / "docs" / "users" / "aas-core.md").read_text(encoding="utf-8")
-            self.assertIn("--package=agentic-awesome-skills@8.4.0", aas_core)
+            self.assertIn(f"--package=agentic-awesome-skills@{sync_repo_metadata.NPM_SETUP_VERSION}", aas_core)
             self.assertIn("searchable, readable, and available for agent selection", aas_core)
             self.assertNotIn("X.Y.Z", aas_core)
             self.assertNotIn("selectable, and usable", aas_core)
@@ -206,7 +207,8 @@ The 1,273+ reusable `SKILL.md` playbooks, specialized plugins, bundles, workflow
             self.assertIn("backed by 1,304+ skills", web_index)
             llms_text = (root / "apps" / "web-app" / "public" / "llms.txt").read_text(encoding="utf-8")
             self.assertIn("Current release: V8.4.0.", llms_text)
-            self.assertIn("V8.4.0 includes AAS Core", llms_text)
+            self.assertIn("GitHub V8.4.0 includes AAS Core", llms_text)
+            self.assertIn(f"published agentic-awesome-skills@{sync_repo_metadata.NPM_SETUP_VERSION}", llms_text)
             self.assertIn("Skill count: 1,304+.", llms_text)
             self.assertIn("1,304+ skill catalog", llms_text)
             jetski_cortex = (root / "docs" / "integrations" / "jetski-cortex.md").read_text(encoding="utf-8")
