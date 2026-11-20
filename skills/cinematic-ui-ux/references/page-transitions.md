@@ -5,58 +5,34 @@ Production-grade page and route transitions for Next.js App Router with isolated
 ---
 
 ## 1. URL Security Sanitization
-Never pass unvalidated or external URLs directly to `router.push()`. Reject protocol-relative attacks (`//evil.com`), script injections (`javascript:`), and malformed URI sequences:
+This example accepts root-relative internal links for known routes. Use native links for static external links or fragment-only navigation. Validate the link before rendering it and before handing it to the router.
 
 ```typescript
 // lib/motion/sanitize-url.ts
+const LOCAL_ORIGIN = 'https://navigation.invalid';
 
-/**
- * Validates and sanitizes internal application navigation targets.
- * Strictly prevents open redirects, protocol-relative attacks (//), and script schemes.
- */
 export function sanitizeNavigationUrl(href: string): string | null {
-  if (!href || typeof href !== 'string') return null;
+  if (typeof href !== 'string') return null;
+  const value = href.trim();
+  const path = value.split(/[?#]/, 1)[0];
+  const internalPath = /^\/(?!\/)[a-zA-Z0-9_\-./~]*$/;
+  if (!internalPath.test(path)) return null;
 
-  const trimmed = href.trim();
-
-  // 1. Explicitly disallow protocol-relative URLs (e.g. "//malicious-site.com")
-  if (trimmed.startsWith('//')) {
-    console.warn(`[Security] Blocked protocol-relative navigation: ${trimmed}`);
-    return null;
-  }
-
-  // 2. Reject hazardous URI protocols
-  const lower = trimmed.toLowerCase();
-  if (
-    lower.startsWith('javascript:') ||
-    lower.startsWith('data:') ||
-    lower.startsWith('vbscript:') ||
-    lower.startsWith('file:')
-  ) {
-    console.warn(`[Security] Blocked malicious URI scheme: ${trimmed}`);
-    return null;
-  }
-
-  // 3. Validate relative paths or same-origin URLs
   try {
-    const parsed = new URL(trimmed, 'http://localhost');
-
-    if (parsed.hostname !== 'localhost') {
-      console.warn(`[Security] Blocked off-origin navigation target: ${trimmed}`);
+    const parsed = new URL(value, LOCAL_ORIGIN);
+    if (parsed.origin !== LOCAL_ORIGIN || !internalPath.test(parsed.pathname)) {
       return null;
     }
-
-    const safePathRegex = /^\/[a-zA-Z0-9_\-\.\/~]*$/;
-    if (!safePathRegex.test(parsed.pathname)) {
-      console.warn(`[Security] Path contains disallowed characters: ${parsed.pathname}`);
-      return null;
-    }
-
     return parsed.pathname + parsed.search + parsed.hash;
   } catch {
-    console.warn(`[Security] Malformed URL target: ${trimmed}`);
     return null;
   }
+}
+
+export function matchesDestination(href: string, pathname: string, query: string): boolean {
+  const target = new URL(href, LOCAL_ORIGIN);
+  return target.pathname === pathname &&
+    target.searchParams.toString() === new URLSearchParams(query).toString();
 }
 ```
 
@@ -80,7 +56,7 @@ import React, {
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
 import gsap from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
-import { sanitizeNavigationUrl } from '@/lib/motion/sanitize-url';
+import { matchesDestination, sanitizeNavigationUrl } from '@/lib/motion/sanitize-url';
 
 gsap.registerPlugin(ScrollToPlugin);
 
@@ -228,7 +204,8 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
         console.error('[Navigation] notifyPageReady requires a valid numeric navId.');
         return;
       }
-      if (navId !== activeNavIdRef.current) return;
+      if (navId !== activeNavIdRef.current || !targetHrefRef.current) return;
+      if (!matchesDestination(targetHrefRef.current, window.location.pathname, window.location.search)) return;
 
       if (state === 'WAITING_DESTINATION' || state === 'SLOW_LOADING') {
         revealCurtain(navId, false);
@@ -240,8 +217,7 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
   const handleRouteChange = useCallback(
     (newPath: string, newQuery: string) => {
       if (state === 'WAITING_DESTINATION' || state === 'SLOW_LOADING') {
-        const fullCurrent = newQuery ? `${newPath}?${newQuery}` : newPath;
-        if (targetHrefRef.current && (targetHrefRef.current === fullCurrent || fullCurrent.startsWith(targetHrefRef.current.split('?')[0]))) {
+        if (targetHrefRef.current && matchesDestination(targetHrefRef.current, newPath, newQuery)) {
           revealCurtain(activeNavIdRef.current, false);
         }
       }
@@ -284,13 +260,12 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
       if (!safeHref) return;
 
       if (isLockedRef.current) return;
-      isLockedRef.current = true;
-
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        isLockedRef.current = false;
+      const curtain = curtainRef.current;
+      if (!curtain || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         router.push(safeHref);
         return;
       }
+      isLockedRef.current = true;
 
       activeNavIdRef.current += 1;
       const currentNavId = activeNavIdRef.current;
@@ -306,12 +281,6 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
 
       const appRoot = document.getElementById('app-root');
       appRoot?.setAttribute('inert', 'true');
-
-      const curtain = curtainRef.current;
-      if (!curtain) {
-        router.push(safeHref);
-        return;
-      }
 
       const tween = gsap.to(curtain, {
         clipPath: 'polygon(0 0%, 100% 0%, 100% 100%, 0 100%)',
@@ -388,7 +357,7 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
         <div
           role="status"
           aria-live="polite"
-          className="fixed bottom-6 right-6 z-[10002] bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded font-mono text-xs shadow-2xl flex items-center gap-3"
+          className="pointer-events-auto fixed bottom-6 right-6 z-[10002] bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-2 rounded font-mono text-xs shadow-2xl flex items-center gap-3"
         >
           <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping" />
           <span>Loading destination assets...</span>
@@ -405,7 +374,7 @@ export function TransitionProvider({ children }: { children: React.ReactNode }) 
         <div
           role="alert"
           aria-live="assertive"
-          className="fixed bottom-6 right-6 z-[10002] bg-red-950/90 border border-red-500/50 text-white px-5 py-3 rounded font-mono text-xs shadow-2xl flex items-center gap-4"
+          className="pointer-events-auto fixed bottom-6 right-6 z-[10002] bg-red-950/90 border border-red-500/50 text-white px-5 py-3 rounded font-mono text-xs shadow-2xl flex items-center gap-4"
         >
           <span>{errorMessage}</span>
           <button
@@ -438,13 +407,14 @@ export function usePageTransition() {
 ---
 
 ## 3. Declarative `<TransitionLink>` Component
-Provides a drop-in replacement for `<Link>` and `<a href>` that handles custom animated transitions, respects modifier keys (Cmd/Ctrl for opening tabs), and ignores external links:
+Use this component for internal links. Modifier keys, non-default targets, and downloads keep their native link behavior after URL validation.
 
 ```tsx
 // components/motion/transition-link.tsx
 'use client';
 import React from 'react';
 import { usePageTransition } from './transition-provider';
+import { sanitizeNavigationUrl } from '@/lib/motion/sanitize-url';
 
 interface TransitionLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;
@@ -453,6 +423,8 @@ interface TransitionLinkProps extends React.AnchorHTMLAttributes<HTMLAnchorEleme
 
 export function TransitionLink({ href, children, className = '', onClick, ...props }: TransitionLinkProps) {
   const { navigate } = usePageTransition();
+  const safeHref = sanitizeNavigationUrl(href);
+  if (!safeHref) return <span className={className}>{children}</span>;
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     if (onClick) onClick(e);
@@ -460,16 +432,14 @@ export function TransitionLink({ href, children, className = '', onClick, ...pro
 
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
 
-    if (href.startsWith('http://') || href.startsWith('https://') || href.startsWith('mailto:') || href.startsWith('#')) {
-      return;
-    }
+    if ((props.target && props.target !== '_self') || props.download !== undefined) return;
 
     e.preventDefault();
-    navigate(href);
+    navigate(safeHref);
   };
 
   return (
-    <a href={href} onClick={handleClick} className={className} {...props}>
+    <a {...props} href={safeHref} onClick={handleClick} className={className}>
       {children}
     </a>
   );
@@ -479,7 +449,7 @@ export function TransitionLink({ href, children, className = '', onClick, ...pro
 ---
 
 ## 4. Destination Resource Readiness Verification
-Waits for actual critical resources (fonts, critical hero images, and WebGL contexts) before releasing the transition curtain:
+The provider above can reveal when the route matches. If the target app requires a resource-based reveal, gate it on both the route match and a readiness signal. The example below reports readiness after waiting for fonts and attempting image decoding. Treat decode failures according to the app’s fallback policy:
 
 ```tsx
 // app/work/[slug]/page.tsx
