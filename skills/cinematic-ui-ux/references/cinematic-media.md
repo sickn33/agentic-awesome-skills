@@ -43,7 +43,6 @@ export function CanvasFrameScrubber({
 }: FrameScrubberProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const inFlightAbortControllersRef = useRef<Map<number, AbortController>>(new Map());
   const scrollTriggerRef = useRef<ScrollTrigger | null>(null);
 
   const [scrubState, setScrubState] = useState<ScrubState>('IDLE');
@@ -61,10 +60,6 @@ export function CanvasFrameScrubber({
   }, []);
 
   const resetState = useCallback(() => {
-    // Abort all in-flight fetch requests
-    inFlightAbortControllersRef.current.forEach((controller) => controller.abort());
-    inFlightAbortControllersRef.current.clear();
-
     if (scrollTriggerRef.current) {
       scrollTriggerRef.current.kill();
       scrollTriggerRef.current = null;
@@ -78,8 +73,8 @@ export function CanvasFrameScrubber({
   useEffect(() => {
     resetState();
 
-    if (!Number.isInteger(frameCount) || frameCount <= 0) {
-      console.error('[FrameScrubber] frameCount must be a positive integer.');
+    if (!Number.isInteger(frameCount) || frameCount < 1 || frameCount > 120) {
+      console.error('[FrameScrubber] frameCount must be between 1 and 120.');
       setScrubState('FAILED');
       setErrorMessage('Invalid frame count specification.');
       return;
@@ -96,6 +91,10 @@ export function CanvasFrameScrubber({
       setScrubState('READY');
       return;
     }
+
+    const pendingImages = new Map<number, HTMLImageElement>();
+    const budgetBytes = Number.isFinite(memoryBudgetMB) ? Math.max(0, memoryBudgetMB) * 1024 * 1024 : 0;
+    const decodedBytes = (image: HTMLImageElement) => image.naturalWidth * image.naturalHeight * 4;
 
     setScrubState('LOADING');
     let isCancelled = false;
@@ -245,7 +244,7 @@ export function CanvasFrameScrubber({
 
       if (loadedCount >= frameCount || nextIndexToLoad >= frameCount) {
         if (!hasInitializedTrigger && loadedCount > 0) {
-          initializeScrollTrigger('READY');
+          initializeScrollTrigger(images.every(Boolean) ? 'READY' : 'PARTIAL_READY');
         }
         return;
       }
@@ -254,34 +253,33 @@ export function CanvasFrameScrubber({
         const index = nextIndexToLoad++;
         activeLoads++;
 
-        const controller = new AbortController();
-        inFlightAbortControllersRef.current.set(index, controller);
-
         const img = new Image();
+        pendingImages.set(index, img);
         img.crossOrigin = 'anonymous';
 
         img.onload = () => {
           if (isCancelled) return;
           activeLoads--;
           loadedCount++;
-          inFlightAbortControllersRef.current.delete(index);
+          pendingImages.delete(index);
 
-          // Estimate decoded image memory
-          const frameBytes = (img.naturalWidth || 1920) * (img.naturalHeight || 1080) * 4;
-          currentDecodedBytes += frameBytes;
-
-          // Decoded Memory Budget Guard: if exceeding MB budget, evict distant frames
-          const totalMB = currentDecodedBytes / (1024 * 1024);
-          if (totalMB > memoryBudgetMB && loadedCount > 10) {
-            // Evict oldest frames distant from current playhead
-            const evictIndex = images.findIndex((frame, i) => frame !== null && Math.abs(i - lastRenderedIndex) > 15);
-            if (evictIndex !== -1 && images[evictIndex]) {
-              images[evictIndex] = null;
-              currentDecodedBytes -= frameBytes;
-            }
+          // Bound the retained decoded frames. The in-flight requests and
+          // browser allocations need separate profiling.
+          const frameBytes = decodedBytes(img);
+          while (frameBytes <= budgetBytes && currentDecodedBytes + frameBytes > budgetBytes) {
+            const evictIndex = images.findIndex((frame, i) => frame !== null && i !== lastRenderedIndex);
+            if (evictIndex === -1) break;
+            const evicted = images[evictIndex]!;
+            currentDecodedBytes -= decodedBytes(evicted);
+            evicted.removeAttribute('src');
+            images[evictIndex] = null;
           }
-
-          images[index] = img;
+          if (frameBytes > 0 && currentDecodedBytes + frameBytes <= budgetBytes) {
+            images[index] = img;
+            currentDecodedBytes += frameBytes;
+          } else {
+            img.removeAttribute('src');
+          }
           setLoadProgress(Math.round((loadedCount / frameCount) * 100));
 
           // Paint frame 0 immediately or initialize when sufficient buffer exists
@@ -291,8 +289,8 @@ export function CanvasFrameScrubber({
             drawFrame(index);
           }
 
-          if (loadedCount === frameCount) {
-            setScrubState('READY');
+          if (loadedCount === frameCount && hasInitializedTrigger) {
+            setScrubState(images.every(Boolean) ? 'READY' : 'PARTIAL_READY');
           }
 
           loadNext();
@@ -301,7 +299,7 @@ export function CanvasFrameScrubber({
         img.onerror = () => {
           if (isCancelled) return;
           activeLoads--;
-          inFlightAbortControllersRef.current.delete(index);
+          pendingImages.delete(index);
           console.warn(`[FrameScrubber] Missing frame: index ${index}`);
 
           if (!hasInitializedTrigger && loadedCount > 0) {
@@ -311,6 +309,7 @@ export function CanvasFrameScrubber({
           loadNext();
         };
 
+        // The app supplies known project assets, or a vetted CORS asset host.
         img.src = frameUrlPattern(index);
       }
     };
@@ -321,10 +320,17 @@ export function CanvasFrameScrubber({
       isCancelled = true;
       clearTimeout(timeoutTimer);
       resizeObserver.disconnect();
-      // Resource disposal: release decoded Image references
+      // Detach outstanding Image callbacks and release requested sources.
+      for (const image of pendingImages.values()) {
+        image.onload = null;
+        image.onerror = null;
+        image.removeAttribute('src');
+      }
+      pendingImages.clear();
+      // Release retained Image references.
       for (let i = 0; i < images.length; i++) {
         if (images[i]) {
-          images[i]!.src = '';
+          images[i]!.removeAttribute('src');
           images[i] = null;
         }
       }

@@ -103,7 +103,7 @@ These checks describe the intended implementation in the references. Validate th
 ### Group C: Media, Interaction, Accessibility & Performance (28–41)
 - **28. Contained/Cover Aspect Ratio Fitting (`cinematic-media.md`)**: Restored contain/cover ratio math with center-shifting letterboxing and pillarboxing.
 - **29. Dynamic Canvas Redraw on Resize (`cinematic-media.md`)**: Recalculates canvas dimensions in `ResizeObserver`, redraws `lastRenderedIndex`, and triggers `ScrollTrigger.refresh()`.
-- **30. Controlled Request Teardown (`cinematic-media.md`)**: Implemented `AbortController` tracking and image reference dereferencing on sequence cancellation.
+- **30. Controlled Request Teardown (`cinematic-media.md`)**: Detaches outstanding image callbacks and releases requested sources on disposal. Browser cancellation and actual memory still need profiling.
 - **31. Swipe Active Pointer Identification (`micro-interactions.md`)**: Tracks `activePointerIdRef.current` and ignores concurrent or secondary touches.
 - **32. Touch-Action Style Restoration (`micro-interactions.md`)**: Preserves `previousTouchAction` and restores original inline style during effect cleanup.
 - **33. Dynamic Media Query Subscriptions (`micro-interactions.md`)**: Subscribes dynamically to `(pointer: fine)` and `(prefers-reduced-motion: reduce)` changes in magnetic buttons.
