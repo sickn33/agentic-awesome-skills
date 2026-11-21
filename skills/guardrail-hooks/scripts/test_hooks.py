@@ -88,6 +88,7 @@ def main():
 
     identity_env = {"BLOCKED_GIT_EMAILS": "wrong@example.com", "GIT_IDENTITY_HINT": "Right Person <right@example.com>"}
     identity_cases = [
+        ("absolute Git path remains guarded", '/usr/bin/git commit --author="Example <wrong@example.com>"', 2),
         ("quoted Git worktree and global options", 'git -C "my worktree" --no-pager -c "log.decorate=short" commit --author="Example <wrong@example.com>"', 2),
         ("Git log remains an allowed search after a quoted option", 'git -C "my worktree" --no-pager log --author=wrong@example.com --grep commit', 0),
         ("user.email via -c blocks", "git -c user.email=wrong@example.com commit -m x", 2),

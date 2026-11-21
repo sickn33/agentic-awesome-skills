@@ -47,7 +47,7 @@ def invokes_git_commit(segment):
         return False
 
     for word in words:
-        if word != "git":
+        if word.replace("\\", "/").rsplit("/", 1)[-1].lower() not in {"git", "git.exe"}:
             continue
         for option in words:
             if option in GIT_VALUE_OPTIONS:
