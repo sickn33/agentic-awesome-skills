@@ -25,6 +25,7 @@ Test after every edit: run the test_hooks.py beside this file (python .claude/ho
 import json
 import os
 import re
+import shlex
 import sys
 
 CONFIG = {
@@ -35,9 +36,27 @@ CONFIG = {
 }
 
 SEGMENT_SPLIT = re.compile(r"&&|\|\||[;|\n]")
-# `commit` as git's subcommand, after any global options (-C <path>, -c <k=v>, --no-pager),
-# so the word elsewhere (`git log --author=<addr> --grep commit`) doesn't count.
-GIT_COMMIT = re.compile(r"""\bgit(?:\s+(?:-[cC]\s+(?:"[^"]*"|'[^']*'|\S+)|-\S+))*\s+commit\b""")
+GIT_VALUE_OPTIONS = {"-C", "-c", "--git-dir", "--work-tree", "--namespace", "--config-env"}
+
+
+def invokes_git_commit(segment):
+    """Recognize a Git subcommand without backtracking across global flags."""
+    try:
+        words = iter(shlex.split(segment))
+    except ValueError:
+        return False
+
+    for word in words:
+        if word.replace("\\", "/").rsplit("/", 1)[-1].lower() not in {"git", "git.exe"}:
+            continue
+        for option in words:
+            if option in GIT_VALUE_OPTIONS:
+                next(words, None)
+            elif not option.startswith("-"):
+                if option == "commit":
+                    return True
+                break
+    return False
 
 
 def read_payload():
@@ -70,7 +89,7 @@ def offending(command, email):
             return "set as user.email"
         if re.search(r"\b(GIT_AUTHOR_EMAIL|GIT_COMMITTER_EMAIL|EMAIL)\s*=\s*['\"]?" + e, seg, re.I):
             return "set as an identity environment variable"
-        if GIT_COMMIT.search(seg) and re.search(r"--author[= ]\s*['\"]?[^'\"\n]{0,80}?" + e, seg, re.I):
+        if invokes_git_commit(seg) and re.search(r"--author[= ]\s*['\"]?[^'\"\n]{0,80}?" + e, seg, re.I):
             return "passed as a commit's --author"
     return None
 
