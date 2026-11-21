@@ -81,4 +81,8 @@ Each rule's origin, the case that taught it, is in `receipts.md` beside this fil
 
 A fresh session given only the note can say what the work is for, what is verified and what is not, and run the next action without asking what happened.
 
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/agent-harness/skills/handover).

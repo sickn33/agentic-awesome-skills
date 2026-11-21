@@ -99,4 +99,12 @@ Exploring customer segments, audiences or new markets: 3-5 segments with their j
 
 Each segment is a group with a distinct job and pain rather than a demographic slice. The owner can say which one to explore first.
 
+## Example
+
+Compare independent shops, franchise operators and marketplace sellers on their distinct inventory tasks and buying channels. Mark unverified demand as a research question.
+
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/product/skills/market-segments).

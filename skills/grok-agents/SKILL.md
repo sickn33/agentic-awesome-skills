@@ -131,4 +131,8 @@ The session started with only your brief and used its mode's flags; you read its
 
 **Apply `independent-review` for the review loop and its wrapper.** Use `claude-agents` and `codex-agents` to drive those CLIs the same way. Apply `delegation` to brief and verify any delegate.
 
+## Limitations
+
+CLI features, sandbox behavior and permissions depend on the version and host. Keep provider and authorization checks in the parent workflow and verify changes independently.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/agent-teams/skills/grok-agents).

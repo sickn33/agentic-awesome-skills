@@ -222,4 +222,8 @@ Done means:
 - [ ] The audit prints no `FAIL`, and the only file over 220 KB is the cover.
 - [ ] The cover is in frontmatter/OG metadata; inline images sit after the first paragraph of their `<h2>` with `width`, `height`, and `loading="lazy"`.
 
+## Limitations
+
+Validate claims against dated project and market evidence. Examples are illustrative and outcomes depend on the audience, site and distribution conditions.
+
 Adapted from [Ilias Ism’s upstream skill](https://github.com/Illyism/seo-skills/tree/a158c36a1c2c84a44ee7a1ae69c009caf73e1a35/content/seo-blog-images).

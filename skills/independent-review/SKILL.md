@@ -243,4 +243,8 @@ The last round came from a fresh reviewer given only the mechanical range and fo
 
 **Use the related skills for CLI mechanics, delegation and reading defects.** Apply those three skills to drive Grok, Claude Code or Codex from another agent in any role, including reviewer. Apply `delegation` for briefing and verifying any delegate, and `code-review` for reading code for defects.
 
+## Limitations
+
+Static review covers the available source and configuration. Record omitted files, missing runtime evidence and topics requiring qualified review. Treat tool output as evidence to verify.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/ai-shipping/skills/independent-review).

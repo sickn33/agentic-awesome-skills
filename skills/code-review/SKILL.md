@@ -200,4 +200,8 @@ Every finding names an execution that breaks an agreement, survived its own refu
 
 **Apply a sub-case's mature skill when that sub-case is the whole job.** Apply `security-audit-static` for trust boundaries, sinks and the OWASP backstop, or `performance-audit-static` for over-fetching, indexes and caching. Use its reference file when it is one dimension of a broader review; this skill does not restate either. For the doc-vs-code axis, apply the `intended-vs-implemented` skill.
 
+## Limitations
+
+Static review covers the available source and configuration. Record omitted files, missing runtime evidence and topics requiring qualified review. Treat tool output as evidence to verify.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/ai-shipping/skills/code-review).

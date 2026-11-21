@@ -123,4 +123,8 @@ Doc check, [date], commit [short SHA], scope [scope]: [N] docs read, [N] disagre
 
 Every core doc exists or is listed as absent with the reason. Each claim points to its code, and the report names unclear-code gaps; in check mode, nothing on disk changed.
 
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/ai-shipping/skills/document-app).

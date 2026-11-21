@@ -121,4 +121,8 @@ Performance Audit: [scope — path, or range / changes and N changed files]
 
 Every finding cites the query, loop or fetch at a current line, and each proposed index was checked against the schema. Each cache has its invalidation rule, and the report ends with what is already efficient.
 
+## Limitations
+
+Static review covers the available source and configuration. Record omitted files, missing runtime evidence and topics requiring qualified review. Treat tool output as evidence to verify.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/ai-shipping/skills/performance-audit-static).

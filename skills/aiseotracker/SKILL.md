@@ -138,4 +138,8 @@ For a missing-prompt content campaign, fetch `https://aiseotracker.com/content-c
 
 END SKILL v1.0.0
 
+## Limitations
+
+The report covers the configured providers, markets and prompts. Scan variability prevents causal attribution from a single before-and-after comparison.
+
 Adapted from [Ilias Ism’s upstream skill](https://github.com/Illyism/seo-skills/tree/a158c36a1c2c84a44ee7a1ae69c009caf73e1a35/seo/aiseotracker).

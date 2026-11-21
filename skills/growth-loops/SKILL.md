@@ -170,4 +170,12 @@ Based on growth loops research by Ognjen Bošković. The focus is compounding us
 
 The chosen loop names who acts, what their action produces and how that brings the next user. The first test measures the step most likely to break.
 
+## Example
+
+For a shared report, a reader opens a viewer link, creates their own report and shares it. Measure the completion rate at each step and validate the initial premise with consented events.
+
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/product/skills/growth-loops).

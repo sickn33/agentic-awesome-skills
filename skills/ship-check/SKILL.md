@@ -196,4 +196,8 @@ Agent instructions: [path edited — the file the repo's structure makes canonic
 
 Every packet section is filled or marked "not run" with its reason; Independent Review is always filled, and each finding cites a file and line. Launch Blockers is empty or names what stops the ship.
 
+## Limitations
+
+Static review covers the available source and configuration. Record omitted files, missing runtime evidence and topics requiring qualified review. Treat tool output as evidence to verify.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/ai-shipping/skills/ship-check).

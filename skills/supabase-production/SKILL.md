@@ -130,4 +130,8 @@ Every schema change reached each database through a repository migration. No cli
 
 **Write to the product's own records, whatever it calls them.** Integration notes hold each provider's configuration, as set and as last verified. The environments doc holds project identities, applied migrations and a dated environment-event log. The permissions doc records who may do what and how the database enforces it. The backlog holds deferred work, each with its reason and reopening trigger.
 
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/app-stack/skills/supabase-production).

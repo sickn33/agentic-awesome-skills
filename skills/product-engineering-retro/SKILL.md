@@ -92,4 +92,8 @@ Each rule's origin, the case that taught it, is in `receipts.md` beside this fil
 
 Each fix names the moment it came from and was checked where it applies, and the next session doesn't hit the same friction.
 
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/agent-harness/skills/retro).

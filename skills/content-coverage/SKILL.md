@@ -66,11 +66,11 @@ Snapshot: <get_scan.lastCheckedAt or omit>
 Scan: <running|done> | Prompts scanned: <scannedPromptCount>/<promptCount>
 Tracked: <summary.total> | Missing: <summary.missing> | Winning: <summary.winning> | Opportunities: <summary.opportunities>
 Missing prompts:
-- [<query>](<absolute prompt href>)
+- [<query>](https://example.invalid/prompt)
 Top sources (independent editorial first):
 #1 [<title>](#) · <domain> · <mentionCount> mentions · prompts: <list>
 Tracked competitors:
-- [<brandName>](<absolute competitor href>) (<domain or none>)
+- [<brandName>](https://example.invalid/competitor) (<domain or none>)
 ```
 
 Separate **independent editorial listicles** (third-party roundups) from **competitor-owned pages** (vendor blogs and homepages). Pitch only independent lists later.
@@ -191,5 +191,9 @@ Optional: fetch `https://aiseotracker.com/ai-seo-report/SKILL.md` for the visibi
 - Call `aiseo_add_prompts` unless the user asked to track those queries
 
 END SKILL v1.0.0
+
+## Limitations
+
+Observed prompt coverage depends on the tracked queries, scan date and provider. Treat citation gaps as hypotheses and confirm diversity and demand before approving a new page.
 
 Adapted from [Ilias Ism’s upstream skill](https://github.com/Illyism/seo-skills/tree/a158c36a1c2c84a44ee7a1ae69c009caf73e1a35/seo/content-coverage).

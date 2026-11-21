@@ -105,4 +105,12 @@ A member of one workspace, holding another workspace's ids, can neither see nor 
 - **Keep product-specific facts in its own permissions and architecture docs.** Never put them here.
 - **Give every testable rule a test.** Say what that test asserts.
 
+## Example
+
+Build a synthetic role matrix for the project list and compare each route result with the approved permissions for owner, member and guest.
+
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/app-stack/skills/saas-authorization).

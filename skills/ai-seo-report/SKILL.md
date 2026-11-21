@@ -76,11 +76,11 @@ Not scanned: <promptCount - scannedPromptCount> | Scanned not mentioned: <missin
 Models:
 <one line per model with visible/scanned and avg rank, using model links>
 Top prompts:
-#<averageRank or ?> [<query>](<absolute prompt href>) · <status> · <provider ranks as "ChatGPT #2; Gemini n/a">
+#<averageRank or ?> [<query>](https://example.invalid/prompt) · <status> · <provider ranks as "ChatGPT #2; Gemini n/a">
 Competitors:
-- [<brandName>](<absolute competitor href>) (<domain or none>): <status>
+- [<brandName>](https://example.invalid/competitor) (<domain or none>): <status>
 Sources:
-#1 [<domain>](<absolute source href>) | <mentionCount> mentions | <prompts.length> prompts
+#1 [<domain>](https://example.invalid/source) | <mentionCount> mentions | <prompts.length> prompts
 Inspect next:
 - <fact> → <absolute href>
 ```
@@ -132,5 +132,9 @@ Then write the brief. Do not quote this opener.
 - Paste raw tool JSON as the user-facing answer
 
 END SKILL v1.0.0
+
+## Limitations
+
+The report is a snapshot of tracked prompts. Use the scan date and provider sample when describing rank or missing coverage.
 
 Adapted from [Ilias Ism’s upstream skill](https://github.com/Illyism/seo-skills/tree/a158c36a1c2c84a44ee7a1ae69c009caf73e1a35/seo/ai-seo-report).

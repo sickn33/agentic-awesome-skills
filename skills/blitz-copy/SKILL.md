@@ -100,4 +100,8 @@ Use 2-3 per piece:
 - Full article: https://il.ly/blog/blitz-copy
 - Companion strategy: [Blitz SEO](https://il.ly/blog/blitz-seo)
 
+## Limitations
+
+Validate claims against dated project and market evidence. Examples are illustrative and outcomes depend on the audience, site and distribution conditions.
+
 Adapted from [Ilias Ism’s upstream skill](https://github.com/Illyism/seo-skills/tree/a158c36a1c2c84a44ee7a1ae69c009caf73e1a35/copywriting/blitz-copy).

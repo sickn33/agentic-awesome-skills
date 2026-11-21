@@ -149,4 +149,8 @@ The installed CLI comes first because you install and update it; the extension s
 - **Pass `-s SANDBOX` only to new sessions, not `exec resume`.** It is an exec-level flag; a resume takes the sandbox as `-c sandbox_mode=…` instead. The wrapper separates new-session and resume paths accordingly. Outside a git repository, resume also needs `--skip-git-repo-check` (observed in a live scratch-folder wrapper test, 2026-10-21). Without it, Codex refuses with "Not inside a trusted directory" and the wrapper falls back to a new session. The conversation is lost, and only stderr says so. The wrapper adds this flag there and only there.
 - **Close stdin so Codex does not wait for interactive input.** Use subprocess `input=""`.
 
+## Limitations
+
+CLI features, sandbox behavior and permissions depend on the version and host. Keep provider and authorization checks in the parent workflow and verify changes independently.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/agent-teams/skills/codex-agents).

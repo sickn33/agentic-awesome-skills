@@ -195,4 +195,8 @@ Each rule's origin, the case that taught it, is in `receipts.md` beside this fil
 
 You know the next step, which skill does it, and what you will be asked to check. Nothing was proposed or planned for a change you could have checked in a minute.
 
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/product/skills/start-here).

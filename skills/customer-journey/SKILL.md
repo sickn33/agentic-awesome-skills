@@ -49,4 +49,12 @@ When given a brand, screenshots, website, or keywords:
 - Prompts should sound like real people typing, not keyword lists.
 - Ask a clarifying question only when the product or audience is unclear.
 
+## Example
+
+For client invoicing, map “why are invoices late?” to problem awareness and an explanatory guide, then map “compare invoicing apps for contractors” to solution awareness and a sourced comparison.
+
+## Limitations
+
+Awareness is a planning lens. Treat generated prompts as hypotheses until customer evidence or dated query observations support them.
+
 Adapted from [Ilias Ism’s upstream skill](https://github.com/Illyism/seo-skills/tree/a158c36a1c2c84a44ee7a1ae69c009caf73e1a35/marketing/customer-journey).

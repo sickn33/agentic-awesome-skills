@@ -216,4 +216,8 @@ The user's agreement covers the run, workspace command customizations were absen
 
 **Apply the sibling skills for their CLIs and shared discipline.** Apply `claude-agents`, `codex-agents` or `grok-agents` for those partners, and `delegation` to brief and verify them. Apply `independent-review` for the release review loop; Gemini supplies an optional second opinion.
 
+## Limitations
+
+CLI features, sandbox behavior and permissions depend on the version and host. Keep provider and authorization checks in the parent workflow and verify changes independently.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/agent-teams/skills/gemini-agents).

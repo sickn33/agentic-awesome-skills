@@ -102,4 +102,12 @@ Competitive research or a competitive brief: competitors and substitutes, their 
 
 Every claim about a competitor has a source and a date, and the alternatives include substitutes and doing nothing. Differentiation follows from weaknesses found, not from wishes.
 
+## Example
+
+When comparing onboarding, record the same task and observation date for each vendor, then distinguish verified steps from hypotheses about buyer preference.
+
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/product/skills/competitor-analysis).

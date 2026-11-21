@@ -199,4 +199,8 @@ Every run ends with:
 - Queue threads that are archived, locked, or in subreddits that ban product mentions
 - Draft new promotional threads instead of replying to ranking ones
 
+## Limitations
+
+Search placement changes and threads may be closed or governed by subreddit rules. Draft with transparent affiliation and leave posting to the approved workflow.
+
 Adapted from [Ilias Ism’s upstream skill](https://github.com/Illyism/seo-skills/tree/a158c36a1c2c84a44ee7a1ae69c009caf73e1a35/seo/reddit-serp).

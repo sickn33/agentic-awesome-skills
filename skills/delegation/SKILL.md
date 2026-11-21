@@ -158,4 +158,8 @@ You can verify the delegate's report without asking it anything, and you repeat 
 |---|---|---|
 | `references/brief-template.md` | a brief's skeleton, with what each part is for, and the handoff the delegate writes back | writing any brief longer than a paragraph; reading a handoff |
 
+## Limitations
+
+CLI features, sandbox behavior and permissions depend on the version and host. Keep provider and authorization checks in the parent workflow and verify changes independently.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/agent-teams/skills/delegation).

@@ -169,4 +169,8 @@ The owner can trace every claim, saw key screens before planning, made decisions
 |---|---|---|
 | `references/proposal.md` | the proposal's sections, the hypothesis table and the observation log, as HTML page sections | writing or updating the record |
 
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/product/skills/propose).

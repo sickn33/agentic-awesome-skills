@@ -122,4 +122,8 @@ Do not split or rechunk SRT cues after the fact. Re-run Scribiz instead.
 - Not for live streams, DRM services (Spotify, Netflix), editing, or generating video.
 - Spot-check names and brands in the output before publishing.
 
+## Limitations
+
+Automated transcripts can misidentify speakers, timing and wording. Verify sensitive claims against the source and establish consent for uploads.
+
 Adapted from [Ilias Ism’s upstream skill](https://github.com/Illyism/seo-skills/tree/a158c36a1c2c84a44ee7a1ae69c009caf73e1a35/content/scribiz).

@@ -310,4 +310,8 @@ Drafting before reading the SERP is how a 2,500-word essay ships onto a query wh
 - AI visibility monitoring: aiseotracker, https://aiseotracker.com
 - Managed listicle and link placements: linkdr, https://linkdr.com/SKILL.md
 
+## Limitations
+
+Results depend on the configured device, language, region and date. URL overlap is a clustering signal and weak evidence when the result set is small. State provider cost and missing fields.
+
 Adapted from [Ilias Ism’s upstream skill](https://github.com/Illyism/seo-skills/tree/a158c36a1c2c84a44ee7a1ae69c009caf73e1a35/seo/dataforseo-serp).

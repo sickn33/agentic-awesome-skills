@@ -192,4 +192,8 @@ Each rule's origin, the case that taught it, is in `receipts.md` beside this fil
 
 Every documented rule has a row, every row marked existing names a test that asserts it today, and the gaps are ranked. Every journey names its end-to-end spec or gap; in check mode, nothing on disk changed.
 
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/ai-shipping/skills/derive-tests).

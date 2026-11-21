@@ -197,4 +197,8 @@ The agent can name the current stage and its missing completion evidence from co
 - **Date what a platform did or required.** Vendors change without notice; correct the line, never leave the old one beside it.
 - **Stage mechanics usually belong in the skill the stage points to.** A lesson about how to do a stage usually belongs there, not here.
 
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/app-stack/skills/app-lifecycle).

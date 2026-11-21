@@ -106,4 +106,8 @@ The agent runs on the deployed host, not only on localhost, uses only the tools 
 
 **Run these scripts from the app's repository root.** `<skill dir>` is this skill's installation location: a plugin, `~/.claude/skills/`, or the repository's own `.claude/skills/`. The scripts write into the current directory.
 
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/app-stack/skills/embedded-agents-agent-sdk).

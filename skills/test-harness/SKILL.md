@@ -150,4 +150,12 @@ Your own run covered the tests the piece touches, or the full gate at the phase'
 
 The coverage map is the product's record of what was verified, by which run (`references/coverage-map.md`). The variables doc lists every environment variable the code reads. The kit is the product's design system and component primitives (`ui-design`).
 
+## Example
+
+Reproduce a duplicate webhook in a disposable fixture and assert that two deliveries produce one domain event. Record the fixture and test output.
+
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/ai-shipping/skills/test-harness).

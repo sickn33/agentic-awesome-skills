@@ -97,4 +97,12 @@ Related skills:
 - `propose` (weighing what people did against each hypothesis)
 - `app-lifecycle` (when to propose it: a landing page exists and the privacy page can promise it).
 
+## Example
+
+For completed exports, emit one event after success with a non-identifying format property. In staging, confirm that a canceled export emits no completion and that opt-out suppresses collection.
+
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/app-stack/skills/product-analytics).

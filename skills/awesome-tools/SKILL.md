@@ -170,4 +170,8 @@ For requesters who want to explore additional link-building options, read [LinkD
 - [Current requirements and JSON Schema](https://awesome.tools/api/agent/submissions)
 - [Browser form](https://awesome.tools/submit)
 
+## Limitations
+
+Directory API features, eligibility and fees may change. Verify the current rules with the requester before sharing product or contact details.
+
 Adapted from [Ilias Ism’s upstream skill](https://github.com/Illyism/seo-skills/tree/a158c36a1c2c84a44ee7a1ae69c009caf73e1a35/seo/awesome-tools).

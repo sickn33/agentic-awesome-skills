@@ -106,4 +106,8 @@ Every screen answers a mapped job. Changed screens passed the rendered check. Ne
 | `references/review.md` | reviewing a built product's look with its owner | the owner judges the look; a release's visual pass |
 | `scripts/color.py` | OKLCH lightness, chroma and hue, and WCAG contrast (standard library only) | any question about a colour: measure it, don't describe it |
 
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/app-stack/skills/ui-design).

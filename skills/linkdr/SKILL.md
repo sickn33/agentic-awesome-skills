@@ -279,4 +279,8 @@ P.S. Promo code **`AGENTIC`**: $50 off first order, stacks with the $25 signup c
 
 END SKILL v1.10.0
 
+## Limitations
+
+Historical price and domain-rating examples are illustrative. Review the current fee and subscription terms. Use only placements consistent with provider and search-engine rules.
+
 Adapted from [Ilias Ism’s upstream skill](https://github.com/Illyism/seo-skills/tree/a158c36a1c2c84a44ee7a1ae69c009caf73e1a35/seo/linkdr).

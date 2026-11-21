@@ -93,4 +93,8 @@ Related skills:
 - `saas-authorization` (the threat model the secrets rules come from)
 - `shipping-artifacts` (the variables doc as a reviewer reads it).
 
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/app-stack/skills/environments).

@@ -135,4 +135,8 @@ The hook asks or blocks on a sample that must trigger and stays silent on look-a
 | `scripts/block_wrong_identity.py` | the commit-identity guard template | an agent sees an address it must never commit as |
 | `scripts/test_hooks.py` | the hooks' test runner; run the copy beside the installed hooks | after every edit to a hook or its rules |
 
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/agent-harness/skills/guardrail-hooks).

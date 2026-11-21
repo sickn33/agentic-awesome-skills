@@ -85,4 +85,12 @@ Related skills:
 - `clerk-production` (the consent setting, the CSP)
 - `ui-design` (what a screen may claim).
 
+## Example
+
+If analytics starts only after opt-in, record the active vendors and events from configuration and draft the privacy copy for counsel to verify.
+
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/app-stack/skills/legal-pages).

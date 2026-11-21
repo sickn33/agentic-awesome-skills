@@ -250,4 +250,8 @@ Below, the top 5 container platforms compared on build speed, pricing model, and
 - [ ] Every number traces to the canonical report or `seo/kb/`; every quote carries `[APPROVE QUOTE]`.
 - [ ] Zero em dashes and zero hype adjectives in all four files.
 
+## Limitations
+
+Syndication outcomes vary by outlet and may change after publication. Confirm editorial rules, canonical behavior and disclosure before approving a channel.
+
 Adapted from [Ilias Ism’s upstream skill](https://github.com/Illyism/seo-skills/tree/a158c36a1c2c84a44ee7a1ae69c009caf73e1a35/marketing/parasite-and-pr).

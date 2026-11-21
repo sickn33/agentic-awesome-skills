@@ -98,7 +98,7 @@ rg -o --no-filename '\[([^\]]+)\]\(/tools/dmarc-checker[^)]*\)' content | sort |
  DMARC tells receiving servers what to do with mail that fails SPF or DKIM.
 -Most domains publish a record once and never look at it again.
 +Most domains publish a record once and never look at it again, so the first
-+step is to [check your DMARC record and policy](/tools/dmarc-checker) before
++step is to [check your DMARC record and policy](https://example.invalid/tools/dmarc-checker) before
 +changing anything.
 ```
 
@@ -209,5 +209,9 @@ Every run ends with:
 - Add `nofollow` to internal links
 - Link a post to a money page whose topic the post does not discuss
 - Hand back suggestions without editing files
+
+## Limitations
+
+The graph recognizes static Markdown and JSX links. Check framework route groups, generated URLs, redirects, and navigation rendered at runtime separately. Verify content decisions with site context.
 
 Adapted from [Ilias Ism’s upstream skill](https://github.com/Illyism/seo-skills/tree/a158c36a1c2c84a44ee7a1ae69c009caf73e1a35/seo/internal-linking).

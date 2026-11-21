@@ -172,4 +172,12 @@ A new user signs up on a phone against production and lands where they should, i
 - **Date what Clerk did or required.** Use "observed 2026-10", because the dashboard and its labels change without notice. When one changes, correct the line; never leave the old one beside the new.
 - **Keep product-specific facts in its own integration notes.** This includes its instances, roles, slugs, confirmations and re-reads.
 
+## Example
+
+For organization billing, exercise the same route as an owner, a member and a signed-out visitor in a test tenant. Record the expected response and actual result for each role.
+
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/app-stack/skills/clerk-production).

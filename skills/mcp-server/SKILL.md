@@ -105,4 +105,12 @@ A real client connects to the deployed server, signs in, lists the tools and cal
 - **Install the `app-stack` pack in every agent that builds the server.** Keep no product copy: it freezes at its copied version, and Claude Code loads it twice beside the pack. For an existing copy (`.claude/skills/mcp-server/`, `.agents/skills/mcp-server/`), move additions into the product's repository (above) or a change for this collection. Then delete the copy.
 - **A builder that is not Claude Code has the pack installed in it too.** A Codex brief for the MCP server names the skill as `mcp-server`.
 
+## Example
+
+For a report-listing tool, use a read-only identity, enforce tenant ownership in the server and test an empty list and a valid nonempty result with synthetic records.
+
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/app-stack/skills/mcp-server).

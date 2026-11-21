@@ -114,4 +114,8 @@ Every item the review checks was verified on the deployed build before submittin
 - **What is true of one product goes in that product's repository.** This includes its plugin's id, package versions, review states and dates, the identity it publishes under, its verified clients.
 - **A rule a test or the checker can hold gets one.** Say what it asserts.
 
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/app-stack/skills/chatgpt-plugin).

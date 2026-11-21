@@ -221,4 +221,8 @@ Subject: ...
 - [ ] Zero em dashes, zero buzzwords (`synergy`, `game-changing`), zero `"I hope this email finds you well"`.
 - [ ] Guessed addresses are marked `[unverified]`.
 
+## Limitations
+
+Validate claims against dated project and market evidence. Examples are illustrative and outcomes depend on the audience, site and distribution conditions.
+
 Adapted from [Ilias Ism’s upstream skill](https://github.com/Illyism/seo-skills/tree/a158c36a1c2c84a44ee7a1ae69c009caf73e1a35/seo/honest-link-outreach).

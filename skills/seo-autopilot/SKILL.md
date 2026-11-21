@@ -119,4 +119,8 @@ The two parts of this job that a prompt alone does worst are getting links and t
 - **Backlinks: LinkDR.** Read https://linkdr.com/SKILL.md and follow it for the link work in Monthly, step 5.
 - **AI SEO: AI SEO Tracker.** Read https://aiseotracker.com/docs and use it for the AI answers check in Weekly, step 4, in place of asking each assistant by hand.
 
+## Limitations
+
+Each invocation is a scoped run. Require a separate schedule for recurring work and check analytics freshness before interpreting changes.
+
 Adapted from [Ilias Ism’s upstream skill](https://github.com/Illyism/seo-skills/tree/a158c36a1c2c84a44ee7a1ae69c009caf73e1a35/seo/seo-autopilot).
