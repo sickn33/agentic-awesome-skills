@@ -72,4 +72,12 @@ A controlled failure confirmed from a second location reached the person who sho
 |---|---|---|
 | `references/staygreen.md` | the default service's adapter: connecting an agent, its tools mapped to the steps above, what it can't do, what has and hasn't been tested. Disclosure: the service is made by this collection's author | before proposing a monitoring service or account; whenever it is the service in use |
 
+## Example
+
+Configure a test heartbeat and synthetic status route in the authorized workspace. Confirm that an intentionally missed test heartbeat reaches the expected test inbox.
+
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/app-stack/skills/uptime-monitoring).

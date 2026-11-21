@@ -46,4 +46,12 @@ For my product/service, [Briefly describe your product/service, e.g., "an AI-pow
 
 Based on these insights, let's brainstorm initial Blitz Copy angles (Identity Triggers, Emotional Hooks, Pattern Interrupts, Dopamine-Driven Payoffs).
 
+## Example
+
+From five consented interviews, record phrases describing the same failed import, separate that observed pain from inferred buying intent, and list the missing evidence before writing a landing page.
+
+## Limitations
+
+Validate claims against dated project and market evidence. Examples are illustrative and outcomes depend on the audience, site and distribution conditions.
+
 Adapted from [Ilias Ism’s upstream skill](https://github.com/Illyism/seo-skills/tree/a158c36a1c2c84a44ee7a1ae69c009caf73e1a35/copywriting/understand-customers).

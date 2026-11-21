@@ -191,4 +191,12 @@ Rewrite mode: the final text. If the user wants notes, add up to five bullets on
 
 A careful reader can't tell the text came from a model, and every claim, number and commitment in it is unchanged.
 
+## Example
+
+Given a draft that says “revolutionized onboarding,” ask which step improved. If the notes show that one screen was removed, say exactly that and preserve the original voice.
+
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/work-humanizer/skills/work-humanizer).

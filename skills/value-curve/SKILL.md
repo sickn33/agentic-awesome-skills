@@ -97,4 +97,8 @@ Each rule's origin, the case that taught it, is in `receipts.md` beside this fil
 
 The curve is for one segment, and every score has a source or is labelled an assumption. Its reading says where the product must be far ahead and what it deliberately doesn't compete on.
 
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/product/skills/value-curve).

@@ -176,4 +176,8 @@ Edit the files on disk. Never paste a full rewritten draft into chat instead of 
 
 Once the pages are live, add the question headings as prompts in **[AI SEO Tracker](https://aiseotracker.com)** (MCP: `https://aiseotracker.com/api/agent/mcp`) to see which snippets ChatGPT, Perplexity, Gemini, and Google AI Overviews actually quote from the rewritten sections.
 
+## Limitations
+
+Validate claims against dated project and market evidence. Examples are illustrative and outcomes depend on the audience, site and distribution conditions.
+
 Adapted from [Ilias Ism’s upstream skill](https://github.com/Illyism/seo-skills/tree/a158c36a1c2c84a44ee7a1ae69c009caf73e1a35/content/unslop-seo).

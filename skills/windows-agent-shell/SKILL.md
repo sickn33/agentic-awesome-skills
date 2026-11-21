@@ -120,4 +120,12 @@ A probe shows the program received the arguments, paths and text you meant. The 
 | `scripts/probe_argv.py` | prints the arguments a program actually received, its working directory and its pipe encodings, for measuring what a shell did to a command |
 | `references/troubleshooting.md` | dated Git Bash auto-mode workarounds and retest commands for individual shell behaviours |
 
+## Example
+
+Launch a harmless argument probe with a workspace path containing spaces. Compare the received argv with the expected single path argument before running a file-writing command.
+
+## Limitations
+
+Treat upstream examples as patterns. Validate scope and results against current project constraints, available tools and decisions recorded by the owner.
+
 Adapted from [Pawel Huryn’s upstream skill](https://github.com/phuryn/product-engineering/tree/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/agent-harness/skills/windows-agent-shell).
