@@ -1,0 +1,400 @@
+<title>What I need from you</title>
+<style>
+/* The owner's page (flight-deck § The owner's page). Everything shown lives in the page's
+   database: `status/*` (one project or several areas, with optional key-work boards) and
+   `items/*` are written by the agent, `answers/*` by the owner. Areas share an Overview and tabs.
+   The agent deletes an item and its answer together once it has recorded the answer, so the
+   page only ever shows what still needs the owner. Replace the <title> before publishing. */
+:root {
+  --ground: #fbfbfc; --surface: #ffffff; --sunk: #f2f3f5;
+  --ink: #101114; --ink-2: #3d434d; --ink-3: #5f6672;
+  --line: #e3e5ea; --line-strong: #cfd3da;
+  --accent: #2443d6; --accent-hover: #1c37b4; --accent-text: #2443d6; --on-accent: #ffffff; --accent-wash: #ebefff;
+  --done: #13804a; --wash-done: #e7f5ed; --gate: #a35a00; --wash-gate: #fdf1df;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --t-1: 13px; --t-2: 15px; --t-3: 17px; --t-4: 26px;
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px; --s-6: 32px;
+  --r-1: 6px; --r-2: 10px; --r-pill: 999px;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --ground: #0d0e10; --surface: #15171b; --sunk: #1c1f24;
+  --ink: #f1f2f4; --ink-2: #c3c8d0; --ink-3: #99a0ab;
+  --line: #272b32; --line-strong: #363b44;
+  --accent: #4766ff; --accent-hover: #3a57e6; --accent-text: #93a8ff; --on-accent: #ffffff; --accent-wash: #172150;
+  --done: #3cc47a; --wash-done: #12291c; --gate: #f2a43a; --wash-gate: #2e2412;
+  color-scheme: dark;
+} }
+:root[data-theme="dark"] {
+  --ground: #0d0e10; --surface: #15171b; --sunk: #1c1f24;
+  --ink: #f1f2f4; --ink-2: #c3c8d0; --ink-3: #99a0ab;
+  --line: #272b32; --line-strong: #363b44;
+  --accent: #4766ff; --accent-hover: #3a57e6; --accent-text: #93a8ff; --on-accent: #ffffff; --accent-wash: #172150;
+  --done: #3cc47a; --wash-done: #12291c; --gate: #f2a43a; --wash-gate: #2e2412;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--ground); color: var(--ink); font-family: var(--font); font-size: var(--t-2); line-height: 1.55; -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 720px; margin: 0 auto; padding: var(--s-6) 16px 72px; display: grid; gap: var(--s-6); }
+h1 { font-size: var(--t-4); line-height: 1.2; font-weight: 650; margin: 0; letter-spacing: -0.01em; }
+.lede { margin: var(--s-2) 0 0; color: var(--ink-2); max-width: 60ch; }
+
+.status { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-2); padding: var(--s-4) var(--s-5); display: grid; gap: var(--s-3); }
+.phase { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--s-2) var(--s-3); font-weight: 650; }
+.pct { font-weight: 500; font-size: var(--t-1); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.bar { height: 6px; border-radius: var(--r-pill); background: var(--sunk); overflow: hidden; }
+.bar > span { display: block; height: 100%; background: var(--accent); }
+.lines-label { font-size: var(--t-1); font-weight: 600; color: var(--ink-3); margin: 0; }
+.steps { display: flex; flex-wrap: wrap; gap: var(--s-2); margin: 0; padding: 0; list-style: none; }
+.step { font-size: var(--t-1); padding: 2px 10px; border-radius: var(--r-pill); background: var(--sunk); color: var(--ink-3); }
+.step.done { background: var(--wash-done); color: var(--ink); }
+.step.done::before { content: "✓ "; color: var(--done); }
+.step.now { background: var(--accent-wash); color: var(--accent-text); font-weight: 600; }
+.lines { margin: 0; padding-left: 1.2em; color: var(--ink-2); display: grid; gap: 2px; }
+.waiting { font-size: var(--t-1); color: var(--ink-3); margin: 0; }
+
+section { display: grid; gap: var(--s-3); }
+section h2 { margin: 0; font-size: var(--t-3); font-weight: 650; }
+section .note { margin: -6px 0 0; color: var(--ink-3); font-size: var(--t-1); }
+.empty { margin: 0; padding: var(--s-4); color: var(--ink-3); border: 1px dashed var(--line-strong); border-radius: var(--r-2); }
+
+.item { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-2); padding: var(--s-5); display: grid; gap: var(--s-3); min-width: 0; }
+.item.gate { border-color: var(--gate); }
+.kind { display: flex; flex-wrap: wrap; gap: var(--s-2); align-items: center; font-size: var(--t-1); color: var(--ink-3); }
+.tag { padding: 1px 8px; border-radius: var(--r-pill); background: var(--sunk); color: var(--ink-2); }
+.tag.gate { background: var(--wash-gate); color: var(--ink); }
+.item h3 { margin: 0; font-size: var(--t-3); line-height: 1.35; font-weight: 650; }
+.part { display: grid; gap: 2px; min-width: 0; }
+.label { font-size: var(--t-1); font-weight: 600; color: var(--ink-3); }
+.part p, .part li { margin: 0; color: var(--ink-2); max-width: 64ch; overflow-wrap: anywhere; }
+.part ol { margin: 0; padding-left: 1.3em; display: grid; gap: 2px; }
+.rec { background: var(--sunk); border-radius: var(--r-1); padding: var(--s-3) var(--s-4); }
+.rec p { color: var(--ink); }
+.go { background: var(--wash-gate); border-radius: var(--r-1); padding: var(--s-3) var(--s-4); color: var(--ink); }
+a { color: var(--accent-text); text-underline-offset: 2px; }
+
+form { display: grid; gap: var(--s-3); padding-top: var(--s-3); border-top: 1px solid var(--line); }
+fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: var(--s-2); min-width: 0; }
+legend { font-size: var(--t-1); font-weight: 600; color: var(--ink-3); padding: 0; margin-bottom: var(--s-2); }
+.opt { display: grid; grid-template-columns: 20px 1fr; gap: var(--s-2); padding: var(--s-3) var(--s-4); border: 1px solid var(--line-strong); border-radius: var(--r-2); cursor: pointer; min-width: 0; }
+.opt:has(input:checked) { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); background: var(--accent-wash); }
+.opt input { margin: 3px 0 0; accent-color: var(--accent); width: 16px; height: 16px; }
+.opt-name { font-weight: 600; }
+.opt-note { display: block; font-size: var(--t-1); color: var(--ink-2); }
+.check { display: flex; gap: var(--s-2); align-items: center; cursor: pointer; }
+.check input { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; }
+textarea { font: inherit; color: var(--ink); background: var(--surface); border: 1px solid var(--line-strong); border-radius: var(--r-1); padding: var(--s-2) var(--s-3); min-height: 72px; resize: vertical; width: 100%; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-3); }
+button { font: inherit; font-weight: 600; height: 40px; padding: 0 var(--s-4); border-radius: 8px; border: 1px solid var(--accent); background: var(--accent); color: var(--on-accent); cursor: pointer; }
+button:hover { background: var(--accent-hover); }
+button:disabled { opacity: .55; cursor: default; }
+textarea:focus-visible, .opt:has(input:focus-visible), .check input:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.saved { font-size: var(--t-1); color: var(--ink-3); }
+.notice { padding: var(--s-4); border: 1px solid var(--line-strong); border-radius: var(--r-2); background: var(--surface); color: var(--ink-2); margin: 0; }
+.panel { display: contents; }
+.panel[role="tabpanel"], .multi #root, .multi #status { display: grid; gap: var(--s-6); min-width: 0; }
+.multi, .board { overflow-wrap: anywhere; }
+.tabs:not([hidden]) { display: flex; gap: var(--s-2); overflow-x: auto; padding: var(--s-1); min-width: 0; }
+.tab { height: auto; min-height: 44px; background: var(--surface); color: var(--ink); border-color: var(--ink-3); }
+.tab { flex: 0 0 auto; max-width: 100%; border-bottom: var(--s-1) solid transparent; }
+.tab:hover { background: var(--sunk); }
+.tab[aria-selected="true"] { background: var(--sunk); border-bottom-color: var(--ink); }
+.area-head { display: grid; gap: var(--s-2); min-width: 0; }
+.area-head h2, .area-head h3 { margin: 0; font-size: var(--t-3); font-weight: 650; }
+.area-meta { margin: 0; color: var(--ink-3); font-size: var(--t-1); }
+.area-open { height: auto; min-height: 32px; padding: 0; border: 0; background: none; color: var(--accent-text); font-size: var(--t-3); font-weight: 650; text-align: start; max-width: 100%; text-decoration: underline; text-underline-offset: 3px; }
+.area-open:hover { background: none; text-decoration-thickness: 2px; }
+.area-head h3 { display: flex; }
+.board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-3); min-width: 0; }
+.board-column { display: grid; align-content: start; gap: var(--s-2); min-width: 0; }
+.board-column h3 { margin: 0; font-size: var(--t-2); font-weight: 650; }
+.board-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-1); padding: var(--s-3); min-width: 0; }
+.board-card h4 { margin: 0; font-size: var(--t-2); font-weight: 600; }
+.board-card p { margin: var(--s-2) 0 0; font-size: var(--t-1); color: var(--ink-2); }
+.board-empty { margin: 0; color: var(--ink-3); font-size: var(--t-1); }
+@media (max-width: 640px) { .board { grid-template-columns: minmax(0, 1fr); gap: var(--s-5); } }
+@media (max-width: 480px) { .item { padding: var(--s-4); } .status { padding: var(--s-4); } h1 { font-size: 22px; } }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>What I need from you</h1>
+    <p class="lede">Only what needs you: a decision, a go, or a task only you can do. Save is how I hear you: I read saved answers at my next check-in, and nothing notifies me, so say so in our chat if it's urgent. Once I've read an answer, the item goes. A go/no-go stays until you type the go in our chat.</p>
+  </header>
+  <div id="tabs" class="tabs" role="tablist" aria-label="Areas of work" hidden></div>
+  <div id="panel" class="panel">
+    <div id="status"></div>
+    <div id="root"></div>
+  </div>
+</div>
+
+<script>
+const GROUPS = [
+  { key: "now", title: "Needs you now", note: "Small things only you can do." },
+  { key: "decide", title: "Your decisions", note: "My recommendation is preselected. Change it, or write what you'd rather do." },
+  { key: "gate", title: "Waiting for your go", note: "One-way doors. Type the go in our chat: a go saved here doesn't clear my permission check." },
+  { key: "later", title: "Before a later milestone", note: "Needed before the milestone each one names. Do it now or wait." },
+];
+let rememberedTab = "overview";
+try { rememberedTab = localStorage.getItem("flight-deck-tab") || "overview"; } catch {}
+const state = { statuses: [], tab: rememberedTab, items: [], answers: {}, drafts: {}, saving: {}, errors: {}, failures: {}, db: null, pending: false };
+const statusEl = document.getElementById("status");
+const root = document.getElementById("root");
+const tabs = document.getElementById("tabs");
+const panel = document.getElementById("panel");
+const wrap = document.querySelector(".wrap");
+
+const el = (tag, attrs = {}, ...kids) => {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (v === undefined || v === null || v === false) continue;
+    if (k === "class") n.className = v; else if (k === "text") n.textContent = v; else n.setAttribute(k, v === true ? "" : v);
+  }
+  for (const k of kids.flat()) if (k) n.append(k.nodeType ? k : document.createTextNode(k));
+  return n;
+};
+// Text with [label](https://…) links; only http(s) becomes a link.
+function rich(text, tag = "p") {
+  const n = el(tag);
+  const re = /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g;
+  let last = 0, m;
+  const s = String(text || "");
+  while ((m = re.exec(s))) {
+    n.append(s.slice(last, m.index), el("a", { href: m[2], target: "_blank", rel: "noopener", text: m[1] }));
+    last = re.lastIndex;
+  }
+  n.append(s.slice(last));
+  return n;
+}
+const paras = (text) => String(text || "").split(/\n\n+/).filter(Boolean).map((t) => rich(t));
+const when = (iso) => { try { return new Date(iso).toLocaleString(undefined, { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" }); } catch { return ""; } };
+const groupOf = (item) => (GROUPS.some((g) => g.key === item.group) ? item.group : "later");
+const isWaiting = (item) => item.kind === "gate" || !state.answers[item.id]; // a gate waits until the go in chat
+const waitingCount = (items = state.items) => items.filter(isWaiting).length;
+const waitingText = (n) => n === 1 ? "1 thing waits on you" : `${n} things wait on you`;
+const areaName = (area) => String(area.name || area.id);
+const areaItems = (area) => state.items.filter((i) => i.area === area.id);
+const byOrder = (x, y) => (x.order ?? 99) - (y.order ?? 99);
+const touchedText = (value) => {
+  if (!value) return "Not recorded";
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? String(value) : when(value);
+};
+
+function statusBlock(s, items = state.items, brief = false) {
+  const kids = [];
+  const pct = s && Number.isFinite(s.percent) ? Math.max(0, Math.min(100, Math.round(s.percent))) : null;
+  if (s && s.phase) kids.push(el("div", { class: "phase" }, el("span", { text: s.phase }), pct !== null ? el("span", { class: "pct", text: pct + "% done" }) : null));
+  if (pct !== null) { const bar = el("div", { class: "bar", role: "img", "aria-label": pct + "% done" }, el("span")); bar.firstChild.style.width = pct + "%"; kids.push(bar); }
+  if (!brief && s && Array.isArray(s.milestones) && s.milestones.length) {   // the Overview leaves milestones to the area's tab
+    kids.push(el("ol", { class: "steps", "aria-label": "Milestones" },
+      s.milestones.map((m) => el("li", { class: "step " + (m.state === "done" || m.state === "now" ? m.state : ""), text: m.name }))));
+  }
+  for (const [key, label] of [["done", s && s.kind === "other" ? "Just done" : "Just built"], ["now", "In progress"], ["next", "What's next"]]) {
+    const lines = s && Array.isArray(s[key]) ? s[key].slice(0, 3) : [];
+    if (lines.length) kids.push(el("p", { class: "lines-label", text: label }), el("ul", { class: "lines" }, lines.map((x) => rich(x, "li"))));
+  }
+  kids.push(el("p", { class: "waiting", text: waitingText(waitingCount(items)) + (s && s.updated ? ` · as of ${s.updated}` : "") }));
+  return el("div", { class: "status", "aria-label": "Where we are" }, kids);
+}
+
+function areaHeading(area, overview = false) {
+  const heading = el(overview ? "h3" : "h2");
+  if (overview) {
+    const button = el("button", { type: "button", class: "area-open", text: areaName(area), "aria-label": "Open " + areaName(area) });
+    button.addEventListener("click", () => selectTab("area:" + area.id, true));
+    heading.append(button);
+  } else heading.textContent = areaName(area);
+  return el("div", { class: "area-head" }, heading,
+    el("p", { class: "area-meta", text: area.where || "Location not recorded" }),
+    el("p", { class: "area-meta", text: (area.kind === "other" ? "Other work" : "Code") + " · Last touched: " + touchedText(area.touched) }));
+}
+
+function boardSection(s) {
+  const cards = s && Array.isArray(s.board) ? s.board.filter((c) => c && typeof c.title === "string" && c.title.trim()).slice(0, 10) : [];
+  if (!cards.length) return null;
+  const columns = [["next", "Next"], ["now", "Now"], ["blocked", "Blocked"], ["done", "Done"]];
+  const columnOf = (c) => columns.some(([key]) => key === c.column) ? c.column : "next";
+  return el("section", { "aria-labelledby": "board-title" }, el("h2", { id: "board-title", text: "Key work" }),
+    el("div", { class: "board" }, columns.map(([key, title]) => {
+      const list = cards.filter((c) => columnOf(c) === key);
+      return el("div", { class: "board-column" }, el("h3", { text: title }),
+        list.length ? list.map((c) => el("article", { class: "board-card" }, el("h4", { text: c.title }), c.note ? el("p", { text: c.note }) : null)) : el("p", { class: "board-empty", text: "Nothing here." }));
+    })));
+}
+
+function itemCard(item, showArea = false) {
+  const a = state.answers[item.id];
+  const d = state.drafts[item.id] || {};
+  const kind = item.kind === "gate" ? "gate" : item.kind === "decision" ? "decision" : "task";
+  const card = el("article", { class: "item" + (kind === "gate" ? " gate" : ""), id: "item-" + item.id });
+  card.append(el("div", { class: "kind" },
+    showArea ? el("span", { class: "tag", text: (() => { const area = state.statuses.find((s) => s.id === item.area); return area ? areaName(area) : "No area"; })() }) : null,
+    el("span", { class: "tag" + (kind === "gate" ? " gate" : ""), text: kind === "gate" ? "Go / no-go" : kind === "decision" ? "Decision" : "Task" }),
+    item.updated ? el("span", { text: "Added " + item.updated }) : null));
+  card.append(el("h3", { text: item.title || "" }));
+  const part = (label, kids, cls = "") => el("div", { class: "part " + cls }, el("div", { class: "label", text: label }), ...kids);
+  if (item.what) card.append(part("What I need", paras(item.what)));
+  if (Array.isArray(item.steps) && item.steps.length) card.append(part("Steps", [el("ol", {}, item.steps.map((t) => rich(t, "li")))]));
+  if (item.link) card.append(part("Where", [rich(item.link)]));
+  if (item.why) card.append(part("Why only you", paras(item.why)));
+  if (item.rec) card.append(part("What I recommend", paras(item.rec), "rec"));
+  if (item.after) card.append(part("After you answer", paras(item.after)));
+  if (kind === "gate") card.append(el("p", { class: "go", text: "To go ahead, type the go in our chat. This card stays until you do. Use the note below for questions or conditions." }));
+
+  const form = el("form");
+  if (kind === "decision" && Array.isArray(item.options) && item.options.length) {
+    const fs = el("fieldset", {}, el("legend", { text: "Your choice" }));
+    const preset = (item.options.find((o) => o.recommended) || {}).id;
+    const chosen = d.choice ?? (a && a.choice) ?? preset ?? "";
+    for (const o of item.options) {
+      const input = el("input", { type: "radio", name: "choice-" + item.id, value: o.id });
+      input.checked = o.id === chosen;
+      input.addEventListener("change", () => { (state.drafts[item.id] ||= {}).choice = o.id; });
+      fs.append(el("label", { class: "opt" }, input,
+        el("span", {}, el("span", { class: "opt-name", text: o.label + (o.recommended ? " (recommended)" : "") }), o.note ? el("span", { class: "opt-note", text: o.note }) : null)));
+    }
+    form.append(fs);
+  } else if (kind === "task") {
+    const box = el("input", { type: "checkbox" });
+    box.checked = d.done ?? !!(a && a.done);
+    box.addEventListener("change", () => { (state.drafts[item.id] ||= {}).done = box.checked; });
+    form.append(el("label", { class: "check" }, box, "I've done this"));
+  }
+  const ta = el("textarea", { "aria-label": "Your note", placeholder: "Anything I should know: what you found, what you'd change, a question." });
+  ta.value = d.note ?? (a && a.note) ?? "";
+  ta.addEventListener("input", () => { (state.drafts[item.id] ||= {}).note = ta.value; });
+  form.append(ta);
+  const btn = el("button", { type: "submit", text: state.saving[item.id] ? "Saving…" : "Save" });
+  btn.disabled = !!state.saving[item.id] || !state.db;
+  const msg = el("span", { class: "saved", role: "status", text: !state.db ? "Answers save only when this page is open on claude.ai, signed in." : state.errors[item.id] || (a ? "Saved " + when(a.at) + "." : "") });
+  form.append(el("div", { class: "actions" }, btn, msg));
+  form.addEventListener("submit", (e) => { e.preventDefault(); save(item, kind); });
+  card.append(form);
+  return card;
+}
+
+async function save(item, kind) {
+  if (!state.db || state.saving[item.id]) return;
+  const a = state.answers[item.id] || {};
+  const d = { ...(state.drafts[item.id] || {}) };
+  const body = { at: new Date().toISOString(), note: String(d.note ?? a.note ?? "").slice(0, 8000) };
+  if (kind === "decision") body.choice = d.choice ?? a.choice ?? ((item.options || []).find((o) => o.recommended) || {}).id ?? "";
+  if (kind === "task") body.done = d.done ?? !!a.done;
+  state.saving[item.id] = true; delete state.errors[item.id]; render();
+  try {
+    await state.db.collection("answers").doc(item.id).set(body);
+    // Edits made while Save was in flight belong to the next save.
+    if (JSON.stringify(state.drafts[item.id] || {}) === JSON.stringify(d)) delete state.drafts[item.id];
+  } catch (e) {
+    // Kept in state: the card is redrawn below, so a message written into the old node would vanish.
+    state.errors[item.id] = e && e.code === "invalid_argument" ? "This view can't save answers." : "Didn't save. Try again in a moment.";
+  } finally {
+    state.saving[item.id] = false; render();
+  }
+}
+
+function selectTab(tab, focus = false) {
+  state.tab = tab;
+  try { localStorage.setItem("flight-deck-tab", tab); } catch {}
+  render(true);
+  if (focus) tabs.querySelector('[aria-selected="true"]')?.focus();
+}
+
+function renderTabs(areas) {
+  const choices = [{ key: "overview", name: "Overview", items: state.items }, ...areas.map((a) => ({ key: "area:" + a.id, name: areaName(a), items: areaItems(a) }))];
+  if (!choices.some((c) => c.key === state.tab)) {
+    state.tab = "overview";
+    try { localStorage.setItem("flight-deck-tab", state.tab); } catch {}
+  }
+  const focused = tabs.contains(document.activeElement);
+  tabs.replaceChildren(...choices.map((c, index) => {
+    const selected = c.key === state.tab;
+    const n = waitingCount(c.items);
+    const button = el("button", { type: "button", class: "tab", role: "tab", id: "tab-" + c.key,
+      "aria-selected": String(selected), "aria-controls": "panel", tabindex: selected ? "0" : "-1", text: c.name + " (" + n + ")" });
+    button.addEventListener("click", () => selectTab(c.key, true));
+    button.addEventListener("keydown", (e) => {
+      const offset = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
+      if (!offset && e.key !== "Home" && e.key !== "End") return;
+      e.preventDefault();
+      selectTab(choices[e.key === "Home" ? 0 : e.key === "End" ? choices.length - 1 : (index + offset + choices.length) % choices.length].key, true);
+    });
+    return button;
+  }));
+  panel.setAttribute("role", "tabpanel");
+  panel.setAttribute("aria-labelledby", "tab-" + state.tab);
+  if (focused) tabs.querySelector('[aria-selected="true"]')?.focus();
+}
+
+function renderOverview(areas) {
+  statusEl.replaceChildren(el("section", { "aria-labelledby": "areas-title" }, el("h2", { id: "areas-title", text: "Areas of work" }),
+    el("p", { class: "waiting", text: waitingText(waitingCount()) }), areas.map((a) => {
+      const block = statusBlock(a, areaItems(a), true);
+      block.prepend(areaHeading(a, true));
+      return block;
+    })));
+  const urgency = (i) => ["gate", "now", "decide", "later"].indexOf(i.kind === "gate" ? "gate" : groupOf(i));
+  // Every item, answered ones included: a saved answer stays visible here, as on its tab, until the agent has read it.
+  const list = [...state.items].sort((x, y) => urgency(x) - urgency(y) || byOrder(x, y));
+  root.append(el("section", { "aria-labelledby": "waiting-title" }, el("h2", { id: "waiting-title", text: "Waiting on you" }),
+    el("p", { class: "note", text: "Every area, go/no-gos first, then what needs you now, your decisions, and what's needed later." }),
+    list.length ? list.map((i) => itemCard(i, true)) : el("p", { class: "empty", text: "Nothing needs you right now." })));
+}
+
+function renderGroups(items) {
+  let shown = 0;
+  for (const g of GROUPS) {
+    const list = items.filter((i) => groupOf(i) === g.key).sort(byOrder);
+    if (!list.length) continue;
+    shown += list.length;
+    root.append(el("section", { "aria-labelledby": "g-" + g.key },
+      el("h2", { id: "g-" + g.key, text: g.title }), el("p", { class: "note", text: g.note }), list.map((i) => itemCard(i))));
+  }
+  if (!shown) root.append(el("p", { class: "empty", text: "Nothing needs you right now." }));
+}
+
+function render(force) {
+  // Never redraw under someone typing; a change that arrives meanwhile waits for the blur.
+  const active = document.activeElement;
+  if (!force && active && root.contains(active) && (active.tagName === "TEXTAREA" || active.tagName === "INPUT")) { state.pending = true; return; }
+  state.pending = false;
+  const multi = state.statuses.some((s) => s.id !== "current");
+  const areas = [...state.statuses].sort((a, b) => byOrder(a, b) || areaName(a).localeCompare(areaName(b)));
+  wrap.classList.toggle("multi", multi);
+  tabs.hidden = !multi;
+  if (multi) renderTabs(areas);
+  else { tabs.replaceChildren(); panel.removeAttribute("role"); panel.removeAttribute("aria-labelledby"); }
+  statusEl.replaceChildren();
+  root.replaceChildren();
+  if (multi && state.tab === "overview") renderOverview(areas);
+  else {
+    const area = multi ? areas.find((a) => "area:" + a.id === state.tab) : areas.find((a) => a.id === "current");
+    const items = multi ? areaItems(area) : state.items;
+    statusEl.replaceChildren(...(multi ? [areaHeading(area)] : []), statusBlock(area, items));
+    const board = boardSection(area);
+    if (board) root.append(board);
+    renderGroups(items);
+  }
+  if (state.failures.status) statusEl.replaceChildren(statusBlock({ phase: "The status couldn't load. Reload the page." }));
+  if (state.failures.items || state.failures.answers) root.replaceChildren(el("p", { class: "notice", text: "The list couldn't load. Reload the page." }));
+}
+root.addEventListener("focusout", () => setTimeout(() => { if (state.pending) render(); }, 0));
+
+statusEl.replaceChildren(statusBlock(null));
+(async () => {
+  let db;
+  try { db = window.claude && typeof window.claude.use === "function" ? await window.claude.use("db") : null; }
+  catch { root.replaceChildren(el("p", { class: "notice", text: "The list couldn't load. Reload the page." })); return; }
+  if (!db) {
+    root.replaceChildren(el("p", { class: "notice", text: "This page's list lives in its database, which loads only on claude.ai while you're signed in." }));
+    return;
+  }
+  state.db = db;
+  const loaded = { status: false, items: false, answers: false };
+  const ready = () => { if (loaded.status && loaded.items && loaded.answers) render(); };
+  const failed = (key) => () => { state.failures[key] = true; loaded[key] = true; ready(); };
+  db.collection("status").onSnapshot((snap) => { state.statuses = snap.docs.map((x) => ({ ...x.data(), id: x.id })); state.failures.status = false; loaded.status = true; ready(); }, failed("status"));
+  db.collection("items").onSnapshot((snap) => { state.items = snap.docs.map((x) => ({ ...x.data(), id: x.id })); state.failures.items = false; loaded.items = true; ready(); }, failed("items"));
+  db.collection("answers").onSnapshot((snap) => { const m = {}; snap.docs.forEach((x) => (m[x.id] = x.data())); state.answers = m; state.failures.answers = false; loaded.answers = true; ready(); }, failed("answers"));
+})();
+</script>
