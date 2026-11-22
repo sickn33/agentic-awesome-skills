@@ -692,6 +692,8 @@ Key source families include:
 - **[elayadesign/ai-design-skills](https://github.com/elayadesign/ai-design-skills)**: Source for `figma-designer`, `landing-page-design`.
 - **[eli-alvarado/us-watchlist-alerts](https://github.com/eli-alvarado/us-watchlist-alerts)**: Source for `us-watchlist-alerts`.
 - **[gomarble-ai/marketing-agent](https://github.com/gomarble-ai/marketing-agent)**: Source for `creative-psychology-hooks`.
+- **[Guerrier-florian/eu-web-compliance](https://github.com/Guerrier-florian/eu-web-compliance)**: Source for the `eu-web-compliance` skill - EU web compliance: GDPR/CNIL consent gating, EAA 2025 accessibility, LCEN/DSA legal footers, and zero-dependency CLI scanner (MIT).
+- **[Guerrier-florian/wp-acf-to-blocks](https://github.com/Guerrier-florian/wp-acf-to-blocks)**: Source for the `wp-acf-to-blocks` skill - WordPress legacy theme migration from ACF Pro to native Gutenberg blocks (Block Bindings, block.json v3, theme.json v3) and zero-dependency scanner (MIT).
 - **[harshmaur/apify-facebook-ads-library-scraper](https://github.com/harshmaur/apify-facebook-ads-library-scraper)**: Source for `apify-facebook-ads-library-scraper`.
 - **[harshmaur/apify-linkedin-jobs-scraper](https://github.com/harshmaur/apify-linkedin-jobs-scraper)**: Source for `apify-linkedin-jobs-scraper`.
 - **[harshmaur/apify-tiktok-scraper](https://github.com/harshmaur/apify-tiktok-scraper)**: Source for `apify-tiktok-scraper`.
