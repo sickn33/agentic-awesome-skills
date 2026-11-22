@@ -92,6 +92,7 @@ Fix must-fix items. Judgment-calls only when they stack.
 #### Bucket B — False profundity (must-fix when repeated; else judgment)
 
 - Invented concept labels (“the X paradox/trap/creep”) used as if established
+- Spotlight verdict — pointing at one item and declaring it the one that matters instead of showing why. First person (`X is the part I'd keep`, `the line that sticks with me`, `what stays with me is X`) or crowd (`X is the part everyone misses`, `what nobody talks about is X`, `the real story is X`). Fix even one when it carries the payoff: cut the verdict and let the item stand, or give the concrete reason once. Keep a real preference with its own reason (`I'd keep the second draft because it's shorter`). Don't swap in a magic adverb or another label. A spotlight used as a closer counts here, not under bow-tie closers
 - Stakes inflation (API tweak framed as civilization-scale)
 - Vague “experts say” / unnamed authorities
 - Magic adverbs papering over a thin claim (see Always-replace below)
@@ -245,6 +246,7 @@ Expected result: deslopped rewrite, then either "imperfection: none" (common at 
 ## Limitations
 
 - English prose only; the word lists and typo pools are English.
+- The typo draw is deterministic for a given cleaned draft, but the cleanup rewrite itself can differ between runs, so two runs on the same input can get different typos (or none). Run imperfections-only on fixed text when exact repeatability matters.
 - The typo pass needs a code tool to compute SHA-256. Without one, report that imperfections were skipped instead of inventing a draw.
 - Error-rate weights come from older typing studies (see upstream NOTES.md) and are an approximation, not a model of any specific writer.
 - Does not guarantee text will pass or fail any AI detector, and should not be described as a detector-evasion tool.
@@ -258,5 +260,5 @@ Expected result: deslopped rewrite, then either "imperfection: none" (common at 
 
 ## Sources and related skills
 
-- Upstream: https://github.com/wilu222/unpolish-ai-writing (MIT), pinned at commit `b840f2f198a2f485506c6dee09f8942ac6c19973`. Install the upstream version with `npx skills add wilu222/unpolish-ai-writing`.
+- Upstream: https://github.com/wilu222/unpolish-ai-writing (MIT), pinned at commit `b167370983d10944fa3e094db527995a028957e1`. Install the upstream version with `npx skills add wilu222/unpolish-ai-writing`.
 - Related: `avoid-ai-writing`, `unslop`, `beautiful-prose`.
