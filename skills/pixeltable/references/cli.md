@@ -44,7 +44,7 @@ The daemon identity also fingerprints installed package metadata, so after `pip 
 | Category | Commands |
 |----------|----------|
 | **Project** | `init` |
-| **Inspection** | `ls`, `describe`, `columns`, `computed`, `idxs`, `history`, `status`, `config` |
+| **Inspection** | `ls`, `describe`, `columns`, `computed`, `idxs`, `history`, `status`, `config`, `functions` |
 | **Query** | `rows`, `get`, `count`, `errors` |
 | **Mutation** | `drop`, `drop-dir`, `rename`, `mv`, `recompute`, `revert` |
 | **Schema** | `schema diff`, `schema update`, `schema prune`, `schema check`, `schema example` |
@@ -60,7 +60,7 @@ The daemon identity also fingerprints installed package metadata, so after `pip 
 | Flag | Description |
 |------|-------------|
 | `-h`, `--help` | Every command |
-| `--json` | Machine-readable output on catalog commands, `init`, the `schema` / `service` verbs other than `example`, `login`, `whoami`, `db`, `org`, `secret`, `key`, `usage`, `feedback`, `daemon status`. Not on `shell`, `dashboard`, `logout`, or `daemon start`/`stop`/`restart`. `health` is always JSON. |
+| `--json` | Machine-readable output on catalog commands, `init`, `functions`, the `schema` / `service` verbs other than `example`, `login`, `whoami`, `db`, `org`, `secret`, `key`, `usage`, `feedback`, `daemon status`. Not on `shell`, `dashboard`, `logout`, or `daemon start`/`stop`/`restart`. `health` is always JSON. |
 | `--json-schema` | `schema diff`, `service diff`, `service list`, `db diff`, `db status`: print the JSON Schema of that command's `--json` output, every field and enum value described, and exit. Takes no other argument |
 | `-n`, `--dry-run` | Catalog mutations (`drop`, `drop-dir`, `rename`, `mv`, `recompute`, `revert`) plus `schema update`, `schema prune`, `service update`, `service prune`, and `db update` |
 | `-f`, `--force` | Skip `[y/N]` on `drop`, `drop-dir`, `recompute`, `revert`, schema/service update and prune, `db update`, and `db delete`. Use it in non-interactive runs when a pending plan can prompt. Additive or no-op schema updates do not prompt. Not on `rename`/`mv`. Without it and without a TTY, a confirmation prompt exits 3 and prints `next: <the same command with -f>  # <what it does>`. A destructive plan refused for want of `--allow-destructive` prints `next:` with `--allow-destructive`, and also `-f` when there is no TTY. With `--json`, catalog commands print `{"error_code": "CONFIRMATION_REQUIRED", ..., "next": [{"command", "effect"}]}`. `schema`, `service`, and `db update` print the refused plan instead of that document. |
@@ -76,6 +76,7 @@ The daemon identity also fingerprints installed package metadata, so after `pip 
 | Review schema drift | `pxt schema diff` | exit `0` in sync, `2` pending |
 | Start HTTP | `pxt service update` | `pxt service update app.py my_app -f` (force pending changes in CI) |
 | Inspect catalog | `pxt ls -l`, `pxt describe`, `pxt columns --computed` | `pxt ls --json \| jq '.entries[] \| select(.kind == "table")'` |
+| List built-in functions | `pxt functions` | `pxt functions video`, `pxt functions --on Json`, `pxt functions --search detect` |
 | Debug failed columns | `pxt errors`, `pxt rows --cols` | `pxt errors my_app/docs --col embedding` |
 | Retry failed cells | `pxt recompute` | `pxt recompute my_app/docs embedding --errors-only -f` (which providers retry: [providers.md](providers.md#retries-and-proxies)) |
 | Debug a hosted service | `pxt service logs` | `pxt service logs pxt://org:db/ingest --since 10m --tail 50`. A local service is not readable this way (the command exits 1). Read it with `tail -50 "${PIXELTABLE_HOME:-$HOME/.pixeltable}/logs/services/<target>/<name>.log"` |
@@ -125,6 +126,7 @@ pxt dashboard
 - **`pxt idxs`**: `--embedding` for embedding indexes only
 - **`pxt history`**: `-n N` for last N versions (run before `revert`)
 - **`pxt status`**: daemon PID, version, total errors; `--sizes` for disk usage
+- **`pxt functions`**: list functions, aggregates, and iterators with signatures (`pxt functions video`, `--on Json`, `--search detect`, `--kind udf`). `--json` emits the records. SDK: `pxt.list_functions()`
 
 ## Query highlights
 
