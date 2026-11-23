@@ -212,7 +212,7 @@ Key source families include:
 
 ### Official Sources
 
-- **[phuryn/product-engineering](https://github.com/phuryn/product-engineering/tree/main/app-stack/skills/uptime-monitoring)**: Official Staygreen skill (`uptime-monitoring`) - content checks confirmed from a second location, heartbeats for scheduled jobs, certificate and domain expiry, status pages and a tested alert route, through the hosted Staygreen MCP server; the same steps work on a monitoring service the owner already uses (MIT).
+- **[phuryn/product-engineering](https://github.com/phuryn/product-engineering)**: Pawel Huryn’s MIT collection of 45 product discovery, agent coordination, shipping and application operations workflows.
 
 - **[CrakSEO/skills](https://github.com/CrakSEO/skills)**: External MIT collection for CrakSEO hosted MCP integrations covering SEO research, Search Console and URL indexing. Listed as an upstream resource; not bundled or connected by this repository.
 
@@ -388,6 +388,8 @@ Key source families include:
 <summary><strong>Community Contributors & Source Repositories</strong></summary>
 
 ### Community Contributors
+
+- **[Illyism/seo-skills](https://github.com/Illyism/seo-skills)**: Ilias Ism’s MIT collection of 30 SEO, content, copywriting and marketing workflows.
 
 - **[timini/agentic-verification](https://github.com/timini/agentic-verification)**: MIT source for the `agentic-verify` and `agentic-test-audit` skills - check a Python change by running every mutant of the changed lines and writing tests until they catch them, and audit a pytest suite for gaps, flaky and slow tests, and removal candidates checked on held-out mutants.
 - **[UmarSiddiqui/obsess](https://github.com/UmarSiddiqui/obsess)**: MIT source for the `obsess` skill - a bounded perfectionist loop for one target that keeps the best evidence-backed attempt and stops on an attempt or time budget.
