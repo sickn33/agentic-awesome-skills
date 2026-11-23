@@ -38,6 +38,29 @@ Summarize the most important change for users in one short paragraph.
 
 ## [Unreleased]
 
+## [21.2.0] - 2026-11-23 - "SEO and Product Engineering Workflows"
+
+AAS adds 76 skills, bringing the catalog to 3,131. This release expands SEO and product engineering coverage and adds Bing results to the Cloro skill.
+
+### New skills
+
+- Add 30 skills from Illyism for technical SEO, internal linking, content coverage, search research, and marketing copy. See [#2447](https://github.com/sickn33/agentic-awesome-skills/pull/2447) and [#2448](https://github.com/sickn33/agentic-awesome-skills/pull/2448).
+- Add 45 skills from Pawel Huryn's Product Engineering collection for product discovery, agent coordination, verification before shipping, and application operations. See [#2448](https://github.com/sickn33/agentic-awesome-skills/pull/2448).
+- Add `unpolish-ai-writing` for editing English prose, with optional seeded typos for creative writing. See [#2465](https://github.com/sickn33/agentic-awesome-skills/pull/2465).
+
+### Improvements
+
+- Document Bing organic results, ads, and AI Overview in the Cloro MCP workflow. See [#2460](https://github.com/sickn33/agentic-awesome-skills/pull/2460).
+- Correct the published npm setup instructions and link the team setup and remote MCP guides. See [#2441](https://github.com/sickn33/agentic-awesome-skills/pull/2441).
+
+### Security and distribution
+
+- Update the Git identity check to avoid regex backtracking. See [#2449](https://github.com/sickn33/agentic-awesome-skills/pull/2449).
+
+### Contributors
+
+- Thanks to @Illyism and @phuryn for the upstream collections, @rbatista191 for [#2460](https://github.com/sickn33/agentic-awesome-skills/pull/2460), and @wilu222 for [#2465](https://github.com/sickn33/agentic-awesome-skills/pull/2465).
+
 ## [21.1.0] - 2026-11-20 - "Design Systems, Motion, and Agent Workflows"
 
 Add 33 skills for design systems, creative production, local inference, engineering and connected workflows, bringing the catalog to 3,055 skills. The public sitemap now lists every active skill.
