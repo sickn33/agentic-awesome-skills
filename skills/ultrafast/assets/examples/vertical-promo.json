@@ -1,0 +1,102 @@
+{
+  "version": 1,
+  "format": {
+    "width": 1080,
+    "height": 1920,
+    "fps": 30,
+    "duration": 8,
+    "motion_blur": {
+      "samples": 6,
+      "shutter": 0.5
+    }
+  },
+  "nodes": {
+    "bg": {
+      "op": "gradient",
+      "params": {
+        "kind": "radial",
+        "a": "#2b2250",
+        "b": "#0b0a12",
+        "radius": 1400
+      }
+    },
+    "title": {
+      "op": "block",
+      "params": {
+        "kind": "title",
+        "kicker": "SATURDAYS, 10 AM",
+        "title": "Learn the wheel",
+        "subtitle": "First class free"
+      },
+      "timing": {
+        "offset": 0.3,
+        "in": 0,
+        "out": 4.2
+      }
+    },
+    "stat": {
+      "op": "block",
+      "params": {
+        "kind": "stat",
+        "value": 12,
+        "label": "seats a class"
+      },
+      "timing": {
+        "offset": 4.2,
+        "in": 4.2,
+        "out": 8
+      }
+    },
+    "words": {
+      "op": "captions",
+      "params": {
+        "words": "0.4 0.8 Pottery\n0.8 1.1 class\n1.1 1.5 every\n1.5 2.1 Saturday.\n4.3 4.7 Twelve\n4.7 5.0 seats\n5.0 5.3 a\n5.3 5.8 class.",
+        "style": "karaoke",
+        "safe": "social"
+      }
+    },
+    "a": {
+      "op": "over",
+      "inputs": {
+        "fg": "title",
+        "bg": "bg"
+      }
+    },
+    "b": {
+      "op": "over",
+      "inputs": {
+        "fg": "stat",
+        "bg": "bg"
+      }
+    },
+    "cut": {
+      "op": "transition",
+      "inputs": {
+        "a": "a",
+        "b": "b"
+      },
+      "params": {
+        "kind": "push",
+        "at": 3.9,
+        "duration": 0.6
+      }
+    },
+    "cap": {
+      "op": "over",
+      "inputs": {
+        "fg": "words",
+        "bg": "cut"
+      }
+    },
+    "finish": {
+      "op": "grain",
+      "inputs": {
+        "source": "cap"
+      },
+      "params": {
+        "amount": 0.06
+      }
+    }
+  },
+  "output": "finish"
+}
