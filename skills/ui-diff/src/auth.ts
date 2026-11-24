@@ -136,7 +136,16 @@ export async function applyAuth(context: BrowserContext, auth: ResolvedAuth | un
         await route.fallback();
         return;
       }
-      await route.continue({ headers: { ...request.headers(), ...auth.headers } });
+      // Fetch only this request. Browser redirects must not inherit injected headers.
+      const response = await route.fetch({
+        headers: { ...await request.allHeaders(), ...auth.headers },
+        maxRedirects: 0,
+      });
+      try {
+        await route.fulfill({ response });
+      } finally {
+        await response.dispose();
+      }
     });
   }
 }

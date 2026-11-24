@@ -83,9 +83,10 @@ Rules ui-diff enforces:
 
 - **Values only from environment variables.** The config holds variable *names*; a value-shaped
   string is rejected by the schema. Missing variables fail the run with a clear message.
-- **Scoped to the preview origins.** Headers are added only to requests whose origin is a preview
-  URL (or `auth.origins`); fonts, analytics and CDNs requested by the page never see them. Cookies
-  are set for the preview hosts only (`secure`, `httpOnly`, `SameSite=Lax`).
+- **Headers scoped to the preview origins.** Only matched requests receive configured headers.
+  The authenticated request does not follow redirects with those headers. Use the final HTTPS
+  preview URL if a redirect reaches another page that needs credentials. Cookies use browser scope
+  rules. Leave the domain unset for preview hosts and review any explicit cookie domain before use.
 - **No links with secrets.** ui-diff never creates Vercel Shareable Links or protection-bypass
   URLs, and refuses preview URLs carrying credentials or token-like parameters
   (`x-vercel-protection-bypass`, `_vercel_share`, `token`, `jwt`, `sig`, …), because URLs end up in
