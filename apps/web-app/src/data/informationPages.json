@@ -223,7 +223,7 @@
     "title": "AAS Core privacy",
     "description": "How the AAS Core remote preview handles tool arguments, temporary sessions and abuse-prevention counters.",
     "intro": "Privacy for the AAS Core remote preview.",
-    "lede": "Publisher: Niccolò Lucioli. Updated 29 October 2026. This notice covers the remote MCP service; local AAS bundles and the website have separate data flows.",
+    "lede": "Publisher: Niccolò Lucioli. Updated 24 November 2026. This notice covers the remote MCP service; local AAS bundles and the website have separate data flows.",
     "sections": [
       {
         "title": "Data your client sends",
@@ -232,7 +232,7 @@
       },
       {
         "title": "Temporary sessions",
-        "body": "Arguments and selection traces remain in an isolated session’s memory and are not intentionally persisted. A session is usable for 20 minutes, can be deleted by an MCP DELETE request and can end earlier on eviction. An expiry alarm is scheduled to discard its in-memory server; infrastructure scheduling may delay cleanup.",
+        "body": "Arguments and selection traces remain in an isolated session’s memory and are not intentionally persisted. A session is usable for 20 minutes, can be deleted by an MCP DELETE request and can end earlier on eviction. An expiry alarm is scheduled to discard its in-memory server; infrastructure scheduling may delay cleanup. An optional audited selection uses a private handle for a separate in-memory trace lasting up to 20 minutes. It can survive replacement of the transport session and expires independently.",
         "links": []
       },
       {
@@ -242,7 +242,7 @@
       },
       {
         "title": "Service providers and the website",
-        "body": "Application request logging is disabled. The remote application uses no advertising, payment service or paid AI model API. Cloudflare processes connection metadata under its own policy. Your AI client processes prompts and outputs under its own policy. These informational pages on aaskills.tech use the website’s existing hosting and aggregate Vercel Web Analytics; query strings and fragments are removed before analytics events are sent. The remote application does not send tool arguments to that analytics service.",
+        "body": "Daily service counters store the tool name, outcome, error code, number of calls and total processing time. An empty search is counted without its query. No arguments, responses, IP addresses or selection handles are included in these aggregates. Older days are removed on the next measured request after 30 days. Application request logging is disabled. The remote application uses no advertising, payment service or paid AI model API. Cloudflare processes connection metadata under its own policy. Your AI client processes prompts and outputs under its own policy. These informational pages on aaskills.tech use the website’s existing hosting and aggregate Vercel Web Analytics; query strings and fragments are removed before analytics events are sent. The remote application does not send tool arguments to that analytics service.",
         "links": [
           {
             "label": "Cloudflare privacy policy",

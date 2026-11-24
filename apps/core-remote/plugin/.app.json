@@ -1,0 +1,8 @@
+{
+  "apps": {
+    "aas-core": {
+      "id": "asdk_app_6ae34d602f74819183e75f3190913fd3",
+      "required": true
+    }
+  }
+}

@@ -2,7 +2,9 @@ const assert = require("node:assert/strict");
 const { assertToolContract } = require("./tool-contract.cjs");
 const endpoint =
   process.env.AAS_MCP_URL || "https://aas-core.aas-core-remote.workers.dev/mcp";
+const product = endpoint.endsWith("/v2");
 let sid;
+let selectionHandle;
 const checks = [];
 async function call(method, params = {}, notification = false) {
   const r = await fetch(endpoint, {
@@ -30,7 +32,8 @@ async function call(method, params = {}, notification = false) {
   assert.ok(r.ok, `HTTP ${r.status}: ${txt.slice(0, 200)}`);
   return { r, body };
 }
-(async () => {
+async function connect() {
+  sid = null;
   const init = await call("initialize", {
     protocolVersion: "2025-06-18",
     capabilities: {},
@@ -41,23 +44,64 @@ async function call(method, params = {}, notification = false) {
   checks.push("initialize");
   await call("notifications/initialized", {}, true);
   checks.push("initialized");
+}
+(async () => {
+  await connect();
   const tools = (await call("tools/list")).body.result.tools;
-  assertToolContract(tools);
+  assertToolContract(tools, product);
   for (const t of tools)
     for (const k of ["readOnlyHint", "openWorldHint", "destructiveHint"])
       assert.equal(typeof t.annotations[k], "boolean");
-  checks.push("nine tools and annotations");
+  checks.push(tools.length + " tools and annotations");
   async function tool(name, args, expectedError = false) {
+    if (
+      selectionHandle &&
+      [
+        "compare_skills",
+        "get_skill",
+        "compose_stack",
+        "inspect_stack",
+        "export_selection_evidence",
+      ].includes(name)
+    )
+      args = { ...args, selectionHandle };
     const x = (await call("tools/call", { name, arguments: args })).body;
     assert.equal(
       x.result?.isError,
       expectedError,
-      JSON.stringify(x).slice(0, 400),
+      name +
+        ": " +
+        (x.result?.structuredContent?.code ||
+          x.error?.code ||
+          "unexpected response"),
     );
     checks.push(name + (expectedError ? " expected rejection" : ""));
     return x.result.structuredContent || JSON.parse(x.result.content[0].text);
   }
-  await tool("search_skills", { query: "python", limit: 3 });
+  const first = await tool("search_skills", {
+    query: "python",
+    limit: 3,
+    ...(product ? { startSelection: true } : {}),
+  });
+  if (product) {
+    selectionHandle = first.selectionHandle;
+    assert.match(selectionHandle, /^[a-f0-9]{64}$/);
+    await fetch(endpoint, {
+      method: "DELETE",
+      headers: { "mcp-session-id": sid },
+    });
+    await connect();
+    const comparison = await tool("compare_skills", {
+      ids: ["python-pro", "better-accessibility"],
+    });
+    assert.deepEqual(
+      comparison.results.map((r) => r.id),
+      ["python-pro", "better-accessibility"],
+    );
+    assert.ok(
+      comparison.results[1].source && comparison.results[1].limitationsExcerpt,
+    );
+  }
   await tool("get_skill", { id: "python-pro", includeContent: true });
   await tool("list_skill_files", { id: "python-pro" });
   await tool("read_skill_file", { id: "python-pro", path: "SKILL.md" });
