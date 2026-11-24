@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23T07:33:52.000Z",
+  "generatedAt": "2026-11-24T09:55:19.000Z",
   "bundles": {
     "core-dev": {
       "description": "Core development skills across languages, frameworks, and backend/frontend fundamentals.",
@@ -376,6 +376,7 @@
         "mobile-native",
         "mobile-reverse",
         "mobile-security-coder",
+        "mobilebox-cloud-phones",
         "modellix",
         "modern-java-guidance",
         "modern-javascript-patterns",
@@ -1812,6 +1813,8 @@
         "nerdzao-elite",
         "nerdzao-elite-gemini-high",
         "nika",
+        "nitrosend-email-platform-migration",
+        "nitrosend-shopify-email-marketing",
         "notification-reminder-hub",
         "notion-automation",
         "notion-manual-import",
@@ -1964,6 +1967,7 @@
         "trello-automation",
         "triage",
         "twitter-automation",
+        "ultrafast",
         "using-n8n-mcp-skills",
         "using-superpowers",
         "vendor-contractor-management",
@@ -2180,6 +2184,8 @@
         "mailtrap-managing-contacts",
         "monetization",
         "multi-tenant-llm-hosting",
+        "nitrosend-email-platform-migration",
+        "nitrosend-shopify-email-marketing",
         "odoo-accounting-setup",
         "odoo-automated-tests",
         "odoo-backup-strategy",
@@ -2305,6 +2311,7 @@
         "mobile-native",
         "mobile-reverse",
         "mobile-security-coder",
+        "mobilebox-cloud-phones",
         "multi-platform-apps-multi-platform",
         "native-data-fetching",
         "odoo-docker-deployment",

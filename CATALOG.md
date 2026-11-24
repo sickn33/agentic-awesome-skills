@@ -1,8 +1,8 @@
 # Skill Catalog
 
-Generated at: 2026-11-23T07:33:52.000Z
+Generated at: 2026-11-24T09:55:19.000Z
 
-Total skills: 3131
+Total skills: 3137
 
 ## agent-behavior (5)
 
@@ -1048,7 +1048,7 @@ Total skills: 3131
 | --- | --- | --- | --- | --- | --- |
 | `web-project-brainstorming` | Masterclass framework for brainstorming web development projects and page designs. Outlines structural phases for concept, UX flow, styling aesthetics, techn... | safe | self | brainstorming, project-planning, web-development, product-scoping, design-system, architecture | brainstorming, project-planning, web-development, product-scoping, design-system, architecture, web, masterclass, framework, development, page, designs |
 
-## content (86)
+## content (87)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1126,6 +1126,7 @@ Total skills: 3131
 | `story-bible-continuity` | Deterministic continuity check for long manuscripts against a story bible: name drift, age arithmetic, era anachronisms, unpaid foreshadowing, POV leaks. Use... | safe | self | writing, novel, continuity, fiction, consistency, manuscript, story-bible | writing, novel, continuity, fiction, consistency, manuscript, story-bible, story, bible, deterministic, check, long |
 | `technical-tutorials` | When the user wants to create step-by-step technical tutorials, quickstarts, or code walkthroughs. Trigger phrases include "tutorial," "quickstart," "getting... | critical | jonathimer/devmarketing-skills | technical, tutorials | technical, tutorials, user, wants, step, quickstarts, code, walkthroughs, trigger, phrases, include, tutorial |
 | `tutorial-engineer` | Creates step-by-step tutorials and educational content from code. Transforms complex concepts into progressive learning experiences with hands-on examples. | safe | community | tutorial | tutorial, engineer, creates, step, tutorials, educational, content, code, transforms, complex, concepts, progressive |
+| `ultrafast` | Make or edit videos as ultrafast JSON documents with the uf CLI or its MCP tools: write, check, look at frames, review, then export MP4, ProRes, WebM, GIF or... | critical | self | video, motion-graphics, captions, mcp, gpu | video, motion-graphics, captions, mcp, gpu, ultrafast, edit, videos, json, documents, uf, cli |
 | `unslop-file` | Humanize natural-language memory files (CLAUDE.md, todos, preferences, docs) by removing AI-isms and adding burstiness while preserving every code block, URL... | critical | MohamedAbdallah-14/unslop | unslop, file | unslop, file, humanize, natural, language, memory, files, claude, md, todos, preferences, docs |
 | `wiki-architect` | You are a documentation architect that produces structured wiki catalogues and onboarding guides from codebases. | critical | community | wiki | wiki, architect, documentation, produces, structured, catalogues, onboarding, guides, codebases |
 | `wiki-changelog` | Generate structured changelogs from git history. Use when user asks "what changed recently", "generate a changelog", "summarize commits" or user wants to und... | safe | community | wiki, changelog | wiki, changelog, generate, structured, changelogs, git, history, user, asks, what, changed, recently |
@@ -2343,7 +2344,7 @@ Total skills: 3131
 | `nap-consistency-checker` | NAP Consistency Checker. Use when working with canonical business name, address and phone plus listing records. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, nap, consistency, checker, working, canonical, business, name, address, phone, plus |
 | `review-response-generator` | Review Response Generator. Use when working with review text and verified business context. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, review, response, generator, working, text, verified, business, context |
 
-## marketing (188)
+## marketing (192)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2471,6 +2472,10 @@ Total skills: 3131
 | `marketing-mindset` | Use when a user asks how to win first customers, whether doing X will produce Y, how to write an ad or judge a marketing test — a marketer's decision framewo... | safe | axelfreeman/marketing-mindset | marketing, growth, positioning, cold-email, decision-making | marketing, growth, positioning, cold-email, decision-making, mindset, user, asks, how, win, first, customers |
 | `marketing-plan` | When the user needs a comprehensive marketing plan for a client, a company they advise, or their own product. | critical | coreyhaines31/marketingskills | marketing, plan | marketing, plan, user, client, company, advise, own, product |
 | `marketing-psychology` | Apply behavioral science and mental models to marketing decisions, prioritized using a psychological leverage and feasibility scoring system. | none | community | marketing, psychology | marketing, psychology, apply, behavioral, science, mental, models, decisions, prioritized, psychological, leverage, feasibility |
+| `nitrosend-email-platform-migration` | Move contacts from MailerLite, Brevo, Kit, ActiveCampaign, HubSpot or any CSV export to Nitrosend, importing opt-outs first and only subscribed contacts after. | critical | nitrosend/claude | email-marketing, migration, mailerlite, brevo, mcp | email-marketing, migration, mailerlite, brevo, mcp, nitrosend, email, platform, move, contacts, kit, activecampaign |
+| `nitrosend-klaviyo-migration` | Move email marketing from Klaviyo to Nitrosend: bring suppressed profiles across first, import subscribed profiles by list, then rebuild flows as inactive dr... | critical | nitrosend/claude | email-marketing, migration, klaviyo, mcp | email-marketing, migration, klaviyo, mcp, nitrosend, move, email, marketing, bring, suppressed, profiles, first |
+| `nitrosend-mailchimp-migration` | Move a Mailchimp audience to Nitrosend without losing consent: import opt-outs first, connect Mailchimp to sync subscribed members, then rebuild journeys as ... | critical | nitrosend/claude | email-marketing, migration, mailchimp, mcp | email-marketing, migration, mailchimp, mcp, nitrosend, move, audience, without, losing, consent, import, opt |
+| `nitrosend-shopify-email-marketing` | Run Shopify email marketing in Nitrosend: connect the store with customer consent kept, segment on orders and store activity, and draft the core store flows. | critical | nitrosend/claude | email-marketing, shopify, ecommerce, mcp | email-marketing, shopify, ecommerce, mcp, nitrosend, email, marketing, run, connect, store, customer, consent |
 | `objection-preemptor` | Map customer objections and address them with evidence and choice-preserving language when a funnel, sales page, or pitch encounters recurring hesitation. | safe | community | objection, preemptor | objection, preemptor, map, customer, objections, address, them, evidence, choice, preserving, language, funnel |
 | `offers` | When the user wants to design, construct, or improve an offer — the thing they actually sell — including value framing, bonus stacking, guarantee design, sca... | safe | coreyhaines31/marketingskills | offers | offers, user, wants, construct, improve, offer, thing, actually, sell, including, value, framing |
 | `omentir-linkedin-outreach` | Run LinkedIn prospecting and outreach through the Omentir MCP server: find people, score fit, draft messages, and check campaigns. Never signs into LinkedIn. | critical | vanshyadav1408/Omentir | linkedin, sales, outreach, lead-generation, prospecting, mcp | linkedin, sales, outreach, lead-generation, prospecting, mcp, omentir, run, through, server, find, people |
@@ -3495,7 +3500,7 @@ Total skills: 3131
 | `test-automator` | Master AI-powered test automation with modern frameworks, self-healing tests, and comprehensive quality engineering. Build scalable testing strategies with a... | critical | community | automator | automator, test, ai, powered, automation, frameworks, self, healing, tests, quality, engineering, scalable |
 | `webapp-testing` | To test local web applications, write native Python Playwright scripts. | critical | community | webapp | webapp, testing, test, local, web, applications, write, native, python, playwright, scripts |
 
-## testing (52)
+## testing (53)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -3521,6 +3526,7 @@ Total skills: 3131
 | `k6-load-testing` | Comprehensive k6 load testing skill for API, browser, and scalability testing. Write realistic load scenarios, analyze results, and integrate with CI/CD. | safe | community | k6, load-testing, performance, api-testing, ci-cd | k6, load-testing, performance, api-testing, ci-cd, load, testing, skill, api, browser, scalability, write |
 | `lambdatest-agent-skills` | Production-grade test automation skills for 46 frameworks across E2E, unit, mobile, BDD, visual, and cloud testing in 15+ languages. | safe | LambdaTest/agent-skills | testing, test-automation, e2e, unit-testing, mobile-testing, bdd, selenium, playwright, cypress, jest, pytest, appium, lambdatest | testing, test-automation, e2e, unit-testing, mobile-testing, bdd, selenium, playwright, cypress, jest, pytest, appium |
 | `mailtrap-testing-with-sandbox` | Capture outbound email in Mailtrap Email Sandbox for development, staging, CI, HTML inspection, spam checks, and fake inbox tests. | safe | community | mailtrap, with, sandbox | mailtrap, with, sandbox, testing, capture, outbound, email, development, staging, ci, html, inspection |
+| `mobilebox-cloud-phones` | Drive a Mobilebox cloud Android phone or iOS simulator over MCP or REST: create it, read the screen, tap and type, install an app, then delete it. Needs a Mo... | critical | mobilebox-dev/mobilebox | android, ios, mobile-testing, cloud-phone, mcp, app-testing | android, ios, mobile-testing, cloud-phone, mcp, app-testing, mobilebox, cloud, phones, drive, phone, simulator |
 | `mock-hunter` | Audit a live web page in five phases (catalog, click, trace, classify, report) to identify mock data, hardcoded values, LLM-generated metrics, and broken end... | critical | CodeShuX/mockhunter | testing, qa, playwright, mock-detection, web-audit, ai-testing, vibe-coding, claude-code | testing, qa, playwright, mock-detection, web-audit, ai-testing, vibe-coding, claude-code, mock, hunter, audit, live |
 | `network-101` | Configure and test common network services (HTTP, HTTPS, SNMP, SMB) for penetration testing lab environments. Enable hands-on practice with service enumerati... | offensive | community | network, 101 | network, 101, configure, test, common, http, https, snmp, smb, penetration, testing, lab |
 | `oneroster-csv-validator` | Validates 1EdTech / IMS Global OneRoster v1.1 and v1.2 CSV roster sets: manifest integrity, bulk vs delta strictness, foreign key references, and encoding sa... | safe | wwewtech/oneroster-csv-validator | edtech, oneroster, csv-validation, ims-global, 1edtech, data-engineering | edtech, oneroster, csv-validation, ims-global, 1edtech, data-engineering, csv, validator, validates, ims, global, v1 |

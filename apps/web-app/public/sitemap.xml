@@ -77,7 +77,7 @@
   </url>
   <url>
     <loc>https://aaskills.tech/docs/getting-started/</loc>
-    <lastmod>2026-11-23</lastmod>
+    <lastmod>2026-11-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -89,7 +89,7 @@
   </url>
   <url>
     <loc>https://aaskills.tech/docs/usage/</loc>
-    <lastmod>2026-11-23</lastmod>
+    <lastmod>2026-11-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -101,7 +101,7 @@
   </url>
   <url>
     <loc>https://aaskills.tech/docs/visual-guide/</loc>
-    <lastmod>2026-11-23</lastmod>
+    <lastmod>2026-11-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -143,7 +143,7 @@
   </url>
   <url>
     <loc>https://aaskills.tech/docs/bundles/</loc>
-    <lastmod>2026-11-23</lastmod>
+    <lastmod>2026-11-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -179,13 +179,13 @@
   </url>
   <url>
     <loc>https://aaskills.tech/docs/gemini-cli-skills/</loc>
-    <lastmod>2026-11-23</lastmod>
+    <lastmod>2026-11-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://aaskills.tech/docs/kiro-integration/</loc>
-    <lastmod>2026-11-23</lastmod>
+    <lastmod>2026-11-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -260,6 +260,36 @@
   </url>
   <url>
     <loc>https://aaskills.tech/topics/skills-para-antigravity/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aaskills.tech/skill/nitrosend-email-platform-migration/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aaskills.tech/skill/nitrosend-klaviyo-migration/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aaskills.tech/skill/nitrosend-mailchimp-migration/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aaskills.tech/skill/nitrosend-shopify-email-marketing/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aaskills.tech/skill/ultrafast/</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://aaskills.tech/skill/mobilebox-cloud-phones/</loc>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>

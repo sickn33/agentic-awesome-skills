@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-23T07:33:52.000Z",
+  "generatedAt": "2026-11-24T09:55:19.000Z",
   "aliases": {
     "20-andruia-intelligence": "20-andruia-niche-intelligence",
     "accessibility-compliance-audit": "accessibility-compliance-accessibility-audit",
@@ -246,6 +246,8 @@
     "multi-agent-orchestrator": "multi-agent-task-orchestrator",
     "multi-platform-apps": "multi-platform-apps-multi-platform",
     "neon-postgres-optimizer": "neon-postgres-egress-optimizer",
+    "nitrosend-email-migration": "nitrosend-email-platform-migration",
+    "nitrosend-shopify-marketing": "nitrosend-shopify-email-marketing",
     "noaa-radar-fetching": "noaa-radar-satellite-fetching",
     "observability-monitoring-setup": "observability-monitoring-monitor-setup",
     "observability-monitoring-implement": "observability-monitoring-slo-implement",
