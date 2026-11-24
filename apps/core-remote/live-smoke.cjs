@@ -78,6 +78,14 @@ async function connect() {
     checks.push(name + (expectedError ? " expected rejection" : ""));
     return x.result.structuredContent || JSON.parse(x.result.content[0].text);
   }
+  if (new URL(endpoint).pathname === "/mcp") {
+    const excluded = "nsfw-ai-spicyapi";
+    await tool("get_skill", { id: excluded, includeContent: true }, true);
+    await tool("read_skill_file", { id: excluded, path: "SKILL.md" }, true);
+    await tool("list_skill_files", { id: excluded }, true);
+    await tool("compare_skills", { ids: ["python-pro", excluded] }, true);
+    assert.ok((await call("resources/read", {uri: "aas://skills/" + excluded})).body.error);
+  }
   const first = await tool("search_skills", {
     query: "python",
     limit: 3,

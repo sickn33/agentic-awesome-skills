@@ -44,7 +44,8 @@ function compareVersions(left, right) {
 async function verifyCandidate() {
   for (let attempt = 1; attempt <= 6; attempt++) {
     const result = await health();
-    if (result.version === "0.1.8" && result.catalogVersion === receipt.version && result.catalogDigest === receipt.catalogDigest) {
+    if (result.version === "0.1.8" && result.catalogVersion === receipt.version && result.catalogDigest === receipt.catalogDigest && result.reviewedDigest === receipt.reviewedDigest) {
+      assert.equal(result.reviewedSkills, receipt.reviewedSkills);
       assert.equal(result.skills, receipt.skillCount);
       const environment = { ...process.env, AAS_MCP_URL: endpoint + "/mcp/v1" };
       delete environment.CLOUDFLARE_API_TOKEN;
@@ -67,7 +68,7 @@ async function main() {
   const previousVersion = activeVersion();
   const previous = await health();
   assert.ok(compareVersions(receipt.version, previous.catalogVersion) >= 0, "Refusing a catalog downgrade");
-  if (previous.version === "0.1.8" && previous.catalogVersion === receipt.version && previous.catalogDigest === receipt.catalogDigest) {
+  if (previous.version === "0.1.8" && previous.catalogVersion === receipt.version && previous.catalogDigest === receipt.catalogDigest && previous.reviewedDigest === receipt.reviewedDigest) {
     await verifyCandidate();
     return;
   }

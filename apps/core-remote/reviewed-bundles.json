@@ -1,0 +1,12 @@
+{
+  "better-accessibility": "sha256-7083561f2e29477ecde524d7800a8d95d8a39c1d91042672c92b164b4dd0941d",
+  "design-how-component-docs": "sha256-e18f423a889cccbaa279ad7be7258a0a0b6368ecd507ca69f63a172ce30a58a9",
+  "design-how-token-mapping": "sha256-76ea2cc5250658fe232611904a1688700c8b48171fc344f4242836c516282a14",
+  "design-how-ui-review": "sha256-39672d800fd65465dfe22dc9cf53fae02fd747e308ad35ae913cbd3d38d00551",
+  "effect-smol-jsdocs": "sha256-99f0d748f2ccef25c5c5ea43576f3f5026fc0bd43e023618a0496e060ee0b352",
+  "effect-smol-performance-analysis": "sha256-83ade8bc060c9478910de7b1c4c3673fe80804f0595e13bd85b4bf96747a5537",
+  "effect-smol-test-development": "sha256-59911a3f9a672ec73a2399d5b0d6df49352f34dd8288d7981d1072ce17ab073d",
+  "fixing-accessibility": "sha256-d532eaf74309781cfc2119a06e678debb2171191941f4d34e1162c4cc4610b96",
+  "python-pro": "sha256-23cf067730fbf668e86ae956fe0939c076a29a2404398965309ba21847333318",
+  "typescript-pro": "sha256-04497a7c09f4d76553591dc5ccb93726834172770226965a3dcb605c04ed388f"
+}

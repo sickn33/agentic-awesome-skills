@@ -64,6 +64,8 @@ for (const skill of catalog.skills) {
     payloads[skill.id].files[f.path] = asset(bytes);
   }
 }
+const view = require("./reviewed.cjs").reviewedView(catalog.skills, require("./reviewed-bundles.json"));
+fs.writeFileSync(path.join(out, "reviewed.json"), JSON.stringify(view));
 const assetCount = fs.readdirSync(path.join(out, "assets")).length;
 if (assetCount > 20000) throw Error("Workers Free asset count exceeded");
 fs.writeFileSync(path.join(out, "catalog.json"), JSON.stringify(catalog));
@@ -74,6 +76,8 @@ fs.writeFileSync(
   JSON.stringify({
     version: catalog.version,
     catalogDigest: catalog.digest,
+    reviewedDigest: view.digest,
+    reviewedSkills: view.ids.length,
     skillCount: catalog.skills.length,
     assets: assetCount,
   }),

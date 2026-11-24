@@ -2,12 +2,15 @@ import { DurableObject } from "cloudflare:workers";
 import { createHash } from "node:crypto";
 import { Buffer } from "node:buffer";
 import { posix } from "node:path";
-import catalog from "./dist/catalog.json";
+import fullCatalog from "./dist/catalog.json";
 import payloads from "./dist/payloads.json";
 import virtualFs from "./virtual-fs.cjs";
 import server from "../../tools/lib/aas-v1/mcp/server.js";
 import { productRequest, productTools, withPayload } from "./product.mjs";
 import { pages } from "./public-pages.mjs";
+import view from "./dist/reviewed.json";
+const reviewedIds = new Set(view.ids);
+const reviewedCatalog = { ...fullCatalog, skills: fullCatalog.skills.filter(s => reviewedIds.has(s.id)) };
 const { McpServer } = server;
 const MAX_BODY = 262144;
 const json = (v, status = 200, headers = {}) =>
@@ -61,7 +64,7 @@ export class QuotaGuard extends DurableObject {
     this.sql.exec("CREATE INDEX IF NOT EXISTS quota_expiry ON quota(expires)");
   }
   async fetch(req) {
-    const { ip, initialize, sid, body, method, product } = await req.json();
+    const { ip, initialize, sid, body, method, product, profile } = await req.json();
     const tool =
       body?.method === "tools/call" && Object.hasOwn(body, "id")
         ? productTools.find((t) => t.name === body.params?.name)?.name ||
@@ -121,11 +124,11 @@ export class QuotaGuard extends DurableObject {
       );
     const started = Date.now();
     const result = await this.env.SESSIONS.get(
-      this.env.SESSIONS.idFromName(sid),
+      this.env.SESSIONS.idFromName(profile + ":" + sid),
     ).fetch(
       new Request("https://session.internal/", {
         method,
-        headers: { "x-product": product ? "2" : "1" },
+        headers: { "x-profile": profile, "x-product": product ? "2" : "1" },
         body: body ? JSON.stringify(body) : undefined,
       }),
     );
@@ -170,6 +173,8 @@ export class CoreSession extends DurableObject {
     }
     const body = await req.json();
     const product = req.headers.get("x-product") === "2";
+    const profile = req.headers.get("x-profile");
+    const catalog = profile === "full" || profile === "legacy" ? fullCatalog : reviewedCatalog;
     const newAudit = req.headers.get("x-new-audit") === "1";
     if (newAudit || body.method === "initialize") {
       if (this.server) return json({ error: "Already initialized" }, 409);
@@ -229,12 +234,12 @@ export class CoreSession extends DurableObject {
       delete args.startSelection;
       delete args.selectionHandle;
       const audit = this.env.SESSIONS.get(
-        this.env.SESSIONS.idFromName("selection:" + handle),
+        this.env.SESSIONS.idFromName(profile + ":selection:" + handle),
       );
       const response = await audit.fetch(
         new Request("https://session.internal/", {
           method: "POST",
-          headers: { "x-product": "2", "x-new-audit": start ? "1" : "0" },
+          headers: { "x-profile": profile, "x-product": "2", "x-new-audit": start ? "1" : "0" },
           body: JSON.stringify(body),
         }),
       );
@@ -302,6 +307,8 @@ export class CoreSession extends DurableObject {
           "Local read-only",
           "Remote read-only",
         );
+      if (result?.result && body.method === "initialize" && profile === "reviewed")
+        result.result.instructions += " This endpoint contains a reviewed selection of skill bundles. License notices: https://aas-core.aas-core-remote.workers.dev/notices and the licenses in each bundle.";
       return result === null
         ? new Response(null, { status: 202 })
         : json(result, 200, {
@@ -348,11 +355,13 @@ export default {
       return json({
         service: "AAS Core",
         version: "0.1.8",
-        catalogVersion: catalog.version,
-        catalogDigest: catalog.digest,
-        skills: catalog.skills.length,
+        catalogVersion: fullCatalog.version,
+        catalogDigest: fullCatalog.digest,
+        skills: fullCatalog.skills.length,
+        reviewedDigest: view.digest,
+        reviewedSkills: reviewedIds.size,
       });
-    const product = url.pathname === "/mcp";
+    const product = url.pathname === "/mcp" || url.pathname === "/mcp/full";
     if (!product && url.pathname !== "/mcp/v1")
       return new Response("Not found", { status: 404 });
     if (!["POST", "DELETE"].includes(request.method))
@@ -409,6 +418,7 @@ export default {
           body,
           method: request.method,
           product,
+          profile: url.pathname === "/mcp" ? "reviewed" : product ? "full" : "legacy",
         }),
       }),
     );
