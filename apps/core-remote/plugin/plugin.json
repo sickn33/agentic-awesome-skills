@@ -2,7 +2,7 @@
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "aas-core",
   "version": "0.1.8",
-  "description": "Search and read the AAS catalog and validate agent-selected skill stacks.",
+  "description": "Search and read reviewed AAS skills and validate agent-selected skill stacks.",
   "author": {
     "name": "Niccolò Lucioli"
   },
@@ -11,7 +11,7 @@
       "interface": {
         "displayName": "AAS Core",
         "shortDescription": "Find and compare agent skills",
-        "longDescription": "Search the AAS skill catalog in your language, compare candidate skills and their documented limits, and prepare a verifiable stack for Codex. Inspect bundled files and export evidence of your selection. Uses a read-only service with short-lived sessions.",
+        "longDescription": "Search a reviewed selection of AAS skills in your language, compare candidate skills and their documented limits, and prepare a verifiable stack for Codex. Inspect bundled files and export evidence of your selection. Uses a read-only service with short-lived sessions.",
         "developerName": "Niccolò Lucioli",
         "category": "Developer Tools",
         "defaultPrompt": [

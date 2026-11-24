@@ -318,3 +318,44 @@ test("empty multilingual searches and successful retries increment aggregate cou
     before.map((n) => n + 1),
   );
 });
+
+test("reviewed bundles exclude new entries and changed files or metadata", async () => {
+  const { fingerprint, reviewedView } = (await import("../reviewed.cjs")).default;
+  const skill = JSON.parse(fs.readFileSync(new URL("../dist/catalog.json", import.meta.url))).skills[0];
+  const approved = { [skill.id]: fingerprint(skill) };
+  const view = (s) => reviewedView([s], approved).ids;
+  assert.deepEqual(view(skill), [skill.id]);
+  assert.deepEqual(view({ ...skill, id: "new" }), []);
+  assert.deepEqual(view({ ...skill, description: "replacement" }), []);
+  assert.deepEqual(view({ ...skill, untrustedFiles: [] }), []);
+  assert.deepEqual(view({ ...skill, untrustedContentRef: { ...skill.untrustedContentRef, sha256: "changed" } }), []);
+});
+
+test("a full-catalog transport and selection cannot cross into Codex", async () => {
+  async function rpc(path, method, params, session) {
+    return worker.fetch(new Request("https://test" + path, {
+      method: "POST",
+      headers: { "content-type": "application/json", "cf-connecting-ip": "192.0.2.113",
+        "x-profile": "full", ...(session && { "mcp-session-id": session }) },
+      body: JSON.stringify({ jsonrpc: "2.0", ...(method.startsWith("notifications/") ? {} : { id: 1 }), method, params }),
+    }), env);
+  }
+  async function connect(path) {
+    const result = await rpc(path, "initialize", { protocolVersion: "2025-06-18" });
+    const session = result.headers.get("mcp-session-id");
+    assert.ok(session);
+    await rpc(path, "notifications/initialized", {}, session);
+    return session;
+  }
+  const full = await connect("/mcp/full");
+  const reviewed = await connect("/mcp");
+  assert.equal((await rpc("/mcp", "ping", {}, full)).status, 404);
+  const get = { name: "get_skill", arguments: { id: "2d-games" } };
+  assert.equal((await (await rpc("/mcp/full", "tools/call", get, full)).json()).result.isError, false);
+  assert.equal((await (await rpc("/mcp", "tools/call", get, reviewed)).json()).result.isError, true);
+  const start = { name: "search_skills", arguments: { query: "python", startSelection: true } };
+  const selection = (await (await rpc("/mcp/full", "tools/call", start, full)).json()).result.structuredContent.selectionHandle;
+  assert.ok(selection);
+  const lookup = { name: "get_skill", arguments: { id: "python-pro", selectionHandle: selection } };
+  assert.match((await (await rpc("/mcp", "tools/call", lookup, reviewed)).json()).error.message, /expired/i);
+});

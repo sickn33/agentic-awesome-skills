@@ -194,7 +194,7 @@
       },
       {
         "title": "Availability and access",
-        "body": "This preview is currently private as an OpenAI plugin. Public directory installation will be available only after review. Developers can connect an MCP client to https://aas-core.aas-core-remote.workers.dev/mcp using Streamable HTTP. Sessions last up to 20 minutes and usage limits apply. The service may become unavailable when its free allowance is exhausted.",
+        "body": "The official Codex plugin searches a reviewed selection of skill bundles. For the complete catalog, connect a generic MCP client to https://aas-core.aas-core-remote.workers.dev/mcp/full using Streamable HTTP. Sessions last up to 20 minutes and usage limits apply. The service may become unavailable when its free allowance is exhausted.",
         "links": [
           {
             "label": "Support",
