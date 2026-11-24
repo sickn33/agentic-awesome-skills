@@ -79,7 +79,11 @@ async function connect() {
     return x.result.structuredContent || JSON.parse(x.result.content[0].text);
   }
   if (new URL(endpoint).pathname === "/mcp") {
+    const page = await tool("search_skills", { query: "", limit: 1 });
+    assert.equal(page.totalMatches, require("./dist/build-receipt.json").skillCount);
     const excluded = "nsfw-ai-spicyapi";
+    const listed = await tool("search_skills", { query: excluded, matchMode: "all" });
+    assert.ok(listed.results.some(row => row.id === excluded && row.description.includes("unavailable")));
     await tool("get_skill", { id: excluded, includeContent: true }, true);
     await tool("read_skill_file", { id: excluded, path: "SKILL.md" }, true);
     await tool("list_skill_files", { id: excluded }, true);
