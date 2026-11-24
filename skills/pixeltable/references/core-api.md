@@ -2,7 +2,7 @@
 
 Apps use `app.py` plus `pxt schema update`. This file is notebook form (`pxt.create_table()`) unless noted. CLI: [cli.md](cli.md). Routes: [workflows.md](workflows.md).
 
-Types are non-nullable by default. Optional is `T | None`. Do not use `pxt.Required`.
+Types are non-nullable by default. Optional is `T | None`. `pxt.Required` was removed in 0.7.25.
 
 ## Contents
 
@@ -71,7 +71,7 @@ scan = pxt.Column(type=pxt.Image, media_validation='on_read', comment='validated
 
 From a file: `pxt.create_table('dir.data', source='data.csv', if_exists='ignore')`.
 
-Insert: `t.insert([{...}])`. `return_rows=True` returns computed columns on the status object. `source=` also takes a path or URL (`source_format='csv'|'excel'|'parquet'|'json'`, `schema_overrides=`), a DataFrame, a list of dicts or Pydantic models, another table or query, or a HF dataset.
+Insert: `t.insert([{...}])`. On a table with a primary key, `insert(..., if_exists='ignore')` skips rows whose key is already present (`row_count_stats.skipped_rows`; their computed columns are not evaluated). That is not the schema `if_exists='ignore'` that skips a `create_*` / `add_*` call. `return_rows=True` returns computed columns on the status object. Counts are `row_count_stats.inserted_rows` / `deleted_rows` / `updated_rows` (the `ins_rows` / `del_rows` / `upd_rows` names were removed in 0.7.25). `source=` also takes a path or URL (`source_format='csv'|'excel'|'parquet'|'json'`, `schema_overrides=`), a DataFrame, a list of dicts or Pydantic models, another table or query, or a HF dataset.
 
 **Do not let one bad row abort a batch.** `insert(..., on_error='ignore')` and `add_computed_column(..., on_error='ignore')` keep the row, leave the failed cell `None`, and record the reason in `t.<col>.errortype` / `t.<col>.errormsg` (stored computed or media columns only). `t.<col>.fileurl` / `.localpath` locate a media cell.
 
@@ -79,7 +79,10 @@ Insert: `t.insert([{...}])`. `return_rows=True` returns computed columns on the 
 t.update({'score': 1.0}, where=t.category == 'important')
 t.delete(where=t.is_active == False)
 t.recompute_columns('summary', errors_only=True)
+t.batch_update([{'id': 1, 'score': 2.0}], if_not_exists='ignore')
 ```
+
+`batch_update()` takes `cascade=`, `if_not_exists=`, and `return_rows=` as keywords only (0.7.25).
 
 Changing a computed column's logic:
 
@@ -256,6 +259,8 @@ def excerpt(text: str, n: int = 12) -> str:
     return text if len(text) <= n else f'{text[:n]}...'
 ```
 
+Try a UDF on Python values without a table: `pxt.eval_udf(excerpt, 'hello world', n=4)`. A media argument can be a path or URL. Aggregates and iterators cannot be evaluated this way.
+
 ### A non-nullable parameter that receives `None` skips the call
 
 The cell is set to `None`, nothing raises, and `errormsg` stays empty. This is by design, and it applies to the shipped UDFs as much as to yours. Annotate `T | None` when the argument can be null, and handle `None` in the body:
@@ -318,7 +323,7 @@ t.select(pxtf.video.concat_videos_agg(t.pos, t.video))
 
 ## Built-in functions
 
-Before writing a UDF, check whether the operation already ships. `pixeltable.functions` (`pxtf`) covers strings, json, math, dates, arrays, images, audio, documents, and video (`video.editing`, `video.filters`, `video.scene_detect`), plus `vision` and `net`. Import the module and read its docs rather than guessing a name.
+Before writing a UDF, check whether the operation already ships. `pxt.list_functions()` (CLI: `pxt functions`) lists functions, aggregates, and iterators with signatures and the first paragraph of each docstring; filter with a module (`'video'`), `on=pxt.Json`, `search=`, or `kind=`. `pixeltable.functions` (`pxtf`) covers strings, json, math, dates, arrays, images, audio, documents, and video (`video.editing`, `video.filters`, `video.scene_detect`), plus `vision` and `net`. Import the module and read its docs rather than guessing a name.
 
 The one path worth spelling out, because nothing else documents it -- video to transcript:
 
