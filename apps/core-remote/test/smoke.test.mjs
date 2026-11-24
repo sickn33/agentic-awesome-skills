@@ -350,7 +350,9 @@ test("a full-catalog transport and selection cannot cross into Codex", async () 
   const full = await connect("/mcp/full");
   const reviewed = await connect("/mcp");
   assert.equal((await rpc("/mcp", "ping", {}, full)).status, 404);
-  const get = { name: "get_skill", arguments: { id: "2d-games" } };
+  const get = { name: "get_skill", arguments: { id: "nsfw-ai-spicyapi" } };
+  const game = { name: "get_skill", arguments: { id: "2d-games" } };
+  assert.equal((await (await rpc("/mcp", "tools/call", game, reviewed)).json()).result.isError, false);
   assert.equal((await (await rpc("/mcp/full", "tools/call", get, full)).json()).result.isError, false);
   assert.equal((await (await rpc("/mcp", "tools/call", get, reviewed)).json()).result.isError, true);
   const start = { name: "search_skills", arguments: { query: "python", startSelection: true } };

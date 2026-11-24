@@ -10,7 +10,19 @@ import { productRequest, productTools, withPayload } from "./product.mjs";
 import { pages } from "./public-pages.mjs";
 import view from "./dist/reviewed.json";
 const reviewedIds = new Set(view.ids);
-const reviewedCatalog = { ...fullCatalog, skills: fullCatalog.skills.filter(s => reviewedIds.has(s.id)) };
+const discoverySkills = fullCatalog.skills.map(skill => {
+  if (reviewedIds.has(skill.id)) return skill;
+  return {
+    id: skill.id, name: skill.id, category: skill.category,
+    description: "Catalog entry. Bundle content is unavailable on this endpoint.",
+    searchTokens: skill.searchTokens, tags: [], triggers: [],
+  };
+});
+const reviewedCatalog = {
+  ...fullCatalog,
+  skills: fullCatalog.skills.filter(skill => reviewedIds.has(skill.id)),
+  discoveryCatalog: { ...fullCatalog, skills: discoverySkills },
+};
 const { McpServer } = server;
 const MAX_BODY = 262144;
 const json = (v, status = 200, headers = {}) =>
@@ -308,7 +320,7 @@ export class CoreSession extends DurableObject {
           "Remote read-only",
         );
       if (result?.result && body.method === "initialize" && profile === "reviewed")
-        result.result.instructions += " This endpoint contains a reviewed selection of skill bundles. License notices: https://aas-core.aas-core-remote.workers.dev/notices and the licenses in each bundle.";
+        result.result.instructions += " Search covers every catalog ID. Entries marked as unavailable support discovery only. License notices: https://aas-core.aas-core-remote.workers.dev/notices and the licenses in each bundle.";
       return result === null
         ? new Response(null, { status: 202 })
         : json(result, 200, {
@@ -360,6 +372,7 @@ export default {
         skills: fullCatalog.skills.length,
         reviewedDigest: view.digest,
         reviewedSkills: reviewedIds.size,
+        searchableSkills: discoverySkills.length,
       });
     const product = url.pathname === "/mcp" || url.pathname === "/mcp/full";
     if (!product && url.pathname !== "/mcp/v1")

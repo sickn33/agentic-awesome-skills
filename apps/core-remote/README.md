@@ -12,7 +12,7 @@ The OpenAI domain verification response and the reviewed demo are intentionally 
 
 ### Codex plugin update
 
-Codex uses the registered `/mcp` URL. Search, exact reads, resources, stacks and audited selections share a reviewed subset of the tagged catalog. Generic clients can use `/mcp/full` for the complete ten-tool service or `/mcp/v1` for the complete nine-tool service. A manually configured client using `/mcp` must change its URL to keep the complete catalog.
+Codex uses the registered `/mcp` URL. Search indexes every ID in the tagged catalog. Entries outside the content-enabled set return a neutral listing. Exact reads, resources and stack composition use the content-enabled set. Generic clients can use `/mcp/full` for the complete ten-tool service or `/mcp/v1` for the complete nine-tool service. A manually configured client using `/mcp` must change its URL to keep the complete catalog.
 
 Each entry in `reviewed-bundles.json` binds catalog metadata, the main text and the complete file inventory. Before adding or updating a fingerprint, review all of those materials for suitability for teenage users and verify provenance and license notices. A new or changed bundle is excluded until reviewed. The catalog digest in stack manifests identifies the parent release for local validation. The health response separately gives the reviewed subset's digest and count.
 
