@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "format": {
+    "width": 1920,
+    "height": 1080,
+    "fps": 30,
+    "duration": 10,
+    "motion_blur": {
+      "samples": 6,
+      "shutter": 0.5
+    }
+  },
+  "nodes": {
+    "paper": {
+      "op": "solid",
+      "params": {
+        "color": "#f3efe6"
+      }
+    },
+    "headline": {
+      "op": "text",
+      "params": {
+        "text": "Rendering got *fast*",
+        "font": "Fraunces",
+        "weight": 600,
+        "size": 120,
+        "color": "#16140f",
+        "em_color": "#e2443b",
+        "align": "center",
+        "valign": "middle",
+        "position": {
+          "keys": [
+            {
+              "t": 0,
+              "v": [
+                960,
+                600
+              ],
+              "ease": "out_expo"
+            },
+            {
+              "t": 0.8,
+              "v": [
+                960,
+                540
+              ]
+            }
+          ]
+        },
+        "opacity": {
+          "keys": [
+            {
+              "t": 0,
+              "v": 0
+            },
+            {
+              "t": 0.5,
+              "v": 1
+            }
+          ]
+        }
+      }
+    },
+    "who": {
+      "op": "block",
+      "params": {
+        "kind": "lower_third",
+        "name": "Mira Chen",
+        "role": "Head of Product",
+        "ink": "#16140f",
+        "accent": "#e2443b"
+      },
+      "timing": {
+        "offset": 1,
+        "in": 0,
+        "out": 4.5
+      }
+    },
+    "chart": {
+      "op": "block",
+      "params": {
+        "kind": "bar_chart",
+        "title": "Frames per second",
+        "values": [
+          24,
+          31,
+          58,
+          265
+        ],
+        "labels": "2019, 2021, 2023, 2025",
+        "ink": "#16140f",
+        "accent": "#e2443b"
+      },
+      "timing": {
+        "offset": 5
+      }
+    },
+    "s1a": {
+      "op": "over",
+      "inputs": {
+        "fg": "headline",
+        "bg": "paper"
+      }
+    },
+    "s1": {
+      "op": "over",
+      "inputs": {
+        "fg": "who",
+        "bg": "s1a"
+      }
+    },
+    "s2": {
+      "op": "over",
+      "inputs": {
+        "fg": "chart",
+        "bg": "paper"
+      }
+    },
+    "cut": {
+      "op": "transition",
+      "inputs": {
+        "a": "s1",
+        "b": "s2"
+      },
+      "params": {
+        "kind": "dip",
+        "color": "#f3efe6",
+        "at": 4.5,
+        "duration": 0.6
+      }
+    },
+    "out": {
+      "op": "grain",
+      "inputs": {
+        "source": "cut"
+      },
+      "params": {
+        "amount": 0.05
+      }
+    }
+  },
+  "output": "out"
+}

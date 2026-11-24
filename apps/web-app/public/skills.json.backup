@@ -49868,6 +49868,40 @@
     }
   },
   {
+    "id": "mobilebox-cloud-phones",
+    "path": "skills/mobilebox-cloud-phones",
+    "category": "testing",
+    "name": "mobilebox-cloud-phones",
+    "description": "Drive a Mobilebox cloud Android phone or iOS simulator over MCP or REST: create it, read the screen, tap and type, install an app, then delete it. Needs a Mobilebox account.",
+    "risk": "critical",
+    "source": "https://github.com/mobilebox-dev/mobilebox/blob/a8bef0e3d80317f4ae58da9a8624803dde80370f/skills/mobilebox/SKILL.md",
+    "date_added": "2026-11-23",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "mobilebox-dev/mobilebox",
+    "license": "MIT",
+    "license_source": "https://github.com/mobilebox-dev/mobilebox/blob/a8bef0e3d80317f4ae58da9a8624803dde80370f/LICENSE",
+    "tags": [
+      "android",
+      "ios",
+      "mobile-testing",
+      "cloud-phone",
+      "mcp",
+      "app-testing"
+    ]
+  },
+  {
     "id": "mock-hunter",
     "path": "skills/mock-hunter",
     "category": "testing",
@@ -52330,6 +52364,135 @@
     "source_repo": "supernovae-st/nika-agents",
     "license": "MIT",
     "license_source": "https://github.com/supernovae-st/nika-agents/blob/main/LICENSE"
+  },
+  {
+    "id": "nitrosend-email-platform-migration",
+    "path": "skills/nitrosend-email-platform-migration",
+    "category": "marketing",
+    "name": "nitrosend-email-platform-migration",
+    "description": "Move contacts from MailerLite, Brevo, Kit, ActiveCampaign, HubSpot or any CSV export to Nitrosend, importing opt-outs first and only subscribed contacts after.",
+    "risk": "critical",
+    "source": "https://github.com/nitrosend/claude/tree/644249d0f6362e146dd1e5c310caea5520d97ecb/skills/email-platform-migration",
+    "date_added": "2026-11-24",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "nitrosend/claude",
+    "license": "MIT",
+    "license_source": "https://github.com/nitrosend/claude/blob/644249d0f6362e146dd1e5c310caea5520d97ecb/LICENSE",
+    "tags": [
+      "email-marketing",
+      "migration",
+      "mailerlite",
+      "brevo",
+      "mcp"
+    ]
+  },
+  {
+    "id": "nitrosend-klaviyo-migration",
+    "path": "skills/nitrosend-klaviyo-migration",
+    "category": "marketing",
+    "name": "nitrosend-klaviyo-migration",
+    "description": "Move email marketing from Klaviyo to Nitrosend: bring suppressed profiles across first, import subscribed profiles by list, then rebuild flows as inactive drafts.",
+    "risk": "critical",
+    "source": "https://github.com/nitrosend/claude/tree/644249d0f6362e146dd1e5c310caea5520d97ecb/skills/klaviyo-migration",
+    "date_added": "2026-11-24",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "nitrosend/claude",
+    "license": "MIT",
+    "license_source": "https://github.com/nitrosend/claude/blob/644249d0f6362e146dd1e5c310caea5520d97ecb/LICENSE",
+    "tags": [
+      "email-marketing",
+      "migration",
+      "klaviyo",
+      "mcp"
+    ]
+  },
+  {
+    "id": "nitrosend-mailchimp-migration",
+    "path": "skills/nitrosend-mailchimp-migration",
+    "category": "marketing",
+    "name": "nitrosend-mailchimp-migration",
+    "description": "Move a Mailchimp audience to Nitrosend without losing consent: import opt-outs first, connect Mailchimp to sync subscribed members, then rebuild journeys as drafts.",
+    "risk": "critical",
+    "source": "https://github.com/nitrosend/claude/tree/644249d0f6362e146dd1e5c310caea5520d97ecb/skills/mailchimp-migration",
+    "date_added": "2026-11-24",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "nitrosend/claude",
+    "license": "MIT",
+    "license_source": "https://github.com/nitrosend/claude/blob/644249d0f6362e146dd1e5c310caea5520d97ecb/LICENSE",
+    "tags": [
+      "email-marketing",
+      "migration",
+      "mailchimp",
+      "mcp"
+    ]
+  },
+  {
+    "id": "nitrosend-shopify-email-marketing",
+    "path": "skills/nitrosend-shopify-email-marketing",
+    "category": "marketing",
+    "name": "nitrosend-shopify-email-marketing",
+    "description": "Run Shopify email marketing in Nitrosend: connect the store with customer consent kept, segment on orders and store activity, and draft the core store flows.",
+    "risk": "critical",
+    "source": "https://github.com/nitrosend/claude/tree/644249d0f6362e146dd1e5c310caea5520d97ecb/skills/shopify-email-marketing",
+    "date_added": "2026-11-24",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "nitrosend/claude",
+    "license": "MIT",
+    "license_source": "https://github.com/nitrosend/claude/blob/644249d0f6362e146dd1e5c310caea5520d97ecb/LICENSE",
+    "tags": [
+      "email-marketing",
+      "shopify",
+      "ecommerce",
+      "mcp"
+    ]
   },
   {
     "id": "no-free-work",
@@ -56763,7 +56926,7 @@
     "source_type": "official",
     "source_repo": "pixeltable/pixeltable-skill",
     "license": "Apache-2.0",
-    "license_source": "https://github.com/pixeltable/pixeltable-skill/blob/5e642cbe3bbe0cb8b82d9aa721714140522bd29c/LICENSE",
+    "license_source": "https://github.com/pixeltable/pixeltable-skill/blob/79cc55476e1ab81e6b47109398afa1e422ebc9e6/LICENSE",
     "tags": [
       "pixeltable",
       "multimodal",
@@ -75690,6 +75853,37 @@
       "storybook",
       "playwright",
       "vitest"
+    ]
+  },
+  {
+    "id": "ultrafast",
+    "path": "skills/ultrafast",
+    "category": "content",
+    "name": "ultrafast",
+    "description": "Make or edit videos as ultrafast JSON documents with the uf CLI or its MCP tools: write, check, look at frames, review, then export MP4, ProRes, WebM, GIF or frame sequences.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-11-24",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "license": "Apache-2.0 OR MIT",
+    "tags": [
+      "video",
+      "motion-graphics",
+      "captions",
+      "mcp",
+      "gpu"
     ]
   },
   {

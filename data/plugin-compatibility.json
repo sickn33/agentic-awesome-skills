@@ -36879,6 +36879,25 @@
       "runtime_files": []
     },
     {
+      "id": "mobilebox-cloud-phones",
+      "path": "skills/mobilebox-cloud-phones",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "mock-hunter",
       "path": "skills/mock-hunter",
       "targets": {
@@ -38666,6 +38685,82 @@
     {
       "id": "nika",
       "path": "skills/nika",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "nitrosend-email-platform-migration",
+      "path": "skills/nitrosend-email-platform-migration",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "nitrosend-klaviyo-migration",
+      "path": "skills/nitrosend-klaviyo-migration",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "nitrosend-mailchimp-migration",
+      "path": "skills/nitrosend-mailchimp-migration",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "nitrosend-shopify-email-marketing",
+      "path": "skills/nitrosend-shopify-email-marketing",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -55639,6 +55734,25 @@
       "runtime_files": []
     },
     {
+      "id": "ultrafast",
+      "path": "skills/ultrafast",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "uncle-bob-craft",
       "path": "skills/uncle-bob-craft",
       "targets": {
@@ -60032,10 +60146,10 @@
     }
   ],
   "summary": {
-    "total_skills": 3131,
+    "total_skills": 3137,
     "supported": {
-      "codex": 3037,
-      "claude": 3062
+      "codex": 3043,
+      "claude": 3068
     },
     "blocked": {
       "codex": 94,

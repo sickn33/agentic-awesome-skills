@@ -11,7 +11,7 @@ author: pierrebrunelle
 tags: [pixeltable, multimodal, embeddings, rag, computed-columns, vector-search]
 tools: [claude, cursor, gemini]
 license: Apache-2.0
-license_source: "https://github.com/pixeltable/pixeltable-skill/blob/5e642cbe3bbe0cb8b82d9aa721714140522bd29c/LICENSE"
+license_source: "https://github.com/pixeltable/pixeltable-skill/blob/79cc55476e1ab81e6b47109398afa1e422ebc9e6/LICENSE"
 ---
 
 # Pixeltable
@@ -20,7 +20,7 @@ license_source: "https://github.com/pixeltable/pixeltable-skill/blob/5e642cbe3bb
 
 Pixeltable is the backend for a multimodal app: one application file (`app.py`) declares `TableModel` tables and `FastAPIRouter` routes. `pxt schema update` creates the tables. `pxt service update` starts HTTP. Insert a row, or POST after the service is up, and computed columns run.
 
-Use computed columns instead of LangChain, pandas-as-store, or a separate vector database. This skill is adapted from the Apache-2.0 Pixeltable skill at `pixeltable/pixeltable-skill` (`skills/pixeltable-skill/`, version 2.14.1, commit `5e642cbe3bbe0cb8b82d9aa721714140522bd29c`).
+Use computed columns instead of LangChain, pandas-as-store, or a separate vector database. This skill is adapted from the Apache-2.0 Pixeltable skill at `pixeltable/pixeltable-skill` (`skills/pixeltable-skill/`, version 2.14.2, commit `79cc55476e1ab81e6b47109398afa1e422ebc9e6`).
 
 CLI table paths use `/` only (`my_app/docs`). A dotted path (`my_app.docs`) is a Python SDK convenience (`pxt.get_table('my_app.docs')`).
 
@@ -109,7 +109,7 @@ OpenAI chat, embeddings, and responses, plus Anthropic and Gemini, retry on thei
 | Serving, FastAPIRouter, routes | [workflows.md](references/workflows.md) |
 | Wrong stack | [anti-patterns.md](references/anti-patterns.md) |
 
-Add video, audio, agents, or a UI by editing `app.py`. A view is either a filter (`base=Docs.where(...)`) or an iterator (`frame_iterator`, `audio_splitter`, `document_splitter`, `video_splitter`, `string_splitter`, `list_iterator`, `tile_iterator`). Check `pixeltable.functions` before writing a UDF. Apps use `app.py` plus `pxt schema update` and `pxt service update`, with indexes on the model. Notebooks and the REPL use `pxt.create_table()`, `add_computed_column()`, and `add_embedding_index()`.
+Add video, audio, agents, or a UI by editing `app.py`. A view is either a filter (`base=Docs.where(...)`) or an iterator (`frame_iterator`, `audio_splitter`, `document_splitter`, `video_splitter`, `string_splitter`, `list_iterator`, `tile_iterator`). Check `pixeltable.functions` before writing a UDF (`pxt.list_functions()` or `pxt functions`). Apps use `app.py` plus `pxt schema update` and `pxt service update`, with indexes on the model. Notebooks and the REPL use `pxt.create_table()`, `add_computed_column()`, and `add_embedding_index()`.
 
 ## Examples
 
@@ -172,7 +172,7 @@ t.add_computed_column(
 )
 ```
 
-Types are non-nullable by default. Optional is `T | None`. Do not use `pxt.Required`. Use `if_exists='ignore'` only when deliberately reusing and verifying the existing schema. That flag skips an existing column; it does not change logic. Failed cells: `t.recompute_columns('summary', errors_only=True)`, or `pxt recompute my_project/documents summary --errors-only -f`. Similarity search is `t.content.similarity(string=query)` after adding a compatible embedding index to that column.
+Types are non-nullable by default. Optional is `T | None`. `pxt.Required` was removed in 0.7.25. Use `if_exists='ignore'` on `create_*` and `add_*` only when deliberately reusing and verifying the existing schema. That flag skips the call; it does not change logic. On a table with a primary key, `insert(..., if_exists='ignore')` is a different skip: it leaves rows whose key is already present and does not evaluate their computed columns. Failed cells: `t.recompute_columns('summary', errors_only=True)`, or `pxt recompute my_project/documents summary --errors-only -f`. Similarity search is `t.content.similarity(string=query)` after adding a compatible embedding index to that column.
 
 ## Best Practices
 
@@ -184,11 +184,11 @@ Types are non-nullable by default. Optional is `T | None`. Do not use `pxt.Requi
 - Ask the user to run `pxt login` and `pxt secret set` in their own terminal.
 - When a refused command prints `next:`, run it only if it does what the user asked. Show `pxt feedback --kind gap '...'` as a preview when Pixeltable cannot do the task, and add `--send` only after they agree.
 - For a local service log, run `tail -50 "${PIXELTABLE_HOME:-$HOME/.pixeltable}/logs/services/<target>/<name>.log"`.
-- Check `pixeltable.functions` before writing a UDF. Add Hugging Face or spaCy only when the user asked.
+- Check `pixeltable.functions` before writing a UDF (`pxt.list_functions()` or `pxt functions`). Add Hugging Face or spaCy only when the user asked.
 
 ## Limitations
 
-- This is an upstream API snapshot of pixeltable-skill 2.14.1 at commit `5e642cbe3bbe0cb8b82d9aa721714140522bd29c`, checked against Pixeltable main `890b85ab903f077a810b5a88504c08cbbad5a590` (latest tag `v0.7.24`). It still records the 0.7.11 PXT-1429 observation below. Installed help and current official docs take precedence; service logs, Cloud keys and retry policies may differ.
+- This is an upstream API snapshot of pixeltable-skill 2.14.2 at commit `79cc55476e1ab81e6b47109398afa1e422ebc9e6`, checked against Pixeltable main `caec4119498af58c9e7269819bd261ffefa11402` (latest tag `v0.7.25`). It still records the 0.7.11 PXT-1429 observation below. Installed help and current official docs take precedence; service logs, Cloud keys and retry policies may differ.
 
 - This skill does not replace environment-specific validation, testing, or expert review. Stop and ask when the catalog target, Cloud organization, or permission to change data is missing.
 - Requires Python 3.11 or newer. HTTP serving requires `a separately installed and reviewed Pixeltable runtime with the serve extra`.
@@ -217,11 +217,11 @@ Commands in this skill change a local Pixeltable catalog under `${PIXELTABLE_HOM
 - **Problem:** A dotted path such as `my_app.docs` is passed to `pxt errors`, `pxt recompute`, or `pxt describe`.
   **Solution:** CLI paths use slashes (`my_app/docs`). Keep the dotted form for `pxt.get_table('my_app.docs')` only.
 - **Problem:** `if_exists='ignore'` is used to "fix" a computed column that already exists.
-  **Solution:** In an app, edit the expression, run `pxt schema update`, then `pxt recompute my_app/docs summary -f`. The update keeps the old values. In a notebook, `t.alter_computed_column(summary=...)` recomputes the column and its dependents.
+  **Solution:** That skip is for `create_*` and `add_*`, not for changing logic, and it is not the primary-key skip on `insert`. In an app, edit the expression, run `pxt schema update`, then `pxt recompute my_app/docs summary -f`. The update keeps the old values. In a notebook, `t.alter_computed_column(summary=...)` recomputes the column and its dependents. On a table with a primary key, `insert(..., if_exists='ignore')` skips rows whose key is already present and does not evaluate their computed columns.
 - **Problem:** A column's type is changed in place (`T` to `T | None`, stored to computed, or `stored=`).
   **Solution:** That alter is `UNSUPPORTED`. The whole update applies nothing, and `--allow-destructive` does not help. Rename a computed column in one `--allow-destructive -f` pass. Renaming a stored column drops its data, so declare `T | None` up front.
 - **Problem:** `openai.vision(...)` or `from pixeltable.iterators import ...`.
-  **Solution:** `openai.vision` is deprecated. Use `chat_completions` with `image_url`, or `responses`. Import iterators from `pixeltable.functions.*`, for example `from pixeltable.functions.video import frame_iterator`.
+  **Solution:** `openai.vision` is deprecated. Use `chat_completions` with `image_url`, or `responses`. `pixeltable.iterators` was removed in 0.7.25 and the import fails. Import the function from `pixeltable.functions.*`, for example `from pixeltable.functions.video import frame_iterator`.
 - **Problem:** `similarity(query)` or `add_embedding_index()` inside `app.py`.
   **Solution:** `similarity(string=query)` (also `image=`, `audio=`, `video=`, `document=`, `vector=`). In an app, declare `__indexes__` on the model. `embedding=` covers text and image. `image_embed=` alone cannot answer `similarity(string=...)`.
 - **Problem:** A non-nullable UDF parameter receives `None` (`def f(x: str)` over a nullable column).
@@ -236,8 +236,8 @@ Commands in this skill change a local Pixeltable catalog under `${PIXELTABLE_HOM
   **Solution:** Both arguments are gone (0.7.22+). The shape follows the query. An ungrouped aggregate or a literal `limit(1)` is a single row, and 0 rows is a 404. A single unnamed expression returns values. Name the column (`select(text=t.text)`) to keep dicts.
 - **Problem:** `uuid.astype(pxt.String)` or `json_col.astype(pxt.String)` on a dict or list.
   **Solution:** `uuid.to_string()`. Serialize JSON with `pxtf.json.dumps(json_col)`. A dict fails insert with `Expected string, got dict`.
-- **Problem:** `t.summary_errortype`, `recompute_columns(columns=['summary'])`, or `pxt.Required[pxt.String]`.
-  **Solution:** `t.summary.errortype` and `t.summary.errormsg` on stored computed or media columns. `t.recompute_columns('summary', errors_only=True)`. Columns are non-nullable unless written `T | None`. Media cells also expose `.fileurl` and `.localpath`.
+- **Problem:** `t.summary_errortype`, `recompute_columns(columns=['summary'])`, `pxt.Required[pxt.String]`, or `f'{t.title}'` / `'{}'.format(t.title)`.
+  **Solution:** `t.summary.errortype` and `t.summary.errormsg` on stored computed or media columns. `t.recompute_columns('summary', errors_only=True)`. `pxt.Required` was removed in 0.7.25. Columns are non-nullable unless written `T | None`. An f-string or `str.format()` on a Pixeltable expression raises; concatenate with `+`, or call `pxtf.string.format('Hello {0}', t.title)`. Media cells also expose `.fileurl` and `.localpath`. Row counts are `row_count_stats.inserted_rows`, `deleted_rows`, and `updated_rows` (`ins_rows`, `del_rows`, and `upd_rows` were removed in 0.7.25).
 - **Problem:** A local-model cell failed and the agent waits for an automatic retry.
   **Solution:** Ollama, llama.cpp, vLLM, Hugging Face, Whisper, WhisperX, and YOLOX do not retry. `pxt errors my_app/docs` lists the cell. `pxt recompute my_app/docs summary --errors-only -f` runs it again. Bedrock `converse`, `invoke_model`, and `embed` already retry up to 3 times. Recompute a Bedrock cell the same way only after that retry is exhausted.
 

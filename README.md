@@ -1,9 +1,9 @@
-<!-- registry-sync: version=21.2.0; skills=3131; stars=50170; updated_at=2026-11-23T07:33:52+00:00 -->
+<!-- registry-sync: version=21.3.0; skills=3137; stars=50233; updated_at=2026-11-24T09:55:19+00:00 -->
 # Agentic Awesome Skills — AI Skills & AAS Core
 
 > **Find reusable instructions for your project, inspect their complete files, and keep an exact skill set you can review and reuse.**
 
-Agentic Awesome Skills is a library of 3,131+ installable `SKILL.md` playbooks for Claude Code, Codex, Cursor, Gemini CLI and other AI coding agents. AAS Core helps Codex or Claude search the complete local catalog, record the skills the agent chooses, and preview a plan you can inspect before changing a target. Core does not rank or recommend skills.
+Agentic Awesome Skills is a library of 3,137+ installable `SKILL.md` playbooks for Claude Code, Codex, Cursor, Gemini CLI and other AI coding agents. AAS Core helps Codex or Claude search the complete local catalog, record the skills the agent chooses, and preview a plan you can inspect before changing a target. Core does not rank or recommend skills.
 
 **Start here:** [Explore the skill catalog](https://aaskills.tech/core/) · [Codex setup](https://aaskills.tech/docs/codex-cli-skills/) · [Claude Code setup](https://aaskills.tech/docs/claude-code-skills/) · [Install or update without npm](#installation)
 
@@ -12,7 +12,7 @@ Agentic Awesome Skills is a library of 3,131+ installable `SKILL.md` playbooks f
 
 **Project identity:** Agentic Awesome Skills (AAS) was previously named **Antigravity Awesome Skills**. The official repository is [sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills), and the official website is [aaskills.tech](https://aaskills.tech/). Original code and tooling use MIT; original written content uses CC BY 4.0. Imported skills retain their own license and attribution requirements; see [License](#license).
 
-**Current release: V21.2.0.** AAS Core supports local catalog inspection, agent-owned selection, stack validation, and plan preview. Apply and recovery remain experimental. [Read the AAS Core preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/v21.2.0/docs/users/aas-core.md) for setup and exact trust boundaries.
+**Current release: V21.3.0.** AAS Core supports local catalog inspection, agent-owned selection, stack validation, and plan preview. Apply and recovery remain experimental. [Read the AAS Core preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/v21.3.0/docs/users/aas-core.md) for setup and exact trust boundaries.
 
 This README tracks `main`. Features listed under [Unreleased](CHANGELOG.md#unreleased) require a later release; the versioned guide describes the published package.
 
@@ -42,7 +42,7 @@ This is an independent community project, not affiliated with or endorsed by Goo
 - [Choose Your Tool](#choose-your-tool)
 - [Recommended Specialized Plugins](#recommended-specialized-plugins)
 - [Bundles & Workflows](#bundles--workflows)
-- [Browse 3,131+ Skills](#browse-3131-skills)
+- [Browse 3,137+ Skills](#browse-3137-skills)
 - [Troubleshooting](#troubleshooting)
 - [Stable Skills Manifest v1](#stable-skills-manifest-v1)
 - [Contributing](#contributing)
@@ -95,7 +95,7 @@ Codex or Claude inspects your project and chooses exact skills. Every current ca
 > [!IMPORTANT]
 > Structural and identity validity does not certify semantic fit, compatibility, setup correctness, operational safety, or safety to apply. Apply and recovery require experimental opt-in and remain outside the supported preview.
 
-The [Workbench](https://aaskills.tech/workbench) reviews stack and plan artifacts in browser memory without accessing your filesystem. See the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v21.2.0/docs/users/aas-core.md) for tool contracts, capability coverage, and limits.
+The [Workbench](https://aaskills.tech/workbench) reviews stack and plan artifacts in browser memory without accessing your filesystem. See the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v21.3.0/docs/users/aas-core.md) for tool contracts, capability coverage, and limits.
 
 ## Installation
 
@@ -108,8 +108,8 @@ With AAS Core already configured, use the [Core guide](docs/users/aas-core.md) t
 With [GitHub CLI](https://cli.github.com/) and `gh skill` available, preview and install one skill from the current release. This example uses Codex at user scope:
 
 ```sh
-gh skill preview sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md@v21.2.0
-gh skill install sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md --agent codex --scope user --pin v21.2.0
+gh skill preview sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md@v21.3.0
+gh skill install sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md --agent codex --scope user --pin v21.3.0
 ```
 
 To update a pinned skill, preview it at the newer release tag and repeat the install with that tag. See the [installation and update guide](docs/users/getting-started.md#install-and-update-without-npm) for other agents, switching from an npm install, downloading a ZIP, and updating a Git clone.
@@ -161,7 +161,7 @@ Bundles suggest related skills; workflows describe the order to use them. They a
 - [Workflows](docs/users/workflows.md) give ordered playbooks for planning, shipping, testing, and auditing; [workflow metadata](data/workflows.json) is available for integrations.
 - If too many installed skills overload Antigravity, follow the [selective activation guide](docs/users/agent-overload-recovery.md). For other hosts, preview a smaller exact install or use the installer's `--risk`, `--category`, and `--tags` filters.
 
-## Browse 3,131+ Skills
+## Browse 3,137+ Skills
 
 Explore the complete library in the [hosted catalog](https://aaskills.tech/) or [`CATALOG.md`](CATALOG.md). The canonical playbooks live in [`skills/`](skills/); [`skills_index.json`](skills_index.json) provides machine-readable discovery. Use [Getting Started](docs/users/getting-started.md) and [Usage](docs/users/usage.md) for first steps, or the [Workbench](https://aaskills.tech/workbench) to inspect a saved Core stack and plan in your browser.
 
@@ -169,7 +169,7 @@ For narrower comparisons, see [Claude Code skills](docs/users/best-claude-code-s
 
 ## Troubleshooting
 
-- [Core setup and trust boundaries](https://github.com/sickn33/agentic-awesome-skills/blob/v21.2.0/docs/users/aas-core.md)
+- [Core setup and trust boundaries](https://github.com/sickn33/agentic-awesome-skills/blob/v21.3.0/docs/users/aas-core.md)
 - [Installation and everyday use](docs/users/usage.md)
 - [Windows context and truncation recovery](docs/users/windows-truncation-recovery.md)
 - [Linux/macOS overload and selective activation](docs/users/agent-overload-recovery.md)
@@ -211,8 +211,6 @@ Key source families include:
 <summary><strong>Official Sources</strong></summary>
 
 ### Official Sources
-
-- **[nitrosend/claude](https://github.com/nitrosend/claude)**: MIT official Nitrosend skills source for `nitrosend-klaviyo-migration`, `nitrosend-mailchimp-migration`, `nitrosend-email-platform-migration` and `nitrosend-shopify-email-marketing` - move an email list to Nitrosend with opt-outs imported first, and run Shopify email marketing with customer consent kept.
 
 - **[phuryn/product-engineering](https://github.com/phuryn/product-engineering)**: Pawel Huryn’s MIT collection of 45 product discovery, agent coordination, shipping and application operations workflows.
 
@@ -368,6 +366,8 @@ Key source families include:
 - **[lumifyai/sports-intelligence-skills](https://github.com/lumifyai/sports-intelligence-skills)**: Source for `lumify-odds`.
 - **[mesmerlord/lurkapi-claude-plugin](https://github.com/mesmerlord/lurkapi-claude-plugin)**: Source for `lurkapi-ad-research`.
 - **[mobbin/skills](https://github.com/mobbin/skills)**: Source for `mobbin`.
+- **[mobilebox-dev/mobilebox](https://github.com/mobilebox-dev/mobilebox)**: Source for `mobilebox-cloud-phones`.
+- **[nitrosend/claude](https://github.com/nitrosend/claude)**: Source for `nitrosend-email-platform-migration`, `nitrosend-klaviyo-migration`, `nitrosend-mailchimp-migration`, `nitrosend-shopify-email-marketing`.
 - **[pangolin-spg/openclaw-skills](https://github.com/pangolin-spg/openclaw-skills)**: Source for `pangolinfo-amazon-data-research`.
 - **[pixeltable/pixeltable-skill](https://github.com/pixeltable/pixeltable-skill)**: Source for `pixeltable`.
 - **[quinnod345/ponder](https://github.com/quinnod345/ponder)**: Source for `ponder`.
