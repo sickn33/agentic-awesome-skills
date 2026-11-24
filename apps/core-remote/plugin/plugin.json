@@ -11,7 +11,7 @@
       "interface": {
         "displayName": "AAS Core",
         "shortDescription": "Find and compare agent skills",
-        "longDescription": "Search the AAS skill catalog in your language, compare candidate skills and their documented limits, and prepare a verifiable stack for Codex. Inspect bundled files and export evidence of your selection. Uses a free, read-only service with short-lived sessions.",
+        "longDescription": "Search the AAS skill catalog in your language, compare candidate skills and their documented limits, and prepare a verifiable stack for Codex. Inspect bundled files and export evidence of your selection. Uses a read-only service with short-lived sessions.",
         "developerName": "Niccolò Lucioli",
         "category": "Developer Tools",
         "defaultPrompt": [
@@ -103,8 +103,7 @@
       "publication": {
         "release_notes": "Compare two to six skills, recover empty multilingual searches and retain selection evidence across transport reconnects.",
         "countries": []
-      },
-      "apps": "./.app.json"
+      }
     }
   }
 }

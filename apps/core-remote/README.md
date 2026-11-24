@@ -12,7 +12,7 @@ The OpenAI domain verification response and the reviewed demo are intentionally 
 
 ### Codex plugin update
 
-Both packages use the registered `/mcp` URL. The 0.1.8 tools accept existing arguments, add optional selection handles and expose the comparison tool. Clients that pin the complete 0.1.7 schema can use `/mcp/v1`. The automated smoke checks both contracts. Package the contents of that directory, including the registered app mapping and logo. Upload the ZIP as a new version of the existing AAS Core plugin after the registered endpoint passes the deployed smoke test.
+Both packages use the registered `/mcp` URL. The 0.1.8 tools accept existing arguments, add optional selection handles and expose the comparison tool. Clients that pin the complete 0.1.7 schema can use `/mcp/v1`. The automated smoke checks both contracts. Package the contents of that directory, including mcp.json and the logo. Upload the ZIP as a new version of the existing AAS Core plugin after the registered endpoint passes the deployed smoke test.
 
 For an audited selection, begin the first search with `startSelection: true`. Pass the returned private `selectionHandle` to subsequent searches, comparisons, composition, inspection and export. Treat it as a bearer credential. It is isolated from other workflows, held in memory for up to 20 minutes, and may expire earlier on eviction. A client can start a fresh transport session during that interval. On expiry, start a new selection and repeat the actual lookup and review operations. A comparison reads the catalog records in order and records each looked-up skill in the trace.
 
