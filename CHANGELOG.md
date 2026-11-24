@@ -38,6 +38,10 @@ Summarize the most important change for users in one short paragraph.
 
 ## [Unreleased]
 
+### New skills
+
+- Add Murat Alpay’s UI Diff for visual PR reviews and Ghost Record for replayable React interaction demos.
+
 ## [21.3.0] - 2026-11-24 - "Email Migration, Video and Mobile Testing"
 
 AAS adds six skills, bringing the catalog to 3,137.
