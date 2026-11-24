@@ -1,0 +1,299 @@
+{
+  "tool": "search_destinations",
+  "contractVersion": "1",
+  "method": "POST",
+  "endpoint": "https://govisit.ai/api/tools/v1/search_destinations",
+  "contentType": "application/json",
+  "context": "search",
+  "defaults": {
+    "language": "en",
+    "scope": "all"
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 120,
+        "description": "Place or destination name, or the traveler's intent."
+      },
+      "mode": {
+        "type": "string",
+        "enum": [
+          "auto",
+          "name",
+          "intent"
+        ],
+        "default": "auto",
+        "description": "Name lookup, intent retrieval, or name-first auto discovery."
+      },
+      "limit": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 20,
+        "default": 10
+      },
+      "language": {
+        "type": "string",
+        "enum": [
+          "en",
+          "cs"
+        ],
+        "description": "Requested response language; defaults to the page language."
+      },
+      "within": {
+        "type": "string",
+        "maxLength": 64,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_]*$",
+        "not": {
+          "pattern": "^[aA][lL][lL]$"
+        },
+        "description": "Canonical destination code to explore within; all is reserved for an explicit unrestricted place search, never a containing-destination filter."
+      },
+      "types": {
+        "type": "array",
+        "minItems": 1,
+        "maxItems": 5,
+        "uniqueItems": true,
+        "items": {
+          "enum": [
+            "country",
+            "region",
+            "district",
+            "city",
+            "highlight"
+          ]
+        },
+        "description": "Match any of these published classifications; not a size/tier filter."
+      }
+    },
+    "required": [
+      "query"
+    ],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "mode": {
+              "const": "intent"
+            }
+          },
+          "required": [
+            "mode"
+          ]
+        },
+        "then": {
+          "properties": {
+            "query": {
+              "minLength": 3
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "mode": {
+              "const": "name"
+            }
+          },
+          "required": [
+            "mode"
+          ]
+        },
+        "then": {
+          "properties": {
+            "query": {
+              "maxLength": 120
+            }
+          }
+        }
+      }
+    ]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "schemaVersion": {
+        "type": "string",
+        "const": "2"
+      },
+      "locale": {
+        "type": "string",
+        "enum": [
+          "en",
+          "cs"
+        ]
+      },
+      "completeness": {
+        "type": "string",
+        "enum": [
+          "search-index-release",
+          "invalid-input",
+          "unavailable"
+        ]
+      },
+      "release": {
+        "type": "string"
+      },
+      "error": {
+        "type": "string"
+      },
+      "warnings": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "truncated": {
+        "type": "boolean"
+      },
+      "retryAfter": {
+        "type": "number"
+      },
+      "data": {
+        "type": "object",
+        "properties": {
+          "scope": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "all",
+                  "destination"
+                ]
+              },
+              "code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "code"
+            ],
+            "additionalProperties": false
+          },
+          "items": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "country",
+                    "region",
+                    "district",
+                    "city",
+                    "highlight",
+                    null
+                  ]
+                },
+                "region": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "The region it lies in; null for a country or a region."
+                },
+                "country": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "The country it lies in; null for a country."
+                },
+                "places": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "description": "Indexed places in the destination."
+                },
+                "match": {
+                  "type": "string",
+                  "enum": [
+                    "name",
+                    "intent"
+                  ]
+                },
+                "score": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "description": "Engine-specific ranking signal; compare only within the same match method, not a suitability probability."
+                },
+                "url": {
+                  "type": "string",
+                  "description": "The destination's canonical GoVisit page."
+                },
+                "entityType": {
+                  "type": "string",
+                  "const": "destination"
+                },
+                "code": {
+                  "type": "string",
+                  "description": "Stable code accepted by search_places.destination."
+                },
+                "classifications": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Published classifications; highlight is not a geographic size or tier."
+                },
+                "containmentMethod": {
+                  "enum": [
+                    "identity",
+                    "division-coverage",
+                    "parent-chain"
+                  ],
+                  "description": "Canonical relation used to establish within scope; parent-chain is disclosed fallback when coverage is absent."
+                }
+              },
+              "required": [
+                "code",
+                "entityType",
+                "name",
+                "url",
+                "match",
+                "score"
+              ]
+            }
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "scope",
+          "items",
+          "count"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "schemaVersion",
+      "locale",
+      "completeness",
+      "data"
+    ]
+  },
+  "annotations": {
+    "readOnlyHint": true,
+    "untrustedContentHint": true
+  },
+  "sourceDigest": "sha256:c49af023b65d166a756510a83fe95de27f16b096bfc488f5ceb92ad5355bdceb",
+  "version": "1-c49af023b65d166a"
+}

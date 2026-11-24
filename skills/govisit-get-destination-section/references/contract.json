@@ -1,0 +1,321 @@
+{
+  "tool": "get_destination_section",
+  "contractVersion": "1",
+  "method": "POST",
+  "endpoint": "https://govisit.ai/api/tools/v1/get_destination_section",
+  "contentType": "application/json",
+  "context": "page",
+  "defaults": {
+    "language": "pagePath",
+    "scope": "page-published"
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "pagePath": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000,
+        "description": "Canonical GoVisit page path supplying this tool's published context; no origin, query or fragment."
+      },
+      "section": {
+        "type": "string",
+        "enum": [
+          "overview",
+          "experiences",
+          "highlights",
+          "categories",
+          "places",
+          "collections",
+          "activities",
+          "updates"
+        ]
+      }
+    },
+    "required": [
+      "pagePath",
+      "section"
+    ],
+    "additionalProperties": false
+  },
+  "outputSchema": {
+    "type": "object",
+    "description": "Successful read of the sanitized published page snapshot. Unsupported sections reject the invocation.",
+    "properties": {
+      "schemaVersion": {
+        "const": "1"
+      },
+      "pageType": {
+        "const": "destination"
+      },
+      "pageId": {
+        "type": "string"
+      },
+      "locale": {
+        "type": "string"
+      },
+      "canonicalUrl": {
+        "type": "string"
+      },
+      "contentVersion": {
+        "type": [
+          "string",
+          "number",
+          "null"
+        ]
+      },
+      "updatedAt": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "freshness": {
+        "type": "object",
+        "properties": {
+          "contentVersion": {
+            "type": [
+              "string",
+              "number",
+              "null"
+            ]
+          },
+          "updatedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "contentVersion",
+          "updatedAt"
+        ],
+        "additionalProperties": false
+      },
+      "completeness": {
+        "const": "page-published-section"
+      },
+      "data": {
+        "description": "The requested published section. Overview includes independent short description and nullable long overview. Experiences is an object with every published page-language card in items (all audiences, no list cap). Other lists remain bounded to 20 items; strings remain bounded.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "null"
+        ],
+        "maxItems": 20,
+        "items": {
+          "description": "Published JSON value; optional field shapes depend on the page projection."
+        },
+        "anyOf": [
+          {
+            "title": "Overview (section=overview)",
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "region": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "country": {
+                "type": [
+                  "object",
+                  "string",
+                  "null"
+                ]
+              },
+              "coordinates": {
+                "type": [
+                  "object",
+                  "array",
+                  "null"
+                ]
+              },
+              "sameAs": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "description": "Published JSON value; optional field shapes depend on the page projection."
+                }
+              },
+              "placeCount": {
+                "type": "number"
+              },
+              "primaryTaxonomy": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "description": "Published JSON value; optional field shapes depend on the page projection."
+                }
+              },
+              "overview": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "maxLength": 2048,
+                "description": "Published long overview in the page language; null when absent. Independent of the short description."
+              }
+            },
+            "required": [
+              "code",
+              "name",
+              "description",
+              "country",
+              "region",
+              "type",
+              "coordinates",
+              "sameAs",
+              "placeCount",
+              "primaryTaxonomy",
+              "overview"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "title": "Complete experiences (section=experiences)",
+            "type": "object",
+            "properties": {
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "maxLength": 4000
+                    },
+                    "audience": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 4000
+                    },
+                    "intent": {
+                      "type": "null",
+                      "description": "Reserved Place-compatible field. Destination canonical editorial intent is never public."
+                    },
+                    "headline": {
+                      "type": "string",
+                      "maxLength": 4000
+                    },
+                    "summary": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "maxLength": 4000
+                    },
+                    "locale": {
+                      "type": "string",
+                      "maxLength": 4000
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "audience",
+                    "intent",
+                    "headline",
+                    "summary",
+                    "locale"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "items"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "title": "Published list section",
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "description": "Published section records; fields depend on the section and the page projection."
+            }
+          },
+          {
+            "title": "Published structured section",
+            "type": "object",
+            "description": "Named public fields or an items list, such as places.items, location coordinates, opening hours or experience groups.",
+            "properties": {
+              "items": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          {
+            "title": "Published text section",
+            "type": "string",
+            "maxLength": 4000
+          },
+          {
+            "title": "Unavailable published section",
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "schemaVersion",
+      "pageType",
+      "pageId",
+      "locale",
+      "canonicalUrl",
+      "contentVersion",
+      "updatedAt",
+      "freshness",
+      "completeness",
+      "data"
+    ],
+    "additionalProperties": false
+  },
+  "errorSchema": {
+    "type": "object",
+    "properties": {
+      "schemaVersion": {
+        "const": "1"
+      },
+      "completeness": {
+        "enum": [
+          "invalid-input",
+          "not-found",
+          "unavailable"
+        ]
+      },
+      "error": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "schemaVersion",
+      "completeness",
+      "error"
+    ],
+    "additionalProperties": false
+  },
+  "annotations": {
+    "readOnlyHint": true,
+    "untrustedContentHint": true
+  },
+  "sourceDigest": "sha256:c49af023b65d166a756510a83fe95de27f16b096bfc488f5ceb92ad5355bdceb",
+  "version": "1-c49af023b65d166a"
+}

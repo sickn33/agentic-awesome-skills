@@ -1,0 +1,441 @@
+{
+  "tool": "search_places",
+  "contractVersion": "1",
+  "method": "POST",
+  "endpoint": "https://govisit.ai/api/tools/v1/search_places",
+  "contentType": "application/json",
+  "context": "search",
+  "defaults": {
+    "language": "en",
+    "scope": "all"
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "query": {
+        "type": "string",
+        "minLength": 2,
+        "maxLength": 200,
+        "description": "Place or destination name, or the traveler's intent."
+      },
+      "mode": {
+        "type": "string",
+        "enum": [
+          "auto",
+          "name",
+          "intent"
+        ],
+        "default": "auto",
+        "description": "Name lookup, intent retrieval, or name-first auto discovery."
+      },
+      "limit": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 20,
+        "default": 10
+      },
+      "language": {
+        "type": "string",
+        "enum": [
+          "en",
+          "cs"
+        ],
+        "description": "Requested response language; defaults to the page language."
+      },
+      "destination": {
+        "type": "string",
+        "maxLength": 64,
+        "pattern": "^[A-Za-z0-9][A-Za-z0-9_]*$",
+        "description": "Stable destination code or all. Defaults to the current destination, otherwise all."
+      },
+      "country": {
+        "type": "string",
+        "pattern": "^[A-Za-z]{2}$",
+        "description": "ISO country scope; intersects destination and proximity where the public geography projection is available."
+      },
+      "near": {
+        "type": "object",
+        "properties": {
+          "placeId": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$",
+            "description": "Reference GERS Place resolved from the same public release."
+          },
+          "coordinates": {
+            "type": "object",
+            "properties": {
+              "latitude": {
+                "type": "number",
+                "minimum": -90,
+                "maximum": 90
+              },
+              "longitude": {
+                "type": "number",
+                "minimum": -180,
+                "maximum": 180
+              }
+            },
+            "required": [
+              "latitude",
+              "longitude"
+            ],
+            "additionalProperties": false
+          },
+          "radiusMeters": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100000
+          }
+        },
+        "required": [
+          "radiusMeters"
+        ],
+        "additionalProperties": false,
+        "oneOf": [
+          {
+            "required": [
+              "placeId"
+            ],
+            "not": {
+              "required": [
+                "coordinates"
+              ]
+            }
+          },
+          {
+            "required": [
+              "coordinates"
+            ],
+            "not": {
+              "required": [
+                "placeId"
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "required": [
+      "query"
+    ],
+    "additionalProperties": false,
+    "allOf": [
+      {
+        "if": {
+          "properties": {
+            "mode": {
+              "const": "intent"
+            }
+          },
+          "required": [
+            "mode"
+          ]
+        },
+        "then": {
+          "properties": {
+            "query": {
+              "minLength": 3
+            }
+          }
+        }
+      },
+      {
+        "if": {
+          "properties": {
+            "mode": {
+              "const": "name"
+            }
+          },
+          "required": [
+            "mode"
+          ]
+        },
+        "then": {
+          "properties": {
+            "query": {
+              "maxLength": 120
+            },
+            "limit": {
+              "maximum": 10
+            }
+          }
+        }
+      }
+    ]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "schemaVersion": {
+        "type": "string",
+        "const": "2"
+      },
+      "locale": {
+        "type": "string",
+        "enum": [
+          "en",
+          "cs"
+        ]
+      },
+      "completeness": {
+        "type": "string",
+        "enum": [
+          "search-index-release",
+          "partial-geography",
+          "invalid-input",
+          "unavailable"
+        ]
+      },
+      "release": {
+        "type": "string"
+      },
+      "error": {
+        "type": "string"
+      },
+      "warnings": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "truncated": {
+        "type": "boolean"
+      },
+      "retryAfter": {
+        "type": "number"
+      },
+      "data": {
+        "type": "object",
+        "properties": {
+          "scope": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "all",
+                  "country",
+                  "destination"
+                ]
+              },
+              "code": {
+                "type": "string"
+              },
+              "country": {
+                "type": "string",
+                "pattern": "^[A-Z]{2}$"
+              },
+              "near": {
+                "type": "object",
+                "description": "Resolved proximity constraint; never interpreted as travel time."
+              }
+            },
+            "required": [
+              "kind",
+              "code"
+            ],
+            "additionalProperties": false
+          },
+          "items": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "category": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "locality": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "address": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "description": "Street address, for example \"Pobřežní 311/1\"; null when the place has none."
+                },
+                "coordinates": {
+                  "type": [
+                    "object",
+                    "null"
+                  ],
+                  "description": "The place's point (WGS 84); null when it has none.",
+                  "properties": {
+                    "latitude": {
+                      "type": "number"
+                    },
+                    "longitude": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "latitude",
+                    "longitude"
+                  ]
+                },
+                "url": {
+                  "type": "string",
+                  "description": "The place's canonical GoVisit page."
+                },
+                "score": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "description": "Engine-specific ranking signal; compare only within the same match method, not a suitability probability."
+                },
+                "entityType": {
+                  "type": "string",
+                  "const": "place"
+                },
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "description": "Public GERS Place identity."
+                },
+                "match": {
+                  "type": "string",
+                  "enum": [
+                    "name",
+                    "intent"
+                  ]
+                },
+                "profileQuality": {
+                  "type": [
+                    "number",
+                    "null"
+                  ],
+                  "description": "Published profile completeness signal; not guest fit."
+                },
+                "categoryCode": {
+                  "type": "string",
+                  "description": "Published canonical category, not an amenity or suitability verdict."
+                },
+                "destinationCodes": {
+                  "type": [
+                    "array",
+                    "null"
+                  ],
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Canonical membership; null is unestablished and an empty array is known empty."
+                },
+                "operatingStatus": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "enum": [
+                    "operational",
+                    "temporarily_closed",
+                    "permanently_closed",
+                    null
+                  ],
+                  "description": "Published lifecycle status, not open-now or booking availability."
+                },
+                "distanceMeters": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Straight-line geographic distance from the explicit proximity reference, not travel time."
+                }
+              },
+              "required": [
+                "id",
+                "entityType",
+                "name",
+                "url",
+                "match",
+                "score"
+              ]
+            }
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "coverage": {
+            "type": "object",
+            "description": "Bounded candidate observation, not exhaustive market coverage.",
+            "properties": {
+              "candidatesRetrieved": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 200
+              },
+              "examined": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 200
+              },
+              "unestablished": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 200
+              },
+              "eligible": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 200
+              },
+              "returned": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 20
+              },
+              "candidateBudget": {
+                "const": 200
+              },
+              "indexRowsScanned": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "truncated": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "candidatesRetrieved",
+              "examined",
+              "unestablished",
+              "eligible",
+              "returned",
+              "candidateBudget",
+              "indexRowsScanned",
+              "truncated"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "scope",
+          "items",
+          "count"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "schemaVersion",
+      "locale",
+      "completeness",
+      "data"
+    ]
+  },
+  "annotations": {
+    "readOnlyHint": true,
+    "untrustedContentHint": true
+  },
+  "sourceDigest": "sha256:c49af023b65d166a756510a83fe95de27f16b096bfc488f5ceb92ad5355bdceb",
+  "version": "1-c49af023b65d166a"
+}

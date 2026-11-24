@@ -1,0 +1,221 @@
+{
+  "tool": "get_category_section",
+  "contractVersion": "1",
+  "method": "POST",
+  "endpoint": "https://govisit.ai/api/tools/v1/get_category_section",
+  "contentType": "application/json",
+  "context": "page",
+  "defaults": {
+    "language": "pagePath",
+    "scope": "page-published"
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "pagePath": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000,
+        "description": "Canonical GoVisit page path supplying this tool's published context; no origin, query or fragment."
+      },
+      "section": {
+        "type": "string",
+        "enum": [
+          "overview",
+          "places"
+        ]
+      }
+    },
+    "required": [
+      "pagePath",
+      "section"
+    ],
+    "additionalProperties": false
+  },
+  "outputSchema": {
+    "type": "object",
+    "description": "Successful read of the sanitized published page snapshot. Unsupported sections reject the invocation.",
+    "properties": {
+      "schemaVersion": {
+        "const": "1"
+      },
+      "pageType": {
+        "const": "category"
+      },
+      "pageId": {
+        "type": "string"
+      },
+      "locale": {
+        "type": "string"
+      },
+      "canonicalUrl": {
+        "type": "string"
+      },
+      "contentVersion": {
+        "type": [
+          "string",
+          "number",
+          "null"
+        ]
+      },
+      "updatedAt": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "freshness": {
+        "type": "object",
+        "properties": {
+          "contentVersion": {
+            "type": [
+              "string",
+              "number",
+              "null"
+            ]
+          },
+          "updatedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "contentVersion",
+          "updatedAt"
+        ],
+        "additionalProperties": false
+      },
+      "completeness": {
+        "const": "page-published-section"
+      },
+      "data": {
+        "description": "The requested published section. Overview is an object; lists are arrays of at most 20 items; places/experiences may wrap items in an object; missing opening-hours data is null. Strings and nested lists are bounded by the WebMCP snapshot policy.",
+        "type": [
+          "object",
+          "array",
+          "string",
+          "null"
+        ],
+        "maxItems": 20,
+        "items": {
+          "description": "Published JSON value; optional field shapes depend on the page projection."
+        },
+        "anyOf": [
+          {
+            "title": "Overview (section=overview)",
+            "type": "object",
+            "properties": {
+              "destinationCode": {
+                "type": "string"
+              },
+              "destinationName": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string"
+              },
+              "label": {
+                "type": "string"
+              },
+              "count": {
+                "type": "number"
+              },
+              "isOther": {
+                "type": "boolean"
+              },
+              "parentCode": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "destinationCode",
+              "destinationName",
+              "code",
+              "label"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "title": "Published list section",
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "description": "Published section records; fields depend on the section and the page projection."
+            }
+          },
+          {
+            "title": "Published structured section",
+            "type": "object",
+            "description": "Named public fields or an items list, such as places.items, location coordinates, opening hours or experience groups.",
+            "properties": {
+              "items": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          {
+            "title": "Published text section",
+            "type": "string",
+            "maxLength": 4000
+          },
+          {
+            "title": "Unavailable published section",
+            "type": "null"
+          }
+        ]
+      }
+    },
+    "required": [
+      "schemaVersion",
+      "pageType",
+      "pageId",
+      "locale",
+      "canonicalUrl",
+      "contentVersion",
+      "updatedAt",
+      "freshness",
+      "completeness",
+      "data"
+    ],
+    "additionalProperties": false
+  },
+  "errorSchema": {
+    "type": "object",
+    "properties": {
+      "schemaVersion": {
+        "const": "1"
+      },
+      "completeness": {
+        "enum": [
+          "invalid-input",
+          "not-found",
+          "unavailable"
+        ]
+      },
+      "error": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "schemaVersion",
+      "completeness",
+      "error"
+    ],
+    "additionalProperties": false
+  },
+  "annotations": {
+    "readOnlyHint": true,
+    "untrustedContentHint": true
+  },
+  "sourceDigest": "sha256:c49af023b65d166a756510a83fe95de27f16b096bfc488f5ceb92ad5355bdceb",
+  "version": "1-c49af023b65d166a"
+}

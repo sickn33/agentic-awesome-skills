@@ -1,0 +1,311 @@
+{
+  "tool": "get_place_overview",
+  "contractVersion": "1",
+  "method": "POST",
+  "endpoint": "https://govisit.ai/api/tools/v1/get_place_overview",
+  "contentType": "application/json",
+  "context": "page",
+  "defaults": {
+    "language": "pagePath",
+    "scope": "page-published"
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "pagePath": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000,
+        "description": "Canonical GoVisit page path supplying this tool's published context; no origin, query or fragment."
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "pagePath"
+    ]
+  },
+  "outputSchema": {
+    "type": "object",
+    "description": "Successful read of the sanitized published page snapshot. Unsupported sections reject the invocation.",
+    "properties": {
+      "schemaVersion": {
+        "const": "1"
+      },
+      "pageType": {
+        "const": "place"
+      },
+      "pageId": {
+        "type": "string"
+      },
+      "locale": {
+        "type": "string"
+      },
+      "canonicalUrl": {
+        "type": "string"
+      },
+      "contentVersion": {
+        "type": [
+          "string",
+          "number",
+          "null"
+        ]
+      },
+      "updatedAt": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "freshness": {
+        "type": "object",
+        "properties": {
+          "contentVersion": {
+            "type": [
+              "string",
+              "number",
+              "null"
+            ]
+          },
+          "updatedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "contentVersion",
+          "updatedAt"
+        ],
+        "additionalProperties": false
+      },
+      "completeness": {
+        "const": "page-published-section"
+      },
+      "data": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "operatingStatus": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "label": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "code",
+              "label"
+            ],
+            "additionalProperties": false
+          },
+          "lifecycle": {
+            "type": "object"
+          },
+          "address": {
+            "description": "Published JSON value; optional field shapes depend on the page projection."
+          },
+          "addresses": {
+            "description": "Published JSON value; optional field shapes depend on the page projection."
+          },
+          "city": {
+            "description": "Published JSON value; optional field shapes depend on the page projection."
+          },
+          "country": {
+            "description": "Published JSON value; optional field shapes depend on the page projection."
+          },
+          "phones": {
+            "description": "Published JSON value; optional field shapes depend on the page projection."
+          },
+          "websites": {
+            "description": "Published JSON value; optional field shapes depend on the page projection."
+          },
+          "website": {
+            "description": "Published JSON value; optional field shapes depend on the page projection."
+          },
+          "email": {
+            "description": "Published JSON value; optional field shapes depend on the page projection."
+          },
+          "classifications": {
+            "type": "array",
+            "description": "Current page-published classifications. Scheme codes define numeric scales; evidence is the exact linked page assessment or null, never inferred from a certificate URL.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "subject": {
+                  "type": "string",
+                  "enum": [
+                    "place",
+                    "facility",
+                    "organizational_unit",
+                    "organization"
+                  ]
+                },
+                "schemeCode": {
+                  "type": "string"
+                },
+                "schemeName": {
+                  "type": "string"
+                },
+                "valueCode": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "numericValue": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "status": {
+                  "const": "active"
+                },
+                "schemeVersion": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "validFrom": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "validTo": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "verificationUrl": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "evidence": {
+                  "type": [
+                    "object",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "subject",
+                "schemeCode",
+                "valueCode",
+                "label",
+                "status",
+                "evidence"
+              ],
+              "additionalProperties": true
+            }
+          },
+          "owner": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Name of the property-owning organization, or null when unknown."
+          },
+          "chain": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Name of the brand's chain organization, or null when unknown."
+          },
+          "operator": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Name of the company that manages the physical facility, distinct from profile management, or null when unknown."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "category",
+          "summary",
+          "description",
+          "operatingStatus",
+          "lifecycle",
+          "owner",
+          "chain",
+          "operator"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "schemaVersion",
+      "pageType",
+      "pageId",
+      "locale",
+      "canonicalUrl",
+      "contentVersion",
+      "updatedAt",
+      "freshness",
+      "completeness",
+      "data"
+    ],
+    "additionalProperties": false
+  },
+  "errorSchema": {
+    "type": "object",
+    "properties": {
+      "schemaVersion": {
+        "const": "1"
+      },
+      "completeness": {
+        "enum": [
+          "invalid-input",
+          "not-found",
+          "unavailable"
+        ]
+      },
+      "error": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "schemaVersion",
+      "completeness",
+      "error"
+    ],
+    "additionalProperties": false
+  },
+  "annotations": {
+    "readOnlyHint": true,
+    "untrustedContentHint": true
+  },
+  "sourceDigest": "sha256:c49af023b65d166a756510a83fe95de27f16b096bfc488f5ceb92ad5355bdceb",
+  "version": "1-c49af023b65d166a"
+}

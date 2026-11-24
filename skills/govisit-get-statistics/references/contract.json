@@ -1,0 +1,331 @@
+{
+  "tool": "get_statistics",
+  "contractVersion": "1",
+  "method": "POST",
+  "endpoint": "https://govisit.ai/api/tools/v1/get_statistics",
+  "contentType": "application/json",
+  "context": "page",
+  "defaults": {
+    "language": "pagePath",
+    "scope": "page-published"
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "pagePath": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000,
+        "description": "Canonical GoVisit page path supplying this tool's published context; no origin, query or fragment."
+      },
+      "category": {
+        "type": "string",
+        "enum": [
+          "coverage"
+        ],
+        "default": "coverage",
+        "description": "Statistic family. Coverage is the only supported family today."
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "pagePath"
+    ]
+  },
+  "outputSchema": {
+    "type": "object",
+    "description": "Governed statistics from the cached public page. Each metric has its own observation date. Missing or invalid observations are unknown, never zero.",
+    "properties": {
+      "schemaVersion": {
+        "const": "1"
+      },
+      "pageType": {
+        "enum": [
+          "home",
+          "places-index",
+          "destinations-index",
+          "destination",
+          "category",
+          "collection"
+        ]
+      },
+      "pageId": {
+        "type": "string"
+      },
+      "locale": {
+        "type": "string"
+      },
+      "canonicalUrl": {
+        "type": "string"
+      },
+      "contentVersion": {
+        "type": [
+          "string",
+          "number",
+          "null"
+        ]
+      },
+      "updatedAt": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "freshness": {
+        "type": "object",
+        "properties": {
+          "contentVersion": {
+            "type": [
+              "string",
+              "number",
+              "null"
+            ]
+          },
+          "updatedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "contentVersion",
+          "updatedAt"
+        ],
+        "additionalProperties": false
+      },
+      "completeness": {
+        "enum": [
+          "page-published-statistics",
+          "partial",
+          "unavailable",
+          "invalid-input"
+        ]
+      },
+      "data": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "const": "coverage"
+          },
+          "scope": {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "enum": [
+                  "world",
+                  "destination"
+                ]
+              },
+              "code": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "kind",
+              "code"
+            ],
+            "additionalProperties": false
+          },
+          "metrics": {
+            "type": "array",
+            "maxItems": 22,
+            "items": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "enum": [
+                    "places",
+                    "activities",
+                    "collections",
+                    "destinations",
+                    "destinations_country",
+                    "destinations_region",
+                    "destinations_district",
+                    "destinations_city",
+                    "destinations_highlight",
+                    "places_arts_and_entertainment",
+                    "places_community_and_government",
+                    "places_cultural_and_historic",
+                    "places_education",
+                    "places_food_and_drink",
+                    "places_geographic_entities",
+                    "places_health_care",
+                    "places_lifestyle_services",
+                    "places_lodging",
+                    "places_services_and_business",
+                    "places_shopping",
+                    "places_sports_and_recreation",
+                    "places_travel_and_transportation"
+                  ]
+                },
+                "name": {
+                  "type": "string",
+                  "maxLength": 4000
+                },
+                "description": {
+                  "type": "string",
+                  "maxLength": 4000
+                },
+                "value": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "unit": {
+                  "const": "count"
+                },
+                "definitionVersion": {
+                  "const": "1"
+                },
+                "source": {
+                  "const": "catalog_coverage"
+                },
+                "observedAt": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})?$"
+                },
+                "computedAt": {
+                  "type": "string",
+                  "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})?$"
+                },
+                "window": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "const": "all_time"
+                    },
+                    "start": {
+                      "type": "string",
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})?$"
+                    },
+                    "end": {
+                      "type": "string",
+                      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})?$"
+                    },
+                    "timeZone": {
+                      "type": [
+                        "string",
+                        "null"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "code",
+                    "start",
+                    "end",
+                    "timeZone"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "code",
+                "name",
+                "description",
+                "value",
+                "unit",
+                "definitionVersion",
+                "source",
+                "observedAt",
+                "computedAt",
+                "window"
+              ]
+            }
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 22
+          },
+          "missingCodes": {
+            "type": "array",
+            "maxItems": 22,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "places",
+                "activities",
+                "collections",
+                "destinations",
+                "destinations_country",
+                "destinations_region",
+                "destinations_district",
+                "destinations_city",
+                "destinations_highlight",
+                "places_arts_and_entertainment",
+                "places_community_and_government",
+                "places_cultural_and_historic",
+                "places_education",
+                "places_food_and_drink",
+                "places_geographic_entities",
+                "places_health_care",
+                "places_lifestyle_services",
+                "places_lodging",
+                "places_services_and_business",
+                "places_shopping",
+                "places_sports_and_recreation",
+                "places_travel_and_transportation"
+              ]
+            }
+          }
+        },
+        "required": [
+          "category",
+          "scope",
+          "metrics",
+          "count",
+          "missingCodes"
+        ],
+        "additionalProperties": false
+      },
+      "error": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "schemaVersion",
+      "pageType",
+      "pageId",
+      "locale",
+      "canonicalUrl",
+      "contentVersion",
+      "updatedAt",
+      "freshness",
+      "completeness",
+      "data"
+    ],
+    "additionalProperties": false
+  },
+  "errorSchema": {
+    "type": "object",
+    "properties": {
+      "schemaVersion": {
+        "const": "1"
+      },
+      "completeness": {
+        "enum": [
+          "invalid-input",
+          "not-found",
+          "unavailable"
+        ]
+      },
+      "error": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "schemaVersion",
+      "completeness",
+      "error"
+    ],
+    "additionalProperties": false
+  },
+  "annotations": {
+    "readOnlyHint": true,
+    "untrustedContentHint": true
+  },
+  "sourceDigest": "sha256:c49af023b65d166a756510a83fe95de27f16b096bfc488f5ceb92ad5355bdceb",
+  "version": "1-c49af023b65d166a"
+}

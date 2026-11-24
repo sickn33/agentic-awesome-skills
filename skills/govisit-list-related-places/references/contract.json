@@ -1,0 +1,114 @@
+{
+  "tool": "list_related_places",
+  "contractVersion": "1",
+  "method": "POST",
+  "endpoint": "https://govisit.ai/api/tools/v1/list_related_places",
+  "contentType": "application/json",
+  "context": "page",
+  "defaults": {
+    "language": "pagePath",
+    "scope": "page-published"
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "pagePath": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000,
+        "description": "Canonical GoVisit page path supplying this tool's published context; no origin, query or fragment."
+      },
+      "name": {
+        "type": "string",
+        "description": "Optional published place name or partial name."
+      },
+      "category": {
+        "type": "string",
+        "description": "Optional published category code."
+      },
+      "audience": {
+        "type": "string",
+        "description": "Optional published audience label or code."
+      },
+      "accessibility": {
+        "type": "string",
+        "description": "Optional published accessibility label or code."
+      },
+      "neighborhood": {
+        "type": "string",
+        "description": "Optional published neighborhood."
+      },
+      "administrativeArea": {
+        "type": "string",
+        "description": "Optional published administrative area."
+      },
+      "activityType": {
+        "type": "string",
+        "description": "Optional published activity type."
+      },
+      "limit": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 20
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "pagePath"
+    ]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "data": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "items",
+          "count"
+        ]
+      }
+    },
+    "required": [
+      "data"
+    ]
+  },
+  "errorSchema": {
+    "type": "object",
+    "properties": {
+      "schemaVersion": {
+        "const": "1"
+      },
+      "completeness": {
+        "enum": [
+          "invalid-input",
+          "not-found",
+          "unavailable"
+        ]
+      },
+      "error": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "schemaVersion",
+      "completeness",
+      "error"
+    ],
+    "additionalProperties": false
+  },
+  "annotations": {
+    "readOnlyHint": true,
+    "untrustedContentHint": true
+  },
+  "sourceDigest": "sha256:c49af023b65d166a756510a83fe95de27f16b096bfc488f5ceb92ad5355bdceb",
+  "version": "1-c49af023b65d166a"
+}

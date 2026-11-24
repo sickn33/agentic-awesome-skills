@@ -1,0 +1,273 @@
+{
+  "tool": "get_place_visit_facts",
+  "contractVersion": "1",
+  "method": "POST",
+  "endpoint": "https://govisit.ai/api/tools/v1/get_place_visit_facts",
+  "contentType": "application/json",
+  "context": "page",
+  "defaults": {
+    "language": "pagePath",
+    "scope": "page-published"
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "pagePath": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000,
+        "description": "Canonical GoVisit page path supplying this tool's published context; no origin, query or fragment."
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "pagePath"
+    ]
+  },
+  "outputSchema": {
+    "type": "object",
+    "description": "Successful read of the sanitized published page snapshot. Unsupported sections reject the invocation.",
+    "properties": {
+      "schemaVersion": {
+        "const": "1"
+      },
+      "pageType": {
+        "const": "place"
+      },
+      "pageId": {
+        "type": "string"
+      },
+      "locale": {
+        "type": "string"
+      },
+      "canonicalUrl": {
+        "type": "string"
+      },
+      "contentVersion": {
+        "type": [
+          "string",
+          "number",
+          "null"
+        ]
+      },
+      "updatedAt": {
+        "type": [
+          "string",
+          "null"
+        ]
+      },
+      "freshness": {
+        "type": "object",
+        "properties": {
+          "contentVersion": {
+            "type": [
+              "string",
+              "number",
+              "null"
+            ]
+          },
+          "updatedAt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "contentVersion",
+          "updatedAt"
+        ],
+        "additionalProperties": false
+      },
+      "completeness": {
+        "const": "page-published-visit-facts"
+      },
+      "data": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "operatingStatus": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "label": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "code",
+              "label"
+            ],
+            "additionalProperties": false
+          },
+          "location": {
+            "type": "object",
+            "properties": {
+              "address": {
+                "description": "Published location value."
+              },
+              "addresses": {
+                "description": "Published location value."
+              },
+              "city": {
+                "description": "Published location value."
+              },
+              "country": {
+                "description": "Published location value."
+              },
+              "coordinates": {
+                "description": "Published location value."
+              },
+              "latitude": {
+                "description": "Published location value."
+              },
+              "longitude": {
+                "description": "Published location value."
+              }
+            },
+            "additionalProperties": false
+          },
+          "contact": {
+            "type": "object",
+            "properties": {
+              "phones": {
+                "description": "Published contact value; phones and websites may be lists of labeled records."
+              },
+              "websites": {
+                "description": "Published contact value; phones and websites may be lists of labeled records."
+              },
+              "website": {
+                "description": "Published contact value; phones and websites may be lists of labeled records."
+              },
+              "email": {
+                "description": "Published contact value; phones and websites may be lists of labeled records."
+              }
+            },
+            "additionalProperties": false
+          },
+          "openingHours": {
+            "type": [
+              "object",
+              "array",
+              "string",
+              "null"
+            ]
+          },
+          "accessibility": {
+            "type": [
+              "object",
+              "array",
+              "null"
+            ]
+          },
+          "experiences": {
+            "type": [
+              "object",
+              "array",
+              "null"
+            ]
+          },
+          "owner": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Name of the property-owning organization, or null when unknown."
+          },
+          "chain": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Name of the brand's chain organization, or null when unknown."
+          },
+          "operator": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Name of the company that manages the physical facility, distinct from profile management, or null when unknown."
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "category",
+          "summary",
+          "operatingStatus",
+          "location",
+          "contact",
+          "openingHours",
+          "accessibility",
+          "experiences",
+          "owner",
+          "chain",
+          "operator"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "required": [
+      "schemaVersion",
+      "pageType",
+      "pageId",
+      "locale",
+      "canonicalUrl",
+      "contentVersion",
+      "updatedAt",
+      "freshness",
+      "completeness",
+      "data"
+    ],
+    "additionalProperties": false
+  },
+  "errorSchema": {
+    "type": "object",
+    "properties": {
+      "schemaVersion": {
+        "const": "1"
+      },
+      "completeness": {
+        "enum": [
+          "invalid-input",
+          "not-found",
+          "unavailable"
+        ]
+      },
+      "error": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "schemaVersion",
+      "completeness",
+      "error"
+    ],
+    "additionalProperties": false
+  },
+  "annotations": {
+    "readOnlyHint": true,
+    "untrustedContentHint": true
+  },
+  "sourceDigest": "sha256:c49af023b65d166a756510a83fe95de27f16b096bfc488f5ceb92ad5355bdceb",
+  "version": "1-c49af023b65d166a"
+}
