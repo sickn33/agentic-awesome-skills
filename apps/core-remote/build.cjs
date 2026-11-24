@@ -29,6 +29,7 @@ for (const name of fs.readdirSync(path.join(root, "schemas/aas-v1"))) {
     );
 }
 const payloads = {};
+const { parseDocument } = require("yaml");
 const content = fs.readFileSync(
   path.join(root, "data/aas-v1/skill-content.v1.ndjson"),
 );
@@ -40,8 +41,16 @@ function asset(bytes) {
 }
 for (const skill of catalog.skills) {
   const ref = skill.untrustedContentRef;
+  const bytes = content.subarray(ref.offset, ref.offset + ref.length);
+  if ("sha256-" + crypto.createHash("sha256").update(bytes).digest("hex") !== ref.sha256) throw Error("Skill content differs from catalog");
+  const prose = JSON.parse(bytes).text;
+  const frontmatter = /^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/.exec(prose);
+  const source = frontmatter ? parseDocument(frontmatter[1]).get("source") : null;
+  const limits = /^## +Limitations[^\n]*\n([\s\S]*?)(?=^#{1,2} |(?![\s\S]))/mi.exec(prose);
   payloads[skill.id] = {
-    content: asset(content.subarray(ref.offset, ref.offset + ref.length)),
+    content: asset(bytes),
+    source: typeof source === "string" ? source.slice(0, 400) : null,
+    limitations: limits?.[1]?.trim().slice(0, 350) || null,
     files: {},
   };
   for (const f of skill.untrustedFiles || []) {

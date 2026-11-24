@@ -44,13 +44,16 @@ function compareVersions(left, right) {
 async function verifyCandidate() {
   for (let attempt = 1; attempt <= 6; attempt++) {
     const result = await health();
-    if (result.catalogVersion === receipt.version && result.catalogDigest === receipt.catalogDigest) {
+    if (result.version === "0.1.8" && result.catalogVersion === receipt.version && result.catalogDigest === receipt.catalogDigest) {
       assert.equal(result.skills, receipt.skillCount);
-      const environment = { ...process.env, AAS_MCP_URL: endpoint + "/mcp" };
+      const environment = { ...process.env, AAS_MCP_URL: endpoint + "/mcp/v1" };
       delete environment.CLOUDFLARE_API_TOKEN;
       delete environment.GH_TOKEN;
       execFileSync(process.execPath, [path.join(__dirname, "live-smoke.cjs")], {
         env: environment, stdio: "inherit", timeout: 90000,
+      });
+      execFileSync(process.execPath, [path.join(__dirname, "live-smoke.cjs")], {
+        env: {...environment, AAS_MCP_URL: endpoint + "/mcp"}, stdio:"inherit", timeout:90000,
       });
       return;
     }
@@ -64,7 +67,7 @@ async function main() {
   const previousVersion = activeVersion();
   const previous = await health();
   assert.ok(compareVersions(receipt.version, previous.catalogVersion) >= 0, "Refusing a catalog downgrade");
-  if (previous.catalogVersion === receipt.version && previous.catalogDigest === receipt.catalogDigest) {
+  if (previous.version === "0.1.8" && previous.catalogVersion === receipt.version && previous.catalogDigest === receipt.catalogDigest) {
     await verifyCandidate();
     return;
   }
