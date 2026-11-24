@@ -2,7 +2,7 @@ const assert = require("node:assert/strict");
 const { assertToolContract } = require("./tool-contract.cjs");
 const endpoint =
   process.env.AAS_MCP_URL || "https://aas-core.aas-core-remote.workers.dev/mcp";
-const product = endpoint.endsWith("/v2");
+const product = !endpoint.endsWith("/v1");
 let sid;
 let selectionHandle;
 const checks = [];

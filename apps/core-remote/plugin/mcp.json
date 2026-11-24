@@ -3,7 +3,7 @@
   "mcpServers": {
     "aas-core": {
       "type": "streamable-http",
-      "url": "https://aas-core.aas-core-remote.workers.dev/mcp/v2"
+      "url": "https://aas-core.aas-core-remote.workers.dev/mcp"
     }
   }
 }

@@ -352,8 +352,8 @@ export default {
         catalogDigest: catalog.digest,
         skills: catalog.skills.length,
       });
-    const product = url.pathname === "/mcp/v2";
-    if (!product && url.pathname !== "/mcp")
+    const product = url.pathname === "/mcp";
+    if (!product && url.pathname !== "/mcp/v1")
       return new Response("Not found", { status: 404 });
     if (!["POST", "DELETE"].includes(request.method))
       return new Response("Method not allowed", {

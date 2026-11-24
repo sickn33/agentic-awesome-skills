@@ -46,14 +46,14 @@ async function verifyCandidate() {
     const result = await health();
     if (result.version === "0.1.8" && result.catalogVersion === receipt.version && result.catalogDigest === receipt.catalogDigest) {
       assert.equal(result.skills, receipt.skillCount);
-      const environment = { ...process.env, AAS_MCP_URL: endpoint + "/mcp" };
+      const environment = { ...process.env, AAS_MCP_URL: endpoint + "/mcp/v1" };
       delete environment.CLOUDFLARE_API_TOKEN;
       delete environment.GH_TOKEN;
       execFileSync(process.execPath, [path.join(__dirname, "live-smoke.cjs")], {
         env: environment, stdio: "inherit", timeout: 90000,
       });
       execFileSync(process.execPath, [path.join(__dirname, "live-smoke.cjs")], {
-        env: {...environment, AAS_MCP_URL: endpoint + "/mcp/v2"}, stdio:"inherit", timeout:90000,
+        env: {...environment, AAS_MCP_URL: endpoint + "/mcp"}, stdio:"inherit", timeout:90000,
       });
       return;
     }

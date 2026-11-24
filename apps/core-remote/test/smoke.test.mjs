@@ -66,7 +66,7 @@ env.SESSIONS = binding(CoreSession);
 let sid;
 async function call(method, params = {}, id = 1, ip = "192.0.2.1") {
   const r = await worker.fetch(
-    new Request("https://test/mcp", {
+    new Request("https://test/mcp/v1", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -233,7 +233,7 @@ test("Codex v2 survives transport replacement and exports a verified selection",
       {
         env: {
           ...process.env,
-          AAS_MCP_URL: "http://127.0.0.1:" + http.address().port + "/mcp/v2",
+          AAS_MCP_URL: "http://127.0.0.1:" + http.address().port + "/mcp",
         },
         stdio: ["ignore", "pipe", "pipe"],
       },
@@ -274,7 +274,7 @@ test("empty multilingual searches and successful retries increment aggregate cou
   const before = [count("empty"), count("success")];
   async function invoke(method, params, id = 1, session) {
     const res = await worker.fetch(
-      new Request("https://test/mcp/v2", {
+      new Request("https://test/mcp", {
         method: "POST",
         headers: {
           "cf-connecting-ip": "192.0.2.72",
