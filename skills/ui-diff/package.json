@@ -1,0 +1,47 @@
+{
+  "name": "ui-diff",
+  "version": "2.1.0",
+  "private": true,
+  "description": "Before/after screenshots, pixel diffs and a UX summary for UI changes in a pull request (agent skill + CLI).",
+  "type": "module",
+  "bin": {
+    "ui-diff": "bin/ui-diff.mjs"
+  },
+  "engines": {
+    "node": ">=20.10"
+  },
+  "files": [
+    "SKILL.md",
+    "bin",
+    "dist",
+    "references",
+    "schema",
+    "src",
+    "tsconfig.json"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepack": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.check.json",
+    "test": "node --import tsx --test --test-reporter=spec test/unit/*.test.ts",
+    "test:integration": "node --import tsx --test --test-reporter=spec --test-concurrency=1 test/integration/*.test.ts",
+    "test:all": "npm run test && npm run test:integration",
+    "schema": "tsx scripts/build-schema.ts",
+    "setup": "npm install && playwright install chromium",
+    "ui-diff": "node bin/ui-diff.mjs"
+  },
+  "dependencies": {
+    "axe-core": "^4.14.1",
+    "gifenc": "^1.0.3",
+    "pixelmatch": "^8.0.0",
+    "playwright": "^1.65.1",
+    "pngjs": "^7.0.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/pngjs": "^6.0.5",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}

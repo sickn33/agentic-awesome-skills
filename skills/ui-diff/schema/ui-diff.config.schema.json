@@ -1,0 +1,1942 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "baseUrl": {
+      "default": "http://localhost:{port}",
+      "description": "URL of the local server; {port} is replaced with a free port. For loopback hosts the other loopback addresses are tried too",
+      "type": "string"
+    },
+    "startCommand": {
+      "description": "Starts the app; {port} is replaced and PORT is set",
+      "type": "string"
+    },
+    "buildCommand": {
+      "type": "string"
+    },
+    "install": {
+      "default": "auto",
+      "anyOf": [
+        {
+          "type": "string",
+          "const": "auto"
+        },
+        {
+          "type": "boolean",
+          "const": false
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "cwd": {
+      "default": ".",
+      "description": "Directory (relative to this file) where commands run",
+      "type": "string"
+    },
+    "readyPath": {
+      "default": "/",
+      "type": "string"
+    },
+    "startTimeoutMs": {
+      "default": 120000,
+      "type": "integer",
+      "minimum": 1000,
+      "maximum": 9007199254740991
+    },
+    "env": {
+      "default": {},
+      "type": "object",
+      "propertyNames": {
+        "type": "string"
+      },
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "copyFiles": {
+      "default": [
+        ".env",
+        ".env.local",
+        ".env.development.local"
+      ],
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "routes": {
+      "default": [],
+      "type": "array",
+      "items": {
+        "anyOf": [
+          {
+            "type": "string",
+            "format": "starts_with",
+            "pattern": "^\\/.*"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "path": {
+                "type": "string",
+                "format": "starts_with",
+                "pattern": "^\\/.*"
+              },
+              "name": {
+                "type": "string"
+              },
+              "files": {
+                "description": "Globs (relative to the config file) whose changes affect this route",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "waitFor": {
+                "type": "string"
+              },
+              "actions": {
+                "description": "Steps to run before the static screenshot",
+                "type": "array",
+                "items": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "hover": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "hover"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "click": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "click"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "focus": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "focus"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "press": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "press"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "fill": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "fill",
+                        "value"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "scroll": {
+                          "type": [
+                            "number",
+                            "string"
+                          ]
+                        },
+                        "smooth": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "scroll"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "wait": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 15000
+                        }
+                      },
+                      "required": [
+                        "wait"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "waitFor": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "waitFor"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "mouse": {
+                          "type": "array",
+                          "prefixItems": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "number"
+                            }
+                          ],
+                          "items": false,
+                          "minItems": 2,
+                          "maxItems": 2
+                        }
+                      },
+                      "required": [
+                        "mouse"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "mask": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "hide": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "fullPage": {
+                "type": "boolean"
+              },
+              "viewports": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "themes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "variants": {
+                "type": "object",
+                "properties": {
+                  "param": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "values": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": [
+                            "string",
+                            "number"
+                          ]
+                        }
+                      }
+                    ],
+                    "description": "\"1..4\", \"a,b,c\" or an array"
+                  },
+                  "viewports": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "themes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "param",
+                  "values"
+                ],
+                "additionalProperties": false
+              },
+              "motion": {
+                "anyOf": [
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "steps": {
+                        "type": "array",
+                        "items": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "hover": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "hover"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "click": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "click"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "focus": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "focus"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "press": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "press"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "fill": {
+                                  "type": "string"
+                                },
+                                "value": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "fill",
+                                "value"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "scroll": {
+                                  "type": [
+                                    "number",
+                                    "string"
+                                  ]
+                                },
+                                "smooth": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "scroll"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "wait": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 15000
+                                }
+                              },
+                              "required": [
+                                "wait"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "waitFor": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "waitFor"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "object",
+                              "properties": {
+                                "mouse": {
+                                  "type": "array",
+                                  "prefixItems": [
+                                    {
+                                      "type": "number"
+                                    },
+                                    {
+                                      "type": "number"
+                                    }
+                                  ],
+                                  "items": false,
+                                  "minItems": 2,
+                                  "maxItems": 2
+                                }
+                              },
+                              "required": [
+                                "mouse"
+                              ],
+                              "additionalProperties": false
+                            }
+                          ]
+                        }
+                      },
+                      "durationMs": {
+                        "type": "integer",
+                        "minimum": 500,
+                        "maximum": 15000
+                      },
+                      "viewport": {
+                        "type": "string"
+                      },
+                      "theme": {
+                        "type": "string"
+                      },
+                      "fromNavigation": {
+                        "type": "boolean"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                ]
+              },
+              "focus": {
+                "description": "Added to the top-level focus for this route",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "ignore": {
+                "description": "Added to the top-level ignore for this route",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": [
+              "path"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "globalFiles": {
+      "default": [],
+      "description": "Globs whose changes affect every route",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "focus": {
+      "default": [],
+      "description": "CSS selectors of the only areas to compare (pixels and styles); the rest of the page is not diffed",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ignore": {
+      "default": [],
+      "description": "CSS selectors of areas not to compare: painted over in the screenshots and left out of the style diff",
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "detect": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "conventions": {
+          "default": true,
+          "type": "boolean"
+        },
+        "imports": {
+          "default": true,
+          "type": "boolean"
+        },
+        "aliases": {
+          "default": {},
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "maxRoutes": {
+          "default": 12,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "uiPackages": {
+          "default": [
+            "react",
+            "react-dom",
+            "next",
+            "vue",
+            "nuxt",
+            "svelte",
+            "@sveltejs/*",
+            "astro",
+            "@astrojs/*",
+            "solid-js",
+            "preact",
+            "@angular/*",
+            "@remix-run/*",
+            "react-router",
+            "react-router-dom",
+            "@tanstack/react-router",
+            "tailwindcss",
+            "@tailwindcss/*",
+            "postcss",
+            "postcss-*",
+            "autoprefixer",
+            "lightningcss",
+            "sass",
+            "less",
+            "styled-components",
+            "@emotion/*",
+            "@stylexjs/*",
+            "@vanilla-extract/*",
+            "@pandacss/*",
+            "class-variance-authority",
+            "tailwind-merge",
+            "@radix-ui/*",
+            "@headlessui/*",
+            "@mui/*",
+            "@chakra-ui/*",
+            "@mantine/*",
+            "antd",
+            "@ant-design/*",
+            "bootstrap",
+            "daisyui",
+            "lucide-react",
+            "@heroicons/*",
+            "@fortawesome/*",
+            "framer-motion",
+            "motion",
+            "@fontsource/*",
+            "@fontsource-variable/*"
+          ],
+          "description": "Package names (* wildcards) whose version changes may change the UI; replaces the default list, so keep the entries you still want",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dependencyRoutes": {
+          "description": "Routes captured when a UI package changes; default: every known route",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "starts_with",
+            "pattern": "^\\/.*"
+          }
+        },
+        "include": {
+          "default": [
+            "**/*.{html,htm,css,scss,sass,less,styl,pcss,vue,svelte,astro,jsx,tsx,mdx,js,ts,mjs,cjs}",
+            "**/*.{svg,png,jpg,jpeg,gif,webp,avif,ico,woff,woff2,ttf,otf}",
+            "**/*.json"
+          ],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exclude": {
+          "default": [
+            "**/node_modules/**",
+            "**/{dist,build,out,coverage,.next,.nuxt,.svelte-kit}/**",
+            "**/*.{test,spec}.*",
+            "**/{__tests__,__mocks__,test,tests,e2e,cypress}/**",
+            "**/*.stories.*",
+            "**/*.d.ts",
+            "**/{package-lock,tsconfig,jsconfig}.json",
+            "**/package.json",
+            "**/.github/**",
+            "**/ui-diff.config.json"
+          ],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "viewports": {
+      "default": [
+        {
+          "name": "desktop",
+          "width": 1280,
+          "height": 800,
+          "deviceScaleFactor": 1
+        },
+        {
+          "name": "mobile",
+          "width": 390,
+          "height": 844,
+          "deviceScaleFactor": 2,
+          "isMobile": true,
+          "hasTouch": true
+        }
+      ],
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+          },
+          "width": {
+            "type": "integer",
+            "minimum": 200,
+            "maximum": 4096
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 200,
+            "maximum": 4096
+          },
+          "device": {
+            "description": "Playwright device descriptor name, e.g. \"iPhone 13\"",
+            "type": "string"
+          },
+          "deviceScaleFactor": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 4
+          },
+          "isMobile": {
+            "type": "boolean"
+          },
+          "hasTouch": {
+            "type": "boolean"
+          },
+          "userAgent": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "themes": {
+      "default": [
+        {
+          "name": "light",
+          "colorScheme": "light"
+        }
+      ],
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]*$"
+          },
+          "query": {
+            "description": "Query params added to every URL, e.g. { \"theme\": \"dark\" }",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "colorScheme": {
+            "type": "string",
+            "enum": [
+              "light",
+              "dark",
+              "no-preference"
+            ]
+          },
+          "localStorage": {
+            "description": "localStorage entries set before the page loads",
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "browser": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "channel": {
+          "description": "Installed browser to capture with instead of Playwright's Chromium, e.g. \"chrome\" (UI_DIFF_BROWSER_CHANNEL overrides it)",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "capture": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "fullPage": {
+          "default": true,
+          "type": "boolean"
+        },
+        "maxHeight": {
+          "default": 4000,
+          "type": "integer",
+          "minimum": 200,
+          "maximum": 16000
+        },
+        "disableAnimations": {
+          "default": true,
+          "description": "Older switch: false turns off freeze.animations",
+          "type": "boolean"
+        },
+        "waitForFonts": {
+          "default": true,
+          "description": "Older switch: false turns off freeze.fonts",
+          "type": "boolean"
+        },
+        "fixedTime": {
+          "default": false,
+          "description": "Older form of freeze.time: an ISO timestamp or \"run-start\" sets it; false leaves freeze.time in charge",
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "boolean",
+              "const": false
+            }
+          ]
+        },
+        "stableRandom": {
+          "default": true,
+          "description": "Older switch: false turns off freeze.random",
+          "type": "boolean"
+        },
+        "mask": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "maskColor": {
+          "default": "#A3A3A3",
+          "type": "string"
+        },
+        "hide": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "hideDevOverlays": {
+          "default": true,
+          "type": "boolean"
+        },
+        "scrollToLoad": {
+          "default": true,
+          "description": "Scroll through the page first to trigger lazy content, then back to the top",
+          "type": "boolean"
+        },
+        "stableShots": {
+          "default": 2,
+          "description": "Retake until this many consecutive screenshots match",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5
+        },
+        "settleMs": {
+          "default": 250,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10000
+        },
+        "timeoutMs": {
+          "default": 30000,
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 9007199254740991
+        },
+        "waitUntil": {
+          "default": "load",
+          "type": "string",
+          "enum": [
+            "load",
+            "domcontentloaded",
+            "networkidle"
+          ]
+        },
+        "networkIdleTimeoutMs": {
+          "default": 3000,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "locale": {
+          "default": "en-US",
+          "type": "string"
+        },
+        "timezoneId": {
+          "default": "UTC",
+          "type": "string"
+        },
+        "styleMaxElements": {
+          "default": 2500,
+          "description": "Most visible elements whose computed styles are recorded per capture (token audit); a warning says when a page has more",
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 9007199254740991
+        }
+      },
+      "additionalProperties": false
+    },
+    "freeze": {
+      "description": "Inputs frozen before every still capture, the same on both sides",
+      "default": {},
+      "type": "object",
+      "properties": {
+        "clock": {
+          "default": true,
+          "description": "Freeze Date at `time` with the Playwright clock on both sides (timers keep running), so clocks and \"2 min ago\" match",
+          "type": "boolean"
+        },
+        "time": {
+          "default": "run-start",
+          "description": "\"run-start\" (the same instant on both sides) or an ISO timestamp",
+          "type": "string"
+        },
+        "random": {
+          "default": true,
+          "description": "Seed Math.random and crypto.getRandomValues / randomUUID",
+          "type": "boolean"
+        },
+        "seed": {
+          "default": 795556381,
+          "description": "Seed for the random generators",
+          "type": "integer",
+          "minimum": -9007199254740991,
+          "maximum": 9007199254740991
+        },
+        "animations": {
+          "default": true,
+          "description": "Finish CSS animations and transitions, hide the caret and set prefers-reduced-motion for still captures",
+          "type": "boolean"
+        },
+        "fonts": {
+          "default": true,
+          "description": "Wait until no web font is loading (document.fonts) before capturing",
+          "type": "boolean"
+        },
+        "fontTimeoutMs": {
+          "default": 8000,
+          "description": "Longest wait for fonts",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 30000
+        }
+      },
+      "additionalProperties": false
+    },
+    "styleDiff": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "default": true,
+          "description": "Record the element map of every capture and describe changes as measured style changes",
+          "type": "boolean"
+        },
+        "maxChanges": {
+          "default": 50,
+          "description": "Most element changes kept per capture in report.json",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "minConfidence": {
+          "default": "medium",
+          "description": "Changes of elements matched with less confidence are listed as unverified",
+          "type": "string",
+          "enum": [
+            "high",
+            "medium",
+            "low"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "states": {
+      "description": "Hover and focus states of links, buttons, form fields and other interactive elements",
+      "default": {},
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "default": true,
+          "description": "Capture interactive elements in their hover and keyboard focus states on both sides and compare them",
+          "type": "boolean"
+        },
+        "hover": {
+          "default": true,
+          "description": "Hover each element with the real pointer",
+          "type": "boolean"
+        },
+        "focus": {
+          "default": true,
+          "description": "Reach each element with the Tab key, so :focus-visible applies",
+          "type": "boolean"
+        },
+        "maxElements": {
+          "default": 20,
+          "description": "Interactive elements checked per page, in document order; the rest are counted as skipped",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "padding": {
+          "default": 12,
+          "description": "CSS px around an element in its state crops, so focus rings and shadows show",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "additionalProperties": false
+    },
+    "flows": {
+      "default": [],
+      "description": "Interactions replayed on both sides (open a menu, fill a form); the page is captured and diffed at each checkpoint",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9 _-]{0,39}$"
+          },
+          "route": {
+            "type": "string",
+            "format": "starts_with",
+            "pattern": "^\\/.*",
+            "description": "Path the flow starts on"
+          },
+          "steps": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "click": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "checkpoint": {
+                      "description": "Capture the page after this step under this name, e.g. \"after open\"",
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9 _-]{0,39}$"
+                    }
+                  },
+                  "required": [
+                    "click"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "hover": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "checkpoint": {
+                      "description": "Capture the page after this step under this name, e.g. \"after open\"",
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9 _-]{0,39}$"
+                    }
+                  },
+                  "required": [
+                    "hover"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "focus": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "checkpoint": {
+                      "description": "Capture the page after this step under this name, e.g. \"after open\"",
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9 _-]{0,39}$"
+                    }
+                  },
+                  "required": [
+                    "focus"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "text": {
+                      "type": "string"
+                    },
+                    "checkpoint": {
+                      "description": "Capture the page after this step under this name, e.g. \"after open\"",
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9 _-]{0,39}$"
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "text"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Replaces the field value with text"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "press": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "checkpoint": {
+                      "description": "Capture the page after this step under this name, e.g. \"after open\"",
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9 _-]{0,39}$"
+                    }
+                  },
+                  "required": [
+                    "press"
+                  ],
+                  "additionalProperties": false,
+                  "description": "A key on the focused element, e.g. \"Escape\" or \"Enter\""
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "select": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "checkpoint": {
+                      "description": "Capture the page after this step under this name, e.g. \"after open\"",
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9 _-]{0,39}$"
+                    }
+                  },
+                  "required": [
+                    "select",
+                    "value"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Picks the option with this value or label"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "scroll": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      ]
+                    },
+                    "checkpoint": {
+                      "description": "Capture the page after this step under this name, e.g. \"after open\"",
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9 _-]{0,39}$"
+                    }
+                  },
+                  "required": [
+                    "scroll"
+                  ],
+                  "additionalProperties": false,
+                  "description": "To a y position in px, or until an element is in view"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "wait": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 15000
+                        },
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      ]
+                    },
+                    "checkpoint": {
+                      "description": "Capture the page after this step under this name, e.g. \"after open\"",
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9 _-]{0,39}$"
+                    }
+                  },
+                  "required": [
+                    "wait"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Milliseconds, or until an element is visible"
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "checkpoint": {
+                      "type": "string",
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9 _-]{0,39}$"
+                    }
+                  },
+                  "required": [
+                    "checkpoint"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "viewports": {
+            "description": "Default: the viewports of the route",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "themes": {
+            "description": "Default: the themes of the route",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "route",
+          "steps"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "flowLimits": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "maxFlows": {
+          "default": 5,
+          "description": "Flows run per run, in config order; the rest are listed as not run",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "maxSteps": {
+          "default": 15,
+          "description": "Longest flow that runs; a longer one is listed as not run",
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "stepTimeoutMs": {
+          "default": 5000,
+          "description": "How long a step waits for its element before the flow stops there",
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 60000
+        }
+      },
+      "additionalProperties": false
+    },
+    "components": {
+      "default": [],
+      "description": "Single components diffed on their own: a tight crop and only the measured changes inside them",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9 _-]{0,39}$"
+          },
+          "route": {
+            "description": "Path the component is on; or give flow",
+            "type": "string",
+            "format": "starts_with",
+            "pattern": "^\\/.*"
+          },
+          "flow": {
+            "description": "Name of a flow whose checkpoint shows the component",
+            "type": "string"
+          },
+          "checkpoint": {
+            "description": "Checkpoint of that flow; default: its last one",
+            "type": "string"
+          },
+          "selector": {
+            "type": "string",
+            "minLength": 1,
+            "description": "CSS selector of the component root; it must match exactly one element"
+          },
+          "states": {
+            "description": "Default: [\"default\"]; \"hover\" puts the pointer on the root, \"focus\" reaches the root (or its first focusable element) with the keyboard",
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "default",
+                "hover",
+                "focus"
+              ]
+            }
+          },
+          "viewports": {
+            "description": "Default: the viewports of the route or flow",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "themes": {
+            "description": "Default: the themes of the route or flow",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "selector"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "componentLimits": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "maxComponents": {
+          "default": 10,
+          "description": "Components run per run, in config order; the rest are listed as not run",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "padding": {
+          "default": 8,
+          "description": "CSS px around the component in its crop",
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 64
+        }
+      },
+      "additionalProperties": false
+    },
+    "fingerprint": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "dataLabel": {
+          "description": "What test data the app ran with (a fixture name, seed or dataset version), shown in the capture settings; \"not declared\" when unset",
+          "type": "string",
+          "maxLength": 200
+        }
+      },
+      "additionalProperties": false
+    },
+    "diff": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "threshold": {
+          "default": 0.1,
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "includeAA": {
+          "default": false,
+          "type": "boolean"
+        },
+        "minChangedPixels": {
+          "default": 8,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "focusPadding": {
+          "default": 32,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        },
+        "maxFocusCrops": {
+          "default": 2,
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 6
+        },
+        "compositeMaxWidth": {
+          "default": 2400,
+          "type": "integer",
+          "minimum": 600,
+          "maximum": 9007199254740991
+        },
+        "highlightColor": {
+          "default": "#FF0080",
+          "type": "string"
+        },
+        "alignShifts": {
+          "default": true,
+          "description": "Match content that only moved up or down (e.g. below a taller hero) and report it as shifted instead of changed",
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "preview": {
+      "description": "Use already-deployed preview URLs instead of local worktrees",
+      "default": {},
+      "type": "object",
+      "properties": {
+        "base": {
+          "type": "string"
+        },
+        "head": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "auth": {
+      "description": "Credentials for protected previews, read from environment variables",
+      "type": "object",
+      "properties": {
+        "headers": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "env": {
+                "type": "string",
+                "pattern": "^[A-Z_][A-Z0-9_]{0,127}$"
+              },
+              "prefix": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "env"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "cookies": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "env": {
+                "type": "string",
+                "pattern": "^[A-Z_][A-Z0-9_]{0,127}$"
+              },
+              "domain": {
+                "type": "string"
+              },
+              "path": {
+                "default": "/",
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "env"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "origins": {
+          "description": "Origins that may receive the credentials; default: the preview URL origins",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "variants": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "default": true,
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "motion": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "default": false,
+          "type": "boolean"
+        },
+        "all": {
+          "default": false,
+          "description": "Record clips for routes without visual changes too (same as --motion-all)",
+          "type": "boolean"
+        },
+        "format": {
+          "default": "gif",
+          "type": "string",
+          "enum": [
+            "gif",
+            "webm",
+            "gif+webm"
+          ]
+        },
+        "durationMs": {
+          "default": 3000,
+          "type": "integer",
+          "minimum": 500,
+          "maximum": 15000
+        },
+        "fps": {
+          "default": 10,
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 30
+        },
+        "viewport": {
+          "type": "string"
+        },
+        "theme": {
+          "type": "string"
+        },
+        "scale": {
+          "default": 0.6,
+          "type": "number",
+          "minimum": 0.2,
+          "maximum": 1
+        },
+        "steps": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "hover": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "hover"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "click": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "click"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "focus": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "focus"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "press": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "press"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "fill": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "fill",
+                  "value"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "scroll": {
+                    "type": [
+                      "number",
+                      "string"
+                    ]
+                  },
+                  "smooth": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "scroll"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "wait": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 15000
+                  }
+                },
+                "required": [
+                  "wait"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "waitFor": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "waitFor"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "mouse": {
+                    "type": "array",
+                    "prefixItems": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "items": false,
+                    "minItems": 2,
+                    "maxItems": 2
+                  }
+                },
+                "required": [
+                  "mouse"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "parallel": {
+          "default": true,
+          "description": "Record base and head at the same time (each in its own page); false records them one after the other",
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "tokens": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "default": false,
+          "type": "boolean"
+        },
+        "files": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "scope": {
+          "default": "changed-regions",
+          "type": "string",
+          "enum": [
+            "changed-regions",
+            "page"
+          ]
+        },
+        "properties": {
+          "default": [
+            "color",
+            "background-color",
+            "border-color",
+            "spacing",
+            "radius",
+            "font-size",
+            "font-weight",
+            "font-family"
+          ],
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "color",
+              "background-color",
+              "border-color",
+              "spacing",
+              "radius",
+              "font-size",
+              "font-weight",
+              "font-family",
+              "line-height"
+            ]
+          }
+        },
+        "colorTolerance": {
+          "default": 2,
+          "type": "number",
+          "minimum": 0,
+          "maximum": 50
+        },
+        "pxTolerance": {
+          "default": 0.5,
+          "type": "number",
+          "minimum": 0,
+          "maximum": 4
+        },
+        "remBase": {
+          "default": 16,
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "allow": {
+          "default": [],
+          "description": "Extra allowed values, e.g. \"0px\", \"1px\", \"#ffffff\"",
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "categories": {
+          "default": {},
+          "description": "Map token names to categories when their names do not say it, e.g. { \"spacing\": [\"--s-*\"], \"font-size\": [\"--fs-*\"] }",
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "enum": [
+              "color",
+              "spacing",
+              "radius",
+              "font-size",
+              "font-weight",
+              "font-family",
+              "line-height"
+            ]
+          },
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "ignoreSelectors": {
+          "default": [],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "maxElements": {
+          "description": "Deprecated: use capture.styleMaxElements (still honoured when that is not set)",
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 9007199254740991
+        },
+        "maxFindings": {
+          "default": 40,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        }
+      },
+      "additionalProperties": false
+    },
+    "a11y": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "default": false,
+          "type": "boolean"
+        },
+        "tags": {
+          "default": [
+            "wcag2a",
+            "wcag2aa",
+            "wcag21a",
+            "wcag21aa",
+            "wcag22aa"
+          ],
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rules": {
+          "default": {
+            "tabindex": true
+          },
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        },
+        "focusOrder": {
+          "default": true,
+          "type": "boolean"
+        },
+        "maxTabStops": {
+          "default": 40,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 200
+        },
+        "viewports": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "themes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "publish": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "mode": {
+          "default": "branch",
+          "type": "string",
+          "enum": [
+            "branch",
+            "none"
+          ]
+        },
+        "branch": {
+          "default": "ui-diff-assets",
+          "type": "string"
+        },
+        "remote": {
+          "default": "origin",
+          "type": "string"
+        },
+        "keepRuns": {
+          "default": 1,
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9007199254740991
+        },
+        "allowPublicRepo": {
+          "default": false,
+          "type": "boolean"
+        },
+        "linkBase": {
+          "description": "Override the image URL prefix (e.g. for GitHub Enterprise)",
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "comment": {
+      "default": {},
+      "type": "object",
+      "properties": {
+        "id": {
+          "default": "default",
+          "type": "string",
+          "pattern": "^[a-z0-9][a-z0-9-]*$"
+        },
+        "title": {
+          "default": "UI diff",
+          "type": "string"
+        },
+        "showUnchanged": {
+          "default": true,
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "title": "ui-diff configuration",
+  "description": "Configuration for the ui-diff skill (before/after screenshots and pixel diffs for pull requests)."
+}
