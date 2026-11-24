@@ -212,6 +212,8 @@ Key source families include:
 
 ### Official Sources
 
+- **[nitrosend/claude](https://github.com/nitrosend/claude)**: MIT official Nitrosend skills source for `nitrosend-klaviyo-migration`, `nitrosend-mailchimp-migration`, `nitrosend-email-platform-migration` and `nitrosend-shopify-email-marketing` - move an email list to Nitrosend with opt-outs imported first, and run Shopify email marketing with customer consent kept.
+
 - **[phuryn/product-engineering](https://github.com/phuryn/product-engineering)**: Pawel Huryn’s MIT collection of 45 product discovery, agent coordination, shipping and application operations workflows.
 
 - **[CrakSEO/skills](https://github.com/CrakSEO/skills)**: External MIT collection for CrakSEO hosted MCP integrations covering SEO research, Search Console and URL indexing. Listed as an upstream resource; not bundled or connected by this repository.
