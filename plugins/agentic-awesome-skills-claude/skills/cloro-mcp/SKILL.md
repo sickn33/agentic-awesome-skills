@@ -1,6 +1,6 @@
 ---
 name: cloro-mcp
-description: "Get Google results with the AI Overview, and ChatGPT, Google AI Mode, Bing AI Mode and Gemini answers with their cited sources, through cloro's hosted MCP server. Use when the user chooses cloro."
+description: "Get Google and Bing results with the AI Overview, and ChatGPT, Google AI Mode, Bing AI Mode and Gemini answers with their cited sources, through cloro's hosted MCP server. Use when the user chooses cloro."
 category: mcp
 risk: safe
 source: self
@@ -16,7 +16,7 @@ tags: [mcp, ai-search, serp, geo, citations, chatgpt, gemini, bing]
 
 Use the cloro MCP tools to see what an AI assistant or Google shows for a prompt
 or query, from a chosen country: the answer text and the sources it cites. The
-tools return Google organic results with the AI Overview, and answers from
+tools return Google and Bing organic results with the AI Overview, and answers from
 ChatGPT, Google AI Mode, Bing AI Mode and Gemini. Use the result to check if a
 brand, page or domain appears in an answer, and which sources an answer cites.
 
@@ -32,8 +32,8 @@ answer comparison, not for general web research.
 - The user chooses cloro, or the cloro tools that are connected to the host.
 - The user wants to know what ChatGPT, Google AI Mode, Bing AI Mode or Gemini
   answers for a prompt, and which sources the answer cites.
-- The user wants the Google results and the AI Overview for a query in a given
-  country.
+- The user wants the Google or Bing results and the AI Overview for a query in a
+  given country.
 - The user wants to compare an AI answer with the Google results for the same
   topic.
 
@@ -58,6 +58,7 @@ Use the host's tool discovery to confirm that the server exposes these tools.
 Hosts can add a server prefix to the names.
 
 - `scrape_google`
+- `scrape_bing`
 - `scrape_chatgpt`
 - `scrape_google_ai_mode`
 - `scrape_bing_aimode`
@@ -77,7 +78,7 @@ settings.
 Get the prompt or query and the country. The country is an ISO 3166-1 alpha-2
 code, such as `US` or `DE`. If the user gives no country, ask. Do not guess,
 because answers and results change by country. Call `list_countries` with a
-`model` (`chatgpt`, `aimode`, `bing_aimode`, `gemini`, `google` or
+`model` (`chatgpt`, `aimode`, `bing_aimode`, `gemini`, `google`, `bing` or
 `aioverview`) to check that an engine supports the country. `list_countries`
 costs no credits.
 
@@ -89,6 +90,7 @@ change between runs, so say that one result is one sample.
 | Tool | Main arguments | Credits |
 | --- | --- | --- |
 | `scrape_google` | `query`, `gl`, optional `include.aioverview: true` | 5, or 7 with the AI Overview |
+| `scrape_bing` | `query`, `country`, optional `pages`, `first` and `include.aioverview: true` | 5, or 7 with the AI Overview, plus 2 for each page after the first |
 | `scrape_chatgpt` | `prompt`, `country` | 7 |
 | `scrape_google_ai_mode` | `prompt`, `gl` | 6 |
 | `scrape_bing_aimode` | `prompt`, `country` | 6 |
@@ -122,6 +124,10 @@ cloro's async API instead of a loop of tool calls.
   `snippet`. With `include.aioverview: true`, `aioverview` has `text` and
   `sources` when Google shows an AI Overview for the query. If `aioverview` is
   missing, Google showed no AI Overview for that query and country.
+- Bing (`scrape_bing`): the same `organicResults`, `ads` and `aioverview` fields
+  as Google. `ads` is absent when the page has no ads. `pages` (1 to 10) gets more
+  Bing pages, and `first` sets the result to start at. Bing accepts all countries
+  except CN, KR and RU, and a query of at most 3,500 characters after URL encoding.
 - A Google `link` or a source `url` can be empty or a `google.com/goto` URL, with
   a `redirectLink` next to it. Pass the `redirectLink` to
   `resolve_google_redirect` to get the destination. Do not open a `/goto` URL
@@ -202,7 +208,7 @@ host's MCP tools and cite the returned sources in the answer.
 - One call returns one answer. AI answers change between runs, days and countries.
 - Results show what the engine returned at call time, for one country. They can be
   different from what a signed-in user with a history or a profile sees.
-- Google does not show an AI Overview for every query.
+- Google and Bing do not show an AI Overview for every query.
 - The skill does not track results over time. For repeated or large jobs, use
   cloro's async API.
 
