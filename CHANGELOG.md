@@ -38,6 +38,24 @@ Summarize the most important change for users in one short paragraph.
 
 ## [Unreleased]
 
+## [21.3.0] - 2026-11-24 - "Email Migration, Video and Mobile Testing"
+
+AAS adds six skills, bringing the catalog to 3,137.
+
+### New skills
+
+- Add four Nitrosend skills for consent-aware email migrations and Shopify email marketing.
+- Add Ultrafast for building and exporting GPU-rendered video from JSON documents.
+- Add Mobilebox cloud phone testing with explicit approval for billable sessions, public screenshots, and consequential actions.
+
+### Improvements
+
+- Update Pixeltable guidance for 0.7.25, including function discovery and primary-key insert behavior.
+
+### Contributors
+
+- Thanks to @CosmoBlk ([#2481](https://github.com/sickn33/agentic-awesome-skills/pull/2481)), @naveenshaji ([#2475](https://github.com/sickn33/agentic-awesome-skills/pull/2475)), @Musti7even ([#2470](https://github.com/sickn33/agentic-awesome-skills/pull/2470)), and @pierrebrunelle ([#2473](https://github.com/sickn33/agentic-awesome-skills/pull/2473)).
+
 ## [21.2.0] - 2026-11-23 - "SEO and Product Engineering Workflows"
 
 AAS adds 76 skills, bringing the catalog to 3,131. This release expands SEO and product engineering coverage and adds Bing results to the Cloro skill.
