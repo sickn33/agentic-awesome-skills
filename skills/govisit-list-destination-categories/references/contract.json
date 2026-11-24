@@ -1,0 +1,81 @@
+{
+  "tool": "list_destination_categories",
+  "contractVersion": "1",
+  "method": "POST",
+  "endpoint": "https://govisit.ai/api/tools/v1/list_destination_categories",
+  "contentType": "application/json",
+  "context": "page",
+  "defaults": {
+    "language": "pagePath",
+    "scope": "page-published"
+  },
+  "inputSchema": {
+    "type": "object",
+    "properties": {
+      "pagePath": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 1000,
+        "description": "Canonical GoVisit page path supplying this tool's published context; no origin, query or fragment."
+      }
+    },
+    "additionalProperties": false,
+    "required": [
+      "pagePath"
+    ]
+  },
+  "outputSchema": {
+    "type": "object",
+    "properties": {
+      "data": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "items",
+          "count"
+        ]
+      }
+    },
+    "required": [
+      "data"
+    ]
+  },
+  "errorSchema": {
+    "type": "object",
+    "properties": {
+      "schemaVersion": {
+        "const": "1"
+      },
+      "completeness": {
+        "enum": [
+          "invalid-input",
+          "not-found",
+          "unavailable"
+        ]
+      },
+      "error": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "schemaVersion",
+      "completeness",
+      "error"
+    ],
+    "additionalProperties": false
+  },
+  "annotations": {
+    "readOnlyHint": true,
+    "untrustedContentHint": true
+  },
+  "sourceDigest": "sha256:d1e56bc603df5552e701ac12614e9f99620b9ca8a11fb99cffb38315b010d697",
+  "version": "1-d1e56bc603df5552"
+}
