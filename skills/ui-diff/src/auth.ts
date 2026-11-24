@@ -1,4 +1,4 @@
-import type { BrowserContext } from 'playwright';
+import type { BrowserContext, Page } from 'playwright';
 import type { AuthConfig } from './config.js';
 import { registerSecret, UiDiffError } from './log.js';
 
@@ -129,23 +129,26 @@ export async function applyAuth(context: BrowserContext, auth: ResolvedAuth | un
     );
     await context.addCookies(cookies);
   }
-  if (Object.keys(auth.headers).length) {
-    await context.route('**/*', async (route) => {
-      const request = route.request();
-      if (!isCredentialOrigin(request.url(), auth.origins)) {
-        await route.fallback();
-        return;
-      }
-      // Fetch only this request. Browser redirects must not inherit injected headers.
-      const response = await route.fetch({
-        headers: { ...await request.allHeaders(), ...auth.headers },
-        maxRedirects: 0,
-      });
-      try {
-        await route.fulfill({ response });
-      } finally {
-        await response.dispose();
-      }
-    });
-  }
+}
+
+export async function applyAuthHeaders(page: Page, auth: ResolvedAuth | undefined): Promise<void> {
+  if (!auth || !Object.keys(auth.headers).length) return;
+  const session = await page.context().newCDPSession(page);
+  session.on('Fetch.requestPaused', async ({ requestId, request }) => {
+    // Chromium applies these header overrides only to this hop, then pauses redirects separately.
+    let headers: Array<{ name: string; value: string }> | undefined;
+    if (isCredentialOrigin(request.url, auth.origins)) {
+      const requestHeaders = Object.fromEntries(
+        Object.entries(request.headers).map(([name, value]) => [name.toLowerCase(), value]),
+      );
+      headers = Object.entries({ ...requestHeaders, ...auth.headers }).map(([name, value]) => ({ name, value }));
+    }
+    try {
+      await session.send('Fetch.continueRequest', { requestId, headers });
+    } catch {
+      // The page may close while a request is paused.
+      await session.send('Fetch.failRequest', { requestId, errorReason: 'Failed' }).catch(() => {});
+    }
+  });
+  await session.send('Fetch.enable', { patterns: [{ urlPattern: 'http*://*', requestStage: 'Request' }] });
 }

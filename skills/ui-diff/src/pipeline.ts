@@ -1399,7 +1399,7 @@ async function recordMotionSide(
   const { cfg } = ctx;
   const context = await session.newContext(ctx.viewport, ctx.theme, { deviceScaleFactor: 1 }, true);
   try {
-    const page = await context.newPage();
+    const page = await session.newPage(context);
     const url = routeUrl(side.url, ctx.route.path, ctx.theme.query);
     const size = page.viewportSize() ?? { width: 1280, height: 800 };
     if (ctx.video) {

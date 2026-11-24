@@ -3,7 +3,7 @@ import { createRequire } from 'node:module';
 import path from 'node:path';
 import { chromium, devices, type Browser, type BrowserContext, type BrowserContextOptions, type Locator, type Page } from 'playwright';
 import { collectFocusOrder, runAxe, type AxeViolation, type FocusStop } from './a11y.js';
-import { applyAuth, type ResolvedAuth } from './auth.js';
+import { applyAuth, applyAuthHeaders, type ResolvedAuth } from './auth.js';
 import { matchMiss, type ComponentRunInfo } from './components.js';
 import type { ComponentState, ResolvedComponent, ResolvedConfig, ResolvedFlow, ResolvedRoute, ThemeConfig, ViewportConfig } from './config.js';
 import { DEV_OVERLAY_SELECTORS, fontState, freezeAnimations, hideCss, initScript, pageHeight, scrollThrough, settleFonts, waitForFontsAndImages, type FontState } from './determinism.js';
@@ -321,6 +321,12 @@ export class CaptureSession {
     return context;
   }
 
+  async newPage(context: BrowserContext): Promise<Page> {
+    const page = await context.newPage();
+    await applyAuthHeaders(page, this.opts.auth);
+    return page;
+  }
+
   /** Measured in the page where it can be: what this capture was rendered with. */
   private async environment(page: Page, target: CaptureTarget, fonts: FontState): Promise<Omit<SideFingerprint, 'commit' | 'data'>> {
     const { cfg } = this.opts;
@@ -522,7 +528,7 @@ export class CaptureSession {
     let context: BrowserContext | undefined;
     try {
       context = await this.newContext(run.viewport, run.theme);
-      const page = await context.newPage();
+      const page = await this.newPage(context);
       page.on('console', (msg) => {
         if (msg.type() === 'error' && consoleErrors.length < 10) consoleErrors.push(redact(msg.text()).slice(0, 300));
       });
@@ -619,7 +625,7 @@ export class CaptureSession {
     let context: BrowserContext | undefined;
     try {
       context = await this.newContext(run.viewport, run.theme);
-      const page = await context.newPage();
+      const page = await this.newPage(context);
       page.on('console', (msg) => {
         if (msg.type() === 'error' && consoleErrors.length < 10) consoleErrors.push(redact(msg.text()).slice(0, 300));
       });
@@ -708,7 +714,7 @@ export class CaptureSession {
     let context: BrowserContext | undefined;
     try {
       context = await this.newContext(target.viewport, target.theme);
-      const page = await context.newPage();
+      const page = await this.newPage(context);
       page.on('console', (msg) => {
         if (msg.type() === 'error' && record.consoleErrors.length < 10) record.consoleErrors.push(redact(msg.text()).slice(0, 300));
       });
