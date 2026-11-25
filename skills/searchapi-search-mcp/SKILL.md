@@ -109,8 +109,10 @@ Look at the other blocks before summarizing: `answer_box`, `knowledge_graph`,
 `inline_videos` often hold the direct answer. `search_information.total_results`
 and `pagination` tell whether a second page is worth it.
 
-Some `link` values are `https://www.google.com/goto?url=…` redirects; cite them as
-returned, they resolve to the target page. A query with no matches is not an error:
+Some `link` values are `https://www.google.com/goto?url=…` redirects whose `url` is
+usually a session token rather than an address; they do not open outside the search
+session. Cite `displayed_link` or `domain` for those, or run the query again. A query
+with no matches is not an error:
 the response carries an `error` message such as "Google didn't return any results."
 and no `organic_results`. Say so and try a broader query or another engine.
 
@@ -189,7 +191,7 @@ arbitrary pages or change local files.
 - Requires an available MCP host connection, network access and a SearchApi account whose plan has requests left.
 - Results reflect what the search engine returned at call time and can be incomplete, regional or stale.
 - Google web search returns at most 10 organic results per page; use `page` for more.
-- Google `link` values can be `google.com/goto` redirects rather than the final URL.
+- Some Google `link` values are `google.com/goto` redirects carrying a session token, not the final URL; they cannot be opened later.
 - The server searches; it does not read, scrape or summarize web pages. Use another connected tool for that.
 - Tool identifiers and parameter schemas come from the host's tool discovery; this skill names tools by the engine they wrap.
 
