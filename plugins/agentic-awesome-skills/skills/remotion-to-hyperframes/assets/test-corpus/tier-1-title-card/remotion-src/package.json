@@ -9,7 +9,7 @@
     "@remotion/cli": "4.0.539",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "remotion": "4.0.539"
+    "remotion": "4.0.540"
   },
   "overrides": {
     "zod": "4.6.6"
