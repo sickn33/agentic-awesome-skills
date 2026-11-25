@@ -8,12 +8,11 @@ today, not a guarantee.
 
 - Each app is its own Kubernetes Deployment and pod, running its own image,
   with its own internal address and, if it has one, its own volume.
-- App pods run on worker machines reserved for apps: the platform's own
-  services run on separate machines, and image builds on separate build
+- App pods run on worker machines labeled for apps, which other
+  workloads may share, and image builds on separate build
   machines.
-- Apps from different keys share worker machines, and so that machine's
-  Linux kernel, as containers on one machine do. There is no per-app
-  virtual machine or kernel sandbox.
+- Apps from different keys share worker machines. On this deployment
+  apps run in a sandbox — `gvisor` by default, or `kata` when the app asks — so they don't share the host's kernel.
 - All apps run in one Kubernetes namespace, alongside the platform's own
   services. The rest of this page is what keeps them apart.
 
@@ -63,7 +62,7 @@ today, not a guarantee.
 ## Storage
 
 - A volume is a block device attached to one app's pod only: no other app
-  can mount it. It survives restarts and sleep.
+  can mount it. It survives restarts, sleep and a zero balance.
 
 ## Builds
 
