@@ -99,7 +99,8 @@ metric | source | value | definition used | as-of | delta vs primary | classific
 
 - Recompute the primary number a second way: sum of daily rows against the aggregate endpoint, or the count query against the length of the list response. Two different query shapes returning the same value is the minimum bar for reporting it.
 - Confirm the period boundary by pulling one adjacent day and checking that the edge records are not double counted or dropped.
-- Test a known-good control where both systems must agree exactly, such as a single order at a known amount. If the control disagrees, the problem is the query, not the business.
+- Cross-check the arithmetic with plain numbers before reporting: every component of the breakdown must sum to the delta, and the delta must return the comparison value when subtracted from the primary. Do the addition explicitly rather than asserting that it ties out. A residual that does not reach zero stays in the output as unexplained; never round it away or relabel it until the parts add up.
+- Test a known-good control where both systems must agree exactly, such as a single order at a known amount, then read which way it fails. Control present in both systems but different: query logic, filters, or join keys. Control absent from one system, or present there with an older as-of time: stale or incomplete source data, so check sync lag and data freshness before touching the query. The two have different fixes, and naming the wrong one sends the user into the wrong system.
 - If the number cannot be reproduced, report the query shapes and both values rather than a single figure.
 - Report when verification is incomplete. "Processor ties to the control order, accounting does not, and I could not read the deferred-revenue schedule" is a usable finding; a confident single number is not.
 
@@ -114,10 +115,13 @@ platform, and accounting.
 
 Expected result (illustrative, not a measured test): a reconciliation table
 naming the processor as primary for cash collected; a composition breakdown
-showing the commerce figure excludes 2,880 of gift-card settlements that the
-processor counts as captured revenue and 0.85 of FX rounding; remaining delta
-0.00 after the breakdown; one reported number with the basis, the as-of time,
-and the breakdown attached.
+over the 3,730 delta (51,940 - 48,210): 3,500 of gift-card settlements that the
+commerce figure excludes but the processor counts as captured revenue, and 230
+of refunds the processor books on the capture date while commerce dates them to
+the prior period. 3,500 + 230 = 3,730, so the residual is 0.00. The gap is 7.2
+percent of the processor total, above the 0.5 percent tolerance, so it is
+reported as a proven composition difference and never as rounding. One reported
+number with the basis, the as-of time, and the breakdown attached.
 ```
 
 ```text
