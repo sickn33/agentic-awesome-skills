@@ -738,6 +738,8 @@ Key source families include:
 
 ### Additional Sources
 
+- **[Camera Prompt Quickcheck](https://github.com/287523023qq-hue/camera-prompt-quickcheck)** — MIT-licensed local linter for camera motion in AI video prompts, with an optional browser playground. Submitted by the upstream maintainer.
+
 - **[Product Metrics](https://github.com/product-metrics/skills)** — MIT skills for conversion tracking and profit-based advertising. The hosted OAuth MCP requires an account and some features require a subscription. Submitted by the Product Metrics team.
 - **[Fair Value Calculator](https://github.com/petz00711/fair-value-calculator-mcp)** — CC BY 4.0 skill for model-based stock valuation and comparisons. The hosted MCP uses OAuth and offers limited free access and a paid subscription. Submitted by a member of the Fair Value Calculator team.
 - **[PersonaXpand](https://github.com/hayat-nextoriainfotech/social-media-skills)** — MIT skills for drafting replies, triaging messages, and planning posts from supplied text. Sending or posting requires the hosted connector and approval of the exact text. Submitted by the Nextoria team.
