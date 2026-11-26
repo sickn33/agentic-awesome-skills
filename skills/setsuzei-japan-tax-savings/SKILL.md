@@ -36,7 +36,7 @@ Scope: tax year 2026 (Reiwa 8) income tax and the fiscal 2027 resident tax that 
 
 ### 1. Establish the inputs
 
-Ask for yearly projected amounts in yen. Start with the required items and treat unknown optional items as 0.
+Ask for yearly projected amounts in yen. Start with the required items. If the user leaves optional inputs unspecified, identify the assumptions or defaults that affect the estimate. Never infer eligibility or a municipality-specific rate.
 
 Required:
 
@@ -70,10 +70,10 @@ cd "$HOME/.cache/setsuzei" && npm ci --ignore-scripts && npm run build
 
 ### 3. Perform the task
 
-Pass the inputs as JSON on standard input and read JSON back:
+Pass the inputs as JSON on standard input through a process API. Do not put real user figures in shell commands, shell history, or files. The following shell example uses synthetic values only:
 
 ```bash
-echo '{"businessRevenue":8000000,"businessExpenses":1500000,"blueReturn":"65","socialInsurance":900000,"idecoPaid":276000,"furusatoPaid":30000}' \
+echo '{"businessRevenue":8000000,"businessExpenses":1500000,"businessIncomeType":"business","blueReturn":"65","socialInsurance":900000,"idecoPaid":276000,"furusatoPaid":30000}' \
   | node "$HOME/.cache/setsuzei/dist/cli.js" --input - --json
 ```
 
@@ -85,16 +85,16 @@ Read the result from these fields:
 | --- | --- |
 | Current income tax / resident tax / total | `baseline.incomeTax.total` / `baseline.residentTax.total` / `baseline.totalTax` |
 | Furusato nozei limit and remaining room | `measures.furusato.limit` / `.remaining` |
-| iDeCo remaining room and saving | `measures.ideco.remaining` / `.saving` |
-| Mutual aid remaining room and saving | `measures.kyosai.remaining` / `.saving` |
+| iDeCo remaining room and saving | `measures.ideco.remaining` / `.saving.total` |
+| Mutual aid remaining room and saving | `measures.kyosai.remaining` / `.saving.total` |
 | Tax for each blue-return level | `measures.blueReturn.options[]` |
-| Saving if furusato nozei, iDeCo and mutual aid are all done | `measures.combined.saving` |
+| Saving if furusato nozei, iDeCo and mutual aid are all done | `measures.combined.saving.total` |
 | Why a measure was not computed | `applicable: false` and `notes` on that measure |
 | Input-dependent cautions | `warnings` |
 
 ### 4. Verify the result and report
 
-- Quote amounts only from the CLI output. Do not add, prorate, or round them yourself; use `measures.combined.saving` for the combined total, because the per-measure savings do not add up.
+- Quote amounts only from the CLI output. Do not add, prorate, or round them yourself; use `measures.combined.saving.total` for the combined total, because the per-measure savings do not add up.
 - Report the current tax, then each measure as "pay this much more, tax falls by this much", including every item in that measure's `notes`.
 - Say that iDeCo and mutual aid money is locked up long-term, and that raising them lowers the furusato nozei limit (`measures.furusato.limitAfterOtherMeasures`).
 - End every answer by saying the figures are estimates and do not replace a tax accountant, the tax office, or the municipality.
@@ -103,7 +103,7 @@ Read the result from these fields:
 
 ```text
 User request: 今年あといくら節税できる？ フリーランスで売上800万、経費150万、青色65万、社会保険料90万、iDeCo 27.6万、ふるさと納税3万済み。
-Inputs: {"businessRevenue":8000000,"businessExpenses":1500000,"blueReturn":"65","socialInsurance":900000,"idecoPaid":276000,"furusatoPaid":30000}
+Inputs: {"businessRevenue":8000000,"businessExpenses":1500000,"businessIncomeType":"business","blueReturn":"65","socialInsurance":900000,"idecoPaid":276000,"furusatoPaid":30000}
 Expected result: current tax 780,000 yen (income tax 375,400 + resident tax 404,600); furusato nozei limit 123,000 yen with 93,000 remaining; iDeCo saving 164,300 yen for 540,000 more; mutual aid saving 241,700 yen for 840,000 more; all three together 393,800 yen. These are the CLI's outputs for this input at the pinned commit.
 ```
 
