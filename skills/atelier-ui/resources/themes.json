@@ -1,0 +1,184 @@
+{
+  "themes": [
+    {
+      "id": "editorial-stone",
+      "fit": ["place", "service", "product"],
+      "vibe": "Warm print editorial with crisp ink contrast and generous measure",
+      "tokens": {
+        "--bg": "#F6F4EF",
+        "--surface": "#ECE8DF",
+        "--ink": "#181715",
+        "--muted": "#5C5852",
+        "--accent": "#B84A27",
+        "--accent-ink": "#FFFFFF",
+        "--border": "#D8D2C7"
+      },
+      "fonts": {
+        "display": "Instrument Serif, Georgia, serif",
+        "body": "Plus Jakarta Sans, system-ui, sans-serif",
+        "mono": "JetBrains Mono, monospace"
+      },
+      "weights": {
+        "display": [400],
+        "body": [400, 500, 600, 700]
+      },
+      "radius": "4px",
+      "surface": {
+        "elevation": "1px solid var(--border)",
+        "shadow": "0 1px 2px rgba(24, 23, 21, 0.05)",
+        "ease": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "focusRing": "2px solid var(--accent)"
+      }
+    },
+    {
+      "id": "swiss-atelier",
+      "fit": ["software", "tech", "service"],
+      "vibe": "High-clarity Swiss grid, cool paper surface, single vermilion signal",
+      "tokens": {
+        "--bg": "#F8F9FA",
+        "--surface": "#FFFFFF",
+        "--ink": "#111315",
+        "--muted": "#5A6068",
+        "--accent": "#D9381E",
+        "--accent-ink": "#FFFFFF",
+        "--border": "#E1E4E8"
+      },
+      "fonts": {
+        "display": "Space Grotesk, system-ui, sans-serif",
+        "body": "DM Sans, system-ui, sans-serif",
+        "mono": "IBM Plex Mono, monospace"
+      },
+      "weights": {
+        "display": [500, 700],
+        "body": [400, 500, 600]
+      },
+      "radius": "6px",
+      "surface": {
+        "elevation": "1px solid var(--border)",
+        "shadow": "0 1px 3px rgba(17, 19, 21, 0.06)",
+        "ease": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+        "focusRing": "2px solid var(--accent)"
+      }
+    },
+    {
+      "id": "obsidian-copper",
+      "fit": ["software", "gaming", "tech"],
+      "vibe": "Deep charcoal technical canvas with warm copper highlight (zero purple)",
+      "tokens": {
+        "--bg": "#0F1012",
+        "--surface": "#181A1E",
+        "--ink": "#F2F0EC",
+        "--muted": "#9CA0A8",
+        "--accent": "#E07A48",
+        "--accent-ink": "#0F1012",
+        "--border": "#2A2D34"
+      },
+      "fonts": {
+        "display": "Syne, system-ui, sans-serif",
+        "body": "Manrope, system-ui, sans-serif",
+        "mono": "JetBrains Mono, monospace"
+      },
+      "weights": {
+        "display": [600, 700],
+        "body": [400, 500, 600]
+      },
+      "radius": "8px",
+      "surface": {
+        "elevation": "1px solid var(--border)",
+        "shadow": "inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 8px 24px rgba(0, 0, 0, 0.35)",
+        "ease": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "focusRing": "2px solid var(--accent)"
+      }
+    },
+    {
+      "id": "botanical-linen",
+      "fit": ["place", "product", "service"],
+      "vibe": "Calm natural daylight palette for hospitality, makers, and wellness",
+      "tokens": {
+        "--bg": "#FAF8F3",
+        "--surface": "#F0EDE4",
+        "--ink": "#1E261E",
+        "--muted": "#576256",
+        "--accent": "#2E5A3A",
+        "--accent-ink": "#FAF8F3",
+        "--border": "#DCE0D7"
+      },
+      "fonts": {
+        "display": "Fraunces, Georgia, serif",
+        "body": "Work Sans, system-ui, sans-serif",
+        "mono": "IBM Plex Mono, monospace"
+      },
+      "weights": {
+        "display": [500, 700],
+        "body": [400, 500, 600]
+      },
+      "radius": "2px",
+      "surface": {
+        "elevation": "1px solid var(--border)",
+        "shadow": "0 1px 2px rgba(30, 38, 30, 0.04)",
+        "ease": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "focusRing": "2px solid var(--accent)"
+      }
+    },
+    {
+      "id": "cobalt-draft",
+      "fit": ["software", "tech", "gaming"],
+      "vibe": "Architectural blueprint precision with cobalt signal and crisp hairlines",
+      "tokens": {
+        "--bg": "#F4F6F9",
+        "--surface": "#FFFFFF",
+        "--ink": "#0D1526",
+        "--muted": "#52607A",
+        "--accent": "#1D4ED8",
+        "--accent-ink": "#FFFFFF",
+        "--border": "#DCE2EC"
+      },
+      "fonts": {
+        "display": "Bricolage Grotesque, system-ui, sans-serif",
+        "body": "Public Sans, system-ui, sans-serif",
+        "mono": "JetBrains Mono, monospace"
+      },
+      "weights": {
+        "display": [600, 700],
+        "body": [400, 500, 600]
+      },
+      "radius": "6px",
+      "surface": {
+        "elevation": "1px solid var(--border)",
+        "shadow": "0 1px 3px rgba(13, 21, 38, 0.07)",
+        "ease": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+        "focusRing": "2px solid var(--accent)"
+      }
+    },
+    {
+      "id": "carbon-crimson",
+      "fit": ["gaming", "tech", "software"],
+      "vibe": "Dark obsidian theater ground with sharp crimson action signal",
+      "tokens": {
+        "--bg": "#0D0E11",
+        "--surface": "#16181D",
+        "--ink": "#F3F4F6",
+        "--muted": "#9AA2B1",
+        "--accent": "#C81E3A",
+        "--accent-ink": "#FFFFFF",
+        "--border": "#272B34"
+      },
+      "fonts": {
+        "display": "Bebas Neue, system-ui, sans-serif",
+        "body": "Plus Jakarta Sans, system-ui, sans-serif",
+        "mono": "JetBrains Mono, monospace"
+      },
+      "weights": {
+        "display": [400],
+        "body": [400, 500, 600, 700]
+      },
+      "radius": "4px",
+      "surface": {
+        "elevation": "1px solid var(--border)",
+        "shadow": "inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 10px 28px rgba(0, 0, 0, 0.45)",
+        "ease": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "focusRing": "2px solid var(--accent)"
+      }
+    }
+  ]
+}
