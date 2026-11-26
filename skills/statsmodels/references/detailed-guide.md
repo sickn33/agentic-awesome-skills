@@ -39,8 +39,13 @@ print(f"Coefficients:\\n{results.params}")
 print(f"P-values:\\n{results.pvalues}")
 
 # Predictions with confidence intervals
-X_new_design = sm.add_constant(X_new, has_constant="add").reindex(columns=X.columns)
+X_new_design = sm.add_constant(X_new, has_constant="add")
 # Reject missing/extra columns rather than silently accept incompatible features.
+# (reindex would fill missing columns with NaN and drop extras without an error.)
+mismatch = set(X_new_design.columns) ^ set(X.columns)
+if mismatch:
+    raise ValueError(f"Prediction columns differ from the training design: {sorted(mismatch)}")
+X_new_design = X_new_design[X.columns]  # same column order as training
 predictions = results.get_prediction(X_new_design)
 pred_summary = predictions.summary_frame()
 print(pred_summary)  # includes mean, CI, prediction intervals
