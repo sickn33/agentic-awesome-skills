@@ -49,11 +49,11 @@ Nearby skills write the text (`linkedin-post-writer`, `boring-marketing-social-c
 3. Media: pass public https links in `mediaUrls`. For a local file, call `get_upload_url`, upload the bytes with HTTP PUT, then call `complete_media`. Instagram, TikTok and YouTube need media before scheduling.
 4. Per-network options go in `platformSettings`, for example `{"youtube": {"privacy": "unlisted"}}`. The schema is strict: a mistyped platform or key returns a validation error.
 
-Confirmation point: show the user the final text, the accounts and the time with its timezone, and wait for an explicit yes before any `create_post` that schedules or publishes, and before `update_post` or `delete_post` on a scheduled post. Saving a draft does not need this step.
+Confirmation point: show the user the final text, the accounts and the time with its timezone, and wait for an explicit yes before any `create_post` that schedules or publishes, and before any `update_post` or `delete_post`. For an edit or deletion, show the exact post and the requested change or removal; deleting a group can remove its posts across platforms. Saving a draft does not need this step.
 
 ### 3. Verify the result
 
-Call `get_post` with the `postGroupId` and report the status per account. If a call fails or its response is lost, check `get_post` or `list_posts` before sending the post again, so it does not go out twice. Statistics: `post_stats` with the `postedId` from `get_post`, and `profile_stats` for follower and post counts (Instagram, Threads, Mastodon and Bluesky).
+Call `get_post` with the `postGroupId` and report the status per account. If a call fails or its response is lost, check `get_post` or `list_posts` before sending the post again, so it does not go out twice. For published Mastodon or Bluesky posts, use `post_stats` with the `postedId` from `get_post`, or call `profile_stats` for account counts. Check the account's analytics plan before using these tools.
 
 ## Platform rules
 
@@ -105,6 +105,6 @@ Expected result: a draft postGroupId; nothing is published.
 
 ## Sources and related skills
 
-- Publora MCP server and tools: https://docs.publora.com
+- Publora MCP server and tools: https://docs.publora.com/guides/mcp-server
 - Publora skills for each network (MIT): https://github.com/publora/skills
 - Related: `linkedin-post-writer`, `boring-marketing-social-content`, `post`
