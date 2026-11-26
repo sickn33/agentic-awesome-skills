@@ -1,6 +1,6 @@
 ---
 name: generate-nanobanana
-description: "Generate and edit images, video, storyboards, code visuals, and studio prompts with Google's Gemini media & reasoning models (Nano Banana 2.1/Pro/Lite, Gemini Omni 1.2 Flash, Gemini 4 Carbon/Argon/Neon/Hydrogen), with offline schema validation, cost-approval gates, and sidecar logs."
+description: "Nano Banana skill to generate and edit images, video, storyboards, code visuals, and studio prompts with Google's Gemini models (Nano Banana 2.1/Pro/Lite, Gemini Omni 1.2 Flash, Gemini 4 Carbon/Argon/Neon/Hydrogen), with offline schema validation, cost-approval gates, and sidecar logs."
 category: media
 risk: critical
 source: community
@@ -8,23 +8,24 @@ source_repo: AntonioCardenas/generate-nanobanana
 source_type: community
 date_added: "2026-08-04"
 author: antonio
-tags: [nanobanana, gemini, gemini-4, gemini-4-carbon, gemini-4-argon, gemini-4-neon, gemini-4-hydrogen, google-ai-studio, image-generation, video-generation]
+tags: [nanobanana, nanobanana-skill, nano-banana, nano-banana-pro, pro-nano-banana, nano-banana-image, image-nano-banana, gemini, gemini-4, gemini-4-carbon, gemini-4-argon, gemini-4-neon, gemini-4-hydrogen, google-ai-studio, image-generation, video-generation]
 tools: [claude, cursor, gemini, codex, antigravity]
 license: "MIT"
 license_source: "https://github.com/AntonioCardenas/generate-nanobanana/blob/main/LICENSE"
 ---
 
-# Generate Nanobanana
+# Generate Nanobanana — Nano Banana Skill
 
 ## Overview
 
-`generate-nanobanana` calls Google's Gemini media and frontier reasoning models directly through the Gemini Interactions API — no third-party routing layer — to generate and edit images, video, 2D-to-3D translations, localized graphics, storyboards, and code visuals (`SVG`, `Three.js`, `GLSL` shaders). It architects natural-language studio prompts with `WHY THESE CHOICES` rationale (including a `$0.00` `/generate prompt` mode), validates request payloads and magic-byte MIME types offline before quoting, gates every paid call behind explicit user approval, enforces bounded polling deadlines and verified `generativelanguage.googleapis.com` `files/<id>` URIs, and writes a JSON sidecar next to every output recording the exact prompt, model, response ID, and cost. It describes a `/generate` workflow; this docs-only distribution does not register a command or include a runner.
+`generate-nanobanana` (the Nano Banana skill, published upstream as `nanobanana-skill`) calls Google's Gemini media and frontier reasoning models directly through the Gemini Interactions API — no third-party routing layer — to generate and edit images, video, 2D-to-3D translations, localized graphics, storyboards, and code visuals (`SVG`, `Three.js`, `GLSL` shaders). It architects natural-language studio prompts with `WHY THESE CHOICES` rationale (including a `$0.00` `/generate prompt` mode), validates request payloads and magic-byte MIME types offline before quoting, gates every paid call behind explicit user approval, enforces bounded polling deadlines and verified `generativelanguage.googleapis.com` `files/<id>` URIs, and writes a JSON sidecar next to every output recording the exact prompt, model, response ID, and cost. It describes a `/generate` workflow; this docs-only distribution does not register a command or include a runner.
 
 This skill adapts the workflow (prompt architecture, model routing, reference-image handling, offline validation fixtures, sidecar logging) from [AntonioCardenas/generate-nanobanana](https://github.com/AntonioCardenas/generate-nanobanana). Re-verify model IDs, request contracts, and live pricing against the [Gemini API docs](https://ai.google.dev/gemini-api/docs/image-generation) linked in each reference file.
 
 ## When to Use This Skill
 
 - Use when the user asks to generate, create, localize, or make an image, video, storyboard, or code visual (`SVG`, `Three.js`, shader), or wants a thumbnail.
+- Use when the user asks for a Nano Banana, Nano Banana Pro ("pro nano banana"), or "image nano banana" render, even without naming a model ID.
 - Use when the user wants an optimized zero-cost studio prompt (`/generate prompt`), wants to convert a 2D sketch/floor plan/wireframe into a 3D render or high-fidelity comp, or wants to translate in-image text across languages.
 - Use when the user wants to animate a still image, extend a video clip up to 30 seconds, or says "generate on brand" or "generate from reference".
 - Use when the user wants to link or import a folder of reference images (logos, faces, product shots) for reuse across generations, or invokes `/generate` / `/generate frf <set>`.
