@@ -5,10 +5,11 @@ dollar. All prices below already include the platform margin.
 
 ## How billing works
 
-- **Billed per second, only while the container is running.** An app with
-  no traffic scales to zero after its idle timeout (15 minutes by
-  default, see SKILL.md section 4) and costs nothing until the next request
-  starts it again.
+- **Billed per second, only while the container is running.** An app
+  sleeps after `sleepAfterMinutes` without requests (15 by default, see
+  SKILL.md section 1) and costs nothing until the next request wakes it,
+  unless it was deployed with `"alwaysOn": true`: that one runs, and is
+  billed, around the clock.
 - **Price per second = CPU + memory + a flat fee**, charged at the size you
   *reserved*, not what the app happens to use:
 
@@ -26,6 +27,13 @@ dollar. All prices below already include the platform margin.
 - **Custom domains** cost $0.01 per active domain per day, billed
   hourly (see SKILL.md section 4).
 - **Persistent volumes** are not billed.
+- **The GPU** (`gpu`, below) is an NVIDIA RTX 4060: a flat
+  $2.73 an hour while the app runs, its CPU and memory
+  included. Deploy with `"gpu": true` (and no `cpuCores`/`memoryGb`) to get it
+  whole. It's exclusive: while one app holds it, a second GPU app gets `409`
+  (`gpu_busy`) until the first sleeps, so let yours sleep when idle too — and
+  a GPU app has no replicas. The machine has the NVIDIA driver; build
+  `FROM` an image with CUDA, such as `nvidia/cuda` or `pytorch/pytorch`.
 
 ## Sizes
 
@@ -41,6 +49,7 @@ Month = 730 hours, year = 8,760 hours, running the whole time.
 | `small` | `"cpuCores": 0.5, "memoryGb": 1` | 0.5 | 1 GB | $0.00000824 | $0.0297 | $21.66 | $259.87 |
 | `medium` | `"cpuCores": 1, "memoryGb": 2` | 1 | 2 GB | $0.00001481 | $0.0533 | $38.93 | $467.17 |
 | `large` | `"cpuCores": 2, "memoryGb": 4` | 2 | 4 GB | $0.00002796 | $0.1007 | $73.48 | $881.78 |
+| `gpu` | `"gpu": true` | 15, and the GPU | 31 GB | $0.00075833 | $2.7300 | $1992.90 | $23914.80 |
 
 ### `shared`: memory and CPU on demand
 
@@ -64,18 +73,20 @@ always there, and it's never restarted to make room for another app.
 
 ## What a year costs by usage
 
-Includes the idle timeout after each period of use (15 minutes by default),
-since the container keeps running until it expires.
+Includes the 15 minutes (the default `sleepAfterMinutes`) the container keeps
+running after each period of use, before it sleeps.
 
-| Usage | Billed hours/year | `shared` | `small` | `medium` | `large` |
-|---|---|---|---|---|---|
-| Always on | 8,760 | $94.03 | $259.87 | $467.17 | $881.78 |
-| 8 h/day, weekdays only | 2,145 | $23.02 | $63.63 | $114.39 | $215.92 |
-| 1 h/day | 456 | $4.90 | $13.53 | $24.33 | $45.93 |
+| Usage | Billed hours/year | `shared` | `small` | `medium` | `large` | `gpu` |
+|---|---|---|---|---|---|---|
+| Always on | 8,760 | $94.03 | $259.87 | $467.17 | $881.78 | $23914.80 |
+| 8 h/day, weekdays only | 2,145 | $23.02 | $63.63 | $114.39 | $215.92 | $5855.85 |
+| 1 h/day | 456 | $4.90 | $13.53 | $24.33 | $45.93 | $1245.56 |
 
 Anything that keeps sending requests (uptime monitors, crawlers, a page
-that polls) keeps the container running and billed. The idle timeout can
-be changed per key, or set to never (`0`) for an always-on container, see
-SKILL.md section 4.
+that polls) keeps the container running and billed. Each app chooses:
+`"alwaysOn": true` for the "Always on" row, or a `sleepAfterMinutes` of its
+own. A bot that wakes every hour (`"wakeEveryMinutes": 60`) and sleeps after
+5 minutes (`"sleepAfterMinutes": 5`) runs about 730 hours a year. See
+SKILL.md section 1.
 
 Current rates are also available as JSON at `GET https://cloudish.ai/api/v1/pricing`.

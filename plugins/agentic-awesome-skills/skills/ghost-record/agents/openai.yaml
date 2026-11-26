@@ -1,0 +1,5 @@
+interface:
+  display_name: Ghost Record
+  short_description: Record a replayable React interaction
+policy:
+  allow_implicit_invocation: false

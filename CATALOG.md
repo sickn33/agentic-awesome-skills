@@ -1,8 +1,8 @@
 # Skill Catalog
 
-Generated at: 2026-11-24T09:55:19.000Z
+Generated at: 2026-11-26T18:50:23.000Z
 
-Total skills: 3137
+Total skills: 3151
 
 ## agent-behavior (5)
 
@@ -580,7 +580,7 @@ Total skills: 3137
 | `skyvern-browser-automation` | AI-powered browser automation — navigate sites, fill forms, extract structured data, log in with stored credentials, and build reusable workflows. | safe | Skyvern-AI/skyvern | browser-automation, mcp, web-scraping, form-filling, ai-agents, workflow-automation | browser-automation, mcp, web-scraping, form-filling, ai-agents, workflow-automation, skyvern, browser, automation, ai, powered, navigate |
 | `specstream-browser-sessions` | Open, drive and release a hosted SpecStream browser session over CDP (Playwright, Puppeteer) or one REST action at a time, with domain limits and per-second ... | critical | self | browser-automation, cdp, playwright, puppeteer, hosted-browser, api | browser-automation, cdp, playwright, puppeteer, hosted-browser, api, specstream, browser, sessions, open, drive, release |
 
-## business (185)
+## business (186)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -618,6 +618,7 @@ Total skills: 3137
 | `contract-document-renewal` | Contract register: counterparty, owner, start and end dates, auto-renewal flag, renewal notice deadline, value and tax basis. Use for renewal tracking and no... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, protect | sme, business, operations, database, csv, notion, sql, protect, contract, document, renewal, register |
 | `course-upskilling-requests` | Training request register: course, provider, cost, duration, budget line, the three approval steps, service bond and completion evidence. Use for upskilling ... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, develop | sme, business, operations, database, csv, notion, sql, develop, course, upskilling, requests, training |
 | `credit-cycle-analysis` | Debtor and creditor credit-cycle analysis: weighted collection or payment days, ageing buckets, credit limit utilisation and gap against benchmark. Use for w... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, accounting, audit, finance, database, csv, notion, sql, working-capital, receivables, payables, aging | sme, accounting, audit, finance, database, csv, notion, sql, working-capital, receivables, payables, aging |
+| `cross-source-metric-reconciliation` | Use when two systems report different values for the same business metric and you must decide which number to trust, explain the gap, and present one figure ... | safe | self | analytics, reconciliation, metrics, business-intelligence, data-quality | analytics, reconciliation, metrics, business-intelligence, data-quality, cross, source, metric, two, report, different, values |
 | `crossframe-org` | Use when CrossFrame Suite routes explicit Chinese analysis of teams, projects, organizations, responsibility chains, feedback write-back, repair, or retrospe... | safe | xi-kari/crossframe-skill | crossframe, chinese, organization, retrospective, repair | crossframe, chinese, organization, retrospective, repair, org, suite, routes, explicit, analysis, teams, organizations |
 | `csv-manual-export` | CSV Manual Export: a UTF-8 CSV template from a confirmed field list, empty by default, with no invented columns or values. Use for an import, staging or hand... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | csv, export, import, template, operations, data, helper | csv, export, import, template, operations, data, helper, manual, utf, confirmed, field, list |
 | `culture-retention` | Employee survey and retention register: engagement, growth, happiness, work-life balance and manager-relationship scores, key concern and retention risk. Use... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, engage | sme, business, operations, database, csv, notion, sql, engage, culture, retention, employee, survey |
@@ -1021,12 +1022,13 @@ Total skills: 3137
 | --- | --- | --- | --- | --- | --- |
 | `viboscope` | Psychological compatibility matching — find cofounders, collaborators, and friends with explicit consent and unverified provider scoring | safe | community | matching, psychology, compatibility, networking, collaboration | matching, psychology, compatibility, networking, collaboration, viboscope, psychological, find, cofounders, collaborators, friends, explicit |
 
-## communication (2)
+## communication (3)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `a4a` | Connect your AI agent to the A4A end-to-end encrypted agent-to-agent messaging network via local MCP tools or Python SDK. | critical | a4a-network/a4a | a4a, mcp, e2ee, agent-communication, messaging | a4a, mcp, e2ee, agent-communication, messaging, connect, ai, agent, encrypted, network, via, local |
 | `cooper-email` | Give an AI agent its own email inbox with Cooper Email: send, receive, reply, and wait for replies or verification codes over MCP or HTTP. | critical | cooper-email/cooper-email | email, inbox, agents, mcp, otp | email, inbox, agents, mcp, otp, cooper, give, ai, agent, own, send, receive |
+| `dopamine-talk` | Cut file-path recaps, trailing hedging disclaimers, boilerplate padding, and unasked critic-gates from coding agent replies. Use for direct explanations or a... | none | AnnenkovLabs/dopamine-talk | communication, prompt-engineering, developer-experience, writing | communication, prompt-engineering, developer-experience, writing, dopamine, talk, cut, file, path, recaps, trailing, hedging |
 
 ## competitor analysis (9)
 
@@ -1183,7 +1185,7 @@ Total skills: 3137
 | `liuguang-banlan-ui` | Builds two parameterized UI modes—流光溢彩白 (iridescent white) and 五彩斑斓黑 (colorful black)—with OKLCH, WebGL/CSS fallback, vision gating, screenshot QA, and total... | critical | self | ui, frontend, oklch, webgl, accessibility | ui, frontend, oklch, webgl, accessibility, liuguang, banlan, two, parameterized, modes, iridescent, white |
 | `modellix` | Integrate the Modellix API/CLI for async AI image, video, and speech generation or transcription (model run --wait, task download). | critical | Modellix/modellix-plugin | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api | image-generation, video-generation, audio-generation, text-to-speech, speech-to-text, speech-to-speech, modellix, cli, api, integrate, async, ai |
 
-## data (61)
+## data (62)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1209,6 +1211,7 @@ Total skills: 3137
 | `footval-stats-and-transfer-news` | Football season leaderboards and transfer news from FootVal: top scorers, assists, minutes and appearances per competition, plus confirmed transfers and rumo... | safe | target1m/footval-mcp | footval, football, soccer, statistics, transfer-news, mcp | footval, football, soccer, statistics, transfer-news, mcp, stats, transfer, news, season, leaderboards, top |
 | `footval-value-and-compare-players` | Explain what a footballer is worth with FootVal: its own transfer value next to the market value, the factors behind the gap, and comparisons of two to four ... | safe | target1m/footval-mcp | footval, football, soccer, player-valuation, transfer-value, mcp | footval, football, soccer, player-valuation, transfer-value, mcp, value, compare, players, explain, what, footballer |
 | `glasser` | Search, inspect, and run third-party data APIs through one CLI when the environment has no suitable integration. | critical | self | api, data, search, enrichment, marketing, research, cli | api, data, search, enrichment, marketing, research, cli, glasser, inspect, run, third, party |
+| `gridpin-offline-geocoding` | Geocode or reverse-geocode addresses locally with the gridpin CLI: no API key, addresses stay on the machine. Use for one address or a CSV in a covered country. | critical | gridpin/gridpin | geocoding, reverse-geocoding, addresses, offline, privacy, csv | geocoding, reverse-geocoding, addresses, offline, privacy, csv, gridpin, geocode, reverse, locally, cli, no |
 | `huggingface-datasets` | Use this skill for Hugging Face Dataset Viewer API workflows that fetch subset/split metadata, paginate rows, search text, apply filters, download parquet UR... | unknown | huggingface/skills | huggingface, datasets | huggingface, datasets, skill, hugging, face, dataset, viewer, api, fetch, subset, split, metadata |
 | `invokely-statistics` | Use Invokely MCP to find official statistics, retrieve values and series, compare or rank places, and report each figure with its period, unit, and source ci... | safe | estevecastells/awesome-copilot | invokely, mcp, statistics, official-data, citations | invokely, mcp, statistics, official-data, citations, find, official, retrieve, values, series, compare, rank |
 | `looot` | Search, price and run 2,500+ data API endpoints (work emails, company search, SERP, web pages) from one prepaid balance via the looot MCP server. | critical | loootai/looot-skills | data-api, enrichment, email-finder, seo, mcp | data-api, enrichment, email-finder, seo, mcp, looot, search, price, run, 500, data, api |
@@ -1478,7 +1481,7 @@ Total skills: 3137
 | `skill-porter` | Preview conservative tool-name translations and copy complete local skill bundles for manual adaptation to Google Antigravity. | critical | Pranav-Nexus/antigravity-skill-porter | antigravity, claude, skills, migration, agent | antigravity, claude, skills, migration, agent, skill, porter, preview, conservative, name, translations, copy |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (301)
+## development (305)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1608,6 +1611,7 @@ Total skills: 3137
 | `framework-migration-legacy-modernize` | Orchestrate a comprehensive legacy system modernization using the strangler fig pattern, enabling gradual replacement of outdated components while maintainin... | critical | community | framework, migration, legacy, modernize | framework, migration, legacy, modernize, orchestrate, modernization, strangler, fig, enabling, gradual, replacement, outdated |
 | `gdb-cli` | GDB debugging assistant for AI agents - analyze core dumps, debug live processes, investigate crashes and deadlocks with source code correlation | critical | community | debugging, gdb, core-dump, crash-analysis, c++, c | debugging, gdb, core-dump, crash-analysis, c++, c, cli, assistant, ai, agents, analyze, core |
 | `gemini-agents` | 'Ask Gemini', 'have Gemini build or review this': Google's Antigravity CLI as a partner. It may break Google's terms on a consumer plan, so the user agrees f... | critical | phuryn/product-engineering | gemini, agents | gemini, agents, ask, review, google, antigravity, cli, partner, may, break, terms, consumer |
+| `ghost-record` | Record a React component interaction as a replayable Ghost Cursor demo. Use only when the user explicitly invokes ghost-record. | critical | imuratalpay/ghost-cursor | ghost, record | ghost, record, react, component, interaction, replayable, cursor, demo, user, explicitly, invokes |
 | `git-commit-message` | Generates conventional-commit messages from staged changes: type prefix + English imperative subject (≤50 chars) + optional body explaining why. Use when the... | safe | alapha888/agent-skills-en | git, commit-messages, conventional-commits | git, commit-messages, conventional-commits, commit, message, generates, conventional, messages, staged, changes, type, prefix |
 | `global-chat-agent-discovery` | Discover and compare MCP servers and AI agents using Global Chat's cross-protocol directory and MCP server. | safe | pumanitro/global-chat | mcp, ai-agents, agent-discovery, agents-txt, a2a, developer-tools | mcp, ai-agents, agent-discovery, agents-txt, a2a, developer-tools, global, chat, agent, discovery, discover, compare |
 | `go-concurrency-patterns` | Master Go concurrency with goroutines, channels, sync primitives, and context. Use when building concurrent Go applications, implementing worker pools, or de... | safe | community | go, concurrency | go, concurrency, goroutines, channels, sync, primitives, context, building, concurrent, applications, implementing, worker |
@@ -1688,6 +1692,7 @@ Total skills: 3137
 | `native-data-fetching` | Use when implementing or debugging ANY network request, API call, or data fetching. Covers fetch API, React Query, SWR, error handling, caching, offline supp... | critical | expo/skills | native, data, fetching | native, data, fetching, implementing, debugging, any, network, request, api, call, covers, fetch |
 | `nerdzao-elite` | Software engineering and product design workflow and Senior Product Designer. Full workflow with planning, architecture, TDD, clean code, and pixel-perfect U... | safe | community | nerdzao, elite | nerdzao, elite, software, engineering, product, senior, designer, full, planning, architecture, tdd, clean |
 | `nerdzao-elite-gemini-high` | Modo Elite Coder + UX Pixel-Perfect otimizado especificamente para Gemini 3.1 Pro High. Workflow completo com foco em qualidade máxima e eficiência de tokens. | safe | community | nerdzao, elite, gemini, high | nerdzao, elite, gemini, high, modo, coder, ux, pixel, perfect, otimizado, especificamente, para |
+| `nia-teams-agent-bridge` | Connect local coding agents (Claude Code, Codex, WorkBuddy, Doubao, Antigravity, Droid, Pi, DSH) to a Nia Teams GroupChat for two-way collaboration. | critical | nia-teams/agent-bridge | nia-teams, agent-bridge, claude-code, codex, workbuddy, doubao, droid, pi, coding-agents, group-chat | nia-teams, agent-bridge, claude-code, codex, workbuddy, doubao, droid, pi, coding-agents, group-chat, nia, teams |
 | `nx-workspace-patterns` | Configure and optimize Nx monorepo workspaces. Use when setting up Nx, configuring project boundaries, optimizing build caching, or implementing affected com... | critical | community | nx, workspace | nx, workspace, configure, optimize, monorepo, workspaces, setting, up, configuring, boundaries, optimizing, caching |
 | `obsess` | Perfectionist mode for one target: checked attempts on a UI detail or hot path, keeps the best version, stops on a budget. Only on explicit /obsess. | critical | UmarSiddiqui/obsess | polish, ui, performance, verification, refactoring | polish, ui, performance, verification, refactoring, obsess, perfectionist, mode, one, target, checked, attempts |
 | `ontoly-software-graph` | Use Ontoly's deterministic Software Graph, MCP server, and agent skills for architecture review, request tracing, impact analysis, and dependency analysis. | critical | 0xsarwagya/ontoly | software-graph, codebase-analysis, mcp, typescript, architecture, impact-analysis | software-graph, codebase-analysis, mcp, typescript, architecture, impact-analysis, ontoly, software, graph, deterministic, server, agent |
@@ -1707,6 +1712,7 @@ Total skills: 3137
 | `posix-shell-pro` | Expert in strict POSIX sh scripting for maximum portability across Unix-like systems. Specializes in shell scripts that run on any POSIX-compliant shell (das... | critical | community | posix, shell | posix, shell, pro, strict, sh, scripting, maximum, portability, unix, like, specializes, scripts |
 | `product-analytics` | Adding analytics, session recordings, heatmaps, 'what did users do', Clarity or PostHog: behaviour analytics without analytics cookies, read back by the agent. | safe | phuryn/product-engineering | product, analytics | product, analytics, adding, session, recordings, heatmaps, what, did, users, do, clarity, posthog |
 | `product-engineering-retro` | Build a session's learnings into the setup: its friction, what went wrong and why, then an improved instruction, route, hook or script, verified, or 'no setu... | safe | phuryn/product-engineering | product, engineering, retro | product, engineering, retro, session, learnings, setup, friction, what, went, wrong, why, then |
+| `pronounce-word` | Speak an English word or developer term aloud via the say-it CLI, using a community pronunciation dictionary so names like kubectl, GIF or Pydantic come out ... | safe | anzy-renlab-ai/pronounce | pronunciation, tts, speech, audio, developer-jargon, dictionary, cli | pronunciation, tts, speech, audio, developer-jargon, dictionary, cli, pronounce, word, speak, english, developer |
 | `prototype` | Build a throwaway prototype to flesh out a design — a runnable terminal app for state/business-logic questions, or several radically different UI variations ... | safe | mattpocock/skills | engineering, workflow, coding-agents | engineering, workflow, coding-agents, prototype, throwaway, flesh, runnable, terminal, app, state, business, logic |
 | `punchtape` | Use a user-authorized punchtape zone to verify agreed project checks and record a machine verdict. | critical | neurophant/punchtape | verification, ai-agents, task-management, arbiter, testing | verification, ai-agents, task-management, arbiter, testing, punchtape, user, authorized, zone, verify, agreed, checks |
 | `push-skill-to-github` | Commit and push skill changes to the configured skills repository after review and validation. | critical | davidondrej/skills | skills, git, publishing | skills, git, publishing, push, skill, github, commit, changes, configured, repository, after, review |
@@ -1766,6 +1772,7 @@ Total skills: 3137
 | `triage` | Move issues and external PRs through a state machine of triage roles — categorise, verify, grill if needed, and write agent-ready briefs. | safe | mattpocock/skills | engineering, workflow, coding-agents | engineering, workflow, coding-agents, triage, move, issues, external, prs, through, state, machine, roles |
 | `turborepo-caching` | Configure Turborepo for efficient monorepo builds with local and remote caching. Use when setting up Turborepo, optimizing build pipelines, or implementing d... | critical | community | turborepo, caching | turborepo, caching, configure, efficient, monorepo, local, remote, setting, up, optimizing, pipelines, implementing |
 | `ui-design` | Mandatory for any product's screens, a builder's too, and any mock, prototype or artifact that shows them: its design system, colour, type, components; judgi... | safe | phuryn/product-engineering | ui | ui, mandatory, any, product, screens, builder, too, mock, prototype, artifact, shows, them |
+| `ui-diff` | Compare UI screenshots between revisions, capture interactions, and draft a visual PR review. Use for visual regressions, component diffs or preview comparis... | critical | imuratalpay/ui-diff | ui, diff | ui, diff, compare, screenshots, between, revisions, capture, interactions, draft, visual, pr, review |
 | `ui-update` | Update StyleSeed engine in your project — analyzes what's outdated and updates safely | critical | bitjaru/styleseed | ui, update | ui, update, styleseed, engine, analyzes, what, outdated, updates, safely |
 | `unship` | Compare AI agent-made UI variants locally in a real app, then keep one and clean up unused temporary code. | critical | mbenhard/unship | ui-variants, frontend, local-first, coding-agents | ui-variants, frontend, local-first, coding-agents, unship, compare, ai, agent, made, ui, variants, locally |
 | `untangle-codebase` | Untangle a whole codebase in one pass, so agents working in it read less per change, break less without noticing, and debug faster. | critical | caldoai/skills | untangle, codebase | untangle, codebase, whole, one, pass, so, agents, working, read, less, per, change |
@@ -1969,13 +1976,14 @@ Total skills: 3137
 | `webly` | Publish a website or share files at a live URL in seconds with no account, then let the person claim it, edit it over Webly's MCP server, and publish drafts ... | critical | Webly-AI/webly-plugin | deploy, static-site, hosting, publish, file-sharing, mcp | deploy, static-site, hosting, publish, file-sharing, mcp, webly, website, share, files, live, url |
 | `windows-server` | Administer Windows Server systems. Manage IIS, Active Directory, and PowerShell automation. Use when administering Windows infrastructure. | critical | BagelHole/DevOps-Security-Agent-Skills | windows, server | windows, server, administer, iis, active, directory, powershell, automation, administering, infrastructure |
 
-## document-processing (4)
+## document-processing (5)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
 | `doc-coauthoring` | This skill provides a structured workflow for guiding users through collaborative document creation. Act as an active guide, walking users through three stag... | critical | community | doc, coauthoring | doc, coauthoring, skill, provides, structured, guiding, users, through, collaborative, document, creation, act |
 | `latex-paper-conversion` | This skill should be used when the user asks to convert an academic paper in LaTeX from one format (e.g., Springer, IPOL) to another format (e.g., MDPI, IEEE... | safe | community | latex, paper, conversion | latex, paper, conversion, skill, should, used, user, asks, convert, academic, one, format |
 | `libreoffice/writer` | Document creation, format conversion (ODT/DOCX/PDF), mail merge, and automation with LibreOffice Writer. | safe | personal | libreoffice/writer | libreoffice/writer, writer, document, creation, format, conversion, odt, docx, pdf, mail, merge, automation |
+| `overleaf-collaboration` | Review changes, resolve co-author conflicts, and handle comments in shared Overleaf LaTeX papers. Use when an Overleaf push is refused or the user asks for t... | critical | yangzichao/mcp-server-overleaf | overleaf, latex, collaboration, research, mcp | overleaf, latex, collaboration, research, mcp, review, changes, resolve, co, author, conflicts, handle |
 | `pdf-conversion-router` | Use when converting a PDF into another format such as Markdown, HTML, text, JSON, DOCX, or structured notes and the agent must choose the best extraction rou... | safe | community | pdf, conversion, router | pdf, conversion, router, converting, another, format, such, markdown, html, text, json, docx |
 
 ## document-verification (7)
@@ -2037,10 +2045,11 @@ Total skills: 3137
 | `web3-transaction-relayer-pool` | Gasless transaction relayer node pool register: fee sponsorship limits, nonce synchronization, and balance replenishment alerts. | safe | Ranjeet2063/agentic-awesome-skills | web3, relayer, gasless, meta-transactions, stellar, infrastructure | web3, relayer, gasless, meta-transactions, stellar, infrastructure, transaction, pool, node, register, fee, sponsorship |
 | `zk-proof-verification-pipeline` | Zero-knowledge cryptographic verification pipeline register: proving system, circuit verification keys, public inputs, and gas costs. | safe | Ranjeet2063/agentic-awesome-skills | zk, zero-knowledge, snark, cryptography, privacy, soroban, web3 | zk, zero-knowledge, snark, cryptography, privacy, soroban, web3, proof, verification, pipeline, zero, knowledge |
 
-## finance (23)
+## finance (25)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
+| `alphasift` | Screen equities across 7 markets (CN/US/HK/JP/KR/TW/IN), run walk-forward pattern audits, and generate T+N research digests via AlphaSift CLI or STDIO MCP. R... | safe | ZhuLinsen/alphasift | finance, quant, screening, mcp, python | finance, quant, screening, mcp, python, alphasift, screen, equities, markets, cn, us, hk |
 | `axonx` | Develop AxonX research plugins and operate quantitative research tasks through CLI or MCP, inspecting execution status, logs, artifacts, and lineage. | critical | FlowLLM-AI/AxonX | quantitative-research, mcp, backtesting, python | quantitative-research, mcp, backtesting, python, axonx, develop, research, plugins, operate, quantitative, tasks, through |
 | `calibrate-first` | Measure a dataset's detection floor before reading any trading-signal result, pre-register every test, and report too-small-to-see as UNDECIDABLE, not 'no ef... | critical | assaylabdesk-sudo/assay-lite | quant, backtesting, statistics, multiple-testing, factor-research | quant, backtesting, statistics, multiple-testing, factor-research, calibrate, first, measure, dataset, detection, floor, before |
 | `equibles` | Query Equibles for US stock market data: SEC filing search, XBRL financial statements, earnings call transcripts, insider and 13F holdings, and daily prices. | safe | self | finance, stocks, sec-filings, earnings-calls, insider-trading, 13f, rest-api, mcp | finance, stocks, sec-filings, earnings-calls, insider-trading, 13f, rest-api, mcp, equibles, query, us, stock |
@@ -2055,6 +2064,7 @@ Total skills: 3137
 | `nano-settlement-verify` | Check that a Nano (XNO) payment settled before a seller serves a paid call: one inline read-only script asks a public node about a send block and returns a v... | critical | self | nano, xno, payments, settlement, x402 | nano, xno, payments, settlement, x402, verify, check, payment, settled, before, seller, serves |
 | `options-flow-analyzer` | Compare raw and explicitly filtered options put/call ratios with documented premium, delta and expiry assumptions | safe | community | options, sentiment-analysis, trading, polygon, market-analysis | options, sentiment-analysis, trading, polygon, market-analysis, flow, analyzer, compare, raw, explicitly, filtered, put |
 | `perp-dex-costs` | Before a perpetual futures trade, find which perp DEX is cheapest now for the size (fees plus slippage on the live book) and compare funding across 25+ venues. | safe | self | crypto, defi, perpetuals, perp-dex, funding-rates, trading-costs, market-data | crypto, defi, perpetuals, perp-dex, funding-rates, trading-costs, market-data, perp, dex, costs, before, perpetual |
+| `setsuzei-japan-tax-savings` | Estimate how much Japanese income and resident tax a freelancer can still save before year-end (furusato nozei limit, iDeCo, mutual aid, blue-return deductio... | safe | self | japan, tax, freelance, furusato-nozei, ideco, finance, cli | japan, tax, freelance, furusato-nozei, ideco, finance, cli, setsuzei, savings, estimate, how, much |
 | `traderspy-market-briefing` | Crypto market briefing from live TraderSpy data: majors, funding, open interest, top-trader lean, fresh AI signals and screener movers. Use for "what's happe... | safe | target1m/traderspy-mcp | traderspy, crypto, market-briefing, derivatives, mcp | traderspy, crypto, market-briefing, derivatives, mcp, market, briefing, live, data, majors, funding, open |
 | `traderspy-market-screener` | Scan the most-traded crypto futures pairs for up to 3 technical conditions in one TraderSpy call, compare coins, and backtest what followed a condition. Use ... | safe | target1m/traderspy-mcp | traderspy, crypto, screener, backtesting, mcp | traderspy, crypto, screener, backtesting, mcp, market, scan, most, traded, futures, pairs, up |
 | `traderspy-position-check` | Health-check crypto futures positions the user describes, with TraderSpy data: liquidation and stop distance, multi-timeframe read, funding and top-trader si... | safe | target1m/traderspy-mcp | traderspy, crypto, risk-management, futures, mcp | traderspy, crypto, risk-management, futures, mcp, position, check, health, positions, user, describes, data |
@@ -2102,7 +2112,7 @@ Total skills: 3137
 | `ui-ux-pro-max` | Comprehensive design guide for web and mobile applications. Use when designing new UI components or pages, choosing color palettes and typography, or reviewi... | critical | community | ui, ux, max | ui, ux, max, pro, web, mobile, applications, designing, new, components, pages, choosing |
 | `web-performance-optimization` | Optimize website and web application performance including loading speed, Core Web Vitals, bundle size, caching strategies, and runtime performance | critical | community | web, performance, optimization | web, performance, optimization, optimize, website, application, including, loading, speed, core, vitals, bundle |
 
-## frontend (66)
+## frontend (67)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2115,6 +2125,7 @@ Total skills: 3137
 | `apple-design` | Apply Apple-inspired interface and motion principles to gestures, typography, depth, feedback, and accessibility on the web. | critical | emilkowalski/skills | apple | apple, apply, inspired, interface, motion, principles, gestures, typography, depth, feedback, accessibility, web |
 | `ask-sonner` | Set up and troubleshoot Sonner React toasts, including promises, loading states, updates, styling, theming, and placement. | critical | emilkowalski/skills | ask, sonner | ask, sonner, set, up, troubleshoot, react, toasts, including, promises, loading, states, updates |
 | `astro` | Build content-focused websites with Astro — zero JS by default, islands architecture, multi-framework components, and Markdown/MDX support. | safe | community | astro, ssg, ssr, islands, content, markdown, mdx, performance | astro, ssg, ssr, islands, content, markdown, mdx, performance, websites, zero, js, default |
+| `atelier-ui` | Route frontend builds across brand sites, app dashboards, and 3D scenes using 1-turn intake, WCAG AA palettes, anti-slop rules, and visual QA. | safe | yashh1323/atelier-ui | frontend, ui-ux, design-systems, anti-slop, tailwind, webgl | frontend, ui-ux, design-systems, anti-slop, tailwind, webgl, atelier, ui, route, brand, sites, app |
 | `break-ui` | Stress-test a component with realistic worst-case data through a development-only fixture toggle and report verified failures. | critical | emilkowalski/skills | break, ui | break, ui, stress, test, component, realistic, worst, case, data, through, development, fixture |
 | `build-ui` | Step-by-step workflow for UI work: read the project, follow the plan for the job (new screen, dashboard, polish, simplify, review), then render, fix and chec... | safe | uxkin/agent | ui, ux, frontend, design, workflow, review | ui, ux, frontend, design, workflow, review, step, work, read, follow, plan, job |
 | `cinematic-ui-ux` | Build high-performance cinematic web experiences with GSAP 3.12+, Lenis smooth scroll, canvas frame scrubbing, kinetic typography, and WCAG 2.2 motion access... | safe | self | cinematic, ui, ux | cinematic, ui, ux, high, performance, web, experiences, gsap, 12, lenis, smooth, scroll |
@@ -2344,7 +2355,7 @@ Total skills: 3137
 | `nap-consistency-checker` | NAP Consistency Checker. Use when working with canonical business name, address and phone plus listing records. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, nap, consistency, checker, working, canonical, business, name, address, phone, plus |
 | `review-response-generator` | Review Response Generator. Use when working with review text and verified business context. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, review, response, generator, working, text, verified, business, context |
 
-## marketing (192)
+## marketing (193)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2498,6 +2509,7 @@ Total skills: 3137
 | `programmatic-seo` | Design and evaluate programmatic SEO strategies for creating SEO-driven pages at scale using templates and structured data. | none | community | programmatic, seo | programmatic, seo, evaluate, creating, driven, pages, scale, structured, data |
 | `proof-kb` | Maintain a source-linked knowledge base of first-hand SEO evidence and update pages that depend on superseded facts. | safe | Illyism/seo-skills | proof, kb | proof, kb, maintain, source, linked, knowledge, base, first, hand, seo, evidence, update |
 | `public-relations` | When the user wants help with public relations, earned media, press coverage, journalist outreach, or media strategy (not pull requests). | critical | coreyhaines31/marketingskills | public, relations | public, relations, user, wants, earned, media, press, coverage, journalist, outreach, pull, requests |
+| `publora-social-posting` | Draft, schedule or publish one post to LinkedIn, X, Instagram, Threads, TikTok, YouTube, Facebook, Bluesky, Mastodon or Telegram through the Publora MCP server. | critical | self | social-media, scheduling, linkedin, instagram, tiktok, mcp | social-media, scheduling, linkedin, instagram, tiktok, mcp, publora, social, posting, draft, schedule, publish |
 | `rea-growth` | Analyze a company’s public growth and content through Treg, distinguish observations from hypotheses, and produce an evidence-linked playbook within an appro... | critical | superdesigndev/treg | rea, growth | rea, growth, analyze, company, public, content, through, treg, distinguish, observations, hypotheses, produce |
 | `reddit-automation` | Automate Reddit tasks via Rube MCP (Composio): search subreddits, create posts, manage comments, and browse top content. Always search tools first for curren... | critical | community | reddit | reddit, automation, automate, tasks, via, rube, mcp, composio, search, subreddits, posts, comments |
 | `reddit-serp` | Find relevant public Reddit threads in search or citation reports and draft transparent practitioner replies for user review. | critical | Illyism/seo-skills | reddit, serp | reddit, serp, find, relevant, public, threads, search, citation, reports, draft, transparent, practitioner |
@@ -2541,7 +2553,7 @@ Total skills: 3137
 | `youtube-seo` | Use an authorized recording or transcript to draft YouTube titles, timestamped chapters, launch posts and verified video structured data. | safe | Illyism/seo-skills | youtube, seo | youtube, seo, authorized, recording, transcript, draft, titles, timestamped, chapters, launch, posts, verified |
 | `zhongcao-note-copywriter` | Install and use the official Xiaohongshu Copywriter package, pinned by digest, for paid hosted work on the Beatra service. | critical | beatra-ai/xiaohongshu-copywriter-skill | xiaohongshu, rednote, copywriting, social-media, social-data, mcp, paid-api, beatra | xiaohongshu, rednote, copywriting, social-media, social-data, mcp, paid-api, beatra, zhongcao, note, copywriter, install |
 
-## mcp (20)
+## mcp (21)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2562,6 +2574,7 @@ Total skills: 3137
 | `piloterr-mcp` | Get structured JSON from 391 Piloterr scraping endpoints (Amazon, LinkedIn, Zillow, Crunchbase, Google...) through Piloterr's MCP server. Use when the user c... | safe | self | mcp, web-scraping, structured-data, ecommerce, real-estate, jobs | mcp, web-scraping, structured-data, ecommerce, real-estate, jobs, piloterr, get, structured, json, 391, scraping |
 | `protect-mcp-governance` | Agent governance skill for MCP tool calls — Cedar policy authoring, shadow-to-enforce rollout, and Ed25519 receipt verification. | critical | scopeblind/scopeblind-gateway | protect, mcp, governance | protect, mcp, governance, agent, skill, calls, cedar, policy, authoring, shadow, enforce, rollout |
 | `restosignals` | Find US restaurants and bars before they open, as scored leads fused from liquor-license, food-permit and business-filing records, via the RestoSignals MCP s... | safe | paperandbeyond23-gif/restosignals-mcp | mcp, restaurants, leads, public-records, liquor-license, prospecting | mcp, restaurants, leads, public-records, liquor-license, prospecting, restosignals, find, us, bars, before, open |
+| `searchapi-search-mcp` | Search Google (web, News, Scholar, Images), Bing, YouTube, Amazon and 100+ engines as structured results through the SearchApi MCP server. Use when the user ... | safe | self | mcp, web-search, serp, news, scholar, research, citations | mcp, web-search, serp, news, scholar, research, citations, searchapi, search, google, web, images |
 | `serply-search-mcp` | Search Google, Bing, Google News and Google Scholar, and read public pages, with the Serply MCP server. Use when the user chooses Serply or its connected too... | safe | self | mcp, web-search, news, scholar, research, citations | mcp, web-search, news, scholar, research, citations, serply, search, google, bing, read, public |
 | `veille-mcp` | Check emails, domains, phone numbers and IPs for fraud signals, and validate EU VAT numbers and IBANs, through Veille's MCP server. Use when the user chooses... | safe | self | mcp, fraud-prevention, email-validation, vat, iban, ip-reputation | mcp, fraud-prevention, email-validation, vat, iban, ip-reputation, veille, check, emails, domains, phone, numbers |
 | `worktable-mcp` | Find, cite and update Docs, Records, HTML Docs, annotations and threads in a Worktable workspace through Worktable's MCP server. Use when the user chooses Wo... | critical | worktable/worktable-plugin | mcp, workspace, documents, records, collaboration, knowledge-base | mcp, workspace, documents, records, collaboration, knowledge-base, worktable, find, cite, update, docs, html |
@@ -3500,7 +3513,7 @@ Total skills: 3137
 | `test-automator` | Master AI-powered test automation with modern frameworks, self-healing tests, and comprehensive quality engineering. Build scalable testing strategies with a... | critical | community | automator | automator, test, ai, powered, automation, frameworks, self, healing, tests, quality, engineering, scalable |
 | `webapp-testing` | To test local web applications, write native Python Playwright scripts. | critical | community | webapp | webapp, testing, test, local, web, applications, write, native, python, playwright, scripts |
 
-## testing (53)
+## testing (54)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -3519,6 +3532,7 @@ Total skills: 3137
 | `cypress-skill` | Generates production-grade Cypress E2E and component tests in JavaScript or TypeScript. Supports local execution and TestMu AI cloud. Use when the user asks ... | critical | LambdaTest/agent-skills | cypress, skill | cypress, skill, generates, grade, e2e, component, tests, javascript, typescript, supports, local, execution |
 | `e2e` | Write, run and debug e2e tests for web and iOS/Android apps that mix plain-language agent steps with exact assertions, replaying cached agent steps without m... | critical | e2e-inc/e2e | e2e, end-to-end-testing, mobile-testing, ios, android, playwright, agentic-testing | e2e, end-to-end-testing, mobile-testing, ios, android, playwright, agentic-testing, write, run, debug, tests, web |
 | `electron-drive-skill` | Launch the project's Electron app on a scratch profile and drive it: click, type, screenshot, run renderer or main-process code, read logs. Use to verify UI ... | critical | Search-3D/electron-drive-skill | electron, playwright, desktop, e2e, testing, automation | electron, playwright, desktop, e2e, testing, automation, drive, skill, launch, app, scratch, profile |
+| `email-testing` | Check HTML email and emulate Outlook, Gmail, Apple Mail, Yahoo Mail, and AOL Mail locally with the Hyper Elements CLI before sending. Emulations, not renders... | safe | hyper-elements/hyper-elements | email, html-email, outlook, gmail, email-clients, preview, dark-mode, accessibility | email, html-email, outlook, gmail, email-clients, preview, dark-mode, accessibility, testing, check, html, emulate |
 | `ghost-qa` | Run autonomous headless Playwright browser QA across Desktop, Tablet, and Mobile viewports to catch hydration, layout, overflow, and a11y bugs. | critical | self | testing, playwright, qa, browser-automation, accessibility, frontend, e2e, mcp | testing, playwright, qa, browser-automation, accessibility, frontend, e2e, mcp, ghost, run, autonomous, headless |
 | `huggingface-community-evals` | Curated upstream guidance for Huggingface Community Evals; use when the workflow matches the user goal. | unknown | huggingface/skills | huggingface, community, evals | huggingface, community, evals, curated, upstream, guidance, matches, user, goal |
 | `hyperexecute-skill` | Operates HyperExecute end-to-end for TestMu AI/LambdaTest cloud test execution: analyze projects, create YAML, validate locally, run CLI jobs, debug failures... | critical | LambdaTest/agent-skills | hyperexecute, skill | hyperexecute, skill, operates, testmu, ai, lambdatest, cloud, test, execution, analyze, yaml, validate |

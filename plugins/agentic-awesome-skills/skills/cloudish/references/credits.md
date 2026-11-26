@@ -43,6 +43,11 @@ the key that ran out:
 { "error": "This API key is out of credits — ...", "alias": "todo-app", "docs": "https://cloudish.ai/credits.md" }
 ```
 
+Its running apps stop within a minute, always-on ones included (their status
+becomes `out_of_credits`); their volumes, and the data on them, are kept,
+and they start again once the key has credits — an always-on app on its own,
+the rest on their next request.
+
 The alias names the key that pays for the request — the project owner's,
 whoever calls it — so match it against each project's saved alias to know
 which project's key needs credits. Then, from that folder, mint a claim link
@@ -59,8 +64,8 @@ The link is single-use and expires 30 minutes after it's minted, so mint it
 right when you hand it over and say that it expires; if your human comes
 back later or the page says it expired, mint a new one. Where
 the credits come from — a purchase, or a balance your human already holds
-elsewhere — is handled on that page; you never need any key other than this
-folder's own, so don't ask your human for one.
+elsewhere — is handled on that page (SKILL.md section 9); you never need
+any key other than this folder's own, so don't ask your human for one.
 
 A `402` saying a daily usage quota was reached is different: the key still
 has credits but hit its rolling 24-hour quota, and recovers on its own as

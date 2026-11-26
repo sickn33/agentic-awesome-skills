@@ -3720,6 +3720,39 @@
     }
   },
   {
+    "id": "alphasift",
+    "path": "skills/alphasift",
+    "category": "finance",
+    "name": "alphasift",
+    "description": "Screen equities across 7 markets (CN/US/HK/JP/KR/TW/IN), run walk-forward pattern audits, and generate T+N research digests via AlphaSift CLI or STDIO MCP. Research only.",
+    "risk": "safe",
+    "source": "community",
+    "date_added": "2026-11-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "ZhuLinsen/alphasift",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/ZhuLinsen/alphasift/blob/2ef343a580d84fd67f197bc52d0c30fc5819f292/LICENSE",
+    "tags": [
+      "finance",
+      "quant",
+      "screening",
+      "mcp",
+      "python"
+    ]
+  },
+  {
     "id": "alternatives-pages",
     "path": "skills/alternatives-pages",
     "category": "marketing",
@@ -6857,6 +6890,40 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "atelier-ui",
+    "path": "skills/atelier-ui",
+    "category": "frontend",
+    "name": "atelier-ui",
+    "description": "Route frontend builds across brand sites, app dashboards, and 3D scenes using 1-turn intake, WCAG AA palettes, anti-slop rules, and visual QA.",
+    "risk": "safe",
+    "source": "https://github.com/yashh1323/atelier-ui",
+    "date_added": "2026-11-24",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "yashh1323/atelier-ui",
+    "license": "MIT",
+    "license_source": "https://github.com/yashh1323/atelier-ui/blob/a58151b66421769e1d59f0df3ed04b8c596481f7/LICENSE",
+    "tags": [
+      "frontend",
+      "ui-ux",
+      "design-systems",
+      "anti-slop",
+      "tailwind",
+      "webgl"
+    ]
   },
   {
     "id": "atlas-cloud-media",
@@ -21305,6 +21372,36 @@
     ]
   },
   {
+    "id": "cross-source-metric-reconciliation",
+    "path": "skills/cross-source-metric-reconciliation",
+    "category": "business",
+    "name": "cross-source-metric-reconciliation",
+    "description": "Use when two systems report different values for the same business metric and you must decide which number to trust, explain the gap, and present one figure with its source and as-of time.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-11-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "analytics",
+      "reconciliation",
+      "metrics",
+      "business-intelligence",
+      "data-quality"
+    ]
+  },
+  {
     "id": "crossframe",
     "path": "skills/crossframe",
     "category": "workflow",
@@ -26518,6 +26615,38 @@
     ]
   },
   {
+    "id": "dopamine-talk",
+    "path": "skills/dopamine-talk",
+    "category": "communication",
+    "name": "dopamine-talk",
+    "description": "Cut file-path recaps, trailing hedging disclaimers, boilerplate padding, and unasked critic-gates from coding agent replies. Use for direct explanations or architecture ideas.",
+    "risk": "none",
+    "source": "community",
+    "date_added": "2026-11-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "AnnenkovLabs/dopamine-talk",
+    "license": "MIT",
+    "license_source": "https://github.com/AnnenkovLabs/dopamine-talk/blob/b6bff86d3b55dc535a12cc8ccd5b46ad256a8c6b/LICENSE",
+    "tags": [
+      "communication",
+      "prompt-engineering",
+      "developer-experience",
+      "writing"
+    ]
+  },
+  {
     "id": "dos-verify-done-claims",
     "path": "skills/dos-verify-done-claims",
     "category": "quality",
@@ -28107,6 +28236,42 @@
       },
       "reasons": []
     }
+  },
+  {
+    "id": "email-testing",
+    "path": "skills/email-testing",
+    "category": "testing",
+    "name": "email-testing",
+    "description": "Check HTML email and emulate Outlook, Gmail, Apple Mail, Yahoo Mail, and AOL Mail locally with the Hyper Elements CLI before sending. Emulations, not renders by the real clients.",
+    "risk": "safe",
+    "source": "official",
+    "date_added": "2026-11-24",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "hyper-elements/hyper-elements",
+    "license": "MIT",
+    "license_source": "https://github.com/hyper-elements/hyper-elements/blob/main/LICENSE",
+    "tags": [
+      "email",
+      "html-email",
+      "outlook",
+      "gmail",
+      "email-clients",
+      "preview",
+      "dark-mode",
+      "accessibility"
+    ]
   },
   {
     "id": "embedded-agents-agent-sdk",
@@ -34284,6 +34449,32 @@
     ]
   },
   {
+    "id": "ghost-record",
+    "path": "skills/ghost-record",
+    "category": "development",
+    "name": "ghost-record",
+    "description": "Record a React component interaction as a replayable Ghost Cursor demo. Use only when the user explicitly invokes ghost-record.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-11-24",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "imuratalpay/ghost-cursor",
+    "license": "MIT",
+    "license_source": "https://github.com/imuratalpay/ghost-cursor/blob/9b20099d1cbad4872920502374c28ac5a7023a2f/LICENSE"
+  },
+  {
     "id": "git-advanced-workflows",
     "path": "skills/git-advanced-workflows",
     "category": "workflow",
@@ -35705,6 +35896,40 @@
     "source_repo": "ChrisWiles/claude-code-showcase",
     "license": "MIT",
     "license_source": "https://github.com/ChrisWiles/claude-code-showcase/blob/main/LICENSE"
+  },
+  {
+    "id": "gridpin-offline-geocoding",
+    "path": "skills/gridpin-offline-geocoding",
+    "category": "data",
+    "name": "gridpin-offline-geocoding",
+    "description": "Geocode or reverse-geocode addresses locally with the gridpin CLI: no API key, addresses stay on the machine. Use for one address or a CSV in a covered country.",
+    "risk": "critical",
+    "source": "https://github.com/gridpin/gridpin/blob/490fc5822f40cf68dd5b48a3a5047132658b7903/integrations/skills/gridpin/SKILL.md",
+    "date_added": "2026-11-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "gridpin/gridpin",
+    "license": "Apache-2.0",
+    "license_source": "https://github.com/gridpin/gridpin/blob/490fc5822f40cf68dd5b48a3a5047132658b7903/LICENSE",
+    "tags": [
+      "geocoding",
+      "reverse-geocoding",
+      "addresses",
+      "offline",
+      "privacy",
+      "csv"
+    ]
   },
   {
     "id": "grill-me",
@@ -52340,6 +52565,44 @@
     }
   },
   {
+    "id": "nia-teams-agent-bridge",
+    "path": "skills/nia-teams-agent-bridge",
+    "category": "development",
+    "name": "nia-teams-agent-bridge",
+    "description": "Connect local coding agents (Claude Code, Codex, WorkBuddy, Doubao, Antigravity, Droid, Pi, DSH) to a Nia Teams GroupChat for two-way collaboration.",
+    "risk": "critical",
+    "source": "https://github.com/nia-teams/agent-bridge/tree/77009d2fe714de7f1977a831b1d6ac77351fdeeb",
+    "date_added": "2026-11-24",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "official",
+    "source_repo": "nia-teams/agent-bridge",
+    "license": "MIT",
+    "license_source": "https://github.com/nia-teams/agent-bridge/blob/77009d2fe714de7f1977a831b1d6ac77351fdeeb/LICENSE",
+    "tags": [
+      "nia-teams",
+      "agent-bridge",
+      "claude-code",
+      "codex",
+      "workbuddy",
+      "doubao",
+      "droid",
+      "pi",
+      "coding-agents",
+      "group-chat"
+    ]
+  },
+  {
     "id": "nika",
     "path": "skills/nika",
     "category": "workflow",
@@ -55272,6 +55535,39 @@
       "personalization",
       "mcp",
       "data-quality"
+    ]
+  },
+  {
+    "id": "overleaf-collaboration",
+    "path": "skills/overleaf-collaboration",
+    "category": "document-processing",
+    "name": "overleaf-collaboration",
+    "description": "Review changes, resolve co-author conflicts, and handle comments in shared Overleaf LaTeX papers. Use when an Overleaf push is refused or the user asks for tracked suggestions or review replies.",
+    "risk": "critical",
+    "source": "https://github.com/yangzichao/mcp-server-overleaf/blob/d9f25b03221bb36514546a7e85c677e69daef6d7/plugins/overleaf/skills/overleaf-collaboration/SKILL.md",
+    "date_added": "2026-11-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "yangzichao/mcp-server-overleaf",
+    "license": "MIT",
+    "license_source": "https://github.com/yangzichao/mcp-server-overleaf/blob/d9f25b03221bb36514546a7e85c677e69daef6d7/LICENSE",
+    "tags": [
+      "overleaf",
+      "latex",
+      "collaboration",
+      "research",
+      "mcp"
     ]
   },
   {
@@ -59628,6 +59924,41 @@
     }
   },
   {
+    "id": "pronounce-word",
+    "path": "skills/pronounce-word",
+    "category": "development",
+    "name": "pronounce-word",
+    "description": "Speak an English word or developer term aloud via the say-it CLI, using a community pronunciation dictionary so names like kubectl, GIF or Pydantic come out the way engineers actually say them.",
+    "risk": "safe",
+    "source": "https://github.com/anzy-renlab-ai/pronounce/blob/83381775b52d8e66d39afcfb43c502d2e55cc14c/skills/pronounce-word/SKILL.md",
+    "date_added": "2026-11-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "community",
+    "source_repo": "anzy-renlab-ai/pronounce",
+    "license": "MIT",
+    "license_source": "https://github.com/anzy-renlab-ai/pronounce/blob/83381775b52d8e66d39afcfb43c502d2e55cc14c/LICENSE",
+    "tags": [
+      "pronunciation",
+      "tts",
+      "speech",
+      "audio",
+      "developer-jargon",
+      "dictionary",
+      "cli"
+    ]
+  },
+  {
     "id": "proof-kb",
     "path": "skills/proof-kb",
     "category": "marketing",
@@ -59781,6 +60112,37 @@
     "source_repo": "coreyhaines31/marketingskills",
     "license": "MIT",
     "license_source": "https://github.com/coreyhaines31/marketingskills/blob/main/LICENSE"
+  },
+  {
+    "id": "publora-social-posting",
+    "path": "skills/publora-social-posting",
+    "category": "marketing",
+    "name": "publora-social-posting",
+    "description": "Draft, schedule or publish one post to LinkedIn, X, Instagram, Threads, TikTok, YouTube, Facebook, Bluesky, Mastodon or Telegram through the Publora MCP server.",
+    "risk": "critical",
+    "source": "self",
+    "date_added": "2026-11-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "social-media",
+      "scheduling",
+      "linkedin",
+      "instagram",
+      "tiktok",
+      "mcp"
+    ]
   },
   {
     "id": "pubmed-database",
@@ -64902,6 +65264,38 @@
     }
   },
   {
+    "id": "searchapi-search-mcp",
+    "path": "skills/searchapi-search-mcp",
+    "category": "mcp",
+    "name": "searchapi-search-mcp",
+    "description": "Search Google (web, News, Scholar, Images), Bing, YouTube, Amazon and 100+ engines as structured results through the SearchApi MCP server. Use when the user chooses SearchApi or its connected tools.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-11-25",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "mcp",
+      "web-search",
+      "serp",
+      "news",
+      "scholar",
+      "research",
+      "citations"
+    ]
+  },
+  {
     "id": "second-deposit-igaming",
     "path": "skills/second-deposit-igaming",
     "category": "business",
@@ -66937,6 +67331,38 @@
       "session-handoff",
       "coding-agents",
       "workflow"
+    ]
+  },
+  {
+    "id": "setsuzei-japan-tax-savings",
+    "path": "skills/setsuzei-japan-tax-savings",
+    "category": "finance",
+    "name": "setsuzei-japan-tax-savings",
+    "description": "Estimate how much Japanese income and resident tax a freelancer can still save before year-end (furusato nozei limit, iDeCo, mutual aid, blue-return deduction) by running the setsuzei CLI.",
+    "risk": "safe",
+    "source": "self",
+    "date_added": "2026-11-26",
+    "plugin": {
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": []
+    },
+    "source_type": "self",
+    "tags": [
+      "japan",
+      "tax",
+      "freelance",
+      "furusato-nozei",
+      "ideco",
+      "finance",
+      "cli"
     ]
   },
   {
@@ -75404,6 +75830,34 @@
     "source_repo": "phuryn/product-engineering",
     "license": "MIT",
     "license_source": "https://github.com/phuryn/product-engineering/blob/8ebb50bb1b28dc9e8bc669199493e6020b808cc6/LICENSE.md"
+  },
+  {
+    "id": "ui-diff",
+    "path": "skills/ui-diff",
+    "category": "development",
+    "name": "ui-diff",
+    "description": "Compare UI screenshots between revisions, capture interactions, and draft a visual PR review. Use for visual regressions, component diffs or preview comparisons.",
+    "risk": "critical",
+    "source": "community",
+    "date_added": "2026-11-24",
+    "plugin": {
+      "targets": {
+        "codex": "blocked",
+        "claude": "blocked"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [
+        "undeclared_runtime_dependency"
+      ]
+    },
+    "source_type": "community",
+    "source_repo": "imuratalpay/ui-diff",
+    "license": "MIT",
+    "license_source": "https://github.com/imuratalpay/ui-diff/blob/66454fbd858291ea678ac5230464210dce7c8f5f/LICENSE"
   },
   {
     "id": "ui-from-screenshot",

@@ -1,9 +1,9 @@
-<!-- registry-sync: version=21.3.0; skills=3137; stars=50233; updated_at=2026-11-24T09:55:19+00:00 -->
+<!-- registry-sync: version=21.4.0; skills=3151; stars=50392; updated_at=2026-11-26T18:50:23+00:00 -->
 # Agentic Awesome Skills — AI Skills & AAS Core
 
 > **Find reusable instructions for your project, inspect their complete files, and keep an exact skill set you can review and reuse.**
 
-Agentic Awesome Skills is a library of 3,137+ installable `SKILL.md` playbooks for Claude Code, Codex, Cursor, Gemini CLI and other AI coding agents. AAS Core helps Codex or Claude search the complete local catalog, record the skills the agent chooses, and preview a plan you can inspect before changing a target. Core does not rank or recommend skills.
+Agentic Awesome Skills is a library of 3,151+ installable `SKILL.md` playbooks for Claude Code, Codex, Cursor, Gemini CLI and other AI coding agents. AAS Core helps Codex or Claude search the complete local catalog, record the skills the agent chooses, and preview a plan you can inspect before changing a target. Core does not rank or recommend skills.
 
 **Start here:** [Explore the skill catalog](https://aaskills.tech/core/) · [Codex setup](https://aaskills.tech/docs/codex-cli-skills/) · [Claude Code setup](https://aaskills.tech/docs/claude-code-skills/) · [Install or update without npm](#installation)
 
@@ -12,7 +12,7 @@ Agentic Awesome Skills is a library of 3,137+ installable `SKILL.md` playbooks f
 
 **Project identity:** Agentic Awesome Skills (AAS) was previously named **Antigravity Awesome Skills**. The official repository is [sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills), and the official website is [aaskills.tech](https://aaskills.tech/). Original code and tooling use MIT; original written content uses CC BY 4.0. Imported skills retain their own license and attribution requirements; see [License](#license).
 
-**Current release: V21.3.0.** AAS Core supports local catalog inspection, agent-owned selection, stack validation, and plan preview. Apply and recovery remain experimental. [Read the AAS Core preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/v21.3.0/docs/users/aas-core.md) for setup and exact trust boundaries.
+**Current release: V21.4.0.** AAS Core supports local catalog inspection, agent-owned selection, stack validation, and plan preview. Apply and recovery remain experimental. [Read the AAS Core preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/v21.4.0/docs/users/aas-core.md) for setup and exact trust boundaries.
 
 This README tracks `main`. Features listed under [Unreleased](CHANGELOG.md#unreleased) require a later release; the versioned guide describes the published package.
 
@@ -42,7 +42,7 @@ This is an independent community project, not affiliated with or endorsed by Goo
 - [Choose Your Tool](#choose-your-tool)
 - [Recommended Specialized Plugins](#recommended-specialized-plugins)
 - [Bundles & Workflows](#bundles--workflows)
-- [Browse 3,137+ Skills](#browse-3137-skills)
+- [Browse 3,151+ Skills](#browse-3151-skills)
 - [Troubleshooting](#troubleshooting)
 - [Stable Skills Manifest v1](#stable-skills-manifest-v1)
 - [Contributing](#contributing)
@@ -95,7 +95,7 @@ Codex or Claude inspects your project and chooses exact skills. Every current ca
 > [!IMPORTANT]
 > Structural and identity validity does not certify semantic fit, compatibility, setup correctness, operational safety, or safety to apply. Apply and recovery require experimental opt-in and remain outside the supported preview.
 
-The [Workbench](https://aaskills.tech/workbench) reviews stack and plan artifacts in browser memory without accessing your filesystem. See the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v21.3.0/docs/users/aas-core.md) for tool contracts, capability coverage, and limits.
+The [Workbench](https://aaskills.tech/workbench) reviews stack and plan artifacts in browser memory without accessing your filesystem. See the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v21.4.0/docs/users/aas-core.md) for tool contracts, capability coverage, and limits.
 
 ## Installation
 
@@ -108,8 +108,8 @@ With AAS Core already configured, use the [Core guide](docs/users/aas-core.md) t
 With [GitHub CLI](https://cli.github.com/) and `gh skill` available, preview and install one skill from the current release. This example uses Codex at user scope:
 
 ```sh
-gh skill preview sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md@v21.3.0
-gh skill install sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md --agent codex --scope user --pin v21.3.0
+gh skill preview sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md@v21.4.0
+gh skill install sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md --agent codex --scope user --pin v21.4.0
 ```
 
 To update a pinned skill, preview it at the newer release tag and repeat the install with that tag. See the [installation and update guide](docs/users/getting-started.md#install-and-update-without-npm) for other agents, switching from an npm install, downloading a ZIP, and updating a Git clone.
@@ -161,7 +161,7 @@ Bundles suggest related skills; workflows describe the order to use them. They a
 - [Workflows](docs/users/workflows.md) give ordered playbooks for planning, shipping, testing, and auditing; [workflow metadata](data/workflows.json) is available for integrations.
 - If too many installed skills overload Antigravity, follow the [selective activation guide](docs/users/agent-overload-recovery.md). For other hosts, preview a smaller exact install or use the installer's `--risk`, `--category`, and `--tags` filters.
 
-## Browse 3,137+ Skills
+## Browse 3,151+ Skills
 
 Explore the complete library in the [hosted catalog](https://aaskills.tech/) or [`CATALOG.md`](CATALOG.md). The canonical playbooks live in [`skills/`](skills/); [`skills_index.json`](skills_index.json) provides machine-readable discovery. Use [Getting Started](docs/users/getting-started.md) and [Usage](docs/users/usage.md) for first steps, or the [Workbench](https://aaskills.tech/workbench) to inspect a saved Core stack and plan in your browser.
 
@@ -169,7 +169,7 @@ For narrower comparisons, see [Claude Code skills](docs/users/best-claude-code-s
 
 ## Troubleshooting
 
-- [Core setup and trust boundaries](https://github.com/sickn33/agentic-awesome-skills/blob/v21.3.0/docs/users/aas-core.md)
+- [Core setup and trust boundaries](https://github.com/sickn33/agentic-awesome-skills/blob/v21.4.0/docs/users/aas-core.md)
 - [Installation and everyday use](docs/users/usage.md)
 - [Windows context and truncation recovery](docs/users/windows-truncation-recovery.md)
 - [Linux/macOS overload and selective activation](docs/users/agent-overload-recovery.md)
@@ -341,7 +341,6 @@ Key source families include:
 - **[MohammadHijjawi97/since-cutoff](https://github.com/MohammadHijjawi97/since-cutoff)**: Official source for the `since-cutoff` skill - lists which APIs of a project's pinned Python dependencies changed after the model's training cutoff, from a static diff of the two releases with no model calls, shows where the code uses them, and writes short AGENTS.md or CLAUDE.md notes (MIT).
 - **[qrxcodes/qrx-mcp](https://github.com/qrxcodes/qrx-mcp)**: Official QRX skill - turn a text prompt and a link into an artistic, branded QR code through the hosted QRX MCP server, checked to scan before it is returned (MIT).
 - **[opencanviz/opencanviz-skills-repo](https://github.com/opencanviz/opencanviz-skills-repo)**: Official openCanviz source for the `opencanviz-json` skill - write an openCanviz video project as JSON with a standard-library Python builder and validator (text entrances, 22 scene transitions, motion presets, LaTeX math, plots, tables, rings, 22 example projects), then import it at opencanviz.com/create, where a free account builds and plays it as a narrated, animated explainer and the MP4 download needs a plan or a one-time export purchase (MIT).
-- **[qrdxinc/qrdx](https://github.com/qrdxinc/qrdx)**: Official QRdx source for the `generate-qr` skill - make a styled, scannable QR code (or one per CSV row) as SVG, PNG, WebP, GIF, BMP, ICO, TIFF or EPS with the QRdx CLI, pinned to an exact `@qrdx/cli` version and run on your machine, with no account or key (MIT).
 
 - **[a4a-network/a4a](https://github.com/a4a-network/a4a)**: Source for `a4a`.
 - **[alexadams6ix/imagera-skills](https://github.com/alexadams6ix/imagera-skills)**: Source for `imagera-media`.
@@ -362,12 +361,15 @@ Key source families include:
 - **[f-o-x11/deed-page-skill](https://github.com/f-o-x11/deed-page-skill)**: Source for `deed-page`.
 - **[f-o-x11/perq-skill](https://github.com/f-o-x11/perq-skill)**: Source for `perq`.
 - **[faberlang/faber](https://github.com/faberlang/faber)**: Source for `faber-language`.
+- **[gridpin/gridpin](https://github.com/gridpin/gridpin)**: Source for `gridpin-offline-geocoding`.
+- **[hyper-elements/hyper-elements](https://github.com/hyper-elements/hyper-elements)**: Source for `email-testing`.
 - **[kasovy/neverapply-mcp](https://github.com/kasovy/neverapply-mcp)**: Source for `neverapply`.
 - **[lliu56/minicut-skills](https://github.com/lliu56/minicut-skills)**: Source for `minicut-film-studio`.
 - **[lumifyai/sports-intelligence-skills](https://github.com/lumifyai/sports-intelligence-skills)**: Source for `lumify-odds`.
 - **[mesmerlord/lurkapi-claude-plugin](https://github.com/mesmerlord/lurkapi-claude-plugin)**: Source for `lurkapi-ad-research`.
 - **[mobbin/skills](https://github.com/mobbin/skills)**: Source for `mobbin`.
 - **[mobilebox-dev/mobilebox](https://github.com/mobilebox-dev/mobilebox)**: Source for `mobilebox-cloud-phones`.
+- **[nia-teams/agent-bridge](https://github.com/nia-teams/agent-bridge)**: Source for `nia-teams-agent-bridge`.
 - **[nitrosend/claude](https://github.com/nitrosend/claude)**: Source for `nitrosend-email-platform-migration`, `nitrosend-klaviyo-migration`, `nitrosend-mailchimp-migration`, `nitrosend-shopify-email-marketing`.
 - **[pangolin-spg/openclaw-skills](https://github.com/pangolin-spg/openclaw-skills)**: Source for `pangolinfo-amazon-data-research`.
 - **[pixeltable/pixeltable-skill](https://github.com/pixeltable/pixeltable-skill)**: Source for `pixeltable`.
@@ -682,6 +684,8 @@ Key source families include:
 - **[caldoai/skills](https://github.com/caldoai/skills)**: MIT source for `untangle-codebase`, a decision-log-driven structural refactoring workflow.
 - **[jakubkrehel/skills](https://github.com/jakubkrehel/skills)**: MIT source for 14 interface design, review, component exploration and technical illustration skills; full supporting files and copyright retained.
 
+- **[annenkovlabs/dopamine-talk](https://github.com/annenkovlabs/dopamine-talk)**: Source for `dopamine-talk`.
+- **[anzy-renlab-ai/pronounce](https://github.com/anzy-renlab-ai/pronounce)**: Source for `pronounce-word`.
 - **[arla6ka/design.how](https://github.com/arla6ka/design.how)**: Source for `design-how-build-design-system`, `design-how-component-docs`, `design-how-design-system-boss`, `design-how-make-font`, `design-how-make-logo`, `design-how-make-motion`, `design-how-migrate-design-system`, `design-how-token-mapping`, `design-how-ui-review`.
 - **[assaylabdesk-sudo/assay-lite](https://github.com/assaylabdesk-sudo/assay-lite)**: Source for `calibrate-first`.
 - **[bartdudzic/keepmacawake](https://github.com/bartdudzic/keepmacawake)**: Source for `keepmacawake`.
@@ -703,6 +707,8 @@ Key source families include:
 - **[heygen-com/hyperframes](https://github.com/heygen-com/hyperframes)**: Source for `figma`, `hyperframes`, `hyperframes-cli`, `hyperframes-registry`, `media-use`, `remotion-to-hyperframes`, `reverse-any-video`, `slideshow`.
 - **[igamingsychov/second-deposit-igaming](https://github.com/igamingsychov/second-deposit-igaming)**: Source for `second-deposit-igaming`.
 - **[igamingsychov/watch-igaming](https://github.com/igamingsychov/watch-igaming)**: Source for `watch-igaming`.
+- **[imuratalpay/ghost-cursor](https://github.com/imuratalpay/ghost-cursor)**: Source for `ghost-record`.
+- **[imuratalpay/ui-diff](https://github.com/imuratalpay/ui-diff)**: Source for `ui-diff`.
 - **[jgsystemsconsulting/jgs-se-knowledge-packs](https://github.com/jgsystemsconsulting/jgs-se-knowledge-packs)**: Source for `requirements-writing`.
 - **[keviniscool-boy/onboard](https://github.com/keviniscool-boy/onboard)**: Source for `onboard`.
 - **[kevinmmiddleton/unpaid-intern](https://github.com/kevinmmiddleton/unpaid-intern)**: Source for `unpaid-intern`.
@@ -724,7 +730,10 @@ Key source families include:
 - **[wilu222/unpolish-ai-writing](https://github.com/wilu222/unpolish-ai-writing)**: Source for `unpolish-ai-writing`.
 - **[wu736139669/goal-instruction-writer](https://github.com/wu736139669/goal-instruction-writer)**: Source for `goal-instruction-writer`.
 - **[wyattau/memory-handoff-skill](https://github.com/wyattau/memory-handoff-skill)**: Source for `memory-handoff`.
+- **[yangzichao/mcp-server-overleaf](https://github.com/yangzichao/mcp-server-overleaf)**: Source for `overleaf-collaboration`.
 - **[yanniskiefer/harvey-specter](https://github.com/yanniskiefer/harvey-specter)**: Source for `harvey-specter`.
+- **[yashh1323/atelier-ui](https://github.com/yashh1323/atelier-ui)**: Source for `atelier-ui`.
+- **[zhulinsen/alphasift](https://github.com/zhulinsen/alphasift)**: Source for `alphasift`.
 
 </details>
 
@@ -777,13 +786,13 @@ Contributors ranked by the number of commits.
 | 1 | <a href="https://github.com/WHOISABHISHEKADHIKARI"><img src="https://github.com/WHOISABHISHEKADHIKARI.png?size=48" width="32" height="32" alt="" /></a> [@WHOISABHISHEKADHIKARI](https://github.com/WHOISABHISHEKADHIKARI) | 51 |
 | 2 | <a href="https://github.com/munir-abbasi"><img src="https://github.com/munir-abbasi.png?size=48" width="32" height="32" alt="" /></a> [@munir-abbasi](https://github.com/munir-abbasi) | 34 |
 | 3 | <a href="https://github.com/Mohammad-Faiz-Cloud-Engineer"><img src="https://github.com/Mohammad-Faiz-Cloud-Engineer.png?size=48" width="32" height="32" alt="" /></a> [@Mohammad-Faiz-Cloud-Engineer](https://github.com/Mohammad-Faiz-Cloud-Engineer) | 33 |
-| 4 | <a href="https://github.com/zinzied"><img src="https://github.com/zinzied.png?size=48" width="32" height="32" alt="" /></a> [@zinzied](https://github.com/zinzied) | 24 |
-| 5 | <a href="https://github.com/beatra-ai"><img src="https://github.com/beatra-ai.png?size=48" width="32" height="32" alt="" /></a> [@beatra-ai](https://github.com/beatra-ai) | 19 |
-| 6 | <a href="https://github.com/Prince-1652"><img src="https://github.com/Prince-1652.png?size=48" width="32" height="32" alt="" /></a> [@Prince-1652](https://github.com/Prince-1652) | 17 |
+| 4 | <a href="https://github.com/beatra-ai"><img src="https://github.com/beatra-ai.png?size=48" width="32" height="32" alt="" /></a> [@beatra-ai](https://github.com/beatra-ai) | 19 |
+| 5 | <a href="https://github.com/Prince-1652"><img src="https://github.com/Prince-1652.png?size=48" width="32" height="32" alt="" /></a> [@Prince-1652](https://github.com/Prince-1652) | 17 |
+| 6 | <a href="https://github.com/waynehamadi"><img src="https://github.com/waynehamadi.png?size=48" width="32" height="32" alt="" /></a> [@waynehamadi](https://github.com/waynehamadi) | 15 |
 | 7 | <a href="https://github.com/ssumanbiswas"><img src="https://github.com/ssumanbiswas.png?size=48" width="32" height="32" alt="" /></a> [@ssumanbiswas](https://github.com/ssumanbiswas) | 15 |
-| 8 | <a href="https://github.com/waynehamadi"><img src="https://github.com/waynehamadi.png?size=48" width="32" height="32" alt="" /></a> [@waynehamadi](https://github.com/waynehamadi) | 15 |
-| 9 | <a href="https://github.com/FrancoStino"><img src="https://github.com/FrancoStino.png?size=48" width="32" height="32" alt="" /></a> [@FrancoStino](https://github.com/FrancoStino) | 13 |
-| 10 | <a href="https://github.com/jhuang-tt"><img src="https://github.com/jhuang-tt.png?size=48" width="32" height="32" alt="" /></a> [@jhuang-tt](https://github.com/jhuang-tt) | 11 |
+| 8 | <a href="https://github.com/FrancoStino"><img src="https://github.com/FrancoStino.png?size=48" width="32" height="32" alt="" /></a> [@FrancoStino](https://github.com/FrancoStino) | 13 |
+| 9 | <a href="https://github.com/jhuang-tt"><img src="https://github.com/jhuang-tt.png?size=48" width="32" height="32" alt="" /></a> [@jhuang-tt](https://github.com/jhuang-tt) | 11 |
+| 10 | <a href="https://github.com/sx4im"><img src="https://github.com/sx4im.png?size=48" width="32" height="32" alt="" /></a> [@sx4im](https://github.com/sx4im) | 10 |
 
 </td>
 <td valign="top" width="50%">
