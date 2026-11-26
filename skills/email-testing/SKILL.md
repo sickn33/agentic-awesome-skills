@@ -1,6 +1,6 @@
 ---
 name: email-testing
-description: "Preview and check an HTML email as Outlook, Gmail, Apple Mail, Yahoo Mail and AOL Mail draw it, on this machine with the Hyper Elements CLI, before it is sent."
+description: "Check HTML email and emulate Outlook, Gmail, Apple Mail, Yahoo Mail, and AOL Mail locally with the Hyper Elements CLI before sending."
 category: testing
 risk: safe
 source: official
@@ -47,7 +47,7 @@ Find or save the email as an `.html` file. Ask which clients matter if the user 
 ### 2. Check the email
 
 ```bash
-npx @hyper-elements/cli check email.html
+npx @hyper-elements/cli@0.3.3 check email.html --offline
 ```
 
 It lists what each client removes or changes (CSS it drops, image formats it doesn't show, web fonts it doesn't load, Gmail clipping a long email) and accessibility gaps such as a missing `lang` or `alt`, each with its line in the file and a fix. It writes no preview files. `--json` gives JSON. With `--max-warnings 0` it exits 1 on any warning, so it can fail a CI job. Lines tagged `cli/…-copy` only say which package version the CLI used.
@@ -72,22 +72,22 @@ Some fixes name Hyper Elements components ("lay it out with a Row"). In plain HT
 ### 3. Preview the email
 
 ```bash
-npx @hyper-elements/cli preview email.html --clients outlook,gmail,apple-mail
+npx @hyper-elements/cli@0.3.3 preview email.html --clients outlook,gmail,apple-mail
 ```
 
 Without `--clients`, it previews `outlook,outlook-com,gmail,apple-mail`. It writes one self-contained HTML file per client to `out/clients/<the email's name>/`. Webmail clients also get a `.mac` file (the same client as read on a Mac, for example `gmail.mac.html`), and Apple Mail gets `apple-mail.iphone.html`. `--dark` adds dark-mode previews where the client's dark mode is modelled.
 
-Open a file in Chrome or Chromium to see it: the list of what that client changed fills in above the email once the page loads. To get PNGs and that list from the command line instead:
+Open a trusted, synthetic preview in Chrome or Chromium to see it. For untrusted or personalized input, first remove remote resources and active content or use an isolated browser with network access blocked. If neither is possible, report the static check only. The list of what that client changed fills in above the email once the page loads. To get PNGs and that list from the command line instead, use the approved Playwright version in place of `PLAYWRIGHT_VERSION` and apply the same isolation rules:
 
 ```bash
-npx -p @hyper-elements/cli -p playwright-core hyper-elements preview email.html --screenshots
-npx -p @hyper-elements/cli -p playwright-core hyper-elements preview email.html --findings --json
+npx -p @hyper-elements/cli@0.3.3 -p playwright-core@PLAYWRIGHT_VERSION hyper-elements preview email.html --screenshots
+npx -p @hyper-elements/cli@0.3.3 -p playwright-core@PLAYWRIGHT_VERSION hyper-elements preview email.html --findings --json
 ```
 
 Where no Chrome, Edge or Chromium is installed, this downloads Playwright's Chromium once. Ask before running it:
 
 ```bash
-npx -p @hyper-elements/cli -p playwright-core hyper-elements preview --install-browser
+npx -p @hyper-elements/cli@0.3.3 -p playwright-core@PLAYWRIGHT_VERSION hyper-elements preview --install-browser
 ```
 
 ### 4. Verify the result and report
@@ -99,7 +99,7 @@ Success is a findings list and one preview file per requested client. Show the u
 ```text
 User request: "Will this welcome email break in Outlook?"
 Inputs: welcome.html, a card laid out with display: flex and a WebP image, no lang, no alt
-Command: npx @hyper-elements/cli check welcome.html --clients outlook,gmail,apple-mail
+Command: npx @hyper-elements/cli@0.3.3 check welcome.html --clients outlook,gmail,apple-mail
 Observed (@hyper-elements/cli 0.3.3, 2026-11-24, trimmed):
   info email/html-css at welcome.html:7: This email may have display: flex: the client lays it out as blocks [outlook]
   warning email/image-format at welcome.html:13: This image is a WebP file, which these email clients don't show [outlook] Fix: use a PNG, JPEG or GIF file
@@ -110,7 +110,7 @@ Observed (@hyper-elements/cli 0.3.3, 2026-11-24, trimmed):
 
 ```text
 User request: "Show me how it looks in Outlook and Gmail."
-Command: npx @hyper-elements/cli preview receipt.html --clients outlook,outlook-com,gmail
+Command: npx @hyper-elements/cli@0.3.3 preview receipt.html --clients outlook,outlook-com,gmail
 Observed (same version): out/clients/receipt/outlook.html, outlook-com.html, outlook-com.mac.html,
 gmail.html and gmail.mac.html, about 465 KB each, exit 0.
 ```
@@ -126,10 +126,10 @@ gmail.html and gmail.mac.html, about 465 KB each, exit 0.
 
 ## Safety and side effects
 
-- `npx` downloads and runs the latest published `@hyper-elements/cli` from npm. Pin a version (for example `@hyper-elements/cli@0.3.3`) to review exactly what runs.
+- `npx` may download and run code from npm. Approve and review the exact package versions first; `--offline` applies to the CLI check, not to `npx` package resolution.
 - `check` writes no preview files. It may fetch the email's remote fonts and images and cache them (under `node_modules/.cache` or `~/.cache`); `--offline` fetches nothing.
 - `preview` writes files under `out/clients/` in the current folder; `--screenshots` writes PNGs beside them. `--install-browser` downloads a browser.
-- The email isn't uploaded or sent. Opening a preview file loads fonts from cdn.jsdelivr.net and the email's own remote images, tracking pixels included, as a mail client would. Use `--fonts inline` to avoid the font requests.
+- The CLI does not send the email. Opening previews can fetch CDN fonts and the email's remote images or tracking pixels. `--fonts inline` only addresses font requests; it is not an offline or privacy boundary.
 - No account, credentials or cost.
 
 ## Sources and related skills
