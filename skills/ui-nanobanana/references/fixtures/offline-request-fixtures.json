@@ -1,0 +1,140 @@
+{
+  "schema_version": 1,
+  "description": "Offline $0 request-shape and MIME validation fixtures for Gemini Interactions API routes",
+  "valid_requests": [
+    {
+      "id": "lite_draft_with_jpeg_ref",
+      "payload": {
+        "model": "gemini-3.1-flash-lite-image",
+        "input": [
+          {"type": "text", "text": "Overhead studio flat-lay of a matte black ceramic espresso cup on weathered white oak, soft morning window light from left."},
+          {"type": "image", "data": "/9j/4AAQSkZJRg==", "mime_type": "image/jpeg"}
+        ],
+        "generation_config": {"thinking_level": "minimal"},
+        "response_format": {"type": "image", "image_size": "1K", "aspect_ratio": "16:9"}
+      }
+    },
+    {
+      "id": "nanobanana_2_1_panoramic_series_lock",
+      "payload": {
+        "model": "gemini-nano-banana-2.1",
+        "input": [
+          {"type": "image", "data": "iVBORw0KGgoAAAANSUhEUg==", "mime_type": "image/png"},
+          {"type": "image", "data": "UklGRh4AAABXRUJQVlA4WA==", "mime_type": "image/webp"},
+          {"type": "text", "text": "Match the exact dawn lighting and slate shadow palette of the first image; wide architectural elevation of seven arched timber doors."}
+        ],
+        "generation_config": {"thinking_level": "medium"},
+        "response_format": {"type": "image", "image_size": "2K", "aspect_ratio": "4:1"}
+      }
+    },
+    {
+      "id": "nanobanana_pro_4k_hero",
+      "payload": {
+        "model": "gemini-3-pro-image",
+        "input": [
+          {"type": "text", "text": "Medium-format architectural studio photograph of a volcanic basalt espresso bar, calm #0c1624 shadow safe-zone in lower-left 40%."}
+        ],
+        "response_format": {"type": "image", "image_size": "4K", "aspect_ratio": "16:9"}
+      }
+    },
+    {
+      "id": "omni_1_2_starting_frame_loop",
+      "payload": {
+        "model": "gemini-omni-1.2-flash",
+        "input": [
+          {"type": "image", "data": "iVBORw0KGgoAAAANSUhEUg==", "mime_type": "image/png"},
+          {"type": "text", "text": "Use this image as the starting frame. In a single unbroken scene, subtle warm steam rises from the brass group head. No dialogue."}
+        ],
+        "response_format": {"type": "video", "aspect_ratio": "16:9", "resolution": "1080p", "duration": "5s", "delivery": "uri"}
+      }
+    },
+    {
+      "id": "gemini_4_neon_svg_code_visual",
+      "payload": {
+        "model": "gemini-4-neon",
+        "input": [
+          {"type": "image", "data": "/9j/4AAQSkZJRg==", "mime_type": "image/jpeg"},
+          {"type": "text", "text": "Generate a crisp self-contained architectural SVG schematic matching the palette of this reference plate."}
+        ],
+        "generation_config": {"thinking_level": "xhigh"}
+      }
+    },
+    {
+      "id": "gemini_4_carbon_shader_scene",
+      "payload": {
+        "model": "gemini-4-carbon",
+        "input": "Write a self-contained Three.js and GLSL fragment shader rendering caustic light refraction over #0c1624 basalt.",
+        "generation_config": {"thinking_level": "high"}
+      }
+    }
+  ],
+  "invalid_requests": [
+    {
+      "id": "reject_top_level_reference_images_arg",
+      "expected_error": "reference_images",
+      "payload": {
+        "model": "gemini-nano-banana-2.1",
+        "input": "Studio mug shot",
+        "reference_images": ["generations/refs/brand/logo.png"],
+        "response_format": {"type": "image", "image_size": "2K", "aspect_ratio": "16:9"}
+      }
+    },
+    {
+      "id": "reject_lite_4k_resolution",
+      "expected_error": "image_size='1K' only",
+      "payload": {
+        "model": "gemini-3.1-flash-lite-image",
+        "input": "Fast draft",
+        "response_format": {"type": "image", "image_size": "4K", "aspect_ratio": "16:9"}
+      }
+    },
+    {
+      "id": "reject_pro_unsupported_panoramic_ratio",
+      "expected_error": "Unsupported aspect_ratio on Nano Banana Pro",
+      "payload": {
+        "model": "gemini-3-pro-image",
+        "input": "Ultra-wide banner",
+        "response_format": {"type": "image", "image_size": "2K", "aspect_ratio": "8:1"}
+      }
+    },
+    {
+      "id": "reject_gemini_4_image_response_format",
+      "expected_error": "outputs text/code only",
+      "payload": {
+        "model": "gemini-4-argon",
+        "input": "Generate a raster photo",
+        "response_format": {"type": "image", "image_size": "2K", "aspect_ratio": "16:9"}
+      }
+    },
+    {
+      "id": "reject_gemini_4_minimal_thinking",
+      "expected_error": "Invalid thinking_level",
+      "payload": {
+        "model": "gemini-4-hydrogen",
+        "input": "Plan storyboard",
+        "generation_config": {"thinking_level": "minimal"}
+      }
+    },
+    {
+      "id": "reject_argon_xhigh_thinking",
+      "expected_error": "Invalid thinking_level",
+      "payload": {
+        "model": "gemini-4-argon",
+        "input": "Plan storyboard",
+        "generation_config": {"thinking_level": "xhigh"}
+      }
+    },
+    {
+      "id": "reject_unsupported_svg_mime_in_image_part",
+      "expected_error": "mime_type",
+      "payload": {
+        "model": "gemini-nano-banana-2.1",
+        "input": [
+          {"type": "image", "data": "PHN2Zz48L3N2Zz4=", "mime_type": "image/svg+xml"},
+          {"type": "text", "text": "Use this logo"}
+        ],
+        "response_format": {"type": "image", "image_size": "2K", "aspect_ratio": "1:1"}
+      }
+    }
+  ]
+}

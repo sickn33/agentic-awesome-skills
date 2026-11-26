@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "description": "Offline URI allowlist, magic-byte MIME detection, and bounded polling timeout fixtures",
+  "uri_cases": [
+    {
+      "id": "valid_v1_files_uri",
+      "uri": "https://generativelanguage.googleapis.com/v1/files/abc123def456",
+      "valid": true,
+      "expected_resource": "files/abc123def456"
+    },
+    {
+      "id": "valid_v1beta_files_uri",
+      "uri": "https://generativelanguage.googleapis.com/v1beta/files/vid-987654321",
+      "valid": true,
+      "expected_resource": "files/vid-987654321"
+    },
+    {
+      "id": "reject_untrusted_external_host",
+      "uri": "https://attacker.example.com/v1/files/abc123def456",
+      "valid": false
+    },
+    {
+      "id": "reject_http_downgrade",
+      "uri": "http://generativelanguage.googleapis.com/v1/files/abc123def456",
+      "valid": false
+    },
+    {
+      "id": "reject_path_traversal_or_naive_split",
+      "uri": "https://generativelanguage.googleapis.com/v1/projects/secret/files/../../abc123",
+      "valid": false
+    },
+    {
+      "id": "reject_query_string_credential_leak",
+      "uri": "https://generativelanguage.googleapis.com/v1/files/abc123?redirect=https://evil.test",
+      "valid": false
+    }
+  ],
+  "mime_magic_cases": [
+    {
+      "id": "jpeg_bytes_with_wrong_png_extension_detected_as_jpeg",
+      "filename": "misnamed_photo.png",
+      "hex_prefix": "ffd8ffe000104a4649460001",
+      "expected_mime": "image/jpeg"
+    },
+    {
+      "id": "png_bytes_detected_as_png",
+      "filename": "logo.png",
+      "hex_prefix": "89504e470d0a1a0a0000000d",
+      "expected_mime": "image/png"
+    },
+    {
+      "id": "webp_bytes_detected_as_webp",
+      "filename": "style_ref.webp",
+      "hex_prefix": "524946462400000057454250",
+      "expected_mime": "image/webp"
+    }
+  ],
+  "polling_timeout_cases": [
+    {
+      "id": "active_before_deadline_succeeds",
+      "deadline_seconds": 600,
+      "step_seconds": 5,
+      "simulated_states": ["PROCESSING", "PROCESSING", "ACTIVE"],
+      "expected_outcome": "ACTIVE"
+    },
+    {
+      "id": "failed_state_aborts_immediately",
+      "deadline_seconds": 600,
+      "step_seconds": 5,
+      "simulated_states": ["PROCESSING", "FAILED"],
+      "expected_outcome": "RuntimeError"
+    },
+    {
+      "id": "stuck_processing_hits_bounded_deadline",
+      "deadline_seconds": 15,
+      "step_seconds": 5,
+      "simulated_states": ["PROCESSING", "PROCESSING", "PROCESSING", "PROCESSING", "PROCESSING"],
+      "expected_outcome": "TimeoutError"
+    }
+  ]
+}
