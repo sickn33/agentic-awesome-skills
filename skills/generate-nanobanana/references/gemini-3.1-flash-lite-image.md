@@ -1,84 +1,97 @@
-# Gemini 3.1 Flash Lite Image (`gemini-3.1-flash-lite-image`)
+# Nano Banana 2 Lite
 
-## Overview
-Nano Banana 2 Lite is Google's fastest and cheapest Gemini image model — the draft tier for rapid concept exploration and quick visual iteration before promoting a picked result to a higher tier.
+Fastest, cheapest Gemini image model (sub-2-second latency target). Default for drafts, rapid iteration, and quick local edits — switch to Nano Banana 2.1 or Nano Banana Pro when a job needs 2K/4K output, multi-character consistency, search grounding, or dedicated style references.
 
-## Model Specification
-- **Model ID**: `gemini-3.1-flash-lite-image`
-- **API**: Interactions API (`client.interactions.create`) — this example uses Interactions; verify other endpoint support rather than assuming generateContent is unavailable.
-- **Primary Use**: Image drafts, rapid prototyping, thumbnail concepts.
-- **Cost**: Billable per call. Quote the current price from the live [pricing page](https://ai.google.dev/gemini-api/docs/pricing) and get explicit user approval before every generation — see the skill's cost-approval rule.
-- **Reference images**: Model/version-specific input limits; check the current model documentation before selecting multiple references.
-- **Reproducibility**: No `seed` parameter is documented for this model. Treat every generation as non-deterministic; for "same image but change X" requests, reuse the exact original prompt and reference images rather than promising an identical re-roll.
+| Field | Value |
+|---|---|
+| Model ID | `gemini-3.1-flash-lite-image` |
+| Provider | Gemini API (Google AI Studio key) |
+| API | Interactions API — `client.interactions.create` |
+| Method | Sync — one call, one reply |
+| Type | Image |
+| API key | `GEMINI_API_KEY` env var |
+| Docs | https://ai.google.dev/gemini-api/docs/image-generation |
+| Cost | ~$0.034 / 1K image ($30 / 1M image output tokens; $0.25 / 1M input tokens) — quote current pricing from https://ai.google.dev/gemini-api/docs/pricing and get approval before every call (see SKILL.md, Rules) |
 
-## Request Shape
+## Request (Python, `google-genai` SDK)
 
-### Python SDK (`google-genai`, Interactions API)
 ```python
 from google import genai
 import base64
+import mimetypes
+from pathlib import Path
 
-client = genai.Client()
+client = genai.Client()  # reads GEMINI_API_KEY from env
+
+input_parts = [{"type": "text", "text": prompt}]
+for ref_path in ref_paths:  # keep to 0-2 images for fast drafting (passed inside input, never a top-level reference_images arg)
+    raw = Path(ref_path).read_bytes()
+    if raw.startswith(b"\x89PNG\r\n\x1a\n"):
+        mime_type = "image/png"
+    elif raw.startswith(b"\xff\xd8\xff"):
+        mime_type = "image/jpeg"
+    elif raw[:4] == b"RIFF" and raw[8:12] == b"WEBP":
+        mime_type = "image/webp"
+    else:
+        mime_type, _ = mimetypes.guess_type(str(ref_path))
+    if mime_type not in {"image/png", "image/jpeg", "image/webp", "image/heic", "image/heif"}:
+        raise ValueError(f"Unsupported reference MIME {mime_type} for {ref_path}")
+    input_parts.append({
+        "type": "image",
+        "data": base64.b64encode(raw).decode("utf-8"),
+        "mime_type": mime_type,
+    })
 
 interaction = client.interactions.create(
     model="gemini-3.1-flash-lite-image",
-    input="A futuristic city skyline at sunset, cyberpunk aesthetic, high detail",
+    input=input_parts,
+    generation_config={
+        "thinking_level": "minimal",  # "minimal" (default) | "high"
+    },
     response_format={
         "type": "image",
-        "aspect_ratio": "16:9",
-        "image_size": "1K",
+        "image_size": "1K",       # 1K (1024px) only — 2K and 4K are unsupported on Lite
+        "aspect_ratio": "16:9",   # 1:1, 16:9, 9:16, 4:3, 3:4, 3:2, 2:3, 4:5, 5:4, 21:9, etc.
     },
 )
-
-with open("generations/output.png", "wb") as f:
-    f.write(base64.b64decode(interaction.output_image.data))
 ```
 
-### Reference Image Input
-Pass reference images as additional `input` parts (base64-encoded), alongside the text prompt:
+### Multi-turn local edit
 ```python
-from google import genai
-import base64
-
-client = genai.Client()
-
-with open("generations/refs/brand/logo.png", "rb") as f:
-    logo_bytes = f.read()
-
-interaction = client.interactions.create(
+edited = client.interactions.create(
     model="gemini-3.1-flash-lite-image",
-    input=[
-        {"type": "text", "text": "Incorporate this logo style into a draft banner for summer sale"},
-        {"type": "image", "data": base64.b64encode(logo_bytes).decode("utf-8"), "mime_type": "image/png"},
-    ],
-    response_format={"type": "image", "aspect_ratio": "16:9"},
+    previous_interaction_id=interaction.id,
+    input="Swap the background to a warm studio gradient; keep everything else identical.",
+    response_format={"type": "image", "image_size": "1K", "aspect_ratio": "16:9"},
 )
 ```
 
-### REST API (`curl`)
-```bash
-mkdir -p generations
-cat > generations/lite_image_request.json << 'EOF'
-{
-  "model": "gemini-3.1-flash-lite-image",
-  "input": [
-    {"type": "text", "text": "A futuristic city skyline at sunset, cyberpunk aesthetic, high detail"}
-  ],
-  "response_format": {
-    "type": "image",
-    "aspect_ratio": "16:9",
-    "image_size": "1K"
-  }
-}
-EOF
+## Response handling
 
-curl --fail-with-body -sS --max-time 120 -X POST \
-  "https://generativelanguage.googleapis.com/v1beta/interactions" \
-  -H "x-goog-api-key: $GEMINI_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d @generations/lite_image_request.json > generations/lite_image_response.json
+```python
+from pathlib import Path
+import base64
+
+if interaction.output_image is None or interaction.output_image.data is None:
+    # No image came back — only text (a refusal, safety block, or commentary).
+    # Surface that text to the user and stop. No file, no sidecar.
+    raise RuntimeError(interaction.output_text or "empty response")
+
+Path(output_path).write_bytes(base64.b64decode(interaction.output_image.data))
+assert Path(output_path).stat().st_size > 0
 ```
 
-The response's `output_image.data` field holds the base64-encoded image bytes; decode and write them to the target file.
+Two rules that are not optional:
 
-These snippets omit robust output existence/MIME/schema checks and protected no-overwrite writes; they are not ready-made production helpers. Raw REST resource shape can differ from SDK convenience properties, so inspect actual response steps/metadata and the pinned reference. Use secure header/config input rather than exposing API keys in process arguments. A polling deadline is not remote cancellation.
+- **`output_image.data` is base64-encoded text, not raw bytes** — decode it with `base64.b64decode` before writing. Writing the string directly (or double-decoding) is the classic way a generation "succeeds" but no valid image ever lands on disk.
+- **Verify the image file exists and is non-empty before writing the sidecar.** The sidecar is the record that an image exists — a sidecar without its image is a false log entry.
+
+`output_text`, when present, is the model's commentary — safe to relay to the user, never the file.
+
+## Notes
+
+- **`image_size` is `"1K"` only.** `2K` and `4K` are unsupported on `gemini-3.1-flash-lite-image`. When a user wants 2K or 4K, route to Nano Banana 2.1 (`gemini-nano-banana-2.1`) or Nano Banana Pro (`gemini-3-pro-image`).
+- **Thinking levels:** Supports `"minimal"` (default, fastest) and `"high"`. Google Search grounding is not supported on Lite.
+- **Determinism & stateful edits:** No `seed` parameter is documented on the Interactions API. Log `interaction.id` in `response_id` on every sidecar so follow-up tweaks can chain statefully via `previous_interaction_id` or reuse the exact prompt and references (see SKILL.md, Determinism & coherence).
+- **Promoting a draft:** A picked draft's identity does not transfer automatically to Nano Banana 2.1 or Pro. Pass the approved Lite draft image itself as a reference in the final call.
+- If a request needs dense on-image text (infographics, packaging, readable UI copy), upgrade to Nano Banana 2.1 or Pro — Lite is weaker at typography.
