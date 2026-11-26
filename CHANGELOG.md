@@ -38,9 +38,43 @@ Summarize the most important change for users in one short paragraph.
 
 ## [Unreleased]
 
+## [21.4.0] - 2026-11-26 - "Visual Review and Team Workflows"
+
+AAS adds 14 skills for visual review, collaboration, research and testing, bringing the catalog to 3,151 skills.
+
 ### New skills
 
 - Add Murat Alpay’s UI Diff for visual PR reviews and Ghost Record for replayable React interaction demos.
+- Add Atelier UI for frontend design, Email Testing for previewing HTML in email clients and Pronounce Word for hearing developer terms.
+- Add Nia Teams Agent Bridge and Overleaf collaboration, plus Dopamine Talk for communication and Publora for approval-gated social publishing.
+- Add Cross-Source Metric Reconciliation, GridPin offline geocoding and SearchApi for search through MCP.
+- Add AlphaSift for equity research and Setsuzei for estimates of Japanese year-end tax savings.
+
+### Improvements
+
+- Let Codex users compare skills and revisit audited selections. Restore search across every catalog ID and bring back 102 reviewed skill bundles.
+- Update Cloudish deployment guidance for 0.1.9, including build context review and bounded build status checks.
+- Correct the Statsmodels prediction example to reject mismatched columns.
+
+### Contributors
+
+- Thanks to @nia-teams-admin for [#2490](https://github.com/sickn33/agentic-awesome-skills/pull/2490).
+- Thanks to @johnisanerd for [#2492](https://github.com/sickn33/agentic-awesome-skills/pull/2492).
+- Thanks to @ivoIturrieta for [#2493](https://github.com/sickn33/agentic-awesome-skills/pull/2493).
+- Thanks to @chenyangsu for [#2494](https://github.com/sickn33/agentic-awesome-skills/pull/2494).
+- Thanks to @yashh1323 for [#2496](https://github.com/sickn33/agentic-awesome-skills/pull/2496).
+- Thanks to @bucharitesh for [#2499](https://github.com/sickn33/agentic-awesome-skills/pull/2499).
+- Thanks to @ZhuLinsen for [#2501](https://github.com/sickn33/agentic-awesome-skills/pull/2501).
+- Thanks to @287523023qq-hue for [#2502](https://github.com/sickn33/agentic-awesome-skills/pull/2502).
+- Thanks to @anzy-renlab-ai for [#2503](https://github.com/sickn33/agentic-awesome-skills/pull/2503).
+- Thanks to @gabsferreira for [#2504](https://github.com/sickn33/agentic-awesome-skills/pull/2504).
+- Thanks to @publora-team for [#2505](https://github.com/sickn33/agentic-awesome-skills/pull/2505).
+- Thanks to @TheSashaDev for [#2506](https://github.com/sickn33/agentic-awesome-skills/pull/2506).
+- Thanks to @gridpin-reserve for [#2508](https://github.com/sickn33/agentic-awesome-skills/pull/2508).
+- Thanks to @javierluraschi for [#2532](https://github.com/sickn33/agentic-awesome-skills/pull/2532).
+- Thanks to @Ben-Home for [#2540](https://github.com/sickn33/agentic-awesome-skills/pull/2540).
+- Thanks to @ozko00 for [#2541](https://github.com/sickn33/agentic-awesome-skills/pull/2541).
+- Thanks to @yangzichao for [#2542](https://github.com/sickn33/agentic-awesome-skills/pull/2542).
 
 ## [21.3.0] - 2026-11-24 - "Email Migration, Video and Mobile Testing"
 
