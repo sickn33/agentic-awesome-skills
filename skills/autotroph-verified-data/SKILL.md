@@ -3,16 +3,15 @@ name: autotroph-verified-data
 description: "Query schema-verified SEC EDGAR XBRL financials, EU TED eForms tenders, USAspending contracts, USPTO patent claim trees, and US Federal Register rules via MCP."
 category: data-ai
 risk: safe
-source: https://github.com/char5742/autotroph-mcp-catalog/blob/9e9febfec9cb3afab95546304aa9b3bc29d4297d/skills/autotroph-verified-data/SKILL.md
+source: https://github.com/char5742/autotroph-mcp-catalog/blob/09e2fab670c5e766bb31ab058a15ef81ce75b6a5/skills/autotroph-verified-data/SKILL.md
 source_repo: char5742/autotroph-mcp-catalog
 source_type: community
 license: MIT
-license_source: https://github.com/char5742/autotroph-mcp-catalog/blob/9e9febfec9cb3afab95546304aa9b3bc29d4297d/LICENSE
+license_source: https://github.com/char5742/autotroph-mcp-catalog/blob/09e2fab670c5e766bb31ab058a15ef81ce75b6a5/LICENSE
 date_added: "2026-11-26"
 author: char5742
 tags: [mcp, sec-edgar, xbrl, procurement, patents, compliance]
 ---
-
 # Autotroph Verified Regulatory, Financial & Patent Data
 
 ## Overview
@@ -32,7 +31,8 @@ Unlike raw HTML scraping or unverified model recall, this workflow enforces bala
 
 ## Prerequisites
 
-- **Network & MCP Endpoint**: Requires read-only HTTPS access to the hosted Streamable HTTP MCP server (`https://mcp.apify.com?tools=...`) or the local zero-dependency stdio wrapper (`npx -y github:char5742/autotroph-mcp-catalog`).
+- **Network & MCP Endpoint (Recommended — Zero Local Install)**: Requires read-only HTTPS access to the hosted Streamable HTTP MCP server (`https://mcp.apify.com?tools=...`).
+- **Optional Local Stdio Wrapper (Pinned & Approval-Gated)**: If using a stdio-only MCP host, pin to the reviewed immutable commit SHA rather than a moving branch (`npx github:char5742/autotroph-mcp-catalog#09e2fab670c5e766bb31ab058a15ef81ce75b6a5`, without auto-confirm flags). Clone into a temporary review directory to inspect `bin/autotroph-mcp.mjs` and `package.json`, and obtain explicit user approval before downloading or executing it with `APIFY_TOKEN`.
 - **Authentication & Pricing**: Requires an Apify API token (`APIFY_TOKEN`, free tier includes `$5/mo` credit covering 1,000+ calls via `https://console.apify.com/settings/integrations?createApiToken=true&for=MCP`). Usage is billed Pay-Per-Event (`$0.00005` actor start + `$0.004–$0.01/record`). Never print or commit `APIFY_TOKEN`.
 
 ## How It Works
