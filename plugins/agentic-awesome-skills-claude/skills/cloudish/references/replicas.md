@@ -15,7 +15,7 @@ replica only while it runs.
 Set `replicas` when creating or updating the app (see [SKILL.md](../SKILL.md)).
 It's the most copies that may run at once, counting the app's own container,
 so `10` allows 9 replicas. The default is `1` (no replicas); the highest is
-100.
+30.
 
 ```bash
 curl -X POST https://cloudish.ai/api/v1/projects \
@@ -94,11 +94,11 @@ curl -X DELETE https://cloudish.ai/api/v1/projects/YOUR_ALIAS/my-app/replicas/r-
 
 ## Lifetime and billing
 
-- A replica stops after the key's idle timeout passes with no requests to
-  it; an open websocket counts as a request. The default is 15 minutes.
-  Change it per key with `PATCH https://cloudish.ai/api/v1/me {"settings": {"idleTimeoutSeconds": 30}}`
-  (one of 30, 60, 300, 900, 3600, 28800, 86400, or `0` for never). The
-  same timeout applies to the app's own container.
+- A replica stops after its app's `sleepAfterMinutes` pass with no requests
+  to it; an open websocket counts as a request. The default is 15 minutes.
+  Change it for the app and its replicas with
+  `PATCH https://cloudish.ai/api/v1/projects/YOUR_ALIAS/my-app {"sleepAfterMinutes": 1}`.
+  A replica of an `alwaysOn` app runs until it's deleted.
 - Each replica is billed per second while it runs, at the app's size
   (`creditsPerHour`, see [instances.md](instances.md)), to the owner's key. When
   the key runs out of credits, its replicas stop.

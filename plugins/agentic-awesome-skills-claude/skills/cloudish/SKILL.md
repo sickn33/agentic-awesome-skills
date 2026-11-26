@@ -35,15 +35,15 @@ URL, and diagnose failures from real build and container logs.
 
 ## How It Works
 
-Last updated 2026-10-21 ([changelog](references/changelog.md)).
+Last updated 2026-11-24 ([changelog](references/changelog.md)).
 
 Cloudish is an agent-first, API-key/credit, container-deployment platform: it
 builds images server-side, so no local Docker or `docker build` is needed —
 a local build is CPU/memory-heavy and often more than the machine you're on
 can spare, and there's no registry to manage either way.
 Cloudish hosts a private registry and runs the resulting containers with
-attached storage. There is no user-facing product UX here — everything is
-this API.
+attached storage. Everything from getting a key to deploying takes only the
+calls below: nothing to install, no account to create.
 
 Never print API keys or secrets into chat, source code or logs. Never
 report a deploy as succeeded until you've verified it: the build reached
@@ -62,7 +62,7 @@ transfer (credits.md).
 
 ```bash
 curl -X POST https://cloudish.ai/api/v1/keys -H "content-type: application/json" \
-  -d '{"alias": "<project-name>", "agent": "<agent>", "model": "<model>", "ref": "skills-repo"}'
+  -d '{"alias": "<alias>", "agent": "<agent>", "model": "<model>", "source": "<source>"}'
 ```
 
 The key comes back in the response:
@@ -72,24 +72,30 @@ The key comes back in the response:
 ```
 
 `key` authenticates every call below (`Authorization: Bearer
-$CLOUDISH_API_KEY`). If this project already has one, reuse it instead of
+$CLOUDISH_API_KEY`). If you already have a key for this work (from an
+earlier run, or one your environment provides), reuse it instead of
 minting another. Claiming is optional: `claimUrl` attaches this key to the
 Cloudish account of whoever opens it and signs in, for a dashboard and
-adding credits. It works once and expires in 30 minutes;
+adding credits; the claim may also add a small credit bonus to that account,
+which they can move into this key. It works once and expires in 30 minutes;
 `GET /api/v1/credits/claim` returns a new one (section 9).
 
-`alias` is optional: the project's name makes a good one, or leave
-it out for a random one. You get that name if it's free, or a close variant
-(e.g. `my-app-otter`) if not; use the `apiKey.alias` that comes back, the
-`{alias}` in every project path below.
+`alias` is optional: a short name for what you're deploying (e.g.
+`todo-app`) makes a good one, or leave it out for a random one. You get
+that name if it's free, or a close variant (e.g. `my-app-otter`) if not,
+and it can be renamed later (`PATCH /api/v1/me`). Use the
+`apiKey.alias` that comes back, the `{alias}` in every project path below.
 
-`agent`, `model` and `ref` are all optional; leave out any you don't know.
+`agent`, `model` and `source` are all optional; leave out any you don't know.
 `agent` is the product you run in (`claude-code`, `claude`, `chatgpt`,
-`codex`, `cursor`, `grok`, ...), `model` the model you are
-(`claude-opus-5-5`, `gpt-5.5`, ...), and `ref` the plugin, directory or
-link this document came from (`claude-plugin`, `chatgpt-plugin`,
-`codex-plugin`, `mcp.so`, `producthunt`, ...) — leave it out rather than
-guess. They only show Cloudish which agents and channels use it. Keep `ref` as shown: it only tells Cloudish which link sent you here.
+`codex`, `cursor`, `grok`, ...), `model` you use (`claude-opus-5-5`,
+`gpt-5.5`, `deepseek-v4-pro`, ...), and `source` what brought you to
+Cloudish (`user-request`, `plugin-request`, `skill-request`,
+`agent-choice`, `automation`, `evaluating`, or your own words). Leave it
+out rather than guess. They only tell Cloudish which agents use it and
+where they came from.
+
+*Advanced minting: see [minting.md](references/minting.md).*
 
 ### 1. Create (or update) a project and deploy it — one call
 
@@ -103,28 +109,45 @@ same request. Two ways to attach one, mutually exclusive:
 ```bash
 curl -X POST https://cloudish.ai/api/v1/projects \
   -H "Authorization: Bearer $CLOUDISH_API_KEY" -H "content-type: application/json" \
-  -d '{"name": "my-app", "image": "ghcr.io/acme/my-app:1.0.0", "port": 8080}'
+  -d '{"name": "my-app", "image": "ghcr.io/acme/my-app:1.0.0", "port": 8080, "alwaysOn": true}'
 # -> { "project": { "path": "your-alias/my-app", ... }, "app": { "status": "registered", ... },
 #      "subdomain": { "url": "https://<token>.cloudish.app/", ... } }
 ```
 
 **Build from source** — upload a tar.gz build context (must contain a
 `Dockerfile` at its root). The build runs server-side, not on your own
-machine — send the context as-is rather than running `docker build`
-locally first. Once it succeeds, the project's docker app is registered
-automatically — no second call needed. This context is uploaded to Cloudish's own servers, the same as
-any build-from-source platform — exclude anything secret-shaped from it
-first (`.env` files, credentials, `.git`) and use section 2's encrypted
-secrets endpoint for real credentials instead, never a file baked into the
-context:
+machine. Skip the local `docker build` and send only the approved context. Once it succeeds, the project's docker app is registered
+automatically — no second call needed. Cloudish receives every entry in the archive. Build a separate staging
+directory using an explicit list of the files needed by the Dockerfile and
+its build steps. Inspect that list for private source, credentials and
+symlinks, then confirm the exact scope with the user before upload. Use the
+secrets endpoint in section 2 for runtime credentials. Keep the archive
+outside the staging directory and remove it after transfer. Set both paths below to absolute paths.
 
 ```bash
-tar --exclude='.env*' --exclude='.git' -czf context.tar.gz .
+tar -C "$APPROVED_BUILD_CONTEXT" -czf "$CONTEXT_ARCHIVE" . &&
 curl -X POST https://cloudish.ai/api/v1/projects \
   -H "Authorization: Bearer $CLOUDISH_API_KEY" \
-  -F "name=my-app" -F "port=8080" -F "context=@context.tar.gz"
-# -> { "project": { "path": "your-alias/my-app", ... }, "build": { "id": 123, "status": "pending" } }
+  -F "name=my-app" -F "port=8080" -F "sleepAfterMinutes=30" -F "context=@$CONTEXT_ARCHIVE"
+# -> { "project": { "path": "your-alias/my-app", ... }, "build": { "id": 123, "status": "running" } }
 ```
+
+**Choose how it runs** on every deploy, since the right answer depends on
+the app:
+
+- `"alwaysOn": true` runs it around the clock, billed the whole time, and
+  starts it as soon as it's deployed: for a site or API that must answer at
+  once, or a bot or worker that nothing sends requests to.
+- `"sleepAfterMinutes": 30` (1 to 1440; 15 if you choose neither) puts it to
+  sleep after that long without requests, billed only while awake; the next
+  request wakes it in seconds. Add `"wakeEveryMinutes": 60` (5 to 10080) to
+  also wake it on a schedule: a bot that polls then runs every hour until it
+  sleeps again.
+
+Left out on a redeploy, each keeps the app's own. Change them without a
+redeploy: `PATCH https://cloudish.ai/api/v1/projects/{owner}/{name}` with the same
+fields. An always-on app's `runway.alwaysOnHoursLeft` says how long its
+balance keeps it running.
 
 `port` defaults to `8080` and must be the port your server listens on,
 whatever the Dockerfile's `EXPOSE` says: an nginx image listens on `80`,
@@ -143,13 +166,17 @@ GB memory (`buildMemoryGb`).
 Poll until it settles:
 
 ```bash
-curl https://cloudish.ai/api/v1/images/builds/123 -H "Authorization: Bearer $CLOUDISH_API_KEY"
+curl --connect-timeout 5 --max-time 15 https://cloudish.ai/api/v1/images/builds/123 -H "Authorization: Bearer $CLOUDISH_API_KEY"
 # -> { "build": { "status": "running", "logs": "<build output so far>" }, "image": null }
 ```
 
-`build.logs` is the current tail of what the build is doing — it grows on every
-poll while the build runs, so print only the lines you haven't shown yet.
-Stop once `status` is `"succeeded"` or `"failed"`; on `"failed"`, show both
+Poll at intervals only while `status` is `"running"`. Set a total
+observation deadline before polling and cap every request by the remaining
+time. On timeout or a transport error, report the build ID and check that
+build before attempting another deploy. Treat missing or unrecognized
+status as an unknown result. `build.logs` is the current tail of what
+the build is doing — it grows on every poll while the build runs, so print
+only new lines and redact credentials or private project data before showing them. On `"failed"`, show both
 `build.error` and the tail of `build.logs`. Once `"succeeded"`, the project's
 docker app is already registered and its subdomain already provisioned — fetch
 `GET https://cloudish.ai/api/v1/projects/{owner}/{name}` for the resulting
@@ -160,7 +187,10 @@ non-secret vars), `volumeEnabled`/`volumeSizeGb`/`volumeMountPath`
 (persistent storage), `cpuCores`/`memoryGb` (container size, distinct
 from the build's own), `maxBodyMb` (the largest request body the app
 accepts, 64 MB unless set, at most 1024; a bigger one gets `413`
-before it reaches the app, so raise it for large uploads). To run many isolated copies of the same app — one
+before it reaches the app, so raise it for large uploads), `runtimeClass`
+(an optional hint for the sandbox technology: `gvisor`, or `kata` for a VM —
+a slower start, a stronger boundary. On this deployment apps run in a sandbox — `gvisor` by default, or `kata` when the app asks — so they don't share the host's kernel;
+leaving it out is always safe, and on a redeploy it keeps the app's own hint). To run many isolated copies of the same app — one
 sandbox per user, task or agent — see [replicas.md](references/replicas.md).
 
 Left out, a new app gets the default size, `shared`: billed for 0.1 CPU
@@ -176,6 +206,10 @@ already reachable — a permanent URL is provisioned automatically, returned
 as `subdomain.url` above. It's `https://<name>.cloudish.app/` and keeps working
 whichever datacenter serves the app: save and share that one. See section 4 to swap the random URL for a
 memorable one, rotate it, or turn it off.
+
+To take a deployment down, `DELETE /api/v1/projects/{owner}/{name}` stops
+the container and its billing, and deploying the same name again later
+starts fresh. A volume is deleted with the project, so its data is gone.
 
 ### 2. Environment variables and secrets
 
@@ -198,6 +232,14 @@ curl -X PUT https://cloudish.ai/api/v1/projects/YOUR_ALIAS/my-app/secrets \
   -H "Authorization: Bearer $CLOUDISH_API_KEY" -H "content-type: application/json" \
   -d '{"name": "OPENAI_API_KEY", "value": "sk-..."}'
 ```
+
+For *human* login, OIDC authentication is available (section 5).
+
+Several at once take the same shape as `env`:
+`-d '{"OPENAI_API_KEY": "sk-...", "STRIPE_KEY": "sk_live_..."}'`. Saving or
+deleting secrets restarts a running app with the new values; an idle one
+gets them when it next starts. `GET …/secrets` lists names (never values);
+`DELETE …/secrets/NAME` removes one.
 
 ### 3. Persistent storage
 
@@ -245,54 +287,11 @@ $CLOUDISH_API_KEY` as everything else in this doc; an `open` (the default)
 or `public` project also answers with no credential at all, billed to its
 owner. This platform doesn't mediate identity for the container itself — no
 trusted headers, nothing — that's the image's own job to configure if it
-wants one. The container starts on first request if it isn't already, and
-scales back down after inactivity
-(30/60/300/900/3600/28800/86400 seconds, or `0` for never, keeping it
-always on and billed around the clock; default is the deployment's own,
-override per-key with `PATCH /api/v1/me {"settings": {"idleTimeoutSeconds":
-<one of those>}}`).
+wants one. A sleeping app (section 1) starts on the next request.
 
-#### Your own domains
-
-A project can also answer at any number of domains you control. Add each
-one (`foobar.com`, `www.foobar.com`, ...) to the same project:
-
-```bash
-curl -X POST https://cloudish.ai/api/v1/projects/YOUR_ALIAS/my-app/domains \
-  -H "Authorization: Bearer $CLOUDISH_API_KEY" -H "content-type: application/json" \
-  -d '{"host": "foobar.com"}'
-# -> { "domain": { "host": "foobar.com", "status": "pending", "redirect": false,
-#      "txtRecord": { "name": "_cloudish-challenge.foobar.com", "value": "cloudish-verify=..." } } }
-```
-
-1. Add the returned TXT record at your DNS provider. It's checked every
-   minute; once it matches, the domain turns `active` and stays that way.
-   It's only checked once, so the record can be removed afterwards.
-2. Point the domain at do.cloudish.ai: a `CNAME` for a subdomain like
-   `www`; an apex (`foobar.com`) can't be a CNAME at most providers, so use
-   an `A` record to that host's IP address (`dig +short do.cloudish.ai`), or your provider's
-   CNAME flattening/ALIAS if it has one. The certificate issues once both
-   steps are done.
-3. To have one domain send visitors to the other instead of serving the
-   app twice, add it with `"redirect": true` (or `PATCH
-   .../domains/www.foobar.com {"redirect": true}` later). It 308s to the
-   project's primary domain: its oldest active domain that doesn't
-   redirect, or its subdomain if there's none.
-
-`GET .../domains` lists them; `DELETE .../domains/{host}` removes one. Each
-active domain costs 0.01 credits a day. Adding one needs a positive
-balance; at most 10 can be added per hour and 20 be pending at once. A
-`409` means another project already holds that host.
-
-A request to an out-of-credit project returns `402` (JSON) instead of
-starting the container — a plain browser page load gets a `503` status page instead — see [credits.md](references/credits.md) for adding credits, especially across
-several projects. Ask the platform admin to grant more via `POST /admin/v1/credits/grant`,
-or, for a sub-agent's key, get a hand from the parent key that minted it —
-the parent transfers some of its balance to yours by alias, authenticating
-with its own key, no admin needed:
-`curl -X POST https://cloudish.ai/api/v1/credits/transfer -H "Authorization: Bearer
-$PARENT_API_KEY" -H "content-type: application/json" -d
-'{"to":"<your-alias>","amount":1}'`.
+Custom domains are covered in [domains.md](references/domains.md); an
+out-of-credit project answers `402` instead of starting — see
+[credits.md](references/credits.md).
 
 ### 5. Building containers — any language, any framework
 
@@ -312,10 +311,11 @@ containers are isolated: [container.md](references/container.md). Bring any Dock
 Anything else that speaks HTTP on one port works the same way — these are
 just the common cases.
 
-#### A real database, without a managed database service
+#### A database that persists
 
-Cloudish has no managed Postgres/MySQL offering — attach a volume (section
-3) and run the database *inside your own container* instead:
+Cloudish has no managed Postgres/MySQL offering. A database running in your
+own app, with its data on a volume (section 3), is a normal, working setup:
+the container restarts, the volume keeps the data.
 
 - **SQLite** — simplest option for most apps: point your app at a file
   under the mounted volume (e.g. `$DATA_DIR/app.db`). No extra process.
@@ -332,9 +332,25 @@ Cloudish has no managed Postgres/MySQL offering — attach a volume (section
   and save it onto the same volume, so it survives restarts instead of
   rotating every redeploy.
 
-#### Sign-in for your users (OIDC)
+The data outlives the app: a zero balance stops it (the app's status becomes
+`out_of_credits`) but the volume, with everything on it, is kept and isn't
+billed, and the app starts again once credits are added. Deleting the
+project is what destroys the data (section 1).
 
-If your app needs to know who's visiting it, point it at Cloudish's own
+If you want backups, add admin endpoints to the app that stream a backup
+(`pg_dump`, or a copy of the SQLite file) for download and accept one back
+to restore — behind a secret (section 2), since they can read and overwrite
+the data. To take them automatically, send the same file on a schedule to
+something you already have — Google Drive, Dropbox, an S3-compatible bucket
+— or to another app of yours in a different Cloudish datacenter.
+
+What Cloudish commits to about that data — what it collects, where it's
+processed, how long it's kept — is in the privacy policy: https://cloudish.ai/privacy.md.
+
+#### Authentication: user sign-in and admin panels (OIDC)
+
+If your app needs to know who's visiting it — an end-user login, or a single
+admin panel — point it at Cloudish's own
 OpenID Connect provider instead of running your own identity system — a
 standard discovery document, Authorization Code + PKCE, no client secret
 to manage:
@@ -354,8 +370,12 @@ verifier>&code_challenge_method=S256&state=...`, then exchange the
 `redirect_uri` must be under your project's subdomain or one of its active
 custom domains (section 4).
 
-Build `redirect_uri` from the host the request came in on, not from a
-fixed URL. An app can answer on more than one hostname (apps created before
+Authenticating the visitor is not the same as authorizing them: any Cloudish
+user can complete this flow, so an admin panel still needs its own allowlist
+of `email`/`sub` claims and must reject everyone else. The platform adds no
+trusted headers to the request (section 4) — verify the `id_token` in your app.
+
+Choose `redirect_uri` from configured HTTPS origins for the project; reject unknown request hosts. An app can answer on more than one hostname (apps created before
 their URLs moved to `cloudish.app` also keep their older
 `*.on.<datacenter>.cloudish.ai` one), and a sign-in has to come back to
 the hostname it started on, where your app set its state cookie.
@@ -399,14 +419,20 @@ transfers, or funding more than one project.
 
 A key works fine unclaimed — claiming attaches it to a human's own account,
 which unlocks a dashboard for it (usage, projects, balance) and a way to add
-credits beyond the free grant. Whether and when that's worth doing is
+credits beyond the free grant. The claim may also add a small credit bonus
+to that account, which the human can move into this key. The same link
+works for a human who already has a Cloudish account: the key is claimed
+into that account, and the page can move credits the account already holds
+into this key, or buy more — so claiming is usually how a key that ran out
+gets funded again without a purchase.
+Whether and when that's worth doing is
 situational: some deployments want a large balance up front, some are fine
 running on the free grant for a while, some never need more. Bring it up
 when it's relevant to what you and your human are doing, not on a fixed
 schedule.
 
-Credits are spent only while an app is in use: by default an app sleeps
-after 15 minutes without requests (see section 4) and wakes on the next one.
+Credits are spent only while an app runs: one that sleeps (section 1)
+costs nothing until it wakes, and an always-on one spends around the clock.
 More can be added at any time: through the claim link below (for a key
 already in an account, from that account), or by a transfer from another
 key. Deploy, `/me` and credits responses carry
@@ -419,8 +445,8 @@ it. Run it yourself and give your human the resulting URL — not the
 
 ```bash
 curl https://cloudish.ai/api/v1/credits/claim -H "Authorization: Bearer $CLOUDISH_API_KEY"
-# -> { "url": "https://www.cloudish.ai/claim?challenge=..." }
-# -> tell your human: "To add credits to <alias>, open: https://www.cloudish.ai/claim?challenge=..."
+# -> { "url": "https://..." }
+# -> tell your human: "To add credits to <alias>, open: <that url>"
 ```
 
 The link works once and expires 30 minutes after it's minted, so mint it at
@@ -437,33 +463,11 @@ Every change to this document is listed in [changelog.md](references/changelog.m
 
 ## Examples
 
-### Example 1: FastAPI app with SQLite
-
-The user says "Deploy this to Cloudish." The agent finds `main.py` serving on port 8000, writes a
-Dockerfile that runs `uvicorn main:app --host 0.0.0.0 --port 8000`, points the database at
-`/data/app.db`, confirms with the user, and deploys with a volume:
-
-```bash
-# Build an inspected allowlisted staging directory outside the source tree first.
-# Do not assume tar honors .dockerignore; exclude credential files, private data and symlinks.
-tar -czf ../context.tar.gz -C ../approved-build-context .
-curl -X POST https://cloudish.ai/api/v1/projects \
-  -H "Authorization: Bearer $CLOUDISH_API_KEY" \
-  -F "name=notes-api" -F "port=8000" -F "context=@../context.tar.gz" \
-  -F "volumeEnabled=true" -F "volumeSizeGb=1" -F "volumeMountPath=/data"
-```
-
-It polls the build, then reports the URL and that the database lives on the volume.
+A worked FastAPI + SQLite deploy is in [examples.md](references/examples.md).
 
 ## Best Practices
 
-- ✅ Reuse the key in `.env` instead of creating a new one on every run.
-- ✅ Put credentials in the secrets endpoint; put only non-secret config in `env`.
-- ✅ Run databases inside the container on a volume; a volume forces a single replica.
-- ✅ Hand the human a claim link, minted with `GET /api/v1/credits/claim`, when they need to add credits; it works once and expires after 30 minutes.
-- ❌ Don't run `docker build` locally first; send the build context as-is.
-- ❌ Don't print the API key or secrets into chat, source files, logs, or commit history.
-- ❌ Don't guess endpoints or fields; check the sections above and `references/` (or https://cloudish.ai/skill.md for the live copy) if a call is rejected.
+See [best-practices.md](references/best-practices.md).
 
 ## Limitations
 
@@ -477,18 +481,13 @@ It polls the build, then reports the URL and that the database lives on the volu
 
 - `risk: critical`: the skill uploads project files to a third-party service, publishes an app to a public URL, and spends prepaid credits.
 - By default the app's URL answers without a credential, and requests are billed to the key owner. If the app must not be publicly reachable, remove the URL with `DELETE /api/v1/projects/{alias}/{name}/subdomain`, or rotate a leaked one with `POST .../subdomain/rotate`.
-- Confirmation gates: ask before the first deploy of a project, before creating a key, and before anything that spends credits beyond what the user asked for, including larger instances, more replicas, an idle timeout of `0` (always on), and credit transfers.
+- Confirmation gates: confirm first deploys, source uploads, key or mint-token creation, credit transfers, extra spend, and destructive operations. Confirm the exact target and data impact before deletion.
 - Exclude `.env*`, `.git`, and other credential files from the build context; it is uploaded to Cloudish's servers.
 - Never hand over the raw API key. To let a human take over the key, give them the claim link.
 
 ## Common Pitfalls
 
-- **Problem:** The build succeeds but the URL returns errors.
-  **Solution:** The server is probably bound to `localhost` or a different port. Bind to `0.0.0.0` on the `port` you sent, then redeploy.
-- **Problem:** Postgres fails on restart with a socket error.
-  **Solution:** Recreate `/var/run/postgresql` on container start and run `initdb` only when the data directory on the volume is empty.
-- **Problem:** A second run creates a new key and an empty project.
-  **Solution:** The key was not saved. Always write it to `.env` immediately after creating it.
+See [pitfalls.md](references/pitfalls.md).
 
 ## Related Skills
 
