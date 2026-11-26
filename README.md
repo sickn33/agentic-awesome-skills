@@ -341,6 +341,7 @@ Key source families include:
 - **[MohammadHijjawi97/since-cutoff](https://github.com/MohammadHijjawi97/since-cutoff)**: Official source for the `since-cutoff` skill - lists which APIs of a project's pinned Python dependencies changed after the model's training cutoff, from a static diff of the two releases with no model calls, shows where the code uses them, and writes short AGENTS.md or CLAUDE.md notes (MIT).
 - **[qrxcodes/qrx-mcp](https://github.com/qrxcodes/qrx-mcp)**: Official QRX skill - turn a text prompt and a link into an artistic, branded QR code through the hosted QRX MCP server, checked to scan before it is returned (MIT).
 - **[opencanviz/opencanviz-skills-repo](https://github.com/opencanviz/opencanviz-skills-repo)**: Official openCanviz source for the `opencanviz-json` skill - write an openCanviz video project as JSON with a standard-library Python builder and validator (text entrances, 22 scene transitions, motion presets, LaTeX math, plots, tables, rings, 22 example projects), then import it at opencanviz.com/create, where a free account builds and plays it as a narrated, animated explainer and the MP4 download needs a plan or a one-time export purchase (MIT).
+- **[qrdxinc/qrdx](https://github.com/qrdxinc/qrdx)**: Official QRdx source for the `generate-qr` skill - make a styled, scannable QR code (or one per CSV row) as SVG, PNG, WebP, GIF, BMP, ICO, TIFF or EPS with the QRdx CLI, pinned to an exact `@qrdx/cli` version and run on your machine, with no account or key (MIT).
 
 - **[a4a-network/a4a](https://github.com/a4a-network/a4a)**: Source for `a4a`.
 - **[alexadams6ix/imagera-skills](https://github.com/alexadams6ix/imagera-skills)**: Source for `imagera-media`.
@@ -737,6 +738,8 @@ Key source families include:
 
 ### Additional Sources
 
+- **[Camera Prompt Quickcheck](https://github.com/287523023qq-hue/camera-prompt-quickcheck)** — MIT-licensed local linter for camera motion in AI video prompts, with an optional browser playground. Submitted by the upstream maintainer.
+
 - **[Product Metrics](https://github.com/product-metrics/skills)** — MIT skills for conversion tracking and profit-based advertising. The hosted OAuth MCP requires an account and some features require a subscription. Submitted by the Product Metrics team.
 - **[Fair Value Calculator](https://github.com/petz00711/fair-value-calculator-mcp)** — CC BY 4.0 skill for model-based stock valuation and comparisons. The hosted MCP uses OAuth and offers limited free access and a paid subscription. Submitted by a member of the Fair Value Calculator team.
 - **[PersonaXpand](https://github.com/hayat-nextoriainfotech/social-media-skills)** — MIT skills for drafting replies, triaging messages, and planning posts from supplied text. Sending or posting requires the hosted connector and approval of the exact text. Submitted by the Nextoria team.
@@ -751,6 +754,7 @@ Key source families include:
 - **[Alpha Bazaar](https://github.com/alphabazaar/skills)**: Agent skill and Claude Code plugin, plus a hosted MCP server with one-click OAuth, that lets an agent publish paper-trading calls with its reasoning and keep a public, server-priced, attested track record. Free; paper trading only, not investment advice. _Disclosure: added by the Alpha Bazaar team._
 - **[ASOScan ASO Skills](https://github.com/ASOScan/aso-skills)**: 9 App Store Optimization skills plus a hosted MCP server (OAuth, `https://asoscan.com/mcp`) for keyword research and opportunities, rank history, competitor keywords, review insights and listing audits on the App Store and Google Play. aso-fundamentals and asoscan-setup work without an account; the data skills need an ASOScan API key. _Disclosure: added by the ASOScan team; ASOScan is a paid product with a 7-day free trial._
 - **[MCP Write Safety](https://github.com/isokron-ai/mcp-writecheck-action/tree/main/skills)**: Two Agent Skills for MCP tools that create, update or delete state: build rules for server authors and call rules for agents (conflicts, retries with idempotency keys, unknown outcomes, bulk writes), each tied to a requirement ID in the MCP Write-Safety Requirements (MWS 0.9). Apache-2.0. _Disclosure: added by the IsoKron team._
+- **[Find Similar Jobs](https://github.com/johnisanerd/claude-skill-find-similar-jobs)**: Agent skill that takes one job posting and returns about ten similar roles, each checked against the employer's own careers board (Ashby, Greenhouse, JazzHR, Workday, Oracle, iCIMS) and labeled open, likely closed, or aggregator only. Needs an Apify account and uses paid Actor runs. _Disclosure: added by the skill's author, who also maintains the Apify Actors it calls._
 
 </details>
 
