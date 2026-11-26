@@ -5,6 +5,6 @@
 - **Problem:** Postgres fails on restart with a socket error.
   **Solution:** Recreate `/var/run/postgresql` on container start and run `initdb` only when the data directory on the volume is empty.
 - **Problem:** A second run creates a new key and an empty project.
-  **Solution:** The key was not saved. Always write it to `.env` immediately after creating it.
+  **Solution:** The key was not saved. Use the project’s approved secret store after creating a key.
 
 Adapted from Cloudish's public skill (https://github.com/cloudishai/skills, MIT).

@@ -76,7 +76,7 @@ curl -X POST https://cloudish.ai/api/v1/keys \
 
 The result is an ordinary child key: same account, no free grant, funded
 with `childCredits` from the issuer if the token sets any. Use it exactly
-like a key from [SKILL.md](SKILL.md) for the rest of the run. There is
+like a key from [SKILL.md](../SKILL.md) for the rest of the run. There is
 no claim step — a child already belongs to the account, so `claimUrl` is
 null.
 

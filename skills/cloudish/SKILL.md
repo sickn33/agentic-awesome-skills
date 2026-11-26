@@ -116,19 +116,19 @@ curl -X POST https://cloudish.ai/api/v1/projects \
 
 **Build from source** — upload a tar.gz build context (must contain a
 `Dockerfile` at its root). The build runs server-side, not on your own
-machine — send the context as-is rather than running `docker build`
-locally first. Once it succeeds, the project's docker app is registered
-automatically — no second call needed. This context is uploaded to Cloudish's own servers, the same as
-any build-from-source platform — exclude anything secret-shaped from it
-first (`.env` files, credentials, `.git`) and use section 2's encrypted
-secrets endpoint for real credentials instead, never a file baked into the
-context:
+machine. Skip the local `docker build` and send only the approved context. Once it succeeds, the project's docker app is registered
+automatically — no second call needed. Cloudish receives every entry in the archive. Build a separate staging
+directory using an explicit list of the files needed by the Dockerfile and
+its build steps. Inspect that list for private source, credentials and
+symlinks, then confirm the exact scope with the user before upload. Use the
+secrets endpoint in section 2 for runtime credentials. Keep the archive
+outside the staging directory and remove it after transfer. Set both paths below to absolute paths.
 
 ```bash
-tar --exclude='.env*' --exclude='.git' -czf context.tar.gz .
+tar -C "$APPROVED_BUILD_CONTEXT" -czf "$CONTEXT_ARCHIVE" . &&
 curl -X POST https://cloudish.ai/api/v1/projects \
   -H "Authorization: Bearer $CLOUDISH_API_KEY" \
-  -F "name=my-app" -F "port=8080" -F "sleepAfterMinutes=30" -F "context=@context.tar.gz"
+  -F "name=my-app" -F "port=8080" -F "sleepAfterMinutes=30" -F "context=@$CONTEXT_ARCHIVE"
 # -> { "project": { "path": "your-alias/my-app", ... }, "build": { "id": 123, "status": "running" } }
 ```
 
@@ -166,15 +166,17 @@ GB memory (`buildMemoryGb`).
 Poll until it settles:
 
 ```bash
-curl https://cloudish.ai/api/v1/images/builds/123 -H "Authorization: Bearer $CLOUDISH_API_KEY"
+curl --connect-timeout 5 --max-time 15 https://cloudish.ai/api/v1/images/builds/123 -H "Authorization: Bearer $CLOUDISH_API_KEY"
 # -> { "build": { "status": "running", "logs": "<build output so far>" }, "image": null }
 ```
 
-Poll only while `status` is `"running"`: that's the only state a build in
-progress is in, so anything else — `"succeeded"`, `"failed"`, or a response
-with no status at all — is the end. `build.logs` is the current tail of what
+Poll at intervals only while `status` is `"running"`. Set a total
+observation deadline before polling and cap every request by the remaining
+time. On timeout or a transport error, report the build ID and check that
+build before attempting another deploy. Treat missing or unrecognized
+status as an unknown result. `build.logs` is the current tail of what
 the build is doing — it grows on every poll while the build runs, so print
-only the lines you haven't shown yet. On `"failed"`, show both
+only new lines and redact credentials or private project data before showing them. On `"failed"`, show both
 `build.error` and the tail of `build.logs`. Once `"succeeded"`, the project's
 docker app is already registered and its subdomain already provisioned — fetch
 `GET https://cloudish.ai/api/v1/projects/{owner}/{name}` for the resulting
@@ -373,8 +375,7 @@ user can complete this flow, so an admin panel still needs its own allowlist
 of `email`/`sub` claims and must reject everyone else. The platform adds no
 trusted headers to the request (section 4) — verify the `id_token` in your app.
 
-Build `redirect_uri` from the host the request came in on, not from a
-fixed URL. An app can answer on more than one hostname (apps created before
+Choose `redirect_uri` from configured HTTPS origins for the project; reject unknown request hosts. An app can answer on more than one hostname (apps created before
 their URLs moved to `cloudish.app` also keep their older
 `*.on.<datacenter>.cloudish.ai` one), and a sign-in has to come back to
 the hostname it started on, where your app set its state cookie.
@@ -480,7 +481,7 @@ See [best-practices.md](references/best-practices.md).
 
 - `risk: critical`: the skill uploads project files to a third-party service, publishes an app to a public URL, and spends prepaid credits.
 - By default the app's URL answers without a credential, and requests are billed to the key owner. If the app must not be publicly reachable, remove the URL with `DELETE /api/v1/projects/{alias}/{name}/subdomain`, or rotate a leaked one with `POST .../subdomain/rotate`.
-- Confirmation gates: ask before the first deploy of a project, before creating a key, and before anything that spends credits beyond what the user asked for, including larger instances, more replicas, an idle timeout of `0` (always on), and credit transfers.
+- Confirmation gates: confirm first deploys, source uploads, key or mint-token creation, credit transfers, extra spend, and destructive operations. Confirm the exact target and data impact before deletion.
 - Exclude `.env*`, `.git`, and other credential files from the build context; it is uploaded to Cloudish's servers.
 - Never hand over the raw API key. To let a human take over the key, give them the claim link.
 

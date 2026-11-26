@@ -12,7 +12,7 @@ replica only while it runs.
 
 ## 1. Allow replicas
 
-Set `replicas` when creating or updating the app (see [SKILL.md](SKILL.md)).
+Set `replicas` when creating or updating the app (see [SKILL.md](../SKILL.md)).
 It's the most copies that may run at once, counting the app's own container,
 so `10` allows 9 replicas. The default is `1` (no replicas); the highest is
 30.
