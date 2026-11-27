@@ -28,9 +28,9 @@ Scope: tax year 2026 (Reiwa 8) income tax and the fiscal 2027 resident tax that 
 
 ## Prerequisites
 
-- Node.js 20 or later and git.
-- Network access once, to download the CLI source from GitHub and its build-time dependencies (`typescript`, `@types/node`, and the latter's dependency `undici-types`) from the npm registry. The calculation itself runs offline and sends nothing.
-- About 30 MB of disk space for the checkout and its build-time dependencies.
+- Node.js 20 or later (with `npx`).
+- Network access once, to download the `setsuzei` package from the npm registry. The package has no dependencies. The calculation itself runs offline and sends nothing.
+- Under 1 MB of disk space in the npm cache.
 
 ## How It Works
 
@@ -60,35 +60,27 @@ Do not decide for the user what counts as an expense or which income category ap
 
 ### 2. Get the CLI (first time only, with the user's approval)
 
-The CLI is not published on npm, so it is built from a pinned commit: release `v0.2.2`, commit `ef954716cd51ecae4fee237f93ceb6eae143e642`. Before doing anything, tell the user what will be downloaded and where, and wait for approval. Ask again before installing dependencies. Run the commands one at a time.
+The CLI is published on npm as [`setsuzei`](https://www.npmjs.com/package/setsuzei). It is built and published from the public repository by GitHub Actions with npm trusted publishing, so the npm page shows where and how each version was built. This skill pins version `0.3.1`.
+
+First check whether a usable CLI is already installed; if this prints `0.2.2` or higher, use it and skip the download:
 
 ```bash
-git clone https://github.com/ozko00/setsuzei.git "$HOME/.cache/setsuzei"
+setsuzei --version
 ```
+
+Otherwise, before downloading anything, tell the user that version `0.3.1` of the `setsuzei` package (under 1 MB, no dependencies) will be downloaded from the npm registry into the npm cache and run locally, and wait for approval. Then check the version; it must print `0.3.1`:
 
 ```bash
-git -C "$HOME/.cache/setsuzei" checkout --detach ef954716cd51ecae4fee237f93ceb6eae143e642
+npx --yes setsuzei@0.3.1 --version
 ```
 
-```bash
-npm ci --ignore-scripts --prefix "$HOME/.cache/setsuzei"
-```
+Use `npx --yes setsuzei@0.3.1` for every later command.
 
-```bash
-npm run build --prefix "$HOME/.cache/setsuzei"
-```
-
-Then check the version; it must print `0.2.2`:
-
-```bash
-node "$HOME/.cache/setsuzei/dist/cli.js" --version
-```
-
-- If `$HOME/.cache/setsuzei` already exists and prints a version below `0.2.2`, do not use it: versions before 0.2.2 do not apply the resident-tax exemption threshold and can report a furusato nozei limit for a person whose resident tax is actually zero. Tell the user, and with their approval run `git -C "$HOME/.cache/setsuzei" fetch origin`, then the checkout, install and build commands above.
-- The checkout goes to a cache directory, not into any skills, plugin, hook, or agent-configuration directory.
-- `npm ci --ignore-scripts` installs only the build-time dependencies listed above and runs no lifecycle scripts; `npm run build` runs the TypeScript compiler. The built CLI has no runtime dependencies.
-- Do not move the pin to a newer commit without the user asking for it and reviewing the change.
-- If the user declines, or the build fails, say that the estimate cannot be computed. Do not substitute figures from memory.
+- Do not use an installed `setsuzei` that prints a version below `0.2.2`: versions before 0.2.2 do not apply the resident-tax exemption threshold and can report a furusato nozei limit for a person whose resident tax is actually zero.
+- Keep the version pinned. Do not switch to `@latest`, an unpinned `npx setsuzei`, or a newer version without the user asking for it.
+- The package goes to the npm cache, not into any skills, plugin, hook, or agent-configuration directory. It has no runtime dependencies and no install scripts.
+- If a command is stopped by a permission prompt or denied, do not rephrase and retry it. Ask the user to run it themselves or to allow it.
+- If the user declines, or the download fails, say that the estimate cannot be computed. Do not substitute figures from memory. The browser version (https://ozko00.github.io/setsuzei/) needs no install.
 
 ### 3. Perform the task
 
@@ -96,7 +88,7 @@ Pass the inputs as JSON on standard input through a process API. Do not put real
 
 ```bash
 echo '{"businessRevenue":8000000,"businessExpenses":1500000,"businessIncomeType":"business","blueReturn":"65","socialInsurance":900000,"idecoPaid":276000,"furusatoPaid":30000}' \
-  | node "$HOME/.cache/setsuzei/dist/cli.js" --input - --json
+  | npx --yes setsuzei@0.3.1 --input - --json
 ```
 
 Exit code 2 means invalid input; read `error.issues` on standard error and fix the input or ask the user. To compare conditions (for example "only 100,000 yen more into iDeCo"), set `idecoAdditional` / `kyosaiAdditional` and run the CLI again for each condition.
@@ -149,14 +141,14 @@ Expected result: current tax 780,000 yen (income tax 375,400 + resident tax 404,
 
 ## Safety and side effects
 
-- Writes: one git checkout and its `node_modules` under `$HOME/.cache/setsuzei`. Nothing else is modified.
-- Network: GitHub and the npm registry during the one-time setup, only after the user approves. No user data is sent anywhere; the calculation reads standard input and writes standard output.
+- Writes: one package (`setsuzei@0.3.1`, under 1 MB, no dependencies) in the npm cache. Nothing else is modified.
+- Network: the npm registry during the one-time download, only after the user approves. No user data is sent anywhere; the calculation reads standard input and writes standard output.
 - The user's income figures stay in the conversation and the local process. Do not write them to files.
 - No accounts, credentials, or paid services.
 
 ## Sources and related skills
 
 - CLI source, tests, and the list of what is and is not calculated: https://github.com/ozko00/setsuzei
-- Per-number primary sources: https://github.com/ozko00/setsuzei/blob/ef954716cd51ecae4fee237f93ceb6eae143e642/src/data/2026.ts
+- Per-number primary sources: https://github.com/ozko00/setsuzei/blob/v0.3.1/src/data/2026.ts
 - Browser version of the same calculation (no install): https://ozko00.github.io/setsuzei/
 - Related in this catalog: `tax-register` and `expense-accounting` build record-keeping templates; they do not estimate personal tax.
