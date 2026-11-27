@@ -47,14 +47,14 @@ Gate: no address overlap, ≥20% spare per segment, safety circuits excluded fro
 One function block per device; the process layer never writes outputs directly; naming prefixes `i_` / `q_` / `stat_`; block numbers and instance DBs allocated.
 Gate: every output is assigned in exactly one place, at the end of its block.
 
-### 4. Implementation → SCL
+### 4. Implementation → SCL (written, never deployed by this skill)
 
 Explicit state machine (step number, entry/exit action, fault step, fault code), edge detection and timers written so they are testable, comments carrying the matrix row IDs.
-Gate: compiles with zero errors; interfaces match step 3 exactly.
+Gate: compiles with zero errors **in a test project or a simulator**; interfaces match step 3 exactly. Deploying to a real controller is out of scope — see Boundaries.
 
 ### 5. Verification → four gates, in order
 
-1. Compile (structural).
+1. Compile (structural) in the test project or simulator.
 2. Interface consistency (read back what the project actually contains, not what you intended).
 3. Simulation cases derived from the matrix — PASS/FAIL per case, fault paths included.
 4. Change-impact regression subset: the cases that touch the modified blocks.
@@ -87,10 +87,18 @@ Expected result:
 - Safety functions (E-stop, light curtain, overpressure, safe torque off) must be implemented in safety relays or a safety PLC, never in generated logic.
 - Does not cover drive/motion tuning, technology objects, communication configuration, or HMI design beyond the tags the logic needs.
 - Without project access or a simulator, gates 3–4 remain unverified and must be reported as unverified.
+- **Out of scope: downloading to, or writing into, a physical controller.** This skill stops at the artifacts plus a test/simulation run.
 
 ## Safety and side effects
 
 Knowledge-only: this skill runs no commands, writes no files and makes no network calls. If a later step uses a gateway to compile or download into a real project, that is a state change — confirm the target project and controller first, and never download to a machine in production without the owner's approval. Keep credentials, project paths and customer identifiers out of the deliverables.
+
+## Boundaries (provenance, licence, commercial affiliation)
+
+- **Provenance**: original work by the authors of this skill; no upstream project is copied. Licence **CC BY 4.0**. Repo: [tia-forge/plc-program-design](https://github.com/tia-forge/plc-program-design).
+- **Commercial affiliation (disclosed)**: the optional gateway path in step 3 points to [TiaLink](https://tia.hubwiz.com/tia-link), commercial software maintained by the same authors (hubwiz.com). It is not required for stages 1–2, and it is not affiliated with or endorsed by Siemens AG.
+- **Prohibited without site-specific engineering approval**: deploying generated logic to a real machine or production controller; using generated logic to implement safety functions (E-stop, light curtain, safe torque off, overpressure); treating a simulation PASS as a site acceptance test.
+- **No side effects from this skill itself**: it runs no commands, writes no files, makes no network calls. Any gateway use is a separate action the user performs knowingly.
 
 ## Sources and related skills
 
