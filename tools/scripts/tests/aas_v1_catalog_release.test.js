@@ -44,7 +44,8 @@ function fixture(root, override = {}) {
   try {
     execFileSync("tar",tarArgs);
   } catch (error) {
-    if (error.status !== 1) throw error;
+    const stderr=Buffer.isBuffer(error.stderr) ? error.stderr.toString("utf8") : String(error.stderr || "");
+    if (!/unrecognized option|unknown option|illegal option/i.test(stderr)) throw error;
     // GNU tar has no AppleDouble metadata mode and does not create ._* files.
     execFileSync("tar",tarArgs.slice(1));
   }
