@@ -38,6 +38,36 @@ Summarize the most important change for users in one short paragraph.
 
 ## [Unreleased]
 
+## [21.5.0] - 2026-11-28 - "Launch Audits, Community Agents, and Safer Examples"
+
+AAS adds 11 skills for brand templates, launch and directory audits, community agents, supply-chain checks and media workflows, bringing the catalog to 3,162 skills. This release also corrects security-sensitive examples, refreshes dependencies and closes the two active skill-content advisories.
+
+### New skills
+
+- Add Brand Templates for producing brand-compliant email, page and social assets with local rule checks.
+- Add Directory Listing Liveness Audit and SaaSCity Launch Audit for distinguishing delistings from blocked hosts and checking directory backlinks and launch readiness.
+- Add Silicon Cafe for owner-approved participation in 1VR's agents-only community, and PLC Program Design for simulator-only verification of industrial logic.
+- Add NPM Supply Chain Check for pre-install malware, provenance, install-script and typosquat review.
+- Add FeraTerra Arena Trading, Groundsocial Subreddit Research and Devlog Poster for read-only market inspection, community research and build-in-public reporting.
+- Add MartLLM Media, TabRetake and improved Setsuzei guidance for cost-capped media generation, repeatable demo videos and corrected Japanese resident-tax estimates.
+
+### Improvements
+
+- Correct the across-conditions feed template, prompt-cache break-even arithmetic, MediaPipe timestamps, interaction obfuscation guidance and the motion example package setup.
+- Correct the Cohen's d pooling, vector-quantization overflow and groundedness claim counts in the evaluation examples.
+- Make the catalog release test independent of macOS archive metadata.
+
+### Security and distribution
+
+- Replace Apify shell input interpolation with JSON input files and remove references to npm packages that do not exist, closing GHSA-p4gx-f39c-xprx and GHSA-4343-mgrf-56g3.
+- Refresh Supabase JS to 2.119.x, React and React DOM to 19.3.1, Remotion to 4.0.541 and Portless to 0.16.0 across their canonical projects.
+- Keep plugin mirrors, catalogs and compatibility manifests synchronized through the protected release distribution.
+
+### Contributors
+
+- Thanks to @ivoIturrieta for [#2551](https://github.com/sickn33/agentic-awesome-skills/pull/2551), @FeraTerra for [#2554](https://github.com/sickn33/agentic-awesome-skills/pull/2554), @shivanshmehendiratta for [#2555](https://github.com/sickn33/agentic-awesome-skills/pull/2555), @salemalem for [#2559](https://github.com/sickn33/agentic-awesome-skills/pull/2559), @best-directories for [#2560](https://github.com/sickn33/agentic-awesome-skills/pull/2560), @Ben-Home for [#2575](https://github.com/sickn33/agentic-awesome-skills/pull/2575), @gnawbit for [#2595](https://github.com/sickn33/agentic-awesome-skills/pull/2595), @ikingst-ops for [#2603](https://github.com/sickn33/agentic-awesome-skills/pull/2603), @ozko00 for [#2604](https://github.com/sickn33/agentic-awesome-skills/pull/2604), and @tia-forge for [#2605](https://github.com/sickn33/agentic-awesome-skills/pull/2605).
+- Thanks to @JiahaoTanXX for the evaluation corrections in [#2592](https://github.com/sickn33/agentic-awesome-skills/pull/2592), [#2593](https://github.com/sickn33/agentic-awesome-skills/pull/2593) and [#2594](https://github.com/sickn33/agentic-awesome-skills/pull/2594).
+
 ## [21.4.0] - 2026-11-26 - "Visual Review and Team Workflows"
 
 AAS adds 14 skills for visual review, collaboration, research and testing, bringing the catalog to 3,151 skills.
