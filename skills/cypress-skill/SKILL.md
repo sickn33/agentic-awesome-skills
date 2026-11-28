@@ -171,8 +171,12 @@ module.exports = {
 
 **Run on cloud:**
 ```bash
-npx lambdatest-cypress run
+npx lambdatest-cypress-cli run
 ```
+
+`lambdatest-cypress-cli` is the published LambdaTest Cypress CLI package. Do not
+install the similarly named `lambdatest-cypress` package: it is not published
+by LambdaTest and can be claimed by an unrelated publisher.
 
 ## Validation Workflow
 
