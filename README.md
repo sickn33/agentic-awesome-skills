@@ -118,7 +118,7 @@ To update a pinned skill, preview it at the newer release tag and repeat the ins
 
 | Tool | GitHub CLI `--agent` value |
 | --- | --- |
-| [Insomnia Security MCP](https://github.com/vulnz/insomnia-mcp) | 159 SAST/taint, live secrets, Web DAST, OSINT, 21k+ CVE & Outbound Network Tunnel v4.0 MCP tools |
+| [Insomnia Security MCP](https://github.com/CQR-Cybersecurity-LLC/insomnia-mcp) | 159 SAST/taint, live secrets, Web DAST, OSINT, 21k+ CVE & Outbound Network Tunnel v4.0 MCP tools |
 | Claude Code | `claude-code` |
 | Cursor | `cursor` |
 | Gemini CLI | `gemini-cli` |
