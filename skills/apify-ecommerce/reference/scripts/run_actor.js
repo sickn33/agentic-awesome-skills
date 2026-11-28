@@ -4,10 +4,10 @@
  *
  * Usage:
  *   # Quick answer (display in chat, no file saved)
- *   node --env-file=.env scripts/run_actor.js --actor ACTOR_ID --input '{}'
+ *   node --env-file=.env scripts/run_actor.js --actor ACTOR_ID --input-file input.json
  *
  *   # Export to file
- *   node --env-file=.env scripts/run_actor.js --actor ACTOR_ID --input '{}' --output data.csv --format csv
+ *   node --env-file=.env scripts/run_actor.js --actor ACTOR_ID --input-file input.json --output data.csv --format csv
  */
 
 import { parseArgs } from 'node:util';
@@ -20,7 +20,7 @@ const USER_AGENT = 'apify-agent-skills/apify-ecommerce-1.0.0';
 function parseCliArgs() {
     const options = {
         actor: { type: 'string', short: 'a' },
-        input: { type: 'string', short: 'i' },
+        'input-file': { type: 'string', short: 'i' },
         output: { type: 'string', short: 'o' },
         format: { type: 'string', short: 'f', default: 'csv' },
         timeout: { type: 'string', short: 't', default: '600' },
@@ -41,8 +41,8 @@ function parseCliArgs() {
         process.exit(1);
     }
 
-    if (!values.input) {
-        console.error('Error: --input is required');
+    if (!values['input-file']) {
+        console.error('Error: --input-file is required');
         printHelp();
         process.exit(1);
     }
@@ -52,9 +52,16 @@ function parseCliArgs() {
     for (const [name, raw, max] of [['timeout', values.timeout, 3600], ['poll-interval', values['poll-interval'], 60]]) {
         if (!Number.isInteger(Number(raw)) || Number(raw) < 1 || Number(raw) > max) throw new Error(`Invalid ${name}`);
     }
+    let input;
+    try {
+        input = JSON.parse(readFileSync(values['input-file'], 'utf8'));
+    } catch (e) {
+        throw new Error(`Cannot read Actor input file: ${e.message}`);
+    }
+    if (!input || Array.isArray(input) || typeof input !== 'object') throw new Error('Input must be a JSON object');
     return {
         actor: values.actor,
-        input: values.input,
+        input,
         output: values.output,
         format: values.format || 'csv',
         timeout: parseInt(values.timeout, 10),
@@ -67,11 +74,11 @@ function printHelp() {
 Apify Actor Runner - Run Apify actors and export results
 
 Usage:
-  node --env-file=.env scripts/run_actor.js --actor ACTOR_ID --input '{}'
+  node --env-file=.env scripts/run_actor.js --actor ACTOR_ID --input-file input.json
 
 Options:
   --actor, -a       Actor ID (e.g., apify/e-commerce-scraping-tool) [required]
-  --input, -i       Actor input as JSON string [required]
+  --input-file, -i  Path to a JSON object file [required]
   --output, -o      Output file path (optional - if not provided, displays quick answer)
   --format, -f      Output format: csv, json (default: csv)
   --timeout, -t     Max wait time in seconds (default: 600)
@@ -87,18 +94,18 @@ Examples:
   # Quick answer - display top 5 products
   node --env-file=.env scripts/run_actor.js \\
     --actor "apify/e-commerce-scraping-tool" \\
-    --input '{"keyword": "bluetooth headphones", "marketplaces": ["www.amazon.com"], "maxProductResults": 10}'
+    --input-file input.json
 
   # Export prices to CSV
   node --env-file=.env scripts/run_actor.js \\
     --actor "apify/e-commerce-scraping-tool" \\
-    --input '{"detailsUrls": ["https://amazon.com/dp/B09V3KXJPB"]}' \\
+    --input-file input.json \\
     --output prices.csv --format csv
 
   # Export reviews to JSON
   node --env-file=.env scripts/run_actor.js \\
     --actor "apify/e-commerce-scraping-tool" \\
-    --input '{"reviewListingUrls": ["https://amazon.com/dp/B09V3KXJPB"], "maxReviewResults": 100}' \\
+    --input-file input.json \\
     --output reviews.json --format json
 `);
 }
@@ -111,18 +118,10 @@ async function apiFetch(token, url, options = {}) {
 }
 
 // Start an actor run and return { runId, datasetId }
-async function startActor(token, actorId, inputJson) {
+async function startActor(token, actorId, inputObject) {
     // Convert "author/actor" format to "author~actor" for API compatibility
     const apiActorId = actorId.replace('/', '~');
     const url = `https://api.apify.com/v2/acts/${apiActorId}/runs`;
-
-    let data;
-    try {
-        data = JSON.parse(inputJson);
-    } catch (e) {
-        console.error(`Error: Invalid JSON input: ${e.message}`);
-        process.exit(1);
-    }
 
     const response = await apiFetch(token, url, {
         method: 'POST',
@@ -130,7 +129,7 @@ async function startActor(token, actorId, inputJson) {
             'Content-Type': 'application/json',
             'User-Agent': `${USER_AGENT}/start_actor`,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(inputObject),
     });
 
     if (response.status === 404) {
