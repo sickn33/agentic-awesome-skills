@@ -1,6 +1,6 @@
 {
-  "generatedAt": "2026-11-26T18:50:23.000Z",
-  "total": 3151,
+  "generatedAt": "2026-11-28T11:17:05.000Z",
+  "total": 3162,
   "skills": [
     {
       "id": "00-andruia-consultant",
@@ -16622,6 +16622,43 @@
       "path": "skills/brand-perception-psychologist/SKILL.md"
     },
     {
+      "id": "brand-templates",
+      "canonical_id": "brand-templates",
+      "name": "brand-templates",
+      "description": "Make an email, page or social image from a team's brand template with Hyper Elements, or write a template from a brand brief. A local check enforces the template's fields and rules.",
+      "category": "design",
+      "risk": "critical",
+      "source": "official",
+      "source_type": "official",
+      "source_repo": "hyper-elements/hyper-elements",
+      "license": "MIT",
+      "license_source": "https://github.com/hyper-elements/hyper-elements/blob/main/LICENSE",
+      "tags": [
+        "brand",
+        "templates",
+        "email",
+        "social-images",
+        "design-system",
+        "react",
+        "guardrails"
+      ],
+      "triggers": [
+        "brand",
+        "templates",
+        "email",
+        "social-images",
+        "design-system",
+        "react",
+        "guardrails",
+        "page",
+        "social",
+        "image",
+        "team",
+        "hyper"
+      ],
+      "path": "skills/brand-templates/SKILL.md"
+    },
+    {
       "id": "brand-vibes",
       "canonical_id": "brand-vibes",
       "name": "brand-vibes",
@@ -30583,6 +30620,39 @@
       "path": "skills/development/SKILL.md"
     },
     {
+      "id": "devlog-poster",
+      "canonical_id": "devlog-poster",
+      "name": "devlog-poster",
+      "description": "Summarize single or multi-repo git commits into multi-platform Build-in-Public devlogs, 4-slide visual cards, and daily/weekly work reports.",
+      "category": "development",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "devlog",
+        "build-in-public",
+        "git",
+        "work-report",
+        "social-media",
+        "developer-tools"
+      ],
+      "triggers": [
+        "devlog",
+        "build-in-public",
+        "git",
+        "work-report",
+        "social-media",
+        "developer-tools",
+        "poster",
+        "summarize",
+        "single",
+        "multi",
+        "repo",
+        "commits"
+      ],
+      "path": "skills/devlog-poster/SKILL.md"
+    },
+    {
       "id": "devops-deploy",
       "canonical_id": "devops-deploy",
       "name": "devops-deploy",
@@ -30909,6 +30979,38 @@
         "incident"
       ],
       "path": "skills/digital-forensics/SKILL.md"
+    },
+    {
+      "id": "directory-listing-liveness-audit",
+      "canonical_id": "directory-listing-liveness-audit",
+      "name": "directory-listing-liveness-audit",
+      "description": "Use when you must confirm a product is really listed on a directory or marketplace, and separate a delisting from an unreachable host, a WAF block or a wrong URL pattern.",
+      "category": "business",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "distribution",
+        "directories",
+        "verification",
+        "monitoring",
+        "seo"
+      ],
+      "triggers": [
+        "distribution",
+        "directories",
+        "verification",
+        "monitoring",
+        "seo",
+        "directory",
+        "listing",
+        "liveness",
+        "audit",
+        "must",
+        "confirm",
+        "product"
+      ],
+      "path": "skills/directory-listing-liveness-audit/SKILL.md"
     },
     {
       "id": "directory-submissions",
@@ -36528,6 +36630,41 @@
         "monitoring"
       ],
       "path": "skills/fedramp-compliance/SKILL.md"
+    },
+    {
+      "id": "feraterra-arena-trading",
+      "canonical_id": "feraterra-arena-trading",
+      "name": "feraterra-arena-trading",
+      "description": "Inspect FeraTerra / Arena Exchange L2/L3 orderbooks, markets, leaderboard, ledger-tip signatures, and dry-run order margin previews via Remote MCP or feraterra-sdk.",
+      "category": "finance",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "crypto",
+        "trading",
+        "orderbook",
+        "perpetuals",
+        "mcp",
+        "defi",
+        "market-data",
+        "python"
+      ],
+      "triggers": [
+        "crypto",
+        "trading",
+        "orderbook",
+        "perpetuals",
+        "mcp",
+        "defi",
+        "market-data",
+        "python",
+        "feraterra",
+        "arena",
+        "inspect",
+        "exchange"
+      ],
+      "path": "skills/feraterra-arena-trading/SKILL.md"
     },
     {
       "id": "ffuf-claude-skill",
@@ -42839,6 +42976,43 @@
         "review"
       ],
       "path": "skills/grok-delegate/SKILL.md"
+    },
+    {
+      "id": "groundsocial-subreddit-research",
+      "canonical_id": "groundsocial-subreddit-research",
+      "name": "groundsocial-subreddit-research",
+      "description": "Find the right subreddits for a topic, read their rules, size and top posts, and collect recurring questions and pain points before posting or doing market research.",
+      "category": "marketing",
+      "risk": "safe",
+      "source": "community",
+      "source_type": "community",
+      "source_repo": "shivanshmehendiratta/groundsocial-skills",
+      "license": "MIT",
+      "license_source": "https://github.com/shivanshmehendiratta/groundsocial-skills/blob/1c677afe23eaf1c2413cce02ca83bda5c74457ff/LICENSE",
+      "tags": [
+        "reddit",
+        "subreddit",
+        "market-research",
+        "community",
+        "pain-points",
+        "social-listening",
+        "api"
+      ],
+      "triggers": [
+        "reddit",
+        "subreddit",
+        "market-research",
+        "community",
+        "pain-points",
+        "social-listening",
+        "api",
+        "groundsocial",
+        "research",
+        "find",
+        "right",
+        "subreddits"
+      ],
+      "path": "skills/groundsocial-subreddit-research/SKILL.md"
     },
     {
       "id": "growth-engine",
@@ -56639,6 +56813,37 @@
       "path": "skills/marlin-bed-leveling/SKILL.md"
     },
     {
+      "id": "martllm-media",
+      "canonical_id": "martllm-media",
+      "name": "martllm-media",
+      "description": "Generate images and videos through MartLLM's media API with live model discovery, a free price quote, a hard cost cap and bounded job polling.",
+      "category": "media",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "martllm",
+        "image-generation",
+        "video-generation",
+        "media-api"
+      ],
+      "triggers": [
+        "martllm",
+        "image-generation",
+        "video-generation",
+        "media-api",
+        "media",
+        "generate",
+        "images",
+        "videos",
+        "through",
+        "api",
+        "live",
+        "model"
+      ],
+      "path": "skills/martllm-media/SKILL.md"
+    },
+    {
       "id": "master-pitcher",
       "canonical_id": "master-pitcher",
       "name": "master-pitcher",
@@ -61875,6 +62080,39 @@
       "path": "skills/notion-template-business/SKILL.md"
     },
     {
+      "id": "npm-supply-chain-check",
+      "canonical_id": "npm-supply-chain-check",
+      "name": "npm-supply-chain-check",
+      "description": "Check one npm package before installing it: malware, version vulns, publisher changes, provenance gaps, install scripts, typosquats.",
+      "category": "security",
+      "risk": "safe",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "npm",
+        "supply-chain",
+        "dependency-security",
+        "malware",
+        "provenance",
+        "typosquatting"
+      ],
+      "triggers": [
+        "npm",
+        "supply-chain",
+        "dependency-security",
+        "malware",
+        "provenance",
+        "typosquatting",
+        "supply",
+        "chain",
+        "check",
+        "one",
+        "package",
+        "before"
+      ],
+      "path": "skills/npm-supply-chain-check/SKILL.md"
+    },
+    {
       "id": "nsfw-ai-spicyapi",
       "canonical_id": "nsfw-ai-spicyapi",
       "name": "nsfw-ai-spicyapi",
@@ -66946,6 +67184,34 @@
         "flow"
       ],
       "path": "skills/playwright-skill/SKILL.md"
+    },
+    {
+      "id": "plc-program-design",
+      "canonical_id": "plc-program-design",
+      "name": "plc-program-design",
+      "description": "Use when designing a PLC program or verifying AI-written PLC code: five gated stages — action matrix, IO list, module split, SCL state machines, four-gate acceptance.",
+      "category": "uncategorized",
+      "risk": "none",
+      "source": "self",
+      "tags": [
+        "plc",
+        "program"
+      ],
+      "triggers": [
+        "plc",
+        "program",
+        "designing",
+        "verifying",
+        "ai",
+        "written",
+        "code",
+        "five",
+        "gated",
+        "stages",
+        "action",
+        "matrix"
+      ],
+      "path": "skills/plc-program-design/SKILL.md"
     },
     {
       "id": "plotly",
@@ -74363,6 +74629,42 @@
       "path": "skills/saas-security-posture/SKILL.md"
     },
     {
+      "id": "saascity-launch-audit",
+      "canonical_id": "saascity-launch-audit",
+      "name": "saascity-launch-audit",
+      "description": "Audit homepage launch readiness, filter 1,600+ startup directories by Ahrefs DR and dofollow status via SaaSCity's keyless MCP, and check live directory backlinks.",
+      "category": "marketing",
+      "risk": "safe",
+      "source": "https://github.com/best-directories/directory-submission-skill",
+      "source_type": "official",
+      "source_repo": "best-directories/directory-submission-skill",
+      "license": "MIT",
+      "license_source": "https://github.com/best-directories/directory-submission-skill/blob/243e8d02768b5bf4f952dd90c3a6949cd3ea96e2/LICENSE",
+      "tags": [
+        "marketing",
+        "seo",
+        "launch",
+        "directories",
+        "backlinks",
+        "mcp"
+      ],
+      "triggers": [
+        "marketing",
+        "seo",
+        "launch",
+        "directories",
+        "backlinks",
+        "mcp",
+        "saascity",
+        "audit",
+        "homepage",
+        "readiness",
+        "filter",
+        "600"
+      ],
+      "path": "skills/saascity-launch-audit/SKILL.md"
+    },
+    {
       "id": "saga-orchestration",
       "canonical_id": "saga-orchestration",
       "name": "saga-orchestration",
@@ -78950,6 +79252,40 @@
         "rates"
       ],
       "path": "skills/signup-flow-cro/SKILL.md"
+    },
+    {
+      "id": "silicon-cafe",
+      "canonical_id": "silicon-cafe",
+      "name": "silicon-cafe",
+      "description": "Join Silicon Café on 1VR, an agents-only community, and search its skill store. Use when an agent needs to register, post, comment or vote.",
+      "category": "community",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "license": "MIT",
+      "license_source": "https://github.com/ikingst-ops/silicon-cafe/blob/4419816b/LICENSE",
+      "tags": [
+        "community",
+        "agents",
+        "social",
+        "skill-store",
+        "mcp"
+      ],
+      "triggers": [
+        "community",
+        "agents",
+        "social",
+        "skill-store",
+        "mcp",
+        "silicon",
+        "cafe",
+        "join",
+        "caf",
+        "1vr",
+        "search",
+        "skill"
+      ],
+      "path": "skills/silicon-cafe/SKILL.md"
     },
     {
       "id": "similarity-search-patterns",
@@ -83910,6 +84246,37 @@
         "agent"
       ],
       "path": "skills/taasky/SKILL.md"
+    },
+    {
+      "id": "tabretake",
+      "canonical_id": "tabretake",
+      "name": "tabretake",
+      "description": "Turn web app demos into repeatable README GIFs and 9:16 vertical videos from editable JSON steps or screen recordings.",
+      "category": "development",
+      "risk": "critical",
+      "source": "self",
+      "source_type": "self",
+      "tags": [
+        "demo-video",
+        "readme-gif",
+        "playwright",
+        "screen-recording"
+      ],
+      "triggers": [
+        "demo-video",
+        "readme-gif",
+        "playwright",
+        "screen-recording",
+        "tabretake",
+        "turn",
+        "web",
+        "app",
+        "demos",
+        "repeatable",
+        "readme",
+        "gifs"
+      ],
+      "path": "skills/tabretake/SKILL.md"
     },
     {
       "id": "tailwind-design-system",

@@ -17,7 +17,7 @@ Before initialization/install/deploy, inspect existing files and preserve their 
 1. Run `apify init` in project root
 2. Wrap code with SDK lifecycle (see language-specific section below)
 3. Configure `.actor/input_schema.json`
-4. Test with `apify run --input '{"key": "value"}'`
+4. Test with `apify run --input-file ./test-input.json`
 5. Deploy with `apify push`
 
 ## When to Use This Skill
@@ -120,17 +120,14 @@ Validate schemas against `@apify/json_schemas` npm package.
 
 ## Step 7: Test Locally
 
-Run the actor with inline input (for JS/TS and Python actors):
-
-```bash
-apify run --input '{"startUrl": "https://example.com", "maxItems": 10}'
-```
-
-Or use an input file:
+Run the actor with an input file (for JS/TS and Python actors):
 
 ```bash
 apify run --input-file ./test-input.json
 ```
+
+Write the test input as JSON in `test-input.json`. Do not paste JSON into the
+shell with `--input`: values containing quotes can change the command.
 
 Use the documented local CLI flow for the selected language; inspect storage purge defaults and preserve unrelated local data. Direct SDK/test execution may also be appropriate. Local execution can still make network requests or use cloud storage when configured; use synthetic fixtures and a test account.
 
