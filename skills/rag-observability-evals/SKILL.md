@@ -142,8 +142,7 @@ Return JSON:
   "claims": [
     {{"claim": "...", "verdict": "SUPPORTED|PARTIALLY_SUPPORTED|NOT_SUPPORTED", "evidence": "..."}}
   ],
-  "groundedness_score": <float 0-1>,
-  "unsupported_claims": ["..."]
+  "groundedness_score": <float 0-1>
 }}
 """
 
@@ -172,11 +171,21 @@ def score_groundedness(answer: str, contexts: List[str]) -> dict:
     if message.refusal or response.choices[0].finish_reason != "stop" or not message.content:
         raise ValueError("Judge refused or returned incomplete output")
     result = json.loads(message.content)
-    if not isinstance(result.get("claims"), list) or not isinstance(result.get("unsupported_claims"), list):
+    if not isinstance(result, dict) or not isinstance(result.get("claims"), list):
         raise ValueError("Invalid judge schema")
     score = result.get("groundedness_score")
     if isinstance(score, bool) or not isinstance(score, (int, float)) or not 0 <= score <= 1:
         raise ValueError("Invalid groundedness score")
+    unsupported = []
+    for claim in result["claims"]:
+        if not isinstance(claim, dict) or not isinstance(claim.get("claim"), str) or not claim["claim"].strip():
+            raise ValueError("Expected claim text")
+        verdict = claim.get("verdict")
+        if verdict not in ("SUPPORTED", "PARTIALLY_SUPPORTED", "NOT_SUPPORTED"):
+            raise ValueError("Unknown claim verdict")
+        if verdict == "NOT_SUPPORTED":
+            unsupported.append(claim["claim"])
+    result["unsupported_claims"] = unsupported
     return result
 
 def batch_groundedness(eval_data: list) -> dict:
