@@ -39,7 +39,16 @@ function fixture(root, override = {}) {
   });
   const manifest={schemaVersion:1,digestVersion:1,package:"agentic-awesome-skills",packageVersion:"2026.10.18",catalogSchemaVersion:"2.0.0",skillCount:1,assets,catalogDigest:sha256(canonicalJson({digestVersion:1,assets})),catalogRelease:release};
   fs.writeFileSync(path.join(stage,"data/aas-v1/catalog-manifest.v1.json"),canonicalJson(manifest)+"\n");
-  const archive=path.join(root,"catalog.tgz");execFileSync("tar",["-czf",archive,"-C",root,"package"]);
+  const archive=path.join(root,"catalog.tgz");
+  const tarArgs=["--no-mac-metadata","-czf",archive,"-C",root,"package"];
+  try {
+    execFileSync("tar",tarArgs);
+  } catch (error) {
+    const stderr=Buffer.isBuffer(error.stderr) ? error.stderr.toString("utf8") : String(error.stderr || "");
+    if (!/unrecognized option|unknown option|illegal option/i.test(stderr)) throw error;
+    // GNU tar has no AppleDouble metadata mode and does not create ._* files.
+    execFileSync("tar",tarArgs.slice(1));
+  }
   const integrity="sha512-"+crypto.createHash("sha512").update(fs.readFileSync(archive)).digest("base64");
   return {archive,integrity,manifest,stage};
 }

@@ -4,10 +4,10 @@
  *
  * Usage:
  *   # Quick answer (display in chat, no file saved)
- *   node --env-file=.env scripts/run_actor.js --actor ACTOR_ID --input '{}'
+ *   node --env-file=.env scripts/run_actor.js --actor ACTOR_ID --input-file input.json
  *
  *   # Export to file
- *   node --env-file=.env scripts/run_actor.js --actor ACTOR_ID --input '{}' --output leads.csv --format csv
+ *   node --env-file=.env scripts/run_actor.js --actor ACTOR_ID --input-file input.json --output leads.csv --format csv
  */
 
 import { parseArgs } from 'node:util';
@@ -20,7 +20,7 @@ const USER_AGENT = 'apify-agent-skills/apify-competitor-intelligence-1.0.1';
 function parseCliArgs() {
     const options = {
         actor: { type: 'string', short: 'a' },
-        input: { type: 'string', short: 'i' },
+        'input-file': { type: 'string', short: 'i' },
         output: { type: 'string', short: 'o' },
         format: { type: 'string', short: 'f', default: 'csv' },
         timeout: { type: 'string', short: 't', default: '600' },
@@ -41,8 +41,8 @@ function parseCliArgs() {
         process.exit(1);
     }
 
-    if (!values.input) {
-        console.error('Error: --input is required');
+    if (!values['input-file']) {
+        console.error('Error: --input-file is required');
         printHelp();
         process.exit(1);
     }
@@ -52,9 +52,16 @@ function parseCliArgs() {
     for (const key of ['timeout', 'poll-interval']) {
         if (!/^\d+$/.test(values[key]) || Number(values[key]) < 1 || Number(values[key]) > 3600) throw new Error(`Invalid ${key}`);
     }
+    let input;
+    try {
+        input = JSON.parse(readFileSync(values['input-file'], 'utf8'));
+    } catch (e) {
+        throw new Error(`Cannot read Actor input file: ${e.message}`);
+    }
+    if (!input || Array.isArray(input) || typeof input !== 'object') throw new Error('Input must be a JSON object');
     return {
         actor: values.actor,
-        input: values.input,
+        input,
         output: values.output,
         format: values.format || 'csv',
         timeout: parseInt(values.timeout, 10),
@@ -67,11 +74,11 @@ function printHelp() {
 Apify Actor Runner - Run Apify actors and export results
 
 Usage:
-  node --env-file=.env scripts/run_actor.js --actor ACTOR_ID --input '{}'
+  node --env-file=.env scripts/run_actor.js --actor ACTOR_ID --input-file input.json
 
 Options:
   --actor, -a       Actor ID (e.g., compass/crawler-google-places) [required]
-  --input, -i       Actor input as JSON string [required]
+  --input-file, -i  Path to a JSON object file [required]
   --output, -o      Output file path (optional - if not provided, displays quick answer)
   --format, -f      Output format: csv, json (default: csv)
   --timeout, -t     Max wait time in seconds (default: 600)
@@ -87,12 +94,12 @@ Examples:
   # Quick answer - display top 5 in chat
   node --env-file=.env scripts/run_actor.js \\
     --actor "compass/crawler-google-places" \\
-    --input '{"searchStringsArray": ["coffee shops"], "locationQuery": "Seattle, USA"}'
+    --input-file input.json
 
   # Export all data to CSV
   node --env-file=.env scripts/run_actor.js \\
     --actor "compass/crawler-google-places" \\
-    --input '{"searchStringsArray": ["coffee shops"], "locationQuery": "Seattle, USA"}' \\
+    --input-file input.json \\
     --output leads.csv --format csv
 `);
 }
@@ -104,18 +111,10 @@ async function apiFetch(token, url, options = {}) {
 }
 
 // Start an actor run and return { runId, datasetId }
-async function startActor(token, actorId, inputJson) {
+async function startActor(token, actorId, inputObject) {
     // Convert "author/actor" format to "author~actor" for API compatibility
     const apiActorId = actorId.replace('/', '~');
     const url = `https://api.apify.com/v2/actors/${apiActorId}/runs`;
-
-    let data;
-    try {
-        data = JSON.parse(inputJson);
-    } catch (e) {
-        console.error(`Error: Invalid JSON input: ${e.message}`);
-        process.exit(1);
-    }
 
     const response = await apiFetch(token, url, {
         method: 'POST',
@@ -123,7 +122,7 @@ async function startActor(token, actorId, inputJson) {
             'Content-Type': 'application/json',
             'User-Agent': `${USER_AGENT}/start_actor`,
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(inputObject),
     });
 
     if (response.status === 404) {
