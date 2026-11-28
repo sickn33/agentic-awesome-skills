@@ -62,7 +62,7 @@ Do not decide for the user what counts as an expense or which income category ap
 
 The CLI is published on npm as [`setsuzei`](https://www.npmjs.com/package/setsuzei). It is built and published from the public repository by GitHub Actions with npm trusted publishing, so the npm page shows where and how each version was built. This skill pins version `0.3.1`.
 
-First check whether a usable CLI is already installed; if this prints `0.2.2` or higher, use it and skip the download:
+First check whether a usable CLI is already installed; if this prints `0.3.1` or higher, use it and skip the download:
 
 ```bash
 setsuzei --version
@@ -76,7 +76,7 @@ npx --yes setsuzei@0.3.1 --version
 
 Use `npx --yes setsuzei@0.3.1` for every later command.
 
-- Do not use an installed `setsuzei` that prints a version below `0.2.2`: versions before 0.2.2 do not apply the resident-tax exemption threshold and can report a furusato nozei limit for a person whose resident tax is actually zero.
+- Do not use an installed `setsuzei` that prints a version below `0.3.1`: this skill's examples and field names were checked against that release. In particular, versions before 0.2.2 do not apply the resident-tax exemption threshold and can report a furusato nozei limit for a person whose resident tax is actually zero.
 - Keep the version pinned. Do not switch to `@latest`, an unpinned `npx setsuzei`, or a newer version without the user asking for it.
 - The package goes to the npm cache, not into any skills, plugin, hook, or agent-configuration directory. It has no runtime dependencies and no install scripts.
 - If a command is stopped by a permission prompt or denied, do not rephrase and retry it. Ask the user to run it themselves or to allow it.
