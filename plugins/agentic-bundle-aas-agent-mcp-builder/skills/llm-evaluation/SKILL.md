@@ -357,7 +357,11 @@ class ABTest:
         t_stat, p_value = stats.ttest_ind(a_scores, b_scores)
 
         # Effect size (Cohen's d)
-        pooled_std = np.sqrt((np.std(a_scores)**2 + np.std(b_scores)**2) / 2)
+        df_a, df_b = len(a_scores) - 1, len(b_scores) - 1
+        pooled_std = np.sqrt(
+            (df_a * np.var(a_scores, ddof=1) + df_b * np.var(b_scores, ddof=1))
+            / (df_a + df_b)
+        )
         cohens_d = (np.mean(b_scores) - np.mean(a_scores)) / pooled_std if pooled_std > 0 else None
 
         return {

@@ -10463,6 +10463,25 @@
       "runtime_files": []
     },
     {
+      "id": "brand-templates",
+      "path": "skills/brand-templates",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "brand-vibes",
       "path": "skills/brand-vibes",
       "targets": {
@@ -19321,6 +19340,25 @@
       "runtime_files": []
     },
     {
+      "id": "devlog-poster",
+      "path": "skills/devlog-poster",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "devops-deploy",
       "path": "skills/devops-deploy",
       "targets": {
@@ -19521,6 +19559,25 @@
     {
       "id": "digital-forensics",
       "path": "skills/digital-forensics",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "directory-listing-liveness-audit",
+      "path": "skills/directory-listing-liveness-audit",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -23078,6 +23135,25 @@
     {
       "id": "fedramp-compliance",
       "path": "skills/fedramp-compliance",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "feraterra-arena-trading",
+      "path": "skills/feraterra-arena-trading",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -27049,6 +27125,25 @@
     {
       "id": "grok-delegate",
       "path": "skills/grok-delegate",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "groundsocial-subreddit-research",
+      "path": "skills/groundsocial-subreddit-research",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -35898,6 +35993,25 @@
       "runtime_files": []
     },
     {
+      "id": "martllm-media",
+      "path": "skills/martllm-media",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "master-pitcher",
       "path": "skills/master-pitcher",
       "targets": {
@@ -39185,6 +39299,25 @@
       "runtime_files": []
     },
     {
+      "id": "npm-supply-chain-check",
+      "path": "skills/npm-supply-chain-check",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "nsfw-ai-spicyapi",
       "path": "skills/nsfw-ai-spicyapi",
       "targets": {
@@ -42326,6 +42459,25 @@
       "runtime_files": [
         "package.json"
       ]
+    },
+    {
+      "id": "plc-program-design",
+      "path": "skills/plc-program-design",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
     },
     {
       "id": "plotly",
@@ -46990,6 +47142,25 @@
       "runtime_files": []
     },
     {
+      "id": "saascity-launch-audit",
+      "path": "skills/saascity-launch-audit",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
       "id": "saga-orchestration",
       "path": "skills/saga-orchestration",
       "targets": {
@@ -49905,6 +50076,25 @@
     {
       "id": "signup-flow-cro",
       "path": "skills/signup-flow-cro",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "silicon-cafe",
+      "path": "skills/silicon-cafe",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -53098,6 +53288,25 @@
     {
       "id": "taasky",
       "path": "skills/taasky",
+      "targets": {
+        "codex": "supported",
+        "claude": "supported"
+      },
+      "setup": {
+        "type": "none",
+        "summary": "",
+        "docs": null
+      },
+      "reasons": [],
+      "blocked_reasons": {
+        "codex": [],
+        "claude": []
+      },
+      "runtime_files": []
+    },
+    {
+      "id": "tabretake",
+      "path": "skills/tabretake",
       "targets": {
         "codex": "supported",
         "claude": "supported"
@@ -60420,10 +60629,10 @@
     }
   ],
   "summary": {
-    "total_skills": 3151,
+    "total_skills": 3162,
     "supported": {
-      "codex": 3056,
-      "claude": 3081
+      "codex": 3067,
+      "claude": 3092
     },
     "blocked": {
       "codex": 95,

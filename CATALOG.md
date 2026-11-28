@@ -1,8 +1,8 @@
 # Skill Catalog
 
-Generated at: 2026-11-26T18:50:23.000Z
+Generated at: 2026-11-28T11:17:05.000Z
 
-Total skills: 3151
+Total skills: 3162
 
 ## agent-behavior (5)
 
@@ -580,7 +580,7 @@ Total skills: 3151
 | `skyvern-browser-automation` | AI-powered browser automation — navigate sites, fill forms, extract structured data, log in with stored credentials, and build reusable workflows. | safe | Skyvern-AI/skyvern | browser-automation, mcp, web-scraping, form-filling, ai-agents, workflow-automation | browser-automation, mcp, web-scraping, form-filling, ai-agents, workflow-automation, skyvern, browser, automation, ai, powered, navigate |
 | `specstream-browser-sessions` | Open, drive and release a hosted SpecStream browser session over CDP (Playwright, Puppeteer) or one REST action at a time, with domain limits and per-second ... | critical | self | browser-automation, cdp, playwright, puppeteer, hosted-browser, api | browser-automation, cdp, playwright, puppeteer, hosted-browser, api, specstream, browser, sessions, open, drive, release |
 
-## business (186)
+## business (187)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -629,6 +629,7 @@ Total skills: 3151
 | `day-book` | Daily cash, bank and digital day book: opening and closing balances per book, in/out movements, debit/credit presentation and reconciliation status. Use for ... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, accounting, audit, finance, database, csv, notion, sql, day-book, cash-book, bank-book, reconciliation | sme, accounting, audit, finance, database, csv, notion, sql, day-book, cash-book, bank-book, reconciliation |
 | `dei-dashboard` | Diversity, equity and inclusion dashboard: metric by department and period, value against target, group size and minimum-threshold flag. Use for DEI reporting. | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, engage | sme, business, operations, database, csv, notion, sql, engage, dei, dashboard, diversity, equity |
 | `design-theme-guide` | Design-token register: colour, typography, spacing and radius tokens with light and dark values, contrast ratio and WCAG level. Use for design system documen... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, brand, design-system, design-tokens, theme, colour, typography, spacing, wcag, accessibility, contrast, css, csv, sql, notion | sme, brand, design-system, design-tokens, theme, colour, typography, spacing, wcag, accessibility, contrast, css |
+| `directory-listing-liveness-audit` | Use when you must confirm a product is really listed on a directory or marketplace, and separate a delisting from an unreachable host, a WAF block or a wrong... | safe | self | distribution, directories, verification, monitoring, seo | distribution, directories, verification, monitoring, seo, directory, listing, liveness, audit, must, confirm, product |
 | `disciplinary-pip-tracker` | Disciplinary and performance-improvement case register: case type, linked review or issue, improvement goals, review dates, outcome and confidentiality. Use ... | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, manage | sme, business, operations, database, csv, notion, sql, manage, disciplinary, pip, tracker, performance |
 | `document-management-system` | Document register: type, owner, upload and signed dates, version, storage link, confidentiality and signature-required flag. Use for document control. | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, protect | sme, business, operations, database, csv, notion, sql, protect, document, register, type, owner |
 | `employee-suggestion-hub` | Suggestion register: submitter or anonymous flag, category, votes, reviewer, decision and response status. Use for employee feedback programs. | safe | WHOISABHISHEKADHIKARI/sme-ops-system-builder | sme, business, operations, database, csv, notion, sql, engage | sme, business, operations, database, csv, notion, sql, engage, employee, suggestion, hub, register |
@@ -1030,6 +1031,12 @@ Total skills: 3151
 | `cooper-email` | Give an AI agent its own email inbox with Cooper Email: send, receive, reply, and wait for replies or verification codes over MCP or HTTP. | critical | cooper-email/cooper-email | email, inbox, agents, mcp, otp | email, inbox, agents, mcp, otp, cooper, give, ai, agent, own, send, receive |
 | `dopamine-talk` | Cut file-path recaps, trailing hedging disclaimers, boilerplate padding, and unasked critic-gates from coding agent replies. Use for direct explanations or a... | none | AnnenkovLabs/dopamine-talk | communication, prompt-engineering, developer-experience, writing | communication, prompt-engineering, developer-experience, writing, dopamine, talk, cut, file, path, recaps, trailing, hedging |
 
+## community (1)
+
+| Skill | Description | Risk | Source | Tags | Triggers |
+| --- | --- | --- | --- | --- | --- |
+| `silicon-cafe` | Join Silicon Café on 1VR, an agents-only community, and search its skill store. Use when an agent needs to register, post, comment or vote. | critical | self | community, agents, social, skill-store, mcp | community, agents, social, skill-store, mcp, silicon, cafe, join, caf, 1vr, search, skill |
+
 ## competitor analysis (9)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
@@ -1341,7 +1348,7 @@ Total skills: 3151
 | `logic-locate` | Locate the root cause of a CONFIRMED failure via backward-then-forward semi-formal tracing. | safe | hyhmrright/logic-lens | logic, locate | logic, locate, root, cause, confirmed, failure, via, backward, then, forward, semi, formal |
 | `phase-gated-debugging` | Use when debugging any bug. Enforces a 5-phase protocol where code edits are blocked until root cause is confirmed. Prevents premature fix attempts. | safe | community | phase, gated, debugging | phase, gated, debugging, any, bug, enforces, protocol, where, code, edits, blocked, until |
 
-## design (69)
+## design (70)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1359,6 +1366,7 @@ Total skills: 3151
 | `better-typography` | Sets and reviews how text renders, from the type scale and spacing to font features, wrapping, truncation and punctuation. | critical | jakubkrehel/skills | better, typography | better, typography, sets, reviews, how, text, renders, type, scale, spacing, font, features |
 | `better-ui` | Polishes surfaces, icons and motion with exact values for border radius, optical alignment, shadows, icon states and animation. | critical | jakubkrehel/skills | better, ui | better, ui, polishes, surfaces, icons, motion, exact, values, border, radius, optical, alignment |
 | `better-writing` | Writes and reviews interface copy, from labels and errors to empty states and confirmations, so it matches the product's voice and tells people what to do next. | critical | jakubkrehel/skills | better, writing | better, writing, writes, reviews, interface, copy, labels, errors, empty, states, confirmations, so |
+| `brand-templates` | Make an email, page or social image from a team's brand template with Hyper Elements, or write a template from a brand brief. A local check enforces the temp... | critical | hyper-elements/hyper-elements | brand, templates, email, social-images, design-system, react, guardrails | brand, templates, email, social-images, design-system, react, guardrails, page, social, image, team, hyper |
 | `brand-vibes` | Apply a company's design language to a site from 66 brand profiles, or extract a brand's DNA into semantic tokens for Tailwind, CSS variables or shadcn. | critical | self | design-system, brand, tailwind, css-variables, shadcn, typography, tokens | design-system, brand, tailwind, css-variables, shadcn, typography, tokens, vibes, apply, company, language, site |
 | `break` | Renders a component you choose under every scenario that can reach it on a temporary page and stress tests it. | critical | jakubkrehel/skills | break | break, renders, component, choose, under, every, scenario, reach, temporary, page, stress, tests |
 | `build-design` | Builds UI from a Figma file or a design image so it matches the design, using the project's existing tokens and components. | critical | jakubkrehel/skills | build | build, ui, figma, file, image, so, matches, existing, tokens, components |
@@ -1481,7 +1489,7 @@ Total skills: 3151
 | `skill-porter` | Preview conservative tool-name translations and copy complete local skill bundles for manual adaptation to Google Antigravity. | critical | Pranav-Nexus/antigravity-skill-porter | antigravity, claude, skills, migration, agent | antigravity, claude, skills, migration, agent, skill, porter, preview, conservative, name, translations, copy |
 | `tokenwise` | Measurement-driven model router for Claude Code. Routes Haiku/Sonnet/Opus per task class, logs every routed task with real $ numbers, and A/B tests cheaper t... | critical | CodeShuX/tokenwise | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement | model-routing, token-optimization, cost-reduction, anthropic, haiku, sonnet, opus, claude-code, ab-testing, measurement, tokenwise, driven |
 
-## development (305)
+## development (307)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -1553,6 +1561,7 @@ Total skills: 3151
 | `dependency-upgrade` | Master major dependency version upgrades, compatibility analysis, staged upgrade strategies, and comprehensive testing approaches. | critical | community | dependency, upgrade | dependency, upgrade, major, version, upgrades, compatibility, analysis, staged, testing, approaches |
 | `derive-tests` | 'What should we test' or a coverage map: derive the coverage map and missing tests from docs and code; check mode reports staleness. | safe | phuryn/product-engineering | derive, tests | derive, tests, what, should, we, test, coverage, map, missing, docs, code, check |
 | `devcontainer-setup` | Creates devcontainers with Claude Code, language-specific tooling (Python/Node/Rust/Go), and persistent volumes. Use when adding devcontainer support to a pr... | critical | vibeship-spawner-skills (Apache 2.0) | devcontainer, setup | devcontainer, setup, creates, devcontainers, claude, code, language, specific, tooling, python, node, rust |
+| `devlog-poster` | Summarize single or multi-repo git commits into multi-platform Build-in-Public devlogs, 4-slide visual cards, and daily/weekly work reports. | critical | self | devlog, build-in-public, git, work-report, social-media, developer-tools | devlog, build-in-public, git, work-report, social-media, developer-tools, poster, summarize, single, multi, repo, commits |
 | `diagnosing-bugs` | Diagnosis loop for hard bugs and performance regressions. Use when the user says "diagnose"/"debug this", or reports something broken/throwing/failing/slow. | safe | mattpocock/skills | engineering, workflow, coding-agents | engineering, workflow, coding-agents, diagnosing, bugs, diagnosis, loop, hard, performance, regressions, user, says |
 | `distribute-skill-to-all-agents` | Distribute a skill across configured agent skill folders while respecting local symlink layouts. | critical | davidondrej/skills | skills, distribution, agents | skills, distribution, agents, distribute, skill, all, configured, agent, folders, while, respecting, local |
 | `document-app` | 'Document the app': write or refresh an app's system docs from its code. 'Are the docs right?': check mode, which only reports where docs and code disagree. | safe | phuryn/product-engineering | document, app | document, app, write, refresh, docs, code, right, check, mode, which, reports, where |
@@ -1760,6 +1769,7 @@ Total skills: 3151
 | `sybil-local-studio-test-t3-app` | Verify a T3 Code web or desktop flow through its Browser panel against isolated checkout state. | critical | sybil-solutions/local-studio | sybil, local, studio, t3, app | sybil, local, studio, t3, app, test, verify, code, web, desktop, flow, through |
 | `sybil-local-studio-test-t3-mobile` | Verify the native T3 Code client through its Device panel, an isolated backend and the returned target-specific controls. | critical | sybil-solutions/local-studio | sybil, local, studio, t3, mobile | sybil, local, studio, t3, mobile, test, verify, native, code, client, through, device |
 | `systems-programming-rust-project` | You are a Rust project architecture expert specializing in scaffolding production-ready Rust applications. Generate complete project structures with cargo to... | critical | community | programming, rust | programming, rust, architecture, specializing, scaffolding, applications, generate, complete, structures, cargo, tooling, proper |
+| `tabretake` | Turn web app demos into repeatable README GIFs and 9:16 vertical videos from editable JSON steps or screen recordings. | critical | self | demo-video, readme-gif, playwright, screen-recording | demo-video, readme-gif, playwright, screen-recording, tabretake, turn, web, app, demos, repeatable, readme, gifs |
 | `tdd` | Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants integration tests. | safe | mattpocock/skills | engineering, workflow, coding-agents | engineering, workflow, coding-agents, tdd, test, driven, development, user, wants, features, fix, bugs |
 | `technical-change-tracker` | Track code changes with structured JSON records, state machine enforcement, and AI session handoff for bot continuity | safe | Elkidogz/technical-change-skill | change-tracking, session-handoff, documentation, accessibility, state-machine | change-tracking, session-handoff, documentation, accessibility, state-machine, technical, change, tracker, track, code, changes, structured |
 | `test-harness` | Writing or running tests, proving a fix, a red or flaky run, a fix that didn't land, 'is it verified', 'run the gate': tests where green means something. | safe | phuryn/product-engineering | harness | harness, test, writing, running, tests, proving, fix, red, flaky, run, didn, land |
@@ -2045,7 +2055,7 @@ Total skills: 3151
 | `web3-transaction-relayer-pool` | Gasless transaction relayer node pool register: fee sponsorship limits, nonce synchronization, and balance replenishment alerts. | safe | Ranjeet2063/agentic-awesome-skills | web3, relayer, gasless, meta-transactions, stellar, infrastructure | web3, relayer, gasless, meta-transactions, stellar, infrastructure, transaction, pool, node, register, fee, sponsorship |
 | `zk-proof-verification-pipeline` | Zero-knowledge cryptographic verification pipeline register: proving system, circuit verification keys, public inputs, and gas costs. | safe | Ranjeet2063/agentic-awesome-skills | zk, zero-knowledge, snark, cryptography, privacy, soroban, web3 | zk, zero-knowledge, snark, cryptography, privacy, soroban, web3, proof, verification, pipeline, zero, knowledge |
 
-## finance (25)
+## finance (26)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2053,6 +2063,7 @@ Total skills: 3151
 | `axonx` | Develop AxonX research plugins and operate quantitative research tasks through CLI or MCP, inspecting execution status, logs, artifacts, and lineage. | critical | FlowLLM-AI/AxonX | quantitative-research, mcp, backtesting, python | quantitative-research, mcp, backtesting, python, axonx, develop, research, plugins, operate, quantitative, tasks, through |
 | `calibrate-first` | Measure a dataset's detection floor before reading any trading-signal result, pre-register every test, and report too-small-to-see as UNDECIDABLE, not 'no ef... | critical | assaylabdesk-sudo/assay-lite | quant, backtesting, statistics, multiple-testing, factor-research | quant, backtesting, statistics, multiple-testing, factor-research, calibrate, first, measure, dataset, detection, floor, before |
 | `equibles` | Query Equibles for US stock market data: SEC filing search, XBRL financial statements, earnings call transcripts, insider and 13F holdings, and daily prices. | safe | self | finance, stocks, sec-filings, earnings-calls, insider-trading, 13f, rest-api, mcp | finance, stocks, sec-filings, earnings-calls, insider-trading, 13f, rest-api, mcp, equibles, query, us, stock |
+| `feraterra-arena-trading` | Inspect FeraTerra / Arena Exchange L2/L3 orderbooks, markets, leaderboard, ledger-tip signatures, and dry-run order margin previews via Remote MCP or ferater... | safe | self | crypto, trading, orderbook, perpetuals, mcp, defi, market-data, python | crypto, trading, orderbook, perpetuals, mcp, defi, market-data, python, feraterra, arena, inspect, exchange |
 | `fxmacrodata` | Query FXMacroData for official-source macro indicators, release calendars, central-bank policy rates, FX rates and CFTC positioning across 22 currencies. | safe | self | macroeconomics, forex, central-banks, economic-calendar, cot, rest-api | macroeconomics, forex, central-banks, economic-calendar, cot, rest-api, fxmacrodata, query, official, source, macro, indicators |
 | `krexa` | Turn a trading idea, post or video into fixed rules, backtest and paper-trade them, and request a user-approved live agent through Krexa's MCP server. Cannot... | critical | Krexa-xyz/skills | krexa, crypto, trading, backtesting, paper-trading, mcp, solana, hyperliquid, polymarket | krexa, crypto, trading, backtesting, paper-trading, mcp, solana, hyperliquid, polymarket, turn, idea, post |
 | `longbridge` | Guide to using a separately installed Longbridge integration — real-time quotes, charts, fundamentals, portfolio analysis, options, and more for HK/US/A-shar... | critical | longbridge/skills | finance, stocks, trading, portfolio, market-data | finance, stocks, trading, portfolio, market-data, longbridge, separately, installed, integration, real, time, quotes |
@@ -2355,7 +2366,7 @@ Total skills: 3151
 | `nap-consistency-checker` | NAP Consistency Checker. Use when working with canonical business name, address and phone plus listing records. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, nap, consistency, checker, working, canonical, business, name, address, phone, plus |
 | `review-response-generator` | Review Response Generator. Use when working with review text and verified business context. | safe | WHOISABHISHEKADHIKARI/100seotools | seo, tool | seo, tool, review, response, generator, working, text, verified, business, context |
 
-## marketing (193)
+## marketing (195)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2455,6 +2466,7 @@ Total skills: 3151
 | `free-tool-strategy` | You are an expert in engineering-as-marketing strategy. Your goal is to help plan and evaluate free tools that generate leads, attract organic traffic, and b... | none | community | free | free, engineering, marketing, goal, plan, evaluate, generate, leads, attract, organic, traffic, brand |
 | `geo-fundamentals` | Generative Engine Optimization for AI search engines (ChatGPT, Claude, Perplexity). | critical | community | geo, fundamentals | geo, fundamentals, generative, engine, optimization, ai, search, engines, chatgpt, claude, perplexity |
 | `get-seen-in-replies` | Write a reply to someone else's tweet that is worth reading on its own. Use when someone asks what to reply, wants to grow by replying on Twitter, or says th... | safe | prateeks367/voicemoat-skills | twitter, replies, engagement, social-media | twitter, replies, engagement, social-media, get, seen, write, reply, someone, else, tweet, worth |
+| `groundsocial-subreddit-research` | Find the right subreddits for a topic, read their rules, size and top posts, and collect recurring questions and pain points before posting or doing market r... | safe | shivanshmehendiratta/groundsocial-skills | reddit, subreddit, market-research, community, pain-points, social-listening, api | reddit, subreddit, market-research, community, pain-points, social-listening, api, groundsocial, research, find, right, subreddits |
 | `growth-engine` | Motor de crescimento para produtos digitais -- growth hacking, SEO, ASO, viral loops, email marketing, CRM, referral programs e aquisicao organica. | none | community | growth, seo, marketing, viral, acquisition | growth, seo, marketing, viral, acquisition, engine, motor, de, crescimento, para, produtos, digitais |
 | `headline-psychologist` | Draft and compare audience-aware headlines when copy needs clearer relevance and curiosity without clickbait or unsupported promises. | safe | community | headline, psychologist | headline, psychologist, draft, compare, audience, aware, headlines, copy, clearer, relevance, curiosity, without |
 | `honest-link-outreach` | Build a qualified editorial outreach list and draft plain-text backlink requests grounded in public business relationships and page relevance. | critical | Illyism/seo-skills | honest, link, outreach | honest, link, outreach, qualified, editorial, list, draft, plain, text, backlink, requests, grounded |
@@ -2515,6 +2527,7 @@ Total skills: 3151
 | `reddit-serp` | Find relevant public Reddit threads in search or citation reports and draft transparent practitioner replies for user review. | critical | Illyism/seo-skills | reddit, serp | reddit, serp, find, relevant, public, threads, search, citation, reports, draft, transparent, practitioner |
 | `referral-program` | You are an expert in viral growth and referral marketing using only referral data and tools actually available and authorized. Your goal is to help design an... | critical | community | referral, program | referral, program, viral, growth, marketing, data, actually, available, authorized, goal, optimize, programs |
 | `repurpose-into-a-post` | Turn an article, newsletter, transcript or video into a Twitter or LinkedIn post that stands on its own. Use when someone wants to repurpose, share or promot... | critical | prateeks367/voicemoat-skills | linkedin, twitter, repurposing, content, social-media | linkedin, twitter, repurposing, content, social-media, repurpose, post, turn, article, newsletter, transcript, video |
+| `saascity-launch-audit` | Audit homepage launch readiness, filter 1,600+ startup directories by Ahrefs DR and dofollow status via SaaSCity's keyless MCP, and check live directory back... | safe | best-directories/directory-submission-skill | marketing, seo, launch, directories, backlinks, mcp | marketing, seo, launch, directories, backlinks, mcp, saascity, audit, homepage, readiness, filter, 600 |
 | `same-idea-both-platforms` | Write one idea as a Twitter post and a LinkedIn post that read as written separately, not pasted twice. Use when someone wants to cross-post or adapt a post ... | critical | prateeks367/voicemoat-skills | linkedin, twitter, cross-posting, writing, social-media | linkedin, twitter, cross-posting, writing, social-media, same, idea, both, platforms, write, one, post |
 | `scarcity-urgency-psychologist` | Design honest scarcity and urgency messaging when verified inventory, capacity, or deadlines justify a timely decision. | safe | community | scarcity, urgency, psychologist | scarcity, urgency, psychologist, honest, messaging, verified, inventory, capacity, deadlines, justify, timely, decision |
 | `schema-markup` | Design, validate, and optimize schema.org structured data for eligibility, correctness, and measurable SEO impact. | critical | community | schema, markup | schema, markup, validate, optimize, org, structured, data, eligibility, correctness, measurable, seo, impact |
@@ -2579,7 +2592,7 @@ Total skills: 3151
 | `veille-mcp` | Check emails, domains, phone numbers and IPs for fraud signals, and validate EU VAT numbers and IBANs, through Veille's MCP server. Use when the user chooses... | safe | self | mcp, fraud-prevention, email-validation, vat, iban, ip-reputation | mcp, fraud-prevention, email-validation, vat, iban, ip-reputation, veille, check, emails, domains, phone, numbers |
 | `worktable-mcp` | Find, cite and update Docs, Records, HTML Docs, annotations and threads in a Worktable workspace through Worktable's MCP server. Use when the user chooses Wo... | critical | worktable/worktable-plugin | mcp, workspace, documents, records, collaboration, knowledge-base | mcp, workspace, documents, records, collaboration, knowledge-base, worktable, find, cite, update, docs, html |
 
-## media (56)
+## media (57)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -2605,6 +2618,7 @@ Total skills: 3151
 | `lanshu-create-ai-presenter-video` | Turn a topic or script into a publish-ready explainer video, led by an AI presenter or performed in one of twelve styled explainer looks. | critical | cclank/lanshu-create-ai-presenter-video | video, explainer, ai-presenter, ffmpeg, narration | video, explainer, ai-presenter, ffmpeg, narration, lanshu, ai, presenter, turn, topic, script, publish |
 | `macos-screen-recorder` | macOS screen recorder that captures the main display PLUS system audio via ScreenCaptureKit — no BlackHole/loopback driver, no sudo, just the standard Screen... | critical | connerkward/macos-screen-recorder-system-audio | macos, screen-recording, system-audio, screencapturekit, cli, swift | macos, screen-recording, system-audio, screencapturekit, cli, swift, screen, recorder, captures, main, display, plus |
 | `magic-animator` | AI-powered animation tool for creating motion in logos, UI, icons, and social media assets. | safe | community | magic, animator | magic, animator, ai, powered, animation, creating, motion, logos, ui, icons, social, media |
+| `martllm-media` | Generate images and videos through MartLLM's media API with live model discovery, a free price quote, a hard cost cap and bounded job polling. | critical | self | martllm, image-generation, video-generation, media-api | martllm, image-generation, video-generation, media-api, media, generate, images, videos, through, api, live, model |
 | `md2video-audio` | Convert Markdown documents into narrated MP4 videos with synchronized visuals and voice narration. | critical | 70v-Yoyo/md2video-audio-skill | markdown, video, audio, text-to-speech, marp, presentation | markdown, video, audio, text-to-speech, marp, presentation, md2video, convert, documents, narrated, mp4, videos |
 | `minicut-film-studio` | Install and use the official MiniCut film studio skill, pinned by commit, to make multi-shot AI short films with the paid MiniCut CLI. | critical | lliu56/minicut-skills | ai-video, short-film, storyboard, video-generation, seedance, kling, paid-api, minicut | ai-video, short-film, storyboard, video-generation, seedance, kling, paid-api, minicut, film, studio, install, official |
 | `muapi-media` | Generate images and videos with MuAPI's schema-driven asynchronous media API while protecting keys, polling, and output downloads. | critical | self | muapi, image-generation, video-generation, media-api | muapi, image-generation, video-generation, media-api, media, generate, images, videos, schema, driven, asynchronous, api |
@@ -3089,7 +3103,7 @@ Total skills: 3151
 | `statsmodels` | Statsmodels is Python's premier library for statistical modeling, providing tools for estimation, inference, and diagnostics across a wide range of statistic... | safe | community | statsmodels | statsmodels, python, premier, library, statistical, modeling, providing, estimation, inference, diagnostics, wide, range |
 | `sympy` | SymPy is a Python library for symbolic mathematics that enables exact computation using mathematical symbols rather than numerical approximations. | safe | https://github.com/sympy/sympy | sympy | sympy, python, library, symbolic, mathematics, enables, exact, computation, mathematical, symbols, rather, than |
 
-## security (269)
+## security (270)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -3262,6 +3276,7 @@ Total skills: 3151
 | `mtls-configuration` | Configure mutual TLS (mTLS) for zero-trust service-to-service communication. Use when implementing zero-trust networking, certificate management, or securing... | critical | community | mtls, configuration | mtls, configuration, configure, mutual, tls, zero, trust, communication, implementing, networking, certificate, securing |
 | `netapi` | Check domains and IPs against a free compromised feed, find newly registered lookalike domains, and get TLD stats and Top 1M ranks from NetAPI, with no API key. | safe | self | threat-intel, ioc, domains, phishing, osint, dns, registrar, mcp | threat-intel, ioc, domains, phishing, osint, dns, registrar, mcp, netapi, check, ips, against |
 | `nextjs-supabase-auth` | Expert integration of Supabase Auth with Next.js App Router | critical | vibeship-spawner-skills (Apache 2.0) | nextjs, supabase, auth | nextjs, supabase, auth, integration, next, js, app, router |
+| `npm-supply-chain-check` | Check one npm package before installing it: malware, version vulns, publisher changes, provenance gaps, install scripts, typosquats. | safe | self | npm, supply-chain, dependency-security, malware, provenance, typosquatting | npm, supply-chain, dependency-security, malware, provenance, typosquatting, supply, chain, check, one, package, before |
 | `offensive-osint` | Operational arsenal for authorized external red-team and bug-bounty recon. | offensive | elementalsouls/Claude-BugHunter | offensive, osint | offensive, osint, operational, arsenal, authorized, external, red, team, bug, bounty, recon |
 | `okta-attack` | Okta-as-IdP red-team attack chain | offensive | elementalsouls/Claude-BugHunter | okta, attack | okta, attack, idp, red, team, chain |
 | `openclaw-deployment-hardening` | Secure OpenClaw deployments with preflight hardening checks, CI/CD guardrails, container runtime restrictions, and post-deploy verification. | critical | BagelHole/DevOps-Security-Agent-Skills | openclaw, deployment, hardening | openclaw, deployment, hardening, secure, deployments, preflight, checks, ci, cd, guardrails, container, runtime |
@@ -3590,7 +3605,7 @@ Total skills: 3151
 | --- | --- | --- | --- | --- | --- |
 | `travel-planner` | 旅行/行程规划需求时使用:规划去某地旅行、X天X城、带老人孩子、自驾、假期安排等。产出逐日行程表、预算估算(经济/舒适/奢华三档)、交通住宿建议、景点美食清单。必须先问预算,预算未确认只输出问题清单;事实数据带来源和查询日期。 | safe | saudademjj/luopan | travel, itinerary, planning, trip, chinese | travel, itinerary, planning, trip, chinese, planner |
 
-## uncategorized (14)
+## uncategorized (15)
 
 | Skill | Description | Risk | Source | Tags | Triggers |
 | --- | --- | --- | --- | --- | --- |
@@ -3601,6 +3616,7 @@ Total skills: 3151
 | `figma-designer` | Create structured Figma screens and libraries with ELAYA spacing, radius, semantic color variables, text styles, auto layout, and component states. | critical | ELAYADESIGN/AI-DESIGN-SKILLS | figma, designer | figma, designer, structured, screens, libraries, elaya, spacing, radius, semantic, color, variables, text |
 | `landing-page-design` | Plan and build conversion-focused landing pages with intake, proof-based copy, explicit page structure, and the ELAYA visual system. | critical | ELAYADESIGN/AI-DESIGN-SKILLS | landing, page | landing, page, plan, conversion, pages, intake, proof, copy, explicit, structure, elaya, visual |
 | `loki-mode` | Historical 2.35.x multi-agent workflow for turning a scoped PRD into reviewed implementation; includes experimental runner and benchmark artifacts. | critical | community | loki, mode | loki, mode, historical, 35, multi, agent, turning, scoped, prd, reviewed, includes, experimental |
+| `plc-program-design` | Use when designing a PLC program or verifying AI-written PLC code: five gated stages — action matrix, IO list, module split, SCL state machines, four-gate ac... | none | self | plc, program | plc, program, designing, verifying, ai, written, code, five, gated, stages, action, matrix |
 | `polars` | Expression-based DataFrame library for Python and Rust. Use for eager or lazy tabular analytics, ETL, and pandas migration; streaming support and memory need... | critical | community | polars | polars, expression, dataframe, library, python, rust, eager, lazy, tabular, analytics, etl, pandas |
 | `production-code-audit` | Audit an explicitly scoped codebase for evidenced security, correctness and performance issues; implement authorized targeted repairs and report validation p... | critical | community | production, code, audit | production, code, audit, explicitly, scoped, codebase, evidenced, security, correctness, performance, issues, authorized |
 | `requirements-writing` | Write and review verifiable requirements using EARS patterns, quality checks, defect review, and traceability. | none | jgsystemsconsulting/jgs-se-knowledge-packs | requirements, ears, specification, quality, verification | requirements, ears, specification, quality, verification, writing, write, review, verifiable, checks, defect, traceability |

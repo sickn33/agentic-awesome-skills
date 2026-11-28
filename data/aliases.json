@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-11-26T18:50:23.000Z",
+  "generatedAt": "2026-11-28T11:17:05.000Z",
   "aliases": {
     "20-andruia-intelligence": "20-andruia-niche-intelligence",
     "accessibility-compliance-audit": "accessibility-compliance-accessibility-audit",
@@ -161,6 +161,7 @@
     "widget-based-design": "design-it/widget-based-design",
     "design-it/widget-based": "design-it/widget-based-design",
     "y2k-design": "design-it/y2k-design",
+    "directory-listing-audit": "directory-listing-liveness-audit",
     "distribute-skill-agents": "distribute-skill-to-all-agents",
     "distributed-debugging-trace": "distributed-debugging-debug-trace",
     "documentation-generation-generate": "documentation-generation-doc-generate",

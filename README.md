@@ -1,9 +1,9 @@
-<!-- registry-sync: version=21.4.0; skills=3151; stars=50392; updated_at=2026-11-26T18:50:23+00:00 -->
+<!-- registry-sync: version=21.5.0; skills=3162; stars=50470; updated_at=2026-11-28T11:17:05+00:00 -->
 # Agentic Awesome Skills — AI Skills & AAS Core
 
 > **Find reusable instructions for your project, inspect their complete files, and keep an exact skill set you can review and reuse.**
 
-Agentic Awesome Skills is a library of 3,151+ installable `SKILL.md` playbooks for Claude Code, Codex, Cursor, Gemini CLI and other AI coding agents. AAS Core helps Codex or Claude search the complete local catalog, record the skills the agent chooses, and preview a plan you can inspect before changing a target. Core does not rank or recommend skills.
+Agentic Awesome Skills is a library of 3,162+ installable `SKILL.md` playbooks for Claude Code, Codex, Cursor, Gemini CLI and other AI coding agents. AAS Core helps Codex or Claude search the complete local catalog, record the skills the agent chooses, and preview a plan you can inspect before changing a target. Core does not rank or recommend skills.
 
 **Start here:** [Explore the skill catalog](https://aaskills.tech/core/) · [Codex setup](https://aaskills.tech/docs/codex-cli-skills/) · [Claude Code setup](https://aaskills.tech/docs/claude-code-skills/) · [Install or update without npm](#installation)
 
@@ -12,7 +12,7 @@ Agentic Awesome Skills is a library of 3,151+ installable `SKILL.md` playbooks f
 
 **Project identity:** Agentic Awesome Skills (AAS) was previously named **Antigravity Awesome Skills**. The official repository is [sickn33/agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills), and the official website is [aaskills.tech](https://aaskills.tech/). Original code and tooling use MIT; original written content uses CC BY 4.0. Imported skills retain their own license and attribution requirements; see [License](#license).
 
-**Current release: V21.4.0.** AAS Core supports local catalog inspection, agent-owned selection, stack validation, and plan preview. Apply and recovery remain experimental. [Read the AAS Core preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/v21.4.0/docs/users/aas-core.md) for setup and exact trust boundaries.
+**Current release: V21.5.0.** AAS Core supports local catalog inspection, agent-owned selection, stack validation, and plan preview. Apply and recovery remain experimental. [Read the AAS Core preview guide](https://github.com/sickn33/agentic-awesome-skills/blob/v21.5.0/docs/users/aas-core.md) for setup and exact trust boundaries.
 
 This README tracks `main`. Features listed under [Unreleased](CHANGELOG.md#unreleased) require a later release; the versioned guide describes the published package.
 
@@ -42,7 +42,7 @@ This is an independent community project, not affiliated with or endorsed by Goo
 - [Choose Your Tool](#choose-your-tool)
 - [Recommended Specialized Plugins](#recommended-specialized-plugins)
 - [Bundles & Workflows](#bundles--workflows)
-- [Browse 3,151+ Skills](#browse-3151-skills)
+- [Browse 3,162+ Skills](#browse-3162-skills)
 - [Troubleshooting](#troubleshooting)
 - [Stable Skills Manifest v1](#stable-skills-manifest-v1)
 - [Contributing](#contributing)
@@ -95,7 +95,7 @@ Codex or Claude inspects your project and chooses exact skills. Every current ca
 > [!IMPORTANT]
 > Structural and identity validity does not certify semantic fit, compatibility, setup correctness, operational safety, or safety to apply. Apply and recovery require experimental opt-in and remain outside the supported preview.
 
-The [Workbench](https://aaskills.tech/workbench) reviews stack and plan artifacts in browser memory without accessing your filesystem. See the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v21.4.0/docs/users/aas-core.md) for tool contracts, capability coverage, and limits.
+The [Workbench](https://aaskills.tech/workbench) reviews stack and plan artifacts in browser memory without accessing your filesystem. See the [Core guide](https://github.com/sickn33/agentic-awesome-skills/blob/v21.5.0/docs/users/aas-core.md) for tool contracts, capability coverage, and limits.
 
 ## Installation
 
@@ -108,8 +108,8 @@ With AAS Core already configured, use the [Core guide](docs/users/aas-core.md) t
 With [GitHub CLI](https://cli.github.com/) and `gh skill` available, preview and install one skill from the current release. This example uses Codex at user scope:
 
 ```sh
-gh skill preview sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md@v21.4.0
-gh skill install sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md --agent codex --scope user --pin v21.4.0
+gh skill preview sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md@v21.5.0
+gh skill install sickn33/agentic-awesome-skills skills/brainstorming/SKILL.md --agent codex --scope user --pin v21.5.0
 ```
 
 To update a pinned skill, preview it at the newer release tag and repeat the install with that tag. See the [installation and update guide](docs/users/getting-started.md#install-and-update-without-npm) for other agents, switching from an npm install, downloading a ZIP, and updating a Git clone.
@@ -161,7 +161,7 @@ Bundles suggest related skills; workflows describe the order to use them. They a
 - [Workflows](docs/users/workflows.md) give ordered playbooks for planning, shipping, testing, and auditing; [workflow metadata](data/workflows.json) is available for integrations.
 - If too many installed skills overload Antigravity, follow the [selective activation guide](docs/users/agent-overload-recovery.md). For other hosts, preview a smaller exact install or use the installer's `--risk`, `--category`, and `--tags` filters.
 
-## Browse 3,151+ Skills
+## Browse 3,162+ Skills
 
 Explore the complete library in the [hosted catalog](https://aaskills.tech/) or [`CATALOG.md`](CATALOG.md). The canonical playbooks live in [`skills/`](skills/); [`skills_index.json`](skills_index.json) provides machine-readable discovery. Use [Getting Started](docs/users/getting-started.md) and [Usage](docs/users/usage.md) for first steps, or the [Workbench](https://aaskills.tech/workbench) to inspect a saved Core stack and plan in your browser.
 
@@ -169,7 +169,7 @@ For narrower comparisons, see [Claude Code skills](docs/users/best-claude-code-s
 
 ## Troubleshooting
 
-- [Core setup and trust boundaries](https://github.com/sickn33/agentic-awesome-skills/blob/v21.4.0/docs/users/aas-core.md)
+- [Core setup and trust boundaries](https://github.com/sickn33/agentic-awesome-skills/blob/v21.5.0/docs/users/aas-core.md)
 - [Installation and everyday use](docs/users/usage.md)
 - [Windows context and truncation recovery](docs/users/windows-truncation-recovery.md)
 - [Linux/macOS overload and selective activation](docs/users/agent-overload-recovery.md)
@@ -350,6 +350,7 @@ Key source families include:
 - **[beatra-ai/wechat-article-cover-skill](https://github.com/beatra-ai/wechat-article-cover-skill)**: Source for `wechat-cover-maker`.
 - **[beatra-ai/xiaohongshu-copywriter-skill](https://github.com/beatra-ai/xiaohongshu-copywriter-skill)**: Source for `zhongcao-note-copywriter`.
 - **[beatra-ai/xiaohongshu-cover-maker-skill](https://github.com/beatra-ai/xiaohongshu-cover-maker-skill)**: Source for `zhongcao-cover-maker`.
+- **[best-directories/directory-submission-skill](https://github.com/best-directories/directory-submission-skill)**: Source for `saascity-launch-audit`.
 - **[ces107/agent-forge](https://github.com/ces107/agent-forge)**: Source for `launch-check`.
 - **[commentkeyword/agent-toolkit](https://github.com/commentkeyword/agent-toolkit)**: Source for `comment-to-dm-cta`.
 - **[cooper-email/cooper-email](https://github.com/cooper-email/cooper-email)**: Source for `cooper-email`.
@@ -362,7 +363,7 @@ Key source families include:
 - **[f-o-x11/perq-skill](https://github.com/f-o-x11/perq-skill)**: Source for `perq`.
 - **[faberlang/faber](https://github.com/faberlang/faber)**: Source for `faber-language`.
 - **[gridpin/gridpin](https://github.com/gridpin/gridpin)**: Source for `gridpin-offline-geocoding`.
-- **[hyper-elements/hyper-elements](https://github.com/hyper-elements/hyper-elements)**: Source for `email-testing`.
+- **[hyper-elements/hyper-elements](https://github.com/hyper-elements/hyper-elements)**: Source for `brand-templates`, `email-testing`.
 - **[kasovy/neverapply-mcp](https://github.com/kasovy/neverapply-mcp)**: Source for `neverapply`.
 - **[lliu56/minicut-skills](https://github.com/lliu56/minicut-skills)**: Source for `minicut-film-studio`.
 - **[lumifyai/sports-intelligence-skills](https://github.com/lumifyai/sports-intelligence-skills)**: Source for `lumify-odds`.
@@ -720,6 +721,7 @@ Key source families include:
 - **[paperandbeyond23-gif/restosignals-mcp](https://github.com/paperandbeyond23-gif/restosignals-mcp)**: Source for `restosignals`.
 - **[seankwon816/foragent-skills](https://github.com/seankwon816/foragent-skills)**: Source for `foragent-call`.
 - **[sequenzy/skills](https://github.com/sequenzy/skills)**: Source for `sequenzy-email-marketing`.
+- **[shivanshmehendiratta/groundsocial-skills](https://github.com/shivanshmehendiratta/groundsocial-skills)**: Source for `groundsocial-subreddit-research`.
 - **[sybil-solutions/glm-flash-lite](https://github.com/sybil-solutions/glm-flash-lite)**: Source for `sybil-glm53-offload-setup`.
 - **[sybil-solutions/inference-optimisation-skill](https://github.com/sybil-solutions/inference-optimisation-skill)**: Source for `sybil-inference-optimisation`.
 - **[sybil-solutions/local-studio](https://github.com/sybil-solutions/local-studio)**: Source for `effect-smol-ai-docs`, `effect-smol-bundle-analysis`, `effect-smol-changesets`, `effect-smol-ci-maintenance`, `effect-smol-dependency-maintenance`, `effect-smol-effect-development`, `effect-smol-jsdocs`, `effect-smol-migration-guidance`, `effect-smol-package-development`, `effect-smol-performance-analysis`, `effect-smol-test-development`, `effect-smol-vendored-assets`, `sybil-local-studio-contribution-triage`, `sybil-local-studio-test-t3-app`, `sybil-local-studio-test-t3-mobile`.
@@ -788,11 +790,11 @@ Contributors ranked by the number of commits.
 | 3 | <a href="https://github.com/Mohammad-Faiz-Cloud-Engineer"><img src="https://github.com/Mohammad-Faiz-Cloud-Engineer.png?size=48" width="32" height="32" alt="" /></a> [@Mohammad-Faiz-Cloud-Engineer](https://github.com/Mohammad-Faiz-Cloud-Engineer) | 33 |
 | 4 | <a href="https://github.com/beatra-ai"><img src="https://github.com/beatra-ai.png?size=48" width="32" height="32" alt="" /></a> [@beatra-ai](https://github.com/beatra-ai) | 19 |
 | 5 | <a href="https://github.com/Prince-1652"><img src="https://github.com/Prince-1652.png?size=48" width="32" height="32" alt="" /></a> [@Prince-1652](https://github.com/Prince-1652) | 17 |
-| 6 | <a href="https://github.com/waynehamadi"><img src="https://github.com/waynehamadi.png?size=48" width="32" height="32" alt="" /></a> [@waynehamadi](https://github.com/waynehamadi) | 15 |
-| 7 | <a href="https://github.com/ssumanbiswas"><img src="https://github.com/ssumanbiswas.png?size=48" width="32" height="32" alt="" /></a> [@ssumanbiswas](https://github.com/ssumanbiswas) | 15 |
+| 6 | <a href="https://github.com/ssumanbiswas"><img src="https://github.com/ssumanbiswas.png?size=48" width="32" height="32" alt="" /></a> [@ssumanbiswas](https://github.com/ssumanbiswas) | 15 |
+| 7 | <a href="https://github.com/waynehamadi"><img src="https://github.com/waynehamadi.png?size=48" width="32" height="32" alt="" /></a> [@waynehamadi](https://github.com/waynehamadi) | 15 |
 | 8 | <a href="https://github.com/FrancoStino"><img src="https://github.com/FrancoStino.png?size=48" width="32" height="32" alt="" /></a> [@FrancoStino](https://github.com/FrancoStino) | 13 |
 | 9 | <a href="https://github.com/jhuang-tt"><img src="https://github.com/jhuang-tt.png?size=48" width="32" height="32" alt="" /></a> [@jhuang-tt](https://github.com/jhuang-tt) | 11 |
-| 10 | <a href="https://github.com/sx4im"><img src="https://github.com/sx4im.png?size=48" width="32" height="32" alt="" /></a> [@sx4im](https://github.com/sx4im) | 10 |
+| 10 | <a href="https://github.com/Champbreed"><img src="https://github.com/Champbreed.png?size=48" width="32" height="32" alt="" /></a> [@Champbreed](https://github.com/Champbreed) | 10 |
 
 </td>
 <td valign="top" width="50%">

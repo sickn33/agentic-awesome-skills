@@ -226,14 +226,14 @@ SKILL_PATH=~/.claude/skills/apify-ecommerce
 ```bash
 node --env-file="$HOME/.claude/.env" "$SKILL_PATH/reference/scripts/run_actor.js" \
   --actor "apify/e-commerce-scraping-tool" \
-  --input 'JSON_INPUT'
+  --input-file input.json
 ```
 
 **CSV export:**
 ```bash
 node --env-file="$HOME/.claude/.env" "$SKILL_PATH/reference/scripts/run_actor.js" \
   --actor "apify/e-commerce-scraping-tool" \
-  --input 'JSON_INPUT' \
+  --input-file input.json \
   --output YYYY-MM-DD_filename.csv \
   --format csv
 ```
@@ -242,7 +242,7 @@ node --env-file="$HOME/.claude/.env" "$SKILL_PATH/reference/scripts/run_actor.js
 ```bash
 node --env-file="$HOME/.claude/.env" "$SKILL_PATH/reference/scripts/run_actor.js" \
   --actor "apify/e-commerce-scraping-tool" \
-  --input 'JSON_INPUT' \
+  --input-file input.json \
   --output YYYY-MM-DD_filename.json \
   --format json
 ```

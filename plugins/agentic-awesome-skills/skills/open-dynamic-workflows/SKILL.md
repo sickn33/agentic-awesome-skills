@@ -45,13 +45,17 @@ Completed work is routed through an adversarial verification pass that challenge
 
 ### Example 1: Run a parallel workflow
 
-ODW requires a separately installed upstream runtime; this single-file skill does not bundle its daemon, bridge, plugin or workflow scripts. Inspect the full upstream tree and pin a reviewed immutable revision before installation. Dependency installation can execute lifecycle scripts; inspect those scripts and the lockfile first, and use an isolated environment. The CLI is
-`odw-daemon` — run it as `npm run odw -- <args>` from inside the repo, or as
-`npx odw-daemon <args>` / a global `odw-daemon` if you link the bin.
+ODW requires a separately installed upstream runtime; this single-file skill does not bundle its daemon, bridge, plugin or workflow scripts. Inspect the full upstream tree and pin a reviewed immutable revision before installation. Dependency installation can execute lifecycle scripts; inspect those scripts and the lockfile first, and use an isolated environment. The repository is not published on npm. Clone it at a reviewed commit and run `npm install`, `npm run setup`, and `npm run odw -- <args>` from that checkout. Do not install or invoke an unrelated `odw-daemon` package from npm.
 
 ```bash
 # Configure your model provider (bring-your-own-model)
 export ANTHROPIC_API_KEY=...        # or an OpenAI-compatible / Ollama endpoint
+
+# One-time install at a reviewed immutable revision
+git clone https://github.com/Suraj1235/open-dynamic-workflows.git
+cd open-dynamic-workflows
+git checkout --detach <REVIEWED_COMMIT_SHA>
+npm install
 
 # One-time setup: generate ~/.odw/config.json
 npm run setup

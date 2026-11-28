@@ -179,10 +179,12 @@ class VectorQuantizer:
         if max_val == min_val:
             return np.zeros_like(vectors, dtype=np.uint8), {"min_val": min_val, "max_val": max_val, "scale": 1.0}
         # This is unsigned UINT8 scalar coding, despite the historical method name.
-        # Scale to 0-255 range
-        scale = 255.0 / (max_val - min_val)
+        # Widen both differences before scaling: int8 spans 255 and the
+        # reciprocal of a small float16 range can exceed its finite maximum.
+        scale = 255.0 / np.subtract(max_val, min_val, dtype=np.float64)
+        offsets = np.subtract(vectors, min_val, dtype=np.float64)
         quantized = np.clip(
-            np.round((vectors - min_val) * scale),
+            np.round(offsets * scale),
             0, 255
         ).astype(np.uint8)
 
