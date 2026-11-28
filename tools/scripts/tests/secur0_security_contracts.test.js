@@ -47,7 +47,24 @@ for (const file of fs.readdirSync(path.join(root, "skills")).filter((name) => na
   const source = fs.readFileSync(exporter, "utf8");
   assert.match(source, /function csvCell\(value\)/, `${file} must neutralize spreadsheet cells`);
   assert.match(source, /fieldnames\.map\(csvCell\)/, `${file} must encode CSV headers`);
+  assert.match(source, /'input-file': \{ type: 'string', short: 'i' \}/, `${file} must require an input file`);
+  assert.match(source, /readFileSync\(values\['input-file'\], 'utf8'\)/, `${file} must read JSON from the input file`);
+  assert.doesNotMatch(source, /JSON\.parse\(values\.input\)/, `${file} must not parse inline JSON`);
 }
+
+for (const file of fs.readdirSync(path.join(root, "skills")).filter((name) => name.startsWith("apify-"))) {
+  const skill = path.join(root, "skills", file, "SKILL.md");
+  if (!fs.existsSync(skill)) continue;
+  const source = fs.readFileSync(skill, "utf8");
+  assert.doesNotMatch(source, /--input\s+'/, `${file} must not paste JSON into a shell command`);
+  if (fs.existsSync(path.join(root, "skills", file, "reference", "scripts", "run_actor.js"))) {
+    assert.match(source, /--input-file input\.json/, `${file} examples must use --input-file`);
+  }
+}
+
+assert.match(read("skills/cypress-skill/SKILL.md"), /npx lambdatest-cypress-cli run/);
+assert.doesNotMatch(read("skills/cypress-skill/SKILL.md"), /npx lambdatest-cypress run/);
+assert.doesNotMatch(read("skills/open-dynamic-workflows/SKILL.md"), /npx odw-daemon/);
 
 const supabase = read("supabase/migrations/202607300001_lock_skill_stars_read_only.sql");
 assert.match(supabase, /enable row level security/);
