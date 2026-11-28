@@ -82,14 +82,14 @@ Before running, ask:
 ```bash
 node --env-file=.env "<resolved-skill-directory>/reference/scripts/run_actor.js" \
   --actor "ACTOR_ID" \
-  --input 'JSON_INPUT'
+  --input-file input.json
 ```
 
 **CSV:**
 ```bash
 node --env-file=.env "<resolved-skill-directory>/reference/scripts/run_actor.js" \
   --actor "ACTOR_ID" \
-  --input 'JSON_INPUT' \
+  --input-file input.json \
   --output YYYY-MM-DD_OUTPUT_FILE.csv \
   --format csv
 ```
@@ -98,7 +98,7 @@ node --env-file=.env "<resolved-skill-directory>/reference/scripts/run_actor.js"
 ```bash
 node --env-file=.env "<resolved-skill-directory>/reference/scripts/run_actor.js" \
   --actor "ACTOR_ID" \
-  --input 'JSON_INPUT' \
+  --input-file input.json \
   --output YYYY-MM-DD_OUTPUT_FILE.json \
   --format json
 ```
