@@ -2,7 +2,7 @@
 name: brand-templates
 description: "Make an email, page or social image from a team's brand template with Hyper Elements, or write a template from a brand brief. A local check enforces the template's fields and rules."
 category: design
-risk: safe
+risk: critical
 source: official
 source_repo: hyper-elements/hyper-elements
 source_type: official
@@ -302,7 +302,7 @@ with template/asset-pixels, and a one-word 40-character headline too wide for it
 ## Safety and side effects
 
 - The install downloads packages from npm. The commands pin each one. After the install, the CLI runs from the project's own `node_modules`.
-- A TSX design or template is code: the CLI runs it to render. Read a template or design from someone else before running `check` or `render` on it. A values file holds no JSX, but it names a template module, which runs.
+- A TSX design or template is code: the CLI runs it to render. Read a template or design from someone else before running `check` or `render` on it. A values file holds no JSX, but it names a template module, which runs. Because rendering executes authored code and writes design and output files, this skill is classified `critical` rather than read-only.
 - `check` writes no output files (it may cache fetched fonts and images). `render` writes under `out/`, `design new` and `design set` write the values file they're given, and `template extract` writes the `-o` file (it refuses to replace one without `--force`). Writing the trusted-template list edits `package.json`.
 - Rendering a Canvas or a Document loads the fonts and images the design names; http(s) ones are fetched once and cached. `--offline` fetches nothing, and a URL not in the cache then fails.
 - Never edit a template to make a design pass; report the refusal instead.
